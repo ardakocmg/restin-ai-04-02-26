@@ -16,9 +16,13 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         request_id = str(uuid.uuid4())
         request.state.request_id = request_id
-        response = await call_next(request)
-        response.headers["X-Request-ID"] = request_id
-        return response
+        try:
+            response = await call_next(request)
+            response.headers["X-Request-ID"] = request_id
+            return response
+        except Exception as e:
+            # Re-raise to be caught by exception handlers
+            raise e
 
 def make_error(code: str, message: str, detail: dict = None, request_id: str = None):
     return {
@@ -115,37 +119,40 @@ def setup_exception_handlers(app):
         db = get_database()
         
         # Log if error level (4xx client errors are WARN, 5xx are ERROR)
-        if exc.status >= 500:
-            await log_system_event(
-                db,
-                level="error",
-                code=exc.code,
-                message=f"API Error {exc.status}: {exc.message}",
-                details={
-                    "status_code": exc.status,
-                    "code": exc.code,
-                    "path": str(request.url),
-                    "request_id": request_id,
-                    "details": exc.details
-                }
-            )
-            await capture_observability_error(request, exc.status, exc.code, exc.message, exc.details)
-        elif exc.status >= 400:
-            await log_system_event(
-                db,
-                level="warning",
-                code=exc.code,
-                message=f"API Error {exc.status}: {exc.message}",
-                details={
-                    "status_code": exc.status,
-                    "code": exc.code,
-                    "path": str(request.url),
-                    "request_id": request_id,
-                    "details": exc.details
-                }
-            )
-            if exc.status not in [401, 403]:
+        try:
+            if exc.status >= 500:
+                await log_system_event(
+                    db,
+                    level="error",
+                    code=exc.code,
+                    message=f"API Error {exc.status}: {exc.message}",
+                    details={
+                        "status_code": exc.status,
+                        "code": exc.code,
+                        "path": str(request.url),
+                        "request_id": request_id,
+                        "details": exc.details
+                    }
+                )
                 await capture_observability_error(request, exc.status, exc.code, exc.message, exc.details)
+            elif exc.status >= 400:
+                await log_system_event(
+                    db,
+                    level="warning",
+                    code=exc.code,
+                    message=f"API Error {exc.status}: {exc.message}",
+                    details={
+                        "status_code": exc.status,
+                        "code": exc.code,
+                        "path": str(request.url),
+                        "request_id": request_id,
+                        "details": exc.details
+                    }
+                )
+                if exc.status not in [401, 403]:
+                    await capture_observability_error(request, exc.status, exc.code, exc.message, exc.details)
+        except Exception as log_err:
+            logging.error(f"Error during API error logging: {log_err}")
         
         return JSONResponse(
             status_code=exc.status,
@@ -170,35 +177,38 @@ def setup_exception_handlers(app):
             message = "Request failed"
         
         # Log if error level (4xx client errors are WARN, 5xx are ERROR)
-        if exc.status_code >= 500:
-            await log_system_event(
-                db,
-                level="error",
-                code=code,
-                message=f"HTTP {exc.status_code}: {message}",
-                details={
-                    "status_code": exc.status_code,
-                    "code": code,
-                    "path": str(request.url),
-                    "request_id": request_id
-                }
-            )
-            await capture_observability_error(request, exc.status_code, code, message, {})
-        elif exc.status_code >= 400:
-            await log_system_event(
-                db,
-                level="warning",
-                code=code,
-                message=f"HTTP {exc.status_code}: {message}",
-                details={
-                    "status_code": exc.status_code,
-                    "code": code,
-                    "path": str(request.url),
-                    "request_id": request_id
-                }
-            )
-            if exc.status_code not in [401, 403]:
+        try:
+            if exc.status_code >= 500:
+                await log_system_event(
+                    db,
+                    level="error",
+                    code=code,
+                    message=f"HTTP {exc.status_code}: {message}",
+                    details={
+                        "status_code": exc.status_code,
+                        "code": code,
+                        "path": str(request.url),
+                        "request_id": request_id
+                    }
+                )
                 await capture_observability_error(request, exc.status_code, code, message, {})
+            elif exc.status_code >= 400:
+                await log_system_event(
+                    db,
+                    level="warning",
+                    code=code,
+                    message=f"HTTP {exc.status_code}: {message}",
+                    details={
+                        "status_code": exc.status_code,
+                        "code": code,
+                        "path": str(request.url),
+                        "request_id": request_id
+                    }
+                )
+                if exc.status_code not in [401, 403]:
+                    await capture_observability_error(request, exc.status_code, code, message, {})
+        except Exception as log_err:
+            logging.error(f"Error during HTTP error logging: {log_err}")
         
         return JSONResponse(
             status_code=exc.status_code,
@@ -212,20 +222,22 @@ def setup_exception_handlers(app):
         logging.error(f"Unhandled exception: {tb}")
         db = get_database()
         
-        await log_system_event(
-            db,
-            level="critical",
-            code="unhandled_exception",
-            message=str(exc),
-            details={
-                "exception_type": type(exc).__name__,
-                "traceback": tb,
-                "path": str(request.url),
-                "request_id": request_id
-            }
-        )
-
-        await capture_observability_error(request, 500, "INTERNAL_ERROR", str(exc), {"traceback": tb})
+        try:
+            await log_system_event(
+                db,
+                level="critical",
+                code="unhandled_exception",
+                message=str(exc),
+                details={
+                    "exception_type": type(exc).__name__,
+                    "traceback": tb,
+                    "path": str(request.url),
+                    "request_id": request_id
+                }
+            )
+            await capture_observability_error(request, 500, "INTERNAL_ERROR", str(exc), {"traceback": tb})
+        except Exception as log_err:
+            logging.error(f"Error during global exception logging: {log_err}")
         
         return JSONResponse(
             status_code=500,

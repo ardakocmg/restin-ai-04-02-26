@@ -218,12 +218,16 @@ cors_origins_env = os.environ.get('CORS_ORIGINS', 'http://localhost:3000,http://
 cors_origins = [o.strip() for o in cors_origins_env if o.strip()]
 
 # Standard dev origins
-dev_origins = ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000"]
+dev_origins = [
+    "http://localhost:3000", "http://127.0.0.1:3000", 
+    "http://localhost:8000", "http://127.0.0.1:8000",
+    "http://localhost:3001", "http://127.0.0.1:3001"
+]
 for dev in dev_origins:
     if dev not in cors_origins:
         cors_origins.append(dev)
 
-# Add origins with trailing slashes just in case
+# Add origins with trailing slashes
 for origin in list(cors_origins):
     if not origin.endswith('/'):
         with_slash = origin + '/'
@@ -232,22 +236,22 @@ for origin in list(cors_origins):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-        "http://localhost:3001",
-        "http://127.0.0.1:3001",
-        # Trailing slash variants just in case
-        "http://localhost:3000/",
-        "http://127.0.0.1:3000/",
-    ],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"]
 )
+
+# Debug CORS
+@app.middleware("http")
+async def debug_cors(request: Request, call_next):
+    origin = request.headers.get("origin")
+    response = await call_next(request)
+    if origin:
+        logging.info(f"🔍 DEBUG CORS: {request.method} {request.url.path} from {origin}")
+        logging.info(f"   Response Headers: {response.headers}")
+    return response
 
 @app.middleware("http")
 async def debug_headers_middleware(request: Request, call_next):

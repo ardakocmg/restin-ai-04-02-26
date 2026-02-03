@@ -22,7 +22,8 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         # Get client identifier
-        client_id = request.headers.get('X-Device-Id') or request.client.host
+        client_host = request.client.host if request.client else "unknown"
+        client_id = request.headers.get('X-Device-Id') or client_host
 
         # Cleanup old entries periodically
         current_time = time.time()
