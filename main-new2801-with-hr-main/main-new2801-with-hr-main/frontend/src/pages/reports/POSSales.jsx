@@ -1,173 +1,153 @@
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { DollarSign, TrendingUp, CreditCard, Users, ShoppingCart } from 'lucide-react';
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
-
-const chartTheme = {
-  background: '#18181B',
-  text: '#D4D4D8',
-  grid: 'rgba(255, 255, 255, 0.1)',
-  primary: '#E53935',
-  success: '#4ADE80',
-  warning: '#FB8C00',
-  colors: ['#E53935', '#4ADE80', '#3B82F6', '#F59E0B', '#8B5CF6']
-};
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
+import { DollarSign, ShoppingBag, TrendingUp, CreditCard } from 'lucide-react';
 
 export default function POSSales() {
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
 
   useEffect(() => {
-    setLoading(false);
+    // Mock data fetch
+    setTimeout(() => {
+      setData({
+        metrics: {
+          total_revenue: 3450.50,
+          total_orders: 128,
+          avg_order_value: 26.95,
+          top_payment_method: 'Card (75%)'
+        },
+        revenue_trend: [
+          { time: '10:00', amount: 120 },
+          { time: '11:00', amount: 350 },
+          { time: '12:00', amount: 850 },
+          { time: '13:00', amount: 920 },
+          { time: '14:00', amount: 450 },
+          { time: '15:00', amount: 300 },
+          { time: '16:00', amount: 560 },
+          { time: '17:00', amount: 890 },
+        ],
+        top_items: [
+          { name: 'Burger', quantity: 45, revenue: 675 },
+          { name: 'Pizza', quantity: 38, revenue: 570 },
+          { name: 'Pasta', quantity: 32, revenue: 480 },
+          { name: 'Salad', quantity: 28, revenue: 336 },
+          { name: 'Coke', quantity: 65, revenue: 195 },
+        ]
+      });
+      setLoading(false);
+    }, 1000);
   }, []);
-
-  // Mock data
-  const revenueData = [
-    { date: 'Mon', revenue: 2840, orders: 24 },
-    { date: 'Tue', revenue: 3210, orders: 28 },
-    { date: 'Wed', revenue: 4150, orders: 35 },
-    { date: 'Thu', revenue: 3890, orders: 31 },
-    { date: 'Fri', revenue: 5420, orders: 45 },
-    { date: 'Sat', revenue: 6730, orders: 58 },
-    { date: 'Sun', revenue: 5120, orders: 42 }
-  ];
-
-  const topItems = [
-    { name: 'Ribeye Steak', sales: 45, revenue: 2025 },
-    { name: 'Lobster Thermidor', sales: 28, revenue: 2240 },
-    { name: 'Truffle Pasta', sales: 52, revenue: 1820 },
-    { name: 'Sea Bass', sales: 34, revenue: 1530 },
-    { name: 'Caesar Salad', sales: 68, revenue: 1088 }
-  ];
-
-  const paymentMethods = [
-    { name: 'Card', value: 68, color: '#E53935' },
-    { name: 'Cash', value: 22, color: '#4ADE80' },
-    { name: 'Digital', value: 10, color: '#3B82F6' }
-  ];
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-950 p-6 flex items-center justify-center">
-        <div className="text-white">Loading Sales Data...</div>
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 p-6">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-heading mb-2" style={{ color: '#F5F5F7' }}>
-          POS SALES ANALYTICS
-        </h1>
-        <p style={{ color: '#A1A1AA' }}>Revenue insights and sales performance</p>
+    <div className="p-6 space-y-6 bg-zinc-950 min-h-screen">
+      <h1 className="text-3xl font-heading text-white mb-8">POS Sales Report</h1>
+
+      {/* Metric Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="card-dark p-6 rounded-2xl border border-white/10">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-zinc-400 text-sm font-medium">Total Revenue</p>
+              <h3 className="text-2xl font-bold text-white mt-1">€{data.metrics.total_revenue.toFixed(2)}</h3>
+            </div>
+            <div className="p-3 bg-green-500/10 rounded-xl">
+              <DollarSign className="w-6 h-6 text-green-500" />
+            </div>
+          </div>
+        </div>
+
+        <div className="card-dark p-6 rounded-2xl border border-white/10">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-zinc-400 text-sm font-medium">Total Orders</p>
+              <h3 className="text-2xl font-bold text-white mt-1">{data.metrics.total_orders}</h3>
+            </div>
+            <div className="p-3 bg-blue-500/10 rounded-xl">
+              <ShoppingBag className="w-6 h-6 text-blue-500" />
+            </div>
+          </div>
+        </div>
+
+        <div className="card-dark p-6 rounded-2xl border border-white/10">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-zinc-400 text-sm font-medium">Avg Order Value</p>
+              <h3 className="text-2xl font-bold text-white mt-1">€{data.metrics.avg_order_value.toFixed(2)}</h3>
+            </div>
+            <div className="p-3 bg-purple-500/10 rounded-xl">
+              <TrendingUp className="w-6 h-6 text-purple-500" />
+            </div>
+          </div>
+        </div>
+
+        <div className="card-dark p-6 rounded-2xl border border-white/10">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-zinc-400 text-sm font-medium">Top Payment</p>
+              <h3 className="text-lg font-bold text-white mt-2">{data.metrics.top_payment_method}</h3>
+            </div>
+            <div className="p-3 bg-orange-500/10 rounded-xl">
+              <CreditCard className="w-6 h-6 text-orange-500" />
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Stat Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="stat-card-dark p-6 rounded-xl">
-          <div className="flex items-center justify-between mb-2">
-            <DollarSign className="w-5 h-5 text-red-500" />
-            <span className="text-xs" style={{ color: '#71717A' }}>This Week</span>
-          </div>
-          <div className="text-3xl font-bold text-red-500 mb-1">€31,360</div>
-          <div className="text-sm" style={{ color: '#A1A1AA' }}>Total Revenue</div>
-        </div>
-
-        <div className="stat-card-dark p-6 rounded-xl">
-          <div className="flex items-center justify-between mb-2">
-            <ShoppingCart className="w-5 h-5 text-green-500" />
-            <span className="text-xs" style={{ color: '#71717A' }}>Avg</span>
-          </div>
-          <div className="text-3xl font-bold text-green-500 mb-1">263</div>
-          <div className="text-sm" style={{ color: '#A1A1AA' }}>Orders</div>
-        </div>
-
-        <div className="stat-card-dark p-6 rounded-xl">
-          <div className="flex items-center justify-between mb-2">
-            <TrendingUp className="w-5 h-5 text-blue-500" />
-            <span className="text-xs" style={{ color: '#71717A' }}>Growth</span>
-          </div>
-          <div className="text-3xl font-bold text-blue-500 mb-1">+12%</div>
-          <div className="text-sm" style={{ color: '#A1A1AA' }}>vs Last Week</div>
-        </div>
-
-        <div className="stat-card-dark p-6 rounded-xl">
-          <div className="flex items-center justify-between mb-2">
-            <Users className="w-5 h-5 text-yellow-500" />
-            <span className="text-xs" style={{ color: '#71717A' }}>Avg</span>
-          </div>
-          <div className="text-3xl font-bold text-yellow-500 mb-1">€119</div>
-          <div className="text-sm" style={{ color: '#A1A1AA' }}>Check Size</div>
-        </div>
-      </div>
-
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue Trend */}
-        <div className="chart-container-dark">
-          <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Revenue Trend</h3>
-          <ResponsiveContainer width="100%" height={300} minHeight={300}>
-            <LineChart data={revenueData}>
-              <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
-              <XAxis dataKey="date" stroke={chartTheme.text} />
-              <YAxis stroke={chartTheme.text} />
-              <Tooltip
-                contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-                labelStyle={{ color: '#F5F5F7' }}
-              />
-              <Legend wrapperStyle={{ color: chartTheme.text }} />
-              <Line type="monotone" dataKey="revenue" stroke={chartTheme.primary} strokeWidth={3} name="Revenue (€)" />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="lg:col-span-2 card-dark p-6 rounded-2xl border border-white/10">
+          <h3 className="text-xl font-heading text-white mb-6">Revenue Trend (Today)</h3>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={data.revenue_trend}>
+                <defs>
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                <XAxis dataKey="time" stroke="#71717A" />
+                <YAxis stroke="#71717A" />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#18181B', border: '1px solid #3F3F46', borderRadius: '8px' }}
+                  itemStyle={{ color: '#E4E4E7' }}
+                />
+                <Area type="monotone" dataKey="amount" stroke="#10B981" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={3} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        {/* Payment Methods */}
-        <div className="chart-container-dark">
-          <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Payment Methods</h3>
-          <ResponsiveContainer width="100%" height={300} minHeight={300}>
-            <PieChart>
-              <Pie
-                data={paymentMethods}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {paymentMethods.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#F5F5F7' }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+        {/* Top Items */}
+        <div className="card-dark p-6 rounded-2xl border border-white/10">
+          <h3 className="text-xl font-heading text-white mb-6">Top Selling Items</h3>
+          <div className="space-y-4">
+            {data.top_items.map((item, index) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-xl border border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-sm font-bold text-zinc-300">
+                    #{index + 1}
+                  </div>
+                  <div>
+                    <div className="text-white font-medium">{item.name}</div>
+                    <div className="text-xs text-zinc-500">{item.quantity} orders</div>
+                  </div>
+                </div>
+                <div className="font-bold text-green-400">€{item.revenue}</div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-
-      {/* Top Selling Items */}
-      <div className="chart-container-dark">
-        <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Top Selling Items</h3>
-        <ResponsiveContainer width="100%" height={300} minHeight={300}>
-          <BarChart data={topItems} layout="vertical">
-            <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
-            <XAxis type="number" stroke={chartTheme.text} />
-            <YAxis type="category" dataKey="name" stroke={chartTheme.text} width={150} />
-            <Tooltip
-              contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-              labelStyle={{ color: '#F5F5F7' }}
-            />
-            <Legend wrapperStyle={{ color: chartTheme.text }} />
-            <Bar dataKey="revenue" fill={chartTheme.primary} name="Revenue (€)" />
-          </BarChart>
-        </ResponsiveContainer>
       </div>
     </div>
   );

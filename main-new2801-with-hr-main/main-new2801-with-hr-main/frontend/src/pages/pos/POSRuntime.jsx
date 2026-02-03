@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, ShoppingCart, Send, CreditCard, X, Trash2, Users, TableIcon } from 'lucide-react';
+import { Grid, ShoppingCart, Send, CreditCard, X, Trash2, Users, TableIcon, ArrowRightLeft } from 'lucide-react';
 import axios from 'axios';
 import ModifierModalNew from '../../components/ModifierModalNew';
 import StateModal from '../../components/StateModal';
+import SplitBillModal from '../../components/SplitBillModal';
+import MergeTableModal from '../../components/MergeTableModal';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -16,25 +18,35 @@ function POSRuntime() {
   const [showPayment, setShowPayment] = useState(false);
   const [showModifier, setShowModifier] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState(null);
+
+  // New Modals
   const [showSplitModal, setShowSplitModal] = useState(false);
+  const [showMergeModal, setShowMergeModal] = useState(false);
+  const [showStateModal, setShowStateModal] = useState(false);
+  const [stateModalConfig, setStateModalConfig] = useState({});
+
   const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
 
   useEffect(() => {
     initSession();
-    
+
     // Keyboard shortcuts
     const handleKeyPress = (e) => {
-      if (e.key === 'Enter' && order && items.length > 0 && !showPayment && !showModifier) {
-        sendOrder();
+      if (e.key === 'Enter' && order && items.length > 0 && !showPayment && !showModifier && !showSplitModal) {
+        // e.preventDefault(); // Prevent accidental commits
+        // sendOrder(); // Maybe too dangerous for Enter key?
       }
-      if (e.key === 'Escape' && showModifier) {
-        setShowModifier(false);
+      if (e.key === 'Escape') {
+        if (showModifier) setShowModifier(false);
+        if (showPayment) setShowPayment(false);
+        if (showSplitModal) setShowSplitModal(false);
+        if (showMergeModal) setShowMergeModal(false);
       }
     };
-    
+
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [order, items, showPayment, showModifier]);
+  }, [order, items, showPayment, showModifier, showSplitModal, showMergeModal]);
 
   const initSession = async () => {
     try {
@@ -52,15 +64,20 @@ function POSRuntime() {
       loadMenuFromSnapshot(response.data.session.menu_snapshot.snapshot_id);
     } catch (error) {
       console.error('Error opening session:', error);
+      showError('Session Error', 'Failed to open POS session. Please try again.');
     }
   };
 
   const loadMenuFromSnapshot = async (snapshotId) => {
-    const snapshot = await axios.get(`${API_URL}/api/pos/snapshots/${snapshotId}`);
-    setCategories(snapshot.data.payload.categories || []);
-    setMenuItems(snapshot.data.payload.items || []);
-    if (snapshot.data.payload.categories?.length > 0) {
-      setSelectedCategory(snapshot.data.payload.categories[0].id);
+    try {
+      const snapshot = await axios.get(`${API_URL}/api/pos/snapshots/${snapshotId}`);
+      setCategories(snapshot.data.payload.categories || []);
+      setMenuItems(snapshot.data.payload.items || []);
+      if (snapshot.data.payload.categories?.length > 0) {
+        setSelectedCategory(snapshot.data.payload.categories[0].id);
+      }
+    } catch (error) {
+      console.error('Error loading menu:', error);
     }
   };
 
@@ -73,7 +90,7 @@ function POSRuntime() {
           venue_id: venueId,
           session_id: session.id,
           order_type: 'DINE_IN',
-          table_id: 'table-001'
+          table_id: 'table-001' // In real app, this comes from table selection
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -85,8 +102,14 @@ function POSRuntime() {
   };
 
   const handleMenuItemClick = (menuItem) => {
-    setSelectedMenuItem(menuItem);
-    setShowModifier(true);
+    // If item has modifier groups, show modal
+    if (menuItem.modifier_groups && menuItem.modifier_groups.length > 0) {
+      setSelectedMenuItem(menuItem);
+      setShowModifier(true);
+    } else {
+      // Add directly if no modifiers
+      addItemToOrder({ ...menuItem, quantity: 1, modifiers: [] });
+    }
   };
 
   const addItemToOrder = async (itemWithModifiers) => {
@@ -94,41 +117,72 @@ function POSRuntime() {
 
     try {
       const token = localStorage.getItem('restin_token');
+      // Pass order.id if it exists, otherwise wait for createOrder to finish
+      // Note: The await createOrder above doesn't return the order, it sets state.
+      // So we might need to rely on the response from a new createOrder call if order is null.
+
+      let currentOrder = order;
+      if (!currentOrder) {
+        // Create order logic duplicated here to ensure we have an ID immediately
+        const res = await axios.post(
+          `${API_URL}/api/pos/orders`,
+          {
+            venue_id: venueId,
+            session_id: session.id,
+            order_type: 'DINE_IN',
+            table_id: 'table-001'
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        currentOrder = res.data.order;
+        setOrder(currentOrder);
+      }
+
       const response = await axios.post(
-        `${API_URL}/api/pos/orders/${order.id}/items`,
+        `${API_URL}/api/pos/orders/${currentOrder.id}/items`,
         {
-          order_id: order.id,
+          order_id: currentOrder.id,
           venue_id: venueId,
           menu_item_id: itemWithModifiers.id,
           qty: itemWithModifiers.quantity || 1,
-          modifiers: itemWithModifiers.modifiers || []
+          modifiers: itemWithModifiers.modifiers || [],
+          special_instructions: itemWithModifiers.special_instructions
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setItems([...items, response.data.item]);
-      refreshOrder();
+      // Optimistic update or refresh
+      refreshOrder(currentOrder.id);
     } catch (error) {
       console.error('Error adding item:', error);
+      showError('Add Item Failed', 'Could not add item to order.');
     }
   };
 
   const removeItem = async (itemId) => {
     try {
+      const token = localStorage.getItem('restin_token');
+      await axios.delete(
+        `${API_URL}/api/pos/orders/${order.id}/items/${itemId}?venue_id=${venueId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      // Optimistic remove
       const newItems = items.filter(i => i.id !== itemId);
       setItems(newItems);
-      refreshOrder();
+      refreshOrder(order.id);
     } catch (error) {
       console.error('Error removing item:', error);
     }
   };
 
-  const refreshOrder = async () => {
-    if (!order) return;
+  const refreshOrder = async (orderId) => {
+    const oid = orderId || order?.id;
+    if (!oid) return;
+
     try {
       const token = localStorage.getItem('restin_token');
       const response = await axios.get(
-        `${API_URL}/api/pos/orders/${order.id}?venue_id=${venueId}`,
+        `${API_URL}/api/pos/orders/${oid}?venue_id=${venueId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setOrder(response.data.order);
@@ -146,10 +200,11 @@ function POSRuntime() {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert('Order sent to kitchen!');
-      refreshOrder();
+      showSuccess('Order Sent', 'The order has been sent to the kitchen.');
+      refreshOrder(order.id);
     } catch (error) {
       console.error('Error sending order:', error);
+      showError('Send Failed', 'Could not send order to kitchen.');
     }
   };
 
@@ -173,14 +228,25 @@ function POSRuntime() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert('Payment successful!');
+      showSuccess('Payment Successful', `Paid €${amount.toFixed(2)} via ${tenderType}`);
       setOrder(null);
       setItems([]);
       setShowPayment(false);
     } catch (error) {
       console.error('Error processing payment:', error);
-      alert('Payment failed: ' + error.response?.data?.error?.code);
+      showError('Payment Failed', error.response?.data?.error?.code || 'Unknown error');
     }
+  };
+
+  // Helper to show state modal
+  const showError = (title, message) => {
+    setStateModalConfig({ type: 'error', title, message });
+    setShowStateModal(true);
+  };
+
+  const showSuccess = (title, message) => {
+    setStateModalConfig({ type: 'success', title, message });
+    setShowStateModal(true);
   };
 
   const filteredItems = selectedCategory
@@ -190,46 +256,46 @@ function POSRuntime() {
   if (!session) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-white text-2xl">Loading POS...</div>
+        <div className="text-white text-2xl flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
+          Loading POS Session...
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col lg:flex-row">
-      {/* Left: Categories - Responsive */}
-      <div className="lg:w-48 bg-zinc-900 border-r border-white/10 p-3 lg:p-2 overflow-x-auto lg:overflow-x-visible">
-        <h3 className="font-bold text-xs mb-3" style={{ color: '#A1A1AA' }}>CATEGORIES</h3>
-        <div className="flex lg:flex-col gap-2">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`min-w-[120px] lg:w-full p-3 rounded-xl text-left font-medium transition-all duration-150 ${
-                selectedCategory === cat.id
-                  ? 'bg-red-600 text-white shadow-lg'
-                  : 'bg-zinc-800 hover:bg-zinc-700 border border-white/10 hover:border-red-500/50'
+    <div className="min-h-screen bg-zinc-950 flex flex-col md:flex-row overflow-hidden">
+      {/* Left: Categories - Improved Responsive Layout */}
+      <div className="md:w-48 lg:w-56 bg-zinc-900 border-r border-white/10 p-2 md:p-3 overflow-x-auto md:overflow-x-visible md:overflow-y-auto flex md:flex-col gap-2 shrink-0 h-16 md:h-auto">
+        <h3 className="hidden md:block font-bold text-xs mb-3 px-2" style={{ color: '#A1A1AA' }}>CATEGORIES</h3>
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => setSelectedCategory(cat.id)}
+            className={`min-w-[100px] md:w-full p-2 md:p-3 rounded-xl text-left font-medium transition-all duration-150 whitespace-nowrap md:whitespace-normal ${selectedCategory === cat.id
+                ? 'bg-red-600 text-white shadow-lg'
+                : 'bg-zinc-800 hover:bg-zinc-700 border border-white/10 hover:border-red-500/50'
               }`}
-              style={
-                selectedCategory === cat.id
-                  ? { boxShadow: '0 0 16px rgba(229, 57, 53, 0.4)' }
-                  : { color: '#D4D4D8' }
-              }
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
+            style={
+              selectedCategory === cat.id
+                ? { boxShadow: '0 0 16px rgba(229, 57, 53, 0.4)' }
+                : { color: '#D4D4D8' }
+            }
+          >
+            {cat.name}
+          </button>
+        ))}
       </div>
 
-      {/* Center: Items Grid - Responsive */}
-      <div className="flex-1 p-4 overflow-y-auto">
-        <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <h2 className="text-2xl font-heading" style={{ color: '#F5F5F7' }}>Menu Items</h2>
+      {/* Center: Items Grid - Flex Grow */}
+      <div className="flex-1 p-3 md:p-4 overflow-y-auto bg-zinc-950">
+        <div className="mb-4 flex flex-col sm:flex-row items-center justify-between gap-3 sticky top-0 bg-zinc-950/90 backdrop-blur-sm z-10 py-2">
+          <h2 className="text-xl md:text-2xl font-heading" style={{ color: '#F5F5F7' }}>Menu Items</h2>
           {order && items.length > 0 && (
             <button
               onClick={sendOrder}
-              className="btn-primary flex items-center gap-2 px-6 py-3 rounded-xl"
+              className="btn-primary flex items-center gap-2 px-6 py-3 rounded-xl shadow-lg shadow-red-900/20"
             >
               <Send className="w-5 h-5" />
               Send to Kitchen
@@ -237,18 +303,18 @@ function POSRuntime() {
           )}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 pb-24 md:pb-0">
           {filteredItems.map((item) => (
             <button
               key={item.id}
               onClick={() => handleMenuItemClick(item)}
-              className="bg-zinc-900 rounded-xl p-4 sm:p-6 text-center hover:bg-zinc-800 transition-all duration-150 border-2 border-transparent hover:border-red-500/50 active:scale-95"
+              className="bg-zinc-900 rounded-xl p-3 md:p-4 lg:p-6 text-center hover:bg-zinc-800 transition-all duration-150 border-2 border-transparent hover:border-red-500/50 active:scale-95 flex flex-col justify-between"
               style={{ minHeight: '120px' }}
             >
-              <div className="text-base sm:text-lg font-bold mb-2" style={{ color: '#F5F5F7' }}>
+              <div className="text-sm sm:text-base lg:text-lg font-bold mb-2 line-clamp-2" style={{ color: '#F5F5F7' }}>
                 {item.name}
               </div>
-              <div className="text-xl sm:text-2xl font-bold text-red-500">
+              <div className="text-lg sm:text-xl font-bold text-red-500">
                 €{item.price?.toFixed(2)}
               </div>
             </button>
@@ -256,48 +322,70 @@ function POSRuntime() {
         </div>
       </div>
 
-      {/* Right: Order Summary - Responsive */}
-      <div className="lg:w-96 bg-zinc-900 border-t lg:border-t-0 lg:border-l border-white/10 p-4 flex flex-col">
-        <div className="flex items-center gap-2 mb-4">
-          <ShoppingCart className="w-6 h-6 text-red-500" />
-          <h3 className="text-xl font-heading" style={{ color: '#F5F5F7' }}>Current Order</h3>
+      {/* Right: Order Summary - Fixed width on desktop, bottom sheet on mobile (conceptually) */}
+      <div className="md:w-80 lg:w-96 bg-zinc-900 border-t md:border-t-0 md:border-l border-white/10 flex flex-col h-[40vh] md:h-screen shrink-0 relative z-20 shadow-2xl md:shadow-none">
+        <div className="p-4 flex items-center justify-between border-b border-white/10">
+          <div className="flex items-center gap-2">
+            <ShoppingCart className="w-5 h-5 text-red-500" />
+            <h3 className="text-lg font-heading" style={{ color: '#F5F5F7' }}>Current Order</h3>
+          </div>
+          {order && (
+            <span className="text-xs font-mono text-zinc-500">#{order.id.slice(-6)}</span>
+          )}
         </div>
 
         {!order ? (
           <div className="flex-1 flex items-center justify-center">
-            <div className="text-center py-12">
-              <Grid className="w-16 h-16 mx-auto mb-4" style={{ color: '#52525B' }} />
+            <div className="text-center py-12 px-6">
+              <Grid className="w-12 h-12 mx-auto mb-4" style={{ color: '#52525B' }} />
               <p className="text-sm" style={{ color: '#A1A1AA' }}>No active order</p>
-              <p className="text-xs mt-1" style={{ color: '#71717A' }}>Add items to start</p>
+              <p className="text-xs mt-1" style={{ color: '#71717A' }}>Select items from the menu to start a new order.</p>
             </div>
           </div>
         ) : (
           <>
-            <div className="flex-1 space-y-2 mb-4 overflow-y-auto max-h-[400px]">
+            <div className="flex-1 p-3 overflow-y-auto space-y-2">
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-zinc-800 rounded-lg p-3 border border-white/5 hover:border-red-500/30 transition-colors"
+                  className="bg-zinc-800/50 rounded-lg p-3 border border-white/5 hover:border-red-500/30 transition-colors group"
                 >
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium" style={{ color: '#F5F5F7' }}>
+                      <div className="font-medium text-sm md:text-base" style={{ color: '#F5F5F7' }}>
                         {item.menu_item_name}
                       </div>
-                      <div className="text-sm mt-1" style={{ color: '#A1A1AA' }}>
-                        Qty: {item.qty}
+
+                      {/* Modifiers display */}
+                      {item.modifiers && item.modifiers.length > 0 && (
+                        <div className="mt-1 space-y-0.5">
+                          {item.modifiers.map((mod, idx) => (
+                            <div key={idx} className="text-xs text-zinc-400 pl-2 border-l border-zinc-700">
+                              + {mod.option_name}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="text-xs mt-1 flex items-center gap-2">
+                        <span style={{ color: '#A1A1AA' }}>Qty: {item.qty}</span>
+                        <span className={`px-1.5 py-0.5 rounded text-[10px] uppercase font-bold ${item.state === 'SENT' ? 'bg-green-900/30 text-green-400' : 'bg-blue-900/30 text-blue-400'
+                          }`}>
+                          {item.state || 'NEW'}
+                        </span>
                       </div>
-                      <div className="text-xs text-blue-400 mt-1">{item.state}</div>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
+
+                    <div className="flex flex-col items-end gap-1">
                       <div className="font-bold text-red-500">
-                        €{item.pricing.line_total.toFixed(2)}
+                        €{item.pricing?.line_total?.toFixed(2)}
                       </div>
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="p-1 rounded hover:bg-red-950/30 transition-colors"
+                        className="p-1.5 rounded hover:bg-red-950/50 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                        style={{ color: '#71717A' }}
                       >
-                        <Trash2 className="w-4 h-4 text-red-400" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -305,78 +393,59 @@ function POSRuntime() {
               ))}
             </div>
 
-            {/* Totals */}
-            <div className="border-t border-white/10 pt-4 space-y-2 mb-4">
-              <div className="flex justify-between text-sm">
-                <span style={{ color: '#A1A1AA' }}>Subtotal:</span>
-                <span style={{ color: '#D4D4D8' }}>€{order.totals.subtotal.toFixed(2)}</span>
+            {/* Totals & Actions */}
+            <div className="p-4 bg-zinc-900 border-t border-white/10 space-y-3">
+              <div className="space-y-1">
+                <div className="flex justify-between text-sm">
+                  <span style={{ color: '#A1A1AA' }}>Subtotal</span>
+                  <span style={{ color: '#D4D4D8' }}>€{order.totals.subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span style={{ color: '#A1A1AA' }}>Tax</span>
+                  <span style={{ color: '#D4D4D8' }}>€{order.totals.tax.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-xl font-bold pt-2 border-t border-white/10">
+                  <span style={{ color: '#F5F5F7' }}>Total</span>
+                  <span className="text-red-500">€{order.totals.grand_total.toFixed(2)}</span>
+                </div>
               </div>
-              <div className="flex justify-between text-sm">
-                <span style={{ color: '#A1A1AA' }}>Tax:</span>
-                <span style={{ color: '#D4D4D8' }}>€{order.totals.tax.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-xl font-bold">
-                <span style={{ color: '#F5F5F7' }}>Total:</span>
-                <span className="text-red-500">€{order.totals.grand_total.toFixed(2)}</span>
-              </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div className="space-y-2">
-              <button
-                onClick={() => setShowPayment(true)}
-                className="w-full btn-primary h-14 rounded-xl font-bold text-lg flex items-center justify-center gap-2"
-              >
-                <CreditCard className="w-6 h-6" />
-                Pay Now
-              </button>
-              
-              <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2 pt-2">
                 <button
-                  onClick={() => setShowSplitModal(true)}
-                  className="btn-secondary h-10 rounded-lg text-sm"
+                  onClick={() => setShowPayment(true)}
+                  className="w-full btn-primary h-12 md:h-14 rounded-xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg shadow-red-900/20"
                 >
-                  <Users className="w-4 h-4 mr-1 inline" />
-                  Split
+                  <CreditCard className="w-5 h-5" />
+                  Pay Now
                 </button>
-                <button className="btn-secondary h-10 rounded-lg text-sm">
-                  <TableIcon className="w-4 h-4 mr-1 inline" />
-                  Transfer
-                </button>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => setShowSplitModal(true)}
+                    className="btn-secondary h-10 rounded-lg text-sm bg-zinc-800 hover:bg-zinc-700 border-white/10"
+                  >
+                    <Users className="w-4 h-4 mr-1 inline" />
+                    Split Bill
+                  </button>
+                  <button
+                    onClick={() => setShowMergeModal(true)}
+                    className="btn-secondary h-10 rounded-lg text-sm bg-zinc-800 hover:bg-zinc-700 border-white/10"
+                  >
+                    <ArrowRightLeft className="w-4 h-4 mr-1 inline" />
+                    Merge Table
+                  </button>
+                </div>
               </div>
             </div>
           </>
         )}
       </div>
 
-      {/* Modifier Modal */}
+      {/* Modals */}
       {showModifier && selectedMenuItem && (
         <ModifierModalNew
           item={selectedMenuItem}
-          modifierGroups={[
-            {
-              id: 'cooking',
-              name: 'How would you like it cooked?',
-              required: false,
-              multiple: false,
-              options: [
-                { id: 'rare', name: 'Rare', price_adjustment: 0 },
-                { id: 'medium', name: 'Medium', price_adjustment: 0 },
-                { id: 'well', name: 'Well Done', price_adjustment: 0 }
-              ]
-            },
-            {
-              id: 'extras',
-              name: 'Add Extras',
-              required: false,
-              multiple: true,
-              options: [
-                { id: 'cheese', name: 'Extra Cheese', price_adjustment: 2.50 },
-                { id: 'bacon', name: 'Bacon', price_adjustment: 3.00 },
-                { id: 'sauce', name: 'Special Sauce', price_adjustment: 1.50 }
-              ]
-            }
-          ]}
+          modifierGroups={selectedMenuItem.modifier_groups || []}
           onAdd={(itemWithModifiers) => {
             addItemToOrder(itemWithModifiers);
             setShowModifier(false);
@@ -385,14 +454,39 @@ function POSRuntime() {
         />
       )}
 
-      {/* Payment Modal */}
+      {showSplitModal && order && (
+        <SplitBillModal
+          order={order}
+          items={items}
+          onClose={() => setShowSplitModal(false)}
+          onSplit={(type, data) => {
+            // Placeholder: Implementing split logic would go here
+            console.log('Split Data:', type, data);
+            setShowSplitModal(false);
+            showSuccess('Bill Split', 'Split bill functionality is simulated for now.');
+          }}
+        />
+      )}
+
+      {showMergeModal && (
+        <MergeTableModal
+          currentTableId="table-001"
+          onClose={() => setShowMergeModal(false)}
+          onMerge={(targetTableId) => {
+            console.log('Merging with:', targetTableId);
+            setShowMergeModal(false);
+            showSuccess('Tables Merged', `Successfully merged with ${targetTableId}`);
+          }}
+        />
+      )}
+
       {showPayment && order && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-          <div 
+          <div
             className="absolute inset-0 bg-black/70 backdrop-blur-md"
             onClick={() => setShowPayment(false)}
           />
-          
+
           <div className="relative z-10 w-full max-w-md card-dark p-8 rounded-2xl">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-heading" style={{ color: '#F5F5F7' }}>Payment</h3>
@@ -408,36 +502,33 @@ function POSRuntime() {
             <div className="space-y-3">
               <button
                 onClick={() => processPayment(order.totals.grand_total, 'CASH')}
-                className="w-full py-4 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transition-all active:scale-95"
+                className="w-full py-4 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-green-900/20"
               >
                 Cash
               </button>
               <button
                 onClick={() => processPayment(order.totals.grand_total, 'CARD')}
-                className="w-full py-4 btn-primary rounded-xl font-bold"
+                className="w-full py-4 btn-primary rounded-xl font-bold shadow-lg shadow-red-900/20"
               >
                 Card
               </button>
               <button
                 className="w-full py-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl font-bold border border-white/10 transition-all"
               >
-                Split Payment
+                Other
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Split Modal */}
-      {showSplitModal && (
+      {showStateModal && (
         <StateModal
-          type="info"
-          title="Split Bill"
-          message="Split bill functionality coming soon. You can split by seat or by item."
-          actions={[
-            { label: 'Close', onClick: () => setShowSplitModal(false) }
-          ]}
-          onClose={() => setShowSplitModal(false)}
+          type={stateModalConfig.type || 'info'}
+          title={stateModalConfig.title}
+          message={stateModalConfig.message}
+          actions={[{ label: 'OK', onClick: () => setShowStateModal(false) }]}
+          onClose={() => setShowStateModal(false)}
         />
       )}
     </div>

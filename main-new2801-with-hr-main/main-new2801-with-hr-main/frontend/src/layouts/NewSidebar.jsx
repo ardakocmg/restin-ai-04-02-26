@@ -190,82 +190,87 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
   };
 
   return (
-    <div className="fixed left-0 top-0 z-40 h-screen flex transition-all duration-300">
+    <div className="fixed left-0 top-0 z-40 h-screen flex transition-all duration-300 font-body">
       {/* Pane 1: Slim Domain Bar */}
       <aside
         className={cn(
-          "h-full flex flex-col items-center py-4 gap-4 border-r border-white/5 transition-all duration-300 shadow-[20px_0_40px_rgba(0,0,0,0.3)]",
-          domainBarExpanded ? "w-56 px-4" : "w-16"
+          "h-full flex flex-col items-center py-4 gap-4 border-r border-white/5 transition-all duration-300 shadow-[20px_0_40px_rgba(0,0,0,0.5)] z-50",
+          domainBarExpanded ? "w-64 px-4 bg-zinc-950/95 backdrop-blur-xl" : "w-20 bg-zinc-950"
         )}
-        style={{ backgroundColor: '#0A0A0B' }}
       >
         <div className={cn("flex items-center w-full mb-8", domainBarExpanded ? "justify-between px-2" : "justify-center")}>
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 bg-red-600 rounded-lg flex items-center justify-center shadow-lg shadow-red-900/40">
-              <span className="text-xl font-black text-white italic">R</span>
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-500/20">
+              <span className="text-2xl font-black text-white italic transform -skew-x-6">R</span>
             </div>
-            {domainBarExpanded && <span className="text-lg font-black text-white italic tracking-tighter">restin.ai</span>}
+            {domainBarExpanded && (
+              <div className="flex flex-col">
+                <span className="text-xl font-black text-white italic tracking-tighter leading-none">restin.ai</span>
+                <span className="text-[10px] font-bold text-red-500 tracking-[0.3em] uppercase">Enterprise</span>
+              </div>
+            )}
           </div>
           {domainBarExpanded && (
-            <Button variant="ghost" size="icon" onClick={toggleDomainExpand} className="text-zinc-500 hover:text-white h-8 w-8">
+            <Button variant="ghost" size="icon" onClick={toggleDomainExpand} className="text-zinc-500 hover:text-white h-8 w-8 hover:bg-white/5">
               <ChevronLeft className="h-4 w-4" />
             </Button>
           )}
         </div>
 
-        <div className="flex-1 w-full space-y-2">
+        <div className="flex-1 w-full space-y-3">
           {domains.map((domain) => (
             <button
               key={domain.id}
               onClick={() => handleDomainClick(domain.id)}
               className={cn(
-                'group relative flex items-center rounded-xl transition-all duration-300 w-full',
-                domainBarExpanded ? 'px-4 py-3 gap-3' : 'h-11 w-11 justify-center mx-auto',
+                'group relative flex items-center rounded-xl transition-all duration-300 w-full outline-none focus:ring-2 focus:ring-red-500/20',
+                domainBarExpanded ? 'px-4 py-3.5 gap-4' : 'h-12 w-12 justify-center mx-auto',
                 activeDomain === domain.id
-                  ? 'bg-red-600 shadow-[0_0_20px_rgba(229,57,53,0.3)] text-white'
-                  : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5'
+                  ? 'bg-gradient-to-r from-red-600 to-red-700 shadow-[0_0_20px_rgba(229,57,53,0.4)] text-white border border-red-500/20'
+                  : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/5 border border-transparent'
               )}
             >
-              <domain.icon className={cn("shrink-0", domainBarExpanded ? "h-5 w-5" : "h-5 w-5")} />
+              <domain.icon className={cn("shrink-0 transition-transform duration-300 group-hover:scale-110", domainBarExpanded ? "h-5 w-5" : "h-6 w-6")} />
               {domainBarExpanded && (
-                <span className="text-sm font-bold truncate uppercase tracking-widest">{domain.title}</span>
+                <span className="text-sm font-bold truncate tracking-wide">{domain.title}</span>
               )}
               {activeDomain === domain.id && !domainBarExpanded && (
-                <div className="absolute left-[-16px] w-[3px] h-6 bg-white rounded-r-full shadow-[0_0_12px_rgba(255,255,255,0.8)]" />
+                <div className="absolute left-[-20px] w-[4px] h-8 bg-white rounded-r-full shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-pulse" />
               )}
               {!domainBarExpanded && (
-                <div className="absolute left-16 px-3 py-1 bg-zinc-800 text-white text-[10px] font-bold rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 uppercase tracking-widest border border-white/5 shadow-2xl">
+                <div className="absolute left-16 px-4 py-2 bg-zinc-900 text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 translate-x-2 group-hover:translate-x-0 whitespace-nowrap z-50 uppercase tracking-widest border border-white/10 shadow-2xl">
                   {domain.title}
+                  <div className="absolute left-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-zinc-900 rotate-45 border-l border-b border-white/10"></div>
                 </div>
               )}
             </button>
           ))}
         </div>
 
-        <div className="mt-auto w-full flex flex-col items-center gap-2">
+        <div className="mt-auto w-full flex flex-col items-center gap-2 pb-4">
           {collapsed && (
             <Button
               variant="ghost"
               size="icon"
               onClick={onToggle}
               className={cn(
-                "h-11 w-11 rounded-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all",
-                domainBarExpanded && "w-full justify-start px-4 gap-3"
+                "h-12 w-12 rounded-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all border border-transparent hover:border-white/5",
+                domainBarExpanded && "w-full justify-start px-4 gap-4"
               )}
             >
               <ChevronRight className="h-5 w-5" />
-              {domainBarExpanded && <span className="text-sm font-bold uppercase tracking-widest">Open Menu</span>}
+              {domainBarExpanded && <span className="text-sm font-bold tracking-wide">Open Menu</span>}
             </Button>
           )}
           <button
             onClick={toggleDomainExpand}
             className={cn(
-              "h-11 w-11 flex items-center justify-center rounded-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all",
-              domainBarExpanded && "w-full justify-start px-4 gap-3"
+              "h-12 w-12 flex items-center justify-center rounded-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all border border-transparent hover:border-white/5",
+              domainBarExpanded && "w-full justify-start px-4 gap-4"
             )}
           >
             {domainBarExpanded ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
-            {domainBarExpanded && <span className="text-sm font-bold uppercase tracking-widest">Collapse Bar</span>}
+            {domainBarExpanded && <span className="text-sm font-bold tracking-wide">Collapse Bar</span>}
           </button>
         </div>
       </aside>
@@ -273,24 +278,23 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
       {/* Pane 2: Original Accordion Bar */}
       <aside
         className={cn(
-          'w-64 h-full flex flex-col transition-all duration-300 border-r border-white/5 overflow-hidden shadow-2xl',
-          collapsed ? 'w-0' : 'w-64'
+          'h-full flex flex-col transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] border-r border-white/5 overflow-hidden shadow-[10px_0_30px_rgba(0,0,0,0.3)] z-40 bg-zinc-950',
+          collapsed ? 'w-0 opacity-0' : 'w-72 opacity-100'
         )}
-        style={{ backgroundColor: '#0A0A0B' }}
       >
-        <div className="flex items-center justify-between h-16 px-4 shrink-0" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+        <div className="flex items-center justify-between h-20 px-6 shrink-0 border-b border-white/5 bg-zinc-950/50 backdrop-blur-sm">
           {!collapsed && (
-            <h1 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-100">
+            <h1 className="text-xs font-black uppercase tracking-[0.25em] text-zinc-400">
               {domains.find(d => d.id === activeDomain)?.title || 'Navigation'}
             </h1>
           )}
-          <Button variant="ghost" size="icon" onClick={onToggle} className="text-zinc-400">
-            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          <Button variant="ghost" size="icon" onClick={onToggle} className="text-zinc-500 hover:text-white hover:bg-white/5 h-8 w-8 rounded-lg">
+            <ChevronLeft className="h-4 w-4" />
           </Button>
         </div>
 
-        <ScrollArea className="flex-1 px-3 py-4">
-          <nav className="space-y-1">
+        <ScrollArea className="flex-1 px-4 py-6">
+          <nav className="space-y-1.5">
             {menuItems
               .filter(item => getDomainForGroup(item.group) === activeDomain)
               .map((item) => (
@@ -298,34 +302,44 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                   {item.href && !item.children ? (
                     <Link
                       to={item.href}
-                      className={cn('flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200', collapsed && 'justify-center')}
+                      className={cn(
+                        'group flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 border border-transparent',
+                        collapsed && 'justify-center'
+                      )}
                       style={isActive(item.href) ? {
-                        backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                        backgroundColor: 'rgba(229, 57, 53, 0.08)',
                         color: '#EF4444',
-                        border: '1px solid rgba(239, 68, 68, 0.3)'
-                      } : { color: '#E2E8F0', border: '1px solid transparent' }}
+                        borderColor: 'rgba(229, 57, 53, 0.2)',
+                        boxShadow: '0 0 15px rgba(229, 57, 53, 0.05)'
+                      } : { color: '#A1A1AA' }}
                       onClick={() => setActiveSubItem(item)}
                     >
-                      <item.icon className="h-5 w-5 flex-shrink-0" />
-                      {!collapsed && <span className="text-sm font-medium">{item.title}</span>}
+                      <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isActive(item.href) ? "text-red-500" : "text-zinc-500 group-hover:text-zinc-300")} />
+                      {!collapsed && <span className={cn("text-sm font-medium", isActive(item.href) ? "font-bold" : "")}>{item.title}</span>}
+                      {isActive(item.href) && !collapsed && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)]"></div>}
                     </Link>
                   ) : (
                     <div className="space-y-1">
                       <button
                         onClick={() => !collapsed && toggleGroup(item.group)}
-                        className={cn('w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200', collapsed && 'justify-center')}
-                        style={{ backgroundColor: isGroupActive(item.children) ? 'rgba(255, 255, 255, 0.05)' : 'transparent', color: isGroupActive(item.children) ? '#F8FAFC' : '#CBD5E1' }}
+                        className={cn(
+                          'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 group hover:bg-white/5',
+                          collapsed && 'justify-center'
+                        )}
+                        style={{
+                          color: isGroupActive(item.children) ? '#F4F4F5' : '#71717A'
+                        }}
                       >
-                        <item.icon className="h-5 w-5 flex-shrink-0" />
+                        <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isGroupActive(item.children) ? "text-zinc-200" : "text-zinc-600 group-hover:text-zinc-400")} />
                         {!collapsed && (
                           <>
-                            <span className="flex-1 text-left text-sm font-medium">{item.title}</span>
-                            <ChevronRight className={cn('h-4 w-4 transition-transform', expandedGroups.includes(item.group) && 'rotate-90')} />
+                            <span className="flex-1 text-left text-sm font-medium tracking-wide">{item.title}</span>
+                            <ChevronRight className={cn('h-4 w-4 transition-transform duration-300 opacity-50', expandedGroups.includes(item.group) && 'rotate-90 opacity-100')} />
                           </>
                         )}
                       </button>
                       {!collapsed && expandedGroups.includes(item.group) && item.children && (
-                        <div className="ml-6 space-y-1 mt-1">
+                        <div className="ml-4 pl-4 border-l border-white/5 space-y-1 mt-1 py-1">
                           {item.children.map((child) => (
                             <button
                               key={child.href}
@@ -333,10 +347,16 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                                 navigate(child.href);
                                 setActiveSubItem(child);
                               }}
-                              className={cn('w-full text-left block px-3 py-1.5 rounded-md text-sm transition-colors border outline-none')}
-                              style={isActive(child.href) ? { backgroundColor: 'rgba(239, 68, 68, 0.15)', color: '#EF4444', border: '1px solid rgba(239, 68, 68, 0.3)', fontWeight: 600 } : { color: '#CBD5E1', border: '1px solid transparent' }}
+                              className={cn('w-full text-left block px-3 py-2 rounded-lg text-sm transition-all border border-transparent outline-none relative overflow-hidden')}
+                              style={isActive(child.href) ? {
+                                backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                                color: '#EF4444',
+                                borderColor: 'rgba(229, 57, 53, 0.1)',
+                                fontWeight: 600
+                              } : { color: '#71717A' }}
                             >
-                              {child.title}
+                              <span className="relative z-10">{child.title}</span>
+                              {isActive(child.href) && <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)]"></div>}
                             </button>
                           ))}
                         </div>
@@ -352,32 +372,33 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
       {/* Pane 3: Tertiary Segment */}
       <aside
         className={cn(
-          'h-full flex flex-col transition-all duration-300 border-r border-white/5 shadow-inner',
-          hasTertiary ? 'w-56 opacity-100' : 'w-0 opacity-0 overflow-hidden border-none'
+          'h-full flex flex-col transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] border-r border-white/5 shadow-inner z-30 bg-[#050506]',
+          hasTertiary ? 'w-60 opacity-100 translate-x-0' : 'w-0 opacity-0 -translate-x-full overflow-hidden border-none'
         )}
-        style={{ backgroundColor: '#070708' }}
       >
-        <div className="h-16 flex items-center px-6 border-b border-white/5">
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.1em] text-zinc-400">
-            {activeSubItem?.title} Details
+        <div className="h-20 flex items-center px-6 border-b border-white/5 bg-[#050506]/80 backdrop-blur-sm">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-zinc-700"></span>
+            {activeSubItem?.title}
           </h2>
         </div>
-        <ScrollArea className="flex-1 px-3 py-6">
-          <nav className="space-y-1">
+        <ScrollArea className="flex-1 px-4 py-6">
+          <nav className="space-y-2">
             {activeSubItem?.subs?.map((sub) => (
               <Button
                 key={sub.id}
                 variant="ghost"
                 className={cn(
-                  'w-full justify-start gap-3 px-4 py-2.5 h-auto rounded-lg text-[11px] font-bold transition-all border border-transparent',
+                  'w-full justify-start gap-3 px-4 py-6 h-auto rounded-xl text-xs font-bold transition-all border border-transparent group relative overflow-hidden',
                   location.search.includes(`type=${sub.id}`)
-                    ? 'bg-red-600/10 text-red-500 border-red-600/20'
+                    ? 'bg-red-600/5 text-red-500 border-red-600/10'
                     : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-200'
                 )}
                 onClick={() => {
                   navigate(`${activeSubItem.href}?type=${sub.id}`);
                 }}
               >
+                <div className={cn("w-1.5 h-1.5 rounded-full transition-all", location.search.includes(`type=${sub.id}`) ? "bg-red-500 shadow-[0_0_5px_rgba(229,57,53,0.5)]" : "bg-zinc-800 group-hover:bg-zinc-600")}></div>
                 {sub.title}
               </Button>
             ))}

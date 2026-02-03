@@ -66,7 +66,8 @@ import RecipeManagementComplete from "./pages/inventory/RecipeManagementComplete
 import ProductionManagementComplete from "./pages/inventory/ProductionManagementComplete";
 import StockTransfersComplete from "./pages/inventory/StockTransfersComplete";
 import KDSPerformance from "./pages/reports/KDSPerformance";
-import InventoryReports from "./pages/reports/InventoryReports";
+import InventoryStatus from "./pages/reports/InventoryStatus";
+import POSSales from "./pages/reports/POSSales";
 import POSSalesReport from "./pages/reports/POSSalesReport";
 import KDSPerformanceReport from "./pages/reports/KDSPerformanceReport";
 import InventoryReport from "./pages/reports/InventoryReport";
@@ -387,8 +388,8 @@ function App() {
                                   <Route path="inventory-production-complete" element={<ProductionManagementComplete />} />
                                   <Route path="inventory-transfers-complete" element={<StockTransfersComplete />} />
                                   <Route path="reports/kds" element={<KDSPerformance />} />
-                                  <Route path="reports/sales" element={<POSSalesReport />} />
-                                  <Route path="reports/inventory" element={<InventoryReports />} />
+                                  <Route path="reports/sales" element={<POSSales />} />
+                                  <Route path="reports/inventory" element={<InventoryStatus />} />
                                   <Route path="reports/pos-sales-detailed" element={<POSSalesReport />} />
                                   <Route path="reports/kds-performance-detailed" element={<KDSPerformanceReport />} />
                                   <Route path="reports/inventory-detailed" element={<InventoryReport />} />

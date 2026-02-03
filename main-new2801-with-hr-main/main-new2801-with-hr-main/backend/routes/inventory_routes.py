@@ -1,6 +1,8 @@
 """Inventory routes - stock management, ledger, items"""
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Optional
+from datetime import datetime, timezone
+import uuid
 
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
@@ -165,5 +167,137 @@ def create_inventory_router():
         
         entries = await db.stock_ledger.find(query, {"_id": 0}).sort("created_at", -1).to_list(500)
         return entries
+
+    @router.post("/venues/{venue_id}/inventory/transfer")
+    async def transfer_inventory(
+        venue_id: str,
+        transfer_data: dict,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """
+        Transfer inventory from one venue to another.
+        transfer_data: {
+            "item_id": str,
+            "to_venue_id": str,
+            "quantity": float,
+            "reason": str (optional)
+        }
+        """
+        await check_venue_access(current_user, venue_id)
+        
+        from_venue_id = venue_id
+        to_venue_id = transfer_data["to_venue_id"]
+        item_id = transfer_data["item_id"]
+        quantity = float(transfer_data["quantity"])
+        reason = transfer_data.get("reason", "Stock Transfer")
+        
+        # 1. Verify source item
+        source_item = await db.inventory_items.find_one(
+            {"id": item_id, "venue_id": from_venue_id},
+            {"_id": 0}
+        )
+        if not source_item:
+            raise HTTPException(404, "Source item not found")
+        
+        if source_item["current_stock"] < quantity:
+            raise HTTPException(400, f"Insufficient stock. Available: {source_item['current_stock']}")
+
+        # 2. Verify destination venue exists (optional, but good practice)
+        # Assuming we trust the ID for now or it's checked by permissions eventually
+        
+        # 3. Handle Destination Item (Find or Create)
+        # We try to find an item with the same SKU in the destination venue
+        dest_item = await db.inventory_items.find_one(
+            {"venue_id": to_venue_id, "sku": source_item["sku"]},
+            {"_id": 0}
+        )
+        
+        dest_item_id = None
+        
+        if dest_item:
+            dest_item_id = dest_item["id"]
+        else:
+            # Create the item in destination if it doesn't exist
+            # This is a simplification; in strict systems, we might require it to exist first.
+            # But for usability, auto-creating mirrors is helpful.
+            dest_item_data = source_item.copy()
+            dest_item_data["id"] = str(uuid.uuid4())
+            dest_item_data["venue_id"] = to_venue_id
+            dest_item_data["current_stock"] = 0
+            dest_item_data["min_stock"] = 0
+            # Reset logs/history
+            if "created_at" in dest_item_data:
+                 dest_item_data["created_at"] = datetime.now(timezone.utc).isoformat()
+            
+            await db.inventory_items.insert_one(dest_item_data)
+            dest_item_id = dest_item_data["id"]
+
+        # 4. Create Ledger Entries (Atomic-ish)
+        
+        # OUT from Source
+        # We reuse the create_ledger_entry logic or call it directly? 
+        # Calling directly via function call would be cleaner but let's just insert for speed/separation
+        
+        # Source Ledger
+        last_entry_src = await db.stock_ledger.find_one(
+            {"venue_id": from_venue_id}, sort=[("created_at", -1)]
+        )
+        prev_hash_src = last_entry_src["entry_hash"] if last_entry_src else "genesis"
+        
+        entry_data_src = {
+            "item_id": item_id,
+            "action": LedgerAction.OUT,
+            "quantity": quantity,
+            "reason": f"Transfer to {to_venue_id}"
+        }
+        entry_hash_src = compute_hash(entry_data_src, prev_hash_src)
+        
+        entry_src = StockLedgerEntry(
+            venue_id=from_venue_id,
+            item_id=item_id,
+            action=LedgerAction.OUT,
+            quantity=quantity,
+            reason=reason,
+            user_id=current_user["id"],
+            prev_hash=prev_hash_src,
+            entry_hash=entry_hash_src
+        )
+        await db.stock_ledger.insert_one(entry_src.model_dump())
+        await db.inventory_items.update_one(
+            {"id": item_id},
+            {"$inc": {"current_stock": -quantity}}
+        )
+
+        # IN to Destination
+        last_entry_dest = await db.stock_ledger.find_one(
+            {"venue_id": to_venue_id}, sort=[("created_at", -1)]
+        )
+        prev_hash_dest = last_entry_dest["entry_hash"] if last_entry_dest else "genesis"
+        
+        entry_data_dest = {
+            "item_id": dest_item_id,
+            "action": LedgerAction.IN,
+            "quantity": quantity,
+            "reason": f"Transfer from {from_venue_id}"
+        }
+        entry_hash_dest = compute_hash(entry_data_dest, prev_hash_dest)
+        
+        entry_dest = StockLedgerEntry(
+            venue_id=to_venue_id,
+            item_id=dest_item_id,
+            action=LedgerAction.IN,
+            quantity=quantity,
+            reason=reason,
+            user_id=current_user["id"],
+            prev_hash=prev_hash_dest,
+            entry_hash=entry_hash_dest
+        )
+        await db.stock_ledger.insert_one(entry_dest.model_dump())
+        await db.inventory_items.update_one(
+            {"id": dest_item_id},
+            {"$inc": {"current_stock": quantity}}
+        )
+        
+        return {"message": "Transfer successful", "source_entry": entry_src.model_dump(), "dest_entry": entry_dest.model_dump()}
 
     return router

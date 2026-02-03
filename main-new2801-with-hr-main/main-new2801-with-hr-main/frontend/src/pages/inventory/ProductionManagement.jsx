@@ -1,139 +1,254 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Factory, Clock, CheckCircle } from 'lucide-react';
+import { Plus, Factory, Play, CheckCircle, Clock } from 'lucide-react';
 import axios from 'axios';
-import StateModal from '../../components/StateModal';
+import { toast } from 'sonner';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '../../components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../components/ui/select';
+import { format } from 'date-fns';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function ProductionManagement() {
   const [batches, setBatches] = useState([]);
+  const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
+  const [venueId] = useState(localStorage.getItem('currentVenueId') || 'venue-caviar-bull');
+
+  const [formData, setFormData] = useState({
+    recipe_id: '',
+    batch_date: format(new Date(), 'yyyy-MM-dd'),
+    quantity: 1, // Multiplier of recipe yield
+    items: [] // Will be populated from recipe
+  });
 
   useEffect(() => {
-    // Mock data for now
-    setBatches([
-      {
-        id: 'batch-001',
-        recipe_name: 'House-made Pasta',
-        batch_qty: 20,
-        unit: 'kg',
-        status: 'COMPLETED',
-        started_at: '2026-01-27T08:00:00Z',
-        completed_at: '2026-01-27T12:00:00Z'
-      },
-      {
-        id: 'batch-002',
-        recipe_name: 'Tomato Sauce Base',
-        batch_qty: 15,
-        unit: 'L',
-        status: 'IN_PROGRESS',
-        started_at: '2026-01-27T10:00:00Z',
-        completed_at: null
-      }
-    ]);
-    setLoading(false);
+    loadData();
   }, []);
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'COMPLETED':
-        return 'bg-green-950/30 text-green-400 border-green-500/30';
-      case 'IN_PROGRESS':
-        return 'bg-blue-950/30 text-blue-400 border-blue-500/30';
-      case 'CANCELLED':
-        return 'bg-red-950/30 text-red-400 border-red-500/30';
-      default:
-        return 'bg-zinc-900 text-zinc-400 border-white/10';
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('restin_token');
+      const headers = { Authorization: `Bearer ${token}` };
+
+      // We need endpoints from central_kitchen.py
+      const [batchesRes, recipesRes] = await Promise.all([
+        axios.get(`${API_URL}/api/venues/${venueId}/production/batches`, { headers }),
+        axios.get(`${API_URL}/api/venues/${venueId}/recipes/engineered`, { headers })
+      ]);
+
+      setBatches(batchesRes.data || []);
+      setRecipes(recipesRes.data || []);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      toast.error('Failed to load production data');
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-zinc-950 p-6 flex items-center justify-center">
-        <div className="text-white">Loading Production...</div>
-      </div>
-    );
-  }
+  const handleStartBatch = async (batchId) => {
+    try {
+      const token = localStorage.getItem('restin_token');
+      await axios.post(
+        `${API_URL}/api/venues/${venueId}/production/batches/${batchId}/start`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success('Batch started');
+      loadData();
+    } catch (error) {
+      toast.error('Failed to start batch');
+    }
+  };
+
+  const handleCompleteBatch = async (batchId) => {
+    try {
+      const token = localStorage.getItem('restin_token');
+      await axios.post(
+        `${API_URL}/api/venues/${venueId}/production/batches/${batchId}/complete`,
+        { quality_checked: true, quality_notes: "Routine check passed" },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success('Batch completed');
+      loadData();
+    } catch (error) {
+      toast.error('Failed to complete batch');
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const token = localStorage.getItem('restin_token');
+
+      // Prepare correct payload structure for ProductionBatchRequest
+      // items: List[Dict[str, Any]] -> [{item_id, quantity...}]
+      // Here we assume simple one-item output for the batch for now or derived from recipe
+      // But the model expects 'items' list.
+      // Let's Find the recipe and its yield item (simplified)
+      const recipe = recipes.find(r => r.id === formData.recipe_id);
+      if (!recipe) return;
+
+      const payload = {
+        batch_date: formData.batch_date,
+        items: [
+          {
+            item_id: recipe.id, // Using recipe ID as item ID proxy or we need a real produced item ID
+            item_name: recipe.recipe_name,
+            quantity: formData.quantity * recipe.servings,
+            unit: 'srv',
+            recipe_id: recipe.id
+          }
+        ],
+        internal_orders: []
+      };
+
+      await axios.post(
+        `${API_URL}/api/venues/${venueId}/production/batches`,
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success('Batch scheduled');
+      setShowCreateModal(false);
+      loadData();
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to create batch');
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'completed': return 'text-green-500 border-green-500/20 bg-green-500/10';
+      case 'in_progress': return 'text-blue-500 border-blue-500/20 bg-blue-500/10';
+      default: return 'text-zinc-500 border-zinc-700 bg-zinc-800';
+    }
+  };
+
+  if (loading) return <div className="p-6 text-white">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-zinc-950 p-6">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-4xl font-heading" style={{ color: '#F5F5F7' }}>
-            PRODUCTION MANAGEMENT
-          </h1>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="btn-primary px-6 py-3 rounded-xl flex items-center gap-2"
-          >
-            <Plus className="w-5 h-5" />
-            New Batch
-          </button>
+    <div className="min-h-screen bg-zinc-950 p-6 font-body text-zinc-200">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-heading font-bold text-white mb-2">Production Management</h1>
+          <p className="text-zinc-500">Track kitchen production batches and status.</p>
         </div>
-        <p style={{ color: '#A1A1AA' }}>Track production batches and recipe execution</p>
+        <Button onClick={() => setShowCreateModal(true)} className="bg-red-600 hover:bg-red-700 text-white font-bold">
+          <Plus className="w-4 h-4 mr-2" />
+          Plan Batch
+        </Button>
       </div>
 
-      {/* Production Batches */}
       <div className="space-y-4">
-        {batches.map((batch) => (
-          <div
-            key={batch.id}
-            className="card-dark p-6 rounded-xl hover:border-red-500/30 transition-all"
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(229, 57, 53, 0.15)' }}>
-                  <Factory className="w-6 h-6 text-red-500" />
+        {batches.length === 0 ? (
+          <div className="text-center py-20 bg-zinc-900/50 rounded-xl border border-dashed border-zinc-800">
+            <Factory className="w-12 h-12 text-zinc-700 mx-auto mb-4" />
+            <h3 className="text-lg font-bold text-zinc-500">No Active Batches</h3>
+          </div>
+        ) : (
+          batches.map(batch => (
+            <div key={batch.id} className="bg-zinc-900/50 border border-white/5 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 hover:border-white/10 transition-all">
+              <div className="flex items-center gap-4 flex-1">
+                <div className="p-3 rounded-lg bg-zinc-800 border border-white/5">
+                  <Factory className="w-6 h-6 text-zinc-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold mb-1" style={{ color: '#F5F5F7' }}>
-                    {batch.recipe_name}
-                  </h3>
-                  <p className="text-sm" style={{ color: '#A1A1AA' }}>
-                    Batch: {batch.batch_qty} {batch.unit}
-                  </p>
+                  <h3 className="text-lg font-bold text-white">{batch.items?.[0]?.item_name || 'Production Batch'}</h3>
+                  <p className="text-sm text-zinc-500 font-mono">{batch.batch_number}</p>
                 </div>
               </div>
-              <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(batch.status)}`}>
-                {batch.status}
-              </span>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/10">
-              <div>
-                <p className="text-xs mb-1" style={{ color: '#71717A' }}>Started</p>
-                <p className="text-sm" style={{ color: '#D4D4D8' }}>
-                  {new Date(batch.started_at).toLocaleTimeString()}
-                </p>
-              </div>
-              {batch.completed_at && (
-                <div>
-                  <p className="text-xs mb-1" style={{ color: '#71717A' }}>Completed</p>
-                  <p className="text-sm" style={{ color: '#D4D4D8' }}>
-                    {new Date(batch.completed_at).toLocaleTimeString()}
-                  </p>
+              <div className="flex items-center gap-8">
+                <div className="text-center">
+                  <span className="block text-xs uppercase font-bold text-zinc-600">Quantity</span>
+                  <span className="text-lg font-bold text-white">{batch.items?.[0]?.quantity} {batch.items?.[0]?.unit}</span>
                 </div>
-              )}
+                <div className="text-center">
+                  <span className="block text-xs uppercase font-bold text-zinc-600">Date</span>
+                  <span className="text-sm font-medium text-zinc-300">{batch.batch_date}</span>
+                </div>
+                <div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border ${getStatusColor(batch.status)}`}>
+                    {batch.status.replace('_', ' ')}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                {batch.status === 'planned' && (
+                  <Button size="sm" onClick={() => handleStartBatch(batch.id)} className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Play className="w-4 h-4 mr-2" /> Start
+                  </Button>
+                )}
+                {batch.status === 'in_progress' && (
+                  <Button size="sm" onClick={() => handleCompleteBatch(batch.id)} className="bg-green-600 hover:bg-green-700 text-white">
+                    <CheckCircle className="w-4 h-4 mr-2" /> Complete
+                  </Button>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
+        <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-200">
+          <DialogHeader>
+            <DialogTitle className="text-white">Plan Production Batch</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <label className="text-xs uppercase font-bold text-zinc-500">Recipe</label>
+              <Select onValueChange={(val) => setFormData({ ...formData, recipe_id: val })}>
+                <SelectTrigger className="bg-zinc-900 border-zinc-800"><SelectValue placeholder="Select Recipe" /></SelectTrigger>
+                <SelectContent className="bg-zinc-900 border-zinc-800 text-zinc-200">
+                  {recipes.map(r => (
+                    <SelectItem key={r.id} value={r.id}>{r.recipe_name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-xs uppercase font-bold text-zinc-500">Multiplier (Batches)</label>
+              <Input
+                type="number"
+                value={formData.quantity}
+                onChange={(e) => setFormData({ ...formData, quantity: parseFloat(e.target.value) })}
+                className="bg-zinc-900 border-zinc-800"
+              />
+            </div>
+            <div>
+              <label className="text-xs uppercase font-bold text-zinc-500">Date</label>
+              <Input
+                type="date"
+                value={formData.batch_date}
+                onChange={(e) => setFormData({ ...formData, batch_date: e.target.value })}
+                className="bg-zinc-900 border-zinc-800"
+              />
             </div>
           </div>
-        ))}
-      </div>
-
-      {/* Create Modal Placeholder */}
-      {showCreateModal && (
-        <StateModal
-          type="info"
-          title="Create Production Batch"
-          message="Production batch creation form will be implemented here. Select recipe, enter quantity, and start production."
-          actions={[
-            { label: 'Close', onClick: () => setShowCreateModal(false) }
-          ]}
-          onClose={() => setShowCreateModal(false)}
-        />
-      )}
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setShowCreateModal(false)}>Cancel</Button>
+            <Button onClick={handleSubmit} className="bg-red-600 text-white">Schedule</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

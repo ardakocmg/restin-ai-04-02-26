@@ -100,7 +100,7 @@ def effective_permissions(user_role: str, venue_settings: dict = None) -> set:
     2. Apply venue-specific overrides (deny first, then grant)
     """
     # Get base permissions for role
-    base_perms = ROLE_DEFAULT_PERMISSIONS.get(user_role, set()).copy()
+    base_perms = ROLE_DEFAULT_PERMISSIONS.get(user_role.lower(), set()).copy()
     
     # Apply venue overrides if present
     if venue_settings:
