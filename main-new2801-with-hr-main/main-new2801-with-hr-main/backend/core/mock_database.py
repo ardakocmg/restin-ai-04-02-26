@@ -148,9 +148,7 @@ class MockDatabase:
             "id": "venue_1",
             "_id": "venue_1",
             "name": "Malta Head Office",
-            "currency": "EUR",
-            "type": "HeadOffice",
-            "brand": "Restin"
+            "currency": "EUR"
         }])
         
         self.shifts = MockCollection("shifts", [])
