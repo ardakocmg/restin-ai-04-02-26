@@ -1,0 +1,129 @@
+import React, { useState, useEffect } from 'react';
+import { Edit, Plus, TrendingUp, TrendingDown } from 'lucide-react';
+import axios from 'axios';
+import StateModal from '../../components/StateModal';
+
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+
+export default function StockAdjustments() {
+  const [adjustments, setAdjustments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
+
+  useEffect(() => {
+    // Mock data
+    setAdjustments([
+      {
+        id: 'adj-001',
+        item_name: 'Wagyu Beef',
+        qty_delta: -2.5,
+        unit: 'kg',
+        reason: 'STOCK_ADJUSTMENT',
+        notes: 'Physical count correction',
+        created_at: '2026-01-27T09:15:00Z'
+      },
+      {
+        id: 'adj-002',
+        item_name: 'Olive Oil',
+        qty_delta: +5.0,
+        unit: 'L',
+        reason: 'RECEIVING_CORRECTION',
+        notes: 'Missing from PO',
+        created_at: '2026-01-26T14:20:00Z'
+      }
+    ]);
+    setLoading(false);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-zinc-950 p-6 flex items-center justify-center">
+        <div className="text-white">Loading Adjustments...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-zinc-950 p-6">
+      {/* Header */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-4xl font-heading" style={{ color: '#F5F5F7' }}>
+            STOCK ADJUSTMENTS
+          </h1>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="btn-primary px-6 py-3 rounded-xl flex items-center gap-2"
+          >
+            <Plus className="w-5 h-5" />
+            New Adjustment
+          </button>
+        </div>
+        <p style={{ color: '#A1A1AA' }}>Manual stock corrections and adjustments</p>
+      </div>
+
+      {/* Adjustments List */}
+      <div className="space-y-4">
+        {adjustments.map((adj) => (
+          <div key={adj.id} className="card-dark p-6 rounded-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div 
+                  className="p-3 rounded-lg"
+                  style={{ 
+                    backgroundColor: adj.qty_delta > 0 
+                      ? 'rgba(74, 222, 128, 0.15)' 
+                      : 'rgba(229, 57, 53, 0.15)' 
+                  }}
+                >
+                  {adj.qty_delta > 0 ? (
+                    <TrendingUp className="w-6 h-6 text-green-500" />
+                  ) : (
+                    <TrendingDown className="w-6 h-6 text-red-500" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1" style={{ color: '#F5F5F7' }}>
+                    {adj.item_name}
+                  </h3>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm px-2 py-1 rounded bg-zinc-900 border border-white/10" style={{ color: '#A1A1AA' }}>
+                      {adj.reason.replace('_', ' ')}
+                    </span>
+                    {adj.notes && (
+                      <span className="text-xs" style={{ color: '#71717A' }}>{adj.notes}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className={`text-2xl font-bold ${
+                  adj.qty_delta > 0 ? 'text-green-500' : 'text-red-500'
+                }`}>
+                  {adj.qty_delta > 0 ? '+' : ''}{adj.qty_delta} {adj.unit}
+                </div>
+                <div className="text-xs" style={{ color: '#71717A' }}>
+                  {new Date(adj.created_at).toLocaleDateString()}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Create Modal */}
+      {showCreateModal && (
+        <StateModal
+          type="info"
+          title="Create Adjustment"
+          message="Stock adjustment form will be implemented here. Select item, enter quantity change (+/-), and reason."
+          actions={[
+            { label: 'Close', onClick: () => setShowCreateModal(false) }
+          ]}
+          onClose={() => setShowCreateModal(false)}
+        />
+      )}
+    </div>
+  );
+}

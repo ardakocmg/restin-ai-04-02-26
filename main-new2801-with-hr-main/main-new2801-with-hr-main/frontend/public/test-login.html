@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PIN Login Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #111; color: #0f0; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .result { background: #222; padding: 10px; margin-top: 20px; white-space: pre-wrap; }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+    </style>
+</head>
+<body>
+    <h1>PIN Login Endpoint Test</h1>
+    
+    <h3>Test 1: Direct Backend Call</h3>
+    <button onclick="testBackend()">Test Backend (localhost:8001)</button>
+    
+    <h3>Test 2: Frontend API Call</h3>
+    <button onclick="testFrontend()">Test via Frontend API</button>
+    
+    <h3>Test 3: Check Environment</h3>
+    <button onclick="checkEnv()">Check Config</button>
+    
+    <div id="result" class="result"></div>
+    
+    <script>
+        const log = (msg, isError = false) => {
+            const result = document.getElementById('result');
+            const className = isError ? 'error' : 'success';
+            result.innerHTML += `<div class="${className}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+        };
+        
+        async function testBackend() {
+            log('Testing direct backend call...');
+            try {
+                const url = 'http://localhost:8001/api/auth/login/pin?pin=1234&app=admin&deviceId=test-browser';
+                log(`URL: ${url}`);
+                
+                const response = await fetch(url, { method: 'POST' });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`✓ SUCCESS (${response.status})`);
+                    log(JSON.stringify(data, null, 2));
+                } else {
+                    log(`✗ FAILED (${response.status})`, true);
+                    log(JSON.stringify(data, null, 2), true);
+                }
+            } catch (error) {
+                log(`✗ ERROR: ${error.message}`, true);
+            }
+        }
+        
+        async function testFrontend() {
+            log('Testing via frontend API client...');
+            try {
+                // Simulate what Login.js does
+                const backendUrl = 'http://localhost:8001';
+                const apiBase = `${backendUrl}/api`;
+                const url = `${apiBase}/auth/login/pin?pin=1234&app=admin&deviceId=test-browser-2`;
+                
+                log(`URL: ${url}`);
+                
+                const response = await fetch(url, { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`✓ SUCCESS (${response.status})`);
+                    log(JSON.stringify(data, null, 2));
+                } else {
+                    log(`✗ FAILED (${response.status})`, true);
+                    log(JSON.stringify(data, null, 2), true);
+                }
+            } catch (error) {
+                log(`✗ ERROR: ${error.message}`, true);
+            }
+        }
+        
+        function checkEnv() {
+            log('Checking environment configuration...');
+            log(`window.location.origin: ${window.location.origin}`);
+            log(`Backend should be at: http://localhost:8001/api`);
+            
+            // Test health endpoint
+            fetch('http://localhost:8001/api/health')
+                .then(r => r.json())
+                .then(data => {
+                    log('✓ Backend health check passed');
+                    log(JSON.stringify(data, null, 2));
+                })
+                .catch(err => log(`✗ Backend health check failed: ${err.message}`, true));
+        }
+    </script>
+</body>
+</html>

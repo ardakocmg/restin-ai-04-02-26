@@ -1,0 +1,9 @@
+
+--- ERROR AT 2026-02-01T22:54:29.020788+00:00 ---
+Message: 400: A payroll run for this period (2026-01-01 - 2026-01-20) already exists.
+Traceback (most recent call last):
+  File "C:\Users\MG Group\.gemini\antigravity\scratch\main-new2801-with-hr\main-new2801-with-hr-main\main-new2801-with-hr-main\backend\routes\hr_payroll_advanced.py", line 48, in create_payroll_run_calculated
+    raise HTTPException(
+    ...<2 lines>...
+    )
+fastapi.exceptions.HTTPException: 400: A payroll run for this period (2026-01-01 - 2026-01-20) already exists.

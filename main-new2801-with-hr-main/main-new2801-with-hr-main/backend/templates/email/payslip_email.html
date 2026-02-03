@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payslip - {{ period_display }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #e8e8e8;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a1a1a;
+            letter-spacing: 1px;
+        }
+        .employee-name {
+            font-size: 14px;
+            color: #666;
+        }
+        .content {
+            padding: 30px;
+        }
+        .title {
+            font-size: 28px;
+            color: #6b46c1;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .greeting {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 15px;
+        }
+        .message {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+        .attachment-box {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            margin: 25px 0;
+        }
+        .pdf-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #6b46c1;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .pdf-icon svg {
+            width: 30px;
+            height: 30px;
+            fill: white;
+        }
+        .attachment-text {
+            font-size: 18px;
+            color: #ff8c00;
+            font-weight: 500;
+        }
+        .signature {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .signature-line {
+            font-size: 14px;
+            color: #888;
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+        .signature-name {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        .footer {
+            background-color: #f9f9f9;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">INDIGO</div>
+            <div class="employee-name">{{ employee_name }}</div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="title">Payslip ({{ period_display }})</div>
+            
+            <div class="greeting">Dear {{ employee_first_name }},</div>
+            
+            <div class="message">
+                Please find attached your payslip for the period {{ period_start }} to {{ period_end }}.
+            </div>
+
+            <!-- Attachment Indicator -->
+            <div class="attachment-box">
+                <div class="pdf-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                    </svg>
+                </div>
+                <div class="attachment-text">Your payslip is attached</div>
+            </div>
+
+            <!-- Signature -->
+            <div class="signature">
+                <div class="signature-line">Regards,</div>
+                <div class="signature-name">{{ manager_name }}</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>This is an automated message from Restin HR System.</p>
+            <p>If you have any questions, please contact your HR department.</p>
+        </div>
+    </div>
+</body>
+</html>

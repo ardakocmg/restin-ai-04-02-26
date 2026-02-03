@@ -1,0 +1,99 @@
+/* Touch Optimization Styles - 44x44px minimum touch targets */
+
+/* Touch-friendly buttons */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* POS Touch Buttons */
+.pos-button {
+  min-width: 80px;
+  min-height: 60px;
+  font-size: 16px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* KDS Touch Targets */
+.kds-bump-button {
+  min-width: 100px;
+  min-height: 50px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Category Buttons */
+.category-button {
+  min-width: 120px;
+  min-height: 48px;
+  padding: 12px 20px;
+}
+
+/* Number Pad */
+.numpad-button {
+  min-width: 72px;
+  min-height: 72px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Menu Item Cards */
+.menu-item-card {
+  min-height: 100px;
+  padding: 16px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Table Selection */
+.table-button {
+  min-width: 80px;
+  min-height: 80px;
+  touch-action: manipulation;
+}
+
+/* Prevent double-tap zoom on iOS */
+button, a, .clickable {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(229, 57, 53, 0.1);
+}
+
+/* Smooth scrolling for touch */
+.scroll-smooth {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Feedback on touch */
+.touch-feedback:active {
+  transform: scale(0.98);
+  transition: transform 0.1s;
+}
+
+/* Responsive touch targets - Mobile */
+@media (max-width: 768px) {
+  .touch-target {
+    min-width: 48px;
+    min-height: 48px;
+  }
+  
+  .pos-button {
+    min-height: 64px;
+  }
+}
+
+/* Tablet optimization */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .pos-button {
+    min-width: 100px;
+    min-height: 70px;
+  }
+  
+  .menu-item-card {
+    min-height: 120px;
+  }
+}

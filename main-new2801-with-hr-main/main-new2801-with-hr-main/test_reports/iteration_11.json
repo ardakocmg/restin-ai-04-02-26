@@ -1,0 +1,33 @@
+{
+  "summary": "Completed comprehensive testing of role-based approval workflow for content versions. All features working correctly - Manager can create drafts but cannot approve (403), Owner can approve and rollback, Content Studio shows proper approval notes based on role, public preview works, and scheduled publishing stores scheduled_publish_at correctly.",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "Manager (PIN 2345) can create drafts",
+    "Manager (PIN 2345) cannot approve content (403 forbidden)",
+    "Owner (PIN 1234) can approve drafts",
+    "Owner (PIN 1234) can rollback archived versions",
+    "Content Studio shows approval note for Manager role",
+    "Content Studio hides approval note for Owner role", 
+    "Approve button disabled for Manager in UI",
+    "Approve button enabled for Owner in UI",
+    "Public preview works for authorized users",
+    "Scheduled publishing stores scheduled_publish_at field",
+    "Version listing includes created_by_role and approved_by_role",
+    "Role-based permissions enforced in backend API",
+    "Frontend UI properly reflects user permissions"
+  ],
+  "test_report_links": ["/app/backend_test.py"],
+  "success_percentage": "backend: 100%, frontend: 100%",
+  "updated_files": ["/app/backend_test.py"],
+  "action_item_for_main_agent": "",
+  "should_call_test_agent_after_fix": "false",
+  "should_main_agent_test_itself": "false"
+}

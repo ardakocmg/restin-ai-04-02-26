@@ -1,0 +1,588 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { venueAPI } from "../../lib/api";
+import api from "../../lib/api";
+import { toast } from "sonner";
+import { safeArray } from "../../lib/safe";
+import { useVenueSettings } from "../../hooks/useVenueSettings";
+import UniversalSearchBar from "../../components/search/UniversalSearchBar";
+import { Button } from "../../components/ui/button";
+import { Badge } from "../../components/ui/badge";
+import { ScrollArea } from "../../components/ui/scroll-area";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
+import { Textarea } from "../../components/ui/textarea";
+import { LogOut, Clock, CheckCircle, PlayCircle, RefreshCw, Loader2, ChefHat, PauseCircle, AlertTriangle, Bell } from "lucide-react";
+
+const STATUS_COLORS = {
+  new: "bg-blue-500",
+  preparing: "bg-orange-500",
+  ready: "bg-green-500",
+  done: "bg-zinc-500",
+  held: "bg-red-500"
+};
+
+const STATUS_LABELS = {
+  new: "NEW",
+  preparing: "PREPARING",
+  ready: "READY",
+  done: "DONE",
+  held: "HELD"
+};
+
+export default function KDSMain() {
+  const navigate = useNavigate();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const [venue, setVenue] = useState(null);
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [holdReason, setHoldReason] = useState("");
+  const [showHoldDialog, setShowHoldDialog] = useState(false);
+  const [showDoneDialog, setShowDoneDialog] = useState(false);
+  const [searchResults, setSearchResults] = useState(null);
+
+  const venueId = localStorage.getItem("restin_kds_venue");
+  const zoneId = localStorage.getItem("restin_kds_zone");
+  const { settings } = useVenueSettings(venueId);
+
+  useEffect(() => {
+    if (authLoading) return;
+    
+    if (!isAuthenticated) {
+      // navigate("/login"); // DISABLED - Safe Mode
+      return;
+    }
+    if (!venueId) {
+      navigate("/kds/setup");
+      return;
+    }
+    loadData();
+
+    // Auto refresh every 10 seconds
+    const interval = setInterval(() => {
+      loadData();
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [isAuthenticated, venueId, authLoading]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-green-500 animate-spin" />
+      </div>
+    );
+  }
+
+  const loadData = async () => {
+    try {
+      const [venueRes, ticketsRes] = await Promise.all([
+        venueAPI.get(venueId),
+        api.get(`/venues/${venueId}/kds/tickets`)
+      ]);
+      
+      setVenue(venueRes.data);
+      setTickets(ticketsRes.data);
+      setLastUpdate(new Date());
+    } catch (error) {
+      console.error("Failed to load data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const startTicket = async (ticketId) => {
+    // OPTIMISTIC UPDATE
+    setTickets(prevTickets => prevTickets.map(t => 
+      t.id === ticketId 
+        ? { ...t, status: 'preparing', started_at: new Date().toISOString() }
+        : t
+    ));
+    
+    try {
+      await api.post(`/kds/tickets/${ticketId}/start`);
+    } catch (error) {
+      // REVERT
+      setTickets(prevTickets => prevTickets.map(t => 
+        t.id === ticketId 
+          ? { ...t, status: 'new', started_at: null }
+          : t
+      ));
+      toast.error("Failed to start");
+    }
+  };
+
+  const markAsReady = async (ticketId) => {
+    // OPTIMISTIC UPDATE: Immediately update UI
+    setTickets(prevTickets => prevTickets.map(t => 
+      t.id === ticketId 
+        ? { ...t, status: 'ready', ready_at: new Date().toISOString() }
+        : t
+    ));
+    
+    try {
+      await api.post(`/kds/tickets/${ticketId}/ready`);
+      toast.success("Marked as READY");
+      // No reload, no navigation - optimistic update already done
+    } catch (error) {
+      // REVERT on failure
+      setTickets(prevTickets => prevTickets.map(t => 
+        t.id === ticketId 
+          ? { ...t, status: 'preparing', ready_at: null }
+          : t
+      ));
+      toast.error("Failed to mark ready - reverted");
+    }
+  };
+
+  const markAsDone = async (ticketId, passNotes) => {
+    // OPTIMISTIC UPDATE
+    setTickets(prevTickets => prevTickets.map(t => 
+      t.id === ticketId 
+        ? { ...t, status: 'done', done_at: new Date().toISOString(), pass_notes: passNotes }
+        : t
+    ));
+    
+    try {
+      await api.post(`/kds/tickets/${ticketId}/done`, { pass_notes: passNotes });
+      setShowDoneDialog(false);
+    } catch (error) {
+      // REVERT
+      setTickets(prevTickets => prevTickets.map(t => 
+        t.id === ticketId 
+          ? { ...t, status: 'ready', done_at: null }
+          : t
+      ));
+      toast.error("Failed to mark done");
+    }
+  };
+
+  const holdTicket = async (ticketId, reason) => {
+    try {
+      await api.post(`/kds/tickets/${ticketId}/hold`, { reason });
+      toast.warning("Ticket on HOLD");
+      setShowHoldDialog(false);
+      setHoldReason("");
+      loadData();
+    } catch (error) {
+      toast.error("Failed to hold ticket");
+    }
+  };
+
+  const getTimeElapsed = (createdAt) => {
+    const created = new Date(createdAt);
+    const now = new Date();
+    const diff = Math.floor((now - created) / 1000 / 60);
+    return diff;
+  };
+
+  const filteredTickets = tickets.filter(ticket => {
+    if (statusFilter === "all") return ticket.status !== "done";
+    return ticket.status === statusFilter;
+  });
+
+  // Apply search filter if active
+  const displayTickets = searchResults?.tickets 
+    ? safeArray(searchResults.tickets)
+    : filteredTickets;
+
+  const statusCounts = {
+    all: tickets.filter(t => t.status !== "done").length,
+    new: tickets.filter(t => t.status === "new" || t.status === "pending").length,
+    preparing: tickets.filter(t => t.status === "preparing" || t.status === "in_progress").length,
+    ready: tickets.filter(t => t.status === "ready").length
+  };
+
+  const isPassRole = user?.role === "owner" || user?.role === "manager" || user?.role === "supervisor";
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-green-500 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-screen flex flex-col bg-zinc-950">
+      {/* Header */}
+      <div className="bg-zinc-900 border-b border-white/10 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="p-2 bg-green-500/20 rounded-lg">
+              <ChefHat className="w-6 h-6 text-green-500" />
+            </div>
+            <div>
+              <h1 className="text-white font-heading font-bold text-2xl">Kitchen Display</h1>
+              <p className="text-zinc-400 text-sm">{venue?.name} {isPassRole && <Badge className="ml-2 bg-purple-500/20 text-purple-400">PASS</Badge>}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            {/* Search Bar */}
+            <div className="w-64">
+              <UniversalSearchBar
+                context="KDS"
+                scope={settings.search?.kds_default_scope || "local"}
+                station={zoneId}
+                enabled={settings.search?.kds_enabled !== false}
+                placeholder="Search ticket / table / item"
+                onResults={(results) => setSearchResults(results)}
+              />
+            </div>
+            
+            <div className="text-right">
+              <p className="text-xs text-zinc-500">Last updated</p>
+              <p className="text-white text-sm font-mono">
+                {lastUpdate.toLocaleTimeString()}
+              </p>
+            </div>
+            <Button
+              onClick={loadData}
+              size="sm"
+              variant="outline"
+              className="border-white/10"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </Button>
+            <Button
+              onClick={() => navigate("/admin/dashboard")}
+              size="sm"
+              variant="outline"
+              className="border-white/10"
+            >
+              <LogOut className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Status Filters */}
+        <div className="flex items-center gap-2 mt-4">
+          <button
+            onClick={() => setStatusFilter("all")}
+            className={`
+              px-4 py-2 rounded-lg font-medium transition-all
+              ${statusFilter === "all" 
+                ? 'bg-white text-black' 
+                : 'bg-zinc-800 text-zinc-400 hover:text-white'}
+            `}
+          >
+            All ({statusCounts.all})
+          </button>
+          <button
+            onClick={() => setStatusFilter("new")}
+            className={`
+              px-4 py-2 rounded-lg font-medium transition-all
+              ${statusFilter === "new" 
+                ? 'bg-blue-500 text-white' 
+                : 'bg-zinc-800 text-zinc-400 hover:text-white'}
+            `}
+          >
+            New ({statusCounts.new})
+          </button>
+          <button
+            onClick={() => setStatusFilter("preparing")}
+            className={`
+              px-4 py-2 rounded-lg font-medium transition-all
+              ${statusFilter === "preparing" 
+                ? 'bg-orange-500 text-white' 
+                : 'bg-zinc-800 text-zinc-400 hover:text-white'}
+            `}
+          >
+            Preparing ({statusCounts.preparing})
+          </button>
+          <button
+            onClick={() => setStatusFilter("ready")}
+            className={`
+              px-4 py-2 rounded-lg font-medium transition-all
+              ${statusFilter === "ready" 
+                ? 'bg-green-500 text-white' 
+                : 'bg-zinc-800 text-zinc-400 hover:text-white'}
+            `}
+          >
+            Ready for PASS ({statusCounts.ready})
+          </button>
+        </div>
+      </div>
+
+      {/* Tickets Grid */}
+      <ScrollArea className="flex-1 p-4">
+        {filteredTickets.length === 0 ? (
+          <div className="text-center py-20 text-zinc-500">
+            <CheckCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
+            <p className="text-lg">All caught up!</p>
+            <p className="text-sm mt-1">No {statusFilter !== "all" ? statusFilter : ""} tickets</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {displayTickets.map((ticket) => {
+              const elapsed = getTimeElapsed(ticket.created_at);
+              const isLate = elapsed > 20;
+              const isVIP = ticket.priority === "vip";
+              const isRush = ticket.priority === "rush";
+              const status = ticket.status || "pending";
+              
+              // FULL CARD BACKGROUND COLOR BY STATUS
+              const cardBgColor = {
+                new: "bg-blue-900/30",
+                pending: "bg-blue-900/30",
+                preparing: "bg-orange-900/30",
+                in_progress: "bg-orange-900/30",
+                ready: "bg-green-900/30",
+                done: "bg-zinc-800",
+                held: "bg-red-900/30"
+              }[status] || "bg-zinc-900";
+              
+              return (
+                <div
+                  key={ticket.id}
+                  className={`
+                    ${cardBgColor} rounded-lg border-2 overflow-hidden transition-all
+                    ${isLate ? 'border-red-500 animate-pulse' : 'border-white/10'}
+                    ${isVIP ? 'ring-2 ring-purple-500' : ''}
+                  `}
+                >
+                  {/* Card Header */}
+                  <div className={`p-3 ${STATUS_COLORS[ticket.status]}`}>
+                    <div className="flex items-center justify-between text-white">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-lg">{ticket.table_name}</span>
+                        <Badge className="bg-black/20 text-white text-xs">
+                          {STATUS_LABELS[ticket.status]}
+                        </Badge>
+                        {isVIP && <Badge className="bg-purple-900 text-purple-200 text-xs">VIP</Badge>}
+                        {isRush && <Badge className="bg-red-900 text-red-200 text-xs">RUSH</Badge>}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        <span className="font-mono text-sm">{elapsed}m</span>
+                      </div>
+                    </div>
+                    {ticket.server_name && (
+                      <p className="text-white/80 text-xs mt-1">Server: {ticket.server_name}</p>
+                    )}
+                    <p className="text-white/70 text-xs">Course {ticket.course}</p>
+                  </div>
+
+                  {/* Allergies/Special Notes */}
+                  {(ticket.allergies?.length > 0 || ticket.special_notes) && (
+                    <div className="p-2 bg-red-500/10 border-b border-red-500/20">
+                      {ticket.allergies?.length > 0 && (
+                        <p className="text-red-400 text-xs font-bold flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3" />
+                          ALLERGY: {ticket.allergies.join(", ")}
+                        </p>
+                      )}
+                      {ticket.special_notes && (
+                        <p className="text-yellow-400 text-xs mt-1">NOTE: {ticket.special_notes}</p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Items */}
+                  <div className="p-3 space-y-2">
+                    {ticket.items?.map((item, idx) => (
+                      <div key={idx} className="text-white">
+                        <div className="flex items-start justify-between">
+                          <span className="font-medium flex-1">
+                            <span className="text-orange-500 font-mono mr-2">{item.quantity}x</span>
+                            {item.menu_item_name || item.name}
+                          </span>
+                          {item.item_status && (
+                            <Badge className={`text-xs ${STATUS_COLORS[item.item_status]} border-0`}>
+                              {STATUS_LABELS[item.item_status]}
+                            </Badge>
+                          )}
+                        </div>
+                        {item.modifiers?.length > 0 && (
+                          <div className="ml-6 mt-1 space-y-0.5">
+                            {item.modifiers.map((mod, i) => (
+                              <p key={i} className="text-xs text-zinc-400">
+                                • {typeof mod === 'object' ? mod.name : mod}
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                        {item.notes && (
+                          <p className="ml-6 mt-1 text-xs text-yellow-400">Chef: {item.notes}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Hold Reason */}
+                  {ticket.hold_reason && (
+                    <div className="px-3 pb-2">
+                      <p className="text-xs text-red-400">HOLD: {ticket.hold_reason}</p>
+                    </div>
+                  )}
+
+                  {/* Actions */}
+                  <div className="p-3 border-t border-white/10 space-y-2">
+                    {ticket.status === "new" || ticket.status === "pending" && (
+                      <>
+                        <Button
+                          onClick={() => startTicket(ticket.id)}
+                          className="w-full bg-orange-500 hover:bg-orange-600"
+                          type="button"
+                        >
+                          <PlayCircle className="w-4 h-4 mr-2" />
+                          Start Preparing
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setSelectedTicket(ticket);
+                            setShowHoldDialog(true);
+                          }}
+                          variant="outline"
+                          className="w-full border-red-500/50 text-red-400 hover:bg-red-500/10"
+                          type="button"
+                        >
+                          <PauseCircle className="w-4 h-4 mr-2" />
+                          HOLD
+                        </Button>
+                      </>
+                    )}
+                    {(ticket.status === "preparing" || ticket.status === "in_progress") && (
+                      <>
+                        <Button
+                          onClick={() => markAsReady(ticket.id)}
+                          className="w-full bg-green-500 hover:bg-green-600"
+                          type="button"
+                        >
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Mark READY
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setSelectedTicket(ticket);
+                            setShowHoldDialog(true);
+                          }}
+                          variant="outline"
+                          className="w-full border-red-500/50 text-red-400"
+                          type="button"
+                        >
+                          <PauseCircle className="w-4 h-4 mr-2" />
+                          HOLD
+                        </Button>
+                      </>
+                    )}
+                    {ticket.status === "ready" && isPassRole && (
+                      <>
+                        <Button
+                          onClick={() => {
+                            setSelectedTicket(ticket);
+                            setShowDoneDialog(true);
+                          }}
+                          className="w-full bg-purple-600 hover:bg-purple-700"
+                          type="button"
+                        >
+                          <Bell className="w-4 h-4 mr-2" />
+                          DONE → Call Server
+                        </Button>
+                        <p className="text-center text-xs text-zinc-400 mt-1">
+                          ⚠️ PASS confirmation required
+                        </p>
+                      </>
+                    )}
+                    {ticket.status === "ready" && !isPassRole && (
+                      <div className="text-center py-2">
+                        <CheckCircle className="w-8 h-8 mx-auto text-green-500" />
+                        <p className="text-green-500 text-sm mt-1 font-medium">Ready for PASS</p>
+                        <p className="text-xs text-zinc-400 mt-1">Awaiting expo confirmation</p>
+                      </div>
+                    )}
+                    {ticket.status === "held" && (
+                      <Button
+                        onClick={() => startTicket(ticket.id)}
+                        className="w-full bg-orange-500 hover:bg-orange-600"
+                        type="button"
+                      >
+                        Resume
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </ScrollArea>
+
+      {/* Hold Dialog */}
+      <Dialog open={showHoldDialog} onOpenChange={setShowHoldDialog}>
+        <DialogContent className="bg-zinc-900 border-white/10">
+          <DialogHeader>
+            <DialogTitle className="text-white">Hold Ticket - {selectedTicket?.table_name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 p-4">
+            <Textarea
+              placeholder="Reason for hold (required)..."
+              value={holdReason}
+              onChange={(e) => setHoldReason(e.target.value)}
+              className="bg-zinc-800 border-white/10 text-white min-h-24"
+            />
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowHoldDialog(false);
+                  setHoldReason("");
+                }}
+                className="flex-1 border-white/10"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => holdTicket(selectedTicket.id, holdReason)}
+                disabled={!holdReason.trim()}
+                className="flex-1 bg-red-600 hover:bg-red-700"
+                type="button"
+              >
+                Confirm HOLD
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* PASS Confirmation Dialog */}
+      <Dialog open={showDoneDialog} onOpenChange={setShowDoneDialog}>
+        <DialogContent className="bg-zinc-900 border-white/10">
+          <DialogHeader>
+            <DialogTitle className="text-white">PASS Confirmation - {selectedTicket?.table_name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 p-4">
+            <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+              <p className="text-green-400 font-medium">✓ Plating Quality Check</p>
+              <p className="text-zinc-400 text-sm mt-1">Confirm all items plated correctly and ready to serve</p>
+            </div>
+            <Textarea
+              placeholder="PASS notes (optional)..."
+              className="bg-zinc-800 border-white/10 text-white"
+            />
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowDoneDialog(false)}
+                className="flex-1 border-white/10"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => markAsDone(selectedTicket.id, "")}
+                className="flex-1 bg-purple-600 hover:bg-purple-700"
+                type="button"
+              >
+                ✓ DONE → Call Server
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
