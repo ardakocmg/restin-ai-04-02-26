@@ -2,7 +2,7 @@
 restin.ai - Enterprise Hospitality OS
 Clean server.py with modular route architecture
 """
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Request
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
