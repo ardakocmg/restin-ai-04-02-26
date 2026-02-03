@@ -96,7 +96,7 @@ outbox_consumer = OutboxConsumer()
 
 # Background task
 async def run_outbox_consumer():
-    print("🚀 [WORKER] Starting outbox consumer loop...")
+    print("[WORKER] Starting outbox consumer loop...")
     while True:
         try:
             # Diagnostic: Write to local file to verify thread is alive
