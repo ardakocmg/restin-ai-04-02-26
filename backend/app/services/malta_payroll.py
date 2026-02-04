@@ -1,56 +1,84 @@
-from backend.app.models.schemas import PayrollResult
+import logging
 
-def calculate_payroll(gross_annual: float, year: int = 2025) -> PayrollResult:
-    """
-    Malta 2025 Payroll Calculation Enforcer.
-    """
-    # 1. COLA (Cost of Living Adjustment)
-    # €5.24 per week -> €272.48 annually (52 weeks)
-    cola_weekly = 5.24
-    cola_annual = cola_weekly * 52
-    
-    # 2. SSC (Social Security Contributions) - Category D (Post 1962)
-    # 10% of basic weekly wage, capped at €54.43/week
-    weekly_wage = gross_annual / 52
-    ssc_weekly = min(weekly_wage * 0.10, 54.43)
-    if weekly_wage < 544.29: # Threshold where 10% might be less than max, but technically floor is usually checked. 
-        # Using strict 10% or cap as per rules. 
-        # Rule: 10% of basic, capped at €54.43
-        pass
-    
-    ssc_annual = ssc_weekly * 52
+logger = logging.getLogger(__name__)
 
-    # 3. Tax Bands (Single Computation 2025)
-    # Rates:
+class MaltaPayrollEngine:
+    # 2025 Tax Bands (Single)
     # 0 - 12,000 : 0%
-    # 12,001 - 16,000 : 15% (Subtract 1800)
-    # 16,001 - 60,000 : 25% (Subtract 3400)
-    # 60,001 + : 35% (Subtract 9400)
+    # 12,001 - 16,000 : 15% (Subtract 1,800)
+    # 16,001 - 60,000 : 25% (Subtract 3,400)
+    # 60,001+ : 35% (Subtract 9,400)
+    TAX_BANDS = {
+        "Single": [
+            {"limit": 12000, "rate": 0.00, "sub": 0},
+            {"limit": 16000, "rate": 0.15, "sub": 1800},
+            {"limit": 60000, "rate": 0.25, "sub": 3400},
+            {"limit": float('inf'), "rate": 0.35, "sub": 9400},
+        ]
+    }
+    
+    # Constants 2025
+    SSC_WEEKLY_CAP = 54.43
+    SSC_THRESHOLD_WEEKLY = 544.29
+    SSC_RATE = 0.10
+    
+    COLA_WEEKLY = 5.24
+    GOV_BONUS_ANNUAL = 512.52
 
-    taxable_gross = gross_annual # Note: In reality SSC might be deducted but for simplistic gross-to-net tax is on gross usually in these bands? 
-    # Actually tax is on chargeable income. For simplicity we assume Gross IS Chargeable.
-    
-    tax_due = 0.0
-    
-    if gross_annual <= 12000:
-        tax_due = 0
-    elif gross_annual <= 16000:
-        tax_due = (gross_annual * 0.15) - 1800
-    elif gross_annual <= 60000:
-        tax_due = (gross_annual * 0.25) - 3400
-    else:
-        tax_due = (gross_annual * 0.35) - 9400
+    @staticmethod
+    def calculate(gross_annual: float, category: str = "Single", cola_eligible: bool = True):
+        logger.info(f"Calculating payroll for Gross: {gross_annual}, Category: {category}")
         
-    if tax_due < 0:
-        tax_due = 0
+        # 1. SSC Calculation (Category D)
+        weekly_gross = gross_annual / 52.0
+        
+        if weekly_gross >= MaltaPayrollEngine.SSC_THRESHOLD_WEEKLY:
+            ssc_weekly = MaltaPayrollEngine.SSC_WEEKLY_CAP
+        else:
+            ssc_weekly = weekly_gross * MaltaPayrollEngine.SSC_RATE
+            
+        ssc_annual = ssc_weekly * 52.0
 
-    net_salary = gross_annual - tax_due - ssc_annual
+        # 2. Tax Calculation
+        # Taxable income = Gross - SSC
+        taxable_income = gross_annual - ssc_annual
+        if taxable_income < 0:
+            taxable_income = 0
+            
+        annual_tax = 0.0
+        
+        # Select Bands
+        bands = MaltaPayrollEngine.TAX_BANDS.get(category, MaltaPayrollEngine.TAX_BANDS["Single"])
+        
+        # Apply Tax Bands
+        for band in bands:
+            if taxable_income <= band["limit"]:
+                annual_tax = (taxable_income * band["rate"]) - band["sub"]
+                break
+            if band["limit"] == float('inf'):
+                annual_tax = (taxable_income * band["rate"]) - band["sub"]
+        
+        if annual_tax < 0:
+            annual_tax = 0.0
 
-    return PayrollResult(
-        gross_salary=round(gross_annual, 2),
-        tax_due=round(tax_due, 2),
-        ssc_due=round(ssc_annual, 2),
-        cola=round(cola_annual, 2),
-        net_salary=round(net_salary, 2),
-        year=year
-    )
+        # 3. Additions (COLA, Bonuses)
+        # Included in payload as requested
+        
+        # Net Classification
+        net_annual = gross_annual - annual_tax - ssc_annual
+        
+        result = {
+            "gross_annual": round(gross_annual, 2),
+            "ssc_annual": round(ssc_annual, 2),
+            "tax_annual": round(annual_tax, 2),
+            "net_annual": round(net_annual, 2),
+            "net_monthly": round(net_annual / 12, 2),
+            "meta": {
+                "cola_weekly": MaltaPayrollEngine.COLA_WEEKLY,
+                "gov_bonus_annual": MaltaPayrollEngine.GOV_BONUS_ANNUAL,
+                "tax_category": category,
+                "ssc_category": "D (Post-1962)"
+            }
+        }
+        
+        return result

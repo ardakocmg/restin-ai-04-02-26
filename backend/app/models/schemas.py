@@ -1,52 +1,22 @@
-from pydantic import BaseModel, EmailStr, Field
-from typing import Optional, Any, Dict
-from datetime import datetime
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional
+from uuid import uuid4
 
-# --- Auth Models ---
-class UserCreate(BaseModel):
-    email: EmailStr
-    password: str
-    role: str = "employee"
-
-class UserInDB(BaseModel):
-    id: str = Field(alias="_id")
-    email: EmailStr
-    role: str
-    is_active: bool = True
-    hashed_password: str
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-# --- Profile Models ---
-class ProfilePublic(BaseModel):
-    user_id: str
-    name: str
-    surname: str
+class EmployeeCore(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid4()), alias="_id")
+    first_name: str
+    last_name: str
+    work_email: EmailStr
     department: str
-    locality: str
     job_title: str
+    locality: str       
+    status: str = "Active"
 
-# --- Secret Models ---
-class SecretVault(BaseModel):
-    user_id: str
-    v: int
-    algo: str
-    nonce: str
-    blob: str
+class EmployeeSecrets(BaseModel):
+    employee_id: str
+    encrypted_blob: dict 
 
-class SecretData(BaseModel):
-    salary: float
-    iban: str
-    id_card: str
-    medical_notes: Optional[str] = None
-
-# --- Payroll Models ---
-class PayrollResult(BaseModel):
-    gross_salary: float
-    tax_due: float
-    ssc_due: float
-    cola: float
-    net_salary: float
-    year: int = 2025
+class PayrollRequest(BaseModel):
+    gross_annual: float
+    cola_eligible: bool = True
+    tax_category: str = "Single"

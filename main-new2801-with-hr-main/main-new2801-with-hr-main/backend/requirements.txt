@@ -1,9 +1,0 @@
-fastapi
-uvicorn[standard]
-pydantic
-pydantic-settings
-cryptography
-python-multipart
-pymongo
-email-validator
-motor
