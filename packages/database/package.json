@@ -1,0 +1,24 @@
+{
+    "name": "@antigravity/database",
+    "version": "0.0.0",
+    "main": "index.ts",
+    "types": "index.ts",
+    "license": "MIT",
+    "scripts": {
+        "generate": "prisma generate",
+        "db:push": "prisma db push",
+        "studio": "prisma studio"
+    },
+    "dependencies": {
+        "@prisma/client": "^5.12.0",
+        "ts-node": "^10.9.1"
+    },
+    "prisma": {
+        "seed": "ts-node prisma/seed.ts"
+    },
+    "devDependencies": {
+        "prisma": "^5.12.0",
+        "typescript": "^5.4.5",
+        "@types/node": "^20.0.0"
+    }
+}

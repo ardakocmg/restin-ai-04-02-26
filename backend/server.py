@@ -81,6 +81,9 @@ from routes.inventory_suppliers import create_inventory_suppliers_router
 from routes.inventory_purchase_orders import create_inventory_purchase_orders_router
 from routes.inventory_receiving import create_inventory_receiving_router
 from routes.inventory_items import create_inventory_items_router
+from routes.inventory_counts import create_inventory_counts_router
+from routes.chat_routes import create_chat_router
+from routes.aggregators import create_aggregator_router
 from routes.analytics import create_analytics_router
 from routes.backup_routes import create_backup_router
 from routes.public_content_routes import create_public_content_router
@@ -306,6 +309,9 @@ inventory_suppliers_router = create_inventory_suppliers_router()
 inventory_purchase_orders_router = create_inventory_purchase_orders_router()
 inventory_receiving_router = create_inventory_receiving_router()
 inventory_items_router = create_inventory_items_router()
+inventory_counts_router = create_inventory_counts_router()
+chat_router = create_chat_router()
+aggregator_router = create_aggregator_router()
 analytics_router = create_analytics_router()
 payroll_mt_router = create_payroll_mt_router()
 accounting_mt_router = create_accounting_mt_router()
@@ -435,6 +441,9 @@ api_main.include_router(inventory_suppliers_router)
 api_main.include_router(inventory_purchase_orders_router)
 api_main.include_router(inventory_receiving_router)
 api_main.include_router(inventory_items_router)
+api_main.include_router(inventory_counts_router)
+api_main.include_router(chat_router)
+api_main.include_router(aggregator_router)
 api_main.include_router(analytics_router)
 api_main.include_router(payroll_mt_router)
 api_main.include_router(accounting_mt_router)

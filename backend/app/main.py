@@ -15,6 +15,28 @@ logger = logging.getLogger("MaltaHR")
 
 app = FastAPI(title=settings.APP_NAME)
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+from app.domains.hr import router as hr_router
+from app.domains.inventory import router as inventory_router
+from app.domains.pos import router as pos_router
+from app.domains.auth import router as auth_router
+from app.domains.venues import router as venues_router
+
+app.include_router(hr_router)
+app.include_router(inventory_router)
+app.include_router(pos_router)
+app.include_router(auth_router)
+app.include_router(venues_router)
+
 # Dependency Injection: Mock Database
 class MockDatabase:
     def __init__(self):

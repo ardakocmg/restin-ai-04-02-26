@@ -1,0 +1,15 @@
+{
+    "name": "@antigravity/config",
+    "version": "0.0.0",
+    "main": "index.ts",
+    "types": "index.ts",
+    "license": "MIT",
+    "scripts": {
+        "lint": "eslint ."
+    },
+    "dependencies": {
+        "@types/lodash": "^4.17.23",
+        "lodash": "^4.17.23",
+        "zod": "^3.22.4"
+    }
+}

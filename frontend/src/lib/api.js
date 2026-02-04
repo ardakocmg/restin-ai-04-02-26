@@ -1,7 +1,7 @@
 import axios from "axios";
 import authStore from "./AuthStore";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api/`;
+const API = `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/`;
 
 // Create axios instance
 const api = axios.create({
@@ -13,7 +13,7 @@ const api = axios.create({
 
 // BaseURL guard on init
 (() => {
-  const currentHost = new URL(process.env.REACT_APP_BACKEND_URL).host;
+  const currentHost = new URL(process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000').host;
   const changed = authStore.checkApiHostChanged(currentHost);
   if (changed) {
     console.log('API host changed - session reset');
@@ -57,7 +57,7 @@ async function refreshToken() {
   if (!token) throw new Error('No token to refresh');
 
   const response = await axios.post(
-    `${process.env.REACT_APP_BACKEND_URL}/api/auth/refresh`,
+    `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/auth/refresh`,
     {},
     { headers: { Authorization: `Bearer ${token}` } }
   );
@@ -126,7 +126,7 @@ api.interceptors.response.use(
 export const authAPI = {
   // New PIN-first login - Using direct axios call to avoid baseURL issues
   loginWithPin: (pin, app, deviceId, stationId = null) => {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
     const url = `${backendUrl}/api/auth/login/pin?pin=${pin}&app=${app}${deviceId ? `&deviceId=${deviceId}` : ''}${stationId ? `&stationId=${stationId}` : ''}`;
     return axios.post(url);
   },

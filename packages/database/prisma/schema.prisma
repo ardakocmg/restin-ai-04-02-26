@@ -1,0 +1,438 @@
+// 🏗️ ANTIGRAVITY MASTER SCHEMA (THE OMNISCIENT)
+// Protocol v17.0 - The DNA of the Enterprise OS
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// ==================================================================================
+// 1. MULTI-TENANCY CORE (Rule #13 & #21)
+// Hierarchy: Organization -> Brand -> Branch -> Device
+// ==================================================================================
+
+// SQLite Compatibility: Enums removed
+
+model Organization {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  plan        String   @default("BASIC") // SQLite: String
+  
+  brands      Brand[]
+  users       User[]
+  auditLogs   AuditLog[]
+  settings    SystemSetting?
+  
+  suppliers   Supplier[]
+  ingredients Ingredient[]
+  recipes     Recipe[]
+  menus       Menu[]
+  taxRules    TaxRule[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Brand {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  name           String
+  branches       Branch[]
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId])
+}
+
+model Branch {
+  id             String       @id @default(uuid())
+  brandId        String
+  brand          Brand        @relation(fields: [brandId], references: [id])
+  
+  name           String
+  timezone       String       @default("Europe/Malta")
+  currency       String       @default("EUR")
+  
+  devices        Device[]
+  stockMovements StockMovement[]
+  orders         Order[]
+  fiscalDrifts   FiscalDrift[]
+  stockCounts    StockCount[]
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([brandId])
+}
+
+model Device {
+  id             String   @id @default(uuid())
+  branchId       String
+  branch         Branch   @relation(fields: [branchId], references: [id])
+  
+  name           String
+  type           String   // SQLite: String (POS_TERMINAL, etc)
+  ipAddress      String?
+  status         String   @default("ONLINE")
+  
+  lastHeartbeat  DateTime?
+  
+  @@index([branchId])
+}
+
+model User {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  email          String?      @unique
+  hashedPassword String?
+  pin            String?
+  
+  firstName      String?
+  lastName       String?
+  
+  isAnonymized   Boolean      @default(false)
+  anonymizedAt   DateTime?
+  
+  role           String       @default("STAFF") // SQLite: String (SUPER_ADMIN, etc)
+  permissions    String // SQLite: JSON string or similar? No, Prisma supports String[] on Postgres but SQLite?
+  // Prisma SQLite DOES NOT support scalar lists (String[]).
+  // I must change permissions to String (JSON serialized) or standard String with separator.
+  // Wait, Prisma docs say "Scalar lists are not supported in SQLite".
+  
+  staffProfile   StaffProfile?
+  
+  orders         Order[]
+  movements      StockMovement[]
+  stockCounts    StockCount[]
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId])
+  @@index([email])
+}
+
+// ... wait, permissions String[] failure will likely happen too.
+// I will attempt simple fixes first.
+
+model StaffProfile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+  
+  xpPoints       Int      @default(0)
+  currentLevel   Int      @default(1)
+  
+  dailyQuestStatus String?   // SQLite: Store as JSON-String if Json not fully supported? 
+  // SQLite supports "Json" type via String in Prisma? Prisma supports Json type in SQLite? Yes.
+  // But String[] (badges) is NOT supported.
+  badges         String    @default("[]") // SQLite Hack: JSON String
+  
+  updatedAt      DateTime @updatedAt
+}
+
+model Supplier {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  name           String
+  email          String?
+  phone          String?
+  skuPrefix      String?
+  
+  ingredients    Ingredient[]
+  
+  @@index([organizationId])
+}
+
+model Ingredient {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  name           String
+  supplierId     String?
+  supplier       Supplier?    @relation(fields: [supplierId], references: [id])
+  
+  supplierSku    String?
+  
+  purchaseUnit   String
+  stockUnit      String
+  conversionRate Float
+  priceCents     Int
+  
+  wastagePercent Float        @default(0.0)
+  nutritionalInfo String?     // SQLite: JSON String (was Json)
+  
+  recipeItems    RecipeItem[]
+  movements      StockMovement[]
+  stockCountItems StockCountItem[]
+  
+  @@index([organizationId])
+}
+
+model Recipe {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  name           String
+  type           String       @default("PREP") // SQLite: String
+  
+  items          RecipeItem[]
+  
+  menuItem       MenuItem?
+  
+  costCents      Int          @default(0)
+  
+  // Rule #40 (Apicbase Parity) - Nutrition
+  calories       Int?     // kcal
+  protein        Float?   // grams
+  carbs          Float?   // grams
+  fat            Float?   // grams
+  allergens      String?  // JSON Array
+  
+  @@index([organizationId])
+}
+
+model RecipeItem {
+  id             String       @id @default(uuid())
+  
+  parentRecipeId String
+  parentRecipe   Recipe       @relation(fields: [parentRecipeId], references: [id])
+  
+  ingredientId   String?
+  ingredient     Ingredient?  @relation(fields: [ingredientId], references: [id])
+  
+  subRecipeId    String?
+  
+  quantity       Float
+  unit           String
+  
+  @@index([parentRecipeId])
+}
+
+model Menu {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  name           String
+  isActive       Boolean      @default(true)
+  
+  categories     Category[]
+  
+  @@index([organizationId])
+}
+
+model Category {
+  id             String       @id @default(uuid())
+  menuId         String
+  menu           Menu         @relation(fields: [menuId], references: [id])
+  
+  name           String
+  sortOrder      Int          @default(0)
+  
+  items          MenuItem[]
+  
+  @@index([menuId])
+}
+
+model MenuItem {
+  id             String       @id @default(uuid())
+  categoryId     String
+  category       Category     @relation(fields: [categoryId], references: [id])
+  
+  name           String
+  recipeId       String?      @unique
+  recipe         Recipe?      @relation(fields: [recipeId], references: [id])
+  
+  priceCents     Int
+  taxRuleId      String?
+  taxRule        TaxRule?     @relation(fields: [taxRuleId], references: [id])
+  
+  orderItems     OrderItem[]
+
+  @@index([categoryId])
+}
+
+model Order {
+  id             String       @id @default(uuid())
+  branchId       String
+  branch         Branch       @relation(fields: [branchId], references: [id])
+  
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  
+  status         String
+  
+  totalCents     Int
+  taxCents       Int
+  
+  items          OrderItem[]
+  
+  fiscalHash     String?
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([branchId])
+}
+
+model OrderItem {
+  id             String       @id @default(uuid())
+  orderId        String
+  order          Order        @relation(fields: [orderId], references: [id])
+  
+  menuItemId     String
+  menuItem       MenuItem     @relation(fields: [menuItemId], references: [id])
+  
+  quantity       Int
+  priceCents     Int
+  
+  @@index([orderId])
+}
+
+model TaxRule {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  name           String
+  rate           Float
+  code           String
+  
+  effectiveDate  DateTime     @default(now())
+  version        Int          @default(1)
+  
+  menuItems      MenuItem[]
+
+  @@index([organizationId])
+}
+
+model FiscalDrift {
+  id                String   @id @default(uuid())
+  branchId          String
+  branch            Branch   @relation(fields: [branchId], references: [id])
+
+  fiscalPeriod      String
+  theoreticalTax    Int
+  actualTax         Int
+  driftCents        Int
+  driftPercentage   Float
+  
+  status            String   @default("PENDING")
+  details           String?  // SQLite: JSON String
+
+  createdAt         DateTime @default(now())
+
+  @@index([branchId])
+}
+
+model AuditLog {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  action         String
+  entityType     String
+  entityId       String
+  
+  userId         String?
+  
+  oldValue       String? // SQLite: JSON String
+  newValue       String? // SQLite: JSON String
+  
+  geoLat         Float?
+  geoLong        Float?
+  ipAddress      String?
+  
+  retentionDate  DateTime?
+  isSystemAction Boolean      @default(false)
+  piiScrubbed    Boolean      @default(false)
+
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId])
+  @@index([entityId])
+}
+
+model SystemSetting {
+  id             String       @id @default(uuid())
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  config         String       // SQLite: JSON String
+  
+  version        Int          @default(1)
+  environment    String       @default("production")
+  lastPublished  DateTime?
+  
+  updatedAt      DateTime     @updatedAt
+}
+
+model StockMovement {
+  id             String       @id @default(uuid())
+  branchId       String
+  branch         Branch       @relation(fields: [branchId], references: [id])
+  
+  ingredientId   String
+  ingredient     Ingredient   @relation(fields: [ingredientId], references: [id])
+  
+  quantity       Float
+  type           String
+  reason         String?
+  
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  
+  createdAt      DateTime     @default(now())
+
+  @@index([branchId])
+  @@index([ingredientId])
+}
+
+model StockCount {
+  id             String           @id @default(uuid())
+  branchId       String
+  branch         Branch           @relation(fields: [branchId], references: [id])
+  
+  status         String           @default("DRAFT") // SQLite: String
+  performedById  String
+  performedBy    User             @relation(fields: [performedById], references: [id])
+  
+  items          StockCountItem[]
+  
+  startedAt      DateTime         @default(now())
+  completedAt    DateTime?
+  
+  @@index([branchId])
+}
+
+model StockCountItem {
+  id             String       @id @default(uuid())
+  stockCountId   String
+  stockCount     StockCount   @relation(fields: [stockCountId], references: [id])
+  
+  ingredientId   String
+  ingredient     Ingredient   @relation(fields: [ingredientId], references: [id])
+  
+  expectedBase   Float
+  actualBase     Float
+  variance       Float
+  
+  costImpact     Int?
+  
+  @@index([stockCountId])
+}

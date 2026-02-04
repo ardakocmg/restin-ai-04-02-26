@@ -1,4 +1,4 @@
-import api from './api';
+import api from '../lib/api';
 
 export interface GuidePhoto {
   asset_id: string;

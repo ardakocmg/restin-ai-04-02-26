@@ -1,0 +1,13 @@
+{
+    "name": "@antigravity/logger",
+    "version": "0.0.0",
+    "main": "index.ts",
+    "types": "index.ts",
+    "license": "MIT",
+    "scripts": {
+        "test": "vitest"
+    },
+    "dependencies": {
+        "winston": "^3.11.0"
+    }
+}

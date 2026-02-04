@@ -21,6 +21,14 @@ class Recipe(BaseModel):
     components: List[RecipeComponent] = []
     yield_qty: float = 1.0
     yield_uom: str = "EA"
+    
+    # Nutrition (Rule #40)
+    calories: Optional[int] = None
+    protein: Optional[float] = None
+    carbs: Optional[float] = None
+    fat: Optional[float] = None
+    allergens: Optional[str] = None # JSON string
+    
     notes: Optional[str] = None
     created_by: str
     activated_at: Optional[str] = None

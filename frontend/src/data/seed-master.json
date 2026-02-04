@@ -1,0 +1,202 @@
+{
+    "venues": [
+        {
+            "id": "venue-caviar-bull",
+            "name": "Caviar & Bull",
+            "currency": "EUR",
+            "timezone": "Europe/Malta"
+        },
+        {
+            "id": "venue-don-royale",
+            "name": "Don Royale",
+            "currency": "EUR",
+            "timezone": "Europe/Malta"
+        }
+    ],
+    "users": [
+        {
+            "id": "user-cb-owner",
+            "google_id": "100001",
+            "email": "marvin@mggroup.com",
+            "name": "Marvin Gauci",
+            "role": "OWNER",
+            "pin": "1234",
+            "venueId": "venue-caviar-bull",
+            "ou_path": "/Executive/Board"
+        },
+        {
+            "id": "user-cb-manager",
+            "google_id": "100002",
+            "email": "sarah.c@mggroup.com",
+            "name": "Sarah Camilleri",
+            "role": "MANAGER",
+            "pin": "2345",
+            "venueId": "venue-caviar-bull",
+            "ou_path": "/Operations/Management"
+        },
+        {
+            "id": "user-cb-server1",
+            "google_id": "100003",
+            "email": "maria.v@mggroup.com",
+            "name": "Maria Vella",
+            "role": "STAFF",
+            "pin": "1111",
+            "venueId": "venue-caviar-bull",
+            "ou_path": "/Operations/Service"
+        }
+    ],
+    "inventory": [
+        {
+            "id": "ing-oscietra-30g",
+            "name": "Oscietra Caviar 30g",
+            "category": "Seafood",
+            "stock": 15,
+            "unit": "tin",
+            "priceCents": 9500,
+            "minStock": 5,
+            "supplier_id": "sup-seafood-ltd",
+            "par_level": 20,
+            "reorder_point": 8,
+            "last_restock_date": "2024-01-20T10:00:00Z",
+            "gl_code_purchase": "5000-SEAFOOD",
+            "allergens": [
+                "Fish"
+            ]
+        },
+        {
+            "id": "ing-ribeye-raw",
+            "name": "Prime Ribeye (Raw)",
+            "category": "Meat",
+            "stock": 30,
+            "unit": "kg",
+            "priceCents": 3200,
+            "minStock": 10,
+            "supplier_id": "sup-meat-masters",
+            "par_level": 50,
+            "reorder_point": 15,
+            "last_restock_date": "2024-01-22T08:30:00Z",
+            "gl_code_purchase": "5000-MEAT",
+            "allergens": []
+        },
+        {
+            "id": "ing-truffle-oil",
+            "name": "Black Truffle Oil",
+            "category": "Pantry",
+            "stock": 12,
+            "unit": "bottle",
+            "priceCents": 1850,
+            "minStock": 3,
+            "supplier_id": "sup-specialty-foods",
+            "par_level": 6,
+            "reorder_point": 4,
+            "last_restock_date": "2024-01-25T09:00:00Z",
+            "gl_code_purchase": "5000-PANTRY",
+            "allergens": []
+        }
+    ],
+    "menu_items": [
+        {
+            "id": "menu-ribeye-steak",
+            "name": "Prime Ribeye Steak 300g",
+            "priceCents": 3800,
+            "vat_rate": 18.0,
+            "gl_code_revenue": "4000-FOOD",
+            "recipe_id": "rec-ribeye-steak"
+        },
+        {
+            "id": "menu-caviar-starter",
+            "name": "Caviar & Blinis",
+            "priceCents": 12000,
+            "vat_rate": 18.0,
+            "gl_code_revenue": "4000-FOOD",
+            "recipe_id": "rec-caviar-starter"
+        }
+    ],
+    "suppliers": [
+        {
+            "id": "sup-seafood-ltd",
+            "name": "Seafood Ltd",
+            "contact_email": "orders@seafoodltd.com",
+            "contact_phone": "+356 2123 4567"
+        },
+        {
+            "id": "sup-meat-masters",
+            "name": "Meat Masters",
+            "contact_email": "sales@meatmasters.mt",
+            "contact_phone": "+356 2134 5678"
+        },
+        {
+            "id": "sup-specialty-foods",
+            "name": "Gourmet Specialty Foods",
+            "contact_email": "orders@gourmet.mt",
+            "contact_phone": "+356 2144 5566"
+        }
+    ],
+    "employees": [
+        {
+            "id": "emp-001",
+            "venueId": "venue-caviar-bull",
+            "first_name": "Maria",
+            "last_name": "Vella",
+            "role": "Head Server",
+            "email": "maria.v@mggroup.com",
+            "gross_salary_cents": 2500000,
+            "id_card_number": "432190M",
+            "fss_tax_status": "single",
+            "ss_number": "123456M",
+            "cola_eligible": true,
+            "leave_balance_hours": 120.5,
+            "start_date": "2023-01-15T00:00:00Z",
+            "status": "active"
+        },
+        {
+            "id": "emp-002",
+            "venueId": "venue-caviar-bull",
+            "first_name": "John",
+            "last_name": "Borg",
+            "role": "Chef de Partie",
+            "email": "john.b@mggroup.com",
+            "gross_salary_cents": 2200000,
+            "id_card_number": "789012M",
+            "fss_tax_status": "married",
+            "ss_number": "654321M",
+            "cola_eligible": true,
+            "leave_balance_hours": 45.0,
+            "start_date": "2023-03-01T00:00:00Z",
+            "status": "active"
+        },
+        {
+            "id": "emp-003",
+            "venueId": "venue-don-royale",
+            "first_name": "Sarah",
+            "last_name": "Camilleri",
+            "role": "Manager",
+            "email": "sarah.c@mggroup.com",
+            "gross_salary_cents": 3500000,
+            "id_card_number": "112233M",
+            "fss_tax_status": "parent",
+            "ss_number": "987654M",
+            "cola_eligible": true,
+            "leave_balance_hours": 200.0,
+            "start_date": "2022-06-01T00:00:00Z",
+            "status": "active"
+        }
+    ],
+    "guests": [
+        {
+            "id": "guest-vip-1",
+            "first_name": "Joseph",
+            "last_name": "Muscat",
+            "email": "jm@domain.com",
+            "phone": "+356 9988 7766",
+            "tags": [
+                "VIP",
+                "Regular"
+            ],
+            "total_spend_cents": 540000,
+            "visit_notes": "Prefers corner table, sparking water",
+            "last_visit": "2024-01-28T20:00:00Z"
+        }
+    ],
+    "orders": []
+}

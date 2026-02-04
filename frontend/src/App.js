@@ -7,17 +7,130 @@ import api from "./lib/api";
 import BookingWidget from './pages/public/booking/BookingWidget';
 
 // Pages
-import Login from "./pages/Login";
+// Pages
+import Login from "./features/auth/Login";
 import AdminLayout from "./pages/admin/AdminLayout";
-import Dashboard from "./pages/admin/Dashboard";
+import PayrollDashboard from "./features/hr/PayrollDashboard";
+import InventoryDashboard from "./features/inventory/InventoryDashboard";
+import CRM from "./pages/admin/CRM";
+import Loyalty from "./pages/admin/Loyalty";
+import Automations from "./pages/admin/Automations";
+import Connectors from "./pages/admin/Connectors";
+import TrustDashboard from "./pages/observability/TrustDashboard";
+import SystemHealth from "./pages/observability/SystemHealth"; // Corrected path
+import Integrity from "./pages/observability/Integrity";
+import AdvancedObservability from "./pages/observability/AdvancedObservability";
+import SelfDiagnostics from "./pages/observability/SelfDiagnostics";
+import ServiceDayClose from "./pages/operations/ServiceDayClose";
+import PreGoLive from "./pages/operations/PreGoLive";
+import TasksKanban from "./pages/collab/TasksKanban";
+import Printers from "./pages/admin/Printers";
+import Inbox from "./pages/collab/Inbox";
+import IntegrationsHub from "./pages/integrations/IntegrationsHub";
+import DeliveryAggregators from "./pages/integrations/DeliveryAggregators";
+import FinanceProviderSettings from "./pages/finance/FinanceProviderSettings";
+import GoogleHub from "./pages/google/GoogleHub";
+import ProcurementHub from "./pages/admin/procurement/ProcurementHub";
+import RFQManagement from "./pages/admin/procurement/RFQManagement";
+import ApprovalWorkflow from "./pages/admin/procurement/ApprovalWorkflow";
+import AutoOrderRules from "./pages/admin/procurement/AutoOrderRules";
+import AIInvoiceHub from "./pages/admin/ai-invoice/AIInvoiceHub";
+import InvoiceOCR from "./pages/admin/ai-invoice/InvoiceOCR";
+import InvoiceList from "./pages/admin/ai-invoice/InvoiceList";
+import ForecastingHub from "./pages/admin/forecasting/ForecastingHub";
+import ForecastingDashboard from "./pages/admin/forecasting/ForecastingDashboard"; // Assuming adjacent
+import CentralKitchenHub from "./pages/admin/central-kitchen/CentralKitchenHub";
+import ProductionBatches from "./pages/admin/central-kitchen/ProductionBatches"; // Assuming adjacent
+import RecipeEngineeringHub from "./pages/admin/recipe-engineering/RecipeEngineeringHub";
+import RecipeList from "./pages/admin/recipe-engineering/RecipeList"; // Assuming adjacent
+import QualityHub from "./pages/admin/quality/QualityHub";
+import QualityAudits from "./pages/admin/quality/QualityAudits"; // Assuming adjacent
+import LeaveManagement from "./pages/admin/hr/LeaveManagement";
+import ExpenseManagementIndigo from "./pages/admin/hr/ExpenseManagement"; // Mapped from ExpenseManagement.jsx
+import PerformanceManagementIndigo from "./pages/admin/hr/PerformanceManagement"; // Mapped from PerformanceManagement.jsx
+import DocumentManagementIndigo from "./pages/admin/hr/DocumentManagement"; // Mapped from DocumentManagement.jsx
+import HRAnalyticsIndigo from "./pages/admin/hr/HRAnalytics"; // Mapped from HRAnalytics.jsx
+import SFMAccountingIndigo from "./pages/admin/hr/SFMAccounting"; // Mapped from SFMAccounting.jsx
+import VarianceAnalysis from "./pages/admin/ai-invoice/VarianceAnalysis"; // Corrected path
+import SeasonalPatterns from "./pages/admin/forecasting/SeasonalPatterns"; // Corrected path
+import InternalOrders from "./pages/admin/central-kitchen/InternalOrders"; // Corrected path
+import CostAnalysis from "./pages/admin/recipe-engineering/CostAnalysis"; // Corrected path
+import VisualContentEditor from "./pages/admin/VisualContentEditor";
+
+// HR Reports
+import EmployeeDetailsReport from "./pages/admin/hr/reports/EmployeeDetailsReport"; // Verify these next if needed
+import HeadcountReport from "./pages/admin/hr/reports/HeadcountReport";
+import TurnoverReport from "./pages/admin/hr/reports/TurnoverReport";
+import EmploymentDatesReport from "./pages/admin/hr/reports/EmploymentDatesReport";
+import BirthdaysAnniversariesReport from "./pages/admin/hr/reports/BirthdaysAnniversariesReport";
+import TrainingExpiringReport from "./pages/admin/hr/reports/TrainingExpiringReport";
+import TrainingStartingReport from "./pages/admin/hr/reports/TrainingStartingReport";
+import TrainingOngoingReport from "./pages/admin/hr/reports/TrainingOngoingReport";
+
+// HR Setup
+import BanksPage from "./pages/admin/hr/setup/BanksPage";
+import DepartmentsPage from "./pages/admin/hr/setup/DepartmentsPage";
+import LocationsPage from "./pages/admin/hr/setup/LocationsPage";
+import OccupationsPage from "./pages/admin/hr/setup/OccupationsPage";
+import CountriesPage from "./pages/admin/hr/setup/CountriesPage";
+import EmploymentTypesPage from "./pages/admin/hr/setup/EmploymentTypesPage";
+import WorkSchedulesPage from "./pages/admin/hr/setup/WorkSchedulesPage";
+import CostCentresPage from "./pages/admin/hr/setup/CostCentresPage";
+import TerminationReasonsPage from "./pages/admin/hr/setup/TerminationReasonsPage";
+import GradesPage from "./pages/admin/hr/setup/GradesPage";
+import CitizenshipPage from "./pages/admin/hr/setup/CitizenshipPage";
+import OrganisationPage from "./pages/admin/hr/setup/OrganisationPage";
+import EmployeesSetupPage from "./pages/admin/hr/setup/EmployeesSetupPage";
+import CalendarSetupPage from "./pages/admin/hr/setup/CalendarSetupPage";
+import SalaryPackagePage from "./pages/admin/hr/setup/SalaryPackagePage";
+import CustomFieldsPage from "./pages/admin/hr/setup/CustomFieldsPage";
+import ApplicantsPage from "./pages/admin/hr/setup/ApplicantsPage";
+import SettingsSetupPage from "./pages/admin/hr/setup/SettingsSetupPage";
+
+// HR Main
+import HRHomeIndigoPage from "./pages/admin/hr/HRHomeIndigo";
+import EmployeeDirectory from "./pages/admin/hr/EmployeeDirectory";
+import EmployeeDetailPage from "./pages/admin/hr/EmployeeDetailPage";
+import PayrollRunDetail from "./pages/admin/hr/PayrollRunDetail";
+import PayslipViewer from "./pages/admin/hr/PayslipViewer";
+import Scheduler from "./pages/admin/hr/Scheduler";
+import ClockingData from "./pages/admin/hr/ClockingData";
+import HRImport from "./pages/admin/hr/HRImport";
+import HRMap from "./pages/admin/hr/HRMap";
+import HRExceptions from "./pages/admin/hr/HRExceptions";
+import HRDevices from "./pages/admin/hr/HRDevices";
+import HeadcountModule from "./pages/admin/hr/HeadcountModule";
+import TurnoverModule from "./pages/admin/hr/TurnoverModule";
+import PerformanceReviews from "./pages/admin/hr/PerformanceReviews";
+import ContractsIndigo from "./pages/admin/hr/Contracts"; // Mapped from Contracts.jsx
+import TipsManagement from "./pages/admin/hr/TipsManagement";
+import ReportingHubIndigo from "./pages/admin/hr/ReportingHub"; // Mapped from ReportingHub.jsx
+import ReportViewer from "./pages/admin/hr/ReportViewer";
+import HRModulePlaceholder from "./pages/admin/hr/HRModulePlaceholder";
+import AdminSettingsIndigo from "./pages/admin/hr/AdminSettings"; // Mapped from AdminSettings.jsx
+import UserProfileSettings from "./pages/UserProfileSettings";
+import POSSetup from "./pages/pos/POSSetup";
+import POSMain from "./pages/pos/POSMain";
+import POSRuntimeEnhanced from "./pages/pos/POSRuntimeEnhanced";
+import KDSSetup from "./pages/kds/KDSSetup"; // Corrected path
+import KDSMain from "./pages/kds/KDSMain"; // Corrected path
+import KDSRuntime from "./pages/kds/KDSRuntime"; // Corrected path
+import KDSFeature from "./features/pos/KDSFeature";
+import POSFeature from "./features/pos/POSFeature";
+import MarketingLanding from "./pages/MarketingLanding";
+import TechnicalHub from "./pages/TechnicalHub";
+import ModulesCatalog from "./pages/ModulesCatalog";
+import PayrollPage from "./pages/admin/hr/PayrollPage";
 import VenueSettings from "./pages/admin/VenueSettings";
+import SummaryDashboard from "./pages/admin/hr/SummaryDashboard";
+import Dashboard from "./pages/admin/hr/SummaryDashboard"; // Temporary fallback
 import StaffManagement from "./pages/admin/StaffManagement";
-import Inventory from "./pages/admin/Inventory";
+import POSSettings from "./pages/admin/POSSettings";
 import Documents from "./pages/admin/Documents";
 import ReviewRisk from "./pages/admin/ReviewRisk";
 import AuditLogs from "./pages/admin/AuditLogs";
-import FloorPlans from "./pages/admin/FloorPlans";
-import FloorPlanEditor from "./pages/admin/FloorPlanEditor";
+import FloorPlans from "./pages/admin/FloorPlans"; // Assuming existence
+import FloorPlanEditor from "./pages/admin/FloorPlanEditor"; // Assuming existence
 import MenuImportWizard from "./pages/admin/MenuImportWizard";
 import Guests from "./pages/admin/Guests";
 import Reservations from "./pages/admin/Reservations";
@@ -27,13 +140,13 @@ import DeviceMapping from "./pages/admin/DeviceMapping";
 import Observability from "./pages/admin/Observability";
 import Operations from "./pages/admin/Operations";
 import POSDashboard from "./pages/admin/POSDashboard";
-import SettingsHub from "./pages/admin/SettingsHub";
-import ContentStudio from "./pages/admin/ContentStudio";
+import ProductManagement from "./pages/admin/ProductManagement";
+import CompanySettings from "./pages/admin/CompanySettings";
+import SettingsHub from "./pages/admin/SettingsHub"; // Check if exists
 import Devices from "./pages/admin/Devices";
 import RestaurantAppSettings from "./pages/admin/RestaurantAppSettings";
 import PhysicalTables from "./pages/admin/PhysicalTables";
-import Printers from "./pages/admin/Printers";
-import CompanySettings from "./pages/admin/CompanySettings";
+import ContentStudio from "./pages/admin/ContentStudio";
 import LogsViewer from "./pages/admin/LogsViewer";
 import FinanceDashboard from "./pages/admin/FinanceDashboard";
 import AccountingHub from "./pages/admin/AccountingHub";
@@ -41,177 +154,47 @@ import UpdatesPage from "./pages/admin/UpdatesPage";
 import ReportingHub from "./pages/admin/ReportingHub";
 import ObservabilityLogs from "./pages/admin/ObservabilityLogs";
 import Users from "./pages/admin/Users";
-import RolesPermissions from "./pages/admin/RolesPermissions";
 import UserAccess from "./pages/admin/UserAccess";
+import RolesPermissions from "./pages/admin/RolesPermissions";
 import ThemeCustomizer from "./pages/admin/ThemeCustomizer";
 import Microservices from "./pages/admin/Microservices";
 import EventMonitor from "./pages/admin/EventMonitor";
 import PayrollCalculator from "./pages/admin/PayrollCalculator";
-import PayrollPage from "./pages/admin/hr/PayrollPage";
-import SuppliersAdmin from "./pages/admin/Suppliers";
-import PurchaseOrdersAdmin from "./pages/admin/PurchaseOrders";
+import SuppliersAdmin from "./pages/admin/Suppliers"; // Mapped from Suppliers.js
+import PurchaseOrdersAdmin from "./pages/admin/PurchaseOrders"; // Mapped from PurchaseOrders.js
 import Receiving from "./pages/admin/Receiving";
-import InventoryPage from "./pages/inventory/InventoryPage";
-import InventoryItemsNew from "./pages/inventory/InventoryItemsNew";
-import InventoryItems from "./pages/inventory/InventoryItems";
-import PurchaseOrdersNew from "./pages/inventory/PurchaseOrders";
-import Suppliers from "./pages/inventory/Suppliers";
-import StockCount from "./pages/inventory/StockCount";
-import WasteLog from "./pages/inventory/WasteLog";
-import RecipeManagement from "./pages/inventory/RecipeManagement";
-import ProductionManagement from "./pages/inventory/ProductionManagement";
-import StockTransfers from "./pages/inventory/StockTransfers";
-import StockAdjustments from "./pages/inventory/StockAdjustments";
-import RecipeManagementComplete from "./pages/inventory/RecipeManagementComplete";
-import ProductionManagementComplete from "./pages/inventory/ProductionManagementComplete";
-import StockTransfersComplete from "./pages/inventory/StockTransfersComplete";
-import KDSPerformance from "./pages/reports/KDSPerformance";
-import InventoryStatus from "./pages/reports/InventoryStatus";
+import InventoryPage from "./pages/admin/Inventory"; // Mapped from Inventory.js
+import InventoryItemsNew from "./pages/admin/inventory/InventoryItemsNew"; // Scaffolding next
+import InventoryItems from "./pages/admin/inventory/InventoryItems"; // Scaffolding next
+import Suppliers from "./pages/admin/Suppliers";
+import PurchaseOrdersNew from "./pages/admin/inventory/PurchaseOrdersNew"; // Scaffolding next
+import StockCount from "./pages/admin/inventory/StockCount"; // Scaffolding next
+import WasteLog from "./pages/admin/inventory/WasteLog"; // Scaffolding next
+import RecipeManagement from "./pages/admin/inventory/RecipeManagement"; // Scaffolding next
+import ProductionManagement from "./pages/admin/inventory/ProductionManagement"; // Scaffolding next
+import StockTransfers from "./pages/admin/inventory/StockTransfers"; // Scaffolding next
+import StockAdjustments from "./pages/admin/inventory/StockAdjustments"; // Scaffolding next
+import RecipeManagementComplete from "./pages/admin/inventory/RecipeManagementComplete"; // Scaffolding next
+import ProductionManagementComplete from "./pages/admin/inventory/ProductionManagementComplete"; // Scaffolding next
+import StockTransfersComplete from "./pages/admin/inventory/StockTransfersComplete"; // Scaffolding next
+import KDSPerformance from "./pages/admin/hr/reports/KDSPerformance"; // Scaffolding next
 import POSSales from "./pages/reports/POSSales";
+import InventoryStatus from "./pages/reports/InventoryStatus";
 import POSSalesReport from "./pages/reports/POSSalesReport";
 import KDSPerformanceReport from "./pages/reports/KDSPerformanceReport";
 import InventoryReport from "./pages/reports/InventoryReport";
 import SystemHealthDashboard from "./pages/admin/SystemHealthDashboard";
 import MonitoringDashboard from "./pages/admin/MonitoringDashboard";
-
-import Analytics from "./pages/admin/Analytics";
-import PayrollMalta from "./pages/admin/PayrollMalta";
-import AccountingMalta from "./pages/admin/AccountingMalta";
-import CRM from "./pages/admin/CRM";
-import Loyalty from "./pages/admin/Loyalty";
-import ProductManagement from "./pages/admin/ProductManagement";
-import Automations from "./pages/admin/Automations";
-import Connectors from "./pages/admin/Connectors";
-import TrustDashboard from "./pages/observability/TrustDashboard";
-import SystemHealth from "./pages/observability/SystemHealth";
-import Integrity from "./pages/observability/Integrity";
-import AdvancedObservability from "./pages/observability/AdvancedObservability";
-import SelfDiagnostics from "./pages/observability/SelfDiagnostics";
 import TestPanel from "./pages/observability/TestPanel";
 import ErrorInbox from "./pages/observability/ErrorInbox";
-import MarketingLanding from "./pages/MarketingLanding";
-import TechnicalHub from "./pages/TechnicalHub";
-import ModulesCatalog from "./pages/ModulesCatalog";
+import Analytics from "./pages/admin/Analytics";
 
-// Shireburn Indigo HR Pages
-import SummaryDashboard from "./pages/admin/hr/SummaryDashboard";
-import EmployeePortalIndigo from "./pages/admin/hr/EmployeePortal";
-import EmployeeDirectory from "./pages/admin/hr/EmployeeDirectory";
-import EmployeePortalComplete from "./pages/admin/hr/EmployeePortalComplete";
-import Scheduler from "./pages/admin/hr/Scheduler";
-import ClockingData from "./pages/admin/hr/ClockingData";
-import EmployeeSetupHub from "./pages/admin/hr/EmployeeSetupHub";
-import HeadcountModule from "./pages/admin/hr/HeadcountModule";
-import TurnoverModule from "./pages/admin/hr/TurnoverModule";
-import SickLeaveAnalysis from "./pages/admin/hr/SickLeaveAnalysis";
-import PayrollCosts from "./pages/admin/hr/PayrollCosts";
-import ForecastingCosts from "./pages/admin/hr/ForecastingCosts";
-import ESGModule from "./pages/admin/hr/ESGModule";
-import ReportingHubIndigo from "./pages/admin/hr/ReportingHub";
-import EmployeeDetailPage from "./pages/admin/hr/EmployeeDetailPage";
-import LeaveManagement from "./pages/admin/hr/LeaveManagement";
-import ContractsIndigo from "./pages/admin/hr/Contracts";
-import TipsManagement from "./pages/admin/hr/TipsManagement";
-import DocumentsIndigo from "./pages/admin/hr/Documents";
-import AuditTrailIndigo from "./pages/admin/hr/AuditTrail";
-import AdminSettingsIndigo from "./pages/admin/hr/AdminSettings";
-import HRHomeIndigoPage from "./pages/admin/hr/HRHomeIndigo";
-import ReportViewer from "./pages/admin/hr/ReportViewer";
-import HRModulePlaceholder from "./pages/admin/hr/HRModulePlaceholder";
-import PayrollRunDetail from "./pages/admin/hr/PayrollRunDetail";
-import PayslipTemplate from "./pages/admin/hr/PayslipTemplate";
-import GovReportsPage from "./pages/admin/hr/GovReportsPage";
-import LeaveDashboard from "./pages/admin/hr/LeaveDashboard";
-import HRImport from "./pages/admin/hr/HRImport";
-import HRMap from "./pages/admin/hr/HRMap";
-import HRDevices from "./pages/admin/hr/HRDevices";
-import HRExceptions from "./pages/admin/hr/HRExceptions";
-import PayslipViewer from "./pages/admin/hr/PayslipViewer";
-import EmployeePayrollHistory from "./pages/portal/EmployeePayrollHistory";
-
-// HR Setup Pages
-import BanksPage from "./pages/admin/hr-setup/BanksPage";
-import DepartmentsPage from "./pages/admin/hr-setup/DepartmentsPage";
-import LocationsPage from "./pages/admin/hr-setup/LocationsPage";
-import OccupationsPage from "./pages/admin/hr-setup/OccupationsPage";
-import CountriesPage from "./pages/admin/hr-setup/CountriesPage";
-import EmploymentTypesPage from "./pages/admin/hr-setup/EmploymentTypesPage";
-import WorkSchedulesPage from "./pages/admin/hr-setup/WorkSchedulesPage";
-import CostCentresPage from "./pages/admin/hr-setup/CostCentresPage";
-import TerminationReasonsPage from "./pages/admin/hr-setup/TerminationReasonsPage";
-import GradesPage from "./pages/admin/hr-setup/GradesPage";
-import CitizenshipPage from "./pages/admin/hr-setup/CitizenshipPage";
-import OrganisationPage from "./pages/admin/hr-setup/OrganisationPage";
-import EmployeesSetupPage from "./pages/admin/hr-setup/EmployeesSetupPage";
-import CalendarSetupPage from "./pages/admin/hr-setup/CalendarSetupPage";
-import SalaryPackagePage from "./pages/admin/hr-setup/SalaryPackagePage";
-import CustomFieldsPage from "./pages/admin/hr-setup/CustomFieldsPage";
-import ApplicantsPage from "./pages/admin/hr-setup/ApplicantsPage";
-import SettingsSetupPage from "./pages/admin/hr-setup/SettingsSetupPage";
-import POSSettings from "./pages/admin/POSSettings";
-import { POSFilterProvider } from "./context/POSFilterContext";
-
-// HR Reporting Pages
-import EmployeeDetailsReport from "./pages/admin/hr-reports/EmployeeDetailsReport";
-import TrainingExpiringReport from "./pages/admin/hr-reports/TrainingExpiringReport";
-import TrainingStartingReport from "./pages/admin/hr-reports/TrainingStartingReport";
-import TrainingOngoingReport from "./pages/admin/hr-reports/TrainingOngoingReport";
-import BirthdaysAnniversariesReport from "./pages/admin/hr-reports/BirthdaysAnniversariesReport";
-import HeadcountReport from "./pages/admin/hr-reports/HeadcountReport";
-import TurnoverReport from "./pages/admin/hr-reports/TurnoverReport";
-import EmploymentDatesReport from "./pages/admin/hr-reports/EmploymentDatesReport";
-import PerformanceReviews from "./pages/admin/hr/PerformanceReviews";
-import ServiceDayClose from "./pages/operations/ServiceDayClose";
-import PreGoLive from "./pages/operations/PreGoLive";
-import TasksKanban from "./pages/collab/TasksKanban";
-import Inbox from "./pages/collab/Inbox";
-import IntegrationsHub from "./pages/integrations/IntegrationsHub";
-import POSRuntime from "./pages/pos/POSRuntime";
-import POSRuntimeEnhanced from "./pages/pos/POSRuntimeEnhanced";
-
-import DeliveryAggregators from "./pages/integrations/DeliveryAggregators";
-import FinanceProviderSettings from "./pages/finance/FinanceProviderSettings";
-import GoogleHub from "./pages/google/GoogleHub";
-import POSSetup from "./pages/pos/POSSetup";
-import POSMain from "./pages/pos/POSMain";
-import KDSSetup from "./pages/kds/KDSSetup";
-import KDSMain from "./pages/kds/KDSMain";
-import KDSStations from "./pages/kds/KDSStations";
-import KDSStationDetail from "./pages/kds/KDSStationDetail";
-import KDSRuntime from "./pages/kds/KDSRuntime";
-import DeviceManagement from "./pages/kds/DeviceManagement";
-import UserProfileSettings from "./pages/UserProfileSettings";
-
-// Ultimate & HR Advanced Pages
-import ProcurementHub from "./pages/admin/procurement/ProcurementHub";
-import RFQManagement from "./pages/admin/procurement/RFQManagement";
-import ApprovalWorkflow from "./pages/admin/procurement/ApprovalWorkflow";
-import AIInvoiceHub from "./pages/admin/ai-invoice/AIInvoiceHub";
-import InvoiceOCR from "./pages/admin/ai-invoice/InvoiceOCR";
-import ForecastingHub from "./pages/admin/forecasting/ForecastingHub";
-import CentralKitchenHub from "./pages/admin/central-kitchen/CentralKitchenHub";
-import RecipeEngineeringHub from "./pages/admin/recipe-engineering/RecipeEngineeringHub";
-import QualityHub from "./pages/admin/quality/QualityHub";
-import AutoOrderRules from "./pages/admin/procurement/AutoOrderRules";
-import InvoiceList from "./pages/admin/ai-invoice/InvoiceList";
-import ForecastingDashboard from "./pages/admin/forecasting/ForecastingDashboard";
-import ProductionBatches from "./pages/admin/central-kitchen/ProductionBatches";
-import RecipeList from "./pages/admin/recipe-engineering/RecipeList";
-import QualityAudits from "./pages/admin/quality/QualityAudits";
-import ExpenseManagementIndigo from "./pages/admin/hr/ExpenseManagement";
-import PerformanceManagementIndigo from "./pages/admin/hr/PerformanceManagement";
-import DocumentManagementIndigo from "./pages/admin/hr/DocumentManagement";
-import HRAnalyticsIndigo from "./pages/admin/hr/HRAnalytics";
-import SFMAccountingIndigo from "./pages/admin/hr/SFMAccounting";
-import VarianceAnalysis from "./pages/admin/ai-invoice/VarianceAnalysis";
-import SeasonalPatterns from "./pages/admin/forecasting/SeasonalPatterns";
-import InternalOrders from "./pages/admin/central-kitchen/InternalOrders";
-import CostAnalysis from "./pages/admin/recipe-engineering/CostAnalysis";
-import VisualContentEditor from "./pages/admin/VisualContentEditor";
-
+// HR Advanced
+import PayrollMalta from "./pages/admin/hr/PayrollMalta"; // Scaffolding next
+import AccountingMalta from "./pages/admin/hr/AccountingMalta"; // Scaffolding next
 
 // Context
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./features/auth/AuthContext";
 import { VenueProvider } from "./context/VenueContext";
 import { SafeModeProvider } from "./context/SafeModeContext";
 import { RuntimeProvider } from "./context/RuntimeContext";
@@ -221,6 +204,7 @@ import { MultiVenueProvider } from "./context/MultiVenueContext";
 import { DesignSystemProvider } from "./context/DesignSystemContext";
 import { SubdomainProvider } from "./context/SubdomainContext";
 import { UserSettingsProvider } from "./context/UserSettingsContext";
+import { POSFilterProvider } from "./context/POSFilterContext";
 
 // Components
 import LoadingOverlay from "./components/LoadingOverlay";
@@ -334,7 +318,9 @@ function App() {
                                   <Route path="venues" element={<VenueSettings />} />
                                   <Route path="menu" element={<POSSettings />} />
                                   <Route path="staff" element={<StaffManagement />} />
-                                  <Route path="inventory" element={<Inventory />} />
+                                  <Route path="inventory" element={<InventoryDashboard />} />
+                                  <Route path="pos" element={<POSFeature />} />
+                                  <Route path="kds" element={<KDSFeature />} />
                                   <Route path="documents" element={<Documents />} />
                                   <Route path="review-risk" element={<ReviewRisk />} />
                                   <Route path="audit-logs" element={<AuditLogs />} />
@@ -484,7 +470,7 @@ function App() {
                                     <Route path="people" element={<EmployeeDirectory />} />
                                     <Route path="people/:employeeCode" element={<EmployeeDetailPage />} />
                                     <Route path="leave-management" element={<LeaveManagement />} />
-                                    <Route path="payroll" element={<PayrollPage />} />
+                                    <Route path="payroll" element={<PayrollDashboard />} />
                                     <Route path="payroll/:runId" element={<PayrollRunDetail />} />
                                     <Route path="payroll/view/:employeeId/:period" element={<PayslipViewer />} />
 

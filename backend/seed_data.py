@@ -33,47 +33,26 @@ async def seed_database():
     
     now = datetime.now(timezone.utc).isoformat()
     
+    # Load Master Seed Data
+    try:
+        import json
+        with open(ROOT_DIR.parent / 'frontend/src/data/seed-master.json', 'r') as f:
+            master_data = json.load(f)
+            print("✅ Loaded seed-master.json")
+    except Exception as e:
+        print(f"❌ Failed to load seed-master.json: {e}")
+        return
+
     # ==================== VENUES ====================
-    venues = [
-        {
-            "id": "venue-caviar-bull",
-            "name": "Caviar & Bull",
-            "type": "fine_dining",
-            "service_style": "fine_dining",
-            "timezone": "Europe/Malta",
-            "pacing_enabled": True,
-            "pacing_interval_minutes": 20,
-            "review_policy_low_threshold": 25,
-            "review_policy_medium_threshold": 50,
-            "created_at": now
-        },
-        {
-            "id": "venue-don-royale",
-            "name": "Don Royale",
-            "type": "steakhouse",
-            "service_style": "steakhouse",
-            "timezone": "Europe/Malta",
-            "pacing_enabled": True,
-            "pacing_interval_minutes": 15,
-            "review_policy_low_threshold": 30,
-            "review_policy_medium_threshold": 60,
-            "created_at": now
-        },
-        {
-            "id": "venue-sole-tarragon",
-            "name": "Sole by Tarragon",
-            "type": "mediterranean",
-            "service_style": "mediterranean",
-            "timezone": "Europe/Malta",
-            "pacing_enabled": False,
-            "pacing_interval_minutes": 12,
-            "review_policy_low_threshold": 35,
-            "review_policy_medium_threshold": 65,
-            "created_at": now
-        }
-    ]
+    venues = master_data.get('venues', [])
+    # Add timestamps if missing
+    for v in venues:
+        v['created_at'] = now
+        # Map frontend keys to backend keys if necessary (e.g. camelCase to snake_case)
+        # keeping simple for now as per JSON
+    
     await db.venues.insert_many(venues)
-    print(f"✅ Created {len(venues)} venues")
+    print(f"✅ Created {len(venues)} venues from Master Seed")
     
     # ==================== ZONES ====================
     zones = [
@@ -215,31 +194,17 @@ async def seed_database():
     print(f"✅ Created {len(tables)} tables")
     
     # ==================== USERS ====================
-    users = [
-        # Caviar & Bull
-        {"id": "user-cb-owner", "venue_id": "venue-caviar-bull", "name": "Marvin Gauci", "pin_hash": hash_pin("1234"), "role": "owner", "email": "marvin@caviarbull.com", "mfa_enabled": False, "created_at": now},
-        {"id": "user-cb-manager", "venue_id": "venue-caviar-bull", "name": "Sarah Camilleri", "pin_hash": hash_pin("2345"), "role": "manager", "email": "sarah@caviarbull.com", "mfa_enabled": False, "created_at": now},
-        {"id": "user-cb-server1", "venue_id": "venue-caviar-bull", "name": "Maria Vella", "pin_hash": hash_pin("1111"), "role": "staff", "created_at": now},
-        {"id": "user-cb-server2", "venue_id": "venue-caviar-bull", "name": "David Borg", "pin_hash": hash_pin("2222"), "role": "staff", "created_at": now},
-        {"id": "user-cb-chef", "venue_id": "venue-caviar-bull", "name": "Chef Marco", "pin_hash": hash_pin("3333"), "role": "kitchen", "created_at": now},
-        {"id": "user-cb-host", "venue_id": "venue-caviar-bull", "name": "Anna Spiteri", "pin_hash": hash_pin("4444"), "role": "host", "created_at": now},
+    users = master_data.get('users', [])
+    for u in users:
+        u['created_at'] = now
+        u['pin_hash'] = hash_pin(u.get('pin', '1111'))
+        if 'pin' in u: del u['pin'] # Remove plain pin
+        # Map camelCase to snake_case if needed
+        if 'venueId' in u:
+            u['venue_id'] = u.pop('venueId')
         
-        # Don Royale
-        {"id": "user-dr-owner", "venue_id": "venue-don-royale", "name": "Marvin Gauci", "pin_hash": hash_pin("1234"), "role": "owner", "email": "marvin@donroyale.com", "mfa_enabled": False, "created_at": now},
-        {"id": "user-dr-manager", "venue_id": "venue-don-royale", "name": "James Attard", "pin_hash": hash_pin("2345"), "role": "manager", "email": "james@donroyale.com", "mfa_enabled": False, "created_at": now},
-        {"id": "user-dr-server1", "venue_id": "venue-don-royale", "name": "Paul Grech", "pin_hash": hash_pin("1111"), "role": "staff", "created_at": now},
-        {"id": "user-dr-server2", "venue_id": "venue-don-royale", "name": "Lisa Farrugia", "pin_hash": hash_pin("2222"), "role": "staff", "created_at": now},
-        {"id": "user-dr-chef", "venue_id": "venue-don-royale", "name": "Chef Roberto", "pin_hash": hash_pin("3333"), "role": "kitchen", "created_at": now},
-        
-        # Sole by Tarragon
-        {"id": "user-st-owner", "venue_id": "venue-sole-tarragon", "name": "Marvin Gauci", "pin_hash": hash_pin("1234"), "role": "owner", "email": "marvin@soletarragon.com", "mfa_enabled": False, "created_at": now},
-        {"id": "user-st-manager", "venue_id": "venue-sole-tarragon", "name": "Claire Zammit", "pin_hash": hash_pin("2345"), "role": "manager", "email": "claire@soletarragon.com", "mfa_enabled": False, "created_at": now},
-        {"id": "user-st-server1", "venue_id": "venue-sole-tarragon", "name": "Mark Galea", "pin_hash": hash_pin("1111"), "role": "staff", "created_at": now},
-        {"id": "user-st-server2", "venue_id": "venue-sole-tarragon", "name": "Elena Mifsud", "pin_hash": hash_pin("2222"), "role": "staff", "created_at": now},
-        {"id": "user-st-chef", "venue_id": "venue-sole-tarragon", "name": "Chef Antonio", "pin_hash": hash_pin("3333"), "role": "kitchen", "created_at": now},
-    ]
     await db.users.insert_many(users)
-    print(f"✅ Created {len(users)} users")
+    print(f"✅ Created {len(users)} users from Master Seed")
     
     # ==================== MENUS ====================
     menus = [
@@ -396,27 +361,19 @@ async def seed_database():
     print(f"✅ Created {len(menu_items)} menu items")
     
     # ==================== INVENTORY ITEMS ====================
-    inventory_items = [
-        # Caviar & Bull
-        {"id": "inv-cb-1", "venue_id": "venue-caviar-bull", "name": "Oscietra Caviar 30g", "sku": "CAV-OSC-30", "unit": "tin", "current_stock": 15, "min_stock": 5, "created_at": now},
-        {"id": "inv-cb-2", "venue_id": "venue-caviar-bull", "name": "Wagyu A5 Ribeye", "sku": "BEEF-WAG-RIB", "unit": "portion", "current_stock": 20, "min_stock": 8, "created_at": now},
-        {"id": "inv-cb-3", "venue_id": "venue-caviar-bull", "name": "Dom Pérignon 2012", "sku": "WINE-DP-2012", "unit": "bottle", "current_stock": 12, "min_stock": 4, "created_at": now},
-        {"id": "inv-cb-4", "venue_id": "venue-caviar-bull", "name": "Dover Sole", "sku": "FISH-DS-001", "unit": "each", "current_stock": 10, "min_stock": 4, "created_at": now},
-        
-        # Don Royale
-        {"id": "inv-dr-1", "venue_id": "venue-don-royale", "name": "Prime Ribeye 14oz", "sku": "BEEF-RIB-14", "unit": "portion", "current_stock": 30, "min_stock": 10, "created_at": now},
-        {"id": "inv-dr-2", "venue_id": "venue-don-royale", "name": "Filet Mignon 8oz", "sku": "BEEF-FIL-8", "unit": "portion", "current_stock": 25, "min_stock": 10, "created_at": now},
-        {"id": "inv-dr-3", "venue_id": "venue-don-royale", "name": "Tomahawk 32oz", "sku": "BEEF-TOM-32", "unit": "portion", "current_stock": 8, "min_stock": 3, "created_at": now},
-        {"id": "inv-dr-4", "venue_id": "venue-don-royale", "name": "Napa Cabernet", "sku": "WINE-NAP-CAB", "unit": "bottle", "current_stock": 24, "min_stock": 8, "created_at": now},
-        
-        # Sole by Tarragon
-        {"id": "inv-st-1", "venue_id": "venue-sole-tarragon", "name": "Fresh Sea Bass", "sku": "FISH-SB-001", "unit": "each", "current_stock": 12, "min_stock": 5, "created_at": now},
-        {"id": "inv-st-2", "venue_id": "venue-sole-tarragon", "name": "Fresh Clams", "sku": "SHELL-CLM", "unit": "kg", "current_stock": 10, "min_stock": 4, "created_at": now},
-        {"id": "inv-st-3", "venue_id": "venue-sole-tarragon", "name": "Tiger Prawns", "sku": "SHELL-PRW", "unit": "kg", "current_stock": 8, "min_stock": 3, "created_at": now},
-        {"id": "inv-st-4", "venue_id": "venue-sole-tarragon", "name": "Prosecco", "sku": "WINE-PROS", "unit": "bottle", "current_stock": 36, "min_stock": 12, "created_at": now},
-    ]
+    inventory_items = master_data.get('inventory', [])
+    for i in inventory_items:
+        i['created_at'] = now
+        # Map camelCase to snake_case
+        if 'venueId' in i: i['venue_id'] = i.pop('venueId')
+        if 'priceCents' in i: i['price_cents'] = i.pop('priceCents')
+        if 'minStock' in i: i['min_stock'] = i.pop('minStock')
+        if 'currentStock' in i: i['current_stock'] = i.pop('currentStock')
+        # Handle 'stock' alias from seed-master
+        if 'stock' in i: i['current_stock'] = i.pop('stock')
+
     await db.inventory_items.insert_many(inventory_items)
-    print(f"✅ Created {len(inventory_items)} inventory items")
+    print(f"✅ Created {len(inventory_items)} inventory items from Master Seed")
     
     print("\n✨ Database seeding completed!")
     print("\n📋 Test Credentials:")
