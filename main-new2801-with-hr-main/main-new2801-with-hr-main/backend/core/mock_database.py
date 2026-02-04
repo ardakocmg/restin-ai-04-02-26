@@ -135,11 +135,20 @@ class MockCollection:
         if item:
             if "$set" in update:
                 item.update(update["$set"])
+            if "$inc" in update:
+                for k, v in update["$inc"].items():
+                    if k in item:
+                        item[k] = item[k] + v
+                    else:
+                        item[k] = v
             return type('obj', (object,), {'modified_count': 1, 'upserted_id': None})
         elif upsert:
             new_doc = query.copy()
             if "$set" in update:
                 new_doc.update(update["$set"])
+            if "$inc" in update:
+                for k, v in update["$inc"].items():
+                    new_doc[k] = v
             
             # Remove any query operators from new_doc keys
             keys_to_remove = [k for k in new_doc.keys() if k.startswith('$')]

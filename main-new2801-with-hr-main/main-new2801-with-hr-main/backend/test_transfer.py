@@ -51,12 +51,21 @@ def test_transfer():
         resp = requests.post(f"{BASE_URL}/api/inventory/items", json=new_item, headers=headers)
         item = resp.json()
         # Add stock
-        requests.post(f"{BASE_URL}/api/inventory/ledger", json={
+        resp = requests.post(f"{BASE_URL}/api/inventory/ledger", json={
             "item_id": item['id'],
             "action": "in",
             "quantity": 100,
             "reason": "Initial Stock"
         }, headers=headers)
+        if resp.status_code != 200:
+             print("Failed to add stock:", resp.text)
+        
+        # Refetch item to check stock
+        resp = requests.get(f"{BASE_URL}/api/venues/{source_venue['id']}/inventory", headers=headers)
+        items = resp.json()["items"]
+        item = next(i for i in items if i['id'] == item['id'])
+        print(f"Stock after ledger add: {item['current_stock']}")
+
         item["current_stock"] = 100
         print("Created item with 100 stock.")
     else:

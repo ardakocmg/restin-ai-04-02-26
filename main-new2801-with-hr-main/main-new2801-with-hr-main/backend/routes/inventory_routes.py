@@ -197,8 +197,11 @@ def create_inventory_router():
             {"_id": 0}
         )
         if not source_item:
+            print(f"DEBUG: Transfer Source Item Not Found. ID: {item_id}, Venue: {from_venue_id}")
             raise HTTPException(404, "Source item not found")
         
+        print(f"DEBUG: Transfer Source Item: {source_item.get('id')} Stock: {source_item.get('current_stock')} Req: {quantity}")
+
         if source_item["current_stock"] < quantity:
             raise HTTPException(400, f"Insufficient stock. Available: {source_item['current_stock']}")
 
