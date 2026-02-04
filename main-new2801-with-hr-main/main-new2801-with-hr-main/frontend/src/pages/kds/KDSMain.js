@@ -154,10 +154,10 @@ export default function KDSMain() {
   return (
     <div className="min-h-screen bg-zinc-950">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 h-16 bg-zinc-900 border-b border-white/10 z-50 flex items-center justify-between px-4">
+      <header className="fixed top-0 left-0 right-0 h-16 bg-zinc-950/80 backdrop-blur-md border-b border-white/5 z-50 flex items-center justify-between px-4">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold text-white">
-            KDS <span className="text-red-500">STATION</span>
+          <h1 className="text-xl font-bold text-white tracking-tight">
+            KDS <span className="text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]">STATION</span>
           </h1>
         </div>
 
@@ -167,9 +167,9 @@ export default function KDSMain() {
             <button
               key={station}
               onClick={() => setStationFilter(station)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${stationFilter === station
-                ? "bg-red-500 text-white"
-                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${stationFilter === station
+                ? "bg-red-500/10 text-red-500 border border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
+                : "bg-zinc-900 text-zinc-400 border border-white/5 hover:bg-zinc-800 hover:text-white"
                 }`}
             >
               {station.toUpperCase()}
@@ -194,7 +194,7 @@ export default function KDSMain() {
       <div className="pt-20 pb-20 px-4">
         {flattenedItems.length === 0 ? (
           <div className="text-center py-20">
-            <CheckCircle className="w-16 h-16 mx-auto text-green-500 mb-4" />
+            <CheckCircle className="w-16 h-16 mx-auto text-green-500 mb-4 drop-shadow-[0_0_15px_rgba(74,222,128,0.3)]" />
             <p className="text-xl text-white mb-2">All Caught Up!</p>
             <p className="text-zinc-500">No pending items</p>
           </div>
@@ -267,8 +267,8 @@ function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onD
 
   return (
     <div
-      className="bg-zinc-900 rounded-lg overflow-hidden border-l-4 transition-all hover:shadow-lg"
-      style={{ borderLeftColor: statusColor }}
+      className="bg-zinc-900/50 backdrop-blur-sm rounded-xl overflow-hidden border border-white/5 hover:border-white/10 transition-all hover:shadow-2xl hover:scale-[1.01]"
+      style={{ borderLeft: `4px solid ${statusColor}` }}
     >
       {/* Card Header */}
       <div className="p-4 border-b border-white/10">
@@ -317,7 +317,7 @@ function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onD
       </div>
 
       {/* Timer Section */}
-      <div className="p-4 bg-zinc-800/50">
+      <div className="p-4 bg-black/40 border-t border-b border-white/5">
         {item.status === "PREPARING" && timeLeft !== null && (
           <div className="text-center">
             <div className={`text-3xl font-mono font-bold ${timeLeft < 0 ? 'text-red-500' : 'text-white'}`}>

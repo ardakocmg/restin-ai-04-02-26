@@ -161,6 +161,30 @@ function POSRuntimeEnhanced() {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      // AUTO-PRINT Logic (Fire & Forget)
+      try {
+        // 1. Find a Kitchen Printer
+        const printersRes = await axios.get(`${API_URL}/api/printers?venue_id=${venueId}&type=Kitchen`);
+        const kitchenPrinter = printersRes.data?.[0];
+
+        if (kitchenPrinter) {
+          await axios.post(`${API_URL}/api/print/jobs`, {
+            printer_id: kitchenPrinter.id,
+            context_data: {
+              order_id: order.id,
+              table: 'Table 1',
+              items: items.map(i => ({ name: i.menu_item_name, qty: i.qty }))
+            }
+          }, { headers: { Authorization: `Bearer ${token}` } });
+          console.log("Print job sent to", kitchenPrinter.name);
+        } else {
+          console.warn("No kitchen printer found for auto-print");
+        }
+      } catch (e) {
+        console.error("Auto-print failed", e);
+      }
+
       alert('Order sent to kitchen!');
       refreshOrder();
     } catch (error) {
@@ -215,11 +239,10 @@ function POSRuntimeEnhanced() {
           <button
             key={cat.id}
             onClick={() => setSelectedCategory(cat.id)}
-            className={`w-full p-4 rounded-lg text-left font-semibold transition text-base ${
-              selectedCategory === cat.id
+            className={`w-full p-4 rounded-lg text-left font-semibold transition text-base ${selectedCategory === cat.id
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-            }`}
+              }`}
           >
             {cat.name}
           </button>
@@ -250,7 +273,7 @@ function POSRuntimeEnhanced() {
               style={{ minHeight: '140px' }}
             >
               <div className="text-lg font-bold text-gray-900 mb-3 line-clamp-2">{item.name}</div>
-              <div className="text-3xl font-bold text-blue-600">€{item.price?.toFixed(2)}</div>
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">€{item.price?.toFixed(2)}</div>
             </button>
           ))}
         </div>
@@ -259,7 +282,7 @@ function POSRuntimeEnhanced() {
       {/* Right: Order Summary */}
       <div className="w-[400px] bg-white border-l border-gray-200 p-6 flex flex-col">
         <div className="flex items-center gap-3 mb-6">
-          <ShoppingCart className="w-7 h-7 text-blue-600" />
+          <ShoppingCart className="w-7 h-7 text-blue-600 dark:text-blue-400" />
           <h3 className="text-2xl font-bold text-gray-900">Order</h3>
         </div>
 
@@ -277,30 +300,29 @@ function POSRuntimeEnhanced() {
                 <div key={item.id} className="bg-gray-50 rounded-xl p-4 relative">
                   <button
                     onClick={() => voidItem(item.id)}
-                    className="absolute top-2 right-2 p-1 hover:bg-red-100 rounded-lg text-red-600"
+                    className="absolute top-2 right-2 p-1 hover:bg-red-100 rounded-lg text-red-600 dark:text-red-400"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
-                  
+
                   <div className="font-semibold text-gray-900 mb-1 pr-8">{item.menu_item_name}</div>
                   <div className="text-sm text-gray-600 mb-2">Qty: {item.qty}</div>
-                  
+
                   {item.modifiers && item.modifiers.length > 0 && (
-                    <div className="text-xs text-blue-600 mb-2">
+                    <div className="text-xs text-blue-600 dark:text-blue-400 mb-2">
                       {item.modifiers.length} modifier(s)
                     </div>
                   )}
-                  
+
                   {item.instructions && (
                     <div className="text-xs text-gray-500 italic mb-2">"{item.instructions}"</div>
                   )}
-                  
+
                   <div className="flex items-center justify-between">
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      item.state === 'SENT' ? 'bg-green-100 text-green-700' :
-                      item.state === 'FIRED' ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-gray-200 text-gray-600'
-                    }`}>
+                    <span className={`text-xs px-2 py-1 rounded-full ${item.state === 'SENT' ? 'bg-green-100 text-green-700' :
+                        item.state === 'FIRED' ? 'bg-yellow-100 text-yellow-700' :
+                          'bg-gray-200 text-gray-600'
+                      }`}>
                       {item.state}
                     </span>
                     <span className="font-bold text-gray-900">€{item.pricing.line_total.toFixed(2)}</span>

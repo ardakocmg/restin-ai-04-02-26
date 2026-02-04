@@ -101,7 +101,7 @@ function DeviceManagement() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {pairingCodes.map((code) => (
               <div key={code.id} className="bg-white rounded-lg p-4 text-center">
-                <div className="text-4xl font-bold text-blue-600 mb-2">{code.code_4_digit}</div>
+                <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">{code.code_4_digit}</div>
                 <p className="text-sm text-gray-600">
                   Expires: {new Date(code.expires_at).toLocaleTimeString()}
                 </p>
@@ -121,8 +121,8 @@ function DeviceManagement() {
             <div key={device.id} className="p-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className={`p-3 rounded-lg ${
-                  device.type === 'KDS_SCREEN' ? 'bg-blue-100 text-blue-600' :
-                  device.type === 'POS' ? 'bg-green-100 text-green-600' :
+                  device.type === 'KDS_SCREEN' ? 'bg-blue-100 text-blue-600 dark:text-blue-400' :
+                  device.type === 'POS' ? 'bg-green-100 text-green-600 dark:text-green-400' :
                   'bg-gray-100 text-gray-600'
                 }`}>
                   {device.type === 'KDS_SCREEN' ? <Monitor className="w-6 h-6" /> : <Smartphone className="w-6 h-6" />}
@@ -140,7 +140,7 @@ function DeviceManagement() {
                 {device.last_seen_at && (
                   <div className="flex items-center gap-2">
                     {new Date(device.last_seen_at) > new Date(Date.now() - 60000) ? (
-                      <Wifi className="w-5 h-5 text-green-600" />
+                      <Wifi className="w-5 h-5 text-green-600 dark:text-green-400" />
                     ) : (
                       <WifiOff className="w-5 h-5 text-gray-400" />
                     )}

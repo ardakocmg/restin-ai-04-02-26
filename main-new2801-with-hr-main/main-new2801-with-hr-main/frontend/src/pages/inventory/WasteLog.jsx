@@ -176,7 +176,7 @@ function WasteLog() {
           {wasteEntries.map((entry) => (
             <div key={entry.id} className="p-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <Trash2 className="w-6 h-6 text-red-600" />
+                <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
                 <div>
                   <h3 className="font-semibold text-gray-900">{entry.item_name}</h3>
                   <p className="text-sm text-gray-600">

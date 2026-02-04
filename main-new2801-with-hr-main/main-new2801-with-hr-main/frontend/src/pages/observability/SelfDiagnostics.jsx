@@ -104,7 +104,7 @@ export default function SelfDiagnostics() {
                 <ul className="space-y-2">
                   {report.suggested_actions.map((action, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="text-blue-600 mt-1">•</span>
+                      <span className="text-blue-600 dark:text-blue-400 mt-1">•</span>
                       <span className="text-sm text-slate-700">{action}</span>
                     </li>
                   ))}

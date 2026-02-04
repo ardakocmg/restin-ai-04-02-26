@@ -59,7 +59,7 @@ function PurchaseOrders() {
           <div key={po.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition cursor-pointer">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <FileText className="w-6 h-6 text-blue-600" />
+                <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">{po.display_id}</h3>
                   <p className="text-sm text-gray-600">{po.supplier_name}</p>

@@ -192,7 +192,7 @@ export default function EmployeePortalComplete() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-blue-500 hover:text-blue-600 text-xs font-bold uppercase tracking-wider"
+                className="text-blue-500 hover:text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider"
                 onClick={() => navigate('/hr/employee-portal/history')}
               >
                 View All History
@@ -437,7 +437,7 @@ export default function EmployeePortalComplete() {
               </div>
               <div className="p-4 bg-blue-100 dark:bg-blue-900 rounded">
                 <p className="text-sm text-slate-600 dark:text-slate-300">Hours Remaining</p>
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-300">{selectedLeave?.hours_left}h</p>
+                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 dark:text-blue-300">{selectedLeave?.hours_left}h</p>
               </div>
             </div>
             <div className="p-4 bg-slate-100 dark:bg-slate-700 rounded">

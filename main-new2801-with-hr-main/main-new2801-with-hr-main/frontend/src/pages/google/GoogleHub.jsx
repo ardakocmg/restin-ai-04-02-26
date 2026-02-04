@@ -98,7 +98,7 @@ export default function GoogleHub() {
                 <Card key={service.key} className="hover:shadow-lg transition-shadow cursor-pointer">
                   <CardContent className="pt-6">
                     <div className="text-center">
-                      <ServiceIcon className="h-10 w-10 mx-auto mb-3 text-blue-600" />
+                      <ServiceIcon className="h-10 w-10 mx-auto mb-3 text-blue-600 dark:text-blue-400" />
                       <h3 className="font-bold text-slate-900 mb-1">{service.label}</h3>
                       <p className="text-xs text-slate-600 mb-3">{service.description}</p>
                       <Badge variant={isEnabled ? 'default' : 'secondary'} className="text-xs">
@@ -196,7 +196,7 @@ export default function GoogleHub() {
                   {analytics[0] && Object.entries(analytics[0].metrics || {}).map(([key, value]) => (
                     <div key={key} className="p-4 bg-blue-50 rounded-lg text-center">
                       <p className="text-sm text-slate-600 capitalize">{key.replace(/_/g, ' ')}</p>
-                      <p className="text-2xl font-bold text-blue-600">{value}</p>
+                      <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{value}</p>
                     </div>
                   ))}
                 </div>

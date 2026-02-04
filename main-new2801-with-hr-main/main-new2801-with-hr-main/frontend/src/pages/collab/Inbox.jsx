@@ -37,7 +37,7 @@ export default function CollabInbox() {
       description="Unified notifications and updates"
     >
       <div className="mb-4 flex items-center gap-2">
-        <Inbox className="h-6 w-6 text-blue-600" />
+        <Inbox className="h-6 w-6 text-blue-600 dark:text-blue-400" />
         <span className="text-2xl font-bold text-slate-900">{unreadCount} Unread</span>
       </div>
 

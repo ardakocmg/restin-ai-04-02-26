@@ -141,28 +141,28 @@ export default function VenueSettings() {
     <div className="space-y-8 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-heading font-bold text-white">Venue Settings</h1>
-          <p className="text-zinc-400 mt-1">{activeVenue.name}</p>
+          <h1 className="text-3xl font-heading font-bold text-zinc-900 dark:text-white">Venue Settings</h1>
+          <p className="text-zinc-500 dark:text-zinc-400 mt-1">{activeVenue.name}</p>
         </div>
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
-        <div className="mb-8 p-1 bg-zinc-900/50 border border-white/5 rounded-xl inline-flex h-12">
+        <div className="mb-8 p-1 bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/5 rounded-xl inline-flex h-12">
           <TabsList className="bg-transparent border-none p-0 flex gap-2 h-full">
-            <TabsTrigger value="general" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white px-6 h-full rounded-lg">General</TabsTrigger>
-            <TabsTrigger value="legal" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white px-6 h-full rounded-lg">Legal & Branding</TabsTrigger>
-            <TabsTrigger value="zones" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white px-6 h-full rounded-lg">Zones</TabsTrigger>
-            <TabsTrigger value="tables" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white px-6 h-full rounded-lg">Tables</TabsTrigger>
-            <TabsTrigger value="modules" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white px-6 h-full rounded-lg">Modules</TabsTrigger>
+            <TabsTrigger value="general" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md px-6 h-full rounded-lg text-zinc-600 dark:text-zinc-400">General</TabsTrigger>
+            <TabsTrigger value="legal" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md px-6 h-full rounded-lg text-zinc-600 dark:text-zinc-400">Legal & Branding</TabsTrigger>
+            <TabsTrigger value="zones" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md px-6 h-full rounded-lg text-zinc-600 dark:text-zinc-400">Zones</TabsTrigger>
+            <TabsTrigger value="tables" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md px-6 h-full rounded-lg text-zinc-600 dark:text-zinc-400">Tables</TabsTrigger>
+            <TabsTrigger value="modules" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md px-6 h-full rounded-lg text-zinc-600 dark:text-zinc-400">Modules</TabsTrigger>
           </TabsList>
         </div>
 
         {/* General Settings */}
         <TabsContent value="general">
-          <Card className="bg-zinc-900/50 border-white/5">
+          <Card className="bg-white dark:bg-zinc-900/50 border-zinc-200 dark:border-white/5">
             <CardHeader>
-              <CardTitle className="text-white font-heading flex items-center gap-2">
-                <Settings className="w-5 h-5" />
+              <CardTitle className="text-zinc-900 dark:text-white font-heading flex items-center gap-2">
+                <Settings className="w-5 h-5 text-zinc-500 dark:text-zinc-400" />
                 General Configuration
               </CardTitle>
             </CardHeader>
@@ -174,7 +174,7 @@ export default function VenueSettings() {
                     data-testid="venue-name-input"
                     value={venueForm.name || ""}
                     onChange={(e) => setVenueForm({ ...venueForm, name: e.target.value })}
-                    className="bg-zinc-950 border-white/10 text-white font-bold h-14 focus:ring-red-500/50 text-lg"
+                    className="bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white font-bold h-14 focus:ring-red-500/50 text-lg"
                     disabled={!isManager()}
                   />
                 </div>
@@ -197,12 +197,12 @@ export default function VenueSettings() {
                 </div>
               </div>
 
-              <div className="border-t border-white/5 pt-6">
-                <h3 className="text-lg font-heading text-white mb-4">Course Pacing</h3>
+              <div className="border-t border-zinc-200 dark:border-white/5 pt-6">
+                <h3 className="text-lg font-heading text-zinc-900 dark:text-white mb-4">Course Pacing</h3>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-white">Enable Course Pacing</p>
-                    <p className="text-sm text-zinc-400">Control course timing for fine dining</p>
+                    <p className="text-zinc-900 dark:text-white">Enable Course Pacing</p>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">Control course timing for fine dining</p>
                   </div>
                   <Switch
                     data-testid="pacing-switch"
@@ -219,15 +219,15 @@ export default function VenueSettings() {
                       type="number"
                       value={venueForm.pacing_interval_minutes || 15}
                       onChange={(e) => setVenueForm({ ...venueForm, pacing_interval_minutes: parseInt(e.target.value) })}
-                      className="bg-zinc-800 border-white/10 text-white w-32"
+                      className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white w-32"
                       disabled={!isManager()}
                     />
                   </div>
                 )}
               </div>
 
-              <div className="border-t border-white/5 pt-6">
-                <h3 className="text-lg font-heading text-white mb-4">Review Policy</h3>
+              <div className="border-t border-zinc-200 dark:border-white/5 pt-6">
+                <h3 className="text-lg font-heading text-zinc-900 dark:text-white mb-4">Review Policy</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="text-zinc-300">Low Risk Threshold (0-100)</Label>
@@ -238,7 +238,7 @@ export default function VenueSettings() {
                       max="100"
                       value={venueForm.review_policy_low_threshold || 30}
                       onChange={(e) => setVenueForm({ ...venueForm, review_policy_low_threshold: parseInt(e.target.value) })}
-                      className="bg-zinc-800 border-white/10 text-white"
+                      className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white"
                       disabled={!isManager()}
                     />
                     <p className="text-xs text-zinc-500">Review QR visible for scores 0-{venueForm.review_policy_low_threshold || 30}</p>
@@ -252,7 +252,7 @@ export default function VenueSettings() {
                       max="100"
                       value={venueForm.review_policy_medium_threshold || 60}
                       onChange={(e) => setVenueForm({ ...venueForm, review_policy_medium_threshold: parseInt(e.target.value) })}
-                      className="bg-zinc-800 border-white/10 text-white"
+                      className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white"
                       disabled={!isManager()}
                     />
                     <p className="text-xs text-zinc-500">Manager override for scores {(venueForm.review_policy_low_threshold || 30) + 1}-{venueForm.review_policy_medium_threshold || 60}</p>
@@ -518,9 +518,9 @@ export default function VenueSettings() {
                   <div
                     key={zone.id}
                     data-testid={`zone-${zone.id}`}
-                    className="p-4 rounded-lg bg-zinc-800/50 border border-white/5"
+                    className="p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-white/5"
                   >
-                    <h4 className="text-white font-medium">{zone.name}</h4>
+                    <h4 className="text-zinc-900 dark:text-white font-medium">{zone.name}</h4>
                     <p className="text-zinc-400 text-sm capitalize">{zone.type}</p>
                     <p className="text-zinc-500 text-xs mt-2">
                       {tables.filter(t => t.zone_id === zone.id).length} tables
@@ -534,9 +534,9 @@ export default function VenueSettings() {
 
         {/* Tables */}
         <TabsContent value="tables">
-          <Card className="bg-zinc-900/50 border-white/5">
+          <Card className="bg-white dark:bg-zinc-900/50 border-zinc-200 dark:border-white/5">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-white font-heading flex items-center gap-2">
+              <CardTitle className="text-zinc-900 dark:text-white font-heading flex items-center gap-2">
                 <Table2 className="w-5 h-5" />
                 Tables
               </CardTitle>
@@ -631,7 +631,7 @@ export default function VenueSettings() {
         </TabsContent>
         {/* Modules */}
         <TabsContent value="modules">
-          <Card className="bg-zinc-950 border-white/5 shadow-2xl overflow-hidden">
+          <Card className="bg-white dark:bg-zinc-950 border-zinc-200 dark:border-white/5 shadow-2xl overflow-hidden">
             <CardHeader className="border-b border-white/5 bg-zinc-900/50 p-6">
               <CardTitle className="text-sm font-black uppercase tracking-[0.2em] text-white flex items-center gap-2">
                 <Package className="w-4 h-4 text-red-500" />
@@ -693,15 +693,15 @@ export default function VenueSettings() {
                       </div>
 
                       {isExpanded && (
-                        <div className="px-6 pb-6 pt-0 bg-zinc-900/30">
-                          <div className="pl-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 border-t border-white/5">
-                            <div className="p-4 rounded-xl bg-zinc-950 border border-white/5">
+                        <div className="px-6 pb-6 pt-0 bg-zinc-50 dark:bg-zinc-900/30">
+                          <div className="pl-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 border-t border-zinc-200 dark:border-white/5">
+                            <div className="p-4 rounded-xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-white/5">
                               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Configuration</p>
-                              <p className="text-xs font-bold text-white uppercase tracking-tight">Advanced Settings</p>
+                              <p className="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-tight">Advanced Settings</p>
                             </div>
-                            <div className="p-4 rounded-xl bg-zinc-950 border border-white/5">
+                            <div className="p-4 rounded-xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-white/5">
                               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Status</p>
-                              <p className="text-xs font-bold text-green-500 uppercase tracking-tight">System Ready</p>
+                              <p className="text-xs font-bold text-green-600 dark:text-green-500 uppercase tracking-tight">System Ready</p>
                             </div>
                           </div>
                         </div>

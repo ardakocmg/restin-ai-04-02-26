@@ -70,6 +70,15 @@ class MenuItemRecipe(BaseModel):
     portion_size: float = 1.0
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
+class LedgerEntryCreate(BaseModel):
+    item_id: str
+    action: LedgerAction
+    quantity: float
+    reason: Optional[str] = None
+    lot_number: Optional[str] = None
+    expiry_date: Optional[str] = None
+    po_id: Optional[str] = None
+
 class StockLedgerEntry(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))

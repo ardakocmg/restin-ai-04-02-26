@@ -51,7 +51,7 @@ export default function ForecastingCosts() {
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Cost Variance</p>
-            <p className={`text-2xl font-bold mt-2 ${data.cost_variance > 0 ? 'text-green-600' : 'text-red-600'
+            <p className={`text-2xl font-bold mt-2 ${data.cost_variance > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
               }`}>{data.cost_variance > 0 ? '+' : ''}{(data.cost_variance || 0).toFixed(2)}%</p>
           </CardContent>
         </Card>

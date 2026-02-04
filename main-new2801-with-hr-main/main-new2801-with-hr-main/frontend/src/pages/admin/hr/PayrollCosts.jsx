@@ -51,13 +51,13 @@ export default function PayrollCosts() {
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Overtime Costs</p>
-            <p className="text-2xl font-bold text-orange-600 mt-2">€{data.overtime_costs.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-orange-600 dark:text-orange-400 mt-2">€{data.overtime_costs.toLocaleString()}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Benefits</p>
-            <p className="text-2xl font-bold text-blue-600 mt-2">€{data.benefits_costs.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-2">€{data.benefits_costs.toLocaleString()}</p>
           </CardContent>
         </Card>
       </div>

@@ -6,7 +6,7 @@ import uuid
 
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
-from models import InventoryItem, InventoryItemCreate, LedgerAction, StockLedgerEntry
+from models import InventoryItem, InventoryItemCreate, LedgerAction, StockLedgerEntry, LedgerEntryCreate
 from services.audit_service import create_audit_log
 from utils.helpers import compute_hash
 
@@ -87,15 +87,17 @@ def create_inventory_router():
 
     @router.post("/inventory/ledger")
     async def create_ledger_entry(
-        item_id: str,
-        action: LedgerAction,
-        quantity: float,
-        reason: Optional[str] = None,
-        lot_number: Optional[str] = None,
-        expiry_date: Optional[str] = None,
-        po_id: Optional[str] = None,
+        entry: LedgerEntryCreate,
         current_user: dict = Depends(get_current_user)
     ):
+        item_id = entry.item_id
+        action = entry.action
+        quantity = entry.quantity
+        reason = entry.reason
+        lot_number = entry.lot_number
+        expiry_date = entry.expiry_date
+        po_id = entry.po_id
+
         item = await db.inventory_items.find_one({"id": item_id}, {"_id": 0})
         if not item:
             raise HTTPException(status_code=404, detail="Item not found")

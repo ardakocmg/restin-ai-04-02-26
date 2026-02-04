@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PageContainer from '../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -12,15 +12,12 @@ import { Checkbox } from '../../components/ui/checkbox';
 import { Label } from '../../components/ui/label';
 import { Badge } from '../../components/ui/badge';
 import { toast } from 'sonner';
+import { printersAPI, printerTemplatesAPI } from '../../lib/api/printers';
+import { useAuth } from '../../context/AuthContext';
+import { Loader2 } from 'lucide-react';
 import DataTable from '../../components/shared/DataTable';
-import { ScrollArea } from '../../components/ui/scroll-area';
 
-const MOCK_PRINTERS = [
-    { id: '1', name: 'Bull POS 1', type: 'Receipt', location: 'Front Desk', ip: '192.168.1.100', port: 9100, status: 'Online', template: 'Receipt - Station' },
-    { id: '2', name: 'Kitchen Main', type: 'Kitchen', location: 'Kitchen', ip: '192.168.1.101', port: 9100, status: 'Online', template: 'Kitchen MAIN' },
-    { id: '3', name: 'Bar Printer', type: 'Bar', location: 'Bar', ip: '192.168.1.102', port: 9100, status: 'Offline', template: 'Bar' },
-    { id: '4', name: 'Kitchen Pass', type: 'Kitchen', location: 'Kitchen Pass', ip: '192.168.1.103', port: 9100, status: 'Online', template: 'Kitchen STR' },
-];
+// Removed MOCK_PRINTERS constant in favor of API fetching
 
 const MOCK_TEMPLATES = [
     {
@@ -154,10 +151,12 @@ const MOCK_CASH_DRAWERS = [
 ];
 
 export default function Printers() {
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = useState('printers');
-    const [printers, setPrinters] = useState(MOCK_PRINTERS);
-    const [templates, setTemplates] = useState(MOCK_TEMPLATES);
+    const [printers, setPrinters] = useState([]);
+    const [templates, setTemplates] = useState([]); // Will load from API
     const [cashDrawers, setCashDrawers] = useState(MOCK_CASH_DRAWERS);
+    const [loading, setLoading] = useState(false);
 
     const [editPrinterModal, setEditPrinterModal] = useState(false);
     const [editTemplateModal, setEditTemplateModal] = useState(false);
@@ -166,6 +165,27 @@ export default function Printers() {
     const [selectedPrinter, setSelectedPrinter] = useState(null);
     const [selectedTemplate, setSelectedTemplate] = useState(null);
     const [newDrawerName, setNewDrawerName] = useState('');
+
+    const loadData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const [printersData, templatesData] = await Promise.all([
+                printersAPI.list({ venue_id: user?.defaultVenueId }),
+                printerTemplatesAPI.list()
+            ]);
+            setPrinters(printersData);
+            setTemplates(templatesData.length > 0 ? templatesData : MOCK_TEMPLATES); // Fallback to mock if empty initially
+        } catch (error) {
+            console.error("Failed to load printers:", error);
+            toast.error("Failed to load printer configuration");
+        } finally {
+            setLoading(false);
+        }
+    }, [user?.defaultVenueId]);
+
+    useEffect(() => {
+        loadData();
+    }, [loadData]);
 
     const openEditTemplate = (template) => {
         setSelectedTemplate(template);
@@ -202,6 +222,7 @@ export default function Printers() {
                         <Printer className="w-4 h-4 mr-2" />
                         Printers
                     </TabsTrigger>
+
                     <TabsTrigger value="templates" className="data-[state=active]:bg-red-600 data-[state=active]:text-white">
                         <FileText className="w-4 h-4 mr-2" />
                         Printer Templates
@@ -254,6 +275,8 @@ export default function Printers() {
                         </CardContent>
                     </Card>
                 </TabsContent>
+
+
 
                 {/* Printer Templates Tab */}
                 <TabsContent value="templates" className="m-0">
@@ -383,6 +406,7 @@ export default function Printers() {
                                     <Label className="text-zinc-400 text-xs">Name</Label>
                                     <Input
                                         value={selectedTemplate.name}
+                                        readOnly
                                         className="bg-zinc-950 border-white/10 text-white mt-1"
                                     />
                                 </div>
@@ -401,6 +425,7 @@ export default function Printers() {
                                     <Label className="text-zinc-400 text-xs">Printer</Label>
                                     <Input
                                         value={selectedTemplate.printer}
+                                        readOnly
                                         className="bg-zinc-950 border-white/10 text-white mt-1"
                                     />
                                 </div>
@@ -432,6 +457,7 @@ export default function Printers() {
                                     <Label className="text-zinc-400 text-xs">Title Text</Label>
                                     <Input
                                         value={selectedTemplate.titleText}
+                                        readOnly
                                         className="bg-zinc-950 border-white/10 text-white mt-1"
                                     />
                                 </div>
@@ -572,7 +598,7 @@ export default function Printers() {
                                     </div>
                                     <div>
                                         <div className="flex justify-between">
-                                            <span className="text-orange-600">20ProductWithPricedAddition</span>
+                                            <span className="text-orange-600 dark:text-orange-400">20ProductWithPricedAddition</span>
                                             <span className="text-zinc-900">1</span>
                                         </div>
                                         <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
@@ -580,14 +606,14 @@ export default function Printers() {
                                     </div>
                                     <div>
                                         <div className="flex justify-between">
-                                            <span className="text-orange-600">10ProductWithPricedAddition</span>
+                                            <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
                                             <span className="text-zinc-900">2</span>
                                         </div>
                                         <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
                                     </div>
                                     <div>
                                         <div className="flex justify-between">
-                                            <span className="text-orange-600">10ProductWithPricedAddition</span>
+                                            <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
                                             <span className="text-zinc-900">3</span>
                                         </div>
                                     </div>

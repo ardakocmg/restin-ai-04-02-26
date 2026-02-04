@@ -60,14 +60,14 @@ export default function AdvancedObservability() {
             </CardHeader>
             <CardContent>
               {slowQueries.length === 0 ? (
-                <p className="text-center py-8 text-green-600">No slow queries detected</p>
+                <p className="text-center py-8 text-green-600 dark:text-green-400">No slow queries detected</p>
               ) : (
                 <div className="space-y-2">
                   {slowQueries.slice(0, 10).map((q, idx) => (
                     <div key={idx} className="p-3 bg-slate-50 rounded border">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium">{q.service_name}.{q.operation}</span>
-                        <span className="text-sm text-orange-600 font-bold">{q.duration_ms.toFixed(0)}ms</span>
+                        <span className="text-sm text-orange-600 dark:text-orange-400 font-bold">{q.duration_ms.toFixed(0)}ms</span>
                       </div>
                       <p className="text-xs text-slate-600 mt-1">{new Date(q.created_at).toLocaleString()}</p>
                     </div>
@@ -115,7 +115,7 @@ export default function AdvancedObservability() {
             </CardHeader>
             <CardContent>
               {readModelHealth.length === 0 ? (
-                <p className="text-center py-8 text-green-600">All read models healthy</p>
+                <p className="text-center py-8 text-green-600 dark:text-green-400">All read models healthy</p>
               ) : (
                 <div className="space-y-2">
                   {readModelHealth.map((rm, idx) => (

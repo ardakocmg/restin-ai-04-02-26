@@ -36,7 +36,7 @@ export default function ESGModule() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-600">Diversity Score</p>
-                <p className="text-3xl font-bold text-green-600 mt-2">{data.diversity_score}</p>
+                <p className="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">{data.diversity_score}</p>
               </div>
               <Award className="h-10 w-10 text-green-500" />
             </div>
@@ -45,13 +45,13 @@ export default function ESGModule() {
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Gender Pay Gap</p>
-            <p className="text-3xl font-bold text-red-600 mt-2">{data.gender_pay_gap}%</p>
+            <p className="text-3xl font-bold text-red-600 dark:text-red-400 mt-2">{data.gender_pay_gap}%</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Employee Satisfaction</p>
-            <p className="text-3xl font-bold text-blue-600 mt-2">{data.employee_satisfaction}/5</p>
+            <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-2">{data.employee_satisfaction}/5</p>
           </CardContent>
         </Card>
       </div>
@@ -63,7 +63,7 @@ export default function ESGModule() {
             <div className="space-y-4">
               <div className="flex justify-between items-center p-4 bg-blue-50 rounded">
                 <span className="text-slate-700">Training Hours per Employee</span>
-                <span className="text-xl font-bold text-blue-600">{data.training_hours_per_employee}h</span>
+                <span className="text-xl font-bold text-blue-600 dark:text-blue-400">{data.training_hours_per_employee}h</span>
               </div>
               <div className="flex justify-between items-center p-4 bg-yellow-50 rounded">
                 <span className="text-slate-700">Safety Incidents</span>
@@ -79,11 +79,11 @@ export default function ESGModule() {
             <div className="space-y-4">
               <div className="flex justify-between items-center p-4 bg-green-50 rounded">
                 <span className="text-slate-700">Total CO2 (tons)</span>
-                <span className="text-xl font-bold text-green-600">{data.carbon_footprint.total_co2}</span>
+                <span className="text-xl font-bold text-green-600 dark:text-green-400">{data.carbon_footprint.total_co2}</span>
               </div>
               <div className="flex justify-between items-center p-4 bg-green-50 rounded">
                 <span className="text-slate-700">Per Employee</span>
-                <span className="text-xl font-bold text-green-600">{data.carbon_footprint.per_employee}</span>
+                <span className="text-xl font-bold text-green-600 dark:text-green-400">{data.carbon_footprint.per_employee}</span>
               </div>
               <div className="flex justify-between items-center p-4 bg-emerald-50 rounded">
                 <span className="text-slate-700">Reduction Target</span>

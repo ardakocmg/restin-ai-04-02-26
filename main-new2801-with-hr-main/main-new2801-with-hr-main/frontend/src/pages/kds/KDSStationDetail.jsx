@@ -106,7 +106,7 @@ function KDSStationDetail() {
               onClick={() => setActiveTab(tab)}
               className={`px-6 py-4 font-medium capitalize transition ${
                 activeTab === tab
-                  ? 'text-blue-600 border-b-2 border-blue-600'
+                  ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -150,7 +150,7 @@ function KDSStationDetail() {
                         };
                         updateSettings(newSettings);
                       }}
-                      className="w-5 h-5 text-blue-600 rounded"
+                      className="w-5 h-5 text-blue-600 dark:text-blue-400 rounded"
                     />
                     <span className="capitalize">{key.replace('_', ' ')}</span>
                   </label>
@@ -179,7 +179,7 @@ function KDSStationDetail() {
                         };
                         updateSettings(newSettings);
                       }}
-                      className="w-5 h-5 text-blue-600 rounded"
+                      className="w-5 h-5 text-blue-600 dark:text-blue-400 rounded"
                     />
                     <span className="capitalize">{key.replace('_', ' ')}</span>
                     {['preparing', 'on_hold', 'completed'].includes(key) && (
@@ -264,7 +264,7 @@ function KDSStationDetail() {
                         wait_times: { ...settings.wait_times, enabled: e.target.checked }
                       });
                     }}
-                    className="w-5 h-5 text-blue-600 rounded"
+                    className="w-5 h-5 text-blue-600 dark:text-blue-400 rounded"
                   />
                   <span className="font-medium">Enable Wait Time Indicators</span>
                 </label>
@@ -316,7 +316,7 @@ function KDSStationDetail() {
 
       {/* Danger Zone */}
       <div className="bg-white rounded-xl shadow-sm border border-red-200 p-6">
-        <h3 className="text-lg font-semibold text-red-600 mb-4">Danger Zone</h3>
+        <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-4">Danger Zone</h3>
         <button
           onClick={resetStation}
           className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"

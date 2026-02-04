@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { tablePreferencesAPI, tablePresetsAPI } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
+import EmptyState from './EmptyState';
 
 const DEFAULT_PAGE_SIZES = [10, 20, 50, 100];
 
@@ -609,10 +610,12 @@ export default function DataTable({
               <TableBody>
                 {!data || data.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={tableColumns.length} className="text-center text-zinc-100 font-bold py-12 bg-zinc-950/20" data-testid="datatable-empty">
-                      <div className="flex flex-col items-center gap-2">
-                        {emptyMessage}
-                      </div>
+                    <TableCell colSpan={tableColumns.length} className="p-0 border-none" data-testid="datatable-empty">
+                      <EmptyState
+                        title={emptyMessage}
+                        description="Try adjusting your filters or search terms."
+                        className="bg-zinc-900/20 backdrop-blur-sm"
+                      />
                     </TableCell>
                   </TableRow>
                 ) : (

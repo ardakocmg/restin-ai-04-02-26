@@ -1,6 +1,6 @@
 """Payroll Malta Routes"""
 from fastapi import APIRouter, Depends, Query
-
+from datetime import datetime
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
 from core.feature_flags import require_feature
@@ -61,8 +61,12 @@ def create_payroll_mt_router():
         gross = float(payload.get("gross_annual", 0))
         category = payload.get("tax_category", "Single")
         
-        from app.services.malta_payroll import MaltaPayrollEngine
-        result = MaltaPayrollEngine.calculate(gross, category)
+        from services.payroll_mt_engine import MaltaPayrollEngine
+        result = MaltaPayrollEngine.calculate_net_salary(gross / 12, category) # Engine takes monthly now for net, or upgrade engine
+        # Actually my Engine.calculate_tax takes annual, calculate_net_salary takes monthly.
+        # User implies payload has "gross_annual".
+        # Let's use calculate_net_salary passing monthly equivalent
+        result = MaltaPayrollEngine.calculate_net_salary(gross / 12, category)
         
         return {"ok": True, "data": result}
         
@@ -89,30 +93,30 @@ def create_payroll_mt_router():
         total_tax = 0
         total_net = 0
         
-        from app.services.malta_payroll import MaltaPayrollEngine
+        from services.payroll_mt_engine import MaltaPayrollEngine
         
         for p in profiles:
-            gross = p.get("salary_amount", 0)
-            if p.get("salary_period") == "hourly":
-                # Estimate annual for calculation or use hours * rate (Simplified for MVP)
-                # Assuming salary_amount is Annual Gross for salary types
-                gross = 0 # specific logic for hourly needed
+            gross_annual = p.get("salary_amount", 0)
+            status = p.get("tax_category", "Single")
             
-            # Calculate taxes
-            calc = MaltaPayrollEngine.calculate(gross, p.get("tax_category", "Single"))
+            # Simple simulation: Monthly Gross = Annual / 12
+            monthly_gross = gross_annual / 12
+            
+            # Use new Engine
+            calc = MaltaPayrollEngine.calculate_net_salary(monthly_gross, status)
             
             # Create Payslip Item
             payslip = {
                 "employee_id": p.get("employee_id"),
-                "employee_name": p.get("employee_name"),
-                "gross_pay": calc["net_monthly"] + calc["tax_annual"]/12 + calc["ssc_annual"]/12, # Reconstruct monthly gross
-                "net_pay": calc["net_monthly"],
-                "tax_amount": calc["tax_annual"] / 12,
-                "ssc_amount": calc["ssc_annual"] / 12,
+                "employee_name": p.get("employee_name", "Unknown"),
+                "employee_number": p.get("employee_number", "000"),
+                "gross_pay": calc["gross"],
+                "net_pay": calc["net"],
+                "tax_amount": calc["tax"],
                 "components": [
-                    {"name": "Basic Pay", "amount": calc["net_monthly"], "type": "earning"},
-                    {"name": "Tax", "amount": -calc["tax_annual"]/12, "type": "deduction"},
-                    {"name": "SSC", "amount": -calc["ssc_annual"]/12, "type": "deduction"}
+                    {"component_name": "Basic Pay", "amount": calc["gross"], "type": "earning"},
+                    {"component_name": "FSS Tax", "amount": calc["tax"], "type": "deduction"},
+                    {"component_name": "Social Security", "amount": calc["ssc"], "type": "deduction"}
                 ]
             }
             payslips.append(payslip)
@@ -123,22 +127,29 @@ def create_payroll_mt_router():
             
         period_str = f"{year}-{month:02d}"
         
+        # Use consistent collection: 'payroll_runs' (matches hr_compliance_mt)
         run_data = {
             "venue_id": venue_id,
             "period": period_str,
             "period_start": f"{year}-{month:02d}-01",
             "period_end": f"{year}-{month:02d}-28", # Simplified end date
-            "status": "draft",
+            "state": "draft", # match enum in other files
             "employee_count": len(profiles),
             "total_gross": round(total_gross, 2),
             "total_tax": round(total_tax, 2),
             "total_net": round(total_net, 2),
             "payslips": payslips,
-            "created_by": current_user.get("uid")
+            "created_by": current_user.get("uid", "system"),
+            "created_at": datetime.utcnow()
         }
         
         if payload.get("commit"):
-            res = await db.pay_runs.insert_one(run_data)
+            # Ensure unique ID if not present
+            if "id" not in run_data:
+                import uuid
+                run_data["id"] = str(uuid.uuid4())
+                
+            res = await db.payroll_runs.insert_one(run_data)
             run_data["_id"] = str(res.inserted_id)
             
         return {"ok": True, "data": run_data}
@@ -172,5 +183,71 @@ def create_payroll_mt_router():
         
         report = await svc.get_employee_annual_summary(venue_id, employee_id, year)
         return {"ok": True, "data": report}
+
+    @router.get("/payroll-mt/run/{run_id}/payslip/{employee_id}/pdf")
+    async def get_payslip_pdf(
+        venue_id: str,
+        run_id: str,
+        employee_id: str,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Generate Individual Payslip PDF"""
+        await check_venue_access(current_user, venue_id)
+        
+        run = await db.payroll_runs.find_one({"id": run_id, "venue_id": venue_id})
+        if not run:
+            # Fallback check by _id if needed, but 'id' is standard
+            from bson import ObjectId
+            try:
+                run = await db.payroll_runs.find_one({"_id": ObjectId(run_id), "venue_id": venue_id})
+            except:
+                pass
+        
+        if not run:
+             # Try finding in pay_runs collection (legacy)
+             run = await db.pay_runs.find_one({"id": run_id, "venue_id": venue_id})
+
+        if not run:
+            return {"ok": False, "error": "Run not found"}
+
+        # Find payslip
+        target_slip = None
+        payslips = run.get("payslips", [])
+        for slip in payslips:
+            if slip.get("employee_id") == employee_id:
+                target_slip = slip
+                break
+        
+        if not target_slip:
+             return {"ok": False, "error": "Payslip not found for employee"}
+
+        # Use PDF Service
+        from services.pdf_generation_service import pdf_service
+        
+        # Enhance slip data with run info for header
+        slip_data = target_slip.copy()
+        slip_data['period_start'] = run.get('period_start', '')
+        slip_data['period_end'] = run.get('period_end', '')
+        
+        # Prepare lines if not present in desired format
+        if 'lines' not in slip_data:
+             slip_data['lines'] = []
+             for comp in slip_data.get('components', []):
+                 slip_data['lines'].append({
+                     'name': comp.get('component_name'),
+                     'qty': 0, # Mock or calc
+                     'rate': 0, # Mock or calc
+                     'earn': comp.get('amount') if comp.get('type') == 'earning' else 0,
+                     'deduct': comp.get('amount') if comp.get('type') == 'deduction' else 0
+                 })
+
+        pdf_bytes = pdf_service.generate_payslip_reportlab(slip_data)
+        
+        from fastapi import Response
+        return Response(
+            content=pdf_bytes,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename=Payslip_{slip_data['employee_name']}_{run.get('period', 'Run')}.pdf"}
+        )
 
     return router

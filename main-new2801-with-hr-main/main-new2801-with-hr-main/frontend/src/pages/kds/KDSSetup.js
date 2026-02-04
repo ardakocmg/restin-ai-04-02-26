@@ -168,11 +168,11 @@ export default function KDSSetup() {
 
   return (
     <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-      <Card className="bg-zinc-900 border-white/10 w-full max-w-2xl">
+      <Card className="bg-zinc-900/50 backdrop-blur-md border-white/5 w-full max-w-2xl shadow-2xl">
         <CardHeader>
           <div className="flex items-center gap-4 mb-2">
-            <div className="p-3 bg-green-500/20 rounded-lg">
-              <ChefHat className="w-8 h-8 text-green-500" />
+            <div className="p-3 bg-red-500/10 rounded-lg border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+              <ChefHat className="w-8 h-8 text-red-500" />
             </div>
             <div>
               <CardTitle className="text-white text-2xl">KDS Setup</CardTitle>
@@ -235,7 +235,7 @@ export default function KDSSetup() {
             <Button
               onClick={handleComplete}
               disabled={!selectedVenue || loading}
-              className="flex-1 bg-green-500 hover:bg-green-600"
+              className="flex-1 bg-red-600 hover:bg-red-700 shadow-[0_0_15px_rgba(220,38,38,0.3)] transition-all"
             >
               {loading ? (
                 <>

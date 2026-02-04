@@ -401,7 +401,7 @@ export default function TechnicalHub() {
 
             <div className="relative group p-8 rounded-3xl bg-gradient-to-br from-zinc-900 to-black border border-white/5 shadow-2xl overflow-hidden">
               <div className="absolute top-0 right-0 p-8 opacity-10 scale-150 rotate-12 transition-transform group-hover:rotate-0 duration-700">
-                <Shield className="w-32 h-32 text-red-600" />
+                <Shield className="w-32 h-32 text-red-600 dark:text-red-400" />
               </div>
               <h4 className="text-xs font-black uppercase tracking-[0.3em] text-red-500 mb-6">Core Assurances</h4>
               <ul className="space-y-6">
@@ -582,7 +582,7 @@ export default function TechnicalHub() {
               </div>
             </div>
             <div className="p-8 rounded-3xl bg-red-600/5 border border-red-600/10 text-center">
-              <Shield className="w-12 h-12 text-red-600 mx-auto mb-4" />
+              <Shield className="w-12 h-12 text-red-600 dark:text-red-400 mx-auto mb-4" />
               <h5 className="text-sm font-bold text-white mb-1">Audit-First Policy</h5>
               <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">
                 Every mutation is hashed and chained. Non-repudiation is strictly enforced at the platform core.

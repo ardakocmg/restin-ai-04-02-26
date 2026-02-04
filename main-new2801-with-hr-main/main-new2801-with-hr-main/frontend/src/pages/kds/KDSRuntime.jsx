@@ -130,44 +130,35 @@ function KDSRuntime() {
 
   if (loading) {
     return (
-      <div  className="min-h-screen flex items-center justify-center " style={{ backgroundColor: '#0A0A0B' }}>
-        <div  className="text-center\">
-          <div  className="text-2xl font-bold " style={{ color: '#F5F5F7' }}>Loading KDS...</div>
+      <div className="min-h-screen flex items-center justify-center " style={{ backgroundColor: '#0A0A0B' }}>
+        <div className="text-center\">
+          <div className="text-2xl font-bold " style={{ color: '#F5F5F7' }}>Loading KDS...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div  className="min-h-screen p-4 " style={{ backgroundColor: '#0A0A0B', color: '#F5F5F7' }}>
+    <div className="min-h-screen p-4 bg-zinc-950 text-zinc-100 font-sans">
       {/* Header */}
-      <div  className="mb-6 flex items-center justify-between\">
+      <div className="mb-6 flex items-center justify-between bg-zinc-900/50 backdrop-blur-md p-4 rounded-2xl border border-white/5 shadow-2xl">
         <div>
-          <h1  className="text-3xl font-bold " style={{ color: '#F5F5F7' }}>{stationKey} Station</h1>
-          <p style={{ color: '#A1A1AA' }}>Active Orders: {filteredTickets.length}</p>
+          <h1 className="text-3xl font-bold text-white tracking-tight">
+            {stationKey} <span className="text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]">Station</span>
+          </h1>
+          <p className="text-zinc-400 mt-1">Active Orders: {filteredTickets.length}</p>
         </div>
 
         {/* Status Filters */}
-        <div  className="flex gap-2\">
+        <div className="flex gap-2">
           {['ALL', 'NEW', 'PREPARING', 'READY', 'ON_HOLD'].map((status) => (
             <button
               key={status}
               onClick={() => setFilter(status)}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-150`}
-              style={
-                filter === status
-                  ? { 
-                      backgroundColor: '#E53935', 
-                      color: '#FFFFFF',
-                      boxShadow: '0 0 12px rgba(229, 57, 53, 0.4)',
-                      border: '1px solid rgba(229, 57, 53, 0.5)'
-                    }
-                  : { 
-                      backgroundColor: '#27272A',
-                      color: '#A1A1AA',
-                      border: '1px solid rgba(255, 255, 255, 0.1)'
-                    }
-              }
+              className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${filter === status
+                  ? "bg-red-500/10 text-red-500 border border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
+                  : "bg-zinc-900 text-zinc-400 border border-white/5 hover:bg-zinc-800 hover:text-white"
+                }`}
             >
               {status}
             </button>
@@ -176,30 +167,29 @@ function KDSRuntime() {
       </div>
 
       {/* Tickets Grid */}
-      <div  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4\">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4\">
         {filteredTickets.map((ticket) => (
           <div
             key={ticket.id}
-             className="rounded-xl p-4 shadow-lg transition-all\"
+            className={`rounded-xl p-4 shadow-lg transition-all bg-zinc-900/50 border border-white/5 hover:border-white/10 hover:shadow-2xl hover:scale-[1.01] ${ticket.wait_time?.visual_state === 'late' ? 'animate-pulse ring-1 ring-red-500/50' : ''
+              }`}
             style={{
-              backgroundColor: '#18181B',
-              border: ticket.wait_time?.visual_state === 'late' ? '2px solid #E53935' :
-                      ticket.wait_time?.visual_state === 'delayed' ? '2px solid #FB8C00' :
-                      '2px solid rgba(255, 255, 255, 0.1)',
-              animation: ticket.wait_time?.visual_state === 'late' ? 'pulse 2s infinite' : 'none'
+              borderLeft: ticket.wait_time?.visual_state === 'late' ? '4px solid #EF4444' :
+                ticket.wait_time?.visual_state === 'delayed' ? '4px solid #F97316' :
+                  '4px solid rgba(255, 255, 255, 0.1)'
             }}
           >
             {/* Ticket Header */}
-            <div  className="flex items-center justify-between mb-3\">
-              <div  className="flex items-center gap-2\">
-                <span 
-                   className="px-3 py-1 rounded-full text-sm font-bold\"
+            <div className="flex items-center justify-between mb-3\">
+              <div className="flex items-center gap-2\">
+                <span
+                  className="px-3 py-1 rounded-full text-sm font-bold\"
                   style={getStatusColor(ticket.status)}
                 >
                   {ticket.status}
                 </span>
-                <span 
-                   className="px-2 py-1 rounded text-xs font-medium\"
+                <span
+                  className="px-2 py-1 rounded text-xs font-medium\"
                   style={getWaitTimeColor(ticket.wait_time)}
                 >
                   {ticket.wait_time?.minutes || 0}min
@@ -209,12 +199,12 @@ function KDSRuntime() {
 
             {/* Order Details */}
             {ticket.order_details && (
-              <div  className="mb-3 pb-3 " style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                <div  className="flex items-center justify-between text-sm\">
-                  <span  className="font-semibold " style={{ color: '#F5F5F7' }}>{ticket.order_details.table_name}</span>
+              <div className="mb-3 pb-3 " style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                <div className="flex items-center justify-between text-sm\">
+                  <span className="font-semibold " style={{ color: '#F5F5F7' }}>{ticket.order_details.table_name}</span>
                   <span style={{ color: '#A1A1AA' }}>{ticket.order_details.server_name}</span>
                 </div>
-                <div  className="text-xs mt-1 " style={{ color: '#71717A' }}>
+                <div className="text-xs mt-1 " style={{ color: '#71717A' }}>
                   Covers: {ticket.order_details.guest_count}
                 </div>
               </div>

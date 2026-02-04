@@ -37,13 +37,13 @@ export default function TurnoverModule() {
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Voluntary Terminations</p>
-            <p className="text-3xl font-bold text-orange-600 mt-2">{data.voluntary_terminations}</p>
+            <p className="text-3xl font-bold text-orange-600 dark:text-orange-400 mt-2">{data.voluntary_terminations}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Non-Voluntary</p>
-            <p className="text-3xl font-bold text-red-600 mt-2">{data.non_voluntary_terminations}</p>
+            <p className="text-3xl font-bold text-red-600 dark:text-red-400 mt-2">{data.non_voluntary_terminations}</p>
           </CardContent>
         </Card>
         <Card>

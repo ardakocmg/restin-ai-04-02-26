@@ -67,13 +67,13 @@ export default function PreGoLive() {
             {currentRun.status === 'PASS' ? (
               <>
                 <Award className="h-16 w-16 mx-auto mb-4 text-green-500" />
-                <h2 className="text-3xl font-bold text-green-600">PASS</h2>
+                <h2 className="text-3xl font-bold text-green-600 dark:text-green-400">PASS</h2>
                 <p className="text-slate-600 mt-2">Venue certified for launch!</p>
               </>
             ) : (
               <>
                 <XCircle className="h-16 w-16 mx-auto mb-4 text-red-500" />
-                <h2 className="text-3xl font-bold text-red-600">FAIL</h2>
+                <h2 className="text-3xl font-bold text-red-600 dark:text-red-400">FAIL</h2>
                 <p className="text-slate-600 mt-2">Issues detected. Review and fix before launch.</p>
               </>
             )}
@@ -85,9 +85,9 @@ export default function PreGoLive() {
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-3">
                     {check.status === 'PASS' ? (
-                      <CheckCircle2 className="h-6 w-6 text-green-600" />
+                      <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />
                     ) : (
-                      <XCircle className="h-6 w-6 text-red-600" />
+                      <XCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
                     )}
                     <div>
                       <p className="font-medium text-slate-900">{check.key}</p>

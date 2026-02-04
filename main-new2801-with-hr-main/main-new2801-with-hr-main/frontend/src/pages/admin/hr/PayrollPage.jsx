@@ -82,12 +82,12 @@ export default function PayrollPage() {
     const fetchData = async () => {
         if (!activeVenue?.id) return;
         try {
-            const [runsRes, usersRes] = await Promise.all([
+            const [runsRes, empsRes] = await Promise.all([
                 api.get(`venues/${activeVenue.id}/hr/payroll/runs`),
-                userAPI.list(activeVenue.id)
+                api.get(`venues/${activeVenue.id}/hr/employees`) // Corrected Endpoint
             ]);
             setRuns(runsRes.data || []);
-            setEmployees(usersRes.data || []);
+            setEmployees(empsRes.data || []);
         } catch (error) {
             console.error("Failed to fetch data:", error);
             toast.error("Failed to load payroll intelligence");
@@ -115,19 +115,20 @@ export default function PayrollPage() {
         try {
             const payload = {
                 run_name: `Payroll Run — ${periodFilter}`,
-                period_start: "01/02/2026",
-                period_end: "28/02/2026",
-                employees: ["1001", "1002", "1003", "1004", "HEMIDA"]
+                period_start: "2026-02-01", // ISO Format preferred
+                period_end: "2026-02-28",
+                pay_date: "2026-02-28",
+                employees: [] // Send empty to auto-select all active
             };
-            await api.post(`venues/${activeVenue.id}/hr/payroll/calculate`, payload);
+            const res = await api.post(`venues/${activeVenue.id}/hr/payruns`, { ...payload, venue_id: activeVenue.id });
+            // Then calculate
+            await api.post(`venues/${activeVenue.id}/hr/payruns/${res.data.id}/calculate`);
+
             toast.success("Payroll cycle calculated");
             fetchData();
         } catch (error) {
-            if (error.response?.status === 400) {
-                toast.error(error.response.data.detail || "Period already exists");
-            } else {
-                toast.error("Calculation failed");
-            }
+            console.error(error);
+            toast.error("Calculation failed");
         } finally {
             setCalculating(false);
         }
@@ -162,6 +163,9 @@ export default function PayrollPage() {
     const totalGrossAccumulated = runs.reduce((acc, r) => acc + (r.total_gross || 0), 0);
     const totalTaxAccumulated = runs.reduce((acc, r) => acc + (r.total_tax || 0), 0);
     const totalNIAccumulated = totalGrossAccumulated * 0.1; // 10% estimation for display
+
+    // Determine Featured Employee (First available or placeholder)
+    const featuredEmp = employees.length > 0 ? employees[0] : { full_name: "Staff Member", occupation: "Pending Loading", display_id: "---" };
 
     return (
         <PageContainer title="Ultimate Payroll Engine" description="Centralized Compliance & Processing Hub">
@@ -253,7 +257,7 @@ export default function PayrollPage() {
                             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1">Active Employees</p>
                             <div className="flex items-center gap-3">
                                 <Users className="h-5 w-5 text-emerald-500" />
-                                <h3 className="text-3xl font-black text-white font-mono">{employees.length || 42}</h3>
+                                <h3 className="text-3xl font-black text-white font-mono">{employees.length}</h3>
                             </div>
                             <p className="text-[10px] text-emerald-500/60 font-black uppercase mt-2 flex items-center gap-2">
                                 <CheckCircle2 className="h-3 w-3" /> Ready for processing
@@ -272,7 +276,7 @@ export default function PayrollPage() {
                             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1">Last Total Gross</p>
                             <div className="flex items-center gap-3">
                                 <Wallet className="h-5 w-5 text-amber-500" />
-                                <h3 className="text-2xl font-black text-white font-mono">€{runs[0]?.total_gross?.toLocaleString() || "45,230"}</h3>
+                                <h3 className="text-2xl font-black text-white font-mono">€{runs[0]?.total_gross?.toLocaleString() || "0"}</h3>
                             </div>
                             <p className="text-[10px] text-zinc-600 font-bold uppercase mt-2">Jan 2026 Summary • Audited</p>
                         </CardContent>
@@ -304,52 +308,60 @@ export default function PayrollPage() {
                     </div>
                 </div>
 
-                {/* Arda KOC Spotlight (Requested) */}
+                {/* Featured Staff Access (Dynamic) */}
                 <div className="space-y-4">
                     <div className="flex items-center gap-2">
                         <div className="h-1 w-8 bg-blue-500 rounded-full" />
                         <h3 className="text-sm font-black text-white uppercase tracking-[0.3em]">Direct Staff Access</h3>
                     </div>
-                    <Card className="bg-zinc-900/80 border-blue-500/20 shadow-2xl overflow-hidden border-2 relative group hover:border-blue-500/40 transition-all">
-                        <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-100 transition-all scale-150">
-                            <AwardIcon className="h-24 w-24 text-blue-500" />
-                        </div>
-                        <CardContent className="p-8">
-                            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                                <div className="flex items-center gap-6">
-                                    <div className="h-20 w-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 p-0.5 shadow-2xl">
-                                        <div className="h-full w-full rounded-[14px] bg-zinc-900 flex items-center justify-center font-black text-2xl text-white">AK</div>
-                                    </div>
-                                    <div>
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <h4 className="text-2xl font-black text-white uppercase tracking-tight">Arda KOC</h4>
-                                            <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 uppercase text-[9px] font-black tracking-widest">Active</Badge>
-                                        </div>
-                                        <p className="text-xs text-zinc-500 font-bold uppercase tracking-[0.2em] mb-4">In House Strategist — Corinthia Hotel Malta</p>
-                                        <div className="flex gap-4">
-                                            <div className="px-3 py-1 bg-white/5 rounded-full border border-white/5 text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
-                                                <ShieldCheck className="h-3 w-3 text-blue-500" /> PE: 456398
-                                            </div>
-                                            <div className="px-3 py-1 bg-white/5 rounded-full border border-white/5 text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
-                                                <Clock className="h-3 w-3 text-amber-500" /> Dec 2025 Cycle
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex gap-3">
-                                    <Button
-                                        onClick={() => navigate('/admin/hr/payroll/view/emp-arda-koc/dec-2025')}
-                                        className="bg-zinc-100 hover:bg-white text-black font-black uppercase tracking-widest text-[10px] px-8 py-6 rounded-xl shadow-2xl"
-                                    >
-                                        Inspect Payslip <Eye className="ml-2 h-4 w-4" />
-                                    </Button>
-                                    <Button variant="outline" className="border-white/10 hover:bg-white/5 text-zinc-400 font-black uppercase tracking-widest text-[10px] px-6 py-6 rounded-xl">
-                                        Distribute <Mail className="ml-2 h-4 w-4" />
-                                    </Button>
-                                </div>
+                    {employees.length > 0 ? (
+                        <Card className="bg-zinc-900/80 border-blue-500/20 shadow-2xl overflow-hidden border-2 relative group hover:border-blue-500/40 transition-all">
+                            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-100 transition-all scale-150">
+                                <AwardIcon className="h-24 w-24 text-blue-500" />
                             </div>
-                        </CardContent>
-                    </Card>
+                            <CardContent className="p-8">
+                                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                                    <div className="flex items-center gap-6">
+                                        <div className="h-20 w-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 p-0.5 shadow-2xl">
+                                            <div className="h-full w-full rounded-[14px] bg-zinc-900 flex items-center justify-center font-black text-2xl text-white">
+                                                {featuredEmp.full_name?.substring(0, 2).toUpperCase() || "OK"}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <h4 className="text-2xl font-black text-white uppercase tracking-tight">{featuredEmp.full_name}</h4>
+                                                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 uppercase text-[9px] font-black tracking-widest">Active</Badge>
+                                            </div>
+                                            <p className="text-xs text-zinc-500 font-bold uppercase tracking-[0.2em] mb-4">{featuredEmp.occupation} — {featuredEmp.department}</p>
+                                            <div className="flex gap-4">
+                                                <div className="px-3 py-1 bg-white/5 rounded-full border border-white/5 text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+                                                    <ShieldCheck className="h-3 w-3 text-blue-500" /> ID: {featuredEmp.display_id || featuredEmp.id?.substring(0, 6)}
+                                                </div>
+                                                <div className="px-3 py-1 bg-white/5 rounded-full border border-white/5 text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+                                                    <Clock className="h-3 w-3 text-amber-500" /> Dec 2025 Cycle
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <Button
+                                            onClick={() => navigate(`/admin/hr/payroll/view/emp/${featuredEmp.id}`)}
+                                            className="bg-zinc-100 hover:bg-white text-black font-black uppercase tracking-widest text-[10px] px-8 py-6 rounded-xl shadow-2xl"
+                                        >
+                                            Inspect Payslip <Eye className="ml-2 h-4 w-4" />
+                                        </Button>
+                                        <Button variant="outline" className="border-white/10 hover:bg-white/5 text-zinc-400 font-black uppercase tracking-widest text-[10px] px-6 py-6 rounded-xl">
+                                            Distribute <Mail className="ml-2 h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <div className="p-8 bg-zinc-900 border border-zinc-800 rounded-xl text-center text-zinc-500">
+                            No active staff found. Please check Employee Directory.
+                        </div>
+                    )}
                 </div>
 
                 <Separator className="bg-zinc-800/50" />

@@ -172,7 +172,6 @@ import POSRuntimeEnhanced from "./pages/pos/POSRuntimeEnhanced";
 import DeliveryAggregators from "./pages/integrations/DeliveryAggregators";
 import FinanceProviderSettings from "./pages/finance/FinanceProviderSettings";
 import GoogleHub from "./pages/google/GoogleHub";
-import EmployeePortal from "./pages/employee/EmployeePortal";
 import POSSetup from "./pages/pos/POSSetup";
 import POSMain from "./pages/pos/POSMain";
 import KDSSetup from "./pages/kds/KDSSetup";
@@ -480,9 +479,10 @@ function App() {
 
                                   <Route path="hr">
                                     <Route index element={<HRHomeIndigoPage />} />
-                                    <Route path="summary" element={<HRHomeIndigoPage />} />
+                                    <Route path="summary" element={<SummaryDashboard />} />
                                     <Route path="dashboard" element={<SummaryDashboard />} />
                                     <Route path="people" element={<EmployeeDirectory />} />
+                                    <Route path="people/:employeeCode" element={<EmployeeDetailPage />} />
                                     <Route path="leave-management" element={<LeaveManagement />} />
                                     <Route path="payroll" element={<PayrollPage />} />
                                     <Route path="payroll/:runId" element={<PayrollRunDetail />} />
@@ -503,11 +503,15 @@ function App() {
                                     <Route path="reporting" element={<ReportingHubIndigo />} />
                                     <Route path="reports/:reportId" element={<ReportViewer />} />
 
+                                    <Route path="reports/:reportId" element={<ReportViewer />} />
+
+                                    {/* Missing Setup Routes - Mapped to Placeholder for now */}
+                                    <Route path="setup/:moduleName" element={<HRModulePlaceholder />} />
+
                                     <Route path="settings" element={<AdminSettingsIndigo />} />
                                   </Route>
                                 </Route>
                                 <Route path="/profile" element={<UserProfileSettings />} />
-                                <Route path="/employee" element={<EmployeePortal />} />
                                 <Route path="/pos/setup" element={<POSSetup />} />
                                 <Route path="/pos" element={<POSMain />} />
                                 <Route path="/pos/runtime" element={<POSRuntimeEnhanced />} />

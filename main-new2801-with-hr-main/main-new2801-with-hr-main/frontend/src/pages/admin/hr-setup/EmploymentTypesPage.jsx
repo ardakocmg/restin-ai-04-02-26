@@ -49,8 +49,8 @@ export default function EmploymentTypesPage() {
                   <td className="p-3">{type.type_code}</td>
                   <td className="p-3 text-center">
                     <div className="flex gap-2 justify-center">
-                      <button className="text-blue-600"><Edit className="h-4 w-4" /></button>
-                      <button className="text-red-600"><Trash className="h-4 w-4" /></button>
+                      <button className="text-blue-600 dark:text-blue-400"><Edit className="h-4 w-4" /></button>
+                      <button className="text-red-600 dark:text-red-400"><Trash className="h-4 w-4" /></button>
                     </div>
                   </td>
                 </tr>

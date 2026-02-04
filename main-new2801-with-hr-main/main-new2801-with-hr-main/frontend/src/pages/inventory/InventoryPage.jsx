@@ -59,7 +59,7 @@ export default function InventoryPage() {
     const minStock = item.min_stock || item.min_quantity || 0;
 
     if (balance < 0) return { label: 'Negative', color: 'destructive', icon: AlertTriangle };
-    if (balance <= minStock) return { label: 'Low Stock', color: 'outline', icon: TrendingDown, className: 'text-orange-600 border-orange-600' };
+    if (balance <= minStock) return { label: 'Low Stock', color: 'outline', icon: TrendingDown, className: 'text-orange-600 dark:text-orange-400 border-orange-600' };
     return { label: 'OK', color: 'outline', icon: CheckCircle2, className: 'bg-green-50 text-green-700 border-green-200' };
   };
 

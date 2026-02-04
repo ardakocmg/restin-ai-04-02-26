@@ -135,7 +135,7 @@ export default function PerformanceReviews() {
               onClick={() => setActiveTab(tab.toLowerCase().replace(' ', '-'))}
               className={`py-3 px-4 border-b-2 transition-colors ${
                 activeTab === tab.toLowerCase().replace(' ', '-')
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400 dark:text-blue-400'
                   : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
@@ -251,7 +251,7 @@ export default function PerformanceReviews() {
                     <td className="p-3">
                       <div className="flex items-center justify-center gap-2">
                         <button className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center hover:bg-blue-200 dark:hover:bg-blue-800">
-                          <span className="text-blue-600 dark:text-blue-300">👁</span>
+                          <span className="text-blue-600 dark:text-blue-400 dark:text-blue-300">👁</span>
                         </button>
                         <button className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600">
                           <span className="text-slate-600 dark:text-slate-300">📄</span>

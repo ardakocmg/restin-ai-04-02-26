@@ -42,13 +42,13 @@ export default function HeadcountModule() {
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">New Employees (YTD)</p>
-            <p className="text-3xl font-bold text-green-600 mt-2">{data.new_employees_ytd}</p>
+            <p className="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">{data.new_employees_ytd}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Terminated (YTD)</p>
-            <p className="text-3xl font-bold text-red-600 mt-2">{data.terminated_ytd}</p>
+            <p className="text-3xl font-bold text-red-600 dark:text-red-400 mt-2">{data.terminated_ytd}</p>
           </CardContent>
         </Card>
       </div>

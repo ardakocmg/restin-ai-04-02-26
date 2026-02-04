@@ -267,6 +267,8 @@ def generate_mock_clocking(num_days: int = 90) -> List[Dict[str, Any]]:
                 "total_cost": cost,
                 "venue": emp["venue"],
                 "vendor": emp["vendor"],
+                "cost_centre": emp["cost_centre"],
+                "designation": emp["occupation"],
                 "status": "APPROVED",
                 "remarks": "Regular Duty"
             })

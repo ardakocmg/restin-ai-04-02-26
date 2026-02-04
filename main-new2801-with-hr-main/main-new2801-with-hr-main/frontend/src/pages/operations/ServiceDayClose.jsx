@@ -26,9 +26,9 @@ export default function ServiceDayClose() {
   };
 
   const getCheckIcon = (status) => {
-    if (status === 'OK') return <CheckCircle2 className="h-5 w-5 text-green-600" />;
-    if (status === 'WARN') return <AlertTriangle className="h-5 w-5 text-orange-600" />;
-    return <XCircle className="h-5 w-5 text-red-600" />;
+    if (status === 'OK') return <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />;
+    if (status === 'WARN') return <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400" />;
+    return <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />;
   };
 
   return (

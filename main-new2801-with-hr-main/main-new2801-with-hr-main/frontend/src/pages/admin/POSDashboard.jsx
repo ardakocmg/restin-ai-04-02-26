@@ -578,23 +578,23 @@ export default function POSDashboard() {
                                         <div className="flex flex-col mt-3 space-y-2">
                                             <div className="flex items-center justify-between text-xs">
                                                 <span className="text-muted-foreground">Target: €{targets.revenue.toLocaleString()}</span>
-                                                <span className={cn("font-bold", totalRevenue >= targets.revenue ? "text-green-500" : "text-amber-500")}>
+                                                <span className={cn("font-bold", totalRevenue >= targets.revenue ? "text-green-500 dark:text-green-400" : "text-amber-500 dark:text-amber-400")}>
                                                     {Math.round(totalRevenue / targets.revenue * 100)}%
                                                 </span>
                                             </div>
                                             <Progress value={Math.min(100, (totalRevenue / targets.revenue) * 100)} className="h-2" />
                                             {getRemaining(totalRevenue, targets.revenue) > 0 ? (
-                                                <p className="text-xs text-red-500 font-medium text-right">
+                                                <p className="text-xs text-red-500 dark:text-red-400 font-medium text-right">
                                                     -€{getRemaining(totalRevenue, targets.revenue).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} to go
                                                 </p>
                                             ) : (
-                                                <p className="text-xs text-green-500 font-bold text-right">Target Met! 🎉</p>
+                                                <p className="text-xs text-green-500 dark:text-green-400 font-bold text-right">Target Met! 🎉</p>
                                             )}
                                         </div>
                                     )}
                                 </div>
                                 <div className="p-2 bg-blue-500/10 rounded-full">
-                                    <DollarSign className="h-5 w-5 text-blue-500" />
+                                    <DollarSign className="h-5 w-5 text-blue-500 dark:text-blue-400" />
                                 </div>
                             </div>
                         </CardContent>
@@ -617,23 +617,23 @@ export default function POSDashboard() {
                                         <div className="flex flex-col mt-3 space-y-2">
                                             <div className="flex items-center justify-between text-xs">
                                                 <span className="text-muted-foreground">Target: {targets.receipts}</span>
-                                                <span className={cn("font-bold", totalReceipts >= targets.receipts ? "text-green-500" : "text-amber-500")}>
+                                                <span className={cn("font-bold", totalReceipts >= targets.receipts ? "text-green-500 dark:text-green-400" : "text-amber-500 dark:text-amber-400")}>
                                                     {Math.round(totalReceipts / targets.receipts * 100)}%
                                                 </span>
                                             </div>
                                             <Progress value={Math.min(100, (totalReceipts / targets.receipts) * 100)} className="h-2" />
                                             {getRemaining(totalReceipts, targets.receipts) > 0 ? (
-                                                <p className="text-xs text-red-500 font-medium text-right">
+                                                <p className="text-xs text-red-500 dark:text-red-400 font-medium text-right">
                                                     {getRemaining(totalReceipts, targets.receipts)} to go
                                                 </p>
                                             ) : (
-                                                <p className="text-xs text-green-500 font-bold text-right">Target Met! 🎉</p>
+                                                <p className="text-xs text-green-500 dark:text-green-400 font-bold text-right">Target Met! 🎉</p>
                                             )}
                                         </div>
                                     )}
                                 </div>
                                 <div className="p-2 bg-green-500/10 rounded-full">
-                                    <Receipt className="h-5 w-5 text-green-500" />
+                                    <Receipt className="h-5 w-5 text-green-500 dark:text-green-400" />
                                 </div>
                             </div>
                         </CardContent>
@@ -656,23 +656,23 @@ export default function POSDashboard() {
                                         <div className="flex flex-col mt-3 space-y-2">
                                             <div className="flex items-center justify-between text-xs">
                                                 <span className="text-muted-foreground">Target: {targets.customers}</span>
-                                                <span className={cn("font-bold", totalCustomers >= targets.customers ? "text-green-500" : "text-amber-500")}>
+                                                <span className={cn("font-bold", totalCustomers >= targets.customers ? "text-green-500 dark:text-green-400" : "text-amber-500 dark:text-amber-400")}>
                                                     {Math.round(totalCustomers / targets.customers * 100)}%
                                                 </span>
                                             </div>
                                             <Progress value={Math.min(100, (totalCustomers / targets.customers) * 100)} className="h-2" />
                                             {getRemaining(totalCustomers, targets.customers) > 0 ? (
-                                                <p className="text-xs text-red-500 font-medium text-right">
+                                                <p className="text-xs text-red-500 dark:text-red-400 font-medium text-right">
                                                     {getRemaining(totalCustomers, targets.customers)} to go
                                                 </p>
                                             ) : (
-                                                <p className="text-xs text-green-500 font-bold text-right">Target Met! 🎉</p>
+                                                <p className="text-xs text-green-500 dark:text-green-400 font-bold text-right">Target Met! 🎉</p>
                                             )}
                                         </div>
                                     )}
                                 </div>
                                 <div className="p-2 bg-orange-500/10 rounded-full">
-                                    <Users className="h-5 w-5 text-orange-500" />
+                                    <Users className="h-5 w-5 text-orange-500 dark:text-orange-400" />
                                 </div>
                             </div>
                         </CardContent>
@@ -816,7 +816,7 @@ export default function POSDashboard() {
                                                     )}
                                                     {detailMetric === 'receipts' && (
                                                         <>
-                                                            <td className="px-4 py-3 font-medium text-blue-600 dark:text-blue-400 hover:underline">{row.id}</td>
+                                                            <td className="px-4 py-3 font-medium text-blue-600 dark:text-blue-400 dark:text-blue-400 hover:underline">{row.id}</td>
                                                             <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{row.time}</td>
                                                             <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{row.staff}</td>
                                                             <td className="px-4 py-3 text-right text-slate-600 dark:text-slate-400">{row.items}</td>

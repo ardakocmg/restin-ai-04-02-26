@@ -16,26 +16,32 @@ async def get_scheduler_data(
 ):
     """Get scheduler data for a specific range (7 or 28 days)"""
     
-    from mock_data_store import MOCK_EMPLOYEES
-    import random
-    from datetime import datetime, timedelta
-
     start_dt = datetime.strptime(week_start, "%Y-%m-%d")
     rows = []
     
-    for code, emp in MOCK_EMPLOYEES.items():
-        main_role = emp["occupation"].split()[-1]
+    # Query DB for employees in this venue
+    # Use "GLOBAL" or logic if needed, usually passed in current_user context
+    venue_id = current_user.get("venueId")
+    query = {"venue_id": venue_id} if venue_id else {}
+    
+    employees = await db.employees.find(query, {"_id": 0}).to_list(1000)
+    
+    for emp in employees:
+        # Fallback for missing fields in DB
+        occ = emp.get("occupation", "Staff")
+        main_role = occ.split()[-1] if occ else "Staff"
         if main_role == "HOSTESS": main_role = "HOST"
         display_role = f"(d){main_role}"
         
         row_dict = {
-            "employee_name": emp["full_name"],
-            "occupation": emp["occupation"],
-            "cost_centre": emp["cost_centre"],
-            "venue": emp.get("venue", "TBA"),
+            "employee_name": emp.get("full_name", "Unknown"),
+            "occupation": occ,
+            "cost_centre": emp.get("cost_centre", "General"),
+            "venue": venue_id or "General", # or fetch venue name
             "vendor": emp.get("vendor", "Direct"),
             "basic_hrs_overtime": f"{40 * (num_days//7)}h 0m",
-            "cost_eur": emp["hourly_rate"] * 40 * (num_days//7)
+            # Mock rate if missing
+            "cost_eur": 10.0 * 40 * (num_days//7) 
         }
         
         # Populate dynamic date keys

@@ -11,7 +11,15 @@ export default function AdminLayout() {
   const [isTertiaryOpen, setIsTertiaryOpen] = useState(false);
   const [domainBarExpanded, setDomainBarExpanded] = useState(false);
 
+  const { user, loading } = useAuth();
   const location = useLocation();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/login');
+    }
+  }, [user, loading, navigate]);
+
   useEffect(() => {
     console.log('[AdminLayout] Current Path:', location.pathname);
   }, [location.pathname]);

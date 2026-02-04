@@ -57,10 +57,10 @@ export default function EmployeeDirectory() {
   const access = getAccess('people');
 
   useEffect(() => {
-    if (access.enabled) {
+    if (access.enabled && venueId) {
       loadEmployees();
     }
-  }, [access.enabled]);
+  }, [access.enabled, venueId]);
 
   const loadEmployees = async () => {
     setLoading(true);

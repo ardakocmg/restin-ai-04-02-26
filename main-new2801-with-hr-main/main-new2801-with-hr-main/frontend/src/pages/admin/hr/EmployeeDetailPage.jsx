@@ -18,10 +18,165 @@ import {
   Phone,
   FileText,
   Printer,
-  ChevronRight
+  ChevronRight,
+  Download
 } from 'lucide-react';
 import api from '@/lib/api';
+import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
+import { Eye } from 'lucide-react';
+
+function EmployeePayrollHistoryLocal({ employeeCode }) {
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await api.get(`/employees/${employeeCode}/payroll-history`);
+        setHistory(res.data);
+      } catch (err) {
+        console.error("Failed to load payroll history", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHistory();
+  }, [employeeCode]);
+
+  const handleDownloadPayslip = async (runId, employeeId) => {
+    const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
+    try {
+      toast.info("Generating PDF...");
+      const response = await api.get(`/venues/${venueId}/hr/payroll-mt/run/${runId}/payslip/${employeeId}/pdf`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Payslip_${employeeId}_${runId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      toast.success("Payslip downloaded");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to download");
+    }
+  };
+
+  if (loading) return <div className="p-4 text-center text-zinc-500">Loading payroll history...</div>;
+
+  return (
+    <div className="space-y-4">
+      {history.length === 0 && (
+        <div className="p-8 text-center border border-dashed border-zinc-800 rounded-xl text-zinc-500">
+          No payroll history found.
+        </div>
+      )}
+      {history.map(item => (
+        <Card key={item.id} className="bg-zinc-900 border-zinc-800 hover:border-zinc-700 transition-colors">
+          <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center text-green-500">
+                <FileText className="h-5 w-5" />
+              </div>
+              <div>
+                <h4 className="font-bold text-white uppercase tracking-wider">{item.month}</h4>
+                <div className="flex items-center gap-2 mt-1">
+                  <Badge variant="outline" className="text-[10px] bg-zinc-950 border-zinc-800 text-zinc-500">{item.status}</Badge>
+                  <span className="text-xs text-zinc-600">Period: {item.period}</span>
+                  <span className="text-xs text-zinc-600">• {new Date(item.date).toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <div className="text-right hidden md:block">
+                <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold">Net Pay</p>
+                <p className="text-lg font-black text-white">
+                  {new Intl.NumberFormat('en-MT', { style: 'currency', currency: 'EUR' }).format(item.net)}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" className="bg-zinc-900 border-zinc-700 hover:bg-zinc-800" onClick={() => handleDownloadPayslip(item.id, employeeCode)}>
+                  <Download className="h-4 w-4 mr-2" /> PDF
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/hr/payroll/${item.id}`)}>
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function EmployeeDocuments({ employeeCode }) {
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDocuments();
+  }, [employeeCode]);
+
+  const fetchDocuments = async () => {
+    try {
+      const res = await api.get(`/employees/${employeeCode}/documents`);
+      setDocuments(res.data);
+    } catch (err) {
+      console.error("Failed to load docs", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownload = async (docId, filename) => {
+    try {
+      const res = await api.get(`/employees/documents/${docId}/download`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+    } catch (e) {
+      toast.error("Download failed");
+    }
+  };
+
+  if (loading) return <div className="p-4 text-center text-zinc-500">Loading documents...</div>;
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {documents.length === 0 && (
+        <div className="col-span-full p-8 text-center border border-dashed border-zinc-800 rounded-xl text-zinc-500">
+          No documents found for this employee.
+        </div>
+      )}
+      {documents.map((doc) => (
+        <Card key={doc.id} className="bg-zinc-900 border-zinc-800 hover:border-zinc-700 transition-colors group">
+          <CardContent className="p-4 flex items-start gap-4">
+            <div className="h-10 w-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:text-blue-400 transition-colors">
+              <FileText className="h-5 w-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="font-bold text-zinc-200 text-sm truncate" title={doc.filename}>{doc.filename}</h4>
+              <p className="text-xs text-zinc-500 mt-1">{new Date(doc.created_at).toLocaleDateString()}</p>
+              <div className="flex gap-2 mt-2">
+                <Badge variant="outline" className="text-[10px] bg-zinc-950 border-zinc-800 text-zinc-500">{doc.extension || 'PDF'}</Badge>
+              </div>
+            </div>
+            <Button variant="ghost" size="icon" className="text-zinc-500 hover:text-white" onClick={() => handleDownload(doc.id, doc.filename)}>
+              <Download className="h-4 w-4" />
+            </Button>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
 
 export default function EmployeeDetailPage() {
   const { employeeCode } = useParams();
@@ -165,6 +320,8 @@ export default function EmployeeDetailPage() {
             <TabsTrigger value="personal" className="rounded-xl px-6 data-[state=active]:bg-white/10 data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px]">Tax & Fiscal</TabsTrigger>
             <TabsTrigger value="contact" className="rounded-xl px-6 data-[state=active]:bg-white/10 data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px]">Contact</TabsTrigger>
             <TabsTrigger value="attendance" className="rounded-xl px-6 data-[state=active]:bg-white/10 data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px]">Work Rules</TabsTrigger>
+            <TabsTrigger value="documents" className="rounded-xl px-6 data-[state=active]:bg-white/10 data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px]">Documents</TabsTrigger>
+            <TabsTrigger value="payroll" className="rounded-xl px-6 data-[state=active]:bg-white/10 data-[state=active]:text-white font-bold uppercase tracking-widest text-[10px]">Payroll History</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-12 animate-in fade-in duration-500 fill-mode-both">
@@ -254,6 +411,15 @@ export default function EmployeeDetailPage() {
               <InfoField label="Self-Approval Power" value={data.leave_details.self_approve_leave ? 'Enabled' : 'Disabled'} />
             </Section>
           </TabsContent>
+
+
+          <TabsContent value="documents" className="space-y-6 animate-in fade-in duration-500">
+            <EmployeeDocuments employeeCode={employeeCode} />
+          </TabsContent>
+
+          <TabsContent value="payroll" className="space-y-6 animate-in fade-in duration-500">
+            <EmployeePayrollHistoryLocal employeeCode={employeeCode} />
+          </TabsContent>
         </Tabs>
 
         {/* System Footer/Tags */}
@@ -266,6 +432,6 @@ export default function EmployeeDetailPage() {
           <p className="text-[10px] text-zinc-700 font-bold uppercase tracking-widest">Global Record I.D. {data.personal_details.code}</p>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

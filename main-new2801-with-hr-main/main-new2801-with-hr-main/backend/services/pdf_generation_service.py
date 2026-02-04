@@ -155,7 +155,7 @@ class PDFGenerationService:
     def generate_payslip_reportlab(self, payslip_data: dict) -> bytes:
         """
         Generate a refined Maltese payslip using ReportLab.
-        Mimics the Indigo/Shireburn layout structure.
+        Matches Shireburn Indigo layout (Arda Koc reference).
         """
         if not REPORTLAB_AVAILABLE:
             raise ImportError("ReportLab not installed")
@@ -164,86 +164,192 @@ class PDFGenerationService:
         c = canvas.Canvas(buffer, pagesize=A4)
         width, height = A4
         
-        # --- Header Section ---
-        c.setFont("Helvetica-Bold", 16)
-        c.drawString(20*mm, height-20*mm, "PAY ADVICE")
+        # --- Constants & Helpers ---
+        LINE_H = 12
+        MARGIN_L = 15*mm
+        MARGIN_R = 195*mm
+        CONTENT_W = MARGIN_R - MARGIN_L
+        
+        def draw_box_label_value(x, y, w, title, value):
+            c.setLineWidth(0.5)
+            c.rect(x, y-10, w, 25)
+            c.setFont("Helvetica-Bold", 7)
+            c.drawString(x+2, y+8, title.upper())
+            c.setFont("Helvetica", 9)
+            c.drawString(x+2, y-2, str(value or ""))
+            
+        # --- Header (Logo & Company) ---
+        # Mock Logo Place
+        c.setFillColorRGB(0.9, 0.9, 0.9)
+        c.rect(MARGIN_L, height-25*mm, 40*mm, 15*mm, fill=1, stroke=0) 
+        c.setFillColorRGB(0,0,0)
+        c.setFont("Helvetica-BoldOblique", 12)
+        c.drawCentredString(MARGIN_L+20*mm, height-18*mm, "LOGO")
+        
+        c.setFont("Helvetica-Bold", 14)
+        c.drawRightString(MARGIN_R, height-15*mm, "PAY ADVICE")
         
         c.setFont("Helvetica-Bold", 10)
-        c.drawString(20*mm, height-30*mm, "Caviar & Bull / Buddhamann Ltd")
+        c.drawString(MARGIN_L, height-35*mm, "Caviar & Bull / Buddhamann Ltd")
         c.setFont("Helvetica", 9)
-        c.drawString(20*mm, height-35*mm, "St Georges Bay, St Julians, Malta")
-        
-        # --- Employee & Period Boxes ---
-        c.setLineWidth(0.2)
-        c.rect(20*mm, height-65*mm, 80*mm, 20*mm) # Left box
-        c.rect(110*mm, height-65*mm, 80*mm, 20*mm) # Right box
+        c.drawString(MARGIN_L, height-40*mm, "St Georges Bay, St Julians, Malta")
+        c.drawString(MARGIN_L, height-45*mm, "PE: 456398") # Mock PE from Arda seed
+
+        # --- Top Metadata Row (Period, Date, Run) ---
+        y_meta = height - 55*mm
+        c.line(MARGIN_L, y_meta+15, MARGIN_R, y_meta+15)
         
         c.setFont("Helvetica-Bold", 8)
-        c.drawString(22*mm, height-50*mm, "EMPLOYEE")
-        c.drawString(112*mm, height-50*mm, "PAYROLL PERIOD")
+        c.drawString(MARGIN_L, y_meta, "PERIOD:")
+        c.setFont("Helvetica", 9)
+        c.drawString(MARGIN_L+15*mm, y_meta, f"{payslip_data.get('period_start')} - {payslip_data.get('period_end')}")
         
-        c.setFont("Helvetica", 10)
-        c.drawString(25*mm, height-58*mm, payslip_data.get('employee_name', 'N/A'))
-        c.drawString(25*mm, height-63*mm, f"ID: {payslip_data.get('employee_number', 'N/A')}")
+        c.setFont("Helvetica-Bold", 8)
+        c.drawString(MARGIN_L+70*mm, y_meta, "RUN DATE:")
+        c.setFont("Helvetica", 9)
+        c.drawString(MARGIN_L+90*mm, y_meta, date.today().strftime("%d-%m-%Y"))
         
-        c.drawString(115*mm, height-58*mm, f"{payslip_data.get('period_start', '')} to {payslip_data.get('period_end', '')}")
+        c.setFont("Helvetica-Bold", 8)
+        c.drawString(MARGIN_L+130*mm, y_meta, "RUN TYPE:")
+        c.setFont("Helvetica", 9)
+        c.drawString(MARGIN_L+150*mm, y_meta, "Main Payroll")
         
-        # --- Earnings & Deductions Table ---
-        # Headers
-        c.line(20*mm, height-75*mm, 190*mm, height-75*mm)
+        c.line(MARGIN_L, y_meta-5, MARGIN_R, y_meta-5)
+        
+        # --- Employee Details ---
+        y_emp = y_meta - 15*mm
+        
         c.setFont("Helvetica-Bold", 9)
-        c.drawString(20*mm, height-82*mm, "Description")
-        c.drawRightString(140*mm, height-82*mm, "Earnings (EUR)")
-        c.drawRightString(185*mm, height-82*mm, "Deductions (EUR)")
-        c.line(20*mm, height-85*mm, 190*mm, height-85*mm)
+        # Row 1
+        c.drawString(MARGIN_L, y_emp, "Code:")
+        c.setFont("Helvetica", 9)
+        c.drawString(MARGIN_L+25*mm, y_emp, payslip_data.get('employee_number', ''))
         
-        # Rows
-        y = height - 95*mm
-        c.setFont("Helvetica", 10)
+        c.setFont("Helvetica-Bold", 9)
+        c.drawString(MARGIN_L+60*mm, y_emp, "ID Card:")
+        c.setFont("Helvetica", 9)
+        c.drawString(MARGIN_L+80*mm, y_emp, payslip_data.get('id_card', '0307741A')) # Mock if missing
         
-        # Basic Pay
-        c.drawString(20*mm, y, "Basic Pay")
-        c.drawRightString(140*mm, y, f"{payslip_data.get('basic_pay', 0.0):.2f}")
-        y -= 10*mm
+        c.setFont("Helvetica-Bold", 9)
+        c.drawString(MARGIN_L+120*mm, y_emp, "Tax Output:")
+        c.setFont("Helvetica", 9)
+        c.drawString(MARGIN_L+150*mm, y_emp, "Single")
         
-        # Taxes & SSC (Mocking from components or summary)
-        tax = payslip_data.get('tax_amount', 0.0)
-        if tax > 0:
-            c.drawString(20*mm, y, "FSS Tax")
-            c.drawRightString(185*mm, y, f"{tax:.2f}")
-            y -= 8*mm
-            
-        ssc = payslip_data.get('total_deductions', 0.0) - tax
-        if ssc > 0:
-            c.drawString(20*mm, y, "Social Security")
-            c.drawRightString(185*mm, y, f"{ssc:.2f}")
-            y -= 8*mm
+        # Row 2
+        y_emp -= 6*mm
+        c.setFont("Helvetica-Bold", 9)
+        c.drawString(MARGIN_L, y_emp, "Name:")
+        c.setFont("Helvetica", 9)
+        c.drawString(MARGIN_L+25*mm, y_emp, payslip_data.get('employee_name', ''))
+        
+        c.setFont("Helvetica-Bold", 9)
+        c.drawString(MARGIN_L+60*mm, y_emp, "Department:")
+        c.setFont("Helvetica", 9)
+        c.drawString(MARGIN_L+80*mm, y_emp, "Operations") # Mock
+        
+        c.setFont("Helvetica-Bold", 9)
+        c.drawString(MARGIN_L+120*mm, y_emp, "NI Cat:")
+        c.setFont("Helvetica", 9)
+        c.drawString(MARGIN_L+150*mm, y_emp, "A")
 
+        # --- Main Table Header ---
+        y_table = y_emp - 15*mm
+        c.setFillColorRGB(0.9, 0.9, 0.9)
+        c.setLineWidth(0.5)
+        c.rect(MARGIN_L, y_table-2, CONTENT_W, 12, fill=1, stroke=1)
+        c.setFillColorRGB(0,0,0)
+        c.setFont("Helvetica-Bold", 8)
+        
+        col_desc = MARGIN_L + 2*mm
+        col_qty = MARGIN_L + 60*mm
+        col_rate = MARGIN_L + 80*mm
+        col_earn = MARGIN_L + 105*mm
+        col_deduct = MARGIN_L + 130*mm
+        col_ytd = MARGIN_L + 155*mm
+        
+        c.drawString(col_desc, y_table+2, "DESCRIPTION")
+        c.drawString(col_qty, y_table+2, "HOURS")
+        c.drawString(col_rate, y_table+2, "RATE")
+        c.drawString(col_earn, y_table+2, "EARNINGS")
+        c.drawString(col_deduct, y_table+2, "DEDUCTIONS")
+        c.drawString(col_ytd, y_table+2, "YTD TOTAL")
+        
+        y_curr = y_table - 6*mm
+        
+        # --- Body Items ---
+        items = payslip_data.get('lines', []) # Assuming refined 'lines' structure, else fallback
+        if not items:
+            # Fallback generator if 'lines' missing
+            items = []
+            if payslip_data.get('basic_pay', 0):
+                items.append({'name': 'Basic Pay', 'qty': 173.33, 'rate': 12.50, 'earn': payslip_data['basic_pay'], 'deduct': 0.0})
+            if payslip_data.get('tax_amount', 0):
+                items.append({'name': 'FSS Tax', 'qty': 0, 'rate': 0, 'earn': 0.0, 'deduct': payslip_data['tax_amount']})
+            ssc = payslip_data.get('total_deductions', 0) - payslip_data.get('tax_amount', 0)
+            if ssc > 0:
+                items.append({'name': 'SSC Contribution', 'qty': 0, 'rate': 0, 'earn': 0.0, 'deduct': ssc})
+                
+        c.setFont("Helvetica", 8)
+        for item in items:
+            c.drawString(col_desc, y_curr, item.get('name', ''))
+            if item.get('qty'):
+                c.drawString(col_qty, y_curr, f"{item['qty']:.2f}")
+            if item.get('rate'):
+                c.drawString(col_rate, y_curr, f"{item['rate']:.2f}")
+            if item.get('earn'):
+                c.drawString(col_earn, y_curr, f"€{item['earn']:.2f}")
+            if item.get('deduct'):
+                c.drawString(col_deduct, y_curr, f"€{item['deduct']:.2f}")
+                
+            y_curr -= 5*mm
+            
+        # Draw separator
+        c.line(MARGIN_L, y_curr, MARGIN_R, y_curr)
+        y_curr -= 5 * mm
+        
         # --- Totals Section ---
-        c.line(20*mm, 50*mm, 190*mm, 50*mm)
-        c.setFont("Helvetica-Bold", 10)
-        c.drawString(20*mm, 43*mm, "TOTAL GROSS")
-        c.drawRightString(140*mm, 43*mm, f"EUR {payslip_data.get('gross_pay', 0.0):.2f}")
+        c.setFont("Helvetica-Bold", 9)
+        c.drawString(col_desc, y_curr, "TOTALS")
+        c.drawString(col_earn, y_curr, f"€{payslip_data.get('gross_pay', 0.0):.2f}")
+        c.drawString(col_deduct, y_curr, f"€{payslip_data.get('total_deductions', 0.0):.2f}")
         
-        c.drawString(20*mm, 35*mm, "TOTAL DEDUCTIONS")
-        c.drawRightString(185*mm, 35*mm, f"EUR {payslip_data.get('total_deductions', 0.0):.2f}")
+        # --- Leave Balances Boxes (Indigo Style) ---
+        y_balances = 65*mm
+        c.line(MARGIN_L, y_balances+5, MARGIN_R, y_balances+5)
         
-        # --- Net Pay Highlight ---
-        c.setFillColorRGB(0.95, 0.95, 0.95)
-        c.rect(110*mm, 15*mm, 80*mm, 15*mm, fill=1)
-        c.setFillColorRGB(0, 0, 0)
-        c.setFont("Helvetica-Bold", 12)
-        c.drawString(115*mm, 22*mm, "NET PAY")
-        c.drawRightString(185*mm, 22*mm, f"EUR {payslip_data.get('net_pay', 0.0):.2f}")
+        box_w = 25*mm
+        c.setFont("Helvetica-Bold", 8)
+        c.drawString(MARGIN_L, y_balances-2, "LEAVE DETAILS")
         
-        # Footer
-        c.setFont("Helvetica-Oblique", 8)
-        c.drawString(20*mm, 10*mm, "This is a computer generated document. Restin.ai HR Module.")
+        # Mock Leave Data
+        vac_ent = 192.0
+        vac_taken = 24.0
+        vac_bal = 168.0
         
-        # Finalize
+        draw_box_label_value(MARGIN_L, y_balances-15, box_w, "Annual Ent.", f"{vac_ent} hrs")
+        draw_box_label_value(MARGIN_L+30*mm, y_balances-15, box_w, "Taken YTD", f"{vac_taken} hrs")
+        draw_box_label_value(MARGIN_L+60*mm, y_balances-15, box_w, "Balance", f"{vac_bal} hrs")
+        
+        # --- Bank Details ---
+        y_bank = 45*mm
+        c.setFont("Helvetica", 7)
+        c.drawString(MARGIN_L, y_bank, "Payment Method: Direct Credit")
+        c.drawString(MARGIN_L, y_bank-3*mm, f"IBAN: {payslip_data.get('iban', 'MT55HSBC0000000000000')}")
+        
+        # --- Net Pay Bottom Right ---
+        c.setLineWidth(1)
+        c.rect(130*mm, 30*mm, 50*mm, 15*mm)
+        c.setFont("Helvetica-Bold", 11)
+        c.drawString(135*mm, 39*mm, "NET PAY")
+        c.setFont("Helvetica-Bold", 14)
+        c.drawRightString(175*mm, 34*mm, f"€{payslip_data.get('net_pay', 0.0):.2f}")
+        
+        # --- Footer ---
+        c.setFont("Helvetica", 6)
+        c.drawCentredString(width/2, 10*mm, "Printed from Restin.ai | Shireburn Indigo Parity Edition")
+        
         c.showPage()
         c.save()
-        
         pdf_bytes = buffer.getvalue()
         buffer.close()
         return pdf_bytes
@@ -264,8 +370,8 @@ class PDFGenerationService:
             </style>
         </head>
         <body>
-            <h1>{title}</h1>
-            {content}
+            <h1>{{ title }}</h1>
+            {{ content }}
         </body>
         </html>
         """

@@ -38,8 +38,10 @@ export default function HRAnalyticsIndigo() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    if (venueId) {
+      fetchDashboardData();
+    }
+  }, [venueId]);
 
   const fetchDashboardData = async () => {
     try {

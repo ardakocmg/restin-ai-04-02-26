@@ -344,7 +344,7 @@ export default function InventoryItemsNew() {
                 <p className="text-sm font-medium">{movement.type}</p>
                 <p className="text-xs text-muted-foreground">{movement.date}</p>
               </div>
-              <span className={movement.quantity > 0 ? 'text-green-600' : 'text-red-600'}>
+              <span className={movement.quantity > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
                 {movement.quantity > 0 ? '+' : ''}{movement.quantity}
               </span>
             </div>

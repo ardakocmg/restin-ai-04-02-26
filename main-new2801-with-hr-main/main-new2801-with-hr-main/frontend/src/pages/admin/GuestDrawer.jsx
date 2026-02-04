@@ -38,7 +38,7 @@ export default function GuestDrawer({ open, onOpenChange, guestId }) {
             <SheetContent className="w-full sm:max-w-xl bg-zinc-950 border-white/10 text-white overflow-y-auto">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center h-full gap-4">
-                        <Loader2 className="w-12 h-12 text-red-600 animate-spin" />
+                        <Loader2 className="w-12 h-12 text-red-600 dark:text-red-400 animate-spin" />
                         <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Retrieving Guest 360...</p>
                     </div>
                 ) : data && (

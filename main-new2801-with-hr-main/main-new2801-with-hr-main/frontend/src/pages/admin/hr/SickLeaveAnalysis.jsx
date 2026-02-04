@@ -33,13 +33,13 @@ export default function SickLeaveAnalysis() {
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Total Sick Days</p>
-            <p className="text-3xl font-bold text-red-600 mt-2">{data.total_sick_days}</p>
+            <p className="text-3xl font-bold text-red-600 dark:text-red-400 mt-2">{data.total_sick_days}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Employees on Sick Leave</p>
-            <p className="text-3xl font-bold text-orange-600 mt-2">{data.employees_on_sick_leave}</p>
+            <p className="text-3xl font-bold text-orange-600 dark:text-orange-400 mt-2">{data.employees_on_sick_leave}</p>
           </CardContent>
         </Card>
         <Card>

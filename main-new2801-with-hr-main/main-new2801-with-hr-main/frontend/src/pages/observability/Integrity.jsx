@@ -121,7 +121,7 @@ export default function IntegrityPage() {
           <CardContent>
             <div className="space-y-2">
               {openFindings.length === 0 ? (
-                <div className="text-center py-8 text-green-600">
+                <div className="text-center py-8 text-green-600 dark:text-green-400">
                   <Shield className="h-12 w-12 mx-auto mb-2" />
                   <p>No open findings</p>
                 </div>

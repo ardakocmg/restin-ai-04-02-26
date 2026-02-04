@@ -83,7 +83,7 @@ function KDSStations() {
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className={`p-3 rounded-lg ${
-                  station.enabled ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'
+                  station.enabled ? 'bg-green-100 text-green-600 dark:text-green-400' : 'bg-gray-100 text-gray-400'
                 }`}>
                   <Monitor className="w-6 h-6" />
                 </div>
@@ -99,7 +99,7 @@ function KDSStations() {
                 }}
                 className={`p-2 rounded-lg transition ${
                   station.enabled
-                    ? 'bg-green-100 text-green-600 hover:bg-green-200'
+                    ? 'bg-green-100 text-green-600 dark:text-green-400 hover:bg-green-200'
                     : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
                 }`}
               >
@@ -133,7 +133,7 @@ function KDSStations() {
                   e.stopPropagation();
                   navigate(`/kds/runtime/${station.station_key}`);
                 }}
-                className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition"
+                className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 rounded-lg hover:bg-blue-100 transition"
               >
                 Open Display
               </button>

@@ -41,7 +41,7 @@ const menuItems = [
   { title: 'Operational Timeline', icon: Clock, href: '/admin/reservations/timeline', group: 'pos' },
   { title: 'Devices', icon: Activity, href: '/admin/devices', group: 'pos' },
   { title: 'Printers', icon: Receipt, href: '/admin/printers', group: 'pos' },
-  { title: 'Printer Templates', icon: FileText, href: '/admin/printers?tab=templates', group: 'pos' },
+
   { title: 'Cash Drawers', icon: DollarSign, href: '/admin/printers?tab=cash-drawers', group: 'pos' },
   { title: 'Tasks Kanban', icon: LayoutDashboard, href: '/admin/tasks-kanban', group: 'pos' },
   { title: 'Inbox', icon: Activity, href: '/admin/inbox', group: 'pos' },

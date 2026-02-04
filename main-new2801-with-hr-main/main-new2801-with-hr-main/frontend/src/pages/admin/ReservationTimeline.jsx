@@ -51,7 +51,7 @@ export default function ReservationTimeline() {
                     <Button variant="outline" size="sm" onClick={() => setViewDate(addDays(viewDate, -1))}>
                         <ChevronLeft className="w-4 h-4" />
                     </Button>
-                    <div className="px-4 py-2 bg-zinc-900 border border-white/5 rounded-md text-xs font-black uppercase text-white">
+                    <div className="px-4 py-2 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 rounded-md text-xs font-black uppercase text-zinc-900 dark:text-white">
                         {format(viewDate, 'EEEE, MMM do')}
                     </div>
                     <Button variant="outline" size="sm" onClick={() => setViewDate(addDays(viewDate, 1))}>
@@ -64,18 +64,18 @@ export default function ReservationTimeline() {
                 {/* Stats Row */}
                 <div className="grid grid-cols-4 gap-4">
                     {[
-                        { label: 'Total Covers', value: '142', icon: Users, color: 'text-blue-500' },
-                        { label: 'Upcoming', value: '12', icon: Clock, color: 'text-orange-500' },
-                        { label: 'Seated', value: '8', icon: CheckCircle, color: 'text-green-500' },
-                        { label: 'Waitlist', value: '3', icon: ArrowRight, color: 'text-purple-500' }
+                        { label: 'Total Covers', value: '142', icon: Users, color: 'text-blue-600 dark:text-blue-400 dark:text-blue-400' },
+                        { label: 'Upcoming', value: '12', icon: Clock, color: 'text-orange-600 dark:text-orange-400 dark:text-orange-400' },
+                        { label: 'Seated', value: '8', icon: CheckCircle, color: 'text-green-600 dark:text-green-400 dark:text-green-400' },
+                        { label: 'Waitlist', value: '3', icon: ArrowRight, color: 'text-purple-600 dark:text-purple-400 dark:text-purple-400' }
                     ].map((s, i) => {
                         const Icon = s.icon;
                         return (
-                            <Card key={i} className="bg-zinc-950 border-white/5 shadow-xl">
+                            <Card key={i} className="bg-white dark:bg-zinc-950 border-zinc-200 dark:border-white/5 shadow-xl">
                                 <CardContent className="p-4 flex items-center justify-between">
                                     <div>
-                                        <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{s.label}</p>
-                                        <p className="text-2xl font-black text-white">{s.value}</p>
+                                        <p className="text-[10px] font-black text-zinc-500 dark:text-zinc-500 uppercase tracking-widest">{s.label}</p>
+                                        <p className="text-2xl font-black text-zinc-900 dark:text-white">{s.value}</p>
                                     </div>
                                     <Icon className={`w-8 h-8 ${s.color} opacity-20`} />
                                 </CardContent>
@@ -85,14 +85,14 @@ export default function ReservationTimeline() {
                 </div>
 
                 {/* Timeline Grid */}
-                <Card className="bg-zinc-950 border-white/5 shadow-2xl overflow-hidden">
+                <Card className="bg-white dark:bg-zinc-950 border-zinc-200 dark:border-white/5 shadow-2xl overflow-hidden">
                     <CardContent className="p-0 overflow-x-auto">
                         <div className="min-w-[1200px]">
                             {/* Header */}
-                            <div className="flex bg-zinc-900 border-b border-white/5">
-                                <div className="w-48 p-4 border-r border-white/5 text-[10px] font-black text-zinc-500 uppercase">Table / Section</div>
+                            <div className="flex bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-white/5">
+                                <div className="w-48 p-4 border-r border-zinc-200 dark:border-white/5 text-[10px] font-black text-zinc-500 uppercase">Table / Section</div>
                                 {hours.map(h => (
-                                    <div key={h} className="flex-1 p-4 text-center border-r border-white/5 text-xs font-black text-white">{h}</div>
+                                    <div key={h} className="flex-1 p-4 text-center border-r border-zinc-200 dark:border-white/5 text-xs font-black text-zinc-700 dark:text-white">{h}</div>
                                 ))}
                             </div>
 
@@ -103,29 +103,29 @@ export default function ReservationTimeline() {
                                 <div className="p-12 text-center text-zinc-600 italic font-bold">No operational data for this date</div>
                             ) : (
                                 reservations.map((res, idx) => (
-                                    <div key={res.id || idx} className="flex border-b border-white/5 hover:bg-white/[0.02] group">
-                                        <div className="w-48 p-4 border-r border-white/5 flex flex-col">
-                                            <span className="text-xs font-bold text-white uppercase">{res.table_id || `Table ${idx + 1}`}</span>
+                                    <div key={res.id || idx} className="flex border-b border-zinc-200 dark:border-white/5 hover:bg-zinc-50 dark:hover:bg-white/[0.02] group">
+                                        <div className="w-48 p-4 border-r border-zinc-200 dark:border-white/5 flex flex-col">
+                                            <span className="text-xs font-bold text-zinc-900 dark:text-white uppercase">{res.table_id || `Table ${idx + 1}`}</span>
                                             <span className="text-[10px] text-zinc-500 font-medium">{res.guest_count} Pax | {res.channel}</span>
                                         </div>
                                         <div className="flex-1 relative h-16 flex">
                                             {/* Dynamic Reservation Block */}
                                             <div
-                                                className="absolute top-2 h-12 bg-red-600/20 border border-red-500/40 rounded-lg p-2 flex flex-col justify-center cursor-pointer hover:bg-red-600/30 transition-all z-10"
+                                                className="absolute top-2 h-12 bg-red-100 dark:bg-red-600/20 border border-red-200 dark:border-red-500/40 rounded-lg p-2 flex flex-col justify-center cursor-pointer hover:bg-red-200 dark:hover:bg-red-600/30 transition-all z-10"
                                                 style={{
                                                     left: `${res.datetime_start ? ((parseInt(res.datetime_start.split('T')[1].split(':')[0]) - 17) * 60 + parseInt(res.datetime_start.split('T')[1].split(':')[1])) / 4.8 : 0}%`,
                                                     width: '15%'
                                                 }}
                                             >
-                                                <span className="text-[10px] font-black text-white uppercase truncate">{res.guest_name || 'Guest'}</span>
-                                                <span className="text-[9px] text-red-400 font-bold uppercase tracking-tight">
+                                                <span className="text-[10px] font-black text-red-900 dark:text-white uppercase truncate">{res.guest_name || 'Guest'}</span>
+                                                <span className="text-[9px] text-red-600 dark:text-red-400 dark:text-red-400 font-bold uppercase tracking-tight">
                                                     {res.datetime_start ? res.datetime_start.split('T')[1].substring(0, 5) : ''} • {res.status}
                                                 </span>
                                             </div>
 
                                             {/* Grid markings */}
                                             {hours.map(h => (
-                                                <div key={h} className="flex-1 border-r border-white/5 opacity-20"></div>
+                                                <div key={h} className="flex-1 border-r border-zinc-200 dark:border-white/5 opacity-20"></div>
                                             ))}
                                         </div>
                                     </div>

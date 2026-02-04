@@ -198,3 +198,6 @@ class MockDatabase:
         col = MockCollection(name, [])
         setattr(self, name, col)
         return col
+
+    def __getitem__(self, name):
+        return getattr(self, name)

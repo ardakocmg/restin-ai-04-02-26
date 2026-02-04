@@ -101,7 +101,7 @@ function StockCount() {
           <div>
             <h1 className="text-4xl font-bold text-gray-900">Stock Count</h1>
             {count && (
-              <p className="text-lg text-blue-600 font-medium mt-1">
+              <p className="text-lg text-blue-600 dark:text-blue-400 font-medium mt-1">
                 Active Count: {count.display_id}
               </p>
             )}

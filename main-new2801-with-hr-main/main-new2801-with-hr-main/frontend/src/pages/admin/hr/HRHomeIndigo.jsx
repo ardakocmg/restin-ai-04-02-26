@@ -99,6 +99,8 @@ export default function HRHomeIndigo() {
 
     const mainActions = [
         { title: 'Scheduler', icon: Calendar, path: '/admin/hr/scheduler' },
+        { title: 'Payroll Processing', icon: DollarSign, path: '/admin/hr/payroll' },
+        { title: 'Employee Directory', icon: UserCheck, path: '/admin/hr/people' },
         { title: 'Import Clocking Data', icon: Upload, path: '/admin/hr/import' },
         { title: 'Clocking Data', icon: Clock, path: '/admin/hr/clocking' },
         { title: 'Clocking Map View', icon: Map, path: '/admin/hr/map' },

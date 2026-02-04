@@ -29,7 +29,6 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
         venue_settings = venue.get("settings", {}) if venue else {}
         user_perms = effective_permissions(current_user["role"], venue_settings)
         
-        # Employees can only see themselves
         if "EMPLOYEES_VIEW_SELF" in user_perms and "EMPLOYEES_VIEW_ALL" not in user_perms:
             # Find employee record linked to user
             query = {"venue_id": venue_id, "email": current_user.get("email")}
@@ -38,6 +37,33 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
         else:
             query = {"venue_id": venue_id}
         
+        # --- SEEDING LOGIC START ---
+        count = await db.employees.count_documents({})
+        if count == 0:
+            from mock_data_store import MOCK_EMPLOYEES
+            seed_docs = []
+            for code, emp in MOCK_EMPLOYEES.items():
+                seed_docs.append({
+                    "id": str(uuid4()), # Generate new ID internal
+                    "display_id": code, # Use code as display ID
+                    "venue_id": venue_id, # Seed into current venue context
+                    "full_name": emp["full_name"],
+                    "email": emp["email"],
+                    "role": "staff",
+                    "department": emp["department"],
+                    "employment_status": "active",
+                    "start_date": emp.get("employment_date"),
+                    "phone": emp.get("mobile"),
+                    # Add extra fields to match schema
+                    "occupation": emp["occupation"],
+                    "cost_centre": emp["cost_centre"],
+                    "vendor": emp.get("vendor"),
+                    "created_at": datetime.now(timezone.utc).isoformat()
+                })
+            if seed_docs:
+                await db.employees.insert_many(seed_docs)
+        # --- SEEDING LOGIC END ---
+
         employees = await db.employees.find(query, {"_id": 0}).to_list(1000)
         
         # Filter sensitive fields based on permissions
@@ -777,27 +803,82 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
     
     @hr_router.post("/payruns/{payrun_id}/calculate")
     async def calculate_payrun(payrun_id: str, current_user: dict = Depends(get_current_user)):
-        """Calculate all payslips for payrun"""
+        """Calculate payslips based on REAL Clocking Data"""
         payrun = await db.pay_runs.find_one({"id": payrun_id}, {"_id": 0})
         if not payrun:
             raise HTTPException(status_code=404, detail="Payrun not found")
         
+        # Period dates (important for filtering clocking)
+        # Expected format: "2026-01-01" or similar iso date
+        p_start = payrun.get("period_start")
+        p_end = payrun.get("period_end")
+
         # Get employees
         employees = await db.employees.find({"venue_id": payrun["venue_id"], "employment_status": "active"}, {"_id": 0}).to_list(1000)
         
         from uuid import uuid4
         payslips_created = 0
         
+        # Pre-fetch clocking for efficiency? Or one by one.
+        # One by one is fine for 1000 employees in this scale.
+        
+        filtered_clocking_query = {
+             "venue_id": payrun["venue_id"]
+        }
+        # Add date range filter if dates are valid ISO strings (YYYY-MM-DD or DD/MM/YYYY)
+        # Clocking data stores date as "DD/MM/YYYY" string currently (legacy mock format).
+        # We need to handle this carefully. Mock data seeded with "DD/MM/YYYY".
+        
+        # Helper to parse dates
+        def parse_date(d_str):
+            try:
+                # Try ISO YYYY-MM-DD
+                return datetime.strptime(d_str, "%Y-%m-%d")
+            except:
+                try:
+                    # Try DD/MM/YYYY
+                    return datetime.strptime(d_str, "%d/%m/%Y")
+                except:
+                    return None
+
+        dt_start = parse_date(p_start) if p_start else None
+        dt_end = parse_date(p_end) if p_end else None
+
         for emp in employees:
-            # Simple calculation (can be extended with tax tables)
+            # Get Contract Rate
             contract = await db.contracts.find_one({"employee_id": emp["id"], "status": "active"}, {"_id": 0})
             if not contract:
-                continue
+                # Fallback to hourly_rate in employee record if no contract (migration support)
+                base_rate = emp.get("hourly_rate", 10.0) # Default 10 EUR
+            else:
+                base_rate = contract.get("base_rate", 0.0)
             
-            base_salary = contract.get("base_rate", 0.0)
-            gross = base_salary
-            tax = gross * 0.15  # Simple 15% tax (Malta placeholder)
-            social = gross * 0.10  # Simple 10% social security
+            # Fetch Clocking Records for this Employee
+            # Since date strings are messy ("DD/MM/YYYY"), complex range queries in Mongo are hard on strings.
+            # We will fetch all for employee and filter in python (safe for small dataset < 5000 records/emp).
+            # Limitation: Performance. Optimization: Store ISODate in ClockingRecord next time.
+            
+            emp_clocking = await db.clocking_records.find({"employee_id": emp["id"]}).to_list(1000)
+            
+            total_hours = 0.0
+            
+            for record in emp_clocking:
+                r_date_str = record.get("date")
+                r_date = parse_date(r_date_str)
+                
+                if r_date and dt_start and dt_end:
+                    if dt_start <= r_date <= dt_end:
+                        total_hours += record.get("hours_worked", 0.0)
+                else:
+                    # If no valid date range, include nothing (safety)
+                    pass
+
+            # Calculate Pay
+            gross = total_hours * base_rate
+            
+            # Simple Tax Rules (Malta Placeholder)
+            tax = gross * 0.10 # 10% FSS
+            social = gross * 0.10 # 10% NI
             net = gross - tax - social
             
             payslip_doc = {
@@ -805,7 +886,11 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
                 "venue_id": payrun["venue_id"],
                 "pay_run_id": payrun_id,
                 "employee_id": emp["id"],
-                "earnings": {"base": base_salary},
+                "period_start": p_start,
+                "period_end": p_end,
+                "worked_hours": total_hours, # Storing the source of truth!
+                "hourly_rate": base_rate,
+                "earnings": {"base": gross},
                 "deductions": {"tax": tax, "social": social},
                 "gross": gross,
                 "net": net,
@@ -819,7 +904,7 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
         
         await db.pay_runs.update_one({"id": payrun_id}, {"$set": {"status": "calculated"}})
         
-        return {"message": f"Calculated {payslips_created} payslips"}
+        return {"message": f"Calculated {payslips_created} payslips using REAL clocking data"}
     
     @hr_router.post("/payruns/{payrun_id}/approve")
     async def approve_payrun(payrun_id: str, current_user: dict = Depends(get_current_user)):

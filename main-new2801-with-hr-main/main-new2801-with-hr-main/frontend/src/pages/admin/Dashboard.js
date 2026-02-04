@@ -194,7 +194,7 @@ export default function Dashboard() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full btn-secondary"
+                    className="w-full btn-secondary text-zinc-100 dark:text-zinc-100 hover:text-white"
                     onClick={() => navigate('/admin/inventory')}
                   >
                     View Inventory

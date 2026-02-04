@@ -34,6 +34,30 @@ export default function PayrollRunDetail() {
         }
     };
 
+    const handleDownloadPayslip = async (employeeId) => {
+        const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull'; // Should use context or fallback
+        try {
+            toast.info("Generating PDF...");
+            // Use current wrapper pattern if necessary, or raw axios for blob
+            // Using raw api.get with responseType blob
+            const response = await api.get(`/venues/${venueId}/hr/payroll-mt/run/${runId}/payslip/${employeeId}/pdf`, { responseType: 'blob' });
+
+            // Create download link
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `Payslip_${employeeId}.pdf`); // Filename usually set by Content-Disposition, but we ensure one here
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            toast.success("Payslip downloaded");
+        } catch (error) {
+            console.error("Failed to download payslip", error);
+            toast.error("Failed to generate PDF");
+        }
+    };
+
     if (loading) {
         return (
             <PageContainer title="Loading Payroll..." description="Fetching secure data">
@@ -163,9 +187,10 @@ export default function PayrollRunDetail() {
                                                 variant="ghost"
                                                 size="icon"
                                                 className="h-8 w-8 hover:bg-zinc-700 rounded-lg"
+                                                title="Download Payslip PDF"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    window.open(`/admin/hr/payroll/payslip/${run.id}/${slip.employee_code}`, '_blank');
+                                                    handleDownloadPayslip(slip.employee_id || slip.employee_code);
                                                 }}
                                             >
                                                 <Printer className="h-4 w-4 text-zinc-400 group-hover:text-white" />

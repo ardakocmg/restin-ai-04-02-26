@@ -10,10 +10,12 @@ class ClockingRecord(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     venue_id: str
+    employee_id: str  # Link to employees collection
     day_of_week: str  # "Tuesday", "Wednesday"
     date: str  # "27/01/2026"
     clocking_in: str  # "16:26"
     clocking_out: str  # "23:52"
+    hours_worked: float = 0.0
     employee_name: str
     employee_designation: Optional[str] = None  # "(SUBCONTRACTED)"
     cost_centre: str  # "CAVFOH", "C&B FC"

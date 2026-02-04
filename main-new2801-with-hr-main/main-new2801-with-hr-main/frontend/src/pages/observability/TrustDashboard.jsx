@@ -64,7 +64,7 @@ export default function TrustDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-600">Critical</p>
-                <p className="text-2xl font-bold text-red-600">{criticalFindings}</p>
+                <p className="text-2xl font-bold text-red-600 dark:text-red-400">{criticalFindings}</p>
               </div>
               <XCircle className="h-8 w-8 text-red-500" />
             </div>
@@ -76,7 +76,7 @@ export default function TrustDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-600">Pending Overrides</p>
-                <p className="text-2xl font-bold text-blue-600">{pendingOverrides}</p>
+                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{pendingOverrides}</p>
               </div>
               <Activity className="h-8 w-8 text-blue-500" />
             </div>

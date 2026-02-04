@@ -25,6 +25,11 @@ export default function NewTopBar() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [systemStatus, setSystemStatus] = useState('healthy'); // 'healthy', 'degraded', 'offline'
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   // All available pages for search
   const allPages = [
     { title: 'Dashboard', path: '/admin/dashboard', category: 'Main', keywords: ['home', 'overview', 'main'] },
@@ -286,7 +291,7 @@ export default function NewTopBar() {
             </div>
 
             <DropdownMenuItem
-              onClick={() => navigate('/admin/hr/employee-portal')}
+              onClick={() => navigate('/profile')}
               className="font-medium cursor-pointer focus:bg-white/5"
             >
               <User className="mr-2 h-4 w-4 text-zinc-500" />
@@ -316,7 +321,7 @@ export default function NewTopBar() {
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-white/5" />
-            <DropdownMenuItem onClick={logout} className="text-red-500 focus:text-red-400 focus:bg-red-500/5">
+            <DropdownMenuItem onClick={handleLogout} className="text-red-500 focus:text-red-400 focus:bg-red-500/5">
               <LogOut className="mr-2 h-4 w-4" />
               Logout
             </DropdownMenuItem>

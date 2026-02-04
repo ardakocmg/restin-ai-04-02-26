@@ -115,7 +115,7 @@ export default function PayslipTemplate() {
                             <td className="py-3 font-bold">Total</td>
                             <td className="py-3"></td>
                             <td className="text-right py-3 font-bold">€{payslip.gross_pay.toFixed(2)}</td>
-                            <td className="text-right py-3 font-bold text-red-600">-€{(payslip.tax_deducted + payslip.ssc_contribution).toFixed(2)}</td>
+                            <td className="text-right py-3 font-bold text-red-600 dark:text-red-400">-€{(payslip.tax_deducted + payslip.ssc_contribution).toFixed(2)}</td>
                         </tr>
                     </tfoot>
                 </table>

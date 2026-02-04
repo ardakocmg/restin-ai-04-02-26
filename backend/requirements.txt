@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+cryptography
+motor
+passlib
+bcrypt==4.0.1
+python-multipart
+pandas
+email-validator

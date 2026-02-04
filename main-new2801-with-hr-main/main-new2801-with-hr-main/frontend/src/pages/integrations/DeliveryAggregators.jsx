@@ -63,7 +63,7 @@ export default function DeliveryAggregators() {
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-lg">{conn.connector_key}</CardTitle>
-                      <Truck className="h-6 w-6 text-blue-600" />
+                      <Truck className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
                     <CardDescription>Primary Malta delivery platform</CardDescription>
                   </CardHeader>
@@ -71,7 +71,7 @@ export default function DeliveryAggregators() {
                     <div className="space-y-2 text-sm">
                       {Object.entries(conn.supports).filter(([k, v]) => v).slice(0, 4).map(([key, value]) => (
                         <div key={key} className="flex items-center gap-2">
-                          <CheckCircle2 className="h-3 w-3 text-green-600" />
+                          <CheckCircle2 className="h-3 w-3 text-green-600 dark:text-green-400" />
                           <span className="text-slate-700">{key.replace(/_/g, ' ')}</span>
                         </div>
                       ))}

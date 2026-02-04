@@ -494,6 +494,16 @@ api_main.include_router(updates_router)
 api_main.include_router(bill_split_router)
 api_main.include_router(table_merge_router)
 api_main.include_router(observability_router)
+api_main.include_router(user_settings_router)
+
+# User Sync utility
+from routes.user_sync import create_user_sync_router
+user_sync_router = create_user_sync_router()
+api_main.include_router(user_sync_router)
+
+from routes.clocking_seeder import create_clocking_seeder_router
+clocking_seeder_router = create_clocking_seeder_router()
+api_main.include_router(clocking_seeder_router)
 
 # Ultimate & HR Advanced Routers
 api_main.include_router(procurement_advanced_router)
@@ -606,6 +616,8 @@ async def startup_event():
         
     except Exception as e:
         logger.error(f"Startup error: {e}")
+
+# Force reload hook - User Sync Added (Unique PINs)
 
 @app.on_event("shutdown")
 async def shutdown_event():

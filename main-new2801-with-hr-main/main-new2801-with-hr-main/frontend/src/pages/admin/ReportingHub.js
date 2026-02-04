@@ -23,7 +23,7 @@ export default function ReportingHub() {
   const [selectedReport, setSelectedReport] = useState(null);
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState(null);
-  
+
   const venueId = user?.venueId || user?.venue_id;
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function ReportingHub() {
 
   const runReport = async () => {
     if (!selectedReport) return;
-    
+
     setRunning(true);
     try {
       const runResult = await ReportingService.runReport(
@@ -56,7 +56,7 @@ export default function ReportingHub() {
         {},
         'json'
       );
-      
+
       if (runResult.status === 'done') {
         setResult(runResult.result_data);
         toast.success('Report generated successfully');
@@ -108,18 +108,17 @@ export default function ReportingHub() {
                   <div
                     key={report.key}
                     onClick={() => setSelectedReport(report)}
-                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                      selectedReport?.key === report.key 
-                        ? 'border-blue-400 bg-blue-50' 
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${selectedReport?.key === report.key
+                      ? 'border-blue-400 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-500'
+                      : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
+                      }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm text-gray-900">{report.title}</h4>
-                        <p className="text-xs text-gray-500 mt-1">{report.description}</p>
+                        <h4 className="font-medium text-sm text-zinc-900 dark:text-white">{report.title}</h4>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{report.description}</p>
                       </div>
-                      <Badge className={CATEGORY_COLORS[report.category]}>
+                      <Badge className={`${CATEGORY_COLORS[report.category]} dark:bg-opacity-20`}>
                         {report.category}
                       </Badge>
                     </div>
@@ -132,18 +131,17 @@ export default function ReportingHub() {
                   <div
                     key={report.key}
                     onClick={() => setSelectedReport(report)}
-                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                      selectedReport?.key === report.key 
-                        ? 'border-blue-400 bg-blue-50' 
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${selectedReport?.key === report.key
+                      ? 'border-blue-400 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-500'
+                      : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
+                      }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm text-gray-900">{report.title}</h4>
-                        <p className="text-xs text-gray-500 mt-1">{report.description}</p>
+                        <h4 className="font-medium text-sm text-zinc-900 dark:text-white">{report.title}</h4>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{report.description}</p>
                       </div>
-                      <Badge className={CATEGORY_COLORS[report.category]}>
+                      <Badge className={`${CATEGORY_COLORS[report.category]} dark:bg-opacity-20`}>
                         {report.category}
                       </Badge>
                     </div>
@@ -179,7 +177,7 @@ export default function ReportingHub() {
                 <div className="text-sm text-gray-600">
                   <strong>Rows:</strong> {result?.rows?.length || 0}
                 </div>
-                <pre className="bg-gray-50 p-4 rounded-lg overflow-auto text-xs">
+                <pre className="bg-zinc-50 dark:bg-zinc-900 p-4 rounded-lg overflow-auto text-xs text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-800">
                   {JSON.stringify(result, null, 2)}
                 </pre>
               </div>
