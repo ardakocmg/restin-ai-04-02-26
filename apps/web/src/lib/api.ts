@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8000', // adjust if needed
+    baseURL: 'http://localhost:8001', // adjust if needed
 });
 
 export const venueAPI = {
