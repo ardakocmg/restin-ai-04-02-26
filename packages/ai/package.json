@@ -1,0 +1,13 @@
+{
+    "name": "@antigravity/ai",
+    "version": "0.0.0",
+    "main": "src/index.ts",
+    "types": "index.ts",
+    "license": "MIT",
+    "dependencies": {
+        "@google-cloud/vertexai": "^1.1.0"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    }
+}

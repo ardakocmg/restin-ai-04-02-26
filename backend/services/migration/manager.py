@@ -43,6 +43,7 @@ class MigrationManager:
             summary=result.get("summary"),
             details=result.get("details"),
             created_by=self.user_id,
+            started_at=datetime.now(timezone.utc).isoformat(),
             completed_at=datetime.now(timezone.utc).isoformat()
         )
         

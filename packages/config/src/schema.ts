@@ -12,6 +12,12 @@ export const AppConfigSchema = z.object({
         pos: z.boolean().default(true),
         kds: z.boolean().default(false),
         hr: z.boolean().default(true),
+        // Restin AI Pillars
+        voice: z.boolean().default(false),
+        radar: z.boolean().default(false),
+        studio: z.boolean().default(false),
+        web: z.boolean().default(false),
+        crm: z.boolean().default(false),
     }),
     tax: z.object({
         defaultRate: z.number().min(0).max(100).default(18), // Malta Standard

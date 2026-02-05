@@ -205,10 +205,14 @@ const menuItems = [
   },
 
   // RESTIN.AI COMMERCIAL MODULES (Protocol v18.0)
+  { title: 'Control Tower', icon: LayoutDashboard, href: '/admin/restin', group: 'restin' },
   { title: 'Website Builder', icon: Globe, href: '/admin/restin/web', group: 'restin' },
   { title: 'Voice AI', icon: Mic, href: '/admin/restin/voice', group: 'restin' },
+  { title: 'Autopilot CRM', icon: Users, href: '/admin/restin/crm', group: 'restin' },
   { title: 'Content Studio', icon: Wand2, href: '/admin/restin/studio', group: 'restin' },
   { title: 'Market Radar', icon: Radar, href: '/admin/restin/radar', group: 'restin' },
+  { title: 'Ops & Aggregators', icon: Layers, href: '/admin/restin/ops', group: 'restin' },
+  { title: 'Fintech & Payments', icon: DollarSign, href: '/admin/restin/fintech', group: 'restin' },
 ];
 
 export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDomainExpand }) {

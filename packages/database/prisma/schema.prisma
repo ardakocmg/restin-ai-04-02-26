@@ -526,6 +526,9 @@ model StorageBilling {
   totalMediaSizeMB Float      @default(0.0)
   totalVectorCount Int        @default(0)
   
+  pricePerGB       Decimal    @default(0.10) // Markup rate
+  pricePer1kVectors Decimal   @default(0.01) // Markup rate
+  
   usageHistory   String?      // JSON History
   
   updatedAt      DateTime     @updatedAt
@@ -736,3 +739,35 @@ model AggregatorConfig {
   
   updatedAt      DateTime     @updatedAt
 }
+
+// ==================================================================================
+// PILLAR 8: THE FINTECH (Omni-Payment)
+// ==================================================================================
+
+model KioskConfig {
+  id             String   @id @default(uuid())
+  branchId       String   @unique
+  branch         Branch   @relation(fields: [branchId], references: [id])
+  
+  isKioskMode    Boolean  @default(false)
+  welcomeMessage String?
+  autoPrintReceipt Boolean @default(true)
+  
+  updatedAt      DateTime @updatedAt
+}
+
+model Transaction {
+  id             String   @id @default(uuid())
+  orderId        String
+  order          Order    @relation(fields: [orderId], references: [id])
+  
+  amountCents    Int
+  paymentMethod  String   // "CASH", "CARD", "WALLET"
+  status         String   // "PENDING", "COMPLETED", "FAILED"
+  
+  provider       String?  // "STRIPE", "REVOLUT"
+  externalRef    String?  @unique
+  
+  createdAt      DateTime @default(now())
+}
+

@@ -46,8 +46,10 @@ async def preview_migration(
         preview = manager.preview(source, data)
         return preview
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print(f"Migration Error: {e}")
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=f"Migration Processing Failed: {str(e)}")
 
 @router.post("/migrations/execute")
 async def execute_migration(

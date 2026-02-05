@@ -18,7 +18,16 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "@antigravity/ai": [
+                "../packages/ai/src/index.ts"
+            ],
+            "@antigravity/ai/*": [
+                "../packages/ai/src/*"
+            ]
+        }
     },
     "include": [
         "src"

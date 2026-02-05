@@ -9,14 +9,16 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         print(f"DEBUG: Received Columns: {df.columns.tolist()}")
 
         column_map = {
-            "name": ["name", "item name", "product name", "item", "description", "recipe name", "recipe", "dish", "title", "ürün adı", "urun adi", "yemek", "reçete", "name (required)"],
-            "unit": ["unit", "uom", "measure", "size", "birim"],
-            "cost": ["cost", "unit cost", "cost price", "buying price", "maliyet", "alış fiyatı"], # Valid Cost (Buying Price)
-            "sales_price": ["sales price", "sell price", "price", "satış fiyatı", "fiyat", "menu price"], # Valid Sales Price
-            "sku": ["sku", "code", "item code", "external id", "id", "barkod", "stok kodu"]
+            "name": ["name", "item name", "product name", "item", "description", "recipe name", "recipe", "dish", "title", "ürün adı", "urun adi", "yemek", "reçete", "name (required)", "product", "item_name"],
+            "unit": ["unit", "uom", "measure", "size", "birim", "ölçü birimi", "olcu birimi"],
+            "cost": ["cost", "unit cost", "cost price", "buying price", "maliyet", "alış fiyatı", "alis fiyati", "unit_cost"],
+            "sales_price": ["sales price", "sell price", "price", "satış fiyatı", "fiyat", "menu price", "sales_price", "fiyatı"],
+            "sku": ["sku", "code", "item code", "external id", "id", "barkod", "stok kodu", "stok_kodu", "article number", "article_number"],
+            "ingredients": ["ingredients", "recipe ingredients", "malzemeler", "içindekiler", "icindekiler", "composition", "ingredients list"]
         }
         
-        # Lowercase all columns
+        # Lowercase and strip all columns for matching
+        original_cols = df.columns.tolist()
         df.columns = df.columns.str.lower().str.strip()
         
         # Rename based on map
@@ -26,7 +28,8 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         for safe_col, aliases in column_map.items():
             for alias in aliases:
                 if alias in df.columns:
-                    new_cols[alias] = safe_col.capitalize() # Standardize to Name, Unit, Cost, Sales_price
+                    # Map the found alias to the standardized name
+                    new_cols[alias] = safe_col.capitalize() # Standardize to Name, Unit, Cost, Sales_price, Ingredients, Sku
                     mappings.append(f"Found '{alias}' -> Mapped to '{safe_col.capitalize()}'")
                     print(f"DEBUG: Mapped '{alias}' -> '{safe_col.capitalize()}'")
                     break
@@ -38,12 +41,17 @@ class ApicbaseAdapter(BaseMigrationAdapter):
 
     def is_recipe_file(self, df) -> bool:
         """Heuristic to check if this is a recipe export"""
+        # Check normalized columns first
         columns = [c.lower() for c in df.columns]
-        # Strong indicators (Normalized keys)
-        if "ingredients" in columns or "sales_price" in columns:
+        
+        # Strong indicators (Normalized or original)
+        if "ingredients" in columns or "sales_price" in columns or "ingredients" in df.columns:
+            return True
+            
+        if "recipe" in "".join(columns):
             return True
         
-        keywords = ["instructions", "prep time", "servings", "yield", "recipe"]
+        keywords = ["instructions", "prep time", "servings", "yield", "recipe", "malzemeler", "tarif", "reçete"]
         match_count = sum(1 for k in keywords if any(k in c for c in columns))
         return match_count >= 1
 
@@ -60,7 +68,9 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         if self.is_recipe_file(data):
             # Recipe Validation
             required = ["Name", "Ingredients"] # Minimal
-            missing = [col for col in required if col not in data.columns]
+            # Check Case-insensitive for column existence since normalize_columns capitalizes
+            cols = [c.capitalize() for c in data.columns]
+            missing = [col for col in required if col not in data.columns and col not in cols]
             if missing:
                 self.log(f"Recipe file missing columns: {missing}", "error")
                 return False
@@ -105,6 +115,19 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         
         return result
 
+    def _parse_float(self, value):
+        """Helper to parse float from string with currency symbols"""
+        if pd.isna(value) or value == "":
+            return 0.0
+        if isinstance(value, (int, float)):
+            return float(value)
+        try:
+            # Remove currency symbols and non-numeric chars except dot/minus
+            clean = str(value).replace("$", "").replace("€", "").replace("£", "").replace(",", "").strip()
+            return float(clean)
+        except:
+            return 0.0
+
     def preview_inventory(self, data):
         new_items = 0
         updates = 0
@@ -117,7 +140,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         for index, row in data.iterrows():
             name = row.get("Name", "Unknown")
             sku = row.get("SKU", "N/A")
-            cost = float(row.get("Cost", 0) or 0)
+            cost = self._parse_float(row.get("Cost", 0))
             
             if sku in existing_skus:
                 old_price = existing_skus[sku]
@@ -133,7 +156,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                     updates += 1 
             else:
                 new_items += 1
-                if new_items <= 5: 
+                if new_items <= 50: # Increased limit for visibility
                     details.append({
                         "type": "new",
                         "name": name,

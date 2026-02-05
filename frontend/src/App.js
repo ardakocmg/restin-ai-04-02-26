@@ -211,6 +211,10 @@ import VoiceSettings from "./features/restin/voice/VoiceSettings";
 import CallLogs from "./features/restin/voice/CallLogs";
 import StudioDashboard from "./features/restin/studio/StudioDashboard";
 import RadarDashboard from "./features/restin/radar/RadarDashboard";
+import { CrmDashboard } from "./features/restin/crm";
+import { OpsDashboard } from "./features/restin/ops";
+import { FintechDashboard } from "./features/restin/fintech";
+import RestinControlTower from "./pages/admin/RestinControlTower";
 
 // Context
 import { AuthProvider } from "./features/auth/AuthContext";
@@ -454,12 +458,14 @@ function App() {
 
                                   {/* RESTIN.AI MASTER PROTOCOL v18.0 */}
                                   <Route path="restin">
+                                    <Route index element={<RestinControlTower />} />
                                     <Route path="web" element={<WebBuilder />} />
                                     <Route path="voice" element={<VoiceDashboard />} />
                                     <Route path="voice/settings" element={<VoiceSettings />} />
                                     <Route path="voice/logs" element={<CallLogs />} />
                                     <Route path="studio" element={<StudioDashboard />} />
                                     <Route path="radar" element={<RadarDashboard />} />
+                                    <Route path="crm" element={<CrmDashboard />} />
                                   </Route>
 
                                   <Route path="hr-reports">
