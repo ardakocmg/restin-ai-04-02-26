@@ -30,6 +30,12 @@ async def preview_migration(
         elif filename.endswith('.json'):
             import json
             data = json.loads(content)
+        elif filename.endswith(('.xlsx', '.xls')):
+            import pandas as pd
+            import io
+            # Read Excel into DataFrame
+            df = pd.read_excel(io.BytesIO(content))
+            data = df
         else:
             raise HTTPException(status_code=400, detail=f"Unsupported file format ({file.filename}). Use CSV or JSON.")
             
