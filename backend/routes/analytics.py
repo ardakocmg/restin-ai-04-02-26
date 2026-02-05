@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from typing import List, Optional
 from datetime import datetime, timezone, timedelta
 from core.database import get_database
-from services.auth_service import get_current_user
+from core.dependencies import get_current_user
 import logging
 
 router = APIRouter()
@@ -130,3 +130,6 @@ async def get_pos_sales_report(
         "revenue_trend": [], # Todo: Group by hour
         "top_items": top_items[:5]
     }
+
+def create_analytics_router():
+    return router

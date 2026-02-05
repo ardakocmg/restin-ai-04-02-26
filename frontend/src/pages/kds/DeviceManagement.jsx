@@ -120,18 +120,25 @@ function DeviceManagement() {
           {devices.map((device) => (
             <div key={device.id} className="p-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-lg ${
-                  device.type === 'KDS_SCREEN' ? 'bg-blue-100 text-blue-600 dark:text-blue-400' :
+                <div className={`p-3 rounded-lg ${device.type === 'KDS_SCREEN' ? 'bg-blue-100 text-blue-600 dark:text-blue-400' :
                   device.type === 'POS' ? 'bg-green-100 text-green-600 dark:text-green-400' :
-                  'bg-gray-100 text-gray-600'
-                }`}>
+                    'bg-gray-100 text-gray-600'
+                  }`}>
                   {device.type === 'KDS_SCREEN' ? <Monitor className="w-6 h-6" /> : <Smartphone className="w-6 h-6" />}
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">{device.name}</h3>
-                  <p className="text-sm text-gray-500">{device.type}</p>
-                  {device.ip_address && (
-                    <p className="text-xs text-gray-400">{device.ip_address}</p>
+                  <div className="text-sm text-gray-500 flex items-center gap-2">
+                    <span className="font-medium text-gray-700">{device.model || 'Unknown Model'}</span>
+                    <span>•</span>
+                    <span>{device.os || 'Unknown OS'}</span>
+                    <span>•</span>
+                    <span>{device.browser || 'Unknown Browser'}</span>
+                  </div>
+                  {device.ip_address ? (
+                    <p className="text-xs text-gray-400 font-mono mt-1">IP: {device.ip_address}</p>
+                  ) : (
+                    <p className="text-xs text-red-300 font-mono mt-1">IP: Not Captured</p>
                   )}
                 </div>
               </div>
@@ -152,11 +159,10 @@ function DeviceManagement() {
 
                 <button
                   onClick={() => trustDevice(device.id, !device.trusted)}
-                  className={`px-4 py-2 rounded-lg font-medium transition ${
-                    device.trusted
-                      ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                      : 'bg-red-100 text-red-700 hover:bg-red-200'
-                  }`}
+                  className={`px-4 py-2 rounded-lg font-medium transition ${device.trusted
+                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                    : 'bg-red-100 text-red-700 hover:bg-red-200'
+                    }`}
                 >
                   {device.trusted ? 'Trusted' : 'Untrusted'}
                 </button>

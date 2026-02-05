@@ -22,6 +22,8 @@ class MenuCategoryCreate(BaseModel):
     name: str
     sort_order: int = 0
     prep_area: str = "kitchen"
+    color: Optional[str] = None  # Hex code for UI styling
+    image: Optional[str] = None  # URL for UI styling
 
 class MenuCategory(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -31,6 +33,9 @@ class MenuCategory(BaseModel):
     name: str
     sort_order: int = 0
     prep_area: str = "kitchen"
+    color: Optional[str] = None
+    image: Optional[str] = None
+    external_links: Optional[List[dict]] = None  # [{source: "lightspeed", id: "123"}]
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class MenuItemCreate(BaseModel):
@@ -45,6 +50,8 @@ class MenuItemCreate(BaseModel):
     tags: List[str] = []
     prep_area: str = "kitchen"
     prep_time_minutes: int = 10
+    color: Optional[str] = None  # Hex code for UI styling
+    image: Optional[str] = None  # URL for UI styling
 
 class MenuItem(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -62,6 +69,9 @@ class MenuItem(BaseModel):
     prep_area: str = "kitchen"
     prep_time_minutes: int = 10
     is_active: bool = True
+    color: Optional[str] = None
+    image: Optional[str] = None
+    external_links: Optional[List[dict]] = None
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class ModifierGroupCreate(BaseModel):

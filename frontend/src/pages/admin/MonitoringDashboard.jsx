@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Activity, Database, Server, Wifi, HardDrive, CheckCircle, AlertCircle } from 'lucide-react';
-import PageContainer from '../../layouts/PageContainer';
+import PageLayout from '../../layouts/PageLayout';
 import { Badge } from '../../components/ui/badge';
 import { Progress } from '../../components/ui/progress';
 import edgeGatewayClient from '../../services/EdgeGatewayClient';
@@ -31,7 +31,10 @@ export default function MonitoringDashboard() {
   ];
 
   return (
-    <PageContainer title="Service Monitoring" description="Real-time system monitoring">
+    <PageLayout
+      title="Service Monitoring"
+      description="Real-time system monitoring"
+    >
       <div className="space-y-6">
         {/* Services Status */}
         <Card>
@@ -135,6 +138,6 @@ export default function MonitoringDashboard() {
           </CardContent>
         </Card>
       </div>
-    </PageContainer>
+    </PageLayout>
   );
 }

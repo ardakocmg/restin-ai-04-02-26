@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useVenue } from '../context/VenueContext';
 import { cn } from '@/lib/utils';
-import { Bell, Search, Settings, User, LogOut, ChevronDown, X, Wifi, WifiOff, AlertTriangle, ShieldCheck, ShieldAlert } from 'lucide-react';
+import { Bell, Search, Settings, User, LogOut, ChevronDown, X, Wifi, WifiOff, AlertTriangle, ShieldCheck, ShieldAlert, Moon, Sun } from 'lucide-react';
 import { useSafeMode } from '../context/SafeModeContext';
 import { Button } from '../components/ui/button';
 import {
@@ -250,6 +250,11 @@ export default function NewTopBar() {
             )} />
           </button>
         </div>
+
+        {/* Theme Toggle */}
+        <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-white/5 transition-colors">
+          <Moon className="h-5 w-5" />
+        </Button>
 
         <div className="w-px h-8 bg-white/5"></div>
 

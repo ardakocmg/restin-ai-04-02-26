@@ -22,6 +22,7 @@ class InventoryItem(BaseModel):
     unit: str = "each"
     current_stock: float = 0
     min_stock: int = 0
+    external_links: Optional[List[dict]] = None  # [{source: "apicbase", id: "123"}]
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class BaseUnit(BaseModel):

@@ -132,6 +132,7 @@ class EmployeeDetailComplete(BaseModel):
     emergency_contact_secondary: EmergencyContact
     leave_details: LeaveDetails
     attendance_details: AttendanceDetails
+    external_links: Optional[List[dict]] = None  # [{source: "shireburn", id: "123"}]
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     updated_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 

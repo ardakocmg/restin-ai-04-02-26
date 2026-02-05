@@ -1,9 +1,9 @@
 import React from 'react';
-import { 
-  AlertCircle, 
-  AlertTriangle, 
-  Info, 
-  CheckCircle2, 
+import {
+  AlertCircle,
+  AlertTriangle,
+  Info,
+  CheckCircle2,
   XCircle,
   Lock,
   Database,
@@ -103,35 +103,35 @@ export default function StateModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
       {/* Blurred Background */}
       {showBackground && (
-        <div 
+        <div
           className="absolute inset-0 bg-black/60 backdrop-blur-md"
           onClick={onClose}
         />
       )}
 
       {/* Modal Card - PIN Screen Style */}
-      <div 
+      <div
         className="relative z-10 w-full max-w-md card-dark p-8 rounded-2xl animate-slide-up"
         style={{
           boxShadow: `0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px ${colors.border}`
         }}
       >
         {/* Icon */}
-        <div 
+        <div
           className="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center"
           style={{
             backgroundColor: colors.glow,
             boxShadow: `0 0 24px ${colors.glow}`
           }}
         >
-          <Icon 
-            className="w-10 h-10" 
+          <Icon
+            className="w-10 h-10"
             style={{ color: colors.icon }}
           />
         </div>
 
         {/* Title */}
-        <h2 
+        <h2
           className="text-2xl font-heading text-center mb-3"
           style={{ color: '#F5F5F7' }}
         >
@@ -139,7 +139,7 @@ export default function StateModal({
         </h2>
 
         {/* Message */}
-        <p 
+        <p
           className="text-center mb-6 leading-relaxed"
           style={{ color: '#D4D4D8', fontSize: '15px' }}
         >
@@ -148,7 +148,7 @@ export default function StateModal({
 
         {/* Details (optional) */}
         {details && (
-          <div 
+          <div
             className="mb-6 p-4 rounded-xl font-mono text-sm"
             style={{
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
@@ -167,23 +167,22 @@ export default function StateModal({
               key={index}
               onClick={action.onClick}
               disabled={action.disabled}
-              className={`w-full h-12 rounded-xl font-bold uppercase tracking-wide transition-all duration-150 ${
-                action.variant === 'secondary'
+              className={`w-full h-12 rounded-xl font-bold uppercase tracking-wide transition-all duration-150 ${action.variant === 'secondary'
                   ? 'bg-zinc-900 border border-white/10 text-white hover:bg-zinc-800 hover:border-red-500/50'
                   : 'btn-primary'
-              }`}
+                }`}
               style={
                 action.variant !== 'secondary' && !action.disabled
                   ? {
-                      background: `linear-gradient(135deg, ${colors.icon} 0%, ${colors.icon}dd 100%)`,
-                      boxShadow: `0 4px 12px ${colors.glow}`
-                    }
+                    background: `linear-gradient(135deg, ${colors.icon} 0%, ${colors.icon}dd 100%)`,
+                    boxShadow: `0 4px 12px ${colors.glow}`
+                  }
                   : action.disabled
-                  ? {
+                    ? {
                       opacity: 0.5,
                       cursor: 'not-allowed'
                     }
-                  : {}
+                    : {}
               }
             >
               {action.label}
@@ -195,10 +194,10 @@ export default function StateModal({
         {onClose && (
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/5 transition-colors"
-            style={{ color: '#71717A' }}
+            className="absolute top-4 right-4 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+            style={{ color: '#9CA3AF' }}
           >
-            <XCircle className="w-5 h-5" />
+            <XCircle className="w-6 h-6" />
           </button>
         )}
       </div>

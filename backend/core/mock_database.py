@@ -212,9 +212,9 @@ class MockDatabase:
                 "_id": "admin_user",
                 "name": "Admin User",
                 "role": "OWNER",
-                "venue_id": "venue_1",
+                "venue_id": "venue-caviar-bull",
                 "pin_hash": pin_hash,
-                "allowed_venue_ids": ["venue_1"],
+                "allowed_venue_ids": ["venue_1", "venue-caviar-bull"],
                 "mfa_enabled": False
             }],
             "venues": [{
@@ -224,6 +224,15 @@ class MockDatabase:
                 "type": "fine_dining",
                 "slug": "malta-head-office",
                 "location": "Valletta",
+                "currency": "EUR"
+            },
+            {
+                "id": "venue-caviar-bull",
+                "_id": "venue-caviar-bull",
+                "name": "Caviar & Bull",
+                "type": "fine_dining",
+                "slug": "caviar-bull",
+                "location": "St. Julians",
                 "currency": "EUR"
             }],
             "tables": [],

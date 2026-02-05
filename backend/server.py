@@ -145,6 +145,7 @@ from routes.user_settings_routes import create_2fa_router
 from routes.venue_integrations_routes import create_venue_integrations_router
 from routes.global_search_routes import create_global_search_router
 from routes.pos_report_routes import create_pos_report_router
+from routes.migration_routes import router as migration_router # Quick Sync
 
 # Shireburn Indigo Parity Routes
 from routes.summary_dashboard import router as summary_dashboard_router
@@ -224,7 +225,8 @@ cors_origins = [o.strip() for o in cors_origins_env if o.strip()]
 dev_origins = [
     "http://localhost:3000", "http://127.0.0.1:3000", 
     "http://localhost:8000", "http://127.0.0.1:8000",
-    "http://localhost:3001", "http://127.0.0.1:3001"
+    "http://localhost:3001", "http://127.0.0.1:3001",
+    "http://192.168.31.243:3000", "http://192.168.31.243:8000"
 ]
 for dev in dev_origins:
     if dev not in cors_origins:
@@ -503,6 +505,7 @@ api_main.include_router(updates_router)
 api_main.include_router(bill_split_router)
 api_main.include_router(table_merge_router)
 api_main.include_router(observability_router)
+api_main.include_router(migration_router, tags=["Migration"])
 api_main.include_router(user_settings_router)
 
 # User Sync utility
@@ -686,3 +689,5 @@ else:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+# Trigger reload - Real Migration API Active

@@ -135,6 +135,7 @@ import AuditLogs from "./pages/admin/AuditLogs";
 import FloorPlans from "./pages/admin/FloorPlans"; // Assuming existence
 import FloorPlanEditor from "./pages/admin/FloorPlanEditor"; // Assuming existence
 import MenuImportWizard from "./pages/admin/MenuImportWizard";
+import MigrationHub from "./pages/admin/migration/MigrationHub"; // Quick Sync
 import Guests from "./pages/admin/Guests";
 import Reservations from "./pages/admin/Reservations";
 import ReservationTimeline from "./pages/admin/ReservationTimeline";
@@ -346,6 +347,7 @@ function App() {
                                   <Route path="floor-plans" element={<FloorPlans />} />
                                   <Route path="floor-plans/:planId/edit" element={<FloorPlanEditor />} />
                                   <Route path="menu-import" element={<MenuImportWizard />} />
+                                  <Route path="migration" element={<MigrationHub />} />
                                   <Route path="guests" element={<Guests />} />
                                   <Route path="reservations" element={<Reservations />} />
                                   <Route path="reservations/timeline" element={<ReservationTimeline />} />

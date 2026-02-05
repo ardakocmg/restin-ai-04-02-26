@@ -169,6 +169,23 @@ def create_order_router():
         
         return result
 
+    @router.get("/orders/{order_id}/billing-eligibility")
+    async def check_billing_eligibility(order_id: str, current_user: dict = Depends(get_current_user)):
+        order = await db.orders.find_one({"id": order_id}, {"_id": 0})
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+        
+        await check_venue_access(current_user, order["venue_id"])
+        
+        # Simple eligibility check: has items and open status
+        is_eligible = len(order.get("items", [])) > 0 and order.get("status") == "open"
+        
+        return {
+            "eligible": is_eligible,
+            "reason": None if is_eligible else "Order has no items or is already closed",
+            "balance": order.get("total", 0.0)
+        }
+
     # KDS ENDPOINTS
     @router.get("/venues/{venue_id}/kds/tickets")
     async def list_kds_tickets(venue_id: str, status: Optional[str] = None, current_user: dict = Depends(get_current_user)):

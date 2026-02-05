@@ -1,0 +1,43 @@
+from typing import Dict, Any, List
+from models.migration import MigrationLog
+from .apicbase import ApicbaseAdapter
+from .lightspeed import LightspeedAdapter
+from .shireburn import ShireburnAdapter
+
+class MigrationManager:
+    def __init__(self, venue_id: str, user_id: str):
+        self.venue_id = venue_id
+        self.user_id = user_id
+        self.adapters = {
+            "apicbase": ApicbaseAdapter(venue_id, user_id),
+            "lightspeed": LightspeedAdapter(venue_id, user_id),
+            "shireburn": ShireburnAdapter(venue_id, user_id)
+        }
+
+    def get_adapter(self, source: str):
+        if source not in self.adapters:
+            raise ValueError(f"Unknown migration source: {source}")
+        return self.adapters[source]
+
+    def validate(self, source: str, data: Any) -> bool:
+        return self.get_adapter(source).validate(data)
+
+    def preview(self, source: str, data: Any) -> Dict[str, Any]:
+        return self.get_adapter(source).preview(data)
+
+    async def execute(self, source: str, data: Any, mode: str = "migrate", options: Dict = None) -> MigrationLog:
+        adapter = self.get_adapter(source)
+        result = await adapter.execute(data, mode, options)
+        
+        # In a real impl, we would save the MigrationLog to DB here
+        log = MigrationLog(
+            venue_id=self.venue_id,
+            source=source,
+            mode=mode,
+            status=result.get("status", "completed"),
+            summary=result.get("summary"),
+            details=result.get("details"),
+            created_by=self.user_id,
+            completed_at=None # TODO
+        )
+        return log

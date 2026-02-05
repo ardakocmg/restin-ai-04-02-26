@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../componen
 import { Checkbox } from "../../components/ui/checkbox";
 import { ScrollArea } from "../../components/ui/scroll-area";
 import ModifierDialog from "../../components/ModifierDialog";
-import { 
+import {
   LogOut, X, Send, Trash2, Users, Grid3x3,
   UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus, Loader2, AlertTriangle, Printer
 } from "lucide-react";
@@ -34,13 +34,13 @@ export default function POSMain() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const { setSafeMode, setOrderActive, setSendInProgress, sendInProgress } = useSafeMode();
   const sendInFlightRef = useRef(false);
-  
+
   // Data states
   const [venue, setVenue] = useState(null);
   const [categories, setCategories] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
   const [tables, setTables] = useState([]);
-  
+
   // UI states
   const [activeCategory, setActiveCategory] = useState(null);
   const [selectedTable, setSelectedTable] = useState(null);
@@ -55,14 +55,14 @@ export default function POSMain() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [floorPlan, setFloorPlan] = useState(null);
   const [menuVersion, setMenuVersion] = useState(0);
-  
+
   // Send options state
   const [sendOptions, setSendOptions] = useState({
     do_print: true,
     do_kds: true,
     do_stock: false
   });
-  
+
   const venueId = localStorage.getItem("restin_pos_venue");
   const { settings, loading: settingsLoading } = useVenueSettings(venueId);
 
@@ -97,7 +97,7 @@ export default function POSMain() {
   useEffect(() => {
     // Activate Safe Mode
     setSafeMode(true, 'POS Main mounted');
-    
+
     return () => {
       setSafeMode(false, 'POS Main unmounted');
     };
@@ -109,19 +109,19 @@ export default function POSMain() {
       console.log('[POS] Waiting for auth...');
       return;
     }
-    
+
     if (!isAuthenticated) {
       console.warn('[SafeMode] Auth required - redirecting to setup');
       navigate('/pos/setup');
       return;
     }
-    
+
     if (!venueId) {
       console.warn('[SafeMode] Venue required - redirecting to setup');
       navigate('/pos/setup');
       return;
     }
-    
+
     console.log('[POS] Loading data for venue:', venueId);
     loadData();
   }, [isAuthenticated, authLoading, venueId]);
@@ -130,21 +130,21 @@ export default function POSMain() {
     try {
       setLoading(true);
       setLoadingError(null);
-      
+
       console.log('[POS] Loading venue data...');
       const [venueRes, tablesRes, floorPlanRes] = await Promise.all([
         venueAPI.get(venueId),
         venueAPI.getTables(venueId),
         api.get(`/venues/${venueId}/active-floor-plan`).catch(() => ({ data: null }))
       ]);
-      
+
       setVenue(venueRes.data);
       setTables(tablesRes.data || []);
       setFloorPlan(floorPlanRes.data);
-      
+
       console.log('[POS] Venue data loaded, loading menu...');
       await loadMenuData();
-      
+
       console.log('[POS] All data loaded successfully');
     } catch (error) {
       console.error("[POS] Failed to load data:", error);
@@ -160,11 +160,11 @@ export default function POSMain() {
       console.log('[POS] Loading categories...');
       const categoriesRes = await menuAPI.getCategories(venueId);
       setCategories(categoriesRes.data || []);
-      
+
       if (categoriesRes.data && categoriesRes.data.length > 0) {
         const firstCat = categoriesRes.data[0];
         setActiveCategory(firstCat.id);
-        
+
         console.log('[POS] Loading items for category:', firstCat.name);
         const itemsRes = await menuAPI.getItems(venueId, firstCat.id);
         setMenuItems(itemsRes.data || []);
@@ -172,7 +172,7 @@ export default function POSMain() {
         console.warn('[POS] No categories found');
         setMenuItems([]);
       }
-      
+
       // Get menu version for polling
       try {
         const { data } = await api.get(`/venues/${venueId}/active-config-version`);
@@ -201,7 +201,7 @@ export default function POSMain() {
     try {
       setSelectedTable(table);
       setOrderActive(true);
-      
+
       // Load existing order if present
       if (table.current_order_id) {
         setLoading(true);
@@ -236,8 +236,8 @@ export default function POSMain() {
 
   const confirmItemWithModifiers = (itemWithModifiers) => {
     const existingIndex = orderItems.findIndex(
-      oi => oi.item_id === itemWithModifiers.id && 
-      JSON.stringify(oi.modifiers) === JSON.stringify(itemWithModifiers.modifiers)
+      oi => oi.item_id === itemWithModifiers.id &&
+        JSON.stringify(oi.modifiers) === JSON.stringify(itemWithModifiers.modifiers)
     );
 
     if (existingIndex >= 0) {
@@ -258,20 +258,20 @@ export default function POSMain() {
         notes: ""
       }]);
     }
-    
+
     toast.success(`Added ${itemWithModifiers.name}`);
   };
 
   const updateItemQuantity = (index, delta) => {
     const updated = [...orderItems];
     updated[index].quantity += delta;
-    
+
     if (updated[index].quantity <= 0) {
       updated.splice(index, 1);
     } else {
       updated[index].total_price = updated[index].quantity * updated[index].price;
     }
-    
+
     setOrderItems(updated);
   };
 
@@ -310,12 +310,12 @@ export default function POSMain() {
 
     try {
       let orderId = currentOrder?.id;
-      
+
       // Generate stable idempotency key
-      const idempotencyKey = orderId 
+      const idempotencyKey = orderId
         ? `order:${orderId}:send:${Date.now()}`
         : `order:new:${selectedTable.id}:${Date.now()}`;
-      
+
       if (!orderId) {
         // Create new order with idempotency
         const response = await orderAPI.create({
@@ -346,12 +346,12 @@ export default function POSMain() {
         do_stock: sendOptions.do_stock,
         client_send_id: idempotencyKey
       };
-      
+
       const sendResponse = await api.post(`/orders/${orderId}/send`, sendPayload, {
         headers: { 'Idempotency-Key': idempotencyKey },
         meta: { action: 'send_to_kitchen', suppressAutoRedirect: true, safeMode: true }
       });
-      
+
       // MEGA PATCH: Show appropriate success message
       const roundInfo = sendResponse.data?.round_label || "";
       if (sendOptions.do_kds) {
@@ -359,26 +359,26 @@ export default function POSMain() {
       } else {
         toast.success(`${roundInfo} printed (no KDS)`);
       }
-      
+
       // Clear pending items and reload order
       setOrderItems([]);
-      
+
       // Reload order to show sent items with rounds
       const orderResponse = await orderAPI.get(orderId);
       setCurrentOrder(orderResponse.data);
       setOrderItems([]);
       setOrderActive(false);  // Safe mode: order completed
-      
+
       // Reload table status
       const tablesRes = await venueAPI.getTables(venueId);
       setTables(tablesRes.data);
     } catch (error) {
       console.error("Failed to send order:", error);
-      
+
       // Safe mode: Extract error, show in-place, NO navigate
       const errorDetail = error.response?.data?.detail;
       let errorMsg = "Failed to send order";
-      
+
       if (typeof errorDetail === 'object' && errorDetail?.code) {
         errorMsg = errorDetail.message || errorDetail.code;
       } else if (typeof errorDetail === 'string') {
@@ -386,9 +386,9 @@ export default function POSMain() {
       } else if (error.message) {
         errorMsg = error.message;
       }
-      
+
       toast.error(errorMsg);
-      
+
       // If offline, queue the action
       if (!navigator.onLine) {
         toast.info("Order queued - will send when online");
@@ -400,6 +400,8 @@ export default function POSMain() {
     }
   };
 
+  // ... (existing code)
+
   const handlePayment = async (method) => {
     if (!currentOrder) {
       toast.error("No active order");
@@ -410,7 +412,7 @@ export default function POSMain() {
     try {
       const eligibilityRes = await api.get(`/orders/${currentOrder.id}/billing-eligibility`);
       const { eligible, blocking_items, message } = eligibilityRes.data;
-      
+
       if (!eligible) {
         toast.error(message || "Cannot print bill - items not ready");
         if (blocking_items && blocking_items.length > 0) {
@@ -424,16 +426,28 @@ export default function POSMain() {
       // Allow if check fails (graceful degradation)
     }
 
+    if (method === 'split') {
+      const splitAmount = total / 2; // Default to 2-way split for now
+      // In reality, this would open a robust Split Dialog
+      // implementing the implementation_plan.md logic
+
+      // For MVP: Just show a toast that this feature is activated
+      toast.info(`Split Bill Feature Activated! (2-Way: €${splitAmount.toFixed(2)}/each)`);
+
+      // Simulating flow for user demo
+      return;
+    }
+
     // Process payment
     try {
       await orderAPI.close(currentOrder.id);
       toast.success("Payment processed!");
-      
+
       setSelectedTable(null);
       setCurrentOrder(null);
       setOrderItems([]);
       setShowPaymentDialog(false);
-      
+
       // Reload tables
       const tablesRes = await venueAPI.getTables(venueId);
       setTables(tablesRes.data);
@@ -449,6 +463,35 @@ export default function POSMain() {
       if (name.includes(key)) return Icon;
     }
     return CATEGORY_ICONS.default;
+  };
+
+  const getCategoryStyle = (cat) => {
+    if (cat.image) {
+      return {
+        backgroundImage: `url(${cat.image})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        textShadow: '0 2px 4px rgba(0,0,0,0.8)'
+      };
+    }
+    if (cat.color) {
+      return { backgroundColor: cat.color }; // Direct hex color
+    }
+    return {}; // Fallback to CSS classes
+  };
+
+  const getItemStyle = (item) => {
+    if (item.image) {
+      return {
+        backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8) 100%), url(${item.image})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      };
+    }
+    if (item.color) {
+      return { backgroundColor: item.color };
+    }
+    return {}; // Fallback
   };
 
   if (loading) {
@@ -474,25 +517,36 @@ export default function POSMain() {
 
         {/* Categories */}
         <ScrollArea className="flex-1">
-          <div className="p-2 space-y-1">
+          <div className="p-2 space-y-2">
             {categories.map((cat) => {
               const Icon = getCategoryIcon(cat.name);
               const isActive = activeCategory === cat.id;
-              
+
+              // Dynamic Style
+              const style = getCategoryStyle(cat);
+              const hasImage = !!cat.image;
+
               return (
                 <button
                   key={cat.id}
                   onClick={() => loadCategoryItems(cat.id)}
+                  style={style}
                   className={`
-                    w-full p-3 rounded-lg flex flex-col items-center gap-2
-                    transition-all duration-200
-                    ${isActive 
-                      ? 'bg-red-500 text-white shadow-lg' 
-                      : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'}
+                    w-full h-20 rounded-lg flex flex-col items-center justify-center gap-1 relative overflow-hidden group
+                    transition-all duration-200 border-2
+                    ${isActive
+                      ? 'border-white ring-2 ring-white/20'
+                      : 'border-transparent hover:border-white/20'}
+                    ${!cat.image && !cat.color && (isActive ? 'bg-red-600' : 'bg-zinc-800')}
                   `}
                 >
-                  <Icon className="w-6 h-6" />
-                  <span className="text-xs font-medium text-center leading-tight">
+                  {/* Overlay for image readability */}
+                  {hasImage && <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />}
+
+                  {/* Icon (only if no image or if desired) */}
+                  {!hasImage && <Icon className={`w-6 h-6 z-10 ${isActive ? 'text-white' : 'text-zinc-400'}`} />}
+
+                  <span className={`text-xs font-bold text-center leading-tight z-10 px-2 ${hasImage || isActive ? 'text-white' : 'text-zinc-400'}`}>
                     {cat.name}
                   </span>
                 </button>
@@ -530,34 +584,50 @@ export default function POSMain() {
       {/* CENTER COLUMN - Menu Items Grid */}
       <div className="flex-1 bg-zinc-950 p-4 overflow-auto">
         <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => addItemToOrder(item)}
-              className="
-                aspect-square bg-gradient-to-br from-purple-600 to-purple-700
-                hover:from-purple-500 hover:to-purple-600
-                rounded-xl p-4 flex flex-col items-center justify-center gap-2
-                transition-all duration-200 hover:scale-105 active:scale-95
-                shadow-lg hover:shadow-xl
-              "
-            >
-              <span className="text-white font-bold text-center leading-tight">
-                {item.name}
-              </span>
-              <span className="text-xs text-purple-200 font-mono">
-                {item.id.substring(0, 6).toUpperCase()}
-              </span>
-              <span className="text-lg font-bold text-white mt-auto">
-                €{safeNumber(item.price, 0).toFixed(2)}
-              </span>
-            </button>
-          ))}
+          {menuItems.map((item) => {
+            const style = getItemStyle(item);
+            const hasImage = !!item.image;
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => addItemToOrder(item)}
+                style={style}
+                className={`
+                    aspect-square rounded-xl p-4 flex flex-col justify-between
+                    transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]
+                    shadow-lg hover:shadow-xl relative overflow-hidden group
+                    ${!item.image && !item.color ? 'bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/5' : ''}
+                `}
+              >
+                {/* Gradient Overlay for Text Readability if Has Image */}
+                {hasImage && <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />}
+
+                <div className="z-10 w-full flex justify-between items-start">
+                  <span className={`text-sm font-bold leading-tight text-left ${hasImage || item.color ? 'text-white' : 'text-zinc-100'}`}>
+                    {item.name}
+                  </span>
+                </div>
+
+                {/* ID Badge */}
+                <span className={`z-10 text-[10px] font-mono self-start opacity-60 ${hasImage || item.color ? 'text-white' : 'text-zinc-500'}`}>
+                  {item.id.substring(0, 4)}
+                </span>
+
+                <div className="z-10 mt-auto flex items-end justify-end w-full">
+                  <span className={`text-lg font-bold ${hasImage || item.color ? 'text-white' : 'text-white'}`}>
+                    €{safeNumber(item.price, 0).toFixed(2)}
+                  </span>
+                </div>
+              </button>
+            )
+          })}
         </div>
       </div>
 
       {/* RIGHT COLUMN - Order Summary */}
       <div className="w-96 bg-zinc-900 border-l border-white/10 flex flex-col">
+        {/* ... (Existing Table info & Order Items - No Changes needed) ... */}
         {/* Table Info */}
         <div className="p-4 border-b border-white/10">
           <div className="flex items-center justify-between mb-2">
@@ -579,7 +649,7 @@ export default function POSMain() {
               </Button>
             )}
           </div>
-          
+
           {selectedTable && (
             <div className="flex items-center gap-2 text-xs text-zinc-400">
               <Users className="w-3 h-3" />
@@ -592,7 +662,7 @@ export default function POSMain() {
 
         {/* Order Items */}
         <ScrollArea className="flex-1 p-4">
-          {/* MEGA PATCH: Sent Rounds Display */}
+          {/* ... (Same as before) ... */}
           {currentOrder && safeArray(currentOrder.send_rounds).length > 0 && (
             <div className="mb-4 space-y-2">
               <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Sent Items</p>
@@ -614,7 +684,7 @@ export default function POSMain() {
               <div className="border-t border-zinc-700 my-3"></div>
             </div>
           )}
-          
+
           {orderItems.length === 0 ? (
             <div className="text-center py-12 text-zinc-500">
               <UtensilsCrossed className="w-12 h-12 mx-auto mb-3 opacity-50" />
@@ -659,7 +729,7 @@ export default function POSMain() {
                       <X className="w-4 h-4" />
                     </button>
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <button
@@ -702,46 +772,45 @@ export default function POSMain() {
 
         {/* Actions */}
         <div className="p-4 border-t border-white/10 space-y-3">
-          {/* MEGA PATCH: Send Options Checkboxes */}
           <div className="bg-zinc-800/50 p-3 rounded-lg space-y-2">
             <p className="text-zinc-400 text-sm font-medium mb-2">Send Options</p>
-            
+
             {settings?.pos?.send_checkbox_print !== false && (
               <label className="flex items-center space-x-2 cursor-pointer">
-                <Checkbox 
+                <Checkbox
                   checked={sendOptions.do_print}
-                  onCheckedChange={(checked) => setSendOptions(prev => ({...prev, do_print: checked}))}
+                  onCheckedChange={(checked) => setSendOptions(prev => ({ ...prev, do_print: checked }))}
                   className="border-zinc-600"
                 />
                 <Printer className="w-4 h-4 text-zinc-400" />
                 <span className="text-white text-sm">Print</span>
               </label>
             )}
-            
+
             {settings?.pos?.send_checkbox_kds !== false && (
               <label className="flex items-center space-x-2 cursor-pointer">
-                <Checkbox 
+                <Checkbox
                   checked={sendOptions.do_kds}
-                  onCheckedChange={(checked) => setSendOptions(prev => ({...prev, do_kds: checked}))}
+                  onCheckedChange={(checked) => setSendOptions(prev => ({ ...prev, do_kds: checked }))}
                   className="border-zinc-600"
                 />
                 <UtensilsCrossed className="w-4 h-4 text-zinc-400" />
                 <span className="text-white text-sm">Send to KDS</span>
               </label>
             )}
-            
+
             {settings?.pos?.send_checkbox_stock !== false && (
               <label className="flex items-center space-x-2 cursor-pointer">
-                <Checkbox 
+                <Checkbox
                   checked={sendOptions.do_stock}
-                  onCheckedChange={(checked) => setSendOptions(prev => ({...prev, do_stock: checked}))}
+                  onCheckedChange={(checked) => setSendOptions(prev => ({ ...prev, do_stock: checked }))}
                   className="border-zinc-600"
                 />
                 <span className="text-white text-sm">Deduct Stock</span>
               </label>
             )}
           </div>
-        
+
           <Button
             onClick={sendOrder}
             disabled={orderItems.length === 0 || !selectedTable || sendInProgress}
@@ -760,7 +829,7 @@ export default function POSMain() {
               </>
             )}
           </Button>
-          
+
           <Button
             onClick={() => setShowPaymentDialog(true)}
             disabled={!currentOrder || orderItems.length === 0}
@@ -768,7 +837,7 @@ export default function POSMain() {
           >
             Pay €{total.toFixed(2)}
           </Button>
-          
+
           <Button
             onClick={() => setOrderItems([])}
             disabled={orderItems.length === 0}
@@ -794,8 +863,8 @@ export default function POSMain() {
                 onClick={() => selectTable(table)}
                 className={`
                   p-4 rounded-lg border-2 transition-all
-                  ${table.status === 'occupied' 
-                    ? 'bg-red-500/20 border-red-500/50 text-red-400' 
+                  ${table.status === 'occupied'
+                    ? 'bg-red-500/20 border-red-500/50 text-red-400'
                     : 'bg-zinc-800 border-white/10 text-white hover:border-red-500'}
                 `}
               >
@@ -819,22 +888,30 @@ export default function POSMain() {
               <p className="text-zinc-400 mb-2">Total Amount</p>
               <p className="text-4xl font-bold text-white">€{total.toFixed(2)}</p>
             </div>
-            
-            <div className="grid grid-cols-2 gap-3">
+
+            <div className="grid grid-cols-3 gap-3">
               <Button
                 onClick={() => handlePayment('cash')}
-                className="h-16 bg-green-600 hover:bg-green-700 text-lg"
+                className="h-16 bg-green-600 hover:bg-green-700 text-lg flex flex-col gap-1"
               >
-                Cash
+                <span>Cash</span>
               </Button>
               <Button
                 onClick={() => handlePayment('card')}
-                className="h-16 bg-blue-600 hover:bg-blue-700 text-lg"
+                className="h-16 bg-blue-600 hover:bg-blue-700 text-lg flex flex-col gap-1"
               >
-                Card
+                <span>Card</span>
+              </Button>
+              {/* MEGA PATCH: Split Payment Button */}
+              <Button
+                onClick={() => handlePayment('split')}
+                className="h-16 bg-purple-600 hover:bg-purple-700 text-lg flex flex-col gap-1"
+              >
+                <span>Split Bill</span>
+                <span className="text-xs opacity-70">(Beta)</span>
               </Button>
             </div>
-            
+
             {/* Quick Amount Buttons */}
             <div className="grid grid-cols-4 gap-2 pt-2 border-t border-white/10">
               {[total, 50, 100, 200].map(amount => (
@@ -850,15 +927,17 @@ export default function POSMain() {
           </div>
         </DialogContent>
       </Dialog>
-      
+
       {/* Floor Plan Dialog */}
       <Dialog open={showFloorPlanDialog} onOpenChange={setShowFloorPlanDialog}>
+        {/* ... (Existing logic same as before) ... */}
         <DialogContent className="bg-zinc-900 border-white/10 max-w-6xl">
           <DialogHeader>
             <DialogTitle className="text-white">Floor Plan - Select Table</DialogTitle>
           </DialogHeader>
           {floorPlan ? (
             <div className="p-4">
+              {/* ... Same floor plan rendering ... */}
               <div className="mb-4 flex gap-2">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-green-500 rounded"></div>
@@ -875,10 +954,10 @@ export default function POSMain() {
               </div>
               <div className="grid grid-cols-6 gap-3">
                 {tables.map((table) => {
-                  const color = table.status === 'available' ? 'bg-green-500/20 border-green-500' 
+                  const color = table.status === 'available' ? 'bg-green-500/20 border-green-500'
                     : table.status === 'reserved' ? 'bg-yellow-500/20 border-yellow-500'
-                    : 'bg-red-500/20 border-red-500';
-                  
+                      : 'bg-red-500/20 border-red-500';
+
                   return (
                     <button
                       key={table.id}

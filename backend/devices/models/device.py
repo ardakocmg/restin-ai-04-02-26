@@ -15,6 +15,11 @@ class Device(BaseModel):
     type: DeviceType
     name: str
     ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
+    model: Optional[str] = "Unknown Device"
+    os: Optional[str] = "Unknown OS"
+    browser: Optional[str] = "Unknown Browser"
+    screen_resolution: Optional[str] = None
     user_agent_hash: Optional[str] = None
     last_seen_at: Optional[str] = None
     trusted: bool = False
@@ -29,6 +34,11 @@ class DeviceCreate(BaseModel):
     type: DeviceType
     name: str
     ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
+    model: Optional[str] = "Unknown Device"
+    os: Optional[str] = "Unknown OS"
+    browser: Optional[str] = "Unknown Browser"
+    screen_resolution: Optional[str] = None
     tags: List[str] = []
 
 class DeviceUpdate(BaseModel):

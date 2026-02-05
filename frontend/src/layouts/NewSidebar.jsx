@@ -8,7 +8,7 @@ import {
   DollarSign, BarChart3, Settings, Activity, TrendingUp, Factory, Award,
   Table as TableIcon, Calendar, Truck, PieChart as PieChartIcon,
   UserCheck, Receipt, Clock, Package, Type, Building2, Search, Upload, Monitor,
-  Globe, Mic, Wand2, Radar, LayoutGrid, ShieldAlert, Palette, Server, Layers
+  Globe, Mic, Wand2, Radar, LayoutGrid, ShieldAlert, Palette, Server, Layers, X
 } from 'lucide-react';
 
 const menuItems = [
@@ -111,7 +111,8 @@ const menuItems = [
 
   // INVENTORY & SUPPLY CHAIN
   { title: 'General Settings', icon: Settings, href: '/admin/menu', group: 'menu' },
-  { title: 'Menu Import', icon: Upload, href: '/admin/menu-import', group: 'menu' },
+  { title: 'Quick Sync (Import)', icon: Upload, href: '/admin/migration', group: 'menu' },
+  { title: 'Menu Import (Legacy)', icon: Upload, href: '/admin/menu-import', group: 'menu' },
   {
     title: 'Inventory Hub',
     icon: Package,
@@ -288,7 +289,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
   };
 
   return (
-    <div className="fixed left-0 top-0 z-40 h-screen flex transition-all duration-300 font-body">
+    <div className="flex h-full font-body">
       {/* Pane 1: Slim Domain Bar */}
       <aside
         className={cn(
@@ -297,17 +298,20 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
         )}
       >
         <div className={cn("flex items-center w-full mb-8", domainBarExpanded ? "justify-between px-2" : "justify-center")}>
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-500/20">
+          <button
+            onClick={toggleDomainExpand}
+            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            <div className="h-10 w-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-500/20 active:scale-95 transition-transform">
               <span className="text-2xl font-black text-white italic transform -skew-x-6">R</span>
             </div>
             {domainBarExpanded && (
-              <div className="flex flex-col">
+              <div className="flex flex-col items-start">
                 <span className="text-xl font-black text-white italic tracking-tighter leading-none">restin.ai</span>
                 <span className="text-[10px] font-bold text-red-500 tracking-[0.3em] uppercase">Enterprise</span>
               </div>
             )}
-          </div>
+          </button>
           {domainBarExpanded && (
             <Button variant="ghost" size="icon" onClick={toggleDomainExpand} className="text-zinc-500 hover:text-white h-8 w-8 hover:bg-white/5">
               <ChevronLeft className="h-4 w-4" />
@@ -499,10 +503,18 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
       >
         <div className={cn("h-20 flex items-center border-b border-white/5 bg-[#050506]/80 backdrop-blur-sm", collapsed ? "justify-center px-0" : "justify-between px-6")}>
           {!collapsed && (
-            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-zinc-700"></span>
-              {activeSubItem?.title}
-            </h2>
+            <div className="flex items-center justify-between w-full">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700"></span>
+                {activeSubItem?.title}
+              </h2>
+              <button
+                onClick={() => setActiveSubItem(null)}
+                className="p-1 hover:bg-white/10 rounded-lg transition-colors text-zinc-500 hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           )}
           {/* Auto-collapse based on Pane 2, essentially mimicking its state or could be independent. 
                User requested 3rd column to be icon mode too.

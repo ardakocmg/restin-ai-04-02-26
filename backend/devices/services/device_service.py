@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from typing import List, Optional
 from devices.models import Device, DeviceCreate, DeviceUpdate
 import hashlib
+import uuid
 
 class DeviceService:
     def __init__(self, db):
@@ -66,3 +67,56 @@ class DeviceService:
                 "updated_at": datetime.now(timezone.utc).isoformat()
             }}
         )
+
+
+    async def upsert_session_device(self, device_data: dict, ip: str, user_agent: str) -> str:
+        """
+        Auto-register or update a device from a session login.
+        Matches by device_id if present, or creates new.
+        """
+        device_id = device_data.get("id") or str(uuid.uuid4())
+        
+        # Simple UA Parsing
+        os = "Unknown OS"
+        browser = "Unknown Browser"
+        if "Windows" in user_agent: os = "Windows"
+        elif "Mac" in user_agent: os = "macOS"
+        elif "Linux" in user_agent: os = "Linux"
+        elif "Android" in user_agent: os = "Android"
+        elif "iPhone" in user_agent or "iPad" in user_agent: os = "iOS"
+        
+        if "Chrome" in user_agent: browser = "Chrome"
+        elif "Firefox" in user_agent: browser = "Firefox"
+        elif "Safari" in user_agent and "Chrome" not in user_agent: browser = "Safari"
+        elif "Edge" in user_agent: browser = "Edge"
+
+        # Prepare update data
+        now = datetime.now(timezone.utc).isoformat()
+        update_doc = {
+            "$set": {
+                "venue_id": device_data.get("venue_id", "gross-gargoyles"), # Default venue if missing
+                "name": device_data.get("device_name") or f"{os} Device ({ip})",
+                "type": "POS" if "POS" in (device_data.get("name") or "") else "KDS_SCREEN", # Default guesswork
+                "ip_address": ip,
+                "user_agent": user_agent,
+                "model": device_data.get("model") or "Browser",
+                "os": device_data.get("os") or os,
+                "browser": device_data.get("browser") or browser,
+                "screen_resolution": device_data.get("screen_resolution"),
+                "last_seen_at": now,
+                "updated_at": now
+            },
+            "$setOnInsert": {
+                "id": device_id,
+                "created_at": now,
+                "trusted": False,
+                "tags": ["session_auto_registered"]
+            }
+        }
+        
+        await self.col.update_one(
+            {"id": device_id},
+            update_doc,
+            upsert=True
+        )
+        return device_id

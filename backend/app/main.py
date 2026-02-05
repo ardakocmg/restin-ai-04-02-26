@@ -140,3 +140,8 @@ async def get_system_version():
         "build_id": "dev-build-2026",
         "environment": "development"
     }
+
+if __name__ == "__main__":
+    import uvicorn
+    # Bind to 0.0.0.0 to allow LAN access (Tablets/Phones)
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

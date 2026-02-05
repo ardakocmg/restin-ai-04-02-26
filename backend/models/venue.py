@@ -74,6 +74,7 @@ class Venue(BaseModel):
     location: Optional[str] = None  # St Julians, Valletta, etc.
     legal_info: Optional[LegalInfo] = Field(default_factory=LegalInfo)
     branding: Optional[Branding] = Field(default_factory=Branding)
+    external_links: Optional[List[dict]] = None  # [{source: "apicbase", id: "123"}]
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 def generate_slug(name: str) -> str:

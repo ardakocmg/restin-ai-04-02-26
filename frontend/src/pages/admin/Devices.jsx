@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Monitor, Smartphone, Tablet, Search, Plus,
     MoreVertical, ChevronRight, Settings, Info,
@@ -21,15 +21,37 @@ import {
 import { cn } from '../../lib/utils';
 import DataTable from '../../components/shared/DataTable';
 
-const MOCK_DEVICES = [
-    { id: 1, name: 'Bull Tablet A', type: 'ipad', version: '5.1.0', prefix: 'BTA', linkedFloor: 'Nut Allergy', defaultFloor: 'Nut Allergy', status: 'online' },
-    { id: 2, name: 'Bull POS 1', type: 'terminal', version: '5.0.2', prefix: 'BP1', linkedFloor: 'Terrace', defaultFloor: 'Terrace', status: 'online' },
-    { id: 3, name: 'Kitchen KDS', type: 'terminal', version: '5.1.0', prefix: 'KDS', linkedFloor: 'Kitchen', defaultFloor: 'Kitchen', status: 'offline' },
-];
+import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function Devices() {
+    const [devices, setDevices] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [selectedDevice, setSelectedDevice] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+
+    useEffect(() => {
+        const fetchDevices = async () => {
+            try {
+                const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
+                const token = localStorage.getItem('restin_token');
+                if (!token) return;
+
+                const response = await axios.get(
+                    `${API_URL}/api/devices?venue_id=${venueId}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setDevices(response.data);
+            } catch (error) {
+                console.error("Failed to fetch devices", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDevices();
+    }, []);
 
     const renderDeviceList = () => (
         <div className="space-y-6">
@@ -56,17 +78,34 @@ export default function Devices() {
                         columns={[
                             {
                                 key: 'name',
-                                label: 'Name',
+                                label: 'Name / IP',
                                 render: (row) => (
                                     <div className="flex items-center gap-3">
                                         <div className="relative">
                                             {row.type === 'ipad' ? <Tablet className="w-5 h-5 text-zinc-400" /> : <Monitor className="w-5 h-5 text-zinc-400" />}
                                             <div className={cn(
                                                 "absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border-2 border-zinc-950",
-                                                row.status === 'online' ? "bg-emerald-500" : "bg-red-500"
+                                                row.last_seen_at && new Date(row.last_seen_at) > new Date(Date.now() - 60000) ? "bg-emerald-500" : "bg-zinc-500"
                                             )} />
                                         </div>
-                                        <span className="font-bold text-white">{row.name}</span>
+                                        <div>
+                                            <div className="font-bold text-white">{row.name}</div>
+                                            <div className="text-xs text-zinc-500 font-mono">{row.ip_address || "No IP"}</div>
+                                        </div>
+                                    </div>
+                                )
+                            },
+                            {
+                                key: 'fingerprint',
+                                label: 'Device Info',
+                                render: (row) => (
+                                    <div className="flex flex-col">
+                                        <span className="text-xs text-zinc-300 font-medium">{row.model || "Unknown Model"}</span>
+                                        <div className="flex items-center gap-1 text-[10px] text-zinc-500">
+                                            <span>{row.os || "Unknown OS"}</span>
+                                            <span>•</span>
+                                            <span>{row.browser || "Unknown Browser"}</span>
+                                        </div>
                                     </div>
                                 )
                             },
@@ -75,18 +114,17 @@ export default function Devices() {
                                 label: 'Version',
                                 render: (row) => (
                                     <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20 font-mono">
-                                        {row.version}
+                                        {row.version || "1.0.0"}
                                     </Badge>
                                 )
                             },
-                            { key: 'prefix', label: 'Prefix', render: (row) => <span className="text-zinc-400 font-mono">{row.prefix}</span> },
-                            { key: 'linkedFloor', label: 'Linked Floor', render: (row) => <span className="text-zinc-400">{row.linkedFloor}</span> },
+                            { key: 'prefix', label: 'Prefix', render: (row) => <span className="text-zinc-400 font-mono">{row.prefix || "N/A"}</span> },
                             {
                                 key: 'defaultFloor',
                                 label: 'Default Floor',
                                 render: (row) => (
-                                    <Select defaultValue={row.defaultFloor}>
-                                        <SelectTrigger className="w-[180px] bg-zinc-950 border-white/10 h-8 text-xs">
+                                    <Select defaultValue={row.defaultFloor || "Main Floor"}>
+                                        <SelectTrigger className="w-[140px] bg-zinc-950 border-white/10 h-8 text-xs">
                                             <SelectValue placeholder="Select floor" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-zinc-900 border-white/10">
@@ -114,7 +152,7 @@ export default function Devices() {
                                 )
                             }
                         ]}
-                        data={MOCK_DEVICES.filter(d => d.name.toLowerCase().includes(searchQuery.toLowerCase()))}
+                        data={devices.filter(d => d.name.toLowerCase().includes(searchQuery.toLowerCase()))}
                     />
                 </CardContent>
             </Card>
