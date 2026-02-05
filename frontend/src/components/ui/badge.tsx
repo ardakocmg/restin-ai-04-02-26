@@ -28,24 +28,24 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   ({ className, variant, ...props }, ref) => {
     const styles: Record<string, React.CSSProperties> = {
       default: {
-        backgroundColor: 'rgba(229, 57, 53, 0.15)',
-        border: '1px solid rgba(229, 57, 53, 0.3)',
-        color: '#E53935'
+        backgroundColor: 'var(--brand-accent-soft)',
+        border: '1px solid var(--brand-accent-glow)',
+        color: 'var(--brand-accent)'
       },
       secondary: {
-        backgroundColor: 'rgba(161, 161, 170, 0.15)',
-        border: '1px solid rgba(161, 161, 170, 0.3)',
-        color: '#A1A1AA'
+        backgroundColor: 'var(--secondary)',
+        border: '1px solid var(--border)',
+        color: 'var(--secondary-foreground)'
       },
       destructive: {
-        backgroundColor: 'rgba(239, 68, 68, 0.15)',
-        border: '1px solid rgba(239, 68, 68, 0.3)',
-        color: '#EF4444'
+        backgroundColor: 'var(--destructive)',
+        border: '1px solid var(--destructive)',
+        color: 'var(--destructive-foreground)'
       },
       outline: {
         backgroundColor: 'transparent',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
-        color: '#D4D4D8'
+        border: '1px solid var(--border)',
+        color: 'var(--foreground)'
       }
     };
 

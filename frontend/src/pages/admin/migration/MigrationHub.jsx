@@ -269,10 +269,10 @@ const MigrationHub = () => {
                                         onDragLeave={onDragLeave}
                                         onDrop={onDrop}
                                         className={`relative border-2 border-dashed rounded-xl p-10 text-center transition-all duration-200 group ${isDragging
-                                                ? 'border-primary bg-primary/10 scale-[1.01]'
-                                                : file
-                                                    ? 'border-green-500/50 bg-green-500/5'
-                                                    : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-500 hover:bg-zinc-900'
+                                            ? 'border-primary bg-primary/10 scale-[1.01]'
+                                            : file
+                                                ? 'border-green-500/50 bg-green-500/5'
+                                                : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-500 hover:bg-zinc-900'
                                             }`}
                                     >
                                         <div className="flex flex-col items-center gap-4">
@@ -359,7 +359,7 @@ const MigrationHub = () => {
                                                 className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'new' ? 'bg-green-950/30 border-green-500/50 shadow-[0_0_30px_rgba(34,197,94,0.1)]' : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900'}`}
                                             >
                                                 <div className="flex justify-between items-start mb-4">
-                                                    <div className={`p-3 rounded-xl ${activeTab === 'new' ? 'bg-green-500 text-black' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700'}`}>
+                                                    <div className={`p-3 rounded-xl ${activeTab === 'new' ? 'bg-green-500 text-zinc-950' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700'}`}>
                                                         <div className="text-xl">📦</div>
                                                     </div>
                                                     {activeTab === 'new' && <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />}
@@ -383,7 +383,7 @@ const MigrationHub = () => {
                                                 className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'update' ? 'bg-amber-950/30 border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.1)]' : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900'}`}
                                             >
                                                 <div className="flex justify-between items-start mb-4">
-                                                    <div className={`p-3 rounded-xl ${activeTab === 'update' ? 'bg-amber-500 text-black' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700'}`}>
+                                                    <div className={`p-3 rounded-xl ${activeTab === 'update' ? 'bg-amber-500 text-zinc-950' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700'}`}>
                                                         <div className="text-xl">🔄</div>
                                                     </div>
                                                     {activeTab === 'update' && <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />}

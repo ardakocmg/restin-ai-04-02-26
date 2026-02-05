@@ -1,0 +1,28 @@
+{
+    "extends": [
+        "stylelint-config-standard"
+    ],
+    "plugins": [
+        "stylelint-declaration-strict-value"
+    ],
+    "rules": {
+        "sh-ane/declaration-strict-value": [
+            [
+                "/color/",
+                "background-color",
+                "border-color"
+            ],
+            {
+                "ignoreValues": [
+                    "transparent",
+                    "inherit",
+                    "initial",
+                    "none",
+                    "currentColor",
+                    "unset"
+                ],
+                "message": "Do not use hardcoded colors. Use theme variables (var(--...)) to ensure Dark Mode compatibility."
+            }
+        ]
+    }
+}

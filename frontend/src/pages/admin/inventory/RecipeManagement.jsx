@@ -9,10 +9,11 @@ import { Badge } from '../../../components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../../components/ui/dialog';
 import { Label } from '../../../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
-import { Search, Plus, Trash2, Save, FileText, ChefHat, RefreshCw, AlertCircle, Columns, Filter } from 'lucide-react';
+import { Search, Plus, Trash2, Save, FileText, ChefHat, RefreshCw, AlertCircle, Columns, Filter, UploadCloud } from 'lucide-react';
 import DataTable from '../../../components/shared/DataTable';
 import { toast } from 'sonner';
 import { Checkbox } from '../../../components/ui/checkbox';
+import { useNavigate } from 'react-router-dom';
 
 // Simple Popover-like Dropdown for Column Selection if Shadcn Popover is missing
 const ColumnSelector = ({ allColumns, visibleColumns, onToggle }) => {
@@ -50,6 +51,7 @@ const ColumnSelector = ({ allColumns, visibleColumns, onToggle }) => {
 
 export default function RecipeManagement() {
   const { activeVenue } = useVenue();
+  const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
   const [items, setItems] = useState([]); // Inventory Items to pick from
   const [menuItems, setMenuItems] = useState([]); // Menu Items to attach recipe to
@@ -213,6 +215,15 @@ export default function RecipeManagement() {
       description="Link menu items to ingredients for automatic stock deduction"
       actions={
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-orange-500/50 text-orange-400 hover:bg-orange-500/10"
+            onClick={() => navigate('/admin/migration')}
+          >
+            <UploadCloud className="w-4 h-4 mr-2" />
+            Apicbase Import
+          </Button>
           <ColumnSelector
             allColumns={importKeys}
             visibleColumns={visibleImportKeys}

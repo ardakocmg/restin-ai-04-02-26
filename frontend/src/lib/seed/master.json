@@ -1,0 +1,17 @@
+{
+    "venues": [
+        {
+            "id": "branch-001",
+            "name": "Restin Central",
+            "brandId": "brand-001",
+            "organizationId": "org-001",
+            "currency": "EUR",
+            "timezone": "Europe/Malta"
+        }
+    ],
+    "commonConfig": {
+        "taxRate": 0.18,
+        "serviceCharge": 0.10,
+        "idleTimeout": 1800000
+    }
+}

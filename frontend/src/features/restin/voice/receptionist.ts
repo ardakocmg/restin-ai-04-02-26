@@ -1,43 +1,50 @@
-import { ai } from '@antigravity/ai';
+import { AiServiceFactory } from '../../../lib/ai/google';
 
 /**
  * 📞 Voice AI Receptionist (Pillar 4)
- * Handles incoming calls using RAG over PDF Menus/Policies.
+ * Goal: Zero Missed Calls via RAG-based AI.
  */
+
+interface VoiceContext {
+    menuItems: string[];
+    policies: string[];
+    availability: string;
+}
+
 export class VoiceReceptionist {
     /**
-     * Query Knowledge Base
-     * Uses Gemini 1.5 Pro with PDF grounding files.
+     * Handle Incoming Call (Rule 180)
+     * Uses the Tenant's Knowledge Base as the "Brain".
      */
-    async queryKnowledgeBase(question: string, pdfIds: string[]): Promise<string> {
+    async handleQuery(transcript: string, knowledge: VoiceContext) {
         const prompt = `
-            You are the AI Receptionist for Restin. 
-            Answer the following guest question using the provided context (Menus/Policies): "${question}".
-            Context Files: [${pdfIds.join(', ')}]
-            Tone: Professional, helpful, and concise.
-            If you don't know the answer, politely offer to connect them to a human manager.
-        `;
+      You are a 24/7 AI Receptionist for a premium restaurant.
+      Knowledge Base:
+      - Menu: ${knowledge.menuItems.join(', ')}
+      - Policies: ${knowledge.policies.join(', ')}
+      - Availability: ${knowledge.availability}
 
-        // In a real RAG implementation, we would pass the PDF blobs or IDs to the Vertex AI context.
-        return await ai.prompt(prompt, 'gemini-1.5-pro');
-    }
+      Guest Query: "${transcript}"
 
-    /**
-     * Handle Reservation Request
-     * Tool-use integration to check availability.
-     */
-    async handleReservation(guestName: string, partySize: number, dateTime: string): Promise<string> {
-        console.log(`[Voice AI] Checking availability for ${guestName} on ${dateTime} for ${partySize} guests.`);
+      Reply naturally, professionally, and keep it brief (max 2 sentences).
+    `;
 
-        // Mocking availability check
-        const isAvailable = true;
-
-        if (isAvailable) {
-            return `I've successfully created a reservation for ${partySize} people on ${dateTime}. We look forward to seeing you, ${guestName}!`;
-        } else {
-            return `I apologize, but we are fully booked at that time. Would you like me to check an hour earlier or later?`;
+        try {
+            const response = await AiServiceFactory.promptWithGrounding(prompt, 'GEMINI_FLASH');
+            return {
+                response: response,
+                tokensUsed: response.length / 4, // Simple estimate for billing
+                timestamp: new Date().toISOString()
+            };
+        } catch (error) {
+            console.error('[Pillar 4] Voice AI failed:', error);
+            return {
+                response: "I'm sorry, I'm having trouble connecting to our system. Let me transfer you to a human manager.",
+                tokensUsed: 0,
+                timestamp: new Date().toISOString()
+            };
         }
     }
 }
 
-export const receptionist = new VoiceReceptionist();
+export const voiceAI = new VoiceReceptionist();

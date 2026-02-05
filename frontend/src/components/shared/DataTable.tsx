@@ -139,22 +139,33 @@ export default function DataTable<TData, TValue>({
   }), []);
 
   const tableColumns = useMemo(() => {
-    const base = columns.map((col, index) => {
-      const colId = col.key || col.id || `col-${index}`;
-      return {
-        id: colId,
-        accessorKey: col.key,
-        header: col.label || colId,
-        cell: (info: any) => (col.render ? col.render(info.row.original) : info.getValue()),
-        enableSorting: col.enableSorting !== false,
-        meta: {
-          filterType: col.filterType,
-          filterOptions: col.filterOptions || [],
-          headerClassName: col.headerClassName,
-          cellClassName: col.cellClassName
+    const mapColumns = (cols: any[]): any[] => {
+      return cols.map((col, index) => {
+        const colId = col.key || col.id || `col-${index}`;
+        const mapped: any = {
+          id: colId,
+          header: col.label || col.header || colId,
+        };
+
+        if (col.columns && Array.isArray(col.columns)) {
+          mapped.columns = mapColumns(col.columns);
+        } else {
+          mapped.accessorKey = col.key;
+          mapped.cell = (info: any) => (col.render ? col.render(info.row.original) : info.getValue());
+          mapped.enableSorting = col.enableSorting !== false;
+          mapped.meta = {
+            filterType: col.filterType,
+            filterOptions: col.filterOptions || [],
+            headerClassName: col.headerClassName,
+            cellClassName: col.cellClassName
+          };
+          if (col.size) mapped.size = col.size;
         }
-      };
-    });
+        return mapped;
+      });
+    };
+
+    const base = mapColumns(columns);
     return enableRowSelection ? [selectionColumn, ...base] : base;
   }, [columns, enableRowSelection, selectionColumn]);
 

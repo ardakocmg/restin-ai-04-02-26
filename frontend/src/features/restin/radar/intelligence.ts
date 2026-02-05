@@ -1,41 +1,48 @@
-import { grounding } from '@antigravity/ai';
+import { AiServiceFactory } from '../../../lib/ai/google';
 
 /**
  * 🔬 Market Radar (Pillar 6)
- * Real-time awareness and competitive intelligence.
+ * Goal: Competitive Intelligence & Safety.
  */
+
 export class MarketRadar {
     /**
-     * Update Competitor Intelligence
-     * Scalable competitor monitoring without fragile scrapers.
+     * Google Grounding Intelligence (Rule 202)
+     * Search competitor prices without scraping.
      */
-    async trackCompetitor(competitorName: string, city: string): Promise<any> {
-        console.log(`[Pillar 6] Scanning Market: ${competitorName} in ${city}`);
+    async searchMarket(city: string, cuisine: string) {
+        const prompt = `
+      Search for top 3 competitors in ${city} for ${cuisine} cuisine.
+      Extract their average price for a main course and their top-selling dish.
+      Return JSON: [ { "brand": "...", "avgPrice": "...", "topDish": "..." } ]
+    `;
 
-        const results = await grounding.searchMarket(`${competitorName} restaurant prices in ${city}`);
-
-        // Parse results (mocked)
-        return {
-            competitorName,
-            observedProducts: [
-                { name: 'Cheeseburger', price: 12.50, status: 'INCREASED' },
-                { name: 'Caesar Salad', price: 9.00, status: 'STABLE' }
-            ],
-            lastUpdate: new Date().toISOString()
-        };
+        try {
+            const response = await AiServiceFactory.promptWithGrounding(prompt, 'GEMINI_PRO');
+            return JSON.parse(response);
+        } catch (error) {
+            console.error('[Pillar 6] Market Radar failed:', error);
+            return [];
+        }
     }
 
     /**
-     * Yield Management Suggestion
-     * Dynamic pricing advice based on market trends and occupancy.
+     * Allergen Guard (Rule 203)
+     * Auto-detects allergens in ingredients.
      */
-    calculateDynamicPricing(basePrice: number, marketTrendFactor: number, currentOccupancy: number): number {
-        // Simple logic: if occupancy > 80% and market is rising, increase by 10%
-        if (currentOccupancy > 0.8 && marketTrendFactor > 1.0) {
-            return basePrice * 1.1;
+    async detectAllergens(ingredients: string[]) {
+        const prompt = `
+      List any common allergens in these ingredients: ${ingredients.join(', ')}.
+      Return JSON: { "allergens": ["gluten", "nuts", etc.] }
+    `;
+
+        try {
+            const response = await AiServiceFactory.promptWithGrounding(prompt, 'GEMINI_FLASH');
+            return JSON.parse(response);
+        } catch (error) {
+            return { allergens: [] };
         }
-        return basePrice;
     }
 }
 
-export const radar = new MarketRadar();
+export const marketRadar = new MarketRadar();
