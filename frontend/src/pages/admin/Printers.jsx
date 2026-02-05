@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react';
+﻿import React, { useState, useCallback, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import PageContainer from '../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -19,131 +20,7 @@ import DataTable from '../../components/shared/DataTable';
 
 // Removed MOCK_PRINTERS constant in favor of API fetching
 
-const MOCK_TEMPLATES = [
-    {
-        id: '1', name: 'Bar', type: 'Bar', printer: 'Bar', backupPrinter: '',
-        titleText: 'BAR', greetingText: '', promotionText: '',
-        fontName: 'Arial', fontSize: 35, timesPrinted: 1,
-        bigFontName: 'Arial-BoldMT', bigFontSize: 50,
-        smallFontName: 'Arial', smallFontSize: 30,
-        itemNumberWidth: 0, priceWidth: 0,
-        showCompany: false, showCustomer: false, showTotalPrice: false,
-        showWaiterTimes: true, signalAccessory: false, showSequenceNr: true, showVAT: false,
-        printItemsSplit: 'Don\'t split', chooseLayout: 'EN-MT'
-    },
-    {
-        id: '2', name: 'Kitchen STR', type: 'Kitchen', printer: 'Kitchen-Pass', backupPrinter: 'Kitchen-Pass',
-        titleText: 'KITCHEN STR', greetingText: '', promotionText: '',
-        fontName: 'Arial', fontSize: 35, timesPrinted: 2,
-        bigFontName: 'Arial-BoldMT', bigFontSize: 50,
-        smallFontName: 'Arial', smallFontSize: 25,
-        itemNumberWidth: 0, priceWidth: 0,
-        showCompany: false, showCustomer: false, showTotalPrice: false,
-        showWaiterTimes: true, signalAccessory: false, showSequenceNr: true, showVAT: false,
-        printItemsSplit: 'Don\'t split', chooseLayout: 'EN-MT'
-    },
-    {
-        id: '3', name: 'Kitchen MAIN', type: 'Kitchen', printer: 'Kitchen-Main', backupPrinter: 'Kitchen-Pass',
-        titleText: 'KITCHEN', greetingText: '', promotionText: '',
-        fontName: 'Arial', fontSize: 30, timesPrinted: 2,
-        bigFontName: 'Arial-BoldMT', bigFontSize: 50,
-        smallFontName: 'Arial', smallFontSize: 35,
-        itemNumberWidth: 0, priceWidth: 0,
-        showCompany: false, showCustomer: false, showTotalPrice: false,
-        showWaiterTimes: true, signalAccessory: false, showSequenceNr: true, showVAT: false,
-        printItemsSplit: 'Don\'t split', chooseLayout: 'EN-MT'
-    },
-    {
-        id: '4', name: 'Kitchen Dessert Sedic', type: 'Kitchen', printer: 'Kitchen-Dessert', backupPrinter: 'Kitchen-Pass',
-        titleText: 'Dessert', greetingText: '', promotionText: '',
-        fontName: 'Arial', fontSize: 30, timesPrinted: 2,
-        bigFontName: 'Arial-BoldMT', bigFontSize: 50,
-        smallFontName: 'Arial', smallFontSize: 40,
-        itemNumberWidth: 0, priceWidth: 0,
-        showCompany: false, showCustomer: false, showTotalPrice: false,
-        showWaiterTimes: true, signalAccessory: false, showSequenceNr: true, showVAT: false,
-        printItemsSplit: 'Don\'t split', chooseLayout: 'EN-MT'
-    },
-    {
-        id: '5', name: 'STATION 2', type: 'Kitchen', printer: 'Station', backupPrinter: 'Bar',
-        titleText: 'Kitchen Order', greetingText: '', promotionText: '',
-        fontName: 'Arial', fontSize: 30, timesPrinted: 1,
-        bigFontName: 'Arial-BoldMT', bigFontSize: 60,
-        smallFontName: 'Arial', smallFontSize: 35,
-        itemNumberWidth: 0, priceWidth: 0,
-        showCompany: false, showCustomer: false, showTotalPrice: false,
-        showWaiterTimes: true, signalAccessory: false, showSequenceNr: true, showVAT: false,
-        printItemsSplit: 'Don\'t split', chooseLayout: 'EN-MT'
-    },
-    {
-        id: '6', name: 'Wine Order @ Station', type: 'Bar', printer: 'Bar', backupPrinter: 'Select a backup printer',
-        titleText: 'BAR', greetingText: '', promotionText: '',
-        fontName: 'Arial', fontSize: 25, timesPrinted: 1,
-        bigFontName: 'Arial-BoldMT', bigFontSize: 45,
-        smallFontName: 'Arial', smallFontSize: 16,
-        itemNumberWidth: 4, priceWidth: 0,
-        showCompany: false, showCustomer: false, showTotalPrice: true,
-        showWaiterTimes: true, signalAccessory: false, showSequenceNr: true, showVAT: false,
-        printItemsSplit: 'Don\'t split', chooseLayout: 'EN-MT'
-    },
-    {
-        id: '7', name: 'Receipt - Station', type: 'Receipt', printer: 'Station', backupPrinter: '',
-        logoUrl: 'CAVIAR & BULL', bottomLogoUrl: '',
-        titleText: '', greetingText: 'Thank you - we look fo', promotionText: 'Please note that service charge is not included in the bill',
-        fontName: 'Arial', fontSize: 25, timesPrinted: 1,
-        bigFontName: 'Arial-BoldMT', bigFontSize: 45,
-        smallFontName: 'Arial', smallFontSize: 20,
-        itemNumberWidth: 0, priceWidth: 8,
-        showCompany: true, showCustomer: true, showTotalPrice: true,
-        showWaiterTimes: true, signalAccessory: false, showSequenceNr: true, showVAT: false,
-        printItemsSplit: 'Don\'t split', chooseLayout: 'EN-MT',
-        qrCode: 'Website', suggestedTips: '10, 15, 20'
-    },
-    {
-        id: '8', name: 'Receipt - Bar', type: 'Receipt', printer: 'Bar', backupPrinter: '',
-        logoUrl: 'CAVIAR & BULL', bottomLogoUrl: '',
-        titleText: '', greetingText: 'Thank you for dining a', promotionText: 'Please note that service charge is not included in the bill',
-        fontName: 'Arial', fontSize: 25, timesPrinted: 1,
-        bigFontName: 'Arial-BoldMT', bigFontSize: 45,
-        smallFontName: 'Arial', smallFontSize: 20,
-        itemNumberWidth: 0, priceWidth: 8,
-        showCompany: true, showCustomer: false, showTotalPrice: true,
-        showWaiterTimes: true, signalAccessory: false, showSequenceNr: true, showVAT: false,
-        printItemsSplit: 'Don\'t split', chooseLayout: 'EN-MT',
-        qrCode: 'Website', suggestedTips: '10, 15, 20'
-    },
-    {
-        id: '9', name: 'Copy of Kitchen STR', type: 'Kitchen', printer: 'Station', backupPrinter: 'Kitchen-Pass',
-        titleText: 'KITCHEN STR', greetingText: '', promotionText: '',
-        fontName: 'ArialMT', fontSize: 35, timesPrinted: 2,
-        bigFontName: 'Arial-BoldMT', bigFontSize: 50,
-        smallFontName: 'Arial', smallFontSize: 25,
-        itemNumberWidth: 0, priceWidth: 0,
-        showCompany: false, showCustomer: false, showTotalPrice: false,
-        showWaiterTimes: true, signalAccessory: false, showSequenceNr: true, showVAT: false,
-        printItemsSplit: 'Don\'t split', chooseLayout: 'EN-MT'
-    },
-    {
-        id: '10', name: 'Copy of Kitchen', type: 'Kitchen', printer: 'Kitchen Main', titleText: 'KITCHEN', fontName: 'Arial', fontSize: 35
-    },
-    {
-        id: '11', name: 'Copy of Bar', type: 'Bar', printer: 'Bar', titleText: 'BAR', fontName: 'Arial', fontSize: 35
-    },
-    {
-        id: '12', name: 'Receipt - Host', type: 'Receipt', printer: 'Host (Bill)', backupPrinter: '',
-        logoUrl: 'CAVIAR & BULL', bottomLogoUrl: '',
-        titleText: '', greetingText: 'Thank you for dining a', promotionText: 'Please note that service charge is not included in the bill',
-        fontName: 'Arial', fontSize: 25, timesPrinted: 1,
-        bigFontName: 'Arial-BoldMT', bigFontSize: 45,
-        smallFontName: 'Arial', smallFontSize: 20,
-        itemNumberWidth: 0, priceWidth: 8,
-        showCompany: true, showCustomer: true, showTotalPrice: true,
-        showWaiterTimes: true, signalAccessory: false, showSequenceNr: true, showVAT: false,
-        printItemsSplit: 'Don\'t split', chooseLayout: 'EN-MT',
-        qrCode: 'Website', suggestedTips: '10, 15, 20',
-        currency: '€', secondaryCurrency: '', exchangeRate: 0.00, taxName: 'VAT'
-    },
-];
+// MOCK DATA REMOVED - STRICT DATABASE MODE
 
 const MOCK_CASH_DRAWERS = [
     { id: '1', name: 'Main Drawer' },
@@ -152,7 +29,15 @@ const MOCK_CASH_DRAWERS = [
 
 export default function Printers() {
     const { user } = useAuth();
+    const location = useLocation();
     const [activeTab, setActiveTab] = useState('printers');
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const tab = params.get('tab');
+        if (tab) setActiveTab(tab);
+    }, [location.search]);
+
     const [printers, setPrinters] = useState([]);
     const [templates, setTemplates] = useState([]); // Will load from API
     const [cashDrawers, setCashDrawers] = useState(MOCK_CASH_DRAWERS);
@@ -174,10 +59,12 @@ export default function Printers() {
                 printerTemplatesAPI.list()
             ]);
             setPrinters(printersData);
-            setTemplates(templatesData.length > 0 ? templatesData : MOCK_TEMPLATES); // Fallback to mock if empty initially
+            setTemplates(templatesData);
         } catch (error) {
             console.error("Failed to load printers:", error);
-            toast.error("Failed to load printer configuration");
+            // FAIL LOUDLY - No Mock Data
+            toast.error("Failed to load printer configuration from server.");
+            setTemplates([]);
         } finally {
             setLoading(false);
         }
@@ -205,6 +92,73 @@ export default function Printers() {
         setNewDrawerName('');
         setAddDrawerModal(false);
         toast.success('Cash drawer added successfully');
+    };
+
+    const handleUpdateTemplateField = (field, value) => {
+        setSelectedTemplate(prev => ({
+            ...prev,
+            [field]: value
+        }));
+    };
+
+    const handleSaveTemplate = async () => {
+        setLoading(true);
+        try {
+            // Check if it's a new template (no ID) or update
+            let updatedTemplates;
+            if (templates.some(t => t.id === selectedTemplate.id)) {
+                updatedTemplates = templates.map(t => t.id === selectedTemplate.id ? selectedTemplate : t);
+                await printerTemplatesAPI.update(selectedTemplate.id, selectedTemplate);
+            } else {
+                const newId = (Math.max(...templates.map(t => parseInt(t.id) || 0)) + 1).toString();
+                const newTemplate = { ...selectedTemplate, id: newId };
+                updatedTemplates = [...templates, newTemplate];
+                await printerTemplatesAPI.create(newTemplate);
+            }
+
+            setTemplates(updatedTemplates);
+            setEditTemplateModal(false);
+            toast.success('Template saved successfully');
+        } catch (error) {
+            console.error('Failed to save template:', error);
+            // Fallback for mock if API fails
+            let updatedTemplates;
+            if (templates.some(t => t.id === selectedTemplate.id)) {
+                updatedTemplates = templates.map(t => t.id === selectedTemplate.id ? selectedTemplate : t);
+            } else {
+                const newId = (Math.max(...templates.map(t => parseInt(t.id) || 0)) + 1).toString();
+                updatedTemplates = [...templates, { ...selectedTemplate, id: newId }];
+            }
+            setTemplates(updatedTemplates);
+            setEditTemplateModal(false);
+            toast.success('Template saved (Local Fallback)');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCopyTemplate = () => {
+        const copy = {
+            ...selectedTemplate,
+            id: (Math.max(...templates.map(t => parseInt(t.id) || 0)) + 1).toString(),
+            name: `Copy of ${selectedTemplate.name}`
+        };
+        setTemplates([...templates, copy]);
+        setSelectedTemplate(copy);
+        toast.success('Template duplicated');
+    };
+
+    const handleDeleteTemplate = async () => {
+        if (!window.confirm('Are you sure you want to delete this template?')) return;
+
+        try {
+            await printerTemplatesAPI.delete(selectedTemplate.id);
+            setTemplates(templates.filter(t => t.id !== selectedTemplate.id));
+            setEditTemplateModal(false);
+            toast.success('Template deleted');
+        } catch (error) {
+            toast.error('Failed to delete template: Backend Error');
+        }
     };
 
     return (
@@ -406,7 +360,7 @@ export default function Printers() {
                                     <Label className="text-zinc-400 text-xs">Name</Label>
                                     <Input
                                         value={selectedTemplate.name}
-                                        readOnly
+                                        onChange={(e) => handleUpdateTemplateField('name', e.target.value)}
                                         className="bg-zinc-950 border-white/10 text-white mt-1"
                                     />
                                 </div>
@@ -414,10 +368,10 @@ export default function Printers() {
                                 <div>
                                     <Label className="text-zinc-400 text-xs">Type</Label>
                                     <div className="flex gap-2 mt-1">
-                                        <Button variant={selectedTemplate.type === 'Ticket' ? 'default' : 'outline'} size="sm" className="flex-1">Ticket</Button>
-                                        <Button variant={selectedTemplate.type === 'Bar' ? 'default' : 'outline'} size="sm" className="flex-1">Bar</Button>
-                                        <Button variant={selectedTemplate.type === 'Kitchen' ? 'default' : 'outline'} size="sm" className="flex-1">Kitchen</Button>
-                                        <Button variant="outline" size="sm" className="flex-1">Gate</Button>
+                                        <Button variant={selectedTemplate.type === 'Ticket' ? 'default' : 'outline'} size="sm" className="flex-1" onClick={() => handleUpdateTemplateField('type', 'Ticket')}>Ticket</Button>
+                                        <Button variant={selectedTemplate.type === 'Bar' ? 'default' : 'outline'} size="sm" className="flex-1" onClick={() => handleUpdateTemplateField('type', 'Bar')}>Bar</Button>
+                                        <Button variant={selectedTemplate.type === 'Kitchen' ? 'default' : 'outline'} size="sm" className="flex-1" onClick={() => handleUpdateTemplateField('type', 'Kitchen')}>Kitchen</Button>
+                                        <Button variant={selectedTemplate.type === 'Receipt' ? 'default' : 'outline'} size="sm" className="flex-1" onClick={() => handleUpdateTemplateField('type', 'Receipt')}>Receipt</Button>
                                     </div>
                                 </div>
 
@@ -425,222 +379,241 @@ export default function Printers() {
                                     <Label className="text-zinc-400 text-xs">Printer</Label>
                                     <Input
                                         value={selectedTemplate.printer}
-                                        readOnly
+                                        onChange={(e) => handleUpdateTemplateField('printer', e.target.value)}
                                         className="bg-zinc-950 border-white/10 text-white mt-1"
                                     />
                                 </div>
 
                                 <div>
                                     <Label className="text-zinc-400 text-xs">Backup printer</Label>
-                                    <Select>
+                                    <Select value={selectedTemplate.backupPrinter} onValueChange={(val) => handleUpdateTemplateField('backupPrinter', val)}>
                                         <SelectTrigger className="bg-zinc-950 border-white/10 text-white mt-1">
                                             <SelectValue placeholder="Select backup" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="kitchen-pass">Kitchen-Pass</SelectItem>
                                             <SelectItem value="station">Station</SelectItem>
+                                            <SelectItem value="Bar">Bar</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
 
                                 <div>
-                                    <Label className="text-zinc-400 text-xs">Logo Url</Label>
-                                    <a href="#" className="text-cyan-500 text-sm block mt-1">Attach an image</a>
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Logo Url</Label>
+                                        <Input
+                                            value={selectedTemplate.logoUrl || ''}
+                                            onChange={(e) => handleUpdateTemplateField('logoUrl', e.target.value)}
+                                            placeholder="https://..."
+                                            className="bg-zinc-950 border-white/10 text-white mt-1"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Bottom Logo Url</Label>
+                                        <Input
+                                            value={selectedTemplate.bottomLogoUrl || ''}
+                                            onChange={(e) => handleUpdateTemplateField('bottomLogoUrl', e.target.value)}
+                                            placeholder="https://..."
+                                            className="bg-zinc-950 border-white/10 text-white mt-1"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Title Text</Label>
+                                        <Input
+                                            value={selectedTemplate.titleText || ''}
+                                            onChange={(e) => handleUpdateTemplateField('titleText', e.target.value)}
+                                            className="bg-zinc-950 border-white/10 text-white mt-1"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Greeting Text</Label>
+                                        <Input
+                                            value={selectedTemplate.greetingText || ''}
+                                            onChange={(e) => handleUpdateTemplateField('greetingText', e.target.value)}
+                                            className="bg-zinc-950 border-white/10 text-white mt-1"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Promotion Text</Label>
+                                        <Input
+                                            value={selectedTemplate.promotionText || ''}
+                                            onChange={(e) => handleUpdateTemplateField('promotionText', e.target.value)}
+                                            className="bg-zinc-950 border-white/10 text-white mt-1"
+                                        />
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox id="show-company" />
+                                        <Label htmlFor="show-company" className="text-zinc-400 text-xs">Show Company</Label>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox id="show-customer" />
+                                        <Label htmlFor="show-customer" className="text-zinc-400 text-xs">Show Customer</Label>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Bottom Logo Url</Label>
-                                    <a href="#" className="text-cyan-500 text-sm block mt-1">Attach an image</a>
+                                {/* Middle Column - Font Settings */}
+                                <div className="space-y-4">
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Font Name</Label>
+                                        <Select defaultValue="arial">
+                                            <SelectTrigger className="bg-zinc-950 border-white/10 text-white mt-1">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="arial">Arial</SelectItem>
+                                                <SelectItem value="arial-bold">Arial-BoldMT</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Font Size</Label>
+                                        <Input type="number" defaultValue="35" className="bg-zinc-950 border-white/10 text-white mt-1" />
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Times Printed</Label>
+                                        <Input type="number" defaultValue="1" className="bg-zinc-950 border-white/10 text-white mt-1" />
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Big Font Name</Label>
+                                        <Select defaultValue="arial-bold">
+                                            <SelectTrigger className="bg-zinc-950 border-white/10 text-white mt-1">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="arial">Arial</SelectItem>
+                                                <SelectItem value="arial-bold">Arial-BoldMT</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Big Font Size</Label>
+                                        <Input type="number" defaultValue="50" className="bg-zinc-950 border-white/10 text-white mt-1" />
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Small Font Name</Label>
+                                        <Select defaultValue="arial">
+                                            <SelectTrigger className="bg-zinc-950 border-white/10 text-white mt-1">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="arial-bold">Arial-BoldMT</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Small Font Size</Label>
+                                        <Input type="number" defaultValue="30" className="bg-zinc-950 border-white/10 text-white mt-1" />
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Item number width</Label>
+                                        <Input type="number" defaultValue="0" className="bg-zinc-950 border-white/10 text-white mt-1" />
+                                    </div>
+
+                                    <div>
+                                        <Label className="text-zinc-400 text-xs">Price Width</Label>
+                                        <Input type="number" defaultValue="0" className="bg-zinc-950 border-white/10 text-white mt-1" />
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox id="show-total" />
+                                        <Label htmlFor="show-total" className="text-zinc-400 text-xs">Show Total Price</Label>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox id="show-waiter" defaultChecked />
+                                        <Label htmlFor="show-waiter" className="text-zinc-400 text-xs">Show waiter times</Label>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox id="signal-accessory" />
+                                        <Label htmlFor="signal-accessory" className="text-zinc-400 text-xs">Signal accessory</Label>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox id="show-sequence" defaultChecked />
+                                        <Label htmlFor="show-sequence" className="text-zinc-400 text-xs">Show sequence nr</Label>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox id="show-vat" />
+                                        <Label htmlFor="show-vat" className="text-zinc-400 text-xs">Show VAT</Label>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Title Text</Label>
-                                    <Input
-                                        value={selectedTemplate.titleText}
-                                        readOnly
-                                        className="bg-zinc-950 border-white/10 text-white mt-1"
-                                    />
-                                </div>
-
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Greeting Text</Label>
-                                    <Input className="bg-zinc-950 border-white/10 text-white mt-1" />
-                                </div>
-
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Promotion Text</Label>
-                                    <Input className="bg-zinc-950 border-white/10 text-white mt-1" />
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <Checkbox id="show-company" />
-                                    <Label htmlFor="show-company" className="text-zinc-400 text-xs">Show Company</Label>
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <Checkbox id="show-customer" />
-                                    <Label htmlFor="show-customer" className="text-zinc-400 text-xs">Show Customer</Label>
+                                {/* Right Column - Receipt Preview */}
+                                <div className="bg-white rounded-lg p-4 h-fit">
+                                    <div className="text-center border-b border-zinc-300 pb-2 mb-2">
+                                        <p className="text-xs text-zinc-600">T-3</p>
+                                        <p className="text-lg font-black text-zinc-900">{selectedTemplate.titleText}</p>
+                                        <p className="text-xs text-zinc-600">#4</p>
+                                        <p className="text-xs text-zinc-600">01 02 2026 19:30</p>
+                                        <p className="text-xs text-zinc-600">94331</p>
+                                        <p className="text-xs font-bold text-zinc-900">Nicolas Doe</p>
+                                        <p className="text-xs text-zinc-600">John Doe</p>
+                                    </div>
+                                    <div className="space-y-1 text-xs">
+                                        <div className="flex justify-between border-b border-zinc-200 pb-1">
+                                            <span className="font-bold text-zinc-900">#Item</span>
+                                            <span className="font-bold text-zinc-900">Cst. #</span>
+                                        </div>
+                                        <div>
+                                            <div className="flex justify-between">
+                                                <span className="text-orange-600 dark:text-orange-400">20ProductWithPricedAddition</span>
+                                                <span className="text-zinc-900">1</span>
+                                            </div>
+                                            <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
+                                            <p className="text-zinc-600 text-[10px] ml-2">* payedThree</p>
+                                        </div>
+                                        <div>
+                                            <div className="flex justify-between">
+                                                <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
+                                                <span className="text-zinc-900">2</span>
+                                            </div>
+                                            <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
+                                        </div>
+                                        <div>
+                                            <div className="flex justify-between">
+                                                <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
+                                                <span className="text-zinc-900">3</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            {/* Middle Column - Font Settings */}
-                            <div className="space-y-4">
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Font Name</Label>
-                                    <Select defaultValue="arial">
-                                        <SelectTrigger className="bg-zinc-950 border-white/10 text-white mt-1">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="arial">Arial</SelectItem>
-                                            <SelectItem value="arial-bold">Arial-BoldMT</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Font Size</Label>
-                                    <Input type="number" defaultValue="35" className="bg-zinc-950 border-white/10 text-white mt-1" />
-                                </div>
-
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Times Printed</Label>
-                                    <Input type="number" defaultValue="1" className="bg-zinc-950 border-white/10 text-white mt-1" />
-                                </div>
-
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Big Font Name</Label>
-                                    <Select defaultValue="arial-bold">
-                                        <SelectTrigger className="bg-zinc-950 border-white/10 text-white mt-1">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="arial">Arial</SelectItem>
-                                            <SelectItem value="arial-bold">Arial-BoldMT</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Big Font Size</Label>
-                                    <Input type="number" defaultValue="50" className="bg-zinc-950 border-white/10 text-white mt-1" />
-                                </div>
-
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Small Font Name</Label>
-                                    <Select defaultValue="arial">
-                                        <SelectTrigger className="bg-zinc-950 border-white/10 text-white mt-1">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="arial">Arial</SelectItem>
-                                            <SelectItem value="arial-bold">Arial-BoldMT</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Small Font Size</Label>
-                                    <Input type="number" defaultValue="30" className="bg-zinc-950 border-white/10 text-white mt-1" />
-                                </div>
-
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Item number width</Label>
-                                    <Input type="number" defaultValue="0" className="bg-zinc-950 border-white/10 text-white mt-1" />
-                                </div>
-
-                                <div>
-                                    <Label className="text-zinc-400 text-xs">Price Width</Label>
-                                    <Input type="number" defaultValue="0" className="bg-zinc-950 border-white/10 text-white mt-1" />
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <Checkbox id="show-total" />
-                                    <Label htmlFor="show-total" className="text-zinc-400 text-xs">Show Total Price</Label>
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <Checkbox id="show-waiter" defaultChecked />
-                                    <Label htmlFor="show-waiter" className="text-zinc-400 text-xs">Show waiter times</Label>
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <Checkbox id="signal-accessory" />
-                                    <Label htmlFor="signal-accessory" className="text-zinc-400 text-xs">Signal accessory</Label>
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <Checkbox id="show-sequence" defaultChecked />
-                                    <Label htmlFor="show-sequence" className="text-zinc-400 text-xs">Show sequence nr</Label>
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <Checkbox id="show-vat" />
-                                    <Label htmlFor="show-vat" className="text-zinc-400 text-xs">Show VAT</Label>
-                                </div>
-                            </div>
-
-                            {/* Right Column - Receipt Preview */}
-                            <div className="bg-white rounded-lg p-4 h-fit">
-                                <div className="text-center border-b border-zinc-300 pb-2 mb-2">
-                                    <p className="text-xs text-zinc-600">T-3</p>
-                                    <p className="text-lg font-black text-zinc-900">{selectedTemplate.titleText}</p>
-                                    <p className="text-xs text-zinc-600">#4</p>
-                                    <p className="text-xs text-zinc-600">01 02 2026 19:30</p>
-                                    <p className="text-xs text-zinc-600">94331</p>
-                                    <p className="text-xs font-bold text-zinc-900">Nicolas Doe</p>
-                                    <p className="text-xs text-zinc-600">John Doe</p>
-                                </div>
-                                <div className="space-y-1 text-xs">
-                                    <div className="flex justify-between border-b border-zinc-200 pb-1">
-                                        <span className="font-bold text-zinc-900">#Item</span>
-                                        <span className="font-bold text-zinc-900">Cst. #</span>
-                                    </div>
-                                    <div>
-                                        <div className="flex justify-between">
-                                            <span className="text-orange-600 dark:text-orange-400">20ProductWithPricedAddition</span>
-                                            <span className="text-zinc-900">1</span>
-                                        </div>
-                                        <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
-                                        <p className="text-zinc-600 text-[10px] ml-2">* payedThree</p>
-                                    </div>
-                                    <div>
-                                        <div className="flex justify-between">
-                                            <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
-                                            <span className="text-zinc-900">2</span>
-                                        </div>
-                                        <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
-                                    </div>
-                                    <div>
-                                        <div className="flex justify-between">
-                                            <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
-                                            <span className="text-zinc-900">3</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     )}
 
-                    <DialogFooter className="flex gap-2">
-                        <Button variant="destructive" className="bg-cyan-500 hover:bg-cyan-600">
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Delete
-                        </Button>
-                        <Button variant="outline" className="bg-cyan-500 hover:bg-cyan-600 text-white border-none">
-                            <Copy className="w-4 h-4 mr-2" />
-                            Copy
-                        </Button>
-                        <div className="flex-1" />
-                        <Button variant="outline" onClick={() => setEditTemplateModal(false)}>
-                            Cancel
-                        </Button>
-                        <Button className="bg-cyan-500 hover:bg-cyan-600">
-                            Ok
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+                            <DialogFooter className="flex gap-2">
+                                <Button variant="destructive" className="bg-red-500 hover:bg-red-600" onClick={handleDeleteTemplate}>
+                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    Delete
+                                </Button>
+                                <Button variant="outline" className="bg-cyan-500 hover:bg-cyan-600 text-white border-none" onClick={handleCopyTemplate}>
+                                    <Copy className="w-4 h-4 mr-2" />
+                                    Copy
+                                </Button>
+                                <div className="flex-1" />
+                                <Button variant="outline" onClick={() => setEditTemplateModal(false)}>
+                                    Cancel
+                                </Button>
+                                <Button className="bg-cyan-500 hover:bg-cyan-600" onClick={handleSaveTemplate}>
+                                    Save Changes
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                        </Dialog>
 
             {/* Add Cash Drawer Modal */}
             <Dialog open={addDrawerModal} onOpenChange={setAddDrawerModal}>

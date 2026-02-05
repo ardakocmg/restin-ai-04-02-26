@@ -202,6 +202,12 @@ import Analytics from "./pages/admin/Analytics";
 import PayrollMalta from "./pages/admin/hr/PayrollMalta"; // Scaffolding next
 import AccountingMalta from "./pages/admin/hr/AccountingMalta"; // Scaffolding next
 
+// RESTIN.AI Master Protocol
+import WebBuilder from "./features/restin/web/WebBuilder";
+import VoiceDashboard from "./features/restin/voice/VoiceDashboard";
+import StudioDashboard from "./features/restin/studio/StudioDashboard";
+import RadarDashboard from "./features/restin/radar/RadarDashboard";
+
 // Context
 import { AuthProvider } from "./features/auth/AuthContext";
 import { VenueProvider } from "./context/VenueContext";
@@ -439,6 +445,14 @@ function App() {
                                   <Route path="central-kitchen/orders" element={<InternalOrders />} />
                                   <Route path="recipe-engineering/cost" element={<CostAnalysis />} />
                                   <Route path="content-editor" element={<VisualContentEditor />} />
+
+                                  {/* RESTIN.AI MASTER PROTOCOL v18.0 */}
+                                  <Route path="/restin">
+                                    <Route path="web" element={<WebBuilder />} />
+                                    <Route path="voice" element={<VoiceDashboard />} />
+                                    <Route path="studio" element={<StudioDashboard />} />
+                                    <Route path="radar" element={<RadarDashboard />} />
+                                  </Route>
 
                                   <Route path="hr-reports">
                                     <Route path="employee-details" element={<EmployeeDetailsReport />} />

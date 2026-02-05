@@ -14,6 +14,7 @@ import { Checkbox } from "../../components/ui/checkbox";
 import { ScrollArea } from "../../components/ui/scroll-area";
 import ModifierModalNew from "../../components/ModifierModalNew"; // Updated Component
 import SplitBillModal from "../../components/SplitBillModal"; // New Feature
+import syncService from "../../services/SyncService";
 import {
   LogOut, X, Send, Trash2, Users, Grid3x3, Map, // Added Map
   UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus, Loader2, AlertTriangle, Printer
@@ -297,6 +298,8 @@ export default function POSRuntime() {
     return { subtotal, tax, total: subtotal + tax };
   };
 
+
+  // --- SEND ORDER (Offline-First Wrapper) ---
   const sendOrder = async () => {
     if (!selectedTable || orderItems.length === 0) {
       toast.error("No items in order");
@@ -310,96 +313,92 @@ export default function POSRuntime() {
     }
 
     sendInFlightRef.current = true;
-    setSendInProgress(true);  // Safe mode: send in progress
+    setSendInProgress(true); // Safe mode: send in progress
+    setLoading(true);
 
     try {
-      let orderId = currentOrder?.id;
-
-      // Generate stable idempotency key
-      const idempotencyKey = orderId
-        ? `order:${orderId}:send:${Date.now()}`
-        : `order:new:${selectedTable.id}:${Date.now()}`;
-
-      if (!orderId) {
-        // Create new order with idempotency
-        const response = await orderAPI.create({
-          venue_id: venueId,
-          table_id: selectedTable.id,
-          server_id: user?.id || 'server-001'
-        });
-        orderId = response.data.id;
-        setCurrentOrder(response.data);
-      }
-
-      // Add items to order
-      for (const item of orderItems) {
-        await orderAPI.addItem(orderId, {
-          menu_item_id: item.item_id,
-          quantity: item.quantity,
-          seat_number: item.seat || 1,
-          modifiers: item.modifiers || [],
-          notes: item.notes || "",
-          course: item.course || 1
-        });
-      }
-
-      // Send to kitchen with simplified options (auto KDS and stock)
-      const sendPayload = {
-        do_print: sendOptions.do_print,
-        do_kds: sendOptions.do_kds,
-        do_stock: sendOptions.do_stock,
-        client_send_id: idempotencyKey
+      // 1. Prepare Payload
+      const orderPayload = {
+        items: orderItems,
+        tableId: selectedTable.id,
+        waiterId: user?.id,
+        timestamp: new Date().toISOString()
       };
 
-      const sendResponse = await api.post(`/orders/${orderId}/send`, sendPayload, {
-        headers: { 'Idempotency-Key': idempotencyKey },
-        meta: { action: 'send_to_kitchen', suppressAutoRedirect: true, safeMode: true }
-      });
+      // 2. Try Online Send via SyncService logic (manual check here for clarity)
+      if (navigator.onLine) {
+        // Try Direct API first for speed
+        const orderId = currentOrder?.id;
 
-      // MEGA PATCH: Show appropriate success message
-      const roundInfo = sendResponse.data?.round_label || "";
-      if (sendOptions.do_kds) {
-        toast.success(`${roundInfo} sent to kitchen!`);
+        // If no ID, create it first (traditional flow)
+        let finalOrderId = orderId;
+        if (!finalOrderId) {
+          const res = await orderAPI.create({
+            venue_id: venueId,
+            status: 'OPEN',
+            table_id: selectedTable.id
+          });
+          finalOrderId = res.data.id;
+        }
+
+        // Add items loop (traditional)
+        for (const item of orderItems) {
+          await orderAPI.addItem(finalOrderId, {
+            menu_item_id: item.item_id,
+            quantity: item.quantity,
+            seat_number: item.seat || 1,
+            modifiers: item.modifiers || [],
+            notes: item.notes || "",
+            course: item.course || 1
+          });
+        }
+
+        // Send to kitchen
+        await api.post(`/orders/${finalOrderId}/send`, {
+          do_print: sendOptions.do_print,
+          do_kds: sendOptions.do_kds
+        });
+
+        toast.success(`Order Sent!`);
       } else {
-        toast.success(`${roundInfo} printed (no KDS)`);
+        // Offline Mode: Queue the composite command
+        await syncService.queuePOSOrder(orderPayload);
+        toast.warning("Offline: Order Queued for Sync 🟡");
+        // Trigger background sync attempt immediately
+        syncService.startSync();
       }
 
-      // Clear pending items and reload order
+      // 3. Clear Local State
       setOrderItems([]);
+      setOrderActive(false);
 
-      // Reload order to show sent items with rounds
-      const orderResponse = await orderAPI.get(orderId);
-      setCurrentOrder(orderResponse.data);
-      setOrderItems([]);
-      setOrderActive(false);  // Safe mode: order completed
+      // Reload table status (if online)
+      if (navigator.onLine) {
+        try {
+          const tablesRes = await venueAPI.getTables(venueId);
+          setTables(tablesRes.data);
+        } catch (e) { console.warn("Failed to refresh tables", e); }
+      }
 
-      // Reload table status
-      const tablesRes = await venueAPI.getTables(venueId);
-      setTables(tablesRes.data);
     } catch (error) {
-      console.error("Failed to send order:", error);
+      console.error('Send failed:', error);
 
-      // Safe mode: Extract error, show in-place, NO navigate
-      const errorDetail = error.response?.data?.detail;
-      let errorMsg = "Failed to send order";
-
-      if (typeof errorDetail === 'object' && errorDetail?.code) {
-        errorMsg = errorDetail.message || errorDetail.code;
-      } else if (typeof errorDetail === 'string') {
-        errorMsg = errorDetail;
-      } else if (error.message) {
-        errorMsg = error.message;
-      }
-
-      toast.error(errorMsg);
-
-      // If offline, queue the action
-      if (!navigator.onLine) {
-        toast.info("Order queued - will send when online");
+      // Safety Net: Queue if it was a network error during the process
+      if (!navigator.onLine || error.code === 'ERR_NETWORK' || error.message.includes('timeout')) {
+        const orderPayload = { items: orderItems, tableId: selectedTable.id, waiterId: user?.id };
+        await syncService.queuePOSOrder(orderPayload);
+        toast.warning("Network Error: Order Queued 🟡");
+        setOrderItems([]);
+        setOrderActive(false);
+      } else {
+        setLoadingError(error.message || "Failed to send order");
+        toast.error("Failed to send order. Server rejected request.");
+        // Do NOT clear items so user can try again
       }
     } finally {
       sendInFlightRef.current = false;
       setSendInProgress(false);
+      setLoading(false);
     }
   };
 

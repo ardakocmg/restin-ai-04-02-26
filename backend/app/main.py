@@ -106,3 +106,25 @@ async def reveal_sensitive_data(
 async def calculate_payroll(request: PayrollRequest):
     logger.info(f"Payroll calculation requested for {request.gross_annual}")
     return MaltaPayrollEngine.calculate(request.gross_annual, request.tax_category, request.cola_eligible)
+
+@app.post("/ai/generate")
+async def generate_ai_content(
+    provider: str = Body(...),
+    model: str = Body(...),
+    prompt: str = Body(...)
+):
+    """
+    Master Protocol v18.0 AI Gateway
+    Mocks the connection to Vertex AI/Gemini for the frontend wrapper.
+    """
+    logger.info(f"AI Generation Request: {provider}/{model} - Length: {len(prompt)}")
+    
+    # Simulation Logic
+    import time
+    time.sleep(1.5) # Simulate latency
+    
+    return {
+        "text": f"**[AI Generated Content]**\nBased on your request for '{prompt[:30]}...', here is a simulated response from {model}. In production, this would connect to Vertex AI.",
+        "usage": {"prompt_tokens": 50, "candidate_tokens": 100, "total_tokens": 150},
+        "citationMetadata": {"citations": []}
+    }

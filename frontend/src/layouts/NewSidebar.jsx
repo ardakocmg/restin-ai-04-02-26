@@ -7,7 +7,8 @@ import {
   ChevronLeft, ChevronRight, LayoutDashboard, ShoppingCart, Users, FileText,
   DollarSign, BarChart3, Settings, Activity, TrendingUp, Factory, Award,
   Table as TableIcon, Calendar, Truck, PieChart as PieChartIcon,
-  UserCheck, Receipt, Clock, Package, Type, Building2, Search
+  UserCheck, Receipt, Clock, Package, Type, Building2, Search, Upload, Monitor,
+  Globe, Mic, Wand2, Radar
 } from 'lucide-react';
 
 const menuItems = [
@@ -44,9 +45,19 @@ const menuItems = [
   { title: 'Loyalty Program', icon: Award, href: '/admin/loyalty', group: 'pos' },
   { title: 'Operational Timeline', icon: Clock, href: '/admin/reservations/timeline', group: 'pos' },
   { title: 'Devices', icon: Activity, href: '/admin/devices', group: 'pos' },
-  { title: 'Printers', icon: Receipt, href: '/admin/printers', group: 'pos' },
+  {
+    title: 'Printer Management',
+    icon: Receipt,
+    group: 'pos',
+    href: '/admin/printers',
+    subs: [
+      { title: 'Printers', id: 'printers', href: '/admin/printers?tab=printers' },
+      { title: 'Templates', id: 'templates', href: '/admin/printers?tab=templates' },
+      { title: 'Cash Drawers', id: 'drawers', href: '/admin/printers?tab=cash-drawers' }
+    ]
+  },
 
-  { title: 'Cash Drawers', icon: DollarSign, href: '/admin/printers?tab=cash-drawers', group: 'pos' },
+
   { title: 'Tasks Kanban', icon: LayoutDashboard, href: '/admin/tasks-kanban', group: 'pos' },
   { title: 'Inbox', icon: Activity, href: '/admin/inbox', group: 'pos' },
   { title: 'Service Day Close', icon: Clock, href: '/admin/service-day-close', group: 'pos' },
@@ -100,6 +111,7 @@ const menuItems = [
 
   // INVENTORY & SUPPLY CHAIN
   { title: 'General Settings', icon: Settings, href: '/admin/menu', group: 'menu' },
+  { title: 'Menu Import', icon: Upload, href: '/admin/menu-import', group: 'menu' },
   {
     title: 'Inventory Hub',
     icon: Package,
@@ -127,7 +139,8 @@ const menuItems = [
 
   // FINANCE
   { title: 'Finance Dashboard', icon: DollarSign, href: '/admin/finance', group: 'finance' },
-  { title: 'Accounting', icon: FileText, href: '/admin/hr-advanced/accounting', group: 'finance' },
+  { title: 'General Ledger', icon: FileText, href: '/admin/accounting', group: 'finance' },
+  { title: 'HR Accounting', icon: FileText, href: '/admin/hr-advanced/accounting', group: 'finance' },
   { title: 'Audit Logs', icon: Activity, href: '/admin/audit-logs', group: 'finance' },
 
   // ANALYTICS & REPORTS
@@ -149,6 +162,7 @@ const menuItems = [
       { title: 'Export Data', id: 'export' }
     ]
   },
+  { title: 'Business Analytics', icon: TrendingUp, href: '/admin/analytics', group: 'reports' },
   { title: 'HR Analytics', icon: BarChart3, href: '/admin/hr-advanced/analytics', group: 'reports' },
   { title: 'KDS Performance', icon: Activity, href: '/admin/reports/kds-performance-detailed', group: 'reports' },
   { title: 'Inventory Analytics', icon: PieChartIcon, href: '/admin/reports/inventory-detailed', group: 'reports' },
@@ -160,11 +174,40 @@ const menuItems = [
   { title: 'Users', icon: UserCheck, href: '/admin/users', group: 'settings' },
   { title: 'Access Control', icon: Award, href: '/admin/access-control', group: 'settings' },
   { title: 'Event Monitor', icon: Activity, href: '/admin/events', group: 'settings' },
-  { title: 'Devices', icon: Activity, href: '/admin/devices', group: 'settings' },
+  {
+    title: 'Device Manager',
+    icon: Monitor,
+    group: 'settings',
+    href: '/admin/devices',
+    subs: [
+      { title: 'Device List', id: 'list', href: '/admin/devices' },
+      { title: 'Device Hub', id: 'hub', href: '/admin/device-hub' },
+      { title: 'Device Mapping', id: 'map', href: '/admin/device-mapping' }
+    ]
+  },
   { title: 'Content Studio', icon: LayoutDashboard, href: '/admin/content-studio', group: 'settings' },
   { title: 'Content Editor', icon: Type, href: '/admin/content-editor', group: 'settings' },
   { title: 'Theme Customizer', icon: Palette, href: '/admin/theme', group: 'settings' },
   { title: 'Microservices', icon: Server, href: '/admin/microservices', group: 'settings' },
+  {
+    title: 'System Intelligence',
+    icon: Activity,
+    href: '/admin/monitoring',
+    group: 'settings',
+    subs: [
+      { title: 'Real-time Monitor', id: 'monitor', href: '/admin/monitoring' },
+      { title: 'System Logs', id: 'logs', href: '/admin/logs' },
+      { title: 'Advanced Health', id: 'health', href: '/admin/system-health-advanced' },
+      { title: 'Error Inbox', id: 'errors', href: '/admin/observability/error-inbox' },
+      { title: 'Test Panel', id: 'test', href: '/admin/observability/testpanel' }
+    ]
+  },
+
+  // RESTIN.AI COMMERCIAL MODULES (Protocol v18.0)
+  { title: 'Website Builder', icon: Globe, href: '/restin/web', group: 'restin' },
+  { title: 'Voice AI', icon: Mic, href: '/restin/voice', group: 'restin' },
+  { title: 'Content Studio', icon: Wand2, href: '/restin/studio', group: 'restin' },
+  { title: 'Market Radar', icon: Radar, href: '/restin/radar', group: 'restin' },
 ];
 
 export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDomainExpand }) {
@@ -179,6 +222,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     { id: 'inventory', title: 'Inventory', icon: FileText },
     { id: 'finance', title: 'Finance', icon: DollarSign },
     { id: 'analytics', title: 'Reporting', icon: BarChart3 },
+    { id: 'restin', title: 'Restin OS', icon: Globe }, // NEW TOP LEVEL
     { id: 'settings', title: 'Settings', icon: Settings }
   ];
 
@@ -190,6 +234,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     if (['menu', 'procurement', 'production'].includes(group)) return 'inventory';
     if (['finance'].includes(group)) return 'finance';
     if (['reports'].includes(group)) return 'analytics';
+    if (['restin'].includes(group)) return 'restin'; // Explicit Domain Mapping
     if (['settings'].includes(group)) return 'settings';
     return 'home';
   };

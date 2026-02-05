@@ -46,11 +46,10 @@ export default function PurchaseOrdersNew() {
       setInventoryItems(itemsRes.data || []);
     } catch (error) {
       console.error("Failed to load PO data", error);
-      // Graceful fallback for missing suppliers endpoint
-      setSuppliers([
-        { id: "supp-1", name: "Metro Cash & Carry" },
-        { id: "supp-2", name: "Local Veg Guys" }
-      ]);
+      console.error("Failed to load PO data", error);
+      toast.error("Failed to load procurement data from server");
+      // STRICT MODE: No fallback
+      setSuppliers([]);
       setLoading(false);
     } finally {
       setLoading(false);

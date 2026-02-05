@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "../../lib/api";
-import { Loader2, Activity, ShieldAlert, DollarSign, Users, Wifi, Calendar } from "lucide-react";
+import { Loader2, Activity, ShieldAlert, DollarSign, Users, Wifi, Calendar, Monitor } from "lucide-react";
+import { Button } from "../../components/ui/button";
 import SalesChart from "../../components/analytics/SalesChart";
 import { format } from "date-fns";
 import { ScrollArea } from "../../components/ui/scroll-area";
@@ -102,12 +103,59 @@ export default function SystemDashboard() {
                     </div>
                     <Wifi className="w-8 h-8 text-indigo-500 opacity-50 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div onClick={() => window.location.href = '/admin/observability'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-green-400/50 transition-colors group">
-                    <div>
-                        <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">System Health</div>
-                        <div className="text-2xl font-bold text-green-400">GOOD</div>
+                <div>
+                    <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">System Health</div>
+                    <div className="text-2xl font-bold text-green-400">GOOD</div>
+                </div>
+                <ShieldAlert className="w-8 h-8 text-green-500 opacity-50 group-hover:opacity-100 transition-opacity" />
+            </div>
+        </div>
+
+            {/* RESTORED LEGACY: Quick Actions & Config */ }
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Venue Config */}
+                <div className="bg-zinc-900 border border-white/10 rounded-xl p-6">
+                    <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+                        <Activity className="w-4 h-4 text-zinc-500" />
+                        Venue Configuration
+                    </h3>
+                    <div className="space-y-4">
+                         <div className="flex justify-between items-center pb-2 border-b border-white/5">
+                            <span className="text-zinc-500 text-sm">Course Pacing</span>
+                            <span className="text-white font-mono text-sm">Enabled (15m)</span>
+                        </div>
+                        <div className="flex justify-between items-center pb-2 border-b border-white/5">
+                            <span className="text-zinc-500 text-sm">Review Policy</span>
+                            <span className="text-white font-mono text-sm">Strict (4.5+)</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-zinc-500 text-sm">Operation Mode</span>
+                            <span className="text-green-500 font-bold text-xs bg-green-500/10 px-2 py-1 rounded">LIVE SERVICE</span>
+                        </div>
                     </div>
-                    <ShieldAlert className="w-8 h-8 text-green-500 opacity-50 group-hover:opacity-100 transition-opacity" />
+                </div>
+
+                {/* Quick Launch */}
+                <div className="bg-gradient-to-br from-red-900/20 to-zinc-900 border border-red-500/20 rounded-xl p-6">
+                    <h3 className="text-red-400 font-bold mb-2 flex items-center gap-2">
+                        <Monitor className="w-5 h-5" />
+                        Point of Sale
+                    </h3>
+                    <p className="text-zinc-500 text-sm mb-4">Launch the main POS terminal interface.</p>
+                    <Button onClick={() => window.location.href='/pos/setup'} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold">
+                        Open POS
+                    </Button>
+                </div>
+
+                <div className="bg-gradient-to-br from-blue-900/20 to-zinc-900 border border-blue-500/20 rounded-xl p-6">
+                     <h3 className="text-blue-400 font-bold mb-2 flex items-center gap-2">
+                        <Wifi className="w-5 h-5" />
+                        Kitchen Display
+                    </h3>
+                    <p className="text-zinc-500 text-sm mb-4">Launch KDS station interface.</p>
+                    <Button onClick={() => window.location.href='/kds/setup'} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold">
+                        Open KDS
+                    </Button>
                 </div>
             </div>
 
@@ -142,6 +190,6 @@ export default function SystemDashboard() {
                     </ScrollArea>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

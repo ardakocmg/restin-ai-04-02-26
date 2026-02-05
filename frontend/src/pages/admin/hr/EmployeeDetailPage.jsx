@@ -27,8 +27,7 @@ import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Eye } from 'lucide-react';
 
-// Mock API for development since backend might not fully support new structure yet
-import seedData from '@/data/seed-master.json';
+// Mock API import removed
 
 function EmployeePayrollHistoryLocal({ employeeCode }) {
   // ... (Keep existing implementation for history, assuming it relies on separate endpoint)
@@ -53,17 +52,12 @@ export default function EmployeeDetailPage() {
 
   const fetchData = async () => {
     try {
-      // DIRECT SEED DATA ACCESS FOR PROTOCOL v3.5 COMPLIANCE
-      const employee = seedData.employees.find(e => e.id === employeeCode);
-      if (employee) {
-        setData(employee);
-      } else {
-        // Fallback to API if not in seed (rare)
-        const response = await api.get(`employees/${employeeCode}`);
-        setData(response.data);
-      }
+      // STRICT DATABASE MODE: No seed fallback
+      const response = await api.get(`employees/${employeeCode}`);
+      setData(response.data);
     } catch (error) {
       console.error('Failed to fetch employee details:', error);
+      toast.error('Failed to retrieve employee record from database');
     } finally {
       setLoading(false);
     }

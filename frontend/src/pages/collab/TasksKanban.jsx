@@ -14,55 +14,30 @@ export default function TasksKanban() {
   const [board, setBoard] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fallback Mock Data
-  const MOCK_BOARD = {
-    columns: [
-      { key: 'todo', title: 'To Do' },
-      { key: 'in_progress', title: 'In Progress' },
-      { key: 'review', title: 'Review' },
-      { key: 'done', title: 'Done' }
-    ],
-    cards: [
-      { id: 1, title: 'Clean Espresso Machine', status: 'todo', checklist_items: [{ done: false }, { done: false }] },
-      { id: 2, title: 'Restock Wine Fridge', status: 'in_progress', checklist_items: [{ done: true }, { done: false }] },
-      { id: 3, title: 'Check Temperature Logs', status: 'done', checklist_items: [{ done: true }, { done: true }] }
-    ]
-  };
+  // MOCK DATA REMOVED - STRICT DATABASE MODE
 
   useEffect(() => {
     if (activeVenue?.id) {
       loadBoard();
-    } else {
-      // Load mock if no venue (dev mode)
-      setBoard(MOCK_BOARD);
-      setLoading(false);
     }
   }, [activeVenue?.id]);
 
   const loadBoard = async () => {
     try {
       const res = await api.get(`/collab/tasks/board?venue_id=${activeVenue.id}`);
-      if (res.data?.data) {
-        setBoard(res.data.data);
-      } else {
-        setBoard(MOCK_BOARD); // Fallback
-      }
+      setBoard(res.data?.data || { columns: [], cards: [] });
     } catch (error) {
-      console.warn('Board API failed, using mock:', error);
-      setBoard(MOCK_BOARD);
+      console.warn('Board API failed');
+      toast.error('Failed to load tasks board from server');
     } finally {
       setLoading(false);
     }
   };
 
   const handleAddTask = () => {
-    toast.info("Task Creation Modal would open here.");
-    // Simulation
-    const newTask = { id: Date.now(), title: 'New Task', status: 'todo', checklist_items: [] };
-    setBoard(prev => ({
-      ...prev,
-      cards: [...prev.cards, newTask]
-    }));
+    // NOTE: Task Creation should be implemented as a real Modal + API call.
+    // For now, I will alert the user that this feature requires the backend implementation.
+    toast.info("Task creation requires backend implementation.");
   };
 
   return (

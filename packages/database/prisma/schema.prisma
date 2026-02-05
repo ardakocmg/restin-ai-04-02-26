@@ -33,6 +33,34 @@ model Organization {
   recipes     Recipe[]
   menus       Menu[]
   taxRules    TaxRule[]
+
+  // ==================================================================================
+  // MASTER PROTOCOL v18.0 RELATIONS
+  // ==================================================================================
+  
+  // Pillar 0: Commercial
+  subscriptionPlanId String?
+  subscriptionPlan   SubscriptionPlan? @relation(fields: [subscriptionPlanId], references: [id])
+  moduleConfig       ModuleConfig?
+  storageBilling     StorageBilling?
+
+  // Pillar 2: Web
+  marketingSite      MarketingSite?
+  
+  // Pillar 3: CRM (Autopilot)
+  customerProfiles   CustomerProfile[]
+  marketingCampaigns MarketingCampaign[]
+
+  // Pillar 4: Voice
+  voiceConfig        VoiceConfig?
+  callLogs           CallLog[]
+
+  // Pillar 5: Studio
+  brandIdentity      BrandIdentity?
+  mediaAssets        MediaAsset[]
+
+  // Pillar 6: Radar
+  competitors        Competitor[]
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -66,6 +94,9 @@ model Branch {
   orders         Order[]
   fiscalDrifts   FiscalDrift[]
   stockCounts    StockCount[]
+  
+  // Pillar 7: Hub
+  aggregatorConfig AggregatorConfig?
   
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -435,4 +466,273 @@ model StockCountItem {
   costImpact     Int?
   
   @@index([stockCountId])
+}
+
+// ==================================================================================
+// PILLAR 0: COMMERCIAL ENGINE (Billing & Brokerage)
+// ==================================================================================
+
+model SubscriptionPlan {
+  id          String   @id @default(uuid())
+  name        String   @unique // "Starter", "Pro", "Enterprise"
+  basePrice   Decimal  @default(0.0)
+  currency    String   @default("EUR")
+  
+  features    String   // JSON List of active pillars/features
+  limits      String?  // JSON Limits (e.g. maxTasks, maxUsers)
+  
+  tenants     Organization[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ModuleConfig {
+  id             String       @id @default(uuid())
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  // Feature Toggles
+  hasVoice       Boolean      @default(false)
+  hasRadar       Boolean      @default(false)
+  hasStudio      Boolean      @default(false)
+  hasWeb         Boolean      @default(false)
+  hasCrm         Boolean      @default(false)
+  
+  // Custom Pricing Overrides
+  customMonthlyPrice Decimal?
+  
+  updatedAt      DateTime     @updatedAt
+}
+
+model AiBrokerConfig {
+  id             String       @id @default(uuid())
+  provider       String       // "GOOGLE", "OPENAI", "ELEVENLABS"
+  model          String       // "gemini-1.5-flash", "gpt-4o"
+  
+  costPerUnit    Decimal      // Our wholesale cost per 1k tokens
+  sellPricePerUnit Decimal    // Tenant retail price per 1k tokens
+  
+  unitType       String       @default("TOKEN") // "TOKEN", "SECOND", "IMAGE"
+  
+  isActive       Boolean      @default(true)
+}
+
+model StorageBilling {
+  id             String       @id @default(uuid())
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  totalMediaSizeMB Float      @default(0.0)
+  totalVectorCount Int        @default(0)
+  
+  usageHistory   String?      // JSON History
+  
+  updatedAt      DateTime     @updatedAt
+}
+
+// ==================================================================================
+// PILLAR 1: AI INFRASTRUCTURE (Google First)
+// ==================================================================================
+
+model GoogleGrounding {
+  id          String   @id @default(uuid())
+  query       String   @unique
+  result      String   // JSON Cached Result
+  source      String   // "SEARCH", "MAPS"
+  
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+}
+
+// ==================================================================================
+// PILLAR 2: WEB ARCHITECT (Digital Storefront)
+// ==================================================================================
+
+model MarketingSite {
+  id             String       @id @default(uuid())
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  domain         String?
+  themeConfig    String?      // JSON Theme
+  seoConfig      String?      // JSON SEO Tags
+  
+  sections       WebSection[]
+  
+  isPublished    Boolean      @default(false)
+  publishedAt    DateTime?
+  
+  updatedAt      DateTime     @updatedAt
+}
+
+model WebSection {
+  id             String        @id @default(uuid())
+  siteId         String
+  site           MarketingSite @relation(fields: [siteId], references: [id])
+  
+  type           String        // "HERO", "MENU", "TESTIMONIALS"
+  content        String        // JSON Content
+  sortOrder      Int           @default(0)
+  
+  // Link to Inventory
+  linkedCategoryId String?
+  
+  updatedAt      DateTime      @updatedAt
+  
+  @@index([siteId])
+}
+
+// ==================================================================================
+// PILLAR 3: AUTOPILOT CRM
+// ==================================================================================
+
+model CustomerProfile {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  phone          String?
+  email          String?
+  name           String?
+  
+  churnScore     Float        @default(0.0) // 0-100 High Risk
+  tasteTags      String?      // JSON Array ["Spicy", "Vegan"]
+  
+  lastVisit      DateTime?
+  visitCount     Int          @default(0)
+  totalSpent     Decimal      @default(0.0)
+  
+  campaigns      MarketingCampaign[] // Many-to-Many ideally, simplified here
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  @@unique([organizationId, phone])
+  @@index([churnScore])
+}
+
+model MarketingCampaign {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  name           String
+  type           String       // "SMS", "EMAIL"
+  status         String       // "DRAFT", "SENT"
+  
+  targetSegment  String?      // JSON Logic
+  
+  aiGeneratedContent String?
+  
+  sentCount      Int          @default(0)
+  clickCount     Int          @default(0)
+  
+  customers      CustomerProfile[]
+  
+  createdAt      DateTime     @default(now())
+}
+
+// ==================================================================================
+// PILLAR 4: VOICE AI
+// ==================================================================================
+
+model VoiceConfig {
+  id             String       @id @default(uuid())
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  persona        String       @default("PROFESSIONAL") // "CASUAL", "BRITISH_BUTLER"
+  knowledgeBase  String?      // JSON Array of PDF IDs
+  
+  isEnabled      Boolean      @default(false)
+  forwardNumber  String?
+  
+  updatedAt      DateTime     @updatedAt
+}
+
+model CallLog {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  callerNumber   String?
+  durationSeconds Int
+  summary        String?
+  actionTaken    String?      // "RESERVATION", "MENU_QUERY"
+  
+  costCents      Int          // Calculated from AiBroker
+  
+  createdAt      DateTime     @default(now())
+  
+  @@index([organizationId])
+}
+
+// ==================================================================================
+// PILLAR 5: THE STUDIO
+// ==================================================================================
+
+model BrandIdentity {
+  id             String       @id @default(uuid())
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  visualStyle    String?      // "MINIMALIST", "RUSTIC"
+  toneOfVoice    String?      // "WITTY", "FORMAL"
+  colorPalette   String?      // JSON Array
+  
+  updatedAt      DateTime     @updatedAt
+}
+
+model MediaAsset {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  url            String
+  type           String       // "IMAGE", "VIDEO"
+  source         String       // "UPLOAD", "GENERATED"
+  
+  tags           String?      // JSON Array
+  
+  createdAt      DateTime     @default(now())
+  
+  @@index([organizationId])
+}
+
+// ==================================================================================
+// PILLAR 6: DEEP INTELLIGENCE (Radar)
+// ==================================================================================
+
+model Competitor {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  name           String
+  googlePlaceId  String?
+  
+  trackedProducts String?     // JSON (Burger -> Price)
+  lastScrapedAt  DateTime?
+  
+  @@index([organizationId])
+}
+
+// ==================================================================================
+// PILLAR 7: HUB & AGGREGATOR
+// ==================================================================================
+
+model AggregatorConfig {
+  id             String       @id @default(uuid())
+  branchId       String       @unique
+  branch         Branch       @relation(fields: [branchId], references: [id])
+  
+  uberEatsKey    String?
+  woltKey        String?
+  boltFoodKey    String?
+  
+  isEnabled      Boolean      @default(false)
+  autoAccept     Boolean      @default(true)
+  
+  updatedAt      DateTime     @updatedAt
 }
