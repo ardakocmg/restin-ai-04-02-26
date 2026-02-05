@@ -312,6 +312,22 @@ export default function RecipeManagement() {
           <Button
             variant="outline"
             size="sm"
+            className="border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10"
+            onClick={async () => {
+              try {
+                const res = await api.post('migrations/backfill-item-ids');
+                toast.success(`✅ ${res.data?.message || 'Item IDs assigned!'}`);
+                loadData(); // Refresh
+              } catch (e) {
+                toast.error('Failed to assign Item IDs');
+              }
+            }}
+          >
+            🔧 Fix Item IDs
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             className="border-orange-500/50 text-orange-400 hover:bg-orange-500/10"
             onClick={() => navigate('/admin/migration')}
           >
