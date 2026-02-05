@@ -1,17 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
-import api from '../../../../lib/api';
+import api from '../../../lib/api';
 import { toast } from 'sonner';
 import {
   Loader2, ShoppingCart, Plus, FileText, CheckCircle,
   Send, XCircle, Search, Truck
 } from 'lucide-react';
-import { Button } from '../../../../components/ui/button';
-import { Badge } from '../../../../components/ui/badge';
-import { Input } from '../../../../components/ui/input';
-import { Card, CardHeader, CardTitle, CardContent } from '../../../../components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../../../components/ui/dialog';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../../../../components/ui/table';
+import { Button } from '../../../components/ui/button';
+import { Badge } from '../../../components/ui/badge';
+import { Input } from '../../../components/ui/input';
+import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../../components/ui/dialog';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../../../components/ui/table';
 
 export default function PurchaseOrdersNew() {
   const [orders, setOrders] = useState([]);

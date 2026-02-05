@@ -19,7 +19,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    # ALLOW ALL ORIGINS for Local Restaurant LAN (Tablets, KDS, Phones)
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -127,4 +128,15 @@ async def generate_ai_content(
         "text": f"**[AI Generated Content]**\nBased on your request for '{prompt[:30]}...', here is a simulated response from {model}. In production, this would connect to Vertex AI.",
         "usage": {"prompt_tokens": 50, "candidate_tokens": 100, "total_tokens": 150},
         "citationMetadata": {"citations": []}
+    }
+
+@app.get("/api/system/version")
+async def get_system_version():
+    """
+    Returns the current system build version to prevent frontend 404 errors.
+    """
+    return {
+        "version": "1.0.0",
+        "build_id": "dev-build-2026",
+        "environment": "development"
     }

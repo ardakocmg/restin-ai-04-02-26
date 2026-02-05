@@ -145,6 +145,7 @@ import Operations from "./pages/admin/Operations";
 import POSDashboard from "./pages/admin/POSDashboard";
 import ProductManagement from "./pages/admin/ProductManagement";
 import CompanySettings from "./pages/admin/CompanySettings";
+import SettingsHub from "./pages/admin/SettingsHub";
 import ESGModule from "./pages/admin/hr/ESGModule";
 import GovReportsPage from "./pages/admin/hr/GovReportsPage";
 import SickLeaveAnalysis from "./pages/admin/hr/SickLeaveAnalysis";
@@ -205,6 +206,8 @@ import AccountingMalta from "./pages/admin/hr/AccountingMalta"; // Scaffolding n
 // RESTIN.AI Master Protocol
 import WebBuilder from "./features/restin/web/WebBuilder";
 import VoiceDashboard from "./features/restin/voice/VoiceDashboard";
+import VoiceSettings from "./features/restin/voice/VoiceSettings";
+import CallLogs from "./features/restin/voice/CallLogs";
 import StudioDashboard from "./features/restin/studio/StudioDashboard";
 import RadarDashboard from "./features/restin/radar/RadarDashboard";
 
@@ -259,10 +262,11 @@ function RootOverlays() {
         const serverBuild = v?.build_id || "";
         const lastBuild = localStorage.getItem("last_build_id") || "";
         if (lastBuild && serverBuild && lastBuild !== serverBuild) {
-          clearSessionHard();
+          // clearSessionHard(); // DISABLED: Causing loop
           if (!mounted) return;
-          setShowVersionWarning(true);
-          openAuthExpiredModal({ reason: "DEPLOYMENT_CHANGED" });
+          // setShowVersionWarning(true); // DISABLED: Causing confusion
+          // openAuthExpiredModal({ reason: "DEPLOYMENT_CHANGED" });
+          console.warn("Version mismatch detected (ignored for dev)");
         }
         if (serverBuild) localStorage.setItem("last_build_id", serverBuild);
       } catch (e) {
@@ -272,8 +276,8 @@ function RootOverlays() {
 
     const onAuthExpired = (e) => {
       if (!mounted) return;
-      console.log('🚨 [AUTH] Expired event received:', e.detail);
-      openAuthExpiredModal({ reason: e.detail?.reason || "AUTH_EXPIRED" });
+      console.log('🚨 [AUTH] Expired event received (Ignored):', e.detail);
+      // openAuthExpiredModal({ reason: e.detail?.reason || "AUTH_EXPIRED" }); // DISABLED
     };
     window.addEventListener("auth-expired", onAuthExpired);
     return () => {
@@ -447,9 +451,11 @@ function App() {
                                   <Route path="content-editor" element={<VisualContentEditor />} />
 
                                   {/* RESTIN.AI MASTER PROTOCOL v18.0 */}
-                                  <Route path="/restin">
+                                  <Route path="restin">
                                     <Route path="web" element={<WebBuilder />} />
                                     <Route path="voice" element={<VoiceDashboard />} />
+                                    <Route path="voice/settings" element={<VoiceSettings />} />
+                                    <Route path="voice/logs" element={<CallLogs />} />
                                     <Route path="studio" element={<StudioDashboard />} />
                                     <Route path="radar" element={<RadarDashboard />} />
                                   </Route>
@@ -487,9 +493,9 @@ function App() {
                                   </Route>
 
                                   <Route path="hr">
-                                    <Route index element={<HRHomeIndigo />} />
+                                    <Route index element={<HRHomeIndigoPage />} />
                                     <Route path="people" element={<EmployeeDirectory />} />
-                                    <Route path="analytics" element={<HRAnalytics />} />
+                                    <Route path="analytics" element={<HRAnalyticsIndigo />} />
                                     <Route path="payroll" element={<PayrollPage />} />
                                     {/* Restored Legacy Modules */}
                                     <Route path="esg" element={<ESGModule />} />
@@ -499,8 +505,8 @@ function App() {
                                     <Route path="portal-view" element={<EmployeePortal />} />
                                     <Route path="timesheets" element={<TimesheetsIndices />} />
 
-                                    <Route path="settings" element={<AdminSettings />} />
-                                    <Route path="contracts" element={<Contracts />} />
+                                    <Route path="settings" element={<AdminSettingsIndigo />} />
+                                    <Route path="contracts" element={<ContractsIndigo />} />
 
                                     {/* Restored Sub-Routes */}
                                     <Route path="people/:employeeCode" element={<EmployeeDetailPage />} />

@@ -17,10 +17,10 @@ export default function POSFeature() {
     const categories = ['All', 'Starters', 'Mains', 'Desserts', 'Drinks'];
 
     const addToCart = (item: any) => { // Using any for seed inventory item
-        setCart(prev => {
+        setCart((prev: OrderItem[]) => {
             const existing = prev.find(i => i.name === item.name);
             if (existing) {
-                return prev.map(i => i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i);
+                return prev.map(i => i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i) as any;
             }
             return [...prev, { name: item.name, quantity: 1, priceCents: item.priceCents }];
         });

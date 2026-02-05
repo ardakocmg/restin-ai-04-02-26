@@ -4,7 +4,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import api from '../../../../lib/api';
 import { Loader2, FileText, Download } from 'lucide-react';
 import { Button } from '../../../../components/ui/button';
-import { DataTable } from '../../../../components/ui/data-table'; // Assuming exists
+
 
 export default function EmployeeDetailsReport() {
   const { user } = useAuth();

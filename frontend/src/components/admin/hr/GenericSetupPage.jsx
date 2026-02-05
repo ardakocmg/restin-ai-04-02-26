@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../../../context/AuthContext';
-import api from '../../../../lib/api';
+import { useAuth } from '../../../context/AuthContext';
+import api from '../../../lib/api';
 import { toast } from 'sonner';
 import { Plus, Trash2, Search, Building2, Code, FileText, Loader2 } from 'lucide-react';
-import { Button } from '../../../../components/ui/button';
-import { Input } from '../../../../components/ui/input';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogFooter,
-} from "../../../../components/ui/dialog";
+} from "../../../components/ui/dialog";
 import {
     Table,
     TableBody,
@@ -19,7 +19,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "../../../../components/ui/table";
+} from "../../../components/ui/table";
 
 /**
  * Generic Setup Page for HR Dictionaries

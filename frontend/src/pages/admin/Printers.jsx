@@ -552,68 +552,69 @@ export default function Printers() {
                                         <Label htmlFor="show-vat" className="text-zinc-400 text-xs">Show VAT</Label>
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* Right Column - Receipt Preview */}
-                                <div className="bg-white rounded-lg p-4 h-fit">
-                                    <div className="text-center border-b border-zinc-300 pb-2 mb-2">
-                                        <p className="text-xs text-zinc-600">T-3</p>
-                                        <p className="text-lg font-black text-zinc-900">{selectedTemplate.titleText}</p>
-                                        <p className="text-xs text-zinc-600">#4</p>
-                                        <p className="text-xs text-zinc-600">01 02 2026 19:30</p>
-                                        <p className="text-xs text-zinc-600">94331</p>
-                                        <p className="text-xs font-bold text-zinc-900">Nicolas Doe</p>
-                                        <p className="text-xs text-zinc-600">John Doe</p>
+                            {/* Right Column - Receipt Preview */},
+                            <div className="bg-white rounded-lg p-4 h-fit">
+                                <div className="text-center border-b border-zinc-300 pb-2 mb-2">
+                                    <p className="text-xs text-zinc-600">T-3</p>
+                                    <p className="text-lg font-black text-zinc-900">{selectedTemplate.titleText}</p>
+                                    <p className="text-xs text-zinc-600">#4</p>
+                                    <p className="text-xs text-zinc-600">01 02 2026 19:30</p>
+                                    <p className="text-xs text-zinc-600">94331</p>
+                                    <p className="text-xs font-bold text-zinc-900">Nicolas Doe</p>
+                                    <p className="text-xs text-zinc-600">John Doe</p>
+                                </div>
+                                <div className="space-y-1 text-xs">
+                                    <div className="flex justify-between border-b border-zinc-200 pb-1">
+                                        <span className="font-bold text-zinc-900">#Item</span>
+                                        <span className="font-bold text-zinc-900">Cst. #</span>
                                     </div>
-                                    <div className="space-y-1 text-xs">
-                                        <div className="flex justify-between border-b border-zinc-200 pb-1">
-                                            <span className="font-bold text-zinc-900">#Item</span>
-                                            <span className="font-bold text-zinc-900">Cst. #</span>
+                                    <div>
+                                        <div className="flex justify-between">
+                                            <span className="text-orange-600 dark:text-orange-400">20ProductWithPricedAddition</span>
+                                            <span className="text-zinc-900">1</span>
                                         </div>
-                                        <div>
-                                            <div className="flex justify-between">
-                                                <span className="text-orange-600 dark:text-orange-400">20ProductWithPricedAddition</span>
-                                                <span className="text-zinc-900">1</span>
-                                            </div>
-                                            <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
-                                            <p className="text-zinc-600 text-[10px] ml-2">* payedThree</p>
+                                        <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
+                                        <p className="text-zinc-600 text-[10px] ml-2">* payedThree</p>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between">
+                                            <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
+                                            <span className="text-zinc-900">2</span>
                                         </div>
-                                        <div>
-                                            <div className="flex justify-between">
-                                                <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
-                                                <span className="text-zinc-900">2</span>
-                                            </div>
-                                            <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
-                                        </div>
-                                        <div>
-                                            <div className="flex justify-between">
-                                                <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
-                                                <span className="text-zinc-900">3</span>
-                                            </div>
+                                        <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between">
+                                            <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
+                                            <span className="text-zinc-900">3</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     )}
 
-                            <DialogFooter className="flex gap-2">
-                                <Button variant="destructive" className="bg-red-500 hover:bg-red-600" onClick={handleDeleteTemplate}>
-                                    <Trash2 className="w-4 h-4 mr-2" />
-                                    Delete
-                                </Button>
-                                <Button variant="outline" className="bg-cyan-500 hover:bg-cyan-600 text-white border-none" onClick={handleCopyTemplate}>
-                                    <Copy className="w-4 h-4 mr-2" />
-                                    Copy
-                                </Button>
-                                <div className="flex-1" />
-                                <Button variant="outline" onClick={() => setEditTemplateModal(false)}>
-                                    Cancel
-                                </Button>
-                                <Button className="bg-cyan-500 hover:bg-cyan-600" onClick={handleSaveTemplate}>
-                                    Save Changes
-                                </Button>
-                            </DialogFooter>
-                        </DialogContent>
-                        </Dialog>
+                    <DialogFooter className="flex gap-2">
+                        <Button variant="destructive" className="bg-red-500 hover:bg-red-600" onClick={handleDeleteTemplate}>
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete
+                        </Button>
+                        <Button variant="outline" className="bg-cyan-500 hover:bg-cyan-600 text-white border-none" onClick={handleCopyTemplate}>
+                            <Copy className="w-4 h-4 mr-2" />
+                            Copy
+                        </Button>
+                        <div className="flex-1" />
+                        <Button variant="outline" onClick={() => setEditTemplateModal(false)}>
+                            Cancel
+                        </Button>
+                        <Button className="bg-cyan-500 hover:bg-cyan-600" onClick={handleSaveTemplate}>
+                            Save Changes
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
             {/* Add Cash Drawer Modal */}
             <Dialog open={addDrawerModal} onOpenChange={setAddDrawerModal}>

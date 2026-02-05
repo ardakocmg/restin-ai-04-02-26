@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import api from '../../../../lib/api';
+import api from '../../../lib/api';
 import { toast } from 'sonner';
 import { Loader2, ClipboardList, Save } from 'lucide-react';
-import { Button } from '../../../../components/ui/button';
-import { Input } from '../../../../components/ui/input';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../../../../components/ui/table';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../../../components/ui/table';
 
 export default function StockAdjustments() {
   const [items, setItems] = useState([]);

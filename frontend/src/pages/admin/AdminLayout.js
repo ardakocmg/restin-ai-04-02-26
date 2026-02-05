@@ -16,7 +16,8 @@ export default function AdminLayout() {
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate('/login');
+      // navigate('/login'); // DISABLED per user request: "Never redirect to login"
+      console.warn("User not found, but staying on page (Dev Mode)");
     }
   }, [user, loading, navigate]);
 
@@ -24,9 +25,17 @@ export default function AdminLayout() {
     console.log('[AdminLayout] Current Path:', location.pathname);
   }, [location.pathname]);
 
-  const sidebarOffset = sidebarCollapsed
-    ? '4rem'
-    : `${(domainBarExpanded ? 14 : 4) + 16 + (isTertiaryOpen ? 14 : 0)}rem`;
+  // Calculate Sidebar Width dynamically based on state
+  // Pane 1: w-20 (5rem) or w-64 (16rem)
+  const pane1Width = domainBarExpanded ? 16 : 5;
+
+  // Pane 2: w-72 (18rem) or w-16 (4rem)
+  const pane2Width = sidebarCollapsed ? 4 : 18;
+
+  // Pane 3: w-60 (15rem) or w-16 (4rem) or 0
+  const pane3Width = isTertiaryOpen ? (sidebarCollapsed ? 4 : 15) : 0;
+
+  const sidebarOffset = `${pane1Width + pane2Width + pane3Width}rem`;
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#0A0A0B]">

@@ -8,7 +8,7 @@ import {
   DollarSign, BarChart3, Settings, Activity, TrendingUp, Factory, Award,
   Table as TableIcon, Calendar, Truck, PieChart as PieChartIcon,
   UserCheck, Receipt, Clock, Package, Type, Building2, Search, Upload, Monitor,
-  Globe, Mic, Wand2, Radar
+  Globe, Mic, Wand2, Radar, LayoutGrid, ShieldAlert, Palette, Server, Layers
 } from 'lucide-react';
 
 const menuItems = [
@@ -204,10 +204,10 @@ const menuItems = [
   },
 
   // RESTIN.AI COMMERCIAL MODULES (Protocol v18.0)
-  { title: 'Website Builder', icon: Globe, href: '/restin/web', group: 'restin' },
-  { title: 'Voice AI', icon: Mic, href: '/restin/voice', group: 'restin' },
-  { title: 'Content Studio', icon: Wand2, href: '/restin/studio', group: 'restin' },
-  { title: 'Market Radar', icon: Radar, href: '/restin/radar', group: 'restin' },
+  { title: 'Website Builder', icon: Globe, href: '/admin/restin/web', group: 'restin' },
+  { title: 'Voice AI', icon: Mic, href: '/admin/restin/voice', group: 'restin' },
+  { title: 'Content Studio', icon: Wand2, href: '/admin/restin/studio', group: 'restin' },
+  { title: 'Market Radar', icon: Radar, href: '/admin/restin/radar', group: 'restin' },
 ];
 
 export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDomainExpand }) {
@@ -373,27 +373,27 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
         </div>
       </aside>
 
-      {/* Pane 2: Original Accordion Bar */}
+      {/* Pane 2: Original Accordion Bar - Now with Icon Mode */}
       <aside
         className={cn(
           'h-full flex flex-col transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] border-r border-white/5 overflow-hidden shadow-[10px_0_30px_rgba(0,0,0,0.3)] z-40 bg-zinc-950',
-          collapsed ? 'w-0 opacity-0' : 'w-72 opacity-100'
+          collapsed ? 'w-16' : 'w-72'
         )}
       >
-        <div className="flex items-center justify-between h-20 px-6 shrink-0 border-b border-white/5 bg-zinc-950/50 backdrop-blur-sm">
+        <div className={cn("flex items-center h-20 shrink-0 border-b border-white/5 bg-zinc-950/50 backdrop-blur-sm", collapsed ? "justify-center px-0" : "justify-between px-6")}>
           {!collapsed && (
             <h1 className="text-xs font-black uppercase tracking-[0.25em] text-zinc-400">
               {domains.find(d => d.id === activeDomain)?.title || 'Navigation'}
             </h1>
           )}
           <Button variant="ghost" size="icon" onClick={onToggle} className="text-zinc-500 hover:text-white hover:bg-white/5 h-8 w-8 rounded-lg">
-            <ChevronLeft className="h-4 w-4" />
+            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
           </Button>
         </div>
 
-        <ScrollArea className="flex-1 px-4 py-6">
+        <ScrollArea className={cn("flex-1 py-6", collapsed ? "px-2" : "px-4")}>
           <nav className="space-y-1.5">
-            {/* Search Bar - New Feature */}
+            {/* Search Bar - Hidden in Icon Mode */}
             {!collapsed && (
               <div className="px-3 pb-4">
                 <div className="relative">
@@ -410,14 +410,12 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
             )}
             {menuItems
               .filter(item => {
-                // If searching, ignore domain grouping and search globally across all titles
-                if (searchTerm) {
+                if (searchTerm && !collapsed) {
                   const term = searchTerm.toLowerCase();
                   const matchesTitle = item.title.toLowerCase().includes(term);
                   const matchesSub = item.children?.some(c => c.title.toLowerCase().includes(term) || c.href?.toLowerCase().includes(term));
                   return matchesTitle || matchesSub;
                 }
-                // Otherwise, stick to domain grouping
                 return getDomainForGroup(item.group) === activeDomain;
               })
               .map((item) => (
@@ -427,7 +425,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                       to={item.href}
                       className={cn(
                         'group flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 border border-transparent',
-                        collapsed && 'justify-center'
+                        collapsed && 'justify-center px-2 py-3'
                       )}
                       style={isActive(item.href) ? {
                         backgroundColor: 'rgba(229, 57, 53, 0.08)',
@@ -444,10 +442,10 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                   ) : (
                     <div className="space-y-1">
                       <button
-                        onClick={() => !collapsed && toggleGroup(item.group)}
+                        onClick={() => !collapsed ? toggleGroup(item.group) : null}
                         className={cn(
                           'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 group hover:bg-white/5',
-                          collapsed && 'justify-center'
+                          collapsed && 'justify-center px-2 py-3'
                         )}
                         style={{
                           color: isGroupActive(item.children) ? '#F4F4F5' : '#71717A'
@@ -492,27 +490,34 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
         </ScrollArea>
       </aside>
 
-      {/* Pane 3: Tertiary Segment */}
+      {/* Pane 3: Tertiary Segment - Collapsible */}
       <aside
         className={cn(
           'h-full flex flex-col transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] border-r border-white/5 shadow-inner z-30 bg-[#050506]',
-          hasTertiary ? 'w-60 opacity-100 translate-x-0' : 'w-0 opacity-0 -translate-x-full overflow-hidden border-none'
+          hasTertiary ? (collapsed ? 'w-16 opacity-100 translate-x-0' : 'w-60 opacity-100 translate-x-0') : 'w-0 opacity-0 -translate-x-full overflow-hidden border-none'
         )}
       >
-        <div className="h-20 flex items-center px-6 border-b border-white/5 bg-[#050506]/80 backdrop-blur-sm">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-zinc-700"></span>
-            {activeSubItem?.title}
-          </h2>
+        <div className={cn("h-20 flex items-center border-b border-white/5 bg-[#050506]/80 backdrop-blur-sm", collapsed ? "justify-center px-0" : "justify-between px-6")}>
+          {!collapsed && (
+            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-zinc-700"></span>
+              {activeSubItem?.title}
+            </h2>
+          )}
+          {/* Auto-collapse based on Pane 2, essentially mimicking its state or could be independent. 
+               User requested 3rd column to be icon mode too.
+               If header is collapsed, we show just a dot or icon.
+           */}
         </div>
-        <ScrollArea className="flex-1 px-4 py-6">
+        <ScrollArea className={cn("flex-1 py-6", collapsed ? "px-2" : "px-4")}>
           <nav className="space-y-2">
             {activeSubItem?.subs?.map((sub) => (
               <Button
                 key={sub.id}
                 variant="ghost"
                 className={cn(
-                  'w-full justify-start gap-3 px-4 py-6 h-auto rounded-xl text-xs font-bold transition-all border border-transparent group relative overflow-hidden',
+                  'w-full h-auto rounded-xl text-xs font-bold transition-all border border-transparent group relative overflow-hidden',
+                  collapsed ? 'justify-center px-2 py-4' : 'justify-start gap-3 px-4 py-6',
                   location.search.includes(`type=${sub.id}`)
                     ? 'bg-red-600/5 text-red-500 border-red-600/10'
                     : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-200'
@@ -520,9 +525,10 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                 onClick={() => {
                   navigate(`${activeSubItem.href}?type=${sub.id}`);
                 }}
+                title={collapsed ? sub.title : undefined}
               >
-                <div className={cn("w-1.5 h-1.5 rounded-full transition-all", location.search.includes(`type=${sub.id}`) ? "bg-red-500 shadow-[0_0_5px_rgba(229,57,53,0.5)]" : "bg-zinc-800 group-hover:bg-zinc-600")}></div>
-                {sub.title}
+                <div className={cn("w-1.5 h-1.5 rounded-full shrink-0 transition-all", location.search.includes(`type=${sub.id}`) ? "bg-red-500 shadow-[0_0_5px_rgba(229,57,53,0.5)]" : "bg-zinc-800 group-hover:bg-zinc-600")}></div>
+                {!collapsed && sub.title}
               </Button>
             ))}
           </nav>

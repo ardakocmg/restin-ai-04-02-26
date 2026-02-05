@@ -3,7 +3,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { DollarSign, ShoppingBag, TrendingUp, CreditCard } from 'lucide-react';
 import api from '../../lib/api';
 import { toast } from 'sonner';
-import { toast } from 'sonner';
+
 
 export default function POSSales() {
   const [data, setData] = useState(null);
