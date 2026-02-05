@@ -29,7 +29,12 @@ class MigrationManager:
         adapter = self.get_adapter(source)
         result = await adapter.execute(data, mode, options)
         
-        # In a real impl, we would save the MigrationLog to DB here
+        # Save to DB
+        from core.database import get_database
+        from datetime import datetime, timezone
+        
+        db = get_database()
+        
         log = MigrationLog(
             venue_id=self.venue_id,
             source=source,
@@ -38,6 +43,8 @@ class MigrationManager:
             summary=result.get("summary"),
             details=result.get("details"),
             created_by=self.user_id,
-            completed_at=None # TODO
+            completed_at=datetime.now(timezone.utc).isoformat()
         )
+        
+        await db.migration_logs.insert_one(log.model_dump())
         return log

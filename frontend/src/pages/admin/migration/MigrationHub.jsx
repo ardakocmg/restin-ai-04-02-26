@@ -233,15 +233,40 @@ const MigrationHub = () => {
                                 <div className="p-4 bg-zinc-950 rounded-lg border border-zinc-800">
                                     <div className="text-xs text-green-500 font-bold uppercase mb-2">New Items Preview</div>
                                     <div className="space-y-1">
-                                        {previewData.details.filter(d => d.type === 'new').slice(0, 3).map((d, i) => (
-                                            <div key={i} className="flex justify-between text-sm text-zinc-400 border-b border-white/5 pb-1 last:border-0 last:pb-0">
-                                                <span>{d.name}</span>
-                                                <span className="text-zinc-600 font-mono">{d.sku}</span>
-                                            </div>
-                                        ))}
-                                        {previewData.new > 3 && (
-                                            <div className="text-xs text-zinc-600 italic pt-2">+ {previewData.new - 3} more items...</div>
-                                        )}
+                                        {/* State for pagination */}
+                                        {(() => {
+                                            const [visibleCount, setVisibleCount] = React.useState(5);
+                                            const newItems = previewData.details.filter(d => d.type === 'new' || d.type === 'new_recipe' || d.type === 'new_employee');
+                                            const total = newItems.length;
+
+                                            // Reset when previewData changes (handled by key or effect usually, but inline here works for simple render)
+                                            // Better to lift state up if complex, but inline component pattern or just simple logic:
+
+                                            return (
+                                                <>
+                                                    {newItems.slice(0, visibleCount).map((d, i) => (
+                                                        <div key={i} className="flex justify-between text-sm text-zinc-400 border-b border-white/5 pb-1 last:border-0 last:pb-0">
+                                                            <div className="flex flex-col">
+                                                                <span className="font-medium text-zinc-300">{d.name}</span>
+                                                                <span className="text-xs text-zinc-500">{d.info}</span>
+                                                            </div>
+                                                            <span className="text-zinc-600 font-mono text-xs">{d.sku || d.code}</span>
+                                                        </div>
+                                                    ))}
+
+                                                    {visibleCount < total && (
+                                                        <div className="pt-2 flex justify-center">
+                                                            <button
+                                                                onClick={() => setVisibleCount(prev => prev + 20)}
+                                                                className="text-xs text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-1 transition-colors"
+                                                            >
+                                                                + {total - visibleCount} more items... (Show 20 more)
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            );
+                                        })()}
                                     </div>
                                 </div>
                             )}

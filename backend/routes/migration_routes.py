@@ -64,3 +64,26 @@ async def execute_migration(
     manager = MigrationManager(venue_id=user["venue_id"], user_id=user["id"])
     result = await manager.execute(source, data, mode, options)
     return result
+
+@router.get("/migrations/history")
+async def get_migration_history(
+    user: dict = Depends(get_current_user)
+):
+    """Get migration history for the venue"""
+    # Verify DB Access
+    from core.database import get_database
+    db = get_database()
+    
+    # Simple fetch
+    # Ensure to sort by started_at desc
+    logs = await db.migration_logs.find(
+        {"venue_id": user["venue_id"]}
+    ).sort("started_at", -1).limit(50).to_list(length=50)
+    
+    # Map _id to id
+    for log in logs:
+        if "_id" in log:
+            log["id"] = str(log["_id"])
+            del log["_id"]
+            
+    return logs
