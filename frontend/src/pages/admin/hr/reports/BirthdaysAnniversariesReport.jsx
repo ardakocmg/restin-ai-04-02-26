@@ -1,27 +1,84 @@
-import React from 'react';
-import PageContainer from '../../../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Construction } from 'lucide-react';
 
-const BirthdaysAnniversariesReport = () => {
+import React, { useState, useEffect } from 'react';
+import api from '../../../../lib/api';
+import { Loader2, Cake, Gift } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from '../../../../components/ui/card';
+
+export default function BirthdaysAnniversariesReport() {
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const venueId = localStorage.getItem("restin_venue_id") || "venue-caviar-bull";
+      const response = await api.get('/hr/employees', { params: { venue_id: venueId } });
+      setEmployees(response.data || []);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  // Helper to get upcoming dates
+  const getUpcoming = (list, field) => {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    return list
+      .filter(e => e[field])
+      .map(e => ({ ...e, dateObj: new Date(e[field]) }))
+      .filter(e => e.dateObj.getMonth() === currentMonth || e.dateObj.getMonth() === (currentMonth + 1) % 12)
+      .sort((a, b) => a.dateObj.getDate() - b.dateObj.getDate());
+  };
+
+  const upcomingBirthdays = getUpcoming(employees, 'date_of_birth'); // Assuming field exists
+  const upcomingAnniversaries = getUpcoming(employees, 'start_date');
+
+  if (loading) return <Loader2 className="animate-spin w-8 h-8 m-auto text-pink-500" />;
+
   return (
-    <PageContainer title="Birthdays Anniversaries  Report" description="Generate and view detailed reports.">
-      <Card className="max-w-4xl mx-auto mt-8 border-dashed">
-        <CardContent className="flex flex-col items-center justify-center py-16 text-center space-y-4">
-          <div className="p-4 bg-muted rounded-full">
-            <Construction className="w-12 h-12 text-muted-foreground" />
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-2xl font-semibold tracking-tight">Under Construction</h3>
-            <p className="text-muted-foreground max-w-sm">
-              The <strong>Birthdays Anniversaries  Report</strong> module is currently in development. 
-              Check back soon for updates.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    </PageContainer>
-  );
-};
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+        <Gift className="w-6 h-6 text-pink-500" />
+        Culture & Moments (This Month)
+      </h1>
 
-export default BirthdaysAnniversariesReport;
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="bg-zinc-900 border-white/10">
+          <CardHeader><CardTitle className="text-white flex items-center gap-2"><Cake className="w-4 h-4 text-pink-400" /> Upcoming Birthdays</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            {upcomingBirthdays.length === 0 ? <p className="text-zinc-500">No upcoming birthdays.</p> : (
+              upcomingBirthdays.map(e => (
+                <div key={e.id} className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg">
+                  <div className="font-medium text-white">{e.full_name}</div>
+                  <div className="text-zinc-400">
+                    {new Date(e.date_of_birth).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  </div>
+                </div>
+              ))
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="bg-zinc-900 border-white/10">
+          <CardHeader><CardTitle className="text-white flex items-center gap-2"><Gift className="w-4 h-4 text-purple-400" /> Work Anniversaries</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            {upcomingAnniversaries.length === 0 ? <p className="text-zinc-500">No upcoming anniversaries.</p> : (
+              upcomingAnniversaries.map(e => (
+                <div key={e.id} className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg">
+                  <div className="font-medium text-white">{e.full_name}</div>
+                  <div className="text-zinc-400">
+                    {new Date(e.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  </div>
+                </div>
+              ))
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

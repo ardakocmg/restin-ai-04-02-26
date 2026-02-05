@@ -115,6 +115,8 @@ import POSRuntimeEnhanced from "./pages/pos/POSRuntimeEnhanced";
 import KDSSetup from "./pages/kds/KDSSetup"; // Corrected path
 import KDSMain from "./pages/kds/KDSMain"; // Corrected path
 import KDSRuntime from "./pages/kds/KDSRuntime"; // Corrected path
+import KDSStations from "./pages/kds/KDSStations";
+import KDSStationDetail from "./pages/kds/KDSStationDetail";
 import KDSFeature from "./features/pos/KDSFeature";
 import POSFeature from "./features/pos/POSFeature";
 import MarketingLanding from "./pages/MarketingLanding";
@@ -143,7 +145,13 @@ import Operations from "./pages/admin/Operations";
 import POSDashboard from "./pages/admin/POSDashboard";
 import ProductManagement from "./pages/admin/ProductManagement";
 import CompanySettings from "./pages/admin/CompanySettings";
-import SettingsHub from "./pages/admin/SettingsHub"; // Check if exists
+import ESGModule from "./pages/admin/hr/ESGModule";
+import GovReportsPage from "./pages/admin/hr/GovReportsPage";
+import SickLeaveAnalysis from "./pages/admin/hr/SickLeaveAnalysis";
+import ForecastingCosts from "./pages/admin/hr/ForecastingCosts";
+import EmployeePortal from "./pages/admin/hr/EmployeePortal";
+import TimesheetsIndices from "./pages/admin/hr/Timesheets";
+
 import Devices from "./pages/admin/Devices";
 import RestaurantAppSettings from "./pages/admin/RestaurantAppSettings";
 import PhysicalTables from "./pages/admin/PhysicalTables";
@@ -465,18 +473,33 @@ function App() {
                                   </Route>
 
                                   <Route path="hr">
-                                    <Route index element={<HRHomeIndigoPage />} />
-                                    <Route path="summary" element={<SummaryDashboard />} />
-                                    <Route path="dashboard" element={<SummaryDashboard />} />
+                                    <Route index element={<HRHomeIndigo />} />
                                     <Route path="people" element={<EmployeeDirectory />} />
+                                    <Route path="analytics" element={<HRAnalytics />} />
+                                    <Route path="payroll" element={<PayrollPage />} />
+                                    {/* Restored Legacy Modules */}
+                                    <Route path="esg" element={<ESGModule />} />
+                                    <Route path="gov-reports" element={<GovReportsPage />} />
+                                    <Route path="sick-leave" element={<SickLeaveAnalysis />} />
+                                    <Route path="forecasting-costs" element={<ForecastingCosts />} />
+                                    <Route path="portal-view" element={<EmployeePortal />} />
+                                    <Route path="timesheets" element={<TimesheetsIndices />} />
+
+                                    <Route path="settings" element={<AdminSettings />} />
+                                    <Route path="contracts" element={<Contracts />} />
+
+                                    {/* Restored Sub-Routes */}
                                     <Route path="people/:employeeCode" element={<EmployeeDetailPage />} />
                                     <Route path="leave-management" element={<LeaveManagement />} />
+                                    <Route path="summary" element={<SummaryDashboard />} />
+                                    <Route path="dashboard" element={<SummaryDashboard />} />
+                                    <Route path="clocking" element={<ClockingData />} />
+
                                     <Route path="payroll" element={<PayrollDashboard />} />
                                     <Route path="payroll/:runId" element={<PayrollRunDetail />} />
                                     <Route path="payroll/view/:employeeId/:period" element={<PayslipViewer />} />
 
                                     <Route path="scheduler" element={<Scheduler />} />
-                                    <Route path="clocking" element={<ClockingData />} />
                                     <Route path="import" element={<HRImport />} />
                                     <Route path="map" element={<HRMap />} />
                                     <Route path="exceptions" element={<HRExceptions />} />
@@ -504,6 +527,9 @@ function App() {
                                 <Route path="/pos/runtime" element={<POSRuntimeEnhanced />} />
                                 <Route path="/kds/setup" element={<KDSSetup />} />
                                 <Route path="/kds" element={<KDSMain />} />
+                                <Route path="/kds/stations" element={<KDSStations />} />
+                                <Route path="/admin/kds/stations" element={<KDSStations />} />
+                                <Route path="/admin/kds/stations/:stationKey" element={<KDSStationDetail />} />
                                 <Route path="/kds/runtime/:stationKey" element={<KDSRuntime />} />
                                 <Route path="/book/:venueId" element={<BookingWidget />} />
                                 <Route path="*" element={<Navigate to="/login" replace />} />

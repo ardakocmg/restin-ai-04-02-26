@@ -58,7 +58,7 @@ export default function KDSPerformance() {
           </CardContent>
         </Card>
         <Card className="bg-zinc-900 border-white/10">
-          <CardHeader className="pb-2"><CardTitle className="text-sm text-zinc-400">Late Orders (>20m)</CardTitle></CardHeader>
+          <CardHeader className="pb-2"><CardTitle className="text-sm text-zinc-400">Late Orders (&gt;20m)</CardTitle></CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-400 flex items-center gap-2">
               <AlertTriangle className="w-5 h-5" />

@@ -1,4 +1,4 @@
-
+ 
 import React from 'react';
 import GenericSetupPage from '../../../components/admin/hr/GenericSetupPage';
 import { Globe } from 'lucide-react';

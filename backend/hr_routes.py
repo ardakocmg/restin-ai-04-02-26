@@ -965,7 +965,8 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
         ALLOWED_TYPES = [
             "departments", "cost_centres", "grades", "employment_types", 
             "banks", "locations", "citizenships", "termination_reasons", 
-            "schedules", "occupations"
+            "schedules", "occupations",
+            "public_holidays", "countries", "salary_packages"
         ]
         
         if type not in ALLOWED_TYPES:

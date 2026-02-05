@@ -7,7 +7,7 @@ import {
   ChevronLeft, ChevronRight, LayoutDashboard, ShoppingCart, Users, FileText,
   DollarSign, BarChart3, Settings, Activity, TrendingUp, Factory, Award,
   Table as TableIcon, Calendar, Truck, PieChart as PieChartIcon,
-  UserCheck, Receipt, Clock, Package, Type, Building2
+  UserCheck, Receipt, Clock, Package, Type, Building2, Search
 } from 'lucide-react';
 
 const menuItems = [
@@ -37,7 +37,11 @@ const menuItems = [
   },
   { title: 'Products', icon: ShoppingCart, href: '/admin/products', group: 'pos' },
   { title: 'Physical Tables', icon: TableIcon, href: '/admin/physical-tables', group: 'pos' },
+  { title: 'Floor Plans', icon: LayoutGrid, href: '/admin/floor-plans', group: 'pos' },
+  { title: 'Review Risk', icon: ShieldAlert, href: '/admin/review-risk', group: 'pos' },
   { title: 'Reservations', icon: Calendar, href: '/admin/reservations', group: 'pos' },
+  { title: 'CRM & Guests', icon: Users, href: '/admin/crm', group: 'pos' },
+  { title: 'Loyalty Program', icon: Award, href: '/admin/loyalty', group: 'pos' },
   { title: 'Operational Timeline', icon: Clock, href: '/admin/reservations/timeline', group: 'pos' },
   { title: 'Devices', icon: Activity, href: '/admin/devices', group: 'pos' },
   { title: 'Printers', icon: Receipt, href: '/admin/printers', group: 'pos' },
@@ -50,6 +54,7 @@ const menuItems = [
   { title: 'App Settings', icon: Settings, href: '/admin/app-settings', group: 'pos' },
   { title: 'Company Settings', icon: Building2, href: '/admin/company-settings', group: 'pos' },
   { title: 'POS Setup', icon: Settings, href: '/pos/setup', group: 'pos' },
+  { title: 'KDS Stations', icon: Monitor, href: '/admin/kds/stations', group: 'pos' },
 
   // HUMAN RESOURCES
   { title: 'HR Dashboard', icon: Users, href: '/admin/hr', group: 'hr' },
@@ -62,11 +67,55 @@ const menuItems = [
   { title: 'Contracts', icon: FileText, href: '/admin/hr/contracts', group: 'hr' },
   { title: 'Documents', icon: FileText, href: '/admin/hr/documents', group: 'hr' },
   { title: 'Tips Management', icon: DollarSign, href: '/admin/hr/tips', group: 'hr' },
-  { title: 'HR Settings', icon: Settings, href: '/admin/hr/settings', group: 'hr' },
+  { title: 'Timesheets', icon: Clock, href: '/admin/hr/timesheets', group: 'hr' },
+  { title: 'Deep Analytics', icon: Activity, href: '/admin/hr/analytics', group: 'hr' },
+  {
+    title: 'Advanced Modules',
+    icon: Layers,
+    href: '#',
+    group: 'hr',
+    subs: [
+      { title: 'ESG & Sustainability', id: 'esg', href: '/admin/hr/esg' },
+      { title: 'Gov Reports', id: 'gov', href: '/admin/hr/gov-reports' },
+      { title: 'Sick Leave Analysis', id: 'sick', href: '/admin/hr/sick-leave' },
+      { title: 'Cost Forecasting', id: 'cost', href: '/admin/hr/forecasting-costs' },
+      { title: 'Employee Portal View', id: 'portal', href: '/admin/hr/portal-view' }
+    ]
+  },
+  {
+    title: 'HR Settings',
+    icon: Settings,
+    href: '/admin/hr/settings',
+    group: 'hr',
+    subs: [
+      { title: 'Feature Flags', id: 'flags', href: '/admin/hr/settings' },
+      { title: 'Banks', id: 'banks', href: '/admin/hr-setup/banks' },
+      { title: 'Departments', id: 'depts', href: '/admin/hr-setup/departments' },
+      { title: 'Locations', id: 'locs', href: '/admin/hr-setup/locations' },
+      { title: 'Occupations', id: 'jobs', href: '/admin/hr-setup/occupations' },
+      { title: 'Work Schedules', id: 'sched', href: '/admin/hr-setup/work-schedules' },
+      { title: 'Tax Profiles', id: 'tax', href: '/admin/hr-setup/tax-profiles' }
+    ]
+  },
 
   // INVENTORY & SUPPLY CHAIN
   { title: 'General Settings', icon: Settings, href: '/admin/menu', group: 'menu' },
-  { title: 'Inventory Hub', icon: Package, href: '/admin/inventory', group: 'menu' },
+  {
+    title: 'Inventory Hub',
+    icon: Package,
+    href: '/admin/inventory',
+    group: 'menu',
+    subs: [
+      { title: 'Items & Stock', id: 'items', href: '/admin/inventory-items' },
+      { title: 'Stock Count', id: 'count', href: '/admin/inventory-stock-count' },
+      { title: 'Waste Log', id: 'waste', href: '/admin/inventory-waste' },
+      { title: 'Recipes', id: 'recipes', href: '/admin/inventory-recipes' },
+      { title: 'Production', id: 'production', href: '/admin/inventory-production' },
+      { title: 'Transfers', id: 'transfers', href: '/admin/inventory-transfers' },
+      { title: 'Suppliers', id: 'suppliers', href: '/admin/suppliers' },
+      { title: 'Purchase Orders', id: 'po', href: '/admin/inventory-purchase-orders' }
+    ]
+  },
   { title: 'Suppliers', icon: Truck, href: '/admin/suppliers', group: 'menu' },
   { title: 'Recipe Engineering', icon: Factory, href: '/admin/recipe-engineering', group: 'menu' },
   { title: 'Procurement Hub', icon: ShoppingCart, href: '/admin/procurement', group: 'procurement' },
@@ -110,9 +159,12 @@ const menuItems = [
   { title: 'Venue Settings', icon: Settings, href: '/admin/settings', group: 'settings' },
   { title: 'Users', icon: UserCheck, href: '/admin/users', group: 'settings' },
   { title: 'Access Control', icon: Award, href: '/admin/access-control', group: 'settings' },
+  { title: 'Event Monitor', icon: Activity, href: '/admin/events', group: 'settings' },
   { title: 'Devices', icon: Activity, href: '/admin/devices', group: 'settings' },
   { title: 'Content Studio', icon: LayoutDashboard, href: '/admin/content-studio', group: 'settings' },
   { title: 'Content Editor', icon: Type, href: '/admin/content-editor', group: 'settings' },
+  { title: 'Theme Customizer', icon: Palette, href: '/admin/theme', group: 'settings' },
+  { title: 'Microservices', icon: Server, href: '/admin/microservices', group: 'settings' },
 ];
 
 export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDomainExpand }) {
@@ -158,6 +210,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
   const [expandedGroups, setExpandedGroups] = useState(['main', 'pos', 'hr', 'reports']);
   const [activeSubItem, setActiveSubItem] = useState(null);
   const [domainBarExpanded, setDomainBarExpanded] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleDomainClick = (id) => {
     setActiveDomain(id);
@@ -295,8 +348,33 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
 
         <ScrollArea className="flex-1 px-4 py-6">
           <nav className="space-y-1.5">
+            {/* Search Bar - New Feature */}
+            {!collapsed && (
+              <div className="px-3 pb-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                  <input
+                    type="text"
+                    placeholder="Search features..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-zinc-900/50 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-red-500/50 transition-all"
+                  />
+                </div>
+              </div>
+            )}
             {menuItems
-              .filter(item => getDomainForGroup(item.group) === activeDomain)
+              .filter(item => {
+                // If searching, ignore domain grouping and search globally across all titles
+                if (searchTerm) {
+                  const term = searchTerm.toLowerCase();
+                  const matchesTitle = item.title.toLowerCase().includes(term);
+                  const matchesSub = item.children?.some(c => c.title.toLowerCase().includes(term) || c.href?.toLowerCase().includes(term));
+                  return matchesTitle || matchesSub;
+                }
+                // Otherwise, stick to domain grouping
+                return getDomainForGroup(item.group) === activeDomain;
+              })
               .map((item) => (
                 <div key={item.title}>
                   {item.href && !item.children ? (

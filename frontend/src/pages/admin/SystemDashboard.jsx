@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../lib/api";
-import { Loader2, Activity, ShieldAlert, DollarSign, Users, Wifi } from "lucide-react";
+import { Loader2, Activity, ShieldAlert, DollarSign, Users, Wifi, Calendar } from "lucide-react";
 import SalesChart from "../../components/analytics/SalesChart";
 import { format } from "date-fns";
 import { ScrollArea } from "../../components/ui/scroll-area";
@@ -49,46 +49,65 @@ export default function SystemDashboard() {
 
     return (
         <div className="p-6 space-y-6 bg-zinc-950 min-h-screen">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <h1 className="text-2xl font-bold text-white flex items-center gap-2">
                     <Activity className="text-red-500" />
                     System Control Tower
                 </h1>
-                <div className="flex items-center gap-2 text-sm text-zinc-400">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    System Operational
+
+                <div className="flex items-center gap-3">
+                    {/* Date/Time Selection */}
+                    <div className="flex items-center gap-2 bg-zinc-900 border border-white/10 rounded-lg p-1">
+                        <Button variant="ghost" size="sm" className="h-8 text-zinc-400 hover:text-white">
+                            Today
+                        </Button>
+                        <div className="h-4 w-[1px] bg-white/10" />
+                        <Button variant="ghost" size="sm" className="h-8 text-zinc-400 hover:text-white">
+                            Yesterday
+                        </Button>
+                        <div className="h-4 w-[1px] bg-white/10" />
+                        <Button variant="outline" size="sm" className="h-8 border-white/10 bg-black text-white gap-2">
+                            <Calendar className="w-3 h-3" />
+                            <span>Custom Range</span>
+                        </Button>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-sm text-zinc-400 px-3 py-1 bg-zinc-900 rounded-full border border-white/5">
+                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <span className="hidden md:inline">System Operational</span>
+                    </div>
                 </div>
             </div>
 
             {/* KPI Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between">
+                <div onClick={() => window.location.href = '/admin/reports/sales?type=revenue'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-green-500/50 transition-colors group">
                     <div>
-                        <div className="text-zinc-500 text-sm">Today's Revenue</div>
+                        <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">Today's Revenue</div>
                         <div className="text-2xl font-bold text-white">€{stats.revenue.toFixed(2)}</div>
                     </div>
-                    <DollarSign className="w-8 h-8 text-green-500 opacity-50" />
+                    <DollarSign className="w-8 h-8 text-green-500 opacity-50 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between">
+                <div onClick={() => window.location.href = '/kds'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-blue-500/50 transition-colors group">
                     <div>
-                        <div className="text-zinc-500 text-sm">Active Orders</div>
+                        <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">Active Orders</div>
                         <div className="text-2xl font-bold text-white">{stats.activeOrders}</div>
                     </div>
-                    <Users className="w-8 h-8 text-blue-500 opacity-50" />
+                    <Users className="w-8 h-8 text-blue-500 opacity-50 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between">
+                <div onClick={() => window.location.href = '/admin/devices'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-indigo-500/50 transition-colors group">
                     <div>
-                        <div className="text-zinc-500 text-sm">Online Devices</div>
+                        <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">Online Devices</div>
                         <div className="text-2xl font-bold text-white">{stats.onlineDevices}</div>
                     </div>
-                    <Wifi className="w-8 h-8 text-indigo-500 opacity-50" />
+                    <Wifi className="w-8 h-8 text-indigo-500 opacity-50 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between">
+                <div onClick={() => window.location.href = '/admin/observability'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-green-400/50 transition-colors group">
                     <div>
-                        <div className="text-zinc-500 text-sm">System Health</div>
+                        <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">System Health</div>
                         <div className="text-2xl font-bold text-green-400">GOOD</div>
                     </div>
-                    <ShieldAlert className="w-8 h-8 text-green-500 opacity-50" />
+                    <ShieldAlert className="w-8 h-8 text-green-500 opacity-50 group-hover:opacity-100 transition-opacity" />
                 </div>
             </div>
 

@@ -77,6 +77,28 @@ export default function InventoryDashboard() {
             }
         >
             <div className="space-y-6">
+
+                {/* Module Navigation Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
+                    {[
+                        { label: 'Stock Count', path: '/admin/inventory-stock-count', color: 'border-blue-500/20 text-blue-400' },
+                        { label: 'Waste Log', path: '/admin/inventory-waste', color: 'border-red-500/20 text-red-400' },
+                        { label: 'Purchasing', path: '/admin/inventory-purchase-orders', color: 'border-green-500/20 text-green-400' },
+                        { label: 'Recipes', path: '/admin/inventory-recipes', color: 'border-orange-500/20 text-orange-400' },
+                        { label: 'Production', path: '/admin/inventory-production', color: 'border-purple-500/20 text-purple-400' },
+                        { label: 'Transfers', path: '/admin/inventory-transfers', color: 'border-cyan-500/20 text-cyan-400' },
+                        { label: 'Suppliers', path: '/admin/suppliers', color: 'border-pink-500/20 text-pink-400' },
+                    ].map(mod => (
+                        <div
+                            key={mod.label}
+                            onClick={() => window.location.href = mod.path}
+                            className={`p-3 bg-zinc-900 border ${mod.color} rounded-lg cursor-pointer hover:bg-zinc-800 transition-all text-center`}
+                        >
+                            <div className="text-xs font-bold uppercase tracking-wide">{mod.label}</div>
+                        </div>
+                    ))}
+                </div>
+
                 <div className="grid gap-4 md:grid-cols-3">
                     <Card className="p-4 bg-zinc-950 border-zinc-800">
                         <div className="text-sm font-medium text-zinc-400">Total Ingredients</div>
