@@ -951,5 +951,82 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
         if not payslip:
             raise HTTPException(status_code=404, detail="Payslip not found")
         return payslip
-    
+
+    # ==================== GENERIC DICTIONARIES (SETUP) ====================
+    @hr_router.get("/dictionaries/{type}")
+    async def list_dictionary_items(
+        type: str,
+        venue_id: str = Query(...),
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Generic endpoint for Key-Value setup items (Banks, Grades, etc.)"""
+        await check_venue_access(current_user, venue_id)
+        
+        ALLOWED_TYPES = [
+            "departments", "cost_centres", "grades", "employment_types", 
+            "banks", "locations", "citizenships", "termination_reasons", 
+            "schedules", "occupations"
+        ]
+        
+        if type not in ALLOWED_TYPES:
+            raise HTTPException(status_code=400, detail="Invalid dictionary type")
+        
+        items = await db.hr_dictionaries.find(
+            {"venue_id": venue_id, "type": type, "is_active": True}, 
+            {"_id": 0}
+        ).to_list(1000)
+        
+        return items
+
+    @hr_router.post("/dictionaries/{type}")
+    async def create_dictionary_item(
+        type: str,
+        data: dict,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Create dictionary item"""
+        await check_venue_access(current_user, data.get("venue_id"))
+        
+        from uuid import uuid4
+        
+        if not data.get("name"):
+             raise HTTPException(status_code=400, detail="Name is required")
+
+        item_doc = {
+            "id": str(uuid4()),
+            "venue_id": data.get("venue_id"),
+            "type": type,
+            "name": data.get("name"),
+            "code": data.get("code"), # Optional
+            "description": data.get("description"), # Optional
+            "meta": data.get("meta", {}), # For things like Start Time in Schedules
+            "is_active": True,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+        # Specific ID generation if needed, skipping for generic speed
+        
+        await db.hr_dictionaries.insert_one(item_doc)
+        return item_doc
+
+    @hr_router.delete("/dictionaries/{type}/{item_id}")
+    async def delete_dictionary_item(
+        type: str,
+        item_id: str,
+        venue_id: str = Query(...),
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Soft delete dictionary item"""
+        await check_venue_access(current_user, venue_id)
+        
+        result = await db.hr_dictionaries.update_one(
+            {"id": item_id, "venue_id": venue_id, "type": type},
+            {"$set": {"is_active": False}}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Item not found")
+            
+        return {"message": "Item deleted"}
+
     return hr_router

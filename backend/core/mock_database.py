@@ -1,8 +1,11 @@
 import hashlib
 from datetime import datetime, timezone
 import asyncio
-
+import json
+import os
 import re
+
+DB_FILE = "local_db.json"
 
 class MockCursor:
     def __init__(self, data):
@@ -22,15 +25,13 @@ class MockCursor:
             raise StopAsyncIteration
 
     def sort(self, *args, **kwargs):
-        # Basic sort support if needed, assuming (key, direction) tuples
         if args:
             key_or_list = args[0]
             if isinstance(key_or_list, str):
                 key = key_or_list
-                direction = kwargs.get('direction', 1) # 1 for asc, -1 for desc
+                direction = kwargs.get('direction', 1) 
                 reverse = direction == -1
                 self.data.sort(key=lambda x: x.get(key), reverse=reverse)
-            # Add more complex sort handling if needed
         return self
         
     async def to_list(self, length):
@@ -56,23 +57,25 @@ class MockClient:
         return self._db
         
     def close(self):
-        pass # No-op for mock
+        pass
 
 class MockCollection:
-    def __init__(self, name, data):
+    def __init__(self, name, db_instance):
         self.name = name
-        self.data = data
+        self.db_instance = db_instance
+        # Data is referenced from the main DB dict
+        if name not in self.db_instance.data_store:
+            self.db_instance.data_store[name] = []
+        self.data = self.db_instance.data_store[name]
         
     def _matches_query(self, item, query):
         for k, v in query.items():
             if k not in item:
-                # Unless checking for existence or null, missing key fails
                 return False
             
             item_val = item[k]
             
             if isinstance(v, dict):
-                # Handle operators
                 for op, op_val in v.items():
                     if op == "$gt":
                         if not (item_val > op_val): return False
@@ -84,14 +87,14 @@ class MockCollection:
                         if not (item_val <= op_val): return False
                     elif op == "$in":
                         if item_val not in op_val: return False
+                    elif op == "$ne":
+                         if item_val == op_val: return False
                     elif op == "$regex":
-                        # Simple regex match
                         try:
                             if not re.search(op_val, str(item_val)): return False
                         except:
                             return False
             else:
-                # Direct equality
                 if item_val != v:
                     return False
         return True
@@ -99,7 +102,6 @@ class MockCollection:
     async def find_one(self, query, projection=None, sort=None, **kwargs):
         data_to_search = self.data
         if sort:
-            # Basic sort support: sort=[("key", direction)]
             for key, direction in sort:
                 reverse = direction == -1
                 data_to_search = sorted(data_to_search, key=lambda x: x.get(key), reverse=reverse)
@@ -118,9 +120,10 @@ class MockCollection:
         
     async def insert_one(self, doc):
         if "_id" not in doc:
-            doc["_id"] = str(len(self.data) + 1)
-        # Deep copy to simulate DB storage behavior (optional but good practice)
+            doc["_id"] = str(len(self.data) + 1000 + int(datetime.utcnow().timestamp()))
+        
         self.data.append(doc)
+        self.db_instance.save_db()
         return type('obj', (object,), {'inserted_id': doc["_id"]})
         
     async def count_documents(self, query):
@@ -141,7 +144,14 @@ class MockCollection:
                         item[k] = item[k] + v
                     else:
                         item[k] = v
+            if "$push" in update:
+                 for k, v in update["$push"].items():
+                    if k not in item: item[k] = []
+                    item[k].append(v)
+            
+            self.db_instance.save_db()
             return type('obj', (object,), {'modified_count': 1, 'upserted_id': None})
+            
         elif upsert:
             new_doc = query.copy()
             if "$set" in update:
@@ -150,54 +160,80 @@ class MockCollection:
                 for k, v in update["$inc"].items():
                     new_doc[k] = v
             
-            # Remove any query operators from new_doc keys
-            keys_to_remove = [k for k in new_doc.keys() if k.startswith('$')]
-            for k in keys_to_remove:
-                del new_doc[k]
-                
-            res = await self.insert_one(new_doc)
+            # Helper to remove operators
+            clean_doc = {k:v for k,v in new_doc.items() if not k.startswith('$')}
+            
+            res = await self.insert_one(clean_doc)
             return type('obj', (object,), {'modified_count': 0, 'upserted_id': res.inserted_id})
             
         return type('obj', (object,), {'modified_count': 0, 'upserted_id': None})
+        
+    async def delete_one(self, query):
+        item = await self.find_one(query)
+        if item:
+            self.data.remove(item)
+            self.db_instance.save_db()
+            return type('obj', (object,), {'deleted_count': 1})
+        return type('obj', (object,), {'deleted_count': 0})
 
 class MockDatabase:
     def __init__(self):
-        # Pre-seed with Admin User
+        self.data_store = {}
+        self.load_db()
+
+    def load_db(self):
+        if os.path.exists(DB_FILE):
+            try:
+                with open(DB_FILE, 'r') as f:
+                    self.data_store = json.load(f)
+                print(f"[DB] Loaded persistent data from {DB_FILE}")
+            except Exception as e:
+                print(f"[DB] Failed to load {DB_FILE}: {e}. Starting fresh.")
+                self.seed_defaults()
+        else:
+            self.seed_defaults()
+            self.save_db()
+
+    def save_db(self):
+        try:
+            # Basic JSON dump (wont handle Date objects well, but for a mock string/int/dict is usually fine)
+            # In a real app we'd need a custom encoder
+            with open(DB_FILE, 'w') as f:
+                json.dump(self.data_store, f, indent=2, default=str)
+        except Exception as e:
+            print(f"[DB] Save failed: {e}")
+
+    def seed_defaults(self):
+        print("[DB] Seeding defaults...")
         pin_hash = hashlib.sha256("1111".encode()).hexdigest()
-        
-        self.users = MockCollection("users", [{
-            "id": "admin_user",
-            "_id": "admin_user",
-            "name": "Admin User",
-            "role": "OWNER",
-            "venue_id": "venue_1",
-            "pin_hash": pin_hash,
-            "allowed_venue_ids": ["venue_1"],
-            "mfa_enabled": False
-        }])
-        
-        self.venues = MockCollection("venues", [{
-            "id": "venue_1",
-            "_id": "venue_1",
-            "name": "Malta Head Office",
-            "type": "fine_dining",
-            "slug": "malta-head-office",
-            "location": "Valletta",
-            "currency": "EUR"
-        }])
-        
-        self.shifts = MockCollection("shifts", [])
-        self.manager_overrides = MockCollection("manager_overrides", [])
-        self.logs = MockCollection("logs", [])
-        self.audit_logs = MockCollection("audit_logs", [])
-        self.payroll_profiles = MockCollection("payroll_profiles", [])
-        self.pay_runs = MockCollection("pay_runs", [])
-        self.payroll_runs = MockCollection("payroll_runs", [])
+        self.data_store = {
+            "users": [{
+                "id": "admin_user",
+                "_id": "admin_user",
+                "name": "Admin User",
+                "role": "OWNER",
+                "venue_id": "venue_1",
+                "pin_hash": pin_hash,
+                "allowed_venue_ids": ["venue_1"],
+                "mfa_enabled": False
+            }],
+            "venues": [{
+                "id": "venue_1",
+                "_id": "venue_1",
+                "name": "Malta Head Office",
+                "type": "fine_dining",
+                "slug": "malta-head-office",
+                "location": "Valletta",
+                "currency": "EUR"
+            }],
+            "tables": [],
+            "orders": [],
+            "items": [],
+            "categories": []
+        }
 
     def __getattr__(self, name):
-        col = MockCollection(name, [])
-        setattr(self, name, col)
-        return col
+        return MockCollection(name, self)
 
     def __getitem__(self, name):
         return getattr(self, name)

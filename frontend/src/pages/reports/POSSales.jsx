@@ -1,42 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import { DollarSign, ShoppingBag, TrendingUp, CreditCard } from 'lucide-react';
+import api from '../../lib/api';
+import { toast } from 'sonner';
+import { toast } from 'sonner';
 
 export default function POSSales() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock data fetch
-    setTimeout(() => {
-      setData({
-        metrics: {
-          total_revenue: 3450.50,
-          total_orders: 128,
-          avg_order_value: 26.95,
-          top_payment_method: 'Card (75%)'
-        },
-        revenue_trend: [
-          { time: '10:00', amount: 120 },
-          { time: '11:00', amount: 350 },
-          { time: '12:00', amount: 850 },
-          { time: '13:00', amount: 920 },
-          { time: '14:00', amount: 450 },
-          { time: '15:00', amount: 300 },
-          { time: '16:00', amount: 560 },
-          { time: '17:00', amount: 890 },
-        ],
-        top_items: [
-          { name: 'Burger', quantity: 45, revenue: 675 },
-          { name: 'Pizza', quantity: 38, revenue: 570 },
-          { name: 'Pasta', quantity: 32, revenue: 480 },
-          { name: 'Salad', quantity: 28, revenue: 336 },
-          { name: 'Coke', quantity: 65, revenue: 195 },
-        ]
-      });
-      setLoading(false);
-    }, 1000);
+    fetchSalesData();
   }, []);
+
+  const fetchSalesData = async () => {
+    try {
+      // Attempt to fetch real data
+      const res = await api.get('/analytics/pos-sales');
+      setData(res.data);
+    } catch (e) {
+      console.warn("Analytics API failed", e);
+      // NO MOCK DATA - User Request
+      setData(null);
+      toast.error("Failed to load sales data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!data) {
+    return <div className="p-8 text-center text-zinc-500">No data available or connection failed.</div>;
+  }
 
   if (loading) {
     return (

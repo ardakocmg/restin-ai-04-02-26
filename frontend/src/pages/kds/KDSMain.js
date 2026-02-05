@@ -15,12 +15,28 @@ import { ScrollArea } from "../../components/ui/scroll-area";
 import BottomNav from "../../components/BottomNav";
 import {
   LogOut, Clock, CheckCircle, PlayCircle, RefreshCw, Loader2,
-  PauseCircle, AlertTriangle, Bell, Truck, Award
+  PauseCircle, AlertTriangle, Bell, Truck, Award, Wifi, WifiOff
 } from "lucide-react";
+import SyncService from '../../services/SyncService';
+
+// Simulated hook for sync status
+const useSyncStatus = () => {
+  const [status, setStatus] = useState({ isOnline: navigator.onLine, isSyncing: false });
+
+  useEffect(() => {
+    const handleStatus = (s, online) => setStatus(prev => ({ ...prev, isOnline: online }));
+    const handleSync = (s, data) => setStatus(prev => ({ ...prev, isSyncing: s !== 'sync_complete' }));
+
+    const unsub = SyncService.onStatusChange(handleStatus);
+    return unsub;
+  }, []);
+  return status;
+};
 
 export default function KDSMain() {
   const navigate = useNavigate();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { isOnline, isSyncing } = useSyncStatus();
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stationFilter, setStationFilter] = useState("all");
@@ -59,6 +75,16 @@ export default function KDSMain() {
   // Item-level actions
   const startItem = async (ticketId, itemId) => {
     try {
+      if (!isOnline) {
+        await SyncService.queueKDSBump({
+          ticket_id: ticketId,
+          item_id: itemId,
+          action: 'start_prep'
+        });
+        toast.warning("Offline: Start Prep Queued");
+        await loadData();
+        return;
+      }
       await api.post(`/kds/tickets/${ticketId}/items/${itemId}/start`);
       toast.success("Item started");
       await loadData();
@@ -159,6 +185,11 @@ export default function KDSMain() {
           <h1 className="text-xl font-bold text-white tracking-tight">
             KDS <span className="text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]">STATION</span>
           </h1>
+          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/10">
+            {isOnline ? <Wifi className="w-4 h-4 text-green-500" /> : <WifiOff className="w-4 h-4 text-red-500" />}
+            <span className="text-xs font-mono text-zinc-400">{isOnline ? 'ONLINE' : 'OFFLINE'}</span>
+            {isSyncing && <RefreshCw className="w-3 h-3 text-blue-400 animate-spin ml-1" />}
+          </div>
         </div>
 
         {/* Station Filter Tabs */}

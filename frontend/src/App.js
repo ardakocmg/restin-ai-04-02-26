@@ -123,7 +123,8 @@ import ModulesCatalog from "./pages/ModulesCatalog";
 import PayrollPage from "./pages/admin/hr/PayrollPage";
 import VenueSettings from "./pages/admin/VenueSettings";
 import SummaryDashboard from "./pages/admin/hr/SummaryDashboard";
-import Dashboard from "./pages/admin/hr/SummaryDashboard"; // Temporary fallback
+import SystemDashboard from "./pages/admin/SystemDashboard";
+// import Dashboard from "./pages/admin/hr/SummaryDashboard"; // REMOVED
 import StaffManagement from "./pages/admin/StaffManagement";
 import POSSettings from "./pages/admin/POSSettings";
 import Documents from "./pages/admin/Documents";
@@ -314,7 +315,7 @@ function App() {
                                 <Route path="/payroll" element={<PayrollPage />} />
                                 <Route path="/admin" element={<AdminLayout />}>
                                   <Route index element={<Navigate to="dashboard" replace />} />
-                                  <Route path="dashboard" element={<Dashboard />} />
+                                  <Route path="dashboard" element={<SystemDashboard />} />
                                   <Route path="venues" element={<VenueSettings />} />
                                   <Route path="menu" element={<POSSettings />} />
                                   <Route path="staff" element={<StaffManagement />} />

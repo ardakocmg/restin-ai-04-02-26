@@ -1,27 +1,15 @@
+
 import React from 'react';
-import PageContainer from '../../../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Construction } from 'lucide-react';
+import GenericSetupPage from '../../../components/admin/hr/GenericSetupPage';
+import { Flag } from 'lucide-react';
 
-const CitizenshipPage = () => {
+export default function CitizenshipPage() {
   return (
-    <PageContainer title="Citizenship " description="Manage configuration and settings.">
-      <Card className="max-w-4xl mx-auto mt-8 border-dashed">
-        <CardContent className="flex flex-col items-center justify-center py-16 text-center space-y-4">
-          <div className="p-4 bg-muted rounded-full">
-            <Construction className="w-12 h-12 text-muted-foreground" />
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-2xl font-semibold tracking-tight">Under Construction</h3>
-            <p className="text-muted-foreground max-w-sm">
-              The <strong>Citizenship </strong> module is currently in development. 
-              Check back soon for updates.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    </PageContainer>
+    <GenericSetupPage
+      title="Citizenship / Nationalities"
+      type="citizenships"
+      description="Manage list of recognized nationalities for compliance."
+      icon={Flag}
+    />
   );
-};
-
-export default CitizenshipPage;
+}

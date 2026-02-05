@@ -284,10 +284,48 @@ async def _create_print_jobs(
 
 
 async def _deduct_stock(db, items: List[dict], venue_id: str, order_id: str, user_id: str):
-    """Deduct stock for order items"""
-    # Stock deduction logic (placeholder for now)
-    # This would integrate with inventory management
-    pass
+    """
+    Deduct stock for order items based on Recipes.
+    If no recipe exists, checks simple Menu-Inventory links.
+    """
+    for item in items:
+        menu_item_id = item.get("menu_item_id")
+        qty_sold = item.get("quantity", 1)
+        
+        # 1. Try to find a Recipe
+        recipe = await db.recipes.find_one({"menu_item_id": menu_item_id, "venue_id": venue_id}, {"_id": 0})
+        
+        if recipe:
+            # Deduct via Recipe Components
+            for comp in recipe.get("components", []):
+                inv_item_id = comp.get("item_id")
+                deduct_qty = comp.get("qty", 0) * qty_sold
+                
+                await db.inventory_items.update_one(
+                    {"id": inv_item_id, "venue_id": venue_id},
+                    {"$inc": {"quantity": -deduct_qty}}
+                )
+        else:
+            # 2. Fallback: Check simple 1:1 links (menu_item_inventory)
+            links = await db.menu_item_inventory.find({"menu_item_id": menu_item_id}, {"_id": 0}).to_list(100)
+            for link in links:
+                inv_item_id = link.get("inventory_item_id")
+                deduct_qty = link.get("quantity", 1) * qty_sold
+                
+                await db.inventory_items.update_one(
+                    {"id": inv_item_id, "venue_id": venue_id},
+                    {"$inc": {"quantity": -deduct_qty}}
+                )
+
+    # Log the stock deduction event
+    await db.inventory_transactions.insert_one({
+        "id": str(uuid.uuid4()),
+        "venue_id": venue_id,
+        "type": "SALES_DEDUCTION",
+        "order_id": order_id,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_by": user_id
+    })
 
 
 async def transfer_order_to_table(db, order_id: str, new_table_id: str, current_user: dict) -> Tuple[bool, Dict[str, Any]]:

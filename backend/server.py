@@ -597,6 +597,10 @@ async def startup_event():
         logger.info("✓ Built-in reports registered")
         
         # Initialize all microservices
+        if hasattr(db, 'initialize'):
+             logger.info("Initializing MongoDB...")
+             await db.initialize()
+        
         await order_service.initialize()
         await inventory_service.initialize()
         await analytics_service.initialize()
@@ -681,4 +685,4 @@ else:
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

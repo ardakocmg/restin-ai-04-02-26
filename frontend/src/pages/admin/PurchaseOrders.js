@@ -32,13 +32,13 @@ export default function PurchaseOrdersPage() {
 
   const getStatusColor = (status) => {
     const colors = {
-      'DRAFT': 'bg-slate-100 text-slate-700',
-      'SUBMITTED': 'bg-blue-100 text-blue-700',
-      'APPROVED': 'bg-green-100 text-green-700',
-      'SENT': 'bg-purple-100 text-purple-700',
-      'PARTIAL_RECEIVED': 'bg-orange-100 text-orange-700',
-      'RECEIVED_CLOSED': 'bg-green-100 text-green-700',
-      'CANCELLED': 'bg-red-100 text-red-700'
+      'DRAFT': 'bg-zinc-800 text-zinc-300 border-zinc-700',
+      'SUBMITTED': 'bg-blue-900/30 text-blue-400 border-blue-800',
+      'APPROVED': 'bg-green-900/30 text-green-400 border-green-800',
+      'SENT': 'bg-purple-900/30 text-purple-400 border-purple-800',
+      'PARTIAL_RECEIVED': 'bg-orange-900/30 text-orange-400 border-orange-800',
+      'RECEIVED_CLOSED': 'bg-zinc-900 text-zinc-500 border-zinc-700 decoration-line-through',
+      'CANCELLED': 'bg-red-900/30 text-red-500 border-red-800'
     };
     return colors[status] || 'bg-slate-100 text-slate-700';
   };
@@ -63,8 +63,8 @@ export default function PurchaseOrdersPage() {
             columns={[
               { key: 'display_id', label: 'PO #' },
               { key: 'supplier_name', label: 'Supplier' },
-              { 
-                key: 'total_amount', 
+              {
+                key: 'total_amount',
                 label: 'Total',
                 render: (row) => `€${row.total_amount?.toFixed(2) || '0.00'}`
               },

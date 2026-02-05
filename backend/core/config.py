@@ -12,8 +12,8 @@ STATIC_DIR = Path(FRONTEND_BUILD_DIR) / "static"
 INDEX_FILE = Path(FRONTEND_BUILD_DIR) / "index.html"
 
 # MongoDB connection
-MONGO_URL = os.environ.get('MONGO_URL')
-DB_NAME = os.environ.get('DB_NAME')
+MONGO_URL = os.environ.get('MONGO_URL', "mongodb://localhost:27017")
+DB_NAME = os.environ.get('DB_NAME', "restin_v2")
 
 # JWT Settings - FAIL FAST
 JWT_SECRET = os.environ.get('JWT_SECRET', '')
