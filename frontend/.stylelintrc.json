@@ -6,7 +6,7 @@
         "stylelint-declaration-strict-value"
     ],
     "rules": {
-        "sh-ane/declaration-strict-value": [
+        "declaration-strict-value": [
             [
                 "/color/",
                 "background-color",

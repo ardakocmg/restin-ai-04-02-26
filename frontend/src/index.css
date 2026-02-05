@@ -4,19 +4,19 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './styles/touch-optimization.css';
+@import url('./styles/touch-optimization.css');
 
 :root {
   /* Typography */
   --font-heading: 'Barlow Condensed', sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, blinkmacsystemfont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Brand Colors - Emergent/restin.ai Premium Red */
   --brand-accent: #E53935;
   --brand-accent-hover: #C62828;
-  --brand-accent-soft: rgba(229, 57, 53, 0.15);
-  --brand-accent-glow: rgba(229, 57, 53, 0.4);
+  --brand-accent-soft: rgb(229 57 53 / 15%);
+  --brand-accent-glow: rgb(229 57 53 / 40%);
 
   /* Dark Theme (Default - Emergent Style) */
   --background: #0A0A0B;
@@ -26,15 +26,15 @@
   --popover: #1C1C1F;
   --popover-foreground: #F5F5F7;
   --primary: #E53935;
-  --primary-foreground: #FFFFFF;
+  --primary-foreground: #FFF;
   --secondary: #27272A;
   --secondary-foreground: #F5F5F7;
   --muted: #27272A;
   --muted-foreground: #A1A1AA;
   --accent: #E53935;
-  --accent-foreground: #FFFFFF;
+  --accent-foreground: #FFF;
   --destructive: #DC2626;
-  --destructive-foreground: #FFFFFF;
+  --destructive-foreground: #FFF;
   --border: #27272A;
   --input: #27272A;
   --ring: #E53935;
@@ -50,26 +50,26 @@
 
 .dark {
   /* Light Theme Override (Optional) - Keep dark as default */
-  --background: #FFFFFF;
+  --background: #FFF;
   --foreground: #09090B;
   --card: #F8F9FA;
   --card-foreground: #09090B;
-  --popover: #FFFFFF;
+  --popover: #FFF;
   --popover-foreground: #09090B;
   --primary: #E53935;
-  --primary-foreground: #FFFFFF;
+  --primary-foreground: #FFF;
   --secondary: #F1F5F9;
   --secondary-foreground: #0F172A;
   --muted: #F1F5F9;
   --muted-foreground: #64748B;
   --accent: #E53935;
-  --accent-foreground: #FFFFFF;
+  --accent-foreground: #FFF;
   --destructive: #EF4444;
-  --destructive-foreground: #FFFFFF;
+  --destructive-foreground: #FFF;
   --border: #E2E8F0;
   --input: #E2E8F0;
   --ring: #E53935;
-  --sidebar: #FFFFFF;
+  --sidebar: #FFF;
   --sidebarBorder: #E2E8F0;
   --sidebarText: #334155;
   --sidebarActive: #FEF2F2;
@@ -161,7 +161,6 @@ h6 {
 }
 
 @keyframes pulse-glow {
-
   0%,
   100% {
     box-shadow: 0 0 0 0 var(--brand-accent-soft);
@@ -173,7 +172,6 @@ h6 {
 }
 
 @keyframes shake {
-
   0%,
   100% {
     transform: translateX(0);
@@ -221,10 +219,9 @@ h6 {
 }
 
 /* Touch targets - minimum 44x44px for mobile */
-@media (max-width: 768px) {
-
+@media (width <= 768px) {
   button,
-  a[role=\"button\"] {
+  a[role="\"button\""] {
     min-height: 44px;
     min-width: 44px;
   }
@@ -238,7 +235,6 @@ h6 {
 }
 
 @keyframes shake {
-
   0%,
   100% {
     transform: translateX(0);
@@ -285,14 +281,15 @@ h6 {
 /* Glass morphism - Emergent Premium */
 .glass {
   backdrop-filter: blur(20px);
-  background: rgba(10, 10, 11, 0.85);
-  border: 1px solid rgba(229, 57, 53, 0.1);
+  background: rgb(10 10 11 / 85%);
+  border: 1px solid rgb(229 57 53 / 10%);
 }
 
 /* Custom button styles - Emergent Red Theme */
 .btn-pos {
   @apply bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-white font-bold uppercase tracking-wide transition-all duration-150;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  box-shadow: 0 1px 3px rgb(0 0 0 / 30%);
 }
 
 .btn-pos:hover {
@@ -301,17 +298,20 @@ h6 {
 
 .btn-pos:active {
   @apply bg-zinc-700;
+
   transform: scale(0.98);
 }
 
 .btn-pos-active {
   @apply text-white border-transparent;
+
   background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-accent-hover) 100%);
   box-shadow: 0 0 20px var(--brand-accent-glow);
 }
 
 .btn-primary {
   @apply text-white font-bold uppercase tracking-wide transition-all duration-150;
+
   background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-accent-hover) 100%);
   box-shadow: 0 4px 12px var(--brand-accent-soft);
 }
@@ -341,12 +341,13 @@ h6 {
 /* Card styles - Premium Dark */
 .card-dark {
   @apply bg-zinc-900/95 border border-white/5 backdrop-blur-sm;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+
+  box-shadow: 0 4px 24px rgb(0 0 0 / 40%);
 }
 
 .card-dark:hover {
-  border-color: rgba(229, 57, 53, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border-color: rgb(229 57 53 / 20%);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 50%);
 }
 
 .card-active {
@@ -357,6 +358,7 @@ h6 {
 /* Input styles - Dark Theme */
 .input-dark {
   @apply bg-zinc-900 border-white/10 focus:border-red-500/50 text-white placeholder:text-zinc-500;
+
   transition: all 0.2s ease;
 }
 
@@ -393,17 +395,19 @@ h6 {
 /* Utility Classes - Emergent Dark Theme */
 .stat-card-dark {
   @apply bg-zinc-900/95 border border-white/10 backdrop-blur-sm;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
 }
 
 .stat-card-dark:hover {
-  border-color: rgba(229, 57, 53, 0.2);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  border-color: rgb(229 57 53 / 20%);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 40%);
 }
 
 .stat-card-danger {
   @apply bg-red-950/30 border-red-500/30;
-  box-shadow: 0 2px 8px rgba(229, 57, 53, 0.2);
+
+  box-shadow: 0 2px 8px rgb(229 57 53 / 20%);
 }
 
 .stat-value-primary {
@@ -439,6 +443,7 @@ h6 {
 .text-slate-700,
 .text-zinc-700 {
   color: #E2E8F0 !important;
+
   /* Lighter slate */
 }
 
@@ -446,6 +451,7 @@ h6 {
 .text-slate-600,
 .text-zinc-600 {
   color: #CBD5E1 !important;
+
   /* Standard readable gray */
 }
 
@@ -453,6 +459,7 @@ h6 {
 .text-slate-500,
 .text-zinc-500 {
   color: #94A3B8 !important;
+
   /* Muted but readable */
 }
 
@@ -460,6 +467,7 @@ h6 {
 .text-slate-400,
 .text-zinc-400 {
   color: #CBD5E1 !important;
+
   /* Force to readable gray */
 }
 
@@ -467,6 +475,7 @@ h6 {
 .text-slate-900,
 .text-zinc-900 {
   color: #F8FAFC !important;
+
   /* Almost white */
 }
 
@@ -474,6 +483,7 @@ h6 {
 .text-slate-800,
 .text-zinc-800 {
   color: #F1F5F9 !important;
+
   /* Very light gray */
 }
 
@@ -486,37 +496,38 @@ h6 {
 
 .bg-white {
   background-color: #18181B !important;
+
   /* Map white backgrounds to card-dark background */
 }
 
 .bg-red-50,
 .bg-rose-50 {
-  background-color: rgba(229, 57, 53, 0.1) !important;
+  background-color: rgb(229 57 53 / 10%) !important;
 }
 
 .border-red-200,
 .border-rose-200 {
-  border-color: rgba(229, 57, 53, 0.3) !important;
+  border-color: rgb(229 57 53 / 30%) !important;
 }
 
 .bg-green-50,
 .bg-emerald-50 {
-  background-color: rgba(34, 197, 94, 0.1) !important;
+  background-color: rgb(34 197 94 / 10%) !important;
 }
 
 .border-green-200,
 .border-emerald-200 {
-  border-color: rgba(34, 197, 94, 0.3) !important;
+  border-color: rgb(34 197 94 / 30%) !important;
 }
 
 .bg-blue-50,
 .bg-sky-50 {
-  background-color: rgba(59, 130, 246, 0.1) !important;
+  background-color: rgb(59 130 246 / 10%) !important;
 }
 
 .border-blue-200,
 .border-sky-200 {
-  border-color: rgba(59, 130, 246, 0.3) !important;
+  border-color: rgb(59 130 246 / 30%) !important;
 }
 
 .text-green-600 {
@@ -532,14 +543,14 @@ h6 {
   color: white;
 }
 
-::-moz-selection {
+::selection {
   background-color: var(--brand-accent);
   color: white;
 }
 
 /* Loading Spinner - Emergent Red */
 .loading-spinner {
-  border: 3px solid rgba(229, 57, 53, 0.1);
+  border: 3px solid rgb(229 57 53 / 10%);
   border-top-color: var(--brand-accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -567,28 +578,28 @@ a:focus-visible {
 /* Toast Notifications - Emergent Style */
 [data-sonner-toast] {
   background: #18181B !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+  border: 1px solid rgb(255 255 255 / 10%) !important;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 60%) !important;
 }
 
 [data-sonner-toast][data-type="success"] {
-  border-color: rgba(67, 160, 71, 0.3) !important;
-  box-shadow: 0 8px 24px rgba(67, 160, 71, 0.2) !important;
+  border-color: rgb(67 160 71 / 30%) !important;
+  box-shadow: 0 8px 24px rgb(67 160 71 / 20%) !important;
 }
 
 [data-sonner-toast][data-type="error"] {
-  border-color: rgba(229, 57, 53, 0.3) !important;
-  box-shadow: 0 8px 24px rgba(229, 57, 53, 0.2) !important;
+  border-color: rgb(229 57 53 / 30%) !important;
+  box-shadow: 0 8px 24px rgb(229 57 53 / 20%) !important;
 }
 
 [data-sonner-toast][data-type="warning"] {
-  border-color: rgba(251, 140, 0, 0.3) !important;
-  box-shadow: 0 8px 24px rgba(251, 140, 0, 0.2) !important;
+  border-color: rgb(251 140 0 / 30%) !important;
+  box-shadow: 0 8px 24px rgb(251 140 0 / 20%) !important;
 }
 
 [data-sonner-toast][data-type="info"] {
-  border-color: rgba(30, 136, 229, 0.3) !important;
-  box-shadow: 0 8px 24px rgba(30, 136, 229, 0.2) !important;
+  border-color: rgb(30 136 229 / 30%) !important;
+  box-shadow: 0 8px 24px rgb(30 136 229 / 20%) !important;
 }
 
 [data-sonner-toast] [data-title] {

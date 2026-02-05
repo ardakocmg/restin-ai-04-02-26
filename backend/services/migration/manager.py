@@ -22,10 +22,10 @@ class MigrationManager:
     def validate(self, source: str, data: Any) -> bool:
         return self.get_adapter(source).validate(data)
 
-    def preview(self, source: str, data: Any) -> Dict[str, Any]:
-        return self.get_adapter(source).preview(data)
+    async def preview(self, source: str, data: Any) -> Dict[str, Any]:
+        return await self.get_adapter(source).preview(data)
 
-    async def execute(self, source: str, data: Any, mode: str = "migrate", options: Dict = None) -> MigrationLog:
+    async def execute(self, source: str, data: Any, mode: str = "migrate", options: Dict = None, filename: str = None) -> MigrationLog:
         adapter = self.get_adapter(source)
         result = await adapter.execute(data, mode, options)
         
@@ -44,7 +44,8 @@ class MigrationManager:
             details=result.get("details"),
             created_by=self.user_id,
             started_at=datetime.now(timezone.utc).isoformat(),
-            completed_at=datetime.now(timezone.utc).isoformat()
+            completed_at=datetime.now(timezone.utc).isoformat(),
+            filename=filename  # Track source filename
         )
         
         await db.migration_logs.insert_one(log.model_dump())

@@ -47,6 +47,7 @@ def create_recipe_engineering_router():
             instructions=recipe_data.instructions,
             category=recipe_data.category,
             tags=recipe_data.tags,
+            raw_import_data=recipe_data.raw_import_data,
             created_by=current_user["id"]
         )
         

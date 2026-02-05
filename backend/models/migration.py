@@ -12,6 +12,7 @@ class MigrationLog(BaseModel):
     status: str = "pending"  # pending, in_progress, completed, failed
     summary: Optional[str] = None
     details: Optional[Dict[str, Any]] = None  # JSON details of conflict/results
+    filename: Optional[str] = None  # Source filename for tracking
     started_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     completed_at: Optional[str] = None
     created_by: Optional[str] = None

@@ -5,6 +5,11 @@ from services.migration.manager import MigrationManager
 import json
 
 router = APIRouter()
+print("[OK] Migration Routes Loaded")
+
+@router.get("/migrations/ping")
+async def ping_migrations():
+    return {"status": "ok", "message": "Migration API is active"}
 
 @router.post("/migrations/preview")
 async def preview_migration(
@@ -25,7 +30,8 @@ async def preview_migration(
             import pandas as pd
             import io
             # Read CSV into DataFrame
-            df = pd.read_csv(io.BytesIO(content))
+            # Read CSV into DataFrame (Auto-detect delimiter)
+            df = pd.read_csv(io.BytesIO(content), sep=None, engine='python')
             data = df # Pass DataFrame directly to adapter
         elif filename.endswith('.json'):
             import json
@@ -43,7 +49,10 @@ async def preview_migration(
         
         # Adapter will handle validation inside preview call or before
         # For now, let's call preview directly which should handle DF
-        preview = manager.preview(source, data)
+        preview = await manager.preview(source, data)
+        
+        # Add filename to preview response for tracking
+        preview["filename"] = file.filename
         return preview
     except Exception as e:
         import traceback
@@ -62,9 +71,10 @@ async def execute_migration(
     data = payload.get("data")
     mode = payload.get("mode", "migrate")
     options = payload.get("options", {})
+    filename = payload.get("filename")  # Get filename from preview
 
     manager = MigrationManager(venue_id=user["venue_id"], user_id=user["id"])
-    result = await manager.execute(source, data, mode, options)
+    result = await manager.execute(source, data, mode, options, filename=filename)
     return result
 
 @router.get("/migrations/history")
@@ -88,4 +98,67 @@ async def get_migration_history(
             log["id"] = str(log["_id"])
             del log["_id"]
             
+
+@router.post("/migrations/backfill-item-ids")
+async def backfill_item_ids(
+    user: dict = Depends(get_current_user)
+):
+    """Backfill item_id for all recipes that don't have one"""
+    from core.database import get_database
+    db = get_database()
+    
+    venue_id = user["venue_id"]
+    venue_prefix = venue_id[:2].upper() if venue_id else "XX"
+    
+    # Find recipes without item_id
+    recipes_without_id = await db.RecipesEngineered.find({
+        "venue_id": venue_id,
+        "$or": [
+            {"item_id": {"$exists": False}},
+            {"item_id": ""},
+            {"item_id": None}
+        ]
+    }).to_list(length=None)
+    
+    if not recipes_without_id:
+        return {"status": "success", "message": "All recipes already have item_id", "updated": 0}
+    
+    # Get current max sequence
+    max_recipe = await db.RecipesEngineered.find_one(
+        {"venue_id": venue_id, "item_id": {"$regex": f"^{venue_prefix}/"}},
+        sort=[("item_id", -1)]
+    )
+    
+    current_seq = 0
+    if max_recipe and max_recipe.get("item_id"):
+        try:
+            current_seq = int(max_recipe["item_id"].split("/")[1])
+        except:
+            current_seq = 0
+    
+    # If no existing sequences, start from count of all recipes
+    if current_seq == 0:
+        current_seq = await db.RecipesEngineered.count_documents({
+            "venue_id": venue_id,
+            "item_id": {"$exists": True, "$ne": "", "$ne": None}
+        })
+    
+    updated_count = 0
+    for recipe in recipes_without_id:
+        current_seq += 1
+        new_item_id = f"{venue_prefix}/{str(current_seq).zfill(3)}"
+        
+        await db.RecipesEngineered.update_one(
+            {"_id": recipe["_id"]},
+            {"$set": {"item_id": new_item_id}}
+        )
+        updated_count += 1
+    
+    return {
+        "status": "success",
+        "message": f"Assigned item_id to {updated_count} recipes",
+        "updated": updated_count,
+        "format": f"{venue_prefix}/001 - {venue_prefix}/{str(current_seq).zfill(3)}"
+    }
+
     return logs

@@ -21,7 +21,7 @@ const MigrationHub = () => {
 
     const fetchHistory = async () => {
         try {
-            const res = await api.get('/migrations/history');
+            const res = await api.get('migrations/history');
             setHistory(res.data);
         } catch (error) {
             console.error(error);
@@ -75,7 +75,7 @@ const MigrationHub = () => {
 
         try {
             // Real API Call
-            const res = await api.post('/migrations/preview', formData, {
+            const res = await api.post('migrations/preview', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
@@ -93,11 +93,12 @@ const MigrationHub = () => {
     const handleExecute = async () => {
         setIsProcessing(true);
         try {
-            await api.post('/migrations/execute', {
+            await api.post('migrations/execute', {
                 source: selectedProvider.id,
                 mode: mode,
                 data: mode === 'migrate' ? previewData.details : null, // Send full data for migration
-                options: {}
+                options: {},
+                filename: previewData.filename  // Pass filename for tracking
             });
 
             setStep(4);
@@ -129,12 +130,14 @@ const MigrationHub = () => {
                     <Button
                         variant={viewMode === 'wizard' ? 'default' : 'outline'}
                         onClick={() => setViewMode('wizard')}
+                        className={viewMode === 'wizard' ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'border-zinc-600 text-zinc-200 hover:bg-zinc-800 hover:text-white'}
                     >
                         New Sync
                     </Button>
                     <Button
                         variant={viewMode === 'history' ? 'default' : 'outline'}
                         onClick={() => { setViewMode('history'); fetchHistory(); }}
+                        className={viewMode === 'history' ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'border-zinc-600 text-zinc-200 hover:bg-zinc-800 hover:text-white'}
                     >
                         History
                     </Button>
@@ -155,6 +158,7 @@ const MigrationHub = () => {
                                 <thead className="text-xs uppercase bg-zinc-950 text-zinc-500 font-bold border-b border-zinc-800">
                                     <tr>
                                         <th className="px-4 py-3">Date</th>
+                                        <th className="px-4 py-3">Filename</th>
                                         <th className="px-4 py-3">Source</th>
                                         <th className="px-4 py-3">Mode</th>
                                         <th className="px-4 py-3">Status</th>
@@ -164,12 +168,17 @@ const MigrationHub = () => {
                                 <tbody className="divide-y divide-zinc-800">
                                     {history.length === 0 ? (
                                         <tr>
-                                            <td colSpan="5" className="px-4 py-8 text-center text-zinc-600 italic">No migration history found.</td>
+                                            <td colSpan="6" className="px-4 py-8 text-center text-zinc-600 italic">No migration history found.</td>
                                         </tr>
                                     ) : (
                                         history.map((log) => (
                                             <tr key={log.id} className="hover:bg-zinc-800/50 transition-colors">
                                                 <td className="px-4 py-3 font-mono text-xs text-zinc-500">{new Date(log.started_at || log.created_at).toLocaleString()}</td>
+                                                <td className="px-4 py-3">
+                                                    <span className="text-zinc-300 text-xs font-mono truncate max-w-[180px] block" title={log.filename}>
+                                                        {log.filename || '-'}
+                                                    </span>
+                                                </td>
                                                 <td className="px-4 py-3">
                                                     <Badge variant="outline" className="capitalize bg-zinc-800">{log.source}</Badge>
                                                 </td>
@@ -192,7 +201,7 @@ const MigrationHub = () => {
                 <>
                     {step > 1 && (
                         <div className="flex justify-end mb-4">
-                            <Button variant="outline" onClick={reset} size="sm">
+                            <Button variant="outline" onClick={reset} size="sm" className="border-zinc-600 text-zinc-200 hover:bg-zinc-800 hover:text-white">
                                 Reset Wizard
                             </Button>
                         </div>
@@ -460,11 +469,13 @@ const MigrationHub = () => {
                                                                             <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-500 text-xs font-mono group-hover:bg-zinc-700 group-hover:text-white transition-colors">
                                                                                 {(i + 1).toString().padStart(2, '0')}
                                                                             </div>
-                                                                            <div>
+                                                                            <div className="flex-1">
                                                                                 <div className="font-semibold text-zinc-200 group-hover:text-white transition-colors">{d.name}</div>
                                                                                 <div className="text-xs text-zinc-500 flex items-center gap-3 mt-0.5">
-                                                                                    {d.sku && <span className="font-mono bg-zinc-950 px-1.5 py-0.5 rounded border border-zinc-800 text-[10px]">{d.sku}</span>}
-                                                                                    {d.info && <span>{d.info}</span>}
+                                                                                    <span className="font-mono bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded text-[10px] font-bold">
+                                                                                        {d.item_id || `CB/${String(i + 1).padStart(3, '0')}`}
+                                                                                    </span>
+                                                                                    {d.sku && d.sku !== 'N/A' && <span className="font-mono bg-zinc-950 px-1.5 py-0.5 rounded border border-zinc-800 text-[10px]">{d.sku}</span>}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -489,16 +500,47 @@ const MigrationHub = () => {
                                                     </div>
                                                 )}
 
-                                                {/* UPDATES VIEW */}
+                                                {/* UPDATES VIEW - Show list with changed fields */}
                                                 {activeTab === 'update' && (
-                                                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 flex flex-col items-center justify-center py-20 text-center px-10">
-                                                        <div className="w-20 h-20 rounded-full bg-amber-500/10 flex items-center justify-center mb-6 ring-1 ring-amber-500/20">
-                                                            <RefreshCw className="w-10 h-10 text-amber-500" />
-                                                        </div>
-                                                        <h3 className="text-xl font-bold text-white mb-2">{previewData.update} Smart Matches</h3>
-                                                        <p className="text-zinc-500 text-sm max-w-sm leading-relaxed">
-                                                            We've identified these items in your existing database. We will merge the new pricing and metadata without creating duplicates.
-                                                        </p>
+                                                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                                        {previewData.update === 0 ? (
+                                                            <div className="py-24 text-center">
+                                                                <div className="text-4xl mb-4 opacity-20">✨</div>
+                                                                <div className="text-zinc-500 italic">No updates needed - all items are new.</div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="p-4 space-y-3 max-h-[400px] overflow-y-auto">
+                                                                {previewData.details.filter(d => d.type === 'update').slice(0, visibleCount).map((d, i) => (
+                                                                    <div key={i} className="flex flex-col p-4 bg-amber-500/5 border border-amber-500/20 rounded-xl gap-3">
+                                                                        <div className="flex items-center gap-4">
+                                                                            <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center text-sm font-bold text-amber-400">
+                                                                                {String(i + 1).padStart(2, '0')}
+                                                                            </div>
+                                                                            <div className="flex-1">
+                                                                                <div className="text-base text-zinc-100 font-bold">{d.name}</div>
+                                                                                <div className="flex items-center gap-3 text-xs mt-1">
+                                                                                    <Badge className="bg-zinc-800 text-zinc-400 font-mono">{d.item_id || d.sku}</Badge>
+                                                                                    <span className="text-amber-500">{d.info}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        {/* Changed Fields Diff */}
+                                                                        {d.changed_fields && d.changed_fields.length > 0 && (
+                                                                            <div className="ml-14 space-y-2 border-l-2 border-amber-500/30 pl-4">
+                                                                                {d.changed_fields.map((cf, cfIdx) => (
+                                                                                    <div key={cfIdx} className="flex items-center gap-3 text-sm">
+                                                                                        <span className="text-zinc-500 uppercase text-[10px] font-bold min-w-[80px]">{cf.field}</span>
+                                                                                        <span className="text-red-400 line-through font-mono text-xs">{cf.old}</span>
+                                                                                        <span className="text-zinc-600">→</span>
+                                                                                        <span className="text-green-400 font-mono text-xs font-bold">{cf.new}</span>
+                                                                                    </div>
+                                                                                ))}
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 )}
 
@@ -573,18 +615,35 @@ const MigrationHub = () => {
                                 <Check className="w-12 h-12 text-green-500" />
                             </div>
                             <h2 className="text-4xl font-black text-white mb-2 tracking-tight">Sync Complete!</h2>
-                            <p className="text-zinc-400 max-w-lg mx-auto mb-8 text-lg">
-                                Successfully processed <strong className="text-white">{previewData?.new + previewData?.update} items</strong> from {selectedProvider?.name}.
-                                <br /><span className="text-sm opacity-70">Background jobs are fetching images (24% complete).</span>
+                            <p className="text-zinc-400 max-w-lg mx-auto mb-4 text-lg">
+                                Successfully processed <strong className="text-white">{previewData?.new + previewData?.update} {previewData?.type === 'recipes' ? 'recipes' : 'items'}</strong> from {selectedProvider?.name}.
                             </p>
+
+                            {/* Target Section Badge */}
+                            <div className="flex items-center justify-center gap-2 mb-8">
+                                <span className="text-zinc-500">Added to:</span>
+                                <Badge className={`text-sm px-3 py-1 ${previewData?.type === 'recipes' ? 'bg-orange-600 text-white' : 'bg-blue-600 text-white'}`}>
+                                    {previewData?.type === 'recipes' ? '🍳 Recipe Engineering' : '📦 Inventory Management'}
+                                </Badge>
+                                {previewData?.new > 0 && (
+                                    <Badge variant="outline" className="text-green-400 border-green-500/50">{previewData?.new} New</Badge>
+                                )}
+                                {previewData?.update > 0 && (
+                                    <Badge variant="outline" className="text-amber-400 border-amber-500/50">{previewData?.update} Updated</Badge>
+                                )}
+                            </div>
 
                             <div className="flex gap-4">
                                 <Button onClick={reset} variant="outline" className="h-12 px-6">
                                     Start Another Sync
                                 </Button>
 
-                                {/* Dynamic Navigation Based on Provider */}
-                                {selectedProvider?.id === 'apicbase' && (
+                                {/* Dynamic Navigation Based on Data Type */}
+                                {previewData?.type === 'recipes' ? (
+                                    <Button className="h-12 px-8 bg-orange-600 hover:bg-orange-700 text-lg font-bold shadow-lg shadow-orange-900/20" onClick={() => window.location.href = '/admin/inventory-recipes'}>
+                                        Go to Recipe Engineering <ArrowRight className="w-5 h-5 ml-2" />
+                                    </Button>
+                                ) : selectedProvider?.id === 'apicbase' && (
                                     <Button className="h-12 px-8 bg-blue-600 hover:bg-blue-700 text-lg font-bold shadow-lg shadow-blue-900/20" onClick={() => window.location.href = '/admin/inventory'}>
                                         Go to Inventory Hub <ArrowRight className="w-5 h-5 ml-2" />
                                     </Button>

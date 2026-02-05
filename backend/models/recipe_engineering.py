@@ -58,6 +58,7 @@ class RecipeEngineered(BaseModel):
     instructions: List[str] = []
     category: Optional[str] = None
     tags: List[str] = []
+    raw_import_data: Dict[str, Any] = {}
     active: bool = True
     parent_recipe_id: Optional[str] = None  # for versioning
     created_by: str
@@ -80,6 +81,7 @@ class RecipeEngineeredRequest(BaseModel):
     instructions: List[str] = []
     category: Optional[str] = None
     tags: List[str] = []
+    raw_import_data: Dict[str, Any] = {}
 
 
 class RecipeVersion(BaseModel):
