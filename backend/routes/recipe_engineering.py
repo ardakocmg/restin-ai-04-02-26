@@ -1,11 +1,17 @@
 """Recipe Engineering Routes"""
-from fastapi import APIRouter, HTTPException, Depends
-from typing import Optional
+from fastapi import APIRouter, HTTPException, Depends, Request
+from pydantic import BaseModel
+from typing import Optional, List
 from datetime import datetime, timezone
+import uuid
 
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
-from models.recipe_engineering import RecipeEngineered, RecipeVersion, RecipeCostAnalysis, RecipeEngineeredRequest
+from models.recipe_engineering import RecipeEngineered, RecipeVersion, RecipeCostAnalysis, RecipeEngineeredRequest, RecipeChangeRecord
+
+
+class BulkRecipeRequest(BaseModel):
+    recipe_ids: List[str]
 
 
 def create_recipe_engineering_router():
@@ -73,6 +79,7 @@ def create_recipe_engineering_router():
         # Strict state filtering
         if active is not None:
             query["active"] = active
+            query["deleted_at"] = None  # Exclude trashed items from active/archived views
             
         if search:
             search_regex = {"$regex": search, "$options": "i"}
@@ -115,29 +122,22 @@ def create_recipe_engineering_router():
         pipeline = [
             {"$match": {"venue_id": venue_id}},
             {"$facet": {
-                "active_count": [{"$match": {"active": True}}, {"$count": "count"}],
-                "archived_count": [{"$match": {"active": False}}, {"$count": "count"}],
+                "active_count": [{"$match": {"active": True, "deleted_at": None}}, {"$count": "count"}],
+                "archived_count": [{"$match": {"active": False, "deleted_at": None}}, {"$count": "count"}],
+                "trash_count": [{"$match": {"deleted_at": {"$ne": None}}}, {"$count": "count"}],
                 "total_count": [{"$count": "count"}],
                 "missing_ids": [
-                    {"$match": {"active": True, "item_id": {"$exists": False}}},
+                    {"$match": {"active": True, "deleted_at": None, "item_id": {"$exists": False}}},
                     {"$count": "count"}
                 ],
                 "categories": [
-                    {"$match": {"active": True}},
+                    {"$match": {"active": True, "deleted_at": None}},
                     {"$group": {"_id": "$category"}},
                     {"$count": "count"}
                 ],
-                # Added today - simplified fallback
-                "today_count": [
-                    {"$match": {"active": True}},
-                    {"$addFields": {
-                        "check_date": {"$ifNull": ["$created_at", "$import_date"]}
-                    }},
-                    {"$match": {
-                        "check_date": {"$gte": datetime.combine(datetime.now().date(), datetime.min.time())}
-                    }},
-                    {"$count": "count"}
-                ]
+                # Added today - disabled due to inconsistent date formats
+                # Will return 0 until data migration normalizes dates
+                "today_count": []
             }}
         ]
         
@@ -150,6 +150,7 @@ def create_recipe_engineering_router():
         return {
             "total_active": get_count("active_count"),
             "total_archived": get_count("archived_count"),
+            "total_trash": get_count("trash_count"),
             "total_recipes": get_count("total_count"),
             "missing_ids": get_count("missing_ids"),
             "categories": get_count("categories"), 
@@ -159,9 +160,10 @@ def create_recipe_engineering_router():
     @router.post("/venues/{venue_id}/recipes/engineered/bulk-archive")
     async def bulk_archive_recipes(
         venue_id: str,
-        recipe_ids: list[str],
+        request: BulkRecipeRequest,
         current_user: dict = Depends(get_current_user)
     ):
+        recipe_ids = request.recipe_ids
         await check_venue_access(current_user, venue_id)
         
         result = await db.RecipesEngineered.update_many(
@@ -173,9 +175,10 @@ def create_recipe_engineering_router():
     @router.post("/venues/{venue_id}/recipes/engineered/bulk-restore")
     async def bulk_restore_recipes(
         venue_id: str,
-        recipe_ids: list[str],
+        request: BulkRecipeRequest,
         current_user: dict = Depends(get_current_user)
     ):
+        recipe_ids = request.recipe_ids
         await check_venue_access(current_user, venue_id)
         
         result = await db.RecipesEngineered.update_many(
@@ -187,16 +190,147 @@ def create_recipe_engineering_router():
     @router.post("/venues/{venue_id}/recipes/engineered/bulk-delete")
     async def bulk_delete_recipes(
         venue_id: str,
-        recipe_ids: list[str],
+        request: BulkRecipeRequest,
         current_user: dict = Depends(get_current_user)
     ):
+        recipe_ids = request.recipe_ids
         await check_venue_access(current_user, venue_id)
         
-        # Hard delete
-        result = await db.RecipesEngineered.delete_many(
-            {"venue_id": venue_id, "id": {"$in": recipe_ids}}
+        now = datetime.now(timezone.utc).isoformat()
+        user_name = current_user.get("name", current_user.get("username", "Unknown"))
+        
+        # Soft delete - move to trash
+        result = await db.RecipesEngineered.update_many(
+            {"venue_id": venue_id, "id": {"$in": recipe_ids}, "deleted_at": None},
+            {"$set": {
+                "deleted_at": now,
+                "deleted_by": current_user["id"],
+                "updated_at": now,
+                "last_modified_by": current_user["id"],
+                "last_modified_by_name": user_name,
+                "last_modified_method": "bulk_action"
+            },
+            "$push": {
+                "change_history": {
+                    "id": str(uuid.uuid4()),
+                    "version": 0,  # No version change for delete
+                    "change_type": "deleted",
+                    "change_method": "bulk_action",
+                    "change_summary": "Moved to trash",
+                    "user_id": current_user["id"],
+                    "user_name": user_name,
+                    "timestamp": now
+                }
+            }}
         )
-        return {"message": f"Deleted {result.deleted_count} recipes"}
+        return {"message": f"Moved {result.modified_count} recipes to trash"}
+    
+    # ===== TRASH MANAGEMENT ENDPOINTS =====
+    # NOTE: These MUST come BEFORE /{recipe_id} route or "trash" gets caught as a recipe_id
+    
+    @router.get("/venues/{venue_id}/recipes/engineered/trash")
+    async def list_trashed_recipes(
+        venue_id: str,
+        page: int = 1,
+        limit: int = 50,
+        search: Optional[str] = None,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """List all recipes in the trash bin."""
+        await check_venue_access(current_user, venue_id)
+        
+        # All authenticated users can view trash (role check removed)
+        
+        query = {
+            "venue_id": venue_id,
+            "deleted_at": {"$ne": None}
+        }
+        
+        if search:
+            search_regex = {"$regex": search, "$options": "i"}
+            query["$or"] = [
+                {"recipe_name": search_regex},
+                {"item_id": search_regex}
+            ]
+        
+        skip = (page - 1) * limit
+        total = await db.RecipesEngineered.count_documents(query)
+        recipes = await db.RecipesEngineered.find(query, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
+        
+        # Get venue trash retention settings (default 30 days)
+        venue = await db.Venues.find_one({"id": venue_id}, {"trash_retention_days": 1})
+        retention_days = venue.get("trash_retention_days", 30) if venue else 30
+        
+        return {
+            "data": recipes,
+            "total": total,
+            "page": page,
+            "limit": limit,
+            "total_pages": (total + limit - 1) // limit,
+            "retention_days": retention_days
+        }
+    
+    @router.post("/venues/{venue_id}/recipes/engineered/bulk-restore-trash")
+    async def bulk_restore_from_trash(
+        venue_id: str,
+        request: BulkRecipeRequest,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Restore recipes from trash back to active."""
+        await check_venue_access(current_user, venue_id)
+        
+        recipe_ids = request.recipe_ids
+        now = datetime.now(timezone.utc).isoformat()
+        user_name = current_user.get("name", current_user.get("username", "Unknown"))
+        
+        result = await db.RecipesEngineered.update_many(
+            {"venue_id": venue_id, "id": {"$in": recipe_ids}, "deleted_at": {"$ne": None}},
+            {
+                "$set": {
+                    "deleted_at": None,
+                    "deleted_by": None,
+                    "active": True,
+                    "updated_at": now,
+                    "last_modified_by": current_user["id"],
+                    "last_modified_by_name": user_name,
+                    "last_modified_method": "bulk_action"
+                },
+                "$inc": {"version": 1},
+                "$push": {
+                    "change_history": {
+                        "id": str(uuid.uuid4()),
+                        "version": 0,
+                        "change_type": "restored_from_trash",
+                        "change_method": "bulk_action",
+                        "change_summary": "Restored from trash",
+                        "user_id": current_user["id"],
+                        "user_name": user_name,
+                        "timestamp": now
+                    }
+                }
+            }
+        )
+        return {"message": f"Restored {result.modified_count} recipes from trash"}
+    
+    @router.post("/venues/{venue_id}/recipes/engineered/bulk-purge")
+    async def bulk_purge_recipes(
+        venue_id: str,
+        request: BulkRecipeRequest,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Permanently delete recipes from trash."""
+        await check_venue_access(current_user, venue_id)
+        
+        recipe_ids = request.recipe_ids
+        
+        # Only delete if already in trash
+        result = await db.RecipesEngineered.delete_many({
+            "venue_id": venue_id,
+            "id": {"$in": recipe_ids},
+            "deleted_at": {"$ne": None}
+        })
+        
+        return {"message": f"Permanently deleted {result.deleted_count} recipes"}
     
     @router.get("/venues/{venue_id}/recipes/engineered/{recipe_id}")
     async def get_engineered_recipe(
@@ -301,5 +435,162 @@ def create_recipe_engineering_router():
             })
         
         return analysis
+    
+    # ============== TRASH MANAGEMENT (Owner/Product Owner Only) ==============
+    
+    @router.get("/venues/{venue_id}/recipes/engineered/trash")
+    async def list_trash(
+        venue_id: str,
+        page: int = 1,
+        limit: int = 50,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """List recipes in trash (soft-deleted). Owner/Product Owner only."""
+        await check_venue_access(current_user, venue_id)
+        
+        # Permission check - only owner/product_owner
+        if current_user.get("role") not in ["owner", "product_owner", "admin"]:
+            raise HTTPException(403, "Only owners can view trash")
+        
+        skip = (page - 1) * limit
+        query = {"venue_id": venue_id, "deleted_at": {"$ne": None}}
+        
+        total = await db.RecipesEngineered.count_documents(query)
+        recipes = await db.RecipesEngineered.find(
+            query, {"_id": 0}
+        ).sort("deleted_at", -1).skip(skip).limit(limit).to_list(limit)
+        
+        # Calculate days until auto-purge (configurable per venue, default 30)
+        venue = await db.venues.find_one({"id": venue_id}, {"_id": 0})
+        retention_days = venue.get("trash_retention_days", 30) if venue else 30
+        
+        for recipe in recipes:
+            if recipe.get("deleted_at"):
+                deleted_dt = datetime.fromisoformat(recipe["deleted_at"].replace("Z", "+00:00"))
+                now_dt = datetime.now(timezone.utc)
+                days_in_trash = (now_dt - deleted_dt).days
+                recipe["days_until_purge"] = max(0, retention_days - days_in_trash)
+        
+        return {
+            "items": recipes,
+            "total": total,
+            "page": page,
+            "pages": (total + limit - 1) // limit,
+            "retention_days": retention_days
+        }
+    
+    @router.post("/venues/{venue_id}/recipes/engineered/bulk-restore-trash")
+    async def bulk_restore_from_trash(
+        venue_id: str,
+        request: BulkRecipeRequest,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Restore recipes from trash back to active."""
+        recipe_ids = request.recipe_ids
+        await check_venue_access(current_user, venue_id)
+        
+        if current_user.get("role") not in ["owner", "product_owner", "admin"]:
+            raise HTTPException(403, "Only owners can restore from trash")
+        
+        now = datetime.now(timezone.utc).isoformat()
+        user_name = current_user.get("name", current_user.get("username", "Unknown"))
+        
+        result = await db.RecipesEngineered.update_many(
+            {"venue_id": venue_id, "id": {"$in": recipe_ids}, "deleted_at": {"$ne": None}},
+            {"$set": {
+                "deleted_at": None,
+                "deleted_by": None,
+                "active": True,
+                "updated_at": now,
+                "last_modified_by": current_user["id"],
+                "last_modified_by_name": user_name,
+                "last_modified_method": "bulk_action"
+            },
+            "$push": {
+                "change_history": {
+                    "id": str(uuid.uuid4()),
+                    "version": 0,
+                    "change_type": "restored_from_trash",
+                    "change_method": "bulk_action",
+                    "change_summary": "Restored from trash",
+                    "user_id": current_user["id"],
+                    "user_name": user_name,
+                    "timestamp": now
+                }
+            }}
+        )
+        return {"message": f"Restored {result.modified_count} recipes from trash"}
+    
+    @router.post("/venues/{venue_id}/recipes/engineered/bulk-purge")
+    async def bulk_purge_recipes(
+        venue_id: str,
+        request: BulkRecipeRequest,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """PERMANENT delete - Owner only. Cannot be undone!"""
+        recipe_ids = request.recipe_ids
+        await check_venue_access(current_user, venue_id)
+        
+        # Strict owner-only check
+        if current_user.get("role") not in ["owner"]:
+            raise HTTPException(403, "Only owners can permanently delete recipes")
+        
+        # Hard delete from trash only
+        result = await db.RecipesEngineered.delete_many(
+            {"venue_id": venue_id, "id": {"$in": recipe_ids}, "deleted_at": {"$ne": None}}
+        )
+        
+        # Log this critical action
+        await db.AuditLogs.insert_one({
+            "id": str(uuid.uuid4()),
+            "venue_id": venue_id,
+            "action": "PERMANENT_DELETE_RECIPES",
+            "entity_type": "recipe_engineered",
+            "entity_ids": recipe_ids,
+            "user_id": current_user["id"],
+            "user_name": current_user.get("name", "Unknown"),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "details": f"Permanently deleted {result.deleted_count} recipes"
+        })
+        
+        return {"message": f"Permanently deleted {result.deleted_count} recipes"}
+    
+    # ============== ARCHIVE DETECTION FOR IMPORT ==============
+    
+    @router.post("/venues/{venue_id}/recipes/engineered/check-archive")
+    async def check_archived_recipes(
+        venue_id: str,
+        recipe_names: List[str],
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Check if any recipes exist in archive/trash for import preview."""
+        await check_venue_access(current_user, venue_id)
+        
+        # Find archived recipes (active=False but not deleted)
+        archived = await db.RecipesEngineered.find(
+            {
+                "venue_id": venue_id,
+                "active": False,
+                "deleted_at": None,
+                "recipe_name": {"$in": recipe_names}
+            },
+            {"recipe_name": 1, "id": 1, "_id": 0}
+        ).to_list(len(recipe_names))
+        
+        # Find trashed recipes
+        trashed = await db.RecipesEngineered.find(
+            {
+                "venue_id": venue_id,
+                "deleted_at": {"$ne": None},
+                "recipe_name": {"$in": recipe_names}
+            },
+            {"recipe_name": 1, "id": 1, "_id": 0}
+        ).to_list(len(recipe_names))
+        
+        return {
+            "archived_matches": archived,
+            "trashed_matches": trashed,
+            "message": f"Found {len(archived)} in archive, {len(trashed)} in trash"
+        }
     
     return router

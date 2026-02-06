@@ -344,7 +344,7 @@ const MigrationHub = () => {
                                 <CardTitle>Migration Preview</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                                     {previewData.error ? (
                                         <div className="col-span-3 p-6 bg-red-950/20 rounded-2xl border border-red-900/50 text-left">
                                             <div className="flex items-start gap-4">
@@ -431,6 +431,78 @@ const MigrationHub = () => {
                                                 </div>
                                                 {activeTab === 'conflict' && (
                                                     <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-50" />
+                                                )}
+                                            </div>
+
+                                            {/* Restore from Archive Widget */}
+                                            <div
+                                                onClick={() => setActiveTab('restore_archive')}
+                                                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'restore_archive' ? 'bg-purple-950/30 border-purple-500/50 shadow-[0_0_30px_rgba(168,85,247,0.1)]' : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900'}`}
+                                            >
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <div className={`p-3 rounded-xl ${activeTab === 'restore_archive' ? 'bg-purple-500 text-white' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700'}`}>
+                                                        <div className="text-xl">📦</div>
+                                                    </div>
+                                                    {activeTab === 'restore_archive' && <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />}
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <div className={`text-4xl font-black tracking-tight ${activeTab === 'restore_archive' ? 'text-white' : 'text-zinc-300'}`}>
+                                                        {previewData.restore_from_archive || 0}
+                                                    </div>
+                                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === 'restore_archive' ? 'text-purple-400' : 'text-zinc-500'}`}>
+                                                        From Archive
+                                                    </div>
+                                                </div>
+                                                {activeTab === 'restore_archive' && (
+                                                    <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-50" />
+                                                )}
+                                            </div>
+
+                                            {/* Restore from Trash Widget */}
+                                            <div
+                                                onClick={() => setActiveTab('restore_trash')}
+                                                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'restore_trash' ? 'bg-rose-950/30 border-rose-500/50 shadow-[0_0_30px_rgba(244,63,94,0.1)]' : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900'}`}
+                                            >
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <div className={`p-3 rounded-xl ${activeTab === 'restore_trash' ? 'bg-rose-500 text-white' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700'}`}>
+                                                        <div className="text-xl">🗑️</div>
+                                                    </div>
+                                                    {activeTab === 'restore_trash' && <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />}
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <div className={`text-4xl font-black tracking-tight ${activeTab === 'restore_trash' ? 'text-white' : 'text-zinc-300'}`}>
+                                                        {previewData.restore_from_trash || 0}
+                                                    </div>
+                                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === 'restore_trash' ? 'text-rose-400' : 'text-zinc-500'}`}>
+                                                        From Trash
+                                                    </div>
+                                                </div>
+                                                {activeTab === 'restore_trash' && (
+                                                    <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent opacity-50" />
+                                                )}
+                                            </div>
+
+                                            {/* Unchanged Widget */}
+                                            <div
+                                                onClick={() => setActiveTab('unchanged')}
+                                                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'unchanged' ? 'bg-teal-950/30 border-teal-500/50 shadow-[0_0_30px_rgba(20,184,166,0.1)]' : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900'}`}
+                                            >
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <div className={`p-3 rounded-xl ${activeTab === 'unchanged' ? 'bg-teal-500 text-white' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700'}`}>
+                                                        <div className="text-xl">✓</div>
+                                                    </div>
+                                                    {activeTab === 'unchanged' && <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />}
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <div className={`text-4xl font-black tracking-tight ${activeTab === 'unchanged' ? 'text-white' : 'text-zinc-300'}`}>
+                                                        {previewData.unchanged || 0}
+                                                    </div>
+                                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === 'unchanged' ? 'text-teal-400' : 'text-zinc-500'}`}>
+                                                        Unchanged
+                                                    </div>
+                                                </div>
+                                                {activeTab === 'unchanged' && (
+                                                    <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-teal-500 to-transparent opacity-50" />
                                                 )}
                                             </div>
                                         </>

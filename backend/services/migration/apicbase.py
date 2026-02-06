@@ -285,6 +285,9 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         
         new_items = 0
         update_items = 0
+        unchanged_items = 0
+        restore_from_archive = 0
+        restore_from_trash = 0
         details = []
         
         # Get venue prefix for Item ID (first 2-3 letters of venue name)
@@ -326,34 +329,82 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                 existing = existing_recipes[f"name:{str(name).lower()}"]
             
             if existing:
-                # UPDATE - find changed fields
-                update_items += 1
-                changed_fields = []
-                old_raw = existing.get("raw_import_data", {})
+                # Determine if it's archived or trashed
+                is_archived = not existing.get("active", True) and not existing.get("deleted_at")
+                is_trashed = existing.get("deleted_at") is not None
                 
-                # Compare key fields
-                key_fields = ["Financial: sell price", "General Information: category", 
-                              "Portioning: # portions", "General Information: difficulty"]
-                for field in key_fields:
-                    old_val = str(old_raw.get(field, "")) if old_raw.get(field) else ""
-                    new_val = str(raw_data.get(field, "")) if raw_data.get(field) else ""
-                    if old_val != new_val:
-                        changed_fields.append({
-                            "field": field.split(": ")[-1] if ": " in field else field,
-                            "old": old_val or "(empty)",
-                            "new": new_val or "(empty)"
+                if is_trashed:
+                    # RESTORE FROM TRASH - highlight this
+                    update_items += 1
+                    restore_from_trash += 1
+                    details.append({
+                        "type": "restore_from_trash",
+                        "name": str(name),
+                        "sku": sku or "N/A",
+                        "item_id": existing.get("item_id", ""),
+                        "existing_id": existing.get("id", ""),
+                        "info": "⚠️ Was in TRASH - will be restored and updated",
+                        "deleted_at": existing.get("deleted_at"),
+                        "raw_import_data": raw_data
+                    })
+                elif is_archived:
+                    # RESTORE FROM ARCHIVE - highlight this
+                    update_items += 1
+                    restore_from_archive += 1
+                    details.append({
+                        "type": "restore_from_archive",
+                        "name": str(name),
+                        "sku": sku or "N/A",
+                        "item_id": existing.get("item_id", ""),
+                        "existing_id": existing.get("id", ""),
+                        "info": "📦 Was ARCHIVED - will be restored and updated",
+                        "raw_import_data": raw_data
+                    })
+                else:
+                    # Regular UPDATE - find changed fields
+                    changed_fields = []
+                    old_raw = existing.get("raw_import_data", {})
+                    
+                    # Compare ALL fields, not just key fields
+                    all_old_keys = set(old_raw.keys())
+                    all_new_keys = set(raw_data.keys())
+                    all_fields = all_old_keys | all_new_keys
+                    
+                    for field in all_fields:
+                        old_val = str(old_raw.get(field, "")) if old_raw.get(field) else ""
+                        new_val = str(raw_data.get(field, "")) if raw_data.get(field) else ""
+                        if old_val != new_val:
+                            changed_fields.append({
+                                "field": field.split(": ")[-1] if ": " in field else field,
+                                "old": old_val or "(empty)",
+                                "new": new_val or "(empty)"
+                            })
+                    
+                    if len(changed_fields) > 0:
+                        # Has actual changes
+                        update_items += 1
+                        details.append({
+                            "type": "update",
+                            "name": str(name),
+                            "sku": sku or "N/A",
+                            "item_id": existing.get("item_id", ""),
+                            "existing_id": existing.get("id", ""),
+                            "changed_fields": changed_fields,
+                            "info": f"{len(changed_fields)} field(s) changed",
+                            "raw_import_data": raw_data
                         })
-                
-                details.append({
-                    "type": "update",
-                    "name": str(name),
-                    "sku": sku or "N/A",
-                    "item_id": existing.get("item_id", ""),
-                    "existing_id": existing.get("id", ""),
-                    "changed_fields": changed_fields,
-                    "info": f"{len(changed_fields)} field(s) changed",
-                    "raw_import_data": raw_data
-                })
+                    else:
+                        # No changes - count as unchanged
+                        unchanged_items += 1
+                        details.append({
+                            "type": "unchanged",
+                            "name": str(name),
+                            "sku": sku or "N/A",
+                            "item_id": existing.get("item_id", ""),
+                            "existing_id": existing.get("id", ""),
+                            "info": "✓ No changes detected",
+                            "raw_import_data": raw_data
+                        })
             else:
                 # NEW item - generate Item ID
                 new_items += 1
@@ -374,11 +425,20 @@ class ApicbaseAdapter(BaseMigrationAdapter):
             summary_parts.append(f"{new_items} New")
         if update_items > 0:
             summary_parts.append(f"{update_items} Updates")
+        if restore_from_archive > 0:
+            summary_parts.append(f"{restore_from_archive} from Archive")
+        if restore_from_trash > 0:
+            summary_parts.append(f"{restore_from_trash} from Trash")
+        if unchanged_items > 0:
+            summary_parts.append(f"{unchanged_items} Unchanged")
         
         return {
             "type": "recipes",
             "new": new_items,
             "update": update_items,
+            "restore_from_archive": restore_from_archive,
+            "restore_from_trash": restore_from_trash,
+            "unchanged": unchanged_items,
             "conflict": 0,
             "details": details,
             "summary": f"Detected: {', '.join(summary_parts) if summary_parts else 'No items'}"
@@ -533,6 +593,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         """Process recipe data from JSON (sent by frontend after preview)"""
         processed = 0
         updated = 0
+        skipped = 0
         errors = 0
         import uuid
         from datetime import datetime, timezone
@@ -576,8 +637,82 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                         except:
                             pass
                 
-                if is_update and existing_id:
-                    # UPDATE existing recipe
+                now = datetime.now(timezone.utc).isoformat()
+                item_type = item.get("type", "new_recipe")
+                
+                # Handle RESTORE FROM TRASH
+                if item_type == "restore_from_trash" and existing_id:
+                    # Restore from trash + update
+                    await db.RecipesEngineered.update_one(
+                        {"id": existing_id, "venue_id": self.venue_id},
+                        {
+                            "$set": {
+                                "active": True,
+                                "deleted_at": None,
+                                "deleted_by": None,
+                                "recipe_name": str(name),
+                                "raw_import_data": raw_data,
+                                "updated_at": now,
+                                "last_modified_by": self.user_id,
+                                "last_modified_method": "excel_upload"
+                            },
+                            "$inc": {"version": 1},
+                            "$push": {
+                                "change_history": {
+                                    "id": str(uuid.uuid4()),
+                                    "version": 0,
+                                    "change_type": "restored_from_trash",
+                                    "change_method": "excel_upload",
+                                    "change_summary": f"Restored from trash via Excel import",
+                                    "user_id": self.user_id,
+                                    "user_name": "Import",
+                                    "timestamp": now
+                                }
+                            }
+                        }
+                    )
+                    updated += 1
+                    
+                # Handle RESTORE FROM ARCHIVE  
+                elif item_type == "restore_from_archive" and existing_id:
+                    await db.RecipesEngineered.update_one(
+                        {"id": existing_id, "venue_id": self.venue_id},
+                        {
+                            "$set": {
+                                "active": True,
+                                "recipe_name": str(name),
+                                "raw_import_data": raw_data,
+                                "updated_at": now,
+                                "last_modified_by": self.user_id,
+                                "last_modified_method": "excel_upload"
+                            },
+                            "$inc": {"version": 1},
+                            "$push": {
+                                "change_history": {
+                                    "id": str(uuid.uuid4()),
+                                    "version": 0,
+                                    "change_type": "restored",
+                                    "change_method": "excel_upload",
+                                    "change_summary": f"Restored from archive via Excel import",
+                                    "user_id": self.user_id,
+                                    "user_name": "Import",
+                                    "timestamp": now
+                                }
+                            }
+                        }
+                    )
+                    updated += 1
+                    
+                # Handle regular UPDATE
+                elif item_type == "update" and existing_id:
+                    # Fetch existing document to compare
+                    existing_doc = await db.RecipesEngineered.find_one(
+                        {"id": existing_id, "venue_id": self.venue_id},
+                        {"_id": 0, "recipe_name": 1, "target_sales_price": 1, "description": 1,
+                         "category": 1, "subcategory": 1, "product_type": 1, "portions": 1,
+                         "difficulty": 1, "cuisine": 1}
+                    )
+                    
                     update_data = {
                         "recipe_name": str(name),
                         "target_sales_price": sales_price,
@@ -589,14 +724,50 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                         "difficulty": raw_data.get("General Information: difficulty", ""),
                         "cuisine": raw_data.get("General Information: cuisine", ""),
                         "raw_import_data": raw_data,
-                        "updated_at": datetime.now(timezone.utc).isoformat()
+                        "updated_at": now,
+                        "last_modified_by": self.user_id,
+                        "last_modified_method": "excel_upload"
                     }
                     
-                    await db.RecipesEngineered.update_one(
-                        {"id": existing_id, "venue_id": self.venue_id},
-                        {"$set": update_data}
-                    )
-                    updated += 1
+                    # Check if any tracked fields actually changed
+                    has_changes = False
+                    if existing_doc:
+                        compare_fields = ["recipe_name", "target_sales_price", "description", 
+                                         "category", "subcategory", "product_type", "portions",
+                                         "difficulty", "cuisine"]
+                        for field in compare_fields:
+                            old_val = existing_doc.get(field)
+                            new_val = update_data.get(field)
+                            # Normalize for comparison
+                            if old_val != new_val:
+                                has_changes = True
+                                break
+                    else:
+                        has_changes = True  # No existing doc, so definitely has changes
+                    
+                    if has_changes:
+                        await db.RecipesEngineered.update_one(
+                            {"id": existing_id, "venue_id": self.venue_id},
+                            {
+                                "$set": update_data,
+                                "$inc": {"version": 1},
+                                "$push": {
+                                    "change_history": {
+                                        "id": str(uuid.uuid4()),
+                                        "version": 0,
+                                        "change_type": "updated",
+                                        "change_method": "excel_upload",
+                                        "change_summary": f"Updated via Excel import",
+                                        "user_id": self.user_id,
+                                        "user_name": "Import",
+                                        "timestamp": now
+                                    }
+                                }
+                            }
+                        )
+                        updated += 1
+                    else:
+                        skipped += 1
                 else:
                     # NEW recipe - generate item_id if not provided
                     if not item_id:
@@ -606,10 +777,11 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                     doc = {
                         "id": str(uuid.uuid4()),
                         "venue_id": self.venue_id,
-                        "item_id": item_id,  # Auto-generated Item ID
+                        "item_id": item_id,
                         "recipe_name": str(name),
                         "target_sales_price": sales_price,
                         "sku": sku,
+                        "version": 1,
                         "description": raw_data.get("General Information: extra info", ""),
                         "category": raw_data.get("General Information: category", "Imported"),
                         "subcategory": raw_data.get("General Information: subcategory", ""),
@@ -625,18 +797,31 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                         },
                         "difficulty": raw_data.get("General Information: difficulty", ""),
                         "cuisine": raw_data.get("General Information: cuisine", ""),
-                        "ingredients": [],  # Will be populated if available
-                        "raw_import_data": raw_data,  # Store all original data
+                        "ingredients": [],
+                        "raw_import_data": raw_data,
                         "active": True,
-                        "created_at": datetime.now(timezone.utc).isoformat(),  # Track creation time
+                        "created_at": now,
+                        "updated_at": now,
+                        "created_by": self.user_id,
+                        "last_modified_by": self.user_id,
+                        "last_modified_method": "excel_upload",
+                        "change_history": [{
+                            "id": str(uuid.uuid4()),
+                            "version": 1,
+                            "change_type": "imported",
+                            "change_method": "excel_upload",
+                            "change_summary": f"Created via Excel import",
+                            "user_id": self.user_id,
+                            "user_name": "Import",
+                            "timestamp": now
+                        }],
                         "external_links": {
                             "source": "apicbase_recipe",
                             "apicbase_id": raw_data.get("Internal: apicbase ID", ""),
-                            "imported_at": datetime.now(timezone.utc).isoformat()
+                            "imported_at": now
                         }
                     }
                     
-                    # Insert into RecipesEngineered
                     await db.RecipesEngineered.insert_one(doc)
                     processed += 1
                 

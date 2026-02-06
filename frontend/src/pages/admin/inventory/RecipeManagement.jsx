@@ -65,9 +65,10 @@ export default function RecipeManagement() {
   const [editingRecipe, setEditingRecipe] = useState(null);
 
   // Bulk Actions & View State
-  const [viewMode, setViewMode] = useState('active'); // 'active' | 'archived'
+  const [viewMode, setViewMode] = useState('active'); // 'active' | 'archived' | 'trash'
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [trashData, setTrashData] = useState({ items: [], total: 0, retention_days: 30 });
 
   // Filters
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -149,9 +150,24 @@ export default function RecipeManagement() {
     setLoading(true);
     try {
       const isArchived = viewMode === 'archived';
+      const isTrash = viewMode === 'trash';
+
       // Server-Side: Fetch only what we need
-      const [recipesRes, itemsRes, menuRes] = await Promise.all([
-        api.get(`venues/${activeVenue.id}/recipes/engineered`, {
+      let recipesRes;
+
+      if (isTrash) {
+        // Fetch trash data from dedicated endpoint
+        recipesRes = await api.get(`venues/${activeVenue.id}/recipes/engineered/trash`, {
+          params: { page: currentPage, limit: limit }
+        });
+        const trashResponse = recipesRes.data;
+        setTrashData(trashResponse);
+        setRecipes(trashResponse.data || []);
+        setTotalPages(trashResponse.total_pages || 1);
+        setTotalRecords(trashResponse.total || 0);
+      } else {
+        // Normal active/archived fetch
+        recipesRes = await api.get(`venues/${activeVenue.id}/recipes/engineered`, {
           params: {
             active: !isArchived,
             page: currentPage,
@@ -159,34 +175,38 @@ export default function RecipeManagement() {
             search: searchQuery || undefined,
             category: selectedCategory !== 'All' ? selectedCategory : undefined
           }
-        }),
+        });
+      }
+
+      const [itemsRes, menuRes] = await Promise.all([
         items.length === 0 ? api.get(`venues/${activeVenue.id}/inventory`) : Promise.resolve({ data: items }),
         menuItems.length === 0 ? api.get(`venues/${activeVenue.id}/menu/items?all=true`) : Promise.resolve({ data: menuItems })
       ]);
 
-      const data = recipesRes.data;
-      // Handle both legacy (array) and new (object) responses during transition
-      const loadedRecipes = Array.isArray(data) ? data : (data.items || []);
+      if (!isTrash) {
+        const data = recipesRes.data;
+        // Handle both legacy (array) and new (object) responses during transition
+        const loadedRecipes = Array.isArray(data) ? data : (data.items || []);
 
-      if (!Array.isArray(data)) {
-        setTotalPages(data.pages || 1);
-        setTotalRecords(data.total || 0);
-      } else {
-        // Fallback for legacy
-        setTotalPages(1);
-        setTotalRecords(loadedRecipes.length);
+        if (!Array.isArray(data)) {
+          setTotalPages(data.pages || 1);
+          setTotalRecords(data.total || 0);
+        } else {
+          // Fallback for legacy
+          setTotalPages(1);
+          setTotalRecords(loadedRecipes.length);
+        }
+
+        setRecipes(loadedRecipes);
+
+        // Extract Filters (Optimized: Only from current page)
+        const cats = new Set(availableCategories);
+        loadedRecipes.forEach(r => { if (r.category) cats.add(r.category); });
+        setAvailableCategories(Array.from(cats));
       }
 
-      setRecipes(loadedRecipes);
       if (itemsRes.data) setItems(itemsRes.data);
       if (menuRes.data) setMenuItems(menuRes.data);
-
-      // Extract Filters (Optimized: Only from current page, or ideally this comes from stats)
-      // For now, let's keep it simple with existing page data
-      const cats = new Set(availableCategories);
-      loadedRecipes.forEach(r => { if (r.category) cats.add(r.category); });
-      setAvailableCategories(Array.from(cats));
-
     } catch (e) {
       console.error(e);
       toast.error("Failed to load data");
@@ -255,13 +275,20 @@ export default function RecipeManagement() {
       } else if (action === 'delete') {
         res = await api.post(`venues/${activeVenue.id}/recipes/engineered/bulk-delete`, { recipe_ids: ids });
         setIsDeleteAlertOpen(false);
+      } else if (action === 'restore-trash') {
+        // Restore from trash
+        res = await api.post(`venues/${activeVenue.id}/recipes/engineered/bulk-restore-trash`, { recipe_ids: ids });
+      } else if (action === 'purge') {
+        // Permanent delete (owner only)
+        res = await api.post(`venues/${activeVenue.id}/recipes/engineered/bulk-purge`, { recipe_ids: ids });
+        setIsDeleteAlertOpen(false);
       }
 
-      toast.success(res.data.message);
+      toast.success(res?.data?.message || 'Action completed');
       setSelectedIds(new Set());
       loadData();
     } catch (e) {
-      toast.error("Bulk action failed");
+      toast.error(e?.response?.data?.detail || "Bulk action failed");
     }
   };
 
@@ -374,7 +401,7 @@ export default function RecipeManagement() {
       ),
       columns: isMainCollapsed ? [] : [
         {
-          key: 'select',
+          key: 'recipe_select',
           label: (
             <Checkbox
               checked={recipes.length > 0 && selectedIds.size === recipes.length}
@@ -557,110 +584,152 @@ export default function RecipeManagement() {
         </div>
       }
     >
-      {/* Dashboard Stats */}
-      {/* Interactive Dashboard Stats - The "WOW" Factor */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        {/* Total Recipes Card */}
-        <Card
-          className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 border-l-4 ${quickFilter === 'all' ? 'border-l-emerald-500 ring-2 ring-emerald-500 bg-zinc-900 shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'border-l-zinc-700 bg-zinc-950 hover:bg-zinc-900 group opacity-70 hover:opacity-100'}`}
-          onClick={() => setQuickFilter('all')}
-        >
-          <div className={`absolute top-0 right-0 p-3 opacity-10 ${quickFilter === 'all' ? 'text-emerald-500' : 'text-white'}`}>
-            <ChefHat className="w-16 h-16 transform rotate-12" />
+      {/* Trash Mode Banner */}
+      {viewMode === 'trash' && (
+        <div className="bg-red-950/50 border border-red-500/30 rounded-xl p-6 mb-6">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-xl bg-red-600/20 flex items-center justify-center">
+              <Trash2 className="w-8 h-8 text-red-400" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-red-400">🗑️ Trash Bin</h3>
+              <p className="text-zinc-400 text-sm">
+                Items here will be permanently deleted after {trashData.retention_days || 30} days.
+                <span className="text-zinc-500 ml-2">({totalRecords} items)</span>
+              </p>
+            </div>
+            {selectedIds.size > 0 && (
+              <div className="flex gap-2">
+                <Badge variant="outline" className="border-red-500/50 text-red-400">
+                  {selectedIds.size} selected
+                </Badge>
+              </div>
+            )}
           </div>
-          <CardContent className="p-5 flex flex-col justify-between h-full relative z-10">
-            <div>
-              <div className={`text-xs font-black uppercase tracking-widest mb-1 ${quickFilter === 'all' ? 'text-emerald-400' : 'text-zinc-500 group-hover:text-zinc-300'}`}>
-                Total Recipes
-              </div>
-              <div className="text-4xl font-black text-white tracking-tighter shadow-black drop-shadow-lg">
-                {stats.total_active}
-              </div>
-            </div>
-            <div className={`text-[10px] font-bold mt-2 ${quickFilter === 'all' ? 'text-emerald-500/80' : 'text-zinc-600'}`}>
-              ALL ACTIVE RECIPES
-            </div>
-          </CardContent>
-        </Card>
+        </div>
+      )}
 
-        {/* Added Today Card */}
-        <Card
-          className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 border-l-4 ${quickFilter === 'today' ? 'border-l-blue-500 ring-2 ring-blue-500 bg-zinc-900 shadow-[0_0_20px_rgba(59,130,246,0.2)]' : 'border-l-zinc-700 bg-zinc-950 hover:bg-zinc-900 group opacity-70 hover:opacity-100'}`}
-          onClick={() => setQuickFilter('today')}
-        >
-          <div className={`absolute top-0 right-0 p-3 opacity-10 ${quickFilter === 'today' ? 'text-blue-500' : 'text-white'}`}>
-            <RefreshCw className="w-16 h-16 transform -rotate-12" />
-          </div>
-          <CardContent className="p-5 flex flex-col justify-between h-full relative z-10">
-            <div>
-              <div className={`text-xs font-black uppercase tracking-widest mb-1 ${quickFilter === 'today' ? 'text-blue-400' : 'text-zinc-500 group-hover:text-zinc-300'}`}>
-                Fresh Uploads
-              </div>
-              <div className="text-4xl font-black text-white tracking-tighter shadow-black drop-shadow-lg">
-                {stats.added_today}
-              </div>
+      {/* Dashboard Stats - Only show for active/archived */}
+      {viewMode !== 'trash' && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          {/* Total Recipes Card */}
+          <Card
+            className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 border-l-4 ${quickFilter === 'all' ? 'border-l-emerald-500 ring-2 ring-emerald-500 bg-zinc-900 shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'border-l-zinc-700 bg-zinc-950 hover:bg-zinc-900 group opacity-70 hover:opacity-100'}`}
+            onClick={() => setQuickFilter('all')}
+          >
+            <div className={`absolute top-0 right-0 p-3 opacity-10 ${quickFilter === 'all' ? 'text-emerald-500' : 'text-white'}`}>
+              <ChefHat className="w-16 h-16 transform rotate-12" />
             </div>
-            <div className={`text-[10px] font-bold mt-2 ${quickFilter === 'today' ? 'text-blue-500/80' : 'text-zinc-600'}`}>
-              ADDED TODAY
-            </div>
-          </CardContent>
-        </Card>
+            <CardContent className="p-5 flex flex-col justify-between h-full relative z-10">
+              <div>
+                <div className={`text-xs font-black uppercase tracking-widest mb-1 ${quickFilter === 'all' ? 'text-emerald-400' : 'text-zinc-500 group-hover:text-zinc-300'}`}>
+                  Total Recipes
+                </div>
+                <div className="text-4xl font-black text-white tracking-tighter shadow-black drop-shadow-lg">
+                  {stats.total_active}
+                </div>
+              </div>
+              <div className={`text-[10px] font-bold mt-2 ${quickFilter === 'all' ? 'text-emerald-500/80' : 'text-zinc-600'}`}>
+                ALL ACTIVE RECIPES
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* Categories Card */}
-        <Card
-          className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 border-l-4 ${quickFilter === 'categories' ? 'border-l-purple-500 ring-2 ring-purple-500 bg-zinc-900 shadow-[0_0_20px_rgba(168,85,247,0.2)]' : 'border-l-zinc-700 bg-zinc-950 hover:bg-zinc-900 group opacity-70 hover:opacity-100'}`}
-          onClick={() => setQuickFilter('categories')} // Could just filter to show distribution or nothing unique yet
-        >
-          <div className={`absolute top-0 right-0 p-3 opacity-10 ${quickFilter === 'categories' ? 'text-purple-500' : 'text-white'}`}>
-            <Filter className="w-16 h-16 transform rotate-6" />
-          </div>
-          <CardContent className="p-5 flex flex-col justify-between h-full relative z-10">
-            <div>
-              <div className={`text-xs font-black uppercase tracking-widest mb-1 ${quickFilter === 'categories' ? 'text-purple-400' : 'text-zinc-500 group-hover:text-zinc-300'}`}>
-                Unique Categories
-              </div>
-              <div className="text-4xl font-black text-white tracking-tighter shadow-black drop-shadow-lg">
-                {stats.categories}
-              </div>
+          {/* Added Today Card */}
+          <Card
+            className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 border-l-4 ${quickFilter === 'today' ? 'border-l-blue-500 ring-2 ring-blue-500 bg-zinc-900 shadow-[0_0_20px_rgba(59,130,246,0.2)]' : 'border-l-zinc-700 bg-zinc-950 hover:bg-zinc-900 group opacity-70 hover:opacity-100'}`}
+            onClick={() => setQuickFilter('today')}
+          >
+            <div className={`absolute top-0 right-0 p-3 opacity-10 ${quickFilter === 'today' ? 'text-blue-500' : 'text-white'}`}>
+              <RefreshCw className="w-16 h-16 transform -rotate-12" />
             </div>
-            <div className={`text-[10px] font-bold mt-2 ${quickFilter === 'categories' ? 'text-purple-500/80' : 'text-zinc-600'}`}>
-              MENU DIVERSITY
-            </div>
-          </CardContent>
-        </Card>
+            <CardContent className="p-5 flex flex-col justify-between h-full relative z-10">
+              <div>
+                <div className={`text-xs font-black uppercase tracking-widest mb-1 ${quickFilter === 'today' ? 'text-blue-400' : 'text-zinc-500 group-hover:text-zinc-300'}`}>
+                  Fresh Uploads
+                </div>
+                <div className="text-4xl font-black text-white tracking-tighter shadow-black drop-shadow-lg">
+                  {stats.added_today}
+                </div>
+              </div>
+              <div className={`text-[10px] font-bold mt-2 ${quickFilter === 'today' ? 'text-blue-500/80' : 'text-zinc-600'}`}>
+                ADDED TODAY
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* Data Quality / Missing IDs Card */}
-        <Card
-          className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 border-l-4 ${quickFilter === 'missing_id' ? 'border-l-amber-500 ring-1 ring-amber-500/50 bg-zinc-900' : 'border-l-zinc-700 bg-zinc-950 hover:bg-zinc-900 group'}`}
-          onClick={() => setQuickFilter('missing_id')}
-        >
-          <div className={`absolute top-0 right-0 p-3 opacity-10 ${quickFilter === 'missing_id' ? 'text-amber-500' : 'text-white'}`}>
-            <AlertCircle className="w-16 h-16 transform -rotate-6" />
-          </div>
-          <CardContent className="p-5 flex flex-col justify-between h-full relative z-10">
-            <div>
-              <div className={`text-xs font-black uppercase tracking-widest mb-1 ${quickFilter === 'missing_id' ? 'text-amber-400' : 'text-zinc-500 group-hover:text-zinc-300'}`}>
-                Missing IDs
-              </div>
-              <div className="text-4xl font-black text-white tracking-tighter shadow-black drop-shadow-lg">
-                {stats.missing_ids}
-              </div>
+          {/* Categories Card */}
+          <Card
+            className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 border-l-4 ${quickFilter === 'categories' ? 'border-l-purple-500 ring-2 ring-purple-500 bg-zinc-900 shadow-[0_0_20px_rgba(168,85,247,0.2)]' : 'border-l-zinc-700 bg-zinc-950 hover:bg-zinc-900 group opacity-70 hover:opacity-100'}`}
+            onClick={() => setQuickFilter('categories')} // Could just filter to show distribution or nothing unique yet
+          >
+            <div className={`absolute top-0 right-0 p-3 opacity-10 ${quickFilter === 'categories' ? 'text-purple-500' : 'text-white'}`}>
+              <Filter className="w-16 h-16 transform rotate-6" />
             </div>
-            <div className={`text-[10px] font-bold mt-2 ${quickFilter === 'missing_id' ? 'text-amber-500/80' : 'text-zinc-600'}`}>
-              NEEDS ATTENTION
+            <CardContent className="p-5 flex flex-col justify-between h-full relative z-10">
+              <div>
+                <div className={`text-xs font-black uppercase tracking-widest mb-1 ${quickFilter === 'categories' ? 'text-purple-400' : 'text-zinc-500 group-hover:text-zinc-300'}`}>
+                  Unique Categories
+                </div>
+                <div className="text-4xl font-black text-white tracking-tighter shadow-black drop-shadow-lg">
+                  {stats.categories}
+                </div>
+              </div>
+              <div className={`text-[10px] font-bold mt-2 ${quickFilter === 'categories' ? 'text-purple-500/80' : 'text-zinc-600'}`}>
+                MENU DIVERSITY
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Data Quality / Missing IDs Card */}
+          <Card
+            className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 border-l-4 ${quickFilter === 'missing_id' ? 'border-l-amber-500 ring-1 ring-amber-500/50 bg-zinc-900' : 'border-l-zinc-700 bg-zinc-950 hover:bg-zinc-900 group'}`}
+            onClick={() => setQuickFilter('missing_id')}
+          >
+            <div className={`absolute top-0 right-0 p-3 opacity-10 ${quickFilter === 'missing_id' ? 'text-amber-500' : 'text-white'}`}>
+              <AlertCircle className="w-16 h-16 transform -rotate-6" />
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            <CardContent className="p-5 flex flex-col justify-between h-full relative z-10">
+              <div>
+                <div className={`text-xs font-black uppercase tracking-widest mb-1 ${quickFilter === 'missing_id' ? 'text-amber-400' : 'text-zinc-500 group-hover:text-zinc-300'}`}>
+                  Missing IDs
+                </div>
+                <div className="text-4xl font-black text-white tracking-tighter shadow-black drop-shadow-lg">
+                  {stats.missing_ids}
+                </div>
+              </div>
+              <div className={`text-[10px] font-bold mt-2 ${quickFilter === 'missing_id' ? 'text-amber-500/80' : 'text-zinc-600'}`}>
+                NEEDS ATTENTION
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Stats & Controls */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
         <div className="flex-1 space-y-4">
-          {/* Tabs for Active / Archive */}
+          {/* Tabs for Active / Archive / Trash */}
           <Tabs value={viewMode} onValueChange={setViewMode} className="w-full md:w-auto">
-            <TabsList className="bg-zinc-900 border border-zinc-800">
-              <TabsTrigger value="active" className="data-[state=active]:bg-zinc-800">Active Recipes</TabsTrigger>
-              <TabsTrigger value="archived" className="data-[state=active]:bg-zinc-800 text-zinc-500 data-[state=active]:text-zinc-400">Archived</TabsTrigger>
+            <TabsList className="bg-zinc-900/80 border border-zinc-700 p-1 gap-1">
+              <TabsTrigger
+                value="active"
+                className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:ring-2 data-[state=active]:ring-emerald-400/50 text-zinc-400 hover:text-white transition-all px-4"
+              >
+                ✅ Active ({stats.total_active || 0})
+              </TabsTrigger>
+              <TabsTrigger
+                value="archived"
+                className="data-[state=active]:bg-amber-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:ring-2 data-[state=active]:ring-amber-400/50 text-zinc-500 hover:text-zinc-300 transition-all px-4"
+              >
+                📦 Archived ({stats.total_archived || 0})
+              </TabsTrigger>
+              <TabsTrigger
+                value="trash"
+                className="data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-[0_0_15px_rgba(239,68,68,0.4)] data-[state=active]:ring-2 data-[state=active]:ring-red-400/50 text-zinc-600 hover:text-red-400 transition-all px-4"
+              >
+                🗑️ Trash ({stats.total_trash || 0})
+              </TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -706,15 +775,26 @@ export default function RecipeManagement() {
               <Button size="sm" variant="ghost" className="text-indigo-300 hover:text-indigo-100 hover:bg-indigo-500/20" onClick={() => handleBulkAction('archive')}>
                 Archive
               </Button>
-            ) : (
+            ) : viewMode === 'archived' ? (
               <Button size="sm" variant="ghost" className="text-emerald-300 hover:text-emerald-100 hover:bg-emerald-500/20" onClick={() => handleBulkAction('restore')}>
                 Restore
               </Button>
-            )}
+            ) : viewMode === 'trash' ? (
+              <>
+                <Button size="sm" variant="ghost" className="text-emerald-300 hover:text-emerald-100 hover:bg-emerald-500/20" onClick={() => handleBulkAction('restore-trash')}>
+                  ♻️ Restore
+                </Button>
+                <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-200 hover:bg-red-500/10" onClick={() => setIsDeleteAlertOpen(true)}>
+                  💀 Permanently Delete
+                </Button>
+              </>
+            ) : null}
 
-            <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-200 hover:bg-red-500/10" onClick={() => setIsDeleteAlertOpen(true)}>
-              <Trash2 className="w-4 h-4 mr-1" /> Delete
-            </Button>
+            {viewMode !== 'trash' && (
+              <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-200 hover:bg-red-500/10" onClick={() => setIsDeleteAlertOpen(true)}>
+                <Trash2 className="w-4 h-4 mr-1" /> Move to Trash
+              </Button>
+            )}
           </div>
         )}
       </div>
@@ -730,6 +810,7 @@ export default function RecipeManagement() {
             data={recipes}
             loading={loading}
             emptyMessage="No recipes found."
+            enableRowSelection={false}
           />
           {/* Pagination Controls */}
           <div className="flex items-center justify-between px-4 py-4 border-t border-white/10 bg-zinc-900/50">
@@ -903,8 +984,8 @@ export default function RecipeManagement() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel className="bg-zinc-900 text-white hover:bg-zinc-800 border-zinc-700">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleBulkAction('delete')} className="bg-red-600 hover:bg-red-700 text-white border-0">
-              Continue
+            <AlertDialogAction onClick={() => handleBulkAction(viewMode === 'trash' ? 'purge' : 'delete')} className="bg-red-600 hover:bg-red-700 text-white border-0">
+              {viewMode === 'trash' ? '💀 Permanently Delete' : 'Continue'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

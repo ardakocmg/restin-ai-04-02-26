@@ -97,7 +97,9 @@ async def get_migration_history(
         if "_id" in log:
             log["id"] = str(log["_id"])
             del log["_id"]
-            
+    
+    return logs
+
 
 @router.post("/migrations/backfill-item-ids")
 async def backfill_item_ids(
@@ -158,5 +160,3 @@ async def backfill_item_ids(
         "updated": updated_count,
         "format": f"{prefix}001..."
     }
-
-    return logs
