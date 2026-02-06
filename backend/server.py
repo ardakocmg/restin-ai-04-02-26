@@ -2,7 +2,8 @@
 restin.ai - Enterprise Hospitality OS
 Clean server.py with modular route architecture
 """
-from fastapi import FastAPI, APIRouter, Request
+from fastapi import FastAPI, APIRouter, Request, Depends
+# Trigger Reload (Updated)
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
@@ -527,6 +528,9 @@ api_main.include_router(quality_control_router)
 api_main.include_router(hr_leave_advanced_router)
 api_main.include_router(hr_payroll_advanced_router)
 api_main.include_router(hr_expense_router)
+api_main.include_router(migration_router)
+api_main.include_router(recipe_engineering_router)
+
 api_main.include_router(hr_performance_router)
 api_main.include_router(hr_documents_advanced_router)
 api_main.include_router(hr_sfm_accounting_router)

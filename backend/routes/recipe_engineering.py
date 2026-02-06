@@ -58,7 +58,10 @@ def create_recipe_engineering_router():
     async def list_engineered_recipes(
         venue_id: str,
         category: Optional[str] = None,
-        active_only: bool = True,
+        active: Optional[bool] = None,
+        page: Optional[int] = None,
+        limit: Optional[int] = None,
+        search: Optional[str] = None,
         current_user: dict = Depends(get_current_user)
     ):
         await check_venue_access(current_user, venue_id)
@@ -66,11 +69,134 @@ def create_recipe_engineering_router():
         query = {"venue_id": venue_id}
         if category:
             query["category"] = category
-        if active_only:
-            query["active"] = True
         
-        recipes = await db.RecipesEngineered.find(query, {"_id": 0}).to_list(1000)
-        return recipes
+        # Strict state filtering
+        if active is not None:
+            query["active"] = active
+            
+        if search:
+            search_regex = {"$regex": search, "$options": "i"}
+            query["$or"] = [
+                {"recipe_name": search_regex},
+                {"item_id": search_regex},
+                {"raw_import_data.Item ID": search_regex},
+                {"raw_import_data.Sku": search_regex}
+            ]
+            
+        if limit is None and page is None:
+            # Legacy mode: Return list up to 50k
+            recipes = await db.RecipesEngineered.find(query, {"_id": 0}).to_list(50000)
+            return recipes
+            
+        # Pagination Mode
+        page = page or 1
+        limit = limit or 50
+        skip = (page - 1) * limit
+        
+        total_count = await db.RecipesEngineered.count_documents(query)
+        recipes = await db.RecipesEngineered.find(query, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
+        
+        return {
+            "items": recipes,
+            "total": total_count,
+            "page": page,
+            "pages": (total_count + limit - 1) // limit,
+            "limit": limit
+        }
+
+    @router.get("/venues/{venue_id}/recipes/engineered/stats")
+    async def get_recipe_stats(
+        venue_id: str,
+        current_user: dict = Depends(get_current_user)
+    ):
+        await check_venue_access(current_user, venue_id)
+        
+        # Parallel stats fetching using aggregation for speed
+        pipeline = [
+            {"$match": {"venue_id": venue_id}},
+            {"$facet": {
+                "active_count": [{"$match": {"active": True}}, {"$count": "count"}],
+                "archived_count": [{"$match": {"active": False}}, {"$count": "count"}],
+                "total_count": [{"$count": "count"}],
+                "missing_ids": [
+                    {"$match": {"active": True, "item_id": {"$exists": False}}},
+                    {"$count": "count"}
+                ],
+                "categories": [
+                    {"$match": {"active": True}},
+                    {"$group": {"_id": "$category"}},
+                    {"$count": "count"}
+                ],
+                # Added today - simplified fallback
+                "today_count": [
+                    {"$match": {"active": True}},
+                    {"$addFields": {
+                        "check_date": {"$ifNull": ["$created_at", "$import_date"]}
+                    }},
+                    {"$match": {
+                        "check_date": {"$gte": datetime.combine(datetime.now().date(), datetime.min.time())}
+                    }},
+                    {"$count": "count"}
+                ]
+            }}
+        ]
+        
+        result = await db.RecipesEngineered.aggregate(pipeline).to_list(1)
+        stats = result[0] if result else {}
+        
+        def get_count(key):
+            return stats.get(key, [{}])[0].get("count", 0) if stats.get(key) else 0
+
+        return {
+            "total_active": get_count("active_count"),
+            "total_archived": get_count("archived_count"),
+            "total_recipes": get_count("total_count"),
+            "missing_ids": get_count("missing_ids"),
+            "categories": get_count("categories"), 
+            "added_today": get_count("today_count")
+        }
+
+    @router.post("/venues/{venue_id}/recipes/engineered/bulk-archive")
+    async def bulk_archive_recipes(
+        venue_id: str,
+        recipe_ids: list[str],
+        current_user: dict = Depends(get_current_user)
+    ):
+        await check_venue_access(current_user, venue_id)
+        
+        result = await db.RecipesEngineered.update_many(
+            {"venue_id": venue_id, "id": {"$in": recipe_ids}},
+            {"$set": {"active": False, "updated_at": datetime.now(timezone.utc).isoformat()}}
+        )
+        return {"message": f"Archived {result.modified_count} recipes"}
+
+    @router.post("/venues/{venue_id}/recipes/engineered/bulk-restore")
+    async def bulk_restore_recipes(
+        venue_id: str,
+        recipe_ids: list[str],
+        current_user: dict = Depends(get_current_user)
+    ):
+        await check_venue_access(current_user, venue_id)
+        
+        result = await db.RecipesEngineered.update_many(
+            {"venue_id": venue_id, "id": {"$in": recipe_ids}},
+            {"$set": {"active": True, "updated_at": datetime.now(timezone.utc).isoformat()}}
+        )
+        return {"message": f"Restored {result.modified_count} recipes"}
+
+    @router.post("/venues/{venue_id}/recipes/engineered/bulk-delete")
+    async def bulk_delete_recipes(
+        venue_id: str,
+        recipe_ids: list[str],
+        current_user: dict = Depends(get_current_user)
+    ):
+        await check_venue_access(current_user, venue_id)
+        
+        # Hard delete
+        result = await db.RecipesEngineered.delete_many(
+            {"venue_id": venue_id, "id": {"$in": recipe_ids}}
+        )
+        return {"message": f"Deleted {result.deleted_count} recipes"}
     
     @router.get("/venues/{venue_id}/recipes/engineered/{recipe_id}")
     async def get_engineered_recipe(
@@ -161,7 +287,7 @@ def create_recipe_engineering_router():
         recipes = await db.RecipesEngineered.find(
             {"venue_id": venue_id, "active": True},
             {"_id": 0}
-        ).to_list(1000)
+        ).to_list(50000)
         
         analysis = []
         for recipe in recipes:

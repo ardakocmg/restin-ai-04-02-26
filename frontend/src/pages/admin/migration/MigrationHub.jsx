@@ -22,7 +22,7 @@ const MigrationHub = () => {
     const fetchHistory = async () => {
         try {
             const res = await api.get('migrations/history');
-            setHistory(res.data);
+            setHistory(Array.isArray(res.data) ? res.data : []);
         } catch (error) {
             console.error(error);
         }
