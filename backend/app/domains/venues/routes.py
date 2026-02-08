@@ -1,157 +1,135 @@
 """
-Venues domain routes - now using real data from DataLoader + MongoDB.
+Venues domain routes - ALL data from MongoDB exclusively.
+No DataLoader, no JSON files.
 """
 from fastapi import APIRouter, Query, HTTPException
 from typing import Optional, List
-from motor.motor_asyncio import AsyncIOMotorClient
-import os
+from pydantic import BaseModel
+from bson import ObjectId
 
-from app.core.data_loader import get_data_loader
+from app.core.database import get_database
 
 router = APIRouter(prefix="/api/venues", tags=["venues"])
-
-# MongoDB connection for imported recipes
-MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
-DB_NAME = os.environ.get('DB_NAME', 'restin_v2')
-
-_mongo_client = None
-_db = None
-
-def get_db():
-    """Get MongoDB database instance."""
-    global _mongo_client, _db
-    if _db is None:
-        _mongo_client = AsyncIOMotorClient(MONGO_URL)
-        _db = _mongo_client[DB_NAME]
-    return _db
 
 
 @router.get("")
 async def list_venues():
-    """Get all venues from seed data."""
-    loader = get_data_loader()
-    return loader.get_venues()
+    """Get all venues from MongoDB."""
+    db = get_database()
+    venues = await db.venues.find({}).to_list(length=100)
+    for v in venues:
+        v["_id"] = str(v["_id"])
+    return venues
 
 
 @router.get("/{venue_id}")
 async def get_venue(venue_id: str):
-    """Get a single venue by ID."""
-    loader = get_data_loader()
-    venue = loader.get_venue(venue_id)
+    """Get a single venue by ID from MongoDB."""
+    db = get_database()
+    venue = await db.venues.find_one({"id": venue_id})
     if not venue:
         raise HTTPException(404, f"Venue '{venue_id}' not found")
+    venue["_id"] = str(venue["_id"])
     return venue
 
 
+# ==================== ZONES & TABLES ====================
+
+@router.get("/{venue_id}/zones")
+async def get_zones(venue_id: str):
+    """Get zones for a venue from MongoDB."""
+    db = get_database()
+    zones = await db.zones.find({"venue_id": venue_id}).to_list(length=100)
+    for z in zones:
+        z["_id"] = str(z["_id"])
+    return zones
+
+
+@router.get("/{venue_id}/tables")
+async def get_tables(venue_id: str):
+    """Get tables for a venue from MongoDB."""
+    db = get_database()
+    tables = await db.tables.find({"venue_id": venue_id}).to_list(length=500)
+    for t in tables:
+        t["_id"] = str(t["_id"])
+    return tables
+
+
+# ==================== MENUS ====================
+
+@router.get("/{venue_id}/menus")
+async def get_menus(venue_id: str):
+    """Get menus for a venue from MongoDB."""
+    db = get_database()
+    menus = await db.menus.find({"venue_id": venue_id}).to_list(length=50)
+    for m in menus:
+        m["_id"] = str(m["_id"])
+    return menus
+
+
+@router.get("/{venue_id}/menu-categories")
+async def get_menu_categories(venue_id: str):
+    """Get menu categories for a venue from MongoDB."""
+    db = get_database()
+    categories = await db.menu_categories.find({"venue_id": venue_id}).to_list(length=200)
+    for c in categories:
+        c["_id"] = str(c["_id"])
+    return categories
+
+
+@router.get("/{venue_id}/menu-items")
+async def get_menu_items(venue_id: str):
+    """Get menu items for a venue from MongoDB."""
+    db = get_database()
+    items = await db.menu_items.find({"venue_id": venue_id}).to_list(length=1000)
+    for i in items:
+        i["_id"] = str(i["_id"])
+    return items
+
+
+# ==================== RECIPES (ENGINEERED) ====================
+
 @router.get("/{venue_id}/recipes/engineered/stats")
 async def get_recipe_stats(venue_id: str):
-    """Get recipe statistics for a venue from seed + MongoDB."""
-    print(f"[DEBUG] Fetching stats for venue: {venue_id}")
-    loader = get_data_loader()
-    seed_recipes = loader.get_recipes()
+    """Get recipe statistics for a venue from MongoDB."""
+    db = get_database()
     
-    # Also get recipes from MongoDB
-    db = get_db()
-    mongo_recipes = []
-    try:
-        # Use to_list for safer async execution
-        mongo_recipes = await db.recipes_engineered.find({}).to_list(length=None)
-        # Convert ObjectId to string
-        for doc in mongo_recipes:
-             doc["_id"] = str(doc["_id"])
-    except Exception as e:
-        print(f"[ERROR] Failed to fetch from MongoDB: {str(e)}")
-        pass
+    # Get all recipes from MongoDB
+    all_recipes = await db.recipes_engineered.find({}).to_list(length=None)
     
-    # Merge and Clean
-    all_recipes = _clean_and_normalize_recipes(seed_recipes + mongo_recipes)
+    # Also include menu items as recipes if no recipes_engineered exist
+    if not all_recipes:
+        all_recipes = await db.menu_items.find({"venue_id": venue_id}).to_list(length=None)
     
-    # Filter only non-deleted for main stats
-    valid_recipes = [r for r in all_recipes if not r.get("deleted", False)]
-    deleted_recipes = [r for r in all_recipes if r.get("deleted", False)]
+    # Clean and process
+    valid = [r for r in all_recipes if not r.get("deleted", False)]
+    active = [r for r in valid if r.get("active", True)]
+    archived = [r for r in valid if not r.get("active", True)]
+    deleted = [r for r in all_recipes if r.get("deleted", False)]
     
-    active_recipes = [r for r in valid_recipes if r["active"]]
-    archived_recipes = [r for r in valid_recipes if not r["active"]]
+    # Categories
+    categories = set()
+    missing_ids = 0
+    for r in valid:
+        cat = r.get("category", r.get("category_id", "Uncategorized"))
+        categories.add(cat)
+        if not r.get("item_id") and not r.get("id"):
+            missing_ids += 1
     
-    # Logic for specific frontend stats
     from datetime import datetime
     today_str = datetime.now().strftime("%Y-%m-%d")
-    
-    # Added Today logic (approximated by checking created_at if available or updated_at)
-    added_today_count = 0
-    missing_ids_count = 0
-    categories = {}
-    
-    for r in valid_recipes:
-        # Categories
-        cat = r["category"]
-        categories[cat] = categories.get(cat, 0) + 1
-        
-        # Missing IDs (sku or item_id)
-        if not r.get("item_id"):
-            missing_ids_count += 1
-            
-        # Added Today
-        created_at = r.get("created_at") or r.get("updated_at")
-        if created_at:
-            if isinstance(created_at, str):
-                is_today = created_at.startswith(today_str)
-            else:
-                try: 
-                    is_today = created_at.strftime("%Y-%m-%d") == today_str
-                except: is_today = False
-            
-            if is_today:
-                added_today_count += 1
-    
-    stats = {
-        "total_active": len(active_recipes), 
-        "total_archived": len(archived_recipes),
-        "total_recipes": len(valid_recipes),
-        "total_trash": len(deleted_recipes),
-        "added_today": added_today_count,
-        "categories": len(categories),
-        "missing_ids": missing_ids_count,
-        "avg_margin_percent": 65.0,
-        "total_price_cents": sum(float(r.get("priceCents", 0) or 0) for r in valid_recipes)
-    }
-    print(f"[DEBUG] Returning stats: {stats}")
-    return stats
-
-
-@router.get("/{venue_id}/recipes/engineered/trash")
-async def get_recipe_trash(
-    venue_id: str,
-    page: int = Query(1, ge=1),
-    limit: int = Query(50, ge=1, le=100)
-):
-    """Get trashed recipes for a venue."""
-    db = get_db()
-    
-    # Get all recipes to ensure we catch everything, cleaner to reuse logic
-    # Optimization: Filter in Mongo first for deleted=True
-    try:
-        cursor = db.recipes_engineered.find({"deleted": True})
-        mongo_trash = await cursor.to_list(length=None)
-        for doc in mongo_trash:
-             doc["_id"] = str(doc["_id"])
-    except:
-        mongo_trash = []
-        
-    # We don't support deleting seed data yet effectively without local state override
-    # So for now only show Mongol trash
-    trash_items = _clean_and_normalize_recipes(mongo_trash)
-    trash_items = [r for r in trash_items if r.get("deleted", False)]
-    
-    start = (page - 1) * limit
-    end = start + limit
-    paginated = trash_items[start:end]
+    added_today = sum(1 for r in valid if str(r.get("created_at", "")).startswith(today_str))
     
     return {
-        "items": paginated,
-        "total": len(trash_items),
-        "page": page,
-        "limit": limit
+        "total_active": len(active),
+        "total_archived": len(archived),
+        "total_recipes": len(valid),
+        "total_trash": len(deleted),
+        "added_today": added_today,
+        "categories": len(categories),
+        "missing_ids": missing_ids,
+        "avg_margin_percent": 65.0,
+        "total_price_cents": sum(float(r.get("priceCents", r.get("price_cents", 0)) or 0) for r in valid)
     }
 
 
@@ -162,154 +140,165 @@ async def get_recipes(
     page: int = Query(1, ge=1),
     limit: int = Query(50, ge=1, le=100)
 ):
-    """Get recipes from seed data + MongoDB imports."""
-    loader = get_data_loader()
-    seed_recipes = loader.get_recipes(active=active)
+    """Get recipes from MongoDB."""
+    db = get_database()
     
-    db = get_db()
-    mongo_recipes = []
-    try:
-        mongo_recipes = await db.recipes_engineered.find({}).to_list(length=None)
-        for doc in mongo_recipes:
-            doc["_id"] = str(doc["_id"])
-    except Exception as e:
-        pass
+    skip = (page - 1) * limit
     
-    # Combine and Clean
-    all_recipes = _clean_and_normalize_recipes(seed_recipes + mongo_recipes)
+    # Check if recipes_engineered has data
+    engineered_count = await db.recipes_engineered.count_documents({})
     
-    # Filter out DELETED items (Trash)
-    all_recipes = [r for r in all_recipes if not r.get("deleted", False)]
+    if engineered_count > 0:
+        # Use recipes_engineered collection
+        query = {}
+        # Only filter deleted if field exists
+        query["deleted"] = {"$ne": True}
+        if active is not None:
+            query["active"] = active
+        
+        total = await db.recipes_engineered.count_documents(query)
+        recipes = await db.recipes_engineered.find(query).skip(skip).limit(limit).to_list(length=limit)
+    else:
+        # Fallback: use menu_items as recipes
+        query = {"venue_id": venue_id}
+        if active is not None:
+            query["is_active"] = active
+        
+        total = await db.menu_items.count_documents(query)
+        recipes = await db.menu_items.find(query).skip(skip).limit(limit).to_list(length=limit)
+        
+        # Normalize menu items to look like recipes
+        for r in recipes:
+            if "recipe_name" not in r:
+                r["recipe_name"] = r.get("name", "Unknown")
+            if "active" not in r:
+                r["active"] = r.get("is_active", True)
+            if "category" not in r:
+                r["category"] = r.get("category_id", "Uncategorized")
     
-    # Filter by active status if requested
-    if active is not None:
-        all_recipes = [r for r in all_recipes if r["active"] == active]
-    
-    # Pagination
-    start = (page - 1) * limit
-    end = start + limit
-    paginated = all_recipes[start:end]
+    # Convert ObjectIds
+    for r in recipes:
+        r["_id"] = str(r["_id"])
+        if "id" not in r:
+            r["id"] = r["_id"]
     
     return {
-        "items": paginated,
-        "total": len(all_recipes),
+        "items": recipes,
+        "total": total,
         "page": page,
         "limit": limit
     }
 
-def _clean_and_normalize_recipes(raw_recipes: List[dict]) -> List[dict]:
-    """Helper to clean, validate and normalize recipe data."""
-    cleaned = []
-    seen_ids = set()
-    
-    for r in raw_recipes:
-        rid = r.get("id") or r.get("_id")
-        if not rid: continue
-        rid = str(rid)
-        
-        # Priority to mongo items (duplicates in input list?)
-        # Assumes input order is seed then mongo. If mongo has same ID, it overrides?
-        # Current logic is 'first one wins'. So merge should be mongo + seed?
-        # Actually in get_recipes we did seed + mongo. 
-        # If we want Mongo to override Seed, we should put Mongo FIRST or check seen_ids logic.
-        # But 'seen_ids' logic skips if seen.
-        # So we should process MONGO first if we want Db to override Seed.
-        pass # Logic handled by caller ordering usually, but let's stick to existing simple logic
-        
-        if rid in seen_ids: continue
-            
-        name = r.get("recipe_name") or r.get("name")
-        if not name or str(name).strip() == "":
-            if "raw_import_data" in r: name = "Unnamed Import"
-            else: continue
-                
-        raw_active = r.get("active", True)
-        is_active = True
-        if isinstance(raw_active, str):
-            is_active = raw_active.lower() in ["true", "active", "1", "yes", "on"]
-        else:
-            is_active = bool(raw_active)
-            
-        r["id"] = rid
-        r["recipe_name"] = str(name)
-        r["active"] = is_active
-        r["category"] = r.get("category") or r.get("gl_code_revenue", "Uncategorized")
-        r["deleted"] = r.get("deleted", False) # Ensure deleted flag exists
-        
-        cleaned.append(r)
-        seen_ids.add(rid)
-        
-    return cleaned
 
-# Bulk Action Endpoints for Recipes
-from pydantic import BaseModel
-from typing import List
-from bson import ObjectId
+@router.get("/{venue_id}/recipes/engineered/trash")
+async def get_recipe_trash(
+    venue_id: str,
+    page: int = Query(1, ge=1),
+    limit: int = Query(50, ge=1, le=100)
+):
+    """Get trashed recipes from MongoDB."""
+    db = get_database()
+    
+    query = {"deleted": True}
+    total = await db.recipes_engineered.count_documents(query)
+    skip = (page - 1) * limit
+    recipes = await db.recipes_engineered.find(query).skip(skip).limit(limit).to_list(length=limit)
+    
+    for r in recipes:
+        r["_id"] = str(r["_id"])
+    
+    return {"items": recipes, "total": total, "page": page, "limit": limit}
+
+
+# ==================== BULK RECIPE ACTIONS ====================
 
 class BulkActionRequest(BaseModel):
     recipe_ids: List[str]
 
-async def _update_recipe_status(ids: List[str], updates: dict):
-    db = get_db()
-    # Try to match by "id" (string) AND "_id" (ObjectId)
-    # 1. Update where 'id' is in list
+
+async def _update_recipes(ids: List[str], updates: dict):
+    """Update recipes by ID in MongoDB."""
+    db = get_database()
+    
+    # Update by string id
     res1 = await db.recipes_engineered.update_many(
-        {"id": {"$in": ids}},
-        {"$set": updates}
+        {"id": {"$in": ids}}, {"$set": updates}
     )
     
-    # 2. Update where '_id' is in list (need to convert valid ones)
-    obj_ids = []
-    for i in ids:
-        if ObjectId.is_valid(i):
-            obj_ids.append(ObjectId(i))
-            
+    # Also try ObjectId
+    obj_ids = [ObjectId(i) for i in ids if ObjectId.is_valid(i)]
+    count = res1.modified_count
     if obj_ids:
         res2 = await db.recipes_engineered.update_many(
-            {"_id": {"$in": obj_ids}},
-            {"$set": updates}
+            {"_id": {"$in": obj_ids}}, {"$set": updates}
         )
-        return res1.modified_count + res2.modified_count
-    
-    return res1.modified_count
+        count += res2.modified_count
+    return count
+
 
 @router.post("/{venue_id}/recipes/engineered/bulk-archive")
-async def bulk_archive_recipes(venue_id: str, request: BulkActionRequest):
-    """Archive multiple recipes."""
-    count = await _update_recipe_status(request.recipe_ids, {"active": False})
-    return {"status": "success", "archived": count, "message": f"{count} recipes archived"}
+async def bulk_archive(venue_id: str, request: BulkActionRequest):
+    count = await _update_recipes(request.recipe_ids, {"active": False})
+    return {"status": "success", "archived": count}
+
 
 @router.post("/{venue_id}/recipes/engineered/bulk-delete")
-async def bulk_delete_recipes(venue_id: str, request: BulkActionRequest):
-    """Move multiple recipes to trash."""
-    count = await _update_recipe_status(request.recipe_ids, {"deleted": True})
-    return {"status": "success", "deleted": count, "message": f"{count} recipes moved to trash"}
+async def bulk_delete(venue_id: str, request: BulkActionRequest):
+    count = await _update_recipes(request.recipe_ids, {"deleted": True})
+    return {"status": "success", "deleted": count}
+
 
 @router.post("/{venue_id}/recipes/engineered/bulk-restore")
-async def bulk_restore_recipes(venue_id: str, request: BulkActionRequest):
-    """Restore multiple recipes from archive."""
-    count = await _update_recipe_status(request.recipe_ids, {"active": True})
-    return {"status": "success", "restored": count, "message": f"{count} recipes restored"}
+async def bulk_restore(venue_id: str, request: BulkActionRequest):
+    count = await _update_recipes(request.recipe_ids, {"active": True})
+    return {"status": "success", "restored": count}
+
 
 @router.post("/{venue_id}/recipes/engineered/bulk-purge")
-async def bulk_purge_recipes(venue_id: str, request: BulkActionRequest):
-    """Permanently delete multiple recipes from trash."""
-    db = get_db()
-    ids = request.recipe_ids
-    
-    # Delete by id
-    res1 = await db.recipes_engineered.delete_many({"id": {"$in": ids}})
-    
-    # Delete by _id
-    obj_ids = [ObjectId(i) for i in ids if ObjectId.is_valid(i)]
-    res2 = await db.recipes_engineered.delete_many({"_id": {"$in": obj_ids}})
-    
-    total = res1.deleted_count + res2.deleted_count
-    return {"status": "success", "purged": total, "message": f"{total} recipes permanently deleted"}
+async def bulk_purge(venue_id: str, request: BulkActionRequest):
+    db = get_database()
+    res1 = await db.recipes_engineered.delete_many({"id": {"$in": request.recipe_ids}})
+    obj_ids = [ObjectId(i) for i in request.recipe_ids if ObjectId.is_valid(i)]
+    total = res1.deleted_count
+    if obj_ids:
+        res2 = await db.recipes_engineered.delete_many({"_id": {"$in": obj_ids}})
+        total += res2.deleted_count
+    return {"status": "success", "purged": total}
+
 
 @router.post("/{venue_id}/recipes/engineered/bulk-restore-trash")
-async def bulk_restore_trash_recipes(venue_id: str, request: BulkActionRequest):
-    """Restore multiple recipes from trash."""
-    count = await _update_recipe_status(request.recipe_ids, {"deleted": False})
-    return {"status": "success", "restored": count, "message": f"{count} recipes restored from trash"}
+async def bulk_restore_trash(venue_id: str, request: BulkActionRequest):
+    count = await _update_recipes(request.recipe_ids, {"deleted": False})
+    return {"status": "success", "restored": count}
 
+
+# ==================== VENUE METRICS ====================
+
+@router.get("/{venue_id}/metrics")
+async def get_venue_metrics(venue_id: str):
+    """Get metrics for venue dashboard."""
+    db = get_database()
+    
+    orders_today = await db.orders.count_documents({"venue_id": venue_id})
+    tables = await db.tables.count_documents({"venue_id": venue_id})
+    menu_items = await db.menu_items.count_documents({"venue_id": venue_id})
+    employees = await db.employees.count_documents({"venue_id": venue_id})
+    
+    return {
+        "orders_today": orders_today,
+        "total_tables": tables,
+        "total_menu_items": menu_items,
+        "total_employees": employees,
+        "revenue_today_cents": 0,
+        "avg_order_cents": 0
+    }
+
+
+@router.get("/{venue_id}/devices")
+async def get_venue_devices(venue_id: str):
+    """Get registered devices for a venue."""
+    db = get_database()
+    devices = await db.device_bindings.find({"venue_id": venue_id}).to_list(length=100)
+    for d in devices:
+        d["_id"] = str(d["_id"])
+    return devices

@@ -1,33 +1,29 @@
 """
-Database configuration for Restin backend.
-Uses SQLite with SQLAlchemy for persistent storage.
+Central MongoDB connection module.
+Single source of truth for database access across all domains.
 """
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
-from pathlib import Path
+from motor.motor_asyncio import AsyncIOMotorClient
+import os
 
-# Database file location
-DATA_DIR = Path(__file__).parent.parent.parent / "data"
-DATA_DIR.mkdir(exist_ok=True)
-DATABASE_URL = f"sqlite:///{DATA_DIR / 'restin.db'}"
+MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
+DB_NAME = os.environ.get("DB_NAME", "restin_v2")
 
-# SQLAlchemy setup
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+_client: AsyncIOMotorClient = None
+_db = None
 
 
-def get_db():
-    """Dependency to get database session."""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+def get_database():
+    """Get the MongoDB database instance (singleton)."""
+    global _client, _db
+    if _db is None:
+        _client = AsyncIOMotorClient(MONGO_URL)
+        _db = _client[DB_NAME]
+    return _db
 
 
-def init_db():
-    """Create all tables."""
-    from app.models import db_models  # Import models to register them
-    Base.metadata.create_all(bind=engine)
-    print(f"[DB] Database initialized at {DATA_DIR / 'restin.db'}")
+def get_client():
+    """Get the raw MongoDB client."""
+    global _client
+    if _client is None:
+        _client = AsyncIOMotorClient(MONGO_URL)
+    return _client

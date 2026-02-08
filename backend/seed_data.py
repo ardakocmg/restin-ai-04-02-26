@@ -16,7 +16,7 @@ load_dotenv(ROOT_DIR / '.env')
 
 mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ.get('DB_NAME', 'restinai')]
+db = client[os.environ.get('DB_NAME', 'restin_v2')]
 
 def hash_pin(pin: str) -> str:
     return hashlib.sha256(pin.encode()).hexdigest()
@@ -27,7 +27,8 @@ async def seed_database():
     # Clear existing data
     collections = ['venues', 'zones', 'tables', 'users', 'menus', 'menu_categories', 'menu_items', 
                    'orders', 'kds_tickets', 'print_jobs', 'inventory_items', 'stock_ledger',
-                   'purchase_orders', 'documents', 'audit_logs', 'device_bindings']
+                   'purchase_orders', 'documents', 'audit_logs', 'device_bindings',
+                   'suppliers', 'employees', 'guests']
     for col in collections:
         await db[col].delete_many({})
     
@@ -374,6 +375,32 @@ async def seed_database():
 
     await db.inventory_items.insert_many(inventory_items)
     print(f"[OK] Created {len(inventory_items)} inventory items from Master Seed")
+    
+    # ==================== SUPPLIERS ====================
+    suppliers = master_data.get('suppliers', [])
+    for s in suppliers:
+        s['created_at'] = now
+    if suppliers:
+        await db.suppliers.insert_many(suppliers)
+        print(f"[OK] Created {len(suppliers)} suppliers from Master Seed")
+    
+    # ==================== EMPLOYEES ====================
+    employees = master_data.get('employees', [])
+    for emp in employees:
+        emp['created_at'] = now
+        if 'venueId' in emp:
+            emp['venue_id'] = emp.pop('venueId')
+    if employees:
+        await db.employees.insert_many(employees)
+        print(f"[OK] Created {len(employees)} employees from Master Seed")
+    
+    # ==================== GUESTS ====================
+    guests = master_data.get('guests', [])
+    for g in guests:
+        g['created_at'] = now
+    if guests:
+        await db.guests.insert_many(guests)
+        print(f"[OK] Created {len(guests)} guests from Master Seed")
     
     print("\n[DONE] Database seeding completed!")
     print("\nTest Credentials:")
