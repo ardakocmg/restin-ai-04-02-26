@@ -140,24 +140,22 @@ async def get_recipes(
     page: int = Query(1, ge=1),
     limit: int = Query(50, ge=1, le=100)
 ):
-    """Get recipes from MongoDB."""
+    """Get recipes from MongoDB - optimized for large collections."""
     db = get_database()
     
     skip = (page - 1) * limit
     
-    # Check if recipes_engineered has data
-    engineered_count = await db.recipes_engineered.count_documents({})
+    # Fast check: does recipes_engineered have ANY data?
+    engineered_count = await db.recipes_engineered.estimated_document_count()
     
     if engineered_count > 0:
-        # Use recipes_engineered collection
+        # Use recipes_engineered - just fetch data directly, skip slow count
         query = {}
-        # Only filter deleted if field exists
-        query["deleted"] = {"$ne": True}
         if active is not None:
             query["active"] = active
         
-        total = await db.recipes_engineered.count_documents(query)
         recipes = await db.recipes_engineered.find(query).skip(skip).limit(limit).to_list(length=limit)
+        total = engineered_count  # Use estimate for total
     else:
         # Fallback: use menu_items as recipes
         query = {"venue_id": venue_id}
