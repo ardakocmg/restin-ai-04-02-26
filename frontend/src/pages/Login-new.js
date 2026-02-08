@@ -19,6 +19,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [loginTarget, setLoginTarget] = useState("admin"); // admin, pos, kds
   const [pinError, setPinError] = useState(false);
+  const [pinSuccess, setPinSuccess] = useState(false);
 
   // Stage 2: Venue selection after successful PIN
   const [showVenueSelection, setShowVenueSelection] = useState(false);
@@ -76,7 +77,11 @@ export default function Login() {
         setAllowedVenues(response.data.allowedVenueIds || []);
         toast.info("MFA verification required");
       } else {
-        handleLoginSuccess(response.data);
+        // Show success animation before proceeding
+        setPinSuccess(true);
+        setTimeout(() => {
+          handleLoginSuccess(response.data);
+        }, 600);
       }
     } catch (error) {
       const status = error.response?.status;
@@ -317,16 +322,17 @@ export default function Login() {
                       {[0, 1, 2, 3].map(i => (
                         <div
                           key={i}
-                          className="w-14 h-14 rounded-lg bg-zinc-800 border flex items-center justify-center transition-all"
+                          className={`w-14 h-14 rounded-lg bg-zinc-800 border flex items-center justify-center transition-all ${pinSuccess ? 'animate-pulse' : ''}`}
                           style={{
-                            borderColor: pinError ? 'var(--brand-accent)' : 'rgba(255, 255, 255, 0.1)',
-                            boxShadow: pinError ? '0 0 8px var(--brand-accent-soft)' : 'none'
+                            borderColor: pinError ? 'var(--brand-accent)' : pinSuccess ? '#10b981' : 'rgba(255, 255, 255, 0.1)',
+                            boxShadow: pinError ? '0 0 8px var(--brand-accent-soft)' : pinSuccess ? '0 0 12px rgba(16, 185, 129, 0.5)' : 'none',
+                            backgroundColor: pinSuccess ? 'rgba(16, 185, 129, 0.1)' : '#27272a'
                           }}
                         >
                           {pin[i] ? (
                             <div
                               className="w-3 h-3 rounded-full"
-                              style={{ backgroundColor: 'var(--brand-accent)' }}
+                              style={{ backgroundColor: pinSuccess ? '#10b981' : 'var(--brand-accent)' }}
                             />
                           ) : null}
                         </div>

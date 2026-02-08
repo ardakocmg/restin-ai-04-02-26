@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { ChevronLeft, ChevronRight, LayoutDashboard, ShoppingCart, Monitor, Users, FileText, DollarSign, BarChart3, Settings, Menu } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LayoutDashboard, ShoppingCart, Monitor, Users, FileText, DollarSign, BarChart3, Settings, Menu, Sparkles } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
 const menuItems = [
@@ -119,6 +119,20 @@ const menuItems = [
       { title: '📊 Analytics', href: '/admin/analytics' },
       { title: '🎁 Loyalty', href: '/admin/loyalty' },
       { title: '🛡️ Trust & Resilience', href: '/admin/trust' }
+    ]
+  },
+  {
+    title: 'AI Hub',
+    icon: Sparkles,
+    group: 'ai',
+    children: [
+      { title: '📞 Voice AI', href: '/admin/ai/voice' },
+      { title: '🎨 Studio', href: '/admin/ai/studio' },
+      { title: '🌐 Web Builder', href: '/admin/ai/web-builder' },
+      { title: '🔬 Radar', href: '/admin/ai/radar' },
+      { title: '🤖 CRM', href: '/admin/ai/crm' },
+      { title: '💳 Fintech', href: '/admin/ai/fintech' },
+      { title: '👥 Ops Hub', href: '/admin/ai/ops' }
     ]
   },
   {

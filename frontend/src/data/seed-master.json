@@ -11,6 +11,12 @@
             "name": "Don Royale",
             "currency": "EUR",
             "timezone": "Europe/Malta"
+        },
+        {
+            "id": "venue-sole-tarragon",
+            "name": "Sole by Tarragon",
+            "currency": "EUR",
+            "timezone": "Europe/Malta"
         }
     ],
     "users": [

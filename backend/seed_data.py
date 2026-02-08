@@ -22,7 +22,7 @@ def hash_pin(pin: str) -> str:
     return hashlib.sha256(pin.encode()).hexdigest()
 
 async def seed_database():
-    print("🌱 Seeding database with Marvin Gauci Group venues...")
+    print("[SEED] Seeding database with Marvin Gauci Group venues...")
     
     # Clear existing data
     collections = ['venues', 'zones', 'tables', 'users', 'menus', 'menu_categories', 'menu_items', 
@@ -38,9 +38,9 @@ async def seed_database():
         import json
         with open(ROOT_DIR.parent / 'frontend/src/data/seed-master.json', 'r') as f:
             master_data = json.load(f)
-            print("✅ Loaded seed-master.json")
+            print("[OK] Loaded seed-master.json")
     except Exception as e:
-        print(f"❌ Failed to load seed-master.json: {e}")
+        print(f"[ERROR] Failed to load seed-master.json: {e}")
         return
 
     # ==================== VENUES ====================
@@ -52,7 +52,7 @@ async def seed_database():
         # keeping simple for now as per JSON
     
     await db.venues.insert_many(venues)
-    print(f"✅ Created {len(venues)} venues from Master Seed")
+    print(f"[OK] Created {len(venues)} venues from Master Seed")
     
     # ==================== ZONES ====================
     zones = [
@@ -78,7 +78,7 @@ async def seed_database():
         {"id": "zone-st-kitchen", "venue_id": "venue-sole-tarragon", "name": "Kitchen", "type": "kitchen", "created_at": now},
     ]
     await db.zones.insert_many(zones)
-    print(f"✅ Created {len(zones)} zones")
+    print(f"[OK] Created {len(zones)} zones")
     
     # ==================== TABLES ====================
     tables = []
@@ -191,7 +191,7 @@ async def seed_database():
         })
     
     await db.tables.insert_many(tables)
-    print(f"✅ Created {len(tables)} tables")
+    print(f"[OK] Created {len(tables)} tables")
     
     # ==================== USERS ====================
     users = master_data.get('users', [])
@@ -204,7 +204,7 @@ async def seed_database():
             u['venue_id'] = u.pop('venueId')
         
     await db.users.insert_many(users)
-    print(f"✅ Created {len(users)} users from Master Seed")
+    print(f"[OK] Created {len(users)} users from Master Seed")
     
     # ==================== MENUS ====================
     menus = [
@@ -213,7 +213,7 @@ async def seed_database():
         {"id": "menu-st-main", "venue_id": "venue-sole-tarragon", "name": "Main Menu", "is_active": True, "created_at": now},
     ]
     await db.menus.insert_many(menus)
-    print(f"✅ Created {len(menus)} menus")
+    print(f"[OK] Created {len(menus)} menus")
     
     # ==================== MENU CATEGORIES ====================
     categories = [
@@ -238,7 +238,7 @@ async def seed_database():
         {"id": "cat-st-drinks", "venue_id": "venue-sole-tarragon", "menu_id": "menu-st-main", "name": "Beverages", "sort_order": 5, "prep_area": "bar", "created_at": now},
     ]
     await db.menu_categories.insert_many(categories)
-    print(f"✅ Created {len(categories)} menu categories")
+    print(f"[OK] Created {len(categories)} menu categories")
     
     # ==================== MENU ITEMS ====================
     menu_items = [
@@ -358,7 +358,7 @@ async def seed_database():
         {"id": "item-st-30", "venue_id": "venue-sole-tarragon", "category_id": "cat-st-drinks", "menu_id": "menu-st-main", "name": "San Pellegrino", "price": 5.00, "price_cents": 500, "description": "Sparkling water 750ml", "allergens": [], "tags": [], "prep_area": "bar", "prep_time_minutes": 1, "is_active": True, "created_at": now},
     ]
     await db.menu_items.insert_many(menu_items)
-    print(f"✅ Created {len(menu_items)} menu items")
+    print(f"[OK] Created {len(menu_items)} menu items")
     
     # ==================== INVENTORY ITEMS ====================
     inventory_items = master_data.get('inventory', [])
@@ -373,10 +373,10 @@ async def seed_database():
         if 'stock' in i: i['current_stock'] = i.pop('stock')
 
     await db.inventory_items.insert_many(inventory_items)
-    print(f"✅ Created {len(inventory_items)} inventory items from Master Seed")
+    print(f"[OK] Created {len(inventory_items)} inventory items from Master Seed")
     
-    print("\n✨ Database seeding completed!")
-    print("\n📋 Test Credentials:")
+    print("\n[DONE] Database seeding completed!")
+    print("\nTest Credentials:")
     print("   Caviar & Bull (venue-caviar-bull):")
     print("      Owner PIN: 1234 | Manager PIN: 2345 | Staff PIN: 1111")
     print("   Don Royale (venue-don-royale):")

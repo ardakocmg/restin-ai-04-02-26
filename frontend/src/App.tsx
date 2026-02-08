@@ -9,7 +9,7 @@ import BookingWidget from './pages/public/booking/BookingWidget';
 
 // Pages
 // Pages
-import Login from "./features/auth/Login";
+import Login from "./pages/Login-new";
 import AdminLayout from "./pages/admin/AdminLayout";
 import PayrollDashboard from "./features/hr/PayrollDashboard";
 import InventoryDashboard from "./features/inventory/InventoryDashboard";
@@ -216,6 +216,15 @@ import { CrmDashboard } from "./features/restin/crm";
 import { OpsDashboard } from "./features/restin/ops";
 import { FintechDashboard } from "./features/restin/fintech";
 import RestinControlTower from "./pages/admin/RestinControlTower";
+
+// AI Hub (New React Pages)
+import VoiceAI from "./pages/admin/ai/VoiceAI";
+import Studio from "./pages/admin/ai/Studio";
+import WebBuilderAI from "./pages/admin/ai/WebBuilder";
+import Radar from "./pages/admin/ai/Radar";
+import CRMAI from "./pages/admin/ai/CRM";
+import Fintech from "./pages/admin/ai/Fintech";
+import Ops from "./pages/admin/ai/Ops";
 
 // Context
 import { AuthProvider } from "./features/auth/AuthContext";
@@ -467,6 +476,17 @@ function App() {
                                     <Route path="studio" element={<StudioDashboard />} />
                                     <Route path="radar" element={<RadarDashboard />} />
                                     <Route path="crm" element={<CrmDashboard />} />
+                                  </Route>
+
+                                  {/* AI HUB - New React Pages */}
+                                  <Route path="ai">
+                                    <Route path="voice" element={<VoiceAI />} />
+                                    <Route path="studio" element={<Studio />} />
+                                    <Route path="web-builder" element={<WebBuilderAI />} />
+                                    <Route path="radar" element={<Radar />} />
+                                    <Route path="crm" element={<CRMAI />} />
+                                    <Route path="fintech" element={<Fintech />} />
+                                    <Route path="ops" element={<Ops />} />
                                   </Route>
 
                                   <Route path="hr-reports">

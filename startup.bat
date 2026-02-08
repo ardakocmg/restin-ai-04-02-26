@@ -8,15 +8,19 @@ echo [INFO] Setting up environment...
 set PYTHONPATH=%CD%
 
 :: Check if virtual environment exists
-if not exist "backend\venv\Scripts\activate.bat" (
-    echo [ERROR] Virtual environment not found at backend\venv
+:: Check for virtual environment in multiple locations
+if exist "backend\venv\Scripts\activate.bat" (
+    call backend\venv\Scripts\activate.bat
+) else if exist ".venv\Scripts\activate.bat" (
+    call .venv\Scripts\activate.bat
+) else (
+    echo [ERROR] Virtual environment not found at backend\venv or .venv
     echo [INFO] Please run the setup script first or ensure venv is created.
     pause
     exit /b 1
 )
 
-:: Activate Virtual Environment
-call backend\venv\Scripts\activate.bat
+
 
 echo [INFO] Starting backend server...
 echo [SUCCESS] Once started, access the app at: http://localhost:8000

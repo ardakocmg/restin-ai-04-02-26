@@ -10,7 +10,8 @@ import {
     ChevronLeft, ChevronRight, LayoutDashboard, ShoppingCart, Users, FileText,
     DollarSign, BarChart3, Settings, Activity, Zap, TrendingUp, Factory, Award,
     Table as TableIcon, Calendar, Truck, PieChart as PieChartIcon,
-    UserCheck, Receipt, Clock, Package, Type, Building2
+    UserCheck, Receipt, Clock, Package, Type, Building2, Sparkles, Phone, Globe,
+    Wand2, Radar as RadarIcon, Target, CreditCard, Layers
 } from 'lucide-react';
 
 const menuItems = [
@@ -49,6 +50,24 @@ const menuItems = [
     { title: 'Finance', icon: DollarSign, href: '/dashboard/finance', group: 'finance' },
     { title: 'Audit Logs', icon: Activity, href: '/dashboard/audit', group: 'finance' },
 
+    // AI HUB (NEW - MIGRATED FROM LEGACY)
+    { title: 'Voice AI', icon: Phone, href: '/dashboard/voice', group: 'ai' },
+    { title: 'Web Builder', icon: Globe, href: '/dashboard/web-builder', group: 'ai' },
+    { title: 'Studio', icon: Wand2, href: '/dashboard/studio', group: 'ai' },
+    { title: 'Radar', icon: RadarIcon, href: '/dashboard/radar', group: 'ai' },
+    { title: 'CRM', icon: Target, href: '/dashboard/crm', group: 'ai' },
+    { title: 'Fintech', icon: CreditCard, href: '/dashboard/fintech', group: 'ai' },
+    { title: 'Ops Hub', icon: Layers, href: '/dashboard/ops', group: 'ai' },
+
+    // LEGACY FEATURES (External - React App on Port 3000)
+    { title: 'Main Dashboard', icon: LayoutDashboard, href: 'http://localhost:3000/admin/dashboard', group: 'legacy', external: true },
+    { title: 'POS System', icon: ShoppingCart, href: 'http://localhost:3000/pos/setup', group: 'legacy', external: true },
+    { title: 'Tables & Reservations', icon: TableIcon, href: 'http://localhost:3000/admin/tables', group: 'legacy', external: true },
+    { title: 'Inventory System', icon: Package, href: 'http://localhost:3000/admin/inventory', group: 'legacy', external: true },
+    { title: 'HR & Payroll', icon: Users, href: 'http://localhost:3000/admin/hr', group: 'legacy', external: true },
+    { title: 'Kitchen Display', icon: Clock, href: 'http://localhost:3000/kds/setup', group: 'legacy', external: true },
+    { title: 'Reports & Analytics', icon: BarChart3, href: 'http://localhost:3000/admin/reports', group: 'legacy', external: true },
+
     // SETTINGS
     { title: 'Settings', icon: Settings, href: '/dashboard/settings', group: 'settings' },
 ];
@@ -66,11 +85,14 @@ export function Sidebar({ collapsed, onToggle, onTertiaryToggle, onDomainExpand 
 
     // Domain Groups (Pane 1)
     const domains = [
+        { id: 'ai', title: 'AI Hub', icon: Sparkles },
+        { id: 'legacy', title: 'Classic Features', icon: Building2 },
         { id: 'home', title: 'Home', icon: LayoutDashboard },
         { id: 'pos', title: 'POS & Ops', icon: ShoppingCart },
         { id: 'hr', title: 'HR & People', icon: Users },
         { id: 'inventory', title: 'Inventory', icon: FileText },
         { id: 'finance', title: 'Finance', icon: DollarSign },
+        { id: 'ai', title: 'AI Hub', icon: Sparkles }, // NEW - Restin.AI Features
         { id: 'cpu', title: 'Central Kitchen', icon: Zap },
         { id: 'technical', title: 'Technical Hub', icon: Activity },
     ];
@@ -82,6 +104,7 @@ export function Sidebar({ collapsed, onToggle, onTertiaryToggle, onDomainExpand 
         if (['hr', 'staff'].includes(group)) return 'hr';
         if (['inventory', 'menu', 'procurement'].includes(group)) return 'inventory';
         if (['finance'].includes(group)) return 'finance';
+        if (['ai'].includes(group)) return 'ai'; // NEW - AI Hub
         if (['settings'].includes(group)) return 'settings';
         return 'home';
     };
