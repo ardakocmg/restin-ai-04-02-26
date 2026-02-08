@@ -102,6 +102,14 @@ from routes.crm import create_crm_router
 from routes.loyalty import create_loyalty_router
 from routes.automations import create_automations_router
 from routes.connectors import create_connectors_router
+from routes.voice_routes import router as voice_router
+from routes.media_routes import router as media_router
+from routes.radar_routes import router as radar_router
+from routes.ops_routes import router as ops_router
+from routes.ops_routes import router as ops_router
+from routes.pay_routes import router as pay_router
+from routes.production_routes import create_production_router
+from routes.pos_session_routes import create_pos_session_router
 from app.domains.reporting.routes.reports_summary import create_summary_report_router
 from routes.venue_config import create_venue_config_router
 from routes.reservation_routes import router as reservation_router
@@ -147,6 +155,9 @@ from routes.venue_integrations_routes import create_venue_integrations_router
 from routes.global_search_routes import create_global_search_router
 from routes.pos_report_routes import create_pos_report_router
 from routes.migration_routes import router as migration_router # Quick Sync
+from routes.websocket_routes import create_websocket_router  # Real-time Notifications
+from routes.fcm_routes import create_fcm_router  # Mobile Push Notifications
+from routes.orders_routes import create_orders_router  # Frontend /api/orders compatibility
 
 # Shireburn Indigo Parity Routes
 from routes.summary_dashboard import router as summary_dashboard_router
@@ -185,6 +196,9 @@ from routes.hr_sfm_accounting import create_hr_sfm_accounting_router
 from routes.hr_analytics_advanced import create_hr_analytics_advanced_router
 from routes.content_editor import create_content_editor_router
 
+# Print Bridge for Network Printing (Rule #30)
+from devices.print_bridge import router as print_bridge_router
+
 # KDS System Imports
 from devices.routes import create_devices_router, create_pairing_router
 from kds.routes import create_kds_admin_router, create_kds_runtime_router
@@ -195,6 +209,8 @@ from reporting_kds.routes import create_kds_reports_router
 # POS System Imports
 from pos.routes import create_pos_runtime_router
 from pos.routes.pos_snapshots import create_pos_snapshot_router
+from pos.routes.pos_discount_routes import create_pos_discount_router
+from pos.routes.pos_split_bill_routes import create_pos_split_bill_router
 
 # Inventory System Imports
 from inventory.routes import create_inventory_routes
@@ -406,6 +422,8 @@ pos_snapshot_router = create_pos_snapshot_router()
 
 # Inventory System Routers
 inventory_router_new = create_inventory_routes()
+production_router = create_production_router()
+pos_session_router = create_pos_session_router()
 
 # ==================== MOUNT ALL ROUTERS ====================
 # ==================== MOUNT ALL ROUTERS ON API PREFIX ====================
@@ -416,8 +434,10 @@ api_main.include_router(auth_router)
 api_main.include_router(system_router)
 api_main.include_router(venue_router)
 api_main.include_router(menu_router)
-api_main.include_router(order_router)
-api_main.include_router(order_ops_router)
+api_main.include_router(radar_router)
+api_main.include_router(ops_router)
+api_main.include_router(pay_router)
+api_main.include_router(create_aggregator_router(), prefix="/aggregators")
 api_main.include_router(guest_router)
 api_main.include_router(stats_router)
 api_main.include_router(finance_router)
@@ -433,9 +453,11 @@ api_main.include_router(manager_override_router)
 api_main.include_router(floor_plan_router)
 api_main.include_router(utils_router)
 api_main.include_router(print_router)
+api_main.include_router(print_bridge_router)  # TCP Socket Print Bridge
 api_main.include_router(telemetry_router)
 api_main.include_router(guide_router)
 api_main.include_router(menu_import_router)
+api_main.include_router(migration_router)  # Quick Sync Migration
 api_main.include_router(review_router)
 api_main.include_router(audit_router)
 api_main.include_router(event_router)
@@ -454,6 +476,9 @@ api_main.include_router(crm_router)
 api_main.include_router(loyalty_router)
 api_main.include_router(automations_router)
 api_main.include_router(connectors_router)
+api_main.include_router(voice_router)
+api_main.include_router(media_router)
+# api_main.include_router(radar_router) # Already mounted at line 423
 api_main.include_router(venue_config_router)
 api_main.include_router(reservation_router)
 api_main.include_router(inventory_adjustments_router)
@@ -508,6 +533,18 @@ api_main.include_router(table_merge_router)
 api_main.include_router(observability_router)
 api_main.include_router(migration_router, tags=["Migration"])
 api_main.include_router(user_settings_router)
+
+# WebSocket for real-time notifications
+websocket_router = create_websocket_router()
+api_main.include_router(websocket_router)
+
+# FCM for mobile push notifications
+fcm_router = create_fcm_router()
+api_main.include_router(fcm_router)
+
+# Orders API for frontend compatibility (/api/orders)
+orders_router = create_orders_router()
+api_main.include_router(orders_router)
 
 # User Sync utility
 from routes.user_sync import create_user_sync_router
@@ -571,7 +608,11 @@ api_main.include_router(pricing_router)
 api_main.include_router(kds_reports_router)
 api_main.include_router(pos_runtime_router)
 api_main.include_router(pos_snapshot_router)
+api_main.include_router(create_pos_discount_router())
+api_main.include_router(create_pos_split_bill_router())
 api_main.include_router(inventory_router_new)
+api_main.include_router(production_router)
+api_main.include_router(pos_session_router)
 api_main.include_router(admin_router_new)
 
 rbac_router = create_rbac_router()

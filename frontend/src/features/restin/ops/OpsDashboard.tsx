@@ -14,6 +14,9 @@ import {
     RefreshCw,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { opsService, aggregatorService } from './ops-service';
+import { useVenue } from '../../../context/VenueContext';
 
 // Rule 1: No 'any'
 interface Aggregator {
@@ -41,26 +44,43 @@ interface OpsLog {
 const OpsDashboard: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { activeVenueId } = useVenue();
 
-    const aggregators: Aggregator[] = [
-        { name: 'UberEats', status: 'Online', orders: 12, revenue: '€240', color: 'bg-green-500' },
-        { name: 'Wolt', status: 'Online', orders: 8, revenue: '€160', color: 'bg-blue-500' },
-        { name: 'Bolt Food', status: 'Busy', orders: 15, revenue: '€310', color: 'bg-amber-500' },
-        { name: 'Glovo', status: 'Offline', orders: 0, revenue: '€0', color: 'bg-zinc-500' },
-    ];
+    // Fetch Aggregators
+    const { data: aggregators = [] } = useQuery<Aggregator[]>({
+        queryKey: ['ops-aggregators', activeVenueId],
+        queryFn: async () => {
+            const res = await aggregatorService.getStatus(activeVenueId || 'default');
+            return Array.isArray(res) ? res : [];
+        },
+        enabled: !!activeVenueId
+    });
 
-    const metrics: OperationalMetric[] = [
-        { label: t('restin.ops.metrics.avgPrep'), value: '12m', target: '< 15m', icon: Clock, status: 'Optimal' },
-        { label: t('restin.ops.metrics.errorRate'), value: '0.2%', target: '< 1%', icon: AlertCircle, status: 'Healthy' },
-        { label: t('restin.ops.metrics.labourCost'), value: '28.4%', target: '30%', icon: Activity, status: 'On Track' },
-    ];
+    // Fetch Metrics
+    const { data: metrics = [] } = useQuery<OperationalMetric[]>({
+        queryKey: ['ops-metrics', activeVenueId],
+        queryFn: async () => {
+            const res = await opsService.getMetrics(activeVenueId || 'default');
+            return Array.isArray(res) ? res : [];
+        },
+        enabled: !!activeVenueId
+    });
 
-    const logs: OpsLog[] = [
-        { time: '12:42', type: 'order', msg: 'UberEats #422 injected to KDS' },
-        { time: '12:40', type: 'alert', msg: 'Labour cost spike detected (32%)' },
-        { time: '12:35', type: 'success', msg: 'Auto-sync with apicbase completed' },
-        { time: '12:30', type: 'order', msg: 'Wolt #112 marked ready for pickup' },
-    ];
+    // Fetch Logs
+    const { data: logs = [] } = useQuery<OpsLog[]>({
+        queryKey: ['ops-logs', activeVenueId],
+        queryFn: async () => {
+            const res = await opsService.getLogs(activeVenueId || 'default');
+            return Array.isArray(res) ? res : [];
+        },
+        enabled: !!activeVenueId
+    });
+
+    // Map icon string names to components (since backend sends strings)
+    const getIcon = (iconName: string) => {
+        const map: any = { Clock, AlertCircle, Activity, CheckCircle2 };
+        return map[iconName] || Activity;
+    };
 
     return (
         <div className="p-6 space-y-6 bg-zinc-950 min-h-screen text-white">
@@ -93,7 +113,10 @@ const OpsDashboard: React.FC = () => {
                         <CardHeader className="pb-2">
                             <div className="flex justify-between items-center">
                                 <div className="p-2 bg-zinc-800 rounded-lg">
-                                    <m.icon className="w-4 h-4 text-red-500" />
+                                    {(() => {
+                                        const Icon = getIcon(m.icon as any);
+                                        return <Icon className="w-4 h-4 text-red-500" />;
+                                    })()}
                                 </div>
                                 <Badge className="bg-green-500/10 text-green-500 border-none text-[10px] font-black">{m.status}</Badge>
                             </div>
@@ -160,7 +183,7 @@ const OpsDashboard: React.FC = () => {
                         <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 italic">{t('restin.ops.liveFeed')}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {logs.map((log, i) => (
+                        {(logs || []).map((log, i) => (
                             <div key={i} className="flex gap-3 items-start group">
                                 <span className="text-[10px] font-mono text-zinc-600 mt-1">{log.time}</span>
                                 <div className="flex-1 text-xs text-zinc-400 leading-tight group-hover:text-zinc-200 transition-colors">

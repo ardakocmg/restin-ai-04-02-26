@@ -5,6 +5,7 @@ import { Badge } from "../../../components/ui/badge";
 import { Upload, Link, Check, AlertCircle, ArrowRight, RefreshCw } from "lucide-react";
 import { toast } from 'sonner';
 import api from "../../../lib/api";
+import * as XLSX from 'xlsx';
 
 const MigrationHub = () => {
     const [selectedProvider, setSelectedProvider] = useState(null);
@@ -18,6 +19,7 @@ const MigrationHub = () => {
     const [viewMode, setViewMode] = useState('wizard'); // 'wizard' or 'history'
     const [activeTab, setActiveTab] = useState('new'); // 'new', 'update', 'conflict'
     const [isDragging, setIsDragging] = useState(false);
+    const [showAllMappings, setShowAllMappings] = useState(false);
 
     const fetchHistory = async () => {
         try {
@@ -62,6 +64,28 @@ const MigrationHub = () => {
         handleFileUpload(e);
     };
 
+
+
+    const readExcelFile = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = e.target.result;
+                    const workbook = XLSX.read(data, { type: 'binary' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const json = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+                    resolve(json);
+                } catch (err) {
+                    reject(err);
+                }
+            };
+            reader.onerror = (err) => reject(err);
+            reader.readAsBinaryString(file);
+        });
+    };
+
     const handlePreview = async () => {
         if (!file && mode === 'migrate') {
             toast.error("Please select a file to upload");
@@ -69,15 +93,29 @@ const MigrationHub = () => {
         }
 
         setIsProcessing(true);
-        const formData = new FormData();
-        formData.append('source', selectedProvider.id);
-        formData.append('file', file);
 
         try {
-            // Real API Call
-            const res = await api.post('migrations/preview', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            let jsonData = [];
+
+            // CLIENT-SIDE PARSING
+            if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls') || file.name.endsWith('.csv')) {
+                toast.info("Analyzing file locally...");
+                jsonData = await readExcelFile(file);
+            } else if (file.name.endsWith('.json')) {
+                const text = await file.text();
+                jsonData = JSON.parse(text);
+            } else {
+                toast.error("Unsupported file type");
+                setIsProcessing(false);
+                return;
+            }
+
+            // Call NEW endpoint
+            const res = await api.post('migrations/preview-json', {
+                source: selectedProvider.id,
+                data: jsonData,
+                filename: file.name
+            }, { timeout: 60000 }); // 60s timeout for processing large JSON
 
             setPreviewData(res.data);
             setStep(3);
@@ -99,7 +137,7 @@ const MigrationHub = () => {
                 data: mode === 'migrate' ? previewData.details : null, // Send full data for migration
                 options: {},
                 filename: previewData.filename  // Pass filename for tracking
-            });
+            }, { timeout: 120000 }); // 2 minute timeout for large migrations
 
             setStep(4);
             setIsProcessing(false);
@@ -130,14 +168,14 @@ const MigrationHub = () => {
                     <Button
                         variant={viewMode === 'wizard' ? 'default' : 'outline'}
                         onClick={() => setViewMode('wizard')}
-                        className={viewMode === 'wizard' ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'border-zinc-600 text-zinc-200 hover:bg-zinc-800 hover:text-white'}
+                        className={viewMode === 'wizard' ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'border-border text-foreground hover:bg-accent hover:text-accent-foreground'}
                     >
                         New Sync
                     </Button>
                     <Button
                         variant={viewMode === 'history' ? 'default' : 'outline'}
                         onClick={() => { setViewMode('history'); fetchHistory(); }}
-                        className={viewMode === 'history' ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'border-zinc-600 text-zinc-200 hover:bg-zinc-800 hover:text-white'}
+                        className={viewMode === 'history' ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'border-border text-foreground hover:bg-accent hover:text-accent-foreground'}
                     >
                         History
                     </Button>
@@ -172,8 +210,10 @@ const MigrationHub = () => {
                                         </tr>
                                     ) : (
                                         history.map((log) => (
-                                            <tr key={log.id} className="hover:bg-zinc-800/50 transition-colors">
-                                                <td className="px-4 py-3 font-mono text-xs text-zinc-500">{new Date(log.started_at || log.created_at).toLocaleString()}</td>
+                                            <tr key={log._id || log.id} className="hover:bg-zinc-800/50 transition-colors">
+                                                <td className="px-4 py-3 font-mono text-xs text-zinc-500">
+                                                    {log.executed_at ? new Date(log.executed_at).toLocaleString() : (log.started_at ? new Date(log.started_at).toLocaleString() : '-')}
+                                                </td>
                                                 <td className="px-4 py-3">
                                                     <span className="text-zinc-300 text-xs font-mono truncate max-w-[180px] block" title={log.filename}>
                                                         {log.filename || '-'}
@@ -188,7 +228,9 @@ const MigrationHub = () => {
                                                         {log.status}
                                                     </Badge>
                                                 </td>
-                                                <td className="px-4 py-3 text-zinc-300">{log.summary || 'No summary'}</td>
+                                                <td className="px-4 py-3 text-zinc-300">
+                                                    {log.stats ? `${log.stats.new || 0} new, ${log.stats.updated || 0} updated` : (log.summary || 'No summary')}
+                                                </td>
                                             </tr>
                                         ))
                                     )}
@@ -509,6 +551,120 @@ const MigrationHub = () => {
                                     )}
                                 </div>
 
+                                {/* Smart Column Mapping Section */}
+                                {previewData.meta?.mappings && previewData.meta.mappings.length > 0 && (() => {
+                                    // Using component-level state: showAllMappings, setShowAllMappings
+                                    const mappings = previewData.meta.mappings;
+
+                                    // Mappings are already sorted by backend: mapped first, then non-empty, then empty
+                                    const visibleMappings = showAllMappings ? mappings : mappings.slice(0, 10);
+                                    const hiddenCount = mappings.length - 10;
+
+
+                                    return (
+                                        <div className="mt-4 p-4 bg-zinc-800/30 rounded-xl border border-zinc-700/50">
+                                            <div className="flex items-center justify-between mb-3">
+                                                <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-2">
+                                                    <span className="text-blue-500">🔗</span> Smart Column Mapping
+                                                </h3>
+                                                <div className="flex items-center gap-2">
+                                                    <Badge variant="outline" className="bg-emerald-950/30 text-emerald-400 border-emerald-800 text-[10px]">
+                                                        {mappings.filter(m => m.is_mapped || m.confidence === 'high').length} mapped
+                                                    </Badge>
+                                                    <Badge variant="outline" className="bg-blue-950/30 text-blue-400 border-blue-800 text-[10px]">
+                                                        {previewData.meta.detected_type || 'Auto-Detected'}
+                                                    </Badge>
+                                                </div>
+                                            </div>
+                                            <div className="text-xs text-zinc-500 mb-3">
+                                                Restin auto-linked Excel columns to Recipe fields. Review the mapping below:
+                                            </div>
+                                            <div className="overflow-x-auto max-h-[300px] overflow-y-auto">
+                                                <table className="w-full text-xs">
+                                                    <thead className="sticky top-0 bg-zinc-900">
+                                                        <tr className="text-zinc-500 text-left border-b border-zinc-700/50">
+                                                            <th className="pb-2 pr-4 font-medium">Excel Column</th>
+                                                            <th className="pb-2 px-2 font-medium text-center">→</th>
+                                                            <th className="pb-2 px-4 font-medium">Recipe Field</th>
+                                                            <th className="pb-2 pl-4 font-medium">Sample Data</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {visibleMappings.map((mapping, idx) => {
+                                                            // Handle both old string format and new object format
+                                                            let originalCol, targetField, sampleData, confidence;
+
+                                                            if (typeof mapping === 'string') {
+                                                                // Old format: "Mapped 'X' -> 'Y'"
+                                                                const parts = mapping.match(/Mapped '(.+?)' -> '(.+?)'/);
+                                                                originalCol = parts ? parts[1] : mapping;
+                                                                targetField = parts ? parts[2] : "-";
+                                                                sampleData = previewData.details?.[0]?.raw_import_data?.[originalCol] || "-";
+                                                                confidence = 'high';
+                                                            } else {
+                                                                // New object format
+                                                                originalCol = mapping.excel_column || '';
+                                                                targetField = mapping.restin_field || '-';
+                                                                sampleData = mapping.sample_value || '-';
+                                                                confidence = mapping.confidence || 'unmapped';
+                                                            }
+
+                                                            // Skip empty unnamed columns
+                                                            if (mapping.is_empty) return null;
+
+                                                            const isHighConfidence = confidence === 'high' || mapping.is_mapped;
+
+                                                            return (
+                                                                <tr key={idx} className="border-t border-zinc-800/50 hover:bg-white/5 transition-colors">
+                                                                    <td className="py-2 pr-4 text-zinc-300 font-mono truncate max-w-[180px]" title={originalCol}>
+                                                                        {originalCol.length > 30 ? originalCol.substring(0, 27) + "..." : originalCol}
+                                                                    </td>
+                                                                    <td className={`py-2 px-2 text-center font-bold ${isHighConfidence ? 'text-green-500' : 'text-zinc-600'}`}>→</td>
+                                                                    <td className="py-2 px-4">
+                                                                        <span className={`px-2 py-0.5 rounded font-medium ${isHighConfidence
+                                                                            ? 'bg-emerald-950/50 text-emerald-400'
+                                                                            : 'bg-zinc-800/50 text-zinc-500'
+                                                                            }`}>
+                                                                            {targetField}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td className="py-2 pl-4 text-zinc-500 font-mono text-[10px] truncate max-w-[150px]" title={String(sampleData)}>
+                                                                        {String(sampleData).length > 25 ? String(sampleData).substring(0, 22) + "..." : sampleData}
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        })}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            {/* Load More Button */}
+                                            {hiddenCount > 0 && !showAllMappings && (
+                                                <button
+                                                    onClick={() => setShowAllMappings(true)}
+                                                    className="mt-3 w-full py-2 text-xs text-blue-400 hover:text-blue-300 bg-blue-950/20 hover:bg-blue-950/40 rounded-lg border border-blue-800/30 transition-colors"
+                                                >
+                                                    Show {hiddenCount} more columns...
+                                                </button>
+                                            )}
+                                            {showAllMappings && hiddenCount > 0 && (
+                                                <button
+                                                    onClick={() => setShowAllMappings(false)}
+                                                    className="mt-3 w-full py-2 text-xs text-zinc-400 hover:text-zinc-300 bg-zinc-800/20 hover:bg-zinc-800/40 rounded-lg border border-zinc-700/30 transition-colors"
+                                                >
+                                                    Show less
+                                                </button>
+                                            )}
+
+                                            <div className="mt-3 pt-3 border-t border-zinc-700/30 flex items-center gap-2">
+                                                <span className="text-[10px] text-blue-400 bg-blue-950/30 px-2 py-1 rounded-full">
+                                                    ● Smart Mapping active: Restin is auto-linking items by Name and SKU.
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
+
                                 {/* Detailed View Area */}
                                 <div className="min-h-[400px] bg-zinc-900/30 rounded-2xl border border-zinc-800/50 overflow-hidden flex flex-col">
                                     {!previewData.error && (
@@ -516,13 +672,13 @@ const MigrationHub = () => {
                                             {/* Header for Detail View */}
                                             <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-zinc-900/50">
                                                 <div className="flex items-center gap-3">
-                                                    <div className={`w-2 h-2 rounded-full ${activeTab === 'new' ? 'bg-green-500' : activeTab === 'update' ? 'bg-amber-500' : 'bg-red-500'}`} />
+                                                    <div className={`w-2 h-2 rounded-full ${activeTab === 'new' ? 'bg-green-500' : activeTab === 'update' ? 'bg-amber-500' : activeTab === 'unchanged' ? 'bg-teal-500' : 'bg-red-500'}`} />
                                                     <h3 className="font-bold text-white uppercase tracking-wider text-xs">
-                                                        {activeTab === 'new' ? 'Incoming Items' : activeTab === 'update' ? 'Updates Logic' : 'Conflict Resolution'}
+                                                        {activeTab === 'new' ? 'Incoming Items' : activeTab === 'update' ? 'Updates Logic' : activeTab === 'unchanged' ? 'Synced Items' : 'Conflict Resolution'}
                                                     </h3>
                                                 </div>
                                                 <div className="text-[10px] text-zinc-500 font-mono uppercase">
-                                                    {activeTab === 'new' ? `${previewData.new} Items` : activeTab === 'update' ? `${previewData.update} Items` : `${previewData.conflict} Issues`}
+                                                    {activeTab === 'new' ? `${previewData.new} Items` : activeTab === 'update' ? `${previewData.update} Items` : activeTab === 'unchanged' ? `${previewData.unchanged} Items` : `${previewData.conflict} Issues`}
                                                 </div>
                                             </div>
 
@@ -657,6 +813,54 @@ const MigrationHub = () => {
                                                         )}
                                                     </div>
                                                 )}
+
+                                                {/* UNCHANGED VIEW */}
+                                                {activeTab === 'unchanged' && (
+                                                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                                        {previewData.unchanged === 0 ? (
+                                                            <div className="py-24 text-center">
+                                                                <div className="text-4xl mb-4 opacity-20">🔄</div>
+                                                                <div className="text-zinc-500 italic">All items have changes - nothing is unchanged.</div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="p-2 divide-y divide-white/5">
+                                                                {previewData.details?.filter(d => d.type === 'unchanged').slice(0, visibleCount).map((d, i) => (
+                                                                    <div key={i} className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors group">
+                                                                        <div className="flex items-center gap-4">
+                                                                            <div className="w-8 h-8 rounded-lg bg-teal-900/50 flex items-center justify-center text-teal-400 text-xs font-mono group-hover:bg-teal-800 group-hover:text-white transition-colors">
+                                                                                <Check className="w-4 h-4" />
+                                                                            </div>
+                                                                            <div className="flex-1">
+                                                                                <div className="font-semibold text-zinc-200 group-hover:text-white transition-colors">{d.name}</div>
+                                                                                <div className="text-xs text-zinc-500 flex items-center gap-3 mt-0.5">
+                                                                                    <span className="font-mono bg-teal-950 text-teal-400 px-1.5 py-0.5 rounded text-[10px] font-bold">
+                                                                                        {d.item_id || `CB/${String(i + 1).padStart(3, '0')}`}
+                                                                                    </span>
+                                                                                    {d.sku && d.sku !== 'N/A' && <span className="font-mono bg-zinc-950 px-1.5 py-0.5 rounded border border-zinc-800 text-[10px]">{d.sku}</span>}
+                                                                                    {d.category && <span className="text-zinc-600">{d.category}</span>}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <Badge variant="outline" className="opacity-60 group-hover:opacity-100 transition-opacity bg-teal-950/50 border-teal-800 text-teal-400 text-[10px] h-5">SYNCED</Badge>
+                                                                    </div>
+                                                                ))}
+
+                                                                {visibleCount < previewData.unchanged && (
+                                                                    <div className="p-6 flex justify-center border-t border-white/5">
+                                                                        <Button
+                                                                            variant="ghost"
+                                                                            size="sm"
+                                                                            onClick={() => setVisibleCount(prev => prev + 20)}
+                                                                            className="text-zinc-500 hover:text-white hover:bg-zinc-800/50"
+                                                                        >
+                                                                            Load 20 more entries...
+                                                                        </Button>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
                                         </>
                                     )}
@@ -734,8 +938,9 @@ const MigrationHub = () => {
                         </div>
                     )}
                 </>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 };
 

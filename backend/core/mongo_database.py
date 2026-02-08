@@ -34,13 +34,17 @@ class MongoDatabase:
             await self.client.admin.command('ping')
             logger.info("MongoDB PING successful.")
             
-            # Auto-Seed Admin User if users collection is empty
-            user_count = await self.db.users.count_documents({})
-            if user_count == 0:
-                logger.warning("No users found. Seeding initial Admin User (PIN: 1111)...")
-                await self.seed_admin_user()
+            # Auto-Seed - DISABLED by default. Set AUTO_SEED=true in .env to enable
+            auto_seed = os.getenv("AUTO_SEED", "false").lower() == "true"
+            if not auto_seed:
+                logger.info("Auto-Seed DISABLED. Set AUTO_SEED=true in .env to enable.")
             else:
-                logger.info(f"Found {user_count} users. Skipping seed.")
+                user_count = await self.db.users.count_documents({})
+                if user_count == 0:
+                    logger.warning("No users found. Seeding initial Admin User (PIN: 1111)...")
+                    await self.seed_admin_user()
+                else:
+                    logger.info(f"Found {user_count} users. Skipping seed.")
                 
         except Exception as e:
             logger.error(f"MongoDB Initialization Failed: {e}")

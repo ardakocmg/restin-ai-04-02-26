@@ -18,6 +18,8 @@ export const AppConfigSchema = z.object({
         studio: z.boolean().default(false),
         web: z.boolean().default(false),
         crm: z.boolean().default(false),
+        ops: z.boolean().default(false),
+        fintech: z.boolean().default(false),
     }),
     tax: z.object({
         defaultRate: z.number().min(0).max(100).default(18), // Malta Standard

@@ -31,7 +31,7 @@ export const InventoryService = {
     },
 
     // Save changes locally if offline, or push to API
-    adjustStock: async (adjustment: any) => {
+    adjustStock: async (adjustment: StockAdjustment) => {
         return axios.post(`${API_URL}/adjust`, adjustment);
     }
 };

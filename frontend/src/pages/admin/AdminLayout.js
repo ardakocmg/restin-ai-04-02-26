@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import NewSidebar from '../../layouts/NewSidebar';
 import NewTopBar from '../../layouts/NewTopBar';
 import { Button } from '../../components/ui/button';
+import { logger } from '../../lib/logger';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -19,12 +20,12 @@ export default function AdminLayout() {
   useEffect(() => {
     if (!loading && !user) {
       // navigate('/login'); // DISABLED per user request: "Never redirect to login"
-      console.warn("User not found, but staying on page (Dev Mode)");
+      // Dev mode: silently continue without user
     }
   }, [user, loading, navigate]);
 
   useEffect(() => {
-    console.log('[AdminLayout] Current Path:', location.pathname);
+    logger.debug('Current admin path', { path: location.pathname });
     setMobileMenuOpen(false); // Close mobile menu on route change
   }, [location.pathname]);
 

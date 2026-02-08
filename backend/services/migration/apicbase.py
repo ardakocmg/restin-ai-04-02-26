@@ -293,16 +293,69 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         # Get venue prefix for Item ID (first 2-3 letters of venue name)
         venue_prefix = self.venue_id[:2].upper() if self.venue_id else "XX"
         
-        # Get existing recipes for this venue (for update detection)
-        existing_recipes = {}
-        async for recipe in db.RecipesEngineered.find({"venue_id": self.venue_id}):
+        # OPTIMIZATION: 2-Step Fetch
+        # 1. Fetch Key Index (ID, SKU, Name) only - fast and small
+        # 2. Identify matches from the input data
+        # 3. Fetch full data only for the matched subset
+        
+        # Step 1: Lightweight Scan
+        existing_index = {} # Map 'sku:X' or 'name:X' -> document_id
+        
+        # Only fetch identification fields
+        cursor = db.RecipesEngineered.find(
+            {"venue_id": self.venue_id},
+            {"_id": 0, "id": 1, "sku": 1, "recipe_name": 1, "active": 1, "deleted_at": 1} 
+        )
+        
+        async for recipe in cursor:
             sku = recipe.get("sku", "")
             name = recipe.get("recipe_name", "")
+            doc_id = recipe.get("id")
+            
             if sku:
-                existing_recipes[f"sku:{sku}"] = recipe
+                existing_index[f"sku:{sku}"] = doc_id
             if name:
-                existing_recipes[f"name:{name.lower()}"] = recipe
+                existing_index[f"name:{name.lower()}"] = doc_id
+
+        # Step 2: Identify required IDs from the uploaded Data
+        needed_ids = set()
         
+        # Pre-scan data to find matches
+        for index, row in data.iterrows():
+            name = row.get("Name", "Unknown Recipe")
+            if pd.isna(name) or str(name).lower() in ['nan', 'total', 'totals', '', 'none']:
+                continue
+                
+            sku = str(row.get("Sku", "")) if pd.notna(row.get("Sku")) else ""
+            
+            # Check Index
+            found_id = None
+            if sku and f"sku:{sku}" in existing_index:
+                found_id = existing_index[f"sku:{sku}"]
+            elif f"name:{str(name).lower()}" in existing_index:
+                found_id = existing_index[f"name:{str(name).lower()}"]
+            
+            if found_id:
+                needed_ids.add(found_id)
+        
+        # Step 3: Fetch Full Data for matches (Bulk)
+        existing_recipes = {} # The full map expected by logic below
+        
+        if needed_ids:
+            # Batch fetch full documents including raw_import_data
+            full_docs_cursor = db.RecipesEngineered.find(
+                {"venue_id": self.venue_id, "id": {"$in": list(needed_ids)}}
+            )
+            async for recipe in full_docs_cursor:
+                sku = recipe.get("sku", "")
+                name = recipe.get("recipe_name", "")
+                
+                # Re-populate the map used by the loop below
+                if sku:
+                    existing_recipes[f"sku:{sku}"] = recipe
+                if name:
+                    existing_recipes[f"name:{name.lower()}"] = recipe
+
         # Get max sequence for auto Item ID
         max_seq = await db.RecipesEngineered.count_documents({"venue_id": self.venue_id})
         
@@ -607,6 +660,13 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         
         for item in data:
             try:
+                item_type = item.get("type", "new_recipe")
+                
+                # SKIP UNCHANGED ITEMS - they should not be processed or counted
+                if item_type == "unchanged":
+                    skipped += 1
+                    continue
+                
                 # Get name from various possible locations
                 name = (
                     item.get("name") or 
@@ -834,11 +894,13 @@ class ApicbaseAdapter(BaseMigrationAdapter):
             summary_parts.append(f"{processed} New")
         if updated > 0:
             summary_parts.append(f"{updated} Updated")
+        if skipped > 0:
+            summary_parts.append(f"{skipped} Unchanged (skipped)")
         if errors > 0:
             summary_parts.append(f"{errors} Errors")
         
         return {
             "status": "completed",
             "summary": f"Processed {', '.join(summary_parts) if summary_parts else '0 items'}.",
-            "details": {"processed": processed, "updated": updated, "errors": errors}
+            "details": {"processed": processed, "updated": updated, "skipped": skipped, "errors": errors}
         }

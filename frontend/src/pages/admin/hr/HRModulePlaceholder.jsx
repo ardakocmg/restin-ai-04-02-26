@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button'; // Verified import
 import { ArrowLeft, Construction, ChevronRight } from 'lucide-react';
 import PageContainer from '@/layouts/PageContainer';
+import { logger } from '@/lib/logger';
 
 export default function HRModulePlaceholder() {
     const { moduleName } = useParams();
@@ -11,7 +12,7 @@ export default function HRModulePlaceholder() {
     const displayTitle = moduleName ? moduleName.replace(/-/g, ' ').toUpperCase() : 'HR MODULE';
 
     useEffect(() => {
-        console.log('HRModulePlaceholder mounted - Version Fix 2.0');
+        logger.debug('HRModulePlaceholder mounted');
     }, []);
 
     return (

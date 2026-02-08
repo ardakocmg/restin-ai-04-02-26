@@ -4,7 +4,7 @@ import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { useMockData } from '../../hooks/useMockData'; // Reuse seed data for menu
-import { Order, OrderItem } from '../../types';
+import { Order, OrderItem, Ingredient } from '../../types';
 import { POSService } from './POSService';
 import { toast } from 'sonner';
 
@@ -16,13 +16,13 @@ export default function POSFeature() {
     // Menu Categories (Dynamically derived from seed data would be better in real app)
     const categories = ['All', 'Starters', 'Mains', 'Desserts', 'Drinks'];
 
-    const addToCart = (item: any) => { // Using any for seed inventory item
+    const addToCart = (item: Ingredient) => {
         setCart((prev: OrderItem[]) => {
             const existing = prev.find(i => i.name === item.name);
             if (existing) {
-                return prev.map(i => i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i) as any;
+                return prev.map(i => i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i);
             }
-            return [...prev, { name: item.name, quantity: 1, priceCents: item.priceCents }];
+            return [...prev, { name: item.name, quantity: 1, priceCents: item.priceCents, course_id: 1, modifiers: [] }];
         });
     };
 
@@ -35,8 +35,10 @@ export default function POSFeature() {
             venueId: 'venue-caviar-bull', // Context driven in real app
             tableId: 'T-1', // Selector needed
             userId: 'user-cb-server1',
+            status: 'PENDING' as const,
             totalCents: totalCents,
-            items: cart
+            items: cart,
+            createdAt: new Date().toISOString()
         };
 
         const success = await POSService.submitOrder(newOrder);

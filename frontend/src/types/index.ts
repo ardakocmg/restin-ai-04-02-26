@@ -53,6 +53,9 @@ export interface Ingredient { // Formerly InventoryItem
     allergens: string[]; // e.g., ["Fish", "Dairy"]
 }
 
+// Type alias for backwards compatibility
+export type InventoryItem = Ingredient;
+
 export interface MenuItem {
     id: string;
     name: string;

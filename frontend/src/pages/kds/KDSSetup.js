@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import { venueAPI, deviceAPI } from "../../lib/api";
 import { toast } from "sonner";
@@ -11,6 +12,7 @@ import { ChefHat, Building2, MapPin, ArrowRight, Loader2 } from "lucide-react";
 
 export default function KDSSetup() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [venues, setVenues] = useState([]);
   const [zones, setZones] = useState([]);
@@ -141,7 +143,7 @@ export default function KDSSetup() {
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-green-500 animate-spin mx-auto mb-4" />
-          <p className="text-white text-lg">Loading KDS Setup...</p>
+          <p className="text-white text-lg">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -155,10 +157,10 @@ export default function KDSSetup() {
             <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <ChefHat className="w-8 h-8 text-red-500" />
             </div>
-            <h2 className="text-xl font-bold text-white mb-2">Setup Error</h2>
+            <h2 className="text-xl font-bold text-white mb-2">{t('errors.setupError')}</h2>
             <p className="text-zinc-400 mb-4">{error}</p>
             <Button onClick={() => checkExistingBinding()} className="bg-green-500 hover:bg-green-600">
-              Retry
+              {t('common.retry')}
             </Button>
           </CardContent>
         </Card>
@@ -175,8 +177,8 @@ export default function KDSSetup() {
               <ChefHat className="w-8 h-8 text-red-500" />
             </div>
             <div>
-              <CardTitle className="text-white text-2xl">KDS Setup</CardTitle>
-              <CardDescription className="text-zinc-400">Configure kitchen display</CardDescription>
+              <CardTitle className="text-white text-2xl">{t('kds.setup')}</CardTitle>
+              <CardDescription className="text-zinc-400">{t('kds.description')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -186,7 +188,7 @@ export default function KDSSetup() {
             <div>
               <Label className="text-white mb-2 block">
                 <Building2 className="w-4 h-4 inline mr-2" />
-                Select Venue
+                {t('common.venue')}
               </Label>
               <Select value={selectedVenue} onValueChange={handleVenueSelect}>
                 <SelectTrigger className="bg-zinc-800 border-white/10 text-white">
@@ -230,7 +232,7 @@ export default function KDSSetup() {
               variant="outline"
               className="flex-1 border-white/10 text-zinc-100 hover:bg-white/5"
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               onClick={handleComplete}
@@ -244,7 +246,7 @@ export default function KDSSetup() {
                 </>
               ) : (
                 <>
-                  Continue
+                  {t('common.continue')}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </>
               )}

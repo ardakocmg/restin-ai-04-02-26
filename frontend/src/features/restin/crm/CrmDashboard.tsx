@@ -18,6 +18,11 @@ import {
 } from 'lucide-react';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
+import { crmService } from './crm-service';
+import { crmAutopilot } from './autopilot';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { useVenue } from '../../../context/VenueContext';
 
 // Rule 1: Explicit interfaces, no 'any'
 interface GuestStat {
@@ -29,12 +34,20 @@ interface GuestStat {
 }
 
 interface GuestProfile {
+    id: string;
     name: string;
-    visits: number;
-    lastVisit: string;
+    // Visually formatted fields (optional if derived)
+    visits?: number;
+    lastVisit?: string;
+    spend?: string;
+
+    // Core data fields (required for Autopilot)
+    lastVisitDays: number;
+    visitCount: number;
+    ltvCents: number;
     risk: 'HIGH' | 'MEDIUM' | 'LOW';
-    spend: string;
-    tags: string[];
+    tags: string[]; // UI uses tags, Autopilot uses tasteTags - likely mapped
+    tasteTags?: string[]; // Add this to be safe
 }
 
 interface AICampaign {
@@ -52,7 +65,41 @@ const GuestFilterSchema = z.object({
 const CrmDashboard: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { activeVenueId } = useVenue();
     const [filter, setFilter] = useState<string>('All');
+
+    // Fetch Guests
+    const { data: guests = [], isLoading } = useQuery<GuestProfile[]>({
+        queryKey: ['crm-guests', activeVenueId],
+        queryFn: async () => {
+            const res = await crmService.listGuests(activeVenueId || 'default');
+            return Array.isArray(res) ? res : [];
+        },
+        enabled: !!activeVenueId
+    });
+
+    // Boomerang Mutation
+    const boomerangMutation = useMutation({
+        mutationFn: async () => {
+            // Map UI tags to tasteTags if missing
+            const mappedGuests = guests.map(g => ({
+                id: g.id,
+                name: g.name,
+                lastVisitDays: g.lastVisitDays,
+                ltvCents: g.ltvCents,
+                tasteTags: g.tasteTags || g.tags || []
+            }));
+            const results = await crmAutopilot.runBoomerang(mappedGuests);
+            return results;
+        },
+        onSuccess: (data) => {
+            const cost = data.reduce((acc, curr) => acc + curr.cost, 0);
+            toast.success(`Sent ${data.length} personalized messages!`, {
+                description: `Total campaign cost: €${cost.toFixed(2)}`
+            });
+        },
+        onError: () => toast.error('Failed to execute Boomerang protocol.')
+    });
 
     const stats: GuestStat[] = [
         { label: t('restin.crm.stats.totalGuests'), value: '12,482', change: '+12%', icon: Users, color: 'text-blue-500' },
@@ -62,11 +109,11 @@ const CrmDashboard: React.FC = () => {
     ];
 
     const customers: GuestProfile[] = [
-        { name: 'Marco Rossi', visits: 42, lastVisit: '2 days ago', risk: 'LOW', spend: '€1,240', tags: ['VIP', 'Wine Lover'] },
-        { name: 'Sarah Smith', visits: 12, lastVisit: '45 days ago', risk: 'HIGH', spend: '€420', tags: ['Churn Risk', 'Pasta Fan'] },
-        { name: 'Lars Olofsson', visits: 8, lastVisit: '12 days ago', risk: 'MEDIUM', spend: '€210', tags: ['Occasional'] },
-        { name: 'Elena Petrova', visits: 25, lastVisit: '5 days ago', risk: 'LOW', spend: '€890', tags: ['Regular'] },
-        { name: 'John Doe', visits: 3, lastVisit: '62 days ago', risk: 'HIGH', spend: '€65', tags: ['One-timer'] },
+        { id: '1', name: 'Marco Rossi', visits: 42, visitCount: 42, lastVisit: '2 days ago', lastVisitDays: 2, risk: 'LOW', spend: '€1,240', ltvCents: 124000, tags: ['VIP', 'Wine Lover'] },
+        { id: '2', name: 'Sarah Smith', visits: 12, visitCount: 12, lastVisit: '45 days ago', lastVisitDays: 45, risk: 'HIGH', spend: '€420', ltvCents: 42000, tags: ['Churn Risk', 'Pasta Fan'] },
+        { id: '3', name: 'Lars Olofsson', visits: 8, visitCount: 8, lastVisit: '12 days ago', lastVisitDays: 12, risk: 'MEDIUM', spend: '€210', ltvCents: 21000, tags: ['Occasional'] },
+        { id: '4', name: 'Elena Petrova', visits: 25, visitCount: 25, lastVisit: '5 days ago', lastVisitDays: 5, risk: 'LOW', spend: '€890', ltvCents: 89000, tags: ['Regular'] },
+        { id: '5', name: 'John Doe', visits: 3, visitCount: 3, lastVisit: '62 days ago', lastVisitDays: 62, risk: 'HIGH', spend: '€65', ltvCents: 6500, tags: ['One-timer'] },
     ];
 
     const activeCampaigns: AICampaign[] = [
@@ -141,26 +188,28 @@ const CrmDashboard: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="divide-y divide-zinc-800">
-                            {customers.map((c, i) => (
+                            {isLoading ? (
+                                <div className="p-4 text-center text-zinc-500">Loading guests...</div>
+                            ) : guests.map((c: any, i: number) => (
                                 <div
                                     key={i}
                                     className="py-4 flex items-center justify-between group hover:bg-white/[0.02] -mx-6 px-6 transition-colors cursor-pointer"
-                                    onClick={() => navigate(`/admin/restin/crm/guests/${c.name.toLowerCase().replace(' ', '-')}`)}
+                                    onClick={() => navigate(`/admin/restin/crm/guests/${c.id}`)}
                                 >
                                     <div className="flex items-center gap-4">
                                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-zinc-700 to-zinc-800 flex items-center justify-center font-bold text-zinc-400">
-                                            {c.name.split(' ').map(n => n[0]).join('')}
+                                            {(c.name || 'Guest').split(' ').map((n: string) => n[0]).join('')}
                                         </div>
                                         <div>
                                             <div className="font-bold flex items-center gap-2 text-white">
                                                 {c.name}
-                                                <Badge className={c.risk === 'HIGH' ? 'bg-red-500/10 text-red-500 border-none px-2 py-0 h-5 text-[9px] font-black' : c.risk === 'LOW' ? 'bg-green-500/10 text-green-500 border-none px-2 py-0 h-5 text-[9px] font-black' : 'bg-amber-500/10 text-amber-500 border-none px-2 py-0 h-5 text-[9px] font-black'}>
-                                                    {c.risk} RISK
+                                                <Badge className={c.risk === 'HIGH' ? 'bg-red-500/10 text-red-500 border-none px-2 py-0 h-5 text-[9px] font-black' : 'bg-green-500/10 text-green-500 border-none px-2 py-0 h-5 text-[9px] font-black'}>
+                                                    {c.risk || 'LOW'} RISK
                                                 </Badge>
                                             </div>
                                             <div className="text-xs text-zinc-500 flex items-center gap-3 mt-1">
-                                                <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> Last: {c.lastVisit}</span>
-                                                <span className="flex items-center gap-1"><Zap className="w-3 h-3" /> {c.visits} visits</span>
+                                                <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> Days: {c.lastVisitDays}</span>
+                                                <span className="flex items-center gap-1"><Zap className="w-3 h-3" /> {c.visitCount || 0} visits</span>
                                             </div>
                                         </div>
                                     </div>
@@ -198,10 +247,14 @@ const CrmDashboard: React.FC = () => {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <p className="text-blue-100 text-sm leading-relaxed mb-4">
-                                AI has detected 12 guests who haven't visited in 30 days but have a high LTV. Execute re-engagement now?
+                                AI has detected {guests.filter((g: any) => (g.lastVisitDays > 30 && g.ltvCents > 5000)).length} guests who haven't visited in 30 days but have a high LTV. Execute re-engagement now?
                             </p>
-                            <Button className="w-full bg-white text-blue-600 hover:bg-blue-50 font-black border-none h-12 text-xs tracking-widest uppercase">
-                                Send 12 Personalized Offers
+                            <Button
+                                onClick={() => boomerangMutation.mutate()}
+                                disabled={boomerangMutation.isPending}
+                                className="w-full bg-white text-blue-600 hover:bg-blue-50 font-black border-none h-12 text-xs tracking-widest uppercase"
+                            >
+                                {boomerangMutation.isPending ? 'Generating Messages...' : 'Run Boomerang Protocol'}
                             </Button>
                         </CardContent>
                     </Card>

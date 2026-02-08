@@ -8,3 +8,8 @@ pymongo
 email-validator
 motor
 pyjwt
+pandas>=2.0.0
+openpyxl>=3.1.0
+httpx
+python-dotenv
+apscheduler

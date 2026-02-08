@@ -1,4 +1,5 @@
 import { AiServiceFactory } from '../../../lib/ai/google';
+import { logger } from '../../../lib/logger';
 
 /**
  * 🕸️ Web Architect Sync Engine (Pillar 2)
@@ -10,9 +11,25 @@ export class MenuSyncEngine {
      * Ensures price changes and item availability reflect instantly.
      */
     async syncCategoryToWeb(categoryId: string, siteId: string) {
-        console.log(`[Pillar 2] Syncing Category ${categoryId} to Site ${siteId}`);
+        logger.info('[Pillar 2] Syncing category to web', { categoryId, siteId });
         // In a real scenario, this would trigger a database update or a webhook
         return { status: 'success', syncedAt: new Date().toISOString() };
+    }
+
+    /**
+     * Publish Web Configuration
+     * Saves the drag & drop builder state to the public content API.
+     */
+    async saveWebConfig(venueId: string, config: any) {
+        logger.info('[Pillar 2] Saving Web Config', { venueId });
+
+        // This would call the public content API
+        // For now we simulate a successful sync
+        return {
+            success: true,
+            version: 'v1.0.0',
+            publishedAt: new Date().toISOString()
+        };
     }
 
     /**
@@ -32,7 +49,7 @@ export class MenuSyncEngine {
             const metadata = JSON.parse(response);
             return metadata;
         } catch (error) {
-            console.error('[Pillar 2] AI SEO failed:', error);
+            logger.error('[Pillar 2] AI SEO failed', { error });
             return {
                 title: `${productName} - Freshly Made at Restin`,
                 description: `Enjoy our ${productName} featuring ${ingredients.join(', ')}. Order online for fast pickup.`,

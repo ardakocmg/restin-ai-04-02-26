@@ -45,4 +45,5 @@ async def check_venue_access(user: dict, venue_id: str):
         return
         
     # 5. Deny
+    print(f"❌ Access Denied: User {user.get('name')} (role={user.get('role')}, venue={user.get('venue_id')}) tried to access {venue_id}. Allowed: {user.get('allowed_venue_ids')}")
     raise HTTPException(status_code=403, detail="Access denied")

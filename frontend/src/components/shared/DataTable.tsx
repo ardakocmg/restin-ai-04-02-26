@@ -4,11 +4,16 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  ColumnDef,
+  ColumnDef as RTColumnDef,
   SortingState,
   ColumnFiltersState,
   VisibilityState,
   PaginationState,
+  Table as RTTable,
+  Row,
+  Cell,
+  HeaderContext,
+  CellContext,
 } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ChevronDown, ChevronLeft, ChevronRight, GripVertical, Pin, PinOff } from 'lucide-react';
@@ -29,13 +34,46 @@ import EmptyState from './EmptyState';
 
 const DEFAULT_PAGE_SIZES = [10, 20, 50, 100];
 
-const buildTableId = (pathname: string, columns: any[]) => {
+// Generic interface allows typed render functions while defaulting to any for flexibility
+export interface ColumnDef<TData = any> {
+  key: string;
+  id?: string;
+  label?: string;
+  header?: string;
+  columns?: ColumnDef<TData>[];
+  render?: (row: TData) => React.ReactNode;
+  enableSorting?: boolean;
+  filterType?: string;
+  filterOptions?: Array<{ value: string; label: string }>;
+  headerClassName?: string;
+  cellClassName?: string;
+  size?: number;
+}
+
+interface TablePreset {
+  id: string;
+  name: string;
+  scope: string;
+  state?: Record<string, unknown>;
+}
+
+interface QueryPayload {
+  pageIndex: number;
+  pageSize: number;
+  sorting: SortingState;
+  globalSearch: string;
+  filters: FilterState;
+}
+
+type FilterState = Record<string, string | string[] | { min?: string; max?: string } | { start?: string; end?: string }>;
+
+const buildTableId = (pathname: string, columns: ColumnDef[]) => {
   const key = columns.map((col) => col.key || col.id).join('-');
   return `table:${pathname}:${key}`;
 };
 
 export interface DataTableProps<TData, TValue> {
-  columns: any[]; // relaxed type for now to avoid complexity with custom column defs
+  columns: ColumnDef[];
   data: TData[];
   loading?: boolean;
   error?: string | null;
@@ -57,8 +95,8 @@ export interface DataTableProps<TData, TValue> {
   enableVirtualization?: boolean;
   bulkActions?: { id: string; label: string; variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" }[];
   onBulkAction?: (actionId: string, selectedRows: TData[]) => void;
-  onQueryChange?: (query: any) => void;
-  onExport?: (query: any) => void;
+  onQueryChange?: (query: QueryPayload) => void;
+  onExport?: (query: QueryPayload) => void;
   renderRowDrawer?: (row: TData | null) => React.ReactNode;
 }
 
@@ -91,23 +129,23 @@ export default function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const location = useLocation();
   const { user } = useAuth();
-  const resolvedVenueId = venueId || (user as any)?.defaultVenueId || localStorage.getItem('restin_pos_venue');
+  const resolvedVenueId = venueId || (user as { defaultVenueId?: string })?.defaultVenueId || localStorage.getItem('restin_pos_venue');
   const resolvedTableId = tableId || buildTableId(location.pathname, columns);
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnOrder, setColumnOrder] = useState<string[]>([]);
-  const [columnPinning, setColumnPinning] = useState({ left: [], right: [] });
-  const [columnSizing, setColumnSizing] = useState({});
+  const [columnPinning, setColumnPinning] = useState<{ left: string[]; right: string[] }>({ left: [], right: [] });
+  const [columnSizing, setColumnSizing] = useState<Record<string, number>>({});
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState({});
   const [globalSearch, setGlobalSearch] = useState('');
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] = useState<FilterState>({});
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZES[1]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeRow, setActiveRow] = useState<TData | null>(null);
   const [prefsLoaded, setPrefsLoaded] = useState(false);
-  const [presets, setPresets] = useState<any[]>([]);
+  const [presets, setPresets] = useState<TablePreset[]>([]);
   const [presetName, setPresetName] = useState('');
   const [presetScope, setPresetScope] = useState('USER');
   const [selectedPresetId, setSelectedPresetId] = useState('');
@@ -118,7 +156,7 @@ export default function DataTable<TData, TValue>({
 
   const selectionColumn = useMemo(() => ({
     id: 'select',
-    header: ({ table }: any) => (
+    header: ({ table }: { table: RTTable<TData> }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
@@ -126,7 +164,7 @@ export default function DataTable<TData, TValue>({
         data-testid="datatable-select-all"
       />
     ),
-    cell: ({ row }: any) => (
+    cell: ({ row }: { row: Row<TData> }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -139,10 +177,10 @@ export default function DataTable<TData, TValue>({
   }), []);
 
   const tableColumns = useMemo(() => {
-    const mapColumns = (cols: any[]): any[] => {
+    const mapColumns = (cols: ColumnDef[]): RTColumnDef<TData>[] => {
       return cols.map((col, index) => {
         const colId = col.key || col.id || `col-${index}`;
-        const mapped: any = {
+        const mapped: RTColumnDef<TData> & { accessorKey?: string; meta?: Record<string, unknown>; columns?: RTColumnDef<TData>[] } = {
           id: colId,
           header: col.label || col.header || colId,
         };
@@ -151,7 +189,7 @@ export default function DataTable<TData, TValue>({
           mapped.columns = mapColumns(col.columns);
         } else {
           mapped.accessorKey = col.key;
-          mapped.cell = (info: any) => (col.render ? col.render(info.row.original) : info.getValue());
+          mapped.cell = (info: CellContext<TData, unknown>) => (col.render ? col.render(info.row.original) : info.getValue());
           mapped.enableSorting = col.enableSorting !== false;
           mapped.meta = {
             filterType: col.filterType,
@@ -161,7 +199,7 @@ export default function DataTable<TData, TValue>({
           };
           if (col.size) mapped.size = col.size;
         }
-        return mapped;
+        return mapped as RTColumnDef<TData>;
       });
     };
 
@@ -277,7 +315,7 @@ export default function DataTable<TData, TValue>({
     overscan: 8
   });
 
-  const handleRowClick = (row: any) => {
+  const handleRowClick = (row: Row<TData>) => {
     if (renderRowDrawer) {
       setActiveRow(row.original);
       setDrawerOpen(true);
@@ -294,16 +332,16 @@ export default function DataTable<TData, TValue>({
     }
   };
 
-  const applyPreset = (preset: any) => {
+  const applyPreset = (preset: TablePreset) => {
     if (!preset?.state) return;
-    setColumnVisibility(preset.state.columnVisibility || {});
-    setColumnOrder(preset.state.columnOrder || []);
-    setColumnPinning(preset.state.columnPinning || { left: [], right: [] });
-    setColumnSizing(preset.state.columnSizing || {});
-    setPageSize(preset.state.pageSize || pageSize);
-    setSorting(preset.state.sorting || []);
-    setGlobalSearch(preset.state.globalSearch || '');
-    setColumnFilters(preset.state.filters || []);
+    setColumnVisibility((preset.state.columnVisibility as VisibilityState) || {});
+    setColumnOrder((preset.state.columnOrder as string[]) || []);
+    setColumnPinning((preset.state.columnPinning as { left: string[]; right: string[] }) || { left: [], right: [] });
+    setColumnSizing((preset.state.columnSizing as Record<string, number>) || {});
+    setPageSize((preset.state.pageSize as number) || pageSize);
+    setSorting((preset.state.sorting as SortingState) || []);
+    setGlobalSearch((preset.state.globalSearch as string) || '');
+    setColumnFilters((preset.state.filters as FilterState) || {});
   };
 
   const handleSavePreset = async () => {
@@ -389,7 +427,7 @@ export default function DataTable<TData, TValue>({
                         {filterType === 'text' && (
                           <Input
                             value={value}
-                            onChange={(e) => setColumnFilters((prev: any) => ({ ...prev, [col.key]: e.target.value }))}
+                            onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: e.target.value }))}
                             data-testid={`datatable-filter-${col.key}`}
                           />
                         )}
@@ -399,14 +437,14 @@ export default function DataTable<TData, TValue>({
                               type="number"
                               placeholder="Min"
                               value={value?.min || ''}
-                              onChange={(e) => setColumnFilters((prev: any) => ({ ...prev, [col.key]: { ...value, min: e.target.value } }))}
+                              onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: { ...(value as Record<string, string>), min: e.target.value } }))}
                               data-testid={`datatable-filter-${col.key}-min`}
                             />
                             <Input
                               type="number"
                               placeholder="Max"
                               value={value?.max || ''}
-                              onChange={(e) => setColumnFilters((prev: any) => ({ ...prev, [col.key]: { ...value, max: e.target.value } }))}
+                              onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: { ...(value as Record<string, string>), max: e.target.value } }))}
                               data-testid={`datatable-filter-${col.key}-max`}
                             />
                           </div>
@@ -416,30 +454,29 @@ export default function DataTable<TData, TValue>({
                             <Input
                               type="date"
                               value={value?.start || ''}
-                              onChange={(e) => setColumnFilters((prev: any) => ({ ...prev, [col.key]: { ...value, start: e.target.value } }))}
+                              onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: { ...(value as Record<string, string>), start: e.target.value } }))}
                               data-testid={`datatable-filter-${col.key}-start`}
                             />
                             <Input
                               type="date"
                               value={value?.end || ''}
-                              onChange={(e) => setColumnFilters((prev: any) => ({ ...prev, [col.key]: { ...value, end: e.target.value } }))}
+                              onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: { ...(value as Record<string, string>), end: e.target.value } }))}
                               data-testid={`datatable-filter-${col.key}-end`}
                             />
                           </div>
                         )}
                         {filterType === 'multiSelect' && (
                           <div className="space-y-2" data-testid={`datatable-filter-${col.key}-multiselect`}>
-                            {(col.filterOptions || []).map((option: any) => (
+                            {(col.filterOptions || []).map((option: { value: string; label: string }) => (
                               <label key={option.value} className="flex items-center gap-2 text-xs text-zinc-300">
                                 <Checkbox
-                                  checked={value.includes(option.value)}
+                                  checked={(value as string[]).includes(option.value)}
                                   onCheckedChange={(checked) => {
-                                    setColumnFilters((prev: any) => {
-                                      const current = prev[col.key] || [];
+                                    setColumnFilters((prev: FilterState) => {
+                                      const current = (prev[col.key] as string[]) || [];
                                       if (checked) {
                                         return { ...prev, [col.key]: [...current, option.value] };
                                       }
-                                      // @ts-ignore
                                       return { ...prev, [col.key]: current.filter((item) => item !== option.value) };
                                     });
                                   }}
@@ -481,7 +518,7 @@ export default function DataTable<TData, TValue>({
                   onValueChange={(value) => {
                     setSelectedPresetId(value);
                     const preset = presets.find((item) => item.id === value);
-                    applyPreset(preset);
+                    if (preset) applyPreset(preset);
                   }}
                 >
                   <SelectTrigger data-testid="datatable-presets-select">
@@ -674,7 +711,7 @@ export default function DataTable<TData, TValue>({
                   </TableRow>
                 ) : (
                   (virtualizationEnabled ? rowVirtualizer.getVirtualItems() : table.getRowModel().rows).map((rowItem) => {
-                    const row: any = virtualizationEnabled ? table.getRowModel().rows[rowItem.index] : rowItem;
+                    const row = (virtualizationEnabled ? table.getRowModel().rows[(rowItem as { index: number }).index] : rowItem) as Row<TData>;
                     return (
                       <TableRow
                         key={row.id}
@@ -688,7 +725,7 @@ export default function DataTable<TData, TValue>({
                           }
                         }}
                       >
-                        {row.getVisibleCells().map((cell: any) => {
+                        {row.getVisibleCells().map((cell: Cell<TData, unknown>) => {
                           const pinned = cell.column.getIsPinned();
                           const style = pinned === 'left'
                             ? { position: 'sticky', left: cell.column.getStart('left'), backgroundColor: '#18181B', zIndex: 1 }

@@ -58,15 +58,15 @@ function WasteLog() {
           venue_id: venueId,
           item_id: formData.item_id,
           item_name: selectedItem.name,
-          qty: parseFloat(formData.qty),
-          unit: selectedItem.base_unit,
+          quantity: parseFloat(formData.qty),
+          unit: selectedItem.unit || 'each',
+          item_type: 'INGREDIENT',
           reason: formData.reason,
-          cost: 0,
           notes: formData.notes
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       alert('Waste logged successfully');
       setShowForm(false);
       setFormData({ item_id: '', qty: '', reason: 'SPOILAGE' });
@@ -100,7 +100,7 @@ function WasteLog() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Item</label>
               <select
                 value={formData.item_id}
-                onChange={(e) => setFormData({...formData, item_id: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, item_id: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               >
                 <option value="">Select item...</option>
@@ -109,24 +109,24 @@ function WasteLog() {
                 ))}
               </select>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
               <input
                 type="number"
                 step="0.01"
                 value={formData.qty}
-                onChange={(e) => setFormData({...formData, qty: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, qty: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 placeholder="0.00"
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Reason</label>
               <select
                 value={formData.reason}
-                onChange={(e) => setFormData({...formData, reason: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               >
                 <option value="SPOILAGE">Spoilage</option>
@@ -135,19 +135,19 @@ function WasteLog() {
                 <option value="OTHER">Other</option>
               </select>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
               <input
                 type="text"
                 value={formData.notes || ''}
-                onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 placeholder="Optional notes..."
               />
             </div>
           </div>
-          
+
           <div className="flex gap-3 mt-6">
             <button
               onClick={() => setShowForm(false)}
@@ -171,7 +171,7 @@ function WasteLog() {
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-xl font-bold text-gray-900">Recent Waste</h2>
         </div>
-        
+
         <div className="divide-y divide-gray-200">
           {wasteEntries.map((entry) => (
             <div key={entry.id} className="p-6 flex items-center justify-between">
@@ -187,7 +187,7 @@ function WasteLog() {
                   )}
                 </div>
               </div>
-              
+
               <div className="text-right">
                 <p className="text-sm text-gray-500">
                   {new Date(entry.created_at).toLocaleDateString()}
@@ -198,7 +198,7 @@ function WasteLog() {
               </div>
             </div>
           ))}
-          
+
           {wasteEntries.length === 0 && (
             <div className="p-12 text-center text-gray-400">
               <Trash2 className="w-16 h-16 mx-auto mb-4" />

@@ -27,7 +27,7 @@ export default function AdvancedObservability() {
         api.get(`/system/observability/data-volume?venue_id=${activeVenue.id}`).catch(() => ({ data: { data: [] } })),
         api.get(`/system/observability/read-model-health?venue_id=${activeVenue.id}`).catch(() => ({ data: { data: [] } }))
       ]);
-      
+
       setSlowQueries(slowRes.data?.data || []);
       setDataVolume(volRes.data?.data || []);
       setReadModelHealth(healthRes.data?.data || []);
@@ -55,7 +55,7 @@ export default function AdvancedObservability() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="h-5 w-5" />
-                Slow Queries (>800ms)
+                Slow Queries (&gt;800ms)
               </CardTitle>
             </CardHeader>
             <CardContent>

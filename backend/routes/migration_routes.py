@@ -60,6 +60,40 @@ async def preview_migration(
         print(f"Migration Error: {e}")
         raise HTTPException(status_code=400, detail=f"Migration Processing Failed: {str(e)}")
 
+@router.post("/migrations/preview-json")
+async def preview_migration_json(
+    payload: Dict = Body(...),
+    user: dict = Depends(get_current_user)
+):
+    """Preview migration from client-side parsed JSON (Avoids 30s timeout)"""
+    import pandas as pd
+    
+    try:
+        source = payload.get("source")
+        data = payload.get("data")
+        filename = payload.get("filename", "client-side-import.json")
+        
+        # Convert JSON list to DataFrame (Adapters expect DataFrames)
+        if isinstance(data, list):
+            df = pd.DataFrame(data)
+            print(f"[Migration] Converted JSON to DataFrame: {len(df)} rows, columns: {list(df.columns)[:10]}")
+        else:
+            df = data
+        
+        manager = MigrationManager(venue_id=user["venue_id"], user_id=user["id"])
+        
+        # Call preview with DataFrame
+        preview = await manager.preview(source, df)
+        
+        # Add filename
+        preview["filename"] = filename
+        return preview
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"JSON Migration Error: {e}")
+        raise HTTPException(status_code=400, detail=f"Migration Processing Failed: {str(e)}")
+
 @router.post("/migrations/execute")
 async def execute_migration(
     payload: Dict = Body(...),

@@ -7,19 +7,42 @@ import {
 import { Card } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { cn } from '../../../lib/utils';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { radarService } from './radar-service';
+import { useVenue } from '../../../context/VenueContext';
+import { toast } from 'sonner';
 
 /**
  * 🔬 MARKET RADAR (Pillar 6)
  * Competitive Intelligence & Yield Management.
  */
 export default function RadarDashboard() {
+    const { activeVenueId } = useVenue();
     const [region, setRegion] = useState('Valletta');
 
-    const competitors = [
-        { name: 'Trattoria Zero', price: '€14.50', trend: 'up', confidence: '98%', items: 32 },
-        { name: 'The Artisan', price: '€12.00', trend: 'down', confidence: '94%', items: 14 },
-        { name: 'Harbor Grill', price: '€18.00', trend: 'stable', confidence: '96%', items: 28 },
-    ];
+    // Fetch Insights
+    const { data: insights } = useQuery({
+        queryKey: ['radar-insights', activeVenueId],
+        queryFn: () => radarService.getInsights(activeVenueId || 'default'),
+        enabled: !!activeVenueId
+    });
+
+    // Fetch Competitors
+    const { data: competitors = [] } = useQuery({
+        queryKey: ['radar-competitors', activeVenueId],
+        queryFn: () => radarService.getCompetitors(activeVenueId || 'default'),
+        enabled: !!activeVenueId
+    });
+
+    // Scan Mutation
+    const scanMutation = useMutation({
+        mutationFn: async () => {
+            toast.info("Initializing Grounding Scan...");
+            return await radarService.scanMarket(activeVenueId || 'default', region, "Mediterranean");
+        },
+        onSuccess: (data) => toast.success("Scan Started", { description: data.message }),
+        onError: () => toast.error("Scan Failed")
+    });
 
     return (
         <div className="flex flex-col gap-8 animate-in fade-in zoom-in duration-700">
@@ -46,10 +69,15 @@ export default function RadarDashboard() {
                     </div>
                     <div className="px-4 py-2">
                         <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1">Index Updated</p>
-                        <p className="text-lg font-black text-white italic leading-none">4m ago</p>
+                        <p className="text-lg font-black text-white italic leading-none">{competitors[0]?.last_updated || 'Now'}</p>
                     </div>
-                    <Button variant="ghost" size="icon" className="hover:bg-white/5 h-10 w-10">
-                        <RefreshCcw size={18} className="text-zinc-500" />
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => scanMutation.mutate()}
+                        disabled={scanMutation.isPending}
+                        className="hover:bg-white/5 h-10 w-10">
+                        <RefreshCcw size={18} className={cn("text-zinc-500", scanMutation.isPending && "animate-spin text-red-500")} />
                     </Button>
                 </div>
             </div>
@@ -68,7 +96,7 @@ export default function RadarDashboard() {
                                 <div>
                                     <h2 className="text-2xl font-black text-white italic tracking-tight">Yield Management Suggestion</h2>
                                     <p className="text-zinc-500 font-medium max-w-lg mt-2 leading-relaxed">
-                                        Demand is surging in Valletta (+24%). We recommend a temporary <span className="text-red-500">8% premium</span> on main courses to optimize margins.
+                                        {insights?.summary || "Analyzing market conditions..."}
                                     </p>
                                 </div>
                                 <Button className="bg-emerald-600 text-white font-black px-8 h-12 rounded-xl shadow-[0_10px_30px_rgba(16,185,129,0.3)] border-none">
@@ -159,7 +187,7 @@ export default function RadarDashboard() {
                                         <div className="flex justify-between items-start mb-4">
                                             <div>
                                                 <h4 className="text-sm font-black text-white tracking-tight group-hover:text-red-500 transition-colors uppercase italic">{comp.name}</h4>
-                                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">{comp.items} Items Scanned</p>
+                                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">{comp.items_scanned} Items Scanned</p>
                                             </div>
                                             <div className={cn(
                                                 "p-2 rounded-xl transition-all",

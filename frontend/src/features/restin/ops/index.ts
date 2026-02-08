@@ -3,8 +3,16 @@
  * Central management for external orders and staff efficiency.
  */
 
+import { logger } from '../../../lib/logger';
+
+interface ExternalOrderItem {
+    name: string;
+    quantity: number;
+    priceCents: number;
+}
+
 interface OrderPayload {
-    items: any[]; // Using any temporarily for external payloads, but mapping to strict types
+    items: ExternalOrderItem[];
     customer: string;
     total: number;
 }
@@ -15,7 +23,7 @@ export class OpsHub {
      * White-labeled injection into the Restin KDS.
      */
     static injectExternalOrder(source: 'UBEREATS' | 'WOLT' | 'BOLT', externalId: string, payload: OrderPayload) {
-        console.log(`[Pillar 7] Injecting ${source} order: ${externalId}`);
+        logger.info('[Pillar 7] Injecting external order', { source, externalId });
         // Logic: Transform specific payload to Restin Order format and push to event bus.
         return {
             status: 'injected',

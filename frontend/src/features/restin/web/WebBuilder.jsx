@@ -12,9 +12,38 @@ import { cn } from '../../../lib/utils';
  * 🕸️ WEB ARCHITECT (Pillar 2)
  * Drag & Drop Website Builder synced with POS Inventory.
  */
+import { webBuilderService } from './web-service';
+import { useVenue } from '../../../context/VenueContext'; // Updated import
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
 export default function WebBuilder() {
+    const { activeVenueId } = useVenue(); // Use global venue context
+    const venueId = activeVenueId;
+
     const [device, setDevice] = useState('desktop');
     const [activeTab, setActiveTab] = useState('sections');
+
+    // Fetch Live Menu Data
+    const { data: menuData, isLoading } = useQuery({
+        queryKey: ['web-builder-menu', venueId],
+        queryFn: () => webBuilderService.getActiveMenuItems(venueId || 'default'), // Fallback for dev
+        enabled: !!venueId
+    });
+
+    // Publish Mutation
+    const publishMutation = useMutation({
+        mutationFn: webBuilderService.publishSite,
+        onSuccess: () => toast.success('Website published successfully!'),
+        onError: () => toast.error('Failed to publish website.')
+    });
+
+    const handlePublish = () => {
+        publishMutation.mutate({
+            theme: 'dark', // Todo: Make dynamic
+            sections: ['hero', 'menu']
+        });
+    };
 
     const sections = [
         { id: 'hero', title: 'Hero Header', icon: Layout },
@@ -69,8 +98,13 @@ export default function WebBuilder() {
                         <Button variant="outline" className="w-full border-zinc-800 text-zinc-400 font-bold hover:bg-white/5 gap-2">
                             <Eye size={16} /> Preview Mode
                         </Button>
-                        <Button className="w-full bg-red-600 text-white font-black hover:bg-red-700 shadow-lg gap-2">
-                            <Rocket size={16} /> Publish Changes
+                        <Button
+                            onClick={handlePublish}
+                            disabled={publishMutation.isPending}
+                            className="w-full bg-red-600 text-white font-black hover:bg-red-700 shadow-lg gap-2"
+                        >
+                            <Rocket size={16} />
+                            {publishMutation.isPending ? 'Publishing...' : 'Publish Changes'}
                         </Button>
                     </div>
                 </Card>
@@ -129,16 +163,15 @@ export default function WebBuilder() {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {[
-                                    { name: 'Wagyu Truffle Burger', price: '24.50', desc: 'Japanese Wagyu, black truffle aioli, aged cheddar.' },
-                                    { name: 'Seared Scallops', price: '18.00', desc: 'Hand-dived scallops, cauliflower purée, crispy pancetta.' }
-                                ].map((item, i) => (
+                                {isLoading ? (
+                                    <div className="text-white text-center col-span-2">Loading menu data...</div>
+                                ) : menuData?.items?.slice(0, 4).map((item, i) => (
                                     <div key={i} className="p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-white/10 transition-all cursor-pointer">
                                         <div className="flex justify-between items-start mb-2">
                                             <h4 className="font-bold text-white">{item.name}</h4>
                                             <span className="text-red-500 font-black text-xs">€{item.price}</span>
                                         </div>
-                                        <p className="text-xs text-zinc-500 font-medium">{item.desc}</p>
+                                        <p className="text-xs text-zinc-500 font-medium line-clamp-2">{item.description || 'No description available.'}</p>
                                     </div>
                                 ))}
                             </div>

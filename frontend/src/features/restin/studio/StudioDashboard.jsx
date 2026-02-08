@@ -7,19 +7,39 @@ import {
 import { Card } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { cn } from '../../../lib/utils';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { studioService } from './studio-service';
+import { useVenue } from '../../../context/VenueContext';
+import { toast } from 'sonner';
 
 /**
  * 🎨 GENERATIVE STUDIO (Pillar 5)
  * Reality-First content pipeline for marketing and menus.
  */
 export default function StudioDashboard() {
+    const { activeVenueId } = useVenue();
+    const queryClient = useQueryClient();
     const [activeFilter, setActiveFilter] = useState('all');
 
-    const assets = [
-        { name: 'Truffle Burger v1', type: 'IMAGE', status: 'Ready', date: '2h ago', preview: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1899&auto=format&fit=crop' },
-        { name: 'Social Reel - Friday', type: 'VIDEO', status: 'Draft', date: '5h ago', preview: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop' },
-        { name: 'Winter Menu Design', type: 'DESIGN', status: 'Review', date: '1d ago', preview: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974&auto=format&fit=crop' },
-    ];
+    // Fetch Assets
+    const { data: assets = [], isLoading } = useQuery({
+        queryKey: ['studio-assets', activeVenueId],
+        queryFn: () => studioService.listAssets(activeVenueId || 'default'),
+        enabled: !!activeVenueId
+    });
+
+    // Generate Mutation
+    const generateMutation = useMutation({
+        mutationFn: async () => {
+            toast.info("Connecting to Imagen 3...");
+            return await studioService.generateAsset(activeVenueId || 'default', "Hyper-realistic wagyu burger with truffle fries, cinematic lighting", "IMAGE");
+        },
+        onSuccess: () => {
+            toast.success("Asset Generated!", { description: "Cost: €0.04 (Billed to Account)" });
+            queryClient.invalidateQueries(['studio-assets']);
+        },
+        onError: () => toast.error("Generation Failed")
+    });
 
     return (
         <div className="flex flex-col gap-8 animate-in slide-in-from-right duration-700">
@@ -55,8 +75,11 @@ export default function StudioDashboard() {
                         </div>
                         <h3 className="text-xs font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">Magic Tools</h3>
                         <div className="space-y-2 relative z-10">
-                            <Button className="w-full justify-start h-14 bg-zinc-950/50 border border-zinc-800 hover:border-red-500/30 text-zinc-300 font-bold px-4 rounded-xl gap-3">
-                                <Camera size={20} className="text-red-500" /> Generate Photo
+                            <Button
+                                onClick={() => generateMutation.mutate()}
+                                disabled={generateMutation.isPending}
+                                className="w-full justify-start h-14 bg-zinc-950/50 border border-zinc-800 hover:border-red-500/30 text-zinc-300 font-bold px-4 rounded-xl gap-3">
+                                <Camera size={20} className="text-red-500" /> {generateMutation.isPending ? 'Dreaming...' : 'Generate Photo'}
                             </Button>
                             <Button className="w-full justify-start h-14 bg-zinc-950/50 border border-zinc-800 hover:border-red-500/30 text-zinc-300 font-bold px-4 rounded-xl gap-3">
                                 <Palette size={20} className="text-purple-500" /> Tone Editor
@@ -109,7 +132,7 @@ export default function StudioDashboard() {
                             <Card key={i} className="bg-zinc-900/40 border-zinc-800 overflow-hidden group hover:scale-[1.02] transition-all duration-300 shadow-2xl">
                                 <div className="h-48 relative overflow-hidden">
                                     <img
-                                        src={asset.preview}
+                                        src={asset.url || asset.preview}
                                         alt={asset.name}
                                         className="w-full h-full object-cover group-hover:scale-110 transition-duration-700"
                                     />
@@ -134,7 +157,7 @@ export default function StudioDashboard() {
                                         <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded uppercase tracking-[0.1em]">{asset.status}</span>
                                     </div>
                                     <div className="flex items-center justify-between mt-4">
-                                        <span className="text-[10px] font-black text-zinc-600">{asset.date}</span>
+                                        <span className="text-[10px] font-black text-zinc-600">{new Date(asset.created_at || Date.now()).toLocaleDateString()}</span>
                                         <div className="flex gap-2">
                                             <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-white/5">
                                                 <RefreshCw size={14} />

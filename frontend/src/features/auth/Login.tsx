@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "./AuthContext";
 import { authAPI } from "../../lib/api";
 import { toast } from "sonner";
@@ -10,6 +11,7 @@ import { User } from "../../types";
 
 export default function Login() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const { login } = useAuth();
 
     const [pin, setPin] = useState("");
@@ -89,13 +91,14 @@ export default function Login() {
                 setPinSuccess(true);
                 setTimeout(() => handleLoginSuccess(data), 300);
             }
-        } catch (error: any) {
-            const status = error.response?.status;
-            const message = error.response?.data?.detail || "Login failed";
+        } catch (error: unknown) {
+            const axiosError = error as { response?: { status?: number; data?: { detail?: string } } };
+            const status = axiosError.response?.status;
+            const message = axiosError.response?.data?.detail || "Login failed";
 
             if (status === 401) {
                 resetPinWithError();
-                toast.error("Invalid PIN");
+                toast.error(t('auth.invalidCredentials'));
             } else {
                 toast.error(message);
                 setLoading(false);
@@ -136,7 +139,7 @@ export default function Login() {
 
     const handleMfaVerify = async () => {
         if (totpCode.length < 6) {
-            toast.error('Enter a valid 6-digit code');
+            toast.error(t('validation.minLength', { count: 6 }));
             return;
         }
 
@@ -155,8 +158,9 @@ export default function Login() {
             setMfaRequired(false);
             setTotpCode("");
             handleLoginSuccess(loginData);
-        } catch (error: any) {
-            toast.error(error.response?.data?.detail || 'MFA verification failed');
+        } catch (error: unknown) {
+            const axiosError = error as { response?: { data?: { detail?: string } } };
+            toast.error(axiosError.response?.data?.detail || 'MFA verification failed');
             setLoading(false);
         }
     };
@@ -315,8 +319,8 @@ export default function Login() {
                             {/* PIN Entry */}
                             <div className="text-center space-y-6">
                                 <div>
-                                    <h2 className="text-2xl font-bold mb-2" style={{ color: '#F5F5F7' }}>ENTER PIN</h2>
-                                    <p className="text-sm" style={{ color: '#A1A1AA' }}>Enter your 4-digit PIN</p>
+                                    <h2 className="text-2xl font-bold mb-2" style={{ color: '#F5F5F7' }}>{t('auth.pin', 'ENTER PIN')}</h2>
+                                    <p className="text-sm" style={{ color: '#A1A1AA' }}>{t('validation.minLength', { count: 4 })}</p>
                                 </div>
 
                                 {/* PIN Boxes */}
@@ -361,7 +365,7 @@ export default function Login() {
                                 </div>
 
                                 {loading && (
-                                    <p className="text-sm" style={{ color: '#A1A1AA' }}>Authenticating...</p>
+                                    <p className="text-sm" style={{ color: '#A1A1AA' }}>{t('common.loading')}</p>
                                 )}
                             </div>
                         </>

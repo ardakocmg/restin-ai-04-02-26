@@ -52,7 +52,7 @@ export default function RecipeManagement() {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [recipesRes, itemsRes] = await Promise.all([
-        axios.get(`${API_URL}/api/venues/${venueId}/recipes/engineered`, { headers }),
+        axios.get(`${API_URL}/api/venues/${venueId}/recipes/engineered?limit=100&page=1`, { headers }),
         axios.get(`${API_URL}/api/venues/${venueId}/inventory`, { headers })
       ]);
 

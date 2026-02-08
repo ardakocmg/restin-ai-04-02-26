@@ -4,6 +4,8 @@
  * Rule 4: All monetary values MUST be Integers (Cents).
  */
 
+import { logger } from '../../../lib/logger';
+
 export type PaymentMethod = 'CASH' | 'CARD' | 'MOBILE_QR' | 'KIOSK';
 
 export interface PaymentResponse {
@@ -12,13 +14,19 @@ export interface PaymentResponse {
     timestamp: string;
 }
 
+interface KioskConfig {
+    isKioskMode: boolean;
+    welcomeMessage?: string;
+    [key: string]: unknown;
+}
+
 export class FintechEngine {
     /**
      * Process Omni-Payment
      * Handles Cash, Card, and Digital Wallets.
      */
     static async processPayment(orderId: string, amountCents: number, method: PaymentMethod): Promise<PaymentResponse> {
-        console.log(`[Pillar 8] Processing ${method} payment for Order ${orderId}: ${amountCents} cents`);
+        logger.info('[Pillar 8] Processing payment', { method, orderId, amountCents });
 
         // Mocking payment gateway delay (Rule 28: handle latency)
         await new Promise(resolve => setTimeout(resolve, 800));
@@ -34,7 +42,7 @@ export class FintechEngine {
      * Toggle Kiosk Mode (Rule 223)
      * Switches POS UI to Self-Service mode.
      */
-    static toggleKioskMode(currentConfig: any) {
+    static toggleKioskMode(currentConfig: KioskConfig): KioskConfig {
         return {
             ...currentConfig,
             isKioskMode: !currentConfig.isKioskMode,

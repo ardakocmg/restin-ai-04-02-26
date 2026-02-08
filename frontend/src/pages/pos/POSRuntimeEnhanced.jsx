@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, ShoppingCart, Send, CreditCard, X, Plus, Trash2 } from 'lucide-react';
 import axios from 'axios';
 import ModifierModal from './ModifierModal';
+import { logger } from '../../lib/logger';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -36,7 +37,7 @@ function POSRuntimeEnhanced() {
       setSession(response.data.session);
       loadMenuFromSnapshot(response.data.session.menu_snapshot.snapshot_id);
     } catch (error) {
-      console.error('Error opening session:', error);
+      logger.error('Error opening session', { error });
     }
   };
 
@@ -87,7 +88,7 @@ function POSRuntimeEnhanced() {
       setOrder(response.data.order);
       setItems([]);
     } catch (error) {
-      console.error('Error creating order:', error);
+      logger.error('Error creating order', { error });
     }
   };
 
@@ -120,7 +121,7 @@ function POSRuntimeEnhanced() {
 
       await refreshOrder();
     } catch (error) {
-      console.error('Error adding item:', error);
+      logger.error('Error adding item', { error });
     }
   };
 
@@ -135,7 +136,7 @@ function POSRuntimeEnhanced() {
       setOrder(response.data.order);
       setItems(response.data.items);
     } catch (error) {
-      console.error('Error refreshing order:', error);
+      logger.error('Error refreshing order', { error });
     }
   };
 
@@ -149,7 +150,7 @@ function POSRuntimeEnhanced() {
       );
       refreshOrder();
     } catch (error) {
-      console.error('Error voiding item:', error);
+      logger.error('Error voiding item', { error });
     }
   };
 
@@ -177,18 +178,18 @@ function POSRuntimeEnhanced() {
               items: items.map(i => ({ name: i.menu_item_name, qty: i.qty }))
             }
           }, { headers: { Authorization: `Bearer ${token}` } });
-          console.log("Print job sent to", kitchenPrinter.name);
+          logger.info('Print job sent', { printer: kitchenPrinter.name });
         } else {
-          console.warn("No kitchen printer found for auto-print");
+          logger.warn('No kitchen printer found for auto-print');
         }
       } catch (e) {
-        console.error("Auto-print failed", e);
+        logger.error('Auto-print failed', { error: e });
       }
 
       alert('Order sent to kitchen!');
       refreshOrder();
     } catch (error) {
-      console.error('Error sending order:', error);
+      logger.error('Error sending order', { error });
     }
   };
 
@@ -217,7 +218,7 @@ function POSRuntimeEnhanced() {
       setItems([]);
       setShowPayment(false);
     } catch (error) {
-      console.error('Error processing payment:', error);
+      logger.error('Error processing payment', { error });
       alert('Payment failed: ' + error.response?.data?.error?.code);
     }
   };
@@ -240,8 +241,8 @@ function POSRuntimeEnhanced() {
             key={cat.id}
             onClick={() => setSelectedCategory(cat.id)}
             className={`w-full p-4 rounded-lg text-left font-semibold transition text-base ${selectedCategory === cat.id
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
           >
             {cat.name}
@@ -320,8 +321,8 @@ function POSRuntimeEnhanced() {
 
                   <div className="flex items-center justify-between">
                     <span className={`text-xs px-2 py-1 rounded-full ${item.state === 'SENT' ? 'bg-green-100 text-green-700' :
-                        item.state === 'FIRED' ? 'bg-yellow-100 text-yellow-700' :
-                          'bg-gray-200 text-gray-600'
+                      item.state === 'FIRED' ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-gray-200 text-gray-600'
                       }`}>
                       {item.state}
                     </span>

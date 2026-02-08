@@ -1,5 +1,6 @@
 import { AiServiceFactory } from '../../../lib/ai/google';
 import { BillingBroker } from '../../billing/broker';
+import { logger } from '../../../lib/logger';
 
 /**
  * 🤖 Autopilot CRM Engine (Pillar 3)
@@ -22,7 +23,7 @@ export class CrmAutopilot {
     async runBoomerang(guests: GuestProfile[]) {
         const highRisk = guests.filter(g => g.lastVisitDays > 30 && g.ltvCents > 5000); // LTV > €50
 
-        console.log(`[Pillar 3] Boomerang detected ${highRisk.length} high-risk guests.`);
+        logger.info('[Pillar 3] Boomerang detected high-risk guests', { count: highRisk.length });
 
         const actions = await Promise.all(highRisk.map(async guest => {
             const prompt = `

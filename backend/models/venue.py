@@ -60,7 +60,7 @@ class Venue(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    type: str
+    type: Optional[str] = "casual"  # fine_dining, casual, bar, steakhouse, mediterranean
     service_style: str = "casual"
     timezone: str = "Europe/Malta"
     currency: str = "EUR"  # EUR, USD, GBP, TRY, etc.

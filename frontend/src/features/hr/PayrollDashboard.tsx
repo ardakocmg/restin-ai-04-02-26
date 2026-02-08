@@ -84,7 +84,7 @@ export default function PayrollDashboard() {
         { key: 'last_name', label: 'Last Name' },
         { key: 'role', label: 'Role' },
         { key: 'gross_salary_cents', label: 'Gross Salary', render: (row: Employee) => `€${(row.gross_salary_cents / 100).toLocaleString()}` },
-        { key: 'tax_status', label: 'Tax Status', render: (row: any) => row.tax_status?.toUpperCase() || 'N/A' },
+        { key: 'tax_status', label: 'Tax Status', render: (row: Employee) => row.fss_tax_status?.toUpperCase() || 'N/A' },
     ];
 
     const payslipColumns = [

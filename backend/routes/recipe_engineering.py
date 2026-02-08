@@ -57,7 +57,7 @@ def create_recipe_engineering_router():
             created_by=current_user["id"]
         )
         
-        await db.RecipesEngineered.insert_one(recipe.model_dump())
+        await db.recipes_engineered.insert_one(recipe.model_dump())
         return recipe.model_dump()
     
     @router.get("/venues/{venue_id}/recipes/engineered")
@@ -68,6 +68,7 @@ def create_recipe_engineering_router():
         page: Optional[int] = None,
         limit: Optional[int] = None,
         search: Optional[str] = None,
+        quick_filter: Optional[str] = None,
         current_user: dict = Depends(get_current_user)
     ):
         await check_venue_access(current_user, venue_id)
@@ -89,10 +90,28 @@ def create_recipe_engineering_router():
                 {"raw_import_data.Item ID": search_regex},
                 {"raw_import_data.Sku": search_regex}
             ]
+        
+        # Quick filter support for dashboard widgets
+        if quick_filter == "today":
+            from datetime import date
+            today_start = datetime.combine(date.today(), datetime.min.time()).replace(tzinfo=timezone.utc).isoformat()
+            query["$or"] = query.get("$or", []) + [
+                {"created_at": {"$gte": today_start}},
+                {"imported_at": {"$gte": today_start}}
+            ] if query.get("$or") else None
+            if not query.get("$or"):
+                query["$or"] = [
+                    {"created_at": {"$gte": today_start}},
+                    {"imported_at": {"$gte": today_start}}
+                ]
+        elif quick_filter == "missing_id":
+            query["$and"] = query.get("$and", []) + [
+                {"$or": [{"item_id": {"$exists": False}}, {"item_id": ""}, {"item_id": None}]}
+            ]
             
         if limit is None and page is None:
             # Legacy mode: Return list up to 50k
-            recipes = await db.RecipesEngineered.find(query, {"_id": 0}).to_list(50000)
+            recipes = await db.recipes_engineered.find(query, {"_id": 0}).to_list(50000)
             return recipes
             
         # Pagination Mode
@@ -100,8 +119,8 @@ def create_recipe_engineering_router():
         limit = limit or 50
         skip = (page - 1) * limit
         
-        total_count = await db.RecipesEngineered.count_documents(query)
-        recipes = await db.RecipesEngineered.find(query, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
+        total_count = await db.recipes_engineered.count_documents(query)
+        recipes = await db.recipes_engineered.find(query, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
         
         return {
             "items": recipes,
@@ -118,43 +137,74 @@ def create_recipe_engineering_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        # Parallel stats fetching using aggregation for speed
-        pipeline = [
-            {"$match": {"venue_id": venue_id}},
-            {"$facet": {
-                "active_count": [{"$match": {"active": True, "deleted_at": None}}, {"$count": "count"}],
-                "archived_count": [{"$match": {"active": False, "deleted_at": None}}, {"$count": "count"}],
-                "trash_count": [{"$match": {"deleted_at": {"$ne": None}}}, {"$count": "count"}],
-                "total_count": [{"$count": "count"}],
-                "missing_ids": [
-                    {"$match": {"active": True, "deleted_at": None, "item_id": {"$exists": False}}},
-                    {"$count": "count"}
-                ],
-                "categories": [
-                    {"$match": {"active": True, "deleted_at": None}},
-                    {"$group": {"_id": "$category"}},
-                    {"$count": "count"}
-                ],
-                # Added today - disabled due to inconsistent date formats
-                # Will return 0 until data migration normalizes dates
-                "today_count": []
-            }}
-        ]
+        # Use separate count queries instead of $facet to avoid BSON size limit
+        # with many large documents (raw_import_data can be huge)
+        import asyncio
         
-        result = await db.RecipesEngineered.aggregate(pipeline).to_list(1)
-        stats = result[0] if result else {}
+        async def count_active():
+            return await db.recipes_engineered.count_documents({
+                "venue_id": venue_id, "active": True, "deleted_at": None
+            })
         
-        def get_count(key):
-            return stats.get(key, [{}])[0].get("count", 0) if stats.get(key) else 0
-
+        async def count_archived():
+            return await db.recipes_engineered.count_documents({
+                "venue_id": venue_id, "active": False, "deleted_at": None
+            })
+        
+        async def count_trash():
+            return await db.recipes_engineered.count_documents({
+                "venue_id": venue_id, "deleted_at": {"$ne": None}
+            })
+        
+        async def count_total():
+            return await db.recipes_engineered.count_documents({"venue_id": venue_id})
+        
+        async def count_missing_ids():
+            return await db.recipes_engineered.count_documents({
+                "venue_id": venue_id, "active": True, "deleted_at": None,
+                "$or": [{"item_id": {"$exists": False}}, {"item_id": ""}, {"item_id": None}]
+            })
+        
+        async def count_categories():
+            pipeline = [
+                {"$match": {"venue_id": venue_id, "active": True, "deleted_at": None}},
+                {"$group": {"_id": "$category"}},
+                {"$count": "count"}
+            ]
+            result = await db.recipes_engineered.aggregate(pipeline).to_list(1)
+            return result[0]["count"] if result else 0
+        
+        async def count_added_today():
+            from datetime import date
+            today_start = datetime.combine(date.today(), datetime.min.time()).replace(tzinfo=timezone.utc).isoformat()
+            return await db.recipes_engineered.count_documents({
+                "venue_id": venue_id, 
+                "deleted_at": None,
+                "$or": [
+                    {"created_at": {"$gte": today_start}},
+                    {"imported_at": {"$gte": today_start}}
+                ]
+            })
+        
+        # Run all counts in parallel for speed
+        results = await asyncio.gather(
+            count_active(),
+            count_archived(),
+            count_trash(),
+            count_total(),
+            count_missing_ids(),
+            count_categories(),
+            count_added_today()
+        )
+        
         return {
-            "total_active": get_count("active_count"),
-            "total_archived": get_count("archived_count"),
-            "total_trash": get_count("trash_count"),
-            "total_recipes": get_count("total_count"),
-            "missing_ids": get_count("missing_ids"),
-            "categories": get_count("categories"), 
-            "added_today": get_count("today_count")
+            "total_active": results[0],
+            "total_archived": results[1],
+            "total_trash": results[2],
+            "total_recipes": results[3],
+            "missing_ids": results[4],
+            "categories": results[5],
+            "added_today": results[6]
         }
 
     @router.post("/venues/{venue_id}/recipes/engineered/bulk-archive")
@@ -166,7 +216,7 @@ def create_recipe_engineering_router():
         recipe_ids = request.recipe_ids
         await check_venue_access(current_user, venue_id)
         
-        result = await db.RecipesEngineered.update_many(
+        result = await db.recipes_engineered.update_many(
             {"venue_id": venue_id, "id": {"$in": recipe_ids}},
             {"$set": {"active": False, "updated_at": datetime.now(timezone.utc).isoformat()}}
         )
@@ -181,7 +231,7 @@ def create_recipe_engineering_router():
         recipe_ids = request.recipe_ids
         await check_venue_access(current_user, venue_id)
         
-        result = await db.RecipesEngineered.update_many(
+        result = await db.recipes_engineered.update_many(
             {"venue_id": venue_id, "id": {"$in": recipe_ids}},
             {"$set": {"active": True, "updated_at": datetime.now(timezone.utc).isoformat()}}
         )
@@ -200,7 +250,7 @@ def create_recipe_engineering_router():
         user_name = current_user.get("name", current_user.get("username", "Unknown"))
         
         # Soft delete - move to trash
-        result = await db.RecipesEngineered.update_many(
+        result = await db.recipes_engineered.update_many(
             {"venue_id": venue_id, "id": {"$in": recipe_ids}, "deleted_at": None},
             {"$set": {
                 "deleted_at": now,
@@ -254,8 +304,8 @@ def create_recipe_engineering_router():
             ]
         
         skip = (page - 1) * limit
-        total = await db.RecipesEngineered.count_documents(query)
-        recipes = await db.RecipesEngineered.find(query, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
+        total = await db.recipes_engineered.count_documents(query)
+        recipes = await db.recipes_engineered.find(query, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
         
         # Get venue trash retention settings (default 30 days)
         venue = await db.Venues.find_one({"id": venue_id}, {"trash_retention_days": 1})
@@ -283,7 +333,7 @@ def create_recipe_engineering_router():
         now = datetime.now(timezone.utc).isoformat()
         user_name = current_user.get("name", current_user.get("username", "Unknown"))
         
-        result = await db.RecipesEngineered.update_many(
+        result = await db.recipes_engineered.update_many(
             {"venue_id": venue_id, "id": {"$in": recipe_ids}, "deleted_at": {"$ne": None}},
             {
                 "$set": {
@@ -324,7 +374,7 @@ def create_recipe_engineering_router():
         recipe_ids = request.recipe_ids
         
         # Only delete if already in trash
-        result = await db.RecipesEngineered.delete_many({
+        result = await db.recipes_engineered.delete_many({
             "venue_id": venue_id,
             "id": {"$in": recipe_ids},
             "deleted_at": {"$ne": None}
@@ -340,7 +390,7 @@ def create_recipe_engineering_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        recipe = await db.RecipesEngineered.find_one(
+        recipe = await db.recipes_engineered.find_one(
             {"id": recipe_id, "venue_id": venue_id},
             {"_id": 0}
         )
@@ -359,7 +409,7 @@ def create_recipe_engineering_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        existing = await db.RecipesEngineered.find_one(
+        existing = await db.recipes_engineered.find_one(
             {"id": recipe_id, "venue_id": venue_id},
             {"_id": 0}
         )
@@ -389,7 +439,7 @@ def create_recipe_engineering_router():
         recipe_data["version"] = new_version
         recipe_data["updated_at"] = datetime.now(timezone.utc).isoformat()
         
-        await db.RecipesEngineered.update_one(
+        await db.recipes_engineered.update_one(
             {"id": recipe_id},
             {"$set": recipe_data}
         )
@@ -418,7 +468,7 @@ def create_recipe_engineering_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        recipes = await db.RecipesEngineered.find(
+        recipes = await db.recipes_engineered.find(
             {"venue_id": venue_id, "active": True},
             {"_id": 0}
         ).to_list(50000)
@@ -455,8 +505,8 @@ def create_recipe_engineering_router():
         skip = (page - 1) * limit
         query = {"venue_id": venue_id, "deleted_at": {"$ne": None}}
         
-        total = await db.RecipesEngineered.count_documents(query)
-        recipes = await db.RecipesEngineered.find(
+        total = await db.recipes_engineered.count_documents(query)
+        recipes = await db.recipes_engineered.find(
             query, {"_id": 0}
         ).sort("deleted_at", -1).skip(skip).limit(limit).to_list(limit)
         
@@ -495,7 +545,7 @@ def create_recipe_engineering_router():
         now = datetime.now(timezone.utc).isoformat()
         user_name = current_user.get("name", current_user.get("username", "Unknown"))
         
-        result = await db.RecipesEngineered.update_many(
+        result = await db.recipes_engineered.update_many(
             {"venue_id": venue_id, "id": {"$in": recipe_ids}, "deleted_at": {"$ne": None}},
             {"$set": {
                 "deleted_at": None,
@@ -536,7 +586,7 @@ def create_recipe_engineering_router():
             raise HTTPException(403, "Only owners can permanently delete recipes")
         
         # Hard delete from trash only
-        result = await db.RecipesEngineered.delete_many(
+        result = await db.recipes_engineered.delete_many(
             {"venue_id": venue_id, "id": {"$in": recipe_ids}, "deleted_at": {"$ne": None}}
         )
         
@@ -567,7 +617,7 @@ def create_recipe_engineering_router():
         await check_venue_access(current_user, venue_id)
         
         # Find archived recipes (active=False but not deleted)
-        archived = await db.RecipesEngineered.find(
+        archived = await db.recipes_engineered.find(
             {
                 "venue_id": venue_id,
                 "active": False,
@@ -578,7 +628,7 @@ def create_recipe_engineering_router():
         ).to_list(len(recipe_names))
         
         # Find trashed recipes
-        trashed = await db.RecipesEngineered.find(
+        trashed = await db.recipes_engineered.find(
             {
                 "venue_id": venue_id,
                 "deleted_at": {"$ne": None},

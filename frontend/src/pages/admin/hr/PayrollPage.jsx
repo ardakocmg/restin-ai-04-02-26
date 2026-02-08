@@ -34,6 +34,7 @@ import api, { userAPI } from '@/lib/api';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { cn } from "@/lib/utils";
+import { logger } from '@/lib/logger';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -70,11 +71,11 @@ export default function PayrollPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("Ultimate Payroll Hub v1.0.1 — Active Venue:", activeVenue?.id);
+        logger.info('Ultimate Payroll Hub v1.0.1', { venueId: activeVenue?.id });
         if (activeVenue?.id) {
             fetchData();
         } else {
-            console.warn("PayrollPage: No active venue ID found in context");
+            logger.warn('PayrollPage: No active venue ID found in context');
             // If venue is missing, we might be stuck in loading state or redirected
         }
     }, [activeVenue?.id]);
@@ -89,7 +90,7 @@ export default function PayrollPage() {
             setRuns(runsRes.data || []);
             setEmployees(empsRes.data || []);
         } catch (error) {
-            console.error("Failed to fetch data:", error);
+            logger.error('Failed to fetch data', { error });
             toast.error("Failed to load payroll intelligence");
         } finally {
             setLoading(false);
@@ -106,7 +107,7 @@ export default function PayrollPage() {
             fetchData();
         } catch (error) {
             toast.error("Deletion failed (Backend override required)");
-            console.error(error);
+            logger.error('Deletion failed', { error });
         }
     };
 
@@ -127,7 +128,7 @@ export default function PayrollPage() {
             toast.success("Payroll cycle calculated");
             fetchData();
         } catch (error) {
-            console.error(error);
+            logger.error('Calculation failed', { error });
             toast.error("Calculation failed");
         } finally {
             setCalculating(false);
@@ -148,7 +149,7 @@ export default function PayrollPage() {
             window.URL.revokeObjectURL(link.href);
             toast.success("Download started");
         } catch (error) {
-            console.error("Download failed:", error);
+            logger.error('Download failed', { error });
             toast.error("Download failed. Please try again.");
         }
     };

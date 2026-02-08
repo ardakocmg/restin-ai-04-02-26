@@ -1,5 +1,6 @@
 import { AiServiceFactory } from '../../../lib/ai/google';
 import { BillingBroker } from '../../billing/broker';
+import { logger } from '../../../lib/logger';
 
 /**
  * 🎨 Generative Studio (Pillar 5)
@@ -22,16 +23,16 @@ export class GenerativeStudio {
         // 1. Reality Check
         const existing = existingAssets.find(a => a.source === 'REALITY');
         if (existing) {
-            console.log(`[Pillar 5] Using reality-first asset for ${productName}`);
+            logger.info('[Pillar 5] Using reality-first asset', { productName });
             return existing;
         }
 
         // 2. Generation Check (Rule 47: SaaS Gating - assume feature is enabled for demo)
-        console.log(`[Pillar 5] No real asset found. Calling Generative AI for ${productName}...`);
+        logger.info('[Pillar 5] No real asset found, generating', { productName });
 
         // Track billable event (Pillar 0)
         const generationCost = BillingBroker.calculateTenantPrice(0.05); // 5 cents base cost
-        console.log(`[Pillar 0] Billing tenant ${generationCost} cents for AI generation.`);
+        logger.info('[Pillar 0] Billing tenant for AI generation', { generationCost });
 
         // Hypothetical call to Imagen 3
         const generatedUrl = `https://storage.googleapis.com/restin-studio/${productName.replace(' ', '-')}.webp`;

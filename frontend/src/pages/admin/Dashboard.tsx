@@ -29,7 +29,7 @@ interface Order {
   table_name?: string;
   status: string;
   total: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface Venue {

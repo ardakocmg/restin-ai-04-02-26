@@ -15,6 +15,10 @@ import {
     PieChart,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { fintechService } from './fintech-service';
+import { useVenue } from '../../../context/VenueContext';
+import { toast } from 'sonner';
 
 // Rule 1: No 'any'
 interface PaymentMetric {
@@ -45,7 +49,24 @@ const formatCents = (cents: number) => {
 const FintechDashboard: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { activeVenueId } = useVenue();
     const [kioskMode, setKioskMode] = useState<boolean>(false);
+
+    // Toggle Kiosk Mutation
+    const kioskMutation = useMutation({
+        mutationFn: async () => {
+            const newState = !kioskMode;
+            await fintechService.toggleKiosk(activeVenueId || 'default', newState);
+            return newState;
+        },
+        onSuccess: (newState) => {
+            setKioskMode(newState);
+            toast.success(newState ? "Kiosk Mode Activated" : "Kiosk Mode Disabled", {
+                description: newState ? "Terminal is now in guest self-serve mode." : "Terminal returned to staff mode."
+            });
+        },
+        onError: () => toast.error("Failed to toggle Kiosk Mode")
+    });
 
     const metrics: PaymentMetric[] = [
         { label: 'Today Revenue', value: formatCents(428000), change: '+18.2%', icon: TrendingUp },
@@ -78,7 +99,8 @@ const FintechDashboard: React.FC = () => {
                     <Button
                         variant={kioskMode ? "destructive" : "outline"}
                         className={kioskMode ? "text-white font-bold" : "border-zinc-800 text-zinc-300 hover:bg-zinc-900 transition-colors"}
-                        onClick={() => setKioskMode(!kioskMode)}
+                        onClick={() => kioskMutation.mutate()}
+                        disabled={kioskMutation.isPending}
                     >
                         <Monitor className="w-4 h-4 mr-2" />
                         {kioskMode ? t('restin.fintech.kioskExit') : t('restin.fintech.kioskInit')}

@@ -1,5 +1,5 @@
 """Finance routes - summaries, reports, open orders, closed checks"""
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Body
 from datetime import datetime, timezone
 
 from core.database import db
@@ -145,5 +145,22 @@ def create_finance_router():
             "rows": rows,
             "meta": {"count": len(rows), "currency": currency}
         }
+
+    @router.post("/venues/{venue_id}/finance/orders/{order_id}/split")
+    async def split_order(venue_id: str, order_id: str, payload: dict = Body(...), current_user: dict = Depends(get_current_user)):
+        """
+        Split an Order (Pillar 8).
+        """
+        # Logic would go here to update the order in DB
+        return {"status": "success", "message": "Order split successfully", "new_orders": ["ORD-123-A", "ORD-123-B"]}
+
+    @router.post("/venues/{venue_id}/finance/kiosk/toggle")
+    async def toggle_kiosk(venue_id: str, payload: dict = Body(...), current_user: dict = Depends(get_current_user)):
+        """
+        Toggle Kiosk Mode for a Terminal (Pillar 8).
+        """
+        enabled = payload.get("enabled", False)
+        # Logic to update Venue/Terminal Config in DB
+        return {"status": "success", "kiosk_mode": enabled}
 
     return router

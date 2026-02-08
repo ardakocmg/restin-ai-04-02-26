@@ -6,7 +6,7 @@ from core.venue_config import get_venue_config
 from pos.service.feature_gate import require_pos_feature
 from pos.service.pos_session_service import PosSessionService
 from pos.service.pos_order_service import PosOrderService
-from pos.service.pos_payment_service import PosPaymentService
+from pos.service.pos_payment_service import pos_payment_service
 from pos.service.pos_split_merge_service import PosSplitMergeService
 from pos.service.pos_kds_integration import PosKdsIntegration
 from pos.models import (
@@ -17,9 +17,10 @@ def create_pos_runtime_router():
     router = APIRouter(prefix="/pos", tags=["pos-runtime"])
     session_service = PosSessionService(db)
     order_service = PosOrderService(db)
-    payment_service = PosPaymentService(db)
+    payment_service = pos_payment_service  # Use global instance
     split_merge_service = PosSplitMergeService(db)
     kds_integration = PosKdsIntegration(db)
+
 
     @router.post("/sessions/open")
     async def open_session(

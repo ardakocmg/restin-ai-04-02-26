@@ -9,8 +9,9 @@ import { Badge } from '../../../components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../../components/ui/dialog';
 import { Label } from '../../../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
-import { Search, Plus, Trash2, Save, FileText, ChefHat, RefreshCw, AlertCircle, Columns, Filter, UploadCloud } from 'lucide-react';
+import { Search, Plus, Trash2, Save, FileText, ChefHat, RefreshCw, AlertCircle, Columns, Filter, UploadCloud, LayoutGrid, Table } from 'lucide-react';
 import DataTable from '../../../components/shared/DataTable';
+import PremiumDataTable from '../../../components/shared/PremiumDataTable';
 import { toast } from 'sonner';
 import { Checkbox } from '../../../components/ui/checkbox';
 import { useNavigate } from 'react-router-dom';
@@ -82,6 +83,7 @@ export default function RecipeManagement() {
   const [collapsedGroups, setCollapsedGroups] = useState(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [quickFilter, setQuickFilter] = useState('all');
+  const [tableStyle, setTableStyle] = useState('classic'); // 'classic' | 'premium'
 
   // Pagination & Server Stats
   const [page, setPage] = useState(1);
@@ -137,6 +139,14 @@ export default function RecipeManagement() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  // Reload when quickFilter changes (dashboard widget clicks)
+  useEffect(() => {
+    if (activeVenue?.id) {
+      setPage(1);
+      loadData(1);
+    }
+  }, [quickFilter]);
+
   const loadStats = async () => {
     try {
       const res = await api.get(`venues/${activeVenue.id}/recipes/engineered/stats`);
@@ -173,7 +183,8 @@ export default function RecipeManagement() {
             page: currentPage,
             limit: limit,
             search: searchQuery || undefined,
-            category: selectedCategory !== 'All' ? selectedCategory : undefined
+            category: selectedCategory !== 'All' ? selectedCategory : undefined,
+            quick_filter: quickFilter !== 'all' ? quickFilter : undefined
           }
         });
       }
@@ -533,6 +544,63 @@ export default function RecipeManagement() {
     ];
   }, [visibleImportKeys, collapsedGroups, selectedIds, recipes]);
 
+  // Convert columns to TanStack format for PremiumDataTable
+  const premiumColumns = useMemo(() => {
+    return [
+      {
+        accessorKey: 'item_id',
+        header: 'Item ID',
+        size: 120,
+        cell: ({ row }) => (
+          <div className="font-mono text-xs text-emerald-400 bg-emerald-950/50 px-2 py-1 rounded font-bold">
+            {row.original.raw_import_data?.['Item ID'] || row.original.raw_import_data?.['Sku'] || row.original.item_id || '-'}
+          </div>
+        ),
+        filterFn: 'auto'
+      },
+      {
+        accessorKey: 'recipe_name',
+        header: 'Recipe Name',
+        cell: ({ row }) => <div className="font-bold text-foreground">{row.original.recipe_name}</div>,
+        filterFn: 'auto'
+      },
+      {
+        accessorKey: 'category',
+        header: 'Category',
+        cell: ({ row }) => (
+          <span className="text-xs font-semibold text-muted-foreground uppercase">
+            {row.original.raw_import_data?.Category || '-'}
+          </span>
+        ),
+        filterFn: 'auto'
+      },
+      {
+        accessorKey: 'subcategory',
+        header: 'Subcategory',
+        cell: ({ row }) => row.original.raw_import_data?.Subcategory || '-',
+        filterFn: 'auto'
+      },
+      {
+        accessorKey: 'yield_qty',
+        header: 'Yield',
+        cell: ({ row }) => (
+          <span className="font-mono text-xs">
+            {row.original.yield_qty} {row.original.yield_uom}
+          </span>
+        )
+      },
+      {
+        accessorKey: 'cost',
+        header: 'Cost',
+        cell: ({ row }) => (
+          <span className="font-mono text-xs text-amber-400">
+            €{(row.original.total_cost || 0).toFixed(2)}
+          </span>
+        )
+      }
+    ];
+  }, []);
+
   return (
     <PageContainer
       title="Recipe Engineering"
@@ -569,7 +637,16 @@ export default function RecipeManagement() {
             visibleColumns={visibleImportKeys}
             onToggle={toggleColumn}
           />
-          <Button variant="outline" size="sm" onClick={loadData}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setTableStyle(s => s === 'classic' ? 'premium' : 'classic')}
+            className={tableStyle === 'premium' ? 'border-violet-500/50 text-violet-400 hover:bg-violet-500/10' : ''}
+          >
+            {tableStyle === 'premium' ? <LayoutGrid className="w-4 h-4 mr-2" /> : <Table className="w-4 h-4 mr-2" />}
+            {tableStyle === 'premium' ? 'Premium' : 'Classic'}
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => loadData()}>
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
@@ -805,13 +882,35 @@ export default function RecipeManagement() {
 
       <Card className="bg-zinc-950 border-white/10">
         <CardContent className="p-0">
-          <DataTable
-            columns={tableColumns}
-            data={recipes}
-            loading={loading}
-            emptyMessage="No recipes found."
-            enableRowSelection={false}
-          />
+          {tableStyle === 'classic' ? (
+            <DataTable
+              columns={tableColumns}
+              data={recipes}
+              loading={loading}
+              emptyMessage="No recipes found."
+              enableRowSelection={false}
+            />
+          ) : (
+            <PremiumDataTable
+              columns={premiumColumns}
+              data={recipes}
+              loading={loading}
+              title="Recipe Engineering"
+              subtitle={`${totalRecords} recipes`}
+              enableGlobalSearch={true}
+              enableFilters={true}
+              enableExport={true}
+              enableRowSelection={true}
+              stickyHeader={true}
+              maxHeight="calc(100vh - 400px)"
+              onRowClick={(row) => {
+                setEditingRecipe(row);
+                setIsModalOpen(true);
+              }}
+              emptyTitle="No recipes found"
+              emptyDescription="Import recipes or create a new one to get started."
+            />
+          )}
           {/* Pagination Controls */}
           <div className="flex items-center justify-between px-4 py-4 border-t border-white/10 bg-zinc-900/50">
             <div className="text-sm text-zinc-500">
@@ -957,6 +1056,51 @@ export default function RecipeManagement() {
                       </div>
                     ));
                   })()}
+                </div>
+              </div>
+            )}
+
+            {/* Version History Section */}
+            {editingRecipe?.change_history && editingRecipe.change_history.length > 0 && (
+              <div className="space-y-3 p-4 bg-zinc-900/20 border border-zinc-800/30 rounded-xl">
+                <div className="flex items-center gap-2 text-zinc-400 mb-2">
+                  <RefreshCw className="w-3 h-3 text-blue-500" />
+                  <h4 className="text-[10px] font-black uppercase tracking-widest">Version History</h4>
+                  <span className="text-[9px] text-zinc-600 ml-auto">v{editingRecipe?.version || 1}</span>
+                </div>
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {editingRecipe.change_history.slice(0, 10).map((change, idx) => (
+                    <div key={change.id || idx} className="flex items-start gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors group">
+                      <div className="flex flex-col items-center">
+                        <div className={`w-2 h-2 rounded-full mt-1.5 ${change.change_type === 'imported' ? 'bg-green-500' :
+                          change.change_type === 'updated' ? 'bg-amber-500' :
+                            change.change_type === 'deleted' ? 'bg-red-500' :
+                              change.change_type === 'restored' || change.change_type === 'restored_from_trash' ? 'bg-emerald-500' :
+                                'bg-zinc-500'
+                          }`} />
+                        {idx < editingRecipe.change_history.slice(0, 10).length - 1 && (
+                          <div className="w-px h-full bg-zinc-700/50 mt-1" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${change.change_type === 'imported' ? 'bg-green-950/50 text-green-400' :
+                            change.change_type === 'updated' ? 'bg-amber-950/50 text-amber-400' :
+                              change.change_type === 'deleted' ? 'bg-red-950/50 text-red-400' :
+                                change.change_type?.includes('restored') ? 'bg-emerald-950/50 text-emerald-400' :
+                                  'bg-zinc-800 text-zinc-400'
+                            }`}>
+                            {change.change_type?.replace(/_/g, ' ') || 'change'}
+                          </span>
+                          <span className="text-[9px] text-zinc-600">
+                            {change.timestamp ? new Date(change.timestamp).toLocaleDateString() : '-'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-zinc-400 mt-0.5 truncate">{change.change_summary || change.change_method}</p>
+                        <p className="text-[9px] text-zinc-600 mt-0.5">by {change.user_name || 'System'}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

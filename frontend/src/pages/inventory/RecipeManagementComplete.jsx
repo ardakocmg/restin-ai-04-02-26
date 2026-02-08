@@ -10,8 +10,10 @@ import LoadingSpinner from '../../components/shared/LoadingSpinner';
 import EmptyState from '../../components/shared/EmptyState';
 import { toast } from 'sonner';
 import api from '../../lib/api';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function RecipeManagementComplete() {
+  const { user } = useAuth();
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
@@ -25,8 +27,9 @@ export default function RecipeManagementComplete() {
   const loadRecipes = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/api/inventory/recipes');
-      setRecipes(response.data || []);
+      if (!user?.venue_id) return;
+      const response = await api.get(`/api/venues/${user.venue_id}/recipes/engineered`);
+      setRecipes(response.data.items || []);
     } catch (error) {
       console.error('Failed to load recipes:', error);
       toast.error('Failed to load recipes');
@@ -42,11 +45,17 @@ export default function RecipeManagementComplete() {
         components
       };
 
+      const recipeData = {
+        recipe_name: editingRecipe.name,
+        ingredients: components,
+        venue_id: user?.venue_id
+      };
+
       if (editingRecipe?.id) {
-        await api.put(`/api/inventory/recipes/${editingRecipe.id}`, payload);
+        await api.put(`/api/venues/${user.venue_id}/recipes/engineered/${editingRecipe.id}`, recipeData);
         toast.success('Recipe updated');
       } else {
-        await api.post('/api/inventory/recipes', payload);
+        await api.post(`/api/venues/${user.venue_id}/recipes/engineered`, recipeData);
         toast.success('Recipe created');
       }
 
@@ -69,8 +78,8 @@ export default function RecipeManagementComplete() {
   if (loading) return <LoadingSpinner fullScreen />;
 
   return (
-    <PageContainer 
-      title="Recipe Management" 
+    <PageContainer
+      title="Recipe Management"
       description="Manage recipes and their components"
       actions={
         <Button onClick={() => { setEditingRecipe({}); setComponents([{ item_id: '', quantity: 1, unit: 'kg' }]); setShowDialog(true); }}>
@@ -80,14 +89,14 @@ export default function RecipeManagementComplete() {
       }
     >
       {recipes.length === 0 ? (
-        <EmptyState 
+        <EmptyState
           title="No Recipes"
           description="Create your first recipe to get started"
           action={() => setShowDialog(true)}
           actionLabel="Create Recipe"
         />
       ) : (
-        <DataTable 
+        <DataTable
           columns={columns}
           data={recipes}
           onRowClick={(recipe) => { setEditingRecipe(recipe); setComponents(recipe.components || []); setShowDialog(true); }}
@@ -100,11 +109,11 @@ export default function RecipeManagementComplete() {
           <DialogHeader>
             <DialogTitle>{editingRecipe?.id ? 'Edit Recipe' : 'New Recipe'}</DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <div>
               <label style={{ color: '#D4D4D8' }}>Recipe Name</label>
-              <Input 
+              <Input
                 value={editingRecipe?.name || ''}
                 onChange={(e) => setEditingRecipe(prev => ({ ...prev, name: e.target.value }))}
                 placeholder="Enter recipe name"
@@ -114,7 +123,7 @@ export default function RecipeManagementComplete() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label style={{ color: '#D4D4D8' }}>Yield Quantity</label>
-                <Input 
+                <Input
                   type="number"
                   value={editingRecipe?.yield_quantity || ''}
                   onChange={(e) => setEditingRecipe(prev => ({ ...prev, yield_quantity: parseFloat(e.target.value) }))}
@@ -122,7 +131,7 @@ export default function RecipeManagementComplete() {
               </div>
               <div>
                 <label style={{ color: '#D4D4D8' }}>Yield Unit</label>
-                <Input 
+                <Input
                   value={editingRecipe?.yield_unit || ''}
                   onChange={(e) => setEditingRecipe(prev => ({ ...prev, yield_unit: e.target.value }))}
                   placeholder="kg, portions, etc."
@@ -140,7 +149,7 @@ export default function RecipeManagementComplete() {
               <div className="space-y-2">
                 {components.map((comp, idx) => (
                   <div key={idx} className="flex items-center gap-2">
-                    <Input 
+                    <Input
                       placeholder="Item ID"
                       value={comp.item_id}
                       onChange={(e) => {
@@ -150,7 +159,7 @@ export default function RecipeManagementComplete() {
                       }}
                       className="flex-1"
                     />
-                    <Input 
+                    <Input
                       type="number"
                       placeholder="Qty"
                       value={comp.quantity}
@@ -161,7 +170,7 @@ export default function RecipeManagementComplete() {
                       }}
                       className="w-24"
                     />
-                    <Input 
+                    <Input
                       placeholder="Unit"
                       value={comp.unit}
                       onChange={(e) => {
@@ -171,8 +180,8 @@ export default function RecipeManagementComplete() {
                       }}
                       className="w-24"
                     />
-                    <Button 
-                      size="icon" 
+                    <Button
+                      size="icon"
                       variant="outline"
                       onClick={() => setComponents(prev => prev.filter((_, i) => i !== idx))}
                     >

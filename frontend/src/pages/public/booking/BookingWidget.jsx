@@ -111,7 +111,7 @@ export default function BookingWidget() {
                     </Select>
                 </div>
             </div>
-            <Button className="w-full bg-white text-black hover:bg-zinc-200 mt-4" onClick={fetchSlots} disabled={loading}>
+            <Button className="w-full bg-white text-foreground hover:bg-zinc-200 mt-4" onClick={fetchSlots} disabled={loading}>
                 {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Calendar className="w-4 h-4 mr-2" />}
                 Find a Table
             </Button>
@@ -138,7 +138,7 @@ export default function BookingWidget() {
             </div>
             <div className="flex gap-2">
                 <Button variant="ghost" className="flex-1" onClick={() => setStep(1)}>Back</Button>
-                <Button className="flex-1 bg-white text-black" disabled={!selectedSlot} onClick={() => setStep(3)}>Next</Button>
+                <Button className="flex-1 bg-white text-foreground" disabled={!selectedSlot} onClick={() => setStep(3)}>Next</Button>
             </div>
         </div>
     );

@@ -1,122 +1,117 @@
+import { PrismaClient, PlanType, AIProvider } from '@prisma/client'
 
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
-const MASTER_DATA = {
-    "venues": [
-        { "id": "venue-caviar-bull", "name": "Caviar & Bull", "currency": "EUR", "timezone": "Europe/Malta" },
-        { "id": "venue-don-royale", "name": "Don Royale", "currency": "EUR", "timezone": "Europe/Malta" }
-    ],
-    "users": [
-        { "id": "user-cb-owner", "email": "marvin@mggroup.com", "name": "Marvin Gauci", "role": "SUPER_ADMIN", "pin": "1234" },
-        { "id": "user-cb-manager", "email": "sarah.c@mggroup.com", "name": "Sarah Camilleri", "role": "BRANCH_MANAGER", "pin": "2345" },
-        { "id": "user-cb-server1", "email": "maria.v@mggroup.com", "name": "Maria Vella", "role": "STAFF", "pin": "1111" }
-    ],
-    "inventory": [
-        { "id": "ing-oscietra-30g", "name": "Oscietra Caviar 30g", "unit": "tin", "priceCents": 9500 },
-        { "id": "ing-ribeye-raw", "name": "Prime Ribeye (Raw)", "unit": "kg", "priceCents": 3200 },
-        { "id": "ing-truffle-oil", "name": "Black Truffle Oil", "unit": "bottle", "priceCents": 1850 }
-    ]
-};
+const prisma = new PrismaClient()
 
 async function main() {
-    console.log('🌱 Starting Surgical Hydration...');
+    console.log('🌱 Starting Production Seed...')
 
-    // 1. Ensure Organization (MG Group)
-    const org = await prisma.organization.upsert({
-        where: { slug: 'mg-group' },
-        update: {},
-        create: {
-            name: 'MG Group',
-            slug: 'mg-group',
-            plan: 'ENTERPRISE'
+    // 1. Subscription Plans
+    const plans = [
+        {
+            name: 'Starter',
+            basePrice: 0,
+            features: ['WEB', 'OPS'],
+            limits: { devices: 1, users: 3, storageMB: 500 }
+        },
+        {
+            name: 'Pro',
+            basePrice: 99.00,
+            features: ['WEB', 'OPS', 'VOICE', 'KITCHEN'],
+            limits: { devices: 5, users: 10, storageMB: 5000 }
+        },
+        {
+            name: 'Enterprise',
+            basePrice: 299.00,
+            features: ['WEB', 'OPS', 'VOICE', 'KITCHEN', 'RADAR', 'STUDIO', 'CRM'],
+            limits: { devices: 999, users: 999, storageMB: 50000 }
         }
-    });
+    ]
 
-    // 2. Ensure Brand and Venues (Branches)
-    const brand = await prisma.brand.upsert({
-        where: { id: 'brand-main' },
-        update: {},
-        create: {
-            id: 'brand-main',
-            name: 'MG Restaurants',
-            organizationId: org.id
-        }
-    });
-
-    for (const v of MASTER_DATA.venues) {
-        await prisma.branch.upsert({
-            where: { id: v.id },
-            update: { name: v.name },
+    for (const plan of plans) {
+        const upserted = await prisma.subscriptionPlan.upsert({
+            where: { name: plan.name },
+            update: {
+                basePrice: plan.basePrice,
+                features: plan.features,
+                limits: plan.limits
+            },
             create: {
-                id: v.id,
-                name: v.name,
-                currency: v.currency,
-                timezone: v.timezone,
-                brandId: brand.id
+                name: plan.name,
+                basePrice: plan.basePrice,
+                features: plan.features,
+                limits: plan.limits
             }
-        });
-        console.log(`✅ Upserted Venue: ${v.name}`);
+        })
+        console.log(`✅ Plan Synced: ${upserted.name}`)
     }
 
-    // 3. Hydrate Staff (Workers)
-    for (const u of MASTER_DATA.users) {
-        const names = u.name.split(' ');
-        await prisma.user.upsert({
-            where: { email: u.email },
-            update: { role: u.role as any }, // Cast to enum
-            create: {
-                id: u.id,
-                email: u.email,
-                firstName: names[0],
-                lastName: names[1] || '',
-                role: u.role as any,
-                pin: u.pin,
-                organizationId: org.id
-            }
-        });
-        console.log(`👤 Upserted User: ${u.name}`);
-    }
-
-    // 4. Hydrate Inventory (Ingredients) - Basic
-    // Attaching to first supplier dummy for now
-    const supplier = await prisma.supplier.upsert({
-        where: { id: 'sup-main' },
-        update: {},
-        create: {
-            id: 'sup-main',
-            name: 'Main Supplier',
-            organizationId: org.id
+    // 2. AI Broker Configuration (Wholesale Costs)
+    const brokers = [
+        {
+            provider: AIProvider.GOOGLE,
+            model: 'gemini-1.5-flash',
+            costPerUnit: 0.0001, // Cost per 1k input tokens
+            sellPricePerUnit: 0.00015, // Sales price
+            unitType: 'TOKEN'
+        },
+        {
+            provider: AIProvider.GOOGLE,
+            model: 'gemini-1.5-pro',
+            costPerUnit: 0.0025,
+            sellPricePerUnit: 0.0035,
+            unitType: 'TOKEN'
+        },
+        {
+            provider: AIProvider.OPENAI,
+            model: 'gpt-4o',
+            costPerUnit: 0.0050,
+            sellPricePerUnit: 0.0070,
+            unitType: 'TOKEN'
         }
-    });
+    ]
 
-    for (const ing of MASTER_DATA.inventory) {
-        await prisma.ingredient.upsert({
-            where: { id: ing.id },
-            update: { priceCents: ing.priceCents },
-            create: {
-                id: ing.id,
-                name: ing.name,
-                purchaseUnit: ing.unit,
-                stockUnit: 'g', // Default
-                conversionRate: 1000,
-                priceCents: ing.priceCents,
-                organizationId: org.id,
-                supplierId: supplier.id
+    // Cannot upsert easily without unique composite key on provider+model, 
+    // but schema doesn't force it. We'll use findFirst/create logic or clean wipe (safe for config) if desired.
+    // Actually, let's just create if not exists for simplicity in this run.
+
+    // cleanup old configs? Rule #21: "Zero-Trust/Clean"
+    // Let's assume we want valid configs.
+
+    for (const broker of brokers) {
+        // Check if exists
+        const existing = await prisma.aiBrokerConfig.findFirst({
+            where: {
+                provider: broker.provider,
+                model: broker.model
             }
-        });
-        console.log(`🥩 Upserted Ingredient: ${ing.name}`);
+        })
+
+        if (!existing) {
+            await prisma.aiBrokerConfig.create({
+                data: broker
+            })
+            console.log(`✅ AI Broker Added: ${broker.provider} / ${broker.model}`)
+        } else {
+            // Update pricing
+            await prisma.aiBrokerConfig.update({
+                where: { id: existing.id },
+                data: {
+                    costPerUnit: broker.costPerUnit,
+                    sellPricePerUnit: broker.sellPricePerUnit
+                }
+            })
+            console.log(`🔄 AI Broker Updated: ${broker.provider} / ${broker.model}`)
+        }
     }
 
-    console.log('✅ Surgical Hydration Complete.');
+    console.log('🏁 Seeding Complete.')
 }
 
 main()
     .catch((e) => {
-        console.error(e);
-        process.exit(1);
+        console.error(e)
+        process.exit(1)
     })
     .finally(async () => {
-        await prisma.$disconnect();
-    });
+        await prisma.$disconnect()
+    })

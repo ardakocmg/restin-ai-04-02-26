@@ -39,7 +39,7 @@ async def list_guests(
     if segment == "VIP":
         query["tags"] = "VIP"
     elif segment == "NO_SHOW":
-        query["visit_summary.no_show_count": {"$gt": 0}]
+        query["visit_summary.no_show_count"] = {"$gt": 0}
         
     cursor = db.guest_profiles.find(query).sort("visit_summary.total_visits", -1)
     return await cursor.to_list(100)

@@ -7,6 +7,7 @@ import uuid
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
 from models import InventoryItem, InventoryItemCreate, LedgerAction, StockLedgerEntry, LedgerEntryCreate
+from models.waste_log import WasteLog, WasteLogCreate
 from services.audit_service import create_audit_log
 from utils.helpers import compute_hash
 
@@ -304,5 +305,65 @@ def create_inventory_router():
         )
         
         return {"message": "Transfer successful", "source_entry": entry_src.model_dump(), "dest_entry": entry_dest.model_dump()}
+
+        return {"message": "Transfer successful", "source_entry": entry_src.model_dump(), "dest_entry": entry_dest.model_dump()}
+
+    @router.post("/inventory/waste", response_model=WasteLog)
+    async def report_waste(
+        data: WasteLogCreate,
+        current_user: dict = Depends(get_current_user)
+    ):
+        await check_venue_access(current_user, data.venue_id)
+        
+        waste_dict = data.model_dump()
+        waste_dict["id"] = str(uuid.uuid4())
+        waste_dict["reported_by"] = current_user["id"]
+        waste_dict["created_at"] = datetime.now(timezone.utc)
+        
+        # Calculate Cost
+        cost_cents = 0
+        if data.item_id:
+            item = await db.inventory_items.find_one({"id": data.item_id})
+            if item:
+                # Simple average cost logic if available, or 0
+                # In real system, we track unit_cost
+                cost_cents = int(item.get("last_cost", 0) * data.quantity * 100)
+        
+        waste_dict["cost_cents"] = cost_cents
+        
+        await db.waste_logs.insert_one(waste_dict)
+        
+        # Deduct from Inventory if it's an ingredient
+        if data.item_type == "INGREDIENT" and data.item_id:
+            await db.inventory_items.update_one(
+                {"id": data.item_id},
+                {"$inc": {"current_stock": -data.quantity}}
+            )
+            
+            # Add Ledger Entry for trace
+            last_entry = await db.stock_ledger.find_one({"venue_id": data.venue_id}, sort=[("created_at", -1)])
+            prev_hash = last_entry["entry_hash"] if last_entry else "genesis"
+            
+            entry_data = {
+                "item_id": data.item_id,
+                "action": "WASTE",
+                "quantity": data.quantity,
+                "reason": data.reason
+            }
+            entry_hash = compute_hash(entry_data, prev_hash)
+            
+            await db.stock_ledger.insert_one({
+                "venue_id": data.venue_id,
+                "item_id": data.item_id,
+                "action": "WASTE",
+                "quantity": data.quantity,
+                "reason": data.reason,
+                "user_id": current_user["id"],
+                "prev_hash": prev_hash,
+                "entry_hash": entry_hash,
+                "created_at": datetime.now(timezone.utc)
+            })
+
+        return waste_dict
 
     return router

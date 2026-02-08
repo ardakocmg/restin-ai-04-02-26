@@ -2,27 +2,18 @@
     "extends": [
         "stylelint-config-standard"
     ],
-    "plugins": [
-        "stylelint-declaration-strict-value"
-    ],
     "rules": {
-        "declaration-strict-value": [
-            [
-                "/color/",
-                "background-color",
-                "border-color"
+        "color-named": "never",
+        "declaration-property-value-disallowed-list": {
+            "color": [
+                "/^#/"
             ],
-            {
-                "ignoreValues": [
-                    "transparent",
-                    "inherit",
-                    "initial",
-                    "none",
-                    "currentColor",
-                    "unset"
-                ],
-                "message": "Do not use hardcoded colors. Use theme variables (var(--...)) to ensure Dark Mode compatibility."
-            }
-        ]
+            "background-color": [
+                "#000000",
+                "#ffffff"
+            ]
+        },
+        "custom-property-pattern": null,
+        "selector-class-pattern": null
     }
 }

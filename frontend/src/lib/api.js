@@ -1,7 +1,8 @@
 import axios from "axios";
 import authStore from "./AuthStore";
+import { logger } from "./logger";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/`;
+const API = `${process.env.REACT_APP_BACKEND_URL || `http://${window.location.hostname}:8000`}/api/`;
 
 // Create axios instance
 const api = axios.create({
@@ -17,7 +18,7 @@ const api = axios.create({
   const currentHost = new URL(process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000').host;
   const changed = authStore.checkApiHostChanged(currentHost);
   if (changed) {
-    console.log('API host changed - session reset');
+    logger.info('API host changed - session reset');
   }
 })();
 

@@ -1,13 +1,13 @@
 // 🏗️ ANTIGRAVITY MASTER SCHEMA (THE OMNISCIENT)
-// Protocol v17.0 - The DNA of the Enterprise OS
+// Protocol v30.0 - The DNA of the Enterprise OS (MongoDB Production)
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 // ==================================================================================
@@ -15,13 +15,38 @@ datasource db {
 // Hierarchy: Organization -> Brand -> Branch -> Device
 // ==================================================================================
 
-// SQLite Compatibility: Enums removed
+enum PlanType {
+  BASIC
+  STARTER
+  PRO
+  ENTERPRISE
+}
+
+enum Role {
+  STAFF
+  MANAGER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum DeviceType {
+  POS_TERMINAL
+  KITCHEN_DISPLAY
+  WAITER_TABLET
+  KIOSK
+}
+
+enum DeviceStatus {
+  ONLINE
+  OFFLINE
+  MAINTENANCE
+}
 
 model Organization {
-  id          String   @id @default(uuid())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   slug        String   @unique
-  plan        String   @default("BASIC") // SQLite: String
+  plan        PlanType @default(BASIC)
   
   brands      Brand[]
   users       User[]
@@ -35,14 +60,22 @@ model Organization {
   taxRules    TaxRule[]
 
   // ==================================================================================
-  // MASTER PROTOCOL v18.0 RELATIONS
+  // MASTER PROTOCOL v30.0 RELATIONS
   // ==================================================================================
   
   // Pillar 0: Commercial
-  subscriptionPlanId String?
+  subscriptionPlanId String? @db.ObjectId
   subscriptionPlan   SubscriptionPlan? @relation(fields: [subscriptionPlanId], references: [id])
   moduleConfig       ModuleConfig?
-  storageBilling     StorageBilling?
+  
+  // Use billingHistory to track all bills. Latest one is current.
+  billingHistory     TenantBilling[] @relation("BillingHistory") 
+  
+  aiBrokerConfig     AiBrokerConfig?
+
+  // Pillar 1: AI Config
+  aiConfig           AiConfig?
+  aiUsageLogs        AiUsageLog[]
 
   // Pillar 2: Web
   marketingSite      MarketingSite?
@@ -64,25 +97,29 @@ model Organization {
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@map("organizations")
 }
 
 model Brand {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   name           String
+  
   branches       Branch[]
   
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
   @@index([organizationId])
+  @@map("brands")
 }
 
 model Branch {
-  id             String       @id @default(uuid())
-  brandId        String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  brandId        String       @db.ObjectId
   brand          Brand        @relation(fields: [brandId], references: [id])
   
   name           String
@@ -94,34 +131,44 @@ model Branch {
   orders         Order[]
   fiscalDrifts   FiscalDrift[]
   stockCounts    StockCount[]
+  employeeShifts EmployeeShift[]
+  laborMetrics   LaborMetric[]
   
   // Pillar 7: Hub
   aggregatorConfig AggregatorConfig?
+  kioskConfig      KioskConfig?
+  
+  // Gap Filling Relations
+  productionBatches ProductionBatch[]
+  wasteLogs         WasteLog[]
+  posSessions       POSSession[]
   
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
   @@index([brandId])
+  @@map("branches")
 }
 
 model Device {
-  id             String   @id @default(uuid())
-  branchId       String
-  branch         Branch   @relation(fields: [branchId], references: [id])
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  branchId       String       @db.ObjectId
+  branch         Branch       @relation(fields: [branchId], references: [id])
   
   name           String
-  type           String   // SQLite: String (POS_TERMINAL, etc)
+  type           DeviceType
   ipAddress      String?
-  status         String   @default("ONLINE")
+  status         DeviceStatus  @default(ONLINE)
   
   lastHeartbeat  DateTime?
-  
+
   @@index([branchId])
+  @@map("devices")
 }
 
 model User {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   email          String?      @unique
@@ -134,47 +181,42 @@ model User {
   isAnonymized   Boolean      @default(false)
   anonymizedAt   DateTime?
   
-  role           String       @default("STAFF") // SQLite: String (SUPER_ADMIN, etc)
-  permissions    String // SQLite: JSON string or similar? No, Prisma supports String[] on Postgres but SQLite?
-  // Prisma SQLite DOES NOT support scalar lists (String[]).
-  // I must change permissions to String (JSON serialized) or standard String with separator.
-  // Wait, Prisma docs say "Scalar lists are not supported in SQLite".
+  role           Role         @default(STAFF)
+  permissions    String[]     
   
   staffProfile   StaffProfile?
   
   orders         Order[]
   movements      StockMovement[]
   stockCounts    StockCount[]
+  shifts         EmployeeShift[]
   
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
   @@index([organizationId])
-  @@index([email])
+  @@map("users")
 }
 
-// ... wait, permissions String[] failure will likely happen too.
-// I will attempt simple fixes first.
-
 model StaffProfile {
-  id             String   @id @default(uuid())
-  userId         String   @unique
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String   @unique @db.ObjectId
   user           User     @relation(fields: [userId], references: [id])
   
   xpPoints       Int      @default(0)
   currentLevel   Int      @default(1)
   
-  dailyQuestStatus String?   // SQLite: Store as JSON-String if Json not fully supported? 
-  // SQLite supports "Json" type via String in Prisma? Prisma supports Json type in SQLite? Yes.
-  // But String[] (badges) is NOT supported.
-  badges         String    @default("[]") // SQLite Hack: JSON String
+  dailyQuestStatus Json? 
+  badges         String[]
   
   updatedAt      DateTime @updatedAt
+  
+  @@map("staff_profiles")
 }
 
 model Supplier {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   name           String
@@ -185,15 +227,16 @@ model Supplier {
   ingredients    Ingredient[]
   
   @@index([organizationId])
+  @@map("suppliers")
 }
 
 model Ingredient {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   name           String
-  supplierId     String?
+  supplierId     String?      @db.ObjectId
   supplier       Supplier?    @relation(fields: [supplierId], references: [id])
   
   supplierSku    String?
@@ -204,22 +247,29 @@ model Ingredient {
   priceCents     Int
   
   wastagePercent Float        @default(0.0)
-  nutritionalInfo String?     // SQLite: JSON String (was Json)
+  nutritionalInfo Json?
   
   recipeItems    RecipeItem[]
   movements      StockMovement[]
   stockCountItems StockCountItem[]
   
   @@index([organizationId])
+  @@map("ingredients")
+}
+
+enum RecipeType {
+  PREP
+  DISH
+  MENU_ITEM
 }
 
 model Recipe {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   name           String
-  type           String       @default("PREP") // SQLite: String
+  type           RecipeType   @default(PREP)
   
   items          RecipeItem[]
   
@@ -227,36 +277,78 @@ model Recipe {
   
   costCents      Int          @default(0)
   
-  // Rule #40 (Apicbase Parity) - Nutrition
-  calories       Int?     // kcal
-  protein        Float?   // grams
-  carbs          Float?   // grams
-  fat            Float?   // grams
-  allergens      String?  // JSON Array
+  calories       Int?     
+  protein        Float?   
+  carbs          Float?   
+  fat            Float?   
+  allergens      String[] 
   
+  rawImportData  Json?    
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Link to Engineering Data (Two-Tier Architecture)
+  engineeredId   String?      @unique @db.ObjectId
+  engineered     RecipeEngineered? @relation(fields: [engineeredId], references: [id])
+
   @@index([organizationId])
+  @@map("recipes")
+}
+
+model RecipeEngineered {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  
+  // Apicbase / External Data
+  name           String       @map("recipe_name")
+  sku            String?      @map("item_id")
+  
+  category       String?
+  subcategory    String?
+  active         Boolean      @default(true)
+
+  // Production Details
+  instructions   String?
+  yield          Float?       @map("servings") // Approximate mapping or add new field
+  laborTime      Int?
+  
+  // Full raw data for reference
+  rawImportData  Json?
+  externalLinks  Json?
+  
+  // Link back to Operational Recipe
+  operationalRecipe Recipe?
+  
+  // Relation to Production
+  productionBatches ProductionBatch[]
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  @@map("recipes_engineered")
 }
 
 model RecipeItem {
-  id             String       @id @default(uuid())
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
   
-  parentRecipeId String
+  parentRecipeId String       @db.ObjectId
   parentRecipe   Recipe       @relation(fields: [parentRecipeId], references: [id])
   
-  ingredientId   String?
+  ingredientId   String?      @db.ObjectId
   ingredient     Ingredient?  @relation(fields: [ingredientId], references: [id])
   
-  subRecipeId    String?
+  subRecipeId    String?      @db.ObjectId
   
   quantity       Float
   unit           String
   
   @@index([parentRecipeId])
+  @@map("recipe_items")
 }
 
 model Menu {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   name           String
@@ -265,11 +357,12 @@ model Menu {
   categories     Category[]
   
   @@index([organizationId])
+  @@map("menus")
 }
 
 model Category {
-  id             String       @id @default(uuid())
-  menuId         String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  menuId         String       @db.ObjectId
   menu           Menu         @relation(fields: [menuId], references: [id])
   
   name           String
@@ -278,40 +371,53 @@ model Category {
   items          MenuItem[]
   
   @@index([menuId])
+  @@map("categories")
 }
 
 model MenuItem {
-  id             String       @id @default(uuid())
-  categoryId     String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  categoryId     String       @db.ObjectId
   category       Category     @relation(fields: [categoryId], references: [id])
   
   name           String
-  recipeId       String?      @unique
+  recipeId       String?      @unique @db.ObjectId
   recipe         Recipe?      @relation(fields: [recipeId], references: [id])
   
   priceCents     Int
-  taxRuleId      String?
+  taxRuleId      String?      @db.ObjectId
   taxRule        TaxRule?     @relation(fields: [taxRuleId], references: [id])
   
   orderItems     OrderItem[]
 
   @@index([categoryId])
+  @@map("menu_items")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  READY
+  SERVED
+  PAID
+  CANCELLED
 }
 
 model Order {
-  id             String       @id @default(uuid())
-  branchId       String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  branchId       String       @db.ObjectId
   branch         Branch       @relation(fields: [branchId], references: [id])
   
-  userId         String
+  userId         String       @db.ObjectId
   user           User         @relation(fields: [userId], references: [id])
   
-  status         String
+  status         OrderStatus
   
   totalCents     Int
   taxCents       Int
   
   items          OrderItem[]
+  transaction    Transaction?
   
   fiscalHash     String?
   
@@ -319,25 +425,27 @@ model Order {
   updatedAt      DateTime     @updatedAt
 
   @@index([branchId])
+  @@map("orders")
 }
 
 model OrderItem {
-  id             String       @id @default(uuid())
-  orderId        String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  orderId        String       @db.ObjectId
   order          Order        @relation(fields: [orderId], references: [id])
   
-  menuItemId     String
+  menuItemId     String       @db.ObjectId
   menuItem       MenuItem     @relation(fields: [menuItemId], references: [id])
   
   quantity       Int
   priceCents     Int
   
   @@index([orderId])
+  @@map("order_items")
 }
 
 model TaxRule {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   name           String
@@ -350,11 +458,12 @@ model TaxRule {
   menuItems      MenuItem[]
 
   @@index([organizationId])
+  @@map("tax_rules")
 }
 
 model FiscalDrift {
-  id                String   @id @default(uuid())
-  branchId          String
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  branchId          String   @db.ObjectId
   branch            Branch   @relation(fields: [branchId], references: [id])
 
   fiscalPeriod      String
@@ -364,26 +473,27 @@ model FiscalDrift {
   driftPercentage   Float
   
   status            String   @default("PENDING")
-  details           String?  // SQLite: JSON String
+  details           Json?
 
   createdAt         DateTime @default(now())
 
   @@index([branchId])
+  @@map("fiscal_drifts")
 }
 
 model AuditLog {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   action         String
   entityType     String
   entityId       String
   
-  userId         String?
+  userId         String?      @db.ObjectId
   
-  oldValue       String? // SQLite: JSON String
-  newValue       String? // SQLite: JSON String
+  oldValue       Json?
+  newValue       Json?
   
   geoLat         Float?
   geoLong        Float?
@@ -397,50 +507,54 @@ model AuditLog {
 
   @@index([organizationId])
   @@index([entityId])
+  @@map("audit_logs")
 }
 
 model SystemSetting {
-  id             String       @id @default(uuid())
-  organizationId String       @unique
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @unique @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
-  config         String       // SQLite: JSON String
+  config         Json
   
   version        Int          @default(1)
   environment    String       @default("production")
   lastPublished  DateTime?
   
   updatedAt      DateTime     @updatedAt
+
+  @@map("system_settings")
 }
 
 model StockMovement {
-  id             String       @id @default(uuid())
-  branchId       String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  branchId       String       @db.ObjectId
   branch         Branch       @relation(fields: [branchId], references: [id])
   
-  ingredientId   String
+  ingredientId   String       @db.ObjectId
   ingredient     Ingredient   @relation(fields: [ingredientId], references: [id])
   
   quantity       Float
   type           String
   reason         String?
   
-  userId         String
+  userId         String       @db.ObjectId
   user           User         @relation(fields: [userId], references: [id])
   
   createdAt      DateTime     @default(now())
 
   @@index([branchId])
   @@index([ingredientId])
+  @@map("stock_movements")
 }
 
 model StockCount {
-  id             String           @id @default(uuid())
-  branchId       String
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  branchId       String           @db.ObjectId
   branch         Branch           @relation(fields: [branchId], references: [id])
   
-  status         String           @default("DRAFT") // SQLite: String
-  performedById  String
+  status         String           @default("DRAFT")
+  performedById  String           @db.ObjectId
   performedBy    User             @relation(fields: [performedById], references: [id])
   
   items          StockCountItem[]
@@ -449,14 +563,15 @@ model StockCount {
   completedAt    DateTime?
   
   @@index([branchId])
+  @@map("stock_counts")
 }
 
 model StockCountItem {
-  id             String       @id @default(uuid())
-  stockCountId   String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  stockCountId   String       @db.ObjectId
   stockCount     StockCount   @relation(fields: [stockCountId], references: [id])
   
-  ingredientId   String
+  ingredientId   String       @db.ObjectId
   ingredient     Ingredient   @relation(fields: [ingredientId], references: [id])
   
   expectedBase   Float
@@ -466,6 +581,7 @@ model StockCountItem {
   costImpact     Int?
   
   @@index([stockCountId])
+  @@map("stock_count_items")
 }
 
 // ==================================================================================
@@ -473,79 +589,139 @@ model StockCountItem {
 // ==================================================================================
 
 model SubscriptionPlan {
-  id          String   @id @default(uuid())
-  name        String   @unique // "Starter", "Pro", "Enterprise"
-  basePrice   Decimal  @default(0.0)
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique 
+  basePrice   Float    @default(0.0) // Float for MongoDB compatibility
   currency    String   @default("EUR")
   
-  features    String   // JSON List of active pillars/features
-  limits      String?  // JSON Limits (e.g. maxTasks, maxUsers)
+  features    Json     
+  limits      Json?    
   
   tenants     Organization[]
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  @@map("subscription_plans")
 }
 
 model ModuleConfig {
-  id             String       @id @default(uuid())
-  organizationId String       @unique
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @unique @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
-  // Feature Toggles
   hasVoice       Boolean      @default(false)
   hasRadar       Boolean      @default(false)
   hasStudio      Boolean      @default(false)
   hasWeb         Boolean      @default(false)
   hasCrm         Boolean      @default(false)
   
-  // Custom Pricing Overrides
-  customMonthlyPrice Decimal?
+  customMonthlyPrice Float? // Float for MongoDB compatibility
   
   updatedAt      DateTime     @updatedAt
+
+  @@map("module_configs")
+}
+
+enum AIProvider {
+  GOOGLE
+  OPENAI
+  ELEVENLABS
 }
 
 model AiBrokerConfig {
-  id             String       @id @default(uuid())
-  provider       String       // "GOOGLE", "OPENAI", "ELEVENLABS"
-  model          String       // "gemini-1.5-flash", "gpt-4o"
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String?      @unique @db.ObjectId 
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  provider       AIProvider
+  model          String
   
-  costPerUnit    Decimal      // Our wholesale cost per 1k tokens
-  sellPricePerUnit Decimal    // Tenant retail price per 1k tokens
+  costPerUnit    Float      // Float for MongoDB compatibility
+  sellPricePerUnit Float    // Float for MongoDB compatibility
   
-  unitType       String       @default("TOKEN") // "TOKEN", "SECOND", "IMAGE"
+  unitType       String       @default("TOKEN") 
   
   isActive       Boolean      @default(true)
+  
+  @@map("ai_broker_configs")
 }
 
-model StorageBilling {
-  id             String       @id @default(uuid())
-  organizationId String       @unique
-  organization   Organization @relation(fields: [organizationId], references: [id])
+model TenantBilling {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId 
+  organization   Organization @relation("BillingHistory", fields: [organizationId], references: [id])
   
-  totalMediaSizeMB Float      @default(0.0)
-  totalVectorCount Int        @default(0)
+  periodStart    DateTime
+  periodEnd      DateTime
   
-  pricePerGB       Decimal    @default(0.10) // Markup rate
-  pricePer1kVectors Decimal   @default(0.01) // Markup rate
+  subscriptionFee Float // Float for MongoDB compatibility
+  moduleFees      Float
+  aiUsageFee      Float
+  storageFee      Float
   
-  usageHistory   String?      // JSON History
+  totalDue        Float
   
-  updatedAt      DateTime     @updatedAt
+  storageUsedMB   Float      @default(0.0)
+  vectorCount     Int        @default(0)
+  
+  status          String      
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  @@index([organizationId])
+  @@map("tenant_billings")
 }
 
 // ==================================================================================
 // PILLAR 1: AI INFRASTRUCTURE (Google First)
 // ==================================================================================
 
+model AiConfig {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @unique @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  activeModel    String       @default("gemini-1.5-flash")
+  groundingEnabled Boolean    @default(true)
+  
+  updatedAt      DateTime     @updatedAt
+  @@map("ai_configs")
+}
+
+model AiUsageLog {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  modelUsed      String
+  inputTokens    Int
+  outputTokens   Int
+  totalTokens    Int
+  
+  costCents      Float // Float for MongoDB compatibility
+  priceCents     Float
+  profitCents    Float
+  
+  feature        String    
+  
+  timestamp      DateTime     @default(now())
+  
+  @@index([organizationId])
+  @@map("ai_usage_logs")
+}
+
 model GoogleGrounding {
-  id          String   @id @default(uuid())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   query       String   @unique
-  result      String   // JSON Cached Result
-  source      String   // "SEARCH", "MAPS"
+  result      Json
+  source      String   
   
   expiresAt   DateTime
   createdAt   DateTime @default(now())
+  
+  @@map("google_groundings")
 }
 
 // ==================================================================================
@@ -553,13 +729,13 @@ model GoogleGrounding {
 // ==================================================================================
 
 model MarketingSite {
-  id             String       @id @default(uuid())
-  organizationId String       @unique
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @unique @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   domain         String?
-  themeConfig    String?      // JSON Theme
-  seoConfig      String?      // JSON SEO Tags
+  themeConfig    Json?
+  seoConfig      Json?
   
   sections       WebSection[]
   
@@ -567,23 +743,25 @@ model MarketingSite {
   publishedAt    DateTime?
   
   updatedAt      DateTime     @updatedAt
+  
+  @@map("marketing_sites")
 }
 
 model WebSection {
-  id             String        @id @default(uuid())
-  siteId         String
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  siteId         String        @db.ObjectId
   site           MarketingSite @relation(fields: [siteId], references: [id])
   
-  type           String        // "HERO", "MENU", "TESTIMONIALS"
-  content        String        // JSON Content
+  type           String
+  content        Json
   sortOrder      Int           @default(0)
   
-  // Link to Inventory
   linkedCategoryId String?
   
   updatedAt      DateTime      @updatedAt
   
   @@index([siteId])
+  @@map("web_sections")
 }
 
 // ==================================================================================
@@ -591,49 +769,56 @@ model WebSection {
 // ==================================================================================
 
 model CustomerProfile {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   phone          String?
   email          String?
   name           String?
   
-  churnScore     Float        @default(0.0) // 0-100 High Risk
-  tasteTags      String?      // JSON Array ["Spicy", "Vegan"]
+  churnScore     Float        @default(0.0)
+  tasteTags      String[]
   
   lastVisit      DateTime?
   visitCount     Int          @default(0)
-  totalSpent     Decimal      @default(0.0)
+  totalSpent     Float        @default(0.0) // Float for MongoDB compatibility
   
-  campaigns      MarketingCampaign[] // Many-to-Many ideally, simplified here
+  // Explicit M:N using ID Arrays for MongoDB
+  campaignIDs    String[]     @db.ObjectId
+  campaigns      MarketingCampaign[] @relation(fields: [campaignIDs], references: [id])
   
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   
   @@unique([organizationId, phone])
   @@index([churnScore])
+  @@map("customer_profiles")
 }
 
 model MarketingCampaign {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   name           String
-  type           String       // "SMS", "EMAIL"
-  status         String       // "DRAFT", "SENT"
+  type           String
+  status         String
   
-  targetSegment  String?      // JSON Logic
+  targetSegment  Json?
   
   aiGeneratedContent String?
   
   sentCount      Int          @default(0)
   clickCount     Int          @default(0)
   
-  customers      CustomerProfile[]
+  // Explicit M:N using ID Arrays for MongoDB
+  customerIDs    String[]     @db.ObjectId
+  customers      CustomerProfile[] @relation(fields: [customerIDs], references: [id])
   
   createdAt      DateTime     @default(now())
+  
+  @@map("marketing_campaigns")
 }
 
 // ==================================================================================
@@ -641,34 +826,38 @@ model MarketingCampaign {
 // ==================================================================================
 
 model VoiceConfig {
-  id             String       @id @default(uuid())
-  organizationId String       @unique
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @unique @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
-  persona        String       @default("PROFESSIONAL") // "CASUAL", "BRITISH_BUTLER"
-  knowledgeBase  String?      // JSON Array of PDF IDs
+  persona        String       @default("PROFESSIONAL")
+  knowledgeBase  String[]     
   
   isEnabled      Boolean      @default(false)
   forwardNumber  String?
   
   updatedAt      DateTime     @updatedAt
+  
+  @@map("voice_configs")
 }
 
 model CallLog {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   callerNumber   String?
   durationSeconds Int
   summary        String?
-  actionTaken    String?      // "RESERVATION", "MENU_QUERY"
+  actionTaken    String?
+  sentiment      String?      
   
-  costCents      Int          // Calculated from AiBroker
+  costCents      Int
   
   createdAt      DateTime     @default(now())
   
   @@index([organizationId])
+  @@map("call_logs")
 }
 
 // ==================================================================================
@@ -676,31 +865,39 @@ model CallLog {
 // ==================================================================================
 
 model BrandIdentity {
-  id             String       @id @default(uuid())
-  organizationId String       @unique
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @unique @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
-  visualStyle    String?      // "MINIMALIST", "RUSTIC"
-  toneOfVoice    String?      // "WITTY", "FORMAL"
-  colorPalette   String?      // JSON Array
+  visualStyle    String?
+  toneOfVoice    String?
+  colorPalette   String[]
   
   updatedAt      DateTime     @updatedAt
+  
+  @@map("brand_identities")
+}
+
+enum MediaSource {
+  REAL
+  GENERATED
 }
 
 model MediaAsset {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   url            String
-  type           String       // "IMAGE", "VIDEO"
-  source         String       // "UPLOAD", "GENERATED"
+  type           String
+  source         MediaSource  @default(REAL)
   
-  tags           String?      // JSON Array
+  tags           String[]
   
   createdAt      DateTime     @default(now())
   
   @@index([organizationId])
+  @@map("media_assets")
 }
 
 // ==================================================================================
@@ -708,26 +905,27 @@ model MediaAsset {
 // ==================================================================================
 
 model Competitor {
-  id             String       @id @default(uuid())
-  organizationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id])
   
   name           String
   googlePlaceId  String?
   
-  trackedProducts String?     // JSON (Burger -> Price)
+  trackedProducts Json?
   lastScrapedAt  DateTime?
   
   @@index([organizationId])
+  @@map("competitors")
 }
 
 // ==================================================================================
-// PILLAR 7: HUB & AGGREGATOR
+// PILLAR 7: HUB & AGGREGATOR & OPS
 // ==================================================================================
 
 model AggregatorConfig {
-  id             String       @id @default(uuid())
-  branchId       String       @unique
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  branchId       String       @unique @db.ObjectId
   branch         Branch       @relation(fields: [branchId], references: [id])
   
   uberEatsKey    String?
@@ -738,6 +936,44 @@ model AggregatorConfig {
   autoAccept     Boolean      @default(true)
   
   updatedAt      DateTime     @updatedAt
+  
+  @@map("aggregator_configs")
+}
+
+model EmployeeShift {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  branchId       String       @db.ObjectId
+  branch         Branch       @relation(fields: [branchId], references: [id])
+  
+  userId         String       @db.ObjectId
+  user           User         @relation(fields: [userId], references: [id])
+  
+  startTime      DateTime
+  endTime        DateTime?
+  
+  role           String
+  
+  createdAt      DateTime     @default(now())
+  
+  @@index([branchId])
+  @@map("employee_shifts")
+}
+
+model LaborMetric {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  branchId       String       @db.ObjectId
+  branch         Branch       @relation(fields: [branchId], references: [id])
+  
+  date           DateTime
+  totalLaborCost Float // Float for MongoDB compatibility
+  laborPercentage Float
+  
+  salesTotal     Float // Float for MongoDB compatibility
+  
+  calculatedAt   DateTime     @default(now())
+  
+  @@index([branchId])
+  @@map("labor_metrics")
 }
 
 // ==================================================================================
@@ -745,8 +981,8 @@ model AggregatorConfig {
 // ==================================================================================
 
 model KioskConfig {
-  id             String   @id @default(uuid())
-  branchId       String   @unique
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  branchId       String   @unique @db.ObjectId
   branch         Branch   @relation(fields: [branchId], references: [id])
   
   isKioskMode    Boolean  @default(false)
@@ -754,20 +990,142 @@ model KioskConfig {
   autoPrintReceipt Boolean @default(true)
   
   updatedAt      DateTime @updatedAt
+  
+  @@map("kiosk_configs")
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  WALLET
 }
 
 model Transaction {
-  id             String   @id @default(uuid())
-  orderId        String
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId        String   @unique @db.ObjectId
   order          Order    @relation(fields: [orderId], references: [id])
   
   amountCents    Int
-  paymentMethod  String   // "CASH", "CARD", "WALLET"
-  status         String   // "PENDING", "COMPLETED", "FAILED"
+  paymentMethod  PaymentMethod
+  status         PaymentStatus
   
-  provider       String?  // "STRIPE", "REVOLUT"
+  provider       String?  
   externalRef    String?  @unique
   
   createdAt      DateTime @default(now())
+  
+  @@map("transactions")
 }
 
+// ==================================================================================
+// GAP FILLING: PRODUCTION & WASTE
+// ==================================================================================
+
+enum ProductionStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model ProductionBatch {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  venueId        String       @db.ObjectId
+  venue          Branch       @relation(fields: [venueId], references: [id])
+  
+  recipeId       String       @db.ObjectId
+  recipe         RecipeEngineered @relation(fields: [recipeId], references: [id])
+  
+  batchNumber    String
+  status         ProductionStatus @default(PLANNED)
+  
+  plannedQuantity Float
+  actualQuantity  Float?
+  unit           String
+  
+  startDate      DateTime?
+  endDate        DateTime?
+  
+  producedBy     String?      @db.ObjectId // User ID
+  
+  notes          String?
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  @@index([venueId])
+  @@map("production_batches")
+}
+
+model WasteLog {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  venueId        String       @db.ObjectId
+  venue          Branch       @relation(fields: [venueId], references: [id])
+  
+  itemId         String?      @db.ObjectId // Can be Ingredient or Recipe
+  itemName       String
+  itemType       String       // "INGREDIENT" or "RECIPE"
+  
+  quantity       Float
+  unit           String
+  costCents      Int
+  
+  reason         String
+  notes          String?
+  
+  reportedBy     String       @db.ObjectId // User ID
+  
+  createdAt      DateTime     @default(now())
+  
+  @@index([venueId])
+  @@map("waste_logs")
+}
+
+// ==================================================================================
+// GAP FILLING: POS SESSIONS
+// ==================================================================================
+
+enum SessionStatus {
+  OPEN
+  CLOSED
+}
+
+model POSSession {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  venueId        String       @db.ObjectId
+  venue          Branch       @relation(fields: [venueId], references: [id])
+  
+  stationId      String?      @db.ObjectId // If tied to specific device
+  stationName    String?
+  
+  openedBy       String       @db.ObjectId
+  closedBy       String?      @db.ObjectId
+  
+  openingTime    DateTime     @default(now())
+  closingTime    DateTime?
+  
+  status         SessionStatus @default(OPEN)
+  
+  openingBalanceCents Int     @default(0)
+  closingBalanceCents Int?
+  
+  cashSalesCents      Int     @default(0)
+  cardSalesCents      Int     @default(0)
+  totalSalesCents     Int     @default(0)
+  
+  cashDifferenceCents Int?    // Overage/Shortage
+  
+  notes               String?
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  @@index([venueId])
+  @@map("pos_sessions")
+}

@@ -4,6 +4,7 @@
  */
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../lib/api";
 import { toast } from "sonner";
@@ -35,6 +36,7 @@ const useSyncStatus = () => {
 
 export default function KDSMain() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const { isOnline, isSyncing } = useSyncStatus();
   const [tickets, setTickets] = useState([]);
@@ -150,9 +152,9 @@ export default function KDSMain() {
 
   // Flatten tickets to items for item-based display
   const flattenedItems = [];
-  filteredTickets.forEach(ticket => {
+  filteredTickets.forEach((ticket) => {
     const items = ticket.items || [];
-    items.forEach(item => {
+    items.forEach((item) => {
       flattenedItems.push({
         ...item,
         ticket_id: ticket.id,

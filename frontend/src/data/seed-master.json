@@ -21,7 +21,7 @@
             "name": "Marvin Gauci",
             "role": "OWNER",
             "pin": "1234",
-            "venueId": "venue-caviar-bull",
+            "venue_id": "venue-caviar-bull",
             "ou_path": "/Executive/Board"
         },
         {
@@ -31,7 +31,7 @@
             "name": "Sarah Camilleri",
             "role": "MANAGER",
             "pin": "2345",
-            "venueId": "venue-caviar-bull",
+            "venue_id": "venue-caviar-bull",
             "ou_path": "/Operations/Management"
         },
         {
@@ -41,7 +41,7 @@
             "name": "Maria Vella",
             "role": "STAFF",
             "pin": "1111",
-            "venueId": "venue-caviar-bull",
+            "venue_id": "venue-caviar-bull",
             "ou_path": "/Operations/Service"
         }
     ],

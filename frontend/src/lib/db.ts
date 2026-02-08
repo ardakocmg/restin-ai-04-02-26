@@ -1,5 +1,5 @@
 import { openDB, DBSchema } from 'idb';
-import { Payslip } from '../types';
+import { Payslip, InventoryItem, Order } from '../types';
 
 interface RestaurantOSDB extends DBSchema {
     payroll_drafts: {
@@ -9,11 +9,11 @@ interface RestaurantOSDB extends DBSchema {
     };
     inventory_items: {
         key: string;
-        value: any;
+        value: InventoryItem;
     };
     orders_queue: {
         key: string;
-        value: any; // Ideally Order type
+        value: Order & { is_offline?: boolean };
     };
 }
 

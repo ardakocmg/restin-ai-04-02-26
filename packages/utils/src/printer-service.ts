@@ -9,6 +9,7 @@ export interface PrinterDevice {
     id: string;
     name: string;
     ip?: string;
+    port?: number;
     type: 'NETWORK' | 'USB' | 'BLUETOOTH';
 }
 
@@ -29,8 +30,36 @@ export class PrinterService {
         const rawHex = builder.toHex();
         console.log(`[PrinterService] Sending ${rawHex.length} bytes to ${printer.name} (${printer.ip})`);
 
-        // Rule #30: Edge Bridge Strategy would go here.
-        // For now, we simulate success.
+        // Rule #30: Edge Bridge - Send to backend API which handles TCP socket
+        if (printer.ip && printer.type === 'NETWORK') {
+            try {
+                const response = await fetch('/api/print/raw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ip: printer.ip,
+                        port: printer.port || 9100,
+                        data: rawHex
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    console.error(`[PrinterService] Print failed: ${error.detail}`);
+                    return false;
+                }
+
+                const result = await response.json();
+                console.log(`[PrinterService] Print success: ${result.bytes_sent} bytes sent`);
+                return true;
+            } catch (error) {
+                console.error(`[PrinterService] Network error:`, error);
+                return false;
+            }
+        }
+
+        // Fallback: Simulation mode for USB/Bluetooth or when no IP
+        console.log(`[PrinterService] Simulation mode - would print ${rawHex.length} bytes`);
         return true;
     }
 

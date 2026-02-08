@@ -44,6 +44,13 @@
   --sidebarActive: #1C0606;
   --sidebarActiveText: #E53935;
 
+  /* Semantic Text Colors (Dark Mode) */
+  --text-primary: #F5F5F7;
+  --text-secondary: #A1A1AA;
+  --text-muted: #71717A;
+  --text-on-brand: #FFFFFF;
+  --text-on-dark-bg: #F5F5F7;
+
   /* Radius */
   --radius: 0.5rem;
 }

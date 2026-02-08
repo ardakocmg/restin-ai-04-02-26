@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useSafeMode } from "../../context/SafeModeContext";
 import { venueAPI, menuAPI, orderAPI } from "../../lib/api";
 import api from "../../lib/api";
+import { logger } from "../../lib/logger";
 import { toast } from "sonner";
 import { safeNumber, safeArray, safeString } from "../../lib/safe";
 import { useVenueSettings } from "../../hooks/useVenueSettings";
@@ -93,7 +94,7 @@ export default function POSRuntime() {
           loadMenuData();
         }
       } catch (error) {
-        console.error("Failed to poll config version:", error);
+        logger.error('Failed to poll config version', { error });
       }
     }, 60000); // Poll every 60 seconds
 
@@ -112,14 +113,14 @@ export default function POSRuntime() {
   useEffect(() => {
     // Wait for auth to finish loading
     if (authLoading) {
-      console.log('[POS] Waiting for auth...');
+      logger.debug('[POS] Waiting for auth');
       return;
     }
 
     // TEMPORARY BYPASS FOR DEVELOPMENT IF NO AUTH
     // if (!isAuthenticated) { ... }
 
-    console.log('[POS] Loading data for venue:', venueId);
+    logger.info('[POS] Loading data for venue', { venueId });
     loadData();
   }, [isAuthenticated, authLoading, venueId]);
 
@@ -128,7 +129,7 @@ export default function POSRuntime() {
       setLoading(true);
       setLoadingError(null);
 
-      console.log('[POS] Loading venue data...');
+      logger.debug('[POS] Loading venue data');
       // Safe Promise.allSettled to avoid full crash
       const results = await Promise.allSettled([
         venueAPI.get(venueId),
@@ -140,12 +141,12 @@ export default function POSRuntime() {
       if (results[1].status === 'fulfilled') setTables(results[1].value.data || []);
       if (results[2].status === 'fulfilled') setFloorPlan(results[2].value.data);
 
-      console.log('[POS] Venue data loaded, loading menu...');
+      logger.debug('[POS] Venue data loaded, loading menu');
       await loadMenuData();
 
-      console.log('[POS] All data loaded successfully');
+      logger.info('[POS] All data loaded successfully');
     } catch (error) {
-      console.error("[POS] Failed to load data:", error);
+      logger.error('[POS] Failed to load data', { error });
       setLoadingError(error.message || "Failed to load POS data");
       toast.error("Failed to load POS data.");
     } finally {
@@ -155,7 +156,7 @@ export default function POSRuntime() {
 
   const loadMenuData = async () => {
     try {
-      console.log('[POS] Loading categories...');
+      logger.debug('[POS] Loading categories');
       const categoriesRes = await menuAPI.getCategories(venueId);
       setCategories(categoriesRes.data || []);
 
@@ -163,11 +164,11 @@ export default function POSRuntime() {
         const firstCat = categoriesRes.data[0];
         setActiveCategory(firstCat.id);
 
-        console.log('[POS] Loading items for category:', firstCat.name);
+        logger.debug('[POS] Loading items for category', { name: firstCat.name });
         const itemsRes = await menuAPI.getItems(venueId, firstCat.id);
         setMenuItems(itemsRes.data || []);
       } else {
-        console.warn('[POS] No categories found');
+        logger.warn('[POS] No categories found');
         setMenuItems([]);
       }
 
@@ -176,10 +177,10 @@ export default function POSRuntime() {
         const { data } = await api.get(`/venues/${venueId}/active-config-version`);
         setMenuVersion(data.menu_version);
       } catch (error) {
-        console.warn('[POS] Failed to get menu version:', error);
+        logger.warn('[POS] Failed to get menu version', { error });
       }
     } catch (error) {
-      console.error("[POS] Failed to load menu:", error);
+      logger.error('[POS] Failed to load menu', { error });
       toast.error("Failed to load menu data");
     }
   };
@@ -190,7 +191,7 @@ export default function POSRuntime() {
       const response = await menuAPI.getItems(venueId, categoryId);
       setMenuItems(response.data);
     } catch (error) {
-      console.error("Failed to load items:", error);
+      logger.error('Failed to load items', { error });
       toast.error("Failed to load items");
     }
   };
@@ -213,7 +214,7 @@ export default function POSRuntime() {
         toast.info(`New order for ${table.name}`);
       }
     } catch (error) {
-      console.error("Failed to load order:", error);
+      logger.error('Failed to load order', { error });
       toast.error("Failed to load order");
     } finally {
       setLoading(false);

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import authStore from "../../lib/AuthStore";
 import { User } from "../../types";
 import { AuthContextType } from "./types";
+import { logger } from "../../lib/logger";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -38,7 +39,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, []);
 
     const login = (authToken: string, userData: User) => {
-        console.log('[AuthContext] Login called with token:', !!authToken);
+        logger.info('Login called', { hasToken: !!authToken });
         setUser(userData);
         setToken(authToken);
         authStore.setAuth(authToken, userData);
