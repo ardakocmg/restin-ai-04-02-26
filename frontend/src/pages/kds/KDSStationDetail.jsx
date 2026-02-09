@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Trash2 } from 'lucide-react';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -55,11 +56,11 @@ function KDSStationDetail() {
         newSettings,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert('Settings saved successfully');
+      toast.success('Settings saved successfully');
       fetchSettings();
     } catch (error) {
       console.error('Error updating settings:', error);
-      alert('Failed to save settings');
+      toast.error('Failed to save settings');
     }
   };
 
@@ -72,7 +73,7 @@ function KDSStationDetail() {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert('Station reset successfully');
+      toast.success('Station reset successfully');
     } catch (error) {
       console.error('Error resetting station:', error);
     }
@@ -104,11 +105,10 @@ function KDSStationDetail() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-6 py-4 font-medium capitalize transition ${
-                activeTab === tab
+              className={`px-6 py-4 font-medium capitalize transition ${activeTab === tab
                   ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600'
                   : 'text-gray-600 hover:text-gray-900'
-              }`}
+                }`}
             >
               {tab.replace('-', ' ')}
             </button>
@@ -200,11 +200,10 @@ function KDSStationDetail() {
                     <button
                       key={theme}
                       onClick={() => updateSettings({ theme })}
-                      className={`px-6 py-3 rounded-lg font-medium transition ${
-                        settings.theme === theme
+                      className={`px-6 py-3 rounded-lg font-medium transition ${settings.theme === theme
                           ? 'bg-blue-600 text-white'
                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
+                        }`}
                     >
                       {theme}
                     </button>
@@ -219,11 +218,10 @@ function KDSStationDetail() {
                     <button
                       key={layout}
                       onClick={() => updateSettings({ layout })}
-                      className={`px-6 py-3 rounded-lg font-medium transition ${
-                        settings.layout === layout
+                      className={`px-6 py-3 rounded-lg font-medium transition ${settings.layout === layout
                           ? 'bg-blue-600 text-white'
                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
+                        }`}
                     >
                       {layout.replace('_', ' ')}
                     </button>
@@ -238,11 +236,10 @@ function KDSStationDetail() {
                     <button
                       key={format}
                       onClick={() => updateSettings({ time_format: format })}
-                      className={`px-6 py-3 rounded-lg font-medium transition ${
-                        settings.time_format === format
+                      className={`px-6 py-3 rounded-lg font-medium transition ${settings.time_format === format
                           ? 'bg-blue-600 text-white'
                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
+                        }`}
                     >
                       {format}
                     </button>

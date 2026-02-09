@@ -105,7 +105,18 @@ def create_2fa_router():
         if current_user.id != user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
         
-        # TODO: Verify password before disabling
+        # Verify password before disabling 2FA
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        stored_hash = user.get("password_hash") or user.get("pin_hash")
+        if stored_hash:
+            import hashlib
+            # Support both PIN and password verification
+            input_hash = hashlib.sha256(data.password.encode()).hexdigest()
+            if input_hash != stored_hash:
+                raise HTTPException(status_code=401, detail="Invalid password")
         
         await db.users.update_one(
             {"id": user_id},

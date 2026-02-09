@@ -109,7 +109,20 @@ def create_rbac_router():
         current_user: dict = Depends(get_current_user)
     ):
         """Archive, restore, or suspend a user."""
-        # TODO: Check if current_user has permission to manage users
+        # RBAC: Verify current user has USER_MANAGE permission
+        admin_roles = {"owner", "general_manager", "manager", "it_admin"}
+        current_role = current_user.get("role", "staff")
+        if current_role not in admin_roles:
+            await db.audit_events.insert_one(AuditEvent(
+                event_type="user.status_change",
+                severity="HIGH",
+                result="DENY",
+                reason="Insufficient permissions for USER_MANAGE",
+                principal_id=current_user["id"],
+                resource_type="user",
+                resource_id=user_id
+            ).model_dump())
+            raise HTTPException(status_code=403, detail="Insufficient permissions to manage users")
         
         user = await db.users.find_one({"id": user_id})
         if not user:

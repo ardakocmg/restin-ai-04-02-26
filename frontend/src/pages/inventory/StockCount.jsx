@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ClipboardList, Search, Check } from 'lucide-react';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -37,7 +38,7 @@ function StockCount() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setCount(response.data.count);
-      alert('Stock count started: ' + response.data.count.display_id);
+      toast.success('Stock count started: ' + response.data.count.display_id);
     } catch (error) {
       console.error('Error starting count:', error);
     }
@@ -45,9 +46,9 @@ function StockCount() {
 
   const submitLine = async (item) => {
     if (!count) return;
-    
+
     const countedQty = parseFloat(countLines[item.id] || 0);
-    
+
     try {
       const token = localStorage.getItem('restin_token');
       await axios.post(
@@ -60,8 +61,8 @@ function StockCount() {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
-      alert(`Counted: ${item.name} - ${countedQty} ${item.base_unit}`);
+
+      toast.info(`Counted: ${item.name} — ${countedQty} ${item.base_unit}`);
     } catch (error) {
       console.error('Error submitting line:', error);
     }
@@ -69,9 +70,9 @@ function StockCount() {
 
   const completeCount = async () => {
     if (!count) return;
-    
+
     if (!confirm('Complete stock count? This will adjust stock levels.')) return;
-    
+
     try {
       const token = localStorage.getItem('restin_token');
       await axios.post(
@@ -79,7 +80,7 @@ function StockCount() {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert('Stock count completed!');
+      toast.success('Stock count completed!');
       setCount(null);
       setCountLines({});
     } catch (error) {
@@ -88,10 +89,10 @@ function StockCount() {
   };
 
   const filteredItems = search
-    ? items.filter(item => 
-        item.name.toLowerCase().includes(search.toLowerCase()) ||
-        item.sku.toLowerCase().includes(search.toLowerCase())
-      )
+    ? items.filter(item =>
+      item.name.toLowerCase().includes(search.toLowerCase()) ||
+      item.sku.toLowerCase().includes(search.toLowerCase())
+    )
     : items;
 
   return (
@@ -106,7 +107,7 @@ function StockCount() {
               </p>
             )}
           </div>
-          
+
           <div className="flex gap-3">
             {!count ? (
               <button
@@ -170,7 +171,7 @@ function StockCount() {
                         type="number"
                         step="0.01"
                         value={countLines[item.id] || ''}
-                        onChange={(e) => setCountLines({...countLines, [item.id]: e.target.value})}
+                        onChange={(e) => setCountLines({ ...countLines, [item.id]: e.target.value })}
                         className="w-32 px-3 py-2 border border-gray-300 rounded-lg"
                         placeholder="0.00"
                       />

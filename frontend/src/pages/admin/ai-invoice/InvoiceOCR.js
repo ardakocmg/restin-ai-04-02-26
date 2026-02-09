@@ -3,6 +3,7 @@ import PageContainer from '../../../layouts/PageContainer';
 import { Card, CardContent } from '../../../components/ui/card';
 import { Upload, Loader } from 'lucide-react';
 import api from '../../../lib/api';
+import { toast } from 'sonner';
 
 export default function InvoiceOCR() {
   const [processing, setProcessing] = useState(false);
@@ -19,19 +20,19 @@ export default function InvoiceOCR() {
       reader.onload = async (event) => {
         const base64 = event.target.result.split(',')[1];
         const venueId = localStorage.getItem('currentVenueId');
-        
+
         const response = await api.post(`/venues/${venueId}/invoices/ocr`, {
           venue_id: venueId,
           image_base64: base64,
           po_id: selectedPO || null
         });
-        
+
         setResult(response.data);
       };
       reader.readAsDataURL(file);
     } catch (error) {
       console.error('OCR failed:', error);
-      alert('Failed to process invoice');
+      toast.error('Failed to process invoice');
     } finally {
       setProcessing(false);
     }

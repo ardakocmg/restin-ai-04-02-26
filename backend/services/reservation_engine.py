@@ -66,11 +66,19 @@ class ReservationEngine:
         })
         existing_reservations = await reservations_cursor.to_list(1000)
         
-        # 3. Generate Slots (18:00 - 23:00 Mock default)
+        # 3. Generate Slots from venue opening hours
         slots = []
-        # TODO: Read OpeningHours from Restaurant model
-        current_time = start_of_day.replace(hour=18, minute=0)
-        close_time = start_of_day.replace(hour=23, minute=0)
+        venue_config = await self._fetch_venue_config(venue_id)
+        opening_hours = venue_config.get("opening_hours", {})
+        # Support day-specific or global hours: {"monday": {"open": "09:00", "close": "23:00"}} or {"open": "09:00", "close": "23:00"}
+        day_name = start_of_day.strftime("%A").lower()
+        day_hours = opening_hours.get(day_name, opening_hours) if isinstance(opening_hours, dict) else {}
+        open_str = day_hours.get("open", "09:00") if isinstance(day_hours, dict) else "09:00"
+        close_str = day_hours.get("close", "23:00") if isinstance(day_hours, dict) else "23:00"
+        open_h, open_m = (int(x) for x in open_str.split(":"))
+        close_h, close_m = (int(x) for x in close_str.split(":"))
+        current_time = start_of_day.replace(hour=open_h, minute=open_m)
+        close_time = start_of_day.replace(hour=close_h, minute=close_m)
         
         turn_time_min = await self.calculate_turn_time(venue_id, pax)
         

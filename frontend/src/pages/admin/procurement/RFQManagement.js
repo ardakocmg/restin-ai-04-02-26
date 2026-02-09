@@ -4,6 +4,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { Plus, Send, Award, X, Eye, Edit } from 'lucide-react';
 import api from '../../../lib/api';
+import { toast } from 'sonner';
 
 export default function RFQManagement() {
   const [rfqs, setRfqs] = useState([]);
@@ -44,7 +45,7 @@ export default function RFQManagement() {
       fetchRFQs();
     } catch (error) {
       console.error('Failed to create RFQ:', error);
-      alert('Failed to create RFQ');
+      toast.error('Failed to create RFQ');
     }
   };
 

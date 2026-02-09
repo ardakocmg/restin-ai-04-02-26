@@ -83,7 +83,7 @@ function KDSRuntime() {
       await fetchTickets();
     } catch (error) {
       console.error('Error undoing:', error);
-      alert('Cannot undo - time window expired');
+      toast.warning('Cannot undo — time window expired');
     }
   };
 
@@ -156,8 +156,8 @@ function KDSRuntime() {
               key={status}
               onClick={() => setFilter(status)}
               className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${filter === status
-                  ? "bg-red-500/10 text-red-500 border border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
-                  : "bg-zinc-900 text-zinc-400 border border-white/5 hover:bg-zinc-800 hover:text-white"
+                ? "bg-red-500/10 text-red-500 border border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
+                : "bg-zinc-900 text-zinc-400 border border-white/5 hover:bg-zinc-800 hover:text-white"
                 }`}
             >
               {status}

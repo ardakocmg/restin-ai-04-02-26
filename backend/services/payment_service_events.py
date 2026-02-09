@@ -1,10 +1,13 @@
 """Payment Service - Payment processing microservice (FUTURE)"""
+import logging
 from typing import Dict
 from datetime import datetime, timezone
 
 from core.database import db
 from services.event_bus import event_handler, event_bus
 from services.service_registry import service_registry
+
+logger = logging.getLogger(__name__)
 
 
 class PaymentService:
@@ -32,8 +35,8 @@ class PaymentService:
         
         await db.payments.insert_one(payment)
         
-        # TODO: Integrate with Stripe/PayPal
-        print(f"💳 PaymentService: Processing €{amount} for order {order_id}")
+        # Future: Integrate with Stripe/PayPal via payment gateway
+        logger.info("PaymentService: Processing €%s for order %s", amount, order_id)
         
         # Simulate success and publish event
         payment["status"] = "SUCCESS"
@@ -55,10 +58,10 @@ async def handle_payment_request(event: Dict):
     amount = data.get("amount")
     
     # Process payment
-    print(f"💳 PaymentService: Payment request received for order {order_id}")
+    logger.info("PaymentService: Payment request received for order %s", order_id)
     
-    # TODO: Actual payment processing logic
-    # For now, just log it
+    # Future: Route to actual payment gateway
+    # For now, log to payment_logs collection
     await db.payment_logs.insert_one({
         "order_id": order_id,
         "amount": amount,

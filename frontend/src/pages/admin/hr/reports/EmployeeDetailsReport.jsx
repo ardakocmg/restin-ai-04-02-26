@@ -4,6 +4,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import api from '../../../../lib/api';
 import { Loader2, FileText, Download } from 'lucide-react';
 import { Button } from '../../../../components/ui/button';
+import { toast } from 'sonner';
 
 
 export default function EmployeeDetailsReport() {
@@ -50,7 +51,7 @@ export default function EmployeeDetailsReport() {
           <FileText className="w-6 h-6 text-blue-500" />
           Employee Master Data
         </h1>
-        <Button variant="outline" onClick={() => alert("Export CSV coming soon")}>
+        <Button variant="outline" onClick={() => toast.info("Export CSV coming soon")}>
           <Download className="w-4 h-4 mr-2" /> Export
         </Button>
       </div>

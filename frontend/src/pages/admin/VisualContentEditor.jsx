@@ -3,6 +3,7 @@ import PageContainer from '../../layouts/PageContainer';
 import { Card, CardContent } from '../../components/ui/card';
 import { Save, Eye } from 'lucide-react';
 import api from '../../lib/api';
+import { toast } from 'sonner';
 
 export default function VisualContentEditor() {
   const [content, setContent] = useState({ title: '', markdown_content: '', html_content: '' });
@@ -17,10 +18,10 @@ export default function VisualContentEditor() {
         ...content,
         content_type: 'page'
       });
-      alert('Content saved successfully!');
+      toast.success('Content saved successfully!');
     } catch (error) {
       console.error('Failed to save content:', error);
-      alert('Failed to save content');
+      toast.error('Failed to save content');
     } finally {
       setSaving(false);
     }

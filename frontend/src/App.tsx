@@ -217,6 +217,21 @@ import { CrmDashboard } from "./features/restin/crm";
 import { OpsDashboard } from "./features/restin/ops";
 import { FintechDashboard } from "./features/restin/fintech";
 import RestinControlTower from "./pages/admin/RestinControlTower";
+import FeatureFlagAdmin from "./pages/admin/settings/FeatureFlagAdmin";
+import DynamicPricingPage from "./pages/admin/pricing/DynamicPricingPage";
+import HACCPChecklists from "./pages/admin/compliance/HACCPChecklists";
+import DataExportPage from "./pages/admin/settings/DataExportPage";
+import SetupWizard from "./pages/admin/onboarding/SetupWizard";
+import GuestProfiles from "./pages/admin/guests/GuestProfiles";
+import StaffGamification from "./pages/admin/staff/StaffGamification";
+import KioskModePage from "./pages/admin/pos/KioskModePage";
+import CarbonFootprint from "./pages/admin/sustainability/CarbonFootprint";
+import CompetitorMonitoring from "./pages/admin/radar/CompetitorMonitoring";
+import FloorplanEditor from "./pages/admin/floorplan/FloorplanEditor";
+import SplitBillPage from "./pages/admin/pos/SplitBillPage";
+import PrintPreviewPage from "./pages/admin/pos/PrintPreviewPage";
+import RecipeVideoBites from "./pages/admin/training/RecipeVideoBites";
+import PluginMarketplace from "./pages/admin/marketplace/PluginMarketplace";
 
 // AI Hub (New React Pages)
 import VoiceAI from "./pages/admin/ai/VoiceAI";
@@ -466,6 +481,21 @@ function App() {
                                   <Route path="central-kitchen/orders" element={<InternalOrders />} />
                                   <Route path="recipe-engineering/cost" element={<CostAnalysis />} />
                                   <Route path="content-editor" element={<VisualContentEditor />} />
+                                  <Route path="feature-flags" element={<FeatureFlagAdmin />} />
+                                  <Route path="dynamic-pricing" element={<DynamicPricingPage />} />
+                                  <Route path="haccp" element={<HACCPChecklists />} />
+                                  <Route path="data-export" element={<DataExportPage />} />
+                                  <Route path="setup-wizard" element={<SetupWizard />} />
+                                  <Route path="guest-profiles" element={<GuestProfiles />} />
+                                  <Route path="staff-gamification" element={<StaffGamification />} />
+                                  <Route path="kiosk-mode" element={<KioskModePage />} />
+                                  <Route path="carbon-footprint" element={<CarbonFootprint />} />
+                                  <Route path="competitor-monitoring" element={<CompetitorMonitoring />} />
+                                  <Route path="floorplan" element={<FloorplanEditor />} />
+                                  <Route path="split-bill" element={<SplitBillPage />} />
+                                  <Route path="print-preview" element={<PrintPreviewPage />} />
+                                  <Route path="recipe-videos" element={<RecipeVideoBites />} />
+                                  <Route path="plugin-marketplace" element={<PluginMarketplace />} />
 
                                   {/* RESTIN.AI MASTER PROTOCOL v18.0 */}
                                   <Route path="restin">

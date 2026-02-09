@@ -4,6 +4,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { Plus, X, Shield } from 'lucide-react';
 import api from '../../../lib/api';
+import { toast } from 'sonner';
 
 export default function ApprovalWorkflow() {
   const [rules, setRules] = useState([]);
@@ -43,7 +44,7 @@ export default function ApprovalWorkflow() {
       fetchRules();
     } catch (error) {
       console.error('Failed to create rule:', error);
-      alert('Failed to create approval rule');
+      toast.error('Failed to create approval rule');
     }
   };
 

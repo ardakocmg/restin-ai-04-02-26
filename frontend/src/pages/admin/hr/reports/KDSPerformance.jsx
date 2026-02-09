@@ -6,6 +6,7 @@ import { Timer, TrendingUp, AlertTriangle, ChefHat, Activity, Loader2 } from 'lu
 import { Button } from '../../../../components/ui/button';
 import api from '../../../../lib/api';
 import { useVenue } from '../../../../context/VenueContext';
+import { toast } from 'sonner';
 
 export default function KDSPerformance() {
   const { activeVenue } = useVenue();
@@ -144,7 +145,7 @@ export default function KDSPerformance() {
       </div>
 
       <div className="flex justify-end">
-        <Button variant="outline" onClick={() => alert("Report Exported")}>Export Detailed PDF</Button>
+        <Button variant="outline" onClick={() => toast.info("Report exported")}>Export Detailed PDF</Button>
       </div>
     </div>
   );

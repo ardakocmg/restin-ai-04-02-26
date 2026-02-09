@@ -85,7 +85,12 @@ def create_fcm_router():
         Send push notification to a user (admin only).
         For testing and manual notifications.
         """
-        # TODO: Add admin role check
+        # Admin role check: only managers+ can send manual push notifications
+        admin_roles = {"owner", "general_manager", "manager", "it_admin"}
+        current_role = current_user.get("role", "staff")
+        if current_role not in admin_roles:
+            raise HTTPException(status_code=403, detail="Admin role required to send push notifications")
+        
         result = await fcm_service.send_push(
             user_id=request.user_id,
             title=request.title,

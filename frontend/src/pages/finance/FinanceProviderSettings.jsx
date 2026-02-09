@@ -8,6 +8,7 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Badge } from '../../components/ui/badge';
 import { Settings, CheckCircle2, XCircle, Link2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function FinanceProviderSettings() {
   const { activeVenue } = useVenue();
@@ -36,10 +37,10 @@ export default function FinanceProviderSettings() {
     try {
       setSaving(true);
       await api.put(`/finance-provider/settings?venue_id=${activeVenue.id}`, settings);
-      alert('Settings saved successfully!');
+      toast.success('Settings saved successfully!');
     } catch (error) {
       console.error('Save error:', error);
-      alert('Failed to save settings');
+      toast.error('Failed to save settings');
     } finally {
       setSaving(false);
     }
@@ -80,7 +81,7 @@ export default function FinanceProviderSettings() {
               <Label>Provider Name (Your Label)</Label>
               <Input
                 value={settings.provider_label || ''}
-                onChange={(e) => setSettings({...settings, provider_label: e.target.value})}
+                onChange={(e) => setSettings({ ...settings, provider_label: e.target.value })}
                 placeholder="e.g., Payroll System A"
               />
             </div>
@@ -89,7 +90,7 @@ export default function FinanceProviderSettings() {
               <Label>Integration Mode</Label>
               <select
                 value={settings.mode || 'EXPORT_ONLY'}
-                onChange={(e) => setSettings({...settings, mode: e.target.value})}
+                onChange={(e) => setSettings({ ...settings, mode: e.target.value })}
                 className="w-full p-2 border rounded"
               >
                 <option value="EXPORT_ONLY">Export Only (File-based)</option>
@@ -103,7 +104,7 @@ export default function FinanceProviderSettings() {
               <Label>Company Code</Label>
               <Input
                 value={settings.company_code || ''}
-                onChange={(e) => setSettings({...settings, company_code: e.target.value})}
+                onChange={(e) => setSettings({ ...settings, company_code: e.target.value })}
                 placeholder="Your company code in external system"
               />
             </div>

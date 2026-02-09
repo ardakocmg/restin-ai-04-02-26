@@ -8,6 +8,7 @@ import { Download, Mail, Printer, ArrowLeft, Calendar, Image } from 'lucide-reac
 import api from '@/lib/api';
 import { exportToPdf, exportToJpeg } from '../../../lib/exportUtils';
 import { useVenue } from '../../../context/VenueContext';
+import { toast } from 'sonner';
 
 export default function PayslipViewer() {
     const { employeeId, period } = useParams();
@@ -73,10 +74,10 @@ export default function PayslipViewer() {
                 employee_id: payslipData?.employee?.id,
                 venue_id: activeVenue?.id
             });
-            alert('Payslip email sent successfully to employee!');
+            toast.success('Payslip email sent successfully to employee!');
         } catch (error) {
             console.error('Failed to send email:', error);
-            alert('Failed to send email. Please try again.');
+            toast.error('Failed to send email. Please try again.');
         } finally {
             setSending(false);
         }

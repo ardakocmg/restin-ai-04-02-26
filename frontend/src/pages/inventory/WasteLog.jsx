@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2, Plus } from 'lucide-react';
 import axios from 'axios';
+import { toast } from 'sonner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -67,7 +68,7 @@ function WasteLog() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert('Waste logged successfully');
+      toast.success('Waste logged successfully');
       setShowForm(false);
       setFormData({ item_id: '', qty: '', reason: 'SPOILAGE' });
       fetchWaste();

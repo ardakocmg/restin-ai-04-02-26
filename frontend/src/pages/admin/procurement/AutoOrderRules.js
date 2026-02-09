@@ -4,6 +4,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { Plus, X, Settings } from 'lucide-react';
 import api from '../../../lib/api';
+import { toast } from 'sonner';
 
 export default function AutoOrderRules() {
   const [rules, setRules] = useState([]);
@@ -42,7 +43,7 @@ export default function AutoOrderRules() {
       fetchRules();
     } catch (error) {
       console.error('Failed to create rule:', error);
-      alert('Failed to create auto-order rule');
+      toast.error('Failed to create auto-order rule');
     }
   };
 

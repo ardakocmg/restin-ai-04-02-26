@@ -110,6 +110,8 @@ from routes.ops_routes import router as ops_router
 from routes.pay_routes import router as pay_router
 from routes.production_routes import create_production_router
 from routes.pos_session_routes import create_pos_session_router
+from routes.haccp_routes import router as haccp_router
+from routes.data_export_routes import router as data_export_router
 from app.domains.reporting.routes.reports_summary import create_summary_report_router
 from routes.venue_config import create_venue_config_router
 from routes.reservation_routes import router as reservation_router
@@ -493,6 +495,8 @@ api_main.include_router(trust_overrides_router)
 api_main.include_router(system_health_router)
 api_main.include_router(system_integrity_router)
 api_main.include_router(system_jobs_router)
+api_main.include_router(haccp_router)
+api_main.include_router(data_export_router)
 api_main.include_router(system_observability_router)
 api_main.include_router(system_diagnostic_router)
 api_main.include_router(ops_service_day_close_router)

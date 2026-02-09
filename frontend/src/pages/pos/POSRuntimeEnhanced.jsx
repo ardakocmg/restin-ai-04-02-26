@@ -3,6 +3,7 @@ import { Grid, ShoppingCart, Send, CreditCard, X, Plus, Trash2 } from 'lucide-re
 import axios from 'axios';
 import ModifierModal from './ModifierModal';
 import { logger } from '../../lib/logger';
+import { toast } from 'sonner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -186,7 +187,7 @@ function POSRuntimeEnhanced() {
         logger.error('Auto-print failed', { error: e });
       }
 
-      alert('Order sent to kitchen!');
+      toast.success('Order sent to kitchen!');
       refreshOrder();
     } catch (error) {
       logger.error('Error sending order', { error });
@@ -213,13 +214,13 @@ function POSRuntimeEnhanced() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert('Payment successful!');
+      toast.success('Payment successful!');
       setOrder(null);
       setItems([]);
       setShowPayment(false);
     } catch (error) {
       logger.error('Error processing payment', { error });
-      alert('Payment failed: ' + error.response?.data?.error?.code);
+      toast.error('Payment failed: ' + (error.response?.data?.error?.code || 'Unknown error'));
     }
   };
 

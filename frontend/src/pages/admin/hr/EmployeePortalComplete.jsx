@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
 import api from '@/lib/api';
+import { toast } from 'sonner';
 
 export default function EmployeePortalComplete() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export default function EmployeePortalComplete() {
           key={date}
           className={`p-2 text-center rounded cursor-pointer hover:opacity-80 transition ${event ? getColorClass(event.event_type) : 'hover:bg-slate-200 dark:hover:bg-slate-600'
             }`}
-          onClick={() => event && alert(`${event.event_type} on ${date}/${month + 1}/${year}`)}
+          onClick={() => event && toast.info(`${event.event_type} on ${date}/${month + 1}/${year}`)}
         >
           <span className="text-sm font-medium">{date}</span>
         </div>
@@ -203,7 +204,7 @@ export default function EmployeePortalComplete() {
                 {data.payslips?.map((payslip, idx) => (
                   <button
                     key={idx}
-                    onClick={() => alert(`View payslip for ${payslip.month}`)}
+                    onClick={() => toast.info(`Viewing payslip for ${payslip.month}`)}
                     className="flex-shrink-0 w-20 h-28 bg-slate-100 dark:bg-slate-700 rounded border-2 border-slate-300 dark:border-slate-600 hover:border-blue-500 transition flex flex-col items-center justify-center p-2"
                   >
                     <div className="text-xs font-semibold text-slate-700 dark:text-slate-300 text-center break-words">
@@ -349,7 +350,7 @@ export default function EmployeePortalComplete() {
                   <div
                     key={idx}
                     className="flex items-center gap-3 p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded cursor-pointer transition"
-                    onClick={() => alert(`${staff.name} - ${staff.leave_type}\n${staff.start_time}${staff.end_time ? ` - ${staff.end_time}` : ''}\n${staff.duration || ''}`)}
+                    onClick={() => toast.info(`${staff.name} — ${staff.leave_type}: ${staff.start_time}${staff.end_time ? ` - ${staff.end_time}` : ''} ${staff.duration || ''}`)}
                   >
                     {/* Profile Picture */}
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 dark:from-slate-600 dark:to-slate-700 flex items-center justify-center flex-shrink-0">
@@ -390,7 +391,7 @@ export default function EmployeePortalComplete() {
             <CardContent>
               <div className="grid grid-cols-3 gap-4">
                 <button
-                  onClick={() => alert('Showing employees on leave today')}
+                  onClick={() => toast.info(`${data.leave_metrics?.on_leave_today || 0} employees on leave today`)}
                   className="text-center p-3 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition"
                 >
                   <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">{data.leave_metrics?.on_leave_today || 0}</p>
@@ -398,7 +399,7 @@ export default function EmployeePortalComplete() {
                 </button>
 
                 <button
-                  onClick={() => alert('Showing employees on leave tomorrow')}
+                  onClick={() => toast.info(`${data.leave_metrics?.on_leave_tomorrow || 0} employees on leave tomorrow`)}
                   className="text-center p-3 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition"
                 >
                   <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">{data.leave_metrics?.on_leave_tomorrow || 0}</p>
@@ -406,7 +407,7 @@ export default function EmployeePortalComplete() {
                 </button>
 
                 <button
-                  onClick={() => alert('Showing employees on sick leave today')}
+                  onClick={() => toast.info(`${data.leave_metrics?.on_sick_leave_today || 0} employees on sick leave today`)}
                   className="text-center p-3 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition"
                 >
                   <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">{data.leave_metrics?.on_sick_leave_today || 0}</p>
