@@ -174,6 +174,7 @@ const menuItems = [
   { title: 'Venue Settings', icon: Settings, href: '/admin/settings', group: 'settings' },
   { title: 'Users', icon: UserCheck, href: '/admin/users', group: 'settings' },
   { title: 'Access Control', icon: Award, href: '/admin/access-control', group: 'settings' },
+  { title: 'Door Access (Nuki)', icon: Award, href: '/admin/door-access', group: 'settings' },
   { title: 'Event Monitor', icon: Activity, href: '/admin/events', group: 'settings' },
   {
     title: 'Device Manager',
