@@ -39,7 +39,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         color: 'blue',
         description: 'Synchronized digital storefront with live inventory mapping.',
         route: '/admin/restin/web',
-        metricsEndpoint: '/api/web/site',
+        metricsEndpoint: '/web/site',
         metricsExtractor: (d) => d?.site_name ? 'Published' : 'Draft',
         statusExtractor: (d) => d?.site_name ? 'Live' : 'Setup'
     },
@@ -50,7 +50,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         color: 'red',
         description: '24/7 RAG-based receptionist handling guest inquiries.',
         route: '/admin/restin/voice',
-        metricsEndpoint: '/api/voice/analytics',
+        metricsEndpoint: '/voice/analytics',
         metricsExtractor: (d) => `${d?.total_calls || 0} Calls`,
         statusExtractor: (d) => (d?.total_calls as number) > 0 ? 'Active' : 'Ready'
     },
@@ -61,7 +61,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         color: 'purple',
         description: 'Reality-first generative content pipeline for menu visuals.',
         route: '/admin/restin/studio',
-        metricsEndpoint: '/api/media/assets',
+        metricsEndpoint: '/media/assets',
         metricsExtractor: (d) => `${Array.isArray(d) ? d.length : 0} Assets`,
         statusExtractor: (d) => Array.isArray(d) && d.length > 0 ? 'Active' : 'Empty'
     },
@@ -72,7 +72,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         color: 'orange',
         description: 'Real-time competitive intelligence and yield management.',
         route: '/admin/restin/radar',
-        metricsEndpoint: '/api/radar/competitors',
+        metricsEndpoint: '/radar/competitors',
         metricsExtractor: (d) => `${Array.isArray(d) ? d.length : 0} Tracked`,
         statusExtractor: (d) => Array.isArray(d) && d.length > 0 ? 'Scanning' : 'Idle'
     },
@@ -83,7 +83,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         color: 'yellow',
         description: 'Autonomous churn detection and boomerang outreach.',
         route: '/admin/restin/crm',
-        metricsEndpoint: '/api/crm/stats',
+        metricsEndpoint: '/crm/stats',
         metricsExtractor: (d) => `${d?.high_risk || 0} At Risk`,
         statusExtractor: (d) => (d?.campaigns_sent as number) > 0 ? 'Triggered' : 'Monitoring'
     },
@@ -94,7 +94,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         color: 'emerald',
         description: 'Omni-channel settlement and embedded financial logic.',
         route: '/admin/restin/fintech',
-        metricsEndpoint: '/api/fintech/stats',
+        metricsEndpoint: '/fintech/stats',
         metricsExtractor: (d) => {
             const rev = (d?.total_revenue_cents as number) || 0;
             return `€${(rev / 100).toFixed(0)} Rev`;
@@ -142,9 +142,9 @@ function useAggregateStats(venueId: string | null) {
         queryKey: ['control-tower-aggregate', venueId],
         queryFn: async () => {
             const [fintech, ops, voice] = await Promise.allSettled([
-                api.get(`/api/fintech/stats?venue_id=${venueId}`),
-                api.get(`/api/ops/metrics?venue_id=${venueId}`),
-                api.get(`/api/voice/analytics?venue_id=${venueId}`),
+                api.get(`/fintech/stats?venue_id=${venueId}`),
+                api.get(`/ops/metrics?venue_id=${venueId}`),
+                api.get(`/voice/analytics?venue_id=${venueId}`),
             ]);
             const ft = fintech.status === 'fulfilled' ? fintech.value.data : {};
             const op = ops.status === 'fulfilled' ? ops.value.data : {};

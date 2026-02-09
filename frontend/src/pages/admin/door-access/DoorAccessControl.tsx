@@ -16,6 +16,7 @@
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { logger } from '@/lib/logger';
+import api from '@/lib/api';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -31,7 +32,7 @@ import {
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API = process.env.REACT_APP_API_URL || '';
+
 
 interface Door {
     id: string;
@@ -147,8 +148,8 @@ function ConnectionTab() {
 
     const checkStatus = async () => {
         try {
-            const resp = await fetch(`${API}/api/access-control/connection/status?venue_id=${getVenueId()}`);
-            if (resp.ok) setStatus(await resp.json());
+            const resp = await api.get(`/access-control/connection/status?venue_id=${getVenueId()}`);
+            if (resp.status === 200) setStatus(resp.data);
         } catch (e) {
             logger.error('Connection check failed', { error: String(e) });
         }
@@ -161,12 +162,10 @@ function ConnectionTab() {
         }
         setLoading(true);
         try {
-            const resp = await fetch(`${API}/api/access-control/connect/token?venue_id=${getVenueId()}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ api_token: apiToken }),
+            const resp = await api.post(`/access-control/connect/token?venue_id=${getVenueId()}`, {
+                api_token: apiToken
             });
-            if (resp.ok) {
+            if (resp.status === 200 || resp.status === 201) {
                 toast.success('Nuki connected successfully!');
                 setApiToken('');
                 checkStatus();
