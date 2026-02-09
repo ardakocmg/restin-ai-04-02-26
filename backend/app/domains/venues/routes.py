@@ -138,13 +138,16 @@ def get_recipes(
     limit: int = Query(50, ge=1, le=100)
 ):
     """Get recipes using sync PyMongo (sync def = FastAPI runs in threadpool)."""
+    import json
     from app.core.database import get_sync_database
+    from fastapi.responses import JSONResponse
     
     sdb = get_sync_database()
     skip = (page - 1) * limit
     
     # Check recipes_engineered first
     eng_count = sdb.recipes_engineered.estimated_document_count()
+    print(f"[RECIPES] eng_count={eng_count}, skip={skip}, limit={limit}")
     
     if eng_count > 0:
         query = {}
@@ -153,6 +156,7 @@ def get_recipes(
         
         docs = list(sdb.recipes_engineered.find(query).skip(skip).limit(limit))
         total = eng_count
+        print(f"[RECIPES] found {len(docs)} docs from recipes_engineered")
     else:
         # Fallback to menu_items
         query = {"venue_id": venue_id}
@@ -161,6 +165,7 @@ def get_recipes(
         
         total = sdb.menu_items.count_documents(query)
         docs = list(sdb.menu_items.find(query).skip(skip).limit(limit))
+        print(f"[RECIPES] fallback: {len(docs)} docs from menu_items")
         
         for r in docs:
             if "recipe_name" not in r:
@@ -170,13 +175,27 @@ def get_recipes(
             if "category" not in r:
                 r["category"] = r.get("category_id", "Uncategorized")
     
-    # Convert ObjectIds
-    for r in docs:
-        r["_id"] = str(r["_id"])
-        if "id" not in r:
-            r["id"] = r["_id"]
+    # Convert ALL BSON types to strings for JSON safety
+    def bson_safe(obj):
+        if hasattr(obj, 'isoformat'):
+            return obj.isoformat()
+        return str(obj)
     
-    return {"items": docs, "total": total, "page": page, "limit": limit}
+    # Convert ObjectIds and other BSON types
+    for r in docs:
+        for key in list(r.keys()):
+            val = r[key]
+            if hasattr(val, '__str__') and type(val).__name__ == 'ObjectId':
+                r[key] = str(val)
+            elif hasattr(val, 'isoformat'):
+                r[key] = val.isoformat()
+        if "id" not in r:
+            r["id"] = str(r.get("_id", ""))
+    
+    result = {"items": docs, "total": total, "page": page, "limit": limit}
+    
+    # Use json.dumps with default=str to handle any remaining BSON types
+    return JSONResponse(content=json.loads(json.dumps(result, default=str)))
 
 
 @router.get("/{venue_id}/recipes/engineered/trash")
