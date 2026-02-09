@@ -1,19 +1,35 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageContainer from '../../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
 import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
-import { ShoppingCart, Truck, Check, Store } from 'lucide-react';
+import { ShoppingCart, Truck, Check, Store, Loader2 } from 'lucide-react';
+import api from '../../../lib/api';
+import { useVenue } from '../../../context/VenueContext';
 
 export default function InternalOrders() {
-    // Phase 5: Simulated Store Requisitions
-    const [orders, setOrders] = useState([
-        { id: 'REQ-001', branch: 'St. Julian\'s', items: 'Burger Patties (50kg), Buns (200)', status: 'Approved', date: '2026-02-05' },
-        { id: 'REQ-002', branch: 'Valletta', items: 'Sauce Base (20L)', status: 'Pending', date: '2026-02-05' },
-        { id: 'REQ-003', branch: 'Sliema', items: 'Fries (100kg)', status: 'Shipped', date: '2026-02-04' },
-    ]);
+    const { activeVenue } = useVenue();
+    const [orders, setOrders] = useState([]);
+    const [summary, setSummary] = useState({ total_requests: 0, pending_approval: 0, in_transit: 0 });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (activeVenue?.id) loadOrders();
+    }, [activeVenue?.id]);
+
+    const loadOrders = async () => {
+        try {
+            const res = await api.get('/central-kitchen/orders', { params: { venue_id: activeVenue.id } });
+            setOrders(res.data.orders || []);
+            setSummary(res.data.summary || { total_requests: 0, pending_approval: 0, in_transit: 0 });
+        } catch (err) {
+            console.warn('Failed to load internal orders');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const getStatusColor = (status) => {
         switch (status) {
@@ -25,6 +41,16 @@ export default function InternalOrders() {
         }
     };
 
+    if (loading) {
+        return (
+            <PageContainer title="Internal Orders" description="Branch-to-Kitchen Supply Requests">
+                <div className="flex items-center justify-center py-16">
+                    <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
+                </div>
+            </PageContainer>
+        );
+    }
+
     return (
         <PageContainer
             title="Internal Orders"
@@ -34,15 +60,15 @@ export default function InternalOrders() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <Card className="bg-zinc-900 border-white/10">
                     <CardHeader className="pb-2"><CardTitle className="text-sm text-zinc-400">Total Requests (Today)</CardTitle></CardHeader>
-                    <CardContent><div className="text-2xl font-bold text-white">12</div></CardContent>
+                    <CardContent><div className="text-2xl font-bold text-white">{summary.total_requests}</div></CardContent>
                 </Card>
                 <Card className="bg-zinc-900 border-white/10">
                     <CardHeader className="pb-2"><CardTitle className="text-sm text-zinc-400">Pending Approval</CardTitle></CardHeader>
-                    <CardContent><div className="text-2xl font-bold text-orange-400">4</div></CardContent>
+                    <CardContent><div className="text-2xl font-bold text-orange-400">{summary.pending_approval}</div></CardContent>
                 </Card>
                 <Card className="bg-zinc-900 border-white/10">
                     <CardHeader className="pb-2"><CardTitle className="text-sm text-zinc-400">In Transit</CardTitle></CardHeader>
-                    <CardContent><div className="text-2xl font-bold text-purple-400">2</div></CardContent>
+                    <CardContent><div className="text-2xl font-bold text-purple-400">{summary.in_transit}</div></CardContent>
                 </Card>
             </div>
 
@@ -59,12 +85,16 @@ export default function InternalOrders() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {orders.map(order => (
+                        {orders.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={6} className="text-center py-8 text-zinc-500">No internal orders found</TableCell>
+                            </TableRow>
+                        ) : orders.map(order => (
                             <TableRow key={order.id} className="border-white/5">
                                 <TableCell className="font-mono text-white">{order.id}</TableCell>
                                 <TableCell className="font-medium text-white">{order.branch}</TableCell>
                                 <TableCell>{order.items}</TableCell>
-                                <TableCell>{order.date}</TableCell>
+                                <TableCell>{(order.date || order.created_at || '').split('T')[0]}</TableCell>
                                 <TableCell>
                                     <Badge className={`${getStatusColor(order.status)} border-0`}>{order.status}</Badge>
                                 </TableCell>

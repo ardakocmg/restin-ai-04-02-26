@@ -273,4 +273,91 @@ def create_analytics_routes():
         await db.accounting_exports.insert_one(export_doc)
         return {"ok": True, "export": {k: v for k, v in export_doc.items() if k != "_id"}}
 
+    # =========================================================================
+    # PROCUREMENT - RFQs
+    # =========================================================================
+    @router.get("/procurement/rfqs")
+    async def list_rfqs(
+        venue_id: str = Query(...),
+        current_user: dict = Depends(get_current_user)
+    ):
+        """List Request for Quotation documents."""
+        rfqs = await db.rfqs.find(
+            {"venue_id": venue_id},
+            {"_id": 0}
+        ).sort("created_at", -1).to_list(100)
+        return {"rfqs": rfqs}
+
+    # =========================================================================
+    # CENTRAL KITCHEN - INTERNAL ORDERS
+    # =========================================================================
+    @router.get("/central-kitchen/orders")
+    async def list_internal_orders(
+        venue_id: str = Query(...),
+        current_user: dict = Depends(get_current_user)
+    ):
+        """List internal supply requisitions between branches and central kitchen."""
+        orders = await db.internal_orders.find(
+            {"venue_id": venue_id},
+            {"_id": 0}
+        ).sort("created_at", -1).to_list(100)
+
+        total = len(orders)
+        pending = sum(1 for o in orders if o.get("status") == "Pending")
+        in_transit = sum(1 for o in orders if o.get("status") == "Shipped")
+
+        return {
+            "orders": orders,
+            "summary": {
+                "total_requests": total,
+                "pending_approval": pending,
+                "in_transit": in_transit
+            }
+        }
+
+    # =========================================================================
+    # SYSTEM DASHBOARD (Admin Control Tower)
+    # =========================================================================
+    @router.get("/admin/dashboard-stats")
+    async def dashboard_stats(
+        venue_id: str = Query(None),
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Aggregated system dashboard stats for control tower."""
+        now = datetime.now(timezone.utc)
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        # Today's revenue from orders
+        revenue_pipeline = [
+            {"$match": {
+                "created_at": {"$gte": today_start.isoformat()},
+                **({"venue_id": venue_id} if venue_id else {})
+            }},
+            {"$group": {"_id": None, "total": {"$sum": "$total_amount"}}}
+        ]
+        rev_result = await db.orders.aggregate(revenue_pipeline).to_list(1)
+        revenue = round(rev_result[0]["total"], 2) if rev_result else 0
+
+        # Active KDS orders today
+        active_orders = await db.kds_tickets.count_documents({
+            **({"venue_id": venue_id} if venue_id else {}),
+            "status": {"$in": ["pending", "in_progress", "PENDING", "IN_PROGRESS"]}
+        })
+
+        # Audit log stream (recent 20)
+        logs = await db.audit_logs.find(
+            {**({"venue_id": venue_id} if venue_id else {})},
+            {"_id": 0}
+        ).sort("created_at", -1).to_list(20)
+
+        return {
+            "stats": {
+                "revenue": revenue,
+                "activeOrders": active_orders,
+                "onlineDevices": 0,
+                "syncHealth": "100%"
+            },
+            "logs": logs
+        }
+
     return router

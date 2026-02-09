@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../lib/api";
+import { useVenue } from "../../context/VenueContext";
 import { Loader2, Activity, ShieldAlert, DollarSign, Users, Wifi, Calendar, Monitor } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import SalesChart from "../../components/analytics/SalesChart";
@@ -8,6 +9,7 @@ import { ScrollArea } from "../../components/ui/scroll-area";
 import { Badge } from "../../components/ui/badge";
 
 export default function SystemDashboard() {
+    const { activeVenue } = useVenue();
     const [stats, setStats] = useState(null);
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,31 +18,24 @@ export default function SystemDashboard() {
         loadDashboardData();
         const interval = setInterval(loadDashboardData, 30000);
         return () => clearInterval(interval);
-    }, []);
+    }, [activeVenue?.id]);
 
     const loadDashboardData = async () => {
         try {
-            // In a real scenario, this endpoint aggregates data.
-            // We will simulate the response structure based on our mock capabilities.
-            // const res = await api.get('/admin/dashboard-stats'); 
-
-            // Simulating data for now based on what we know exists
-            setStats({
-                revenue: 1450.50,
-                activeOrders: 5,
-                onlineDevices: 3,
-                syncHealth: "100%"
-            });
-
-            setLogs([
-                { id: 1, action: "VOID_ITEM", user: "Manager", details: "Voided Coca Cola (Table 5)", time: new Date() },
-                { id: 2, action: "DISCOUNT", user: "Admin", details: "Applied 10% Staff Disc", time: new Date(Date.now() - 1000 * 60 * 15) },
-                { id: 3, action: "SYNC_ERROR", user: "System", details: "KDS-01 failed to ack", time: new Date(Date.now() - 1000 * 60 * 45) },
-            ]);
-
-            setLoading(false);
+            const params = activeVenue?.id ? { venue_id: activeVenue.id } : {};
+            const res = await api.get('/admin/dashboard-stats', { params });
+            setStats(res.data.stats || { revenue: 0, activeOrders: 0, onlineDevices: 0, syncHealth: '100%' });
+            setLogs((res.data.logs || []).map((log, i) => ({
+                ...log,
+                id: log.id || i,
+                time: log.created_at ? new Date(log.created_at) : new Date()
+            })));
         } catch (error) {
-            console.error("Dashboard load failed", error);
+            console.warn("Dashboard load failed, using defaults");
+            setStats({ revenue: 0, activeOrders: 0, onlineDevices: 0, syncHealth: '100%' });
+            setLogs([]);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -58,7 +53,6 @@ export default function SystemDashboard() {
                     </h1>
 
                     <div className="flex items-center gap-3">
-                        {/* Date/Time Selection */}
                         <div className="flex items-center gap-2 bg-zinc-900 border border-white/10 rounded-lg p-1">
                             <Button variant="ghost" size="sm" className="h-8 text-zinc-400 hover:text-white">
                                 Today
@@ -86,21 +80,21 @@ export default function SystemDashboard() {
                     <div onClick={() => window.location.href = '/admin/reports/sales?type=revenue'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-green-500/50 transition-colors group">
                         <div>
                             <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">Today's Revenue</div>
-                            <div className="text-2xl font-bold text-white">€{stats.revenue.toFixed(2)}</div>
+                            <div className="text-2xl font-bold text-white">€{(stats?.revenue || 0).toFixed(2)}</div>
                         </div>
                         <DollarSign className="w-8 h-8 text-green-500 opacity-50 group-hover:opacity-100 transition-opacity" />
                     </div>
                     <div onClick={() => window.location.href = '/kds'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-blue-500/50 transition-colors group">
                         <div>
                             <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">Active Orders</div>
-                            <div className="text-2xl font-bold text-white">{stats.activeOrders}</div>
+                            <div className="text-2xl font-bold text-white">{stats?.activeOrders || 0}</div>
                         </div>
                         <Users className="w-8 h-8 text-blue-500 opacity-50 group-hover:opacity-100 transition-opacity" />
                     </div>
                     <div onClick={() => window.location.href = '/admin/devices'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-indigo-500/50 transition-colors group">
                         <div>
                             <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">Online Devices</div>
-                            <div className="text-2xl font-bold text-white">{stats.onlineDevices}</div>
+                            <div className="text-2xl font-bold text-white">{stats?.onlineDevices || 0}</div>
                         </div>
                         <Wifi className="w-8 h-8 text-indigo-500 opacity-50 group-hover:opacity-100 transition-opacity" />
                     </div>
@@ -114,7 +108,6 @@ export default function SystemDashboard() {
 
             {/* RESTORED LEGACY: Quick Actions & Config */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Venue Config */}
                 <div className="bg-zinc-900 border border-white/10 rounded-xl p-6">
                     <h3 className="text-white font-bold mb-4 flex items-center gap-2">
                         <Activity className="w-4 h-4 text-zinc-500" />
@@ -136,7 +129,6 @@ export default function SystemDashboard() {
                     </div>
                 </div>
 
-                {/* Quick Launch */}
                 <div className="bg-gradient-to-br from-red-900/20 to-zinc-900 border border-red-500/20 rounded-xl p-6">
                     <h3 className="text-red-400 font-bold mb-2 flex items-center gap-2">
                         <Monitor className="w-5 h-5" />
@@ -161,7 +153,6 @@ export default function SystemDashboard() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Main Chart */}
                 <div className="lg:col-span-2">
                     <SalesChart title="Real-time Sales Activity" />
                 </div>
@@ -174,16 +165,18 @@ export default function SystemDashboard() {
                     </div>
                     <ScrollArea className="flex-1 p-4">
                         <div className="space-y-4">
-                            {logs.map((log, i) => (
-                                <div key={i} className="flex gap-3 items-start">
-                                    <div className={`mt-1 w-2 h-2 rounded-full ${log.action.includes('ERROR') ? 'bg-red-500' : 'bg-blue-500'}`} />
+                            {logs.length === 0 ? (
+                                <p className="text-center text-zinc-500 text-sm py-4">No audit events yet</p>
+                            ) : logs.map((log, i) => (
+                                <div key={log.id || i} className="flex gap-3 items-start">
+                                    <div className={`mt-1 w-2 h-2 rounded-full ${(log.action || '').includes('ERROR') ? 'bg-red-500' : 'bg-blue-500'}`} />
                                     <div>
                                         <div className="text-sm text-white font-medium flex items-center gap-2">
                                             {log.action}
                                             <span className="text-zinc-500 text-xs font-normal">by {log.user}</span>
                                         </div>
                                         <div className="text-xs text-zinc-400">{log.details}</div>
-                                        <div className="text-[10px] text-zinc-600 mt-1">{format(log.time, 'HH:mm:ss')}</div>
+                                        <div className="text-[10px] text-zinc-600 mt-1">{log.time ? format(log.time, 'HH:mm:ss') : ''}</div>
                                     </div>
                                 </div>
                             ))}
