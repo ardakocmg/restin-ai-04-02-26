@@ -63,12 +63,18 @@ export default function ReservationTimeline() {
             <div className="space-y-6">
                 {/* Stats Row */}
                 <div className="grid grid-cols-4 gap-4">
-                    {[
-                        { label: 'Total Covers', value: '142', icon: Users, color: 'text-blue-600 dark:text-blue-400 dark:text-blue-400' },
-                        { label: 'Upcoming', value: '12', icon: Clock, color: 'text-orange-600 dark:text-orange-400 dark:text-orange-400' },
-                        { label: 'Seated', value: '8', icon: CheckCircle, color: 'text-green-600 dark:text-green-400 dark:text-green-400' },
-                        { label: 'Waitlist', value: '3', icon: ArrowRight, color: 'text-purple-600 dark:text-purple-400 dark:text-purple-400' }
-                    ].map((s, i) => {
+                    {(() => {
+                        const totalCovers = reservations.reduce((sum, r) => sum + (r.guest_count || 0), 0);
+                        const upcoming = reservations.filter(r => r.status === 'confirmed' || r.status === 'pending').length;
+                        const seated = reservations.filter(r => r.status === 'seated' || r.status === 'in_progress').length;
+                        const waitlist = reservations.filter(r => r.status === 'waitlist').length;
+                        return [
+                            { label: 'Total Covers', value: totalCovers, icon: Users, color: 'text-blue-600 dark:text-blue-400' },
+                            { label: 'Upcoming', value: upcoming, icon: Clock, color: 'text-orange-600 dark:text-orange-400' },
+                            { label: 'Seated', value: seated, icon: CheckCircle, color: 'text-green-600 dark:text-green-400' },
+                            { label: 'Waitlist', value: waitlist, icon: ArrowRight, color: 'text-purple-600 dark:text-purple-400' }
+                        ];
+                    })().map((s, i) => {
                         const Icon = s.icon;
                         return (
                             <Card key={i} className="bg-white dark:bg-zinc-950 border-zinc-200 dark:border-white/5 shadow-xl">

@@ -35,15 +35,7 @@ export default function LoyaltyPage() {
             const res = await api.get(`/loyalty/accounts?venue_id=${activeVenue.id}`).catch(() => ({ data: { data: [] } }));
             // Augment with mock data if empty
             const data = res.data?.data || [];
-            if (data.length === 0) {
-                setAccounts([
-                    { guest_id: 'GST-99281', name: 'Alice M.', points: 1250, tier: 'Silver', visits: 12 },
-                    { guest_id: 'GST-11029', name: 'Bob D.', points: 5200, tier: 'Platinum', visits: 45 },
-                    { guest_id: 'GST-33412', name: 'Charlie', points: 100, tier: 'Bronze', visits: 2 },
-                ]);
-            } else {
-                setAccounts(data);
-            }
+            setAccounts(data);
         } catch (error) {
             console.error('Loyalty error:', error);
         } finally {
@@ -63,12 +55,20 @@ export default function LoyaltyPage() {
             }
         >
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                {[
-                    { label: 'Total Members', value: accounts.length, icon: Gift, color: 'text-purple-500' },
-                    { label: 'Points Issued', value: '1.2M', icon: Star, color: 'text-yellow-500' },
-                    { label: 'Redemptions', value: '450', icon: Award, color: 'text-green-500' },
-                    { label: 'Retention Rate', value: '68%', icon: TrendingUp, color: 'text-blue-500' }
-                ].map((m, i) => {
+                {(() => {
+                    const totalPoints = accounts.reduce((sum, a) => sum + (a.points || 0), 0);
+                    const totalVisits = accounts.reduce((sum, a) => sum + (a.visits || 0), 0);
+                    const returning = accounts.filter(a => (a.visits || 0) > 1).length;
+                    const retentionPct = accounts.length > 0 ? Math.round((returning / accounts.length) * 100) : 0;
+                    const fmtPoints = totalPoints >= 1_000_000 ? `${(totalPoints / 1_000_000).toFixed(1)}M` :
+                        totalPoints >= 1_000 ? `${(totalPoints / 1_000).toFixed(1)}K` : totalPoints.toString();
+                    return [
+                        { label: 'Total Members', value: accounts.length, icon: Gift, color: 'text-purple-500' },
+                        { label: 'Points Issued', value: fmtPoints, icon: Star, color: 'text-yellow-500' },
+                        { label: 'Total Visits', value: totalVisits.toLocaleString(), icon: Award, color: 'text-green-500' },
+                        { label: 'Retention Rate', value: `${retentionPct}%`, icon: TrendingUp, color: 'text-blue-500' }
+                    ];
+                })().map((m, i) => {
                     const Icon = m.icon;
                     return (
                         <Card key={i} className="bg-zinc-950 border-white/5 shadow-xl">

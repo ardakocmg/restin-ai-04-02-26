@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PageContainer from '../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -7,7 +7,7 @@ import {
     Box, Maximize2, Move, Plus, Search,
     Trash2, Undo, Redo, Save, Layers,
     LayoutGrid, List, Smartphone, Music,
-    Trees, Snowflake, Heart, Users
+    Trees, Snowflake, Heart, Users, Loader2
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { cn } from '../../lib/utils';
@@ -19,103 +19,60 @@ import { Calendar } from 'lucide-react';
 import { Activity } from 'lucide-react';
 import { Clock } from 'lucide-react';
 import DataTable from '../../components/shared/DataTable';
-
-const MOCK_TABLES = [
-    // Nut Allergy Floor
-    { id: '1', name: '1', floor: 'Nut Allergy', capacity: 2, x: 150, y: 150, type: 'rect', status: 'available' },
-    { id: '2', name: '2', floor: 'Nut Allergy', capacity: 2, x: 250, y: 150, type: 'rect', status: 'available' },
-    { id: '3', name: '3', floor: 'Nut Allergy', capacity: 4, x: 350, y: 150, type: 'rect', status: 'available' },
-    { id: '4', name: '4', floor: 'Nut Allergy', capacity: 4, x: 450, y: 150, type: 'rect', status: 'available' },
-    { id: '5', name: '5', floor: 'Nut Allergy', capacity: 4, x: 550, y: 150, type: 'rect', status: 'available' },
-    { id: '6', name: '6', floor: 'Nut Allergy', capacity: 6, x: 650, y: 150, type: 'round', status: 'available' },
-    { id: '7', name: '7', floor: 'Nut Allergy', capacity: 6, x: 750, y: 150, type: 'round', status: 'available' },
-    { id: '8', name: '8', floor: 'Nut Allergy', capacity: 8, x: 150, y: 300, type: 'round', status: 'occupied' },
-    { id: '9', name: '9', floor: 'Nut Allergy', capacity: 4, x: 250, y: 300, type: 'rect', status: 'available' },
-    { id: '10', name: '10', floor: 'Nut Allergy', capacity: 4, x: 350, y: 300, type: 'rect', status: 'available' },
-    { id: '11', name: '11', floor: 'Nut Allergy', capacity: 2, x: 450, y: 300, type: 'rect', status: 'available' },
-    { id: '12', name: '12', floor: 'Nut Allergy', capacity: 2, x: 550, y: 300, type: 'rect', status: 'available' },
-    { id: '13', name: '13', floor: 'Nut Allergy', capacity: 4, x: 650, y: 300, type: 'rect', status: 'available' },
-    { id: '14', name: '14', floor: 'Nut Allergy', capacity: 6, x: 750, y: 300, type: 'round', status: 'available' },
-    { id: '15', name: '15', floor: 'Nut Allergy', capacity: 4, x: 150, y: 450, type: 'rect', status: 'available' },
-    { id: '16', name: '16', floor: 'Nut Allergy', capacity: 4, x: 250, y: 450, type: 'rect', status: 'available' },
-    { id: '17', name: '17', floor: 'Nut Allergy', capacity: 6, x: 350, y: 450, type: 'round', status: 'available' },
-    { id: '18', name: '18', floor: 'Nut Allergy', capacity: 8, x: 450, y: 450, type: 'round', status: 'available' },
-    { id: '19', name: '19', floor: 'Nut Allergy', capacity: 2, x: 550, y: 450, type: 'rect', status: 'available' },
-    { id: '20', name: '20', floor: 'Nut Allergy', capacity: 2, x: 650, y: 450, type: 'rect', status: 'available' },
-
-    // Terrace Floor
-    { id: '21', name: '1', floor: 'Terrace', capacity: 2, x: 150, y: 150, type: 'rect', status: 'available' },
-    { id: '22', name: '2', floor: 'Terrace', capacity: 2, x: 250, y: 150, type: 'rect', status: 'available' },
-    { id: '23', name: '3', floor: 'Terrace', capacity: 4, x: 350, y: 150, type: 'rect', status: 'available' },
-    { id: '24', name: '4', floor: 'Terrace', capacity: 4, x: 450, y: 150, type: 'rect', status: 'available' },
-    { id: '25', name: '5', floor: 'Terrace', capacity: 4, x: 550, y: 150, type: 'rect', status: 'available' },
-    { id: '26', name: '6', floor: 'Terrace', capacity: 6, x: 650, y: 150, type: 'round', status: 'available' },
-    { id: '27', name: '7', floor: 'Terrace', capacity: 6, x: 750, y: 150, type: 'round', status: 'available' },
-    { id: '28', name: '8', floor: 'Terrace', capacity: 8, x: 150, y: 300, type: 'round', status: 'available' },
-    { id: '29', name: '9', floor: 'Terrace', capacity: 4, x: 250, y: 300, type: 'rect', status: 'available' },
-    { id: '30', name: '10', floor: 'Terrace', capacity: 4, x: 350, y: 300, type: 'rect', status: 'available' },
-    { id: '31', name: '11', floor: 'Terrace', capacity: 2, x: 450, y: 300, type: 'rect', status: 'available' },
-    { id: '32', name: '12', floor: 'Terrace', capacity: 2, x: 550, y: 300, type: 'rect', status: 'available' },
-    { id: '33', name: '13', floor: 'Terrace', capacity: 4, x: 650, y: 300, type: 'rect', status: 'available' },
-    { id: '34', name: '14', floor: 'Terrace', capacity: 6, x: 750, y: 300, type: 'round', status: 'available' },
-    { id: '35', name: '15', floor: 'Terrace', capacity: 4, x: 150, y: 450, type: 'rect', status: 'available' },
-    { id: '36', name: '16', floor: 'Terrace', capacity: 4, x: 250, y: 450, type: 'rect', status: 'available' },
-    { id: '37', name: '17', floor: 'Terrace', capacity: 6, x: 350, y: 450, type: 'round', status: 'available' },
-    { id: '38', name: '18', floor: 'Terrace', capacity: 8, x: 450, y: 450, type: 'round', status: 'available' },
-    { id: '39', name: '19', floor: 'Terrace', capacity: 2, x: 550, y: 450, type: 'rect', status: 'available' },
-    { id: '40', name: '20', floor: 'Terrace', capacity: 2, x: 650, y: 450, type: 'rect', status: 'available' },
-
-    // Valentine's Floor
-    { id: '41', name: '1', floor: "Valentine's", capacity: 2, x: 150, y: 150, type: 'rect', status: 'available' },
-    { id: '42', name: '2', floor: "Valentine's", capacity: 2, x: 250, y: 150, type: 'rect', status: 'available' },
-    { id: '43', name: '3', floor: "Valentine's", capacity: 4, x: 350, y: 150, type: 'rect', status: 'available' },
-    { id: '44', name: '4', floor: "Valentine's", capacity: 4, x: 450, y: 150, type: 'rect', status: 'available' },
-    { id: '45', name: '5', floor: "Valentine's", capacity: 4, x: 550, y: 150, type: 'rect', status: 'available' },
-    { id: '46', name: '6', floor: "Valentine's", capacity: 6, x: 650, y: 150, type: 'round', status: 'available' },
-    { id: '47', name: '7', floor: "Valentine's", capacity: 6, x: 750, y: 150, type: 'round', status: 'available' },
-    { id: '48', name: '8', floor: "Valentine's", capacity: 8, x: 150, y: 300, type: 'round', status: 'available' },
-    { id: '49', name: '9', floor: "Valentine's", capacity: 4, x: 250, y: 300, type: 'rect', status: 'available' },
-    { id: '50', name: '10', floor: "Valentine's", capacity: 4, x: 350, y: 300, type: 'rect', status: 'available' },
-    { id: '51', name: '11', floor: "Valentine's", capacity: 2, x: 450, y: 300, type: 'rect', status: 'available' },
-    { id: '52', name: '12', floor: "Valentine's", capacity: 2, x: 550, y: 300, type: 'rect', status: 'available' },
-    { id: '53', name: '13', floor: "Valentine's", capacity: 4, x: 650, y: 300, type: 'rect', status: 'available' },
-    { id: '54', name: '14', floor: "Valentine's", capacity: 6, x: 750, y: 300, type: 'round', status: 'available' },
-    { id: '55', name: '15', floor: "Valentine's", capacity: 4, x: 150, y: 450, type: 'rect', status: 'available' },
-    { id: '56', name: '16', floor: "Valentine's", capacity: 4, x: 250, y: 450, type: 'rect', status: 'available' },
-    { id: '57', name: '17', floor: "Valentine's", capacity: 6, x: 350, y: 450, type: 'round', status: 'available' },
-    { id: '58', name: '18', floor: "Valentine's", capacity: 8, x: 450, y: 450, type: 'round', status: 'available' },
-    { id: '59', name: '19', floor: "Valentine's", capacity: 2, x: 550, y: 450, type: 'rect', status: 'available' },
-    { id: '60', name: '20', floor: "Valentine's", capacity: 2, x: 650, y: 450, type: 'rect', status: 'available' },
-];
+import { useVenue } from '@/context/VenueContext';
+import api from '@/lib/api';
 
 const DECORATIONS = [
     { id: 'plant1', name: 'Plant', icon: Trees, x: 50, y: 50 },
     { id: 'violin1', name: 'Violin', icon: Music, x: 100, y: 100 },
 ];
 
-const FLOORS = ['Nut Allergy', 'Terrace', 'Valentine\'s'];
-
 export default function PhysicalTables() {
+    const { activeVenue } = useVenue();
     const [activeTab, setActiveTab] = useState('list');
-    const [selectedFloor, setSelectedFloor] = useState('Nut Allergy');
-    const [tables, setTables] = useState(MOCK_TABLES);
+    const [selectedFloor, setSelectedFloor] = useState('');
+    const [tables, setTables] = useState([]);
+    const [floors, setFloors] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [decorations, setDecorations] = useState(DECORATIONS);
     const [searchQuery, setSearchQuery] = useState('');
     const [draggedItem, setDraggedItem] = useState(null);
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
     const [selectedTable, setSelectedTable] = useState(null);
-    const [backgroundImages, setBackgroundImages] = useState({
-        'Nut Allergy': null,
-        'Terrace': null,
-        "Valentine's": null
-    });
+    const [backgroundImages, setBackgroundImages] = useState({});
 
-    const addTable = () => {
-        const newId = (Math.max(...tables.map(t => parseInt(t.id) || 0)) + 1).toString();
+    // ─── Fetch tables from API ───────────────────────────────────
+    const loadTables = useCallback(async () => {
+        if (!activeVenue?.id) return;
+        setLoading(true);
+        try {
+            const [tablesRes, floorsRes] = await Promise.all([
+                api.get('/tables', { params: { venue_id: activeVenue.id } }),
+                api.get('/tables/floors', { params: { venue_id: activeVenue.id } }),
+            ]);
+            setTables(tablesRes.data || []);
+            const loadedFloors = floorsRes.data?.length > 0 ? floorsRes.data : ['Main Floor'];
+            setFloors(loadedFloors);
+            if (!selectedFloor || !loadedFloors.includes(selectedFloor)) {
+                setSelectedFloor(loadedFloors[0]);
+            }
+        } catch (err) {
+            toast.error('Failed to load tables');
+            setTables([]);
+            setFloors(['Main Floor']);
+            if (!selectedFloor) setSelectedFloor('Main Floor');
+        } finally {
+            setLoading(false);
+        }
+    }, [activeVenue?.id]);
+
+    useEffect(() => { loadTables(); }, [loadTables]);
+
+    const addTable = async () => {
+        if (!activeVenue?.id) return;
         const currentFloorTables = tables.filter(t => t.floor === selectedFloor);
         const maxTableNumber = Math.max(...currentFloorTables.map(t => parseInt(t.name) || 0), 0);
-        const newTable = {
-            id: newId,
+        const body = {
             name: (maxTableNumber + 1).toString(),
             floor: selectedFloor,
             capacity: 4,
@@ -124,25 +81,44 @@ export default function PhysicalTables() {
             type: 'rect',
             status: 'available'
         };
-        setTables([...tables, newTable]);
-        setSelectedTable(newTable);
+        try {
+            const res = await api.post('/tables', body, { params: { venue_id: activeVenue.id } });
+            const newTable = res.data;
+            setTables(prev => [...prev, newTable]);
+            setSelectedTable(newTable);
+            toast.success('Table added');
+        } catch {
+            toast.error('Failed to add table');
+        }
     };
 
     const updateTablePosition = (id, x, y) => {
         setTables(prev => prev.map(t => t.id === id ? { ...t, x, y } : t));
     };
 
-    const updateTableProperty = (id, property, value) => {
+    const updateTableProperty = async (id, property, value) => {
+        // Optimistic update
         setTables(prev => prev.map(t => t.id === id ? { ...t, [property]: value } : t));
         if (selectedTable?.id === id) {
             setSelectedTable(prev => ({ ...prev, [property]: value }));
         }
+        try {
+            await api.put(`/tables/${id}`, { [property]: value });
+        } catch {
+            toast.error('Failed to update table');
+        }
     };
 
-    const deleteTable = (id) => {
-        setTables(prev => prev.filter(t => t.id !== id));
-        if (selectedTable?.id === id) {
-            setSelectedTable(null);
+    const deleteTable = async (id) => {
+        try {
+            await api.delete(`/tables/${id}`);
+            setTables(prev => prev.filter(t => t.id !== id));
+            if (selectedTable?.id === id) {
+                setSelectedTable(null);
+            }
+            toast.success('Table deleted');
+        } catch {
+            toast.error('Failed to delete table');
         }
     };
 
@@ -220,7 +196,7 @@ export default function PhysicalTables() {
         >
             <div className="mb-6 flex items-center gap-4">
                 <div className="flex items-center gap-2 bg-zinc-900 border border-white/5 p-1 rounded-xl">
-                    {FLOORS.map(floor => (
+                    {floors.map(floor => (
                         <button
                             key={floor}
                             onClick={() => setSelectedFloor(floor)}
