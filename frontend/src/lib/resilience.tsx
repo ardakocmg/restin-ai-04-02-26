@@ -28,12 +28,12 @@ const defaultChaosConfig: ChaosConfig = {
 let chaosConfig = { ...defaultChaosConfig };
 
 /** Enable chaos testing (call from dev console) */
-(window as Record<string, unknown>).__enableChaos = (config?: Partial<ChaosConfig>) => {
+(window as unknown as Record<string, unknown>).__enableChaos = (config?: Partial<ChaosConfig>) => {
     chaosConfig = { ...defaultChaosConfig, ...config, enabled: true };
     console.warn('🌪️ Chaos testing ENABLED:', chaosConfig);
 };
 
-(window as Record<string, unknown>).__disableChaos = () => {
+(window as unknown as Record<string, unknown>).__disableChaos = () => {
     chaosConfig = { ...defaultChaosConfig, enabled: false };
     console.warn('🌪️ Chaos testing DISABLED');
 };
