@@ -1,10 +1,10 @@
-import axios from 'axios';import { logger } from '@/lib/logger';
+import axios from 'axios';
+import { logger } from '@/lib/logger';
 
-import { Employee, Payslip } from '../../types';import { logger } from '@/lib/logger';
+import { Employee, Payslip } from '../../types';
 
 import { saveDraft, getDrafts } from '../../lib/db';
 
-import { logger } from '@/lib/logger';
 // Base URL for API
 const API_URL = '/api/hr';
 
