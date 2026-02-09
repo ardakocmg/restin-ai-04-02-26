@@ -30,9 +30,9 @@ def get_employees():
 
 @router.post("/payroll/calculate", response_model=List[Payslip])
 def run_payroll(
-    period_start: datetime = Body(..., example="2026-02-01T00:00:00Z"),
-    period_end: datetime = Body(..., example="2026-02-28T23:59:59Z"),
-    venue_id: str = Body(..., example="venue-caviar-bull")
+    period_start: datetime = Body(..., examples=["2026-02-01T00:00:00Z"]),
+    period_end: datetime = Body(..., examples=["2026-02-28T23:59:59Z"]),
+    venue_id: str = Body(..., examples=["venue-caviar-bull"])
 ):
     employees = load_mock_employees()
     venue_employees = [e for e in employees if e.venue_id == venue_id]
