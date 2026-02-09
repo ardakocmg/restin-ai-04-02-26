@@ -1,64 +1,71 @@
-"""Audit log routes - audit trail management"""
-from fastapi import APIRouter, HTTPException, Depends, Query
-from typing import Optional
-from datetime import datetime, timezone
-
-from core.database import db
-from core.dependencies import get_current_user, check_venue_access
-from models import UserRole
-from services.audit_service import create_audit_log
+"""
+📜 Audit Trail API Routes — Rule 49
+Forensic-grade immutable audit logging with geo-location.
+"""
+from fastapi import APIRouter, Request, Query
+from services.audit_trail import log_audit_event, get_audit_trail, get_audit_summary
 
 
 def create_audit_router():
-    router = APIRouter(tags=["audit"])
+    router = APIRouter(prefix="/audit", tags=["Audit Trail"])
 
-    @router.get("/venues/{venue_id}/audit-logs")
-    async def get_audit_logs(
-        venue_id: str,
-        resource_type: Optional[str] = None,
-        action: Optional[str] = None,
-        limit: int = Query(default=100, le=500),
-        current_user: dict = Depends(get_current_user)
+    @router.get("/")
+    async def list_audit_events(
+        request: Request,
+        venue_id: str = Query(...),
+        resource_type: str = Query(""),
+        actor_id: str = Query(""),
+        severity: str = Query(""),
+        start_date: str = Query(""),
+        end_date: str = Query(""),
+        limit: int = Query(100, le=500),
+        skip: int = Query(0),
     ):
-        await check_venue_access(current_user, venue_id)
-        
-        if limit > 100 and current_user["role"] not in [UserRole.OWNER, UserRole.MANAGER]:
-            raise HTTPException(status_code=403, detail="Export quota exceeded for staff")
-        
-        query = {"venue_id": venue_id}
-        if resource_type:
-            query["resource_type"] = resource_type
-        if action:
-            query["action"] = action
-        
-        logs = await db.audit_logs.find(query, {"_id": 0}).sort("created_at", -1).to_list(limit)
-        return logs
-
-    @router.get("/venues/{venue_id}/audit-logs/export")
-    async def export_audit_logs(
-        venue_id: str,
-        current_user: dict = Depends(get_current_user)
-    ):
-        """Export with DLP controls - watermarked"""
-        if current_user["role"] not in [UserRole.OWNER, UserRole.MANAGER]:
-            raise HTTPException(status_code=403, detail="Export permission denied")
-        
-        await check_venue_access(current_user, venue_id)
-        
-        logs = await db.audit_logs.find({"venue_id": venue_id}, {"_id": 0}).to_list(1000)
-        
-        export_metadata = {
-            "exported_by": current_user["name"],
-            "exported_at": datetime.now(timezone.utc).isoformat(),
-            "venue_id": venue_id,
-            "watermark": f"CONFIDENTIAL - Exported by {current_user['name']} on {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')}"
-        }
-        
-        await create_audit_log(
-            venue_id, current_user["id"], current_user["name"],
-            "export", "audit_logs", venue_id, {"count": len(logs)}
+        """List audit trail events with filters."""
+        db = request.app.mongodb
+        events = await get_audit_trail(
+            db,
+            venue_id=venue_id,
+            resource_type=resource_type,
+            actor_id=actor_id,
+            severity=severity,
+            start_date=start_date or None,
+            end_date=end_date or None,
+            limit=limit,
+            skip=skip,
         )
-        
-        return {"metadata": export_metadata, "logs": logs}
+        return events
+
+    @router.get("/summary")
+    async def audit_summary(
+        request: Request,
+        venue_id: str = Query(...),
+        days: int = Query(30),
+    ):
+        """Get audit trail summary stats."""
+        db = request.app.mongodb
+        return await get_audit_summary(db, venue_id, days)
+
+    @router.post("/")
+    async def create_audit_event_endpoint(request: Request):
+        """Manually log an audit event (for admin use)."""
+        db = request.app.mongodb
+        body = await request.json()
+
+        event_id = await log_audit_event(
+            db,
+            action=body.get("action", "manual.entry"),
+            actor_id=body.get("actor_id", ""),
+            actor_name=body.get("actor_name", ""),
+            actor_role=body.get("actor_role", ""),
+            resource_type=body.get("resource_type", "manual"),
+            resource_id=body.get("resource_id", ""),
+            venue_id=body.get("venue_id", ""),
+            tenant_id=body.get("tenant_id", ""),
+            details=body.get("details"),
+            severity=body.get("severity", "info"),
+            fiscal_status=body.get("fiscal_status"),
+        )
+        return {"id": event_id, "status": "logged"}
 
     return router
