@@ -382,3 +382,271 @@ async def get_active_menu(venue_id: str):
     if menu:
         menu["_id"] = str(menu["_id"])
     return menu or {
+        "id": "default", "name": "No Active Menu", "is_active": False
+    }
+
+
+# ==================== STATS ====================
+
+@router.get("/{venue_id}/stats")
+async def get_venue_stats(venue_id: str):
+    """Real-time venue statistics from MongoDB."""
+    db = get_database()
+
+    # Count open orders
+    open_orders = await db.orders.count_documents({
+        "venue_id": venue_id,
+        "status": {"$in": ["open", "in_progress", "pending", "new"]}
+    })
+
+    # Count tables
+    total_tables = await db.tables.count_documents({"venue_id": venue_id})
+    if total_tables == 0:
+        total_tables = await db.tables.count_documents({})
+
+    occupied_tables = await db.tables.count_documents({
+        "status": {"$in": ["occupied", "busy", "in_use"]}
+    })
+
+    # KDS tickets pending
+    pending_kds = await db.kds_tickets.count_documents({
+        "status": {"$in": ["new", "pending", "in_progress"]}
+    })
+
+    # Low stock items (below reorder point or min_stock)
+    low_stock_pipeline = [
+        {"$match": {"$expr": {"$lte": ["$current_stock", "$reorder_point"]}}},
+        {"$count": "total"}
+    ]
+    low_stock_result = await db.inventory_items.aggregate(low_stock_pipeline).to_list(1)
+    low_stock = low_stock_result[0]["total"] if low_stock_result else 0
+
+    # Revenue today
+    from datetime import datetime, timezone, timedelta
+    today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+    revenue_pipeline = [
+        {"$match": {
+            "venue_id": venue_id,
+            "status": {"$in": ["completed", "closed", "paid"]},
+            "created_at": {"$gte": today_start.isoformat()}
+        }},
+        {"$group": {"_id": None, "total": {"$sum": "$total_cents"}, "count": {"$sum": 1}}}
+    ]
+    revenue_result = await db.orders.aggregate(revenue_pipeline).to_list(1)
+    revenue_cents = revenue_result[0]["total"] if revenue_result else 0
+    orders_today = revenue_result[0]["count"] if revenue_result else 0
+
+    # Active staff
+    active_staff = await db.shifts.count_documents({
+        "status": {"$in": ["active", "clocked_in"]}
+    })
+
+    return {
+        "open_orders": open_orders,
+        "total_tables": total_tables,
+        "occupied_tables": occupied_tables,
+        "pending_kds_tickets": pending_kds,
+        "low_stock_items": low_stock,
+        "revenue_today_cents": revenue_cents,
+        "orders_today": orders_today,
+        "active_staff": active_staff,
+    }
+
+
+# ==================== ORDERS ====================
+
+@router.get("/{venue_id}/orders")
+async def get_venue_orders(
+    venue_id: str,
+    status: Optional[str] = Query(None),
+    table_id: Optional[str] = Query(None),
+    limit: int = Query(50, le=200)
+):
+    """Get orders for a venue with optional filtering."""
+    db = get_database()
+    query = {"venue_id": venue_id}
+    if status:
+        query["status"] = status
+    if table_id:
+        query["table_id"] = table_id
+
+    orders = await db.orders.find(query).sort("created_at", -1).to_list(length=limit)
+
+    if not orders:
+        # Return all orders if no venue-specific ones found
+        query_all = {}
+        if status:
+            query_all["status"] = status
+        if table_id:
+            query_all["table_id"] = table_id
+        orders = await db.orders.find(query_all).sort("created_at", -1).to_list(length=limit)
+
+    for o in orders:
+        o["_id"] = str(o["_id"])
+    return orders
+
+
+# ==================== SHIFTS ====================
+
+@router.get("/{venue_id}/shifts")
+async def get_venue_shifts(venue_id: str):
+    """Get shifts for a venue."""
+    db = get_database()
+    shifts = await db.shifts.find({"venue_id": venue_id}).sort("start_time", -1).to_list(length=100)
+    if not shifts:
+        shifts = await db.shifts.find({}).sort("start_time", -1).to_list(length=100)
+    for s in shifts:
+        s["_id"] = str(s["_id"])
+    return shifts
+
+
+# ==================== RECIPES ====================
+
+@router.get("/{venue_id}/recipes")
+async def get_venue_recipes(venue_id: str):
+    """Get recipes for a venue."""
+    db = get_database()
+    recipes = await db.recipes.find({}).to_list(length=500)
+    for r in recipes:
+        r["_id"] = str(r["_id"])
+    return recipes
+
+
+# ==================== KDS ====================
+
+@router.get("/{venue_id}/kds/tickets")
+async def get_kds_tickets(
+    venue_id: str,
+    status: Optional[str] = Query(None)
+):
+    """Get KDS tickets for a venue."""
+    db = get_database()
+    query = {"venue_id": venue_id}
+    if status:
+        query["status"] = status
+    tickets = await db.kds_tickets.find(query).sort("created_at", -1).to_list(length=100)
+    if not tickets:
+        tickets = await db.kds_tickets.find({}).sort("created_at", -1).to_list(length=100)
+    for t in tickets:
+        t["_id"] = str(t["_id"])
+    return tickets
+
+
+@router.get("/{venue_id}/kds/stations")
+async def get_kds_stations(venue_id: str):
+    """Get KDS stations for a venue."""
+    db = get_database()
+    stations = await db.kds_stations.find({"venue_id": venue_id}).to_list(length=20)
+    if not stations:
+        stations = await db.kds_stations.find({}).to_list(length=20)
+    for s in stations:
+        s["_id"] = str(s["_id"])
+    return stations
+
+
+# ==================== SUPPLIERS ====================
+
+@router.get("/{venue_id}/suppliers")
+async def get_venue_suppliers(venue_id: str):
+    """Get suppliers for a venue."""
+    db = get_database()
+    suppliers = await db.suppliers.find({}).to_list(length=200)
+    for s in suppliers:
+        s["_id"] = str(s["_id"])
+    return suppliers
+
+
+# ==================== PURCHASE ORDERS ====================
+
+@router.get("/{venue_id}/purchase-orders")
+async def get_venue_purchase_orders(venue_id: str):
+    """Get purchase orders for a venue."""
+    db = get_database()
+    pos = await db.purchase_orders.find({"venue_id": venue_id}).sort("created_at", -1).to_list(length=100)
+    if not pos:
+        pos = await db.purchase_orders.find({}).sort("created_at", -1).to_list(length=100)
+    for p in pos:
+        p["_id"] = str(p["_id"])
+    return pos
+
+
+# ==================== WASTE LOG ====================
+
+@router.get("/{venue_id}/waste-log")
+async def get_venue_waste_log(venue_id: str):
+    """Get waste log entries for a venue."""
+    db = get_database()
+    waste = await db.waste_logs.find({"venue_id": venue_id}).sort("created_at", -1).to_list(length=200)
+    if not waste:
+        waste = await db.waste_logs.find({}).sort("created_at", -1).to_list(length=200)
+    for w in waste:
+        w["_id"] = str(w["_id"])
+    return waste
+
+
+# ==================== STOCK TRANSFERS ====================
+
+@router.get("/{venue_id}/stock-transfers")
+async def get_stock_transfers(venue_id: str):
+    """Get stock transfers for a venue."""
+    db = get_database()
+    transfers = await db.stock_transfers.find({}).sort("created_at", -1).to_list(length=100)
+    for t in transfers:
+        t["_id"] = str(t["_id"])
+    return transfers
+
+
+# ==================== RESERVATIONS ====================
+
+@router.get("/{venue_id}/reservations")
+async def get_venue_reservations(venue_id: str):
+    """Get reservations for a venue."""
+    db = get_database()
+    reservations = await db.reservations.find({"venue_id": venue_id}).sort("date", -1).to_list(length=200)
+    if not reservations:
+        reservations = await db.reservations.find({}).sort("date", -1).to_list(length=200)
+    for r in reservations:
+        r["_id"] = str(r["_id"])
+    return reservations
+
+
+# ==================== FLOOR PLAN ====================
+
+@router.get("/{venue_id}/floor-plan")
+async def get_floor_plan(venue_id: str):
+    """Get floor plan data for a venue."""
+    db = get_database()
+    plan = await db.floor_plans.find_one({"venue_id": venue_id})
+    if not plan:
+        plan = await db.floor_plans.find_one({})
+    if plan:
+        plan["_id"] = str(plan["_id"])
+    return plan or {"venue_id": venue_id, "zones": [], "tables": []}
+
+
+# ==================== GUESTS / CRM ====================
+
+@router.get("/{venue_id}/guests")
+async def get_venue_guests(venue_id: str):
+    """Get guest profiles for CRM."""
+    db = get_database()
+    guests = await db.guests.find({}).sort("last_visit", -1).to_list(length=500)
+    for g in guests:
+        g["_id"] = str(g["_id"])
+    return guests
+
+
+# ==================== NOTIFICATIONS ====================
+
+@router.get("/{venue_id}/notifications")
+async def get_venue_notifications(venue_id: str):
+    """Get notifications for a venue."""
+    db = get_database()
+    notifications = await db.notifications.find(
+        {"venue_id": venue_id}
+    ).sort("created_at", -1).to_list(length=50)
+    if not notifications:
+        notifications = await db.notifications.find({}).sort("created_at", -1).to_list(length=50)
+    for n in notifications:
+        n["_id"] = str(n["_id"])
+    return notifications
