@@ -45,7 +45,7 @@ app.include_router(uploads_router)
 # MongoDB connection for vault endpoints
 from app.core.database import get_database
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 def read_health():
     return {"status": "System Operational", "region": "Malta", "config": "Secure"}
 

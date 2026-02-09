@@ -381,4 +381,4 @@ async def get_active_menu(venue_id: str):
         menu = menus[0] if menus else None
     if menu:
         menu["_id"] = str(menu["_id"])
-    return menu or {}
+    return menu or {
