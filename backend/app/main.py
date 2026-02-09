@@ -33,6 +33,7 @@ from app.domains.auth import router as auth_router
 from app.domains.venues import router as venues_router
 from app.domains.migrations import router as migrations_router
 from app.domains.uploads import router as uploads_router
+from app.domains.catchall import router as catchall_router
 
 app.include_router(hr_router)
 app.include_router(inventory_router)
@@ -41,6 +42,7 @@ app.include_router(auth_router)
 app.include_router(venues_router)
 app.include_router(migrations_router)
 app.include_router(uploads_router)
+app.include_router(catchall_router)
 
 # MongoDB connection for vault endpoints
 from app.core.database import get_database
