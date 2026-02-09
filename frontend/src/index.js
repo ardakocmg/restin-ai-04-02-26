@@ -1,3 +1,14 @@
+import * as Sentry from "@sentry/react";
+
+Sentry.init({
+  dsn: "https://c8948ba4809a8afc56aaac4380bcae56@o4510853881921536.ingest.de.sentry.io/4510853958467664",
+  environment: process.env.NODE_ENV,
+  enabled: process.env.NODE_ENV === "production",
+  tracesSampleRate: 0.2,
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+});
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
