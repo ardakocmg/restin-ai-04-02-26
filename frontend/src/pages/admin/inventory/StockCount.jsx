@@ -10,6 +10,7 @@ import { Search, Save, AlertTriangle, CheckCircle2, RefreshCw, Calculator } from
 import DataTable from '../../../components/shared/DataTable';
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function StockCount() {
   const { activeVenue } = useVenue();
   const [items, setItems] = useState([]);
@@ -31,7 +32,7 @@ export default function StockCount() {
       setItems(res.data || []);
       setCounts({}); // Reset counts on reload
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       toast.error("Failed to load inventory");
     } finally {
       setLoading(false);
@@ -77,7 +78,7 @@ export default function StockCount() {
       toast.success("Stock count applied successfully");
       loadData();
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       toast.error("Failed to save adjustments");
     } finally {
       setSaving(false);

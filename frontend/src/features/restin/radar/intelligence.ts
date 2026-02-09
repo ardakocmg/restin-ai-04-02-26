@@ -1,5 +1,6 @@
 import { AiServiceFactory } from '../../../lib/ai/google';
 
+import { logger } from '@/lib/logger';
 /**
  * 🔬 Market Radar (Pillar 6)
  * Goal: Competitive Intelligence & Safety.
@@ -21,7 +22,7 @@ export class MarketRadar {
             const response = await AiServiceFactory.promptWithGrounding(prompt, 'GEMINI_PRO');
             return JSON.parse(response);
         } catch (error) {
-            console.error('[Pillar 6] Market Radar failed:', error);
+            logger.error('[Pillar 6] Market Radar failed:', error);
             return [];
         }
     }

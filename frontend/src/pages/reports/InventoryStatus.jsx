@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { Package, AlertTriangle, TrendingDown, ArrowUpRight } from 'lucide-react';
-import api from '../../lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';import { logger } from '@/lib/logger';
+
+import { Package, AlertTriangle, TrendingDown, ArrowUpRight } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
 import { useVenue } from '../../context/VenueContext';
 
+import { logger } from '@/lib/logger';
 const COLORS = ['#EF4444', '#F59E0B', '#10B981', '#3B82F6'];
 
 export default function InventoryStatus() {
@@ -20,7 +25,7 @@ export default function InventoryStatus() {
             const res = await api.get('/inventory/analytics', { params: { venue_id: activeVenue.id } });
             setData(res.data);
         } catch (err) {
-            console.warn('Inventory analytics API failed');
+            logger.warn('Inventory analytics API failed');
             setData({
                 metrics: { total_items: 0, low_stock_alerts: 0, waste_cost_week: 0, inventory_value: 0 },
                 waste_distribution: [],

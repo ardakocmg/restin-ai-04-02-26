@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+
 import {
     MapPin,
     Navigation,
@@ -12,11 +14,15 @@ import {
     Smartphone,
     Search,
     ChevronLeft
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function HRMap() {
     const navigate = useNavigate();
     const [markers, setMarkers] = useState([]);
@@ -31,7 +37,7 @@ export default function HRMap() {
                 setMarkers(data.markers || []);
                 setStats(data.stats || { total_check_ins: 0, currently_in: 0, mobile_users: 0 });
             } catch (err) {
-                console.error('Failed to load attendance data:', err);
+                logger.error('Failed to load attendance data:', err);
             } finally {
                 setLoading(false);
             }

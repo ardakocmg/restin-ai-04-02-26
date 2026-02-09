@@ -1,28 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
 import {
     Monitor, Smartphone, Tablet, Search, Plus,
     MoreVertical, ChevronRight, Settings, Info,
     Wifi, Shield, History, MapPin
-} from 'lucide-react';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Badge } from '../../components/ui/badge';
-import { Switch } from '../../components/ui/switch';
-import { Label } from '../../components/ui/label';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Switch } from '../../components/ui/switch';import { logger } from '@/lib/logger';
+
+import { Label } from '../../components/ui/label';import { logger } from '@/lib/logger';
+
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue
-} from '../../components/ui/select';
-import { cn } from '../../lib/utils';
+} from '../../components/ui/select';import { logger } from '@/lib/logger';
+
+import { cn } from '../../lib/utils';import { logger } from '@/lib/logger';
+
 import DataTable from '../../components/shared/DataTable';
+import { logger } from '@/lib/logger';
 
 import axios from 'axios';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function Devices() {
@@ -44,7 +57,7 @@ export default function Devices() {
                 );
                 setDevices(response.data);
             } catch (error) {
-                console.error("Failed to fetch devices", error);
+                logger.error("Failed to fetch devices", error);
             } finally {
                 setLoading(false);
             }

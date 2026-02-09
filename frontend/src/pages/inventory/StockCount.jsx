@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { ClipboardList, Search, Check } from 'lucide-react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { ClipboardList, Search, Check } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import axios from 'axios';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function StockCount() {
@@ -25,7 +29,7 @@ function StockCount() {
       );
       setItems(response.data.items || []);
     } catch (error) {
-      console.error('Error fetching items:', error);
+      logger.error('Error fetching items:', error);
     }
   };
 
@@ -40,7 +44,7 @@ function StockCount() {
       setCount(response.data.count);
       toast.success('Stock count started: ' + response.data.count.display_id);
     } catch (error) {
-      console.error('Error starting count:', error);
+      logger.error('Error starting count:', error);
     }
   };
 
@@ -64,7 +68,7 @@ function StockCount() {
 
       toast.info(`Counted: ${item.name} — ${countedQty} ${item.base_unit}`);
     } catch (error) {
-      console.error('Error submitting line:', error);
+      logger.error('Error submitting line:', error);
     }
   };
 
@@ -84,7 +88,7 @@ function StockCount() {
       setCount(null);
       setCountLines({});
     } catch (error) {
-      console.error('Error completing count:', error);
+      logger.error('Error completing count:', error);
     }
   };
 
@@ -100,7 +104,7 @@ function StockCount() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900">Stock Count</h1>
+            <h1 className="text-4xl font-bold text-foreground">Stock Count</h1>
             {count && (
               <p className="text-lg text-blue-600 dark:text-blue-400 font-medium mt-1">
                 Active Count: {count.display_id}
@@ -164,7 +168,7 @@ function StockCount() {
                 {filteredItems.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 text-sm font-mono text-gray-600">{item.sku}</td>
-                    <td className="px-6 py-4 font-medium text-gray-900">{item.name}</td>
+                    <td className="px-6 py-4 font-medium text-foreground">{item.name}</td>
                     <td className="px-6 py-4 text-sm text-gray-600">{item.current_stock?.toFixed(2)}</td>
                     <td className="px-6 py-4">
                       <input

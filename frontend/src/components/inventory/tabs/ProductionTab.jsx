@@ -15,7 +15,7 @@ export default function ProductionTab({ batches = [] }) {
           <Card key={batch.id}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-medium text-slate-900">{batch.display_id}</span>
+                <span className="font-medium text-foreground">{batch.display_id}</span>
                 <span className="text-sm text-slate-600">
                   {new Date(batch.produced_at).toLocaleDateString()}
                 </span>

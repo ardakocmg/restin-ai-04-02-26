@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import PageLayout from '../../layouts/PageLayout';
-import DataTable from '../../components/shared/DataTable';
-import { Card } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Employee, Payslip } from '../../types';
-import { HRService } from './HRService';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import PageLayout from '../../layouts/PageLayout';import { logger } from '@/lib/logger';
+
+import DataTable from '../../components/shared/DataTable';import { logger } from '@/lib/logger';
+
+import { Card } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Employee, Payslip } from '../../types';import { logger } from '@/lib/logger';
+
+import { HRService } from './HRService';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function PayrollDashboard() {
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [payslips, setPayslips] = useState<Payslip[]>([]);
@@ -28,7 +37,7 @@ export default function PayrollDashboard() {
             setEmployees(empData);
             setOfflineMode(false);
         } catch (e) {
-            console.warn("API Offline, check for local data?");
+            logger.warn("API Offline, check for local data?");
             toast.error("Network Error: Could not fetch employees.");
             setOfflineMode(true);
         }
@@ -61,7 +70,7 @@ export default function PayrollDashboard() {
             results.forEach(p => HRService.saveDraftLocally(p));
 
         } catch (error) {
-            console.error("Payroll Run Failed", error);
+            logger.error("Payroll Run Failed", error);
             toast.error("Failed to run payroll. Check connection.");
             setOfflineMode(true);
         } finally {

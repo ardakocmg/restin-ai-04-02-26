@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function EmployeeDetailsReport() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +18,7 @@ export default function EmployeeDetailsReport() {
       const response = await api.get('reporting/employee-details');
       setEmployees(response.data);
     } catch (error) {
-      console.error('Failed to fetch employee details:', error);
+      logger.error('Failed to fetch employee details:', error);
     } finally {
       setLoading(false);
     }
@@ -25,7 +28,7 @@ export default function EmployeeDetailsReport() {
 
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-slate-900 mb-6">Employee Details Report</h1>
+      <h1 className="text-3xl font-bold text-foreground mb-6">Employee Details Report</h1>
       <Card>
         <CardContent className="p-0">
           <table className="w-full">

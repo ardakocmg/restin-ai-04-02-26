@@ -46,7 +46,7 @@ export default function MovementsTab({ movements = [] }) {
                       <Badge className={getActionColor(mov.action)}>
                         {mov.action}
                       </Badge>
-                      <span className="font-mono text-sm font-medium text-slate-900">
+                      <span className="font-mono text-sm font-medium text-foreground">
                         {mov.action === 'OUT' ? '-' : '+'}{mov.quantity}
                       </span>
                     </div>

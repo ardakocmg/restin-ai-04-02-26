@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Package, Plus, TrendingUp, TrendingDown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Package, Plus, TrendingUp, TrendingDown } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import axios from 'axios';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function InventoryItems() {
@@ -23,7 +26,7 @@ function InventoryItems() {
       );
       setItems(response.data.items || []);
     } catch (error) {
-      console.error('Error fetching items:', error);
+      logger.error('Error fetching items:', error);
     } finally {
       setLoading(false);
     }
@@ -37,7 +40,7 @@ function InventoryItems() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-4xl font-bold text-gray-900">Inventory Items</h1>
+          <h1 className="text-4xl font-bold text-foreground">Inventory Items</h1>
           <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             <Plus className="w-5 h-5" />
             Add Item
@@ -67,11 +70,11 @@ function InventoryItems() {
           <tbody className="divide-y divide-gray-200">
             {items.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50 cursor-pointer">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">{item.sku}</td>
+                <td className="px-6 py-4 text-sm font-medium text-foreground">{item.sku}</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <Package className="w-5 h-5 text-gray-400" />
-                    <span className="font-medium text-gray-900">{item.name}</span>
+                    <span className="font-medium text-foreground">{item.name}</span>
                   </div>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-600">{item.category || '-'}</td>

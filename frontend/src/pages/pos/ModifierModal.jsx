@@ -34,7 +34,7 @@ function ModifierModal({ menuItem, onClose, onConfirm }) {
         {/* Header */}
         <div className="p-6 border-b border-gray-200 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">{menuItem.name}</h2>
+            <h2 className="text-2xl font-bold text-foreground">{menuItem.name}</h2>
             <p className="text-gray-600">Customize your order</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -47,7 +47,7 @@ function ModifierModal({ menuItem, onClose, onConfirm }) {
           {/* Modifier Groups */}
           {menuItem.modifier_groups?.map((group) => (
             <div key={group.id}>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+              <h3 className="text-lg font-semibold text-foreground mb-3">
                 {group.name}
                 {group.required && <span className="text-red-500 ml-1">*</span>}
               </h3>
@@ -67,7 +67,7 @@ function ModifierModal({ menuItem, onClose, onConfirm }) {
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
-                      <span className="font-medium text-gray-900">{option.name}</span>
+                      <span className="font-medium text-foreground">{option.name}</span>
                       <div className="flex items-center gap-3">
                         {option.price > 0 && (
                           <span className="text-sm text-gray-600">+€{option.price.toFixed(2)}</span>
@@ -87,7 +87,7 @@ function ModifierModal({ menuItem, onClose, onConfirm }) {
 
           {/* Special Instructions */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Special Instructions</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-3">Special Instructions</h3>
             <textarea
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}

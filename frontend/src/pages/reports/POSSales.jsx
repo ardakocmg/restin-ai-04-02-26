@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
-import { DollarSign, ShoppingBag, TrendingUp, CreditCard } from 'lucide-react';
-import api from '../../lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';import { logger } from '@/lib/logger';
+
+import { DollarSign, ShoppingBag, TrendingUp, CreditCard } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
 
+import { logger } from '@/lib/logger';
 export default function POSSales() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,7 +24,7 @@ export default function POSSales() {
       const res = await api.get('/analytics/pos-sales');
       setData(res.data);
     } catch (e) {
-      console.warn("Analytics API failed", e);
+      logger.warn("Analytics API failed", e);
       // NO MOCK DATA - User Request
       setData(null);
       toast.error("Failed to load sales data");

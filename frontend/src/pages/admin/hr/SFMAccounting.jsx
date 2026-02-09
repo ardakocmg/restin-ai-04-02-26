@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Plus, X, DollarSign } from 'lucide-react';
+import { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import PageContainer from '@/layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Plus, X, DollarSign } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function SFMAccountingIndigo() {
   const [view, setView] = useState('gl');
   const [accounts, setAccounts] = useState([]);
@@ -26,7 +32,7 @@ export default function SFMAccountingIndigo() {
       const response = await api.get(`/venues/${venueId}/accounting/gl-accounts`);
       setAccounts(response.data || []);
     } catch (error) {
-      console.error('Failed to fetch accounts:', error);
+      logger.error('Failed to fetch accounts:', error);
       setAccounts([]);
     } finally {
       setLoading(false);
@@ -39,7 +45,7 @@ export default function SFMAccountingIndigo() {
       const response = await api.get(`/venues/${venueId}/accounting/ledger-entries`);
       setLedger(response.data || []);
     } catch (error) {
-      console.error('Failed to fetch ledger:', error);
+      logger.error('Failed to fetch ledger:', error);
       setLedger([]);
     } finally {
       setLoading(false);
@@ -52,7 +58,7 @@ export default function SFMAccountingIndigo() {
       const response = await api.get(`/venues/${venueId}/accounting/vat-returns`);
       setVat(response.data || []);
     } catch (error) {
-      console.error('Failed to fetch VAT:', error);
+      logger.error('Failed to fetch VAT:', error);
       setVat([]);
     } finally {
       setLoading(false);
@@ -66,7 +72,7 @@ export default function SFMAccountingIndigo() {
       setShowModal(false);
       fetchAccounts();
     } catch (error) {
-      console.error('Failed to create account:', error);
+      logger.error('Failed to create account:', error);
     }
   };
 

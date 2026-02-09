@@ -7,7 +7,7 @@ export default function CustomFieldsPage() {
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-slate-900">Custom Fields</h1>
+        <h1 className="text-3xl font-bold text-foreground">Custom Fields</h1>
         <Button><Plus className="h-4 w-4 mr-2" /> Add Field</Button>
       </div>
       <Card>

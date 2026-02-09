@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../../../../components
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Loader2, Users } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function HeadcountReport() {
   const { user } = useAuth();
   const [data, setData] = useState([]);
@@ -22,7 +23,7 @@ export default function HeadcountReport() {
       processData(response.data);
       setLoading(false);
     } catch (error) {
-      console.error("Failed to load headcount:", error);
+      logger.error("Failed to load headcount:", error);
       setLoading(false);
     }
   };

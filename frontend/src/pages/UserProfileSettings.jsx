@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
+import React, { useState } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '@/components/ui/input';import { logger } from '@/lib/logger';
+
+import { Label } from '@/components/ui/label';import { logger } from '@/lib/logger';
+
+import { Switch } from '@/components/ui/switch';import { logger } from '@/lib/logger';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';import { logger } from '@/lib/logger';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';import { logger } from '@/lib/logger';
+
+import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+
 import {
   User,
   Mail,
@@ -20,15 +29,23 @@ import {
   Download,
   AlertCircle,
   CheckCircle2
-} from 'lucide-react';
-import { useUserSettings } from '../context/UserSettingsContext';
-import { useDesignSystem } from '../context/DesignSystemContext';
-import { useAuth } from '../context/AuthContext';
-import { QRCodeSVG } from 'qrcode.react';
-import { useVenue } from '../context/VenueContext';
-import api from '../lib/api';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
+import { useUserSettings } from '../context/UserSettingsContext';import { logger } from '@/lib/logger';
+
+import { useDesignSystem } from '../context/DesignSystemContext';import { logger } from '@/lib/logger';
+
+import { useAuth } from '../context/AuthContext';import { logger } from '@/lib/logger';
+
+import { QRCodeSVG } from 'qrcode.react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../lib/api';import { logger } from '@/lib/logger';
+
 import { Calendar, FileText, DollarSign, Clock } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function UserProfileSettings() {
   // Employee Portal Logic
   const { activeVenue } = useVenue();
@@ -61,7 +78,7 @@ export default function UserProfileSettings() {
       setTips(tipsRes.data || []);
       setPayslips(docsData.filter(d => d.category === 'payslip'));
     } catch (error) {
-      console.error('Failed to load employee data:', error);
+      logger.error('Failed to load employee data:', error);
     } finally {
       setEmployeeLoading(false);
     }

@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';import { logger } from '@/lib/logger';
+
+import { useSearchParams } from 'react-router-dom';import { logger } from '@/lib/logger';
+
 import api from '../lib/api';
 
+import { logger } from '@/lib/logger';
 const defaultContent = {
   hero: {
     tag: 'Enterprise-grade, offline-first, Europe-ready',
@@ -142,7 +145,7 @@ export default function MarketingLanding() {
           setIsPreview(!!previewId);
         }
       } catch (error) {
-        console.warn('Marketing content fallback used');
+        logger.warn('Marketing content fallback used');
       }
     };
     loadContent();

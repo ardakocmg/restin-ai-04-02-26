@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function SickLeaveAnalysis() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,7 +20,7 @@ export default function SickLeaveAnalysis() {
       const response = await api.get('sick-leave/metrics');
       setData(response.data);
     } catch (error) {
-      console.error('Failed to fetch sick leave data:', error);
+      logger.error('Failed to fetch sick leave data:', error);
     } finally {
       setLoading(false);
     }
@@ -27,7 +31,7 @@ export default function SickLeaveAnalysis() {
 
   return (
     <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-slate-900">Sick Leave Analysis</h1>
+      <h1 className="text-3xl font-bold text-foreground">Sick Leave Analysis</h1>
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
@@ -45,7 +49,7 @@ export default function SickLeaveAnalysis() {
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Average Days/Employee</p>
-            <p className="text-3xl font-bold text-slate-900 mt-2">{(data.average_sick_days_per_employee || 0).toFixed(2)}</p>
+            <p className="text-3xl font-bold text-foreground mt-2">{(data.average_sick_days_per_employee || 0).toFixed(2)}</p>
           </CardContent>
         </Card>
       </div>

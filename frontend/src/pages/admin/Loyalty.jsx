@@ -1,15 +1,25 @@
 
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Gift, Star, Award, TrendingUp, Settings, Plus, Trophy } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Tabs, TabsList, TabsTrigger } from '../../components/ui/tabs';import { logger } from '@/lib/logger';
+
+import { Gift, Star, Award, TrendingUp, Settings, Plus, Trophy } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function LoyaltyPage() {
     const { activeVenue } = useVenue();
     const [accounts, setAccounts] = useState([]);
@@ -37,7 +47,7 @@ export default function LoyaltyPage() {
             const data = res.data?.data || [];
             setAccounts(data);
         } catch (error) {
-            console.error('Loyalty error:', error);
+            logger.error('Loyalty error:', error);
         } finally {
             setLoading(false);
         }

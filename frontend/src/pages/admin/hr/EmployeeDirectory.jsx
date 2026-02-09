@@ -1,26 +1,41 @@
 /**
  * PHASE 9: People - Employee Directory (Indigo Parity Edition)
  */
-import { useState, useEffect, useMemo } from "react";
-import { useAuth } from "../../../context/AuthContext";
-import api from "../../../lib/api";
-import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";
-import HRAccessPanel from "../../../components/hr/HRAccessPanel";
-import { toast } from "sonner";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "../../../components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "../../../components/ui/tabs";
-import { UserPlus, Mail, Phone, Calendar, CreditCard } from "lucide-react";
-import DataTable from "../../../components/shared/DataTable";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";import { logger } from '@/lib/logger';
+
+import { useAuth } from "../../../context/AuthContext";import { logger } from '@/lib/logger';
+
+import api from "../../../lib/api";import { logger } from '@/lib/logger';
+
+import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";import { logger } from '@/lib/logger';
+
+import HRAccessPanel from "../../../components/hr/HRAccessPanel";import { logger } from '@/lib/logger';
+
+import { toast } from "sonner";import { logger } from '@/lib/logger';
+
+import { Button } from "../../../components/ui/button";import { logger } from '@/lib/logger';
+
+import { Badge } from "../../../components/ui/badge";import { logger } from '@/lib/logger';
+
+import { Tabs, TabsList, TabsTrigger } from "../../../components/ui/tabs";import { logger } from '@/lib/logger';
+
+import { UserPlus, Mail, Phone, Calendar, CreditCard } from "lucide-react";import { logger } from '@/lib/logger';
+
+import DataTable from "../../../components/shared/DataTable";import { logger } from '@/lib/logger';
+
+import { useNavigate } from "react-router-dom";import { logger } from '@/lib/logger';
+
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle
-} from "../../../components/ui/dialog";
-import { Label } from "../../../components/ui/label";
-import { Input } from "../../../components/ui/input";
+} from "../../../components/ui/dialog";import { logger } from '@/lib/logger';
+
+import { Label } from "../../../components/ui/label";import { logger } from '@/lib/logger';
+
+import { Input } from "../../../components/ui/input";import { logger } from '@/lib/logger';
+
 import {
   Select,
   SelectContent,
@@ -29,9 +44,11 @@ import {
   SelectValue
 } from "../../../components/ui/select";
 
+import { logger } from '@/lib/logger';
 // DIRECT SEED DATA ACCESS
 import seedData from '../../../data/seed-master.json';
 
+import { logger } from '@/lib/logger';
 const STATUS_MAP = {
   active: "success",
   on_leave: "warning",
@@ -69,7 +86,7 @@ export default function EmployeeDirectory() {
       // Use seed data directly for Protocol v3.5 Verification
       setEmployees(seedData.employees);
     } catch (error) {
-      console.error("Failed to load employees:", error);
+      logger.error("Failed to load employees:", error);
       toast.error("Failed to load directory");
     } finally {
       setLoading(false);

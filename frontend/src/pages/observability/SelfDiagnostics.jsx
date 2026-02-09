@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import React, { useState } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
 import { Play, CheckCircle2, AlertTriangle, XCircle, Loader2 } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function SelfDiagnostics() {
   const { activeVenue } = useVenue();
   const [report, setReport] = useState(null);
@@ -18,7 +26,7 @@ export default function SelfDiagnostics() {
       const res = await api.post(`/system/diagnostics/run?venue_id=${activeVenue.id}`);
       setReport(res.data?.data);
     } catch (error) {
-      console.error('Diagnostics error:', error);
+      logger.error('Diagnostics error:', error);
     } finally {
       setRunning(false);
     }
@@ -84,7 +92,7 @@ export default function SelfDiagnostics() {
                   {report.failed_checks.map((check, idx) => (
                     <div key={idx} className="p-4 bg-slate-50 rounded border">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium text-slate-900">{check.check}</span>
+                        <span className="font-medium text-foreground">{check.check}</span>
                         {getStatusBadge(check.status)}
                       </div>
                       <p className="text-sm text-slate-700">{check.details || check.error}</p>

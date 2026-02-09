@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Plus, Monitor, Settings, Play, Pause } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import { Plus, Monitor, Settings, Play, Pause } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import axios from 'axios';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function KDSStations() {
@@ -24,7 +28,7 @@ function KDSStations() {
       );
       setStations(response.data);
     } catch (error) {
-      console.error('Error fetching stations:', error);
+      logger.error('Error fetching stations:', error);
     } finally {
       setLoading(false);
     }
@@ -40,7 +44,7 @@ function KDSStations() {
       );
       fetchStations();
     } catch (error) {
-      console.error('Error toggling station:', error);
+      logger.error('Error toggling station:', error);
     }
   };
 
@@ -60,7 +64,7 @@ function KDSStations() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-4xl font-bold text-gray-900">KDS Stations</h1>
+          <h1 className="text-4xl font-bold text-foreground">KDS Stations</h1>
           <button
             onClick={() => navigate('/admin/kds/stations/new')}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
@@ -88,7 +92,7 @@ function KDSStations() {
                   <Monitor className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{station.name}</h3>
+                  <h3 className="text-lg font-semibold text-foreground">{station.name}</h3>
                   <p className="text-sm text-gray-500">{station.station_key}</p>
                 </div>
               </div>
@@ -155,7 +159,7 @@ function KDSStations() {
           <div className="col-span-full">
             <div className="text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-300">
               <Monitor className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No stations configured</h3>
+              <h3 className="text-lg font-medium text-foreground mb-2">No stations configured</h3>
               <p className="text-gray-500 mb-4">Get started by creating your first KDS station</p>
               <button
                 onClick={() => navigate('/admin/kds/stations/new')}

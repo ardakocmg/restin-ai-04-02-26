@@ -58,7 +58,7 @@ export default function OverviewTab({ data, onRefresh }) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-600">On-Hand Balance</p>
-                <p className="text-3xl font-bold text-slate-900 mt-1">
+                <p className="text-3xl font-bold text-foreground mt-1">
                   {balance.toFixed(2)} {sku.unit}
                 </p>
               </div>

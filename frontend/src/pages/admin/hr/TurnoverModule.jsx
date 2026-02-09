@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useVenue } from '@/context/VenueContext';
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } from 'recharts';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { useVenue } from '@/context/VenueContext';import { logger } from '@/lib/logger';
+
+import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } from 'recharts';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 const COLORS = ['#EF4444', '#F59E0B', '#10B981'];
 
 export default function TurnoverModule() {
@@ -20,7 +25,7 @@ export default function TurnoverModule() {
       const response = await api.get(`/venues/${venueId}/hr/analytics/turnover`);
       setData(response.data);
     } catch (error) {
-      console.error('Failed to fetch turnover data:', error);
+      logger.error('Failed to fetch turnover data:', error);
     } finally {
       setLoading(false);
     }
@@ -31,7 +36,7 @@ export default function TurnoverModule() {
 
   return (
     <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-slate-900">Staff Turnover Analysis</h1>
+      <h1 className="text-3xl font-bold text-foreground">Staff Turnover Analysis</h1>
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
@@ -49,7 +54,7 @@ export default function TurnoverModule() {
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Turnover Rate</p>
-            <p className="text-3xl font-bold text-slate-900 mt-2">{(data.turnover_rate || 0).toFixed(2)}%</p>
+            <p className="text-3xl font-bold text-foreground mt-2">{(data.turnover_rate || 0).toFixed(2)}%</p>
           </CardContent>
         </Card>
       </div>

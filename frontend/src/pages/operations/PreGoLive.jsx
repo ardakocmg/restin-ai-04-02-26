@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import React, { useState } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
 import { Play, CheckCircle2, XCircle, Loader2, Award } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function PreGoLive() {
   const { activeVenue } = useVenue();
   const [runs, setRuns] = useState([]);
@@ -20,7 +28,7 @@ export default function PreGoLive() {
       setCurrentRun(res.data?.data);
       loadRuns();
     } catch (error) {
-      console.error('Certification error:', error);
+      logger.error('Certification error:', error);
     } finally {
       setRunning(false);
     }
@@ -31,7 +39,7 @@ export default function PreGoLive() {
       const res = await api.get(`/ops/pre-go-live/runs?venue_id=${activeVenue.id}`);
       setRuns(res.data?.data || []);
     } catch (error) {
-      console.error('Load runs error:', error);
+      logger.error('Load runs error:', error);
     }
   };
 
@@ -90,7 +98,7 @@ export default function PreGoLive() {
                       <XCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
                     )}
                     <div>
-                      <p className="font-medium text-slate-900">{check.key}</p>
+                      <p className="font-medium text-foreground">{check.key}</p>
                       <p className="text-sm text-slate-600">{check.details}</p>
                     </div>
                   </div>

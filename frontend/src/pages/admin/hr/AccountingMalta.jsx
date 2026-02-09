@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { FileDown, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function AccountingMalta() {
   const { activeVenue } = useVenue();
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ export default function AccountingMalta() {
       const res = await api.get('/accounting/exports', { params: { venue_id: activeVenue.id } });
       setHistory(Array.isArray(res.data) ? res.data : res.data.exports || []);
     } catch (err) {
-      console.warn('Failed to load accounting exports');
+      logger.warn('Failed to load accounting exports');
     } finally {
       setHistoryLoading(false);
     }
@@ -45,7 +46,7 @@ export default function AccountingMalta() {
       // Reload history to show the new export
       loadHistory();
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       toast.error("Export failed");
     } finally {
       setLoading(false);

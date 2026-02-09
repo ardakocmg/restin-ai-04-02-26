@@ -8,6 +8,7 @@ import api from '../../../../lib/api';
 import { useVenue } from '../../../../context/VenueContext';
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function KDSPerformance() {
   const { activeVenue } = useVenue();
   const [loading, setLoading] = useState(true);
@@ -42,7 +43,7 @@ export default function KDSPerformance() {
         }))
       });
     } catch (err) {
-      console.warn('Failed to load KDS Performance data');
+      logger.warn('Failed to load KDS Performance data');
     } finally {
       setLoading(false);
     }

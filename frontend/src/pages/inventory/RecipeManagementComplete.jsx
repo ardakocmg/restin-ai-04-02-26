@@ -1,17 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/dialog';
-import { Plus, Trash2, Save } from 'lucide-react';
-import PageContainer from '../../layouts/PageContainer';
-import DataTable from '../../components/shared/DataTable';
-import LoadingSpinner from '../../components/shared/LoadingSpinner';
-import EmptyState from '../../components/shared/EmptyState';
-import { toast } from 'sonner';
-import api from '../../lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/dialog';import { logger } from '@/lib/logger';
+
+import { Plus, Trash2, Save } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import DataTable from '../../components/shared/DataTable';import { logger } from '@/lib/logger';
+
+import LoadingSpinner from '../../components/shared/LoadingSpinner';import { logger } from '@/lib/logger';
+
+import EmptyState from '../../components/shared/EmptyState';import { logger } from '@/lib/logger';
+
+import { toast } from 'sonner';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
 import { useAuth } from '../../hooks/useAuth';
 
+import { logger } from '@/lib/logger';
 export default function RecipeManagementComplete() {
   const { user } = useAuth();
   const [recipes, setRecipes] = useState([]);
@@ -31,7 +44,7 @@ export default function RecipeManagementComplete() {
       const response = await api.get(`/api/venues/${user.venue_id}/recipes/engineered`);
       setRecipes(response.data.items || []);
     } catch (error) {
-      console.error('Failed to load recipes:', error);
+      logger.error('Failed to load recipes:', error);
       toast.error('Failed to load recipes');
     } finally {
       setLoading(false);
@@ -63,7 +76,7 @@ export default function RecipeManagementComplete() {
       setEditingRecipe(null);
       loadRecipes();
     } catch (error) {
-      console.error('Failed to save recipe:', error);
+      logger.error('Failed to save recipe:', error);
       toast.error('Failed to save recipe');
     }
   };

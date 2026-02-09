@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Calendar, ChevronLeft, ChevronRight, Clock, Users, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '@/context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '@/lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '@/layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Calendar, ChevronLeft, ChevronRight, Clock, Users, ArrowRight } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import { format, addHours, startOfDay, addDays } from 'date-fns';
 
+import { logger } from '@/lib/logger';
 export default function ReservationTimeline() {
     const { activeVenue } = useVenue();
     const [viewDate, setViewDate] = useState(new Date());
@@ -36,7 +45,7 @@ export default function ReservationTimeline() {
             const response = await api.get(`/venues/${activeVenue.id}/reservations`);
             setReservations(response.data);
         } catch (error) {
-            console.error('Failed to load reservations:', error);
+            logger.error('Failed to load reservations:', error);
         } finally {
             setLoading(false);
         }

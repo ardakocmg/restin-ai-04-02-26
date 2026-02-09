@@ -1,12 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
 import { Activity, Database, AlertTriangle, CheckCircle2, RefreshCw } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function SystemHealth() {
   const { activeVenue } = useVenue();
   const [health, setHealth] = useState(null);
@@ -23,7 +31,7 @@ export default function SystemHealth() {
       const res = await api.get(`/system/health?venue_id=${activeVenue.id}`);
       setHealth(res.data?.data);
     } catch (error) {
-      console.error('Health check error:', error);
+      logger.error('Health check error:', error);
     } finally {
       setLoading(false);
     }

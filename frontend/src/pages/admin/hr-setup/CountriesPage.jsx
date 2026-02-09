@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Plus, Edit, Trash } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function CountriesPage() {
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +22,7 @@ export default function CountriesPage() {
       const response = await api.get('/employee-setup/countries');
       setCountries(response.data);
     } catch (error) {
-      console.error('Failed to fetch countries:', error);
+      logger.error('Failed to fetch countries:', error);
     } finally {
       setLoading(false);
     }
@@ -28,7 +33,7 @@ export default function CountriesPage() {
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-slate-900">Countries</h1>
+        <h1 className="text-3xl font-bold text-foreground">Countries</h1>
       </div>
 
       <Card>

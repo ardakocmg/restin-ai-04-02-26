@@ -1,18 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Plus, Calendar } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '../../components/ui/dialog';
-import { Label } from '../../components/ui/label';
-import PageContainer from '../../layouts/PageContainer';
-import DataTable from '../../components/shared/DataTable';
-import LoadingSpinner from '../../components/shared/LoadingSpinner';
-import { toast } from 'sonner';
-import api from '../../lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';import { logger } from '@/lib/logger';
+
+import { Plus, Calendar } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '../../components/ui/dialog';import { logger } from '@/lib/logger';
+
+import { Label } from '../../components/ui/label';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import DataTable from '../../components/shared/DataTable';import { logger } from '@/lib/logger';
+
+import LoadingSpinner from '../../components/shared/LoadingSpinner';import { logger } from '@/lib/logger';
+
+import { toast } from 'sonner';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
 import { useAuth } from '../../hooks/useAuth';
 
+import { logger } from '@/lib/logger';
 export default function ProductionManagementComplete() {
   const { user } = useAuth();
   const [batches, setBatches] = useState([]);
@@ -40,7 +54,7 @@ export default function ProductionManagementComplete() {
       setBatches(batchesRes.data || []);
       setRecipes(recipesRes.data || []);
     } catch (error) {
-      console.error('Failed to load data:', error);
+      logger.error('Failed to load data:', error);
     } finally {
       setLoading(false);
     }
@@ -67,7 +81,7 @@ export default function ProductionManagementComplete() {
       // Reset form
       setNewBatch({ recipe_id: '', planned_quantity: '', unit: 'portions', status: 'PLANNED' });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       toast.error('Failed to create batch');
     }
   };

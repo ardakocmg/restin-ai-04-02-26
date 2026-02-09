@@ -1,12 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
-import api from '@/lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';import { logger } from '@/lib/logger';
+
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '@/lib/api';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function EmployeePortalComplete() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
@@ -25,14 +33,14 @@ export default function EmployeePortalComplete() {
       const response = await api.get('employee-portal/data');
       setData(response.data);
     } catch (error) {
-      console.error('Failed to fetch portal data:', error);
+      logger.error('Failed to fetch portal data:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <div className="p-8 text-slate-900 dark:text-slate-50">Loading...</div>;
-  if (!data) return <div className="p-8 text-slate-900 dark:text-slate-50">No data available</div>;
+  if (loading) return <div className="p-8 text-foreground dark:text-slate-50">Loading...</div>;
+  if (!data) return <div className="p-8 text-foreground dark:text-slate-50">No data available</div>;
 
   // Calendar helper functions
   const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
@@ -106,7 +114,7 @@ export default function EmployeePortalComplete() {
     <div className="p-6 bg-slate-50 dark:bg-slate-900 min-h-screen">
       {/* Header - matching Shireburn */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">Employee Portal</h1>
+        <h1 className="text-2xl font-bold text-foreground dark:text-slate-50">Employee Portal</h1>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-12">
@@ -115,7 +123,7 @@ export default function EmployeePortalComplete() {
           {/* My Profile */}
           <Card className="bg-white dark:bg-slate-800">
             <CardHeader className="pb-4">
-              <CardTitle className="text-base text-slate-900 dark:text-slate-50">My Profile</CardTitle>
+              <CardTitle className="text-base text-foreground dark:text-slate-50">My Profile</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col items-center text-center">
@@ -132,7 +140,7 @@ export default function EmployeePortalComplete() {
                   )}
                 </div>
 
-                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50">{data.my_profile.name}</h3>
+                <h3 className="text-lg font-bold text-foreground dark:text-slate-50">{data.my_profile.name}</h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">{data.my_profile.job_title}</p>
 
                 <div className="flex gap-3 w-full">
@@ -146,7 +154,7 @@ export default function EmployeePortalComplete() {
           {/* My Leave Year Planner */}
           <Card className="bg-white dark:bg-slate-800">
             <CardHeader className="pb-4">
-              <CardTitle className="text-base text-slate-900 dark:text-slate-50">My Leave Year Planner</CardTitle>
+              <CardTitle className="text-base text-foreground dark:text-slate-50">My Leave Year Planner</CardTitle>
             </CardHeader>
             <CardContent>
               {/* Legend */}
@@ -189,7 +197,7 @@ export default function EmployeePortalComplete() {
           {/* My Payslips */}
           <Card className="bg-white dark:bg-slate-800">
             <CardHeader className="pb-4 flex flex-row items-center justify-between space-y-0">
-              <CardTitle className="text-base text-slate-900 dark:text-slate-50">My Payslips</CardTitle>
+              <CardTitle className="text-base text-foreground dark:text-slate-50">My Payslips</CardTitle>
               <Button
                 variant="ghost"
                 size="sm"
@@ -222,7 +230,7 @@ export default function EmployeePortalComplete() {
           {/* Staff reporting to me leave balances */}
           <Card className="bg-white dark:bg-slate-800">
             <CardHeader>
-              <CardTitle className="text-base text-slate-900 dark:text-slate-50">Staff reporting to me leave balances</CardTitle>
+              <CardTitle className="text-base text-foreground dark:text-slate-50">Staff reporting to me leave balances</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-slate-600 dark:text-slate-400">Team leave overview</p>
@@ -235,7 +243,7 @@ export default function EmployeePortalComplete() {
           {/* Leave Balances */}
           <Card className="bg-white dark:bg-slate-800">
             <CardHeader className="pb-4">
-              <CardTitle className="text-base text-slate-900 dark:text-slate-50">Leave Balances</CardTitle>
+              <CardTitle className="text-base text-foreground dark:text-slate-50">Leave Balances</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-6">
@@ -299,7 +307,7 @@ export default function EmployeePortalComplete() {
                           )}
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
-                          <span className="text-3xl font-bold text-slate-900 dark:text-slate-50">{balance.hours_left}</span>
+                          <span className="text-3xl font-bold text-foreground dark:text-slate-50">{balance.hours_left}</span>
                           <span className="text-xs text-slate-600 dark:text-slate-400">hours left</span>
                         </div>
                       </div>
@@ -319,7 +327,7 @@ export default function EmployeePortalComplete() {
           {/* Out of the office */}
           <Card className="bg-white dark:bg-slate-800">
             <CardHeader className="pb-4">
-              <CardTitle className="text-base text-slate-900 dark:text-slate-50">Out of the office</CardTitle>
+              <CardTitle className="text-base text-foreground dark:text-slate-50">Out of the office</CardTitle>
             </CardHeader>
             <CardContent>
               {/* Date Selector */}
@@ -328,7 +336,7 @@ export default function EmployeePortalComplete() {
                   <ChevronLeft className="h-4 w-4" />
                 </button>
                 <div className="text-center">
-                  <div className="text-sm font-semibold text-slate-900 dark:text-slate-50">11/11/2024</div>
+                  <div className="text-sm font-semibold text-foreground dark:text-slate-50">11/11/2024</div>
                   <div className="text-xs text-slate-600 dark:text-slate-400">Monday</div>
                 </div>
                 <button className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded">
@@ -361,7 +369,7 @@ export default function EmployeePortalComplete() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium text-slate-900 dark:text-slate-50 truncate">{staff.name}</p>
+                        <p className="text-sm font-medium text-foreground dark:text-slate-50 truncate">{staff.name}</p>
                         {staff.is_sick && <span className="text-red-500 text-xs">🔴</span>}
                       </div>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
@@ -386,7 +394,7 @@ export default function EmployeePortalComplete() {
           {/* Leave Metrics */}
           <Card className="bg-white dark:bg-slate-800">
             <CardHeader className="pb-4">
-              <CardTitle className="text-base text-slate-900 dark:text-slate-50">Leave</CardTitle>
+              <CardTitle className="text-base text-foreground dark:text-slate-50">Leave</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-4">
@@ -394,7 +402,7 @@ export default function EmployeePortalComplete() {
                   onClick={() => toast.info(`${data.leave_metrics?.on_leave_today || 0} employees on leave today`)}
                   className="text-center p-3 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition"
                 >
-                  <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">{data.leave_metrics?.on_leave_today || 0}</p>
+                  <p className="text-3xl font-bold text-foreground dark:text-slate-50">{data.leave_metrics?.on_leave_today || 0}</p>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">On leave today</p>
                 </button>
 
@@ -402,7 +410,7 @@ export default function EmployeePortalComplete() {
                   onClick={() => toast.info(`${data.leave_metrics?.on_leave_tomorrow || 0} employees on leave tomorrow`)}
                   className="text-center p-3 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition"
                 >
-                  <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">{data.leave_metrics?.on_leave_tomorrow || 0}</p>
+                  <p className="text-3xl font-bold text-foreground dark:text-slate-50">{data.leave_metrics?.on_leave_tomorrow || 0}</p>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">On leave tomorrow</p>
                 </button>
 
@@ -410,7 +418,7 @@ export default function EmployeePortalComplete() {
                   onClick={() => toast.info(`${data.leave_metrics?.on_sick_leave_today || 0} employees on sick leave today`)}
                   className="text-center p-3 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition"
                 >
-                  <p className="text-3xl font-bold text-slate-900 dark:text-slate-50">{data.leave_metrics?.on_sick_leave_today || 0}</p>
+                  <p className="text-3xl font-bold text-foreground dark:text-slate-50">{data.leave_metrics?.on_sick_leave_today || 0}</p>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">On sick leave today</p>
                 </button>
               </div>
@@ -423,7 +431,7 @@ export default function EmployeePortalComplete() {
       <Dialog open={showLeaveDialog} onOpenChange={setShowLeaveDialog}>
         <DialogContent className="bg-white dark:bg-slate-800">
           <DialogHeader>
-            <DialogTitle className="text-slate-900 dark:text-slate-50">
+            <DialogTitle className="text-foreground dark:text-slate-50">
               {selectedLeave?.leave_type} Balance
             </DialogTitle>
             <DialogDescription className="text-slate-600 dark:text-slate-400">
@@ -434,7 +442,7 @@ export default function EmployeePortalComplete() {
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-slate-100 dark:bg-slate-700 rounded">
                 <p className="text-sm text-slate-600 dark:text-slate-400">Total Allocation</p>
-                <p className="text-2xl font-bold text-slate-900 dark:text-slate-50">{selectedLeave?.total_hours}h</p>
+                <p className="text-2xl font-bold text-foreground dark:text-slate-50">{selectedLeave?.total_hours}h</p>
               </div>
               <div className="p-4 bg-blue-100 dark:bg-blue-900 rounded">
                 <p className="text-sm text-slate-600 dark:text-slate-300">Hours Remaining</p>
@@ -443,7 +451,7 @@ export default function EmployeePortalComplete() {
             </div>
             <div className="p-4 bg-slate-100 dark:bg-slate-700 rounded">
               <p className="text-sm text-slate-600 dark:text-slate-400">Hours Used</p>
-              <p className="text-xl font-bold text-slate-900 dark:text-slate-50">
+              <p className="text-xl font-bold text-foreground dark:text-slate-50">
                 {selectedLeave ? selectedLeave.total_hours - selectedLeave.hours_left : 0}h
               </p>
             </div>
@@ -453,7 +461,7 @@ export default function EmployeePortalComplete() {
                 {selectedLeave.segments?.map((seg, i) => (
                   <div key={i} className="flex justify-between items-center py-2">
                     <span className="text-sm text-slate-600 dark:text-slate-400 capitalize">{seg.type}</span>
-                    <span className="text-sm font-semibold text-slate-900 dark:text-slate-50">{seg.hours}h</span>
+                    <span className="text-sm font-semibold text-foreground dark:text-slate-50">{seg.hours}h</span>
                   </div>
                 ))}
               </div>

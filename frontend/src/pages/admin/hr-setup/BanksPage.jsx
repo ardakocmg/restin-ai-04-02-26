@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Plus, Edit, Trash } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '@/components/ui/input';import { logger } from '@/lib/logger';
+
+import { Plus, Edit, Trash } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function BanksPage() {
   const [banks, setBanks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +24,7 @@ export default function BanksPage() {
       const response = await api.get('/employee-setup/banks');
       setBanks(response.data);
     } catch (error) {
-      console.error('Failed to fetch banks:', error);
+      logger.error('Failed to fetch banks:', error);
     } finally {
       setLoading(false);
     }
@@ -29,7 +35,7 @@ export default function BanksPage() {
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-slate-900">Banks</h1>
+        <h1 className="text-3xl font-bold text-foreground">Banks</h1>
         <Button><Plus className="h-4 w-4 mr-2" /> Add Bank</Button>
       </div>
 

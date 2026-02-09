@@ -1,16 +1,25 @@
 /**
  * MODULE 4: Tips Tracking & Allocation
  */
-import { useState, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
-import api from "@/lib/api";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Loader2, DollarSign, Plus, Lock } from "lucide-react";
-import { useHRFeatureFlags } from "@/hooks/useHRFeatureFlags";
+import { useState, useEffect } from "react";import { logger } from '@/lib/logger';
+
+import { useAuth } from "@/context/AuthContext";import { logger } from '@/lib/logger';
+
+import api from "@/lib/api";import { logger } from '@/lib/logger';
+
+import { toast } from "sonner";import { logger } from '@/lib/logger';
+
+import { Button } from "@/components/ui/button";import { logger } from '@/lib/logger';
+
+import { Badge } from "@/components/ui/badge";import { logger } from '@/lib/logger';
+
+import { Loader2, DollarSign, Plus, Lock } from "lucide-react";import { logger } from '@/lib/logger';
+
+import { useHRFeatureFlags } from "@/hooks/useHRFeatureFlags";import { logger } from '@/lib/logger';
+
 import HRAccessPanel from "@/components/hr/HRAccessPanel";
 
+import { logger } from '@/lib/logger';
 const STATUS_COLORS = {
   open: "bg-blue-500/20 text-blue-400 border-blue-500/50",
   allocated: "bg-yellow-500/20 text-yellow-400 border-yellow-500/50",
@@ -36,7 +45,7 @@ export default function TipsManagement() {
       const response = await api.get(`/hr/tips/pools?venue_id=${venueId}`);
       setTipsPools(response.data);
     } catch (error) {
-      console.error("Failed to load tips pools:", error);
+      logger.error("Failed to load tips pools:", error);
       if (error.response?.status !== 403) {
         toast.error("Failed to load tips pools");
       }
@@ -74,7 +83,7 @@ export default function TipsManagement() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50 mb-2">Tips Management</h1>
+            <h1 className="text-3xl font-bold text-foreground dark:text-slate-50 mb-2">Tips Management</h1>
             <p className="text-slate-600 dark:text-slate-400">Track and allocate tips to staff</p>
           </div>
           <Button className="bg-indigo-500 hover:bg-indigo-600">

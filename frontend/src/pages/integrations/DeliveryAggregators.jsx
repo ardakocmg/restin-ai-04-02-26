@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';import { logger } from '@/lib/logger';
+
 import { Truck, UtensilsCrossed, CheckCircle2, XCircle, Activity } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function DeliveryAggregators() {
   const { activeVenue } = useVenue();
   const [deliveryOrders, setDeliveryOrders] = useState([]);
@@ -33,7 +42,7 @@ export default function DeliveryAggregators() {
       setCapabilities(capRes.data?.data || []);
       setMenuMappings(mapRes.data?.data || []);
     } catch (error) {
-      console.error('Delivery error:', error);
+      logger.error('Delivery error:', error);
     } finally {
       setLoading(false);
     }
@@ -56,7 +65,7 @@ export default function DeliveryAggregators() {
 
         <TabsContent value="overview" className="mt-4">
           <div className="mb-6">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">🇲🇹 Malta Priority Connectors</h3>
+            <h3 className="text-lg font-bold text-foreground mb-4">🇲🇹 Malta Priority Connectors</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {maltaConnectors.map((conn) => (
                 <Card key={conn.connector_key} className="border-blue-200">
@@ -86,7 +95,7 @@ export default function DeliveryAggregators() {
           </div>
 
           <div>
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Global Delivery Platforms</h3>
+            <h3 className="text-lg font-bold text-foreground mb-4">Global Delivery Platforms</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {otherConnectors.map((conn) => (
                 <Card key={conn.connector_key}>
@@ -126,7 +135,7 @@ export default function DeliveryAggregators() {
                     <div key={order.id} className="p-4 bg-slate-50 rounded border">
                       <div className="flex items-center justify-between mb-2">
                         <div>
-                          <span className="font-medium text-slate-900">{order.display_id}</span>
+                          <span className="font-medium text-foreground">{order.display_id}</span>
                           <Badge variant="outline" className="ml-2">{order.source?.connector_key}</Badge>
                         </div>
                         <Badge>{order.state}</Badge>

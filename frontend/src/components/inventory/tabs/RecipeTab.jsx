@@ -11,7 +11,7 @@ function RecipeNode({ component, depth = 0 }) {
       {component.type === 'SKU' ? (
         <div className="flex items-center gap-2 p-2 bg-slate-50 rounded border">
           <Package className="h-4 w-4 text-slate-600" />
-          <span className="font-medium text-slate-900">{component.sku_name}</span>
+          <span className="font-medium text-foreground">{component.sku_name}</span>
           <Badge variant="outline" className="text-xs ml-auto">
             {component.qty_base} {component.sku_unit}
           </Badge>

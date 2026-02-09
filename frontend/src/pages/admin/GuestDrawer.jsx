@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';import { logger } from '@/lib/logger';
+
+import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';import { logger } from '@/lib/logger';
+
 import {
     Users, Heart, Star, Clock, CreditCard, ShoppingBag,
     Calendar, Phone, Mail, MapPin, Loader2, Tag, Plus
-} from 'lucide-react';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function GuestDrawer({ open, onOpenChange, guestId }) {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
@@ -25,7 +32,7 @@ export default function GuestDrawer({ open, onOpenChange, guestId }) {
             const res = await api.get(`/crm/guests/${guestId}/360`);
             setData(res.data);
         } catch (e) {
-            console.error(e);
+            logger.error(e);
         } finally {
             setLoading(false);
         }

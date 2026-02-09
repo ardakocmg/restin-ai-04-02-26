@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { FileText, Plus, CheckCircle, Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { FileText, Plus, CheckCircle, Clock } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import axios from 'axios';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function PurchaseOrders() {
@@ -22,7 +25,7 @@ function PurchaseOrders() {
       );
       setPos(response.data.purchase_orders || []);
     } catch (error) {
-      console.error('Error fetching POs:', error);
+      logger.error('Error fetching POs:', error);
     } finally {
       setLoading(false);
     }
@@ -46,7 +49,7 @@ function PurchaseOrders() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-4xl font-bold text-gray-900">Purchase Orders</h1>
+          <h1 className="text-4xl font-bold text-foreground">Purchase Orders</h1>
           <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             <Plus className="w-5 h-5" />
             New PO
@@ -61,7 +64,7 @@ function PurchaseOrders() {
               <div className="flex items-center gap-3">
                 <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{po.display_id}</h3>
+                  <h3 className="text-lg font-semibold text-foreground">{po.display_id}</h3>
                   <p className="text-sm text-gray-600">{po.supplier_name}</p>
                 </div>
               </div>
@@ -73,15 +76,15 @@ function PurchaseOrders() {
             <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-100">
               <div>
                 <p className="text-sm text-gray-600">Lines</p>
-                <p className="text-lg font-semibold text-gray-900">{po.lines?.length || 0}</p>
+                <p className="text-lg font-semibold text-foreground">{po.lines?.length || 0}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Total</p>
-                <p className="text-lg font-semibold text-gray-900">€{po.total?.toFixed(2)}</p>
+                <p className="text-lg font-semibold text-foreground">€{po.total?.toFixed(2)}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Created</p>
-                <p className="text-sm text-gray-900">{new Date(po.created_at).toLocaleDateString()}</p>
+                <p className="text-sm text-foreground">{new Date(po.created_at).toLocaleDateString()}</p>
               </div>
             </div>
           </div>

@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Calendar, Edit, MapPin, Info, Trash, ArrowUpDown, Search, Filter } from 'lucide-react';
-import api from '@/lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '@/components/ui/input';import { logger } from '@/lib/logger';
+
+import { Calendar, Edit, MapPin, Info, Trash, ArrowUpDown, Search, Filter } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '@/lib/api';import { logger } from '@/lib/logger';
+
 import { useVenue } from '@/context/VenueContext';
 
+import { logger } from '@/lib/logger';
 export default function ClockingData() {
   const { venueId } = useVenue();
   const [data, setData] = useState([]);
@@ -45,7 +52,7 @@ export default function ClockingData() {
       const response = await api.post('clocking/data', payload);
       setData(response.data);
     } catch (error) {
-      console.error('Failed to fetch clocking data:', error);
+      logger.error('Failed to fetch clocking data:', error);
     } finally {
       setLoading(false);
     }

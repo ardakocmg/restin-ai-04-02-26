@@ -1,14 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import FilterBar from '../../components/shared/FilterBar';
-import DataList from '../../components/shared/DataList';
-import DetailDrawer, { InfoRow, InfoSection } from '../../components/shared/DetailDrawer';
-import { Card, CardContent } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useNavigate, useSearchParams } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import FilterBar from '../../components/shared/FilterBar';import { logger } from '@/lib/logger';
+
+import DataList from '../../components/shared/DataList';import { logger } from '@/lib/logger';
+
+import DetailDrawer, { InfoRow, InfoSection } from '../../components/shared/DetailDrawer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
 import { 
   Package, 
   Plus, 
@@ -23,9 +34,11 @@ import {
   Activity,
   History,
   Eye
-} from 'lucide-react';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 const FILTERS = [
   {
     key: 'category',
@@ -179,7 +192,7 @@ export default function InventoryItemsNew() {
         total: response.data?.total || 0
       }));
     } catch (error) {
-      console.error('Failed to load items:', error);
+      logger.error('Failed to load items:', error);
       toast.error('Failed to load inventory items');
     } finally {
       setLoading(false);
@@ -198,7 +211,7 @@ export default function InventoryItemsNew() {
       const response = await api.get(`/inventory/items/${itemId}/details?venue_id=${activeVenue.id}`);
       setItemDetails(response.data);
     } catch (error) {
-      console.error('Failed to load item details:', error);
+      logger.error('Failed to load item details:', error);
     } finally {
       setDetailsLoading(false);
     }

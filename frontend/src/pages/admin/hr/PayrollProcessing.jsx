@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Wallet, Download, Send } from 'lucide-react';
+import { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '../../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Wallet, Download, Send } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function PayrollProcessing() {
   const [runs, setRuns] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +25,7 @@ export default function PayrollProcessing() {
       const response = await api.get(`/venues/${venueId}/hr/payroll/runs`);
       setRuns(response.data || []);
     } catch (error) {
-      console.error('Failed to fetch payroll runs:', error);
+      logger.error('Failed to fetch payroll runs:', error);
       setRuns([]);
     } finally {
       setLoading(false);

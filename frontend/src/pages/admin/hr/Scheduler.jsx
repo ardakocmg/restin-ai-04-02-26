@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect, useRef } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -18,10 +21,14 @@ import {
   ArrowDown,
   ArrowUpDown,
   ChevronDown
-} from 'lucide-react';
-import api from '@/lib/api';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '@/lib/api';import { logger } from '@/lib/logger';
+
+import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+
+import { cn } from '@/lib/utils';import { logger } from '@/lib/logger';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,9 +36,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function Scheduler() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -63,7 +72,7 @@ export default function Scheduler() {
       const response = await api.get(`scheduler/data?week_start=${weekStart}&num_days=${numDays}`);
       setData(response.data);
     } catch (error) {
-      console.error('Failed to fetch scheduler data:', error);
+      logger.error('Failed to fetch scheduler data:', error);
       toast.error("Failed to load scheduler data");
     } finally {
       setLoading(false);

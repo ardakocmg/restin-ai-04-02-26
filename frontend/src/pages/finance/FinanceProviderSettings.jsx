@@ -1,15 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Badge } from '../../components/ui/badge';
-import { Settings, CheckCircle2, XCircle, Link2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+
+import { Label } from '../../components/ui/label';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Settings, CheckCircle2, XCircle, Link2 } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function FinanceProviderSettings() {
   const { activeVenue } = useVenue();
   const [settings, setSettings] = useState(null);
@@ -27,7 +38,7 @@ export default function FinanceProviderSettings() {
       const res = await api.get(`/finance-provider/settings?venue_id=${activeVenue.id}`);
       setSettings(res.data?.data);
     } catch (error) {
-      console.error('Provider settings error:', error);
+      logger.error('Provider settings error:', error);
     } finally {
       setLoading(false);
     }
@@ -39,7 +50,7 @@ export default function FinanceProviderSettings() {
       await api.put(`/finance-provider/settings?venue_id=${activeVenue.id}`, settings);
       toast.success('Settings saved successfully!');
     } catch (error) {
-      console.error('Save error:', error);
+      logger.error('Save error:', error);
       toast.error('Failed to save settings');
     } finally {
       setSaving(false);

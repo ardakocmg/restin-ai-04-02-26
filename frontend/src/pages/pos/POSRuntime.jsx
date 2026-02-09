@@ -309,7 +309,7 @@ export default function POSRuntime() {
 
     // In-flight lock (prevent double-send)
     if (sendInFlightRef.current) {
-      console.warn('[POS] Send already in progress');
+      logger.warn('[POS] Send already in progress');
       return;
     }
 
@@ -378,11 +378,11 @@ export default function POSRuntime() {
         try {
           const tablesRes = await venueAPI.getTables(venueId);
           setTables(tablesRes.data);
-        } catch (e) { console.warn("Failed to refresh tables", e); }
+        } catch (e) { logger.warn("Failed to refresh tables", e); }
       }
 
     } catch (error) {
-      console.error('Send failed:', error);
+      logger.error('Send failed:', error);
 
       // Safety Net: Queue if it was a network error during the process
       if (!navigator.onLine || error.code === 'ERR_NETWORK' || error.message.includes('timeout')) {
@@ -422,7 +422,7 @@ export default function POSRuntime() {
       const tablesRes = await venueAPI.getTables(venueId);
       setTables(tablesRes.data);
     } catch (error) {
-      console.error("Payment failed:", error);
+      logger.error("Payment failed:", error);
       toast.error("Failed to process payment");
     }
   };
@@ -745,7 +745,7 @@ export default function POSRuntime() {
               setOrderItems(res.data.items || []);
 
             } catch (error) {
-              console.error("Split failed:", error);
+              logger.error("Split failed:", error);
               toast.error("Failed to split bill");
             }
           }}

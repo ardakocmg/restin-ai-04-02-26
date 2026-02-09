@@ -17,10 +17,12 @@ import { Checkbox } from '../../../components/ui/checkbox';
 import { useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '../../../components/ui/dropdown-menu';
 import { MoreHorizontal, Archive, Undo2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 import { Tabs, TabsList, TabsTrigger } from '../../../components/ui/tabs'; // Add Tabs
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../../../components/ui/alert-dialog';
 
+import { logger } from '@/lib/logger';
 // Simple Popover-like Dropdown for Column Selection if Shadcn Popover is missing
 const ColumnSelector = ({ allColumns, visibleColumns, onToggle }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -152,7 +154,7 @@ export default function RecipeManagement() {
       const res = await api.get(`venues/${activeVenue.id}/recipes/engineered/stats`);
       setStats(res.data);
     } catch (e) {
-      console.error("Failed to load stats", e);
+      logger.error("Failed to load stats", e);
     }
   };
 
@@ -219,7 +221,7 @@ export default function RecipeManagement() {
       if (itemsRes.data) setItems(itemsRes.data);
       if (menuRes.data) setMenuItems(menuRes.data);
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       toast.error("Failed to load data");
     } finally {
       setLoading(false);
@@ -372,7 +374,7 @@ export default function RecipeManagement() {
         toast.error(error.detail || "Failed to save recipe");
       }
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       toast.error("An error occurred while saving");
     }
   };
@@ -393,6 +395,7 @@ export default function RecipeManagement() {
 
     // Grouping logic for import columns
     const groupedImportCols = {};
+import { logger } from '@/lib/logger';
     visibleImportKeys.forEach(key => {
       const parts = key.split(': ');
       const cat = parts.length > 1 ? parts[0].trim() : 'General Information';

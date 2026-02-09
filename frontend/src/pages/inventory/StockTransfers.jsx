@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRightLeft, Plus, Building2, Package } from 'lucide-react';
-import axios from 'axios';
-import { toast } from 'sonner';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { ArrowRightLeft, Plus, Building2, Package } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import axios from 'axios';import { logger } from '@/lib/logger';
+
+import { toast } from 'sonner';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '../../components/ui/dialog';
+} from '../../components/ui/dialog';import { logger } from '@/lib/logger';
+
 import {
   Select,
   SelectContent,
@@ -19,6 +26,7 @@ import {
   SelectValue,
 } from '../../components/ui/select';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function StockTransfers() {
@@ -58,7 +66,7 @@ export default function StockTransfers() {
       // Mock transfers list for now as we don't have a dedicated endpoint for just transfers list
       // In a real implementation we would query the ledger
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       // toast.error('Failed to load data');
     } finally {
       setLoading(false);
@@ -94,7 +102,7 @@ export default function StockTransfers() {
       }, ...prev]);
 
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       toast.error(error.response?.data?.detail || 'Transfer failed');
     }
   };

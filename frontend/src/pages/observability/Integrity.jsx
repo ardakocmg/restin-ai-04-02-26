@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
-import DataTable from '../../components/shared/DataTable';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import DataTable from '../../components/shared/DataTable';import { logger } from '@/lib/logger';
+
 import { Play, Shield, AlertTriangle } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function IntegrityPage() {
   const { activeVenue } = useVenue();
   const [runs, setRuns] = useState([]);
@@ -30,7 +39,7 @@ export default function IntegrityPage() {
       setRuns(runsRes.data?.data || []);
       setFindings(findingsRes.data?.data || []);
     } catch (error) {
-      console.error('Integrity data error:', error);
+      logger.error('Integrity data error:', error);
     } finally {
       setLoading(false);
     }
@@ -41,7 +50,7 @@ export default function IntegrityPage() {
       await api.post(`/system/integrity/run?venue_id=${activeVenue.id}`, {});
       await loadIntegrityData();
     } catch (error) {
-      console.error('Run checks error:', error);
+      logger.error('Run checks error:', error);
     }
   };
 
@@ -132,7 +141,7 @@ export default function IntegrityPage() {
                       <Badge variant="outline" className="text-orange-700">{f.severity}</Badge>
                       <span className="text-xs text-slate-600">{f.check_key}</span>
                     </div>
-                    <p className="text-sm text-slate-900">{f.title}</p>
+                    <p className="text-sm text-foreground">{f.title}</p>
                   </div>
                 ))
               )}

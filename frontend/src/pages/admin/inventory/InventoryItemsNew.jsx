@@ -13,6 +13,7 @@ import { Plus, Search, Filter, Package, AlertTriangle, Edit2, Trash2, Loader2, R
 import DataTable from '../../../components/shared/DataTable';
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function InventoryItemsNew() {
   const { activeVenue } = useVenue();
   const [items, setItems] = useState([]);
@@ -43,7 +44,7 @@ export default function InventoryItemsNew() {
       const res = await api.get(`/inventory/items?venue_id=${activeVenue.id}`);
       setItems(res.data || []);
     } catch (error) {
-      console.error("Failed to load inventory items:", error);
+      logger.error("Failed to load inventory items:", error);
       toast.error("Failed to load inventory");
     } finally {
       setLoading(false);
@@ -75,7 +76,7 @@ export default function InventoryItemsNew() {
       setFormData({ name: '', category: 'General', unit: 'EA', min_stock: 0, cost_price: 0 });
       loadItems();
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       toast.error("Failed to save item");
     }
   };

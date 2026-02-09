@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import React, { useState } from 'react';import { logger } from '@/lib/logger';
+
+import { useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import { cn } from '@/lib/utils';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '@/components/ui/input';import { logger } from '@/lib/logger';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,11 +15,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Search, Bell, Menu, LogOut, User } from 'lucide-react';
+} from '@/components/ui/dropdown-menu';import { logger } from '@/lib/logger';
+
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';import { logger } from '@/lib/logger';
+
+import { Search, Bell, Menu, LogOut, User } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import VenueSwitcher from '../components/VenueSwitcher';
 
+import { logger } from '@/lib/logger';
 export default function TopBar({ onMenuToggle, user }) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
@@ -29,7 +38,7 @@ export default function TopBar({ onMenuToggle, user }) {
     e.preventDefault();
     if (searchQuery.trim()) {
       // Implement search functionality
-      console.log('Search:', searchQuery);
+      logger.info('Search:', searchQuery);
     }
   };
 

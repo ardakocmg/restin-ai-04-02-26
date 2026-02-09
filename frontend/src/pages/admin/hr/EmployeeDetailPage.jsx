@@ -1,11 +1,16 @@
 /**
  * PHASE 9: People - Employee Detail (Indigo Parity Edition)
  */
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useParams, useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';import { logger } from '@/lib/logger';
+
 import {
   ArrowLeft,
   User,
@@ -21,18 +26,24 @@ import {
   ChevronRight,
   Download,
   Calendar
-} from 'lucide-react';
-import api from '@/lib/api';
-import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '@/lib/api';import { logger } from '@/lib/logger';
+
+import { toast } from 'sonner';import { logger } from '@/lib/logger';
+
+import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+
 import { Eye } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 // Mock API import removed
 
 function EmployeePayrollHistoryLocal({ employeeCode }) {
   // ... (Keep existing implementation for history, assuming it relies on separate endpoint)
   // For safety, let's keep it simple or placeholder if data missing
   return <div className="p-4 text-zinc-500">Payroll History Module Loading...</div>;
+import { logger } from '@/lib/logger';
 }
 
 function EmployeeDocuments({ employeeCode }) {
@@ -56,7 +67,7 @@ export default function EmployeeDetailPage() {
       const response = await api.get(`employees/${employeeCode}`);
       setData(response.data);
     } catch (error) {
-      console.error('Failed to fetch employee details:', error);
+      logger.error('Failed to fetch employee details:', error);
       toast.error('Failed to retrieve employee record from database');
     } finally {
       setLoading(false);

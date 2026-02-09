@@ -1,13 +1,22 @@
-import { useState, useEffect } from "react";
-import api from "../../lib/api";
-import { useVenue } from "../../context/VenueContext";
-import { Loader2, Activity, ShieldAlert, DollarSign, Users, Wifi, Calendar, Monitor } from "lucide-react";
-import { Button } from "../../components/ui/button";
-import SalesChart from "../../components/analytics/SalesChart";
-import { format } from "date-fns";
-import { ScrollArea } from "../../components/ui/scroll-area";
+import { useState, useEffect } from "react";import { logger } from '@/lib/logger';
+
+import api from "../../lib/api";import { logger } from '@/lib/logger';
+
+import { useVenue } from "../../context/VenueContext";import { logger } from '@/lib/logger';
+
+import { Loader2, Activity, ShieldAlert, DollarSign, Users, Wifi, Calendar, Monitor } from "lucide-react";import { logger } from '@/lib/logger';
+
+import { Button } from "../../components/ui/button";import { logger } from '@/lib/logger';
+
+import SalesChart from "../../components/analytics/SalesChart";import { logger } from '@/lib/logger';
+
+import { format } from "date-fns";import { logger } from '@/lib/logger';
+
+import { ScrollArea } from "../../components/ui/scroll-area";import { logger } from '@/lib/logger';
+
 import { Badge } from "../../components/ui/badge";
 
+import { logger } from '@/lib/logger';
 export default function SystemDashboard() {
     const { activeVenue } = useVenue();
     const [stats, setStats] = useState(null);
@@ -31,7 +40,7 @@ export default function SystemDashboard() {
                 time: log.created_at ? new Date(log.created_at) : new Date()
             })));
         } catch (error) {
-            console.warn("Dashboard load failed, using defaults");
+            logger.warn("Dashboard load failed, using defaults");
             setStats({ revenue: 0, activeOrders: 0, onlineDevices: 0, syncHealth: '100%' });
             setLogs([]);
         } finally {

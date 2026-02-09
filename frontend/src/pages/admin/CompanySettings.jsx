@@ -1,22 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import { venueAPI } from '../../lib/api';
-import { toast } from 'sonner';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Switch } from '../../components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Badge } from '../../components/ui/badge';
-import { Textarea } from '../../components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Separator } from '../../components/ui/separator';
-import DataTable from '../../components/shared/DataTable';
-import { Save, Building2, Plus, Globe, MapPin, Contact2, Receipt, Settings2, Activity } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import { venueAPI } from '../../lib/api';import { logger } from '@/lib/logger';
+
+import { toast } from 'sonner';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+
+import { Label } from '../../components/ui/label';import { logger } from '@/lib/logger';
+
+import { Switch } from '../../components/ui/switch';import { logger } from '@/lib/logger';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Textarea } from '../../components/ui/textarea';import { logger } from '@/lib/logger';
+
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';import { logger } from '@/lib/logger';
+
+import { Separator } from '../../components/ui/separator';import { logger } from '@/lib/logger';
+
+import DataTable from '../../components/shared/DataTable';import { logger } from '@/lib/logger';
+
+import { Save, Building2, Plus, Globe, MapPin, Contact2, Receipt, Settings2, Activity } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import { cn } from '../../lib/utils';
 
+import { logger } from '@/lib/logger';
 export default function CompanySettings() {
     const { activeVenue, refreshVenues } = useVenue();
     const [loading, setLoading] = useState(false);
@@ -63,7 +81,7 @@ export default function CompanySettings() {
             setZones(zonesRes.data);
             setTables(tablesRes.data);
         } catch (error) {
-            console.error('Failed to load data:', error);
+            logger.error('Failed to load data:', error);
         } finally {
             setDataLoading(false);
         }

@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Trash2, Plus } from 'lucide-react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Trash2, Plus } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import axios from 'axios';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function WasteLog() {
@@ -30,7 +34,7 @@ function WasteLog() {
       );
       setWasteEntries(response.data.waste || []);
     } catch (error) {
-      console.error('Error fetching waste:', error);
+      logger.error('Error fetching waste:', error);
     }
   };
 
@@ -43,7 +47,7 @@ function WasteLog() {
       );
       setItems(response.data.items || []);
     } catch (error) {
-      console.error('Error fetching items:', error);
+      logger.error('Error fetching items:', error);
     }
   };
 
@@ -73,7 +77,7 @@ function WasteLog() {
       setFormData({ item_id: '', qty: '', reason: 'SPOILAGE' });
       fetchWaste();
     } catch (error) {
-      console.error('Error logging waste:', error);
+      logger.error('Error logging waste:', error);
     }
   };
 
@@ -81,7 +85,7 @@ function WasteLog() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-4xl font-bold text-gray-900">Waste Log</h1>
+          <h1 className="text-4xl font-bold text-foreground">Waste Log</h1>
           <button
             onClick={() => setShowForm(!showForm)}
             className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
@@ -95,7 +99,7 @@ function WasteLog() {
       {/* Waste Entry Form */}
       {showForm && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">New Waste Entry</h2>
+          <h2 className="text-xl font-bold text-foreground mb-4">New Waste Entry</h2>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Item</label>
@@ -170,7 +174,7 @@ function WasteLog() {
       {/* Waste Entries List */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
         <div className="p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">Recent Waste</h2>
+          <h2 className="text-xl font-bold text-foreground">Recent Waste</h2>
         </div>
 
         <div className="divide-y divide-gray-200">
@@ -179,7 +183,7 @@ function WasteLog() {
               <div className="flex items-center gap-4">
                 <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
                 <div>
-                  <h3 className="font-semibold text-gray-900">{entry.item_name}</h3>
+                  <h3 className="font-semibold text-foreground">{entry.item_name}</h3>
                   <p className="text-sm text-gray-600">
                     {entry.qty} {entry.unit} - {entry.reason}
                   </p>

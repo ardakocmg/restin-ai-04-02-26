@@ -13,6 +13,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../../components/ui/dialog';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../../../components/ui/table';
 
+import { logger } from '@/lib/logger';
 export default function PurchaseOrdersNew() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,8 +46,8 @@ export default function PurchaseOrdersNew() {
       setSuppliers(suppliersRes.data || []);
       setInventoryItems(itemsRes.data || []);
     } catch (error) {
-      console.error("Failed to load PO data", error);
-      console.error("Failed to load PO data", error);
+      logger.error("Failed to load PO data", error);
+      logger.error("Failed to load PO data", error);
       toast.error("Failed to load procurement data from server");
       // STRICT MODE: No fallback
       setSuppliers([]);

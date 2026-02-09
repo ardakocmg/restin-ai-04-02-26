@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
-import { DollarSign } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';import { logger } from '@/lib/logger';
+
+import { DollarSign } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function PayrollCosts() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,7 +22,7 @@ export default function PayrollCosts() {
       const response = await api.get('payroll-costs/metrics');
       setData(response.data);
     } catch (error) {
-      console.error('Failed to fetch payroll costs:', error);
+      logger.error('Failed to fetch payroll costs:', error);
     } finally {
       setLoading(false);
     }
@@ -28,7 +33,7 @@ export default function PayrollCosts() {
 
   return (
     <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-slate-900">Payroll Costs</h1>
+      <h1 className="text-3xl font-bold text-foreground">Payroll Costs</h1>
 
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
@@ -36,7 +41,7 @@ export default function PayrollCosts() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-600">Total Cost (YTD)</p>
-                <p className="text-2xl font-bold text-slate-900 mt-2">€{data.total_cost_ytd.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-foreground mt-2">€{data.total_cost_ytd.toLocaleString()}</p>
               </div>
               <DollarSign className="h-8 w-8 text-green-500" />
             </div>
@@ -45,7 +50,7 @@ export default function PayrollCosts() {
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Avg per Employee</p>
-            <p className="text-2xl font-bold text-slate-900 mt-2">€{(data.average_cost_per_employee || 0).toFixed(2)}</p>
+            <p className="text-2xl font-bold text-foreground mt-2">€{(data.average_cost_per_employee || 0).toFixed(2)}</p>
           </CardContent>
         </Card>
         <Card>

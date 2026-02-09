@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
-import { Button } from "../../../components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../../../components/ui/card";
-import { Badge } from "../../../components/ui/badge";
-import { Upload, Link, Check, AlertCircle, ArrowRight, RefreshCw } from "lucide-react";
-import { toast } from 'sonner';
-import api from "../../../lib/api";
+import React, { useState } from 'react';import { logger } from '@/lib/logger';
+
+import { Button } from "../../../components/ui/button";import { logger } from '@/lib/logger';
+
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../../../components/ui/card";import { logger } from '@/lib/logger';
+
+import { Badge } from "../../../components/ui/badge";import { logger } from '@/lib/logger';
+
+import { Upload, Link, Check, AlertCircle, ArrowRight, RefreshCw } from "lucide-react";import { logger } from '@/lib/logger';
+
+import { toast } from 'sonner';import { logger } from '@/lib/logger';
+
+import api from "../../../lib/api";import { logger } from '@/lib/logger';
+
 import * as XLSX from 'xlsx';
 
+import { logger } from '@/lib/logger';
 const MigrationHub = () => {
     const [selectedProvider, setSelectedProvider] = useState(null);
     const [mode, setMode] = useState('migrate'); // 'migrate' or 'link'
@@ -26,7 +34,7 @@ const MigrationHub = () => {
             const res = await api.get('migrations/history');
             setHistory(Array.isArray(res.data) ? res.data : []);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
         }
     };
 
@@ -122,7 +130,7 @@ const MigrationHub = () => {
             setIsProcessing(false);
 
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             toast.error(error.response?.data?.detail || "Failed to analyze file");
             setIsProcessing(false);
         }
@@ -144,7 +152,7 @@ const MigrationHub = () => {
             toast.success("Migration Completed Successfully!");
             fetchHistory(); // Refresh history
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             toast.error("Migration failed");
             setIsProcessing(false);
         }

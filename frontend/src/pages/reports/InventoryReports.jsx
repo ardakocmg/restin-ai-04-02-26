@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Package, AlertTriangle, TrendingDown, DollarSign } from 'lucide-react';
-import api from '../../lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';import { logger } from '@/lib/logger';
+
+import { Package, AlertTriangle, TrendingDown, DollarSign } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
 import { useVenue } from '../../context/VenueContext';
 
+import { logger } from '@/lib/logger';
 const chartTheme = {
   background: '#18181B',
   text: '#D4D4D8',
@@ -42,7 +47,7 @@ export default function InventoryReports() {
       setWasteTrend(analytics.waste_trend || []);
       setCostVariance(analytics.cost_variance || []);
     } catch (error) {
-      console.warn('Error loading inventory reports:', error);
+      logger.warn('Error loading inventory reports:', error);
     } finally {
       setLoading(false);
     }

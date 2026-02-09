@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useParams, useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
 import {
     ArrowLeft,
     Download,
@@ -10,11 +14,15 @@ import {
     FileText,
     Search,
     ChevronRight
-} from 'lucide-react';
-import api from '@/lib/api';
-import DataTable from '@/components/shared/DataTable';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '@/lib/api';import { logger } from '@/lib/logger';
+
+import DataTable from '@/components/shared/DataTable';import { logger } from '@/lib/logger';
+
 import PageContainer from '@/layouts/PageContainer';
 
+import { logger } from '@/lib/logger';
 export default function ReportViewer() {
     const { reportSlug } = useParams();
     const navigate = useNavigate();
@@ -31,7 +39,7 @@ export default function ReportViewer() {
             const response = await api.get(`/reporting/indigo/${reportSlug}`);
             setReport(response.data);
         } catch (error) {
-            console.error('Failed to fetch report:', error);
+            logger.error('Failed to fetch report:', error);
         } finally {
             setLoading(false);
         }

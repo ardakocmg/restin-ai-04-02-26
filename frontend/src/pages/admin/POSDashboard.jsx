@@ -1,24 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, DollarSign, Receipt, Users, Clock, Settings, Check, ArrowUpRight, CalendarClock } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
-import { cn } from '@/lib/utils';
-import { Slider } from '@/components/ui/slider';
-import { Progress } from "@/components/ui/progress";
-import { usePOSFilters } from '@/context/POSFilterContext';
-import POSFilterBar from '@/components/pos/POSFilterBar';
-import api from '@/lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Calendar } from '@/components/ui/calendar';import { logger } from '@/lib/logger';
+
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';import { logger } from '@/lib/logger';
+
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";import { logger } from '@/lib/logger';
+
+import { Input } from "@/components/ui/input";import { logger } from '@/lib/logger';
+
+import { Label } from "@/components/ui/label";import { logger } from '@/lib/logger';
+
+import { Switch } from "@/components/ui/switch";import { logger } from '@/lib/logger';
+
+import { Checkbox } from "@/components/ui/checkbox";import { logger } from '@/lib/logger';
+
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns';import { logger } from '@/lib/logger';
+
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, DollarSign, Receipt, Users, Clock, Settings, Check, ArrowUpRight, CalendarClock } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';import { logger } from '@/lib/logger';
+
+import { cn } from '@/lib/utils';import { logger } from '@/lib/logger';
+
+import { Slider } from '@/components/ui/slider';import { logger } from '@/lib/logger';
+
+import { Progress } from "@/components/ui/progress";import { logger } from '@/lib/logger';
+
+import { usePOSFilters } from '@/context/POSFilterContext';import { logger } from '@/lib/logger';
+
+import POSFilterBar from '@/components/pos/POSFilterBar';import { logger } from '@/lib/logger';
+
+import api from '@/lib/api';import { logger } from '@/lib/logger';
+
 import { useVenue } from '@/context/VenueContext';
 
+import { logger } from '@/lib/logger';
 // Categories will come from API response
 const FALLBACK_CATEGORIES = ["Food - Starters", "Food - Mains", "Food - Desserts", "Beverages - Soft", "Beverages - Alcohol", "Service Charge"];
 
@@ -84,7 +104,7 @@ export default function POSDashboard() {
                 // eventTime and taxInclusive should ideally come from global context now
                 if (settings.closingDays) setClosingDays(settings.closingDays);
             } catch (e) {
-                console.error('Failed to load POS dashboard settings:', e);
+                logger.error('Failed to load POS dashboard settings:', e);
             }
         }
     }, []);
@@ -116,7 +136,7 @@ export default function POSDashboard() {
                     setViewMode(result.view_mode || (isSameDay(date.from, date.to) ? 'hourly' : 'daily'));
                     setApiCategories(result.categories || []);
                 } catch (err) {
-                    console.error('Failed to load POS dashboard:', err);
+                    logger.error('Failed to load POS dashboard:', err);
                     setData([]);
                     setApiCategories([]);
                 }
@@ -243,7 +263,7 @@ export default function POSDashboard() {
             {/* Header & Controls */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">POS Dashboard</h1>
+                    <h1 className="text-2xl font-bold text-foreground dark:text-slate-50">POS Dashboard</h1>
 
                     <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
                         <DialogTrigger asChild>
@@ -326,7 +346,7 @@ export default function POSDashboard() {
                                                         onCheckedChange={(c) => setShifts(prev => ({ ...prev, [key]: { ...prev[key], enabled: c } }))}
                                                     />
                                                     <div className="flex-1">
-                                                        <Label htmlFor={`shift-${key}`} className="text-sm font-medium capitalize text-slate-900 dark:text-slate-100 cursor-pointer">{key}</Label>
+                                                        <Label htmlFor={`shift-${key}`} className="text-sm font-medium capitalize text-foreground dark:text-slate-100 cursor-pointer">{key}</Label>
                                                         <div className="flex items-center gap-2 mt-1">
                                                             <Input
                                                                 type="number"
@@ -362,7 +382,7 @@ export default function POSDashboard() {
                                                 onCheckedChange={(c) => setEventTime(prev => ({ ...prev, enabled: c }))}
                                             />
                                             <div className="flex-1">
-                                                <Label htmlFor="event-enabled" className="text-sm font-medium text-slate-900 dark:text-slate-100 cursor-pointer">Event</Label>
+                                                <Label htmlFor="event-enabled" className="text-sm font-medium text-foreground dark:text-slate-100 cursor-pointer">Event</Label>
                                                 <div className="flex items-center gap-2 mt-1">
                                                     <Input
                                                         type="time"
@@ -396,7 +416,7 @@ export default function POSDashboard() {
                                                 className={cn(
                                                     "flex-1 py-2 text-xs font-medium transition-colors hover:bg-slate-50 dark:hover:bg-slate-900",
                                                     closingDays[day]
-                                                        ? "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-100"
+                                                        ? "bg-slate-100 text-foreground dark:bg-slate-800 dark:text-slate-100"
                                                         : "bg-white text-slate-500 dark:bg-black"
                                                 )}
                                             >
@@ -450,7 +470,7 @@ export default function POSDashboard() {
             <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <div className="space-y-1">
-                        <CardTitle className="text-base text-slate-900 dark:text-slate-50">
+                        <CardTitle className="text-base text-foreground dark:text-slate-50">
                             {viewMode === 'hourly' ? 'Hourly Performance' : 'Daily Performance'}
                         </CardTitle>
                         <div className="flex gap-2">
@@ -560,7 +580,7 @@ export default function POSDashboard() {
                                     <p className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
                                         Revenue <ArrowUpRight className="h-3 w-3 opacity-50" />
                                     </p>
-                                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mt-1">
+                                    <h3 className="text-2xl font-bold text-foreground dark:text-slate-50 mt-1">
                                         €{totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </h3>
                                     {targets.revenue > 0 && (
@@ -601,7 +621,7 @@ export default function POSDashboard() {
                                     <p className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
                                         Receipts <ArrowUpRight className="h-3 w-3 opacity-50" />
                                     </p>
-                                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mt-1">{totalReceipts}</h3>
+                                    <h3 className="text-2xl font-bold text-foreground dark:text-slate-50 mt-1">{totalReceipts}</h3>
                                     {targets.receipts > 0 && (
                                         <div className="flex flex-col mt-3 space-y-2">
                                             <div className="flex items-center justify-between text-xs">
@@ -640,7 +660,7 @@ export default function POSDashboard() {
                                     <p className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
                                         Customers <ArrowUpRight className="h-3 w-3 opacity-50" />
                                     </p>
-                                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mt-1">{totalCustomers}</h3>
+                                    <h3 className="text-2xl font-bold text-foreground dark:text-slate-50 mt-1">{totalCustomers}</h3>
                                     {targets.customers > 0 && (
                                         <div className="flex flex-col mt-3 space-y-2">
                                             <div className="flex items-center justify-between text-xs">
@@ -798,9 +818,9 @@ export default function POSDashboard() {
                                                 >
                                                     {detailMetric === 'revenue' && (
                                                         <>
-                                                            <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-200">{row.label}</td>
+                                                            <td className="px-4 py-3 font-medium text-foreground dark:text-slate-200">{row.label}</td>
                                                             <td className="px-4 py-3 text-right text-slate-600 dark:text-slate-400">{row.count}</td>
-                                                            <td className="px-4 py-3 text-right text-slate-900 dark:text-slate-200">€{calculateValue(row.value, true).toFixed(2)}</td>
+                                                            <td className="px-4 py-3 text-right text-foreground dark:text-slate-200">€{calculateValue(row.value, true).toFixed(2)}</td>
                                                         </>
                                                     )}
                                                     {detailMetric === 'receipts' && (
@@ -809,14 +829,14 @@ export default function POSDashboard() {
                                                             <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{row.time}</td>
                                                             <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{row.staff}</td>
                                                             <td className="px-4 py-3 text-right text-slate-600 dark:text-slate-400">{row.items}</td>
-                                                            <td className="px-4 py-3 text-right text-slate-900 dark:text-slate-200">€{calculateValue(row.amount, true).toFixed(2)}</td>
+                                                            <td className="px-4 py-3 text-right text-foreground dark:text-slate-200">€{calculateValue(row.amount, true).toFixed(2)}</td>
                                                         </>
                                                     )}
                                                     {detailMetric === 'customers' && (
                                                         <>
-                                                            <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-200">{row.time}</td>
+                                                            <td className="px-4 py-3 font-medium text-foreground dark:text-slate-200">{row.time}</td>
                                                             <td className="px-4 py-3 text-right text-slate-600 dark:text-slate-400">{row.occupancy}%</td>
-                                                            <td className="px-4 py-3 text-right text-slate-900 dark:text-slate-200">{row.count}</td>
+                                                            <td className="px-4 py-3 text-right text-foreground dark:text-slate-200">{row.count}</td>
                                                         </>
                                                     )}
                                                 </tr>

@@ -1,24 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import { useNavigate } from 'react-router-dom';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Switch } from '../../components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
-import { Alert, AlertDescription } from '../../components/ui/alert';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import { useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+
+import { Label } from '../../components/ui/label';import { logger } from '@/lib/logger';
+
+import { Switch } from '../../components/ui/switch';import { logger } from '@/lib/logger';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';import { logger } from '@/lib/logger';
+
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';import { logger } from '@/lib/logger';
+
+import { Alert, AlertDescription } from '../../components/ui/alert';import { logger } from '@/lib/logger';
+
 import {
   MessageSquare, Mail, Globe, Star, Zap, CheckCircle2, XCircle,
   Settings, Key, Info, TrendingUp, Clock, ExternalLink, Copy, Eye, EyeOff,
   DollarSign, Brain
-} from 'lucide-react';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 const AVAILABLE_INTEGRATIONS = [
   {
     key: 'stripe',
@@ -140,7 +156,7 @@ export default function IntegrationsHub() {
       const response = await api.get(`/venues/${activeVenue.id}/integrations`);
       setIntegrations(response.data || []);
     } catch (error) {
-      console.error('Failed to load integrations:', error);
+      logger.error('Failed to load integrations:', error);
       // Initialize with empty data
       setIntegrations([]);
     } finally {
@@ -178,7 +194,7 @@ export default function IntegrationsHub() {
       loadIntegrations();
     } catch (error) {
       toast.error('Failed to save configuration');
-      console.error(error);
+      logger.error(error);
     } finally {
       setSaving(false);
     }

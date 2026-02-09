@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import api from '@/lib/api';
+import React, { useEffect, useState } from 'react';import { logger } from '@/lib/logger';
+
+import { useParams } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import api from '@/lib/api';import { logger } from '@/lib/logger';
+
 import { Loader2 } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function PayslipTemplate() {
     const { runId, employeeCode } = useParams();
     const [data, setData] = useState(null);
@@ -21,7 +25,7 @@ export default function PayslipTemplate() {
                     setData({ run, payslip });
                 }
             } catch (error) {
-                console.error("Failed to load payslip", error);
+                logger.error("Failed to load payslip", error);
             } finally {
                 setLoading(false);
             }
@@ -42,7 +46,7 @@ export default function PayslipTemplate() {
             {/* Header */}
             <div className="flex justify-between items-start mb-8 border-b border-gray-300 pb-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 uppercase tracking-tight">Payslip</h1>
+                    <h1 className="text-2xl font-bold text-foreground uppercase tracking-tight">Payslip</h1>
                     <p className="text-gray-500 font-medium">{run.run_name}</p>
                 </div>
                 <div className="text-right">

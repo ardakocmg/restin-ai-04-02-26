@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useVenue } from '@/context/VenueContext';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { useVenue } from '@/context/VenueContext';import { logger } from '@/lib/logger';
+
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function HeadcountModule() {
   const { venueId } = useVenue();
   const [data, setData] = useState(null);
@@ -18,7 +23,7 @@ export default function HeadcountModule() {
       const response = await api.get(`/venues/${venueId}/hr/analytics/headcount`);
       setData(response.data);
     } catch (error) {
-      console.error('Failed to fetch headcount data:', error);
+      logger.error('Failed to fetch headcount data:', error);
     } finally {
       setLoading(false);
     }
@@ -29,14 +34,14 @@ export default function HeadcountModule() {
 
   return (
     <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-slate-900">Headcount Analysis</h1>
+      <h1 className="text-3xl font-bold text-foreground">Headcount Analysis</h1>
 
       {/* KPI Cards */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Total Headcount</p>
-            <p className="text-3xl font-bold text-slate-900 mt-2">{data.total_headcount}</p>
+            <p className="text-3xl font-bold text-foreground mt-2">{data.total_headcount}</p>
           </CardContent>
         </Card>
         <Card>

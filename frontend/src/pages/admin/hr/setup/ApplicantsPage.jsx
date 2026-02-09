@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import api from '../../../../lib/api';
 import { useVenue } from '../../../../context/VenueContext';
 
+import { logger } from '@/lib/logger';
 export default function ApplicantsPage() {
   const { activeVenue } = useVenue();
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,7 @@ export default function ApplicantsPage() {
       setApplicants(data.applicants || []);
       setSummary(data.summary || { open_roles: 0, total_applicants: 0, interviews_today: 0 });
     } catch (err) {
-      console.warn('Failed to load applicants');
+      logger.warn('Failed to load applicants');
     } finally {
       setLoading(false);
     }

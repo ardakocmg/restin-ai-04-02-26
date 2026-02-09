@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Plus, Edit, Trash } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function OccupationsPage() {
   const [occupations, setOccupations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +22,7 @@ export default function OccupationsPage() {
       const response = await api.get('/employee-setup/occupations');
       setOccupations(response.data);
     } catch (error) {
-      console.error('Failed to fetch occupations:', error);
+      logger.error('Failed to fetch occupations:', error);
     } finally {
       setLoading(false);
     }
@@ -28,7 +33,7 @@ export default function OccupationsPage() {
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-slate-900">Occupations</h1>
+        <h1 className="text-3xl font-bold text-foreground">Occupations</h1>
         <Button><Plus className="h-4 w-4 mr-2" /> Add Occupation</Button>
       </div>
 

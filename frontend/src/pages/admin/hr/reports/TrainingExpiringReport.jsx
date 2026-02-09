@@ -5,6 +5,7 @@ import { GraduationCap, AlertTriangle, Loader2 } from 'lucide-react';
 import api from '../../../../lib/api';
 import { useVenue } from '../../../../context/VenueContext';
 
+import { logger } from '@/lib/logger';
 export default function TrainingExpiringReport() {
   const { activeVenue } = useVenue();
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,7 @@ export default function TrainingExpiringReport() {
         status: doc.days_until_expiry <= 14 ? 'critical' : 'expiring'
       })));
     } catch (err) {
-      console.warn('Failed to load expiring training data');
+      logger.warn('Failed to load expiring training data');
     } finally {
       setLoading(false);
     }

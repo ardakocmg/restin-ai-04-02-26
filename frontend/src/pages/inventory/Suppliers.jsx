@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Building2, Plus, Mail, Phone } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Building2, Plus, Mail, Phone } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import axios from 'axios';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Suppliers() {
@@ -21,7 +24,7 @@ function Suppliers() {
       );
       setSuppliers(response.data.suppliers || []);
     } catch (error) {
-      console.error('Error fetching suppliers:', error);
+      logger.error('Error fetching suppliers:', error);
     }
   };
 
@@ -29,7 +32,7 @@ function Suppliers() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-4xl font-bold text-gray-900">Suppliers</h1>
+          <h1 className="text-4xl font-bold text-foreground">Suppliers</h1>
           <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             <Plus className="w-5 h-5" />
             Add Supplier
@@ -45,7 +48,7 @@ function Suppliers() {
                 <Building2 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">{supplier.name}</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-1">{supplier.name}</h3>
                 <p className="text-sm text-gray-500 mb-3">{supplier.code || 'No code'}</p>
                 
                 {supplier.email && (

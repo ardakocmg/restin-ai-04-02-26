@@ -1,10 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
-import { Clock, ChefHat, CheckCircle, XCircle, AlertTriangle, Undo2 } from 'lucide-react';
-import axios from 'axios';
-import CountdownTimer, { formatTime } from '../../components/kds/CountdownTimer';
+import React, { useState, useEffect, useCallback } from 'react';import { logger } from '@/lib/logger';
+
+import { useParams } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import { Clock, ChefHat, CheckCircle, XCircle, AlertTriangle, Undo2 } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import axios from 'axios';import { logger } from '@/lib/logger';
+
+import CountdownTimer, { formatTime } from '../../components/kds/CountdownTimer';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function KDSRuntime() {
@@ -32,7 +38,7 @@ function KDSRuntime() {
       setSettings(response.data.settings);
       await fetchTickets();
     } catch (error) {
-      console.error('Error bootstrapping:', error);
+      logger.error('Error bootstrapping:', error);
     } finally {
       setLoading(false);
     }
@@ -47,7 +53,7 @@ function KDSRuntime() {
       );
       setTickets(response.data);
     } catch (error) {
-      console.error('Error fetching tickets:', error);
+      logger.error('Error fetching tickets:', error);
     }
   };
 
@@ -64,7 +70,7 @@ function KDSRuntime() {
       toast.success(`Ticket updated to ${newStatus}`);
       await fetchTickets();
     } catch (error) {
-      console.error('Error bumping ticket:', error);
+      logger.error('Error bumping ticket:', error);
       const errorMsg = error.response?.data?.detail || 'Failed to update ticket status';
       toast.error(`Error: ${errorMsg}`);
     }
@@ -82,7 +88,7 @@ function KDSRuntime() {
       setUndoToast(null);
       await fetchTickets();
     } catch (error) {
-      console.error('Error undoing:', error);
+      logger.error('Error undoing:', error);
       toast.warning('Cannot undo — time window expired');
     }
   };

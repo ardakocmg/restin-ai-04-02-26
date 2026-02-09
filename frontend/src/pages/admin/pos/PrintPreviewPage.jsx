@@ -193,7 +193,7 @@ export default function PrintPreviewPage() {
                     <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                         <Eye className="w-4 h-4 text-orange-500" /> Receipt Preview
                     </h3>
-                    <div className="bg-white rounded-lg p-4 font-mono text-xs text-zinc-900 leading-relaxed shadow-inner">
+                    <div className="bg-white rounded-lg p-4 font-mono text-xs text-foreground leading-relaxed shadow-inner">
                         {RECEIPT_PREVIEW.map((line, i) => (
                             <div key={i} className="whitespace-pre">{line}</div>
                         ))}

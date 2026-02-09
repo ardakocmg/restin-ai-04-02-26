@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function TrainingOngoingReport() {
   const [trainings, setTrainings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +18,7 @@ export default function TrainingOngoingReport() {
       const response = await api.get('reporting/training-ongoing');
       setTrainings(response.data);
     } catch (error) {
-      console.error('Failed to fetch training data:', error);
+      logger.error('Failed to fetch training data:', error);
     } finally {
       setLoading(false);
     }
@@ -25,7 +28,7 @@ export default function TrainingOngoingReport() {
 
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-slate-900 mb-6">Ongoing Training & Certifications</h1>
+      <h1 className="text-3xl font-bold text-foreground mb-6">Ongoing Training & Certifications</h1>
       <Card>
         <CardContent className="p-0">
           <table className="w-full">

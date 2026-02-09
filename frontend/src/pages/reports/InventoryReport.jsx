@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Package, TrendingDown, AlertTriangle, DollarSign } from 'lucide-react';
-import PageContainer from '../../layouts/PageContainer';
-import LoadingSpinner from '../../components/shared/LoadingSpinner';
-import { Badge } from '../../components/ui/badge';
-import api from '../../lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';import { logger } from '@/lib/logger';
+
+import { Package, TrendingDown, AlertTriangle, DollarSign } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import LoadingSpinner from '../../components/shared/LoadingSpinner';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
 import { useVenue } from '../../context/VenueContext';
 
+import { logger } from '@/lib/logger';
 export default function InventoryReport() {
   const { activeVenue } = useVenue();
   const [loading, setLoading] = useState(true);
@@ -27,7 +36,7 @@ export default function InventoryReport() {
       setStockLevels(d.stock_levels || []);
       setWasteData(d.waste_trend || []);
     } catch (err) {
-      console.warn('Inventory report API failed');
+      logger.warn('Inventory report API failed');
       setMetrics({ total_items: 0, low_stock_alerts: 0, waste_cost_week: 0, inventory_value: 0 });
     } finally {
       setLoading(false);

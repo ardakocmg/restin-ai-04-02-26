@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Monitor, Smartphone, Wifi, WifiOff, Plus } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Monitor, Smartphone, Wifi, WifiOff, Plus } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import axios from 'axios';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function DeviceManagement() {
@@ -25,7 +28,7 @@ function DeviceManagement() {
       );
       setDevices(response.data);
     } catch (error) {
-      console.error('Error fetching devices:', error);
+      logger.error('Error fetching devices:', error);
     } finally {
       setLoading(false);
     }
@@ -40,7 +43,7 @@ function DeviceManagement() {
       );
       setPairingCodes(response.data);
     } catch (error) {
-      console.error('Error fetching pairing codes:', error);
+      logger.error('Error fetching pairing codes:', error);
     }
   };
 
@@ -55,7 +58,7 @@ function DeviceManagement() {
       fetchPairingCodes();
       setShowPairingModal(true);
     } catch (error) {
-      console.error('Error generating code:', error);
+      logger.error('Error generating code:', error);
     }
   };
 
@@ -69,7 +72,7 @@ function DeviceManagement() {
       );
       fetchDevices();
     } catch (error) {
-      console.error('Error updating device:', error);
+      logger.error('Error updating device:', error);
     }
   };
 
@@ -82,7 +85,7 @@ function DeviceManagement() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-4xl font-bold text-gray-900">Device Management</h1>
+          <h1 className="text-4xl font-bold text-foreground">Device Management</h1>
           <button
             onClick={generatePairingCode}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
@@ -114,7 +117,7 @@ function DeviceManagement() {
       {/* Devices List */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
         <div className="p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">Registered Devices</h2>
+          <h2 className="text-xl font-bold text-foreground">Registered Devices</h2>
         </div>
         <div className="divide-y divide-gray-200">
           {devices.map((device) => (
@@ -127,7 +130,7 @@ function DeviceManagement() {
                   {device.type === 'KDS_SCREEN' ? <Monitor className="w-6 h-6" /> : <Smartphone className="w-6 h-6" />}
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">{device.name}</h3>
+                  <h3 className="font-semibold text-foreground">{device.name}</h3>
                   <div className="text-sm text-gray-500 flex items-center gap-2">
                     <span className="font-medium text-gray-700">{device.model || 'Unknown Model'}</span>
                     <span>•</span>

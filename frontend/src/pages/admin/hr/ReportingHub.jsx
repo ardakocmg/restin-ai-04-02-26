@@ -20,7 +20,7 @@ export default function ReportingHub() {
   return (
     <div className="p-6 bg-slate-50 dark:bg-slate-900 min-h-screen">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50">Reporting</h1>
+        <h1 className="text-3xl font-bold text-foreground dark:text-slate-50">Reporting</h1>
         <p className="text-slate-600 dark:text-slate-400 mt-1">HR Analytics & Reports</p>
       </div>
 
@@ -35,7 +35,7 @@ export default function ReportingHub() {
             >
               <CardContent className="p-6 flex flex-col items-center text-center">
                 <Icon className="h-12 w-12 text-blue-500 mb-3" />
-                <h3 className="font-semibold text-slate-900 dark:text-slate-50 text-sm">{report.title}</h3>
+                <h3 className="font-semibold text-foreground dark:text-slate-50 text-sm">{report.title}</h3>
               </CardContent>
             </Card>
           );

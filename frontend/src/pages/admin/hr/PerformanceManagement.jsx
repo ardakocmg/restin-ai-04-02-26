@@ -1,9 +1,14 @@
-import { useState, useEffect } from 'react';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent } from '@/components/ui/card';
-import { Target, Award } from 'lucide-react';
+import { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import PageContainer from '@/layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Target, Award } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function PerformanceManagementIndigo() {
   const [view, setView] = useState('goals');
   const [goals, setGoals] = useState([]);
@@ -20,7 +25,7 @@ export default function PerformanceManagementIndigo() {
       const response = await api.get(`/venues/${venueId}/hr/goals`);
       setGoals(response.data || []);
     } catch (error) {
-      console.error('Failed to fetch goals:', error);
+      logger.error('Failed to fetch goals:', error);
     }
   };
 
@@ -30,7 +35,7 @@ export default function PerformanceManagementIndigo() {
       const response = await api.get(`/venues/${venueId}/hr/reviews`);
       setReviews(response.data || []);
     } catch (error) {
-      console.error('Failed to fetch reviews:', error);
+      logger.error('Failed to fetch reviews:', error);
     }
   };
 

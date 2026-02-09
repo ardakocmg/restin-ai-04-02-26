@@ -225,8 +225,8 @@ async def _create_kds_tickets(
         
         try:
             ticket_doc = await ensure_ids(db, "kds_ticket", ticket_doc, venue_id)
-        except:
-            pass
+        except Exception as e:
+            logger.warning(f"ensure_ids failed for kds_ticket: {e}")
         
         await db.kds_tickets.insert_one(ticket_doc)
         ticket_ids.append(ticket_doc["id"])

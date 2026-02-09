@@ -1,12 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import DataTable from '../../components/shared/DataTable';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import DataTable from '../../components/shared/DataTable';import { logger } from '@/lib/logger';
+
 import { Inbox, CheckCircle2 } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function CollabInbox() {
   const { activeVenue } = useVenue();
   const [notifications, setNotifications] = useState([]);
@@ -23,7 +31,7 @@ export default function CollabInbox() {
       const res = await api.get(`/collab/inbox?venue_id=${activeVenue.id}`);
       setNotifications(res.data?.data || []);
     } catch (error) {
-      console.error('Inbox error:', error);
+      logger.error('Inbox error:', error);
     } finally {
       setLoading(false);
     }
@@ -38,7 +46,7 @@ export default function CollabInbox() {
     >
       <div className="mb-4 flex items-center gap-2">
         <Inbox className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-        <span className="text-2xl font-bold text-slate-900">{unreadCount} Unread</span>
+        <span className="text-2xl font-bold text-foreground">{unreadCount} Unread</span>
       </div>
 
       <Card>

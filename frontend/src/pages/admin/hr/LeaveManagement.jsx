@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Calendar, Ban, TrendingUp, Plus } from 'lucide-react';
+import { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '../../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Calendar, Ban, TrendingUp, Plus } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function LeaveManagement() {
   const [view, setView] = useState('balances');
   const [balances, setBalances] = useState([]);
@@ -21,7 +27,7 @@ export default function LeaveManagement() {
     const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
     try {
       if (!venueId) {
-        console.warn('Venue ID not found, using default');
+        logger.warn('Venue ID not found, using default');
       }
       if (view === 'balances') {
         const response = await api.get(`/venues/${venueId}/hr/leave/balance/emp_001`);
@@ -37,7 +43,7 @@ export default function LeaveManagement() {
         setRules(response.data || []);
       }
     } catch (error) {
-      console.error('Failed to fetch:', error);
+      logger.error('Failed to fetch:', error);
     }
   };
 
@@ -51,7 +57,7 @@ export default function LeaveManagement() {
       }
       fetchData(); // Refresh
     } catch (e) {
-      console.error("Action failed", e);
+      logger.error("Action failed", e);
     }
   };
 

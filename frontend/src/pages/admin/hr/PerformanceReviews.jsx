@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { Search, Filter, RotateCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '@/components/ui/input';import { logger } from '@/lib/logger';
+
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';import { logger } from '@/lib/logger';
+
+import { Search, Filter, RotateCw } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 const COLORS = ['#10B981', '#F59E0B', '#94A3B8', '#EF4444'];
 
 export default function PerformanceReviews() {
@@ -31,7 +38,7 @@ export default function PerformanceReviews() {
         color: COLORS[i % COLORS.length]
       })));
     } catch (error) {
-      console.error('Failed to fetch reviews:', error);
+      logger.error('Failed to fetch reviews:', error);
       setReviews([]);
       setStatusData([]);
     } finally {
@@ -43,14 +50,14 @@ export default function PerformanceReviews() {
 
   return (
     <div className="p-6 bg-slate-50 dark:bg-slate-900 min-h-screen">
-      <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-6">Performance Management / Reviews</h1>
+      <h1 className="text-2xl font-bold text-foreground dark:text-slate-50 mb-6">Performance Management / Reviews</h1>
 
       {/* Summary Section */}
       <div className="grid gap-6 md:grid-cols-3 mb-6">
         {/* Chart */}
         <Card className="bg-cyan-50 dark:bg-cyan-950 border-cyan-200 dark:border-cyan-800">
           <CardContent className="p-6">
-            <h3 className="text-base font-semibold mb-4 text-slate-900 dark:text-slate-50">Performance Management / Reviews</h3>
+            <h3 className="text-base font-semibold mb-4 text-foreground dark:text-slate-50">Performance Management / Reviews</h3>
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
@@ -104,7 +111,7 @@ export default function PerformanceReviews() {
               onClick={() => setActiveTab(tab.toLowerCase().replace(' ', '-'))}
               className={`py-3 px-4 border-b-2 transition-colors ${activeTab === tab.toLowerCase().replace(' ', '-')
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400 dark:text-blue-400'
-                  : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                  : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-foreground dark:hover:text-slate-200'
                 }`}
             >
               {tab}
@@ -139,16 +146,16 @@ export default function PerformanceReviews() {
             <table className="w-full">
               <thead className="bg-slate-100 dark:bg-slate-800">
                 <tr>
-                  <th className="p-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-50">Name & Surname</th>
-                  <th className="p-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-50">Manager</th>
-                  <th className="p-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-50">Company Name</th>
-                  <th className="p-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-50">Review Name</th>
-                  <th className="p-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-50">Due Date</th>
-                  <th className="p-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-50">Published On</th>
-                  <th className="p-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-50">Finalised Date</th>
-                  <th className="p-3 text-left text-sm font-semibold text-slate-900 dark:text-slate-50">Review Status</th>
-                  <th className="p-3 text-center text-sm font-semibold text-slate-900 dark:text-slate-50">Resp. Status</th>
-                  <th className="p-3 text-center text-sm font-semibold text-slate-900 dark:text-slate-50">Actions</th>
+                  <th className="p-3 text-left text-sm font-semibold text-foreground dark:text-slate-50">Name & Surname</th>
+                  <th className="p-3 text-left text-sm font-semibold text-foreground dark:text-slate-50">Manager</th>
+                  <th className="p-3 text-left text-sm font-semibold text-foreground dark:text-slate-50">Company Name</th>
+                  <th className="p-3 text-left text-sm font-semibold text-foreground dark:text-slate-50">Review Name</th>
+                  <th className="p-3 text-left text-sm font-semibold text-foreground dark:text-slate-50">Due Date</th>
+                  <th className="p-3 text-left text-sm font-semibold text-foreground dark:text-slate-50">Published On</th>
+                  <th className="p-3 text-left text-sm font-semibold text-foreground dark:text-slate-50">Finalised Date</th>
+                  <th className="p-3 text-left text-sm font-semibold text-foreground dark:text-slate-50">Review Status</th>
+                  <th className="p-3 text-center text-sm font-semibold text-foreground dark:text-slate-50">Resp. Status</th>
+                  <th className="p-3 text-center text-sm font-semibold text-foreground dark:text-slate-50">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -162,7 +169,7 @@ export default function PerformanceReviews() {
                           </span>
                         </div>
                         <div>
-                          <p className="font-medium text-slate-900 dark:text-slate-50">{review.employee_name}</p>
+                          <p className="font-medium text-foreground dark:text-slate-50">{review.employee_name}</p>
                           <p className="text-xs text-slate-500 dark:text-slate-400">{review.employee_code}</p>
                         </div>
                       </div>
@@ -175,16 +182,16 @@ export default function PerformanceReviews() {
                           </span>
                         </div>
                         <div>
-                          <p className="font-medium text-slate-900 dark:text-slate-50">{review.manager_name}</p>
+                          <p className="font-medium text-foreground dark:text-slate-50">{review.manager_name}</p>
                           <p className="text-xs text-slate-500 dark:text-slate-400">{review.manager_code}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="p-3 text-slate-900 dark:text-slate-50">{review.company_name}</td>
-                    <td className="p-3 text-slate-900 dark:text-slate-50">{review.review_name}</td>
-                    <td className="p-3 text-slate-900 dark:text-slate-50">{review.due_date}</td>
-                    <td className="p-3 text-slate-900 dark:text-slate-50">{review.published_on}</td>
-                    <td className="p-3 text-slate-900 dark:text-slate-50">{review.finalised_date || 'N/A'}</td>
+                    <td className="p-3 text-foreground dark:text-slate-50">{review.company_name}</td>
+                    <td className="p-3 text-foreground dark:text-slate-50">{review.review_name}</td>
+                    <td className="p-3 text-foreground dark:text-slate-50">{review.due_date}</td>
+                    <td className="p-3 text-foreground dark:text-slate-50">{review.published_on}</td>
+                    <td className="p-3 text-foreground dark:text-slate-50">{review.finalised_date || 'N/A'}</td>
                     <td className="p-3">
                       <span className={`px-3 py-1 rounded text-xs font-medium ${review.review_status === 'Pending Manager'
                           ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'

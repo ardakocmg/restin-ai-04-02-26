@@ -1,16 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '@/context/VenueContext';
-import { useSearchParams } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { usePOSFilters } from '@/context/POSFilterContext';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '@/context/VenueContext';import { logger } from '@/lib/logger';
+
+import { useSearchParams } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import { cn } from '@/lib/utils';import { logger } from '@/lib/logger';
+
+import { usePOSFilters } from '@/context/POSFilterContext';import { logger } from '@/lib/logger';
+
+import PageContainer from '@/layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line, AreaChart, Area
-} from 'recharts';
+} from 'recharts';import { logger } from '@/lib/logger';
+
 import {
   TrendingUp, Users, DollarSign, Package, Download,
   Filter, Calendar, Clock, ArrowUpRight, ArrowDownRight,
@@ -19,15 +29,23 @@ import {
   FileDown, Share2, Save, Plus, Trash2, GripVertical, Info,
   Activity, BarChart3, PieChart as PieChartIcon,
   Table as TableIcon, Type, Home, ChevronLeft
-} from 'lucide-react';
-import api from '@/lib/api';
-import POSFilterBar from '@/components/pos/POSFilterBar';
-import { format } from 'date-fns';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import { exportToCsv, exportToPdf } from '@/lib/exportUtils';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '@/lib/api';import { logger } from '@/lib/logger';
+
+import POSFilterBar from '@/components/pos/POSFilterBar';import { logger } from '@/lib/logger';
+
+import { format } from 'date-fns';import { logger } from '@/lib/logger';
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';import { logger } from '@/lib/logger';
+
+import LoadingSpinner from '@/components/shared/LoadingSpinner';import { logger } from '@/lib/logger';
+
+import { exportToCsv, exportToPdf } from '@/lib/exportUtils';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 const COLORS = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
 
 export default function POSSalesReport() {
@@ -91,7 +109,7 @@ export default function POSSalesReport() {
       const response = await api.get('/api/reports/pos-sales', { params });
       setSalesData(response.data);
     } catch (error) {
-      console.error('Failed to fetch POS report:', error);
+      logger.error('Failed to fetch POS report:', error);
       toast.error('Failed to load report data');
     } finally {
       setLoading(false);

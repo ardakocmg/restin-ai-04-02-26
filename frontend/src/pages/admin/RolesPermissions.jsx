@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
 import {
     Shield, User, Lock, Save, AlertTriangle, Check,
     ChevronRight, Search, Layout, Printer, Coffee,
     DollarSign, BarChart2, Users, Settings
-} from 'lucide-react';
-import { toast } from 'sonner';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
+import { toast } from 'sonner';import { logger } from '@/lib/logger';
+
 import api from '../../lib/api';
 
+import { logger } from '@/lib/logger';
 export default function RolesPermissions() {
     const [roles, setRoles] = useState([]);
     const [selectedRole, setSelectedRole] = useState(null);
@@ -37,7 +41,7 @@ export default function RolesPermissions() {
                 setSelectedRole(fetchedRoles[0]);
             }
         } catch (error) {
-            console.error("Failed to fetch roles:", error);
+            logger.error("Failed to fetch roles:", error);
             toast.error("Failed to load roles");
         } finally {
             setLoading(false);

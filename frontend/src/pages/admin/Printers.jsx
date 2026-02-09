@@ -1,24 +1,44 @@
-﻿import React, { useState, useCallback, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Printer, Plus, Settings, Trash2, Copy, FileText } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { cn } from '../../lib/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Checkbox } from '../../components/ui/checkbox';
-import { Label } from '../../components/ui/label';
-import { Badge } from '../../components/ui/badge';
-import { toast } from 'sonner';
-import { printersAPI, printerTemplatesAPI } from '../../lib/api/printers';
-import api from '../../lib/api';
-import { useAuth } from '../../context/AuthContext';
-import { Loader2 } from 'lucide-react';
+import React, { useState, useCallback, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useLocation } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+
+import { Printer, Plus, Settings, Trash2, Copy, FileText } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';import { logger } from '@/lib/logger';
+
+import { cn } from '../../lib/utils';import { logger } from '@/lib/logger';
+
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/dialog';import { logger } from '@/lib/logger';
+
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';import { logger } from '@/lib/logger';
+
+import { Checkbox } from '../../components/ui/checkbox';import { logger } from '@/lib/logger';
+
+import { Label } from '../../components/ui/label';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { toast } from 'sonner';import { logger } from '@/lib/logger';
+
+import { printersAPI, printerTemplatesAPI } from '../../lib/api/printers';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import { useAuth } from '../../context/AuthContext';import { logger } from '@/lib/logger';
+
+import { Loader2 } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import DataTable from '../../components/shared/DataTable';
 
+import { logger } from '@/lib/logger';
 // Removed MOCK_PRINTERS constant in favor of API fetching
 
 // MOCK DATA REMOVED - STRICT DATABASE MODE
@@ -60,7 +80,7 @@ export default function Printers() {
             setTemplates(templatesData);
             setCashDrawers(drawersRes.data || []);
         } catch (error) {
-            console.error("Failed to load printers:", error);
+            logger.error("Failed to load printers:", error);
             // FAIL LOUDLY - No Mock Data
             toast.error("Failed to load printer configuration from server.");
             setTemplates([]);
@@ -119,7 +139,7 @@ export default function Printers() {
             setEditTemplateModal(false);
             toast.success('Template saved successfully');
         } catch (error) {
-            console.error('Failed to save template:', error);
+            logger.error('Failed to save template:', error);
             // Fallback for mock if API fails
             let updatedTemplates;
             if (templates.some(t => t.id === selectedTemplate.id)) {
@@ -557,22 +577,22 @@ export default function Printers() {
                             <div className="bg-white rounded-lg p-4 h-fit">
                                 <div className="text-center border-b border-zinc-300 pb-2 mb-2">
                                     <p className="text-xs text-zinc-600">T-3</p>
-                                    <p className="text-lg font-black text-zinc-900">{selectedTemplate.titleText}</p>
+                                    <p className="text-lg font-black text-foreground">{selectedTemplate.titleText}</p>
                                     <p className="text-xs text-zinc-600">#4</p>
                                     <p className="text-xs text-zinc-600">01 02 2026 19:30</p>
                                     <p className="text-xs text-zinc-600">94331</p>
-                                    <p className="text-xs font-bold text-zinc-900">Nicolas Doe</p>
+                                    <p className="text-xs font-bold text-foreground">Nicolas Doe</p>
                                     <p className="text-xs text-zinc-600">John Doe</p>
                                 </div>
                                 <div className="space-y-1 text-xs">
                                     <div className="flex justify-between border-b border-zinc-200 pb-1">
-                                        <span className="font-bold text-zinc-900">#Item</span>
-                                        <span className="font-bold text-zinc-900">Cst. #</span>
+                                        <span className="font-bold text-foreground">#Item</span>
+                                        <span className="font-bold text-foreground">Cst. #</span>
                                     </div>
                                     <div>
                                         <div className="flex justify-between">
                                             <span className="text-orange-600 dark:text-orange-400">20ProductWithPricedAddition</span>
-                                            <span className="text-zinc-900">1</span>
+                                            <span className="text-foreground">1</span>
                                         </div>
                                         <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
                                         <p className="text-zinc-600 text-[10px] ml-2">* payedThree</p>
@@ -580,14 +600,14 @@ export default function Printers() {
                                     <div>
                                         <div className="flex justify-between">
                                             <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
-                                            <span className="text-zinc-900">2</span>
+                                            <span className="text-foreground">2</span>
                                         </div>
                                         <p className="text-zinc-600 text-[10px] ml-2">* payedTwo</p>
                                     </div>
                                     <div>
                                         <div className="flex justify-between">
                                             <span className="text-orange-600 dark:text-orange-400">10ProductWithPricedAddition</span>
-                                            <span className="text-zinc-900">3</span>
+                                            <span className="text-foreground">3</span>
                                         </div>
                                     </div>
                                 </div>

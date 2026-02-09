@@ -1,12 +1,19 @@
 
-import React, { useState, useEffect } from 'react';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Upload, Scan, FileText, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
-import api from '../../../lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '../../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Upload, Scan, FileText, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '../../../lib/api';import { logger } from '@/lib/logger';
+
 import { useVenue } from '../../../context/VenueContext';
 
+import { logger } from '@/lib/logger';
 export default function AIInvoiceHub() {
     const { activeVenue } = useVenue();
     const [scanning, setScanning] = useState(false);
@@ -30,7 +37,7 @@ export default function AIInvoiceHub() {
                 date: (inv.created_at || inv.invoice_date || '').split('T')[0]
             })));
         } catch (err) {
-            console.warn('Failed to load AI invoices');
+            logger.warn('Failed to load AI invoices');
         } finally {
             setLoading(false);
         }

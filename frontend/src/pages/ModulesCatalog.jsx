@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';import { logger } from '@/lib/logger';
+
+import { useSearchParams } from 'react-router-dom';import { logger } from '@/lib/logger';
+
 import api from '../lib/api';
 
+import { logger } from '@/lib/logger';
 const defaultModulesContent = {
   hero: {
     title: 'Module Catalog',
@@ -64,7 +67,7 @@ export default function ModulesCatalog() {
           setIsPreview(!!previewId);
         }
       } catch (error) {
-        console.warn('Module catalog fallback used');
+        logger.warn('Module catalog fallback used');
       }
     };
     loadContent();

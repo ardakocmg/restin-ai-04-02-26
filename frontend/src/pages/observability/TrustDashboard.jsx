@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
 import { Shield, AlertTriangle, CheckCircle2, XCircle, Activity } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function TrustDashboard() {
   const { activeVenue } = useVenue();
   const [riskFindings, setRiskFindings] = useState([]);
@@ -31,7 +38,7 @@ export default function TrustDashboard() {
       setKillSwitches(switchRes.data?.data || []);
       setOverrides(overrideRes.data?.data || []);
     } catch (error) {
-      console.error('Trust data error:', error);
+      logger.error('Trust data error:', error);
     } finally {
       setLoading(false);
     }

@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { FileText, AlertTriangle } from 'lucide-react';
+import { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import PageContainer from '@/layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+
+import { FileText, AlertTriangle } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function DocumentManagementIndigo() {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +25,7 @@ export default function DocumentManagementIndigo() {
       const response = await api.get(`/venues/${venueId}/hr/documents`);
       setDocuments(response.data || []);
     } catch (error) {
-      console.error('Failed to fetch documents:', error);
+      logger.error('Failed to fetch documents:', error);
       setDocuments([]);
     } finally {
       setLoading(false);

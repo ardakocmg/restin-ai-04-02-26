@@ -7,6 +7,7 @@ import { Button } from '../../../../components/ui/button';
 import { toast } from 'sonner';
 
 
+import { logger } from '@/lib/logger';
 export default function EmployeeDetailsReport() {
   const { user } = useAuth();
   const [data, setData] = useState([]);
@@ -23,7 +24,7 @@ export default function EmployeeDetailsReport() {
       setData(response.data || []);
       setLoading(false);
     } catch (error) {
-      console.error("Failed to load details:", error);
+      logger.error("Failed to load details:", error);
       setLoading(false);
     }
   };

@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Clock, Activity, AlertCircle, CheckCircle2 } from 'lucide-react';
-import api from '../../lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';import { logger } from '@/lib/logger';
+
+import { Clock, Activity, AlertCircle, CheckCircle2 } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
 import { useVenue } from '../../context/VenueContext';
 
+import { logger } from '@/lib/logger';
 export default function KDSPerformance() {
   const { activeVenue } = useVenue();
   const [data, setData] = useState(null);
@@ -18,7 +23,7 @@ export default function KDSPerformance() {
       const res = await api.get('/kds/analytics', { params: { venue_id: activeVenue.id } });
       setData(res.data);
     } catch (err) {
-      console.warn('KDS analytics API failed, using empty state');
+      logger.warn('KDS analytics API failed, using empty state');
       setData({
         metrics: { avg_prep_time: '0m 00s', throughput_per_hour: 0, active_stations: 0, delayed_orders: 0 },
         hourly_throughput: [],

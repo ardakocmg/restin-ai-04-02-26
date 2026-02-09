@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+
+import { Plus, Edit, Trash } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function CostCentresPage() {
   const [costCentres, setCostCentres] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +22,7 @@ export default function CostCentresPage() {
       const response = await api.get('/employee-setup/cost-centres');
       setCostCentres(response.data);
     } catch (error) {
-      console.error('Failed to fetch cost centres:', error);
+      logger.error('Failed to fetch cost centres:', error);
     } finally {
       setLoading(false);
     }
@@ -28,7 +33,7 @@ export default function CostCentresPage() {
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-slate-900">Cost Centres</h1>
+        <h1 className="text-3xl font-bold text-foreground">Cost Centres</h1>
         <Button><Plus className="h-4 w-4 mr-2" /> Add Cost Centre</Button>
       </div>
 

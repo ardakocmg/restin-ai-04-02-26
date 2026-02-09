@@ -30,7 +30,7 @@ export default function EmployeeSetupHub() {
   return (
     <div className="p-6 bg-slate-50 dark:bg-slate-900 min-h-screen">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50">Employee Setup</h1>
+        <h1 className="text-3xl font-bold text-foreground dark:text-slate-50">Employee Setup</h1>
         <p className="text-slate-600 dark:text-slate-400 mt-1">Configure employee data and organizational structure</p>
       </div>
 
@@ -47,7 +47,7 @@ export default function EmployeeSetupHub() {
             >
               <CardContent className="p-6 flex flex-col items-center text-center">
                 <Icon className={`h-12 w-12 mb-3 text-${module.color}-500`} />
-                <h3 className="font-semibold text-slate-900 dark:text-slate-50">{module.title}</h3>
+                <h3 className="font-semibold text-foreground dark:text-slate-50">{module.title}</h3>
               </CardContent>
             </Card>
           );

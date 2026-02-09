@@ -5,6 +5,7 @@ import api from '../../../../lib/api';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../../components/ui/card';
 import { Loader2, UserMinus, TrendingDown, TrendingUp } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function TurnoverReport() {
   const { user } = useAuth();
   const [stats, setStats] = useState({ joined: 0, left: 0, turnoverRadio: 0 });
@@ -33,7 +34,7 @@ export default function TurnoverReport() {
       });
       setLoading(false);
     } catch (error) {
-      console.error("Failed to load turnover:", error);
+      logger.error("Failed to load turnover:", error);
       setLoading(false);
     }
   };

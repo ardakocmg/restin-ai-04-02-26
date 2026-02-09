@@ -1,5 +1,6 @@
 import { AiServiceFactory } from '../../../lib/ai/google';
 
+import { logger } from '@/lib/logger';
 /**
  * 📞 Voice AI Receptionist (Pillar 4)
  * Goal: Zero Missed Calls via RAG-based AI.
@@ -37,7 +38,7 @@ export class VoiceReceptionist {
                 timestamp: new Date().toISOString()
             };
         } catch (error) {
-            console.error('[Pillar 4] Voice AI failed:', error);
+            logger.error('[Pillar 4] Voice AI failed:', error);
             return {
                 response: "I'm sorry, I'm having trouble connecting to our system. Let me transfer you to a human manager.",
                 tokensUsed: 0,

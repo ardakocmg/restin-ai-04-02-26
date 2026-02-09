@@ -1,18 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useParams, useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+
 import {
     Shield, User, Lock, History, AlertTriangle, Check,
     RotateCcw, Save, Trash2, Archive, Activity, Globe
-} from 'lucide-react';
-import { toast } from 'sonner';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
+import { toast } from 'sonner';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
 import DataTable from '../../components/shared/DataTable';
 
+import { logger } from '@/lib/logger';
 export default function UserAccess() {
     const { userId } = useParams();
     const navigate = useNavigate();
@@ -51,7 +62,7 @@ export default function UserAccess() {
             setUser({ id: userId, name: "User " + userId.substring(0, 4), status: "active" });
 
         } catch (error) {
-            console.error("Failed to load access data:", error);
+            logger.error("Failed to load access data:", error);
             toast.error("Failed to load user access data");
         } finally {
             setLoading(false);

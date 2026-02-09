@@ -1,12 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
 import { CheckCircle2, XCircle, AlertTriangle, Play } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function ServiceDayClose() {
   const { activeVenue } = useVenue();
   const [closeStatus, setCloseStatus] = useState(null);
@@ -19,7 +27,7 @@ export default function ServiceDayClose() {
       const res = await api.get(`/ops/service-day-close/status?venue_id=${activeVenue.id}&date=${today}`);
       setCloseStatus(res.data?.data);
     } catch (error) {
-      console.error('Day close error:', error);
+      logger.error('Day close error:', error);
     } finally {
       setLoading(false);
     }
@@ -63,7 +71,7 @@ export default function ServiceDayClose() {
                   <div className="flex items-center gap-3">
                     {getCheckIcon(check.status)}
                     <div className="flex-1">
-                      <p className="font-medium text-slate-900">{check.label}</p>
+                      <p className="font-medium text-foreground">{check.label}</p>
                       <p className="text-sm text-slate-600">{check.details}</p>
                     </div>
                   </div>

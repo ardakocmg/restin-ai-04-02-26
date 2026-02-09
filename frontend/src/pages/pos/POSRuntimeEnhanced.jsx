@@ -254,7 +254,7 @@ function POSRuntimeEnhanced() {
       {/* Center: Items Grid */}
       <div className="flex-1 p-6 overflow-y-auto">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-3xl font-bold text-gray-900">Menu</h2>
+          <h2 className="text-3xl font-bold text-foreground">Menu</h2>
           {order && (
             <button
               onClick={sendOrder}
@@ -274,7 +274,7 @@ function POSRuntimeEnhanced() {
               className="bg-white rounded-2xl p-6 text-center hover:shadow-xl transition-all border-2 border-transparent hover:border-blue-500 active:scale-95"
               style={{ minHeight: '140px' }}
             >
-              <div className="text-lg font-bold text-gray-900 mb-3 line-clamp-2">{item.name}</div>
+              <div className="text-lg font-bold text-foreground mb-3 line-clamp-2">{item.name}</div>
               <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">€{item.price?.toFixed(2)}</div>
             </button>
           ))}
@@ -285,7 +285,7 @@ function POSRuntimeEnhanced() {
       <div className="w-[400px] bg-white border-l border-gray-200 p-6 flex flex-col">
         <div className="flex items-center gap-3 mb-6">
           <ShoppingCart className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-          <h3 className="text-2xl font-bold text-gray-900">Order</h3>
+          <h3 className="text-2xl font-bold text-foreground">Order</h3>
         </div>
 
         {!order ? (
@@ -307,7 +307,7 @@ function POSRuntimeEnhanced() {
                     <Trash2 className="w-4 h-4" />
                   </button>
 
-                  <div className="font-semibold text-gray-900 mb-1 pr-8">{item.menu_item_name}</div>
+                  <div className="font-semibold text-foreground mb-1 pr-8">{item.menu_item_name}</div>
                   <div className="text-sm text-gray-600 mb-2">Qty: {item.qty}</div>
 
                   {item.modifiers && item.modifiers.length > 0 && (
@@ -327,7 +327,7 @@ function POSRuntimeEnhanced() {
                       }`}>
                       {item.state}
                     </span>
-                    <span className="font-bold text-gray-900">€{item.pricing.line_total.toFixed(2)}</span>
+                    <span className="font-bold text-foreground">€{item.pricing.line_total.toFixed(2)}</span>
                   </div>
                 </div>
               ))}
@@ -343,7 +343,7 @@ function POSRuntimeEnhanced() {
                 <span>Tax (18%):</span>
                 <span className="font-semibold">€{order.totals.tax.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-2xl font-bold text-gray-900">
+              <div className="flex justify-between text-2xl font-bold text-foreground">
                 <span>Total:</span>
                 <span>€{order.totals.grand_total.toFixed(2)}</span>
               </div>
@@ -382,13 +382,13 @@ function POSRuntimeEnhanced() {
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-8 w-[500px]">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-3xl font-bold text-gray-900">Payment</h3>
+              <h3 className="text-3xl font-bold text-foreground">Payment</h3>
               <button onClick={() => setShowPayment(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <X className="w-6 h-6" />
               </button>
             </div>
 
-            <div className="text-5xl font-bold text-center mb-8 text-gray-900">
+            <div className="text-5xl font-bold text-center mb-8 text-foreground">
               €{order.totals.grand_total.toFixed(2)}
             </div>
 

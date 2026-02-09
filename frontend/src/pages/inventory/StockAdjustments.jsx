@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Edit, Plus, TrendingUp, TrendingDown } from 'lucide-react';
-import api from '../../lib/api';
-import StateModal from '../../components/StateModal';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Edit, Plus, TrendingUp, TrendingDown } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import StateModal from '../../components/StateModal';import { logger } from '@/lib/logger';
+
 import { useVenue } from '../../context/VenueContext';
 
+import { logger } from '@/lib/logger';
 export default function StockAdjustments() {
   const { activeVenue } = useVenue();
   const [adjustments, setAdjustments] = useState([]);
@@ -19,7 +24,7 @@ export default function StockAdjustments() {
       const res = await api.get('/inventory/adjustments', { params: { venue_id: activeVenue.id } });
       setAdjustments(Array.isArray(res.data) ? res.data : res.data.adjustments || []);
     } catch (err) {
-      console.warn('Failed to load stock adjustments');
+      logger.warn('Failed to load stock adjustments');
       setAdjustments([]);
     } finally {
       setLoading(false);

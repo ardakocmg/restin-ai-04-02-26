@@ -15,10 +15,13 @@ import {
   Network,
   Settings,
   Briefcase
-} from 'lucide-react';
-import api from '../lib/api';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '../lib/api';import { logger } from '@/lib/logger';
+
 import PDFExportButton from '../components/PDFExportButton';
 
+import { logger } from '@/lib/logger';
 const GlassCard = ({ children, className = "", title, icon: Icon, tag }) => (
   <div className={`relative group transition-all duration-500 hover:-translate-y-1 ${className}`}>
     <div className="absolute -inset-[1px] bg-gradient-to-r from-red-600/50 via-transparent to-red-600/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm pointer-events-none" />
@@ -266,7 +269,7 @@ export default function TechnicalHub() {
           setIsPreview(!!previewId);
         }
       } catch (error) {
-        console.warn('Technical content fallback used');
+        logger.warn('Technical content fallback used');
       }
     };
     loadContent();

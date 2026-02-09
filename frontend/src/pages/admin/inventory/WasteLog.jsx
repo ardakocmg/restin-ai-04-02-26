@@ -11,6 +11,7 @@ import { Trash2, AlertTriangle, RefreshCw, Loader2, History } from 'lucide-react
 import DataTable from '../../../components/shared/DataTable';
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function WasteLog() {
   const { activeVenue } = useVenue();
   const [items, setItems] = useState([]);
@@ -48,7 +49,7 @@ export default function WasteLog() {
       );
       setLogs(wasteLogs);
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       toast.error("Failed to load waste data");
     } finally {
       setLoading(false);
@@ -74,7 +75,7 @@ export default function WasteLog() {
       setFormData({ item_id: '', quantity: '', reason: 'Expired' });
       loadData();
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       toast.error("Failed to record waste");
     } finally {
       setSubmitting(false);

@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { ArrowRightLeft, Truck, Package, AlertCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function StockTransfers() {
   const { activeVenue } = useVenue();
   const [items, setItems] = useState([]);
@@ -39,7 +40,7 @@ export default function StockTransfers() {
       // Filter out current venue from targets
       setVenues((venuesRes.data || []).filter(v => v.id !== activeVenue.id));
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       toast.error("Failed to load transfer data");
     } finally {
       setLoading(false);
@@ -72,7 +73,7 @@ export default function StockTransfers() {
       setFormData({ ...formData, quantity: '', item_id: '' }); // Reset partial
       loadData(); // Refresh stock
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       toast.error(e.response?.data?.detail || "Transfer failed");
     } finally {
       setLoading(false);

@@ -10,6 +10,7 @@ import { Download, FileText, Calculator, Play, Loader2, RefreshCw } from 'lucide
 import DataTable from '../../../components/shared/DataTable';
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function PayrollMalta() {
   const { activeVenue } = useVenue();
   const [activeTab, setActiveTab] = useState('payrun');
@@ -35,7 +36,7 @@ export default function PayrollMalta() {
       const res = await api.get(`/payroll-mt/payruns?venue_id=${activeVenue.id}`);
       setPayRuns(res.data?.data || []);
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       toast.error("Failed to load pay runs");
     } finally {
       setLoading(false);
@@ -48,7 +49,7 @@ export default function PayrollMalta() {
       const res = await api.get(`/payroll-mt/reports/fs5?venue_id=${activeVenue.id}&year=${year}&month=${month}`);
       setFs5Data(res.data?.data);
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       // toast.error("Failed to load FS5 data"); // Might be 404 if no data, suppress noise
       setFs5Data(null);
     } finally {
@@ -68,7 +69,7 @@ export default function PayrollMalta() {
       toast.success("Pay run generated successfully");
       loadPayRuns();
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       toast.error("Failed to generate pay run");
     } finally {
       setLoading(false);
@@ -93,7 +94,7 @@ export default function PayrollMalta() {
       link.click();
       link.remove();
     } catch (e) {
-      console.error(e);
+      logger.error(e);
       toast.error("Failed to download PDF");
     }
   };

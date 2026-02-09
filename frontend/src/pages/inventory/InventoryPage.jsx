@@ -1,18 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import SearchBar from '../../components/shared/SearchBar';
-import FilterBar from '../../components/shared/FilterBar';
-import ItemDetailDrawer from '../../components/inventory/ItemDetailDrawer';
-import { Card, CardContent } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import SearchBar from '../../components/shared/SearchBar';import { logger } from '@/lib/logger';
+
+import FilterBar from '../../components/shared/FilterBar';import { logger } from '@/lib/logger';
+
+import ItemDetailDrawer from '../../components/inventory/ItemDetailDrawer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
 import { 
   Package, AlertTriangle, TrendingDown, CheckCircle2,
   Plus, RefreshCw
 } from 'lucide-react';
 
+import { logger } from '@/lib/logger';
 export default function InventoryPage() {
   const { activeVenue } = useVenue();
   const [items, setItems] = useState([]);
@@ -43,7 +54,7 @@ export default function InventoryPage() {
       const res = await api.get(`/inventory/items?${params}`);
       setItems(res.data?.items || []);
     } catch (error) {
-      console.error('Failed to load items:', error);
+      logger.error('Failed to load items:', error);
     } finally {
       setLoading(false);
     }
@@ -148,7 +159,7 @@ export default function InventoryPage() {
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <Package className="h-5 w-5 text-slate-600" />
-                      <span className="font-medium text-slate-900">{item.name}</span>
+                      <span className="font-medium text-foreground">{item.name}</span>
                     </div>
                     <Badge variant={status.color} className={status.className}>
                       <StatusIcon className="h-3 w-3 mr-1" />
@@ -158,7 +169,7 @@ export default function InventoryPage() {
                   <div className="space-y-1 text-sm">
                     <div className="flex justify-between">
                       <span className="text-slate-600">On Hand:</span>
-                      <span className="font-medium text-slate-900">
+                      <span className="font-medium text-foreground">
                         {item.quantity?.toFixed(2) || '0.00'} {item.unit}
                       </span>
                     </div>

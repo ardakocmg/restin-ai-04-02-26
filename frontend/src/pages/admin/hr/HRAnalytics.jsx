@@ -1,7 +1,11 @@
-import { useState, useEffect } from 'react';
-import { useVenue } from '@/context/VenueContext';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useVenue } from '@/context/VenueContext';import { logger } from '@/lib/logger';
+
+import PageContainer from '@/layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
 import {
   Users,
   TrendingUp,
@@ -10,8 +14,10 @@ import {
   PieChart as PieIcon,
   BarChart as BarIcon,
   Activity
-} from 'lucide-react';
-import api from '@/lib/api';
+} from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '@/lib/api';import { logger } from '@/lib/logger';
+
 import {
   LineChart,
   Line,
@@ -30,6 +36,7 @@ import {
   Legend
 } from 'recharts';
 
+import { logger } from '@/lib/logger';
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 export default function HRAnalyticsIndigo() {
@@ -49,7 +56,7 @@ export default function HRAnalyticsIndigo() {
       const response = await api.get(`/venues/${venueId}/summary/dashboard`);
       setData(response.data);
     } catch (error) {
-      console.error('Failed to fetch HR dashboard data:', error);
+      logger.error('Failed to fetch HR dashboard data:', error);
     } finally {
       setLoading(false);
     }

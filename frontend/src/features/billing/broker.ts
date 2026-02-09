@@ -4,6 +4,7 @@
 
 import api from "../../lib/api";
 
+import { logger } from '@/lib/logger';
 // Pricing Table (Should ideally be fetched from Backend/DB)
 // Initial values from Seed
 export const AiPricing = {
@@ -38,7 +39,7 @@ export interface AiUsageDetails {
 export const calculateBillableAmount = (model: string, inputTokens: number, outputTokens: number): number => {
     const pricing = AiPricing[model as keyof typeof AiPricing];
     if (!pricing) {
-        console.warn(`Billing Broker: Unknown model '${model}'. Defaulting to $0.`);
+        logger.warn(`Billing Broker: Unknown model '${model}'. Defaulting to $0.`);
         return 0;
     }
 
@@ -62,7 +63,7 @@ export const logAiUsage = async (details: AiUsageDetails) => {
     try {
         const cost = calculateBillableAmount(details.model, details.inputTokens, details.outputTokens);
 
-        console.log(`💰 Billing Event: ${details.feature} used ${details.model}. Billable: $${cost.toFixed(6)}`);
+        logger.info(`💰 Billing Event: ${details.feature} used ${details.model}. Billable: $${cost.toFixed(6)}`);
 
         // Fire and Forget (don't block UI)
         await api.post('/billing/ai-usage', {
@@ -73,7 +74,7 @@ export const logAiUsage = async (details: AiUsageDetails) => {
 
     } catch (error) {
         // Fail silent to not break UX, but log error
-        console.error("🚨 Billing Broker Error: Failed to log usage.", error);
+        logger.error("🚨 Billing Broker Error: Failed to log usage.", error);
     }
 };
 

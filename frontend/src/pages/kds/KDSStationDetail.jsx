@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, Trash2 } from 'lucide-react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useParams, useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import { ArrowLeft, Save, Trash2 } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import axios from 'axios';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function KDSStationDetail() {
@@ -29,7 +34,7 @@ function KDSStationDetail() {
       );
       setStation(response.data);
     } catch (error) {
-      console.error('Error fetching station:', error);
+      logger.error('Error fetching station:', error);
     } finally {
       setLoading(false);
     }
@@ -44,7 +49,7 @@ function KDSStationDetail() {
       );
       setSettings(response.data);
     } catch (error) {
-      console.error('Error fetching settings:', error);
+      logger.error('Error fetching settings:', error);
     }
   };
 
@@ -59,7 +64,7 @@ function KDSStationDetail() {
       toast.success('Settings saved successfully');
       fetchSettings();
     } catch (error) {
-      console.error('Error updating settings:', error);
+      logger.error('Error updating settings:', error);
       toast.error('Failed to save settings');
     }
   };
@@ -75,7 +80,7 @@ function KDSStationDetail() {
       );
       toast.success('Station reset successfully');
     } catch (error) {
-      console.error('Error resetting station:', error);
+      logger.error('Error resetting station:', error);
     }
   };
 
@@ -89,12 +94,12 @@ function KDSStationDetail() {
       <div className="mb-6">
         <button
           onClick={() => navigate('/admin/kds/stations')}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+          className="flex items-center gap-2 text-gray-600 hover:text-foreground mb-4"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Stations
         </button>
-        <h1 className="text-4xl font-bold text-gray-900">{station.name}</h1>
+        <h1 className="text-4xl font-bold text-foreground">{station.name}</h1>
         <p className="text-gray-600">{station.station_key}</p>
       </div>
 
@@ -107,7 +112,7 @@ function KDSStationDetail() {
               onClick={() => setActiveTab(tab)}
               className={`px-6 py-4 font-medium capitalize transition ${activeTab === tab
                   ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-gray-600 hover:text-foreground'
                 }`}
             >
               {tab.replace('-', ' ')}

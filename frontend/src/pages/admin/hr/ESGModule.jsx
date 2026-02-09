@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Leaf, TrendingUp, Award } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Leaf, TrendingUp, Award } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function ESGModule() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,7 +20,7 @@ export default function ESGModule() {
       const response = await api.get('esg/metrics');
       setData(response.data);
     } catch (error) {
-      console.error('Failed to fetch ESG data:', error);
+      logger.error('Failed to fetch ESG data:', error);
     } finally {
       setLoading(false);
     }
@@ -27,7 +31,7 @@ export default function ESGModule() {
 
   return (
     <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-slate-900">ESG Metrics</h1>
+      <h1 className="text-3xl font-bold text-foreground">ESG Metrics</h1>
       <p className="text-slate-600">Environmental, Social & Governance</p>
 
       <div className="grid gap-4 md:grid-cols-3">

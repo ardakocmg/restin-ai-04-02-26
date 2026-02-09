@@ -1,15 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import PageContainer from '../../../layouts/PageContainer';
-import PayslipDocument from '../../../components/payroll/PayslipDocument';
-import { Button } from '../../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Download, Mail, Printer, ArrowLeft, Calendar, Image } from 'lucide-react';
-import api from '@/lib/api';
-import { exportToPdf, exportToJpeg } from '../../../lib/exportUtils';
-import { useVenue } from '../../../context/VenueContext';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { useParams, useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import PayslipDocument from '../../../components/payroll/PayslipDocument';import { logger } from '@/lib/logger';
+
+import { Button } from '../../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { Download, Mail, Printer, ArrowLeft, Calendar, Image } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import api from '@/lib/api';import { logger } from '@/lib/logger';
+
+import { exportToPdf, exportToJpeg } from '../../../lib/exportUtils';import { logger } from '@/lib/logger';
+
+import { useVenue } from '../../../context/VenueContext';import { logger } from '@/lib/logger';
+
 import { toast } from 'sonner';
 
+import { logger } from '@/lib/logger';
 export default function PayslipViewer() {
     const { employeeId, period } = useParams();
     const navigate = useNavigate();
@@ -41,7 +52,7 @@ export default function PayslipViewer() {
                     setPayslipData(payslips[0]);
                 }
             } catch (fallbackErr) {
-                console.error('Failed to load payslip:', fallbackErr);
+                logger.error('Failed to load payslip:', fallbackErr);
             }
         } finally {
             setLoading(false);
@@ -76,7 +87,7 @@ export default function PayslipViewer() {
             });
             toast.success('Payslip email sent successfully to employee!');
         } catch (error) {
-            console.error('Failed to send email:', error);
+            logger.error('Failed to send email:', error);
             toast.error('Failed to send email. Please try again.');
         } finally {
             setSending(false);

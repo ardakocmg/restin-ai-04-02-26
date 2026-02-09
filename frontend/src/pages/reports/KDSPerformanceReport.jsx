@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Clock, TrendingUp, Activity, AlertCircle } from 'lucide-react';
-import PageContainer from '../../layouts/PageContainer';
-import LoadingSpinner from '../../components/shared/LoadingSpinner';
-import { Badge } from '../../components/ui/badge';
-import api from '../../lib/api';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';import { logger } from '@/lib/logger';
+
+import { Clock, TrendingUp, Activity, AlertCircle } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+
+import LoadingSpinner from '../../components/shared/LoadingSpinner';import { logger } from '@/lib/logger';
+
+import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+
+import api from '../../lib/api';import { logger } from '@/lib/logger';
+
 import { useVenue } from '../../context/VenueContext';
 
+import { logger } from '@/lib/logger';
 export default function KDSPerformanceReport() {
   const { activeVenue } = useVenue();
   const [loading, setLoading] = useState(true);
@@ -37,7 +46,7 @@ export default function KDSPerformanceReport() {
         status: s.status || 'good'
       })));
     } catch (err) {
-      console.warn('KDS analytics failed');
+      logger.warn('KDS analytics failed');
       setMetrics({ avg_prep_time: '0m', total_tickets: 0, peak_time: 'N/A', delayed_orders: 0, peak_tickets: 0, delay_rate: 0 });
     } finally {
       setLoading(false);

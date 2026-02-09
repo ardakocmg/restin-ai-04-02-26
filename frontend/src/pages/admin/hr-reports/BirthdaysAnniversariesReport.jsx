@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Cake } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { Cake } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function BirthdaysAnniversariesReport() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +20,7 @@ export default function BirthdaysAnniversariesReport() {
       const response = await api.get('reporting/birthdays-anniversaries');
       setEvents(response.data);
     } catch (error) {
-      console.error('Failed to fetch birthdays/anniversaries:', error);
+      logger.error('Failed to fetch birthdays/anniversaries:', error);
     } finally {
       setLoading(false);
     }
@@ -26,7 +30,7 @@ export default function BirthdaysAnniversariesReport() {
 
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-slate-900 mb-6">Birthdays & Anniversaries</h1>
+      <h1 className="text-3xl font-bold text-foreground mb-6">Birthdays & Anniversaries</h1>
       <Card>
         <CardContent className="p-0">
           <table className="w-full">

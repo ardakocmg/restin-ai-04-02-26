@@ -1,16 +1,25 @@
 /**
  * PHASE 1: Leave & Absence Management
  */
-import { useState, useEffect } from "react";
-import { useAuth } from "../../../context/AuthContext";
-import api from "../../../lib/api";
-import { toast } from "sonner";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "../../../components/ui/badge";
-import { Loader2, Umbrella, CheckCircle, XCircle } from "lucide-react";
-import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";
+import { useState, useEffect } from "react";import { logger } from '@/lib/logger';
+
+import { useAuth } from "../../../context/AuthContext";import { logger } from '@/lib/logger';
+
+import api from "../../../lib/api";import { logger } from '@/lib/logger';
+
+import { toast } from "sonner";import { logger } from '@/lib/logger';
+
+import { Button } from "../../../components/ui/button";import { logger } from '@/lib/logger';
+
+import { Badge } from "../../../components/ui/badge";import { logger } from '@/lib/logger';
+
+import { Loader2, Umbrella, CheckCircle, XCircle } from "lucide-react";import { logger } from '@/lib/logger';
+
+import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";import { logger } from '@/lib/logger';
+
 import HRAccessPanel from "../../../components/hr/HRAccessPanel";
 
+import { logger } from '@/lib/logger';
 const STATUS_COLORS = {
   pending: "bg-yellow-500/20 text-yellow-400 border-yellow-500/50",
   approved: "bg-green-500/20 text-green-400 border-green-500/50",
@@ -32,7 +41,7 @@ export default function LeavePage() {
       const response = await api.get(`/hr/leave?venue_id=${venueId}`);
       setLeaveRequests(response.data);
     } catch (error) {
-      console.error("Failed to load leave requests:", error);
+      logger.error("Failed to load leave requests:", error);
       if (error.response?.status !== 403) {
         toast.error("Failed to load leave requests");
       }

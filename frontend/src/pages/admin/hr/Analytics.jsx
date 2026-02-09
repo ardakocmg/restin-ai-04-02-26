@@ -1,14 +1,21 @@
 /**
  * PHASE 1: HR Analytics Dashboard
  */
-import { useState, useEffect } from "react";
-import { useAuth } from "../../../context/AuthContext";
-import api from "../../../lib/api";
-import { toast } from "sonner";
-import { Loader2, Users, Calendar, Umbrella, FileText } from "lucide-react";
-import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";
+import { useState, useEffect } from "react";import { logger } from '@/lib/logger';
+
+import { useAuth } from "../../../context/AuthContext";import { logger } from '@/lib/logger';
+
+import api from "../../../lib/api";import { logger } from '@/lib/logger';
+
+import { toast } from "sonner";import { logger } from '@/lib/logger';
+
+import { Loader2, Users, Calendar, Umbrella, FileText } from "lucide-react";import { logger } from '@/lib/logger';
+
+import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";import { logger } from '@/lib/logger';
+
 import HRAccessPanel from "../../../components/hr/HRAccessPanel";
 
+import { logger } from '@/lib/logger';
 export default function AnalyticsPage() {
   const { user } = useAuth();
   const { getAccess, loading: flagsLoading } = useHRFeatureFlags();
@@ -28,7 +35,7 @@ export default function AnalyticsPage() {
       const response = await api.get(`/hr/analytics?venue_id=${venueId}`);
       setAnalytics(response.data);
     } catch (error) {
-      console.error("Failed to load analytics:", error);
+      logger.error("Failed to load analytics:", error);
       if (error.response?.status !== 403) {
         toast.error("Failed to load analytics");
       }

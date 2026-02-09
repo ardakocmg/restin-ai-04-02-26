@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { TrendingUp } from 'lucide-react';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';import { logger } from '@/lib/logger';
+
+import { TrendingUp } from 'lucide-react';import { logger } from '@/lib/logger';
+
 import api from '@/lib/api';
 
+import { logger } from '@/lib/logger';
 export default function ForecastingCosts() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,7 +22,7 @@ export default function ForecastingCosts() {
       const response = await api.get('forecasting-costs/metrics');
       setData(response.data);
     } catch (error) {
-      console.error('Failed to fetch forecasting data:', error);
+      logger.error('Failed to fetch forecasting data:', error);
     } finally {
       setLoading(false);
     }
@@ -28,7 +33,7 @@ export default function ForecastingCosts() {
 
   return (
     <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-slate-900">Forecasting Costs</h1>
+      <h1 className="text-3xl font-bold text-foreground">Forecasting Costs</h1>
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
@@ -36,7 +41,7 @@ export default function ForecastingCosts() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-600">Projected Next Quarter</p>
-                <p className="text-2xl font-bold text-slate-900 mt-2">€{data.projected_costs_next_quarter.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-foreground mt-2">€{data.projected_costs_next_quarter.toLocaleString()}</p>
               </div>
               <TrendingUp className="h-8 w-8 text-blue-500" />
             </div>
@@ -45,7 +50,7 @@ export default function ForecastingCosts() {
         <Card>
           <CardContent className="p-6">
             <p className="text-sm text-slate-600">Projected Headcount</p>
-            <p className="text-2xl font-bold text-slate-900 mt-2">{data.projected_headcount_next_quarter}</p>
+            <p className="text-2xl font-bold text-foreground mt-2">{data.projected_headcount_next_quarter}</p>
           </CardContent>
         </Card>
         <Card>

@@ -1,17 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, ChefHat, Search, Filter, Save, Trash2, Calculator, Info } from 'lucide-react';
-import axios from 'axios';
-import { toast } from 'sonner';
-import StateModal from '../../components/StateModal';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
+import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+
+import { Plus, ChefHat, Search, Filter, Save, Trash2, Calculator, Info } from 'lucide-react';import { logger } from '@/lib/logger';
+
+import axios from 'axios';import { logger } from '@/lib/logger';
+
+import { toast } from 'sonner';import { logger } from '@/lib/logger';
+
+import StateModal from '../../components/StateModal';import { logger } from '@/lib/logger';
+
+import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+
+import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '../../components/ui/dialog';
+} from '../../components/ui/dialog';import { logger } from '@/lib/logger';
+
 import {
   Select,
   SelectContent,
@@ -20,6 +28,7 @@ import {
   SelectValue,
 } from '../../components/ui/select';
 
+import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function RecipeManagement() {
@@ -59,7 +68,7 @@ export default function RecipeManagement() {
       setRecipes(recipesRes.data || []);
       setInventoryItems(itemsRes.data.items || []);
     } catch (error) {
-      console.error('Error loading data:', error);
+      logger.error('Error loading data:', error);
       toast.error('Failed to load recipes');
     } finally {
       setLoading(false);
@@ -127,7 +136,7 @@ export default function RecipeManagement() {
         instructions: []
       });
     } catch (error) {
-      console.error('Error creating recipe:', error);
+      logger.error('Error creating recipe:', error);
       toast.error('Failed to create recipe');
     }
   };

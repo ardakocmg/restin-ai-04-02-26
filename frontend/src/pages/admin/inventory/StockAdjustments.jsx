@@ -7,6 +7,7 @@ import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../../../components/ui/table';
 
+import { logger } from '@/lib/logger';
 export default function StockAdjustments() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +24,7 @@ export default function StockAdjustments() {
       setItems(res.data || []);
       setLoading(false);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       setLoading(false);
     }
   };
