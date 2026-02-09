@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Package, AlertTriangle, TrendingDown, DollarSign } from 'lucide-react';
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+import api from '../../lib/api';
+import { useVenue } from '../../context/VenueContext';
 
 const chartTheme = {
   background: '#18181B',
@@ -15,50 +14,39 @@ const chartTheme = {
 };
 
 export default function InventoryReports() {
+  const { activeVenue } = useVenue();
   const [loading, setLoading] = useState(true);
   const [lowStockItems, setLowStockItems] = useState([]);
-  const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
+  const [metrics, setMetrics] = useState({ total_items: 0, low_stock_alerts: 0, waste_cost_week: 0, inventory_value: 0 });
+  const [wasteTrend, setWasteTrend] = useState([]);
+  const [costVariance, setCostVariance] = useState([]);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (activeVenue?.id) loadData();
+  }, [activeVenue?.id]);
 
   const loadData = async () => {
     try {
-      const token = localStorage.getItem('restin_token');
-      const response = await axios.get(
-        `${API_URL}/api/inventory/items?venue_id=${venueId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      const items = response.data.items || [];
-      const lowStock = items.filter(item => 
-        item.current_stock < item.reorder_level
-      );
+      // Load inventory items for low stock
+      const [itemsRes, analyticsRes] = await Promise.all([
+        api.get('/inventory/items', { params: { venue_id: activeVenue.id } }).catch(() => ({ data: { items: [] } })),
+        api.get('/inventory/analytics', { params: { venue_id: activeVenue.id } }).catch(() => ({ data: {} }))
+      ]);
+
+      const items = itemsRes.data.items || [];
+      const lowStock = items.filter(item => item.current_stock < item.reorder_level);
       setLowStockItems(lowStock);
+
+      const analytics = analyticsRes.data;
+      setMetrics(analytics.metrics || { total_items: items.length, low_stock_alerts: lowStock.length, waste_cost_week: 0, inventory_value: 0 });
+      setWasteTrend(analytics.waste_trend || []);
+      setCostVariance(analytics.cost_variance || []);
     } catch (error) {
-      console.error('Error loading inventory:', error);
+      console.warn('Error loading inventory reports:', error);
     } finally {
       setLoading(false);
     }
   };
-
-  // Mock data
-  const wasteTrend = [
-    { month: 'Jul', waste: 145, cost: 580 },
-    { month: 'Aug', waste: 132, cost: 528 },
-    { month: 'Sep', waste: 98, cost: 392 },
-    { month: 'Oct', waste: 115, cost: 460 },
-    { month: 'Nov', waste: 87, cost: 348 },
-    { month: 'Dec', waste: 102, cost: 408 }
-  ];
-
-  const costVariance = [
-    { item: 'Beef Tenderloin', variance: -12 },
-    { item: 'Lobster', variance: +8 },
-    { item: 'Truffle Oil', variance: +22 },
-    { item: 'Salmon', variance: -5 },
-    { item: 'Champagne', variance: +15 }
-  ];
 
   if (loading) {
     return (
@@ -85,7 +73,7 @@ export default function InventoryReports() {
             <Package className="w-5 h-5 text-green-500" />
             <span className="text-xs" style={{ color: '#71717A' }}>Total</span>
           </div>
-          <div className="text-3xl font-bold text-green-500 mb-1">487</div>
+          <div className="text-3xl font-bold text-green-500 mb-1">{metrics.total_items}</div>
           <div className="text-sm" style={{ color: '#A1A1AA' }}>Items in Stock</div>
         </div>
 
@@ -103,7 +91,7 @@ export default function InventoryReports() {
             <TrendingDown className="w-5 h-5 text-yellow-500" />
             <span className="text-xs" style={{ color: '#71717A' }}>This Month</span>
           </div>
-          <div className="text-3xl font-bold text-yellow-500 mb-1">€408</div>
+          <div className="text-3xl font-bold text-yellow-500 mb-1">€{metrics.waste_cost_week}</div>
           <div className="text-sm" style={{ color: '#A1A1AA' }}>Waste Cost</div>
         </div>
 
@@ -112,7 +100,7 @@ export default function InventoryReports() {
             <DollarSign className="w-5 h-5 text-blue-500" />
             <span className="text-xs" style={{ color: '#71717A' }}>Value</span>
           </div>
-          <div className="text-3xl font-bold text-blue-500 mb-1">€84k</div>
+          <div className="text-3xl font-bold text-blue-500 mb-1">€{(metrics.inventory_value || 0).toLocaleString()}</div>
           <div className="text-sm" style={{ color: '#A1A1AA' }}>Total Inventory</div>
         </div>
       </div>
@@ -122,36 +110,44 @@ export default function InventoryReports() {
         {/* Waste Trend */}
         <div className="chart-container-dark">
           <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Waste Trend</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={wasteTrend}>
-              <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
-              <XAxis dataKey="month" stroke={chartTheme.text} />
-              <YAxis stroke={chartTheme.text} />
-              <Tooltip 
-                contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-                labelStyle={{ color: '#F5F5F7' }}
-              />
-              <Legend wrapperStyle={{ color: chartTheme.text }} />
-              <Line type="monotone" dataKey="cost" stroke={chartTheme.primary} strokeWidth={2} name="Waste Cost (€)" />
-            </LineChart>
-          </ResponsiveContainer>
+          {wasteTrend.length > 0 ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={wasteTrend}>
+                <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
+                <XAxis dataKey="month" stroke={chartTheme.text} />
+                <YAxis stroke={chartTheme.text} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                  labelStyle={{ color: '#F5F5F7' }}
+                />
+                <Legend wrapperStyle={{ color: chartTheme.text }} />
+                <Line type="monotone" dataKey="cost" stroke={chartTheme.primary} strokeWidth={2} name="Waste Cost (€)" />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[300px] flex items-center justify-center text-zinc-500">No waste trend data yet</div>
+          )}
         </div>
 
         {/* Cost Variance */}
         <div className="chart-container-dark">
           <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Cost Variance</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={costVariance}>
-              <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
-              <XAxis dataKey="item" stroke={chartTheme.text} />
-              <YAxis stroke={chartTheme.text} />
-              <Tooltip 
-                contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-                labelStyle={{ color: '#F5F5F7' }}
-              />
-              <Bar dataKey="variance" fill={chartTheme.primary} name="Variance (%)" />
-            </BarChart>
-          </ResponsiveContainer>
+          {costVariance.length > 0 ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={costVariance}>
+                <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
+                <XAxis dataKey="item" stroke={chartTheme.text} />
+                <YAxis stroke={chartTheme.text} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                  labelStyle={{ color: '#F5F5F7' }}
+                />
+                <Bar dataKey="variance" fill={chartTheme.primary} name="Variance (%)" />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[300px] flex items-center justify-center text-zinc-500">No cost variance data yet</div>
+          )}
         </div>
       </div>
 

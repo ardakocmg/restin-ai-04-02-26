@@ -1,40 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Edit, Plus, TrendingUp, TrendingDown } from 'lucide-react';
-import axios from 'axios';
+import api from '../../lib/api';
 import StateModal from '../../components/StateModal';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+import { useVenue } from '../../context/VenueContext';
 
 export default function StockAdjustments() {
+  const { activeVenue } = useVenue();
   const [adjustments, setAdjustments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
 
   useEffect(() => {
-    // Mock data
-    setAdjustments([
-      {
-        id: 'adj-001',
-        item_name: 'Wagyu Beef',
-        qty_delta: -2.5,
-        unit: 'kg',
-        reason: 'STOCK_ADJUSTMENT',
-        notes: 'Physical count correction',
-        created_at: '2026-01-27T09:15:00Z'
-      },
-      {
-        id: 'adj-002',
-        item_name: 'Olive Oil',
-        qty_delta: +5.0,
-        unit: 'L',
-        reason: 'RECEIVING_CORRECTION',
-        notes: 'Missing from PO',
-        created_at: '2026-01-26T14:20:00Z'
-      }
-    ]);
-    setLoading(false);
-  }, []);
+    if (activeVenue?.id) loadAdjustments();
+  }, [activeVenue?.id]);
+
+  const loadAdjustments = async () => {
+    try {
+      const res = await api.get('/inventory/adjustments', { params: { venue_id: activeVenue.id } });
+      setAdjustments(Array.isArray(res.data) ? res.data : res.data.adjustments || []);
+    } catch (err) {
+      console.warn('Failed to load stock adjustments');
+      setAdjustments([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -65,19 +55,23 @@ export default function StockAdjustments() {
 
       {/* Adjustments List */}
       <div className="space-y-4">
-        {adjustments.map((adj) => (
-          <div key={adj.id} className="card-dark p-6 rounded-xl">
+        {adjustments.length === 0 ? (
+          <div className="card-dark p-12 rounded-xl text-center">
+            <p className="text-zinc-500">No stock adjustments found</p>
+          </div>
+        ) : adjustments.map((adj) => (
+          <div key={adj.id || adj._id} className="card-dark p-6 rounded-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div 
+                <div
                   className="p-3 rounded-lg"
-                  style={{ 
-                    backgroundColor: adj.qty_delta > 0 
-                      ? 'rgba(74, 222, 128, 0.15)' 
-                      : 'rgba(229, 57, 53, 0.15)' 
+                  style={{
+                    backgroundColor: (adj.qty_delta || adj.quantity_delta || 0) > 0
+                      ? 'rgba(74, 222, 128, 0.15)'
+                      : 'rgba(229, 57, 53, 0.15)'
                   }}
                 >
-                  {adj.qty_delta > 0 ? (
+                  {(adj.qty_delta || adj.quantity_delta || 0) > 0 ? (
                     <TrendingUp className="w-6 h-6 text-green-500" />
                   ) : (
                     <TrendingDown className="w-6 h-6 text-red-500" />
@@ -85,11 +79,11 @@ export default function StockAdjustments() {
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1" style={{ color: '#F5F5F7' }}>
-                    {adj.item_name}
+                    {adj.item_name || adj.product_name || 'Unknown Item'}
                   </h3>
                   <div className="flex items-center gap-3">
                     <span className="text-sm px-2 py-1 rounded bg-zinc-900 border border-white/10" style={{ color: '#A1A1AA' }}>
-                      {adj.reason.replace('_', ' ')}
+                      {(adj.reason || 'ADJUSTMENT').replace(/_/g, ' ')}
                     </span>
                     {adj.notes && (
                       <span className="text-xs" style={{ color: '#71717A' }}>{adj.notes}</span>
@@ -98,13 +92,12 @@ export default function StockAdjustments() {
                 </div>
               </div>
               <div className="text-right">
-                <div className={`text-2xl font-bold ${
-                  adj.qty_delta > 0 ? 'text-green-500' : 'text-red-500'
-                }`}>
-                  {adj.qty_delta > 0 ? '+' : ''}{adj.qty_delta} {adj.unit}
+                <div className={`text-2xl font-bold ${(adj.qty_delta || adj.quantity_delta || 0) > 0 ? 'text-green-500' : 'text-red-500'
+                  }`}>
+                  {(adj.qty_delta || adj.quantity_delta || 0) > 0 ? '+' : ''}{adj.qty_delta || adj.quantity_delta || 0} {adj.unit || adj.base_unit || ''}
                 </div>
                 <div className="text-xs" style={{ color: '#71717A' }}>
-                  {new Date(adj.created_at).toLocaleDateString()}
+                  {adj.created_at ? new Date(adj.created_at).toLocaleDateString() : ''}
                 </div>
               </div>
             </div>

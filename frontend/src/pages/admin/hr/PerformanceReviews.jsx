@@ -13,6 +13,7 @@ export default function PerformanceReviews() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusData, setStatusData] = useState([]);
 
   useEffect(() => {
     fetchReviews();
@@ -20,55 +21,23 @@ export default function PerformanceReviews() {
 
   const fetchReviews = async () => {
     try {
-      // Mock data matching Shireburn screenshot
-      const mockReviews = [
-        {
-          id: 'rev_001',
-          employee_name: 'Emily Lloyd',
-          employee_code: 'EML01',
-          employee_photo: null,
-          manager_name: 'Carrie Andrews',
-          manager_code: 'AND01',
-          manager_photo: null,
-          company_name: 'Insights Hotel',
-          review_name: 'Mid Year Review 2024',
-          due_date: '30/09/2024',
-          published_on: '21/10/2024',
-          finalised_date: null,
-          review_status: 'Pending Manager',
-          respondent_status: { manager_done: false, employee_done: true }
-        },
-        {
-          id: 'rev_002',
-          employee_name: 'Jennifer Aniston',
-          employee_code: 'JEN01',
-          employee_photo: null,
-          manager_name: 'Emily Lloyd',
-          manager_code: 'EML01',
-          manager_photo: null,
-          company_name: 'Insights Hotel',
-          review_name: 'Annual Review 2024',
-          due_date: '25/06/2024',
-          published_on: '19/06/2024',
-          finalised_date: '10/06/2024',
-          review_status: 'Closed',
-          respondent_status: { manager_done: true, employee_done: true }
-        }
-      ];
-      setReviews(mockReviews);
+      const params = {};
+      if (activeTab !== 'all') params.status = activeTab;
+      const response = await api.get('/hr/reviews', { params });
+      const data = response.data;
+      setReviews(data.reviews || []);
+      setStatusData((data.statusData || []).map((s, i) => ({
+        ...s,
+        color: COLORS[i % COLORS.length]
+      })));
     } catch (error) {
       console.error('Failed to fetch reviews:', error);
+      setReviews([]);
+      setStatusData([]);
     } finally {
       setLoading(false);
     }
   };
-
-  const statusData = [
-    { name: 'Pending Both Parties', value: 26, color: '#10B981' },
-    { name: 'Appraisal Stage', value: 0, color: '#F59E0B' },
-    { name: 'Closed', value: 0, color: '#94A3B8' },
-    { name: 'Cancelled', value: 0, color: '#EF4444' }
-  ];
 
   if (loading) return <div className="p-8 text-slate-50">Loading...</div>;
 
@@ -133,11 +102,10 @@ export default function PerformanceReviews() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab.toLowerCase().replace(' ', '-'))}
-              className={`py-3 px-4 border-b-2 transition-colors ${
-                activeTab === tab.toLowerCase().replace(' ', '-')
+              className={`py-3 px-4 border-b-2 transition-colors ${activeTab === tab.toLowerCase().replace(' ', '-')
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400 dark:text-blue-400'
                   : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
+                }`}
             >
               {tab}
             </button>
@@ -218,30 +186,27 @@ export default function PerformanceReviews() {
                     <td className="p-3 text-slate-900 dark:text-slate-50">{review.published_on}</td>
                     <td className="p-3 text-slate-900 dark:text-slate-50">{review.finalised_date || 'N/A'}</td>
                     <td className="p-3">
-                      <span className={`px-3 py-1 rounded text-xs font-medium ${
-                        review.review_status === 'Pending Manager'
+                      <span className={`px-3 py-1 rounded text-xs font-medium ${review.review_status === 'Pending Manager'
                           ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
                           : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                      }`}>
+                        }`}>
                         {review.review_status}
                       </span>
                     </td>
                     <td className="p-3">
                       <div className="flex items-center justify-center gap-2">
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                          review.respondent_status.employee_done
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${review.respondent_status.employee_done
                             ? 'border-green-500 bg-green-500'
                             : 'border-slate-400'
-                        }`}>
+                          }`}>
                           {review.respondent_status.employee_done && (
                             <span className="text-white text-xs">✓</span>
                           )}
                         </div>
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                          review.respondent_status.manager_done
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${review.respondent_status.manager_done
                             ? 'border-green-500 bg-green-500'
                             : 'border-slate-400'
-                        }`}>
+                          }`}>
                           {review.respondent_status.manager_done && (
                             <span className="text-white text-xs">✓</span>
                           )}

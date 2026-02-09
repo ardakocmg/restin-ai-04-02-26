@@ -32,72 +32,47 @@ export default function EmployeePayrollHistory() {
     }, []);
 
     const fetchHistory = async () => {
-        setTimeout(() => {
-            setPayslips([
-                { id: 'p1', month: 'December 2025', net: 746.99, date: '05/01/2026', status: 'PAID' },
-                { id: 'p2', month: 'November 2025', net: 820.50, date: '05/12/2025', status: 'PAID' },
-                { id: 'p3', month: 'October 2025', net: 795.00, date: '05/11/2025', status: 'PAID' },
-            ]);
-            setFs3s([
-                { id: 'f1', year: 2024, total_gross: 9995.00, tax: 1000.00, date: '26/02/2025' },
-                { id: 'f2', year: 2023, total_gross: 8500.00, tax: 850.00, date: '15/02/2024' },
-            ]);
-            setSkillsPass({
-                fullName: 'ARDA KOC',
-                candidateNumber: '40379',
-                jobFamily: 'Revenue Analyst',
-                level: 'RED',
-                issuanceDate: '07-Aug-2025',
-                batchNumber: '69',
-                peNumber: '456398',
-                validUntil: '07-Aug-2027'
+        try {
+            // Get the current user's employee ID from localStorage or auth context
+            const authData = JSON.parse(localStorage.getItem('auth') || '{}');
+            const employeeId = authData?.user?.id || 'current';
+
+            const response = await api.get('/hr/employee/documents', {
+                params: { employee_id: employeeId }
             });
-            setContracts([
-                { id: 'c1', title: 'Letter of Engagement', date: '22/08/2024', status: 'SIGNED' }
-            ]);
-            setExitDocs([
-                { id: 'e1', title: 'Quick Exit Settlement', date: '31/01/2026', status: 'FINALIZED' }
-            ]);
+            const data = response.data;
+
+            setPayslips(data.payslips || []);
+            setFs3s(data.fs3_statements || []);
+            setSkillsPass(data.skills_pass?.[0] || null);
+            setContracts(data.contracts || []);
+            setExitDocs(data.exit_documents || []);
+        } catch (error) {
+            console.error('Failed to fetch employee documents:', error);
+            setPayslips([]);
+            setFs3s([]);
+            setContracts([]);
+            setExitDocs([]);
+        } finally {
             setLoading(false);
-        }, 500);
+        }
     };
 
     const handleViewFS3 = (fs3) => {
-        const mockFs3Data = {
-            year: fs3.year,
-            payee: { surname: 'KOC', firstName: 'ARDA', address: '23, Triq In-Nixxiegha, Mellieha', locality: 'Mellieha', idNumber: '0307741A', ssNumber: 'D70158083' },
-            payer: { name: 'Caviar & Bull', address: 'Corinthia Hotel, St. Georges Bay', locality: 'St. Julians, STJ 3301, MT', peNumber: '456398', principalName: 'Antoinette Corby', principalPosition: 'CFO' },
-            period: { start: '22/08/2024', end: '31/12/2024' },
-            emoluments: { c1: 0, c1a: 0, c1b: 0, c2: 9995, c3: 0, c3a: 0, c4: 9995 },
-            deductions: { d1: 0, d1a: 0, d2: 1000, d3: 0, d3a: 0, d4: 1000 },
-            sscTable: [
-                { wage: 400.00, number: 5.00, category: 'C', payee: 0.00, payer: 0.00, total: 0.00, maternity: 6.00 },
-                { wage: 385.00, number: 5.00, category: 'C', payee: 0.00, payer: 0.00, total: 0.00, maternity: 5.80 }
-            ]
-        };
-        setSelectedDoc(mockFs3Data);
+        // Use real FS3 data from the API response
+        setSelectedDoc(fs3);
         setDocType('FS3');
     };
 
-    const handleViewContract = () => {
-        setSelectedDoc({
-            employeeName: 'Arda Koc',
-            address: '23, Triq In-Nixxiegha, Mellieha',
-            date: '22nd August 2024',
-            idNumber: '0307741A',
-            ssNumber: 'D70158083',
-            jobTitle: 'In House Strategist'
-        });
+    const handleViewContract = (contract) => {
+        // Use real contract data from the API response
+        setSelectedDoc(contract || contracts[0]);
         setDocType('Contract');
     };
 
-    const handleViewExit = () => {
-        setSelectedDoc({
-            employeeName: 'Arda Koc',
-            employeeId: 'emp-40379',
-            exitDate: '31st January 2026',
-            reason: 'Resignation'
-        });
+    const handleViewExit = (exitDoc) => {
+        // Use real exit document data from the API response
+        setSelectedDoc(exitDoc || exitDocs[0]);
         setDocType('Exit');
     };
 

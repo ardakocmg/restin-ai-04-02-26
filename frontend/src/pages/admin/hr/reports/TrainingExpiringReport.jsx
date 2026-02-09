@@ -1,14 +1,44 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '../../../../components/ui/card';
-import { GraduationCap, AlertTriangle } from 'lucide-react';
+import { GraduationCap, AlertTriangle, Loader2 } from 'lucide-react';
+import api from '../../../../lib/api';
+import { useVenue } from '../../../../context/VenueContext';
 
 export default function TrainingExpiringReport() {
-  // Mock data for LMS
-  const expiringTraining = [
-    { id: 1, name: "Hygiene Certificate L2", employee: "John Doe", expiry: "2026-03-01", status: "expiring" },
-    { id: 2, name: "Fire Safety", employee: "Jane Smith", expiry: "2026-02-15", status: "critical" },
-  ];
+  const { activeVenue } = useVenue();
+  const [loading, setLoading] = useState(true);
+  const [expiringTraining, setExpiringTraining] = useState([]);
+
+  useEffect(() => {
+    if (activeVenue?.id) loadData();
+  }, [activeVenue?.id]);
+
+  const loadData = async () => {
+    try {
+      const res = await api.get(`/venues/${activeVenue.id}/hr/documents/expiring-soon`);
+      const data = Array.isArray(res.data) ? res.data : res.data.documents || [];
+      setExpiringTraining(data.map(doc => ({
+        id: doc.id || doc._id,
+        name: doc.document_type || doc.name || 'Certificate',
+        employee: doc.employee_name || 'Unknown',
+        expiry: (doc.expiry_date || '').split('T')[0],
+        status: doc.days_until_expiry <= 14 ? 'critical' : 'expiring'
+      })));
+    } catch (err) {
+      console.warn('Failed to load expiring training data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -18,7 +48,9 @@ export default function TrainingExpiringReport() {
       </h1>
 
       <div className="grid gap-4">
-        {expiringTraining.map(item => (
+        {expiringTraining.length === 0 ? (
+          <p className="text-zinc-500 text-center py-8">No expiring training certificates found</p>
+        ) : expiringTraining.map(item => (
           <Card key={item.id} className="bg-zinc-900 border-white/10 hover:border-yellow-500/50 transition-colors">
             <CardContent className="flex items-center justify-between p-4">
               <div className="flex items-center gap-4">

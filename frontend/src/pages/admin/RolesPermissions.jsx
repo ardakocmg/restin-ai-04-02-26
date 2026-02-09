@@ -12,55 +12,7 @@ export default function RolesPermissions() {
     const [selectedRole, setSelectedRole] = useState(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
-
-    // Mock initial data - in real app this comes from API
-    const permissionGroups = [
-        {
-            id: "orders",
-            title: "Orders & Service",
-            icon: Coffee,
-            permissions: [
-                { key: "orders:create", label: "Create Orders", risk: "LOW" },
-                { key: "orders:void", label: "Void Items/Orders", risk: "HIGH", gate: "manager_code" },
-                { key: "orders:discount", label: "Apply Discounts", risk: "MED" },
-                { key: "orders:transfer", label: "Transfer Tables", risk: "LOW" },
-                { key: "orders:split", label: "Split Bills", risk: "LOW" },
-            ]
-        },
-        {
-            id: "payments",
-            title: "Payments & Cash",
-            icon: DollarSign,
-            permissions: [
-                { key: "payments:process", label: "Process Payments", risk: "LOW" },
-                { key: "payments:refund", label: "Process Refunds", risk: "HIGH" },
-                { key: "cash:open_drawer", label: "Open Cash Drawer", risk: "MED", gate: "cashdesk" },
-                { key: "cash:shift_close", label: "Close Cash Shift", risk: "HIGH" },
-            ]
-        },
-        {
-            id: "kitchen",
-            title: "Kitchen & Production",
-            icon: Printer,
-            permissions: [
-                { key: "kitchen:view", label: "View KDS", risk: "LOW" },
-                { key: "kitchen:bump", label: "Bump Orders", risk: "LOW" },
-                { key: "kitchen:recall", label: "Recall Orders", risk: "MED" },
-                { key: "stock:adjust", label: "Adjust Stock", risk: "MED" },
-            ]
-        },
-        {
-            id: "admin",
-            title: "Administration",
-            icon: Shield,
-            permissions: [
-                { key: "admin:users", label: "Manage Users", risk: "CRITICAL" },
-                { key: "admin:roles", label: "Manage Roles", risk: "CRITICAL" },
-                { key: "reports:view", label: "View Reports", risk: "MED" },
-                { key: "settings:edit", label: "Edit Settings", risk: "HIGH" },
-            ]
-        }
-    ];
+    const [permissionGroups, setPermissionGroups] = useState([]);
 
     const stations = [
         { id: "floor", label: "Floor" },
@@ -76,23 +28,14 @@ export default function RolesPermissions() {
 
     const fetchRoles = async () => {
         try {
-            // In a real implementation this would fetch from /api/admin/roles
-            // For now we mock it based on the spec
-            const mockRoles = [
-                { id: "owner", label: "Owner", category: "Management", allowedStations: ["floor", "bar", "cashdesk", "kitchen", "office"] },
-                { id: "general_manager", label: "General Manager", category: "Management", allowedStations: ["floor", "bar", "cashdesk", "kitchen", "office"] },
-                { id: "manager", label: "Manager", category: "Management", allowedStations: ["floor", "bar", "cashdesk", "office"] },
-                { id: "supervisor", label: "Supervisor", category: "Management", allowedStations: ["floor", "bar"] },
-                { id: "waiter", label: "Waiter", category: "Service", allowedStations: ["floor", "bar"] },
-                { id: "bartender", label: "Bartender", category: "Service", allowedStations: ["bar"] },
-                { id: "runner", label: "Runner", category: "Service", allowedStations: ["floor", "kitchen"] },
-                { id: "head_chef", label: "Head Chef", category: "Kitchen", allowedStations: ["kitchen", "office"] },
-                { id: "chef_de_partie", label: "Chef de Partie", category: "Kitchen", allowedStations: ["kitchen"] },
-                { id: "cashier", label: "Cashier", category: "Other", allowedStations: ["cashdesk"] },
-                { id: "it_admin", label: "IT Admin", category: "Other", allowedStations: ["office"] },
-            ];
-            setRoles(mockRoles);
-            setSelectedRole(mockRoles[0]);
+            const response = await api.get('/admin/roles');
+            const data = response.data;
+            const fetchedRoles = data.roles || [];
+            setRoles(fetchedRoles);
+            setPermissionGroups(data.permissionGroups || []);
+            if (fetchedRoles.length > 0) {
+                setSelectedRole(fetchedRoles[0]);
+            }
         } catch (error) {
             console.error("Failed to fetch roles:", error);
             toast.error("Failed to load roles");
@@ -144,8 +87,8 @@ export default function RolesPermissions() {
                                     key={role.id}
                                     onClick={() => setSelectedRole(role)}
                                     className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition-colors ${selectedRole?.id === role.id
-                                            ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
-                                            : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+                                        ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
+                                        : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
                                         }`}
                                 >
                                     <div className="flex items-center gap-2">
@@ -215,8 +158,8 @@ export default function RolesPermissions() {
                                             key={station.id}
                                             onClick={() => handleStationToggle(station.id)}
                                             className={`relative p-4 rounded-lg border text-left transition-all ${isAllowed
-                                                    ? "bg-emerald-500/10 border-emerald-500/30"
-                                                    : "bg-zinc-900 border-zinc-800 opacity-60 hover:opacity-100"
+                                                ? "bg-emerald-500/10 border-emerald-500/30"
+                                                : "bg-zinc-900 border-zinc-800 opacity-60 hover:opacity-100"
                                                 }`}
                                         >
                                             <div className="flex justify-between items-start mb-2">

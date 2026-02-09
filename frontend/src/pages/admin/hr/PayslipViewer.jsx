@@ -5,12 +5,14 @@ import PayslipDocument from '../../../components/payroll/PayslipDocument';
 import { Button } from '../../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Download, Mail, Printer, ArrowLeft, Calendar, Image } from 'lucide-react';
-import axios from 'axios';
+import api from '@/lib/api';
 import { exportToPdf, exportToJpeg } from '../../../lib/exportUtils';
+import { useVenue } from '../../../context/VenueContext';
 
 export default function PayslipViewer() {
     const { employeeId, period } = useParams();
     const navigate = useNavigate();
+    const { activeVenue } = useVenue();
     const [payslipData, setPayslipData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
@@ -23,83 +25,23 @@ export default function PayslipViewer() {
         try {
             setLoading(true);
 
-            // For demo purposes, use mock data for Arda KOC
-            const mockPayslip = {
-                employee: {
-                    name: 'ARDA KOC (KOC)',
-                    id_number: '0307741A',
-                    ss_number: 'D70158083',
-                    pe_number: '456398',
-                    address: {
-                        line1: '23',
-                        line2: 'Triq In-Noxagha',
-                        city: 'Mellieha',
-                        country: 'Malta'
-                    },
-                    department: 'OTHER',
-                    section: '-',
-                    unit: '-',
-                    grade: '-',
-                    occupation: 'IN HOUSE STRATEGIST',
-                    occupation_roll: 'Dec 25 (2025-5/12)',
-                    company: {
-                        name: 'Corinthia Hotel',
-                        address: 'St. Georges Bay',
-                        city: 'St. Julians',
-                        postal_code: 'STJ 3301',
-                        country: 'MT'
-                    }
-                },
-                period: {
-                    start: '01/12/2025',
-                    end: '31/12/2025',
-                    pay_date: '05/01/2026',
-                    display: "Dec'25"
-                },
-                basicSalary: {
-                    hours: 32.00,
-                    rate: 25.1300000,
-                    amount: 804.16
-                },
-                adjustments: [
-                    {
-                        type: 'Government Bonus',
-                        date: '1.00 December',
-                        rate: 25.6287817,
-                        amount: 25.83
-                    }
-                ],
-                grossTotal: 829.99,
-                tax: {
-                    type: 'Part Time Standard Tax Rate',
-                    amount: 83.00
-                },
-                socialSecurity: 0.00,
-                netPay: 746.99,
-                totalsToDate: {
-                    gross: 9987.00,
-                    ot_con_gross: 0.00,
-                    ot_con_hours: 0.00,
-                    social_security: 0.00,
-                    tax_fs5: 999.00,
-                    tax_ot_con: 0.00,
-                    tax_arrears: 0.00,
-                    tax_share_opt: 0.00
-                },
-                benefits: {
-                    category_1: 0.00,
-                    category_2: 0.00,
-                    category_3: 0.00,
-                    share_opt: 0.00
-                },
-                leaveType: '',
-                employmentDate: '22/08/2024',
-                remarks: `SKILLS PASS - Should you fail your third attempt for the Skills Pass, the portal will automatically block you for a period of 3 months before you can try again so kindly start your skills pass process as soon as possible so you have sufficient time to complete the necessary attempts considering the three month suspension period after the third failure.\n\nADVANCES - Any request for a salary advance is to be submitted via email to the HR Department on hr@marvingauci.com. The HR Department will then seek authorization to issue the advance. Requests must reach the HR Department three working days before the funds are needed. Note that Saturdays and Sundays are not counted as working days. No requests will be accepted two days prior to the end of the month and five days after the first of the month. Advances should only be requested in case of emergencies. These requests should not become a regular monthly occurrence and should only be made in situation of extreme need.`
-            };
-
-            setPayslipData(mockPayslip);
+            // Try to load by payslip ID (period may be the payslip id)
+            const payslipId = period || employeeId;
+            const response = await api.get(`/hr/payslips/${payslipId}`);
+            setPayslipData(response.data);
         } catch (error) {
-            console.error('Failed to load payslip:', error);
+            // Fallback: try listing payslips for the employee and pick latest
+            try {
+                const listRes = await api.get('/hr/payslips', {
+                    params: { employee_id: employeeId }
+                });
+                const payslips = listRes.data;
+                if (Array.isArray(payslips) && payslips.length > 0) {
+                    setPayslipData(payslips[0]);
+                }
+            } catch (fallbackErr) {
+                console.error('Failed to load payslip:', fallbackErr);
+            }
         } finally {
             setLoading(false);
         }
@@ -126,8 +68,11 @@ export default function PayslipViewer() {
     const handleSendEmail = async () => {
         try {
             setSending(true);
-            // In production, this would call the backend to send email
-            await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+            await api.post('/payroll/send-payslip-email', {
+                payslip_id: payslipData?.id,
+                employee_id: payslipData?.employee?.id,
+                venue_id: activeVenue?.id
+            });
             alert('Payslip email sent successfully to employee!');
         } catch (error) {
             console.error('Failed to send email:', error);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useVenue } from '../../../context/VenueContext';
 import api from '../../../lib/api';
 import PageContainer from '../../../layouts/PageContainer';
@@ -13,34 +13,37 @@ import { toast } from 'sonner';
 export default function AccountingMalta() {
   const { activeVenue } = useVenue();
   const [loading, setLoading] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(true);
   const [target, setTarget] = useState('xero');
   const [range, setRange] = useState('last_month');
+  const [history, setHistory] = useState([]);
 
-  // Mock History (Replace with real API call if available)
-  const [history, setHistory] = useState([
-    { id: 1, date: '2024-01-05 10:00', type: 'Xero', period: 'Dec 2023', status: 'Success', user: 'Admin' },
-    { id: 2, date: '2023-12-05 09:30', type: 'SFM', period: 'Nov 2023', status: 'Success', user: 'Admin' },
-  ]);
+  useEffect(() => {
+    if (activeVenue?.id) loadHistory();
+  }, [activeVenue?.id]);
+
+  const loadHistory = async () => {
+    try {
+      const res = await api.get('/accounting/exports', { params: { venue_id: activeVenue.id } });
+      setHistory(Array.isArray(res.data) ? res.data : res.data.exports || []);
+    } catch (err) {
+      console.warn('Failed to load accounting exports');
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
 
   const handleExport = async () => {
     setLoading(true);
     try {
-      // Simulate API call or call real endpoint
-      // await api.post(`/accounting/export`, { venue_id: activeVenue.id, target, range });
-      await new Promise(r => setTimeout(r, 1500)); // Fake processing
-
+      await api.post('/accounting/exports', {
+        venue_id: activeVenue.id,
+        target,
+        range
+      });
       toast.success(`${target.toUpperCase()} Export generated successfully`);
-
-      // Add to history
-      setHistory(prev => [{
-        id: Date.now(),
-        date: new Date().toISOString().replace('T', ' ').substring(0, 16),
-        type: target === 'xero' ? 'Xero' : 'Shireburn SFM',
-        period: range === 'last_month' ? 'Last Month' : 'Year to Date',
-        status: 'Success',
-        user: 'You'
-      }, ...prev]);
-
+      // Reload history to show the new export
+      loadHistory();
     } catch (e) {
       console.error(e);
       toast.error("Export failed");
@@ -113,36 +116,46 @@ export default function AccountingMalta() {
             <CardTitle>Export History</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow className="border-white/10 hover:bg-transparent">
-                  <TableHead>Date</TableHead>
-                  <TableHead>Target</TableHead>
-                  <TableHead>Period</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {history.map((row) => (
-                  <TableRow key={row.id} className="border-white/5 hover:bg-white/5">
-                    <TableCell className="font-mono text-xs">{row.date}</TableCell>
-                    <TableCell>{row.type}</TableCell>
-                    <TableCell>{row.period}</TableCell>
-                    <TableCell>
-                      <span className="inline-flex items-center gap-1 text-green-500 text-xs font-bold px-2 py-1 bg-green-900/20 rounded-full">
-                        <CheckCircle2 className="w-3 h-3" /> {row.status}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <FileDown className="w-4 h-4 text-zinc-500" />
-                      </Button>
-                    </TableCell>
+            {historyLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-white/10 hover:bg-transparent">
+                    <TableHead>Date</TableHead>
+                    <TableHead>Target</TableHead>
+                    <TableHead>Period</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Action</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {history.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-8 text-zinc-500">No exports yet</TableCell>
+                    </TableRow>
+                  ) : history.map((row) => (
+                    <TableRow key={row.id} className="border-white/5 hover:bg-white/5">
+                      <TableCell className="font-mono text-xs">{row.date}</TableCell>
+                      <TableCell>{row.type}</TableCell>
+                      <TableCell>{row.period}</TableCell>
+                      <TableCell>
+                        <span className="inline-flex items-center gap-1 text-green-500 text-xs font-bold px-2 py-1 bg-green-900/20 rounded-full">
+                          <CheckCircle2 className="w-3 h-3" /> {row.status}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <FileDown className="w-4 h-4 text-zinc-500" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
       </div>

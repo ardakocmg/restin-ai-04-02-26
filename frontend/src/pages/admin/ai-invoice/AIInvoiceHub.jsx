@@ -1,30 +1,48 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageContainer from '../../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Upload, Scan, FileText, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
+import api from '../../../lib/api';
+import { useVenue } from '../../../context/VenueContext';
 
 export default function AIInvoiceHub() {
-    // Phase 5: Simulated AI OCR
+    const { activeVenue } = useVenue();
     const [scanning, setScanning] = useState(false);
-    const [invoices, setInvoices] = useState([
-        { id: 'INV-001', supplier: 'Sysco Foods', amount: '$1,204.50', status: 'scanned', confidence: 0.98, date: '2026-02-05' },
-        { id: 'INV-002', supplier: 'Metro Cash & Carry', amount: '$450.20', status: 'review_needed', confidence: 0.75, date: '2026-02-04' },
-    ]);
+    const [invoices, setInvoices] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (activeVenue?.id) loadInvoices();
+    }, [activeVenue?.id]);
+
+    const loadInvoices = async () => {
+        try {
+            const res = await api.get(`/venues/${activeVenue.id}/invoices/ai`);
+            const data = Array.isArray(res.data) ? res.data : [];
+            setInvoices(data.map(inv => ({
+                id: inv.invoice_number || inv.id,
+                supplier: inv.supplier_name || 'Unknown',
+                amount: `€${(inv.total_amount || 0).toFixed(2)}`,
+                status: inv.status || 'pending',
+                confidence: inv.ocr_confidence || 0,
+                date: (inv.created_at || inv.invoice_date || '').split('T')[0]
+            })));
+        } catch (err) {
+            console.warn('Failed to load AI invoices');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleScan = () => {
+        // In production, this would open a file picker and send to OCR endpoint
         setScanning(true);
         setTimeout(() => {
             setScanning(false);
-            setInvoices([{
-                id: `INV-${Math.floor(Math.random() * 1000)}`,
-                supplier: 'Simulated Supplier',
-                amount: '$88.00',
-                status: 'scanned',
-                confidence: 0.99,
-                date: new Date().toISOString().split('T')[0]
-            }, ...invoices]);
+            // Reload invoices after scan would complete
+            if (activeVenue?.id) loadInvoices();
         }, 2000);
     };
 
@@ -61,7 +79,13 @@ export default function AIInvoiceHub() {
                 <Card className="bg-zinc-900 border-white/10">
                     <CardHeader><CardTitle className="text-white">Recent Activity</CardTitle></CardHeader>
                     <CardContent className="space-y-4">
-                        {invoices.map(inv => (
+                        {loading ? (
+                            <div className="text-center py-8">
+                                <Loader2 className="w-6 h-6 animate-spin mx-auto text-zinc-500" />
+                            </div>
+                        ) : invoices.length === 0 ? (
+                            <p className="text-zinc-500 text-center py-8">No invoices processed yet</p>
+                        ) : invoices.map(inv => (
                             <div key={inv.id} className="p-3 bg-zinc-950 rounded-lg border border-white/5 flex items-center justify-between">
                                 <div>
                                     <div className="font-medium text-white">{inv.supplier}</div>
@@ -69,8 +93,8 @@ export default function AIInvoiceHub() {
                                 </div>
                                 <div className="text-right">
                                     <div className="font-bold text-white">{inv.amount}</div>
-                                    <div className={`text-[10px] flex items-center justify-end gap-1 ${inv.status === 'scanned' ? 'text-green-500' : 'text-orange-500'}`}>
-                                        {inv.status === 'scanned' ? <CheckCircle className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
+                                    <div className={`text-[10px] flex items-center justify-end gap-1 ${inv.status === 'matched' || inv.status === 'approved' || inv.status === 'ocr_complete' ? 'text-green-500' : 'text-orange-500'}`}>
+                                        {inv.status === 'matched' || inv.status === 'approved' || inv.status === 'ocr_complete' ? <CheckCircle className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
                                         {(inv.confidence * 100).toFixed(0)}%
                                     </div>
                                 </div>

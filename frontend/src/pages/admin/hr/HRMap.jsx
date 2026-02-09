@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     MapPin,
@@ -15,16 +15,31 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import api from '@/lib/api';
 
 export default function HRMap() {
     const navigate = useNavigate();
+    const [markers, setMarkers] = useState([]);
+    const [stats, setStats] = useState({ total_check_ins: 0, currently_in: 0, mobile_users: 0 });
+    const [loading, setLoading] = useState(true);
 
-    const mockMarkers = [
-        { id: 1, name: "DONALD AGIUS", time: "08:55", loc: "Sliema Hub", status: "In", coords: [35.9122, 14.5042] },
-        { id: 2, name: "MARC ALPHONSI", time: "09:12", loc: "Valletta Gate", status: "In", coords: [35.8989, 14.5146] },
-        { id: 3, name: "ANNE FAITH ALINAN", time: "08:45", loc: "St Julians Office", status: "In", coords: [35.9189, 14.4883] },
-        { id: 4, name: "BRANKO ANASTASOV", time: "09:05", loc: "Gzira Waterfront", status: "In", coords: [35.9048, 14.4969] },
-    ];
+    useEffect(() => {
+        const loadAttendance = async () => {
+            try {
+                const res = await api.get('/hr/attendance/live');
+                const data = res.data;
+                setMarkers(data.markers || []);
+                setStats(data.stats || { total_check_ins: 0, currently_in: 0, mobile_users: 0 });
+            } catch (err) {
+                console.error('Failed to load attendance data:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadAttendance();
+        const interval = setInterval(loadAttendance, 30000); // Refresh every 30s
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <div className="min-h-screen bg-[#0A0A0B] text-zinc-100 flex flex-col">
@@ -55,13 +70,13 @@ export default function HRMap() {
                         <Card className="bg-black/40 backdrop-blur-md border-white/5 rounded-xl">
                             <CardContent className="p-4 flex flex-col">
                                 <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Active Check-ins</span>
-                                <span className="text-xl font-black text-green-400 leading-none mt-1">1,248</span>
+                                <span className="text-xl font-black text-green-400 leading-none mt-1">{stats.total_check_ins.toLocaleString()}</span>
                             </CardContent>
                         </Card>
                         <Card className="bg-black/40 backdrop-blur-md border-white/5 rounded-xl">
                             <CardContent className="p-4 flex flex-col">
                                 <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Mobile Users</span>
-                                <span className="text-xl font-black text-blue-400 leading-none mt-1">842</span>
+                                <span className="text-xl font-black text-blue-400 leading-none mt-1">{stats.mobile_users.toLocaleString()}</span>
                             </CardContent>
                         </Card>
                     </div>
@@ -92,7 +107,7 @@ export default function HRMap() {
                         </div>
                     </div>
                     <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
-                        {mockMarkers.map(m => (
+                        {markers.map(m => (
                             <div key={m.id} className="p-3 bg-zinc-900/50 border border-white/5 rounded-xl hover:bg-zinc-800/50 transition-colors cursor-pointer group">
                                 <div className="flex items-start justify-between mb-2">
                                     <div className="flex flex-col">

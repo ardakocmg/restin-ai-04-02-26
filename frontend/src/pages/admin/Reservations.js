@@ -87,7 +87,7 @@ export default function Reservations() {
             <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Total Bookings</p>
             <div className="flex items-end gap-2">
               <p className="text-2xl font-black text-white">{analytics?.total_reservations || 0}</p>
-              <span className="text-[10px] text-green-500 font-bold mb-1">+12%</span>
+              {analytics?.growth_rate != null && <span className={`text-[10px] font-bold mb-1 ${analytics.growth_rate >= 0 ? 'text-green-500' : 'text-red-500'}`}>{analytics.growth_rate >= 0 ? '+' : ''}{analytics.growth_rate}%</span>}
             </div>
           </CardContent>
         </Card>
@@ -108,7 +108,7 @@ export default function Reservations() {
         <Card className="bg-zinc-950 border-white/5 shadow-xl border-b-2" style={{ borderBottomColor: '#10b981' }}>
           <CardContent className="p-4">
             <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Conversion</p>
-            <p className="text-2xl font-black text-green-500">22.4%</p>
+            <p className="text-2xl font-black text-green-500">{analytics?.conversion_rate != null ? `${analytics.conversion_rate}%` : '0%'}</p>
           </CardContent>
         </Card>
       </div>

@@ -103,9 +103,10 @@ async def get_reservation_analytics(
 ):
     """
     Returns high-level analytics for the reservation system.
-    Calculates conversion by channel and no-show stats.
+    Calculates conversion by channel, no-show stats, growth rate, and conversion rate.
     """
     from models.reservations.core import ReservationStatus
+    from datetime import timedelta
     
     # 1. Total Reservations
     total_res = await db.reservations.count_documents({"venue_id": venue_id})
@@ -113,6 +114,8 @@ async def get_reservation_analytics(
         return {
             "total_reservations": 0,
             "no_show_rate": 0,
+            "growth_rate": 0,
+            "conversion_rate": 0,
             "channel_distribution": {},
             "status_distribution": {}
         }
@@ -132,16 +135,48 @@ async def get_reservation_analytics(
     channel_cursor = db.reservations.aggregate(pipeline)
     channel_dist = {item["_id"]: item["count"] async for item in channel_cursor}
     
-    # 4. Conversion Logic (Mock for now: Web vs Google vs Social)
-    # Future: Compare against 'Check Availability' hits (Analytics events)
+    # 4. Growth Rate (this month vs last month)
+    now = datetime.now()
+    this_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    last_month_start = (this_month_start - timedelta(days=1)).replace(day=1)
+    
+    this_month_count = await db.reservations.count_documents({
+        "venue_id": venue_id,
+        "created_at": {"$gte": this_month_start.isoformat()}
+    })
+    last_month_count = await db.reservations.count_documents({
+        "venue_id": venue_id,
+        "created_at": {"$gte": last_month_start.isoformat(), "$lt": this_month_start.isoformat()}
+    })
+    
+    growth_rate = 0
+    if last_month_count > 0:
+        growth_rate = round(((this_month_count - last_month_count) / last_month_count) * 100, 1)
+    
+    # 5. Conversion Rate (completed / total)
+    completed = await db.reservations.count_documents({
+        "venue_id": venue_id,
+        "status": ReservationStatus.COMPLETED.value
+    })
+    conversion_rate = round((completed / total_res) * 100, 1) if total_res > 0 else 0
+    
+    # 6. Status counts
+    cancelled = await db.reservations.count_documents({
+        "venue_id": venue_id, "status": ReservationStatus.CANCELLED.value
+    })
+    confirmed = await db.reservations.count_documents({
+        "venue_id": venue_id, "status": ReservationStatus.CONFIRMED.value
+    })
     
     return {
         "total_reservations": total_res,
         "no_show_rate": round((no_shows / total_res) * 100, 1),
+        "growth_rate": growth_rate,
+        "conversion_rate": conversion_rate,
         "channel_distribution": channel_dist,
         "status_distribution": {
-            "completed": await db.reservations.count_documents({"venue_id": venue_id, "status": ReservationStatus.COMPLETED.value}),
-            "cancelled": await db.reservations.count_documents({"venue_id": venue_id, "status": ReservationStatus.CANCELLED.value}),
-            "confirmed": await db.reservations.count_documents({"venue_id": venue_id, "status": ReservationStatus.CONFIRMED.value})
+            "completed": completed,
+            "cancelled": cancelled,
+            "confirmed": confirmed
         }
     }

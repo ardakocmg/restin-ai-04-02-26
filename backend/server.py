@@ -195,6 +195,7 @@ from routes.hr_documents_advanced import create_hr_documents_advanced_router
 from routes.hr_sfm_accounting import create_hr_sfm_accounting_router
 from routes.hr_analytics_advanced import create_hr_analytics_advanced_router
 from routes.content_editor import create_content_editor_router
+from routes.analytics_routes import create_analytics_routes as create_dashboard_analytics_router
 
 # Print Bridge for Network Printing (Rule #30)
 from devices.print_bridge import router as print_bridge_router
@@ -406,6 +407,7 @@ hr_sfm_accounting_router = create_hr_sfm_accounting_router()
 hr_analytics_advanced_router = create_hr_analytics_advanced_router()
 content_editor_router = create_content_editor_router()
 hr_compliance_mt_router = create_hr_compliance_mt_router()
+dashboard_analytics_router = create_dashboard_analytics_router()
 
 # KDS System Routers
 devices_router = create_devices_router()
@@ -573,6 +575,7 @@ api_main.include_router(hr_documents_advanced_router)
 api_main.include_router(hr_sfm_accounting_router)
 api_main.include_router(hr_analytics_advanced_router)
 api_main.include_router(content_editor_router)
+api_main.include_router(dashboard_analytics_router)
 
 # Shireburn Indigo Parity Routers
 api_main.include_router(summary_dashboard_router)

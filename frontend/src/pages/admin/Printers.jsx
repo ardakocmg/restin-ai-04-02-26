@@ -14,6 +14,7 @@ import { Label } from '../../components/ui/label';
 import { Badge } from '../../components/ui/badge';
 import { toast } from 'sonner';
 import { printersAPI, printerTemplatesAPI } from '../../lib/api/printers';
+import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
 import { Loader2 } from 'lucide-react';
 import DataTable from '../../components/shared/DataTable';
@@ -22,10 +23,6 @@ import DataTable from '../../components/shared/DataTable';
 
 // MOCK DATA REMOVED - STRICT DATABASE MODE
 
-const MOCK_CASH_DRAWERS = [
-    { id: '1', name: 'Main Drawer' },
-    { id: '2', name: 'Bar Drawer' },
-];
 
 export default function Printers() {
     const { user } = useAuth();
@@ -40,7 +37,7 @@ export default function Printers() {
 
     const [printers, setPrinters] = useState([]);
     const [templates, setTemplates] = useState([]); // Will load from API
-    const [cashDrawers, setCashDrawers] = useState(MOCK_CASH_DRAWERS);
+    const [cashDrawers, setCashDrawers] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const [editPrinterModal, setEditPrinterModal] = useState(false);
@@ -54,12 +51,14 @@ export default function Printers() {
     const loadData = useCallback(async () => {
         setLoading(true);
         try {
-            const [printersData, templatesData] = await Promise.all([
+            const [printersData, templatesData, drawersRes] = await Promise.all([
                 printersAPI.list({ venue_id: user?.defaultVenueId }),
-                printerTemplatesAPI.list()
+                printerTemplatesAPI.list(),
+                api.get('/hr/cash-drawers', { params: { venue_id: user?.defaultVenueId } })
             ]);
             setPrinters(printersData);
             setTemplates(templatesData);
+            setCashDrawers(drawersRes.data || []);
         } catch (error) {
             console.error("Failed to load printers:", error);
             // FAIL LOUDLY - No Mock Data

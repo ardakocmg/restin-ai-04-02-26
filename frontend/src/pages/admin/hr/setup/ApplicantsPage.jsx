@@ -1,18 +1,35 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../../components/ui/card';
-import { Users, Filter, Plus, Mail } from 'lucide-react';
+import { Users, Filter, Plus, Mail, Loader2 } from 'lucide-react';
 import { Button } from '../../../../components/ui/button';
 import { Badge } from '../../../../components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../../components/ui/table';
+import api from '../../../../lib/api';
+import { useVenue } from '../../../../context/VenueContext';
 
 export default function ApplicantsPage() {
-  // Mock Data for Recruitment Phase
-  const [applicants, setApplicants] = useState([
-    { id: 1, name: "Maria Vella", role: "Head Chef", status: "Interviewing", date: "2026-02-01", email: "maria@example.com" },
-    { id: 2, name: "Liam Borg", role: "Waiter", status: "Applied", date: "2026-02-03", email: "liam@example.com" },
-    { id: 3, name: "Sarah Camilleri", role: "Bartender", status: "Offer Sent", date: "2026-01-28", email: "sarah@example.com" },
-  ]);
+  const { activeVenue } = useVenue();
+  const [loading, setLoading] = useState(true);
+  const [applicants, setApplicants] = useState([]);
+  const [summary, setSummary] = useState({ open_roles: 0, total_applicants: 0, interviews_today: 0 });
+
+  useEffect(() => {
+    if (activeVenue?.id) loadData();
+  }, [activeVenue?.id]);
+
+  const loadData = async () => {
+    try {
+      const res = await api.get('/hr/applicants', { params: { venue_id: activeVenue.id } });
+      const data = res.data;
+      setApplicants(data.applicants || []);
+      setSummary(data.summary || { open_roles: 0, total_applicants: 0, interviews_today: 0 });
+    } catch (err) {
+      console.warn('Failed to load applicants');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -24,6 +41,14 @@ export default function ApplicantsPage() {
       default: return 'bg-zinc-500';
     }
   };
+
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -47,7 +72,7 @@ export default function ApplicantsPage() {
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-sm text-zinc-400">Open Roles</p>
-              <p className="text-2xl font-bold text-white">4</p>
+              <p className="text-2xl font-bold text-white">{summary.open_roles}</p>
             </div>
           </CardContent>
         </Card>
@@ -55,7 +80,7 @@ export default function ApplicantsPage() {
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-sm text-zinc-400">Total Applicants</p>
-              <p className="text-2xl font-bold text-white">12</p>
+              <p className="text-2xl font-bold text-white">{summary.total_applicants}</p>
             </div>
           </CardContent>
         </Card>
@@ -63,7 +88,7 @@ export default function ApplicantsPage() {
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-sm text-zinc-400">Interviews Today</p>
-              <p className="text-2xl font-bold text-white">1</p>
+              <p className="text-2xl font-bold text-white">{summary.interviews_today}</p>
             </div>
           </CardContent>
         </Card>
@@ -85,14 +110,18 @@ export default function ApplicantsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {applicants.map(app => (
-              <TableRow key={app.id} className="border-white/5 hover:bg-white/5">
+            {applicants.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-8 text-zinc-500">No applicants found</TableCell>
+              </TableRow>
+            ) : applicants.map(app => (
+              <TableRow key={app.id || app._id} className="border-white/5 hover:bg-white/5">
                 <TableCell className="font-medium text-white">
                   {app.name}
                   <div className="text-xs text-zinc-500">{app.email}</div>
                 </TableCell>
-                <TableCell>{app.role}</TableCell>
-                <TableCell>{app.date}</TableCell>
+                <TableCell>{app.role || app.position}</TableCell>
+                <TableCell>{(app.date || app.created_at || '').split('T')[0]}</TableCell>
                 <TableCell>
                   <Badge className={`${getStatusColor(app.status)} border-0 text-white`}>
                     {app.status}

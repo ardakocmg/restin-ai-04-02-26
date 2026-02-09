@@ -1,46 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Clock, Activity, AlertCircle, CheckCircle2 } from 'lucide-react';
-import StateModal from '../../components/StateModal';
+import api from '../../lib/api';
+import { useVenue } from '../../context/VenueContext';
 
 export default function KDSPerformance() {
+  const { activeVenue } = useVenue();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock data fetch
-    setTimeout(() => {
-      setData({
-        subsystem: 'kds',
-        metrics: {
-          avg_prep_time: '8m 45s',
-          throughput_per_hour: 42,
-          active_stations: 4,
-          delayed_orders: 3
-        },
-        hourly_throughput: [
-          { time: '12:00', orders: 12 },
-          { time: '13:00', orders: 35 },
-          { time: '14:00', orders: 28 },
-          { time: '15:00', orders: 15 },
-          { time: '16:00', orders: 10 },
-          { time: '17:00', orders: 22 },
-          { time: '18:00', orders: 45 },
-          { time: '19:00', orders: 58 },
-          { time: '20:00', orders: 50 },
-        ],
-        station_performance: [
-          { name: 'Grill', avg_time: 12 },
-          { name: 'Fryer', avg_time: 6 },
-          { name: 'Salad', avg_time: 5 },
-          { name: 'Dessert', avg_time: 4 },
-        ]
-      });
-      setLoading(false);
-    }, 1000);
-  }, []);
+    if (activeVenue?.id) loadData();
+  }, [activeVenue?.id]);
 
-  if (loading) {
+  const loadData = async () => {
+    try {
+      const res = await api.get('/kds/analytics', { params: { venue_id: activeVenue.id } });
+      setData(res.data);
+    } catch (err) {
+      console.warn('KDS analytics API failed, using empty state');
+      setData({
+        metrics: { avg_prep_time: '0m 00s', throughput_per_hour: 0, active_stations: 0, delayed_orders: 0 },
+        hourly_throughput: [],
+        station_performance: []
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading || !data) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>

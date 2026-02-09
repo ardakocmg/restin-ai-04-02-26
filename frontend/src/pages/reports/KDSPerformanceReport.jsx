@@ -5,31 +5,46 @@ import { Clock, TrendingUp, Activity, AlertCircle } from 'lucide-react';
 import PageContainer from '../../layouts/PageContainer';
 import LoadingSpinner from '../../components/shared/LoadingSpinner';
 import { Badge } from '../../components/ui/badge';
+import api from '../../lib/api';
+import { useVenue } from '../../context/VenueContext';
 
 export default function KDSPerformanceReport() {
+  const { activeVenue } = useVenue();
   const [loading, setLoading] = useState(true);
+  const [metrics, setMetrics] = useState(null);
+  const [performanceData, setPerformanceData] = useState([]);
+  const [stationData, setStationData] = useState([]);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
-  }, []);
+    if (activeVenue?.id) loadData();
+  }, [activeVenue?.id]);
+
+  const loadData = async () => {
+    try {
+      const res = await api.get('/kds/analytics', { params: { venue_id: activeVenue.id } });
+      const d = res.data;
+      setMetrics(d.metrics);
+      // Transform hourly_throughput for the chart
+      setPerformanceData((d.hourly_throughput || []).map(h => ({
+        time: h.time,
+        avgTime: 0, // avg per-hour data would need per-hour aggregation
+        tickets: h.orders
+      })));
+      setStationData((d.station_performance || []).map(s => ({
+        station: s.station || s.name,
+        tickets: s.tickets || 0,
+        avgTime: s.avg_time || 0,
+        status: s.status || 'good'
+      })));
+    } catch (err) {
+      console.warn('KDS analytics failed');
+      setMetrics({ avg_prep_time: '0m', total_tickets: 0, peak_time: 'N/A', delayed_orders: 0, peak_tickets: 0, delay_rate: 0 });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) return <LoadingSpinner fullScreen text="Loading KDS performance..." />;
-
-  const performanceData = [
-    { time: '09:00', avgTime: 8.2, tickets: 12 },
-    { time: '10:00', avgTime: 7.5, tickets: 18 },
-    { time: '11:00', avgTime: 9.1, tickets: 24 },
-    { time: '12:00', avgTime: 11.3, tickets: 42 },
-    { time: '13:00', avgTime: 12.8, tickets: 48 },
-    { time: '14:00', avgTime: 10.2, tickets: 35 },
-  ];
-
-  const stationData = [
-    { station: 'Hot Kitchen', tickets: 145, avgTime: 9.2, status: 'good' },
-    { station: 'Cold Kitchen', tickets: 89, avgTime: 6.5, status: 'good' },
-    { station: 'Grill', tickets: 67, avgTime: 14.3, status: 'warning' },
-    { station: 'Desserts', tickets: 43, avgTime: 5.1, status: 'good' },
-  ];
 
   return (
     <PageContainer title="KDS Performance" description="Kitchen display system analytics">
@@ -42,8 +57,8 @@ export default function KDSPerformanceReport() {
               <Clock className="h-4 w-4" style={{ color: '#E53935' }} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>9.8 min</div>
-              <p className="text-xs" style={{ color: '#4ADE80' }}>-1.2 min from yesterday</p>
+              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.avg_prep_time || '0m'}</div>
+              <p className="text-xs" style={{ color: '#71717A' }}>Current average</p>
             </CardContent>
           </Card>
           <Card>
@@ -52,8 +67,8 @@ export default function KDSPerformanceReport() {
               <Activity className="h-4 w-4" style={{ color: '#E53935' }} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>344</div>
-              <p className="text-xs" style={{ color: '#4ADE80' }}>+15% from yesterday</p>
+              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.total_tickets || 0}</div>
+              <p className="text-xs" style={{ color: '#71717A' }}>Today</p>
             </CardContent>
           </Card>
           <Card>
@@ -62,8 +77,8 @@ export default function KDSPerformanceReport() {
               <TrendingUp className="h-4 w-4" style={{ color: '#E53935' }} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>13:00</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>48 tickets/hour</p>
+              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.peak_time || 'N/A'}</div>
+              <p className="text-xs" style={{ color: '#71717A' }}>{metrics?.peak_tickets || 0} tickets/hour</p>
             </CardContent>
           </Card>
           <Card>
@@ -72,8 +87,8 @@ export default function KDSPerformanceReport() {
               <AlertCircle className="h-4 w-4" style={{ color: '#FB8C00' }} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#FB8C00' }}>12</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>3.5% of total</p>
+              <div className="text-2xl font-bold" style={{ color: '#FB8C00' }}>{metrics?.delayed_orders || 0}</div>
+              <p className="text-xs" style={{ color: '#71717A' }}>{metrics?.delay_rate || 0}% of total</p>
             </CardContent>
           </Card>
         </div>
@@ -81,17 +96,17 @@ export default function KDSPerformanceReport() {
         {/* Performance Over Time */}
         <Card>
           <CardHeader>
-            <CardTitle>Average Ticket Time by Hour</CardTitle>
+            <CardTitle>Tickets by Hour</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={performanceData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                 <XAxis dataKey="time" stroke="#A1A1AA" />
-                <YAxis stroke="#A1A1AA" label={{ value: 'Minutes', angle: -90, position: 'insideLeft', fill: '#A1A1AA' }} />
+                <YAxis stroke="#A1A1AA" />
                 <Tooltip contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', color: '#F5F5F7' }} />
                 <Legend wrapperStyle={{ color: '#D4D4D8' }} />
-                <Line type="monotone" dataKey="avgTime" stroke="#E53935" strokeWidth={2} name="Avg Time (min)" />
+                <Line type="monotone" dataKey="tickets" stroke="#E53935" strokeWidth={2} name="Tickets" />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -104,7 +119,9 @@ export default function KDSPerformanceReport() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {stationData.map((station) => (
+              {stationData.length === 0 ? (
+                <p className="text-zinc-500 text-center py-8">No station data available</p>
+              ) : stationData.map((station) => (
                 <div key={station.station} className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <div className="flex-1">
                     <h4 className="font-medium" style={{ color: '#F5F5F7' }}>{station.station}</h4>

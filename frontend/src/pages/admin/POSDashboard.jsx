@@ -16,42 +16,19 @@ import { Slider } from '@/components/ui/slider';
 import { Progress } from "@/components/ui/progress";
 import { usePOSFilters } from '@/context/POSFilterContext';
 import POSFilterBar from '@/components/pos/POSFilterBar';
+import api from '@/lib/api';
+import { useVenue } from '@/context/VenueContext';
 
-// Mock Data Generators
-const generateHourlyData = (date, startHour, endHour) => {
-    const data = [];
-    for (let i = startHour; i <= endHour; i++) {
-        const isLunchPeak = i >= 12 && i <= 14;
-        const isDinnerPeak = i >= 19 && i <= 21;
-        const multiplier = isLunchPeak || isDinnerPeak ? 3 : 1;
-
-        data.push({
-            time: `${i}:00`,
-            revenue: Math.floor(Math.random() * 500 * multiplier) + 50,
-            receipts: Math.floor(Math.random() * 10 * multiplier) + 2,
-            customers: Math.floor(Math.random() * 15 * multiplier) + 5,
-        });
-    }
-    return data;
-};
-
-const generateDailyData = (start, end) => {
-    const days = eachDayOfInterval({ start, end });
-    return days.map(day => ({
-        time: format(day, 'MMM dd'),
-        revenue: Math.floor(Math.random() * 5000) + 1000,
-        receipts: Math.floor(Math.random() * 100) + 20,
-        customers: Math.floor(Math.random() * 150) + 50,
-    }));
-};
-
-const CATEGORIES = ["Food - Starters", "Food - Mains", "Food - Desserts", "Beverages - Soft", "Beverages - Alcohol", "Service Charge"];
+// Categories will come from API response
+const FALLBACK_CATEGORIES = ["Food - Starters", "Food - Mains", "Food - Desserts", "Beverages - Soft", "Beverages - Alcohol", "Service Charge"];
 
 export default function POSDashboard() {
     const { filters, updateFilters } = usePOSFilters();
     const { dateRange: date, timeRange, taxInclusive } = filters;
+    const { activeVenue } = useVenue();
 
     const [data, setData] = useState([]);
+    const [apiCategories, setApiCategories] = useState([]);
     const [activeMetric, setActiveMetric] = useState('revenue');
     const [viewMode, setViewMode] = useState('hourly');
 
@@ -124,16 +101,29 @@ export default function POSDashboard() {
     }, [visibleMetrics, targets, shifts, closingDays]);
 
     useEffect(() => {
-        if (date?.from && date?.to) {
-            if (isSameDay(date.from, date.to)) {
-                setViewMode('hourly');
-                setData(generateHourlyData(date.from, timeRange[0], timeRange[1]));
-            } else {
-                setViewMode('daily');
-                setData(generateDailyData(date.from, date.to));
-            }
+        if (date?.from && date?.to && activeVenue?.id) {
+            const loadDashboardData = async () => {
+                try {
+                    const res = await api.get('/pos/dashboard', {
+                        params: {
+                            venue_id: activeVenue.id,
+                            date_from: date.from.toISOString(),
+                            date_to: date.to.toISOString(),
+                        }
+                    });
+                    const result = res.data;
+                    setData(result.data || []);
+                    setViewMode(result.view_mode || (isSameDay(date.from, date.to) ? 'hourly' : 'daily'));
+                    setApiCategories(result.categories || []);
+                } catch (err) {
+                    console.error('Failed to load POS dashboard:', err);
+                    setData([]);
+                    setApiCategories([]);
+                }
+            };
+            loadDashboardData();
         }
-    }, [date, timeRange]);
+    }, [date, timeRange, activeVenue?.id]);
 
     const calculateValue = (val, isMonetary) => {
         if (!isMonetary) return val;
@@ -151,32 +141,31 @@ export default function POSDashboard() {
         return diff > 0 ? diff : 0;
     };
 
-    // Generate Mock Detail Data based on current view
+    // Detail data from real API response
     const getDetailData = (metric) => {
         if (!metric) return [];
 
         if (metric === 'revenue') {
-            // Breakdown by Category
-            return CATEGORIES.map(cat => ({
-                label: cat,
-                value: totalRevenue * (Math.random() * 0.3 + 0.05), // random distribution
-                count: Math.floor(totalReceipts * (Math.random() * 0.3 + 0.05))
-            })).sort((a, b) => b.value - a.value);
+            // Use real category breakdown from API
+            if (apiCategories.length > 0) return apiCategories;
+            return FALLBACK_CATEGORIES.map(cat => ({
+                label: cat, value: 0, count: 0
+            }));
         } else if (metric === 'receipts') {
-            // Last transactions
-            return Array.from({ length: 15 }).map((_, i) => ({
-                id: `RCT-${1000 + i}`,
-                time: `${12 + Math.floor(i / 4)}:${(i % 4) * 15}`.padStart(5, '0'),
-                amount: Math.random() * 150 + 20,
-                items: Math.floor(Math.random() * 5) + 1,
-                staff: ['John D.', 'Sarah M.', 'Mike R.'][Math.floor(Math.random() * 3)]
+            // Show time-bucketed receipt counts from real data
+            return data.map((d, i) => ({
+                id: `RCT-${i + 1}`,
+                time: d.time,
+                amount: d.revenue,
+                items: d.receipts,
+                staff: '-'
             }));
         } else if (metric === 'customers') {
-            // Hourly breakdown
+            // Hourly/daily customer breakdown from real data
             return data.map(d => ({
                 time: d.time,
                 count: d.customers,
-                occupancy: Math.min(100, Math.floor(d.customers / 1.5)) // Mock occupancy %
+                occupancy: Math.min(100, Math.floor(d.customers / 1.5))
             }));
         }
         return [];
