@@ -146,7 +146,12 @@ DEFAULT_ROLES = [
 ]
 
 
-@router.get("/admin/roles")
+# ... (Keep existing auth routes attached to 'router')
+
+# Create a separate router for Admin endpoints to match /api/admin/...
+admin_router = APIRouter(prefix="/api/admin", tags=["admin"])
+
+@admin_router.get("/roles")
 async def get_roles():
     """Get all roles from MongoDB. Seeds defaults if collection is empty."""
     db = get_database()
@@ -167,7 +172,7 @@ async def get_roles():
     }
 
 
-@router.post("/admin/roles")
+@admin_router.post("/roles")
 async def create_role(req: Request):
     """Create a new role."""
     db = get_database()
@@ -178,7 +183,7 @@ async def create_role(req: Request):
     return body
 
 
-@router.put("/admin/roles/{role_id}")
+@admin_router.put("/roles/{role_id}")
 async def update_role(role_id: str, req: Request):
     """Update an existing role."""
     db = get_database()

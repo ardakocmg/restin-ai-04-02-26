@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, Query
 from typing import List, Optional
 from datetime import datetime, timezone, timedelta
-from core.database import get_database
-from core.dependencies import get_current_user
+from app.core.database import get_database
+from app.core.dependencies import get_current_user
 import logging
 
-router = APIRouter()
+router = APIRouter(prefix="/api", tags=["analytics"])
 logger = logging.getLogger(__name__)
 
 @router.get("/admin/dashboard-stats")

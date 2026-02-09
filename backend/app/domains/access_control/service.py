@@ -118,13 +118,18 @@ class AccessControlService:
         """Retrieve decrypted token for API calls. Never expose to frontend."""
         db = get_database()
         cred = await db.nuki_credentials.find_one({"venue_id": venue_id, "status": "active"})
-        if not cred:
-            return None
+        
+        # 1. Try DB credentials
+        if cred:
+            if cred.get("mode") == "API_TOKEN" and cred.get("encrypted_api_token"):
+                return decrypt_value(cred["encrypted_api_token"])
+            elif cred.get("encrypted_access_token"):
+                return decrypt_value(cred["encrypted_access_token"])
 
-        if cred.get("mode") == "API_TOKEN" and cred.get("encrypted_api_token"):
-            return decrypt_value(cred["encrypted_api_token"])
-        elif cred.get("encrypted_access_token"):
-            return decrypt_value(cred["encrypted_access_token"])
+        # 2. Fallback to Environment Variable (Dev/Global)
+        env_token = os.environ.get("NUKI_API_TOKEN")
+        if env_token:
+            return env_token
 
         return None
 

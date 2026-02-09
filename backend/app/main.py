@@ -46,10 +46,14 @@ from app.domains.forecasting import router as forecasting_router
 from app.domains.tables import router as tables_router
 from app.domains.access_control import router as access_control_router
 
+from app.domains.auth.routes import admin_router
+from app.domains.analytics.routes import router as analytics_router
 app.include_router(hr_router)
 app.include_router(inventory_router)
 app.include_router(pos_router)
 app.include_router(auth_router)
+app.include_router(admin_router)
+app.include_router(analytics_router)
 app.include_router(venues_router)
 app.include_router(migrations_router)
 app.include_router(uploads_router)
