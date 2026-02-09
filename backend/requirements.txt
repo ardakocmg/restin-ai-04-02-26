@@ -4,7 +4,7 @@ pydantic
 pydantic-settings
 cryptography
 python-multipart
-pymongo
+pymongo[srv]
 email-validator
 motor
 pyjwt
