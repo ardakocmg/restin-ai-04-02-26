@@ -1,10 +1,10 @@
 """
-🔐 Access Control Routes — 16 REST Endpoints
+🔐 Access Control Routes — 25 REST Endpoints
 
 All door access decisions are server-authoritative.
 Frontend is UI-only — no business logic allowed client-side.
 
-Endpoints:
+Phase 1 — Core:
   POST /api/access-control/connect/oauth          — Start OAuth2 flow
   GET  /api/access-control/connect/oauth/callback  — OAuth2 callback
   POST /api/access-control/connect/token           — Connect via API token
@@ -21,8 +21,21 @@ Endpoints:
   GET  /api/access-control/audit                    — Filtered audit log
   POST /api/access-control/bridge/configure         — Register bridge
   GET  /api/access-control/bridge/health            — Check bridge health
+
+Phase 2 — Reporting:
+  GET /api/access-control/reports/summary           — Dashboard analytics
+  GET /api/access-control/reports/door/{door_id}    — Per-door access history
+  GET /api/access-control/reports/user/{user_id}    — Per-user access history
+  GET /api/access-control/reports/heatmap           — Daily hourly heatmap
+  GET /api/access-control/reports/timeline          — Activity timeline feed
+
+Phase 3 — Keypad PINs:
+  GET  /api/access-control/keypad/pins              — List PINs
+  POST /api/access-control/keypad/pins              — Create PIN
+  DELETE /api/access-control/keypad/pins/{pin_id}   — Revoke PIN
+  POST /api/access-control/keypad/auto-revoke       — Auto-revoke expired PINs
 """
-from fastapi import APIRouter, Query, HTTPException, Header
+from fastapi import APIRouter, Query, HTTPException
 from typing import Optional
 from pydantic import BaseModel
 import os
@@ -32,6 +45,7 @@ import httpx
 from app.domains.access_control.service import AccessControlService
 from app.domains.access_control.models import (
     DoorAction, DoorUpdate, PermissionCreate, BridgeConfigCreate, NukiCredentialCreate,
+    KeypadPinCreate,
 )
 
 logger = logging.getLogger(__name__)
@@ -313,3 +327,110 @@ async def configure_bridge(
 async def get_bridge_health(venue_id: str = Query(...)):
     """Check Nuki Bridge connectivity and health."""
     return await AccessControlService.get_bridge_health(venue_id)
+
+
+# ==================== PHASE 2: REPORTING ====================
+
+@router.get("/reports/summary")
+async def get_access_summary(
+    venue_id: str = Query(...),
+    days: int = Query(30, ge=1, le=365, description="Analysis period in days"),
+):
+    """Dashboard analytics: success rate, busiest door, most active user."""
+    return await AccessControlService.get_access_summary(venue_id, days)
+
+
+@router.get("/reports/door/{door_id}")
+async def get_door_history(
+    door_id: str,
+    venue_id: str = Query(...),
+    limit: int = Query(200, ge=1, le=1000),
+):
+    """Per-door access history with aggregated stats."""
+    result = await AccessControlService.get_door_history(venue_id, door_id, limit)
+    if "error" in result:
+        raise HTTPException(status_code=404, detail=result["error"])
+    return result
+
+
+@router.get("/reports/user/{user_id}")
+async def get_user_history(
+    user_id: str,
+    venue_id: str = Query(...),
+    limit: int = Query(200, ge=1, le=1000),
+):
+    """Per-user access history across all doors."""
+    return await AccessControlService.get_user_history(venue_id, user_id, limit)
+
+
+@router.get("/reports/heatmap")
+async def get_daily_heatmap(
+    venue_id: str = Query(...),
+    days: int = Query(14, ge=1, le=90, description="Heatmap period in days"),
+):
+    """Hourly access heatmap for visualization (date × hour grid)."""
+    return await AccessControlService.get_daily_heatmap(venue_id, days)
+
+
+@router.get("/reports/timeline")
+async def get_activity_timeline(
+    venue_id: str = Query(...),
+    limit: int = Query(50, ge=1, le=200),
+):
+    """Human-readable activity feed with severity levels and descriptions."""
+    return await AccessControlService.get_activity_timeline(venue_id, limit)
+
+
+# ==================== PHASE 3: KEYPAD PINs ====================
+
+@router.get("/keypad/pins")
+async def list_keypad_pins(
+    venue_id: str = Query(...),
+    door_id: Optional[str] = Query(None, description="Filter by door"),
+):
+    """List all keypad PINs for a venue. Optionally filter by door."""
+    # Auto-revoke expired PINs on each list request
+    await AccessControlService.auto_revoke_expired_pins(venue_id)
+    return await AccessControlService.list_keypad_pins(venue_id, door_id)
+
+
+@router.post("/keypad/pins")
+async def create_keypad_pin(
+    body: KeypadPinCreate,
+    venue_id: str = Query(...),
+    created_by: str = Query("admin", description="Who is creating this PIN"),
+):
+    """Create a time-limited Keypad PIN. Dispatched to Nuki device and tracked locally."""
+    result = await AccessControlService.create_keypad_pin(
+        venue_id=venue_id,
+        door_id=body.door_id,
+        name=body.name,
+        code=body.code,
+        created_by=created_by,
+        valid_from=body.valid_from,
+        valid_until=body.valid_until,
+    )
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
+
+
+@router.delete("/keypad/pins/{pin_id}")
+async def revoke_keypad_pin(
+    pin_id: str,
+    revoked_by: str = Query("admin", description="Who is revoking this PIN"),
+):
+    """Revoke a keypad PIN. Removes from Nuki device and marks locally as revoked."""
+    result = await AccessControlService.revoke_keypad_pin(pin_id, revoked_by)
+    if "error" in result:
+        raise HTTPException(
+            status_code=404 if "not found" in result["error"] else 400,
+            detail=result["error"],
+        )
+    return result
+
+
+@router.post("/keypad/auto-revoke")
+async def auto_revoke_expired_pins(venue_id: str = Query(...)):
+    """Manually trigger auto-revocation of expired PINs."""
+    return await AccessControlService.auto_revoke_expired_pins(venue_id)

@@ -530,6 +530,375 @@ class AccessControlService:
             "last_health_check": now,
         }
 
+    # ==================== PHASE 2: REPORTING & ANALYTICS ====================
+
+    @staticmethod
+    async def get_access_summary(venue_id: str, days: int = 30) -> dict:
+        """
+        Dashboard summary: total actions, success rate, busiest door, most active user.
+        Aggregates audit data over the specified number of days.
+        """
+        db = get_database()
+        from datetime import timedelta
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+
+        entries = await db.access_audit.find({
+            "venue_id": venue_id,
+            "timestamp": {"$gte": cutoff},
+        }).to_list(length=10000)
+
+        if not entries:
+            return {
+                "total_actions": 0, "success_count": 0, "failure_count": 0,
+                "unauthorized_count": 0, "success_rate": 0,
+                "busiest_door": None, "most_active_user": None,
+                "avg_response_ms": 0, "bridge_usage_pct": 0,
+                "period_days": days,
+            }
+
+        total = len(entries)
+        success = sum(1 for e in entries if e.get("result") == "SUCCESS")
+        failures = sum(1 for e in entries if e.get("result") == "FAILURE")
+        unauthorized = sum(1 for e in entries if e.get("result") == "UNAUTHORIZED")
+        bridge_count = sum(1 for e in entries if e.get("provider_path") == "BRIDGE")
+
+        # Duration stats (only successful actions)
+        durations = [e["duration_ms"] for e in entries if e.get("duration_ms") and e.get("result") == "SUCCESS"]
+        avg_ms = round(sum(durations) / len(durations)) if durations else 0
+
+        # Busiest door
+        door_counts: dict[str, int] = {}
+        for e in entries:
+            name = e.get("door_display_name", "Unknown")
+            door_counts[name] = door_counts.get(name, 0) + 1
+        busiest_door = max(door_counts, key=door_counts.get) if door_counts else None  # type: ignore[arg-type]
+
+        # Most active user
+        user_counts: dict[str, int] = {}
+        for e in entries:
+            name = e.get("user_name", "Unknown")
+            user_counts[name] = user_counts.get(name, 0) + 1
+        most_active_user = max(user_counts, key=user_counts.get) if user_counts else None  # type: ignore[arg-type]
+
+        return {
+            "total_actions": total,
+            "success_count": success,
+            "failure_count": failures,
+            "unauthorized_count": unauthorized,
+            "success_rate": round((success / total) * 100, 1) if total else 0,
+            "busiest_door": {"name": busiest_door, "count": door_counts.get(busiest_door, 0)} if busiest_door else None,
+            "most_active_user": {"name": most_active_user, "count": user_counts.get(most_active_user, 0)} if most_active_user else None,
+            "avg_response_ms": avg_ms,
+            "bridge_usage_pct": round((bridge_count / total) * 100, 1) if total else 0,
+            "period_days": days,
+        }
+
+    @staticmethod
+    async def get_door_history(venue_id: str, door_id: str, limit: int = 200) -> dict:
+        """Per-door access history with stats."""
+        db = get_database()
+        door = await db.doors.find_one({"id": door_id, "venue_id": venue_id})
+        if not door:
+            return {"error": "Door not found"}
+
+        entries = await db.access_audit.find({
+            "venue_id": venue_id,
+            "door_id": door_id,
+        }).sort("timestamp", -1).to_list(length=limit)
+
+        for e in entries:
+            e["_id"] = str(e["_id"])
+
+        total = len(entries)
+        success = sum(1 for e in entries if e.get("result") == "SUCCESS")
+
+        # Unique users who accessed this door
+        unique_users = list({e.get("user_name", "") for e in entries if e.get("user_name")})
+
+        return {
+            "door_id": door_id,
+            "door_name": door.get("display_name", door_id),
+            "total_actions": total,
+            "success_count": success,
+            "failure_count": total - success,
+            "unique_users": unique_users,
+            "entries": entries,
+        }
+
+    @staticmethod
+    async def get_user_history(venue_id: str, user_id: str, limit: int = 200) -> dict:
+        """Per-user access history across all doors."""
+        db = get_database()
+        entries = await db.access_audit.find({
+            "venue_id": venue_id,
+            "user_id": user_id,
+        }).sort("timestamp", -1).to_list(length=limit)
+
+        for e in entries:
+            e["_id"] = str(e["_id"])
+
+        total = len(entries)
+        success = sum(1 for e in entries if e.get("result") == "SUCCESS")
+        unauthorized = sum(1 for e in entries if e.get("result") == "UNAUTHORIZED")
+
+        # Doors accessed
+        doors_accessed = list({e.get("door_display_name", "") for e in entries if e.get("door_display_name")})
+
+        # User name from first entry
+        user_name = entries[0].get("user_name", user_id) if entries else user_id
+
+        return {
+            "user_id": user_id,
+            "user_name": user_name,
+            "total_actions": total,
+            "success_count": success,
+            "unauthorized_count": unauthorized,
+            "doors_accessed": doors_accessed,
+            "entries": entries,
+        }
+
+    @staticmethod
+    async def get_daily_heatmap(venue_id: str, days: int = 14) -> list[dict]:
+        """
+        Hourly access heatmap data for the last N days.
+        Returns [{date, hour, count, action_breakdown}].
+        """
+        db = get_database()
+        from datetime import timedelta
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+
+        entries = await db.access_audit.find({
+            "venue_id": venue_id,
+            "timestamp": {"$gte": cutoff},
+        }).to_list(length=20000)
+
+        heatmap: dict[str, dict] = {}
+
+        for e in entries:
+            ts = e.get("timestamp", "")
+            if not ts:
+                continue
+            try:
+                dt = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+            except (ValueError, AttributeError):
+                continue
+
+            date_str = dt.strftime("%Y-%m-%d")
+            hour = dt.hour
+            key = f"{date_str}-{hour:02d}"
+
+            if key not in heatmap:
+                heatmap[key] = {
+                    "date": date_str,
+                    "hour": hour,
+                    "count": 0,
+                    "unlock": 0,
+                    "lock": 0,
+                    "unlatch": 0,
+                }
+
+            heatmap[key]["count"] += 1
+            action = e.get("action", "").lower()
+            if action in heatmap[key]:
+                heatmap[key][action] += 1
+
+        # Sort by date+hour
+        result = sorted(heatmap.values(), key=lambda x: (x["date"], x["hour"]))
+        return result
+
+    @staticmethod
+    async def get_activity_timeline(venue_id: str, limit: int = 50) -> list[dict]:
+        """
+        Activity timeline — human-readable feed of recent access events.
+        Groups events and enriches with context for frontend display.
+        """
+        db = get_database()
+        entries = await db.access_audit.find({
+            "venue_id": venue_id,
+        }).sort("timestamp", -1).to_list(length=limit)
+
+        timeline = []
+        for e in entries:
+            action = e.get("action", "UNKNOWN")
+            result = e.get("result", "UNKNOWN")
+            user = e.get("user_name", "Unknown")
+            door = e.get("door_display_name", "Unknown")
+
+            # Human-readable description
+            action_verbs = {"UNLOCK": "unlocked", "LOCK": "locked", "UNLATCH": "unlatched"}
+            verb = action_verbs.get(action, action.lower())
+
+            if result == "SUCCESS":
+                description = f"{user} {verb} {door}"
+                severity = "info"
+            elif result == "UNAUTHORIZED":
+                description = f"{user} was denied access to {door}"
+                severity = "warning"
+            elif result == "FAILURE":
+                description = f"Failed to {action.lower()} {door} for {user}"
+                severity = "error"
+            else:
+                description = f"{user} attempted {action.lower()} on {door}"
+                severity = "info"
+
+            timeline.append({
+                "id": e.get("id", ""),
+                "timestamp": e.get("timestamp", ""),
+                "description": description,
+                "severity": severity,
+                "action": action,
+                "result": result,
+                "user_name": user,
+                "door_name": door,
+                "provider_path": e.get("provider_path", "WEB"),
+                "duration_ms": e.get("duration_ms"),
+                "error_message": e.get("error_message"),
+            })
+
+        return timeline
+
+    # ==================== PHASE 3: KEYPAD PIN MANAGEMENT ====================
+
+    @staticmethod
+    async def create_keypad_pin(
+        venue_id: str,
+        door_id: str,
+        name: str,
+        code: int,
+        created_by: str,
+        valid_from: Optional[str] = None,
+        valid_until: Optional[str] = None,
+    ) -> dict:
+        """
+        Create a Keypad 2 PIN for a door.
+        Dispatches to Nuki Web API and stores locally for lifecycle management.
+        """
+        db = get_database()
+        now = datetime.now(timezone.utc).isoformat()
+
+        # Validate door
+        door = await db.doors.find_one({"id": door_id, "venue_id": venue_id})
+        if not door:
+            return {"error": "Door not found"}
+
+        # Get token
+        token = await AccessControlService.get_token(venue_id)
+        if not token:
+            return {"error": "No active Nuki connection"}
+
+        # Create PIN on Nuki
+        nuki_result = await NukiProvider.create_keypad_pin(
+            smartlock_id=door["nuki_smartlock_id"],
+            name=name,
+            code=code,
+            token=token,
+            valid_from=valid_from,
+            valid_until=valid_until,
+        )
+
+        if not nuki_result:
+            return {"error": "Failed to create PIN on Nuki device"}
+
+        # Store locally for lifecycle management
+        pin_record = {
+            "id": f"pin-{uuid.uuid4().hex[:8]}",
+            "venue_id": venue_id,
+            "door_id": door_id,
+            "door_display_name": door["display_name"],
+            "nuki_smartlock_id": door["nuki_smartlock_id"],
+            "nuki_auth_id": nuki_result.get("id"),
+            "name": name,
+            "code_hint": f"***{str(code)[-2:]}",  # Only store last 2 digits
+            "valid_from": valid_from,
+            "valid_until": valid_until,
+            "status": "active",
+            "created_at": now,
+            "created_by": created_by,
+            "revoked_at": None,
+        }
+
+        await db.keypad_pins.insert_one(pin_record)
+        pin_record.pop("_id", None)
+
+        logger.info(f"[Keypad] PIN '{name}' created for door {door_id} by {created_by}")
+        return pin_record
+
+    @staticmethod
+    async def list_keypad_pins(venue_id: str, door_id: Optional[str] = None) -> list[dict]:
+        """List all keypad PINs. Optionally filter by door."""
+        db = get_database()
+        query: dict[str, Any] = {"venue_id": venue_id}
+        if door_id:
+            query["door_id"] = door_id
+
+        pins = await db.keypad_pins.find(query).sort("created_at", -1).to_list(length=200)
+        for p in pins:
+            p["_id"] = str(p["_id"])
+        return pins
+
+    @staticmethod
+    async def revoke_keypad_pin(pin_id: str, revoked_by: str) -> dict:
+        """
+        Revoke a keypad PIN — removes from Nuki device and marks locally.
+        Revocation is irreversible.
+        """
+        db = get_database()
+        now = datetime.now(timezone.utc).isoformat()
+
+        pin = await db.keypad_pins.find_one({"id": pin_id})
+        if not pin:
+            return {"error": "PIN not found"}
+
+        if pin.get("status") == "revoked":
+            return {"error": "PIN already revoked"}
+
+        # Revoke on Nuki if we have the auth ID
+        nuki_auth_id = pin.get("nuki_auth_id")
+        if nuki_auth_id:
+            token = await AccessControlService.get_token(pin["venue_id"])
+            if token:
+                await NukiProvider.revoke_keypad_pin(
+                    smartlock_id=pin["nuki_smartlock_id"],
+                    auth_id=int(nuki_auth_id),
+                    token=token,
+                )
+
+        # Mark as revoked locally
+        await db.keypad_pins.update_one(
+            {"id": pin_id},
+            {"$set": {"status": "revoked", "revoked_at": now, "revoked_by": revoked_by}},
+        )
+
+        logger.info(f"[Keypad] PIN '{pin['name']}' revoked by {revoked_by}")
+        return {"status": "revoked", "id": pin_id, "name": pin["name"]}
+
+    @staticmethod
+    async def auto_revoke_expired_pins(venue_id: str) -> dict:
+        """
+        Auto-revoke PINs that have passed their valid_until deadline.
+        Should be called periodically (e.g. by a cron job or on page load).
+        """
+        db = get_database()
+        now = datetime.now(timezone.utc).isoformat()
+
+        # Find active PINs with expired valid_until
+        expired = await db.keypad_pins.find({
+            "venue_id": venue_id,
+            "status": "active",
+            "valid_until": {"$ne": None, "$lt": now},
+        }).to_list(length=500)
+
+        revoked_count = 0
+        for pin in expired:
+            result = await AccessControlService.revoke_keypad_pin(pin["id"], "system-auto-revoke")
+            if "error" not in result:
+                revoked_count += 1
+
+        if revoked_count > 0:
+            logger.info(f"[Keypad] Auto-revoked {revoked_count} expired PINs for venue {venue_id}")
+
+        return {"checked": len(expired), "revoked": revoked_count}
+
 
 # ==================== HELPERS ====================
 

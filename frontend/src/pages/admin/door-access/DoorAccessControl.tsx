@@ -11,6 +11,8 @@
  *  4. Permissions         — Role × Door matrix
  *  5. Audit Trail         — Immutable access history
  *  6. Bridge              — Health indicator, LAN/WEB routing
+ *  7. Reporting           — Analytics, heatmap, timeline
+ *  8. Keypad PINs         — Time-limited PIN lifecycle
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { logger } from '@/lib/logger';
@@ -23,7 +25,8 @@ import {
     Lock, Unlock, DoorOpen, Shield, ShieldCheck, ShieldAlert,
     Wifi, WifiOff, Battery, BatteryWarning, RefreshCw, Pencil,
     Check, X, Clock, Eye, Plus, Trash2, Key, Settings,
-    Globe, Router, Activity, AlertTriangle
+    Globe, Router, Activity, AlertTriangle, BarChart3, Keyboard,
+    TrendingUp, Users, Zap, Hash, Timer, Ban
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -76,6 +79,57 @@ interface BridgeHealth {
     is_healthy: boolean;
     ip_address?: string;
     port?: number;
+}
+
+interface AccessSummary {
+    total_actions: number;
+    success_count: number;
+    failure_count: number;
+    unauthorized_count: number;
+    success_rate: number;
+    busiest_door: { name: string; count: number } | null;
+    most_active_user: { name: string; count: number } | null;
+    avg_response_ms: number;
+    bridge_usage_pct: number;
+    period_days: number;
+}
+
+interface TimelineEntry {
+    id: string;
+    timestamp: string;
+    description: string;
+    severity: string;
+    action: string;
+    result: string;
+    user_name: string;
+    door_name: string;
+    provider_path: string;
+    duration_ms?: number;
+    error_message?: string;
+}
+
+interface HeatmapEntry {
+    date: string;
+    hour: number;
+    count: number;
+    unlock: number;
+    lock: number;
+    unlatch: number;
+}
+
+interface KeypadPin {
+    id: string;
+    venue_id: string;
+    door_id: string;
+    door_display_name: string;
+    name: string;
+    code_hint: string;
+    valid_from?: string;
+    valid_until?: string;
+    status: string;
+    created_at: string;
+    created_by: string;
+    revoked_at?: string;
 }
 
 function getVenueId(): string {
@@ -848,6 +902,528 @@ function BridgeTab() {
     );
 }
 
+// ==================== REPORTS TAB (Phase 2) ====================
+
+function ReportsTab() {
+    const [summary, setSummary] = useState<AccessSummary | null>(null);
+    const [timeline, setTimeline] = useState<TimelineEntry[]>([]);
+    const [heatmap, setHeatmap] = useState<HeatmapEntry[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [days, setDays] = useState(30);
+
+    useEffect(() => { loadReports(); }, [days]);
+
+    const loadReports = async () => {
+        setLoading(true);
+        try {
+            const [sumResp, tlResp, hmResp] = await Promise.all([
+                fetch(`${API}/api/access-control/reports/summary?venue_id=${getVenueId()}&days=${days}`),
+                fetch(`${API}/api/access-control/reports/timeline?venue_id=${getVenueId()}&limit=50`),
+                fetch(`${API}/api/access-control/reports/heatmap?venue_id=${getVenueId()}&days=14`),
+            ]);
+            if (sumResp.ok) setSummary(await sumResp.json());
+            if (tlResp.ok) setTimeline(await tlResp.json());
+            if (hmResp.ok) setHeatmap(await hmResp.json());
+        } catch (e) {
+            logger.error('Reports load failed', { error: String(e) });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const severityColors: Record<string, string> = {
+        info: 'border-l-emerald-500 bg-emerald-500/5',
+        warning: 'border-l-amber-500 bg-amber-500/5',
+        error: 'border-l-red-500 bg-red-500/5',
+    };
+
+    const severityIcons: Record<string, React.ReactNode> = {
+        info: <Check className="h-4 w-4 text-emerald-400" />,
+        warning: <AlertTriangle className="h-4 w-4 text-amber-400" />,
+        error: <X className="h-4 w-4 text-red-400" />,
+    };
+
+    if (loading) {
+        return (
+            <div className="flex justify-center py-12">
+                <RefreshCw className="h-8 w-8 animate-spin text-zinc-600" />
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-6">
+            {/* Period Selector */}
+            <div className="flex justify-between items-center">
+                <h3 className="text-lg font-semibold text-zinc-100">Access Reports</h3>
+                <div className="flex items-center gap-2">
+                    <span className="text-xs text-zinc-400">Period:</span>
+                    {[7, 14, 30, 90].map(d => (
+                        <Button
+                            key={d}
+                            size="sm"
+                            variant={days === d ? 'default' : 'outline'}
+                            className={days === d
+                                ? 'bg-emerald-600 text-white h-7 text-xs'
+                                : 'border-zinc-700 text-zinc-400 h-7 text-xs'}
+                            onClick={() => setDays(d)}
+                        >
+                            {d}d
+                        </Button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Summary Cards */}
+            {summary && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}>
+                        <Card className="bg-zinc-950 border-zinc-800">
+                            <CardContent className="p-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Activity className="h-4 w-4 text-blue-400" />
+                                    <span className="text-xs text-zinc-400 uppercase">Total Actions</span>
+                                </div>
+                                <p className="text-2xl font-bold text-zinc-100">{summary.total_actions.toLocaleString()}</p>
+                                <p className="text-xs text-zinc-500 mt-1">Last {summary.period_days} days</p>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+                        <Card className="bg-zinc-950 border-zinc-800">
+                            <CardContent className="p-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <TrendingUp className="h-4 w-4 text-emerald-400" />
+                                    <span className="text-xs text-zinc-400 uppercase">Success Rate</span>
+                                </div>
+                                <p className="text-2xl font-bold text-emerald-400">{summary.success_rate}%</p>
+                                <p className="text-xs text-zinc-500 mt-1">{summary.success_count} / {summary.total_actions}</p>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                        <Card className="bg-zinc-950 border-zinc-800">
+                            <CardContent className="p-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Zap className="h-4 w-4 text-cyan-400" />
+                                    <span className="text-xs text-zinc-400 uppercase">Avg Response</span>
+                                </div>
+                                <p className="text-2xl font-bold text-zinc-100">{summary.avg_response_ms}ms</p>
+                                <p className="text-xs text-zinc-500 mt-1">Bridge: {summary.bridge_usage_pct}%</p>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+                        <Card className="bg-zinc-950 border-zinc-800">
+                            <CardContent className="p-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <AlertTriangle className="h-4 w-4 text-red-400" />
+                                    <span className="text-xs text-zinc-400 uppercase">Failures</span>
+                                </div>
+                                <p className="text-2xl font-bold text-red-400">{summary.failure_count + summary.unauthorized_count}</p>
+                                <p className="text-xs text-zinc-500 mt-1">{summary.unauthorized_count} unauthorized</p>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                </div>
+            )}
+
+            {/* Highlights */}
+            {summary && (summary.busiest_door || summary.most_active_user) && (
+                <div className="grid grid-cols-2 gap-4">
+                    {summary.busiest_door && (
+                        <Card className="bg-zinc-950 border-zinc-800">
+                            <CardContent className="p-4 flex items-center gap-4">
+                                <div className="h-10 w-10 rounded-lg bg-blue-900/30 flex items-center justify-center">
+                                    <DoorOpen className="h-5 w-5 text-blue-400" />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-zinc-400">Busiest Door</p>
+                                    <p className="text-sm font-semibold text-zinc-100">{summary.busiest_door.name}</p>
+                                    <p className="text-xs text-zinc-500">{summary.busiest_door.count} actions</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
+                    {summary.most_active_user && (
+                        <Card className="bg-zinc-950 border-zinc-800">
+                            <CardContent className="p-4 flex items-center gap-4">
+                                <div className="h-10 w-10 rounded-lg bg-purple-900/30 flex items-center justify-center">
+                                    <Users className="h-5 w-5 text-purple-400" />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-zinc-400">Most Active User</p>
+                                    <p className="text-sm font-semibold text-zinc-100">{summary.most_active_user.name}</p>
+                                    <p className="text-xs text-zinc-500">{summary.most_active_user.count} actions</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
+                </div>
+            )}
+
+            {/* Heatmap */}
+            {heatmap.length > 0 && (
+                <Card className="bg-zinc-950 border-zinc-800">
+                    <CardHeader>
+                        <CardTitle className="text-zinc-100 flex items-center gap-2 text-sm">
+                            <BarChart3 className="h-4 w-4 text-orange-400" />
+                            Access Heatmap (14 days)
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-24 gap-[2px]">
+                            {Array.from({ length: 24 }, (_, hour) => {
+                                const hourEntries = heatmap.filter(h => h.hour === hour);
+                                const totalCount = hourEntries.reduce((s, e) => s + e.count, 0);
+                                const maxCount = Math.max(...heatmap.map(h => h.count), 1);
+                                const intensity = totalCount / (maxCount * Math.max(hourEntries.length, 1));
+                                const bgOpacity = Math.min(0.1 + intensity * 0.9, 1);
+
+                                return (
+                                    <div
+                                        key={hour}
+                                        className="flex flex-col items-center"
+                                        title={`${hour}:00 — ${totalCount} total actions`}
+                                    >
+                                        <div
+                                            className="w-full h-8 rounded-sm"
+                                            style={{
+                                                backgroundColor: `rgba(52, 211, 153, ${bgOpacity})`,
+                                            }}
+                                        />
+                                        <span className="text-[9px] text-zinc-600 mt-1">{hour}</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <p className="text-[10px] text-zinc-600 mt-2 text-right">Hour of day (UTC)</p>
+                    </CardContent>
+                </Card>
+            )}
+
+            {/* Activity Timeline */}
+            <Card className="bg-zinc-950 border-zinc-800">
+                <CardHeader>
+                    <CardTitle className="text-zinc-100 flex items-center gap-2 text-sm">
+                        <Activity className="h-4 w-4 text-emerald-400" />
+                        Activity Timeline
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-2 max-h-[400px] overflow-auto">
+                        <AnimatePresence>
+                            {timeline.map((entry, i) => (
+                                <motion.div
+                                    key={entry.id}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: i * 0.02 }}
+                                    className={`border-l-2 ${severityColors[entry.severity] || severityColors.info} px-3 py-2 rounded-r`}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            {severityIcons[entry.severity]}
+                                            <span className="text-sm text-zinc-200">{entry.description}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            {entry.duration_ms && (
+                                                <span className="text-[10px] text-zinc-500">{entry.duration_ms}ms</span>
+                                            )}
+                                            <Badge variant="outline" className="text-[9px] border-zinc-700 text-zinc-500">
+                                                {entry.provider_path}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                    <p className="text-[10px] text-zinc-600 mt-1">
+                                        {new Date(entry.timestamp).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'medium' })}
+                                    </p>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                        {timeline.length === 0 && (
+                            <div className="text-center py-8 text-zinc-500">
+                                <BarChart3 className="h-8 w-8 mx-auto mb-2 text-zinc-600" />
+                                <p>No activity data yet. Actions will appear here automatically.</p>
+                            </div>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+    );
+}
+
+// ==================== KEYPAD TAB (Phase 3) ====================
+
+function KeypadTab() {
+    const [pins, setPins] = useState<KeypadPin[]>([]);
+    const [doors, setDoors] = useState<Door[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [creating, setCreating] = useState(false);
+    const [newPin, setNewPin] = useState({
+        door_id: '',
+        name: '',
+        code: '',
+        valid_from: '',
+        valid_until: '',
+    });
+
+    useEffect(() => { loadData(); }, []);
+
+    const loadData = async () => {
+        setLoading(true);
+        try {
+            const [pinResp, doorResp] = await Promise.all([
+                fetch(`${API}/api/access-control/keypad/pins?venue_id=${getVenueId()}`),
+                fetch(`${API}/api/access-control/doors?venue_id=${getVenueId()}`),
+            ]);
+            if (pinResp.ok) setPins(await pinResp.json());
+            if (doorResp.ok) setDoors(await doorResp.json());
+        } catch (e) {
+            logger.error('Keypad load failed', { error: String(e) });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const createPin = async () => {
+        if (!newPin.door_id || !newPin.name || !newPin.code) {
+            toast.error('Door, name, and code are required');
+            return;
+        }
+        const codeNum = parseInt(newPin.code, 10);
+        if (isNaN(codeNum) || codeNum < 1000 || codeNum > 999999) {
+            toast.error('PIN must be 4-6 digits');
+            return;
+        }
+        setCreating(true);
+        try {
+            const resp = await fetch(`${API}/api/access-control/keypad/pins?venue_id=${getVenueId()}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    door_id: newPin.door_id,
+                    name: newPin.name,
+                    code: codeNum,
+                    valid_from: newPin.valid_from || null,
+                    valid_until: newPin.valid_until || null,
+                }),
+            });
+            if (resp.ok) {
+                toast.success('PIN created and dispatched to Nuki device');
+                setNewPin({ door_id: '', name: '', code: '', valid_from: '', valid_until: '' });
+                loadData();
+            } else {
+                const err = await resp.json();
+                toast.error(err.detail || 'PIN creation failed');
+            }
+        } catch (e) {
+            toast.error('PIN creation error');
+            logger.error('Create PIN failed', { error: String(e) });
+        } finally {
+            setCreating(false);
+        }
+    };
+
+    const revokePin = async (pinId: string) => {
+        try {
+            const resp = await fetch(`${API}/api/access-control/keypad/pins/${pinId}?revoked_by=admin`, {
+                method: 'DELETE',
+            });
+            if (resp.ok) {
+                toast.success('PIN revoked from device');
+                loadData();
+            } else {
+                toast.error('Revocation failed');
+            }
+        } catch (e) {
+            toast.error('Revoke error');
+            logger.error('Revoke PIN failed', { error: String(e) });
+        }
+    };
+
+    const activePins = pins.filter(p => p.status === 'active');
+    const revokedPins = pins.filter(p => p.status === 'revoked');
+
+    return (
+        <div className="space-y-6">
+            {/* Create PIN */}
+            <Card className="bg-zinc-950 border-zinc-800">
+                <CardHeader>
+                    <CardTitle className="text-zinc-100 flex items-center gap-2">
+                        <Plus className="h-5 w-5 text-emerald-400" />
+                        Create Keypad PIN
+                    </CardTitle>
+                    <CardDescription className="text-zinc-400">
+                        Create a time-limited PIN for Nuki Keypad 2. The PIN is dispatched directly to the device.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-6 gap-3 items-end">
+                        <div className="col-span-2">
+                            <label className="text-xs text-zinc-400 mb-1 block">Door</label>
+                            <select
+                                title="Select door for PIN"
+                                className="w-full bg-zinc-900 border border-zinc-700 text-zinc-200 rounded px-3 py-2 text-sm"
+                                value={newPin.door_id}
+                                onChange={(e) => setNewPin({ ...newPin, door_id: e.target.value })}
+                            >
+                                <option value="">Select door...</option>
+                                {doors.map(d => <option key={d.id} value={d.id}>{d.display_name}</option>)}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-xs text-zinc-400 mb-1 block">Label</label>
+                            <Input
+                                placeholder="Morning Shift"
+                                value={newPin.name}
+                                onChange={(e) => setNewPin({ ...newPin, name: e.target.value })}
+                                className="bg-zinc-900 border-zinc-700 text-zinc-200"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-xs text-zinc-400 mb-1 block">PIN (4-6 digits)</label>
+                            <Input
+                                type="password"
+                                placeholder="••••"
+                                value={newPin.code}
+                                maxLength={6}
+                                onChange={(e) => setNewPin({ ...newPin, code: e.target.value.replace(/\D/g, '') })}
+                                className="bg-zinc-900 border-zinc-700 text-zinc-200"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-xs text-zinc-400 mb-1 block">Valid Until</label>
+                            <Input
+                                type="datetime-local"
+                                value={newPin.valid_until}
+                                onChange={(e) => setNewPin({ ...newPin, valid_until: e.target.value })}
+                                className="bg-zinc-900 border-zinc-700 text-zinc-200 text-xs"
+                            />
+                        </div>
+                        <Button
+                            onClick={createPin}
+                            disabled={creating}
+                            className="bg-emerald-600 text-white hover:bg-emerald-700"
+                        >
+                            {creating ? <RefreshCw className="h-4 w-4 animate-spin mr-1" /> : <Key className="h-4 w-4 mr-1" />}
+                            Create
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Active PINs */}
+            <Card className="bg-zinc-950 border-zinc-800">
+                <CardHeader>
+                    <CardTitle className="text-zinc-100 flex items-center gap-2 text-sm">
+                        <Key className="h-4 w-4 text-emerald-400" />
+                        Active PINs ({activePins.length})
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <table className="w-full">
+                        <thead>
+                            <tr className="border-b border-zinc-800">
+                                <th className="text-left p-3 text-xs font-medium text-zinc-500 uppercase">Name</th>
+                                <th className="text-left p-3 text-xs font-medium text-zinc-500 uppercase">Door</th>
+                                <th className="text-left p-3 text-xs font-medium text-zinc-500 uppercase">Code</th>
+                                <th className="text-left p-3 text-xs font-medium text-zinc-500 uppercase">Valid Until</th>
+                                <th className="text-left p-3 text-xs font-medium text-zinc-500 uppercase">Created</th>
+                                <th className="text-right p-3 text-xs font-medium text-zinc-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <AnimatePresence>
+                                {activePins.map(pin => (
+                                    <motion.tr
+                                        key={pin.id}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="border-b border-zinc-900 hover:bg-zinc-900/50 transition-colors"
+                                    >
+                                        <td className="p-3">
+                                            <div className="flex items-center gap-2">
+                                                <Hash className="h-3.5 w-3.5 text-emerald-400" />
+                                                <span className="text-sm text-zinc-200 font-medium">{pin.name}</span>
+                                            </div>
+                                        </td>
+                                        <td className="p-3 text-sm text-zinc-300">{pin.door_display_name}</td>
+                                        <td className="p-3">
+                                            <code className="text-xs text-zinc-400 bg-zinc-900 px-2 py-0.5 rounded">
+                                                {pin.code_hint}
+                                            </code>
+                                        </td>
+                                        <td className="p-3 text-xs text-zinc-400">
+                                            {pin.valid_until ? (
+                                                <div className="flex items-center gap-1">
+                                                    <Timer className="h-3 w-3 text-amber-400" />
+                                                    {new Date(pin.valid_until).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}
+                                                </div>
+                                            ) : (
+                                                <span className="text-zinc-600">No expiry</span>
+                                            )}
+                                        </td>
+                                        <td className="p-3 text-xs text-zinc-500">
+                                            {new Date(pin.created_at).toLocaleDateString('en-GB')} by {pin.created_by}
+                                        </td>
+                                        <td className="p-3 text-right">
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                className="text-red-400 hover:text-red-300 hover:bg-red-950"
+                                                onClick={() => revokePin(pin.id)}
+                                            >
+                                                <Ban className="h-4 w-4 mr-1" />
+                                                Revoke
+                                            </Button>
+                                        </td>
+                                    </motion.tr>
+                                ))}
+                            </AnimatePresence>
+                            {activePins.length === 0 && (
+                                <tr><td colSpan={6} className="p-6 text-center text-zinc-500">No active PINs. Create one above.</td></tr>
+                            )}
+                        </tbody>
+                    </table>
+                </CardContent>
+            </Card>
+
+            {/* Revoked PINs */}
+            {revokedPins.length > 0 && (
+                <Card className="bg-zinc-950 border-zinc-800/50">
+                    <CardHeader>
+                        <CardTitle className="text-zinc-400 flex items-center gap-2 text-sm">
+                            <Ban className="h-4 w-4 text-zinc-500" />
+                            Revoked PINs ({revokedPins.length})
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                        <table className="w-full">
+                            <tbody>
+                                {revokedPins.map(pin => (
+                                    <tr key={pin.id} className="border-b border-zinc-900/30">
+                                        <td className="p-3 text-sm text-zinc-500 line-through">{pin.name}</td>
+                                        <td className="p-3 text-xs text-zinc-600">{pin.door_display_name}</td>
+                                        <td className="p-3 text-xs text-zinc-600">
+                                            Revoked {pin.revoked_at ? new Date(pin.revoked_at).toLocaleDateString('en-GB') : ''}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </CardContent>
+                </Card>
+            )}
+        </div>
+    );
+}
+
 // ==================== MAIN COMPONENT ====================
 
 export default function DoorAccessControl() {
@@ -866,7 +1442,7 @@ export default function DoorAccessControl() {
 
             {/* Tabs */}
             <Tabs defaultValue="doors" className="space-y-6">
-                <TabsList className="bg-zinc-900 border border-zinc-800 p-1">
+                <TabsList className="bg-zinc-900 border border-zinc-800 p-1 flex-wrap">
                     <TabsTrigger value="connection" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
                         <Wifi className="h-4 w-4 mr-1.5" /> Connection
                     </TabsTrigger>
@@ -879,6 +1455,12 @@ export default function DoorAccessControl() {
                     <TabsTrigger value="audit" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
                         <Eye className="h-4 w-4 mr-1.5" /> Audit Trail
                     </TabsTrigger>
+                    <TabsTrigger value="reports" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                        <BarChart3 className="h-4 w-4 mr-1.5" /> Reports
+                    </TabsTrigger>
+                    <TabsTrigger value="keypad" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                        <Keyboard className="h-4 w-4 mr-1.5" /> Keypad
+                    </TabsTrigger>
                     <TabsTrigger value="bridge" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
                         <Router className="h-4 w-4 mr-1.5" /> Bridge
                     </TabsTrigger>
@@ -888,6 +1470,8 @@ export default function DoorAccessControl() {
                 <TabsContent value="doors"><DoorsTab /></TabsContent>
                 <TabsContent value="permissions"><PermissionsTab /></TabsContent>
                 <TabsContent value="audit"><AuditTab /></TabsContent>
+                <TabsContent value="reports"><ReportsTab /></TabsContent>
+                <TabsContent value="keypad"><KeypadTab /></TabsContent>
                 <TabsContent value="bridge"><BridgeTab /></TabsContent>
             </Tabs>
         </div>

@@ -196,3 +196,12 @@ class KeypadPinConfig(BaseModel):
     created_at: str = ""
     revoked_at: Optional[str] = None
     created_by: Optional[str] = None
+
+
+class KeypadPinCreate(BaseModel):
+    """Input model for creating a keypad PIN."""
+    door_id: str
+    name: str = Field(..., min_length=1, max_length=50, description="PIN label, e.g. 'Morning Shift'")
+    code: int = Field(..., ge=1000, le=999999, description="4-6 digit PIN code")
+    valid_from: Optional[str] = None
+    valid_until: Optional[str] = None
