@@ -35,6 +35,7 @@ from app.domains.migrations import router as migrations_router
 from app.domains.uploads import router as uploads_router
 from app.domains.catchall import router as catchall_router
 from app.domains.system import router as system_router
+from app.domains.voice import router as voice_router
 
 app.include_router(hr_router)
 app.include_router(inventory_router)
@@ -43,6 +44,7 @@ app.include_router(auth_router)
 app.include_router(venues_router)
 app.include_router(migrations_router)
 app.include_router(uploads_router)
+app.include_router(voice_router)
 app.include_router(catchall_router)
 app.include_router(system_router)
 

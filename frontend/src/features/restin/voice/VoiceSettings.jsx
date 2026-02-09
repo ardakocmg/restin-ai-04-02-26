@@ -1,4 +1,4 @@
-                                    import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PageContainer from '../../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
@@ -7,15 +7,74 @@ import { Label } from '../../../components/ui/label';
 import { Switch } from '../../../components/ui/switch';
 import { Slider } from '../../../components/ui/slider';
 import { Textarea } from '../../../components/ui/textarea';
-import { Save, Mic, Upload, FileText, Bot } from 'lucide-react';
+import { Save, Mic, Upload, FileText, Bot, Trash2, Loader2, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { voiceService } from './voice-service';
+import { useVenue } from '../../../context/VenueContext';
 
 export default function VoiceSettings() {
-    const [persona, setPersona] = useState('British Butler');
-    const [voiceSpeed, setVoiceSpeed] = useState([1.0]);
-    const [autoReservations, setAutoReservations] = useState(true);
-    const [greeting, setGreeting] = useState("Good evening, welcome to Restin. How may I assist you today?");
+    const { activeVenueId } = useVenue();
+    const queryClient = useQueryClient();
+    const fileInputRef = useRef(null);
+
+    const { data: config, isLoading } = useQuery({
+        queryKey: ['voice-config', activeVenueId],
+        queryFn: () => voiceService.getConfig(activeVenueId || 'default'),
+        enabled: !!activeVenueId
+    });
+
+    const { data: knowledge = [] } = useQuery({
+        queryKey: ['voice-knowledge', activeVenueId],
+        queryFn: () => voiceService.getKnowledge(activeVenueId || 'default'),
+        enabled: !!activeVenueId
+    });
+
+    const [persona, setPersona] = useState(config?.persona || 'British Butler');
+    const [voiceSpeed, setVoiceSpeed] = useState([config?.voice_speed || 1.0]);
+    const [autoReservations, setAutoReservations] = useState(config?.auto_reservations ?? true);
+    const [callTransfer, setCallTransfer] = useState(config?.call_transfer ?? true);
+    const [smsConfirmation, setSmsConfirmation] = useState(config?.sms_confirmation ?? true);
+    const [greeting, setGreeting] = useState(config?.greeting || "Good evening, welcome to Restin. How may I assist you today?");
     const [isPlaying, setIsPlaying] = useState(false);
+
+    // Sync state when config loads
+    React.useEffect(() => {
+        if (config) {
+            setPersona(config.persona || 'British Butler');
+            setVoiceSpeed([config.voice_speed || 1.0]);
+            setAutoReservations(config.auto_reservations ?? true);
+            setCallTransfer(config.call_transfer ?? true);
+            setSmsConfirmation(config.sms_confirmation ?? true);
+            setGreeting(config.greeting || "Good evening, welcome to Restin. How may I assist you today?");
+        }
+    }, [config]);
+
+    const saveMutation = useMutation({
+        mutationFn: (data) => voiceService.updateConfig(activeVenueId || 'default', data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['voice-config'] });
+            toast.success("Voice configuration saved to database");
+        },
+        onError: () => toast.error("Failed to save configuration"),
+    });
+
+    const uploadMutation = useMutation({
+        mutationFn: (file) => voiceService.uploadKnowledge(activeVenueId || 'default', file),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['voice-knowledge'] });
+            toast.success("Document uploaded and indexed!");
+        },
+        onError: () => toast.error("Upload failed"),
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (docId) => voiceService.deleteKnowledge(docId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['voice-knowledge'] });
+            toast.success("Document removed");
+        },
+    });
 
     const handlePreview = () => {
         if (!window.speechSynthesis) {
@@ -32,7 +91,6 @@ export default function VoiceSettings() {
         const utterance = new SpeechSynthesisUtterance(greeting);
         utterance.rate = voiceSpeed[0];
 
-        // Simple voice selection heuristic
         const voices = window.speechSynthesis.getVoices();
         let selectedVoice = voices.find(v => v.lang.includes('en'));
 
@@ -52,7 +110,21 @@ export default function VoiceSettings() {
     };
 
     const handleSave = () => {
-        toast.success("Voice configuration saved successfully");
+        saveMutation.mutate({
+            persona,
+            greeting,
+            voice_speed: voiceSpeed[0],
+            auto_reservations: autoReservations,
+            call_transfer: callTransfer,
+            sms_confirmation: smsConfirmation,
+        });
+    };
+
+    const handleFileUpload = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            uploadMutation.mutate(file);
+        }
     };
 
     return (
@@ -128,32 +200,58 @@ export default function VoiceSettings() {
                                 <FileText className="w-5 h-5 text-blue-400" />
                                 Knowledge Base (RAG)
                             </CardTitle>
-                            <CardDescription>Upload menus and policy documents for the AI to reference.</CardDescription>
+                            <CardDescription>Upload menus and policy documents for the AI to reference during calls.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="border-2 border-dashed border-zinc-800 rounded-xl p-8 text-center hover:bg-zinc-900/50 transition-colors cursor-pointer">
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleFileUpload}
+                                accept=".pdf,.txt,.doc,.docx"
+                                className="hidden"
+                            />
+                            <div
+                                onClick={() => fileInputRef.current?.click()}
+                                className="border-2 border-dashed border-zinc-800 rounded-xl p-8 text-center hover:bg-zinc-900/50 transition-colors cursor-pointer"
+                            >
                                 <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <Upload className="w-6 h-6 text-zinc-400" />
+                                    {uploadMutation.isPending ? (
+                                        <Loader2 className="w-6 h-6 text-purple-400 animate-spin" />
+                                    ) : (
+                                        <Upload className="w-6 h-6 text-zinc-400" />
+                                    )}
                                 </div>
-                                <h3 className="text-sm font-bold text-white mb-1">Upload PDF Menu or Policy</h3>
+                                <h3 className="text-sm font-bold text-white mb-1">
+                                    {uploadMutation.isPending ? 'Uploading & Indexing...' : 'Upload PDF Menu or Policy'}
+                                </h3>
                                 <p className="text-xs text-zinc-500">Drag and drop or click to browse</p>
                             </div>
 
                             <div className="mt-6 space-y-3">
-                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/5">
-                                    <div className="flex items-center gap-3">
-                                        <FileText className="w-4 h-4 text-green-500" />
-                                        <span className="text-sm text-zinc-300">Dinner_Menu_Winter_2026.pdf</span>
+                                {knowledge.map((doc, i) => (
+                                    <div key={doc.id || i} className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/5 group">
+                                        <div className="flex items-center gap-3">
+                                            <FileText className="w-4 h-4 text-green-500" />
+                                            <span className="text-sm text-zinc-300">{doc.filename}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-xs text-green-500 bg-green-500/10 px-2 py-1 rounded">
+                                                {doc.status || 'Indexed'}
+                                            </span>
+                                            <Button
+                                                size="icon"
+                                                variant="ghost"
+                                                onClick={() => deleteMutation.mutate(doc.id)}
+                                                className="h-7 w-7 text-zinc-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <Trash2 className="w-3 h-3" />
+                                            </Button>
+                                        </div>
                                     </div>
-                                    <span className="text-xs text-green-500 bg-green-500/10 px-2 py-1 rounded">Indexed</span>
-                                </div>
-                                <div className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-white/5">
-                                    <div className="flex items-center gap-3">
-                                        <FileText className="w-4 h-4 text-green-500" />
-                                        <span className="text-sm text-zinc-300">Reservation_Policy.pdf</span>
-                                    </div>
-                                    <span className="text-xs text-green-500 bg-green-500/10 px-2 py-1 rounded">Indexed</span>
-                                </div>
+                                ))}
+                                {knowledge.length === 0 && (
+                                    <p className="text-xs text-zinc-600 text-center py-4">No documents uploaded yet. Upload a menu or policy PDF to get started.</p>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
@@ -178,21 +276,32 @@ export default function VoiceSettings() {
                                     <Label>Call Transfer</Label>
                                     <p className="text-xs text-zinc-500">Forward to human if confused</p>
                                 </div>
-                                <Switch checked={true} />
+                                <Switch checked={callTransfer} onCheckedChange={setCallTransfer} />
                             </div>
                             <div className="flex items-center justify-between">
                                 <div className="space-y-0.5">
                                     <Label>SMS Confirmation</Label>
                                     <p className="text-xs text-zinc-500">Send text after call</p>
                                 </div>
-                                <Switch checked={true} />
+                                <Switch checked={smsConfirmation} onCheckedChange={setSmsConfirmation} />
                             </div>
                         </CardContent>
                     </Card>
 
-                    <div className="sticky top-6">
-                        <Button onClick={handleSave} className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold h-12">
-                            <Save className="w-4 h-4 mr-2" /> Save Configuration
+                    <div className="sticky top-6 space-y-3">
+                        <Button
+                            onClick={handleSave}
+                            disabled={saveMutation.isPending}
+                            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold h-12 gap-2"
+                        >
+                            {saveMutation.isPending ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : saveMutation.isSuccess ? (
+                                <CheckCircle className="w-4 h-4" />
+                            ) : (
+                                <Save className="w-4 h-4" />
+                            )}
+                            {saveMutation.isPending ? 'Saving...' : saveMutation.isSuccess ? 'Saved!' : 'Save Configuration'}
                         </Button>
                     </div>
                 </div>
