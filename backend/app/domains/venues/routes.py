@@ -310,3 +310,75 @@ async def get_venue_devices(venue_id: str):
     for d in devices:
         d["_id"] = str(d["_id"])
     return devices
+
+
+@router.get("/{venue_id}/inventory")
+async def get_venue_inventory(venue_id: str):
+    """Get inventory items for a venue from MongoDB."""
+    db = get_database()
+    items = await db.inventory_items.find({}).to_list(length=500)
+    for item in items:
+        item["_id"] = str(item["_id"])
+    return items
+
+
+@router.get("/{venue_id}/menu/categories")
+async def get_venue_menu_categories(
+    venue_id: str,
+    menu_id: Optional[str] = Query(None)
+):
+    """Get menu categories for a venue."""
+    db = get_database()
+    query = {}
+    if menu_id:
+        query["menu_id"] = menu_id
+    categories = await db.menu_categories.find(query).to_list(length=200)
+    for c in categories:
+        c["_id"] = str(c["_id"])
+    return categories
+
+
+@router.get("/{venue_id}/menu/items")
+async def get_venue_menu_items(
+    venue_id: str,
+    category_id: Optional[str] = Query(None),
+    menu_id: Optional[str] = Query(None),
+    include_inactive: Optional[bool] = Query(None),
+    all: Optional[bool] = Query(None)
+):
+    """Get menu items for a venue."""
+    db = get_database()
+    query = {}
+    if category_id:
+        query["category_id"] = category_id
+    if menu_id:
+        query["menu_id"] = menu_id
+    if not include_inactive and not all:
+        query["is_active"] = True
+    items = await db.menu_items.find(query).to_list(length=500)
+    for item in items:
+        item["_id"] = str(item["_id"])
+    return items
+
+
+@router.get("/{venue_id}/menus")
+async def get_venue_menus(venue_id: str):
+    """Get menus for a venue."""
+    db = get_database()
+    menus = await db.menus.find({}).to_list(length=50)
+    for m in menus:
+        m["_id"] = str(m["_id"])
+    return menus
+
+
+@router.get("/{venue_id}/menus/active")
+async def get_active_menu(venue_id: str):
+    """Get the active menu for a venue."""
+    db = get_database()
+    menu = await db.menus.find_one({"is_active": True})
+    if not menu:
+        menus = await db.menus.find({}).to_list(length=1)
+        menu = menus[0] if menus else None
+    if menu:
+        menu["_id"] = str(menu["_id"])
+    return menu or {}
