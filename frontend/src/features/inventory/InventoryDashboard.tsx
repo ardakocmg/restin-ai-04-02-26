@@ -36,7 +36,7 @@ export default function InventoryDashboard() {
             const totalCents = data.reduce((acc, item) => acc + (item.stock * item.priceCents), 0);
             setValuation({ total_valuation_cents: totalCents, currency: 'EUR' });
         } catch (e) {
-            logger.error("Failed to load inventory:", e);
+            logger.error("Failed to load inventory:", { error: String(e) });
             toast.error("Could not load inventory.");
         } finally {
             setLoading(false);
