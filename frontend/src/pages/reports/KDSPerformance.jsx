@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';import { logger } from '@/lib/logger';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-import { Clock, Activity, AlertCircle, CheckCircle2 } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Clock, Activity, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
 import { useVenue } from '../../context/VenueContext';
 
-import { logger } from '@/lib/logger';
 export default function KDSPerformance() {
   const { activeVenue } = useVenue();
   const [data, setData] = useState(null);

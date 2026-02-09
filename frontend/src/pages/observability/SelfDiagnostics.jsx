@@ -1,20 +1,20 @@
-import React, { useState } from 'react';import { logger } from '@/lib/logger';
+import React, { useState } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '../../context/VenueContext';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
-import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
 import { Play, CheckCircle2, AlertTriangle, XCircle, Loader2 } from 'lucide-react';
 
-import { logger } from '@/lib/logger';
 export default function SelfDiagnostics() {
   const { activeVenue } = useVenue();
   const [report, setReport] = useState(null);

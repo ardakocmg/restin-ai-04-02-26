@@ -1,46 +1,45 @@
-import React, { useState, useCallback, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useCallback, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useLocation } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useLocation } from 'react-router-dom';
 
-import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
-import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+import { Input } from '../../components/ui/input';
 
-import { Printer, Plus, Settings, Trash2, Copy, FileText } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Printer, Plus, Settings, Trash2, Copy, FileText } from 'lucide-react';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';import { logger } from '@/lib/logger';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 
-import { cn } from '../../lib/utils';import { logger } from '@/lib/logger';
+import { cn } from '../../lib/utils';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/dialog';import { logger } from '@/lib/logger';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/dialog';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';import { logger } from '@/lib/logger';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 
-import { Checkbox } from '../../components/ui/checkbox';import { logger } from '@/lib/logger';
+import { Checkbox } from '../../components/ui/checkbox';
 
-import { Label } from '../../components/ui/label';import { logger } from '@/lib/logger';
+import { Label } from '../../components/ui/label';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
-import { toast } from 'sonner';import { logger } from '@/lib/logger';
+import { toast } from 'sonner';
 
-import { printersAPI, printerTemplatesAPI } from '../../lib/api/printers';import { logger } from '@/lib/logger';
+import { printersAPI, printerTemplatesAPI } from '../../lib/api/printers';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
-import { useAuth } from '../../context/AuthContext';import { logger } from '@/lib/logger';
+import { useAuth } from '../../context/AuthContext';
 
-import { Loader2 } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Loader2 } from 'lucide-react';
 
 import DataTable from '../../components/shared/DataTable';
 
-import { logger } from '@/lib/logger';
 // Removed MOCK_PRINTERS constant in favor of API fetching
-
 
 export default function Printers() {
     const { user } = useAuth();
@@ -246,8 +245,6 @@ export default function Printers() {
                         </CardContent>
                     </Card>
                 </TabsContent>
-
-
 
                 {/* Printer Templates Tab */}
                 <TabsContent value="templates" className="m-0">

@@ -22,7 +22,6 @@ import { logger } from '@/lib/logger';
 import { Tabs, TabsList, TabsTrigger } from '../../../components/ui/tabs'; // Add Tabs
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../../../components/ui/alert-dialog';
 
-import { logger } from '@/lib/logger';
 // Simple Popover-like Dropdown for Column Selection if Shadcn Popover is missing
 const ColumnSelector = ({ allColumns, visibleColumns, onToggle }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -395,7 +394,6 @@ export default function RecipeManagement() {
 
     // Grouping logic for import columns
     const groupedImportCols = {};
-import { logger } from '@/lib/logger';
     visibleImportKeys.forEach(key => {
       const parts = key.split(': ');
       const cat = parts.length > 1 ? parts[0].trim() : 'General Information';

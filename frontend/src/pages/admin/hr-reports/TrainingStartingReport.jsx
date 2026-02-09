@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent } from '@/components/ui/card';
 
 import api from '@/lib/api';
 
-import { logger } from '@/lib/logger';
 export default function TrainingStartingReport() {
   const [trainings, setTrainings] = useState([]);
   const [loading, setLoading] = useState(true);

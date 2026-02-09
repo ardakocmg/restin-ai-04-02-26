@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useNavigate } from 'react-router-dom';
 
-import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '../../context/VenueContext';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
-import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../layouts/PageContainer';
 
-import DataTable from '../../components/shared/DataTable';import { logger } from '@/lib/logger';
+import DataTable from '../../components/shared/DataTable';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
-import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+import { Input } from '../../components/ui/input';
 
 import {
     Plus,
@@ -28,13 +29,12 @@ import {
     Coffee,
     CheckCircle2,
     AlertCircle
-} from 'lucide-react';import { logger } from '@/lib/logger';
+} from 'lucide-react';
 
-import { toast } from 'sonner';import { logger } from '@/lib/logger';
+import { toast } from 'sonner';
 
 import { cn } from '../../lib/utils';
 
-import { logger } from '@/lib/logger';
 export default function ProductManagement() {
     const navigate = useNavigate();
     const { activeVenue } = useVenue();

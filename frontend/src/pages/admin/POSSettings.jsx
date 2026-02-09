@@ -1,34 +1,34 @@
-import { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '../../context/VenueContext';
 
-import { venueAPI } from '../../lib/api';import { logger } from '@/lib/logger';
+import { venueAPI } from '../../lib/api';
 
-import { toast } from 'sonner';import { logger } from '@/lib/logger';
+import { toast } from 'sonner';
 
-import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
-import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+import { Input } from '../../components/ui/input';
 
-import { Label } from '../../components/ui/label';import { logger } from '@/lib/logger';
+import { Label } from '../../components/ui/label';
 
-import { Switch } from '../../components/ui/switch';import { logger } from '@/lib/logger';
+import { Switch } from '../../components/ui/switch';
 
-import { cn } from '../../lib/utils';import { logger } from '@/lib/logger';
+import { cn } from '../../lib/utils';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';import { logger } from '@/lib/logger';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
-import DataTable from '../../components/shared/DataTable';import { logger } from '@/lib/logger';
+import DataTable from '../../components/shared/DataTable';
 
 import { Save, Building2, Plus } from 'lucide-react';
 
-import { logger } from '@/lib/logger';
 export default function POSSettings() {
   const { activeVenue, refreshVenues } = useVenue();
   const [zones, setZones] = useState([]);

@@ -1,22 +1,22 @@
-import { useState, useEffect } from "react";import { logger } from '@/lib/logger';
+import { useState, useEffect } from "react";
+import { logger } from '@/lib/logger';
 
-import api from "../../lib/api";import { logger } from '@/lib/logger';
+import api from "../../lib/api";
 
-import { useVenue } from "../../context/VenueContext";import { logger } from '@/lib/logger';
+import { useVenue } from "../../context/VenueContext";
 
-import { Loader2, Activity, ShieldAlert, DollarSign, Users, Wifi, Calendar, Monitor } from "lucide-react";import { logger } from '@/lib/logger';
+import { Loader2, Activity, ShieldAlert, DollarSign, Users, Wifi, Calendar, Monitor } from "lucide-react";
 
-import { Button } from "../../components/ui/button";import { logger } from '@/lib/logger';
+import { Button } from "../../components/ui/button";
 
-import SalesChart from "../../components/analytics/SalesChart";import { logger } from '@/lib/logger';
+import SalesChart from "../../components/analytics/SalesChart";
 
-import { format } from "date-fns";import { logger } from '@/lib/logger';
+import { format } from "date-fns";
 
-import { ScrollArea } from "../../components/ui/scroll-area";import { logger } from '@/lib/logger';
+import { ScrollArea } from "../../components/ui/scroll-area";
 
 import { Badge } from "../../components/ui/badge";
 
-import { logger } from '@/lib/logger';
 export default function SystemDashboard() {
     const { activeVenue } = useVenue();
     const [stats, setStats] = useState(null);

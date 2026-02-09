@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';import { logger } from '@/lib/logger';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-import { Package, AlertTriangle, TrendingDown, DollarSign } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Package, AlertTriangle, TrendingDown, DollarSign } from 'lucide-react';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
 import { useVenue } from '../../context/VenueContext';
 
-import { logger } from '@/lib/logger';
 const chartTheme = {
   background: '#18181B',
   text: '#D4D4D8',

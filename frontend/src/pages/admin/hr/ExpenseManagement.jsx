@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import PageContainer from '@/layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '@/layouts/PageContainer';
 
-import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent } from '@/components/ui/card';
 
-import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '@/components/ui/badge';
 
-import { Receipt, Plus } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Receipt, Plus } from 'lucide-react';
 
 import api from '@/lib/api';
 
-import { logger } from '@/lib/logger';
 export default function ExpenseManagementIndigo() {
   const [claims, setClaims] = useState([]);
   const [loading, setLoading] = useState(true);

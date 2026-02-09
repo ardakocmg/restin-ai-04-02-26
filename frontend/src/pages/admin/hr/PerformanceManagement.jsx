@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import PageContainer from '@/layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '@/layouts/PageContainer';
 
-import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent } from '@/components/ui/card';
 
-import { Target, Award } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Target, Award } from 'lucide-react';
 
 import api from '@/lib/api';
 
-import { logger } from '@/lib/logger';
 export default function PerformanceManagementIndigo() {
   const [view, setView] = useState('goals');
   const [goals, setGoals] = useState([]);

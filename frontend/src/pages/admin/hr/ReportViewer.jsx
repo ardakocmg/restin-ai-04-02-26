@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useParams, useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useParams, useNavigate } from 'react-router-dom';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
 import {
     ArrowLeft,
@@ -14,15 +15,14 @@ import {
     FileText,
     Search,
     ChevronRight
-} from 'lucide-react';import { logger } from '@/lib/logger';
+} from 'lucide-react';
 
-import api from '@/lib/api';import { logger } from '@/lib/logger';
+import api from '@/lib/api';
 
-import DataTable from '@/components/shared/DataTable';import { logger } from '@/lib/logger';
+import DataTable from '@/components/shared/DataTable';
 
 import PageContainer from '@/layouts/PageContainer';
 
-import { logger } from '@/lib/logger';
 export default function ReportViewer() {
     const { reportSlug } = useParams();
     const navigate = useNavigate();

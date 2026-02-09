@@ -1,23 +1,23 @@
 
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import PageContainer from '../../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';import { logger } from '@/lib/logger';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
 
-import { Badge } from '../../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../../components/ui/badge';
 
-import { Button } from '../../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../../components/ui/button';
 
-import { ShoppingCart, Truck, Check, Store, Loader2 } from 'lucide-react';import { logger } from '@/lib/logger';
+import { ShoppingCart, Truck, Check, Store, Loader2 } from 'lucide-react';
 
-import api from '../../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../../lib/api';
 
 import { useVenue } from '../../../context/VenueContext';
 
-import { logger } from '@/lib/logger';
 export default function InternalOrders() {
     const { activeVenue } = useVenue();
     const [orders, setOrders] = useState([]);

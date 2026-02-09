@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';import { logger } from '@/lib/logger';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';import { logger } from '@/lib/logger';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 
-import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+import { Input } from '../../components/ui/input';
 
-import { CheckCircle, XCircle, AlertTriangle, RefreshCcw, Check } from 'lucide-react';import { logger } from '@/lib/logger';
+import { CheckCircle, XCircle, AlertTriangle, RefreshCcw, Check } from 'lucide-react';
 
-import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../layouts/PageContainer';
 
-import DataTable from '../../components/shared/DataTable';import { logger } from '@/lib/logger';
+import DataTable from '../../components/shared/DataTable';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
-import { toast } from 'sonner';import { logger } from '@/lib/logger';
+import { toast } from 'sonner';
 
 import { downloadCsv } from '../../lib/csv';
 
-import { logger } from '@/lib/logger';
 export default function ErrorInbox() {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(true);

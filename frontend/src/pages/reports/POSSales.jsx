@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';import { logger } from '@/lib/logger';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 
-import { DollarSign, ShoppingBag, TrendingUp, CreditCard } from 'lucide-react';import { logger } from '@/lib/logger';
+import { DollarSign, ShoppingBag, TrendingUp, CreditCard } from 'lucide-react';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
 import { toast } from 'sonner';
 
-
-import { logger } from '@/lib/logger';
 export default function POSSales() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);

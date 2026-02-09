@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { useVenue } from '@/context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '@/context/VenueContext';
 
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } from 'recharts';import { logger } from '@/lib/logger';
+import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } from 'recharts';
 
 import api from '@/lib/api';
 
-import { logger } from '@/lib/logger';
 const COLORS = ['#EF4444', '#F59E0B', '#10B981'];
 
 export default function TurnoverModule() {

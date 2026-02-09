@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
 import {
     Shield, User, Lock, Save, AlertTriangle, Check,
     ChevronRight, Search, Layout, Printer, Coffee,
     DollarSign, BarChart2, Users, Settings
-} from 'lucide-react';import { logger } from '@/lib/logger';
+} from 'lucide-react';
 
-import { toast } from 'sonner';import { logger } from '@/lib/logger';
+import { toast } from 'sonner';
 
 import api from '../../lib/api';
 
-import { logger } from '@/lib/logger';
 export default function RolesPermissions() {
     const [roles, setRoles] = useState([]);
     const [selectedRole, setSelectedRole] = useState(null);

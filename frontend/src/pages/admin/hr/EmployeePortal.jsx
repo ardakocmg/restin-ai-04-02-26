@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import api from '@/lib/api';
 
-import { logger } from '@/lib/logger';
 export default function EmployeePortal() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);

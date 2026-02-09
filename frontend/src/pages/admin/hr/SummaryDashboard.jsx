@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useNavigate } from 'react-router-dom';
 
-import { useVenue } from '@/context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '@/context/VenueContext';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';import { logger } from '@/lib/logger';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 import {
   Users, UserPlus, UserMinus, Calendar, Clock, ShieldCheck, Wallet, FileText,
   Umbrella, SlidersHorizontal, ClipboardList, DollarSign, Upload, Map, AlertCircle,
   Settings, Layout, Layers, Box, Smartphone, UserCheck, Activity, Gift, XCircle,
   Scissors, Landmark, BarChart3, Briefcase
-} from 'lucide-react';import { logger } from '@/lib/logger';
+} from 'lucide-react';
 
 import api from '@/lib/api';
 
-import { logger } from '@/lib/logger';
 const COLORS = ['#3B82F6', '#EF4444'];
 
 const Section = ({ title, children }) => (

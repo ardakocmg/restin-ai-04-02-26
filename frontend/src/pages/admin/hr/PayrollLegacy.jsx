@@ -1,27 +1,27 @@
 /**
  * MODULE 5-7: Payroll Management
  */
-import { useState, useEffect } from "react";import { logger } from '@/lib/logger';
+import { useState, useEffect } from "react";
+import { logger } from '@/lib/logger';
 
-import { useAuth } from "../../../context/AuthContext";import { logger } from '@/lib/logger';
+import { useAuth } from "../../../context/AuthContext";
 
-import api from "../../../lib/api";import { logger } from '@/lib/logger';
+import api from "../../../lib/api";
 
-import { toast } from "sonner";import { logger } from '@/lib/logger';
+import { toast } from "sonner";
 
-import { Button } from "../../../components/ui/button";import { logger } from '@/lib/logger';
+import { Button } from "../../../components/ui/button";
 
-import { Badge } from "../../../components/ui/badge";import { logger } from '@/lib/logger';
+import { Badge } from "../../../components/ui/badge";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";import { logger } from '@/lib/logger';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 
-import { Loader2, Calculator, CheckCircle, Lock, Mail, Download, Plus } from "lucide-react";import { logger } from '@/lib/logger';
+import { Loader2, Calculator, CheckCircle, Lock, Mail, Download, Plus } from "lucide-react";
 
-import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";import { logger } from '@/lib/logger';
+import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";
 
 import HRAccessPanel from "../../../components/hr/HRAccessPanel";
 
-import { logger } from '@/lib/logger';
 const STATUS_COLORS = {
   draft: "bg-blue-500/20 text-blue-400 border-blue-500/50",
   calculated: "bg-yellow-500/20 text-yellow-400 border-yellow-500/50",
@@ -74,7 +74,6 @@ export default function PayrollPage() {
       </div>
     );
   }
-
 
   const loadPayslips = async (payrunId) => {
     try {

@@ -1,25 +1,25 @@
 /**
  * PHASE 1: Shifts & Attendance
  */
-import { useState, useEffect } from "react";import { logger } from '@/lib/logger';
+import { useState, useEffect } from "react";
+import { logger } from '@/lib/logger';
 
-import { useAuth } from "../../../context/AuthContext";import { logger } from '@/lib/logger';
+import { useAuth } from "../../../context/AuthContext";
 
-import api from "../../../lib/api";import { logger } from '@/lib/logger';
+import api from "../../../lib/api";
 
-import { toast } from "sonner";import { logger } from '@/lib/logger';
+import { toast } from "sonner";
 
-import { Button } from "../../../components/ui/button";import { logger } from '@/lib/logger';
+import { Button } from "../../../components/ui/button";
 
-import { Badge } from "../../../components/ui/badge";import { logger } from '@/lib/logger';
+import { Badge } from "../../../components/ui/badge";
 
-import { Loader2, Clock, Calendar, Plus } from "lucide-react";import { logger } from '@/lib/logger';
+import { Loader2, Clock, Calendar, Plus } from "lucide-react";
 
-import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";import { logger } from '@/lib/logger';
+import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";
 
 import HRAccessPanel from "../../../components/hr/HRAccessPanel";
 
-import { logger } from '@/lib/logger';
 const STATUS_COLORS = {
   scheduled: "bg-blue-500/20 text-blue-400",
   clocked_in: "bg-green-500/20 text-green-400",

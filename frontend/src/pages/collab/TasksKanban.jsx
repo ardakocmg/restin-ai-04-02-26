@@ -1,23 +1,23 @@
 
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '../../context/VenueContext';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
-import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent } from '../../components/ui/card';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
-import { Kanban, CheckSquare, Plus, MoreHorizontal } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Kanban, CheckSquare, Plus, MoreHorizontal } from 'lucide-react';
 
 import { toast } from 'sonner';
 
-import { logger } from '@/lib/logger';
 export default function TasksKanban() {
   const { activeVenue } = useVenue();
   const [board, setBoard] = useState(null);

@@ -1,21 +1,21 @@
 
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import PageContainer from '../../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 
-import { Button } from '../../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../../components/ui/button';
 
-import { Badge } from '../../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../../components/ui/badge';
 
-import { FileText, Send, Clock, DollarSign, Loader2 } from 'lucide-react';import { logger } from '@/lib/logger';
+import { FileText, Send, Clock, DollarSign, Loader2 } from 'lucide-react';
 
-import api from '../../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../../lib/api';
 
 import { useVenue } from '../../../context/VenueContext';
 
-import { logger } from '@/lib/logger';
 export default function RFQManagement() {
     const { activeVenue } = useVenue();
     const [rfqs, setRfqs] = useState([]);

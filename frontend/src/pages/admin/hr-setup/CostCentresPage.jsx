@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent } from '@/components/ui/card';
 
-import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
-import { Plus, Edit, Trash } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Plus, Edit, Trash } from 'lucide-react';
 
 import api from '@/lib/api';
 
-import { logger } from '@/lib/logger';
 export default function CostCentresPage() {
   const [costCentres, setCostCentres] = useState([]);
   const [loading, setLoading] = useState(true);

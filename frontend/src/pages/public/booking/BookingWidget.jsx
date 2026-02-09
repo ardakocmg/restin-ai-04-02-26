@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useSearchParams, useParams } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useSearchParams, useParams } from 'react-router-dom';
 
-import { Calendar, Users, Clock, CheckCircle, ChevronRight, Loader2 } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Calendar, Users, Clock, CheckCircle, ChevronRight, Loader2 } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
-import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
-import { Input } from '@/components/ui/input';import { logger } from '@/lib/logger';
+import { Input } from '@/components/ui/input';
 
-import { Label } from '@/components/ui/label';import { logger } from '@/lib/logger';
+import { Label } from '@/components/ui/label';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';import { logger } from '@/lib/logger';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';import { logger } from '@/lib/logger';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
-import { toast } from 'sonner';import { logger } from '@/lib/logger';
+import { toast } from 'sonner';
 
 import api from '@/lib/api';
 
-import { logger } from '@/lib/logger';
 export default function BookingWidget() {
     const { venueId } = useParams();
     const [searchParams] = useSearchParams();

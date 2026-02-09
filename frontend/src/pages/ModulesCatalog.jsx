@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';import { logger } from '@/lib/logger';
+import React, { useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useSearchParams } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useSearchParams } from 'react-router-dom';
 
 import api from '../lib/api';
 
-import { logger } from '@/lib/logger';
 const defaultModulesContent = {
   hero: {
     title: 'Module Catalog',

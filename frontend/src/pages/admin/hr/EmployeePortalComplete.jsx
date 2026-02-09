@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useNavigate } from 'react-router-dom';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';import { logger } from '@/lib/logger';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';import { logger } from '@/lib/logger';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
 
-import api from '@/lib/api';import { logger } from '@/lib/logger';
+import api from '@/lib/api';
 
 import { toast } from 'sonner';
 
-import { logger } from '@/lib/logger';
 export default function EmployeePortalComplete() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);

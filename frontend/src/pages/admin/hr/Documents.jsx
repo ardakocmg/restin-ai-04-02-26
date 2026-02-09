@@ -1,25 +1,25 @@
 /**
  * PHASE 1: HR Documents & Compliance
  */
-import { useState, useEffect } from "react";import { logger } from '@/lib/logger';
+import { useState, useEffect } from "react";
+import { logger } from '@/lib/logger';
 
-import { useAuth } from "@/context/AuthContext";import { logger } from '@/lib/logger';
+import { useAuth } from "@/context/AuthContext";
 
-import api from "@/lib/api";import { logger } from '@/lib/logger';
+import api from "@/lib/api";
 
-import { toast } from "sonner";import { logger } from '@/lib/logger';
+import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";import { logger } from '@/lib/logger';
+import { Button } from "@/components/ui/button";
 
-import { Badge } from "@/components/ui/badge";import { logger } from '@/lib/logger';
+import { Badge } from "@/components/ui/badge";
 
-import { Loader2, FileText, Upload, AlertTriangle } from "lucide-react";import { logger } from '@/lib/logger';
+import { Loader2, FileText, Upload, AlertTriangle } from "lucide-react";
 
-import { useHRFeatureFlags } from "@/hooks/useHRFeatureFlags";import { logger } from '@/lib/logger';
+import { useHRFeatureFlags } from "@/hooks/useHRFeatureFlags";
 
 import HRAccessPanel from "@/components/hr/HRAccessPanel";
 
-import { logger } from '@/lib/logger';
 export default function Documents() {
   const { user } = useAuth();
   const { getAccess, loading: flagsLoading } = useHRFeatureFlags();

@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useVenue } from '@/context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '@/context/VenueContext';
 
-import PageContainer from '@/layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '@/layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import {
   Users,
@@ -14,9 +15,9 @@ import {
   PieChart as PieIcon,
   BarChart as BarIcon,
   Activity
-} from 'lucide-react';import { logger } from '@/lib/logger';
+} from 'lucide-react';
 
-import api from '@/lib/api';import { logger } from '@/lib/logger';
+import api from '@/lib/api';
 
 import {
   LineChart,
@@ -36,7 +37,6 @@ import {
   Legend
 } from 'recharts';
 
-import { logger } from '@/lib/logger';
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 export default function HRAnalyticsIndigo() {

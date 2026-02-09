@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect, useRef } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent } from '@/components/ui/card';
 
-import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
 import {
   ChevronLeft,
@@ -21,13 +22,13 @@ import {
   ArrowDown,
   ArrowUpDown,
   ChevronDown
-} from 'lucide-react';import { logger } from '@/lib/logger';
+} from 'lucide-react';
 
-import api from '@/lib/api';import { logger } from '@/lib/logger';
+import api from '@/lib/api';
 
-import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '@/components/ui/badge';
 
-import { cn } from '@/lib/utils';import { logger } from '@/lib/logger';
+import { cn } from '@/lib/utils';
 
 import {
   DropdownMenu,
@@ -36,11 +37,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";import { logger } from '@/lib/logger';
+} from "@/components/ui/dropdown-menu";
 
 import { toast } from 'sonner';
 
-import { logger } from '@/lib/logger';
 export default function Scheduler() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -478,7 +478,6 @@ export default function Scheduler() {
                   <td className="p-3 text-left border-r border-white/5 cursor-pointer hover:bg-white/5 group/cell whitespace-nowrap" onClick={() => handleFilterChange('cost_centre', row.cost_centre)}>
                     <span className="text-[10px] font-medium text-zinc-400 group-hover/cell:text-blue-400 transition-colors">{row.cost_centre}</span>
                   </td>
-
 
                   {/* Days Columns */}
                   {dayKeys.map(day => {

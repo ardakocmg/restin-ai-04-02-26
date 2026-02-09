@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '../../context/VenueContext';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
-import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../layouts/PageContainer';
 
-import SearchBar from '../../components/shared/SearchBar';import { logger } from '@/lib/logger';
+import SearchBar from '../../components/shared/SearchBar';
 
-import FilterBar from '../../components/shared/FilterBar';import { logger } from '@/lib/logger';
+import FilterBar from '../../components/shared/FilterBar';
 
-import ItemDetailDrawer from '../../components/inventory/ItemDetailDrawer';import { logger } from '@/lib/logger';
+import ItemDetailDrawer from '../../components/inventory/ItemDetailDrawer';
 
-import { Card, CardContent } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent } from '../../components/ui/card';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
 import { 
   Package, AlertTriangle, TrendingDown, CheckCircle2,
   Plus, RefreshCw
 } from 'lucide-react';
 
-import { logger } from '@/lib/logger';
 export default function InventoryPage() {
   const { activeVenue } = useVenue();
   const [items, setItems] = useState([]);

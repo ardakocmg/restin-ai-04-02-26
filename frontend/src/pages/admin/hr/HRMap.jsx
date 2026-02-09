@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useNavigate } from 'react-router-dom';
 
 import {
     MapPin,
@@ -14,15 +15,14 @@ import {
     Smartphone,
     Search,
     ChevronLeft
-} from 'lucide-react';import { logger } from '@/lib/logger';
+} from 'lucide-react';
 
-import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
-import { Card, CardContent } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent } from '@/components/ui/card';
 
 import api from '@/lib/api';
 
-import { logger } from '@/lib/logger';
 export default function HRMap() {
     const navigate = useNavigate();
     const [markers, setMarkers] = useState([]);

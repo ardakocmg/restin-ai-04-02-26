@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';import { logger } from '@/lib/logger';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
-import { Package, AlertTriangle, TrendingDown, ArrowUpRight } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Package, AlertTriangle, TrendingDown, ArrowUpRight } from 'lucide-react';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
 import { useVenue } from '../../context/VenueContext';
 
-import { logger } from '@/lib/logger';
 const COLORS = ['#EF4444', '#F59E0B', '#10B981', '#3B82F6'];
 
 export default function InventoryStatus() {

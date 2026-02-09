@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useParams, useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useParams, useNavigate } from 'react-router-dom';
 
-import PageContainer from '../../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../../layouts/PageContainer';
 
-import PayslipDocument from '../../../components/payroll/PayslipDocument';import { logger } from '@/lib/logger';
+import PayslipDocument from '../../../components/payroll/PayslipDocument';
 
-import { Button } from '../../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../../components/ui/button';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 
-import { Download, Mail, Printer, ArrowLeft, Calendar, Image } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Download, Mail, Printer, ArrowLeft, Calendar, Image } from 'lucide-react';
 
-import api from '@/lib/api';import { logger } from '@/lib/logger';
+import api from '@/lib/api';
 
-import { exportToPdf, exportToJpeg } from '../../../lib/exportUtils';import { logger } from '@/lib/logger';
+import { exportToPdf, exportToJpeg } from '../../../lib/exportUtils';
 
-import { useVenue } from '../../../context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '../../../context/VenueContext';
 
 import { toast } from 'sonner';
 
-import { logger } from '@/lib/logger';
 export default function PayslipViewer() {
     const { employeeId, period } = useParams();
     const navigate = useNavigate();

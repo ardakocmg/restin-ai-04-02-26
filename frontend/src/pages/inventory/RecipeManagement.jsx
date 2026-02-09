@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Plus, ChefHat, Search, Filter, Save, Trash2, Calculator, Info } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Plus, ChefHat, Search, Filter, Save, Trash2, Calculator, Info } from 'lucide-react';
 
-import axios from 'axios';import { logger } from '@/lib/logger';
+import axios from 'axios';
 
-import { toast } from 'sonner';import { logger } from '@/lib/logger';
+import { toast } from 'sonner';
 
-import StateModal from '../../components/StateModal';import { logger } from '@/lib/logger';
+import StateModal from '../../components/StateModal';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
-import { Input } from '../../components/ui/input';import { logger } from '@/lib/logger';
+import { Input } from '../../components/ui/input';
 
 import {
   Dialog,
@@ -18,7 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '../../components/ui/dialog';import { logger } from '@/lib/logger';
+} from '../../components/ui/dialog';
 
 import {
   Select,
@@ -28,7 +29,6 @@ import {
   SelectValue,
 } from '../../components/ui/select';
 
-import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function RecipeManagement() {

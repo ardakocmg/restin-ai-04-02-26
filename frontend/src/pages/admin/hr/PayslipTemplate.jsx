@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';import { logger } from '@/lib/logger';
+import React, { useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useParams } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useParams } from 'react-router-dom';
 
-import api from '@/lib/api';import { logger } from '@/lib/logger';
+import api from '@/lib/api';
 
 import { Loader2 } from 'lucide-react';
 
-import { logger } from '@/lib/logger';
 export default function PayslipTemplate() {
     const { runId, employeeCode } = useParams();
     const [data, setData] = useState(null);

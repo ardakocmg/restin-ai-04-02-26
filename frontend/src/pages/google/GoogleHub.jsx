@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '../../context/VenueContext';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
-import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';import { logger } from '@/lib/logger';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 
 import {
   MapPin, Star, Calendar, FolderOpen, BarChart3,
   Megaphone, FileText, Table, CheckCircle2, XCircle, RefreshCw, Send
-} from 'lucide-react';import { logger } from '@/lib/logger';
+} from 'lucide-react';
 
-import { toast } from 'sonner';import { logger } from '@/lib/logger';
+import { toast } from 'sonner';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/dialog';import { logger } from '@/lib/logger';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/dialog';
 
 import { Input } from '../../components/ui/input';
 
-import { logger } from '@/lib/logger';
 export default function GoogleHub() {
   const { activeVenue } = useVenue();
   const [settings, setSettings] = useState(null);

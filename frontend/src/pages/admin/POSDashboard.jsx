@@ -1,44 +1,44 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
-import { Calendar } from '@/components/ui/calendar';import { logger } from '@/lib/logger';
+import { Calendar } from '@/components/ui/calendar';
 
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';import { logger } from '@/lib/logger';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";import { logger } from '@/lib/logger';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 
-import { Input } from "@/components/ui/input";import { logger } from '@/lib/logger';
+import { Input } from "@/components/ui/input";
 
-import { Label } from "@/components/ui/label";import { logger } from '@/lib/logger';
+import { Label } from "@/components/ui/label";
 
-import { Switch } from "@/components/ui/switch";import { logger } from '@/lib/logger';
+import { Switch } from "@/components/ui/switch";
 
-import { Checkbox } from "@/components/ui/checkbox";import { logger } from '@/lib/logger';
+import { Checkbox } from "@/components/ui/checkbox";
 
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns';import { logger } from '@/lib/logger';
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns';
 
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, DollarSign, Receipt, Users, Clock, Settings, Check, ArrowUpRight, CalendarClock } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, DollarSign, Receipt, Users, Clock, Settings, Check, ArrowUpRight, CalendarClock } from 'lucide-react';
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';import { logger } from '@/lib/logger';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 
-import { cn } from '@/lib/utils';import { logger } from '@/lib/logger';
+import { cn } from '@/lib/utils';
 
-import { Slider } from '@/components/ui/slider';import { logger } from '@/lib/logger';
+import { Slider } from '@/components/ui/slider';
 
-import { Progress } from "@/components/ui/progress";import { logger } from '@/lib/logger';
+import { Progress } from "@/components/ui/progress";
 
-import { usePOSFilters } from '@/context/POSFilterContext';import { logger } from '@/lib/logger';
+import { usePOSFilters } from '@/context/POSFilterContext';
 
-import POSFilterBar from '@/components/pos/POSFilterBar';import { logger } from '@/lib/logger';
+import POSFilterBar from '@/components/pos/POSFilterBar';
 
-import api from '@/lib/api';import { logger } from '@/lib/logger';
+import api from '@/lib/api';
 
 import { useVenue } from '@/context/VenueContext';
 
-import { logger } from '@/lib/logger';
 // Categories will come from API response
 const FALLBACK_CATEGORIES = ["Food - Starters", "Food - Mains", "Food - Desserts", "Beverages - Soft", "Beverages - Alcohol", "Service Charge"];
 

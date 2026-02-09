@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent } from '../../components/ui/card';
 
-import { Save, Eye } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Save, Eye } from 'lucide-react';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
 import { toast } from 'sonner';
 
-import { logger } from '@/lib/logger';
 export default function VisualContentEditor() {
   const [content, setContent] = useState({ title: '', markdown_content: '', html_content: '' });
   const [preview, setPreview] = useState(false);

@@ -1,24 +1,25 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useNavigate, useSearchParams } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '../../context/VenueContext';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
-import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../layouts/PageContainer';
 
-import FilterBar from '../../components/shared/FilterBar';import { logger } from '@/lib/logger';
+import FilterBar from '../../components/shared/FilterBar';
 
-import DataList from '../../components/shared/DataList';import { logger } from '@/lib/logger';
+import DataList from '../../components/shared/DataList';
 
-import DetailDrawer, { InfoRow, InfoSection } from '../../components/shared/DetailDrawer';import { logger } from '@/lib/logger';
+import DetailDrawer, { InfoRow, InfoSection } from '../../components/shared/DetailDrawer';
 
-import { Card, CardContent } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent } from '../../components/ui/card';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
 import { 
   Package, 
@@ -34,11 +35,10 @@ import {
   Activity,
   History,
   Eye
-} from 'lucide-react';import { logger } from '@/lib/logger';
+} from 'lucide-react';
 
 import { toast } from 'sonner';
 
-import { logger } from '@/lib/logger';
 const FILTERS = [
   {
     key: 'category',

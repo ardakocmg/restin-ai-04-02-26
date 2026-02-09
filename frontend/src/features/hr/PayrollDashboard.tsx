@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import PageLayout from '../../layouts/PageLayout';import { logger } from '@/lib/logger';
+import PageLayout from '../../layouts/PageLayout';
 
-import DataTable from '../../components/shared/DataTable';import { logger } from '@/lib/logger';
+import DataTable from '../../components/shared/DataTable';
 
-import { Card } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card } from '../../components/ui/card';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
-import { Employee, Payslip } from '../../types';import { logger } from '@/lib/logger';
+import { Employee, Payslip } from '../../types';
 
-import { HRService } from './HRService';import { logger } from '@/lib/logger';
+import { HRService } from './HRService';
 
 import { toast } from 'sonner';
 
-import { logger } from '@/lib/logger';
 export default function PayrollDashboard() {
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [payslips, setPayslips] = useState<Payslip[]>([]);

@@ -1,21 +1,21 @@
 /**
  * PHASE 1: HR Analytics Dashboard
  */
-import { useState, useEffect } from "react";import { logger } from '@/lib/logger';
+import { useState, useEffect } from "react";
+import { logger } from '@/lib/logger';
 
-import { useAuth } from "../../../context/AuthContext";import { logger } from '@/lib/logger';
+import { useAuth } from "../../../context/AuthContext";
 
-import api from "../../../lib/api";import { logger } from '@/lib/logger';
+import api from "../../../lib/api";
 
-import { toast } from "sonner";import { logger } from '@/lib/logger';
+import { toast } from "sonner";
 
-import { Loader2, Users, Calendar, Umbrella, FileText } from "lucide-react";import { logger } from '@/lib/logger';
+import { Loader2, Users, Calendar, Umbrella, FileText } from "lucide-react";
 
-import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";import { logger } from '@/lib/logger';
+import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";
 
 import HRAccessPanel from "../../../components/hr/HRAccessPanel";
 
-import { logger } from '@/lib/logger';
 export default function AnalyticsPage() {
   const { user } = useAuth();
   const { getAccess, loading: flagsLoading } = useHRFeatureFlags();

@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import PageContainer from '@/layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '@/layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
-import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
-import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '@/components/ui/badge';
 
-import { Progress } from '@/components/ui/progress';import { logger } from '@/lib/logger';
+import { Progress } from '@/components/ui/progress';
 
-import { Calendar, Plus, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Calendar, Plus, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
-import api from '@/lib/api';import { logger } from '@/lib/logger';
+import api from '@/lib/api';
 
 import { toast } from 'sonner';
-import { logger } from '@/lib/logger';
 
 import LeaveRequestModal from './LeaveRequestModal';
 
-import { logger } from '@/lib/logger';
 export default function LeaveDashboard() {
     const [balances, setBalances] = useState(null);
     const [requests, setRequests] = useState([]);

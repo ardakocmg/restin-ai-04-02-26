@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';import { logger } from '@/lib/logger';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-import { Clock, TrendingUp, Activity, AlertCircle } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Clock, TrendingUp, Activity, AlertCircle } from 'lucide-react';
 
-import PageContainer from '../../layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '../../layouts/PageContainer';
 
-import LoadingSpinner from '../../components/shared/LoadingSpinner';import { logger } from '@/lib/logger';
+import LoadingSpinner from '../../components/shared/LoadingSpinner';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
 import { useVenue } from '../../context/VenueContext';
 
-import { logger } from '@/lib/logger';
 export default function KDSPerformanceReport() {
   const { activeVenue } = useVenue();
   const [loading, setLoading] = useState(true);

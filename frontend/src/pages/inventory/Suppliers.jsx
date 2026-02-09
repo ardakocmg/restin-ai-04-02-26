@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Building2, Plus, Mail, Phone } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Building2, Plus, Mail, Phone } from 'lucide-react';
 
 import axios from 'axios';
 
-import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Suppliers() {

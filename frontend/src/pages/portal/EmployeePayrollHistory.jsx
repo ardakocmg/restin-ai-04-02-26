@@ -1,36 +1,36 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import PageContainer from '@/layouts/PageContainer';import { logger } from '@/lib/logger';
+import PageContainer from '@/layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
-import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
-import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '@/components/ui/badge';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';import { logger } from '@/lib/logger';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import { FileText, Download, Printer, Eye, Calendar, Award, ShieldCheck, Image, FileSignature, LogOut } from 'lucide-react';import { logger } from '@/lib/logger';
+import { FileText, Download, Printer, Eye, Calendar, Award, ShieldCheck, Image, FileSignature, LogOut } from 'lucide-react';
 
-import { useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useNavigate } from 'react-router-dom';
 
-import api from '@/lib/api';import { logger } from '@/lib/logger';
+import api from '@/lib/api';
 
-import FS3Document from '@/components/payroll/FS3Document';import { logger } from '@/lib/logger';
+import FS3Document from '@/components/payroll/FS3Document';
 
-import SkillsPassDocument from '@/components/payroll/SkillsPassDocument';import { logger } from '@/lib/logger';
+import SkillsPassDocument from '@/components/payroll/SkillsPassDocument';
 
-import EngagementLetter from '@/components/payroll/EngagementLetter';import { logger } from '@/lib/logger';
+import EngagementLetter from '@/components/payroll/EngagementLetter';
 
-import ExitTemplate from '@/components/payroll/ExitTemplate';import { logger } from '@/lib/logger';
+import ExitTemplate from '@/components/payroll/ExitTemplate';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';import { logger } from '@/lib/logger';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-import { exportToPdf, exportToJpeg } from '@/lib/exportUtils';import { logger } from '@/lib/logger';
+import { exportToPdf, exportToJpeg } from '@/lib/exportUtils';
 
 import { useMultiVenue } from '@/context/MultiVenueContext';
 
-import { logger } from '@/lib/logger';
 export default function EmployeePayrollHistory() {
     const [payslips, setPayslips] = useState([]);
     const [fs3s, setFs3s] = useState([]);

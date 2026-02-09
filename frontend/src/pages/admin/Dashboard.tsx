@@ -1,24 +1,25 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useNavigate } from 'react-router-dom';
 
-import { useVenue } from '../../context/VenueContext';import { logger } from '@/lib/logger';
+import { useVenue } from '../../context/VenueContext';
 
-import { venueAPI } from '../../lib/api';import { logger } from '@/lib/logger';
+import { venueAPI } from '../../lib/api';
 
-import PageLayout from '../../layouts/PageLayout';import { logger } from '@/lib/logger';
+import PageLayout from '../../layouts/PageLayout';
 
-import { StatCard, StatsGrid } from '../../components/shared/Stats';import { logger } from '@/lib/logger';
+import { StatCard, StatsGrid } from '../../components/shared/Stats';
 
-import DataTable from '../../components/shared/DataTable';import { logger } from '@/lib/logger';
+import DataTable from '../../components/shared/DataTable';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';import { logger } from '@/lib/logger';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 
-import { Button } from '../../components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '../../components/ui/button';
 
-import { Badge } from '../../components/ui/badge';import { logger } from '@/lib/logger';
+import { Badge } from '../../components/ui/badge';
 
-import { Progress } from '../../components/ui/progress';import { logger } from '@/lib/logger';
+import { Progress } from '../../components/ui/progress';
 
 import {
   ShoppingCart, Clock, Package, AlertTriangle,
@@ -26,7 +27,6 @@ import {
   ArrowRight, Activity, CheckCircle2, Users, DollarSign
 } from 'lucide-react';
 
-import { logger } from '@/lib/logger';
 interface VenueStats {
   open_orders: number;
   total_tables: number;

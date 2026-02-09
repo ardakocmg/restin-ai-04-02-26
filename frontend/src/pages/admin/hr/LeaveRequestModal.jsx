@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';import { logger } from '@/lib/logger';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
-import { Button } from '@/components/ui/button';import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
-import { Input } from '@/components/ui/input';import { logger } from '@/lib/logger';
+import { Input } from '@/components/ui/input';
 
-import { Label } from '@/components/ui/label';import { logger } from '@/lib/logger';
+import { Label } from '@/components/ui/label';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';import { logger } from '@/lib/logger';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { Textarea } from '@/components/ui/textarea';import { logger } from '@/lib/logger';
+import { Textarea } from '@/components/ui/textarea';
 
-import api from '@/lib/api';import { logger } from '@/lib/logger';
+import api from '@/lib/api';
 
 import { toast } from 'sonner';
 
-import { logger } from '@/lib/logger';
 export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
     const [leaveTypes, setLeaveTypes] = useState([]);
     const [formData, setFormData] = useState({

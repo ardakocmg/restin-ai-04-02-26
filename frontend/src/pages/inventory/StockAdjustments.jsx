@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { Edit, Plus, TrendingUp, TrendingDown } from 'lucide-react';import { logger } from '@/lib/logger';
+import { Edit, Plus, TrendingUp, TrendingDown } from 'lucide-react';
 
-import api from '../../lib/api';import { logger } from '@/lib/logger';
+import api from '../../lib/api';
 
-import StateModal from '../../components/StateModal';import { logger } from '@/lib/logger';
+import StateModal from '../../components/StateModal';
 
 import { useVenue } from '../../context/VenueContext';
 
-import { logger } from '@/lib/logger';
 export default function StockAdjustments() {
   const { activeVenue } = useVenue();
   const [adjustments, setAdjustments] = useState([]);

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';import { logger } from '@/lib/logger';
+import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
-import { useParams, useNavigate } from 'react-router-dom';import { logger } from '@/lib/logger';
+import { useParams, useNavigate } from 'react-router-dom';
 
-import { ArrowLeft, Save, Trash2 } from 'lucide-react';import { logger } from '@/lib/logger';
+import { ArrowLeft, Save, Trash2 } from 'lucide-react';
 
-import axios from 'axios';import { logger } from '@/lib/logger';
+import axios from 'axios';
 
 import { toast } from 'sonner';
 
-import { logger } from '@/lib/logger';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function KDSStationDetail() {
