@@ -4,30 +4,14 @@ Handles Apicbase multi-row headers (Row 1 = category, Row 2 = field names).
 """
 from fastapi import APIRouter, UploadFile, File, HTTPException, Body
 from typing import Optional, List, Any
-from motor.motor_asyncio import AsyncIOMotorClient
 import pandas as pd
 import io
 import os
 from datetime import datetime, timezone
 
-from app.core.data_loader import get_data_loader
+from app.core.database import get_database, get_sync_database
 
 router = APIRouter(prefix="/api/migrations", tags=["migrations"])
-
-# MongoDB connection for persistence
-MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
-DB_NAME = os.environ.get('DB_NAME', 'restin_v2')
-
-_mongo_client = None
-_db = None
-
-def get_db():
-    """Get MongoDB database instance."""
-    global _mongo_client, _db
-    if _db is None:
-        _mongo_client = AsyncIOMotorClient(MONGO_URL)
-        _db = _mongo_client[DB_NAME]
-    return _db
 
 
 def detect_header_row(df_raw: pd.DataFrame) -> int:
@@ -99,13 +83,13 @@ def build_smart_mappings(columns: List[str], sample_row: dict) -> List[dict]:
 
 
 def parse_excel_file(file_content: bytes, filename: str) -> dict:
-    """Parse an Excel file and compare with existing inventory."""
-    loader = get_data_loader()
-    existing_inventory = loader.get_inventory()
-    existing_menu = loader.get_menu_items()
+    """Parse an Excel file and compare with existing inventory from MongoDB."""
+    sdb = get_sync_database()
+    existing_inventory = list(sdb.inventory_items.find({}))
+    existing_menu = list(sdb.menu_items.find({}))
     
-    existing_by_name = {item['name'].lower(): item for item in existing_inventory}
-    menu_by_name = {item['name'].lower(): item for item in existing_menu}
+    existing_by_name = {item.get('name', '').lower(): item for item in existing_inventory if item.get('name')}
+    menu_by_name = {item.get('name', '').lower(): item for item in existing_menu if item.get('name')}
     
     try:
         df_raw = pd.read_excel(io.BytesIO(file_content), engine='openpyxl', header=None)
@@ -227,7 +211,7 @@ def parse_excel_file(file_content: bytes, filename: str) -> dict:
 @router.get("/history")
 async def get_migration_history(venue_id: Optional[str] = None):
     """Get migration history from MongoDB."""
-    db = get_db()
+    db = get_database()
     cursor = db.migration_history.find({}).sort("executed_at", -1).limit(50)
     history = []
     async for doc in cursor:
@@ -327,7 +311,7 @@ async def execute_migration(
     }
     
     # Save to MongoDB
-    db = get_db()
+    db = get_database()
     result = await db.migration_history.insert_one(migration_record)
     migration_id = str(result.inserted_id)
     

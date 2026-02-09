@@ -131,57 +131,52 @@ async def get_recipe_stats(venue_id: str):
 
 
 @router.get("/{venue_id}/recipes/engineered")
-async def get_recipes(
+def get_recipes(
     venue_id: str,
     active: Optional[bool] = Query(None),
     page: int = Query(1, ge=1),
     limit: int = Query(50, ge=1, le=100)
 ):
-    """Get recipes using sync PyMongo (Motor hangs on large collections)."""
-    import asyncio
+    """Get recipes using sync PyMongo (sync def = FastAPI runs in threadpool)."""
     from app.core.database import get_sync_database
     
-    def _fetch():
-        sdb = get_sync_database()
-        skip = (page - 1) * limit
-        
-        # Check recipes_engineered first
-        eng_count = sdb.recipes_engineered.estimated_document_count()
-        
-        if eng_count > 0:
-            query = {}
-            if active is not None:
-                query["active"] = active
-            
-            docs = list(sdb.recipes_engineered.find(query).skip(skip).limit(limit))
-            total = eng_count
-        else:
-            # Fallback to menu_items
-            query = {"venue_id": venue_id}
-            if active is not None:
-                query["is_active"] = active
-            
-            total = sdb.menu_items.count_documents(query)
-            docs = list(sdb.menu_items.find(query).skip(skip).limit(limit))
-            
-            for r in docs:
-                if "recipe_name" not in r:
-                    r["recipe_name"] = r.get("name", "Unknown")
-                if "active" not in r:
-                    r["active"] = r.get("is_active", True)
-                if "category" not in r:
-                    r["category"] = r.get("category_id", "Uncategorized")
-        
-        # Convert ObjectIds
-        for r in docs:
-            r["_id"] = str(r["_id"])
-            if "id" not in r:
-                r["id"] = r["_id"]
-        
-        return {"items": docs, "total": total, "page": page, "limit": limit}
+    sdb = get_sync_database()
+    skip = (page - 1) * limit
     
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, _fetch)
+    # Check recipes_engineered first
+    eng_count = sdb.recipes_engineered.estimated_document_count()
+    
+    if eng_count > 0:
+        query = {}
+        if active is not None:
+            query["active"] = active
+        
+        docs = list(sdb.recipes_engineered.find(query).skip(skip).limit(limit))
+        total = eng_count
+    else:
+        # Fallback to menu_items
+        query = {"venue_id": venue_id}
+        if active is not None:
+            query["is_active"] = active
+        
+        total = sdb.menu_items.count_documents(query)
+        docs = list(sdb.menu_items.find(query).skip(skip).limit(limit))
+        
+        for r in docs:
+            if "recipe_name" not in r:
+                r["recipe_name"] = r.get("name", "Unknown")
+            if "active" not in r:
+                r["active"] = r.get("is_active", True)
+            if "category" not in r:
+                r["category"] = r.get("category_id", "Uncategorized")
+    
+    # Convert ObjectIds
+    for r in docs:
+        r["_id"] = str(r["_id"])
+        if "id" not in r:
+            r["id"] = r["_id"]
+    
+    return {"items": docs, "total": total, "page": page, "limit": limit}
 
 
 @router.get("/{venue_id}/recipes/engineered/trash")

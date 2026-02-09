@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Header, Body, Depends
+from fastapi import FastAPI, HTTPException, Header, Body
 from datetime import datetime
 import logging
 from typing import Dict
@@ -40,22 +40,8 @@ app.include_router(auth_router)
 app.include_router(venues_router)
 app.include_router(migrations_router)
 
-# Dependency Injection: Mock Database
-class MockDatabase:
-    def __init__(self):
-        self._store = {}
-    
-    def get(self, key):
-        return self._store.get(key)
-    
-    def set(self, key, value):
-        self._store[key] = value
-
-# Singleton instance for simple DI in this example
-_db_instance = MockDatabase()
-
-def get_db():
-    return _db_instance
+# MongoDB connection for vault endpoints
+from app.core.database import get_database
 
 @app.get("/health")
 def read_health():
@@ -64,12 +50,16 @@ def read_health():
 @app.post("/api/employees/secure-vault")
 async def create_secret_vault(
     emp_id: str = Body(...), 
-    secrets: dict = Body(...),
-    db: MockDatabase = Depends(get_db)
+    secrets: dict = Body(...)
 ):
     try:
         encrypted = EnvelopeCrypto.encrypt(secrets)
-        db.set(emp_id, encrypted)
+        db = get_database()
+        await db.secrets.update_one(
+            {"emp_id": emp_id},
+            {"$set": {"emp_id": emp_id, "data": encrypted}},
+            upsert=True
+        )
         logger.info(f"Vault created for employee {emp_id}")
         return {"status": "secured", "emp_id": emp_id}
     except Exception as e:
@@ -80,18 +70,18 @@ async def create_secret_vault(
 async def reveal_sensitive_data(
     emp_id: str, 
     type: str, 
-    user_agent: str = Header(None),
-    db: MockDatabase = Depends(get_db)
+    user_agent: str = Header(None)
 ):
     logger.info(f"[ALERT] AUDIT LOG: Access to {type} for Employee {emp_id} at {datetime.now()} [UA: {user_agent}]")
     
-    encrypted_blob = db.get(emp_id)
-    if not encrypted_blob:
+    db = get_database()
+    record = await db.secrets.find_one({"emp_id": emp_id})
+    if not record or not record.get("data"):
         logger.warning(f"Vault access denied: Not found for {emp_id}")
         raise HTTPException(404, "Vault not found")
 
     try:
-        full_data = EnvelopeCrypto.decrypt(encrypted_blob)
+        full_data = EnvelopeCrypto.decrypt(record["data"])
     except Exception as e:
         logger.critical(f"Security integrity breach attempt or error: {e}")
         raise HTTPException(500, "Security Integrity Error")
