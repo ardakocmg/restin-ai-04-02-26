@@ -431,7 +431,107 @@ class AccessControlService:
         return await NukiProvider.delete_authorization(door["nuki_smartlock_id"], token, auth_id)
 
 
-    # ==================== PERMISSION ENFORCEMENT ====================
+    # ==================== LOG ARCHIVING & STAFF LINKING ====================
+
+    @staticmethod
+    async def get_native_logs(venue_id: str, door_id: str, limit: int = 50) -> list[dict]:
+        """
+        Get Nuki logs. Prefers local archived logs (with staff info), 
+        falls back to live Nuki API if no local logs found (or force sync needed).
+        """
+        db = get_database()
+        
+        # 1. Try local DB first (archived logs)
+        local_logs = await db.nuki_activity_logs.find({
+            "door_id": door_id
+        }).sort("timestamp", -1).to_list(length=limit)
+        
+        if local_logs:
+            for log in local_logs:
+                log["_id"] = str(log["_id"])
+            return local_logs
+
+        # 2. Fallback to Nuki Web API (Live)
+        token = await AccessControlService.get_token(venue_id)
+        if not token:
+            return []
+            
+        door = await db.doors.find_one({"id": door_id, "venue_id": venue_id})
+        if not door:
+            return []
+            
+        return await NukiProvider.get_activity_log(door["nuki_smartlock_id"], token, limit)
+
+    @staticmethod
+    async def sync_door_logs(door_id: str) -> dict:
+        """
+        Fetch logs from Nuki -> Deduplicate -> Link Staff -> Archive to DB.
+        """
+        db = get_database()
+        door = await db.doors.find_one({"id": door_id})
+        if not door:
+            return {"error": "Door not found"}
+            
+        venue_id = door["venue_id"]
+        token = await AccessControlService.get_token(venue_id)
+        if not token:
+            return {"error": "No Nuki connection"}
+
+        # 1. Fetch from Nuki
+        raw_logs = await NukiProvider.get_activity_log(door["nuki_smartlock_id"], token, limit=100)
+        if not raw_logs:
+            return {"synced": 0}
+
+        new_count = 0
+        
+        # 2. Process each log
+        for log in raw_logs:
+            # key: smartlockId + id (unique event id from Nuki)
+            nuki_unique_id = log.get("id") 
+            if not nuki_unique_id:
+                continue
+                
+            exists = await db.nuki_activity_logs.find_one({"nuki_id": nuki_unique_id})
+            if exists:
+                continue
+
+            # 3. Link Staff (Match Name)
+            user_name = log.get("name", "")
+            staff_id = None
+            staff_name = None
+            
+            if user_name:
+                # Simple loose matching - exact name or first name match
+                # Ideally, we map Nuki Users to Staff IDs explicitly in a separate collection,
+                # but for now we fuzzy link by name.
+                staff = await db.users.find_one({
+                    "venue_id": venue_id, 
+                    "name": {"$regex": f"^{user_name}$", "$options": "i"}
+                })
+                if staff:
+                    staff_id = staff["id"]
+                    staff_name = staff["name"]
+
+            # 4. Insert
+            entry = {
+                "venue_id": venue_id,
+                "door_id": door_id,
+                "nuki_id": nuki_unique_id,
+                "smartlock_id": log.get("smartlockId"),
+                "device_type": log.get("deviceType"),
+                "auth_id": log.get("authId"),
+                "auth_name": user_name,
+                "action": log.get("action"),
+                "action_type": log.get("actionType"),
+                "timestamp": log.get("date"),
+                "staff_id": staff_id,
+                "staff_name": staff_name, # Enriched field
+                "synced_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.nuki_activity_logs.insert_one(entry)
+            new_count += 1
+
+        return {"success": True, "synced": new_count}
 
     @staticmethod
     async def check_permission(user_id: str, door_id: str, action: DoorAction) -> bool:
