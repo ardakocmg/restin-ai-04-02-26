@@ -18,9 +18,16 @@ Phase 1 — Core:
   GET  /api/access-control/permissions              — List permissions
   POST /api/access-control/permissions              — Create/update permission
   DELETE /api/access-control/permissions/{perm_id}  — Revoke permission
-  GET  /api/access-control/audit                    — Filtered audit log
+  GET  /api/access-control/audit-logs                       — Filtered audit log
   POST /api/access-control/bridge/configure         — Register bridge
   GET  /api/access-control/bridge/health            — Check bridge health
+
+Phase 1.5 — Extended Nuki Features (New):
+  GET  /api/access-control/doors/{door_id}/config   — Get device config
+  POST /api/access-control/doors/{door_id}/config   — Update device config
+  GET  /api/access-control/doors/{door_id}/native-logs — Get Nuki native logs
+  GET  /api/access-control/doors/{door_id}/auths    — List Nuki auths
+  POST /api/access-control/doors/{door_id}/auths    — Create Nuki auth
 
 Phase 2 — Reporting:
   GET /api/access-control/reports/summary           — Dashboard analytics
@@ -33,10 +40,9 @@ Phase 3 — Keypad PINs:
   GET  /api/access-control/keypad/pins              — List PINs
   POST /api/access-control/keypad/pins              — Create PIN
   DELETE /api/access-control/keypad/pins/{pin_id}   — Revoke PIN
-  POST /api/access-control/keypad/auto-revoke       — Auto-revoke expired PINs
 """
 from fastapi import APIRouter, Query, HTTPException
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 import os
 import logging
@@ -45,7 +51,7 @@ import httpx
 from app.domains.access_control.service import AccessControlService
 from app.domains.access_control.models import (
     DoorAction, DoorUpdate, PermissionCreate, BridgeConfigCreate, NukiCredentialCreate,
-    KeypadPinCreate,
+    KeypadPinCreate, DoorConfig, DoorConfigUpdate, NukiAuthorization, NukiLogEntry, NukiAuthorizationCreate
 )
 
 logger = logging.getLogger(__name__)
@@ -200,6 +206,118 @@ async def update_door(door_id: str, body: DoorUpdate, venue_id: str = Query(...)
     if not door:
         raise HTTPException(status_code=404, detail="Door not found")
     return door
+
+
+# ==================== EXTENDED NUKI FEATURES ====================
+
+@router.get("/doors/{door_id}/config", response_model=DoorConfig)
+async def get_door_config(door_id: str, venue_id: str = Query(...)):
+    """Get device configuration (LED, Button, etc)."""
+    config = await AccessControlService.get_door_config(venue_id, door_id)
+    if not config:
+        raise HTTPException(status_code=404, detail="Door or config not found")
+    return config
+
+
+@router.post("/doors/{door_id}/config")
+async def update_door_config(
+    door_id: str,
+    body: DoorConfigUpdate,
+    venue_id: str = Query(...),
+):
+    """Update device configuration."""
+    success = await AccessControlService.update_door_config(venue_id, door_id, body.dict(exclude_unset=True))
+    if not success:
+        raise HTTPException(status_code=400, detail="Failed to update configuration")
+    return {"success": True}
+
+
+@router.get("/doors/{door_id}/native-logs", response_model=List[NukiLogEntry])
+async def get_native_logs(
+    door_id: str,
+    venue_id: str = Query(...),
+    limit: int = 50,
+):
+    """Fetch raw Nuki logs (redundancy)."""
+    return await AccessControlService.get_native_logs(venue_id, door_id, limit)
+
+
+@router.get("/doors/{door_id}/auths", response_model=List[NukiAuthorization])
+async def list_nuki_auths(door_id: str, venue_id: str = Query(...)):
+    """List all Nuki authorizations (Keypad, App, Fob)."""
+    return await AccessControlService.list_nuki_authorizations(venue_id, door_id)
+
+
+@router.post("/doors/{door_id}/auths")
+async def create_nuki_auth(
+    door_id: str,
+    body: NukiAuthorizationCreate,
+    venue_id: str = Query(...),
+):
+    """Create a new Nuki authorization (App User)."""
+    success = await AccessControlService.create_nuki_authorization(venue_id, door_id, body.name)
+    if not success:
+        raise HTTPException(status_code=400, detail="Failed to create authorization")
+    return {"success": True}
+
+
+# ==================== ACTIONS ====================
+
+@router.post("/doors/{door_id}/unlock")
+async def unlock_door(
+    door_id: str,
+    venue_id: str = Query(...),
+    user_id: str = Query(..., description="Authenticated user ID"),
+    request_id: Optional[str] = Query(None, description="Idempotency key"),
+):
+    """Unlock a door. Permission-checked + audited."""
+    result = await AccessControlService.execute_door_action(
+        venue_id=venue_id, user_id=user_id,
+        door_id=door_id, action=DoorAction.UNLOCK,
+        request_id=request_id,
+    )
+    if not result["success"]:
+        status = 403 if result.get("error") == "Permission denied" else 502
+        raise HTTPException(status_code=status, detail=result["error"])
+    return result
+
+
+@router.post("/doors/{door_id}/lock")
+async def lock_door(
+    door_id: str,
+    venue_id: str = Query(...),
+    user_id: str = Query(...),
+    request_id: Optional[str] = Query(None),
+):
+    """Lock a door. Permission-checked + audited."""
+    result = await AccessControlService.execute_door_action(
+        venue_id=venue_id, user_id=user_id,
+        door_id=door_id, action=DoorAction.LOCK,
+        request_id=request_id,
+    )
+    if not result["success"]:
+        status = 403 if result.get("error") == "Permission denied" else 502
+        raise HTTPException(status_code=status, detail=result["error"])
+    return result
+
+
+@router.post("/doors/{door_id}/unlatch")
+async def unlatch_door(
+    door_id: str,
+    venue_id: str = Query(...),
+    user_id: str = Query(...),
+    request_id: Optional[str] = Query(None),
+):
+    """Unlatch a door. Permission-checked + audited."""
+    result = await AccessControlService.execute_door_action(
+        venue_id=venue_id, user_id=user_id,
+        door_id=door_id, action=DoorAction.UNLATCH,
+        request_id=request_id,
+    )
+    if not result["success"]:
+        status = 403 if result.get("error") == "Permission denied" else 502
+        raise HTTPException(status_code=status, detail=result["error"])
+    return result
 
 
 # ==================== PERMISSIONS ====================

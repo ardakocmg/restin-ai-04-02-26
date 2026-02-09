@@ -177,7 +177,72 @@ class BridgeConfigCreate(BaseModel):
     token: Optional[str] = None
 
 
-# ==================== KEYPAD (Phase 3) ====================
+# ==================== DEVICE CONFIGURATION ====================
+
+class DoorConfig(BaseModel):
+    """Device configuration for Nuki Smart Lock."""
+    name: str
+    led_brightness: int = Field(..., ge=0, le=5, description="0=Off, 5=Max")
+    single_lock: bool = Field(False, description="True=Single lock, False=Double lock")
+    button_enabled: bool = True
+    led_enabled: bool = True
+    pairing_enabled: bool = True
+    sound_level: int = Field(2, ge=0, le=5)  # 0=Silent/2=Normal/5=Loud
+
+class DoorConfigUpdate(BaseModel):
+    """Input model for updating device config."""
+    name: Optional[str] = None
+    led_brightness: Optional[int] = Field(None, ge=0, le=5)
+    single_lock: Optional[bool] = None
+    button_enabled: Optional[bool] = None
+    led_enabled: Optional[bool] = None
+    pairing_enabled: Optional[bool] = None
+    sound_level: Optional[int] = Field(None, ge=0, le=5)
+
+# ==================== NATIVE LOGS ====================
+
+class NukiLogEntry(BaseModel):
+    """Raw log entry from Nuki Web API."""
+    id: str
+    smartlock_id: int
+    device_type: int
+    account_user_id: Optional[int] = None
+    auth_id: Optional[str] = None
+    name: Optional[str] = None  # Who did it
+    action: str
+    trigger: str
+    state: str
+    auto_unlock: bool = False
+    date: str
+
+# ==================== ADVANCED AUTH (KEYPAD/FOB/USER) ====================
+
+class AuthType(str, Enum):
+    APP = "APP"
+    BRIDGE = "BRIDGE"
+    FOB = "FOB"
+    KEYPAD = "KEYPAD"
+    KEYPAD_V2 = "KEYPAD_V2"
+
+class NukiAuthorization(BaseModel):
+    """A credential/user on the Nuki device."""
+    id: str
+    smartlock_id: int
+    type: AuthType
+    name: str # e.g. "Cleaner Fob"
+    enabled: bool = True
+    remote_allowed: bool = False
+    date_created: str
+    last_active_date: Optional[str] = None
+    lock_count: int = 0
+
+class NukiAuthorizationCreate(BaseModel):
+    """Input to create authorization."""
+    name: str
+    type: AuthType = AuthType.APP # Default to App User
+    remote_allowed: bool = False # Safety default
+
+# ==================== KEYPAD (Legacy / Specific) ====================
 
 class KeypadPinConfig(BaseModel):
     """PIN lifecycle for Keypad 2 (Phase 3 — feature-flagged)."""
