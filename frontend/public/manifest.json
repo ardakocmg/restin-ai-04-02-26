@@ -1,7 +1,7 @@
 {
-  "short_name": "restin.ai",
-  "name": "restin.ai - Enterprise Hospitality OS",
-  "description": "Offline-first POS, KDS, and Inventory Management System",
+  "short_name": "Restin.ai",
+  "name": "Restin.ai — Enterprise Restaurant OS",
+  "description": "All-in-one restaurant management: POS, KDS, Inventory, HR, CRM, and AI-powered operations.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -21,40 +21,17 @@
       "purpose": "any maskable"
     }
   ],
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
-  "theme_color": "#E53935",
-  "background_color": "#0A0A0B",
-  "orientation": "portrait-primary",
-  "scope": "/",
-  "categories": ["business", "productivity", "food"],
-  "screenshots": [],
-  "shortcuts": [
-    {
-      "name": "POS",
-      "short_name": "POS",
-      "description": "Open Point of Sale",
-      "url": "/pos/setup",
-      "icons": []
-    },
-    {
-      "name": "KDS",
-      "short_name": "KDS",
-      "description": "Open Kitchen Display",
-      "url": "/kds/setup",
-      "icons": []
-    },
-    {
-      "name": "Admin",
-      "short_name": "Admin",
-      "description": "Admin Dashboard",
-      "url": "/admin/dashboard",
-      "icons": []
-    }
+  "orientation": "any",
+  "theme_color": "#09090b",
+  "background_color": "#09090b",
+  "categories": [
+    "business",
+    "food",
+    "productivity"
   ],
-  "prefer_related_applications": false,
-  "related_applications": [],
-  "edge_side_panel": {},
-  "iarc_rating_id": "",
-  "offline_enabled": true
+  "lang": "en",
+  "scope": "/",
+  "prefer_related_applications": false
 }
