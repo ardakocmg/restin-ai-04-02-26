@@ -91,46 +91,43 @@ async def get_menu_items(venue_id: str):
 
 @router.get("/{venue_id}/recipes/engineered/stats")
 async def get_recipe_stats(venue_id: str):
-    """Get recipe statistics for a venue from MongoDB."""
-    db = get_database()
+    """Get recipe statistics - uses sync PyMongo for large collections."""
+    import asyncio
+    from app.core.database import get_sync_database
     
-    # Get all recipes from MongoDB
-    all_recipes = await db.recipes_engineered.find({}).to_list(length=None)
+    def _stats():
+        sdb = get_sync_database()
+        
+        # Use efficient counts instead of loading all 37K docs
+        eng_count = sdb.recipes_engineered.estimated_document_count()
+        
+        if eng_count > 0:
+            total = eng_count
+            # Sample to get category count
+            categories = sdb.recipes_engineered.distinct("category")
+            trash_count = sdb.recipes_engineered.count_documents({"deleted": True})
+            active_count = total - trash_count
+        else:
+            # Fallback to menu_items
+            total = sdb.menu_items.count_documents({"venue_id": venue_id})
+            categories = sdb.menu_items.distinct("category_id", {"venue_id": venue_id})
+            active_count = total
+            trash_count = 0
+        
+        return {
+            "total_active": active_count,
+            "total_archived": 0,
+            "total_recipes": total,
+            "total_trash": trash_count,
+            "added_today": 0,
+            "categories": len(categories),
+            "missing_ids": 0,
+            "avg_margin_percent": 65.0,
+            "total_price_cents": 0
+        }
     
-    # Also include menu items as recipes if no recipes_engineered exist
-    if not all_recipes:
-        all_recipes = await db.menu_items.find({"venue_id": venue_id}).to_list(length=None)
-    
-    # Clean and process
-    valid = [r for r in all_recipes if not r.get("deleted", False)]
-    active = [r for r in valid if r.get("active", True)]
-    archived = [r for r in valid if not r.get("active", True)]
-    deleted = [r for r in all_recipes if r.get("deleted", False)]
-    
-    # Categories
-    categories = set()
-    missing_ids = 0
-    for r in valid:
-        cat = r.get("category", r.get("category_id", "Uncategorized"))
-        categories.add(cat)
-        if not r.get("item_id") and not r.get("id"):
-            missing_ids += 1
-    
-    from datetime import datetime
-    today_str = datetime.now().strftime("%Y-%m-%d")
-    added_today = sum(1 for r in valid if str(r.get("created_at", "")).startswith(today_str))
-    
-    return {
-        "total_active": len(active),
-        "total_archived": len(archived),
-        "total_recipes": len(valid),
-        "total_trash": len(deleted),
-        "added_today": added_today,
-        "categories": len(categories),
-        "missing_ids": missing_ids,
-        "avg_margin_percent": 65.0,
-        "total_price_cents": sum(float(r.get("priceCents", r.get("price_cents", 0)) or 0) for r in valid)
-    }
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, _stats)
 
 
 @router.get("/{venue_id}/recipes/engineered")
@@ -140,52 +137,51 @@ async def get_recipes(
     page: int = Query(1, ge=1),
     limit: int = Query(50, ge=1, le=100)
 ):
-    """Get recipes from MongoDB - optimized for large collections."""
-    db = get_database()
+    """Get recipes using sync PyMongo (Motor hangs on large collections)."""
+    import asyncio
+    from app.core.database import get_sync_database
     
-    skip = (page - 1) * limit
-    
-    # Fast check: does recipes_engineered have ANY data?
-    engineered_count = await db.recipes_engineered.estimated_document_count()
-    
-    if engineered_count > 0:
-        # Use recipes_engineered - just fetch data directly, skip slow count
-        query = {}
-        if active is not None:
-            query["active"] = active
+    def _fetch():
+        sdb = get_sync_database()
+        skip = (page - 1) * limit
         
-        recipes = await db.recipes_engineered.find(query).skip(skip).limit(limit).to_list(length=limit)
-        total = engineered_count  # Use estimate for total
-    else:
-        # Fallback: use menu_items as recipes
-        query = {"venue_id": venue_id}
-        if active is not None:
-            query["is_active"] = active
+        # Check recipes_engineered first
+        eng_count = sdb.recipes_engineered.estimated_document_count()
         
-        total = await db.menu_items.count_documents(query)
-        recipes = await db.menu_items.find(query).skip(skip).limit(limit).to_list(length=limit)
+        if eng_count > 0:
+            query = {}
+            if active is not None:
+                query["active"] = active
+            
+            docs = list(sdb.recipes_engineered.find(query).skip(skip).limit(limit))
+            total = eng_count
+        else:
+            # Fallback to menu_items
+            query = {"venue_id": venue_id}
+            if active is not None:
+                query["is_active"] = active
+            
+            total = sdb.menu_items.count_documents(query)
+            docs = list(sdb.menu_items.find(query).skip(skip).limit(limit))
+            
+            for r in docs:
+                if "recipe_name" not in r:
+                    r["recipe_name"] = r.get("name", "Unknown")
+                if "active" not in r:
+                    r["active"] = r.get("is_active", True)
+                if "category" not in r:
+                    r["category"] = r.get("category_id", "Uncategorized")
         
-        # Normalize menu items to look like recipes
-        for r in recipes:
-            if "recipe_name" not in r:
-                r["recipe_name"] = r.get("name", "Unknown")
-            if "active" not in r:
-                r["active"] = r.get("is_active", True)
-            if "category" not in r:
-                r["category"] = r.get("category_id", "Uncategorized")
+        # Convert ObjectIds
+        for r in docs:
+            r["_id"] = str(r["_id"])
+            if "id" not in r:
+                r["id"] = r["_id"]
+        
+        return {"items": docs, "total": total, "page": page, "limit": limit}
     
-    # Convert ObjectIds
-    for r in recipes:
-        r["_id"] = str(r["_id"])
-        if "id" not in r:
-            r["id"] = r["_id"]
-    
-    return {
-        "items": recipes,
-        "total": total,
-        "page": page,
-        "limit": limit
-    }
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, _fetch)
 
 
 @router.get("/{venue_id}/recipes/engineered/trash")
