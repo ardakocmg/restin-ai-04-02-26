@@ -736,7 +736,7 @@ function AuditTab() {
                                             {new Date(entry.timestamp).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'medium' })}
                                         </td>
                                         <td className="p-3 text-sm text-zinc-200">{entry.user_name}</td>
-                                        <td className="p-3 text-sm text-zinc-300">{entry.door_name}</td>
+                                        <td className="p-3 text-sm text-zinc-300">{entry.door_display_name}</td>
                                         <td className="p-3">
                                             <div className="flex items-center gap-1.5">
                                                 {actionIcons[entry.action]}
