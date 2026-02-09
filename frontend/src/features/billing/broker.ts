@@ -74,7 +74,7 @@ export const logAiUsage = async (details: AiUsageDetails) => {
 
     } catch (error) {
         // Fail silent to not break UX, but log error
-        logger.error("🚨 Billing Broker Error: Failed to log usage.", error);
+        logger.error("🚨 Billing Broker Error: Failed to log usage.", { error: String(error) });
     }
 };
 

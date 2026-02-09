@@ -70,7 +70,7 @@ export default function PayrollDashboard() {
             results.forEach(p => HRService.saveDraftLocally(p));
 
         } catch (error) {
-            logger.error("Payroll Run Failed", error);
+            logger.error("Payroll Run Failed", { error: String(error) });
             toast.error("Failed to run payroll. Check connection.");
             setOfflineMode(true);
         } finally {

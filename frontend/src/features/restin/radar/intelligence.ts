@@ -22,7 +22,7 @@ export class MarketRadar {
             const response = await AiServiceFactory.promptWithGrounding(prompt, 'GEMINI_PRO');
             return JSON.parse(response);
         } catch (error) {
-            logger.error('[Pillar 6] Market Radar failed:', error);
+            logger.error('[Pillar 6] Market Radar failed:', { error: String(error) });
             return [];
         }
     }

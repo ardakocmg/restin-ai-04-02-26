@@ -15,7 +15,7 @@ export const HRService = {
             const response = await axios.get<Employee[]>(`${API_URL}/employees`);
             return response.data;
         } catch (error) {
-            logger.error("Failed to fetch employees:", error);
+            logger.error("Failed to fetch employees:", { error: String(error) });
             throw error;
         }
     },
@@ -30,7 +30,7 @@ export const HRService = {
             });
             return response.data;
         } catch (error) {
-            logger.error("Failed to calculate payroll:", error);
+            logger.error("Failed to calculate payroll:", { error: String(error) });
             throw error;
         }
     },
@@ -41,7 +41,7 @@ export const HRService = {
             await saveDraft(payslip);
             return true;
         } catch (error) {
-            logger.error("Failed to save draft locally:", error);
+            logger.error("Failed to save draft locally:", { error: String(error) });
             return false;
         }
     },
@@ -51,7 +51,7 @@ export const HRService = {
         try {
             return await getDrafts();
         } catch (error) {
-            logger.error("Failed to load local drafts:", error);
+            logger.error("Failed to load local drafts:", { error: String(error) });
             return [];
         }
     }

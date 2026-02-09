@@ -80,7 +80,7 @@ export default function Dashboard() {
       setStats(statsRes.data);
       setRecentOrders(ordersRes.data?.slice(0, 5) || []);
     } catch (error) {
-      logger.error('Failed to load dashboard:', error);
+      logger.error('Failed to load dashboard:', { error: String(error) });
     } finally {
       setLoading(false);
     }

@@ -101,74 +101,72 @@ export default function ProductionManagementComplete() {
       title="Production Management"
       description="Track production batches"
       actions={
-        actions = {
-        < Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          New Batch
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create Production Batch</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="recipe" className="text-right">
-              Recipe
-            </Label>
-            <div className="col-span-3">
-              <Select
-                value={newBatch.recipe_id}
-                onValueChange={(val) => setNewBatch({ ...newBatch, recipe_id: val })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select recipe" />
-                </SelectTrigger>
-                <SelectContent>
-                  {recipes.map(recipe => (
-                    <SelectItem key={recipe.id} value={recipe.id}>
-                      {recipe.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              New Batch
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create Production Batch</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="recipe" className="text-right">
+                  Recipe
+                </Label>
+                <div className="col-span-3">
+                  <Select
+                    value={newBatch.recipe_id}
+                    onValueChange={(val) => setNewBatch({ ...newBatch, recipe_id: val })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select recipe" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {recipes.map(recipe => (
+                        <SelectItem key={recipe.id} value={recipe.id}>
+                          {recipe.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="quantity" className="text-right">
+                  Quantity
+                </Label>
+                <Input
+                  id="quantity"
+                  type="number"
+                  value={newBatch.planned_quantity}
+                  onChange={(e) => setNewBatch({ ...newBatch, planned_quantity: e.target.value })}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="unit" className="text-right">
+                  Unit
+                </Label>
+                <Input
+                  id="unit"
+                  value={newBatch.unit}
+                  onChange={(e) => setNewBatch({ ...newBatch, unit: e.target.value })}
+                  className="col-span-3"
+                />
+              </div>
             </div>
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="quantity" className="text-right">
-              Quantity
-            </Label>
-            <Input
-              id="quantity"
-              type="number"
-              value={newBatch.planned_quantity}
-              onChange={(e) => setNewBatch({ ...newBatch, planned_quantity: e.target.value })}
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="unit" className="text-right">
-              Unit
-            </Label>
-            <Input
-              id="unit"
-              value={newBatch.unit}
-              onChange={(e) => setNewBatch({ ...newBatch, unit: e.target.value })}
-              className="col-span-3"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button onClick={handleCreateBatch}>Create Batch</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-      }
+            <DialogFooter>
+              <Button onClick={handleCreateBatch}>Create Batch</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       }
     >
-  <DataTable columns={columns} data={batches} />
-    </PageContainer >
+      <DataTable columns={columns} data={batches} />
+    </PageContainer>
   );
 }
