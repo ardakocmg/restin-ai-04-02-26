@@ -13,33 +13,33 @@ import {
     Zap,
     History,
     PieChart,
+    Loader2,
+    Settings,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fintechService } from './fintech-service';
 import { useVenue } from '../../../context/VenueContext';
 import { toast } from 'sonner';
 
 // Rule 1: No 'any'
-interface PaymentMetric {
-    label: string;
-    value: string;
-    change: string;
-    icon: React.ElementType;
-}
-
 interface Transaction {
     id: string;
-    type: 'CARD' | 'KIOSK' | 'MOBILE';
-    amountCents: number; // Rule 4: Cents
-    status: 'SUCCESS' | 'PENDING' | 'FAILED';
-    time: string;
+    method: string;
+    amount_cents: number;
+    tip_cents: number;
+    total_cents: number;
+    status: string;
+    created_at: string;
 }
 
-interface ChannelMix {
-    label: string;
-    val: number;
-    color: string;
+interface FintechStats {
+    total_transactions: number;
+    total_revenue_cents: number;
+    total_tips_cents: number;
+    avg_transaction_cents: number;
+    card_transactions: number;
+    cash_transactions: number;
 }
 
 const formatCents = (cents: number) => {
@@ -50,7 +50,41 @@ const FintechDashboard: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { activeVenueId } = useVenue();
+    const queryClient = useQueryClient();
     const [kioskMode, setKioskMode] = useState<boolean>(false);
+
+    // Fetch real stats
+    const { data: stats } = useQuery<FintechStats>({
+        queryKey: ['fintech-stats', activeVenueId],
+        queryFn: async () => {
+            const response = await import('../../../lib/api').then(m => m.default.get(`/fintech/stats?venue_id=${activeVenueId}`));
+            return response.data;
+        },
+        enabled: !!activeVenueId,
+    });
+
+    // Fetch real transactions
+    const { data: transactions = [], isLoading } = useQuery<Transaction[]>({
+        queryKey: ['fintech-transactions', activeVenueId],
+        queryFn: async () => {
+            const response = await import('../../../lib/api').then(m => m.default.get(`/fintech/transactions?venue_id=${activeVenueId}`));
+            return Array.isArray(response.data) ? response.data : [];
+        },
+        enabled: !!activeVenueId,
+    });
+
+    // Seed demo data
+    const seedMutation = useMutation({
+        mutationFn: async () => {
+            const api = await import('../../../lib/api').then(m => m.default);
+            return api.post(`/fintech/seed?venue_id=${activeVenueId}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['fintech-stats'] });
+            queryClient.invalidateQueries({ queryKey: ['fintech-transactions'] });
+            toast.success('Fintech demo data seeded!');
+        },
+    });
 
     // Toggle Kiosk Mutation
     const kioskMutation = useMutation({
@@ -68,24 +102,34 @@ const FintechDashboard: React.FC = () => {
         onError: () => toast.error("Failed to toggle Kiosk Mode")
     });
 
-    const metrics: PaymentMetric[] = [
-        { label: 'Today Revenue', value: formatCents(428000), change: '+18.2%', icon: TrendingUp },
-        { label: 'Avg Ticket', value: formatCents(3250), change: '+2.4%', icon: PieChart },
+    // Build metrics from real stats
+    const metrics = [
+        { label: 'Total Revenue', value: formatCents(stats?.total_revenue_cents || 0), change: `${stats?.total_transactions || 0} txns`, icon: TrendingUp },
+        { label: 'Avg Ticket', value: formatCents(stats?.avg_transaction_cents || 0), change: `Tips: ${formatCents(stats?.total_tips_cents || 0)}`, icon: PieChart },
         { label: 'Cloud Sync', value: 'Active', change: '100%', icon: Zap },
     ];
 
-    const transactions: Transaction[] = [
-        { id: '#TR-8821', type: 'CARD', amountCents: 4200, status: 'SUCCESS', time: '2m ago' },
-        { id: '#TR-8820', type: 'KIOSK', amountCents: 1850, status: 'SUCCESS', time: '5m ago' },
-        { id: '#TR-8819', type: 'MOBILE', amountCents: 12400, status: 'PENDING', time: '8m ago' },
-        { id: '#TR-8818', type: 'CARD', amountCents: 6520, status: 'SUCCESS', time: '12m ago' },
+    // Calculate channel mix from real data
+    const totalTxns = (stats?.card_transactions || 0) + (stats?.cash_transactions || 0);
+    const cardPct = totalTxns > 0 ? Math.round(((stats?.card_transactions || 0) / totalTxns) * 100) : 65;
+    const cashPct = totalTxns > 0 ? 100 - cardPct : 35;
+
+    const channelMix = [
+        { label: 'Card (POS)', val: cardPct, color: 'bg-blue-500' },
+        { label: 'Cash', val: cashPct, color: 'bg-green-500' },
     ];
 
-    const channelMix: ChannelMix[] = [
-        { label: 'In-Store POS', val: 65, color: 'bg-blue-500' },
-        { label: 'Self-Serve Kiosk', val: 24, color: 'bg-purple-500' },
-        { label: 'Mobile / QR', val: 11, color: 'bg-green-500' },
-    ];
+    // Format time ago
+    const timeAgo = (isoDate: string) => {
+        try {
+            const diff = Date.now() - new Date(isoDate).getTime();
+            const mins = Math.floor(diff / 60000);
+            if (mins < 60) return `${mins}m ago`;
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24) return `${hrs}h ago`;
+            return `${Math.floor(hrs / 24)}d ago`;
+        } catch { return 'recently'; }
+    };
 
     return (
         <div className="p-6 space-y-6 bg-zinc-950 min-h-screen text-white">
@@ -96,6 +140,15 @@ const FintechDashboard: React.FC = () => {
                     <p className="text-zinc-400">{t('restin.fintech.subtitle')}</p>
                 </div>
                 <div className="flex gap-3">
+                    <Button
+                        variant="outline"
+                        onClick={() => seedMutation.mutate()}
+                        disabled={seedMutation.isPending}
+                        className="border-zinc-800 text-zinc-300 hover:bg-zinc-900 gap-2"
+                    >
+                        {seedMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Settings className="w-4 h-4" />}
+                        Seed Demo
+                    </Button>
                     <Button
                         variant={kioskMode ? "destructive" : "outline"}
                         className={kioskMode ? "text-white font-bold" : "border-zinc-800 text-zinc-300 hover:bg-zinc-900 transition-colors"}
@@ -140,7 +193,7 @@ const FintechDashboard: React.FC = () => {
                     <CardHeader className="flex flex-row items-center justify-between">
                         <CardTitle className="flex items-center gap-2 text-white text-lg font-bold">
                             <History className="w-5 h-5 text-blue-500" />
-                            {t('restin.fintech.liveTransactions')}
+                            {t('restin.fintech.liveTransactions')} ({transactions.length})
                         </CardTitle>
                         <Button variant="ghost" className="text-[10px] text-zinc-500 font-black tracking-widest uppercase hover:text-white">
                             View All
@@ -149,24 +202,35 @@ const FintechDashboard: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-3">
-                            {transactions.map((tr, i) => (
-                                <div key={i} className="flex items-center justify-between p-4 bg-zinc-950 border border-zinc-800 rounded-xl group hover:border-blue-500/30 transition-all">
+                            {isLoading ? (
+                                <div className="p-8 text-center">
+                                    <Loader2 className="w-6 h-6 text-zinc-400 animate-spin mx-auto mb-2" />
+                                    <span className="text-zinc-500 text-sm">Loading transactions...</span>
+                                </div>
+                            ) : transactions.length === 0 ? (
+                                <div className="p-8 text-center text-zinc-500">
+                                    <CreditCard className="w-12 h-12 mx-auto mb-3 opacity-20" />
+                                    <p className="font-bold text-sm">No transactions</p>
+                                    <p className="text-xs mt-1">Click "Seed Demo" to populate data</p>
+                                </div>
+                            ) : transactions.slice(0, 8).map((tr, i) => (
+                                <div key={tr.id || i} className="flex items-center justify-between p-4 bg-zinc-950 border border-zinc-800 rounded-xl group hover:border-blue-500/30 transition-all">
                                     <div className="flex items-center gap-4">
                                         <div className="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center border border-zinc-800">
-                                            {tr.type === 'CARD' && <CreditCard className="w-4 h-4 text-zinc-400" />}
-                                            {tr.type === 'KIOSK' && <Monitor className="w-4 h-4 text-zinc-400" />}
-                                            {tr.type === 'MOBILE' && <Smartphone className="w-4 h-4 text-zinc-400" />}
+                                            {tr.method === 'CARD' && <CreditCard className="w-4 h-4 text-zinc-400" />}
+                                            {tr.method === 'CASH' && <Monitor className="w-4 h-4 text-zinc-400" />}
+                                            {tr.method === 'QR' && <Smartphone className="w-4 h-4 text-zinc-400" />}
                                         </div>
                                         <div>
                                             <div className="font-bold font-mono tracking-tight text-zinc-200">{tr.id}</div>
-                                            <div className="text-[10px] text-zinc-600 uppercase font-black tracking-widest">{tr.time} via {tr.type}</div>
+                                            <div className="text-[10px] text-zinc-600 uppercase font-black tracking-widest">{timeAgo(tr.created_at)} via {tr.method}</div>
                                         </div>
                                     </div>
                                     <div className="text-right flex items-center gap-6">
                                         <div>
-                                            <div className="text-lg font-black text-white">{formatCents(tr.amountCents)}</div>
-                                            <Badge className={tr.status === 'SUCCESS' ? 'bg-green-500/10 text-green-500 border-none px-2 py-0 h-4 text-[9px] font-black' : 'bg-amber-500/10 text-amber-500 border-none px-2 py-0 h-4 text-[9px] font-black'}>
-                                                {tr.status}
+                                            <div className="text-lg font-black text-white">{formatCents(tr.total_cents)}</div>
+                                            <Badge className={tr.status === 'completed' ? 'bg-green-500/10 text-green-500 border-none px-2 py-0 h-4 text-[9px] font-black' : 'bg-amber-500/10 text-amber-500 border-none px-2 py-0 h-4 text-[9px] font-black'}>
+                                                {tr.status?.toUpperCase()}
                                             </Badge>
                                         </div>
                                         <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 group-hover:text-blue-500">

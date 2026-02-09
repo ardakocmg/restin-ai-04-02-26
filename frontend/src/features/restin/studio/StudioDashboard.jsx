@@ -11,6 +11,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { studioService } from './studio-service';
 import { useVenue } from '../../../context/VenueContext';
 import { toast } from 'sonner';
+import { Loader2, Settings } from 'lucide-react';
 
 /**
  * 🎨 GENERATIVE STUDIO (Pillar 5)
@@ -41,6 +42,18 @@ export default function StudioDashboard() {
         onError: () => toast.error("Generation Failed")
     });
 
+    // Seed demo data
+    const seedMutation = useMutation({
+        mutationFn: async () => {
+            const api = await import('../../../lib/api').then(m => m.default);
+            return api.post(`/media/seed?venue_id=${activeVenueId}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(['studio-assets']);
+            toast.success('Studio demo data seeded!');
+        },
+    });
+
     return (
         <div className="flex flex-col gap-8 animate-in slide-in-from-right duration-700">
             {/* Search and Global Action */}
@@ -54,10 +67,19 @@ export default function StudioDashboard() {
                     />
                 </div>
                 <div className="flex items-center gap-4">
+                    <Button
+                        variant="outline"
+                        onClick={() => seedMutation.mutate()}
+                        disabled={seedMutation.isPending}
+                        className="border-zinc-800 text-zinc-400 hover:bg-zinc-900 gap-2"
+                    >
+                        {seedMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Settings size={16} />}
+                        Seed Demo
+                    </Button>
                     <div className="p-4 bg-zinc-900/50 rounded-2xl border border-zinc-800/80 flex items-center gap-3">
                         <div className="flex flex-col text-right">
-                            <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Storage</span>
-                            <span className="text-xs font-black text-white">4.2 GB / 10 GB</span>
+                            <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Assets</span>
+                            <span className="text-xs font-black text-white">{assets.length} items</span>
                         </div>
                         <div className="w-10 h-10 rounded-full bg-red-600/10 border border-red-500/20 flex items-center justify-center">
                             <Zap size={20} className="text-red-500" />
@@ -128,12 +150,16 @@ export default function StudioDashboard() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {assets.map((asset, i) => (
-                            <Card key={i} className="bg-zinc-900/40 border-zinc-800 overflow-hidden group hover:scale-[1.02] transition-all duration-300 shadow-2xl">
+                        {isLoading ? (
+                            <div className="col-span-3 flex items-center justify-center py-20">
+                                <Loader2 size={32} className="text-zinc-600 animate-spin" />
+                            </div>
+                        ) : assets.map((asset, i) => (
+                            <Card key={asset.id || i} className="bg-zinc-900/40 border-zinc-800 overflow-hidden group hover:scale-[1.02] transition-all duration-300 shadow-2xl">
                                 <div className="h-48 relative overflow-hidden">
                                     <img
-                                        src={asset.url || asset.preview}
-                                        alt={asset.name}
+                                        src={asset.url}
+                                        alt={asset.prompt || 'Asset'}
                                         className="w-full h-full object-cover group-hover:scale-110 transition-duration-700"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-80"></div>
@@ -153,8 +179,8 @@ export default function StudioDashboard() {
                                 </div>
                                 <div className="p-5">
                                     <div className="flex justify-between items-center mb-2">
-                                        <h4 className="text-sm font-black text-white italic truncate">{asset.name}</h4>
-                                        <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded uppercase tracking-[0.1em]">{asset.status}</span>
+                                        <h4 className="text-sm font-black text-white italic truncate">{asset.prompt || 'Untitled'}</h4>
+                                        <span className={`text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-[0.1em] ${asset.source === 'upload' ? 'text-blue-500 bg-blue-500/10' : asset.source === 'inventory' ? 'text-emerald-500 bg-emerald-500/10' : 'text-purple-500 bg-purple-500/10'}`}>{asset.source || 'AI'}</span>
                                     </div>
                                     <div className="flex items-center justify-between mt-4">
                                         <span className="text-[10px] font-black text-zinc-600">{new Date(asset.created_at || Date.now()).toLocaleDateString()}</span>

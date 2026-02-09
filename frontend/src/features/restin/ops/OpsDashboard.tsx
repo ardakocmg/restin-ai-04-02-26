@@ -12,42 +12,73 @@ import {
     Layers,
     ArrowUpRight,
     RefreshCw,
+    Loader2,
+    Settings,
+    DollarSign,
+    Users,
+    Flame,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { opsService, aggregatorService } from './ops-service';
 import { useVenue } from '../../../context/VenueContext';
+import { toast } from 'sonner';
 
 // Rule 1: No 'any'
-interface Aggregator {
-    name: string;
-    status: string;
-    orders: number;
-    revenue: string;
-    color: string;
+interface OpsMetrics {
+    total_orders: number;
+    orders_today: number;
+    total_revenue_cents: number;
+    labor_cost_cents: number;
+    labor_percentage: number;
+    kds_pending: number;
+    kds_in_progress: number;
+    waste_cost_cents: number;
+    food_cost_percentage: number;
 }
 
-interface OperationalMetric {
-    label: string;
-    value: string;
-    target: string;
-    icon: React.ElementType;
+interface AggregatorConfig {
+    platform: string;
     status: string;
+    orders_today: number;
+    revenue_today_cents: number;
+    commission_pct: number;
 }
 
-interface OpsLog {
-    time: string;
-    type: 'order' | 'alert' | 'success';
-    msg: string;
+interface OpsLogEntry {
+    id: string;
+    event: string;
+    severity: string;
+    created_at: string;
 }
+
+const formatCents = (cents: number) =>
+    new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(cents / 100);
+
+const timeAgo = (iso: string) => {
+    try {
+        const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+        if (mins < 60) return `${mins}m ago`;
+        if (mins < 1440) return `${Math.floor(mins / 60)}h ago`;
+        return `${Math.floor(mins / 1440)}d ago`;
+    } catch { return ''; }
+};
 
 const OpsDashboard: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { activeVenueId } = useVenue();
+    const queryClient = useQueryClient();
+
+    // Fetch real metrics
+    const { data: metrics } = useQuery<OpsMetrics>({
+        queryKey: ['ops-metrics', activeVenueId],
+        queryFn: () => opsService.getMetrics(activeVenueId || 'default'),
+        enabled: !!activeVenueId
+    });
 
     // Fetch Aggregators
-    const { data: aggregators = [] } = useQuery<Aggregator[]>({
+    const { data: aggregators = [] } = useQuery<AggregatorConfig[]>({
         queryKey: ['ops-aggregators', activeVenueId],
         queryFn: async () => {
             const res = await aggregatorService.getStatus(activeVenueId || 'default');
@@ -56,18 +87,8 @@ const OpsDashboard: React.FC = () => {
         enabled: !!activeVenueId
     });
 
-    // Fetch Metrics
-    const { data: metrics = [] } = useQuery<OperationalMetric[]>({
-        queryKey: ['ops-metrics', activeVenueId],
-        queryFn: async () => {
-            const res = await opsService.getMetrics(activeVenueId || 'default');
-            return Array.isArray(res) ? res : [];
-        },
-        enabled: !!activeVenueId
-    });
-
     // Fetch Logs
-    const { data: logs = [] } = useQuery<OpsLog[]>({
+    const { data: logs = [] } = useQuery<OpsLogEntry[]>({
         queryKey: ['ops-logs', activeVenueId],
         queryFn: async () => {
             const res = await opsService.getLogs(activeVenueId || 'default');
@@ -76,10 +97,31 @@ const OpsDashboard: React.FC = () => {
         enabled: !!activeVenueId
     });
 
-    // Map icon string names to components (since backend sends strings)
-    const getIcon = (iconName: string) => {
-        const map: any = { Clock, AlertCircle, Activity, CheckCircle2 };
-        return map[iconName] || Activity;
+    // Seed
+    const seedMutation = useMutation({
+        mutationFn: async () => {
+            const api = await import('../../../lib/api').then(m => m.default);
+            return api.post(`/ops/seed?venue_id=${activeVenueId}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['ops-metrics'] });
+            queryClient.invalidateQueries({ queryKey: ['ops-aggregators'] });
+            queryClient.invalidateQueries({ queryKey: ['ops-logs'] });
+            toast.success('Ops demo data seeded!');
+        },
+    });
+
+    // Build metric cards from real data
+    const metricCards = [
+        { label: 'Labor Cost %', value: `${metrics?.labor_percentage || 0}%`, target: '28%', icon: Users, status: (metrics?.labor_percentage || 0) <= 30 ? 'OK' : 'HIGH' },
+        { label: 'KDS Pending', value: `${metrics?.kds_pending || 0}`, target: '<5', icon: Flame, status: (metrics?.kds_pending || 0) <= 5 ? 'OK' : 'BUSY' },
+        { label: 'Revenue Today', value: formatCents(metrics?.total_revenue_cents || 0), target: `${metrics?.total_orders || 0} orders`, icon: DollarSign, status: 'LIVE' },
+    ];
+
+    const platformColors: Record<string, string> = {
+        wolt: 'bg-blue-500',
+        uber_eats: 'bg-green-500',
+        bolt_food: 'bg-emerald-500',
     };
 
     return (
@@ -91,6 +133,15 @@ const OpsDashboard: React.FC = () => {
                     <p className="text-zinc-400">{t('restin.ops.subtitle')}</p>
                 </div>
                 <div className="flex gap-3">
+                    <Button
+                        variant="outline"
+                        onClick={() => seedMutation.mutate()}
+                        disabled={seedMutation.isPending}
+                        className="border-zinc-800 text-zinc-300 hover:bg-zinc-900 gap-2"
+                    >
+                        {seedMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Settings className="w-4 h-4" />}
+                        Seed Demo
+                    </Button>
                     <Button variant="outline" className="border-zinc-800 text-zinc-300 hover:bg-zinc-900 transition-colors">
                         <RefreshCw className="w-4 h-4 mr-2" />
                         {t('common.sync')}
@@ -104,7 +155,7 @@ const OpsDashboard: React.FC = () => {
 
             {/* Performance Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {metrics.map((m, i) => (
+                {metricCards.map((m, i) => (
                     <Card
                         key={i}
                         className="bg-zinc-900 border-zinc-800 overflow-hidden relative group cursor-pointer hover:border-red-500/50 transition-all"
@@ -113,12 +164,9 @@ const OpsDashboard: React.FC = () => {
                         <CardHeader className="pb-2">
                             <div className="flex justify-between items-center">
                                 <div className="p-2 bg-zinc-800 rounded-lg">
-                                    {(() => {
-                                        const Icon = getIcon(m.icon as any);
-                                        return <Icon className="w-4 h-4 text-red-500" />;
-                                    })()}
+                                    <m.icon className="w-4 h-4 text-red-500" />
                                 </div>
-                                <Badge className="bg-green-500/10 text-green-500 border-none text-[10px] font-black">{m.status}</Badge>
+                                <Badge className={`text-[10px] font-black border-none ${m.status === 'OK' ? 'bg-green-500/10 text-green-500' : m.status === 'HIGH' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{m.status}</Badge>
                             </div>
                         </CardHeader>
                         <CardContent>
@@ -144,28 +192,34 @@ const OpsDashboard: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {aggregators.map((agg, i) => (
+                            {aggregators.length === 0 ? (
+                                <div className="col-span-2 text-center text-zinc-500 py-8">
+                                    <Truck className="w-12 h-12 mx-auto mb-3 opacity-20" />
+                                    <p className="text-sm font-bold">No aggregators configured</p>
+                                    <p className="text-xs mt-1">Click "Seed Demo" to populate data</p>
+                                </div>
+                            ) : aggregators.map((agg, i) => (
                                 <div key={i} className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 hover:border-zinc-700 transition-all group">
                                     <div className="flex justify-between items-start mb-4">
                                         <div className="flex items-center gap-3">
-                                            <div className={`w-3 h-3 rounded-full ${agg.color}`} />
-                                            <span className="font-bold text-lg text-white">{agg.name}</span>
+                                            <div className={`w-3 h-3 rounded-full ${agg.status === 'online' ? 'bg-green-500' : agg.status === 'paused' ? 'bg-amber-500' : 'bg-zinc-600'}`} />
+                                            <span className="font-bold text-lg text-white capitalize">{agg.platform?.replace('_', ' ')}</span>
                                         </div>
                                         <Badge variant="outline" className="opacity-0 group-hover:opacity-100 transition-opacity uppercase text-[10px] border-zinc-800 text-zinc-500 italic">Settings</Badge>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="p-3 bg-zinc-900 rounded-lg">
                                             <div className="text-[10px] text-zinc-500 uppercase font-black mb-1 tracking-widest">Live Orders</div>
-                                            <div className="text-xl font-black text-white">{agg.orders}</div>
+                                            <div className="text-xl font-black text-white">{agg.orders_today || 0}</div>
                                         </div>
                                         <div className="p-3 bg-zinc-900 rounded-lg">
                                             <div className="text-[10px] text-zinc-500 uppercase font-black mb-1 tracking-widest">Today's Rev.</div>
-                                            <div className="text-xl font-black text-white">{agg.revenue}</div>
+                                            <div className="text-xl font-black text-white">{formatCents(agg.revenue_today_cents || 0)}</div>
                                         </div>
                                     </div>
                                     <div className="mt-4 flex gap-2">
                                         <Button className="flex-1 bg-zinc-800 hover:bg-zinc-700 h-8 text-[10px] font-black tracking-widest uppercase border-none text-zinc-300">
-                                            {t('restin.ops.pauseStream')}
+                                            {agg.status === 'online' ? t('restin.ops.pauseStream') : 'Go Live'}
                                         </Button>
                                         <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 hover:text-white">
                                             <ArrowUpRight className="w-4 h-4" />
@@ -183,14 +237,16 @@ const OpsDashboard: React.FC = () => {
                         <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 italic">{t('restin.ops.liveFeed')}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {(logs || []).map((log, i) => (
-                            <div key={i} className="flex gap-3 items-start group">
-                                <span className="text-[10px] font-mono text-zinc-600 mt-1">{log.time}</span>
+                        {logs.length === 0 ? (
+                            <p className="text-xs text-zinc-600 text-center py-4">No events yet. Seed demo data to populate.</p>
+                        ) : logs.map((log, i) => (
+                            <div key={log.id || i} className="flex gap-3 items-start group">
+                                <span className="text-[10px] font-mono text-zinc-600 mt-1 whitespace-nowrap">{timeAgo(log.created_at)}</span>
                                 <div className="flex-1 text-xs text-zinc-400 leading-tight group-hover:text-zinc-200 transition-colors">
-                                    {log.msg}
+                                    {log.event}
                                 </div>
-                                {log.type === 'alert' && <AlertCircle className="w-3 h-3 text-red-500" />}
-                                {log.type === 'success' && <CheckCircle2 className="w-3 h-3 text-green-500" />}
+                                {log.severity === 'warning' && <AlertCircle className="w-3 h-3 text-red-500 flex-shrink-0" />}
+                                {log.severity === 'info' && <CheckCircle2 className="w-3 h-3 text-green-500 flex-shrink-0" />}
                             </div>
                         ))}
                         <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-white mt-4 border border-zinc-800 border-dashed hover:bg-zinc-800 h-10 transition-all">

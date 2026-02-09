@@ -64,12 +64,12 @@ export default function RadarDashboard() {
 
                 <div className="flex items-center gap-4 bg-zinc-900/30 p-2 rounded-2xl border border-zinc-800/50 backdrop-blur-md">
                     <div className="px-4 py-2 border-r border-zinc-800">
-                        <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1">Grounding Confidence</p>
-                        <p className="text-lg font-black text-emerald-500 italic leading-none">96.8%</p>
+                        <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1">Targets Tracked</p>
+                        <p className="text-lg font-black text-emerald-500 italic leading-none">{competitors.length}</p>
                     </div>
                     <div className="px-4 py-2">
                         <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest mb-1">Index Updated</p>
-                        <p className="text-lg font-black text-white italic leading-none">{competitors[0]?.last_updated || 'Now'}</p>
+                        <p className="text-lg font-black text-white italic leading-none">{competitors[0]?.created_at ? new Date(competitors[0].created_at).toLocaleDateString() : 'Now'}</p>
                     </div>
                     <Button
                         variant="ghost"
@@ -96,7 +96,7 @@ export default function RadarDashboard() {
                                 <div>
                                     <h2 className="text-2xl font-black text-white italic tracking-tight">Yield Management Suggestion</h2>
                                     <p className="text-zinc-500 font-medium max-w-lg mt-2 leading-relaxed">
-                                        {insights?.summary || "Analyzing market conditions..."}
+                                        {insights?.dynamic_pricing_suggestion || "Analyzing market conditions..."}
                                     </p>
                                 </div>
                                 <Button className="bg-emerald-600 text-white font-black px-8 h-12 rounded-xl shadow-[0_10px_30px_rgba(16,185,129,0.3)] border-none">
@@ -106,9 +106,9 @@ export default function RadarDashboard() {
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 {[
-                                    { label: 'Demand Surge', value: '+24%', color: 'text-red-500', icon: TrendingUp },
-                                    { label: 'Market Volatility', value: 'High', color: 'text-orange-500', icon: AlertCircle },
-                                    { label: 'Predicted Yield', value: '+€842', color: 'text-emerald-500', icon: BarChart3 },
+                                    { label: 'Orders Analyzed', value: `${insights?.total_orders_analyzed || 0}`, color: 'text-red-500', icon: TrendingUp },
+                                    { label: 'Peak Hour', value: `${insights?.peak_hour || 0}:00`, color: 'text-orange-500', icon: AlertCircle },
+                                    { label: 'Avg Order', value: `€${Math.round((insights?.avg_order_cents || 0) / 100)}`, color: 'text-emerald-500', icon: BarChart3 },
                                 ].map((metric, i) => (
                                     <div key={i} className="flex flex-col gap-2">
                                         <div className="flex items-center gap-2">
@@ -187,25 +187,23 @@ export default function RadarDashboard() {
                                         <div className="flex justify-between items-start mb-4">
                                             <div>
                                                 <h4 className="text-sm font-black text-white tracking-tight group-hover:text-red-500 transition-colors uppercase italic">{comp.name}</h4>
-                                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">{comp.items_scanned} Items Scanned</p>
+                                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">{comp.review_count || 0} Reviews • {comp.cuisine}</p>
                                             </div>
                                             <div className={cn(
                                                 "p-2 rounded-xl transition-all",
-                                                comp.trend === 'up' ? "bg-red-500/10 text-red-500" :
-                                                    comp.trend === 'down' ? "bg-emerald-500/10 text-emerald-500" :
-                                                        "bg-zinc-800 text-zinc-400"
+                                                comp.trending ? "bg-red-500/10 text-red-500" : "bg-zinc-800 text-zinc-400"
                                             )}>
-                                                {comp.trend === 'up' ? <TrendingUp size={16} /> : comp.trend === 'down' ? <TrendingDown size={16} /> : <ArrowUpRight size={16} />}
+                                                {comp.trending ? <TrendingUp size={16} /> : <ArrowUpRight size={16} />}
                                             </div>
                                         </div>
                                         <div className="flex justify-between items-end border-t border-white/5 pt-4 mt-4">
                                             <div>
                                                 <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest block mb-1">Avg Price</span>
-                                                <span className="text-lg font-black text-white italic">{comp.price}</span>
+                                                <span className="text-lg font-black text-white italic">€{((comp.avg_price_cents || 0) / 100).toFixed(0)}</span>
                                             </div>
                                             <div className="text-right">
-                                                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest block mb-1">Confidence</span>
-                                                <span className="text-xs font-bold text-white italic">{comp.confidence}</span>
+                                                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest block mb-1">Rating</span>
+                                                <span className="text-xs font-bold text-white italic">⭐ {comp.rating || '—'}</span>
                                             </div>
                                         </div>
                                     </div>
