@@ -4,14 +4,14 @@ import {
     Layout, Type, Image, ShoppingCart, CreditCard,
     ToggleLeft, ToggleRight, Loader2, Save, RotateCcw
 } from 'lucide-react';
-import { Card } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
-import { Input } from '../../../../components/ui/input';
-import { cn } from '../../../../lib/utils';
+import { Card } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
+import { cn } from '../../../lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useVenue } from '../../../../context/VenueContext';
+import { useVenue } from '../../../context/VenueContext';
 import { toast } from 'sonner';
-import api from '../../../../lib/api';
+import api from '../../../lib/api';
 
 /**
  * 🖥️ Kiosk Mode — Rule 47 (Pillar 8: Fintech)

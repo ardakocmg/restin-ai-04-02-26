@@ -4,13 +4,13 @@ import {
     Loader2, CheckCircle, AlertTriangle, HardDrive,
     RefreshCw, ChevronRight, Package
 } from 'lucide-react';
-import { Card } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
-import { cn } from '../../../../lib/utils';
+import { Card } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { cn } from '../../../lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useVenue } from '../../../../context/VenueContext';
+import { useVenue } from '../../../context/VenueContext';
 import { toast } from 'sonner';
-import api from '../../../../lib/api';
+import api from '../../../lib/api';
 
 const COLLECTIONS = [
     { key: 'orders', label: 'Orders', icon: Package },

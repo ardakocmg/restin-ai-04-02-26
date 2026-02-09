@@ -4,14 +4,14 @@ import {
     AlertTriangle, Clock, Loader2, RefreshCw, ChevronDown,
     ChevronRight, Trash2, Database, ShieldCheck
 } from 'lucide-react';
-import { Card } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
-import { Input } from '../../../../components/ui/input';
-import { cn } from '../../../../lib/utils';
+import { Card } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
+import { cn } from '../../../lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useVenue } from '../../../../context/VenueContext';
+import { useVenue } from '../../../context/VenueContext';
 import { toast } from 'sonner';
-import api from '../../../../lib/api';
+import api from '../../../lib/api';
 
 /**
  * 🛡️ Digital HACCP Checklists (Auto-HACCP — Rule 53)

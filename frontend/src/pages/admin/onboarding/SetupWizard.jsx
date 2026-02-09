@@ -4,13 +4,13 @@ import {
     Users, Check, ChevronRight, ChevronLeft, Loader2,
     Sparkles, MapPin, Clock, Phone, Globe, Wifi
 } from 'lucide-react';
-import { Card } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
-import { Input } from '../../../../components/ui/input';
-import { cn } from '../../../../lib/utils';
+import { Card } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
+import { cn } from '../../../lib/utils';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import api from '../../../../lib/api';
+import api from '../../../lib/api';
 
 const STEPS = [
     { id: 'venue', label: 'Venue Info', icon: Building2 },

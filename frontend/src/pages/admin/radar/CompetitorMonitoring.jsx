@@ -5,13 +5,13 @@ import {
     RefreshCw, ExternalLink, BarChart3, ArrowUpRight,
     ArrowDownRight, Minus, ChevronDown, ChevronRight
 } from 'lucide-react';
-import { Card } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
-import { cn } from '../../../../lib/utils';
+import { Card } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { cn } from '../../../lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useVenue } from '../../../../context/VenueContext';
+import { useVenue } from '../../../context/VenueContext';
 import { toast } from 'sonner';
-import api from '../../../../lib/api';
+import api from '../../../lib/api';
 
 /**
  * 🔬 Competitor Price Monitoring — Rule 65 (Pillar 6: Radar)

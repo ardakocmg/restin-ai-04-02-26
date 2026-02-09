@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import PageContainer from '../../../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Badge } from '../../../../components/ui/badge';
-import { Button } from '../../../../components/ui/button';
-import { Input } from '../../../../components/ui/input';
+import PageContainer from '../../../layouts/PageContainer';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Badge } from '../../../components/ui/badge';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
 import { BookOpen, Clock, CheckCircle2, AlertTriangle, Users, Search, BarChart3 } from 'lucide-react';
-import api from '../../../../lib/api';
+import api from '../../../lib/api';
 
 export default function TrainingOngoingReport() {
   const [training, setTraining] = useState([]);

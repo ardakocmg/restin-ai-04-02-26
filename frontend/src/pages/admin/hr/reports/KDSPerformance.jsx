@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '../../../../components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { Timer, TrendingUp, AlertTriangle, ChefHat, Activity, Loader2 } from 'lucide-react';
-import { Button } from '../../../../components/ui/button';
-import api from '../../../../lib/api';
-import { useVenue } from '../../../../context/VenueContext';
+import { Button } from '../../../components/ui/button';
+import api from '../../../lib/api';
+import { useVenue } from '../../../context/VenueContext';
 import { toast } from 'sonner';
 
 import { logger } from '@/lib/logger';

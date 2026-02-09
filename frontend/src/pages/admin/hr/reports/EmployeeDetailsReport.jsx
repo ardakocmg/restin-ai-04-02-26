@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../../../context/AuthContext';
-import api from '../../../../lib/api';
+import { useAuth } from '../../../context/AuthContext';
+import api from '../../../lib/api';
 import { Loader2, FileText, Download } from 'lucide-react';
-import { Button } from '../../../../components/ui/button';
+import { Button } from '../../../components/ui/button';
 import { toast } from 'sonner';
 
 

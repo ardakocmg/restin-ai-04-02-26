@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import api from '../../../../lib/api';
+import api from '../../../lib/api';
 import { Loader2, Cake, Gift } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '../../../../components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
 
 export default function BirthdaysAnniversariesReport() {
   const [employees, setEmployees] = useState([]);

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import GenericSetupPage from '../../../../components/admin/hr/GenericSetupPage';
+import GenericSetupPage from '../../../components/admin/hr/GenericSetupPage';
 import { Building } from 'lucide-react';
 
 export default function DepartmentsPage() {

@@ -5,14 +5,14 @@ import {
     Loader2, Save, AlertTriangle, Sun, Moon,
     Zap, ChevronRight, ArrowUpRight, Filter
 } from 'lucide-react';
-import { Card } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
-import { Input } from '../../../../components/ui/input';
-import { cn } from '../../../../lib/utils';
+import { Card } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
+import { cn } from '../../../lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useVenue } from '../../../../context/VenueContext';
+import { useVenue } from '../../../context/VenueContext';
 import { toast } from 'sonner';
-import api from '../../../../lib/api';
+import api from '../../../lib/api';
 
 /**
  * 💸 Dynamic Pricing Rules Engine UI (Pillar 6)

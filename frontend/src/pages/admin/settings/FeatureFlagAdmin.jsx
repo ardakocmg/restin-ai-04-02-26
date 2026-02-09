@@ -5,13 +5,13 @@ import {
     Briefcase, Calendar, Award, Flag, AlertTriangle,
     ChevronRight, Loader2, CheckCircle
 } from 'lucide-react';
-import { Card } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
-import { cn } from '../../../../lib/utils';
+import { Card } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { cn } from '../../../lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useVenue } from '../../../../context/VenueContext';
+import { useVenue } from '../../../context/VenueContext';
 import { toast } from 'sonner';
-import api from '../../../../lib/api';
+import api from '../../../lib/api';
 
 const MODULE_META = {
     people: { icon: Users, label: 'People', desc: 'Employee directory & profiles' },
