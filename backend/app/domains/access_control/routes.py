@@ -184,72 +184,22 @@ async def sync_devices(venue_id: str = Query(...)):
     return result
 
 
-@router.put("/doors/{door_id}")
-async def update_door(door_id: str, body: DoorUpdate, venue_id: str = Query(...)):
-    """Update door display name. Does NOT affect historical audit logs."""
+@router.post("/doors/{door_id}/rename")
+async def rename_door_post(door_id: str, body: DoorUpdate, venue_id: str = Query(...)):
+    """Rename door (Action alias for PUT)."""
     door = await AccessControlService.update_door(door_id, body.display_name)
     if not door:
         raise HTTPException(status_code=404, detail="Door not found")
     return door
 
 
-# ==================== ACTIONS ====================
-
-@router.post("/doors/{door_id}/unlock")
-async def unlock_door(
-    door_id: str,
-    venue_id: str = Query(...),
-    user_id: str = Query(..., description="Authenticated user ID"),
-    request_id: Optional[str] = Query(None, description="Idempotency key"),
-):
-    """Unlock a door. Permission-checked + audited."""
-    result = await AccessControlService.execute_door_action(
-        venue_id=venue_id, user_id=user_id,
-        door_id=door_id, action=DoorAction.UNLOCK,
-        request_id=request_id,
-    )
-    if not result["success"]:
-        status = 403 if result.get("error") == "Permission denied" else 502
-        raise HTTPException(status_code=status, detail=result["error"])
-    return result
-
-
-@router.post("/doors/{door_id}/lock")
-async def lock_door(
-    door_id: str,
-    venue_id: str = Query(...),
-    user_id: str = Query(...),
-    request_id: Optional[str] = Query(None),
-):
-    """Lock a door. Permission-checked + audited."""
-    result = await AccessControlService.execute_door_action(
-        venue_id=venue_id, user_id=user_id,
-        door_id=door_id, action=DoorAction.LOCK,
-        request_id=request_id,
-    )
-    if not result["success"]:
-        status = 403 if result.get("error") == "Permission denied" else 502
-        raise HTTPException(status_code=status, detail=result["error"])
-    return result
-
-
-@router.post("/doors/{door_id}/unlatch")
-async def unlatch_door(
-    door_id: str,
-    venue_id: str = Query(...),
-    user_id: str = Query(...),
-    request_id: Optional[str] = Query(None),
-):
-    """Unlatch a door. Permission-checked + audited."""
-    result = await AccessControlService.execute_door_action(
-        venue_id=venue_id, user_id=user_id,
-        door_id=door_id, action=DoorAction.UNLATCH,
-        request_id=request_id,
-    )
-    if not result["success"]:
-        status = 403 if result.get("error") == "Permission denied" else 502
-        raise HTTPException(status_code=status, detail=result["error"])
-    return result
+@router.put("/doors/{door_id}")
+async def update_door(door_id: str, body: DoorUpdate, venue_id: str = Query(...)):
+    """Update door display name."""
+    door = await AccessControlService.update_door(door_id, body.display_name)
+    if not door:
+        raise HTTPException(status_code=404, detail="Door not found")
+    return door
 
 
 # ==================== PERMISSIONS ====================
@@ -289,7 +239,7 @@ async def delete_permission(perm_id: str):
 
 # ==================== AUDIT ====================
 
-@router.get("/audit")
+@router.get("/audit-logs")
 async def get_audit_log(
     venue_id: str = Query(...),
     door_id: Optional[str] = Query(None),
