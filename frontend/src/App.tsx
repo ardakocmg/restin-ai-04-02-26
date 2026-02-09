@@ -229,6 +229,7 @@ import SplitBillPage from "./pages/admin/pos/SplitBillPage";
 import PrintPreviewPage from "./pages/admin/pos/PrintPreviewPage";
 import RecipeVideoBites from "./pages/admin/training/RecipeVideoBites";
 import PluginMarketplace from "./pages/admin/marketplace/PluginMarketplace";
+import DoorAccessControl from "./pages/admin/door-access/DoorAccessControl";
 
 // AI Hub (New React Pages)
 import VoiceAI from "./pages/admin/ai/VoiceAI";
@@ -399,6 +400,7 @@ function App() {
                                   <Route path="users" element={<Users />} />
                                   <Route path="users/:userId/access" element={<UserAccess />} />
                                   <Route path="access-control" element={<RolesPermissions />} />
+                                  <Route path="door-access" element={<DoorAccessControl />} />
                                   <Route path="theme" element={<ThemeCustomizer />} />
                                   <Route path="microservices" element={<Microservices />} />
                                   <Route path="events" element={<EventMonitor />} />

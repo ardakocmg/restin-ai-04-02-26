@@ -44,6 +44,7 @@ from app.domains.fintech import router as fintech_router
 from app.domains.ops import router as ops_router
 from app.domains.forecasting import router as forecasting_router
 from app.domains.tables import router as tables_router
+from app.domains.access_control import router as access_control_router
 
 app.include_router(hr_router)
 app.include_router(inventory_router)
@@ -61,6 +62,7 @@ app.include_router(fintech_router)
 app.include_router(ops_router)
 app.include_router(forecasting_router)
 app.include_router(tables_router)
+app.include_router(access_control_router)
 app.include_router(catchall_router)
 app.include_router(system_router)
 

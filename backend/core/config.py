@@ -27,3 +27,8 @@ JWT_EXPIRATION_HOURS = 12
 BUILD_ID = os.getenv("BUILD_ID") or os.getenv("EMERGENT_DEPLOY_ID") or os.getenv("GIT_SHA") or "local"
 GIT_SHA = os.getenv("GIT_SHA", "uncommitted")
 BUILT_AT = os.getenv("BUILT_AT") or datetime.now(timezone.utc).isoformat()
+
+# Nuki Smart Lock OAuth2
+NUKI_CLIENT_ID = os.environ.get("NUKI_CLIENT_ID", "")
+NUKI_CLIENT_SECRET = os.environ.get("NUKI_CLIENT_SECRET", "")
+NUKI_REDIRECT_URI = os.environ.get("NUKI_REDIRECT_URI", "")
