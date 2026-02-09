@@ -120,14 +120,36 @@ async def get_pos_sales_report(
     ]
     top_items.sort(key=lambda x: x["revenue"], reverse=True)
     
+    # Revenue trend: group by hour
+    hourly_revenue = {}
+    for order in orders:
+        order_time = order.get("created_at", "")
+        if isinstance(order_time, str) and len(order_time) >= 13:
+            try:
+                hour = int(order_time[11:13])
+            except (ValueError, IndexError):
+                hour = 0
+        else:
+            hour = 0
+        
+        if hour not in hourly_revenue:
+            hourly_revenue[hour] = 0
+        hourly_revenue[hour] += order.get("total_amount", 0)
+    
+    revenue_trend = [
+        {"hour": f"{h:02d}:00", "revenue": round(hourly_revenue.get(h, 0), 2)}
+        for h in range(24)
+        if h <= now.hour  # Only include hours up to current time
+    ]
+    
     return {
         "metrics": {
             "total_revenue": total_revenue,
             "total_orders": total_orders,
             "avg_order_value": total_revenue / total_orders if total_orders > 0 else 0,
-            "top_payment_method": "N/A" # Need payment transaction data
+            "top_payment_method": "N/A"  # Need payment transaction data
         },
-        "revenue_trend": [], # Todo: Group by hour
+        "revenue_trend": revenue_trend,
         "top_items": top_items[:5]
     }
 

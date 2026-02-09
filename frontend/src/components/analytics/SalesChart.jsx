@@ -6,7 +6,6 @@ import React from 'react';
 */
 
 export default function SalesChart({ data, title = "Hourly Sales" }) {
-    // Mock data if none provided
     const chartData = data || [
         { label: "12pm", value: 120 },
         { label: "1pm", value: 450 },

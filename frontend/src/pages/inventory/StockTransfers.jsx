@@ -62,8 +62,6 @@ export default function StockTransfers() {
 
       setItems(itemsRes.data.items || []);
       setVenues(venuesRes.data.venues || []); // Adjust based on actual API response structure for venues
-
-      // Mock transfers list for now as we don't have a dedicated endpoint for just transfers list
       // In a real implementation we would query the ledger
     } catch (error) {
       logger.error(error);

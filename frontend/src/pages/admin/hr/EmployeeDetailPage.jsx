@@ -37,7 +37,6 @@ import { Badge } from '@/components/ui/badge';import { logger } from '@/lib/log
 import { Eye } from 'lucide-react';
 
 import { logger } from '@/lib/logger';
-// Mock API import removed
 
 function EmployeePayrollHistoryLocal({ employeeCode }) {
   // ... (Keep existing implementation for history, assuming it relies on separate endpoint)

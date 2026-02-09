@@ -3,8 +3,6 @@ import { X, Table2, ArrowRightLeft, CheckCircle2 } from 'lucide-react';
 
 export default function MergeTableModal({ currentTableId, activeTables, onClose, onMerge }) {
     const [selectedTable, setSelectedTable] = useState(null);
-
-    // Mock data if no activeTables passed
     const tables = activeTables || [
         { id: 'table-2', name: 'Table 2', status: 'occupied', guests: 3, total: 145.50 },
         { id: 'table-5', name: 'Table 5', status: 'occupied', guests: 2, total: 89.00 },

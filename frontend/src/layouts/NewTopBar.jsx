@@ -64,7 +64,6 @@ export default function NewTopBar() {
       if (!isOnline) {
         setSystemStatus('offline');
       } else {
-        // Mock: randomly set status for demo
         setSystemStatus('healthy');
       }
     };

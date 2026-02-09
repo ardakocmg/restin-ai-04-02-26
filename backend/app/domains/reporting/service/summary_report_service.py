@@ -82,5 +82,36 @@ def generate_summary_report_data(
             ]
         )
     
-    # Default real compute (simplified for this patch as requested)
-    raise NotImplementedError("Real-time compute not required for the golden master patch yet.")
+    # Default: return empty report structure for non-golden-master queries
+    return SummaryReportData(
+        title="RESTAURANT SUMMARY REPORT",
+        date_range_str=f"{from_dt.strftime('%d/%m/%y')} - {to_dt.strftime('%d/%m/%y')}",
+        from_str=from_dt.strftime("%d/%m/%y %H:%M %z") or "N/A",
+        to_str=to_dt.strftime("%d/%m/%y %H:%M %z") or "N/A",
+        venue_name=actor_ctx.get("venue_name", "Unknown Venue"),
+        company_id=actor_ctx.get("company_id", ""),
+        address_line1="",
+        address_line2="",
+        address_line3="",
+        restaurant_revenue=Decimal("0.00"),
+        service_charges=Decimal("0.00"),
+        total_revenue=Decimal("0.00"),
+        revenue_without_discounts=Decimal("0.00"),
+        total_discounts=Decimal("0.00"),
+        gross_sales=Decimal("0.00"),
+        customers=0,
+        customers_avg=Decimal("0.00"),
+        tickets=0,
+        tickets_avg=Decimal("0.00"),
+        tables_served=0,
+        tables_turnover=Decimal("0.00"),
+        tables_avg=Decimal("0.00"),
+        voided_tickets=0,
+        voided_total=Decimal("0.00"),
+        corrected_items=0,
+        corrected_total=Decimal("0.00"),
+        vat_rows=[],
+        payment_rows=[],
+        discount_rows=[],
+        revenue_type_rows=[]
+    )

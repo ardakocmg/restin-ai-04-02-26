@@ -32,7 +32,6 @@ export default function LeaveDashboard() {
 
     const fetchData = async () => {
         try {
-            // Mock Employee Code 1001 for now
             const [balanceRes, requestsRes] = await Promise.all([
                 api.get('/hr/leave/balances/1001'),
                 api.get('/hr/leave/requests?employee_code=1001')

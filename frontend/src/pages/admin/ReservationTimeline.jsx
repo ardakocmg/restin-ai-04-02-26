@@ -153,8 +153,6 @@ export default function ReservationTimeline() {
         </PageContainer>
     );
 }
-
-// Mocked missing icon
 function CheckCircle(props) {
     return (
         <svg

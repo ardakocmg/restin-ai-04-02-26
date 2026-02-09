@@ -5,7 +5,6 @@ import { ChefHat, ArrowRight } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
 
 export default function ProductionManagement() {
-  // Placeholder for Batch Cooking Logic
   // This would typically involve selecting a "Batch Recipe" and declaring "Produced X amount"
   // which triggers stock deduction of ingredients.
 

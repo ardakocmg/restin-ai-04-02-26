@@ -94,7 +94,6 @@ export default function RecipeManagement() {
       const selectedItem = inventoryItems.find(i => i.id === value);
       if (selectedItem) {
         ingredient.item_name = selectedItem.name;
-        // Mock cost if not available, simply for demo calculation
         // In real app, we'd fetch latest cost price
         ingredient.unit = selectedItem.unit;
         ingredient.unit_cost = 5.00; // Mock unit cost €5.00

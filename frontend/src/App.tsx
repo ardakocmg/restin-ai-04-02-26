@@ -183,13 +183,10 @@ import Suppliers from "./pages/admin/Suppliers";
 import PurchaseOrdersNew from "./pages/admin/inventory/PurchaseOrdersNew"; // Scaffolding next
 import StockCount from "./pages/admin/inventory/StockCount"; // Scaffolding next
 import WasteLog from "./pages/admin/inventory/WasteLog"; // Scaffolding next
-import RecipeManagement from "./pages/admin/inventory/RecipeManagement"; // Scaffolding next
-import ProductionManagement from "./pages/admin/inventory/ProductionManagement"; // Scaffolding next
-import StockTransfers from "./pages/admin/inventory/StockTransfers"; // Scaffolding next
-import StockAdjustments from "./pages/admin/inventory/StockAdjustments"; // Scaffolding next
-import RecipeManagementComplete from "./pages/admin/inventory/RecipeManagementComplete"; // Scaffolding next
-import ProductionManagementComplete from "./pages/admin/inventory/ProductionManagementComplete"; // Scaffolding next
-import StockTransfersComplete from "./pages/admin/inventory/StockTransfersComplete"; // Scaffolding next
+import RecipeManagement from "./pages/admin/inventory/RecipeManagementComplete";
+import ProductionManagement from "./pages/admin/inventory/ProductionManagementComplete";
+import StockTransfers from "./pages/admin/inventory/StockTransfersComplete";
+import StockAdjustments from "./pages/admin/inventory/StockAdjustments";
 import KDSPerformance from "./pages/admin/hr/reports/KDSPerformance"; // Scaffolding next
 import POSSales from "./pages/reports/POSSales";
 import InventoryStatus from "./pages/reports/InventoryStatus";
@@ -420,9 +417,7 @@ function App() {
                                   <Route path="inventory-production" element={<ProductionManagement />} />
                                   <Route path="inventory-transfers" element={<StockTransfers />} />
                                   <Route path="inventory-adjustments" element={<StockAdjustments />} />
-                                  <Route path="inventory-recipes-complete" element={<RecipeManagementComplete />} />
-                                  <Route path="inventory-production-complete" element={<ProductionManagementComplete />} />
-                                  <Route path="inventory-transfers-complete" element={<StockTransfersComplete />} />
+                                  {/* Consolidated: old 'Complete' routes removed, primary routes now use Complete components */}
                                   <Route path="reports/kds" element={<KDSPerformance />} />
                                   <Route path="reports/sales" element={<POSSales />} />
                                   <Route path="reports/inventory" element={<InventoryStatus />} />

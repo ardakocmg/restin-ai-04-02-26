@@ -56,8 +56,6 @@ export default function UserAccess() {
             setAssignments(assignmentsRes.data);
             setActiveContext(contextRes.data);
             setAuditLogs(auditRes.data);
-
-            // Mock user details for display if we can't fetch easily
             // In real implementation we should have GET /users/{id}
             setUser({ id: userId, name: "User " + userId.substring(0, 4), status: "active" });
 

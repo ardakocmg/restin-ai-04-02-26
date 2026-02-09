@@ -23,8 +23,6 @@ export default function TasksKanban() {
   const [board, setBoard] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // MOCK DATA REMOVED - STRICT DATABASE MODE
-
   useEffect(() => {
     if (activeVenue?.id) {
       loadBoard();

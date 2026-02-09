@@ -41,8 +41,6 @@ import DataTable from '../../components/shared/DataTable';
 import { logger } from '@/lib/logger';
 // Removed MOCK_PRINTERS constant in favor of API fetching
 
-// MOCK DATA REMOVED - STRICT DATABASE MODE
-
 
 export default function Printers() {
     const { user } = useAuth();

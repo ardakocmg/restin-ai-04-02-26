@@ -39,8 +39,9 @@ export default function WebBuilder() {
     });
 
     const handlePublish = () => {
+        const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
         publishMutation.mutate({
-            theme: 'dark', // Todo: Make dynamic
+            theme: currentTheme,
             sections: ['hero', 'menu']
         });
     };
