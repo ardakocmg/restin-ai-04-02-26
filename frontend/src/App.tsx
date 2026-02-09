@@ -493,6 +493,7 @@ function App() {
                                   <Route path="print-preview" element={<PrintPreviewPage />} />
                                   <Route path="recipe-videos" element={<RecipeVideoBites />} />
                                   <Route path="plugin-marketplace" element={<PluginMarketplace />} />
+                                  <Route path="access-control" element={<DoorAccessControl />} />
 
                                   {/* RESTIN.AI MASTER PROTOCOL v18.0 */}
                                   <Route path="restin">
