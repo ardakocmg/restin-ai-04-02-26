@@ -157,6 +157,7 @@ import TimesheetsIndices from "./pages/admin/hr/Timesheets";
 
 import Devices from "./pages/admin/Devices";
 import RestaurantAppSettings from "./pages/admin/RestaurantAppSettings";
+import NotFound from "./pages/NotFound";
 import PhysicalTables from "./pages/admin/PhysicalTables";
 import ContentStudio from "./pages/admin/ContentStudio";
 import LogsViewer from "./pages/admin/LogsViewer";
@@ -581,7 +582,7 @@ function App() {
                                 <Route path="/admin/kds/stations/:stationKey" element={<KDSStationDetail />} />
                                 <Route path="/kds/runtime/:stationKey" element={<KDSRuntime />} />
                                 <Route path="/book/:venueId" element={<BookingWidget />} />
-                                <Route path="*" element={<Navigate to="/login" replace />} />
+                                <Route path="*" element={<NotFound />} />
                               </Routes>
                               <LogRoute />
                               <RootOverlays />
