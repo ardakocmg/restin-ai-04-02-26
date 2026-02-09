@@ -16,7 +16,7 @@
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { logger } from '@/lib/logger';
-import api from '@/lib/api';
+import api, { accessControlAPI } from '@/lib/api';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -27,10 +27,17 @@ import {
     Wifi, WifiOff, Battery, BatteryWarning, RefreshCw, Pencil,
     Check, X, Clock, Eye, Plus, Trash2, Key, Settings,
     Globe, Router, Activity, AlertTriangle, BarChart3, Keyboard,
-    TrendingUp, Users, Zap, Hash, Timer, Ban
+    TrendingUp, Users, User, Zap, Hash, Timer, Ban
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+    Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
+} from '@/components/ui/dialog';
+import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Label } from '@/components/ui/label';
 
 
 
@@ -131,6 +138,37 @@ interface KeypadPin {
     created_at: string;
     created_by: string;
     revoked_at?: string;
+}
+
+interface DoorConfig {
+    name: string;
+    led_enabled: boolean;
+    led_brightness: number;
+    single_lock: boolean;
+    button_enabled: boolean;
+    admin_pin_state: boolean;
+}
+
+interface NukiAuth {
+    id: string;
+    name: string;
+    type: string; // KEYPAD, FOB, APP, SMARTLOCK
+    status: string;
+    allowed_from_time?: string;
+    allowed_until_time?: string;
+    creation_date: string;
+}
+
+interface NukiLog {
+    id: string;
+    smartlock_id: number;
+    device_type: string;
+    date: string;
+    action: string;
+    trigger: string;
+    auth_name: string;
+    staff_name?: string;
+    completion_status: string;
 }
 
 function getVenueId(): string {
@@ -278,6 +316,341 @@ function ConnectionTab() {
     );
 }
 
+// ==================== CREATE PIN DIALOG ====================
+
+function CreatePinDialog({ doorId, isOpen, onClose, onSuccess }: { doorId: string; isOpen: boolean; onClose: () => void; onSuccess: () => void }) {
+    const [name, setName] = useState('');
+    const [code, setCode] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async () => {
+        if (!name || code.length !== 6) {
+            toast.error('Name and 6-digit code required');
+            return;
+        }
+        setLoading(true);
+        try {
+            // Try creating as PIN first
+            const resp = await accessControlAPI.createPin(doorId, name, parseInt(code), getVenueId());
+            if (resp.status === 200) {
+                toast.success('PIN created successfully');
+                onSuccess();
+                onClose();
+                setName('');
+                setCode('');
+            }
+        } catch (e) {
+            toast.error('Failed to create PIN');
+            logger.error('Create PIN failed', { error: String(e) });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+            <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
+                <DialogHeader>
+                    <DialogTitle>Create New PIN</DialogTitle>
+                    <DialogDescription className="text-zinc-400">
+                        Create a 6-digit access code for the Keypad.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                        <Label>Name</Label>
+                        <Input
+                            placeholder="e.g. Guest Access"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="bg-zinc-900 border-zinc-700 text-zinc-200"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Code (6 digits)</Label>
+                        <Input
+                            placeholder="123456"
+                            value={code}
+                            maxLength={6}
+                            onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))}
+                            className="bg-zinc-900 border-zinc-700 text-zinc-200 font-mono tracking-widest text-center text-lg"
+                        />
+                    </div>
+                    <Button onClick={handleSubmit} disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
+                        {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
+                        Create PIN
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+// ==================== DOOR DETAIL MODAL ====================
+
+function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolean; onClose: () => void }) {
+    const [activeTab, setActiveTab] = useState('settings');
+    const [config, setConfig] = useState<DoorConfig | null>(null);
+    const [auths, setAuths] = useState<NukiAuth[]>([]);
+    const [logs, setLogs] = useState<NukiLog[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [isCreatePinOpen, setIsCreatePinOpen] = useState(false);
+
+    useEffect(() => {
+        if (isOpen && door) {
+            loadTabContent(activeTab);
+        }
+    }, [isOpen, activeTab, door]);
+
+    const loadTabContent = async (tab: string) => {
+        setLoading(true);
+        try {
+            if (tab === 'settings') {
+                const resp = await accessControlAPI.getConfig(door.id, getVenueId());
+                if (resp.status === 200) setConfig(resp.data);
+            } else if (tab === 'users') {
+                const resp = await accessControlAPI.listAuths(door.id, getVenueId());
+                if (resp.status === 200) setAuths(resp.data);
+            } else if (tab === 'logs') {
+                const resp = await accessControlAPI.getNativeLogs(door.id, getVenueId());
+                if (resp.status === 200) setLogs(resp.data);
+            }
+        } catch (e) {
+            logger.error(`Load ${tab} failed`, { error: String(e) });
+            toast.error(`Failed to load ${tab}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const saveConfig = async () => {
+        if (!config) return;
+        setSaving(true);
+        try {
+            const resp = await accessControlAPI.updateConfig(door.id, config, getVenueId());
+            if (resp.status === 200) {
+                toast.success('Settings saved');
+                setConfig(resp.data);
+            }
+        } catch (e) {
+            toast.error('Save failed');
+            logger.error('Save config failed', { error: String(e) });
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const revokeAuth = async (authId: string) => {
+        if (!confirm('Are you sure you want to revoke this user?')) return;
+        try {
+            // Use deleteAuth for generic revocation (works for App, PIN, Fob)
+            const resp = await accessControlAPI.deleteAuth(door.id, authId, getVenueId());
+            if (resp.status === 200) {
+                toast.success('User revoked');
+                loadTabContent('users');
+            }
+        } catch (e) {
+            toast.error('Revoke failed');
+        }
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+            <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100 max-w-4xl h-[80vh] flex flex-col p-0">
+                <DialogHeader className="p-6 border-b border-zinc-800">
+                    <DialogTitle className="flex items-center gap-2">
+                        <Settings className="h-5 w-5 text-zinc-400" />
+                        Manage {door?.display_name}
+                    </DialogTitle>
+                    <DialogDescription className="text-zinc-400">
+                        Configure device settings, manage authorizations, and view internal logs.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <div className="flex-1 overflow-hidden flex">
+                    {/* Sidebar */}
+                    <div className="w-48 border-r border-zinc-800 bg-zinc-900/50 p-4 space-y-2">
+                        <Button variant={activeTab === 'settings' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveTab('settings')}>
+                            <Settings className="h-4 w-4 mr-2" /> Settings
+                        </Button>
+                        <Button variant={activeTab === 'users' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveTab('users')}>
+                            <Users className="h-4 w-4 mr-2" /> Users
+                        </Button>
+                        <Button variant={activeTab === 'logs' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveTab('logs')}>
+                            <Activity className="h-4 w-4 mr-2" /> Native Logs
+                        </Button>
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 p-6 overflow-auto bg-zinc-950">
+                        {loading ? (
+                            <div className="flex justify-center py-12">
+                                <RefreshCw className="h-8 w-8 animate-spin text-zinc-600" />
+                            </div>
+                        ) : activeTab === 'settings' && config ? (
+                            <div className="space-y-6 max-w-lg">
+                                <div className="space-y-4">
+                                    <h3 className="text-lg font-medium text-zinc-100">Device Behavior</h3>
+
+                                    <div className="flex items-center justify-between">
+                                        <div className="space-y-0.5">
+                                            <Label className="text-base text-zinc-200">Single Lock</Label>
+                                            <p className="text-sm text-zinc-500">Only lock once (don't double bolt)</p>
+                                        </div>
+                                        <Switch checked={config.single_lock} onCheckedChange={(c) => setConfig({ ...config, single_lock: c })} />
+                                    </div>
+
+                                    <div className="flex items-center justify-between">
+                                        <div className="space-y-0.5">
+                                            <Label className="text-base text-zinc-200">Button Enabled</Label>
+                                            <p className="text-sm text-zinc-500">Allow physical button on device</p>
+                                        </div>
+                                        <Switch checked={config.button_enabled} onCheckedChange={(c) => setConfig({ ...config, button_enabled: c })} />
+                                    </div>
+
+                                    <div className="flex items-center justify-between">
+                                        <div className="space-y-0.5">
+                                            <Label className="text-base text-zinc-200">LED Enabled</Label>
+                                            <p className="text-sm text-zinc-500">Ring/Indicator light</p>
+                                        </div>
+                                        <Switch checked={config.led_enabled} onCheckedChange={(c) => setConfig({ ...config, led_enabled: c })} />
+                                    </div>
+
+                                    {config.led_enabled && (
+                                        <div className="space-y-2 pt-2">
+                                            <Label className="text-sm text-zinc-400">LED Brightness ({config.led_brightness}%)</Label>
+                                            <Slider
+                                                value={[config.led_brightness]}
+                                                min={0} max={5} step={1}
+                                                onValueChange={(v) => setConfig({ ...config, led_brightness: v[0] })}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+
+                                <Button onClick={saveConfig} disabled={saving} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
+                                    {saving ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Check className="h-4 w-4 mr-2" />}
+                                    Save Changes
+                                </Button>
+                            </div>
+                        ) : activeTab === 'users' ? (
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-lg font-medium text-zinc-100">Authorized Users</h3>
+                                    <Button size="sm" onClick={() => setIsCreatePinOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                                        <Plus className="h-4 w-4 mr-2" /> New PIN
+                                    </Button>
+                                    <CreatePinDialog
+                                        doorId={door.id}
+                                        isOpen={isCreatePinOpen}
+                                        onClose={() => setIsCreatePinOpen(false)}
+                                        onSuccess={() => loadTabContent('users')}
+                                    />
+                                </div>
+                                <div className="border border-zinc-800 rounded-md">
+                                    <table className="w-full">
+                                        <thead className="bg-zinc-900/50">
+                                            <tr>
+                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Name</th>
+                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Type</th>
+                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Status</th>
+                                                <th className="text-right p-3 text-xs font-medium text-zinc-500">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {auths.map(auth => (
+                                                <tr key={auth.id} className="border-t border-zinc-800 hover:bg-zinc-900/30">
+                                                    <td className="p-3 text-sm text-zinc-200">{auth.name}</td>
+                                                    <td className="p-3">
+                                                        <Badge variant="outline" className="text-xs border-zinc-700 text-zinc-400">{auth.type}</Badge>
+                                                    </td>
+                                                    <td className="p-3">
+                                                        <span className={`text-xs ${auth.status === 'ACT' ? 'text-emerald-400' : 'text-zinc-500'}`}>
+                                                            {auth.status === 'ACT' ? 'Active' : auth.status}
+                                                        </span>
+                                                    </td>
+                                                    <td className="p-3 text-right">
+                                                        <Button size="sm" variant="ghost" onClick={() => revokeAuth(auth.id)} className="text-red-400 hover:bg-red-950/50 h-6 w-6 p-0">
+                                                            <Trash2 className="h-3 w-3" />
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            {auths.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-zinc-500">No authorizations found.</td></tr>}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        ) : activeTab === 'logs' ? (
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-lg font-medium text-zinc-100">Native Device Logs</h3>
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={async () => {
+                                            toast.loading("Syncing logs...");
+                                            try {
+                                                await accessControlAPI.syncLogs(door.id, getVenueId());
+                                                toast.dismiss();
+                                                toast.success("Logs synced!");
+                                                loadTabContent('logs');
+                                            } catch (e) {
+                                                toast.dismiss();
+                                                toast.error("Sync failed");
+                                            }
+                                        }}
+                                        className="h-8 gap-2 border-zinc-700 text-zinc-300"
+                                    >
+                                        <RefreshCw className="h-3 w-3" />
+                                        Sync from Device
+                                    </Button>
+                                </div>
+                                <div className="border border-zinc-800 rounded-md overflow-hidden">
+                                    <table className="w-full">
+                                        <thead className="bg-zinc-900/50">
+                                            <tr>
+                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Time</th>
+                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Action</th>
+                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">User / Staff</th>
+                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Trigger</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {logs.map(log => (
+                                                <tr key={log.id} className="border-t border-zinc-800 hover:bg-zinc-900/30">
+                                                    <td className="p-3 text-xs text-zinc-400">
+                                                        {new Date(log.date).toLocaleString()}
+                                                    </td>
+                                                    <td className="p-3 text-sm text-zinc-200">{log.action}</td>
+                                                    <td className="p-3">
+                                                        <div className="flex flex-col">
+                                                            <span className="text-sm text-zinc-300">{log.auth_name || '—'}</span>
+                                                            {log.staff_name && (
+                                                                <Badge variant="outline" className="w-fit mt-1 text-[10px] h-4 px-1 gap-1 border-emerald-900/50 text-emerald-400 bg-emerald-950/30">
+                                                                    <User className="h-2 w-2" />
+                                                                    {log.staff_name}
+                                                                </Badge>
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                    <td className="p-3 text-xs text-zinc-500">{log.trigger}</td>
+                                                </tr>
+                                            ))}
+                                            {logs.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-zinc-500">No logs found on device.</td></tr>}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        ) : null}
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
 // ==================== DOORS TAB ====================
 
 function DoorsTab() {
@@ -287,6 +660,7 @@ function DoorsTab() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editName, setEditName] = useState('');
     const [actionLoading, setActionLoading] = useState<string | null>(null);
+    const [manageDoor, setManageDoor] = useState<Door | null>(null);
 
     useEffect(() => { loadDoors(); }, []);
 
@@ -427,6 +801,9 @@ function DoorsTab() {
                                                         <Button size="sm" variant="ghost" onClick={() => setEditingId(null)} className="text-zinc-400 h-8 w-8 p-0">
                                                             <X className="h-4 w-4" />
                                                         </Button>
+                                                        <Button size="sm" variant="ghost" onClick={() => setEditingId(null)} className="text-zinc-400 h-8 w-8 p-0">
+                                                            <X className="h-4 w-4" />
+                                                        </Button>
                                                     </div>
                                                 ) : (
                                                     <div className="flex items-center gap-2">
@@ -437,6 +814,14 @@ function DoorsTab() {
                                                             onClick={() => { setEditingId(door.id); setEditName(door.display_name); }}
                                                         >
                                                             <Pencil className="h-3 w-3" />
+                                                        </Button>
+                                                        <Button
+                                                            size="sm" variant="ghost"
+                                                            className="text-zinc-500 hover:text-emerald-400 h-6 w-6 p-0 ml-1"
+                                                            onClick={() => setManageDoor(door)}
+                                                            title="Manage Device"
+                                                        >
+                                                            <Settings className="h-3 w-3" />
                                                         </Button>
                                                     </div>
                                                 )}
@@ -502,6 +887,13 @@ function DoorsTab() {
                         ))}
                     </AnimatePresence>
                 </div>
+            )}
+            {manageDoor && (
+                <DoorDetailModal
+                    door={manageDoor}
+                    isOpen={!!manageDoor}
+                    onClose={() => setManageDoor(null)}
+                />
             )}
         </div>
     );

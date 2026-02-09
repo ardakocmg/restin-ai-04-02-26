@@ -242,6 +242,18 @@ async def get_native_logs(
     return await AccessControlService.get_native_logs(venue_id, door_id, limit)
 
 
+@router.post("/doors/{door_id}/sync-logs")
+async def sync_door_logs(
+    door_id: str,
+    venue_id: str = Query(...),
+):
+    """Trigger valid log sync (Fetch -> Link Staff -> Store)."""
+    result = await AccessControlService.sync_door_logs(door_id)
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
+
+
 @router.get("/doors/{door_id}/auths", response_model=List[NukiAuthorization])
 async def list_nuki_auths(door_id: str, venue_id: str = Query(...)):
     """List all Nuki authorizations (Keypad, App, Fob)."""
@@ -258,6 +270,19 @@ async def create_nuki_auth(
     success = await AccessControlService.create_nuki_authorization(venue_id, door_id, body.name)
     if not success:
         raise HTTPException(status_code=400, detail="Failed to create authorization")
+    return {"success": True}
+
+
+@router.delete("/doors/{door_id}/auths/{auth_id}")
+async def delete_nuki_auth(
+    door_id: str,
+    auth_id: str,
+    venue_id: str = Query(...),
+):
+    """Revoke a Nuki authorization (App, User, PIN) by ID."""
+    success = await AccessControlService.delete_nuki_authorization(venue_id, door_id, auth_id)
+    if not success:
+        raise HTTPException(status_code=400, detail="Failed to revoke authorization")
     return {"success": True}
 
 

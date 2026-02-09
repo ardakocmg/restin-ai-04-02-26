@@ -234,6 +234,47 @@ class NukiProvider:
         except Exception:
             return False
 
+
+    # ==================== AUTHORIZATIONS ====================
+
+    @staticmethod
+    async def create_authorization(
+        smartlock_id: int,
+        token: str,
+        name: str,
+        type_id: int = 0,  # 0=App, 13=Keypad
+    ) -> bool:
+        """Create a new authorization (App User default)."""
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                resp = await client.put(
+                    f"{NUKI_WEB_API}/smartlock/{smartlock_id}/auth",
+                    headers={"Authorization": f"Bearer {token}"},
+                    json={"name": name, "type": type_id},
+                )
+                return resp.status_code in (200, 204)
+        except Exception as e:
+            logger.error(f"[Nuki] Create auth error: {e}")
+            return False
+
+    @staticmethod
+    async def delete_authorization(
+        smartlock_id: int,
+        token: str,
+        auth_id: str,
+    ) -> bool:
+        """Revoke any authorization by ID."""
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                resp = await client.delete(
+                    f"{NUKI_WEB_API}/smartlock/{smartlock_id}/auth/{auth_id}",
+                    headers={"Authorization": f"Bearer {token}"},
+                )
+                return resp.status_code in (200, 204)
+        except Exception as e:
+            logger.error(f"[Nuki] Delete auth error: {e}")
+            return False
+
     # ==================== KEYPAD (Phase 3) ====================
 
     @staticmethod

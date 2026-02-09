@@ -371,4 +371,40 @@ export const managerOverrideAPI = {
   list: (venueId) => api.get(`/venues/${venueId}/manager-override`)
 };
 
+// Access Control (Nuki) APIs
+export const accessControlAPI = {
+  // Core
+  listDoors: (venueId) => api.get(`/access-control/doors?venue_id=${venueId}`),
+  sync: (venueId) => api.post(`/access-control/doors/sync?venue_id=${venueId}`),
+  renameDoor: (doorId, name, venueId) => api.post(`/access-control/doors/${doorId}/rename?venue_id=${venueId}`, { display_name: name }),
+
+  // Actions
+  unlock: (doorId, venueId, userId) => api.post(`/access-control/doors/${doorId}/unlock?venue_id=${venueId}&user_id=${userId}`),
+  lock: (doorId, venueId, userId) => api.post(`/access-control/doors/${doorId}/lock?venue_id=${venueId}&user_id=${userId}`),
+  unlatch: (doorId, venueId, userId) => api.post(`/access-control/doors/${doorId}/unlatch?venue_id=${venueId}&user_id=${userId}`),
+
+  // Config (New)
+  getConfig: (doorId, venueId) => api.get(`/access-control/doors/${doorId}/config?venue_id=${venueId}`),
+  updateConfig: (doorId, config, venueId) => api.post(`/access-control/doors/${doorId}/config?venue_id=${venueId}`, config),
+
+  // Logs (New)
+  getAuditLogs: (venueId, limit = 100) => api.get(`/access-control/audit-logs?venue_id=${venueId}&limit=${limit}`),
+  getNativeLogs: (doorId, venueId, limit = 50) => api.get(`/access-control/doors/${doorId}/native-logs?venue_id=${venueId}&limit=${limit}`),
+  syncLogs: (doorId, venueId) => api.post(`/access-control/doors/${doorId}/sync-logs?venue_id=${venueId}`),
+
+  // Auth (New)
+  listAuths: (doorId, venueId) => api.get(`/access-control/doors/${doorId}/auths?venue_id=${venueId}`),
+  createAuth: (doorId, name, venueId) => api.post(`/access-control/doors/${doorId}/auths?venue_id=${venueId}`, { name }),
+  deleteAuth: (doorId, authId, venueId) => api.delete(`/access-control/doors/${doorId}/auths/${authId}?venue_id=${venueId}`),
+  revokeAuth: (id, venueId) => api.delete(`/access-control/keypad/pins/${id}?venue_id=${venueId}`), // Keep for legacy if needed
+
+  // Keypad
+  listPins: (venueId, doorId) => api.get(`/access-control/keypad/pins?venue_id=${venueId}${doorId ? `&door_id=${doorId}` : ''}`),
+  createPin: (venueId, doorId, name, code, validFrom, validUntil) =>
+    api.post(`/access-control/keypad/pins?venue_id=${venueId}`, {
+      door_id: doorId, name, code: parseInt(code), valid_from: validFrom, valid_until: validUntil
+    }),
+  revokePin: (pinId) => api.delete(`/access-control/keypad/pins/${pinId}`)
+};
+
 export default api;

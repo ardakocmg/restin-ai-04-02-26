@@ -214,6 +214,28 @@ class NukiLogEntry(BaseModel):
     state: str
     auto_unlock: bool = False
     date: str
+    
+    
+class NukiActivityLog(BaseModel):
+    """Archived log entry with internal links."""
+    id: str = Field(..., description="Unique Nuki Log ID")
+    venue_id: str
+    door_id: str
+    nuki_smartlock_id: int
+    
+    # Nuki Raw Data
+    nuki_action: str
+    nuki_trigger: str
+    nuki_state: str
+    nuki_name: Optional[str] = None
+    nuki_date: datetime
+    
+    # Internal Link
+    staff_id: Optional[str] = None
+    staff_name: Optional[str] = None
+    
+    created_at: str = ""
+
 
 # ==================== ADVANCED AUTH (KEYPAD/FOB/USER) ====================
 
