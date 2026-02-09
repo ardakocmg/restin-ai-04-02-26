@@ -182,12 +182,9 @@ function ConnectionTab() {
 
     const startOAuth = async () => {
         try {
-            const resp = await fetch(`${API}/api/access-control/connect/oauth?venue_id=${getVenueId()}`, {
-                method: 'POST',
-            });
-            if (resp.ok) {
-                const data = await resp.json();
-                window.location.href = data.redirect_url;
+            const resp = await api.post(`/access-control/connect/oauth?venue_id=${getVenueId()}`);
+            if (resp.status === 200) {
+                window.location.href = resp.data.redirect_url;
             } else {
                 toast.error('OAuth2 not configured on server');
             }
@@ -296,8 +293,8 @@ function DoorsTab() {
     const loadDoors = async () => {
         setLoading(true);
         try {
-            const resp = await fetch(`${API}/api/access-control/doors?venue_id=${getVenueId()}`);
-            if (resp.ok) setDoors(await resp.json());
+            const resp = await api.get(`/access-control/doors?venue_id=${getVenueId()}`);
+            if (resp.status === 200) setDoors(resp.data);
         } catch (e) {
             logger.error('Load doors failed', { error: String(e) });
         } finally {
@@ -308,14 +305,13 @@ function DoorsTab() {
     const syncDevices = async () => {
         setSyncing(true);
         try {
-            const resp = await fetch(`${API}/api/access-control/doors/sync?venue_id=${getVenueId()}`, { method: 'POST' });
-            if (resp.ok) {
-                const data = await resp.json();
+            const resp = await api.post(`/access-control/doors/sync?venue_id=${getVenueId()}`);
+            if (resp.status === 200) {
+                const data = resp.data;
                 toast.success(`Synced: ${data.discovered} devices (${data.new} new, ${data.updated} updated)`);
                 loadDoors();
             } else {
-                const err = await resp.json();
-                toast.error(err.detail || 'Sync failed');
+                toast.error(resp.data.detail || 'Sync failed');
             }
         } catch (e) {
             toast.error('Device sync failed');
@@ -328,12 +324,10 @@ function DoorsTab() {
     const renameDoor = async (doorId: string) => {
         if (!editName.trim()) return;
         try {
-            const resp = await fetch(`${API}/api/access-control/doors/${doorId}?venue_id=${getVenueId()}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ display_name: editName }),
+            const resp = await api.post(`/access-control/doors/${doorId}/rename?venue_id=${getVenueId()}`, {
+                new_name: editName
             });
-            if (resp.ok) {
+            if (resp.status === 200) {
                 toast.success('Door renamed');
                 setEditingId(null);
                 loadDoors();
@@ -349,16 +343,14 @@ function DoorsTab() {
         setActionLoading(key);
         try {
             const userId = localStorage.getItem('userId') || 'admin';
-            const resp = await fetch(
-                `${API}/api/access-control/doors/${doorId}/${action.toLowerCase()}?venue_id=${getVenueId()}&user_id=${userId}`,
-                { method: 'POST' }
+            const resp = await api.post(
+                `/access-control/doors/${doorId}/${action.toLowerCase()}?venue_id=${getVenueId()}&user_id=${userId}`
             );
-            const data = await resp.json();
-            if (resp.ok) {
-                toast.success(`${action} successful via ${data.provider_path} (${data.duration_ms}ms)`);
+            if (resp.status === 200) {
+                toast.success(`${action} successful via ${resp.data.provider_path} (${resp.data.duration_ms}ms)`);
                 loadDoors();
             } else {
-                toast.error(data.detail || `${action} failed`);
+                toast.error(resp.data.detail || `${action} failed`);
             }
         } catch (e) {
             toast.error(`${action} failed`);
@@ -531,11 +523,11 @@ function PermissionsTab() {
         setLoading(true);
         try {
             const [permResp, doorResp] = await Promise.all([
-                fetch(`${API}/api/access-control/permissions?venue_id=${getVenueId()}`),
-                fetch(`${API}/api/access-control/doors?venue_id=${getVenueId()}`),
+                api.get(`/access-control/permissions?venue_id=${getVenueId()}`),
+                api.get(`/access-control/doors?venue_id=${getVenueId()}`),
             ]);
-            if (permResp.ok) setPermissions(await permResp.json());
-            if (doorResp.ok) setDoors(await doorResp.json());
+            if (permResp.status === 200) setPermissions(permResp.data);
+            if (doorResp.status === 200) setDoors(doorResp.data);
         } catch (e) {
             logger.error('Load permissions failed', { error: String(e) });
         } finally {
@@ -549,12 +541,8 @@ function PermissionsTab() {
             return;
         }
         try {
-            const resp = await fetch(`${API}/api/access-control/permissions?venue_id=${getVenueId()}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newPerm),
-            });
-            if (resp.ok) {
+            const resp = await api.post(`/access-control/permissions?venue_id=${getVenueId()}`, newPerm);
+            if (resp.status === 200) {
                 toast.success('Permission created');
                 loadData();
                 setNewPerm({ door_id: '', role_id: '', can_unlock: true, can_lock: true, can_unlatch: false });
@@ -567,8 +555,8 @@ function PermissionsTab() {
 
     const deletePermission = async (permId: string) => {
         try {
-            const resp = await fetch(`${API}/api/access-control/permissions/${permId}`, { method: 'DELETE' });
-            if (resp.ok) {
+            const resp = await api.delete(`/access-control/permissions/${permId}?venue_id=${getVenueId()}`);
+            if (resp.status === 200) {
                 toast.success('Permission revoked');
                 loadData();
             }
@@ -694,8 +682,8 @@ function AuditTab() {
     const loadAudit = async () => {
         setLoading(true);
         try {
-            const resp = await fetch(`${API}/api/access-control/audit?venue_id=${getVenueId()}&limit=200`);
-            if (resp.ok) setEntries(await resp.json());
+            const resp = await api.get(`/access-control/audit-logs?venue_id=${getVenueId()}&limit=200`);
+            if (resp.status === 200) setEntries(resp.data);
         } catch (e) {
             logger.error('Audit load failed', { error: String(e) });
         } finally {
@@ -748,7 +736,7 @@ function AuditTab() {
                                             {new Date(entry.timestamp).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'medium' })}
                                         </td>
                                         <td className="p-3 text-sm text-zinc-200">{entry.user_name}</td>
-                                        <td className="p-3 text-sm text-zinc-300">{entry.door_display_name}</td>
+                                        <td className="p-3 text-sm text-zinc-300">{entry.door_name}</td>
                                         <td className="p-3">
                                             <div className="flex items-center gap-1.5">
                                                 {actionIcons[entry.action]}
@@ -794,8 +782,8 @@ function BridgeTab() {
 
     const checkHealth = async () => {
         try {
-            const resp = await fetch(`${API}/api/access-control/bridge/health?venue_id=${getVenueId()}`);
-            if (resp.ok) setHealth(await resp.json());
+            const resp = await api.get(`/access-control/bridge/health?venue_id=${getVenueId()}`);
+            if (resp.status === 200) setHealth(resp.data);
         } catch (e) {
             logger.error('Bridge health check failed', { error: String(e) });
         }
@@ -805,13 +793,11 @@ function BridgeTab() {
         if (!bridgeIp) { toast.error('Enter bridge IP'); return; }
         setLoading(true);
         try {
-            const resp = await fetch(`${API}/api/access-control/bridge/configure?venue_id=${getVenueId()}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ip_address: bridgeIp, port: parseInt(bridgePort), token: bridgeToken || null }),
+            const resp = await api.post(`/access-control/bridge/configure?venue_id=${getVenueId()}`, {
+                ip_address: bridgeIp, port: parseInt(bridgePort), token: bridgeToken || null
             });
-            if (resp.ok) {
-                const data = await resp.json();
+            if (resp.status === 200) {
+                const data = resp.data;
                 toast.success(data.is_healthy ? 'Bridge connected and healthy!' : 'Bridge configured but unreachable');
                 checkHealth();
             } else {
@@ -916,13 +902,13 @@ function ReportsTab() {
         setLoading(true);
         try {
             const [sumResp, tlResp, hmResp] = await Promise.all([
-                fetch(`${API}/api/access-control/reports/summary?venue_id=${getVenueId()}&days=${days}`),
-                fetch(`${API}/api/access-control/reports/timeline?venue_id=${getVenueId()}&limit=50`),
-                fetch(`${API}/api/access-control/reports/heatmap?venue_id=${getVenueId()}&days=14`),
+                api.get(`/access-control/reports/summary?venue_id=${getVenueId()}&days=${days}`),
+                api.get(`/access-control/reports/timeline?venue_id=${getVenueId()}&limit=50`),
+                api.get(`/access-control/reports/heatmap?venue_id=${getVenueId()}&days=14`),
             ]);
-            if (sumResp.ok) setSummary(await sumResp.json());
-            if (tlResp.ok) setTimeline(await tlResp.json());
-            if (hmResp.ok) setHeatmap(await hmResp.json());
+            if (sumResp.status === 200) setSummary(sumResp.data);
+            if (tlResp.status === 200) setTimeline(tlResp.data);
+            if (hmResp.status === 200) setHeatmap(hmResp.data);
         } catch (e) {
             logger.error('Reports load failed', { error: String(e) });
         } finally {
@@ -1177,11 +1163,11 @@ function KeypadTab() {
         setLoading(true);
         try {
             const [pinResp, doorResp] = await Promise.all([
-                fetch(`${API}/api/access-control/keypad/pins?venue_id=${getVenueId()}`),
-                fetch(`${API}/api/access-control/doors?venue_id=${getVenueId()}`),
+                api.get(`/access-control/keypad/pins?venue_id=${getVenueId()}`),
+                api.get(`/access-control/doors?venue_id=${getVenueId()}`),
             ]);
-            if (pinResp.ok) setPins(await pinResp.json());
-            if (doorResp.ok) setDoors(await doorResp.json());
+            if (pinResp.status === 200) setPins(pinResp.data);
+            if (doorResp.status === 200) setDoors(doorResp.data);
         } catch (e) {
             logger.error('Keypad load failed', { error: String(e) });
         } finally {
@@ -1201,24 +1187,19 @@ function KeypadTab() {
         }
         setCreating(true);
         try {
-            const resp = await fetch(`${API}/api/access-control/keypad/pins?venue_id=${getVenueId()}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    door_id: newPin.door_id,
-                    name: newPin.name,
-                    code: codeNum,
-                    valid_from: newPin.valid_from || null,
-                    valid_until: newPin.valid_until || null,
-                }),
+            const resp = await api.post(`/access-control/keypad/pins?venue_id=${getVenueId()}`, {
+                door_id: newPin.door_id,
+                name: newPin.name,
+                code: codeNum,
+                valid_from: newPin.valid_from || null,
+                valid_until: newPin.valid_until || null,
             });
-            if (resp.ok) {
+            if (resp.status === 200) {
                 toast.success('PIN created and dispatched to Nuki device');
                 setNewPin({ door_id: '', name: '', code: '', valid_from: '', valid_until: '' });
                 loadData();
             } else {
-                const err = await resp.json();
-                toast.error(err.detail || 'PIN creation failed');
+                toast.error(resp.data.detail || 'PIN creation failed');
             }
         } catch (e) {
             toast.error('PIN creation error');
@@ -1230,10 +1211,8 @@ function KeypadTab() {
 
     const revokePin = async (pinId: string) => {
         try {
-            const resp = await fetch(`${API}/api/access-control/keypad/pins/${pinId}?revoked_by=admin`, {
-                method: 'DELETE',
-            });
-            if (resp.ok) {
+            const resp = await api.delete(`/access-control/keypad/pins/${pinId}?venue_id=${getVenueId()}`);
+            if (resp.status === 200) {
                 toast.success('PIN revoked from device');
                 loadData();
             } else {
