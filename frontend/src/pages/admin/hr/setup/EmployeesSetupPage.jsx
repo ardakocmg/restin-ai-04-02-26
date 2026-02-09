@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Label } from '../../../components/ui/label';
-import { Badge } from '../../../components/ui/badge';
+import PageContainer from '../../../../layouts/PageContainer';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../../components/ui/card';
+import { Button } from '../../../../components/ui/button';
+import { Input } from '../../../../components/ui/input';
+import { Label } from '../../../../components/ui/label';
+import { Badge } from '../../../../components/ui/badge';
 import { Users, Upload, UserPlus, Search, ArrowRight, CheckCircle2, AlertCircle, FileSpreadsheet } from 'lucide-react';
 import { toast } from 'sonner';
-import api from '../../../lib/api';
+import api from '../../../../lib/api';
 
 export default function EmployeesSetupPage() {
   const [employees, setEmployees] = useState([]);

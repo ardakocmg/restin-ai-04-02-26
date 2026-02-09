@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '../../../components/ui/card';
+import { Card, CardContent } from '../../../../components/ui/card';
 import { GraduationCap, AlertTriangle, Loader2 } from 'lucide-react';
-import api from '../../../lib/api';
-import { useVenue } from '../../../context/VenueContext';
+import api from '../../../../lib/api';
+import { useVenue } from '../../../../context/VenueContext';
 
 import { logger } from '@/lib/logger';
 export default function TrainingExpiringReport() {

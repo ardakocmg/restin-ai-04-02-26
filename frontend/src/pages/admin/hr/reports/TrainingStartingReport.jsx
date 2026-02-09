@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
+import PageContainer from '../../../../layouts/PageContainer';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
+import { Badge } from '../../../../components/ui/badge';
 import { GraduationCap, Calendar, Users, Clock, Search } from 'lucide-react';
-import { Input } from '../../../components/ui/input';
-import api from '../../../lib/api';
+import { Input } from '../../../../components/ui/input';
+import api from '../../../../lib/api';
 
 export default function TrainingStartingReport() {
   const [training, setTraining] = useState([]);

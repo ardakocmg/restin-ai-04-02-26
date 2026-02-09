@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../../context/AuthContext';
-import api from '../../../lib/api';
-import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
+import { useAuth } from '../../../../context/AuthContext';
+import api from '../../../../lib/api';
+import { Card, CardHeader, CardTitle, CardContent } from '../../../../components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Loader2, Users } from 'lucide-react';
 
