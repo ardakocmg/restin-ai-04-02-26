@@ -37,6 +37,11 @@ from app.domains.catchall import router as catchall_router
 from app.domains.system import router as system_router
 from app.domains.voice import router as voice_router
 from app.domains.crm import router as crm_router
+from app.domains.web import router as web_router
+from app.domains.studio import router as studio_router
+from app.domains.radar import router as radar_router
+from app.domains.fintech import router as fintech_router
+from app.domains.ops import router as ops_router
 
 app.include_router(hr_router)
 app.include_router(inventory_router)
@@ -47,6 +52,11 @@ app.include_router(migrations_router)
 app.include_router(uploads_router)
 app.include_router(voice_router)
 app.include_router(crm_router)
+app.include_router(web_router)
+app.include_router(studio_router)
+app.include_router(radar_router)
+app.include_router(fintech_router)
+app.include_router(ops_router)
 app.include_router(catchall_router)
 app.include_router(system_router)
 
