@@ -9,14 +9,6 @@ import { toast } from "sonner";
 import api from '@/lib/api';
 import { useAuth } from '@/features/auth/AuthContext';
 
-// Explicitly type the Switch component if it's missing types
-const TypedSwitch = Switch as React.ComponentType<{
-    checked: boolean;
-    onCheckedChange: (checked: boolean) => void;
-    disabled?: boolean;
-    className?: string;
-}>;
-
 interface UsageData {
     ai_cost: number;
     storage_cost: number;
@@ -203,7 +195,7 @@ export default function BillingDashboard() {
                             </div>
                             <div className="flex items-center gap-3">
                                 <span className="text-sm text-zinc-400 font-mono">€50/mo</span>
-                                <TypedSwitch
+                                <Switch
                                     checked={isModuleActive('Voice AI')}
                                     disabled={toggling === 'hasVoice'}
                                     onCheckedChange={(c) => toggleModule('Voice AI', 'hasVoice', c)}
@@ -219,7 +211,7 @@ export default function BillingDashboard() {
                             </div>
                             <div className="flex items-center gap-3">
                                 <span className="text-sm text-zinc-400 font-mono">€30/mo</span>
-                                <TypedSwitch
+                                <Switch
                                     checked={isModuleActive('Market Radar')}
                                     disabled={toggling === 'hasRadar'}
                                     onCheckedChange={(c) => toggleModule('Market Radar', 'hasRadar', c)}
@@ -235,7 +227,7 @@ export default function BillingDashboard() {
                             </div>
                             <div className="flex items-center gap-3">
                                 <span className="text-sm text-zinc-400 font-mono">€20/mo</span>
-                                <TypedSwitch
+                                <Switch
                                     checked={isModuleActive('Content Studio')}
                                     disabled={toggling === 'hasStudio'}
                                     onCheckedChange={(c) => toggleModule('Content Studio', 'hasStudio', c)}
