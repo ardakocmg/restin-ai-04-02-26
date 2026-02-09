@@ -28,7 +28,8 @@ app.add_middleware(
 
 from app.domains.hr import router as hr_router
 from app.domains.inventory import router as inventory_router
-from app.domains.pos import router as pos_router
+from app.domains.pos.routes import router as pos_router
+from app.domains.billing.routes import router as billing_router
 from app.domains.auth import router as auth_router
 from app.domains.venues import router as venues_router
 from app.domains.migrations import router as migrations_router
@@ -50,7 +51,8 @@ from app.domains.auth.routes import admin_router
 from app.domains.analytics.routes import router as analytics_router
 app.include_router(hr_router)
 app.include_router(inventory_router)
-app.include_router(pos_router)
+app.include_router(pos_router, prefix="/api/pos", tags=["pos"])
+app.include_router(billing_router, prefix="/api/billing", tags=["billing"])
 app.include_router(auth_router)
 app.include_router(admin_router)
 app.include_router(analytics_router)

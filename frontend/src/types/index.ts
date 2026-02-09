@@ -13,6 +13,7 @@ export interface User {
     role: UserRole;
     pin: string; // Legacy PIN for quick POS access
     venueId: string;
+    organizationId?: string; // Added to match backend schema
     ou_path?: string; // e.g., "/Operations/Kitchen"
 }
 
