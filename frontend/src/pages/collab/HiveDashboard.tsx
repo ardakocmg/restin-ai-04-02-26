@@ -8,11 +8,11 @@ import {
     ChefHat, Wine, Briefcase, Bell, Search, Pin, Star,
     CheckSquare, Clock, Zap, Volume2, Paperclip, Smile,
     Reply, Trash2, Edit3, MoreHorizontal, Image, FileText,
-    X, Check, ArrowRight
+    X, Check, ArrowRight, PhoneCall, FileAudio
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { parseSmartMessage, SmartToken } from '@/lib/smartParser';
-import { useWalkieTalkie } from '@/hooks/useWalkieTalkie';
+import { useWalkieTalkie, LiveSpeaker, TransmissionResult } from '@/hooks/useWalkieTalkie';
 
 // ─── Channel Definitions ────────────────────────────────────────────────
 interface Channel {
@@ -48,6 +48,9 @@ interface ChatMessage {
     attachments?: { name: string; type: 'image' | 'file'; size: string }[];
     isEdited?: boolean;
     readBy?: string[];
+    // Voice message fields
+    isVoice?: boolean;
+    voiceDuration?: number; // seconds
 }
 
 const MOCK_MESSAGES: ChatMessage[] = [
@@ -238,8 +241,23 @@ export default function HiveDashboard() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // PTT
-    const { isTalking, isConnected, startTalking, stopTalking, micPermission } = useWalkieTalkie(activeChannel);
+    // PTT — onTransmissionEnd injects voice messages into chat
+    const handleTransmissionEnd = useCallback((result: TransmissionResult) => {
+        const voiceMsg: ChatMessage = {
+            id: `voice-${Date.now()}`,
+            channelId: result.channelId,
+            sender: result.speaker,
+            senderInitials: 'ME',
+            senderColor: 'bg-zinc-600',
+            text: result.transcript || '🎙️ Voice message',
+            timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            isVoice: true,
+            voiceDuration: result.duration,
+        };
+        setMessages(prev => [...prev, voiceMsg]);
+    }, []);
+
+    const { isTalking, isConnected, startTalking, stopTalking, micPermission, liveTranscript, callLog, clearCallLog, liveSpeakers } = useWalkieTalkie(activeChannel, { onTransmissionEnd: handleTransmissionEnd });
 
     // Filter messages
     const channelMessages = useMemo(() => {
@@ -288,7 +306,7 @@ export default function HiveDashboard() {
             senderInitials: 'ME',
             senderColor: 'bg-zinc-600',
             text: messageInput,
-            timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+            timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
             replyTo: replyingTo?.id,
             replyPreview: replyingTo ? replyingTo.text.substring(0, 60) + (replyingTo.text.length > 60 ? '...' : '') : undefined,
         };
@@ -505,12 +523,39 @@ export default function HiveDashboard() {
                                         <div className="flex items-baseline gap-2">
                                             <span className="font-semibold text-sm text-zinc-200">{msg.sender}</span>
                                             <span className="text-[10px] text-zinc-600">{msg.timestamp}</span>
+                                            {msg.isVoice && (
+                                                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 text-[10px] font-medium">
+                                                    🎙️ Voice · {msg.voiceDuration}s
+                                                </span>
+                                            )}
                                             {msg.isPinned && <Pin className="h-3 w-3 text-amber-500" />}
                                             {msg.isEdited && <span className="text-[10px] text-zinc-600 italic">(edited)</span>}
                                         </div>
 
-                                        {/* Message Body (Edit Mode or Display) */}
-                                        {editingId === msg.id ? (
+                                        {/* Message Body — Voice or Text */}
+                                        {msg.isVoice ? (
+                                            <div className="mt-1 p-2 rounded-lg bg-zinc-900/80 border border-zinc-800 space-y-1">
+                                                {/* Waveform visualization */}
+                                                <div className="flex items-center gap-1.5">
+                                                    <Mic className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />
+                                                    <div className="flex items-end gap-0.5 h-4">
+                                                        {Array.from({ length: 20 }).map((_, i) => (
+                                                            <div
+                                                                key={i}
+                                                                className="w-1 rounded-full bg-red-500/60"
+                                                                style={{ height: `${4 + Math.sin(i * 0.7) * 8 + Math.random() * 6}px` }}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                    <span className="text-[10px] text-zinc-500 ml-1">{msg.voiceDuration}s</span>
+                                                </div>
+                                                {msg.text && msg.text !== '🎙️ Voice message' && (
+                                                    <p className="text-xs text-zinc-400 italic leading-relaxed pl-5">
+                                                        "{msg.text}"
+                                                    </p>
+                                                )}
+                                            </div>
+                                        ) : editingId === msg.id ? (
                                             <div className="flex gap-2 mt-1">
                                                 <Input
                                                     value={editText}
@@ -729,7 +774,7 @@ export default function HiveDashboard() {
                 </div>
             </div>
 
-            {/* ─── RIGHT: Tasks Panel ──────────────────────────────────── */}
+            {/* ─── RIGHT: Tasks + Call Log + PTT Panel ─────────────────── */}
             <div className="w-72 flex-shrink-0 border-l border-zinc-800 flex flex-col bg-zinc-950/80">
                 <Tabs defaultValue="tasks" className="flex flex-col h-full">
                     <TabsList className="bg-zinc-900 border-b border-zinc-800 rounded-none h-14 px-2 flex-shrink-0">
@@ -738,6 +783,12 @@ export default function HiveDashboard() {
                         </TabsTrigger>
                         <TabsTrigger value="ptt" className="text-xs">
                             <Radio className="h-3.5 w-3.5 mr-1" /> PTT
+                        </TabsTrigger>
+                        <TabsTrigger value="log" className="text-xs">
+                            <PhoneCall className="h-3.5 w-3.5 mr-1" /> Log
+                            {callLog.length > 0 && (
+                                <Badge className="ml-1 h-4 min-w-[16px] px-1 text-[10px] bg-zinc-700 text-zinc-300 border-0">{callLog.length}</Badge>
+                            )}
                         </TabsTrigger>
                     </TabsList>
 
@@ -812,15 +863,43 @@ export default function HiveDashboard() {
                         )}
                     </TabsContent>
 
-                    {/* PTT Tab */}
-                    <TabsContent value="ptt" className="flex-1 flex flex-col items-center justify-center p-6 mt-0">
-                        <div className="text-center space-y-4">
+                    {/* PTT Tab — with Live Speakers + Transcript */}
+                    <TabsContent value="ptt" className="flex-1 flex flex-col items-center p-6 mt-0 overflow-auto">
+                        <div className="text-center space-y-4 w-full">
                             <p className="text-[10px] uppercase tracking-widest text-zinc-600 font-bold">
                                 Walkie-Talkie
                             </p>
                             <p className="text-xs text-zinc-500">
                                 Channel: <span className="text-zinc-300 font-medium">#{activeChannelData?.name}</span>
                             </p>
+
+                            {/* 🔴 Live Speakers (who is currently talking) */}
+                            <AnimatePresence>
+                                {liveSpeakers.filter(s => s.channelId === activeChannel).map(speaker => (
+                                    <motion.div
+                                        key={speaker.name}
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.8 }}
+                                        className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-red-600/10 border border-red-500/20"
+                                    >
+                                        <div className="relative">
+                                            <div className={`h-8 w-8 rounded-full ${speaker.color} flex items-center justify-center`}>
+                                                <span className="text-white text-[10px] font-bold">{speaker.initials}</span>
+                                            </div>
+                                            <motion.div
+                                                className="absolute -inset-1 rounded-full border-2 border-red-500"
+                                                animate={{ scale: [1, 1.3], opacity: [0.8, 0] }}
+                                                transition={{ duration: 1, repeat: Infinity }}
+                                            />
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="text-xs font-bold text-red-400">{speaker.name}</p>
+                                            <p className="text-[10px] text-red-400/60 animate-pulse">🔴 LIVE</p>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
 
                             {/* Big PTT Button */}
                             <motion.button
@@ -837,6 +916,7 @@ export default function HiveDashboard() {
                                         : 'bg-zinc-800 hover:bg-zinc-700 shadow-[0_0_20px_rgba(0,0,0,0.5)]'
                                     }`}
                                 disabled={micPermission === 'denied'}
+                                title="Hold to talk"
                             >
                                 {isTalking && (
                                     <>
@@ -865,25 +945,126 @@ export default function HiveDashboard() {
                                 ) : micPermission === 'denied' ? (
                                     <span className="text-red-400">Microphone access denied</span>
                                 ) : (
-                                    'Hold button to transmit'
+                                    'Hold to talk · Space bar · AirPods squeeze'
                                 )}
                             </p>
 
-                            {/* Active Speakers */}
+                            {/* Live Transcript (while talking) */}
+                            <AnimatePresence>
+                                {isTalking && liveTranscript && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0 }}
+                                        className="w-full p-2 rounded-lg bg-zinc-900 border border-zinc-800"
+                                    >
+                                        <p className="text-[10px] text-zinc-600 uppercase tracking-widest mb-1 flex items-center gap-1">
+                                            <FileAudio className="h-2.5 w-2.5" /> Live Transcript
+                                        </p>
+                                        <p className="text-xs text-zinc-300 italic leading-relaxed">
+                                            "{liveTranscript}"
+                                        </p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            {/* On This Channel — with LIVE indicators */}
                             <div className="pt-4 border-t border-zinc-800 w-full">
                                 <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-3">On this channel</p>
                                 <div className="flex flex-wrap justify-center gap-2">
-                                    {ONLINE_STAFF.filter(s => s.status === 'online').slice(0, 4).map(s => (
-                                        <div key={s.name} className="flex flex-col items-center gap-1">
-                                            <div className={`h-8 w-8 rounded-full ${s.color} flex items-center justify-center`}>
-                                                <span className="text-white text-[10px] font-bold">{s.initials}</span>
+                                    {ONLINE_STAFF.filter(s => s.status === 'online').slice(0, 4).map(s => {
+                                        const isLive = liveSpeakers.some(ls => ls.initials === s.initials && ls.channelId === activeChannel);
+                                        return (
+                                            <div key={s.name} className="flex flex-col items-center gap-1">
+                                                <div className="relative">
+                                                    <div className={`h-8 w-8 rounded-full ${s.color} flex items-center justify-center ${isLive ? 'ring-2 ring-red-500 ring-offset-1 ring-offset-zinc-950' : ''}`}>
+                                                        <span className="text-white text-[10px] font-bold">{s.initials}</span>
+                                                    </div>
+                                                    {isLive && (
+                                                        <motion.div
+                                                            className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-red-500 border border-zinc-950 flex items-center justify-center"
+                                                            animate={{ scale: [1, 1.2, 1] }}
+                                                            transition={{ duration: 1, repeat: Infinity }}
+                                                        >
+                                                            <Mic className="h-1.5 w-1.5 text-white" />
+                                                        </motion.div>
+                                                    )}
+                                                </div>
+                                                <span className={`text-[10px] ${isLive ? 'text-red-400 font-bold' : 'text-zinc-500'}`}>
+                                                    {isLive ? '🔴 LIVE' : s.name.split(' ')[0]}
+                                                </span>
                                             </div>
-                                            <span className="text-[10px] text-zinc-500">{s.name.split(' ')[0]}</span>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>
+                    </TabsContent>
+
+                    {/* Call Log Tab — Transcripts */}
+                    <TabsContent value="log" className="flex-1 overflow-auto p-3 mt-0 space-y-2">
+                        <div className="flex items-center justify-between">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+                                Call History
+                            </p>
+                            {callLog.length > 0 && (
+                                <button
+                                    onClick={clearCallLog}
+                                    className="text-[10px] text-zinc-600 hover:text-red-400 transition-colors"
+                                    title="Clear log"
+                                >
+                                    Clear
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Search call log */}
+                        <div className="relative">
+                            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-600" />
+                            <Input
+                                placeholder="Search transcripts..."
+                                className="bg-zinc-900 border-zinc-800 text-zinc-300 placeholder:text-zinc-600 pl-7 h-7 text-[11px]"
+                            />
+                        </div>
+
+                        <AnimatePresence>
+                            {callLog.length === 0 ? (
+                                <div className="flex flex-col items-center justify-center py-10 text-center">
+                                    <PhoneCall className="h-8 w-8 text-zinc-700 mb-2" />
+                                    <p className="text-xs text-zinc-600">No calls yet</p>
+                                    <p className="text-[10px] text-zinc-700 mt-1">PTT transmissions will appear here with transcripts</p>
+                                </div>
+                            ) : (
+                                callLog.map(entry => (
+                                    <motion.div
+                                        key={entry.id}
+                                        initial={{ opacity: 0, x: 10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        className="p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 space-y-1.5"
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-1.5">
+                                                <div className="h-5 w-5 rounded-full bg-zinc-700 flex items-center justify-center">
+                                                    <Mic className="h-2.5 w-2.5 text-zinc-300" />
+                                                </div>
+                                                <span className="text-xs font-medium text-zinc-300">{entry.speaker}</span>
+                                            </div>
+                                            <span className="text-[10px] text-zinc-600">{entry.startedAt}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-[10px] text-zinc-500">
+                                            <span>#{entry.channelId}</span>
+                                            <span>·</span>
+                                            <span>{entry.duration}s</span>
+                                        </div>
+                                        {entry.transcript !== '(no transcript)' && (
+                                            <p className="text-[11px] text-zinc-400 italic bg-zinc-800/50 rounded px-2 py-1.5 leading-relaxed">
+                                                "{entry.transcript}"
+                                            </p>
+                                        )}
+                                    </motion.div>
+                                ))
+                            )}
+                        </AnimatePresence>
                     </TabsContent>
                 </Tabs>
             </div>
