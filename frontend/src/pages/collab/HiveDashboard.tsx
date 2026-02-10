@@ -10,7 +10,9 @@ import {
     Reply, Trash2, Edit3, MoreHorizontal, Image, FileText,
     X, Check, ArrowRight, PhoneCall, FileAudio, Share2,
     Play, Pause, Square, Calendar, UserPlus, ListTodo, RotateCw, Timer, GripVertical, Plus,
-    Settings, Globe, Volume1
+    Settings, Globe, Volume1, Bookmark, Flag, BarChart3,
+    AlarmClock, Languages, Sparkles, Eye, MessageSquarePlus,
+    Copy, Sticker, LayoutTemplate, Layout, VolumeX
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { parseSmartMessage, SmartToken } from '@/lib/smartParser';
@@ -37,6 +39,12 @@ const CHANNELS: Channel[] = [
 ];
 
 // ─── Message Types ──────────────────────────────────────────────────────
+interface PollOption {
+    id: string;
+    text: string;
+    votes: string[]; // voter names
+}
+
 interface ChatMessage {
     id: string;
     channelId: string;
@@ -46,16 +54,29 @@ interface ChatMessage {
     text: string;
     timestamp: string;
     isPinned?: boolean;
-    reactions?: Record<string, string[]>; // emoji -> list of user names
-    replyTo?: string; // message id
+    reactions?: Record<string, string[]>;
+    replyTo?: string;
     replyPreview?: string;
     attachments?: { name: string; type: 'image' | 'file'; size: string }[];
     isEdited?: boolean;
     readBy?: string[];
-    // Voice message fields
+    // Voice
     isVoice?: boolean;
-    voiceDuration?: number; // seconds
-    audioUrl?: string;      // Blob URL for playback
+    voiceDuration?: number;
+    audioUrl?: string;
+    transcriptConfidence?: number; // 0-1
+    // Tier 1
+    isBookmarked?: boolean;
+    isPriority?: boolean;
+    isScheduled?: boolean;
+    scheduledTime?: string;
+    poll?: { question: string; options: PollOption[]; multiSelect?: boolean };
+    reminder?: { time: string; label?: string };
+    // Tier 2
+    isTranslated?: boolean;
+    translatedText?: string;
+    // Tier 3
+    templateId?: string;
 }
 
 const MOCK_MESSAGES: ChatMessage[] = [
@@ -280,6 +301,29 @@ export default function HiveDashboard() {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [forwardingMsg, setForwardingMsg] = useState<ChatMessage | null>(null);
 
+    // ─── Tier 1-3 Feature State ─────────────────────────────────────────
+    const [showBookmarks, setShowBookmarks] = useState(false);
+    const [showScheduler, setShowScheduler] = useState<string | null>(null); // msg id being scheduled
+    const [scheduleTime, setScheduleTime] = useState('');
+    const [showPollCreator, setShowPollCreator] = useState(false);
+    const [pollQuestion, setPollQuestion] = useState('');
+    const [pollOptions, setPollOptions] = useState(['', '']);
+    const [showReminderPicker, setShowReminderPicker] = useState<string | null>(null);
+    const [reminders, setReminders] = useState<{ msgId: string; time: string; text: string }[]>([]);
+    const [showTemplates, setShowTemplates] = useState(false);
+    const [messageTemplates] = useState([
+        { id: 't1', name: 'Shift Handover', text: '📋 **Shift Handover Report**\n- Pending orders: \n- Notes: \n- Issues: ' },
+        { id: 't2', name: 'Daily Special', text: '🍽️ **Today\'s Special**: \n💰 Price: €\n⏰ Available: until sold out' },
+        { id: 't3', name: 'Kitchen Alert', text: '🔴 **KITCHEN ALERT**\n- Item: \n- Status: 86\'d / Low Stock\n- ETA: ' },
+        { id: 't4', name: 'Staff Update', text: '👥 **Staff Update**\n- Who: \n- What: \n- When: ' },
+        { id: 't5', name: 'Reservation Note', text: '📞 **Reservation**\n- Name: \n- Covers: \n- Time: \n- Notes: ' },
+    ]);
+    const [staffStatus, setStaffStatus] = useState<{ emoji: string; label: string }>({ emoji: '🟢', label: 'Available' });
+    const [showStatusPicker, setShowStatusPicker] = useState(false);
+    const [mutedChannels, setMutedChannels] = useState<string[]>([]);
+    const [showReceiptsDetail, setShowReceiptsDetail] = useState<string | null>(null);
+    const [lastReadTimestamp, setLastReadTimestamp] = useState<string>('14:35');
+
     // ─── Message Settings State ──────────────────────────────────────
     const [ttsRate, setTtsRate] = useState(1.4);
     const [ttsVoiceName, setTtsVoiceName] = useState('');
@@ -497,6 +541,131 @@ export default function HiveDashboard() {
         setMessages(prev => [...prev, forwardedMsg]);
         setForwardingMsg(null);
     }, []);
+
+    // ─── Tier 1: Bookmark ────────────────────────────────────────────────
+    const toggleBookmark = useCallback((msgId: string) => {
+        setMessages(prev => prev.map(m => m.id === msgId ? { ...m, isBookmarked: !m.isBookmarked } : m));
+    }, []);
+
+    // ─── Tier 1: Priority Flag ───────────────────────────────────────────
+    const togglePriority = useCallback((msgId: string) => {
+        setMessages(prev => prev.map(m => m.id === msgId ? { ...m, isPriority: !m.isPriority } : m));
+    }, []);
+
+    // ─── Tier 2: Translate Message (simulated — Google Translate API in prod) ──
+    const translateMessage = useCallback((msgId: string) => {
+        setMessages(prev => prev.map(m => {
+            if (m.id !== msgId) return m;
+            if (m.isTranslated) return { ...m, isTranslated: false, translatedText: undefined };
+            // Simulated translation — in production this calls Google Translate API
+            const translated = `[Translated] ${m.text}`;
+            return { ...m, isTranslated: true, translatedText: translated };
+        }));
+    }, []);
+
+    // ─── Tier 1: Poll Vote ───────────────────────────────────────────────
+    const votePoll = useCallback((msgId: string, optionId: string) => {
+        setMessages(prev => prev.map(m => {
+            if (m.id !== msgId || !m.poll) return m;
+            const updatedOptions = m.poll.options.map(opt => {
+                if (opt.id !== optionId) return opt;
+                const hasVoted = opt.votes.includes('You');
+                return { ...opt, votes: hasVoted ? opt.votes.filter(v => v !== 'You') : [...opt.votes, 'You'] };
+            });
+            return { ...m, poll: { ...m.poll, options: updatedOptions } };
+        }));
+    }, []);
+
+    // ─── Tier 1: Set Reminder ────────────────────────────────────────────
+    const setMsgReminder = useCallback((msgId: string, minutes: number) => {
+        const now = new Date();
+        const rem = new Date(now.getTime() + minutes * 60000);
+        const timeStr = rem.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        const msg = messages.find(m => m.id === msgId);
+        setReminders(prev => [...prev, { msgId, time: timeStr, text: msg?.text?.slice(0, 50) || 'Message' }]);
+        setShowReminderPicker(null);
+        // Auto-remove reminder after timeout (simulated notification)
+        setTimeout(() => {
+            setReminders(prev => prev.filter(r => r.msgId !== msgId));
+        }, minutes * 60000);
+    }, [messages]);
+
+    // ─── Tier 1: Schedule Message ────────────────────────────────────────
+    const sendScheduledMessage = useCallback(() => {
+        if (!messageInput.trim() || !scheduleTime) return;
+        const newMsg: ChatMessage = {
+            id: `msg-${Date.now()}`,
+            channelId: activeChannel,
+            sender: 'You',
+            senderInitials: 'YO',
+            senderColor: 'bg-blue-600',
+            text: messageInput,
+            timestamp: scheduleTime,
+            isScheduled: true,
+            scheduledTime: scheduleTime,
+        };
+        setMessages(prev => [...prev, newMsg]);
+        setMessageInput('');
+        setScheduleTime('');
+        setShowScheduler(null);
+    }, [messageInput, scheduleTime, activeChannel]);
+
+    // ─── Tier 1: Create Poll ─────────────────────────────────────────────
+    const createPollMessage = useCallback(() => {
+        if (!pollQuestion.trim() || pollOptions.filter(o => o.trim()).length < 2) return;
+        const newMsg: ChatMessage = {
+            id: `msg-${Date.now()}`,
+            channelId: activeChannel,
+            sender: 'You',
+            senderInitials: 'YO',
+            senderColor: 'bg-blue-600',
+            text: `📊 Poll: ${pollQuestion}`,
+            timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+            poll: {
+                question: pollQuestion,
+                options: pollOptions.filter(o => o.trim()).map((o, i) => ({
+                    id: `opt-${i}`,
+                    text: o.trim(),
+                    votes: [],
+                })),
+            },
+        };
+        setMessages(prev => [...prev, newMsg]);
+        setPollQuestion('');
+        setPollOptions(['', '']);
+        setShowPollCreator(false);
+    }, [pollQuestion, pollOptions, activeChannel]);
+
+    // ─── Tier 3: Use Template ────────────────────────────────────────────
+    const useTemplate = useCallback((templateText: string) => {
+        setMessageInput(templateText);
+        setShowTemplates(false);
+        inputRef.current?.focus();
+    }, []);
+
+    // ─── Tier 3: AI Summary ──────────────────────────────────────────────
+    const aiSummarize = useCallback(() => {
+        const channelMsgs = messages.filter(m => m.channelId === activeChannel).slice(-20);
+        const summary = channelMsgs.map(m => `${m.sender}: ${m.text}`).join(' | ');
+        const summaryMsg: ChatMessage = {
+            id: `msg-${Date.now()}`,
+            channelId: activeChannel,
+            sender: '✨ AI Assistant',
+            senderInitials: 'AI',
+            senderColor: 'bg-gradient-to-r from-purple-600 to-pink-600',
+            text: `📝 **Channel Summary** (last ${channelMsgs.length} messages):\n${summary.slice(0, 300)}...`,
+            timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+        };
+        setMessages(prev => [...prev, summaryMsg]);
+    }, [messages, activeChannel]);
+
+    // ─── Tier 2: Toggle Channel Mute ─────────────────────────────────────
+    const toggleChannelMute = useCallback((channelId: string) => {
+        setMutedChannels(prev => prev.includes(channelId) ? prev.filter(c => c !== channelId) : [...prev, channelId]);
+    }, []);
+
+    // ─── Computed: bookmarked & filtered messages ────────────────────────
+    const bookmarkedMessages = useMemo(() => messages.filter(m => m.isBookmarked), [messages]);
 
     // Task management (stateful)
     const [tasks, setTasks] = useState<MicroTask[]>(SEED_TASKS);
@@ -723,272 +892,632 @@ export default function HiveDashboard() {
                     )}
                     <div className="flex-1" />
                     {pinnedMessages.length > 0 && (
-                        <Button variant="ghost" size="sm" className="h-7 text-xs text-amber-400 hover:text-amber-300">
+                        <Button variant="ghost" size="sm" className="h-7 text-xs text-amber-400 hover:text-amber-300" title="View pinned messages">
                             <Pin className="h-3 w-3 mr-1" /> {pinnedMessages.length} Pinned
                         </Button>
                     )}
-                    <Button variant="ghost" size="sm" className="h-7 text-xs text-zinc-400 hover:text-zinc-100">
+                    {bookmarkedMessages.length > 0 && (
+                        <Button
+                            variant="ghost" size="sm"
+                            className={`h-7 text-xs ${showBookmarks ? 'text-amber-400' : 'text-zinc-400 hover:text-amber-400'}`}
+                            onClick={() => setShowBookmarks(!showBookmarks)}
+                            title="View bookmarked messages"
+                        >
+                            <Bookmark className="h-3 w-3 mr-1" /> {bookmarkedMessages.length}
+                        </Button>
+                    )}
+                    <Button
+                        variant="ghost" size="sm"
+                        className="h-7 text-xs text-zinc-400 hover:text-purple-400"
+                        onClick={aiSummarize}
+                        title="AI channel summary"
+                    >
+                        <Sparkles className="h-3 w-3 mr-1" /> Summary
+                    </Button>
+                    <Button
+                        variant="ghost" size="sm"
+                        className="h-7 text-xs text-zinc-400 hover:text-purple-400"
+                        onClick={() => setShowPollCreator(!showPollCreator)}
+                        title="Create a poll"
+                    >
+                        <BarChart3 className="h-3 w-3 mr-1" /> Poll
+                    </Button>
+                    <Button
+                        variant="ghost" size="sm"
+                        className="h-7 text-xs text-zinc-400 hover:text-blue-400"
+                        onClick={() => setShowTemplates(!showTemplates)}
+                        title="Message templates"
+                    >
+                        <Layout className="h-3 w-3 mr-1" /> Templates
+                    </Button>
+                    <Button
+                        variant="ghost" size="sm"
+                        className={`h-7 text-xs ${mutedChannels.includes(activeChannel) ? 'text-red-400' : 'text-zinc-400 hover:text-zinc-100'}`}
+                        onClick={() => toggleChannelMute(activeChannel)}
+                        title={mutedChannels.includes(activeChannel) ? 'Unmute channel' : 'Mute channel'}
+                    >
+                        {mutedChannels.includes(activeChannel) ? <VolumeX className="h-3 w-3 mr-1" /> : <Volume2 className="h-3 w-3 mr-1" />}
+                        {mutedChannels.includes(activeChannel) ? 'Muted' : 'Mute'}
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-7 text-xs text-zinc-400 hover:text-zinc-100" title="Online staff">
                         <Users className="h-3 w-3 mr-1" /> {ONLINE_STAFF.length}
                     </Button>
+                    {/* Staff Status Picker */}
+                    <div className="relative">
+                        <button
+                            onClick={() => setShowStatusPicker(!showStatusPicker)}
+                            className="h-7 px-2 rounded-md text-xs flex items-center gap-1 bg-zinc-800/50 text-zinc-300 hover:bg-zinc-800 transition-colors"
+                            title="Set your status"
+                        >
+                            <span>{staffStatus.emoji}</span>
+                            <span className="text-[10px]">{staffStatus.label}</span>
+                        </button>
+                        <AnimatePresence>
+                            {showStatusPicker && (
+                                <motion.div
+                                    className="absolute top-8 right-0 bg-zinc-900 border border-zinc-700 rounded-xl p-2 shadow-xl z-30 min-w-[140px]"
+                                    initial={{ opacity: 0, scale: 0.9, y: -5 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.9, y: -5 }}
+                                >
+                                    {[
+                                        { emoji: '🟢', label: 'Available' },
+                                        { emoji: '🔴', label: 'Busy' },
+                                        { emoji: '🟡', label: 'Away' },
+                                        { emoji: '🍽️', label: 'On Break' },
+                                        { emoji: '🏃', label: 'In Service' },
+                                        { emoji: '🧹', label: 'Cleaning' },
+                                    ].map(s => (
+                                        <button
+                                            key={s.label}
+                                            onClick={() => { setStaffStatus(s); setShowStatusPicker(false); }}
+                                            className={`w-full text-left px-2 py-1.5 rounded-md text-xs transition-colors ${staffStatus.label === s.label ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-300 hover:bg-zinc-800'}`}
+                                            title={`Set status: ${s.label}`}
+                                        >
+                                            {s.emoji} {s.label}
+                                        </button>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
+
+                {/* Reminders Banner */}
+                <AnimatePresence>
+                    {reminders.length > 0 && (
+                        <motion.div
+                            className="px-4 py-2 bg-violet-500/10 border-b border-violet-500/20 flex items-center gap-2"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                        >
+                            <AlarmClock className="h-3.5 w-3.5 text-violet-400" />
+                            <span className="text-xs text-violet-300">
+                                {reminders.length} reminder{reminders.length > 1 ? 's' : ''} set
+                            </span>
+                            {reminders.map(r => (
+                                <Badge key={r.msgId} className="text-[9px] bg-violet-500/20 text-violet-300 border-0">
+                                    {r.time} — {r.text}
+                                </Badge>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Poll Creator Drawer */}
+                <AnimatePresence>
+                    {showPollCreator && (
+                        <motion.div
+                            className="px-4 py-3 bg-zinc-900/90 border-b border-zinc-800 space-y-2"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                        >
+                            <p className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
+                                <BarChart3 className="h-3.5 w-3.5 text-purple-400" /> Create Poll
+                            </p>
+                            <Input
+                                value={pollQuestion}
+                                onChange={e => setPollQuestion(e.target.value)}
+                                placeholder="Poll question..."
+                                className="bg-zinc-800 border-zinc-700 text-zinc-200 text-sm h-8"
+                            />
+                            {pollOptions.map((opt, i) => (
+                                <Input
+                                    key={i}
+                                    value={opt}
+                                    onChange={e => {
+                                        const newOpts = [...pollOptions];
+                                        newOpts[i] = e.target.value;
+                                        setPollOptions(newOpts);
+                                    }}
+                                    placeholder={`Option ${i + 1}`}
+                                    className="bg-zinc-800 border-zinc-700 text-zinc-200 text-sm h-8"
+                                />
+                            ))}
+                            <div className="flex gap-2">
+                                <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-7 text-xs text-zinc-400"
+                                    onClick={() => setPollOptions([...pollOptions, ''])}
+                                    title="Add another option"
+                                >
+                                    + Add Option
+                                </Button>
+                                <div className="flex-1" />
+                                <Button size="sm" variant="ghost" className="h-7 text-xs text-zinc-400" onClick={() => setShowPollCreator(false)} title="Cancel poll">Cancel</Button>
+                                <Button size="sm" className="h-7 text-xs bg-purple-600 hover:bg-purple-500 text-white" onClick={createPollMessage} title="Send poll">Send Poll</Button>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Templates Drawer */}
+                <AnimatePresence>
+                    {showTemplates && (
+                        <motion.div
+                            className="px-4 py-3 bg-zinc-900/90 border-b border-zinc-800 space-y-1.5"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                        >
+                            <p className="text-xs font-bold text-zinc-300 flex items-center gap-1.5 mb-1">
+                                <Layout className="h-3.5 w-3.5 text-blue-400" /> Message Templates
+                            </p>
+                            {messageTemplates.map(t => (
+                                <button
+                                    key={t.id}
+                                    onClick={() => useTemplate(t.text)}
+                                    className="w-full text-left px-3 py-2 rounded-lg bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 hover:border-zinc-600 transition-colors"
+                                    title={`Use template: ${t.name}`}
+                                >
+                                    <p className="text-xs font-medium text-zinc-200">{t.name}</p>
+                                    <p className="text-[10px] text-zinc-500 truncate">{t.text.slice(0, 60)}...</p>
+                                </button>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Bookmarks Drawer */}
+                <AnimatePresence>
+                    {showBookmarks && bookmarkedMessages.length > 0 && (
+                        <motion.div
+                            className="px-4 py-3 bg-zinc-900/90 border-b border-zinc-800 space-y-1.5 max-h-40 overflow-y-auto"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                        >
+                            <p className="text-xs font-bold text-amber-400 flex items-center gap-1.5 mb-1">
+                                <Bookmark className="h-3.5 w-3.5 fill-amber-400" /> Bookmarked Messages
+                            </p>
+                            {bookmarkedMessages.map(m => (
+                                <div key={m.id} className="flex items-center gap-2 px-2 py-1 rounded bg-zinc-800/50 text-xs">
+                                    <span className="text-zinc-400 font-medium">{m.sender}</span>
+                                    <span className="text-zinc-500 truncate flex-1">{m.text.slice(0, 60)}</span>
+                                    <span className="text-[10px] text-zinc-600">{m.timestamp}</span>
+                                </div>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4">
                     <div className="space-y-3 max-w-3xl">
                         <AnimatePresence>
-                            {channelMessages.map(msg => (
-                                <motion.div
-                                    key={msg.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="flex gap-3 group relative"
-                                >
-                                    <div className={`h-8 w-8 rounded-full flex-shrink-0 mt-0.5 ${msg.senderColor} flex items-center justify-center`}>
-                                        <span className="text-white text-[10px] font-bold">{msg.senderInitials}</span>
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        {/* Reply Reference */}
-                                        {msg.replyTo && msg.replyPreview && (
-                                            <div className="flex items-center gap-1.5 mb-1 pl-2 border-l-2 border-zinc-700">
-                                                <Reply className="h-3 w-3 text-zinc-600 rotate-180" />
-                                                <span className="text-[10px] text-zinc-500 truncate max-w-xs">{msg.replyPreview}</span>
+                            {channelMessages.map((msg, msgIndex) => {
+                                // Unread separator
+                                const showUnreadSep = msgIndex > 0 && msg.timestamp > lastReadTimestamp && channelMessages[msgIndex - 1].timestamp <= lastReadTimestamp;
+                                return (
+                                    <React.Fragment key={msg.id}>
+                                        {showUnreadSep && (
+                                            <div className="flex items-center gap-2 py-1">
+                                                <div className="flex-1 h-px bg-red-500/40" />
+                                                <span className="text-[10px] font-bold text-red-400 uppercase tracking-widest">New Messages</span>
+                                                <div className="flex-1 h-px bg-red-500/40" />
                                             </div>
                                         )}
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className={`flex gap-3 group relative ${msg.isPriority ? 'border-l-2 border-red-500 pl-2' : ''}`}
+                                        >
+                                            <div className={`h-8 w-8 rounded-full flex-shrink-0 mt-0.5 ${msg.senderColor} flex items-center justify-center`}>
+                                                <span className="text-white text-[10px] font-bold">{msg.senderInitials}</span>
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                {/* Reply Reference */}
+                                                {msg.replyTo && msg.replyPreview && (
+                                                    <div className="flex items-center gap-1.5 mb-1 pl-2 border-l-2 border-zinc-700">
+                                                        <Reply className="h-3 w-3 text-zinc-600 rotate-180" />
+                                                        <span className="text-[10px] text-zinc-500 truncate max-w-xs">{msg.replyPreview}</span>
+                                                    </div>
+                                                )}
 
-                                        <div className="flex items-baseline gap-2">
-                                            <span className="font-semibold text-sm text-zinc-200">{msg.sender}</span>
-                                            <span className="text-[10px] text-zinc-600">{msg.timestamp}</span>
-                                            {msg.isVoice && (
-                                                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 text-[10px] font-medium">
-                                                    🎙️ Voice · {msg.voiceDuration}s
-                                                </span>
-                                            )}
-                                            {msg.isPinned && <Pin className="h-3 w-3 text-amber-500" />}
-                                            {msg.isEdited && <span className="text-[10px] text-zinc-600 italic">(edited)</span>}
-                                        </div>
-
-                                        {/* Message Body — Voice or Text */}
-                                        {msg.isVoice ? (
-                                            <div className="mt-1 p-2 rounded-lg bg-zinc-900/80 border border-zinc-800 space-y-1">
-                                                {/* Waveform + Audio Playback */}
                                                 <div className="flex items-center gap-1.5">
-                                                    {msg.audioUrl ? (
-                                                        <button
-                                                            onClick={() => playAudio(msg.audioUrl as string, msg.id)}
-                                                            className="h-6 w-6 rounded-full bg-red-500/20 hover:bg-red-500/30 flex items-center justify-center text-red-400 transition-colors flex-shrink-0"
-                                                            title={playingAudioId === msg.id ? 'Stop playback' : 'Play voice message'}
-                                                        >
-                                                            {playingAudioId === msg.id ? (
-                                                                <Pause className="h-3 w-3" />
-                                                            ) : (
-                                                                <Play className="h-3 w-3 ml-0.5" />
-                                                            )}
-                                                        </button>
-                                                    ) : (
-                                                        <Mic className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />
+                                                    <p className="text-sm font-semibold text-zinc-200">{msg.sender}</p>
+                                                    {msg.isPriority && <Flag className="h-3 w-3 text-red-400" />}
+                                                    {msg.isBookmarked && <Bookmark className="h-3 w-3 text-amber-400 fill-amber-400" />}
+                                                    {msg.isScheduled && (
+                                                        <Badge className="text-[9px] bg-blue-600/20 text-blue-400 border-0 px-1 py-0">
+                                                            <Clock className="h-2 w-2 mr-0.5" /> Scheduled {msg.scheduledTime}
+                                                        </Badge>
                                                     )}
-                                                    <div className="flex items-end gap-0.5 h-4">
-                                                        {Array.from({ length: 20 }).map((_, i) => (
-                                                            <div
-                                                                key={i}
-                                                                className={`w-1 rounded-full ${playingAudioId === msg.id ? 'bg-red-400 animate-pulse' : 'bg-red-500/60'}`}
-                                                                style={{ height: `${4 + Math.sin(i * 0.7) * 8 + Math.random() * 6}px` }}
-                                                            />
+                                                    <span className="text-[10px] text-zinc-600">{msg.timestamp}</span>
+                                                    {msg.isVoice && (
+                                                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 text-[10px] font-medium">
+                                                            🎙️ Voice · {msg.voiceDuration}s
+                                                        </span>
+                                                    )}
+                                                    {msg.isPinned && <Pin className="h-3 w-3 text-amber-500" />}
+                                                    {msg.isEdited && <span className="text-[10px] text-zinc-600 italic">(edited)</span>}
+                                                </div>
+
+                                                {/* Message Body — Voice or Text */}
+                                                {msg.isVoice ? (
+                                                    <div className="mt-1 p-2 rounded-lg bg-zinc-900/80 border border-zinc-800 space-y-1">
+                                                        {/* Waveform + Audio Playback */}
+                                                        <div className="flex items-center gap-1.5">
+                                                            {msg.audioUrl ? (
+                                                                <button
+                                                                    onClick={() => playAudio(msg.audioUrl as string, msg.id)}
+                                                                    className="h-6 w-6 rounded-full bg-red-500/20 hover:bg-red-500/30 flex items-center justify-center text-red-400 transition-colors flex-shrink-0"
+                                                                    title={playingAudioId === msg.id ? 'Stop playback' : 'Play voice message'}
+                                                                >
+                                                                    {playingAudioId === msg.id ? (
+                                                                        <Pause className="h-3 w-3" />
+                                                                    ) : (
+                                                                        <Play className="h-3 w-3 ml-0.5" />
+                                                                    )}
+                                                                </button>
+                                                            ) : (
+                                                                <Mic className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />
+                                                            )}
+                                                            <div className="flex items-end gap-0.5 h-4">
+                                                                {Array.from({ length: 20 }).map((_, i) => (
+                                                                    <div
+                                                                        key={i}
+                                                                        className={`w-1 rounded-full ${playingAudioId === msg.id ? 'bg-red-400 animate-pulse' : 'bg-red-500/60'}`}
+                                                                        style={{ height: `${4 + Math.sin(i * 0.7) * 8 + Math.random() * 6}px` }}
+                                                                    />
+                                                                ))}
+                                                            </div>
+                                                            <span className="text-[10px] text-zinc-500 ml-1">{msg.voiceDuration}s</span>
+                                                        </div>
+                                                        {msg.text && msg.text !== '🎙️ Voice message' && (
+                                                            <p className="text-xs text-zinc-400 italic leading-relaxed pl-5">
+                                                                &quot;{msg.text}&quot;
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                ) : editingId === msg.id ? (
+                                                    <div className="flex gap-2 mt-1">
+                                                        <Input
+                                                            value={editText}
+                                                            onChange={e => setEditText(e.target.value)}
+                                                            onKeyDown={e => { if (e.key === 'Enter') handleSaveEdit(msg.id); if (e.key === 'Escape') setEditingId(null); }}
+                                                            className="bg-zinc-900 border-zinc-700 text-zinc-200 text-sm h-8 flex-1"
+                                                            autoFocus
+                                                        />
+                                                        <Button size="sm" className="h-8 bg-emerald-600 hover:bg-emerald-500 text-white" onClick={() => handleSaveEdit(msg.id)}>
+                                                            <Check className="h-3 w-3" />
+                                                        </Button>
+                                                        <Button size="sm" variant="ghost" className="h-8 text-zinc-400" onClick={() => setEditingId(null)}>
+                                                            <X className="h-3 w-3" />
+                                                        </Button>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-sm text-zinc-300 mt-0.5 leading-relaxed">
+                                                        <SmartMessageRenderer text={msg.text} />
+                                                    </p>
+                                                )}
+
+                                                {/* Poll Display */}
+                                                {msg.poll && (
+                                                    <div className="mt-2 p-3 rounded-lg bg-zinc-900/80 border border-zinc-800 space-y-2">
+                                                        <p className="text-xs font-bold text-zinc-200 flex items-center gap-1.5">
+                                                            <BarChart3 className="h-3.5 w-3.5 text-purple-400" />
+                                                            {msg.poll.question}
+                                                        </p>
+                                                        {msg.poll.options.map(opt => {
+                                                            const totalVotes = msg.poll!.options.reduce((s, o) => s + o.votes.length, 0);
+                                                            const pct = totalVotes > 0 ? Math.round((opt.votes.length / totalVotes) * 100) : 0;
+                                                            const hasVoted = opt.votes.includes('You');
+                                                            return (
+                                                                <button
+                                                                    key={opt.id}
+                                                                    onClick={() => votePoll(msg.id, opt.id)}
+                                                                    className={`w-full relative overflow-hidden rounded-md border text-left px-3 py-1.5 text-xs transition-colors ${hasVoted ? 'border-purple-500/40 bg-purple-500/10' : 'border-zinc-700 hover:border-zinc-600 bg-zinc-800/50'
+                                                                        }`}
+                                                                    title={`Vote for ${opt.text}`}
+                                                                >
+                                                                    <div
+                                                                        className="absolute inset-y-0 left-0 bg-purple-500/15 transition-all"
+                                                                        style={{ width: `${pct}%` }}
+                                                                    />
+                                                                    <div className="relative flex items-center justify-between">
+                                                                        <span className="text-zinc-300">{opt.text}</span>
+                                                                        <span className="text-zinc-500 text-[10px]">{opt.votes.length} ({pct}%)</span>
+                                                                    </div>
+                                                                </button>
+                                                            );
+                                                        })}
+                                                        <p className="text-[10px] text-zinc-600">
+                                                            {msg.poll.options.reduce((s, o) => s + o.votes.length, 0)} votes · Click to vote
+                                                        </p>
+                                                    </div>
+                                                )}
+
+                                                {/* Translation Display */}
+                                                {msg.isTranslated && msg.translatedText && (
+                                                    <div className="mt-1 p-2 rounded-md bg-emerald-500/10 border border-emerald-500/20">
+                                                        <p className="text-[10px] text-emerald-400 flex items-center gap-1 mb-0.5">
+                                                            <Languages className="h-2.5 w-2.5" /> Translated
+                                                        </p>
+                                                        <p className="text-xs text-zinc-300">{msg.translatedText}</p>
+                                                    </div>
+                                                )}
+
+                                                {/* Attachments */}
+                                                {msg.attachments && msg.attachments.length > 0 && (
+                                                    <div className="flex flex-wrap gap-2 mt-1">
+                                                        {msg.attachments.map((att, i) => (
+                                                            <AttachmentBubble key={i} att={att} />
                                                         ))}
                                                     </div>
-                                                    <span className="text-[10px] text-zinc-500 ml-1">{msg.voiceDuration}s</span>
-                                                </div>
-                                                {msg.text && msg.text !== '🎙️ Voice message' && (
-                                                    <p className="text-xs text-zinc-400 italic leading-relaxed pl-5">
-                                                        &quot;{msg.text}&quot;
+                                                )}
+
+                                                {/* Reactions */}
+                                                {msg.reactions && Object.keys(msg.reactions).length > 0 && (
+                                                    <div className="flex flex-wrap gap-1 mt-1.5">
+                                                        {Object.entries(msg.reactions).map(([emoji, users]) => (
+                                                            <button
+                                                                key={emoji}
+                                                                onClick={() => addReaction(msg.id, emoji)}
+                                                                className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] transition-colors ${users.includes('You') ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-zinc-800 hover:bg-zinc-700'
+                                                                    }`}
+                                                            >
+                                                                <span>{emoji}</span>
+                                                                <span className="text-zinc-400">{users.length}</span>
+                                                            </button>
+                                                        ))}
+                                                        {/* Add reaction button */}
+                                                        <button
+                                                            onClick={() => setShowEmojiPicker(showEmojiPicker === msg.id ? null : msg.id)}
+                                                            className="px-1.5 py-0.5 rounded-full bg-zinc-800/50 hover:bg-zinc-700 text-zinc-500 text-[11px] transition-colors"
+                                                        >
+                                                            +
+                                                        </button>
+                                                    </div>
+                                                )}
+
+                                                {/* Read Receipts */}
+                                                {msg.readBy && msg.readBy.length > 0 && msg.sender === 'You' && (
+                                                    <p className="text-[10px] text-zinc-600 mt-1 flex items-center gap-1">
+                                                        <Check className="h-2.5 w-2.5" /> Seen by {msg.readBy.join(', ')}
                                                     </p>
                                                 )}
                                             </div>
-                                        ) : editingId === msg.id ? (
-                                            <div className="flex gap-2 mt-1">
-                                                <Input
-                                                    value={editText}
-                                                    onChange={e => setEditText(e.target.value)}
-                                                    onKeyDown={e => { if (e.key === 'Enter') handleSaveEdit(msg.id); if (e.key === 'Escape') setEditingId(null); }}
-                                                    className="bg-zinc-900 border-zinc-700 text-zinc-200 text-sm h-8 flex-1"
-                                                    autoFocus
-                                                />
-                                                <Button size="sm" className="h-8 bg-emerald-600 hover:bg-emerald-500 text-white" onClick={() => handleSaveEdit(msg.id)}>
-                                                    <Check className="h-3 w-3" />
-                                                </Button>
-                                                <Button size="sm" variant="ghost" className="h-8 text-zinc-400" onClick={() => setEditingId(null)}>
-                                                    <X className="h-3 w-3" />
-                                                </Button>
-                                            </div>
-                                        ) : (
-                                            <p className="text-sm text-zinc-300 mt-0.5 leading-relaxed">
-                                                <SmartMessageRenderer text={msg.text} />
-                                            </p>
-                                        )}
 
-                                        {/* Attachments */}
-                                        {msg.attachments && msg.attachments.length > 0 && (
-                                            <div className="flex flex-wrap gap-2 mt-1">
-                                                {msg.attachments.map((att, i) => (
-                                                    <AttachmentBubble key={i} att={att} />
-                                                ))}
-                                            </div>
-                                        )}
-
-                                        {/* Reactions */}
-                                        {msg.reactions && Object.keys(msg.reactions).length > 0 && (
-                                            <div className="flex flex-wrap gap-1 mt-1.5">
-                                                {Object.entries(msg.reactions).map(([emoji, users]) => (
+                                            {/* ─── Message Action Bar (hover) ────────────────── */}
+                                            <div className="absolute -top-3 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 bg-zinc-900 border border-zinc-800 rounded-lg px-1 py-0.5 shadow-xl">
+                                                {REACTION_EMOJIS.slice(0, 4).map(emoji => (
                                                     <button
                                                         key={emoji}
                                                         onClick={() => addReaction(msg.id, emoji)}
-                                                        className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] transition-colors ${users.includes('You') ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-zinc-800 hover:bg-zinc-700'
-                                                            }`}
-                                                    >
-                                                        <span>{emoji}</span>
-                                                        <span className="text-zinc-400">{users.length}</span>
-                                                    </button>
-                                                ))}
-                                                {/* Add reaction button */}
-                                                <button
-                                                    onClick={() => setShowEmojiPicker(showEmojiPicker === msg.id ? null : msg.id)}
-                                                    className="px-1.5 py-0.5 rounded-full bg-zinc-800/50 hover:bg-zinc-700 text-zinc-500 text-[11px] transition-colors"
-                                                >
-                                                    +
-                                                </button>
-                                            </div>
-                                        )}
-
-                                        {/* Read Receipts */}
-                                        {msg.readBy && msg.readBy.length > 0 && msg.sender === 'You' && (
-                                            <p className="text-[10px] text-zinc-600 mt-1 flex items-center gap-1">
-                                                <Check className="h-2.5 w-2.5" /> Seen by {msg.readBy.join(', ')}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    {/* ─── Message Action Bar (hover) ────────────────── */}
-                                    <div className="absolute -top-3 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 bg-zinc-900 border border-zinc-800 rounded-lg px-1 py-0.5 shadow-xl">
-                                        {REACTION_EMOJIS.slice(0, 4).map(emoji => (
-                                            <button
-                                                key={emoji}
-                                                onClick={() => addReaction(msg.id, emoji)}
-                                                className="h-6 w-6 rounded hover:bg-zinc-800 text-xs flex items-center justify-center transition-colors"
-                                            >
-                                                {emoji}
-                                            </button>
-                                        ))}
-                                        <div className="w-px h-4 bg-zinc-700 mx-0.5" />
-                                        <button
-                                            onClick={() => setShowEmojiPicker(showEmojiPicker === msg.id ? null : msg.id)}
-                                            className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 flex items-center justify-center transition-colors"
-                                            title="More reactions"
-                                        >
-                                            <Smile className="h-3.5 w-3.5" />
-                                        </button>
-                                        <button
-                                            onClick={() => { setReplyingTo(msg); inputRef.current?.focus(); }}
-                                            className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 flex items-center justify-center transition-colors"
-                                            title="Reply"
-                                        >
-                                            <Reply className="h-3.5 w-3.5" />
-                                        </button>
-                                        <button
-                                            onClick={() => togglePin(msg.id)}
-                                            className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${msg.isPinned ? 'text-amber-400' : 'text-zinc-400'}`}
-                                            title={msg.isPinned ? 'Unpin' : 'Pin'}
-                                        >
-                                            <Pin className="h-3.5 w-3.5" />
-                                        </button>
-                                        <button
-                                            onClick={() => handleSpeak(msg.id, msg.text)}
-                                            className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${speakingMsgId === msg.id ? 'text-blue-400' : 'text-zinc-400'}`}
-                                            title={speakingMsgId === msg.id ? 'Stop reading' : 'Read aloud'}
-                                        >
-                                            <Volume2 className="h-3.5 w-3.5" />
-                                        </button>
-                                        <button
-                                            onClick={() => createTaskFromMessage(msg)}
-                                            className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 hover:text-emerald-400 flex items-center justify-center transition-colors"
-                                            title="Create task from message"
-                                        >
-                                            <CheckSquare className="h-3.5 w-3.5" />
-                                        </button>
-                                        <button
-                                            onClick={() => setForwardingMsg(forwardingMsg?.id === msg.id ? null : msg)}
-                                            className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${forwardingMsg?.id === msg.id ? 'text-cyan-400' : 'text-zinc-400 hover:text-cyan-400'}`}
-                                            title="Forward message"
-                                        >
-                                            <Share2 className="h-3.5 w-3.5" />
-                                        </button>
-                                        {msg.sender === 'You' && (
-                                            <>
-                                                <button
-                                                    onClick={() => { setEditingId(msg.id); setEditText(msg.text); }}
-                                                    className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 flex items-center justify-center transition-colors"
-                                                    title="Edit"
-                                                >
-                                                    <Edit3 className="h-3.5 w-3.5" />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(msg.id)}
-                                                    className="h-6 w-6 rounded hover:bg-zinc-800 text-red-400 flex items-center justify-center transition-colors"
-                                                    title="Delete"
-                                                >
-                                                    <Trash2 className="h-3.5 w-3.5" />
-                                                </button>
-                                            </>
-                                        )}
-                                    </div>
-
-                                    {/* Emoji Picker Dropdown */}
-                                    <AnimatePresence>
-                                        {showEmojiPicker === msg.id && (
-                                            <motion.div
-                                                className="absolute -top-12 right-0 bg-zinc-900 border border-zinc-700 rounded-xl px-2 py-1.5 flex gap-1 shadow-xl z-10"
-                                                initial={{ opacity: 0, scale: 0.9, y: 5 }}
-                                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                                exit={{ opacity: 0, scale: 0.9, y: 5 }}
-                                            >
-                                                {REACTION_EMOJIS.map(emoji => (
-                                                    <button
-                                                        key={emoji}
-                                                        onClick={() => addReaction(msg.id, emoji)}
-                                                        className="h-7 w-7 rounded-lg hover:bg-zinc-800 text-sm flex items-center justify-center transition-all hover:scale-125"
+                                                        className="h-6 w-6 rounded hover:bg-zinc-800 text-xs flex items-center justify-center transition-colors"
                                                     >
                                                         {emoji}
                                                     </button>
                                                 ))}
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                                <div className="w-px h-4 bg-zinc-700 mx-0.5" />
+                                                <button
+                                                    onClick={() => setShowEmojiPicker(showEmojiPicker === msg.id ? null : msg.id)}
+                                                    className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 flex items-center justify-center transition-colors"
+                                                    title="More reactions"
+                                                >
+                                                    <Smile className="h-3.5 w-3.5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => { setReplyingTo(msg); inputRef.current?.focus(); }}
+                                                    className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 flex items-center justify-center transition-colors"
+                                                    title="Reply"
+                                                >
+                                                    <Reply className="h-3.5 w-3.5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => togglePin(msg.id)}
+                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${msg.isPinned ? 'text-amber-400' : 'text-zinc-400'}`}
+                                                    title={msg.isPinned ? 'Unpin' : 'Pin'}
+                                                >
+                                                    <Pin className="h-3.5 w-3.5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleSpeak(msg.id, msg.text)}
+                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${speakingMsgId === msg.id ? 'text-blue-400' : 'text-zinc-400'}`}
+                                                    title={speakingMsgId === msg.id ? 'Stop reading' : 'Read aloud'}
+                                                >
+                                                    <Volume2 className="h-3.5 w-3.5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => createTaskFromMessage(msg)}
+                                                    className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 hover:text-emerald-400 flex items-center justify-center transition-colors"
+                                                    title="Create task from message"
+                                                >
+                                                    <CheckSquare className="h-3.5 w-3.5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => setForwardingMsg(forwardingMsg?.id === msg.id ? null : msg)}
+                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${forwardingMsg?.id === msg.id ? 'text-cyan-400' : 'text-zinc-400 hover:text-cyan-400'}`}
+                                                    title="Forward message"
+                                                >
+                                                    <Share2 className="h-3.5 w-3.5" />
+                                                </button>
+                                                <div className="w-px h-4 bg-zinc-700 mx-0.5" />
+                                                {/* Bookmark */}
+                                                <button
+                                                    onClick={() => toggleBookmark(msg.id)}
+                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${msg.isBookmarked ? 'text-amber-400' : 'text-zinc-400 hover:text-amber-400'}`}
+                                                    title={msg.isBookmarked ? 'Remove bookmark' : 'Bookmark'}
+                                                >
+                                                    <Bookmark className={`h-3.5 w-3.5 ${msg.isBookmarked ? 'fill-amber-400' : ''}`} />
+                                                </button>
+                                                {/* Priority */}
+                                                <button
+                                                    onClick={() => togglePriority(msg.id)}
+                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${msg.isPriority ? 'text-red-400' : 'text-zinc-400 hover:text-red-400'}`}
+                                                    title={msg.isPriority ? 'Remove priority' : 'Mark as urgent'}
+                                                >
+                                                    <Flag className={`h-3.5 w-3.5 ${msg.isPriority ? 'fill-red-400' : ''}`} />
+                                                </button>
+                                                {/* Translate */}
+                                                <button
+                                                    onClick={() => translateMessage(msg.id)}
+                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${msg.isTranslated ? 'text-emerald-400' : 'text-zinc-400 hover:text-emerald-400'}`}
+                                                    title={msg.isTranslated ? 'Show original' : 'Translate'}
+                                                >
+                                                    <Languages className="h-3.5 w-3.5" />
+                                                </button>
+                                                {/* Reminder */}
+                                                <button
+                                                    onClick={() => setShowReminderPicker(showReminderPicker === msg.id ? null : msg.id)}
+                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${showReminderPicker === msg.id ? 'text-violet-400' : 'text-zinc-400 hover:text-violet-400'}`}
+                                                    title="Set reminder"
+                                                >
+                                                    <AlarmClock className="h-3.5 w-3.5" />
+                                                </button>
+                                                {/* Copy */}
+                                                <button
+                                                    onClick={() => navigator.clipboard.writeText(msg.text)}
+                                                    className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 flex items-center justify-center transition-colors"
+                                                    title="Copy text"
+                                                >
+                                                    <Copy className="h-3.5 w-3.5" />
+                                                </button>
+                                                {msg.sender === 'You' && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => { setEditingId(msg.id); setEditText(msg.text); }}
+                                                            className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 flex items-center justify-center transition-colors"
+                                                            title="Edit"
+                                                        >
+                                                            <Edit3 className="h-3.5 w-3.5" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(msg.id)}
+                                                            className="h-6 w-6 rounded hover:bg-zinc-800 text-red-400 flex items-center justify-center transition-colors"
+                                                            title="Delete"
+                                                        >
+                                                            <Trash2 className="h-3.5 w-3.5" />
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </div>
 
-                                    {/* Forward Channel Picker */}
-                                    <AnimatePresence>
-                                        {forwardingMsg?.id === msg.id && (
-                                            <motion.div
-                                                className="absolute -top-20 right-0 bg-zinc-900 border border-zinc-700 rounded-xl p-2 shadow-xl z-20 min-w-[160px]"
-                                                initial={{ opacity: 0, scale: 0.9, y: 5 }}
-                                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                                exit={{ opacity: 0, scale: 0.9, y: 5 }}
-                                            >
-                                                <p className="text-[10px] font-bold uppercase text-zinc-500 mb-1 px-1">Forward to</p>
-                                                {CHANNELS.filter(ch => ch.id !== activeChannel).map(ch => (
-                                                    <button
-                                                        key={ch.id}
-                                                        onClick={() => forwardMessage(msg, ch.id)}
-                                                        className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
-                                                        title={`Forward to #${ch.name}`}
+                                            {/* Emoji Picker Dropdown */}
+                                            <AnimatePresence>
+                                                {showEmojiPicker === msg.id && (
+                                                    <motion.div
+                                                        className="absolute -top-12 right-0 bg-zinc-900 border border-zinc-700 rounded-xl px-2 py-1.5 flex gap-1 shadow-xl z-10"
+                                                        initial={{ opacity: 0, scale: 0.9, y: 5 }}
+                                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                        exit={{ opacity: 0, scale: 0.9, y: 5 }}
                                                     >
-                                                        <ch.icon className={`h-3.5 w-3.5 ${ch.color}`} />
-                                                        <span>#{ch.name}</span>
-                                                    </button>
-                                                ))}
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </motion.div>
-                            ))}
+                                                        {REACTION_EMOJIS.map(emoji => (
+                                                            <button
+                                                                key={emoji}
+                                                                onClick={() => addReaction(msg.id, emoji)}
+                                                                className="h-7 w-7 rounded-lg hover:bg-zinc-800 text-sm flex items-center justify-center transition-all hover:scale-125"
+                                                            >
+                                                                {emoji}
+                                                            </button>
+                                                        ))}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+
+                                            {/* Forward Channel Picker */}
+                                            <AnimatePresence>
+                                                {forwardingMsg?.id === msg.id && (
+                                                    <motion.div
+                                                        className="absolute -top-20 right-0 bg-zinc-900 border border-zinc-700 rounded-xl p-2 shadow-xl z-20 min-w-[160px]"
+                                                        initial={{ opacity: 0, scale: 0.9, y: 5 }}
+                                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                        exit={{ opacity: 0, scale: 0.9, y: 5 }}
+                                                    >
+                                                        <p className="text-[10px] font-bold uppercase text-zinc-500 mb-1 px-1">Forward to</p>
+                                                        {CHANNELS.filter(ch => ch.id !== activeChannel).map(ch => (
+                                                            <button
+                                                                key={ch.id}
+                                                                onClick={() => forwardMessage(msg, ch.id)}
+                                                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
+                                                                title={`Forward to #${ch.name}`}
+                                                            >
+                                                                <ch.icon className={`h-3.5 w-3.5 ${ch.color}`} />
+                                                                <span>#{ch.name}</span>
+                                                            </button>
+                                                        ))}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+
+                                            {/* Reminder Picker */}
+                                            <AnimatePresence>
+                                                {showReminderPicker === msg.id && (
+                                                    <motion.div
+                                                        className="absolute -top-28 right-14 bg-zinc-900 border border-zinc-700 rounded-xl p-2 shadow-xl z-20 min-w-[140px]"
+                                                        initial={{ opacity: 0, scale: 0.9, y: 5 }}
+                                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                        exit={{ opacity: 0, scale: 0.9, y: 5 }}
+                                                    >
+                                                        <p className="text-[10px] font-bold uppercase text-zinc-500 mb-1 px-1 flex items-center gap-1">
+                                                            <AlarmClock className="h-2.5 w-2.5" /> Remind me
+                                                        </p>
+                                                        {[
+                                                            { label: 'In 5 min', mins: 5 },
+                                                            { label: 'In 15 min', mins: 15 },
+                                                            { label: 'In 30 min', mins: 30 },
+                                                            { label: 'In 1 hour', mins: 60 },
+                                                            { label: 'In 2 hours', mins: 120 },
+                                                        ].map(opt => (
+                                                            <button
+                                                                key={opt.mins}
+                                                                onClick={() => setMsgReminder(msg.id, opt.mins)}
+                                                                className="w-full text-left px-2 py-1.5 rounded-md text-xs text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
+                                                                title={opt.label}
+                                                            >
+                                                                {opt.label}
+                                                            </button>
+                                                        ))}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+
+                                            {/* Read Receipts Detail */}
+                                            <AnimatePresence>
+                                                {showReceiptsDetail === msg.id && msg.readBy && (
+                                                    <motion.div
+                                                        className="absolute -top-16 right-0 bg-zinc-900 border border-zinc-700 rounded-xl p-2.5 shadow-xl z-20 min-w-[140px]"
+                                                        initial={{ opacity: 0, scale: 0.9 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        exit={{ opacity: 0, scale: 0.9 }}
+                                                    >
+                                                        <p className="text-[10px] font-bold uppercase text-zinc-500 mb-1 flex items-center gap-1">
+                                                            <Eye className="h-2.5 w-2.5" /> Seen by {msg.readBy.length}
+                                                        </p>
+                                                        {msg.readBy.map(name => (
+                                                            <p key={name} className="text-xs text-zinc-300 py-0.5">{name}</p>
+                                                        ))}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </motion.div>
+                                    </React.Fragment>
+                                );
+                            })}
                         </AnimatePresence>
                         <div ref={messagesEndRef} />
                     </div>
