@@ -9,7 +9,7 @@ import {
   Table as TableIcon, Calendar, Truck, PieChart as PieChartIcon,
   UserCheck, Receipt, Clock, Package, Type, Building2, Search, Upload, Monitor,
   Globe, Mic, Wand2, Radar, LayoutGrid, ShieldAlert, Palette, Server, Layers, X,
-  RefreshCw, Home
+  RefreshCw, Home, MessageSquare, Radio
 } from 'lucide-react';
 
 const menuItems = [
@@ -217,6 +217,12 @@ const menuItems = [
   { title: 'Market Radar', icon: Radar, href: '/admin/restin/radar', group: 'restin' },
   { title: 'Ops & Aggregators', icon: Layers, href: '/admin/restin/ops', group: 'restin' },
   { title: 'Fintech & Payments', icon: DollarSign, href: '/admin/restin/fintech', group: 'restin' },
+
+  // COLLABORATION & COMMUNICATION
+  { title: 'Hive Chat', icon: MessageSquare, href: '/collab/hive', group: 'collab' },
+  { title: 'Tasks Board', icon: LayoutGrid, href: '/collab/tasks', group: 'collab' },
+  { title: 'Inbox', icon: FileText, href: '/collab/inbox', group: 'collab' },
+  { title: 'Gamification', icon: Award, href: '/admin/staff-gamification', group: 'collab' },
 ];
 
 export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDomainExpand }) {
@@ -231,7 +237,8 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     { id: 'inventory', title: 'Inventory', icon: FileText },
     { id: 'finance', title: 'Finance', icon: DollarSign },
     { id: 'analytics', title: 'Reporting', icon: BarChart3 },
-    { id: 'restin', title: 'Restin OS', icon: Globe }, // NEW TOP LEVEL
+    { id: 'restin', title: 'Restin OS', icon: Globe },
+    { id: 'collab', title: 'Collaborate', icon: MessageSquare },
     { id: 'settings', title: 'Settings', icon: Settings }
   ];
 
@@ -243,7 +250,8 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     if (['menu', 'procurement', 'production'].includes(group)) return 'inventory';
     if (['finance'].includes(group)) return 'finance';
     if (['reports'].includes(group)) return 'analytics';
-    if (['restin'].includes(group)) return 'restin'; // Explicit Domain Mapping
+    if (['restin'].includes(group)) return 'restin';
+    if (['collab'].includes(group)) return 'collab';
     if (['settings'].includes(group)) return 'settings';
     return 'home';
   };
