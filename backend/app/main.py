@@ -72,6 +72,11 @@ app.include_router(access_control_router)
 app.include_router(catchall_router)
 app.include_router(system_router)
 
+from app.domains.integrations.routes import router as integrations_router
+app.include_router(integrations_router, prefix="/api/v1/integrations", tags=["integrations"])
+# Alias for sync operations if needed, or keep under integrations
+app.include_router(integrations_router, prefix="/api/v1/sync", tags=["sync"])
+
 # MongoDB connection for vault endpoints
 from app.core.database import get_database
 

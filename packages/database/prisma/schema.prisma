@@ -1129,3 +1129,116 @@ model POSSession {
   @@index([venueId])
   @@map("pos_sessions")
 }
+// ==================================================================================
+// PILLAR 9: UNIFIED INTEGRATIONS CONTROL PLANE (Shared Sync Engine)
+// ==================================================================================
+
+enum IntegrationProvider {
+  LIGHTSPEED
+  SHIREBURN
+  APICBASE
+  GOOGLE
+  NUKI
+  TUYA
+  MEROSS
+  QINGPING
+}
+
+enum SyncStatus {
+  PENDING
+  IN_PROGRESS
+  SUCCESS
+  FAILED
+  PARTIAL
+}
+
+enum JobType {
+  DISCOVER
+  SYNC
+  HISTORY
+  WEBHOOK
+}
+
+model IntegrationConfig {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  provider       IntegrationProvider
+  isEnabled      Boolean      @default(false)
+  
+  // Encrypted Credentials & Settings
+  credentials    Json?        // OAuth tokens, API keys (Encrypted at rest)
+  settings       Json?        // Sync frequency, mappings, options
+  
+  status         String       @default("NOT_CONFIGURED") // CONNECTED, ERROR, DISABLED
+  lastSyncAt     DateTime?
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([organizationId, provider])
+  @@map("integration_configs")
+}
+
+model SyncJob {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  provider       IntegrationProvider
+  jobType        JobType
+  
+  schedule       String?      // CRON expression
+  nextRunAt      DateTime?
+  
+  isEnabled      Boolean      @default(true)
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  @@index([organizationId])
+  @@map("sync_jobs")
+}
+
+model SyncRun {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId String       @db.ObjectId
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  
+  jobId          String?      @db.ObjectId
+  
+  provider       IntegrationProvider
+  jobType        JobType
+  
+  status         SyncStatus   @default(PENDING)
+  
+  startedAt      DateTime     @default(now())
+  finishedAt     DateTime?
+  
+  durationMs     Int?
+  itemsProcessed Int          @default(0)
+  itemsFailed    Int          @default(0)
+  
+  errorSummary   String?
+  
+  logs           SyncLog[]
+
+  @@index([organizationId])
+  @@map("sync_runs")
+}
+
+model SyncLog {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  syncRunId      String       @db.ObjectId
+  syncRun        SyncRun      @relation(fields: [syncRunId], references: [id])
+  
+  level          String       @default("INFO") // INFO, WARN, ERROR
+  message        String
+  details        Json?
+  
+  timestamp      DateTime     @default(now())
+  
+  @@index([syncRunId])
+  @@map("sync_logs")
+}
