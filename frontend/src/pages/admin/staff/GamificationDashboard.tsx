@@ -2,8 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Trophy, Star, Zap, Target, TrendingUp, Award,
@@ -186,11 +184,9 @@ export default function GamificationDashboard() {
                                         </div>
 
                                         {/* Avatar */}
-                                        <Avatar className="h-10 w-10">
-                                            <AvatarFallback className={`${entry.color} text-white text-sm font-bold`}>
-                                                {entry.initials}
-                                            </AvatarFallback>
-                                        </Avatar>
+                                        <div className={`h-10 w-10 rounded-full ${entry.color} flex items-center justify-center flex-shrink-0`}>
+                                            <span className="text-white text-sm font-bold">{entry.initials}</span>
+                                        </div>
 
                                         {/* Info */}
                                         <div className="flex-1 min-w-0">
@@ -267,7 +263,9 @@ export default function GamificationDashboard() {
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Progress value={pct} className="h-1.5 flex-1 bg-zinc-800" />
+                                            <div className="flex-1 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                                <div className="h-full bg-emerald-500 rounded-full transition-all" style={{ width: `${pct}%` }} />
+                                            </div>
                                             <span className="text-[10px] text-zinc-500">{quest.progress}/{quest.goal}</span>
                                         </div>
                                         <div className="flex items-center justify-between">

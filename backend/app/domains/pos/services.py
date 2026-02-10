@@ -1,36 +1,68 @@
-from typing import List, Optional
-from datetime import datetime
-from .models import Order, OrderCreate, OrderItem
+"""
+POS Service — MongoDB-backed Order Management.
 
-# In-Memory Queue (Replace with Redis/DB in Production)
-MOCK_ORDER_DB: List[Order] = []
+Note: The main order CRUD lives in routes.py (direct MongoDB).
+This module provides reusable helper functions for other services
+that need to interact with orders programmatically.
+"""
+from typing import List, Optional
+from datetime import datetime, timezone
+from app.core.database import get_database
+import uuid
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class PosService:
     @staticmethod
-    def create_order(order_data: OrderCreate) -> Order:
-        total = sum(i.quantity * i.price_cents for i in order_data.items)
-        new_order = Order(
-            id=f"ord-{len(MOCK_ORDER_DB) + 1}",
-            venueId=order_data.venue_id,
-            tableId=order_data.table_id,
-            userId=order_data.user_id,
-            status="PENDING",
-            totalCents=total,
-            items=order_data.items,
-            createdAt=datetime.now(),
-            updatedAt=datetime.now()
+    async def create_order(venue_id: str, table_id: str, user_id: str, items: list) -> dict:
+        """Create a new order in MongoDB."""
+        db = get_database()
+        total = sum(i.get("quantity", 1) * i.get("price_cents", 0) for i in items)
+
+        order_data = {
+            "id": f"order-{uuid.uuid4().hex[:8]}",
+            "venue_id": venue_id,
+            "table_id": table_id,
+            "user_id": user_id,
+            "status": "PENDING",
+            "total_cents": total,
+            "items": items,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+        await db.orders.insert_one(order_data)
+        order_data.pop("_id", None)
+        return order_data
+
+    @staticmethod
+    async def get_active_orders(venue_id: str) -> List[dict]:
+        """Get active (non-completed) orders for a venue."""
+        db = get_database()
+        orders = await db.orders.find({
+            "venue_id": venue_id,
+            "status": {"$ne": "COMPLETED"}
+        }).sort("created_at", -1).to_list(length=200)
+
+        for o in orders:
+            o["_id"] = str(o["_id"])
+        return orders
+
+    @staticmethod
+    async def update_status(order_id: str, status: str) -> Optional[dict]:
+        """Update order status in MongoDB."""
+        db = get_database()
+        result = await db.orders.update_one(
+            {"id": order_id},
+            {"$set": {"status": status, "updated_at": datetime.now(timezone.utc).isoformat()}}
         )
-        MOCK_ORDER_DB.append(new_order)
-        return new_order
 
-    @staticmethod
-    def get_active_orders(venue_id: str) -> List[Order]:
-        return [o for o in MOCK_ORDER_DB if o.venue_id == venue_id and o.status != 'COMPLETED']
+        if result.modified_count == 0:
+            return None
 
-    @staticmethod
-    def update_status(order_id: str, status: str) -> Optional[Order]:
-        order = next((o for o in MOCK_ORDER_DB if o.id == order_id), None)
-        if order:
-            order.status = status
-            order.updated_at = datetime.now()
-        return order
+        updated = await db.orders.find_one({"id": order_id})
+        if updated:
+            updated["_id"] = str(updated["_id"])
+        return updated
