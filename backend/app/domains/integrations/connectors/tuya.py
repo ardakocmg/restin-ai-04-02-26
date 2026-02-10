@@ -3,9 +3,9 @@ import json
 from typing import Dict, Any, List
 from datetime import datetime, timezone
 
-# Attempt to import tuya-iot-python-sdk
+# Attempt to import tuya-connector-python
 try:
-    from tuya_iot import TuyaOpenAPI, AuthType
+    from tuya_connector import TuyaOpenAPI, TUYA_LOGGER
     TUYA_AVAILABLE = True
 except ImportError:
     TUYA_AVAILABLE = False
@@ -34,7 +34,7 @@ class TuyaConnector(BaseConnector):
         access_secret = self.credentials.get("access_secret")
         endpoint = self.credentials.get("endpoint", "https://openapi.tuyau.com") # Default to EU
         
-        # AuthType.CUSTOM is for IoT Core
+        # TuyaOpenAPI(endpoint, access_id, access_secret)
         openapi = TuyaOpenAPI(endpoint, access_id, access_secret)
         openapi.connect()
         return openapi
