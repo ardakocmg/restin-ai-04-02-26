@@ -121,6 +121,7 @@ const ReportingHubIndigo = React.lazy(() => import("./pages/admin/hr/ReportingHu
 const ReportViewer = React.lazy(() => import("./pages/admin/hr/ReportViewer"));
 const HRModulePlaceholder = React.lazy(() => import("./pages/admin/hr/HRModulePlaceholder"));
 const AdminSettingsIndigo = React.lazy(() => import("./pages/admin/hr/AdminSettings"));
+const EmployeePortal = React.lazy(() => import("./pages/admin/hr/EmployeePortalComplete"));
 const UserProfileSettings = React.lazy(() => import("./pages/UserProfileSettings"));
 const POSSetup = React.lazy(() => import("./pages/pos/POSSetup"));
 const POSMain = React.lazy(() => import("./pages/pos/POSMain"));
@@ -602,6 +603,7 @@ function App() {
                                       <Route path="performance-reviews" element={<PerformanceReviews />} />
                                       <Route path="contracts" element={<ContractsIndigo />} />
                                       <Route path="tips" element={<TipsManagement />} />
+                                      <Route path="portal-view" element={<EmployeePortal />} />
                                       <Route path="reporting" element={<ReportingHubIndigo />} />
                                       <Route path="reports/:reportId" element={<ReportViewer />} />
 
