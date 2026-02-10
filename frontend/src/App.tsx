@@ -223,6 +223,7 @@ import SetupWizard from "./pages/admin/onboarding/SetupWizard";
 import GuestProfiles from "./pages/admin/guests/GuestProfiles";
 import StaffGamification from "./pages/admin/staff/GamificationDashboard";
 import HiveDashboard from "./pages/collab/HiveDashboard";
+import { GlobalPTTProvider } from "./contexts/GlobalPTTContext";
 import KioskModePage from "./pages/admin/pos/KioskModePage";
 import CarbonFootprint from "./pages/admin/sustainability/CarbonFootprint";
 import CompetitorMonitoring from "./pages/admin/radar/CompetitorMonitoring";
@@ -616,7 +617,7 @@ function App() {
                                 <Route path="/admin/kds/stations" element={<KDSStations />} />
                                 <Route path="/admin/kds/stations/:stationKey" element={<KDSStationDetail />} />
                                 <Route path="/kds/runtime/:stationKey" element={<KDSRuntime />} />
-                                <Route path="/collab/hive" element={<HiveDashboard />} />
+                                <Route path="/collab/hive" element={<GlobalPTTProvider><HiveDashboard /></GlobalPTTProvider>} />
                                 <Route path="/collab/inbox" element={<Inbox />} />
                                 <Route path="/collab/tasks" element={<TasksKanban />} />
                                 <Route path="/book/:venueId" element={<BookingWidget />} />
