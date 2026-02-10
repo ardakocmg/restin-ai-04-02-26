@@ -14,9 +14,9 @@ const PROVIDERS = [
     { key: 'SHIREBURN', label: 'Shireburn Indigo', desc: 'HR, Payroll, Leave', icon: Users },
     { key: 'APICBASE', label: 'Apicbase', desc: 'Inventory, Recipes, Stock', icon: Database },
     { key: 'GOOGLE', label: 'Google Business', desc: 'Maps, Reservations, Reviews', icon: Cloud },
-    { key: 'NUKI', label: 'Nuki Smart Lock', desc: 'Door Access, Keypad Codes', icon: Server },
-    { key: 'TUYA', label: 'Tuya Smart Life', desc: 'Lights, Switches, Climate', icon: Smartphone },
-    { key: 'MEROSS', label: 'Meross IoT', desc: 'Plugs, Garage Doors', icon: Smartphone },
+    { key: 'NUKI', label: 'Nuki Smart Lock', desc: 'Door Access, Keypad Codes', icon: Server, appLink: '/admin/door-access', appLabel: 'Door Control' },
+    { key: 'TUYA', label: 'Tuya Smart Life', desc: 'Lights, Switches, Climate', icon: Smartphone, appLink: '/admin/smart-home', appLabel: 'Smart Home' },
+    { key: 'MEROSS', label: 'Meross IoT', desc: 'Plugs, Garage Doors', icon: Smartphone, appLink: '/admin/smart-home', appLabel: 'Smart Home' },
     { key: 'QINGPING', label: 'Qingping Sensors', desc: 'Temp & Humidity Monitoring', icon: Smartphone },
 ];
 
@@ -94,6 +94,8 @@ export default function SyncDashboard() {
                                     loading={syncing === p.key}
                                     onSync={() => handleSync(p.key)}
                                     onConfigure={() => handleConfigure(p.key)}
+                                    appLink={(p as any).appLink}
+                                    appLabel={(p as any).appLabel}
                                 />
                             );
                         })}

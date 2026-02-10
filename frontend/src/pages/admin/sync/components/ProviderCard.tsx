@@ -1,8 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { RefreshCw, Settings, CheckCircle, AlertTriangle, XCircle, Power } from 'lucide-react';
+import { RefreshCw, Settings, CheckCircle, AlertTriangle, XCircle, Power, ExternalLink } from 'lucide-react';
 
 interface ProviderCardProps {
     provider: string;
@@ -14,12 +15,15 @@ interface ProviderCardProps {
     onSync: () => void;
     onConfigure: () => void;
     loading?: boolean;
+    appLink?: string;
+    appLabel?: string;
 }
 
 export function ProviderCard({
     provider, label, description, icon: Icon,
-    status, lastSync, onSync, onConfigure, loading
+    status, lastSync, onSync, onConfigure, loading, appLink, appLabel
 }: ProviderCardProps) {
+    const navigate = useNavigate();
 
     const getStatusColor = () => {
         switch (status) {
@@ -69,21 +73,33 @@ export function ProviderCard({
                     )}
                 </div>
             </CardContent>
-            <CardFooter className="pt-0 gap-2">
-                <Button variant="outline" size="sm" className="flex-1 h-8 text-xs bg-zinc-900 border-zinc-800 hover:bg-zinc-800" onClick={onConfigure}>
-                    <Settings className="h-3 w-3 mr-2" />
-                    Config
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 h-8 text-xs bg-zinc-900 border-zinc-800 hover:bg-zinc-800 disabled:opacity-50"
-                    onClick={onSync}
-                    disabled={status === 'NOT_CONFIGURED' || status === 'DISABLED' || loading}
-                >
-                    <RefreshCw className={`h-3 w-3 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                    Sync
-                </Button>
+            <CardFooter className="pt-0 flex-col gap-2">
+                <div className="flex gap-2 w-full">
+                    <Button variant="outline" size="sm" className="flex-1 h-8 text-xs bg-zinc-900 border-zinc-800 hover:bg-zinc-800" onClick={onConfigure}>
+                        <Settings className="h-3 w-3 mr-2" />
+                        Config
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 h-8 text-xs bg-zinc-900 border-zinc-800 hover:bg-zinc-800 disabled:opacity-50"
+                        onClick={onSync}
+                        disabled={status === 'NOT_CONFIGURED' || status === 'DISABLED' || loading}
+                    >
+                        <RefreshCw className={`h-3 w-3 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                        Sync
+                    </Button>
+                </div>
+                {appLink && (
+                    <Button
+                        size="sm"
+                        className="w-full h-8 text-xs bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border-0 shadow-[0_0_12px_rgba(16,185,129,0.3)]"
+                        onClick={() => navigate(appLink)}
+                    >
+                        <ExternalLink className="h-3 w-3 mr-2" />
+                        {appLabel || 'Open App'}
+                    </Button>
+                )}
             </CardFooter>
         </Card>
     );

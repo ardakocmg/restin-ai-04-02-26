@@ -17,6 +17,7 @@ interface SmartDevice {
     firmware: string | null;
     hardware: string | null;
     device_category: string;
+    provider?: string;
 }
 
 interface DevicesResponse {
@@ -283,10 +284,20 @@ function DeviceCard({ device, index, onControl }: {
                     )}
                 </div>
 
-                {/* Footer: Type badge */}
+                {/* Footer: Type + Provider badge */}
                 <div className="px-5 pb-4">
                     <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-zinc-700 uppercase">{device.type}</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-mono text-zinc-700 uppercase">{device.type}</span>
+                            {device.provider && (
+                                <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded ${device.provider === 'tuya'
+                                        ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
+                                        : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                    }`}>
+                                    {device.provider}
+                                </span>
+                            )}
+                        </div>
                         {device.firmware && (
                             <span className="text-[10px] font-mono text-zinc-700">FW {device.firmware}</span>
                         )}
@@ -366,7 +377,7 @@ export default function SmartHomeDashboard() {
                         <div>
                             <h1 className="text-2xl lg:text-3xl font-black text-white tracking-tight">Smart Home</h1>
                             <p className="text-sm text-zinc-500 font-medium mt-1">
-                                IoT Device Control Center — Meross Cloud
+                                IoT Device Control Center — Meross + Tuya
                             </p>
                             {lastUpdated && (
                                 <p className="text-[10px] text-zinc-600 font-mono mt-2 uppercase tracking-wider">
