@@ -13,6 +13,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { parseSmartMessage, SmartToken } from '@/lib/smartParser';
 import { useGlobalPTT, TransmissionResult, LiveSpeaker } from '@/contexts/GlobalPTTContext';
+import { useVoiceDictation, speakMessage, stopSpeaking, isSpeaking } from '@/hooks/useVoiceDictation';
 
 // ─── Channel Definitions ────────────────────────────────────────────────
 interface Channel {
@@ -244,6 +245,31 @@ export default function HiveDashboard() {
     const [showAttachMenu, setShowAttachMenu] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null);
+
+    // Voice dictation — mic button fills the input field
+    const { isListening, interimText, toggleDictation, isSupported: dictationSupported } = useVoiceDictation({
+        onResult: (text: string) => setMessageInput(prev => (prev + ' ' + text).trim()),
+        onInterim: () => { /* interim shown via interimText state */ },
+    });
+
+    // TTS — read a message aloud
+    const handleSpeak = useCallback((msgId: string, text: string) => {
+        if (speakingMsgId === msgId && isSpeaking()) {
+            stopSpeaking();
+            setSpeakingMsgId(null);
+        } else {
+            speakMessage(text);
+            setSpeakingMsgId(msgId);
+            // Clear speaking state when done
+            const checkDone = setInterval(() => {
+                if (!isSpeaking()) {
+                    setSpeakingMsgId(null);
+                    clearInterval(checkDone);
+                }
+            }, 300);
+        }
+    }, [speakingMsgId]);
 
     // PTT — use global context (shared with FloatingPTT + Space bar + AirPods)
     const {
@@ -663,6 +689,13 @@ export default function HiveDashboard() {
                                         >
                                             <Pin className="h-3.5 w-3.5" />
                                         </button>
+                                        <button
+                                            onClick={() => handleSpeak(msg.id, msg.text)}
+                                            className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${speakingMsgId === msg.id ? 'text-blue-400' : 'text-zinc-400'}`}
+                                            title={speakingMsgId === msg.id ? 'Stop reading' : 'Read aloud'}
+                                        >
+                                            <Volume2 className="h-3.5 w-3.5" />
+                                        </button>
                                         {msg.sender === 'You' && (
                                             <>
                                                 <button
@@ -736,6 +769,24 @@ export default function HiveDashboard() {
                     )}
                 </AnimatePresence>
 
+                {/* Live Dictation Indicator */}
+                <AnimatePresence>
+                    {isListening && (
+                        <motion.div
+                            className="px-4 py-1.5 border-t border-red-500/20 bg-red-500/5 flex items-center gap-2"
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                        >
+                            <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                            <span className="text-xs text-red-400 font-medium">Listening...</span>
+                            {interimText && (
+                                <span className="text-xs text-zinc-400 italic truncate flex-1">"{interimText}"</span>
+                            )}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
                 {/* Message Input */}
                 <div className="p-4 border-t border-zinc-800 bg-zinc-950/80 flex-shrink-0">
                     <div className="flex gap-2 max-w-3xl relative">
@@ -774,6 +825,19 @@ export default function HiveDashboard() {
                             onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
                             className="bg-zinc-900 border-zinc-800 text-zinc-200 placeholder:text-zinc-600 flex-1 h-9"
                         />
+                        {/* Voice Dictation Button */}
+                        {dictationSupported && (
+                            <button
+                                onClick={toggleDictation}
+                                title={isListening ? 'Stop dictation' : 'Voice input'}
+                                className={`h-9 w-9 rounded-lg border flex items-center justify-center transition-all flex-shrink-0 ${isListening
+                                        ? 'bg-red-600 border-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)] animate-pulse'
+                                        : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'
+                                    }`}
+                            >
+                                {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                            </button>
+                        )}
                         <Button
                             size="sm"
                             className="bg-blue-600 hover:bg-blue-500 text-white px-4 h-9"
