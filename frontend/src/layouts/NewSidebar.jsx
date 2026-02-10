@@ -219,9 +219,9 @@ const menuItems = [
   { title: 'Fintech & Payments', icon: DollarSign, href: '/admin/restin/fintech', group: 'restin' },
 
   // COLLABORATION & COMMUNICATION
-  { title: 'Hive Chat', icon: MessageSquare, href: '/collab/hive', group: 'collab' },
-  { title: 'Tasks Board', icon: LayoutGrid, href: '/collab/tasks', group: 'collab' },
-  { title: 'Inbox', icon: FileText, href: '/collab/inbox', group: 'collab' },
+  { title: 'Hive Chat', icon: MessageSquare, href: '/admin/collab/hive', group: 'collab' },
+  { title: 'Tasks Board', icon: LayoutGrid, href: '/admin/collab/tasks', group: 'collab' },
+  { title: 'Inbox', icon: FileText, href: '/admin/collab/inbox', group: 'collab' },
   { title: 'Gamification', icon: Award, href: '/admin/staff-gamification', group: 'collab' },
 ];
 

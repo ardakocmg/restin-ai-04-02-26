@@ -731,7 +731,7 @@ export default function HiveDashboard() {
     const doneTasks = tasks.filter(t => t.status === 'done');
 
     return (
-        <div className="h-[calc(100vh-64px)] flex bg-zinc-950 text-zinc-100 overflow-hidden rounded-xl border border-zinc-800/50">
+        <div className="h-[calc(100vh-5rem)] -m-4 lg:-m-6 flex bg-zinc-950 text-zinc-100 overflow-hidden">
 
             {/* ─── LEFT: Channels & Staff ───────────────────────────────── */}
             <div className="w-64 flex-shrink-0 border-r border-zinc-800 flex flex-col bg-zinc-950/80">
@@ -1001,6 +1001,10 @@ export default function HiveDashboard() {
                                     {r.time} — {r.text}
                                 </Badge>
                             ))}
+                            <div className="flex-1" />
+                            <button onClick={() => setReminders([])} className="h-5 w-5 rounded hover:bg-violet-500/20 flex items-center justify-center text-violet-400 hover:text-violet-300" title="Dismiss all reminders">
+                                <X className="h-3 w-3" />
+                            </button>
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -1014,9 +1018,14 @@ export default function HiveDashboard() {
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                         >
-                            <p className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
-                                <BarChart3 className="h-3.5 w-3.5 text-purple-400" /> Create Poll
-                            </p>
+                            <div className="flex items-center justify-between">
+                                <p className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
+                                    <BarChart3 className="h-3.5 w-3.5 text-purple-400" /> Create Poll
+                                </p>
+                                <button onClick={() => setShowPollCreator(false)} className="h-5 w-5 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close poll creator">
+                                    <X className="h-3.5 w-3.5" />
+                                </button>
+                            </div>
                             <Input
                                 value={pollQuestion}
                                 onChange={e => setPollQuestion(e.target.value)}
@@ -1063,9 +1072,14 @@ export default function HiveDashboard() {
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                         >
-                            <p className="text-xs font-bold text-zinc-300 flex items-center gap-1.5 mb-1">
-                                <Layout className="h-3.5 w-3.5 text-blue-400" /> Message Templates
-                            </p>
+                            <div className="flex items-center justify-between mb-1">
+                                <p className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
+                                    <Layout className="h-3.5 w-3.5 text-blue-400" /> Message Templates
+                                </p>
+                                <button onClick={() => setShowTemplates(false)} className="h-5 w-5 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close templates">
+                                    <X className="h-3.5 w-3.5" />
+                                </button>
+                            </div>
                             {messageTemplates.map(t => (
                                 <button
                                     key={t.id}
@@ -1090,9 +1104,14 @@ export default function HiveDashboard() {
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                         >
-                            <p className="text-xs font-bold text-amber-400 flex items-center gap-1.5 mb-1">
-                                <Bookmark className="h-3.5 w-3.5 fill-amber-400" /> Bookmarked Messages
-                            </p>
+                            <div className="flex items-center justify-between mb-1">
+                                <p className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                                    <Bookmark className="h-3.5 w-3.5 fill-amber-400" /> Bookmarked Messages
+                                </p>
+                                <button onClick={() => setShowBookmarks(false)} className="h-5 w-5 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close bookmarks">
+                                    <X className="h-3.5 w-3.5" />
+                                </button>
+                            </div>
                             {bookmarkedMessages.map(m => (
                                 <div key={m.id} className="flex items-center gap-2 px-2 py-1 rounded bg-zinc-800/50 text-xs">
                                     <span className="text-zinc-400 font-medium">{m.sender}</span>
@@ -1439,16 +1458,22 @@ export default function HiveDashboard() {
                                                 )}
                                             </AnimatePresence>
 
-                                            {/* Forward Channel Picker */}
+                                            {/* Forward Channel / DM Picker */}
                                             <AnimatePresence>
                                                 {forwardingMsg?.id === msg.id && (
                                                     <motion.div
-                                                        className="absolute -top-20 right-0 bg-zinc-900 border border-zinc-700 rounded-xl p-2 shadow-xl z-20 min-w-[160px]"
+                                                        className="absolute -top-32 right-0 bg-zinc-900 border border-zinc-700 rounded-xl p-2 shadow-xl z-20 min-w-[180px] max-h-64 overflow-y-auto"
                                                         initial={{ opacity: 0, scale: 0.9, y: 5 }}
                                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                                         exit={{ opacity: 0, scale: 0.9, y: 5 }}
                                                     >
-                                                        <p className="text-[10px] font-bold uppercase text-zinc-500 mb-1 px-1">Forward to</p>
+                                                        <div className="flex items-center justify-between mb-1 px-1">
+                                                            <p className="text-[10px] font-bold uppercase text-zinc-500">Forward to</p>
+                                                            <button onClick={() => setForwardingMsg(null)} className="h-4 w-4 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close">
+                                                                <X className="h-3 w-3" />
+                                                            </button>
+                                                        </div>
+                                                        <p className="text-[9px] uppercase text-zinc-600 px-1 mt-1 mb-0.5">Channels</p>
                                                         {CHANNELS.filter(ch => ch.id !== activeChannel).map(ch => (
                                                             <button
                                                                 key={ch.id}
@@ -1458,6 +1483,20 @@ export default function HiveDashboard() {
                                                             >
                                                                 <ch.icon className={`h-3.5 w-3.5 ${ch.color}`} />
                                                                 <span>#{ch.name}</span>
+                                                            </button>
+                                                        ))}
+                                                        <div className="border-t border-zinc-800 my-1" />
+                                                        <p className="text-[9px] uppercase text-zinc-600 px-1 mb-0.5">Direct Messages</p>
+                                                        {ONLINE_STAFF.map(staff => (
+                                                            <button
+                                                                key={staff.name}
+                                                                onClick={() => forwardMessage(msg, `dm-${staff.initials.toLowerCase()}`)}
+                                                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
+                                                                title={`DM ${staff.name}`}
+                                                            >
+                                                                <div className={`h-4 w-4 rounded-full ${staff.color} flex items-center justify-center text-[8px] font-bold text-white`}>{staff.initials}</div>
+                                                                <span>{staff.name}</span>
+                                                                <span className={`ml-auto h-1.5 w-1.5 rounded-full ${staff.status === 'online' ? 'bg-green-400' : staff.status === 'busy' ? 'bg-red-400' : 'bg-yellow-400'}`} />
                                                             </button>
                                                         ))}
                                                     </motion.div>
@@ -1473,9 +1512,14 @@ export default function HiveDashboard() {
                                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                                         exit={{ opacity: 0, scale: 0.9, y: 5 }}
                                                     >
-                                                        <p className="text-[10px] font-bold uppercase text-zinc-500 mb-1 px-1 flex items-center gap-1">
-                                                            <AlarmClock className="h-2.5 w-2.5" /> Remind me
-                                                        </p>
+                                                        <div className="flex items-center justify-between mb-1 px-1">
+                                                            <p className="text-[10px] font-bold uppercase text-zinc-500 flex items-center gap-1">
+                                                                <AlarmClock className="h-2.5 w-2.5" /> Remind me
+                                                            </p>
+                                                            <button onClick={() => setShowReminderPicker(null)} className="h-4 w-4 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close">
+                                                                <X className="h-3 w-3" />
+                                                            </button>
+                                                        </div>
                                                         {[
                                                             { label: 'In 5 min', mins: 5 },
                                                             { label: 'In 15 min', mins: 15 },
@@ -1505,9 +1549,14 @@ export default function HiveDashboard() {
                                                         animate={{ opacity: 1, scale: 1 }}
                                                         exit={{ opacity: 0, scale: 0.9 }}
                                                     >
-                                                        <p className="text-[10px] font-bold uppercase text-zinc-500 mb-1 flex items-center gap-1">
-                                                            <Eye className="h-2.5 w-2.5" /> Seen by {msg.readBy.length}
-                                                        </p>
+                                                        <div className="flex items-center justify-between mb-1">
+                                                            <p className="text-[10px] font-bold uppercase text-zinc-500 flex items-center gap-1">
+                                                                <Eye className="h-2.5 w-2.5" /> Seen by {msg.readBy.length}
+                                                            </p>
+                                                            <button onClick={() => setShowReceiptsDetail(null)} className="h-4 w-4 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close">
+                                                                <X className="h-3 w-3" />
+                                                            </button>
+                                                        </div>
                                                         {msg.readBy.map(name => (
                                                             <p key={name} className="text-xs text-zinc-300 py-0.5">{name}</p>
                                                         ))}

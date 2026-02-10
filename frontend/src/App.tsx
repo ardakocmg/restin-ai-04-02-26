@@ -606,8 +606,15 @@ function App() {
 
                                     <Route path="settings" element={<AdminSettingsIndigo />} />
                                   </Route>
+
+                                  {/* Collaboration */}
+                                  <Route path="collab/hive" element={<HiveDashboard />} />
+                                  <Route path="collab/inbox" element={<Inbox />} />
+                                  <Route path="collab/tasks" element={<TasksKanban />} />
+
+                                  {/* Profile */}
+                                  <Route path="profile" element={<UserProfileSettings />} />
                                 </Route>
-                                <Route path="/profile" element={<UserProfileSettings />} />
                                 <Route path="/pos/setup" element={<POSSetup />} />
                                 <Route path="/pos" element={<POSMain />} />
                                 <Route path="/pos/runtime" element={<POSRuntimeEnhanced />} />
@@ -617,9 +624,6 @@ function App() {
                                 <Route path="/admin/kds/stations" element={<KDSStations />} />
                                 <Route path="/admin/kds/stations/:stationKey" element={<KDSStationDetail />} />
                                 <Route path="/kds/runtime/:stationKey" element={<KDSRuntime />} />
-                                <Route path="/collab/hive" element={<GlobalPTTProvider><HiveDashboard /></GlobalPTTProvider>} />
-                                <Route path="/collab/inbox" element={<Inbox />} />
-                                <Route path="/collab/tasks" element={<TasksKanban />} />
                                 <Route path="/book/:venueId" element={<BookingWidget />} />
                                 <Route path="*" element={<NotFound />} />
                               </Routes>
