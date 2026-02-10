@@ -7,6 +7,7 @@ export interface TransmissionResult {
     duration: number;
     transcript: string;
     timestamp: string;
+    audioUrl?: string;
 }
 
 export interface CallLogEntry {
@@ -16,6 +17,7 @@ export interface CallLogEntry {
     startedAt: string;
     duration: number;
     transcript: string;
+    audioUrl?: string;
 }
 
 export interface LiveSpeaker {
@@ -125,6 +127,10 @@ export function GlobalPTTProvider({ children }: { children: React.ReactNode }) {
     const transcriptBufferRef = useRef('');
     const channelRef = useRef(activeChannel);
     const onTransmissionEndRef = useRef<((result: TransmissionResult) => void) | null>(null);
+
+    // Audio recording refs
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const audioChunksRef = useRef<Blob[]>([]);
 
     // Silent audio element for MediaSession activation on PC
     const silentAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -251,6 +257,25 @@ export function GlobalPTTProvider({ children }: { children: React.ReactNode }) {
         setLiveTranscript('');
         startRecognition();
 
+        // ─── Start audio recording ──────────────────────────────────
+        audioChunksRef.current = [];
+        if (localStream.current) {
+            try {
+                const recorder = new MediaRecorder(localStream.current, {
+                    mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+                        ? 'audio/webm;codecs=opus'
+                        : 'audio/webm',
+                });
+                recorder.ondataavailable = (e: BlobEvent) => {
+                    if (e.data.size > 0) audioChunksRef.current.push(e.data);
+                };
+                recorder.start(100); // collect chunks every 100ms
+                mediaRecorderRef.current = recorder;
+            } catch {
+                // MediaRecorder not available — recording disabled
+            }
+        }
+
         setLiveSpeakers(prev => [
             ...prev.filter(s => s.name !== 'You'),
             { name: 'You', initials: 'ME', color: 'bg-zinc-600', channelId: channelRef.current, startedAt: Date.now() }
@@ -274,24 +299,48 @@ export function GlobalPTTProvider({ children }: { children: React.ReactNode }) {
         const timestamp = new Date(talkStartRef.current).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         const currentChannel = channelRef.current;
 
-        const entry: CallLogEntry = {
-            id: `call-${Date.now()}`,
-            speaker: 'You',
-            channelId: currentChannel,
-            startedAt: timestamp,
-            duration,
-            transcript: transcript || '(no transcript)',
-        };
-        setCallLog(prev => [entry, ...prev].slice(0, 50));
+        // ─── Stop recording & create audio Blob URL ─────────────────
+        const recorder = mediaRecorderRef.current;
+        mediaRecorderRef.current = null;
 
-        // Fire callback → injects voice message into the channel
-        onTransmissionEndRef.current?.({
-            channelId: currentChannel,
-            speaker: 'You',
-            duration,
-            transcript: transcript || '',
-            timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-        });
+        const finalize = (audioUrl?: string) => {
+            const entry: CallLogEntry = {
+                id: `call-${Date.now()}`,
+                speaker: 'You',
+                channelId: currentChannel,
+                startedAt: timestamp,
+                duration,
+                transcript: transcript || '(no transcript)',
+                audioUrl,
+            };
+            setCallLog(prev => [entry, ...prev].slice(0, 50));
+
+            onTransmissionEndRef.current?.({
+                channelId: currentChannel,
+                speaker: 'You',
+                duration,
+                transcript: transcript || '',
+                timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                audioUrl,
+            });
+        };
+
+        if (recorder && recorder.state !== 'inactive') {
+            recorder.onstop = () => {
+                const chunks = audioChunksRef.current;
+                if (chunks.length > 0) {
+                    const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+                    const url = URL.createObjectURL(blob);
+                    finalize(url);
+                } else {
+                    finalize();
+                }
+                audioChunksRef.current = [];
+            };
+            recorder.stop();
+        } else {
+            finalize();
+        }
 
         setLiveSpeakers(prev => prev.filter(s => s.name !== 'You'));
         setLiveTranscript('');

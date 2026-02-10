@@ -8,7 +8,8 @@ import {
     ChefHat, Wine, Briefcase, Bell, Search, Pin, Star,
     CheckSquare, Clock, Zap, Volume2, Paperclip, Smile,
     Reply, Trash2, Edit3, MoreHorizontal, Image, FileText,
-    X, Check, ArrowRight, PhoneCall, FileAudio
+    X, Check, ArrowRight, PhoneCall, FileAudio,
+    Play, Pause, Square, Calendar, UserPlus, ListTodo, RotateCw, Timer, GripVertical, Plus
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { parseSmartMessage, SmartToken } from '@/lib/smartParser';
@@ -52,6 +53,7 @@ interface ChatMessage {
     // Voice message fields
     isVoice?: boolean;
     voiceDuration?: number; // seconds
+    audioUrl?: string;      // Blob URL for playback
 }
 
 const MOCK_MESSAGES: ChatMessage[] = [
@@ -132,22 +134,48 @@ const ONLINE_STAFF: OnlineStaff[] = [
 interface MicroTask {
     id: string;
     title: string;
-    urgency: 'LOW' | 'MEDIUM' | 'HIGH';
+    urgency: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
     xp: number;
-    assignee?: string;
+    assignedTo?: string;
+    department?: string;
     deadline?: string;
+    status: 'pool' | 'assigned' | 'in-progress' | 'done';
+    recurrence?: 'none' | 'daily' | 'weekly' | 'shift-start' | 'shift-end';
+    startedAt?: string;
+    completedAt?: string;
+    sourceMessageId?: string;
 }
 
-const TASKS: MicroTask[] = [
-    { id: 't1', title: 'Clean coffee machine', urgency: 'HIGH', xp: 100, deadline: '15:30' },
-    { id: 't2', title: 'Restock napkins at Table 5-8', urgency: 'MEDIUM', xp: 50 },
-    { id: 't3', title: 'Polish wine glasses', urgency: 'LOW', xp: 30 },
-    { id: 't4', title: 'Update daily specials board', urgency: 'MEDIUM', xp: 50, deadline: '16:00' },
-    { id: 't5', title: 'Inventory count — freezer', urgency: 'HIGH', xp: 150, deadline: '17:00' },
+const SEED_TASKS: MicroTask[] = [
+    { id: 't1', title: 'Clean coffee machine', urgency: 'HIGH', xp: 100, deadline: '15:30', status: 'pool', recurrence: 'daily' },
+    { id: 't2', title: 'Restock napkins at Table 5-8', urgency: 'MEDIUM', xp: 50, status: 'pool' },
+    { id: 't3', title: 'Polish wine glasses', urgency: 'LOW', xp: 30, status: 'pool' },
+    { id: 't4', title: 'Update daily specials board', urgency: 'MEDIUM', xp: 50, deadline: '16:00', status: 'assigned', assignedTo: 'Sarah P.', department: 'floor' },
+    { id: 't5', title: 'Inventory count — freezer', urgency: 'HIGH', xp: 150, deadline: '17:00', status: 'assigned', assignedTo: 'You', department: 'kitchen' },
+    { id: 't6', title: 'Check walk-in fridge temps', urgency: 'CRITICAL', xp: 80, status: 'pool', recurrence: 'shift-start' },
 ];
 
 // ─── AVAILABLE REACTIONS ────────────────────────────────────────────────
 const REACTION_EMOJIS = ['👍', '❤️', '😂', '🔥', '🎉', '⭐', '👀', '✅'];
+
+// ─── Smart Token Renderer ──────────────────────────────────────────────
+
+// ─── Quick Message Shortcuts ────────────────────────────────────────────
+interface QuickMessage {
+    command: string;
+    label: string;
+    emoji: string;
+    text: string;
+}
+
+const QUICK_MESSAGES: QuickMessage[] = [
+    { command: '/86', label: '86 Item', emoji: '\ud83d\udeab', text: '\ud83d\udeab 86d \u2014 Item is no longer available' },
+    { command: '/vip', label: 'VIP Alert', emoji: '\u2b50', text: '\u2b50 VIP guest arriving \u2014 priority service required' },
+    { command: '/fire', label: 'Fire Course', emoji: '\ud83d\udd25', text: '\ud83d\udd25 FIRE \u2014 Send the next course NOW' },
+    { command: '/hold', label: 'Hold Course', emoji: '\u23f8\ufe0f', text: '\u23f8\ufe0f HOLD \u2014 Do NOT send next course yet' },
+    { command: '/clean', label: 'Cleanup', emoji: '\ud83e\uddf9', text: '\ud83e\uddf9 Table needs immediate cleanup' },
+    { command: '/help', label: 'Need Help', emoji: '\ud83c\udd98', text: '\ud83c\udd98 Need assistance at my station immediately' },
+];
 
 // ─── Smart Token Renderer ──────────────────────────────────────────────
 function SmartTokenSpan({ token }: { token: SmartToken }) {
@@ -241,8 +269,8 @@ export default function HiveDashboard() {
     const [editText, setEditText] = useState('');
     const [showEmojiPicker, setShowEmojiPicker] = useState<string | null>(null);
     const [typingUsers] = useState<string[]>(['Chef Marco']);
-    const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set());
     const [showAttachMenu, setShowAttachMenu] = useState(false);
+    const [showQuickPicker, setShowQuickPicker] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null);
@@ -291,6 +319,7 @@ export default function HiveDashboard() {
                 timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
                 isVoice: true,
                 voiceDuration: result.duration,
+                audioUrl: result.audioUrl,
             };
             setMessages(prev => [...prev, voiceMsg]);
         });
@@ -389,16 +418,68 @@ export default function HiveDashboard() {
         setMessages(prev => prev.map(m => m.id === msgId ? { ...m, isPinned: !m.isPinned } : m));
     }, []);
 
-    // Complete task
-    const completeTask = useCallback((taskId: string) => {
-        setCompletedTasks(prev => {
-            const next = new Set(prev);
-            next.add(taskId);
-            return next;
-        });
+    // Task management (stateful)
+    const [tasks, setTasks] = useState<MicroTask[]>(SEED_TASKS);
+    const [showCreateTask, setShowCreateTask] = useState(false);
+    const [createFromMessage, setCreateFromMessage] = useState<ChatMessage | null>(null);
+    const [newTaskTitle, setNewTaskTitle] = useState('');
+    const [newTaskUrgency, setNewTaskUrgency] = useState<MicroTask['urgency']>('MEDIUM');
+    const [newTaskAssignee, setNewTaskAssignee] = useState('');
+    const [newTaskDeadline, setNewTaskDeadline] = useState('');
+    const [newTaskRecurrence, setNewTaskRecurrence] = useState<MicroTask['recurrence']>('none');
+
+    // Task actions
+    const claimTask = useCallback((taskId: string) => {
+        setTasks(prev => prev.map(t =>
+            t.id === taskId ? { ...t, status: 'assigned' as const, assignedTo: 'You' } : t
+        ));
     }, []);
 
-    const activeTasks = TASKS.filter(t => !completedTasks.has(t.id));
+    const startTask = useCallback((taskId: string) => {
+        setTasks(prev => prev.map(t =>
+            t.id === taskId ? { ...t, status: 'in-progress' as const, startedAt: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) } : t
+        ));
+    }, []);
+
+    const completeTask = useCallback((taskId: string) => {
+        setTasks(prev => prev.map(t =>
+            t.id === taskId ? { ...t, status: 'done' as const, completedAt: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) } : t
+        ));
+    }, []);
+
+    const createTaskFromMessage = useCallback((msg: ChatMessage) => {
+        setCreateFromMessage(msg);
+        setNewTaskTitle(msg.text.substring(0, 80));
+        setNewTaskUrgency('MEDIUM');
+        setNewTaskAssignee('');
+        setNewTaskDeadline('');
+        setNewTaskRecurrence('none');
+        setShowCreateTask(true);
+    }, []);
+
+    const submitNewTask = useCallback(() => {
+        if (!newTaskTitle.trim()) return;
+        const task: MicroTask = {
+            id: `task-${Date.now()}`,
+            title: newTaskTitle.trim(),
+            urgency: newTaskUrgency,
+            xp: newTaskUrgency === 'CRITICAL' ? 200 : newTaskUrgency === 'HIGH' ? 100 : newTaskUrgency === 'MEDIUM' ? 50 : 30,
+            status: newTaskAssignee ? 'assigned' : 'pool',
+            assignedTo: newTaskAssignee || undefined,
+            deadline: newTaskDeadline || undefined,
+            recurrence: newTaskRecurrence,
+            sourceMessageId: createFromMessage?.id,
+        };
+        setTasks(prev => [task, ...prev]);
+        setShowCreateTask(false);
+        setCreateFromMessage(null);
+        setNewTaskTitle('');
+    }, [newTaskTitle, newTaskUrgency, newTaskAssignee, newTaskDeadline, newTaskRecurrence, createFromMessage]);
+
+    const poolTasks = tasks.filter(t => t.status === 'pool');
+    const myTasks = tasks.filter(t => (t.status === 'assigned' || t.status === 'in-progress') && t.assignedTo === 'You');
+    const allActiveTasks = tasks.filter(t => t.status !== 'done');
+    const doneTasks = tasks.filter(t => t.status === 'done');
 
     return (
         <div className="h-[calc(100vh-64px)] flex bg-zinc-950 text-zinc-100 overflow-hidden rounded-xl border border-zinc-800/50">
@@ -458,28 +539,64 @@ export default function HiveDashboard() {
                     </div>
                 </div>
 
+                {/* Direct Messages */}
+                <div className="px-3 py-2">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-2">Direct Messages</p>
+                    <div className="space-y-0.5">
+                        {ONLINE_STAFF.filter(s => s.status === 'online').slice(0, 3).map(s => {
+                            const dmId = `dm-${s.name.toLowerCase().replace(/\s+/g, '-')}`;
+                            return (
+                                <button
+                                    key={dmId}
+                                    onClick={() => setActiveChannel(dmId)}
+                                    className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm transition-all ${activeChannel === dmId
+                                        ? 'bg-zinc-800 text-zinc-100'
+                                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
+                                        }`}
+                                    title={`DM ${s.name}`}
+                                >
+                                    <div className="relative">
+                                        <div className={`h-5 w-5 rounded-full ${s.color} flex items-center justify-center`}>
+                                            <span className="text-white text-[8px] font-bold">{s.initials}</span>
+                                        </div>
+                                        <div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-500 border border-zinc-950" />
+                                    </div>
+                                    <span className="flex-1 text-left truncate">{s.name}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
                 {/* Online Staff */}
                 <div className="px-3 py-2 flex-1 overflow-auto">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-2">
                         Online — {ONLINE_STAFF.filter(s => s.status === 'online').length}
                     </p>
                     <div className="space-y-1">
-                        {ONLINE_STAFF.map(s => (
-                            <div key={s.name} className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-zinc-900 cursor-pointer transition-colors">
-                                <div className="relative">
-                                    <div className={`h-7 w-7 rounded-full ${s.color} flex items-center justify-center`}>
-                                        <span className="text-white text-[10px] font-bold">{s.initials}</span>
+                        {ONLINE_STAFF.map(s => {
+                            const dmId = `dm-${s.name.toLowerCase().replace(/\s+/g, '-')}`;
+                            return (
+                                <div
+                                    key={s.name}
+                                    className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-zinc-900 cursor-pointer transition-colors"
+                                    onClick={() => setActiveChannel(dmId)}
+                                    title={`Open DM with ${s.name}`}
+                                >
+                                    <div className="relative">
+                                        <div className={`h-7 w-7 rounded-full ${s.color} flex items-center justify-center`}>
+                                            <span className="text-white text-[10px] font-bold">{s.initials}</span>
+                                        </div>
+                                        <div className={`absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-zinc-950 ${s.status === 'online' ? 'bg-emerald-500' :
+                                            s.status === 'busy' ? 'bg-red-500' : 'bg-amber-500'
+                                            }`} />
                                     </div>
-                                    <div className={`absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-zinc-950 ${s.status === 'online' ? 'bg-emerald-500' :
-                                        s.status === 'busy' ? 'bg-red-500' : 'bg-amber-500'
-                                        }`} />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-medium text-zinc-300 truncate">{s.name}</p>
-                                    <p className="text-[10px] text-zinc-600">{s.role}</p>
-                                </div>
-                            </div>
-                        ))}
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-xs font-medium text-zinc-300 truncate">{s.name}</p>
+                                        <p className="text-[10px] text-zinc-600">{s.role}</p>
+                                    </div>
+                                </div>);
+                        })}
                     </div>
                 </div>
 
@@ -573,9 +690,29 @@ export default function HiveDashboard() {
                                         {/* Message Body — Voice or Text */}
                                         {msg.isVoice ? (
                                             <div className="mt-1 p-2 rounded-lg bg-zinc-900/80 border border-zinc-800 space-y-1">
-                                                {/* Waveform visualization */}
+                                                {/* Waveform + Audio Playback */}
                                                 <div className="flex items-center gap-1.5">
-                                                    <Mic className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />
+                                                    {msg.audioUrl ? (
+                                                        <button
+                                                            onClick={() => {
+                                                                const existing = document.getElementById(`audio-${msg.id}`) as HTMLAudioElement | null;
+                                                                if (existing) {
+                                                                    if (existing.paused) {
+                                                                        existing.play();
+                                                                    } else {
+                                                                        existing.pause();
+                                                                        existing.currentTime = 0;
+                                                                    }
+                                                                }
+                                                            }}
+                                                            className="h-6 w-6 rounded-full bg-red-500/20 hover:bg-red-500/30 flex items-center justify-center text-red-400 transition-colors flex-shrink-0"
+                                                            title="Play voice message"
+                                                        >
+                                                            <Play className="h-3 w-3 ml-0.5" />
+                                                        </button>
+                                                    ) : (
+                                                        <Mic className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />
+                                                    )}
                                                     <div className="flex items-end gap-0.5 h-4">
                                                         {Array.from({ length: 20 }).map((_, i) => (
                                                             <div
@@ -587,6 +724,9 @@ export default function HiveDashboard() {
                                                     </div>
                                                     <span className="text-[10px] text-zinc-500 ml-1">{msg.voiceDuration}s</span>
                                                 </div>
+                                                {msg.audioUrl && (
+                                                    <audio id={`audio-${msg.id}`} src={msg.audioUrl} preload="metadata" className="hidden" />
+                                                )}
                                                 {msg.text && msg.text !== '🎙️ Voice message' && (
                                                     <p className="text-xs text-zinc-400 italic leading-relaxed pl-5">
                                                         "{msg.text}"
@@ -695,6 +835,13 @@ export default function HiveDashboard() {
                                             title={speakingMsgId === msg.id ? 'Stop reading' : 'Read aloud'}
                                         >
                                             <Volume2 className="h-3.5 w-3.5" />
+                                        </button>
+                                        <button
+                                            onClick={() => createTaskFromMessage(msg)}
+                                            className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 hover:text-emerald-400 flex items-center justify-center transition-colors"
+                                            title="Create task from message"
+                                        >
+                                            <CheckSquare className="h-3.5 w-3.5" />
                                         </button>
                                         {msg.sender === 'You' && (
                                             <>
@@ -819,20 +966,57 @@ export default function HiveDashboard() {
 
                         <Input
                             ref={inputRef}
-                            placeholder={`Message #${activeChannelData?.name || 'channel'}... (use #Order, @Table, $Item)`}
+                            placeholder={`Message #${activeChannelData?.name || 'channel'}... (use / for shortcuts)`}
                             value={messageInput}
-                            onChange={e => setMessageInput(e.target.value)}
+                            onChange={e => {
+                                setMessageInput(e.target.value);
+                                setShowQuickPicker(e.target.value === '/');
+                            }}
                             onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
                             className="bg-zinc-900 border-zinc-800 text-zinc-200 placeholder:text-zinc-600 flex-1 h-9"
                         />
+
+                        {/* Quick Message Picker */}
+                        <AnimatePresence>
+                            {showQuickPicker && (
+                                <motion.div
+                                    className="absolute bottom-12 left-12 bg-zinc-900 border border-zinc-700 rounded-xl shadow-xl w-72 overflow-hidden z-20"
+                                    initial={{ opacity: 0, y: 5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 5 }}
+                                >
+                                    <p className="px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500 border-b border-zinc-800">
+                                        ⚡ Quick Shortcuts
+                                    </p>
+                                    {QUICK_MESSAGES.map(qm => (
+                                        <button
+                                            key={qm.command}
+                                            onClick={() => {
+                                                setMessageInput(qm.text);
+                                                setShowQuickPicker(false);
+                                                inputRef.current?.focus();
+                                            }}
+                                            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors text-left"
+                                            title={qm.label}
+                                        >
+                                            <span className="text-base">{qm.emoji}</span>
+                                            <div>
+                                                <span className="text-zinc-400 font-mono">{qm.command}</span>
+                                                <span className="text-zinc-500 ml-2">{qm.label}</span>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                         {/* Voice Dictation Button */}
                         {dictationSupported && (
                             <button
                                 onClick={toggleDictation}
                                 title={isListening ? 'Stop dictation' : 'Voice input'}
                                 className={`h-9 w-9 rounded-lg border flex items-center justify-center transition-all flex-shrink-0 ${isListening
-                                        ? 'bg-red-600 border-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)] animate-pulse'
-                                        : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'
+                                    ? 'bg-red-600 border-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)] animate-pulse'
+                                    : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'
                                     }`}
                             >
                                 {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
@@ -870,18 +1054,175 @@ export default function HiveDashboard() {
 
                     {/* Tasks Tab */}
                     <TabsContent value="tasks" className="flex-1 overflow-auto p-3 mt-0 space-y-3">
-                        <div className="flex items-center justify-between">
+                        {/* Create Task Button */}
+                        <button
+                            onClick={() => { setShowCreateTask(true); setCreateFromMessage(null); setNewTaskTitle(''); }}
+                            className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-zinc-700 hover:border-zinc-500 text-zinc-500 hover:text-zinc-300 text-xs transition-colors"
+                            title="Create new task"
+                        >
+                            <Plus className="h-3.5 w-3.5" /> New Task
+                        </button>
+
+                        {/* Create Task Form (Popover) */}
+                        <AnimatePresence>
+                            {showCreateTask && (
+                                <motion.div
+                                    className="p-3 rounded-lg bg-zinc-900 border border-zinc-700 space-y-2"
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-xs font-bold text-zinc-300">
+                                            {createFromMessage ? '📋 From Message' : '➕ New Task'}
+                                        </p>
+                                        <button onClick={() => setShowCreateTask(false)} className="text-zinc-500 hover:text-zinc-300" title="Close">
+                                            <X className="h-3.5 w-3.5" />
+                                        </button>
+                                    </div>
+                                    <Input
+                                        placeholder="Task title..."
+                                        value={newTaskTitle}
+                                        onChange={e => setNewTaskTitle(e.target.value)}
+                                        className="bg-zinc-800 border-zinc-700 text-zinc-200 h-8 text-xs"
+                                    />
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <select
+                                            value={newTaskUrgency}
+                                            onChange={e => setNewTaskUrgency(e.target.value as MicroTask['urgency'])}
+                                            className="bg-zinc-800 border border-zinc-700 rounded-md text-xs text-zinc-300 h-8 px-2"
+                                            title="Task urgency level"
+                                        >
+                                            <option value="LOW">Low</option>
+                                            <option value="MEDIUM">Medium</option>
+                                            <option value="HIGH">High</option>
+                                            <option value="CRITICAL">Critical</option>
+                                        </select>
+                                        <select
+                                            value={newTaskAssignee}
+                                            onChange={e => setNewTaskAssignee(e.target.value)}
+                                            className="bg-zinc-800 border border-zinc-700 rounded-md text-xs text-zinc-300 h-8 px-2"
+                                            title="Assign task to staff"
+                                        >
+                                            <option value="">Unassigned (Pool)</option>
+                                            <option value="You">Assign to Me</option>
+                                            {ONLINE_STAFF.map(s => (
+                                                <option key={s.name} value={s.name}>{s.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <Input
+                                            placeholder="Deadline (HH:MM)"
+                                            value={newTaskDeadline}
+                                            onChange={e => setNewTaskDeadline(e.target.value)}
+                                            className="bg-zinc-800 border-zinc-700 text-zinc-200 h-8 text-xs"
+                                        />
+                                        <select
+                                            value={newTaskRecurrence}
+                                            onChange={e => setNewTaskRecurrence(e.target.value as MicroTask['recurrence'])}
+                                            className="bg-zinc-800 border border-zinc-700 rounded-md text-xs text-zinc-300 h-8 px-2"
+                                            title="Task recurrence schedule"
+                                        >
+                                            <option value="none">No Repeat</option>
+                                            <option value="daily">Daily</option>
+                                            <option value="weekly">Weekly</option>
+                                            <option value="shift-start">Shift Start</option>
+                                            <option value="shift-end">Shift End</option>
+                                        </select>
+                                    </div>
+                                    <Button
+                                        size="sm"
+                                        className="w-full h-8 bg-emerald-600 hover:bg-emerald-500 text-white text-xs"
+                                        onClick={submitNewTask}
+                                        disabled={!newTaskTitle.trim()}
+                                    >
+                                        <Check className="h-3.5 w-3.5 mr-1" /> Create Task
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* My Tasks */}
+                        {myTasks.length > 0 && (
+                            <>
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-blue-400 mt-1">
+                                    📌 My Tasks — {myTasks.length}
+                                </p>
+                                <AnimatePresence>
+                                    {myTasks.map(task => (
+                                        <motion.div
+                                            key={task.id}
+                                            layout
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.95, height: 0 }}
+                                            className="p-3 rounded-lg bg-zinc-900 border border-blue-500/20 space-y-2"
+                                        >
+                                            <div className="flex items-start justify-between gap-2">
+                                                <p className="text-sm font-medium text-zinc-200">{task.title}</p>
+                                                <Badge className={`text-[10px] shrink-0 ${task.urgency === 'CRITICAL' ? 'bg-red-700 text-white' : task.urgency === 'HIGH' ? 'bg-red-600 text-white' :
+                                                    task.urgency === 'MEDIUM' ? 'bg-amber-600 text-white' : 'bg-zinc-700 text-zinc-300'}`}>
+                                                    {task.urgency}
+                                                </Badge>
+                                            </div>
+                                            {task.deadline && (
+                                                <p className="text-[10px] text-zinc-500 flex items-center gap-1">
+                                                    <Clock className="h-2.5 w-2.5" /> Due by {task.deadline}
+                                                </p>
+                                            )}
+                                            {task.recurrence && task.recurrence !== 'none' && (
+                                                <p className="text-[10px] text-violet-400 flex items-center gap-1">
+                                                    <RotateCw className="h-2.5 w-2.5" /> {task.recurrence}
+                                                </p>
+                                            )}
+                                            {task.startedAt && (
+                                                <p className="text-[10px] text-emerald-400 flex items-center gap-1">
+                                                    <Timer className="h-2.5 w-2.5" /> Started {task.startedAt}
+                                                </p>
+                                            )}
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs text-zinc-500 flex items-center gap-1">
+                                                    <Zap className="h-3 w-3 text-amber-400" /> {task.xp} XP
+                                                </span>
+                                                <div className="flex gap-1.5">
+                                                    {task.status === 'assigned' && (
+                                                        <Button
+                                                            size="sm"
+                                                            className="h-6 px-3 text-[10px] bg-blue-600 hover:bg-blue-500 text-white border-0"
+                                                            onClick={() => startTask(task.id)}
+                                                        >
+                                                            ▶ Start
+                                                        </Button>
+                                                    )}
+                                                    <Button
+                                                        size="sm"
+                                                        className="h-6 px-3 text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white border-0"
+                                                        onClick={() => completeTask(task.id)}
+                                                    >
+                                                        Done ✓
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </AnimatePresence>
+                            </>
+                        )}
+
+                        {/* Task Pool */}
+                        <div className="flex items-center justify-between mt-1">
                             <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">
-                                Active Tasks — {activeTasks.length}
+                                🎯 Task Pool — {poolTasks.length}
                             </p>
-                            {completedTasks.size > 0 && (
+                            {doneTasks.length > 0 && (
                                 <Badge className="bg-emerald-600/20 text-emerald-400 text-[10px] border-0">
-                                    {completedTasks.size} done ✓
+                                    {doneTasks.length} done ✓
                                 </Badge>
                             )}
                         </div>
                         <AnimatePresence>
-                            {activeTasks.map(task => (
+                            {poolTasks.map(task => (
                                 <motion.div
                                     key={task.id}
                                     layout
@@ -893,16 +1234,19 @@ export default function HiveDashboard() {
                                 >
                                     <div className="flex items-start justify-between gap-2">
                                         <p className="text-sm font-medium text-zinc-200">{task.title}</p>
-                                        <Badge className={`text-[10px] shrink-0 ${task.urgency === 'HIGH' ? 'bg-red-600 text-white' :
-                                            task.urgency === 'MEDIUM' ? 'bg-amber-600 text-white' :
-                                                'bg-zinc-700 text-zinc-300'
-                                            }`}>
+                                        <Badge className={`text-[10px] shrink-0 ${task.urgency === 'CRITICAL' ? 'bg-red-700 text-white' : task.urgency === 'HIGH' ? 'bg-red-600 text-white' :
+                                            task.urgency === 'MEDIUM' ? 'bg-amber-600 text-white' : 'bg-zinc-700 text-zinc-300'}`}>
                                             {task.urgency}
                                         </Badge>
                                     </div>
                                     {task.deadline && (
                                         <p className="text-[10px] text-zinc-500 flex items-center gap-1">
                                             <Clock className="h-2.5 w-2.5" /> Due by {task.deadline}
+                                        </p>
+                                    )}
+                                    {task.recurrence && task.recurrence !== 'none' && (
+                                        <p className="text-[10px] text-violet-400 flex items-center gap-1">
+                                            <RotateCw className="h-2.5 w-2.5" /> {task.recurrence}
                                         </p>
                                     )}
                                     <div className="flex items-center justify-between">
@@ -915,10 +1259,10 @@ export default function HiveDashboard() {
                                             </Button>
                                             <Button
                                                 size="sm"
-                                                className="h-6 px-3 text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white border-0"
-                                                onClick={() => completeTask(task.id)}
+                                                className="h-6 px-3 text-[10px] bg-blue-600 hover:bg-blue-500 text-white border-0"
+                                                onClick={() => claimTask(task.id)}
                                             >
-                                                Done ✓
+                                                👋 Claim
                                             </Button>
                                         </div>
                                     </div>
@@ -926,7 +1270,7 @@ export default function HiveDashboard() {
                             ))}
                         </AnimatePresence>
 
-                        {activeTasks.length === 0 && (
+                        {allActiveTasks.length === 0 && (
                             <motion.div
                                 className="flex flex-col items-center justify-center py-8 text-center"
                                 initial={{ opacity: 0 }}
@@ -1125,7 +1469,23 @@ export default function HiveDashboard() {
                                                 </div>
                                                 <span className="text-xs font-medium text-zinc-300">{entry.speaker}</span>
                                             </div>
-                                            <span className="text-[10px] text-zinc-600">{entry.startedAt}</span>
+                                            <div className="flex items-center gap-1.5">
+                                                {entry.audioUrl && (
+                                                    <button
+                                                        onClick={() => {
+                                                            const el = document.getElementById(`log-audio-${entry.id}`) as HTMLAudioElement | null;
+                                                            if (el) {
+                                                                if (el.paused) { el.play(); } else { el.pause(); el.currentTime = 0; }
+                                                            }
+                                                        }}
+                                                        className="h-5 w-5 rounded-full bg-blue-500/20 hover:bg-blue-500/30 flex items-center justify-center text-blue-400 transition-colors"
+                                                        title="Play recording"
+                                                    >
+                                                        <Play className="h-2.5 w-2.5 ml-0.5" />
+                                                    </button>
+                                                )}
+                                                <span className="text-[10px] text-zinc-600">{entry.startedAt}</span>
+                                            </div>
                                         </div>
                                         <div className="flex items-center gap-2 text-[10px] text-zinc-500">
                                             <span>#{entry.channelId}</span>
@@ -1136,6 +1496,9 @@ export default function HiveDashboard() {
                                             <p className="text-[11px] text-zinc-400 italic bg-zinc-800/50 rounded px-2 py-1.5 leading-relaxed">
                                                 "{entry.transcript}"
                                             </p>
+                                        )}
+                                        {entry.audioUrl && (
+                                            <audio id={`log-audio-${entry.id}`} src={entry.audioUrl} preload="metadata" className="hidden" />
                                         )}
                                     </motion.div>
                                 ))
