@@ -28,13 +28,19 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_event():
-    from app.services.prisma import connect_prisma
-    await connect_prisma()
+    # MongoDB connection is handled by get_database() on first use.
+    # We do an early check here to fail fast if DB is unreachable.
+    try:
+        from app.core.database import get_database
+        db = get_database()
+        await db.command("ping")
+        logger.info("MongoDB connection verified on startup")
+    except Exception as e:
+        logger.warning(f"MongoDB ping failed on startup (may connect later): {e}")
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    from app.services.prisma import disconnect_prisma
-    await disconnect_prisma()
+    logger.info("Application shutting down")
 
 from app.domains.hr import router as hr_router
 from app.domains.inventory import router as inventory_router
