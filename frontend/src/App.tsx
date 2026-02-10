@@ -506,7 +506,7 @@ function App() {
                                     <Route path="print-preview" element={<PrintPreviewPage />} />
                                     <Route path="recipe-videos" element={<RecipeVideoBites />} />
                                     <Route path="plugin-marketplace" element={<PluginMarketplace />} />
-                                    <Route path="door-access" element={<DoorAccessControl />} />
+                                    {/* door-access route is defined above at line ~414 */}
                                     <Route path="sync" element={<SyncDashboard />} />
 
                                     {/* RESTIN.AI MASTER PROTOCOL v18.0 */}
