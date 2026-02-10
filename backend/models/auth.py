@@ -19,6 +19,10 @@ class User(BaseModel):
     pin_hash: str
     role: UserRole
     email: Optional[str] = None
+    username: Optional[str] = None
+    employee_id: Optional[str] = None
+    password_hash: Optional[str] = None
+    is_super_owner: bool = False
     mfa_secret: Optional[str] = None
     mfa_enabled: bool = False
     last_login: Optional[str] = None

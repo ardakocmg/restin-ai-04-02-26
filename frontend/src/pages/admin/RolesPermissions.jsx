@@ -22,18 +22,18 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "POS & Orders",
         icon: ShoppingCart,
         children: [
-            { key: "pos:access", label: "Access POS Terminal", risk: "LOW" },
-            { key: "orders:create", label: "Create Orders", risk: "LOW" },
-            { key: "orders:edit", label: "Edit Open Orders", risk: "LOW" },
-            { key: "orders:void", label: "Void Items/Orders", risk: "HIGH", gate: "manager_code" },
-            { key: "orders:discount", label: "Apply Discounts", risk: "MED" },
-            { key: "orders:transfer", label: "Transfer Tables", risk: "LOW" },
-            { key: "orders:split", label: "Split Bills", risk: "LOW" },
-            { key: "orders:course_fire", label: "Fire / Hold Courses", risk: "LOW" },
-            { key: "orders:reprint", label: "Reprint Receipts", risk: "LOW" },
-            { key: "pos:setup", label: "Configure POS Setup", risk: "HIGH" },
-            { key: "pos:kiosk_mode", label: "Enable Kiosk Mode", risk: "MED" },
-            { key: "pos:dynamic_pricing", label: "Manage Dynamic Pricing", risk: "HIGH" },
+            { key: "pos:access", label: "Access POS Terminal", risk: "LOW", auth: "pin" },
+            { key: "orders:create", label: "Create Orders", risk: "LOW", auth: "pin" },
+            { key: "orders:edit", label: "Edit Open Orders", risk: "LOW", auth: "pin" },
+            { key: "orders:void", label: "Void Items/Orders", risk: "HIGH", gate: "manager_code", auth: "2fa" },
+            { key: "orders:discount", label: "Apply Discounts", risk: "MED", auth: "password" },
+            { key: "orders:transfer", label: "Transfer Tables", risk: "LOW", auth: "pin" },
+            { key: "orders:split", label: "Split Bills", risk: "LOW", auth: "pin" },
+            { key: "orders:course_fire", label: "Fire / Hold Courses", risk: "LOW", auth: "pin" },
+            { key: "orders:reprint", label: "Reprint Receipts", risk: "LOW", auth: "pin" },
+            { key: "pos:setup", label: "Configure POS Setup", risk: "HIGH", auth: "2fa" },
+            { key: "pos:kiosk_mode", label: "Enable Kiosk Mode", risk: "MED", auth: "password" },
+            { key: "pos:dynamic_pricing", label: "Manage Dynamic Pricing", risk: "HIGH", auth: "2fa" },
         ]
     },
     {
@@ -41,14 +41,14 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Payments & Cash",
         icon: CreditCard,
         children: [
-            { key: "payments:process", label: "Process Payments", risk: "LOW" },
-            { key: "payments:refund", label: "Process Refunds", risk: "HIGH", gate: "manager_code" },
-            { key: "payments:tips", label: "Process Tips", risk: "LOW" },
-            { key: "cash:open_drawer", label: "Open Cash Drawer", risk: "MED", gate: "cashdesk" },
-            { key: "cash:shift_close", label: "Close Cash Shift", risk: "HIGH" },
-            { key: "cash:blind_close", label: "Blind Close Allowed", risk: "MED" },
-            { key: "payments:split_bill", label: "Split Bill Operations", risk: "LOW" },
-            { key: "payments:fintech", label: "Fintech & Provider Settings", risk: "CRITICAL" },
+            { key: "payments:process", label: "Process Payments", risk: "LOW", auth: "pin" },
+            { key: "payments:refund", label: "Process Refunds", risk: "HIGH", gate: "manager_code", auth: "2fa" },
+            { key: "payments:tips", label: "Process Tips", risk: "LOW", auth: "pin" },
+            { key: "cash:open_drawer", label: "Open Cash Drawer", risk: "MED", gate: "cashdesk", auth: "password" },
+            { key: "cash:shift_close", label: "Close Cash Shift", risk: "HIGH", auth: "2fa" },
+            { key: "cash:blind_close", label: "Blind Close Allowed", risk: "MED", auth: "password" },
+            { key: "payments:split_bill", label: "Split Bill Operations", risk: "LOW", auth: "pin" },
+            { key: "payments:fintech", label: "Fintech & Provider Settings", risk: "CRITICAL", auth: "2fa" },
         ]
     },
     {
@@ -56,13 +56,13 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Kitchen & KDS",
         icon: Utensils,
         children: [
-            { key: "kitchen:view_kds", label: "View Kitchen Display", risk: "LOW" },
-            { key: "kitchen:bump", label: "Bump Orders", risk: "LOW" },
-            { key: "kitchen:recall", label: "Recall Bumped Orders", risk: "MED" },
-            { key: "kitchen:priority", label: "Set Priority Rush", risk: "LOW" },
-            { key: "kds:manage_stations", label: "Manage KDS Stations", risk: "HIGH" },
-            { key: "kds:performance", label: "View KDS Performance Reports", risk: "LOW" },
-            { key: "kitchen:recipe_videos", label: "Access Recipe Video Bites", risk: "LOW" },
+            { key: "kitchen:view_kds", label: "View Kitchen Display", risk: "LOW", auth: "pin" },
+            { key: "kitchen:bump", label: "Bump Orders", risk: "LOW", auth: "pin" },
+            { key: "kitchen:recall", label: "Recall Bumped Orders", risk: "MED", auth: "password" },
+            { key: "kitchen:priority", label: "Set Priority Rush", risk: "LOW", auth: "pin" },
+            { key: "kds:manage_stations", label: "Manage KDS Stations", risk: "HIGH", auth: "2fa" },
+            { key: "kds:performance", label: "View KDS Performance Reports", risk: "LOW", auth: "pin" },
+            { key: "kitchen:recipe_videos", label: "Access Recipe Video Bites", risk: "LOW", auth: "pin" },
         ]
     },
     {
@@ -70,13 +70,13 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Tables & Reservations",
         icon: Calendar,
         children: [
-            { key: "tables:view", label: "View Floor Plan", risk: "LOW" },
-            { key: "tables:manage", label: "Manage Physical Tables", risk: "MED" },
-            { key: "tables:floorplan_edit", label: "Edit Floor Plan Layout", risk: "HIGH" },
-            { key: "reservations:view", label: "View Reservations", risk: "LOW" },
-            { key: "reservations:create", label: "Create / Edit Reservations", risk: "LOW" },
-            { key: "reservations:delete", label: "Cancel Reservations", risk: "MED" },
-            { key: "reservations:timeline", label: "Operational Timeline Access", risk: "LOW" },
+            { key: "tables:view", label: "View Floor Plan", risk: "LOW", auth: "pin" },
+            { key: "tables:manage", label: "Manage Physical Tables", risk: "MED", auth: "password" },
+            { key: "tables:floorplan_edit", label: "Edit Floor Plan Layout", risk: "HIGH", auth: "2fa" },
+            { key: "reservations:view", label: "View Reservations", risk: "LOW", auth: "pin" },
+            { key: "reservations:create", label: "Create / Edit Reservations", risk: "LOW", auth: "pin" },
+            { key: "reservations:delete", label: "Cancel Reservations", risk: "MED", auth: "password" },
+            { key: "reservations:timeline", label: "Operational Timeline Access", risk: "LOW", auth: "pin" },
         ]
     },
     {
@@ -84,13 +84,13 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Products & Menu",
         icon: Package,
         children: [
-            { key: "products:view", label: "View Products", risk: "LOW" },
-            { key: "products:create", label: "Create Products", risk: "MED" },
-            { key: "products:edit", label: "Edit Products & Pricing", risk: "MED" },
-            { key: "products:delete", label: "Delete Products", risk: "HIGH" },
-            { key: "products:categories", label: "Manage Categories", risk: "MED" },
-            { key: "products:modifiers", label: "Manage Modifiers / Options", risk: "MED" },
-            { key: "menu:settings", label: "General Menu Settings", risk: "HIGH" },
+            { key: "products:view", label: "View Products", risk: "LOW", auth: "pin" },
+            { key: "products:create", label: "Create Products", risk: "MED", auth: "password" },
+            { key: "products:edit", label: "Edit Products & Pricing", risk: "MED", auth: "password" },
+            { key: "products:delete", label: "Delete Products", risk: "HIGH", auth: "2fa" },
+            { key: "products:categories", label: "Manage Categories", risk: "MED", auth: "password" },
+            { key: "products:modifiers", label: "Manage Modifiers / Options", risk: "MED", auth: "password" },
+            { key: "menu:settings", label: "General Menu Settings", risk: "HIGH", auth: "2fa" },
         ]
     },
     {
@@ -98,16 +98,16 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Inventory & Stock",
         icon: Database,
         children: [
-            { key: "inventory:view", label: "View Inventory Dashboard", risk: "LOW" },
-            { key: "inventory:items", label: "Manage Inventory Items", risk: "MED" },
-            { key: "stock:count", label: "Perform Stock Count", risk: "MED" },
-            { key: "stock:adjust", label: "Adjust Stock Levels", risk: "HIGH" },
-            { key: "stock:transfer", label: "Inter-Branch Transfers", risk: "MED" },
-            { key: "waste:log", label: "Log Waste", risk: "LOW" },
-            { key: "waste:view", label: "View Waste Reports", risk: "LOW" },
-            { key: "inventory:recipes", label: "Manage Recipe Ingredients", risk: "MED" },
-            { key: "inventory:production", label: "Production Management", risk: "MED" },
-            { key: "inventory:haccp", label: "HACCP Checklists", risk: "LOW" },
+            { key: "inventory:view", label: "View Inventory Dashboard", risk: "LOW", auth: "pin" },
+            { key: "inventory:items", label: "Manage Inventory Items", risk: "MED", auth: "password" },
+            { key: "stock:count", label: "Perform Stock Count", risk: "MED", auth: "password" },
+            { key: "stock:adjust", label: "Adjust Stock Levels", risk: "HIGH", auth: "2fa" },
+            { key: "stock:transfer", label: "Inter-Branch Transfers", risk: "MED", auth: "password" },
+            { key: "waste:log", label: "Log Waste", risk: "LOW", auth: "pin" },
+            { key: "waste:view", label: "View Waste Reports", risk: "LOW", auth: "pin" },
+            { key: "inventory:recipes", label: "Manage Recipe Ingredients", risk: "MED", auth: "password" },
+            { key: "inventory:production", label: "Production Management", risk: "MED", auth: "password" },
+            { key: "inventory:haccp", label: "HACCP Checklists", risk: "LOW", auth: "pin" },
         ]
     },
     {
@@ -115,16 +115,16 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Procurement & Suppliers",
         icon: Truck,
         children: [
-            { key: "suppliers:view", label: "View Suppliers", risk: "LOW" },
-            { key: "suppliers:manage", label: "Add / Edit Suppliers", risk: "MED" },
-            { key: "po:create", label: "Create Purchase Orders", risk: "MED" },
-            { key: "po:approve", label: "Approve Purchase Orders", risk: "HIGH", gate: "manager_code" },
-            { key: "po:receive", label: "Receive Goods", risk: "MED" },
-            { key: "procurement:rfq", label: "RFQ Management", risk: "MED" },
-            { key: "procurement:auto_order", label: "Configure Auto-Order Rules", risk: "HIGH" },
-            { key: "ai_invoice:upload", label: "Upload AI Invoices (OCR)", risk: "LOW" },
-            { key: "ai_invoice:approve", label: "Approve AI Invoice Matches", risk: "HIGH" },
-            { key: "ai_invoice:variance", label: "View Variance Analysis", risk: "MED" },
+            { key: "suppliers:view", label: "View Suppliers", risk: "LOW", auth: "pin" },
+            { key: "suppliers:manage", label: "Add / Edit Suppliers", risk: "MED", auth: "password" },
+            { key: "po:create", label: "Create Purchase Orders", risk: "MED", auth: "password" },
+            { key: "po:approve", label: "Approve Purchase Orders", risk: "HIGH", gate: "manager_code", auth: "2fa" },
+            { key: "po:receive", label: "Receive Goods", risk: "MED", auth: "password" },
+            { key: "procurement:rfq", label: "RFQ Management", risk: "MED", auth: "password" },
+            { key: "procurement:auto_order", label: "Configure Auto-Order Rules", risk: "HIGH", auth: "2fa" },
+            { key: "ai_invoice:upload", label: "Upload AI Invoices (OCR)", risk: "LOW", auth: "pin" },
+            { key: "ai_invoice:approve", label: "Approve AI Invoice Matches", risk: "HIGH", auth: "2fa" },
+            { key: "ai_invoice:variance", label: "View Variance Analysis", risk: "MED", auth: "password" },
         ]
     },
     {
@@ -132,13 +132,13 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Recipe Engineering & Central Kitchen",
         icon: Layers,
         children: [
-            { key: "recipes:view", label: "View Recipes & Costs", risk: "LOW" },
-            { key: "recipes:create", label: "Create / Edit Recipes", risk: "MED" },
-            { key: "recipes:cost_analysis", label: "Recipe Cost Analysis", risk: "MED" },
-            { key: "central_kitchen:access", label: "Access Central Kitchen", risk: "MED" },
-            { key: "central_kitchen:batches", label: "Manage Production Batches", risk: "MED" },
-            { key: "central_kitchen:orders", label: "Internal Branch Orders", risk: "MED" },
-            { key: "quality:audits", label: "Quality Control Audits", risk: "MED" },
+            { key: "recipes:view", label: "View Recipes & Costs", risk: "LOW", auth: "pin" },
+            { key: "recipes:create", label: "Create / Edit Recipes", risk: "MED", auth: "password" },
+            { key: "recipes:cost_analysis", label: "Recipe Cost Analysis", risk: "MED", auth: "password" },
+            { key: "central_kitchen:access", label: "Access Central Kitchen", risk: "MED", auth: "password" },
+            { key: "central_kitchen:batches", label: "Manage Production Batches", risk: "MED", auth: "password" },
+            { key: "central_kitchen:orders", label: "Internal Branch Orders", risk: "MED", auth: "password" },
+            { key: "quality:audits", label: "Quality Control Audits", risk: "MED", auth: "password" },
         ]
     },
     {
@@ -146,21 +146,21 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "HR & People",
         icon: Users,
         children: [
-            { key: "hr:dashboard", label: "View HR Dashboard", risk: "LOW" },
-            { key: "hr:directory", label: "View Employee Directory", risk: "LOW" },
-            { key: "hr:employee_detail", label: "View Employee Details (PII)", risk: "HIGH" },
-            { key: "hr:employee_create", label: "Create Employees", risk: "HIGH" },
-            { key: "hr:employee_edit", label: "Edit Employee Records", risk: "HIGH" },
-            { key: "hr:employee_terminate", label: "Terminate Employees", risk: "CRITICAL" },
-            { key: "hr:leave", label: "Manage Leave Requests", risk: "MED" },
-            { key: "hr:scheduler", label: "Access Shift Scheduler", risk: "MED" },
-            { key: "hr:clocking", label: "View / Edit Clocking Data", risk: "MED" },
-            { key: "hr:contracts", label: "Manage Employee Contracts", risk: "HIGH" },
-            { key: "hr:documents", label: "Manage HR Documents", risk: "MED" },
-            { key: "hr:tips", label: "Tips Distribution", risk: "MED" },
-            { key: "hr:timesheets", label: "Review Timesheets", risk: "MED" },
-            { key: "hr:performance", label: "Performance Reviews", risk: "MED" },
-            { key: "hr:import", label: "Import Employee Data", risk: "HIGH" },
+            { key: "hr:dashboard", label: "View HR Dashboard", risk: "LOW", auth: "pin" },
+            { key: "hr:directory", label: "View Employee Directory", risk: "LOW", auth: "pin" },
+            { key: "hr:employee_detail", label: "View Employee Details (PII)", risk: "HIGH", auth: "2fa" },
+            { key: "hr:employee_create", label: "Create Employees", risk: "HIGH", auth: "2fa" },
+            { key: "hr:employee_edit", label: "Edit Employee Records", risk: "HIGH", auth: "2fa" },
+            { key: "hr:employee_terminate", label: "Terminate Employees", risk: "CRITICAL", auth: "2fa" },
+            { key: "hr:leave", label: "Manage Leave Requests", risk: "MED", auth: "password" },
+            { key: "hr:scheduler", label: "Access Shift Scheduler", risk: "MED", auth: "password" },
+            { key: "hr:clocking", label: "View / Edit Clocking Data", risk: "MED", auth: "password" },
+            { key: "hr:contracts", label: "Manage Employee Contracts", risk: "HIGH", auth: "2fa" },
+            { key: "hr:documents", label: "Manage HR Documents", risk: "MED", auth: "password" },
+            { key: "hr:tips", label: "Tips Distribution", risk: "MED", auth: "password" },
+            { key: "hr:timesheets", label: "Review Timesheets", risk: "MED", auth: "password" },
+            { key: "hr:performance", label: "Performance Reviews", risk: "MED", auth: "password" },
+            { key: "hr:import", label: "Import Employee Data", risk: "HIGH", auth: "2fa" },
         ]
     },
     {
@@ -168,16 +168,16 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Payroll & Finance",
         icon: DollarSign,
         children: [
-            { key: "payroll:view", label: "View Payroll Dashboard", risk: "MED" },
-            { key: "payroll:run", label: "Process Payroll Run", risk: "CRITICAL", gate: "manager_code" },
-            { key: "payroll:view_payslips", label: "View Payslips", risk: "HIGH" },
-            { key: "payroll:calculator", label: "Payroll Calculator Tool", risk: "LOW" },
-            { key: "payroll:malta", label: "Malta Tax Configuration", risk: "CRITICAL" },
-            { key: "finance:dashboard", label: "Finance Dashboard", risk: "MED" },
-            { key: "finance:general_ledger", label: "General Ledger / Accounting", risk: "HIGH" },
-            { key: "finance:hr_accounting", label: "HR Accounting (SFM)", risk: "HIGH" },
-            { key: "finance:billing", label: "Billing & Subscription Management", risk: "CRITICAL" },
-            { key: "finance:expense", label: "Expense Management", risk: "MED" },
+            { key: "payroll:view", label: "View Payroll Dashboard", risk: "MED", auth: "password" },
+            { key: "payroll:run", label: "Process Payroll Run", risk: "CRITICAL", gate: "manager_code", auth: "2fa" },
+            { key: "payroll:view_payslips", label: "View Payslips", risk: "HIGH", auth: "2fa" },
+            { key: "payroll:calculator", label: "Payroll Calculator Tool", risk: "LOW", auth: "pin" },
+            { key: "payroll:malta", label: "Malta Tax Configuration", risk: "CRITICAL", auth: "2fa" },
+            { key: "finance:dashboard", label: "Finance Dashboard", risk: "MED", auth: "password" },
+            { key: "finance:general_ledger", label: "General Ledger / Accounting", risk: "HIGH", auth: "2fa" },
+            { key: "finance:hr_accounting", label: "HR Accounting (SFM)", risk: "HIGH", auth: "2fa" },
+            { key: "finance:billing", label: "Billing & Subscription Management", risk: "CRITICAL", auth: "2fa" },
+            { key: "finance:expense", label: "Expense Management", risk: "MED", auth: "password" },
         ]
     },
     {
@@ -185,21 +185,21 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Reports & Analytics",
         icon: BarChart2,
         children: [
-            { key: "reports:sales", label: "Sales / Revenue Reports", risk: "MED" },
-            { key: "reports:products", label: "Product Performance Reports", risk: "LOW" },
-            { key: "reports:labour", label: "Labour Cost Reports", risk: "MED" },
-            { key: "reports:inventory", label: "Inventory Reports", risk: "LOW" },
-            { key: "reports:kds", label: "KDS Performance Reports", risk: "LOW" },
-            { key: "reports:advanced", label: "Advanced Analytics", risk: "MED" },
-            { key: "reports:export", label: "Export Data", risk: "HIGH" },
-            { key: "reports:forecasting", label: "Demand Forecasting", risk: "MED" },
-            { key: "reports:seasonal", label: "Seasonal Pattern Analysis", risk: "LOW" },
-            { key: "hr_reports:headcount", label: "HR Headcount Analysis", risk: "MED" },
-            { key: "hr_reports:turnover", label: "HR Turnover Analysis", risk: "MED" },
-            { key: "hr_reports:esg", label: "ESG & Sustainability", risk: "LOW" },
-            { key: "hr_reports:gov", label: "Government Reports", risk: "HIGH" },
-            { key: "hr_reports:sick_leave", label: "Sick Leave Analysis", risk: "MED" },
-            { key: "hr_reports:cost_forecast", label: "Cost Forecasting", risk: "MED" },
+            { key: "reports:sales", label: "Sales / Revenue Reports", risk: "MED", auth: "password" },
+            { key: "reports:products", label: "Product Performance Reports", risk: "LOW", auth: "pin" },
+            { key: "reports:labour", label: "Labour Cost Reports", risk: "MED", auth: "password" },
+            { key: "reports:inventory", label: "Inventory Reports", risk: "LOW", auth: "pin" },
+            { key: "reports:kds", label: "KDS Performance Reports", risk: "LOW", auth: "pin" },
+            { key: "reports:advanced", label: "Advanced Analytics", risk: "MED", auth: "password" },
+            { key: "reports:export", label: "Export Data", risk: "HIGH", auth: "2fa" },
+            { key: "reports:forecasting", label: "Demand Forecasting", risk: "MED", auth: "password" },
+            { key: "reports:seasonal", label: "Seasonal Pattern Analysis", risk: "LOW", auth: "pin" },
+            { key: "hr_reports:headcount", label: "HR Headcount Analysis", risk: "MED", auth: "password" },
+            { key: "hr_reports:turnover", label: "HR Turnover Analysis", risk: "MED", auth: "password" },
+            { key: "hr_reports:esg", label: "ESG & Sustainability", risk: "LOW", auth: "pin" },
+            { key: "hr_reports:gov", label: "Government Reports", risk: "HIGH", auth: "2fa" },
+            { key: "hr_reports:sick_leave", label: "Sick Leave Analysis", risk: "MED", auth: "password" },
+            { key: "hr_reports:cost_forecast", label: "Cost Forecasting", risk: "MED", auth: "password" },
         ]
     },
     {
@@ -207,14 +207,14 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "CRM & Guest Loyalty",
         icon: Heart,
         children: [
-            { key: "crm:view", label: "View Guest Profiles", risk: "LOW" },
-            { key: "crm:edit", label: "Edit Guest Information", risk: "MED" },
-            { key: "crm:campaigns", label: "Marketing Campaigns", risk: "MED" },
-            { key: "loyalty:view", label: "View Loyalty Program", risk: "LOW" },
-            { key: "loyalty:manage", label: "Configure Loyalty Rules", risk: "HIGH" },
-            { key: "loyalty:redeem", label: "Redeem Points for Guests", risk: "MED" },
-            { key: "review:risk", label: "Review Risk Assessment", risk: "MED" },
-            { key: "crm:carbon_footprint", label: "Carbon Footprint Tracking", risk: "LOW" },
+            { key: "crm:view", label: "View Guest Profiles", risk: "LOW", auth: "pin" },
+            { key: "crm:edit", label: "Edit Guest Information", risk: "MED", auth: "password" },
+            { key: "crm:campaigns", label: "Marketing Campaigns", risk: "MED", auth: "password" },
+            { key: "loyalty:view", label: "View Loyalty Program", risk: "LOW", auth: "pin" },
+            { key: "loyalty:manage", label: "Configure Loyalty Rules", risk: "HIGH", auth: "2fa" },
+            { key: "loyalty:redeem", label: "Redeem Points for Guests", risk: "MED", auth: "password" },
+            { key: "review:risk", label: "Review Risk Assessment", risk: "MED", auth: "password" },
+            { key: "crm:carbon_footprint", label: "Carbon Footprint Tracking", risk: "LOW", auth: "pin" },
         ]
     },
     {
@@ -222,16 +222,16 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Restin AI Modules",
         icon: Zap,
         children: [
-            { key: "restin:control_tower", label: "Control Tower Dashboard", risk: "LOW" },
-            { key: "restin:web_builder", label: "Website Builder", risk: "MED" },
-            { key: "restin:voice_ai", label: "Voice AI Receptionist", risk: "HIGH" },
-            { key: "restin:voice_settings", label: "Voice AI Settings", risk: "HIGH" },
-            { key: "restin:voice_logs", label: "Call Logs", risk: "MED" },
-            { key: "restin:crm", label: "Autopilot CRM", risk: "MED" },
-            { key: "restin:studio", label: "Content Studio (Generative)", risk: "MED" },
-            { key: "restin:radar", label: "Market Radar (Competitor Intel)", risk: "MED" },
-            { key: "restin:ops", label: "Ops & Aggregator Hub", risk: "MED" },
-            { key: "restin:fintech", label: "Fintech Module", risk: "HIGH" },
+            { key: "restin:control_tower", label: "Control Tower Dashboard", risk: "LOW", auth: "pin" },
+            { key: "restin:web_builder", label: "Website Builder", risk: "MED", auth: "password" },
+            { key: "restin:voice_ai", label: "Voice AI Receptionist", risk: "HIGH", auth: "2fa" },
+            { key: "restin:voice_settings", label: "Voice AI Settings", risk: "HIGH", auth: "2fa" },
+            { key: "restin:voice_logs", label: "Call Logs", risk: "MED", auth: "password" },
+            { key: "restin:crm", label: "Autopilot CRM", risk: "MED", auth: "password" },
+            { key: "restin:studio", label: "Content Studio (Generative)", risk: "MED", auth: "password" },
+            { key: "restin:radar", label: "Market Radar (Competitor Intel)", risk: "MED", auth: "password" },
+            { key: "restin:ops", label: "Ops & Aggregator Hub", risk: "MED", auth: "password" },
+            { key: "restin:fintech", label: "Fintech Module", risk: "HIGH", auth: "2fa" },
         ]
     },
     {
@@ -239,22 +239,22 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Settings & Administration",
         icon: Settings,
         children: [
-            { key: "admin:venue_settings", label: "Venue Settings", risk: "HIGH" },
-            { key: "admin:company_settings", label: "Company Settings", risk: "HIGH" },
-            { key: "admin:app_settings", label: "App Settings", risk: "HIGH" },
-            { key: "admin:users", label: "Manage Users", risk: "CRITICAL" },
-            { key: "admin:roles", label: "Manage Roles & Permissions", risk: "CRITICAL" },
-            { key: "admin:door_access", label: "Door Access (Nuki)", risk: "HIGH" },
-            { key: "admin:printers", label: "Printer Management", risk: "MED" },
-            { key: "admin:devices", label: "Device Manager", risk: "MED" },
-            { key: "admin:theme", label: "Theme Customizer", risk: "LOW" },
-            { key: "admin:integrations", label: "Integrations & Sync", risk: "HIGH" },
-            { key: "admin:google", label: "Google Integration", risk: "HIGH" },
-            { key: "admin:delivery_agg", label: "Delivery Aggregators", risk: "HIGH" },
-            { key: "admin:feature_flags", label: "Feature Flags", risk: "CRITICAL" },
-            { key: "admin:data_export", label: "Data Export", risk: "HIGH" },
-            { key: "admin:plugin_marketplace", label: "Plugin Marketplace", risk: "MED" },
-            { key: "admin:setup_wizard", label: "Setup Wizard", risk: "HIGH" },
+            { key: "admin:venue_settings", label: "Venue Settings", risk: "HIGH", auth: "2fa" },
+            { key: "admin:company_settings", label: "Company Settings", risk: "HIGH", auth: "2fa" },
+            { key: "admin:app_settings", label: "App Settings", risk: "HIGH", auth: "2fa" },
+            { key: "admin:users", label: "Manage Users", risk: "CRITICAL", auth: "2fa" },
+            { key: "admin:roles", label: "Manage Roles & Permissions", risk: "CRITICAL", auth: "2fa" },
+            { key: "admin:door_access", label: "Door Access (Nuki)", risk: "HIGH", auth: "2fa" },
+            { key: "admin:printers", label: "Printer Management", risk: "MED", auth: "password" },
+            { key: "admin:devices", label: "Device Manager", risk: "MED", auth: "password" },
+            { key: "admin:theme", label: "Theme Customizer", risk: "LOW", auth: "pin" },
+            { key: "admin:integrations", label: "Integrations & Sync", risk: "HIGH", auth: "2fa" },
+            { key: "admin:google", label: "Google Integration", risk: "HIGH", auth: "2fa" },
+            { key: "admin:delivery_agg", label: "Delivery Aggregators", risk: "HIGH", auth: "2fa" },
+            { key: "admin:feature_flags", label: "Feature Flags", risk: "CRITICAL", auth: "2fa" },
+            { key: "admin:data_export", label: "Data Export", risk: "HIGH", auth: "2fa" },
+            { key: "admin:plugin_marketplace", label: "Plugin Marketplace", risk: "MED", auth: "password" },
+            { key: "admin:setup_wizard", label: "Setup Wizard", risk: "HIGH", auth: "2fa" },
         ]
     },
     {
@@ -262,10 +262,10 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Smart Home & IoT",
         icon: Home,
         children: [
-            { key: "smart_home:dashboard", label: "Smart Home Dashboard", risk: "LOW" },
-            { key: "smart_home:controls", label: "Control Devices", risk: "MED" },
-            { key: "smart_home:automations", label: "Configure Automations", risk: "HIGH" },
-            { key: "smart_home:scenes", label: "Manage Scenes", risk: "MED" },
+            { key: "smart_home:dashboard", label: "Smart Home Dashboard", risk: "LOW", auth: "pin" },
+            { key: "smart_home:controls", label: "Control Devices", risk: "MED", auth: "password" },
+            { key: "smart_home:automations", label: "Configure Automations", risk: "HIGH", auth: "2fa" },
+            { key: "smart_home:scenes", label: "Manage Scenes", risk: "MED", auth: "password" },
         ]
     },
     {
@@ -273,16 +273,16 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "System Monitoring & Observability",
         icon: Activity,
         children: [
-            { key: "system:health", label: "System Health Dashboard", risk: "LOW" },
-            { key: "system:monitoring", label: "Real-time Monitoring", risk: "LOW" },
-            { key: "system:logs", label: "View System Logs", risk: "MED" },
-            { key: "system:events", label: "Event Monitor", risk: "LOW" },
-            { key: "system:error_inbox", label: "Error Inbox", risk: "MED" },
-            { key: "system:test_panel", label: "Test Panel", risk: "HIGH" },
-            { key: "system:diagnostics", label: "Self-Diagnostics", risk: "HIGH" },
-            { key: "system:microservices", label: "Microservices Overview", risk: "MED" },
-            { key: "audit:view", label: "View Audit Logs", risk: "HIGH" },
-            { key: "audit:export", label: "Export Audit Trails", risk: "CRITICAL" },
+            { key: "system:health", label: "System Health Dashboard", risk: "LOW", auth: "pin" },
+            { key: "system:monitoring", label: "Real-time Monitoring", risk: "LOW", auth: "pin" },
+            { key: "system:logs", label: "View System Logs", risk: "MED", auth: "password" },
+            { key: "system:events", label: "Event Monitor", risk: "LOW", auth: "pin" },
+            { key: "system:error_inbox", label: "Error Inbox", risk: "MED", auth: "password" },
+            { key: "system:test_panel", label: "Test Panel", risk: "HIGH", auth: "2fa" },
+            { key: "system:diagnostics", label: "Self-Diagnostics", risk: "HIGH", auth: "2fa" },
+            { key: "system:microservices", label: "Microservices Overview", risk: "MED", auth: "password" },
+            { key: "audit:view", label: "View Audit Logs", risk: "HIGH", auth: "2fa" },
+            { key: "audit:export", label: "Export Audit Trails", risk: "CRITICAL", auth: "2fa" },
         ]
     },
     {
@@ -290,11 +290,11 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Collaboration & Communication",
         icon: MessageSquare,
         children: [
-            { key: "collab:hive_chat", label: "Hive Chat", risk: "LOW" },
-            { key: "collab:tasks", label: "Tasks Board", risk: "LOW" },
-            { key: "collab:inbox", label: "Team Inbox", risk: "LOW" },
-            { key: "collab:gamification", label: "Staff Gamification", risk: "LOW" },
-            { key: "collab:ptt", label: "Push-to-Talk (Walkie-Talkie)", risk: "LOW" },
+            { key: "collab:hive_chat", label: "Hive Chat", risk: "LOW", auth: "pin" },
+            { key: "collab:tasks", label: "Tasks Board", risk: "LOW", auth: "pin" },
+            { key: "collab:inbox", label: "Team Inbox", risk: "LOW", auth: "pin" },
+            { key: "collab:gamification", label: "Staff Gamification", risk: "LOW", auth: "pin" },
+            { key: "collab:ptt", label: "Push-to-Talk (Walkie-Talkie)", risk: "LOW", auth: "pin" },
         ]
     },
     {
@@ -302,21 +302,21 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "HR Setup & Configuration",
         icon: Key,
         children: [
-            { key: "hr_setup:banks", label: "Manage Banks", risk: "HIGH" },
-            { key: "hr_setup:departments", label: "Manage Departments", risk: "MED" },
-            { key: "hr_setup:locations", label: "Manage Locations", risk: "MED" },
-            { key: "hr_setup:occupations", label: "Manage Occupations", risk: "MED" },
-            { key: "hr_setup:work_schedules", label: "Work Schedules", risk: "MED" },
-            { key: "hr_setup:tax_profiles", label: "Tax Profiles", risk: "CRITICAL" },
-            { key: "hr_setup:employment_types", label: "Employment Types", risk: "MED" },
-            { key: "hr_setup:cost_centres", label: "Cost Centres", risk: "MED" },
-            { key: "hr_setup:grades", label: "Salary Grades", risk: "MED" },
-            { key: "hr_setup:salary_packages", label: "Salary Packages", risk: "HIGH" },
-            { key: "hr_setup:custom_fields", label: "Custom Fields", risk: "MED" },
-            { key: "hr_setup:organisation", label: "Organisation Structure", risk: "HIGH" },
-            { key: "hr_setup:calendar", label: "Calendar & Holidays", risk: "MED" },
-            { key: "hr_setup:termination_reasons", label: "Termination Reasons", risk: "MED" },
-            { key: "hr_setup:feature_flags", label: "HR Feature Flags", risk: "HIGH" },
+            { key: "hr_setup:banks", label: "Manage Banks", risk: "HIGH", auth: "2fa" },
+            { key: "hr_setup:departments", label: "Manage Departments", risk: "MED", auth: "password" },
+            { key: "hr_setup:locations", label: "Manage Locations", risk: "MED", auth: "password" },
+            { key: "hr_setup:occupations", label: "Manage Occupations", risk: "MED", auth: "password" },
+            { key: "hr_setup:work_schedules", label: "Work Schedules", risk: "MED", auth: "password" },
+            { key: "hr_setup:tax_profiles", label: "Tax Profiles", risk: "CRITICAL", auth: "2fa" },
+            { key: "hr_setup:employment_types", label: "Employment Types", risk: "MED", auth: "password" },
+            { key: "hr_setup:cost_centres", label: "Cost Centres", risk: "MED", auth: "password" },
+            { key: "hr_setup:grades", label: "Salary Grades", risk: "MED", auth: "password" },
+            { key: "hr_setup:salary_packages", label: "Salary Packages", risk: "HIGH", auth: "2fa" },
+            { key: "hr_setup:custom_fields", label: "Custom Fields", risk: "MED", auth: "password" },
+            { key: "hr_setup:organisation", label: "Organisation Structure", risk: "HIGH", auth: "2fa" },
+            { key: "hr_setup:calendar", label: "Calendar & Holidays", risk: "MED", auth: "password" },
+            { key: "hr_setup:termination_reasons", label: "Termination Reasons", risk: "MED", auth: "password" },
+            { key: "hr_setup:feature_flags", label: "HR Feature Flags", risk: "HIGH", auth: "2fa" },
         ]
     },
     {
@@ -324,11 +324,11 @@ const DEFAULT_PERMISSION_GROUPS = [
         title: "Data Migration & Import",
         icon: Upload,
         children: [
-            { key: "migration:quick_sync", label: "Quick Sync (Import)", risk: "HIGH" },
-            { key: "migration:menu_import", label: "Menu Import (Legacy)", risk: "HIGH" },
-            { key: "migration:hr_import", label: "HR Data Import", risk: "HIGH" },
-            { key: "migration:content_editor", label: "Visual Content Editor", risk: "MED" },
-            { key: "migration:content_studio", label: "Content Studio", risk: "MED" },
+            { key: "migration:quick_sync", label: "Quick Sync (Import)", risk: "HIGH", auth: "2fa" },
+            { key: "migration:menu_import", label: "Menu Import (Legacy)", risk: "HIGH", auth: "2fa" },
+            { key: "migration:hr_import", label: "HR Data Import", risk: "HIGH", auth: "2fa" },
+            { key: "migration:content_editor", label: "Visual Content Editor", risk: "MED", auth: "password" },
+            { key: "migration:content_studio", label: "Content Studio", risk: "MED", auth: "password" },
         ]
     },
 ];
@@ -428,12 +428,25 @@ function PermissionTreeGroup({ group, expanded, onToggle }) {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-3 ml-4 shrink-0">
-                                    <select className="bg-zinc-950 border border-zinc-800 rounded px-2 py-1 text-[11px] text-zinc-400 focus:outline-none focus:border-indigo-500/50 w-[130px]">
+                                <div className="flex items-center gap-2 ml-4 shrink-0">
+                                    <select className="bg-zinc-950 border border-zinc-800 rounded px-2 py-1 text-[11px] text-zinc-400 focus:outline-none focus:border-indigo-500/50 w-[120px]">
                                         <option value="own_branch">This Branch Only</option>
                                         <option value="own_shift">Own Shift Only</option>
                                         <option value="own_section">Own Section Only</option>
                                         <option value="all_branches">All Branches</option>
+                                    </select>
+
+                                    {/* Per-Permission Auth Method Selector */}
+                                    <select
+                                        defaultValue={perm.auth || 'pin'}
+                                        className={`rounded px-2 py-1 text-[11px] font-semibold focus:outline-none focus:ring-1 w-[100px] border ${perm.auth === '2fa' ? 'bg-red-500/10 border-red-500/30 text-red-300 focus:ring-red-500/50' :
+                                                perm.auth === 'password' ? 'bg-blue-500/10 border-blue-500/30 text-blue-300 focus:ring-blue-500/50' :
+                                                    'bg-emerald-500/10 border-emerald-500/30 text-emerald-300 focus:ring-emerald-500/50'
+                                            }`}
+                                    >
+                                        <option value="pin">🟢 PIN</option>
+                                        <option value="password">🔵 Password</option>
+                                        <option value="2fa">🔴 2FA</option>
                                     </select>
 
                                     <label className="relative inline-flex items-center cursor-pointer">
@@ -796,9 +809,10 @@ export default function RolesPermissions() {
                         <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-5">
                             <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
                                 <Fingerprint className="w-4 h-4 text-red-400" />
-                                Authentication Requirements
+                                Default Auth Method
+                                <span className="text-[10px] font-normal text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded">Role Minimum</span>
                             </h3>
-                            <p className="text-xs text-zinc-500 mb-4">Select how users with this role will authenticate. PIN is scoped per venue — no two users in the same venue can share a PIN.</p>
+                            <p className="text-xs text-zinc-500 mb-4">Sets the minimum auth for this role. Individual permissions can override this with stricter methods (configured per-permission below).</p>
                             <div className="grid grid-cols-3 gap-3">
                                 {AUTH_METHODS.map(method => {
                                     const isSelected = selectedRole.auth === method.id;

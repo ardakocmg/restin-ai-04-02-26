@@ -8,6 +8,7 @@ import { logger } from "./lib/logger";
 
 // ─── EAGER: Critical path only (Login, Layout, Landing, NotFound) ─────────────
 import Login from "./pages/Login-new";
+const SetupWizard = React.lazy(() => import("./pages/SetupWizard"));
 import AdminLayout from "./pages/admin/AdminLayout";
 import MarketingLanding from "./pages/MarketingLanding";
 import NotFound from "./pages/NotFound";
@@ -371,6 +372,7 @@ function App() {
                                   <Route path="/technic" element={<TechnicalHub />} />
                                   <Route path="/modules" element={<ModulesCatalog />} />
                                   <Route path="/login" element={<Login />} />
+                                  <Route path="/setup" element={<React.Suspense fallback={<LoadingFallback />}><SetupWizard /></React.Suspense>} />
                                   <Route path="/payroll" element={<PayrollPage />} />
                                   <Route path="/admin" element={<AdminLayout />}>
                                     <Route index element={<Navigate to="dashboard" replace />} />

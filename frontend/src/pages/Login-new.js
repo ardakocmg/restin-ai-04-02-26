@@ -8,7 +8,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Building2, Lock, Shield, ChefHat, LayoutGrid, Monitor } from "lucide-react";
+import { Building2, Lock, Shield, ChefHat, LayoutGrid, Monitor, Mail, User, KeyRound } from "lucide-react";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,8 +17,13 @@ export default function Login() {
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
   const [loginTarget, setLoginTarget] = useState("admin"); // admin, pos, kds
+  const [loginMode, setLoginMode] = useState("credentials"); // pin, credentials
   const [pinError, setPinError] = useState(false);
   const [pinSuccess, setPinSuccess] = useState(false);
+
+  // Credentials Mode state
+  const [identifier, setIdentifier] = useState(""); // email, username, or employee ID
+  const [password, setPassword] = useState("");
 
   // Stage 2: Venue selection after successful PIN
   const [showVenueSelection, setShowVenueSelection] = useState(false);
@@ -34,10 +39,19 @@ export default function Login() {
 
   // Auto-submit when PIN reaches 4 digits
   useEffect(() => {
-    if (pin.length === 4 && !loading && !showVenueSelection) {
+    if (pin.length === 4 && !loading && !showVenueSelection && loginMode === 'pin') {
       handlePinLogin();
     }
   }, [pin]);
+
+  // Auto-switch login mode based on target
+  useEffect(() => {
+    if (loginTarget === 'admin') {
+      setLoginMode('credentials');
+    } else {
+      setLoginMode('pin');
+    }
+  }, [loginTarget]);
 
   const handlePinInput = (digit) => {
     if (pin.length < 4 && !loading) {
@@ -97,6 +111,49 @@ export default function Login() {
       }
 
       resetPinWithError();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCredentialsLogin = async () => {
+    if (!identifier.trim() || !password.trim()) {
+      toast.error("Enter identifier and password");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const deviceId = localStorage.getItem("restin_device_id") ||
+        `device_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem("restin_device_id", deviceId);
+
+      const response = await authAPI.loginWithCredentials({
+        identifier: identifier.trim(),
+        password,
+        target: loginTarget,
+        deviceId,
+      });
+
+      if (response.data.requires_mfa) {
+        setMfaRequired(true);
+        setMfaUserId(response.data.user_id);
+        setAllowedVenues(response.data.allowedVenueIds || []);
+        toast.info("MFA verification required");
+      } else {
+        handleLoginSuccess(response.data);
+      }
+    } catch (error) {
+      const status = error.response?.status;
+      if (status === 401) {
+        toast.error("Invalid credentials");
+      } else if (status === 403) {
+        toast.error("Account locked or outside allowed hours");
+      } else if (status === 429) {
+        toast.error("Too many attempts. Wait 5 minutes.");
+      } else {
+        toast.error(error.response?.data?.detail || "Login failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -299,17 +356,45 @@ export default function Login() {
             </Button>
           </div>
 
+          {/* Login Mode Toggle */}
+          <div className="flex justify-center">
+            <div className="inline-flex bg-zinc-900/80 rounded-lg border border-white/10 p-1">
+              <button
+                onClick={() => setLoginMode('pin')}
+                className={`px-4 py-2 rounded-md text-xs font-semibold tracking-wide transition-all flex items-center gap-2 ${
+                  loginMode === 'pin'
+                    ? 'bg-zinc-700 text-white shadow-sm'
+                    : 'text-zinc-400 hover:text-zinc-300'
+                }`}
+              >
+                <KeyRound className="w-3.5 h-3.5" />
+                PIN
+              </button>
+              <button
+                onClick={() => setLoginMode('credentials')}
+                className={`px-4 py-2 rounded-md text-xs font-semibold tracking-wide transition-all flex items-center gap-2 ${
+                  loginMode === 'credentials'
+                    ? 'bg-zinc-700 text-white shadow-sm'
+                    : 'text-zinc-400 hover:text-zinc-300'
+                }`}
+              >
+                <Mail className="w-3.5 h-3.5" />
+                Credentials
+              </button>
+            </div>
+          </div>
+
           <Card className="bg-zinc-900/90 border-white/10 backdrop-blur-xl">
             <CardHeader className="text-center pb-4">
               <CardTitle className="text-white text-2xl font-heading">
-                {mfaRequired ? "VERIFY IDENTITY" : "ENTER PIN"}
+                {mfaRequired ? "VERIFY IDENTITY" : loginMode === 'pin' ? "ENTER PIN" : "SIGN IN"}
               </CardTitle>
               <CardDescription className="text-zinc-400">
-                {mfaRequired ? "Enter your authenticator code" : "Enter your 4-digit PIN"}
+                {mfaRequired ? "Enter your authenticator code" : loginMode === 'pin' ? "Enter your 4-digit PIN" : "Use email, username, or employee ID"}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {!mfaRequired ? (
+              {!mfaRequired && loginMode === 'pin' ? (
                 <div className="space-y-6">
                   {/* PIN Display */}
                   <div className="space-y-2">
@@ -388,6 +473,59 @@ export default function Login() {
                     </Button>
                   </div>
                 </div>
+              ) : !mfaRequired && loginMode === 'credentials' ? (
+                <div className="space-y-5">
+                  {/* Identifier Field */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-300 uppercase text-xs tracking-wide flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      Email / Username / Employee ID
+                    </Label>
+                    <Input
+                      type="text"
+                      value={identifier}
+                      onChange={(e) => setIdentifier(e.target.value)}
+                      placeholder="arda@restin.ai or EMP-001 or username"
+                      className="bg-zinc-800 border-white/10 text-white h-12"
+                      data-testid="login-identifier"
+                      onKeyDown={(e) => e.key === 'Enter' && document.getElementById('login-password')?.focus()}
+                    />
+                  </div>
+
+                  {/* Password Field */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-300 uppercase text-xs tracking-wide flex items-center gap-2">
+                      <Lock className="w-4 h-4" />
+                      Password
+                    </Label>
+                    <Input
+                      id="login-password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Enter your password"
+                      className="bg-zinc-800 border-white/10 text-white h-12"
+                      data-testid="login-password"
+                      onKeyDown={(e) => e.key === 'Enter' && handleCredentialsLogin()}
+                    />
+                  </div>
+
+                  {/* Sign In Button */}
+                  <Button
+                    className="w-full h-12 text-white font-bold uppercase border-0"
+                    style={{ backgroundColor: 'var(--brand-accent)' }}
+                    onClick={handleCredentialsLogin}
+                    disabled={loading || !identifier.trim() || !password.trim()}
+                    data-testid="login-credentials-submit"
+                  >
+                    {loading ? "Authenticating..." : "Sign In"}
+                  </Button>
+
+                  {/* Helper text */}
+                  <p className="text-center text-zinc-600 text-[11px]">
+                    Accepts: email address, username, or employee ID (EMP-XXX)
+                  </p>
+                </div>
               ) : (
                 <div className="space-y-6">
                   <div className="space-y-2">
@@ -422,9 +560,10 @@ export default function Login() {
                       setMfaUserId("");
                       setTotpCode("");
                       setPin("");
+                      setPassword("");
                     }}
                   >
-                    Back to PIN login
+                    Back to login
                   </Button>
                 </div>
               )}
@@ -433,6 +572,8 @@ export default function Login() {
 
           <p className="text-center text-zinc-500 text-xs">
             Test PINs: Owner 1234 | Manager 2345 | Staff 1111
+            <br />
+            <span className="text-zinc-600">Test Login: arda@restin.ai / SuperOwner2024!</span>
           </p>
         </div>
       </div>

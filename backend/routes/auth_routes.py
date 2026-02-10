@@ -1,14 +1,15 @@
 """Authentication routes - login, MFA, token refresh"""
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends, Query, Body
 from fastapi.security import HTTPAuthorizationCredentials
 from typing import Optional
 from datetime import datetime, timezone
 import pyotp
 import jwt
+import uuid
 
 from core.database import db
 from core.config import JWT_SECRET, JWT_ALGORITHM
-from core.security import hash_pin, create_jwt_token
+from core.security import hash_pin, create_jwt_token, hash_password, verify_password
 from core.dependencies import get_current_user, security
 from models import UserRole
 from services.auth_service import check_rate_limit, log_login_attempt
@@ -47,7 +48,6 @@ def create_auth_router():
         
         if not user:
             await log_login_attempt(deviceId, pin, app, False, "Invalid PIN")
-            # V2 Detailed Logging: LOGIN_FAIL
             await log_event(
                 db,
                 level="SECURITY",
@@ -61,14 +61,12 @@ def create_auth_router():
         if app != "admin" and user["role"] == UserRole.STAFF:
             now = datetime.now(timezone.utc).isoformat()
             
-            # Check for active shift
             active_shift = await db.shifts.find_one({
                 "user_id": user["id"],
                 "start_time": {"$lte": now},
                 "end_time": {"$gte": now}
             }, {"_id": 0})
             
-            # Check for manager override
             override = await db.manager_overrides.find_one({
                 "user_id": user["id"],
                 "expires_at": {"$gte": now}
@@ -81,7 +79,7 @@ def create_auth_router():
                     detail="You are not scheduled for a shift right now. Please contact your manager."
                 )
         
-        # Get allowed venues (default to user's primary venue if not set)
+        # Get allowed venues
         allowed_venue_ids = user.get("allowed_venue_ids", [user["venue_id"]])
         if not allowed_venue_ids:
             allowed_venue_ids = [user["venue_id"]]
@@ -90,7 +88,7 @@ def create_auth_router():
         if not default_venue_id and len(allowed_venue_ids) == 1:
             default_venue_id = allowed_venue_ids[0]
         
-        # Check if MFA required for owner/manager
+        # Check if MFA required
         if user["role"] in [UserRole.OWNER, UserRole.MANAGER] and user.get("mfa_enabled"):
             return {
                 "requires_mfa": True,
@@ -107,13 +105,10 @@ def create_auth_router():
             }}
         )
         
-        # Create token (venue-agnostic for now, will be set after venue selection)
         token = create_jwt_token(user["id"], user["venue_id"], user["role"], deviceId)
         
-        # Log successful attempt
         await log_login_attempt(deviceId, pin, app, True, None, user["id"], user["venue_id"])
         
-        # V2 Detailed Logging: LOGIN_SUCCESS
         await log_event(
             db,
             level="SECURITY",
@@ -124,7 +119,6 @@ def create_auth_router():
             meta={"app": app, "device_id": deviceId}
         )
         
-        # Audit log
         await create_audit_log(
             user["venue_id"], user["id"], user["name"], "login",
             "user", user["id"],
@@ -143,32 +137,260 @@ def create_auth_router():
             "defaultVenueId": default_venue_id
         }
 
+    # ─── Credentials Login (email / username / employee_id + password) ───────
+    @router.post("/auth/login/credentials")
+    async def login_with_credentials(payload: dict = Body(...)):
+        """
+        Multi-identifier login: accepts email, username, or employee ID + password.
+        """
+        identifier = payload.get("identifier", "").strip()
+        password = payload.get("password", "")
+        app = payload.get("app", "admin")
+        device_id = payload.get("deviceId")
+
+        if not identifier or not password:
+            raise HTTPException(status_code=400, detail="Identifier and password are required")
+
+        # Rate limit check
+        rate_key = device_id or identifier
+        if await check_rate_limit(rate_key):
+            await log_login_attempt(rate_key, "***", app, False, "Rate limited")
+            raise HTTPException(
+                status_code=429,
+                detail="Too many failed attempts. Please try again in 5 minutes."
+            )
+
+        # Multi-identifier lookup: email OR username OR employee_id
+        user = await db.users.find_one(
+            {"$or": [
+                {"email": identifier},
+                {"username": identifier},
+                {"employee_id": identifier}
+            ]},
+            {"_id": 0}
+        )
+
+        if not user or not user.get("password_hash"):
+            await log_login_attempt(rate_key, "***", app, False, "Invalid credentials")
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+
+        # Verify password
+        if not verify_password(password, user["password_hash"]):
+            await log_login_attempt(rate_key, "***", app, False, "Wrong password")
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+
+        # Check account status
+        if user.get("status") != "active":
+            raise HTTPException(status_code=403, detail="Account is suspended or archived")
+
+        # Shift scheduling check for staff on POS/KDS
+        if app != "admin" and user["role"] == UserRole.STAFF:
+            now = datetime.now(timezone.utc).isoformat()
+            active_shift = await db.shifts.find_one({
+                "user_id": user["id"],
+                "start_time": {"$lte": now},
+                "end_time": {"$gte": now}
+            }, {"_id": 0})
+            override = await db.manager_overrides.find_one({
+                "user_id": user["id"],
+                "expires_at": {"$gte": now}
+            }, {"_id": 0})
+            if not active_shift and not override:
+                raise HTTPException(status_code=403, detail="Not scheduled for a shift right now")
+
+        # Allowed venues
+        allowed_venue_ids = user.get("allowed_venue_ids", [user["venue_id"]])
+        if not allowed_venue_ids:
+            allowed_venue_ids = [user["venue_id"]]
+
+        # MFA check
+        if user.get("mfa_enabled"):
+            return {
+                "requires_mfa": True,
+                "user_id": user["id"],
+                "allowedVenueIds": allowed_venue_ids
+            }
+
+        # Update last login
+        await db.users.update_one(
+            {"id": user["id"]},
+            {"$set": {
+                "last_login": datetime.now(timezone.utc).isoformat(),
+                "device_id": device_id
+            }}
+        )
+
+        token = create_jwt_token(user["id"], user["venue_id"], user["role"], device_id)
+
+        default_venue_id = user.get("default_venue_id")
+        if not default_venue_id and len(allowed_venue_ids) == 1:
+            default_venue_id = allowed_venue_ids[0]
+
+        await log_login_attempt(rate_key, "***", app, True, None, user["id"], user["venue_id"])
+
+        await log_event(
+            db,
+            level="SECURITY",
+            code="LOGIN_SUCCESS",
+            message=f"User {user['name']} logged in via credentials",
+            user=user,
+            venue_id=user["venue_id"],
+            meta={"app": app, "device_id": device_id, "method": "credentials"}
+        )
+
+        await create_audit_log(
+            user["venue_id"], user["id"], user["name"], "login",
+            "user", user["id"],
+            {"device_id": device_id, "app": app, "method": "credentials"}
+        )
+
+        return {
+            "accessToken": token,
+            "user": {
+                "id": user["id"],
+                "name": user["name"],
+                "role": user["role"],
+                "venueId": user["venue_id"]
+            },
+            "allowedVenueIds": allowed_venue_ids,
+            "defaultVenueId": default_venue_id
+        }
+
+    # ─── Super Owner Setup Status ────────────────────────────────────────────
+    @router.get("/auth/setup/status")
+    async def check_setup_status():
+        """Check if initial Super Owner setup is required."""
+        super_owner = await db.users.find_one(
+            {"is_super_owner": True},
+            {"_id": 0, "id": 1}
+        )
+        return {"setupRequired": super_owner is None}
+
+    # ─── Super Owner Setup ───────────────────────────────────────────────────
+    @router.post("/auth/setup")
+    async def setup_super_owner(payload: dict = Body(...)):
+        """
+        One-time Super Owner creation. Creates the root user with password + optional 2FA.
+        Refuses to run if a super owner already exists.
+        """
+        existing = await db.users.find_one({"is_super_owner": True}, {"_id": 0, "id": 1})
+        if existing:
+            raise HTTPException(status_code=409, detail="Super Owner already exists")
+
+        name = payload.get("name", "Super Owner")
+        email = payload.get("email", "")
+        password = payload.get("password", "")
+        totp_code = payload.get("totpCode")
+        enable_2fa = payload.get("enable2fa")
+
+        if not email or not password:
+            raise HTTPException(status_code=400, detail="Email and password are required")
+
+        if len(password) < 8:
+            raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
+
+        # Get default venue
+        default_venue = await db.venues.find_one({}, {"_id": 0, "id": 1})
+        venue_id = default_venue["id"] if default_venue else "default"
+
+        user_id = str(uuid.uuid4())
+        now = datetime.now(timezone.utc).isoformat()
+
+        user_doc = {
+            "id": user_id,
+            "venue_id": venue_id,
+            "name": name,
+            "email": email,
+            "username": email.split("@")[0] if "@" in email else email,
+            "employee_id": "EMP-OWNER",
+            "pin_hash": hash_pin("1234"),
+            "password_hash": hash_password(password),
+            "role": UserRole.OWNER,
+            "is_super_owner": True,
+            "mfa_enabled": False,
+            "mfa_secret": None,
+            "allowed_venue_ids": [],
+            "status": "active",
+            "created_at": now,
+            "last_login": None,
+        }
+
+        # Handle 2FA enrollment
+        if enable_2fa is True and totp_code:
+            if not user_doc.get("mfa_secret"):
+                raise HTTPException(status_code=400, detail="Setup 2FA first")
+            totp = pyotp.TOTP(user_doc["mfa_secret"])
+            if not totp.verify(totp_code):
+                raise HTTPException(status_code=401, detail="Invalid TOTP code")
+            user_doc["mfa_enabled"] = True
+
+        elif enable_2fa is not False and not totp_code:
+            # Generate QR code for enrollment
+            secret = pyotp.random_base32()
+            totp = pyotp.TOTP(secret)
+            provisioning_uri = totp.provisioning_uri(name, issuer_name="restin.ai")
+            user_doc["mfa_secret"] = secret
+
+            await db.users.insert_one(user_doc)
+
+            await log_event(
+                db,
+                level="SECURITY",
+                code="SUPER_OWNER_SETUP_PENDING_2FA",
+                message=f"Super Owner {name} created, awaiting 2FA verification",
+                meta={"user_id": user_id, "email": email}
+            )
+
+            return {
+                "qrCodeUrl": provisioning_uri,
+                "secret": secret,
+                "userId": user_id
+            }
+
+        await db.users.insert_one(user_doc)
+
+        await log_event(
+            db,
+            level="SECURITY",
+            code="SUPER_OWNER_CREATED",
+            message=f"Super Owner {name} ({email}) created",
+            meta={"user_id": user_id, "email": email, "mfa_enabled": user_doc["mfa_enabled"]}
+        )
+
+        await create_audit_log(
+            venue_id, user_id, name, "super_owner_setup",
+            "user", user_id,
+            {"email": email, "mfa_enabled": user_doc["mfa_enabled"]}
+        )
+
+        return {
+            "message": "Super Owner created successfully",
+            "userId": user_id,
+            "mfaEnabled": user_doc["mfa_enabled"]
+        }
+
     @router.post("/auth/refresh")
     async def refresh_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
         """Refresh expired JWT token within grace period"""
         try:
-            # Decode token (allow expired within 5 min grace)
             payload = jwt.decode(
                 credentials.credentials, 
                 JWT_SECRET, 
                 algorithms=[JWT_ALGORITHM],
-                options={"verify_exp": False}  # Manual exp check for grace period
+                options={"verify_exp": False}
             )
             
             exp_time = payload.get("exp", 0)
             now = datetime.now(timezone.utc).timestamp()
-            grace_period = 5 * 60  # 5 minutes
+            grace_period = 5 * 60
             
-            # Check if within grace period
             if now - exp_time > grace_period:
                 raise HTTPException(status_code=401, detail="TOKEN_EXPIRED_BEYOND_GRACE")
             
-            # Verify user still exists
             user = await db.users.find_one({"id": payload["user_id"]}, {"_id": 0})
             if not user:
                 raise HTTPException(status_code=401, detail="TOKEN_INVALID_USER")
             
-            # Issue new token
             new_token = create_jwt_token(
                 user["id"], 
                 payload.get("venue_id", user["venue_id"]), 
@@ -215,11 +437,9 @@ def create_auth_router():
         if not user:
             raise HTTPException(status_code=401, detail="Invalid PIN")
         
-        # Check if MFA required for owner/manager
         if user["role"] in [UserRole.OWNER, UserRole.MANAGER] and user.get("mfa_enabled"):
             return {"requires_mfa": True, "user_id": user["id"]}
         
-        # Update last login
         await db.users.update_one(
             {"id": user["id"]},
             {"$set": {"last_login": datetime.now(timezone.utc).isoformat(), "device_id": device_id}}

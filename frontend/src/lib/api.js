@@ -132,13 +132,32 @@ export const authAPI = {
     const url = `${backendUrl}/api/auth/login/pin?pin=${pin}&app=${app}${deviceId ? `&deviceId=${deviceId}` : ''}${stationId ? `&stationId=${stationId}` : ''}`;
     return axios.post(url);
   },
+  // Credentials login (email, username, or employee ID + password)
+  loginWithCredentials: ({ identifier, password, target, deviceId }) => {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+    return axios.post(`${backendUrl}/api/auth/login/credentials`, {
+      identifier,
+      password,
+      app: target,
+      deviceId,
+    });
+  },
   // Legacy venue-based login (kept for backwards compatibility)
   login: (venueId, pin, deviceId) =>
     axios.post(`${API}/auth/login?venue_id=${venueId}&pin=${pin}${deviceId ? `&device_id=${deviceId}` : ''}`),
   verifyMFA: (userId, totpCode, deviceId) =>
     axios.post(`${API}/auth/verify-mfa?user_id=${userId}&totp_code=${totpCode}${deviceId ? `&device_id=${deviceId}` : ''}`),
   setupMFA: () => api.post("/auth/setup-mfa"),
-  enableMFA: (totpCode) => api.post(`/auth/enable-mfa?totp_code=${totpCode}`)
+  enableMFA: (totpCode) => api.post(`/auth/enable-mfa?totp_code=${totpCode}`),
+  // Super Owner first-run setup
+  checkSetupRequired: () => {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+    return axios.get(`${backendUrl}/api/auth/setup/status`);
+  },
+  setupSuperOwner: (data) => {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+    return axios.post(`${backendUrl}/api/auth/setup`, data);
+  },
 };
 
 // Venue APIs

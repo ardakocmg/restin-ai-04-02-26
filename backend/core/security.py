@@ -1,4 +1,6 @@
 import hashlib
+import hmac
+import os
 import jwt
 from datetime import datetime, timezone, timedelta
 from typing import Optional
@@ -6,6 +8,23 @@ from .config import JWT_SECRET, JWT_ALGORITHM, JWT_EXPIRATION_HOURS
 
 def hash_pin(pin: str) -> str:
     return hashlib.sha256(pin.encode()).hexdigest()
+
+def hash_password(password: str) -> str:
+    """Hash a password using PBKDF2-HMAC-SHA256 with random salt (no bcrypt dependency)."""
+    salt = os.urandom(32)
+    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 310_000)
+    return salt.hex() + ':' + key.hex()
+
+def verify_password(password: str, stored_hash: str) -> bool:
+    """Verify a password against a stored PBKDF2 hash."""
+    try:
+        salt_hex, key_hex = stored_hash.split(':')
+        salt = bytes.fromhex(salt_hex)
+        stored_key = bytes.fromhex(key_hex)
+        new_key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 310_000)
+        return hmac.compare_digest(new_key, stored_key)
+    except (ValueError, AttributeError):
+        return False
 
 def compute_hash(data: dict, prev_hash: str) -> str:
     payload = f"{prev_hash}:{str(data)}"
