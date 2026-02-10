@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     MessageSquare, Hash, Mic, MicOff, Send, Users, Radio,
@@ -237,8 +237,8 @@ export default function HiveDashboard() {
                                 key={ch.id}
                                 onClick={() => setActiveChannel(ch.id)}
                                 className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm transition-all ${activeChannel === ch.id
-                                        ? 'bg-zinc-800 text-zinc-100'
-                                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
+                                    ? 'bg-zinc-800 text-zinc-100'
+                                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
                                     }`}
                             >
                                 <ch.icon className={`h-4 w-4 ${ch.color}`} />
@@ -262,13 +262,11 @@ export default function HiveDashboard() {
                         {ONLINE_STAFF.map(s => (
                             <div key={s.name} className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-zinc-900 cursor-pointer">
                                 <div className="relative">
-                                    <Avatar className="h-7 w-7">
-                                        <AvatarFallback className={`${s.color} text-white text-[10px] font-bold`}>
-                                            {s.initials}
-                                        </AvatarFallback>
-                                    </Avatar>
+                                    <div className={`h-7 w-7 rounded-full ${s.color} flex items-center justify-center`}>
+                                        <span className="text-white text-[10px] font-bold">{s.initials}</span>
+                                    </div>
                                     <div className={`absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-zinc-950 ${s.status === 'online' ? 'bg-emerald-500' :
-                                            s.status === 'busy' ? 'bg-red-500' : 'bg-amber-500'
+                                        s.status === 'busy' ? 'bg-red-500' : 'bg-amber-500'
                                         }`} />
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -289,10 +287,10 @@ export default function HiveDashboard() {
                         onTouchStart={startTalking}
                         onTouchEnd={stopTalking}
                         className={`w-full py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${isTalking
-                                ? 'bg-red-600 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] scale-[1.02]'
-                                : micPermission === 'denied'
-                                    ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
-                                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 active:bg-red-600'
+                            ? 'bg-red-600 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] scale-[1.02]'
+                            : micPermission === 'denied'
+                                ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
+                                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 active:bg-red-600'
                             }`}
                         disabled={micPermission === 'denied'}
                     >
@@ -338,11 +336,9 @@ export default function HiveDashboard() {
                                     animate={{ opacity: 1, y: 0 }}
                                     className="flex gap-3 group"
                                 >
-                                    <Avatar className="h-8 w-8 flex-shrink-0 mt-0.5">
-                                        <AvatarFallback className={`${msg.senderColor} text-white text-[10px] font-bold`}>
-                                            {msg.senderInitials}
-                                        </AvatarFallback>
-                                    </Avatar>
+                                    <div className={`h-8 w-8 rounded-full flex-shrink-0 mt-0.5 ${msg.senderColor} flex items-center justify-center`}>
+                                        <span className="text-white text-[10px] font-bold">{msg.senderInitials}</span>
+                                    </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-baseline gap-2">
                                             <span className="font-semibold text-sm text-zinc-200">{msg.sender}</span>
@@ -410,8 +406,8 @@ export default function HiveDashboard() {
                                 <div className="flex items-start justify-between gap-2">
                                     <p className="text-sm font-medium text-zinc-200">{task.title}</p>
                                     <Badge className={`text-[10px] shrink-0 ${task.urgency === 'HIGH' ? 'bg-red-600 text-white' :
-                                            task.urgency === 'MEDIUM' ? 'bg-amber-600 text-white' :
-                                                'bg-zinc-700 text-zinc-300'
+                                        task.urgency === 'MEDIUM' ? 'bg-amber-600 text-white' :
+                                            'bg-zinc-700 text-zinc-300'
                                         }`}>
                                         {task.urgency}
                                     </Badge>
@@ -452,10 +448,10 @@ export default function HiveDashboard() {
                                 onTouchEnd={stopTalking}
                                 whileTap={{ scale: 0.95 }}
                                 className={`relative mx-auto w-28 h-28 rounded-full flex items-center justify-center transition-all ${isTalking
-                                        ? 'bg-red-600 shadow-[0_0_40px_rgba(239,68,68,0.5)]'
-                                        : micPermission === 'denied'
-                                            ? 'bg-zinc-800 cursor-not-allowed'
-                                            : 'bg-zinc-800 hover:bg-zinc-700 shadow-[0_0_20px_rgba(0,0,0,0.5)]'
+                                    ? 'bg-red-600 shadow-[0_0_40px_rgba(239,68,68,0.5)]'
+                                    : micPermission === 'denied'
+                                        ? 'bg-zinc-800 cursor-not-allowed'
+                                        : 'bg-zinc-800 hover:bg-zinc-700 shadow-[0_0_20px_rgba(0,0,0,0.5)]'
                                     }`}
                                 disabled={micPermission === 'denied'}
                             >
@@ -497,11 +493,9 @@ export default function HiveDashboard() {
                                 <div className="flex flex-wrap justify-center gap-2">
                                     {ONLINE_STAFF.filter(s => s.status === 'online').slice(0, 4).map(s => (
                                         <div key={s.name} className="flex flex-col items-center gap-1">
-                                            <Avatar className="h-8 w-8">
-                                                <AvatarFallback className={`${s.color} text-white text-[10px] font-bold`}>
-                                                    {s.initials}
-                                                </AvatarFallback>
-                                            </Avatar>
+                                            <div className={`h-8 w-8 rounded-full ${s.color} flex items-center justify-center`}>
+                                                <span className="text-white text-[10px] font-bold">{s.initials}</span>
+                                            </div>
                                             <span className="text-[10px] text-zinc-500">{s.name.split(' ')[0]}</span>
                                         </div>
                                     ))}
