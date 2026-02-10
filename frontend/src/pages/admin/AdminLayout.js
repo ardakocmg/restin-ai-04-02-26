@@ -5,6 +5,8 @@ import NewSidebar from '../../layouts/NewSidebar';
 import NewTopBar from '../../layouts/NewTopBar';
 import { Button } from '../../components/ui/button';
 import { logger } from '../../lib/logger';
+import FloatingChat from '../../components/widgets/FloatingChat';
+import FloatingPTT from '../../components/widgets/FloatingPTT';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -91,6 +93,10 @@ export default function AdminLayout() {
         <main className="flex-1 overflow-auto p-4 lg:p-6 pb-24 lg:pb-6"> {/* Extra bottom padding for mobile usage */}
           <Outlet />
         </main>
+
+        {/* Floating Widgets — visible on all admin pages */}
+        <FloatingChat />
+        <FloatingPTT />
       </div>
     </div>
   );
