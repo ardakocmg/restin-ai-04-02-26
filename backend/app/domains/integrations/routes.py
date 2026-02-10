@@ -14,8 +14,8 @@ service = IntegrationService()
 
 # Mock Auth Dependency until fully wired
 async def get_current_org_id():
-    # TODO: Replace with actual auth
-    return "67a360699268383a667ee0d0" 
+    # MG Group Org ID
+    return "698896440bc2eddbf9cac672" 
 
 @router.get("/", response_model=List[IntegrationConfigResponse])
 async def list_integrations(organization_id: str = Depends(get_current_org_id)):
@@ -48,5 +48,6 @@ async def trigger_sync(
     organization_id: str = Depends(get_current_org_id)
 ):
     """Manually trigger a sync job"""
-    # TODO: Connect to SyncEngine
-    return {"status": "Sync triggered", "job_id": "pending"}
+    engine = SyncEngine()
+    result = await engine.trigger_sync(organization_id, provider)
+    return result

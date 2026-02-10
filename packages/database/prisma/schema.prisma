@@ -1,8 +1,12 @@
-// 🏗️ ANTIGRAVITY MASTER SCHEMA (THE OMNISCIENT)
+// ANTIGRAVITY MASTER SCHEMA (THE OMNISCIENT)
 // Protocol v30.0 - The DNA of the Enterprise OS (MongoDB Production)
 
 generator client {
   provider = "prisma-client-js"
+}
+
+generator client_py {
+  provider = "prisma-client-py"
 }
 
 datasource db {
@@ -95,6 +99,11 @@ model Organization {
   // Pillar 6: Radar
   competitors        Competitor[]
   
+  // Pillar 7: Integrations
+  integrationConfigs IntegrationConfig[]
+  syncJobs           SyncJob[]
+  syncRuns           SyncRun[]
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -309,7 +318,7 @@ model RecipeEngineered {
 
   // Production Details
   instructions   String?
-  yield          Float?       @map("servings") // Approximate mapping or add new field
+  yieldValue     Float?       @map("servings") // Approximate mapping or add new field
   laborTime      Int?
   
   // Full raw data for reference

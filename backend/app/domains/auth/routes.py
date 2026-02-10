@@ -203,3 +203,138 @@ async def update_role(role_id: str, req: Request):
     if updated:
         updated["_id"] = str(updated["_id"])
     return updated
+
+
+# ==================== OBSERVABILITY / LOGS ====================
+
+ERROR_CODES = [
+    {
+        "code": "AUTH_LOGIN_FAILED",
+        "title": "Login Failed",
+        "description": "User attempted to login with invalid credentials.",
+        "level": "warn",
+        "likely_causes": ["Wrong PIN", "User disabled", "Network intercept"],
+        "operator_action": ["Verify credentials", "Check user status"],
+        "dev_action": ["Check auth logs", "Verify hash function"]
+    },
+    {
+        "code": "SYNC_FAILED",
+        "title": "Synchronization Failed",
+        "description": "Failed to sync data with external provider (e.g., Lightspeed).",
+        "level": "error",
+        "likely_causes": ["API Limit Reached", "Invalid Credentials", "Timeout"],
+        "operator_action": ["Retry sync manually", "Check internet connection"],
+        "dev_action": ["Check integration connector logic", "Inspect payload"]
+    },
+    {
+        "code": "ORDER_VOID_HIGH_VALUE",
+        "title": "High Value Order Voided",
+        "description": "An order exceeding the safety threshold was voided.",
+        "level": "warn",
+        "likely_causes": ["Customer changed mind", "Mistake in entry"],
+        "operator_action": ["Manager approval required"],
+        "dev_action": ["None if authorized"]
+    },
+    {
+        "code": "DEVICE_OFFLINE",
+        "title": "Device Went Offline",
+        "description": "A critical device (POS/KDS) stopped sending heartbeats.",
+        "level": "error",
+        "likely_causes": ["Power loss", "Network cable unplugged", "WiFi interference"],
+        "operator_action": ["Check device power", "Check network status"],
+        "dev_action": ["Check WebSocket heartbeats"]
+    },
+    {
+        "code": "INVENTORY_LOW_STOCK",
+        "title": "Low Stock Alert",
+        "description": "Item inventory dropped below reorder point.",
+        "level": "info",
+        "likely_causes": ["High sales volume", "Forgot to restock"],
+        "operator_action": ["Create Purchase Order", "Restock from storage"],
+        "dev_action": ["None"]
+    }
+]
+
+@admin_router.get("/error-codes")
+async def get_error_codes():
+    """Get registry of system error codes."""
+    return {"codes": ERROR_CODES}
+
+
+@admin_router.get("/logs")
+async def get_system_logs(
+    venue_id: Optional[str] = Query(None),
+    level: Optional[str] = Query(None),
+    code: Optional[str] = Query(None),
+    q: Optional[str] = Query(None),
+    limit: int = Query(100)
+):
+    """Get system logs with filtering."""
+    db = get_database()
+    query = {}
+    
+    if venue_id:
+        query["venue_id"] = venue_id
+    if level and level != "ALL":
+        query["level"] = level
+    if code:
+        query["code"] = code
+    if q:
+        query["$or"] = [
+            {"message": {"$regex": q, "$options": "i"}},
+            {"code": {"$regex": q, "$options": "i"}}
+        ]
+        
+    logs = await db.logs.find(query).sort("ts", -1).to_list(length=limit)
+    
+    # If no logs, seed some sample data for demo
+    if not logs and not query:
+        from datetime import timedelta
+        import random
+        base_time = datetime.now(timezone.utc)
+        
+        sample_logs = []
+        for i in range(15):
+            err = random.choice(ERROR_CODES)
+            sample_logs.append({
+                "ts": (base_time - timedelta(minutes=i*10)).isoformat(),
+                "level": err["level"].upper(),
+                "code": err["code"],
+                "message": f"Sample event: {err['description']}",
+                "venue_id": "venue-caviar-bull",
+                "endpoint": "/api/demo",
+                "request_id": f"req-{random.randint(1000,9999)}",
+                "acknowledged": False
+            })
+        
+        if sample_logs:
+            await db.logs.insert_many(sample_logs)
+            logs = await db.logs.find({}).sort("ts", -1).to_list(length=limit)
+
+    for l in logs:
+        l["id"] = str(l["_id"])
+        l["_id"] = str(l["_id"])
+        
+    return {"items": logs, "total": len(logs)}
+
+
+@admin_router.post("/logs/{log_id}/ack")
+async def acknowledge_log(log_id: str):
+    """Acknowledge a log entry."""
+    db = get_database()
+    from bson import ObjectId
+    
+    try:
+        oid = ObjectId(log_id)
+        query = {"_id": oid}
+    except:
+        query = {"id": log_id}
+        
+    await db.logs.update_one(query, {"$set": {"acknowledged": True}})
+    
+    updated = await db.logs.find_one(query)
+    if updated:
+        updated["id"] = str(updated["_id"])
+        updated["_id"] = str(updated["_id"])
+        
+    return updated or {"status": "success"}

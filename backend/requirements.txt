@@ -17,3 +17,4 @@ boto3
 Pillow>=10.0.0
 tuya-connector-python
 meross-iot
+prisma

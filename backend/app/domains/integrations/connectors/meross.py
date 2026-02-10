@@ -43,7 +43,8 @@ class MerossConnector(BaseConnector):
         try:
             http_api_client = await MerossHttpClient.async_from_user_password(
                 email=email, 
-                password=password
+                password=password,
+                api_base_url="https://iotx-eu.meross.com"
             )
             await http_api_client.async_logout()
             return True
@@ -66,7 +67,8 @@ class MerossConnector(BaseConnector):
             
             http_api_client = await MerossHttpClient.async_from_user_password(
                 email=email, 
-                password=password
+                password=password,
+                api_base_url="https://iotx-eu.meross.com"
             )
             
             manager = MerossManager(http_client=http_api_client)
@@ -113,7 +115,11 @@ class MerossConnector(BaseConnector):
             email = self.credentials.get("email")
             password = self.credentials.get("password")
             
-            http_api_client = await MerossHttpClient.async_from_user_password(email=email, password=password)
+            http_api_client = await MerossHttpClient.async_from_user_password(
+                email=email, 
+                password=password,
+                api_base_url="https://iotx-eu.meross.com"
+            )
             manager = MerossManager(http_client=http_api_client)
             await manager.async_init()
             await manager.async_device_discovery()
@@ -193,7 +199,11 @@ class MerossConnector(BaseConnector):
             email = self.credentials.get("email")
             password = self.credentials.get("password")
             
-            http_api_client = await MerossHttpClient.async_from_user_password(email=email, password=password)
+            http_api_client = await MerossHttpClient.async_from_user_password(
+                email=email, 
+                password=password,
+                api_base_url="https://iotx-eu.meross.com"
+            )
             manager = MerossManager(http_client=http_api_client)
             await manager.async_init()
             await manager.async_device_discovery()

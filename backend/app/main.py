@@ -26,6 +26,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+async def startup_event():
+    from app.services.prisma import connect_prisma
+    await connect_prisma()
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    from app.services.prisma import disconnect_prisma
+    await disconnect_prisma()
+
 from app.domains.hr import router as hr_router
 from app.domains.inventory import router as inventory_router
 from app.domains.pos.routes import router as pos_router
