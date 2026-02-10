@@ -164,7 +164,6 @@ const ESGModule = React.lazy(() => import("./pages/admin/hr/ESGModule"));
 const GovReportsPage = React.lazy(() => import("./pages/admin/hr/GovReportsPage"));
 const SickLeaveAnalysis = React.lazy(() => import("./pages/admin/hr/SickLeaveAnalysis"));
 const ForecastingCosts = React.lazy(() => import("./pages/admin/hr/ForecastingCosts"));
-const EmployeePortal = React.lazy(() => import("./pages/admin/hr/EmployeePortal"));
 const TimesheetsIndices = React.lazy(() => import("./pages/admin/hr/Timesheets"));
 const SmartHomeDashboard = React.lazy(() => import("./pages/admin/smart-home/SmartHomeDashboard"));
 const Devices = React.lazy(() => import("./pages/admin/Devices"));
