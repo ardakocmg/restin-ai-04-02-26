@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Badge } from "@/components/ui/badge";
 import {
     Mic, MicOff, Radio, ChevronDown, X, Volume2,
     Hash, ChefHat, Wine, Briefcase, Bell
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useWalkieTalkie } from '@/hooks/useWalkieTalkie';
+import { useGlobalPTT, LiveSpeaker } from '@/contexts/GlobalPTTContext';
 
 // ─── Channel Config ─────────────────────────────────────────────────────
 interface PTTChannel {
@@ -66,9 +66,18 @@ function WaveformBars({ active }: { active: boolean }) {
 // ─── Floating PTT Widget ────────────────────────────────────────────────
 export default function FloatingPTT() {
     const [isOpen, setIsOpen] = useState(false);
-    const [activeChannel, setActiveChannel] = useState('general');
     const [showChannels, setShowChannels] = useState(false);
-    const { isTalking, startTalking, stopTalking, micPermission } = useWalkieTalkie(activeChannel);
+    const {
+        activeChannel,
+        setActiveChannel,
+        isTalking,
+        startTalking,
+        stopTalking,
+        micPermission,
+        liveTranscript,
+        liveSpeakers,
+    } = useGlobalPTT();
+
     const activeChannelData = PTT_CHANNELS.find(c => c.id === activeChannel);
 
     // Play chirp sound on PTT start/stop
@@ -108,16 +117,33 @@ export default function FloatingPTT() {
         return (
             <motion.button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-24 right-6 z-50 h-12 w-12 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center shadow-lg hover:bg-zinc-700 transition-colors group"
+                title="Open Walkie-Talkie"
+                className={`fixed bottom-24 right-6 z-50 h-12 w-12 rounded-full border flex items-center justify-center shadow-lg transition-colors group ${isTalking
+                        ? 'bg-red-600 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)]'
+                        : 'bg-zinc-800 border-zinc-700 hover:bg-zinc-700'
+                    }`}
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
             >
-                <Radio className="h-5 w-5 text-zinc-400 group-hover:text-emerald-400 transition-colors" />
+                {isTalking ? (
+                    <>
+                        <Mic className="h-5 w-5 text-white animate-pulse" />
+                        <motion.div
+                            className="absolute inset-0 rounded-full border-2 border-red-500"
+                            animate={{ scale: [1, 1.5], opacity: [0.6, 0] }}
+                            transition={{ duration: 1, repeat: Infinity }}
+                        />
+                    </>
+                ) : (
+                    <Radio className="h-5 w-5 text-zinc-400 group-hover:text-emerald-400 transition-colors" />
+                )}
                 {/* Green dot = connected */}
-                <div className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-zinc-950" />
+                {!isTalking && (
+                    <div className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-zinc-950" />
+                )}
             </motion.button>
         );
     }
@@ -137,8 +163,11 @@ export default function FloatingPTT() {
                     <div className="flex items-center gap-1.5">
                         <Radio className="h-3.5 w-3.5 text-emerald-400" />
                         <span className="text-xs font-semibold text-zinc-300">Walkie-Talkie</span>
+                        {isTalking && (
+                            <Badge className="h-4 px-1.5 text-[9px] bg-red-600 text-white border-0 animate-pulse">LIVE</Badge>
+                        )}
                     </div>
-                    <button onClick={() => setIsOpen(false)} className="p-1 rounded-md hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors">
+                    <button title="Close" onClick={() => setIsOpen(false)} className="p-1 rounded-md hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors">
                         <X className="h-3.5 w-3.5" />
                     </button>
                 </div>
@@ -146,6 +175,7 @@ export default function FloatingPTT() {
                 {/* Channel Selector */}
                 <div className="px-3 py-2 border-b border-zinc-800">
                     <button
+                        title="Select channel"
                         onClick={() => setShowChannels(!showChannels)}
                         className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 transition-colors"
                     >
@@ -171,6 +201,7 @@ export default function FloatingPTT() {
                                 {PTT_CHANNELS.map(ch => (
                                     <button
                                         key={ch.id}
+                                        title={`Switch to ${ch.name}`}
                                         onClick={() => { setActiveChannel(ch.id); setShowChannels(false); }}
                                         className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs transition-all ${activeChannel === ch.id ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
                                             }`}
@@ -192,6 +223,7 @@ export default function FloatingPTT() {
 
                     {/* Big PTT Button */}
                     <motion.button
+                        title={isTalking ? 'Release to stop' : 'Hold to talk'}
                         onMouseDown={handlePTTStart}
                         onMouseUp={handlePTTStop}
                         onMouseLeave={handlePTTStop}
@@ -200,10 +232,10 @@ export default function FloatingPTT() {
                         whileTap={{ scale: 0.95 }}
                         disabled={micPermission === 'denied'}
                         className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all ${isTalking
-                                ? 'bg-red-600 shadow-[0_0_40px_rgba(239,68,68,0.5)]'
-                                : micPermission === 'denied'
-                                    ? 'bg-zinc-800 cursor-not-allowed'
-                                    : 'bg-zinc-800 hover:bg-zinc-700 shadow-[0_0_15px_rgba(0,0,0,0.4)]'
+                            ? 'bg-red-600 shadow-[0_0_40px_rgba(239,68,68,0.5)]'
+                            : micPermission === 'denied'
+                                ? 'bg-zinc-800 cursor-not-allowed'
+                                : 'bg-zinc-800 hover:bg-zinc-700 shadow-[0_0_15px_rgba(0,0,0,0.4)]'
                             }`}
                     >
                         {/* Pulse rings on transmit */}
@@ -234,23 +266,38 @@ export default function FloatingPTT() {
                         ) : micPermission === 'denied' ? (
                             <span className="text-red-400">Mic access denied</span>
                         ) : (
-                            'Hold to talk'
+                            <span>Hold to talk · <kbd className="px-1 py-0.5 rounded bg-zinc-800 text-zinc-400 text-[9px] font-mono">Space</kbd></span>
                         )}
                     </p>
+
+                    {/* Live transcript */}
+                    {isTalking && liveTranscript && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            className="w-full px-2 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800"
+                        >
+                            <p className="text-[10px] text-zinc-400 italic truncate">"{liveTranscript}"</p>
+                        </motion.div>
+                    )}
                 </div>
 
-                {/* Active Listeners */}
+                {/* Active Listeners with Live Speaker Indicators */}
                 <div className="px-3 pb-3 border-t border-zinc-800 pt-3">
                     <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">On this channel</p>
                     <div className="flex flex-wrap gap-2">
-                        {SPEAKERS.filter(s => s.online).map(s => (
-                            <div key={s.name} className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-zinc-900">
-                                <div className={`h-5 w-5 rounded-full ${s.color} flex items-center justify-center`}>
-                                    <span className="text-white text-[8px] font-bold">{s.initials}</span>
+                        {SPEAKERS.filter(s => s.online).map(s => {
+                            const isLive = liveSpeakers.some(ls => ls.initials === s.initials);
+                            return (
+                                <div key={s.name} className={`flex items-center gap-1.5 px-2 py-1 rounded-full ${isLive ? 'bg-red-500/10 ring-1 ring-red-500/40' : 'bg-zinc-900'}`}>
+                                    <div className={`h-5 w-5 rounded-full ${s.color} flex items-center justify-center ${isLive ? 'ring-2 ring-red-500' : ''}`}>
+                                        <span className="text-white text-[8px] font-bold">{s.initials}</span>
+                                    </div>
+                                    <span className={`text-[10px] ${isLive ? 'text-red-400 font-semibold' : 'text-zinc-400'}`}>{s.name}</span>
+                                    {isLive && <Volume2 className="h-2.5 w-2.5 text-red-400 animate-pulse" />}
                                 </div>
-                                <span className="text-[10px] text-zinc-400">{s.name}</span>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             </motion.div>

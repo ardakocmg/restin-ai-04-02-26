@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { parseSmartMessage, SmartToken } from '@/lib/smartParser';
-import { useWalkieTalkie, LiveSpeaker, TransmissionResult } from '@/hooks/useWalkieTalkie';
+import { useGlobalPTT, TransmissionResult, LiveSpeaker } from '@/contexts/GlobalPTTContext';
 
 // ─── Channel Definitions ────────────────────────────────────────────────
 interface Channel {
@@ -232,7 +232,6 @@ function AttachmentBubble({ att }: { att: { name: string; type: 'image' | 'file'
 
 // ─── Main Dashboard ─────────────────────────────────────────────────────
 export default function HiveDashboard() {
-    const [activeChannel, setActiveChannel] = useState('general');
     const [messageInput, setMessageInput] = useState('');
     const [messages, setMessages] = useState<ChatMessage[]>(MOCK_MESSAGES);
     const [searchQuery, setSearchQuery] = useState('');
@@ -246,23 +245,31 @@ export default function HiveDashboard() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // PTT — onTransmissionEnd injects voice messages into chat
-    const handleTransmissionEnd = useCallback((result: TransmissionResult) => {
-        const voiceMsg: ChatMessage = {
-            id: `voice-${Date.now()}`,
-            channelId: result.channelId,
-            sender: result.speaker,
-            senderInitials: 'ME',
-            senderColor: 'bg-zinc-600',
-            text: result.transcript || '🎙️ Voice message',
-            timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-            isVoice: true,
-            voiceDuration: result.duration,
-        };
-        setMessages(prev => [...prev, voiceMsg]);
-    }, []);
+    // PTT — use global context (shared with FloatingPTT + Space bar + AirPods)
+    const {
+        isTalking, isConnected, startTalking, stopTalking, micPermission,
+        liveTranscript, callLog, clearCallLog, liveSpeakers,
+        activeChannel, setActiveChannel, setOnTransmissionEnd,
+    } = useGlobalPTT();
 
-    const { isTalking, isConnected, startTalking, stopTalking, micPermission, liveTranscript, callLog, clearCallLog, liveSpeakers } = useWalkieTalkie(activeChannel, { onTransmissionEnd: handleTransmissionEnd });
+    // Register voice message injection callback
+    useEffect(() => {
+        setOnTransmissionEnd((result: TransmissionResult) => {
+            const voiceMsg: ChatMessage = {
+                id: `voice-${Date.now()}`,
+                channelId: result.channelId,
+                sender: result.speaker,
+                senderInitials: 'ME',
+                senderColor: 'bg-zinc-600',
+                text: result.transcript || '🎙️ Voice message',
+                timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                isVoice: true,
+                voiceDuration: result.duration,
+            };
+            setMessages(prev => [...prev, voiceMsg]);
+        });
+        return () => setOnTransmissionEnd(null);
+    }, [setOnTransmissionEnd]);
 
     // Filter messages
     const channelMessages = useMemo(() => {

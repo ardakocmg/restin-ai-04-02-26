@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/button';
 import { logger } from '../../lib/logger';
 import FloatingChat from '../../components/widgets/FloatingChat';
 import FloatingPTT from '../../components/widgets/FloatingPTT';
+import { GlobalPTTProvider } from '../../contexts/GlobalPTTContext';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -47,57 +48,60 @@ export default function AdminLayout() {
   const desktopSidebarOffset = `${pane1Width + pane2Width + pane3Width}rem`;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#0A0A0B]">
-      {/* Mobile Logo Toggle (Favicon) */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="h-10 w-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-500/20 active:scale-95 transition-transform"
-        >
-          <span className="text-2xl font-black text-white italic transform -skew-x-6">R</span>
-        </button>
-      </div>
-
-      {/* Sidebar Wrapper for Mobile */}
-      <div className={`
-        fixed inset-0 z-40 lg:relative lg:z-auto transition-transform duration-300 lg:translate-x-0
-        ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:flex
-      `}>
-        <NewSidebar
-          collapsed={sidebarCollapsed}
-          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-          onTertiaryToggle={setIsTertiaryOpen}
-          onDomainExpand={setDomainBarExpanded}
-        />
-      </div>
-
-      {/* Mobile Overlay Backdrop */}
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/80 z-30 lg:hidden backdrop-blur-sm"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* Main Content */}
-      <div
-        className="flex-1 flex flex-col overflow-hidden transition-all duration-300 w-full"
-      >
-        {/* Top Bar */}
-        <div className="pl-16 lg:pl-0"> {/* Add padding on mobile for hamburger */}
-          <NewTopBar />
+    <GlobalPTTProvider>
+      <div className="flex h-screen overflow-hidden bg-[#0A0A0B]">
+        {/* Mobile Logo Toggle (Favicon) */}
+        <div className="lg:hidden fixed top-4 left-4 z-50">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="h-10 w-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-500/20 active:scale-95 transition-transform"
+          >
+            <span className="text-2xl font-black text-white italic transform -skew-x-6">R</span>
+          </button>
         </div>
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-auto p-4 lg:p-6 pb-24 lg:pb-6"> {/* Extra bottom padding for mobile usage */}
-          <Outlet />
-        </main>
+        {/* Sidebar Wrapper for Mobile */}
+        <div className={`
+          fixed inset-0 z-40 lg:relative lg:z-auto transition-transform duration-300 lg:translate-x-0
+          ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:flex
+        `}>
+          <NewSidebar
+            collapsed={sidebarCollapsed}
+            onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+            onTertiaryToggle={setIsTertiaryOpen}
+            onDomainExpand={setDomainBarExpanded}
+          />
+        </div>
 
-        {/* Floating Widgets — visible on all admin pages */}
-        <FloatingChat />
-        <FloatingPTT />
+        {/* Mobile Overlay Backdrop */}
+        {mobileMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black/80 z-30 lg:hidden backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        )}
+
+        {/* Main Content */}
+        <div
+          className="flex-1 flex flex-col overflow-hidden transition-all duration-300 w-full"
+        >
+          {/* Top Bar */}
+          <div className="pl-16 lg:pl-0"> {/* Add padding on mobile for hamburger */}
+            <NewTopBar />
+          </div>
+
+          {/* Page Content */}
+          <main className="flex-1 overflow-auto p-4 lg:p-6 pb-24 lg:pb-6"> {/* Extra bottom padding for mobile usage */}
+            <Outlet />
+          </main>
+
+          {/* Floating Widgets — visible on all admin pages */}
+          <FloatingChat />
+          <FloatingPTT />
+        </div>
       </div>
-    </div>
+    </GlobalPTTProvider>
   );
 }
+
