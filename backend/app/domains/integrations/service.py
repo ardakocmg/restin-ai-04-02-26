@@ -146,6 +146,7 @@ class SyncEngine:
         from app.domains.integrations.connectors.tuya import TuyaConnector
         from app.domains.integrations.connectors.meross import MerossConnector
         from app.domains.integrations.connectors.qingping import QingpingConnector
+        from app.domains.integrations.connectors.nuki import NukiConnector
         
         # Factory Map
         CONNECTORS = {
@@ -156,7 +157,7 @@ class SyncEngine:
             IntegrationProvider.TUYA: TuyaConnector,
             IntegrationProvider.MEROSS: MerossConnector,
             IntegrationProvider.QINGPING: QingpingConnector,
-            IntegrationProvider.NUKI: DeviceHubConnector # Re-use stub or import real Nuki connector
+            IntegrationProvider.NUKI: NukiConnector
         }
         
         ConnectorClass = CONNECTORS.get(provider)
@@ -165,8 +166,5 @@ class SyncEngine:
             
         return ConnectorClass(org_id, creds or {}, settings or {})
 
-    # Helper for Stub
-class DeviceHubConnector:
-    def __init__(self, org, creds, settings): pass
-    async def sync(self): return {"processed": 0}
+
 
