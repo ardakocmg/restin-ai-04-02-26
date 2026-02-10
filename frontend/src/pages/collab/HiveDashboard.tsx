@@ -8,7 +8,7 @@ import {
     ChefHat, Wine, Briefcase, Bell, Search, Pin, Star,
     CheckSquare, Clock, Zap, Volume2, Paperclip, Smile,
     Reply, Trash2, Edit3, MoreHorizontal, Image, FileText,
-    X, Check, ArrowRight, PhoneCall, FileAudio,
+    X, Check, ArrowRight, PhoneCall, FileAudio, Share2,
     Play, Pause, Square, Calendar, UserPlus, ListTodo, RotateCw, Timer, GripVertical, Plus
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -274,6 +274,9 @@ export default function HiveDashboard() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null);
+    const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [forwardingMsg, setForwardingMsg] = useState<ChatMessage | null>(null);
 
     // Voice dictation — mic button fills the input field
     const { isListening, interimText, toggleDictation, isSupported: dictationSupported } = useVoiceDictation({
@@ -416,6 +419,57 @@ export default function HiveDashboard() {
     // Toggle pin
     const togglePin = useCallback((msgId: string) => {
         setMessages(prev => prev.map(m => m.id === msgId ? { ...m, isPinned: !m.isPinned } : m));
+    }, []);
+
+    // ─── Audio playback (voice messages & call log) ──────────────────
+    const playAudio = useCallback((audioUrl: string, itemId: string) => {
+        // Stop current playback
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.src = '';
+            audioRef.current = null;
+        }
+        // If same item, just stop
+        if (playingAudioId === itemId) {
+            setPlayingAudioId(null);
+            return;
+        }
+        const audio = new Audio(audioUrl);
+        audio.onended = () => {
+            setPlayingAudioId(null);
+            audioRef.current = null;
+        };
+        audio.onerror = () => {
+            setPlayingAudioId(null);
+            audioRef.current = null;
+        };
+        audioRef.current = audio;
+        setPlayingAudioId(itemId);
+        audio.play().catch(() => {
+            setPlayingAudioId(null);
+            audioRef.current = null;
+        });
+    }, [playingAudioId]);
+
+    // ─── Forward message to another channel ──────────────────────────
+    const forwardMessage = useCallback((msg: ChatMessage, targetChannelId: string) => {
+        const forwardedMsg: ChatMessage = {
+            id: `msg-${Date.now()}`,
+            sender: msg.sender,
+            senderInitials: msg.senderInitials,
+            senderColor: msg.senderColor,
+            text: msg.text,
+            timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+            channel: targetChannelId,
+            isVoice: msg.isVoice,
+            voiceDuration: msg.voiceDuration,
+            audioUrl: msg.audioUrl,
+            attachments: msg.attachments,
+            replyTo: undefined,
+            replyPreview: `↪ Forwarded from #${msg.channel || 'general'}`,
+        };
+        setMessages(prev => [...prev, forwardedMsg]);
+        setForwardingMsg(null);
     }, []);
 
     // Task management (stateful)
@@ -694,21 +748,15 @@ export default function HiveDashboard() {
                                                 <div className="flex items-center gap-1.5">
                                                     {msg.audioUrl ? (
                                                         <button
-                                                            onClick={() => {
-                                                                const existing = document.getElementById(`audio-${msg.id}`) as HTMLAudioElement | null;
-                                                                if (existing) {
-                                                                    if (existing.paused) {
-                                                                        existing.play();
-                                                                    } else {
-                                                                        existing.pause();
-                                                                        existing.currentTime = 0;
-                                                                    }
-                                                                }
-                                                            }}
+                                                            onClick={() => playAudio(msg.audioUrl as string, msg.id)}
                                                             className="h-6 w-6 rounded-full bg-red-500/20 hover:bg-red-500/30 flex items-center justify-center text-red-400 transition-colors flex-shrink-0"
-                                                            title="Play voice message"
+                                                            title={playingAudioId === msg.id ? 'Stop playback' : 'Play voice message'}
                                                         >
-                                                            <Play className="h-3 w-3 ml-0.5" />
+                                                            {playingAudioId === msg.id ? (
+                                                                <Pause className="h-3 w-3" />
+                                                            ) : (
+                                                                <Play className="h-3 w-3 ml-0.5" />
+                                                            )}
                                                         </button>
                                                     ) : (
                                                         <Mic className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />
@@ -717,19 +765,16 @@ export default function HiveDashboard() {
                                                         {Array.from({ length: 20 }).map((_, i) => (
                                                             <div
                                                                 key={i}
-                                                                className="w-1 rounded-full bg-red-500/60"
+                                                                className={`w-1 rounded-full ${playingAudioId === msg.id ? 'bg-red-400 animate-pulse' : 'bg-red-500/60'}`}
                                                                 style={{ height: `${4 + Math.sin(i * 0.7) * 8 + Math.random() * 6}px` }}
                                                             />
                                                         ))}
                                                     </div>
                                                     <span className="text-[10px] text-zinc-500 ml-1">{msg.voiceDuration}s</span>
                                                 </div>
-                                                {msg.audioUrl && (
-                                                    <audio id={`audio-${msg.id}`} src={msg.audioUrl} preload="metadata" className="hidden" />
-                                                )}
                                                 {msg.text && msg.text !== '🎙️ Voice message' && (
                                                     <p className="text-xs text-zinc-400 italic leading-relaxed pl-5">
-                                                        "{msg.text}"
+                                                        &quot;{msg.text}&quot;
                                                     </p>
                                                 )}
                                             </div>
@@ -843,6 +888,13 @@ export default function HiveDashboard() {
                                         >
                                             <CheckSquare className="h-3.5 w-3.5" />
                                         </button>
+                                        <button
+                                            onClick={() => setForwardingMsg(forwardingMsg?.id === msg.id ? null : msg)}
+                                            className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${forwardingMsg?.id === msg.id ? 'text-cyan-400' : 'text-zinc-400 hover:text-cyan-400'}`}
+                                            title="Forward message"
+                                        >
+                                            <Share2 className="h-3.5 w-3.5" />
+                                        </button>
                                         {msg.sender === 'You' && (
                                             <>
                                                 <button
@@ -879,6 +931,31 @@ export default function HiveDashboard() {
                                                         className="h-7 w-7 rounded-lg hover:bg-zinc-800 text-sm flex items-center justify-center transition-all hover:scale-125"
                                                     >
                                                         {emoji}
+                                                    </button>
+                                                ))}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+
+                                    {/* Forward Channel Picker */}
+                                    <AnimatePresence>
+                                        {forwardingMsg?.id === msg.id && (
+                                            <motion.div
+                                                className="absolute -top-20 right-0 bg-zinc-900 border border-zinc-700 rounded-xl p-2 shadow-xl z-20 min-w-[160px]"
+                                                initial={{ opacity: 0, scale: 0.9, y: 5 }}
+                                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                exit={{ opacity: 0, scale: 0.9, y: 5 }}
+                                            >
+                                                <p className="text-[10px] font-bold uppercase text-zinc-500 mb-1 px-1">Forward to</p>
+                                                {CHANNELS.filter(ch => ch.id !== activeChannel).map(ch => (
+                                                    <button
+                                                        key={ch.id}
+                                                        onClick={() => forwardMessage(msg, ch.id)}
+                                                        className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
+                                                        title={`Forward to #${ch.name}`}
+                                                    >
+                                                        <ch.icon className={`h-3.5 w-3.5 ${ch.color}`} />
+                                                        <span>#{ch.name}</span>
                                                     </button>
                                                 ))}
                                             </motion.div>

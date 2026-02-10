@@ -243,7 +243,9 @@ export function GlobalPTTProvider({ children }: { children: React.ReactNode }) {
         recognitionRef.current = null;
     }, []);
 
-    // ─── Core PTT ───────────────────────────────────────────────────────
+    // Audio recording stream ref (separate from localStream for reliability)
+    const recordingStream = useRef<MediaStream | null>(null);
+
     const startTalking = useCallback(() => {
         if (localStream.current) {
             localStream.current.getAudioTracks().forEach(track => {
@@ -257,24 +259,30 @@ export function GlobalPTTProvider({ children }: { children: React.ReactNode }) {
         setLiveTranscript('');
         startRecognition();
 
-        // ─── Start audio recording ──────────────────────────────────
+        // ─── Start audio recording with a FRESH stream ──────────────
         audioChunksRef.current = [];
-        if (localStream.current) {
-            try {
-                const recorder = new MediaRecorder(localStream.current, {
-                    mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+        navigator.mediaDevices?.getUserMedia({ audio: true })
+            .then(freshStream => {
+                recordingStream.current = freshStream;
+                try {
+                    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
                         ? 'audio/webm;codecs=opus'
-                        : 'audio/webm',
-                });
-                recorder.ondataavailable = (e: BlobEvent) => {
-                    if (e.data.size > 0) audioChunksRef.current.push(e.data);
-                };
-                recorder.start(100); // collect chunks every 100ms
-                mediaRecorderRef.current = recorder;
-            } catch {
-                // MediaRecorder not available — recording disabled
-            }
-        }
+                        : MediaRecorder.isTypeSupported('audio/webm')
+                            ? 'audio/webm'
+                            : '';
+                    const recorder = new MediaRecorder(freshStream, mimeType ? { mimeType } : undefined);
+                    recorder.ondataavailable = (e: BlobEvent) => {
+                        if (e.data.size > 0) audioChunksRef.current.push(e.data);
+                    };
+                    recorder.start(200); // collect chunks every 200ms
+                    mediaRecorderRef.current = recorder;
+                } catch {
+                    // MediaRecorder not available — recording disabled
+                }
+            })
+            .catch(() => {
+                // Mic not accessible for recording
+            });
 
         setLiveSpeakers(prev => [
             ...prev.filter(s => s.name !== 'You'),
@@ -303,7 +311,15 @@ export function GlobalPTTProvider({ children }: { children: React.ReactNode }) {
         const recorder = mediaRecorderRef.current;
         mediaRecorderRef.current = null;
 
+        const cleanupRecordingStream = () => {
+            if (recordingStream.current) {
+                recordingStream.current.getTracks().forEach(t => t.stop());
+                recordingStream.current = null;
+            }
+        };
+
         const finalize = (audioUrl?: string) => {
+            cleanupRecordingStream();
             const entry: CallLogEntry = {
                 id: `call-${Date.now()}`,
                 speaker: 'You',
@@ -339,6 +355,7 @@ export function GlobalPTTProvider({ children }: { children: React.ReactNode }) {
             };
             recorder.stop();
         } else {
+            cleanupRecordingStream();
             finalize();
         }
 
