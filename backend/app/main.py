@@ -79,6 +79,10 @@ app.include_router(ops_router)
 app.include_router(forecasting_router)
 app.include_router(tables_router)
 app.include_router(access_control_router)
+
+from app.domains.integrations.smart_home_routes import router as smart_home_router
+app.include_router(smart_home_router, prefix="/api/smart-home", tags=["smart-home"])
+
 app.include_router(catchall_router)
 app.include_router(system_router)
 

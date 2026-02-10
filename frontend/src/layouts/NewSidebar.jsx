@@ -9,7 +9,7 @@ import {
   Table as TableIcon, Calendar, Truck, PieChart as PieChartIcon,
   UserCheck, Receipt, Clock, Package, Type, Building2, Search, Upload, Monitor,
   Globe, Mic, Wand2, Radar, LayoutGrid, ShieldAlert, Palette, Server, Layers, X,
-  RefreshCw
+  RefreshCw, Home
 } from 'lucide-react';
 
 const menuItems = [
@@ -177,6 +177,7 @@ const menuItems = [
   { title: 'Access Control', icon: Award, href: '/admin/access-control', group: 'settings' },
   { title: 'Integration Sync', icon: RefreshCw, href: '/admin/sync', group: 'settings' },
   { title: 'Door Access (Nuki)', icon: Award, href: '/admin/door-access', group: 'settings' },
+  { title: 'Smart Home', icon: Home, href: '/admin/smart-home', group: 'settings' },
   { title: 'Event Monitor', icon: Activity, href: '/admin/events', group: 'settings' },
   {
     title: 'Device Manager',

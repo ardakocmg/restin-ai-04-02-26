@@ -155,6 +155,7 @@ import ForecastingCosts from "./pages/admin/hr/ForecastingCosts";
 import EmployeePortal from "./pages/admin/hr/EmployeePortal";
 import TimesheetsIndices from "./pages/admin/hr/Timesheets";
 
+import SmartHomeDashboard from "./pages/admin/smart-home/SmartHomeDashboard";
 import Devices from "./pages/admin/Devices";
 import RestaurantAppSettings from "./pages/admin/RestaurantAppSettings";
 import NotFound from "./pages/NotFound";
@@ -450,6 +451,7 @@ function App() {
                                   <Route path="tasks-kanban" element={<TasksKanban />} />
                                   <Route path="printers" element={<Printers />} />
                                   <Route path="inbox" element={<Inbox />} />
+                                  <Route path="smart-home" element={<SmartHomeDashboard />} />
                                   <Route path="integrations" element={<IntegrationsHub />} />
                                   <Route path="delivery-aggregators" element={<DeliveryAggregators />} />
                                   <Route path="finance-provider" element={<FinanceProviderSettings />} />
