@@ -486,13 +486,13 @@ export default function HiveDashboard() {
             senderColor: msg.senderColor,
             text: msg.text,
             timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
-            channel: targetChannelId,
+            channelId: targetChannelId,
             isVoice: msg.isVoice,
             voiceDuration: msg.voiceDuration,
             audioUrl: msg.audioUrl,
             attachments: msg.attachments,
             replyTo: undefined,
-            replyPreview: `↪ Forwarded from #${msg.channel || 'general'}`,
+            replyPreview: `↪ Forwarded from #${msg.channelId || 'general'}`,
         };
         setMessages(prev => [...prev, forwardedMsg]);
         setForwardingMsg(null);
