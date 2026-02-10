@@ -5,7 +5,7 @@ from app.domains.integrations.models import (
     IntegrationConfigResponse, 
     UpdateIntegrationConfig
 )
-from app.domains.integrations.service import IntegrationService
+from app.domains.integrations.service import IntegrationService, SyncEngine
 # Assume simple auth dependency for now
 # from app.dependencies import get_current_user_organization 
 
