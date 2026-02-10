@@ -187,10 +187,12 @@ export const useWalkieTalkie = (
 
     // ─── Core PTT Controls ──────────────────────────────────────────────
     const startTalking = useCallback(() => {
-        if (!localStream.current) return;
-        localStream.current.getAudioTracks().forEach(track => {
-            track.enabled = true;
-        });
+        // Enable mic tracks if available (but don't block PTT state if mic isn't ready)
+        if (localStream.current) {
+            localStream.current.getAudioTracks().forEach(track => {
+                track.enabled = true;
+            });
+        }
         setIsTalking(true);
         isTalkingRef.current = true;
         talkStartRef.current = Date.now();
@@ -206,39 +208,41 @@ export const useWalkieTalkie = (
     }, [channelId, startRecognition]);
 
     const stopTalking = useCallback(() => {
-        if (!localStream.current || !isTalkingRef.current) return;
-        localStream.current.getAudioTracks().forEach(track => {
-            track.enabled = false;
-        });
+        if (!isTalkingRef.current) return;
+
+        // Mute mic tracks if available
+        if (localStream.current) {
+            localStream.current.getAudioTracks().forEach(track => {
+                track.enabled = false;
+            });
+        }
         setIsTalking(false);
         isTalkingRef.current = false;
         stopRecognition();
 
-        const duration = Math.round((Date.now() - talkStartRef.current) / 1000);
+        const duration = Math.max(1, Math.round((Date.now() - talkStartRef.current) / 1000));
         const transcript = transcriptBufferRef.current.trim();
         const timestamp = new Date(talkStartRef.current).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-        // Add to call log (only if > 1 second)
-        if (duration >= 1) {
-            const entry: CallLogEntry = {
-                id: `call-${Date.now()}`,
-                speaker: 'You',
-                channelId,
-                startedAt: timestamp,
-                duration,
-                transcript: transcript || '(no transcript)',
-            };
-            setCallLog(prev => [entry, ...prev].slice(0, 50));
+        // Always add to call log
+        const entry: CallLogEntry = {
+            id: `call-${Date.now()}`,
+            speaker: 'You',
+            channelId,
+            startedAt: timestamp,
+            duration,
+            transcript: transcript || '(no transcript)',
+        };
+        setCallLog(prev => [entry, ...prev].slice(0, 50));
 
-            // Fire callback → lets the dashboard inject a voice message into the channel
-            onTransmissionEndRef.current?.({
-                channelId,
-                speaker: 'You',
-                duration,
-                transcript: transcript || '',
-                timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
-            });
-        }
+        // Fire callback → injects voice message into the channel
+        onTransmissionEndRef.current?.({
+            channelId,
+            speaker: 'You',
+            duration,
+            transcript: transcript || '',
+            timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        });
 
         // Remove self from live speakers
         setLiveSpeakers(prev => prev.filter(s => s.name !== 'You'));

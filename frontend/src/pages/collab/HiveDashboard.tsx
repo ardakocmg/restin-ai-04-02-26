@@ -73,27 +73,32 @@ const MOCK_MESSAGES: ChatMessage[] = [
     {
         id: '4', channelId: 'kitchen', sender: 'Sarah P.', senderInitials: 'SP',
         senderColor: 'bg-teal-600', text: 'Confirmed! Fixing it now for @Table12.',
-        timestamp: '14:41', replyTo: '3', replyPreview: '#Order847 needs to be medium-rare...',
+        timestamp: '14:41:22', replyTo: '3', replyPreview: '#Order847 needs to be medium-rare...',
     },
     {
         id: '5', channelId: 'general', sender: 'Alex R.', senderInitials: 'AR',
         senderColor: 'bg-violet-600', text: 'VIP guests on @Table3 — please prioritize their #Order902.',
-        timestamp: '14:45', reactions: { '⭐': ['Maria L.', 'John K.'] },
+        timestamp: '14:45:10', reactions: { '⭐': ['Maria L.', 'John K.'] },
+    },
+    {
+        id: '5b', channelId: 'kitchen', sender: 'Chef Marco', senderInitials: 'CM',
+        senderColor: 'bg-orange-600', text: 'Hey team, the supplier just called — fresh sea bass is arriving at 4pm, let\'s prep the station now.',
+        timestamp: '14:47:33', isVoice: true, voiceDuration: 8,
     },
     {
         id: '6', channelId: 'alerts', sender: 'System', senderInitials: '⚡',
         senderColor: 'bg-red-600', text: 'Low stock alert: $ItemFlour is below reorder threshold.',
-        timestamp: '14:50',
+        timestamp: '14:50:00',
     },
     {
         id: '7', channelId: 'alerts', sender: 'System', senderInitials: '⚡',
         senderColor: 'bg-red-600', text: 'IoT: Coffee machine temperature above normal range (96°C).',
-        timestamp: '14:52',
+        timestamp: '14:52:15',
     },
     {
         id: '8', channelId: 'bar', sender: 'Tony B.', senderInitials: 'TB',
         senderColor: 'bg-purple-600', text: 'Running low on Aperol. Please add to next order.',
-        timestamp: '15:01',
+        timestamp: '15:01:44',
         attachments: [{ name: 'aperol-photo.jpg', type: 'image', size: '1.2 MB' }],
     },
     {
