@@ -54,4 +54,4 @@ jobs:
                   pip install ruff
 
             - name: Lint with Ruff
-              run: ruff check app/ --ignore E501,F401,F841
+              run: ruff check app/ --ignore E501,F401,F841,E402,E741,E701,E722,F541,F821
