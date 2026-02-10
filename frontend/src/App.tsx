@@ -231,6 +231,7 @@ import RecipeVideoBites from "./pages/admin/training/RecipeVideoBites";
 import PluginMarketplace from "./pages/admin/marketplace/PluginMarketplace";
 import DoorAccessControl from "./pages/admin/door-access/DoorAccessControl";
 import BillingDashboard from './pages/admin/billing/BillingDashboard';
+import SyncDashboard from './pages/admin/sync/SyncDashboard';
 
 // AI Hub (New React Pages)
 import VoiceAI from "./pages/admin/ai/VoiceAI";
@@ -496,6 +497,7 @@ function App() {
                                   <Route path="recipe-videos" element={<RecipeVideoBites />} />
                                   <Route path="plugin-marketplace" element={<PluginMarketplace />} />
                                   <Route path="door-access" element={<DoorAccessControl />} />
+                                  <Route path="sync" element={<SyncDashboard />} />
 
                                   {/* RESTIN.AI MASTER PROTOCOL v18.0 */}
                                   <Route path="restin">
