@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
-    Globe, Layout, Type, Image as ImageIcon,
-    Settings, Save, Eye, Rocket, Plus,
-    Hash, ChevronRight, MousePointer2, Smartphone, Monitor, Tablet
+    Layout, Type, Image as ImageIcon,
+    Hash, Smartphone, Monitor, Tablet
 } from 'lucide-react';
-import { Card } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { cn } from '../../../lib/utils';
 
@@ -152,7 +150,7 @@ export default function WebBuilder() {
                             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop')] mix-blend-overlay opacity-30 grayscale saturate-0"></div>
                             <div className="relative z-10">
                                 <h2 className="text-4xl font-black text-white italic tracking-tighter uppercase leading-none">The Artisan's <br /> Kitchen</h2>
-                                <Button className="mt-6 bg-white text-black font-black hover:bg-zinc-200">Order Now</Button>
+                                <Button className="mt-6 bg-card text-foreground font-black hover:bg-zinc-200 dark:hover:bg-zinc-700">Order Now</Button>
                             </div>
                         </section>
 

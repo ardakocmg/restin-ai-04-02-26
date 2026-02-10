@@ -11,7 +11,7 @@ import { Switch } from "../../components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../../components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
-import { Building2, MapPin, Table2, Plus, Settings, Package, ChevronDown, ChevronUp, Palette, Scale, UserCheck, Upload, Loader2 } from "lucide-react";
+import { MapPin, Table2, Plus, Settings, Package, ChevronDown, ChevronUp, Palette, Scale, UserCheck, Upload, Loader2 } from "lucide-react";
 import { documentAPI } from "../../lib/api";
 import { cn } from "../../lib/utils";
 
@@ -264,7 +264,7 @@ export default function VenueSettings() {
                 <Button
                   data-testid="save-venue-btn"
                   onClick={handleUpdateVenue}
-                  className="bg-white text-black hover:bg-zinc-200"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   Save Changes
                 </Button>
@@ -416,7 +416,7 @@ export default function VenueSettings() {
                     </div>
 
                     {venueForm.branding?.logo_url && (
-                      <div className="mt-2 p-4 bg-white rounded-lg flex items-center justify-center relative group">
+                      <div className="mt-2 p-4 bg-white rounded-lg flex items-center justify-center relative group"> {/* eslint-disable-line restin-guardrails/no-hardcoded-colors */}
                         <img src={venueForm.branding.logo_url} alt="Logo Preview" className="max-h-12 object-contain" />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
                           <span className="text-[10px] font-black text-white uppercase tracking-widest">Preview</span>
@@ -445,7 +445,7 @@ export default function VenueSettings() {
 
               <Button
                 onClick={handleUpdateVenue}
-                className="w-full bg-white text-black hover:bg-zinc-200 h-12 font-black uppercase tracking-widest"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 font-black uppercase tracking-widest"
                 disabled={!isManager()}
               >
                 Save Branding & Legal
@@ -465,7 +465,7 @@ export default function VenueSettings() {
               {isManager() && (
                 <Dialog open={showZoneDialog} onOpenChange={setShowZoneDialog}>
                   <DialogTrigger asChild>
-                    <Button data-testid="add-zone-btn" className="bg-white text-black hover:bg-zinc-200">
+                    <Button data-testid="add-zone-btn" className="bg-primary text-primary-foreground hover:bg-primary/90">
                       <Plus className="w-4 h-4 mr-2" />
                       Add Zone
                     </Button>
@@ -503,7 +503,7 @@ export default function VenueSettings() {
                       <Button
                         data-testid="create-zone-btn"
                         onClick={handleCreateZone}
-                        className="w-full bg-white text-black hover:bg-zinc-200"
+                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                       >
                         Create Zone
                       </Button>
@@ -543,7 +543,7 @@ export default function VenueSettings() {
               {isManager() && (
                 <Dialog open={showTableDialog} onOpenChange={setShowTableDialog}>
                   <DialogTrigger asChild>
-                    <Button data-testid="add-table-btn" className="bg-white text-black hover:bg-zinc-200">
+                    <Button data-testid="add-table-btn" className="bg-primary text-primary-foreground hover:bg-primary/90">
                       <Plus className="w-4 h-4 mr-2" />
                       Add Table
                     </Button>
@@ -589,7 +589,7 @@ export default function VenueSettings() {
                       <Button
                         data-testid="create-table-btn"
                         onClick={handleCreateTable}
-                        className="w-full bg-white text-black hover:bg-zinc-200"
+                        className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                       >
                         Create Table
                       </Button>

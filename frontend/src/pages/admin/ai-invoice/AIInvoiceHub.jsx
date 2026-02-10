@@ -74,7 +74,7 @@ export default function AIInvoiceHub() {
                                 <Scan className="w-12 h-12 text-zinc-500 mb-4 mx-auto" />
                                 <p className="text-zinc-300 font-medium text-lg">Drag & Drop Invoices Here</p>
                                 <p className="text-zinc-500 text-sm mt-2 mb-6">Support for PDF, JPG, PNG</p>
-                                <Button onClick={handleScan} className="bg-white text-black hover:bg-zinc-200">
+                                <Button onClick={handleScan} className="bg-primary text-primary-foreground hover:bg-primary/90">
                                     <Upload className="w-4 h-4 mr-2" /> Select Files
                                 </Button>
                             </div>

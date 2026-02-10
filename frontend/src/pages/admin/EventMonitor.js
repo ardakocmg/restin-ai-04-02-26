@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../lib/api';
 import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
+import { Card, CardContent } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Input } from '../../components/ui/input';
-import {
-  Zap, Clock, CheckCircle2, XCircle, Filter,
-  ArrowRight, Database, TrendingUp
-} from 'lucide-react';
+import { Zap, Clock, CheckCircle2, XCircle, Database } from 'lucide-react';
 
 export default function EventMonitorPage() {
   const [outboxEvents, setOutboxEvents] = useState([]);
   const [dlqEvents, setDlqEvents] = useState([]);
   const [completedEvents, setCompletedEvents] = useState([]);
-  const [filter, setFilter] = useState('all');
-  const [loading, setLoading] = useState(true);
+  const [filter] = useState('all');
+  const [, setLoading] = useState(true);
 
   useEffect(() => {
     loadEvents();
@@ -66,8 +62,8 @@ export default function EventMonitorPage() {
 
   const EventCard = ({ event, type = 'pending' }) => (
     <div className={`p-4 rounded-lg border ${type === 'dlq' ? 'bg-red-50 border-red-200' :
-        type === 'completed' ? 'bg-green-50 border-green-200' :
-          'bg-white border-slate-200'
+      type === 'completed' ? 'bg-green-50 border-green-200' :
+        'bg-white border-slate-200'
       }`}>
       <div className="flex items-start justify-between mb-2">
         <div className="flex-1">

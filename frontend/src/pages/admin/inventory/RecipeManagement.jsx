@@ -469,7 +469,7 @@ export default function RecipeManagement() {
           key: 'status',
           label: 'Status',
           render: (row) => (
-            <Badge className={row.active ? "bg-emerald-500 text-black hover:bg-emerald-400 font-bold border-0" : "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"}>
+            <Badge className={row.active ? "bg-emerald-500 text-emerald-950 hover:bg-emerald-400 font-bold border-0" : "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"}>
               {row.active ? 'ACTIVE' : 'ARCHIVED'}
             </Badge>
           )
@@ -1109,7 +1109,7 @@ export default function RecipeManagement() {
             <div className="flex justify-end gap-3 pt-6">
               <Button variant="ghost" onClick={() => setIsModalOpen(false)} className="text-zinc-500">Cancel</Button>
               <Button
-                className="bg-orange-500 hover:bg-orange-600 text-black font-black uppercase tracking-tighter px-8"
+                className="bg-orange-500 hover:bg-orange-600 text-orange-950 font-black uppercase tracking-tighter px-8"
                 onClick={handleSave}
               >
                 Save Recipe

@@ -1,15 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useVenue } from "../context/VenueContext";
 import { authAPI } from "../lib/api";
 import { toast } from "sonner";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Building2, Lock, Shield, ChefHat, LayoutGrid, Monitor } from "lucide-react";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -408,7 +401,7 @@ export default function Login() {
                   </div>
 
                   <Button
-                    className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-bold uppercase"
+                    className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-bold uppercase"
                     onClick={handleMFAVerify}
                     disabled={loading || totpCode.length !== 6}
                   >

@@ -141,7 +141,7 @@ export default function FloatingChat() {
                 {totalUnread > 0 && (
                     <Badge className="bg-red-500 text-white text-[10px] border-0 h-4 px-1">{totalUnread}</Badge>
                 )}
-                <button onClick={(e) => { e.stopPropagation(); setIsOpen(false); setIsMinimized(false); }} className="ml-2 text-zinc-500 hover:text-zinc-300">
+                <button title="Close chat" onClick={(e) => { e.stopPropagation(); setIsOpen(false); setIsMinimized(false); }} className="ml-2 text-zinc-500 hover:text-zinc-300">
                     <X className="h-3.5 w-3.5" />
                 </button>
             </motion.div>
@@ -172,10 +172,10 @@ export default function FloatingChat() {
                         </button>
                     </div>
                     <div className="flex items-center gap-1">
-                        <button onClick={() => setIsMinimized(true)} className="p-1.5 rounded-md hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors">
+                        <button title="Minimize chat" onClick={() => setIsMinimized(true)} className="p-1.5 rounded-md hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors">
                             <Minimize2 className="h-3.5 w-3.5" />
                         </button>
-                        <button onClick={() => setIsOpen(false)} className="p-1.5 rounded-md hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors">
+                        <button title="Close chat" onClick={() => setIsOpen(false)} className="p-1.5 rounded-md hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors">
                             <X className="h-3.5 w-3.5" />
                         </button>
                     </div>
@@ -298,6 +298,7 @@ export default function FloatingChat() {
                             className="bg-zinc-900 border-zinc-800 text-zinc-200 placeholder:text-zinc-600 text-xs h-8 flex-1"
                         />
                         <button
+                            title="Send message"
                             onClick={handleSend}
                             disabled={!messageInput.trim()}
                             className="h-8 w-8 rounded-lg bg-amber-600 hover:bg-amber-500 disabled:bg-zinc-800 disabled:text-zinc-600 text-white flex items-center justify-center transition-colors flex-shrink-0"

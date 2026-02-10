@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { toast } from "sonner";
 import api from '@/lib/api';
+import { useVenue } from '@/context/VenueContext';
 import { ProviderCard } from './components/ProviderCard';
 
 // ─── Per-Provider Credential Field Definitions ──────────────────────────
@@ -103,10 +104,9 @@ interface SyncRun {
     error_summary: string | null;
 }
 
-const API_BASE = '/v1/integrations';
-
 // ─── Main Dashboard ─────────────────────────────────────────────────────
 export default function SyncDashboard() {
+    const { activeVenueId } = useVenue();
     const [configs, setConfigs] = useState<IntegrationConfig[]>([]);
     const [loading, setLoading] = useState(true);
     const [syncing, setSyncing] = useState<string | null>(null);
@@ -125,16 +125,28 @@ export default function SyncDashboard() {
 
     // ─── Fetch Configs ──────────────────────────────────────────────────
     const fetchConfigs = useCallback(async () => {
+        if (!activeVenueId) { setLoading(false); return; }
         try {
-            const res = await api.get(`${API_BASE}/`);
-            setConfigs(Array.isArray(res.data) ? res.data : []);
+            const res = await api.get(`/venues/${activeVenueId}/integrations`);
+            const raw = Array.isArray(res.data) ? res.data : (res.data?.data ?? []);
+            // Map backend shape → frontend IntegrationConfig shape
+            const mapped: IntegrationConfig[] = raw.map((item: Record<string, unknown>) => ({
+                id: (item.key as string) || (item.id as string) || '',
+                organization_id: '',
+                provider: (item.key as string) || (item.provider as string) || '',
+                is_enabled: !!(item.enabled ?? item.is_enabled),
+                status: (item.enabled ?? item.is_enabled) ? 'CONNECTED' : 'DISABLED',
+                last_sync: (item.lastSync as string) || (item.last_sync as string) || null,
+                settings: (item.config as Record<string, unknown>) || (item.settings as Record<string, unknown>) || {},
+            }));
+            setConfigs(mapped);
         } catch (err) {
             // API might 404 if no configs yet — that's OK
             setConfigs([]);
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [activeVenueId]);
 
     useEffect(() => { fetchConfigs(); }, [fetchConfigs]);
 
@@ -146,9 +158,9 @@ export default function SyncDashboard() {
         setSyncing(provider);
         toast.info(`Starting sync for ${provider}...`);
         try {
-            const res = await api.post(`${API_BASE}/${provider}/sync`);
+            const res = await api.post(`/venues/${activeVenueId}/integrations/${provider}/sync`);
             const result = res.data;
-            if (result.status === 'SUCCESS') {
+            if (result.status === 'SUCCESS' || result.success) {
                 toast.success(`${provider} sync completed! ${result.result?.processed || 0} items processed.`);
             } else {
                 toast.error(`${provider} sync failed: ${result.error || 'Unknown error'}`);
@@ -180,10 +192,10 @@ export default function SyncDashboard() {
         if (!configProvider) return;
         setSaving(true);
         try {
-            await api.post(`${API_BASE}/${configProvider}`, {
-                is_enabled: configEnabled,
-                credentials: credentials,
-                settings: credentials, // Store non-secret settings here too
+            await api.post(`/venues/${activeVenueId}/integrations/${configProvider}`, {
+                enabled: configEnabled,
+                config: credentials,
+                test_mode: false,
             });
             toast.success(`${configProvider} configuration saved!`);
             setConfigOpen(false);

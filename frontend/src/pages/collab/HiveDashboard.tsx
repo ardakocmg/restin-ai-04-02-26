@@ -1221,10 +1221,10 @@ export default function HiveDashboard() {
                                                             className="bg-zinc-900 border-zinc-700 text-zinc-200 text-sm h-8 flex-1"
                                                             autoFocus
                                                         />
-                                                        <Button size="sm" className="h-8 bg-emerald-600 hover:bg-emerald-500 text-white" onClick={() => handleSaveEdit(msg.id)}>
+                                                        <Button size="sm" title="Save edit" className="h-8 bg-emerald-600 hover:bg-emerald-500 text-white" onClick={() => handleSaveEdit(msg.id)}>
                                                             <Check className="h-3 w-3" />
                                                         </Button>
-                                                        <Button size="sm" variant="ghost" className="h-8 text-zinc-400" onClick={() => setEditingId(null)}>
+                                                        <Button size="sm" title="Cancel edit" variant="ghost" className="h-8 text-zinc-400" onClick={() => setEditingId(null)}>
                                                             <X className="h-3 w-3" />
                                                         </Button>
                                                     </div>
@@ -1590,7 +1590,7 @@ export default function HiveDashboard() {
                             <span className="text-xs text-zinc-400 truncate flex-1">
                                 Replying to <span className="text-zinc-300 font-medium">{replyingTo.sender}</span>: {replyingTo.text.substring(0, 50)}...
                             </span>
-                            <button onClick={() => setReplyingTo(null)} className="text-zinc-500 hover:text-zinc-300">
+                            <button title="Cancel reply" onClick={() => setReplyingTo(null)} className="text-zinc-500 hover:text-zinc-300">
                                 <X className="h-3.5 w-3.5" />
                             </button>
                         </motion.div>
@@ -1621,6 +1621,7 @@ export default function HiveDashboard() {
                         {/* Attachment Button */}
                         <div className="relative">
                             <button
+                                title="Attach file"
                                 onClick={() => setShowAttachMenu(!showAttachMenu)}
                                 className="h-9 w-9 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-zinc-200 transition-colors"
                             >
