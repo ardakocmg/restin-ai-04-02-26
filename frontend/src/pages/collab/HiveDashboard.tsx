@@ -9,12 +9,14 @@ import {
     CheckSquare, Clock, Zap, Volume2, Paperclip, Smile,
     Reply, Trash2, Edit3, MoreHorizontal, Image, FileText,
     X, Check, ArrowRight, PhoneCall, FileAudio, Share2,
-    Play, Pause, Square, Calendar, UserPlus, ListTodo, RotateCw, Timer, GripVertical, Plus
+    Play, Pause, Square, Calendar, UserPlus, ListTodo, RotateCw, Timer, GripVertical, Plus,
+    Settings, Globe, Volume1
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { parseSmartMessage, SmartToken } from '@/lib/smartParser';
 import { useGlobalPTT, TransmissionResult, LiveSpeaker } from '@/contexts/GlobalPTTContext';
-import { useVoiceDictation, speakMessage, stopSpeaking, isSpeaking } from '@/hooks/useVoiceDictation';
+import { useVoiceDictation, speakMessage, stopSpeaking, isSpeaking, getAvailableVoices, SUPPORTED_LANGUAGES } from '@/hooks/useVoiceDictation';
+import type { TTSConfig } from '@/hooks/useVoiceDictation';
 
 // ─── Channel Definitions ────────────────────────────────────────────────
 interface Channel {
@@ -278,10 +280,34 @@ export default function HiveDashboard() {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [forwardingMsg, setForwardingMsg] = useState<ChatMessage | null>(null);
 
+    // ─── Message Settings State ──────────────────────────────────────
+    const [ttsRate, setTtsRate] = useState(1.4);
+    const [ttsVoiceName, setTtsVoiceName] = useState('');
+    const [recognitionLang, setRecognitionLang] = useState('en-US');
+    const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+
+    // Load available voices (they load asynchronously in some browsers)
+    useEffect(() => {
+        const loadVoices = () => {
+            const voices = getAvailableVoices();
+            if (voices.length > 0) setAvailableVoices(voices);
+        };
+        loadVoices();
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+    }, []);
+
+    const ttsConfig: TTSConfig = useMemo(() => ({
+        rate: ttsRate,
+        voiceName: ttsVoiceName || undefined,
+    }), [ttsRate, ttsVoiceName]);
+
     // Voice dictation — mic button fills the input field
     const { isListening, interimText, toggleDictation, isSupported: dictationSupported } = useVoiceDictation({
         onResult: (text: string) => setMessageInput(prev => (prev + ' ' + text).trim()),
         onInterim: () => { /* interim shown via interimText state */ },
+        lang: recognitionLang,
     });
 
     // TTS — read a message aloud
@@ -290,7 +316,7 @@ export default function HiveDashboard() {
             stopSpeaking();
             setSpeakingMsgId(null);
         } else {
-            speakMessage(text);
+            speakMessage(text, ttsConfig);
             setSpeakingMsgId(msgId);
             // Clear speaking state when done
             const checkDone = setInterval(() => {
@@ -1127,6 +1153,9 @@ export default function HiveDashboard() {
                                 <Badge className="ml-1 h-4 min-w-[16px] px-1 text-[10px] bg-zinc-700 text-zinc-300 border-0">{callLog.length}</Badge>
                             )}
                         </TabsTrigger>
+                        <TabsTrigger value="settings" className="text-xs">
+                            <Settings className="h-3.5 w-3.5 mr-1" /> Settings
+                        </TabsTrigger>
                     </TabsList>
 
                     {/* Tasks Tab */}
@@ -1549,16 +1578,16 @@ export default function HiveDashboard() {
                                             <div className="flex items-center gap-1.5">
                                                 {entry.audioUrl && (
                                                     <button
-                                                        onClick={() => {
-                                                            const el = document.getElementById(`log-audio-${entry.id}`) as HTMLAudioElement | null;
-                                                            if (el) {
-                                                                if (el.paused) { el.play(); } else { el.pause(); el.currentTime = 0; }
-                                                            }
-                                                        }}
-                                                        className="h-5 w-5 rounded-full bg-blue-500/20 hover:bg-blue-500/30 flex items-center justify-center text-blue-400 transition-colors"
-                                                        title="Play recording"
+                                                        onClick={() => playAudio(entry.audioUrl as string, `log-${entry.id}`)}
+                                                        className={`h-5 w-5 rounded-full flex items-center justify-center transition-colors ${playingAudioId === `log-${entry.id}` ? 'bg-blue-500/40 text-blue-300' : 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-400'
+                                                            }`}
+                                                        title={playingAudioId === `log-${entry.id}` ? 'Stop playback' : 'Play recording'}
                                                     >
-                                                        <Play className="h-2.5 w-2.5 ml-0.5" />
+                                                        {playingAudioId === `log-${entry.id}` ? (
+                                                            <Pause className="h-2.5 w-2.5" />
+                                                        ) : (
+                                                            <Play className="h-2.5 w-2.5 ml-0.5" />
+                                                        )}
                                                     </button>
                                                 )}
                                                 <span className="text-[10px] text-zinc-600">{entry.startedAt}</span>
@@ -1571,16 +1600,125 @@ export default function HiveDashboard() {
                                         </div>
                                         {entry.transcript !== '(no transcript)' && (
                                             <p className="text-[11px] text-zinc-400 italic bg-zinc-800/50 rounded px-2 py-1.5 leading-relaxed">
-                                                "{entry.transcript}"
+                                                &quot;{entry.transcript}&quot;
                                             </p>
-                                        )}
-                                        {entry.audioUrl && (
-                                            <audio id={`log-audio-${entry.id}`} src={entry.audioUrl} preload="metadata" className="hidden" />
                                         )}
                                     </motion.div>
                                 ))
                             )}
                         </AnimatePresence>
+                    </TabsContent>
+
+                    {/* ─── Settings Tab ──────────────────────────────── */}
+                    <TabsContent value="settings" className="flex-1 overflow-auto p-3 mt-0 space-y-4">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+                            🎙️ Voice & Language
+                        </p>
+
+                        {/* TTS Speed */}
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <label className="text-xs text-zinc-300 flex items-center gap-1.5">
+                                    <Volume1 className="h-3.5 w-3.5 text-blue-400" />
+                                    Speech Speed
+                                </label>
+                                <span className="text-xs font-mono text-zinc-400">{ttsRate.toFixed(1)}x</span>
+                            </div>
+                            <input
+                                type="range"
+                                min="0.5"
+                                max="2.0"
+                                step="0.1"
+                                value={ttsRate}
+                                onChange={e => setTtsRate(parseFloat(e.target.value))}
+                                className="w-full h-1.5 bg-zinc-800 rounded-full appearance-none cursor-pointer accent-blue-500"
+                                title="TTS speech rate"
+                            />
+                            <div className="flex justify-between text-[10px] text-zinc-600">
+                                <span>0.5x Slow</span>
+                                <span>1.0x Normal</span>
+                                <span>2.0x Fast</span>
+                            </div>
+                        </div>
+
+                        {/* TTS Voice */}
+                        <div className="space-y-1.5">
+                            <label className="text-xs text-zinc-300 flex items-center gap-1.5">
+                                <Volume2 className="h-3.5 w-3.5 text-purple-400" />
+                                TTS Voice
+                            </label>
+                            <select
+                                value={ttsVoiceName}
+                                onChange={e => setTtsVoiceName(e.target.value)}
+                                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg text-xs text-zinc-300 h-8 px-2"
+                                title="Select TTS voice"
+                            >
+                                <option value="">Auto (System Default)</option>
+                                {availableVoices
+                                    .filter(v => v.lang.startsWith('en'))
+                                    .map(v => (
+                                        <option key={v.name} value={v.name}>
+                                            {v.name} ({v.lang})
+                                        </option>
+                                    ))}
+                                {availableVoices.filter(v => !v.lang.startsWith('en')).length > 0 && (
+                                    <optgroup label="Other Languages">
+                                        {availableVoices
+                                            .filter(v => !v.lang.startsWith('en'))
+                                            .map(v => (
+                                                <option key={v.name} value={v.name}>
+                                                    {v.name} ({v.lang})
+                                                </option>
+                                            ))}
+                                    </optgroup>
+                                )}
+                            </select>
+                            <button
+                                onClick={() => speakMessage('Hello, this is a test of the selected voice.', ttsConfig)}
+                                className="w-full py-1.5 rounded-md bg-zinc-800 hover:bg-zinc-700 text-[10px] text-zinc-400 hover:text-zinc-200 transition-colors"
+                                title="Test current TTS voice"
+                            >
+                                ▶ Test Voice
+                            </button>
+                        </div>
+
+                        <div className="h-px bg-zinc-800" />
+
+                        {/* Speech Recognition Language */}
+                        <div className="space-y-1.5">
+                            <label className="text-xs text-zinc-300 flex items-center gap-1.5">
+                                <Globe className="h-3.5 w-3.5 text-emerald-400" />
+                                Recognition Language
+                            </label>
+                            <select
+                                value={recognitionLang}
+                                onChange={e => setRecognitionLang(e.target.value)}
+                                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg text-xs text-zinc-300 h-8 px-2"
+                                title="Select speech recognition language"
+                            >
+                                {SUPPORTED_LANGUAGES.map(lang => (
+                                    <option key={lang.code} value={lang.code}>
+                                        {lang.label} ({lang.code})
+                                    </option>
+                                ))}
+                            </select>
+                            <p className="text-[10px] text-zinc-600">Used for voice dictation (mic button) and PTT transcription</p>
+                        </div>
+
+                        <div className="h-px bg-zinc-800" />
+
+                        {/* Quick Voice Info */}
+                        <div className="space-y-1.5">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+                                ℹ️ Info
+                            </p>
+                            <div className="text-[10px] text-zinc-500 space-y-1">
+                                <p>• <span className="text-zinc-400">Dictation:</span> Click the mic button in the input bar</p>
+                                <p>• <span className="text-zinc-400">PTT:</span> Hold-to-Talk sends audio to the channel</p>
+                                <p>• <span className="text-zinc-400">Read Aloud:</span> Click 🔊 on any message</p>
+                                <p>• <span className="text-zinc-400">Shortcuts:</span> Space bar or AirPods squeeze for PTT</p>
+                            </div>
+                        </div>
                     </TabsContent>
                 </Tabs>
             </div>

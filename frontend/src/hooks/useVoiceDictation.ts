@@ -41,23 +41,73 @@ const getSpeechRecognition = (): SpeechRecognitionConstructor | null => {
     return (w.SpeechRecognition || w.webkitSpeechRecognition) as SpeechRecognitionConstructor | null;
 };
 
+// ─── TTS Configuration ──────────────────────────────────────────────────
+export interface TTSConfig {
+    rate?: number;         // 0.5 - 2.0, default 1.4
+    pitch?: number;        // 0.5 - 2.0, default 1.0
+    volume?: number;       // 0.0 - 1.0, default 1.0
+    voiceName?: string;    // Name of specific voice to use
+    lang?: string;         // e.g. 'en-US', 'en-GB'
+}
+
+// ─── Speech Recognition Supported Languages ─────────────────────────────
+export const SUPPORTED_LANGUAGES = [
+    { code: 'en-US', label: 'English (US)' },
+    { code: 'en-GB', label: 'English (UK)' },
+    { code: 'en-AU', label: 'English (AU)' },
+    { code: 'mt-MT', label: 'Maltese' },
+    { code: 'it-IT', label: 'Italian' },
+    { code: 'de-DE', label: 'German' },
+    { code: 'fr-FR', label: 'French' },
+    { code: 'es-ES', label: 'Spanish' },
+    { code: 'tr-TR', label: 'Turkish' },
+    { code: 'ar-SA', label: 'Arabic' },
+    { code: 'zh-CN', label: 'Chinese (Simplified)' },
+    { code: 'ja-JP', label: 'Japanese' },
+] as const;
+
 // ─── Text-to-Speech Utility ─────────────────────────────────────────────
 let currentUtterance: SpeechSynthesisUtterance | null = null;
 
-export function speakMessage(text: string): boolean {
+/** List all available TTS voices from the browser */
+export function getAvailableVoices(): SpeechSynthesisVoice[] {
+    if (!('speechSynthesis' in window)) return [];
+    return window.speechSynthesis.getVoices();
+}
+
+export function speakMessage(text: string, config: TTSConfig = {}): boolean {
     if (!('speechSynthesis' in window)) return false;
 
     // Stop any currently playing speech
     window.speechSynthesis.cancel();
 
+    const {
+        rate = 1.4,
+        pitch = 1.0,
+        volume = 1.0,
+        voiceName,
+        lang,
+    } = config;
+
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-    // Try to find a good English voice
+    utterance.rate = rate;
+    utterance.pitch = pitch;
+    utterance.volume = volume;
+
+    // Voice selection priority: explicit voiceName > lang match > any English > first
     const voices = window.speechSynthesis.getVoices();
-    const englishVoice = voices.find(v => v.lang.startsWith('en') && v.localService) || voices[0];
-    if (englishVoice) utterance.voice = englishVoice;
+    let selectedVoice: SpeechSynthesisVoice | undefined;
+
+    if (voiceName) {
+        selectedVoice = voices.find(v => v.name === voiceName);
+    }
+    if (!selectedVoice && lang) {
+        selectedVoice = voices.find(v => v.lang.startsWith(lang));
+    }
+    if (!selectedVoice) {
+        selectedVoice = voices.find(v => v.lang.startsWith('en') && v.localService) || voices[0];
+    }
+    if (selectedVoice) utterance.voice = selectedVoice;
 
     currentUtterance = utterance;
     window.speechSynthesis.speak(utterance);
