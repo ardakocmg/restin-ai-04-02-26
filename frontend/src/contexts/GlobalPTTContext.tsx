@@ -141,59 +141,48 @@ export function GlobalPTTProvider({ children }: { children: React.ReactNode }) {
     }, [activeChannel]);
 
     // ─── Silent Audio for MediaSession (AirPods on PC) ──────────────────
-    useEffect(() => {
-        // Create a silent audio element that plays in a loop.
-        // This activates MediaSession API on desktop browsers,
-        // allowing AirPods/Bluetooth headsets to control play/pause.
+    // PERF: Deferred — only activates when PTT is first used, not on page load
+    const activateSilentAudio = useCallback(() => {
+        if (silentAudioRef.current) return; // Already activated
         try {
             const audio = new Audio();
-            // Tiny silent WAV (44 bytes of silence, base64 encoded)
             audio.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
             audio.loop = true;
-            audio.volume = 0.01; // Near-silent
+            audio.volume = 0.01;
             silentAudioRef.current = audio;
-
-            // Start playing after first user interaction
-            const activateAudio = () => {
-                audio.play().catch(() => {
-                    // Autoplay blocked, will retry on next interaction
-                });
-                // Only need one activation
-                document.removeEventListener('click', activateAudio);
-                document.removeEventListener('keydown', activateAudio);
-                document.removeEventListener('touchstart', activateAudio);
-            };
-
-            document.addEventListener('click', activateAudio);
-            document.addEventListener('keydown', activateAudio);
-            document.addEventListener('touchstart', activateAudio);
-
-            return () => {
-                document.removeEventListener('click', activateAudio);
-                document.removeEventListener('keydown', activateAudio);
-                document.removeEventListener('touchstart', activateAudio);
-                audio.pause();
-                audio.src = '';
-            };
+            audio.play().catch(() => { /* Autoplay blocked */ });
         } catch {
             // Audio not available
         }
     }, []);
 
-    // ─── Mic Access ─────────────────────────────────────────────────────
+    // Cleanup silent audio on unmount
     useEffect(() => {
-        navigator.mediaDevices
-            ?.getUserMedia({ audio: true })
-            .then(stream => {
-                stream.getAudioTracks().forEach(t => { t.enabled = false; });
-                localStream.current = stream;
-                setMicPermission('granted');
-                setIsConnected(true);
-            })
-            .catch(() => {
-                setMicPermission('denied');
-            });
+        return () => {
+            if (silentAudioRef.current) {
+                silentAudioRef.current.pause();
+                silentAudioRef.current.src = '';
+            }
+        };
+    }, []);
 
+    // ─── Mic Access ─────────────────────────────────────────────────────
+    // PERF: Deferred — mic is requested on first PTT use, not on page load
+    const ensureMicAccess = useCallback(async () => {
+        if (localStream.current) return; // Already acquired
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getAudioTracks().forEach(t => { t.enabled = false; });
+            localStream.current = stream;
+            setMicPermission('granted');
+            setIsConnected(true);
+        } catch {
+            setMicPermission('denied');
+        }
+    }, []);
+
+    // Cleanup mic on unmount
+    useEffect(() => {
         return () => {
             localStream.current?.getTracks().forEach(t => t.stop());
         };
@@ -247,6 +236,10 @@ export function GlobalPTTProvider({ children }: { children: React.ReactNode }) {
     const recordingStream = useRef<MediaStream | null>(null);
 
     const startTalking = useCallback(() => {
+        // PERF: Defer mic & audio activation to first PTT use
+        ensureMicAccess();
+        activateSilentAudio();
+
         if (localStream.current) {
             localStream.current.getAudioTracks().forEach(track => {
                 track.enabled = true;
@@ -288,7 +281,7 @@ export function GlobalPTTProvider({ children }: { children: React.ReactNode }) {
             ...prev.filter(s => s.name !== 'You'),
             { name: 'You', initials: 'ME', color: 'bg-zinc-600', channelId: channelRef.current, startedAt: Date.now() }
         ]);
-    }, [startRecognition]);
+    }, [startRecognition, ensureMicAccess, activateSilentAudio]);
 
     const stopTalking = useCallback(() => {
         if (!isTalkingRef.current) return;
@@ -455,26 +448,10 @@ export function GlobalPTTProvider({ children }: { children: React.ReactNode }) {
         };
     }, [startTalking, stopTalking]);
 
-    // ─── Simulate remote speakers ───────────────────────────────────────
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (Math.random() < 0.05) {
-                const mockSpeaker: LiveSpeaker = {
-                    name: 'Chef Marco',
-                    initials: 'CM',
-                    color: 'bg-orange-600',
-                    channelId: activeChannel,
-                    startedAt: Date.now(),
-                };
-                setLiveSpeakers(prev => [...prev.filter(s => s.name !== mockSpeaker.name), mockSpeaker]);
-                setTimeout(() => {
-                    setLiveSpeakers(prev => prev.filter(s => s.name !== mockSpeaker.name));
-                }, 3000 + Math.random() * 2000);
-            }
-        }, 5000);
-
-        return () => clearInterval(interval);
-    }, [activeChannel]);
+    // ─── PERF: Mock speaker simulation REMOVED ──────────────────────────
+    // Previously ran setInterval every 5s to simulate "Chef Marco" speaking.
+    // This caused unnecessary state updates & re-renders across the entire app.
+    // Will be replaced with real WebSocket presence when backend supports it.
 
     const value = useMemo<PTTContextValue>(() => ({
         activeChannel,

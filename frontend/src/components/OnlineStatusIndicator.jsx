@@ -43,13 +43,23 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
     loadStats();
 
-    // Poll stats every 10 seconds
-    const interval = setInterval(loadStats, 10000);
+    // PERF: Visibility-aware polling — pause when tab is hidden
+    let interval = setInterval(loadStats, 10000);
+
+    const handleVisibility = () => {
+      clearInterval(interval);
+      if (document.visibilityState === 'visible') {
+        loadStats(); // Refresh immediately when tab becomes visible
+        interval = setInterval(loadStats, 10000);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
       unsubscribe();
       unsubscribeSync();
       clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, []);
 

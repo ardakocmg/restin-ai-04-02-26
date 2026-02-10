@@ -27,8 +27,20 @@ export default function MonitoringDashboard() {
 
   useEffect(() => {
     loadHealth();
-    const interval = setInterval(loadHealth, 10000);
-    return () => clearInterval(interval);
+    // PERF: Visibility-aware polling
+    let interval = setInterval(loadHealth, 10000);
+    const handleVisibility = () => {
+      clearInterval(interval);
+      if (document.visibilityState === 'visible') {
+        loadHealth();
+        interval = setInterval(loadHealth, 10000);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [loadHealth]);
 
   const getStatusColor = (status) => {

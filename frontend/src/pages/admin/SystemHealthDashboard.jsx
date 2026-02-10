@@ -30,8 +30,20 @@ export default function SystemHealthDashboard() {
 
   useEffect(() => {
     loadSystemHealth();
-    const interval = setInterval(loadSystemHealth, 10000);
-    return () => clearInterval(interval);
+    // PERF: Visibility-aware polling
+    let interval = setInterval(loadSystemHealth, 10000);
+    const handleVisibility = () => {
+      clearInterval(interval);
+      if (document.visibilityState === 'visible') {
+        loadSystemHealth();
+        interval = setInterval(loadSystemHealth, 10000);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, []);
 
   return (
@@ -118,10 +130,10 @@ export default function SystemHealthDashboard() {
           <CardContent>
             <div className="flex items-center gap-4">
               <div className="flex-1">
-                <div className="text-3xl font-bold mb-2" style={{ 
-                  color: resilienceStatus?.mode === 'online' ? '#4ADE80' : 
-                         resilienceStatus?.mode === 'edge' ? '#3B82F6' : 
-                         resilienceStatus?.mode === 'mesh' ? '#A855F7' : '#E53935'
+                <div className="text-3xl font-bold mb-2" style={{
+                  color: resilienceStatus?.mode === 'online' ? '#4ADE80' :
+                    resilienceStatus?.mode === 'edge' ? '#3B82F6' :
+                      resilienceStatus?.mode === 'mesh' ? '#A855F7' : '#E53935'
                 }}>
                   {resilienceStatus?.mode?.toUpperCase() || 'UNKNOWN'}
                 </div>

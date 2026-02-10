@@ -13,8 +13,8 @@ import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { ScrollArea } from "../../components/ui/scroll-area";
 import BottomNav from "../../components/BottomNav";
-import { 
-  LogOut, Clock, CheckCircle, PlayCircle, RefreshCw, Loader2, 
+import {
+  LogOut, Clock, CheckCircle, PlayCircle, RefreshCw, Loader2,
   PauseCircle, AlertTriangle, Bell, Truck, Award
 } from "lucide-react";
 
@@ -25,13 +25,13 @@ export default function KDSMain() {
   const [loading, setLoading] = useState(true);
   const [stationFilter, setStationFilter] = useState("all");
   const [lastUpdate, setLastUpdate] = useState(new Date());
-  
+
   const venueId = localStorage.getItem("restin_kds_venue");
   const { settings } = useVenueSettings(venueId);
 
   useEffect(() => {
     if (authLoading) return;
-    
+
     if (!isAuthenticated) return;
     if (!venueId) {
       navigate("/kds/setup");
@@ -39,9 +39,20 @@ export default function KDSMain() {
     }
     loadData();
 
-    // Auto refresh every 5 seconds
-    const interval = setInterval(loadData, 5000);
-    return () => clearInterval(interval);
+    // PERF: Visibility-aware polling
+    let interval = setInterval(loadData, 5000);
+    const handleVisibility = () => {
+      clearInterval(interval);
+      if (document.visibilityState === 'visible') {
+        loadData();
+        interval = setInterval(loadData, 5000);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [isAuthenticated, venueId, authLoading]);
 
   const loadData = async () => {
@@ -82,7 +93,7 @@ export default function KDSMain() {
   const holdItem = async (ticketId, itemId) => {
     const reason = prompt("Hold reason:");
     if (!reason) return;
-    
+
     try {
       await api.post(`/kds/tickets/${ticketId}/items/${itemId}/hold?reason=${encodeURIComponent(reason)}`);
       toast.success("Item held");
@@ -167,11 +178,10 @@ export default function KDSMain() {
             <button
               key={station}
               onClick={() => setStationFilter(station)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                stationFilter === station
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${stationFilter === station
                   ? "bg-red-500 text-white"
                   : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
-              }`}
+                }`}
             >
               {station.toUpperCase()}
             </button>
@@ -248,7 +258,7 @@ function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onD
   }, [item.status, item.started_at, item.target_prep_seconds]);
 
   const statusColor = getStatusColor(settings, item.status) || "#2F80ED";
-  
+
   const formatTime = (seconds) => {
     const mins = Math.floor(Math.abs(seconds) / 60);
     const secs = Math.abs(seconds) % 60;
@@ -256,18 +266,18 @@ function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onD
     return `${sign}${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const showPassApprove = 
-    item.status === "READY" && 
-    item.pass_required && 
+  const showPassApprove =
+    item.status === "READY" &&
+    item.pass_required &&
     !item.pass_approved;
 
-  const showDeliver = 
-    item.status === "READY" && 
-    item.pass_approved && 
+  const showDeliver =
+    item.status === "READY" &&
+    item.pass_approved &&
     !item.delivered;
 
   return (
-    <div 
+    <div
       className="bg-zinc-900 rounded-lg overflow-hidden border-l-4 transition-all hover:shadow-lg"
       style={{ borderLeftColor: statusColor }}
     >
@@ -409,7 +419,7 @@ function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onD
       </div>
 
       {/* Status Badge */}
-      <div 
+      <div
         className="px-4 py-2 text-center text-white font-bold text-sm"
         style={{ backgroundColor: statusColor }}
       >

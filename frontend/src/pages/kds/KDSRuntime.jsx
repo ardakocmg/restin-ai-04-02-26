@@ -24,8 +24,20 @@ function KDSRuntime() {
 
   useEffect(() => {
     bootstrap();
-    const interval = setInterval(fetchTickets, 3000); // Poll every 3s
-    return () => clearInterval(interval);
+    // PERF: Visibility-aware polling — pause when tab is hidden
+    let interval = setInterval(fetchTickets, 3000);
+    const handleVisibility = () => {
+      clearInterval(interval);
+      if (document.visibilityState === 'visible') {
+        fetchTickets();
+        interval = setInterval(fetchTickets, 3000);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [stationKey]);
 
   const bootstrap = async () => {

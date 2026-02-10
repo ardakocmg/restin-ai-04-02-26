@@ -56,21 +56,29 @@ export default function NewTopBar() {
     }).slice(0, 5) // Limit to 5 suggestions
     : []
 
-  // Monitor system health (mock implementation)
+  // PERF: Use browser events instead of polling for online/offline detection
   useEffect(() => {
     const checkSystemHealth = () => {
-      // In production, this would check actual API health endpoints
-      const isOnline = navigator.onLine;
-      if (!isOnline) {
-        setSystemStatus('offline');
-      } else {
-        setSystemStatus('healthy');
-      }
+      setSystemStatus(navigator.onLine ? 'healthy' : 'offline');
     };
 
     checkSystemHealth();
-    const interval = setInterval(checkSystemHealth, 30000); // Check every 30s
-    return () => clearInterval(interval);
+
+    // Use native events (zero CPU) instead of 30s polling
+    window.addEventListener('online', checkSystemHealth);
+    window.addEventListener('offline', checkSystemHealth);
+
+    // Also re-check when tab becomes visible
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') checkSystemHealth();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      window.removeEventListener('online', checkSystemHealth);
+      window.removeEventListener('offline', checkSystemHealth);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, []);
 
   const handleSearch = (e) => {

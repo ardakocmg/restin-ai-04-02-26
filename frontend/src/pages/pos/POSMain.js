@@ -80,7 +80,7 @@ export default function POSMain() {
 
   // Auto-refresh for menu/config updates
   useEffect(() => {
-    const pollInterval = setInterval(async () => {
+    const pollConfigVersion = async () => {
       try {
         const { data } = await api.get(`/venues/${venueId}/active-config-version`);
         if (data.menu_version !== menuVersion && menuVersion !== 0) {
@@ -90,9 +90,21 @@ export default function POSMain() {
       } catch (error) {
         logger.error('Failed to poll config version', { error });
       }
-    }, 60000); // Poll every 60 seconds
-
-    return () => clearInterval(pollInterval);
+    };
+    // PERF: Visibility-aware polling
+    let pollInterval = setInterval(pollConfigVersion, 60000);
+    const handleVisibility = () => {
+      clearInterval(pollInterval);
+      if (document.visibilityState === 'visible') {
+        pollConfigVersion();
+        pollInterval = setInterval(pollConfigVersion, 60000);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(pollInterval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [venueId, menuVersion]);
 
   useEffect(() => {

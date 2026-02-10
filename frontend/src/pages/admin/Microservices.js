@@ -5,9 +5,9 @@ import PageContainer from '../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
-import { 
-  Activity, Server, AlertCircle, CheckCircle2, 
-  Clock, Zap, Database, RefreshCw, ChevronRight 
+import {
+  Activity, Server, AlertCircle, CheckCircle2,
+  Clock, Zap, Database, RefreshCw, ChevronRight
 } from 'lucide-react';
 
 export default function MicroservicesPage() {
@@ -20,8 +20,20 @@ export default function MicroservicesPage() {
 
   useEffect(() => {
     loadServiceData();
-    const interval = setInterval(loadServiceData, 5000); // Refresh every 5s
-    return () => clearInterval(interval);
+    // PERF: Visibility-aware polling
+    let interval = setInterval(loadServiceData, 5000);
+    const handleVisibility = () => {
+      clearInterval(interval);
+      if (document.visibilityState === 'visible') {
+        loadServiceData();
+        interval = setInterval(loadServiceData, 5000);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, []);
 
   const loadServiceData = async () => {
@@ -31,7 +43,7 @@ export default function MicroservicesPage() {
         api.get('/events/outbox?limit=10'),
         api.get('/events/dlq?limit=10')
       ]);
-      
+
       setServices(statusRes.data.services || []);
       setEventBusRunning(statusRes.data.event_bus_running || false);
       setOutboxEvents(outboxRes.data.events || []);
@@ -47,7 +59,7 @@ export default function MicroservicesPage() {
     const now = new Date();
     const lastHeartbeat = new Date(service.last_heartbeat);
     const diff = (now - lastHeartbeat) / 1000; // seconds
-    
+
     if (diff < 30) return 'text-green-600';
     if (diff < 60) return 'text-yellow-600';
     return 'text-red-600';

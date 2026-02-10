@@ -57,9 +57,20 @@ export default function KDSMain() {
     }
     loadData();
 
-    // Auto refresh every 5 seconds
-    const interval = setInterval(loadData, 5000);
-    return () => clearInterval(interval);
+    // PERF: Visibility-aware polling
+    let interval = setInterval(loadData, 5000);
+    const handleVisibility = () => {
+      clearInterval(interval);
+      if (document.visibilityState === 'visible') {
+        loadData();
+        interval = setInterval(loadData, 5000);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [isAuthenticated, venueId, authLoading]);
 
   const loadData = async () => {

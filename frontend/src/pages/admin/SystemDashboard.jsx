@@ -25,8 +25,20 @@ export default function SystemDashboard() {
 
     useEffect(() => {
         loadDashboardData();
-        const interval = setInterval(loadDashboardData, 30000);
-        return () => clearInterval(interval);
+        // PERF: Visibility-aware polling
+        let interval = setInterval(loadDashboardData, 30000);
+        const handleVisibility = () => {
+            clearInterval(interval);
+            if (document.visibilityState === 'visible') {
+                loadDashboardData();
+                interval = setInterval(loadDashboardData, 30000);
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibility);
+        return () => {
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', handleVisibility);
+        };
     }, [activeVenue?.id]);
 
     const loadDashboardData = async () => {

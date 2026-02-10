@@ -6,7 +6,7 @@ import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Input } from '../../components/ui/input';
-import { 
+import {
   Zap, Clock, CheckCircle2, XCircle, Filter,
   ArrowRight, Database, TrendingUp
 } from 'lucide-react';
@@ -20,8 +20,20 @@ export default function EventMonitorPage() {
 
   useEffect(() => {
     loadEvents();
-    const interval = setInterval(loadEvents, 3000);
-    return () => clearInterval(interval);
+    // PERF: Visibility-aware polling
+    let interval = setInterval(loadEvents, 3000);
+    const handleVisibility = () => {
+      clearInterval(interval);
+      if (document.visibilityState === 'visible') {
+        loadEvents();
+        interval = setInterval(loadEvents, 3000);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [filter]);
 
   const loadEvents = async () => {
@@ -31,7 +43,7 @@ export default function EventMonitorPage() {
         api.get('/events/dlq?limit=20'),
         api.get('/events/outbox?status=COMPLETED&limit=30').catch(() => ({ data: { events: [] } }))
       ]);
-      
+
       setOutboxEvents(outboxRes.data.events || []);
       setDlqEvents(dlqRes.data.events || []);
       setCompletedEvents(completedRes.data.events || []);
@@ -53,11 +65,10 @@ export default function EventMonitorPage() {
   };
 
   const EventCard = ({ event, type = 'pending' }) => (
-    <div className={`p-4 rounded-lg border ${
-      type === 'dlq' ? 'bg-red-50 border-red-200' :
-      type === 'completed' ? 'bg-green-50 border-green-200' :
-      'bg-white border-slate-200'
-    }`}>
+    <div className={`p-4 rounded-lg border ${type === 'dlq' ? 'bg-red-50 border-red-200' :
+        type === 'completed' ? 'bg-green-50 border-green-200' :
+          'bg-white border-slate-200'
+      }`}>
       <div className="flex items-start justify-between mb-2">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
@@ -79,8 +90,8 @@ export default function EventMonitorPage() {
         <div className="flex items-center gap-1">
           <Clock className="h-3 w-3" />
           {type === 'dlq' ? new Date(event.moved_to_dlq_at).toLocaleString() :
-           type === 'completed' ? new Date(event.completed_at).toLocaleString() :
-           new Date(event.published_at).toLocaleString()}
+            type === 'completed' ? new Date(event.completed_at).toLocaleString() :
+              new Date(event.published_at).toLocaleString()}
         </div>
         {event.retry_count > 0 && (
           <Badge variant="outline" className="text-xs">
