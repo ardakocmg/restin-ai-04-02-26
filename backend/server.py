@@ -50,6 +50,7 @@ from utils.helpers import log_event
 # Import all modular routers
 from hr_routes import create_hr_router
 from routes.auth_routes import create_auth_router
+from app.routes.auth_jwks import jwks_router  # JWKS endpoint for RS256 public keys
 from routes.system_routes import create_system_router
 from routes.venue_routes import create_venue_router
 from routes.menu_routes import create_menu_router
@@ -438,6 +439,7 @@ api_main = APIRouter(prefix="/api")
 
 # Foundational routers
 api_main.include_router(auth_router)
+api_main.include_router(jwks_router)  # JWKS (.well-known/jwks.json)
 api_main.include_router(system_router)
 api_main.include_router(venue_router)
 api_main.include_router(menu_router)

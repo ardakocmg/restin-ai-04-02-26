@@ -15,13 +15,14 @@ INDEX_FILE = Path(FRONTEND_BUILD_DIR) / "index.html"
 MONGO_URL = os.environ.get('MONGO_URL', "mongodb://localhost:27017")
 DB_NAME = os.environ.get('DB_NAME', "restin_v2")
 
-# JWT Settings - FAIL FAST
+# JWT Settings
 JWT_SECRET = os.environ.get('JWT_SECRET', '')
-if not JWT_SECRET or len(JWT_SECRET) < 16:
-    raise RuntimeError("JWT_SECRET misconfigured (missing/too short). Refuse to start.")
-
-JWT_ALGORITHM = "HS256"
+JWT_ALGORITHM = "HS256"  # Legacy default; actual algorithm chosen by jwt_config
 JWT_EXPIRATION_HOURS = 12
+
+# Validate JWT config at startup (supports HS256_ONLY and RS256_ONLY modes)
+from app.core.auth.jwt_config import validate_jwt_startup
+validate_jwt_startup()
 
 # Build metadata - MUST CHANGE PER DEPLOY
 BUILD_ID = os.getenv("BUILD_ID") or os.getenv("EMERGENT_DEPLOY_ID") or os.getenv("GIT_SHA") or "local"

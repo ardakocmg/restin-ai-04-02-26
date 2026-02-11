@@ -1,10 +1,10 @@
 import hashlib
 import hmac
 import os
-import jwt
-from datetime import datetime, timezone, timedelta
+import logging
 from typing import Optional
-from .config import JWT_SECRET, JWT_ALGORITHM, JWT_EXPIRATION_HOURS
+
+logger = logging.getLogger("core.security")
 
 def hash_pin(pin: str) -> str:
     return hashlib.sha256(pin.encode()).hexdigest()
@@ -31,25 +31,27 @@ def compute_hash(data: dict, prev_hash: str) -> str:
     return hashlib.sha256(payload.encode()).hexdigest()
 
 def create_jwt_token(user_id: str, venue_id: str, role: str, device_id: Optional[str] = None) -> str:
-    payload = {
-        "user_id": user_id,
-        "venue_id": venue_id,
-        "role": role,
-        "device_id": device_id,
-        "exp": datetime.now(timezone.utc) + timedelta(hours=JWT_EXPIRATION_HOURS)
-    }
-    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    """
+    Create a signed JWT access token.
+    Delegates to app.core.auth.jwt_sign (HS256 or RS256 based on config).
+    Signature unchanged — zero callsite modifications needed.
+    """
+    from app.core.auth.jwt_sign import sign_access_token
+    return sign_access_token(user_id, venue_id, role, device_id)
 
 def verify_jwt_token(token: str, allow_expired: bool = False) -> dict:
+    """
+    Verify a JWT token (dual HS256 + RS256).
+    Delegates to app.core.auth.jwt_verify.
+    Returns payload dict or None on failure (backward compatible).
+    """
+    from app.core.auth.jwt_verify import verify_jwt, JwtAuthError
     try:
-        options = {"verify_exp": not allow_expired}
-        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM], options=options)
-        return payload
-    except jwt.ExpiredSignatureError:
-        if not allow_expired:
-            raise
-        # If allow_expired, decode without verification
-        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM], options={"verify_signature": False})
-        return payload
-    except jwt.InvalidTokenError:
+        return verify_jwt(token, allow_expired=allow_expired)
+    except JwtAuthError as exc:
+        logger.warning("JWT verification failed: %s", exc.code)
+        if exc.code == "TOKEN_EXPIRED" and not allow_expired:
+            import jwt as pyjwt
+            raise pyjwt.ExpiredSignatureError(exc.message)
         return None
+
