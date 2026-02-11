@@ -33,3 +33,6 @@ BUILT_AT = os.getenv("BUILT_AT") or datetime.now(timezone.utc).isoformat()
 NUKI_CLIENT_ID = os.environ.get("NUKI_CLIENT_ID", "")
 NUKI_CLIENT_SECRET = os.environ.get("NUKI_CLIENT_SECRET", "")
 NUKI_REDIRECT_URI = os.environ.get("NUKI_REDIRECT_URI", "")
+
+# Google Workspace SSO
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")

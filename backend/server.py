@@ -161,6 +161,8 @@ from routes.migration_routes import router as migration_router # Quick Sync
 from routes.websocket_routes import create_websocket_router  # Real-time Notifications
 from routes.fcm_routes import create_fcm_router  # Mobile Push Notifications
 from routes.orders_routes import create_orders_router  # Frontend /api/orders compatibility
+from routes.google_sso_routes import create_google_sso_router  # Google Workspace SSO
+from google.routes.workspace_routes import create_workspace_routes  # Workspace domain mgmt
 
 # Shireburn Indigo Parity Routes
 from routes.summary_dashboard import router as summary_dashboard_router
@@ -386,6 +388,8 @@ venue_group_router = create_venue_group_router()
 user_settings_router = create_2fa_router()
 venue_integrations_router = create_venue_integrations_router()
 global_search_router = create_global_search_router()
+google_sso_router = create_google_sso_router()
+workspace_router = create_workspace_routes()
 backup_router = create_backup_router()
 public_content_router = create_public_content_router()
 table_preferences_router = create_table_preferences_router()
@@ -532,6 +536,8 @@ api_main.include_router(venue_group_router)
 api_main.include_router(user_settings_router)
 api_main.include_router(venue_integrations_router)
 api_main.include_router(global_search_router)
+api_main.include_router(google_sso_router)
+api_main.include_router(workspace_router)
 api_main.include_router(backup_router)
 api_main.include_router(public_content_router)
 api_main.include_router(table_preferences_router)
