@@ -588,8 +588,8 @@ def create_auth_router():
         new_password = payload.get("new_password", "")
         current_password = payload.get("current_password", "")
 
-        if not new_password or len(new_password) < 6:
-            raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+        if not new_password or len(new_password) < 8:
+            raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
 
         user = await db.users.find_one({"id": user_id}, {"_id": 0})
         if not user:
@@ -637,8 +637,8 @@ def create_auth_router():
 
         if not target_user_id:
             raise HTTPException(status_code=400, detail="user_id is required")
-        if not new_password or len(new_password) < 6:
-            raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+        if not new_password or len(new_password) < 8:
+            raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
 
         target_user = await db.users.find_one({"id": target_user_id}, {"_id": 0})
         if not target_user:

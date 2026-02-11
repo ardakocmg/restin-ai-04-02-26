@@ -26,7 +26,7 @@ const EmployeePortalComplete = React.lazy(() => import('./admin/hr/EmployeePorta
 export default function UserProfileSettings() {
   // ─── Hooks ───────────────────────────────────────────────────────
   const { user } = useAuth();
-  const { settings, updateSettings, enable2FA, verify2FA, disable2FA, loading: settingsLoading } = useUserSettings();
+  const { settings, updateSettings, enable2FA, verify2FA, disable2FA, refreshSettings, loading: settingsLoading } = useUserSettings();
   const { themeMode, toggleTheme } = useDesignSystem();
   const { activeVenue } = useVenue();
 
@@ -93,8 +93,22 @@ export default function UserProfileSettings() {
   const [pwConfirm, setPwConfirm] = useState('');
   const [pwShowCurrent, setPwShowCurrent] = useState(false);
   const [pwShowNew, setPwShowNew] = useState(false);
+  const [pwShowConfirm, setPwShowConfirm] = useState(false);
   const [pwSaving, setPwSaving] = useState(false);
   const hasPassword = settings?.hasPassword || false;
+
+  // Password strength checks
+  const pwChecks = {
+    minLength: pwNew.length >= 8,
+    hasUpper: /[A-Z]/.test(pwNew),
+    hasLower: /[a-z]/.test(pwNew),
+    hasNumber: /[0-9]/.test(pwNew),
+    hasSpecial: /[^A-Za-z0-9]/.test(pwNew),
+  };
+  const pwStrengthCount = Object.values(pwChecks).filter(Boolean).length;
+  const pwStrengthLabel = pwStrengthCount <= 1 ? 'Very Weak' : pwStrengthCount === 2 ? 'Weak' : pwStrengthCount === 3 ? 'Fair' : pwStrengthCount === 4 ? 'Strong' : 'Excellent';
+  const pwStrengthColor = pwStrengthCount <= 1 ? 'bg-rose-500' : pwStrengthCount === 2 ? 'bg-orange-500' : pwStrengthCount === 3 ? 'bg-amber-500' : pwStrengthCount === 4 ? 'bg-emerald-500' : 'bg-green-400';
+  const pwValid = pwChecks.minLength && pwChecks.hasUpper && pwChecks.hasLower && pwChecks.hasNumber && pwChecks.hasSpecial;
 
   const handleEnable2FA = async () => {
     try {
@@ -187,8 +201,8 @@ export default function UserProfileSettings() {
 
   // ─── Password Set / Change ────────────────────────────────────────
   const handlePasswordSave = async () => {
-    if (!pwNew || pwNew.length < 6) {
-      setMessage({ type: 'error', text: 'Password must be at least 6 characters.' }); clearMessage(); return;
+    if (!pwValid) {
+      setMessage({ type: 'error', text: 'Password does not meet all requirements.' }); clearMessage(); return;
     }
     if (pwNew !== pwConfirm) {
       setMessage({ type: 'error', text: 'Passwords do not match.' }); clearMessage(); return;
@@ -201,6 +215,7 @@ export default function UserProfileSettings() {
       await api.post('/auth/set-password', { current_password: pwCurrent, new_password: pwNew });
       setMessage({ type: 'success', text: hasPassword ? 'Password changed successfully.' : 'Password set successfully.' });
       setPwCurrent(''); setPwNew(''); setPwConfirm('');
+      await refreshSettings();
       clearMessage();
     } catch (err) {
       const msg = err?.response?.data?.detail || 'Failed to set password.';
@@ -558,7 +573,11 @@ export default function UserProfileSettings() {
               {twoFASetup && (
                 <div className="space-y-4">
                   <div className="flex justify-center p-4 bg-white rounded-lg">
-                    <QRCodeSVG value={twoFASetup.qrCode} size={200} />
+                    {twoFASetup.qrCode.startsWith('data:') ? (
+                      <img src={twoFASetup.qrCode} alt="2FA QR Code" className="w-[200px] h-[200px]" />
+                    ) : (
+                      <QRCodeSVG value={twoFASetup.qrCode} size={200} />
+                    )}
                   </div>
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
@@ -635,7 +654,7 @@ export default function UserProfileSettings() {
                   <div className="relative">
                     <Input id="pw-new" type={pwShowNew ? 'text' : 'password'}
                       value={pwNew} onChange={e => setPwNew(e.target.value)}
-                      placeholder="Min. 6 characters" />
+                      placeholder="Min. 8 characters" />
                     <Button type="button" variant="ghost" size="icon"
                       className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
                       onClick={() => setPwShowNew(!pwShowNew)}>
@@ -645,26 +664,55 @@ export default function UserProfileSettings() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="pw-confirm">Confirm Password</Label>
-                  <Input id="pw-confirm" type="password"
-                    value={pwConfirm} onChange={e => setPwConfirm(e.target.value)}
-                    placeholder="••••••••" />
+                  <div className="relative">
+                    <Input id="pw-confirm" type={pwShowConfirm ? 'text' : 'password'}
+                      value={pwConfirm} onChange={e => setPwConfirm(e.target.value)}
+                      placeholder="••••••••" />
+                    <Button type="button" variant="ghost" size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                      onClick={() => setPwShowConfirm(!pwShowConfirm)}>
+                      {pwShowConfirm ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    </Button>
+                  </div>
                 </div>
               </div>
+
+              {/* Password Strength Bar */}
+              {pwNew.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-zinc-400">Password Strength</span>
+                    <span className={`text-xs font-bold ${pwStrengthCount >= 4 ? 'text-emerald-400' : pwStrengthCount >= 3 ? 'text-amber-400' : 'text-rose-400'}`}>{pwStrengthLabel}</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full transition-all duration-300 ${pwStrengthColor}`} style={{ width: `${(pwStrengthCount / 5) * 100}%` }} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {[
+                      { check: pwChecks.minLength, label: 'At least 8 characters' },
+                      { check: pwChecks.hasUpper, label: 'Uppercase letter (A-Z)' },
+                      { check: pwChecks.hasLower, label: 'Lowercase letter (a-z)' },
+                      { check: pwChecks.hasNumber, label: 'Number (0-9)' },
+                      { check: pwChecks.hasSpecial, label: 'Special character (!@#$)' },
+                    ].map((r, i) => (
+                      <div key={i} className={`text-[11px] flex items-center gap-1.5 ${r.check ? 'text-emerald-400' : 'text-zinc-500'}`}>
+                        {r.check ? <CheckCircle2 className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
+                        {r.label}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {pwNew && pwConfirm && pwNew !== pwConfirm && (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>Passwords do not match</AlertDescription>
                 </Alert>
               )}
-              {pwNew && pwNew.length > 0 && pwNew.length < 6 && (
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>Password must be at least 6 characters</AlertDescription>
-                </Alert>
-              )}
               <div className="flex justify-end">
                 <Button onClick={handlePasswordSave}
-                  disabled={pwSaving || !pwNew || pwNew.length < 6 || pwNew !== pwConfirm || (hasPassword && !pwCurrent)}>
+                  disabled={pwSaving || !pwValid || pwNew !== pwConfirm || (hasPassword && !pwCurrent)}>
                   {pwSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lock className="mr-2 h-4 w-4" />}
                   {hasPassword ? 'Change Password' : 'Set Password'}
                 </Button>

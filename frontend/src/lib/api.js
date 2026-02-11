@@ -2,7 +2,11 @@ import axios from "axios";
 import authStore from "./AuthStore";
 import { logger } from "./logger";
 
-const API = `${process.env.REACT_APP_BACKEND_URL || `http://${window.location.hostname}:8000`}/api/`;
+// Production: Render backend | Dev: localhost
+const PRODUCTION_BACKEND = 'https://restin-ai-04-02-26.onrender.com';
+const isProduction = window.location.hostname === 'restin.ai' || window.location.hostname === 'www.restin.ai';
+const BACKEND_BASE = process.env.REACT_APP_BACKEND_URL || (isProduction ? PRODUCTION_BACKEND : `http://${window.location.hostname}:8000`);
+const API = `${BACKEND_BASE}/api/`;
 
 // Create axios instance
 const api = axios.create({
@@ -59,7 +63,7 @@ async function refreshToken() {
   if (!token) throw new Error('No token to refresh');
 
   const response = await axios.post(
-    `${process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'}/api/auth/refresh`,
+    `${BACKEND_BASE}/api/auth/refresh`,
     {},
     { headers: { Authorization: `Bearer ${token}` } }
   );
@@ -128,13 +132,13 @@ api.interceptors.response.use(
 export const authAPI = {
   // New PIN-first login - Using direct axios call to avoid baseURL issues
   loginWithPin: (pin, app, deviceId, stationId = null) => {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+    const backendUrl = BACKEND_BASE;
     const url = `${backendUrl}/api/auth/login/pin?pin=${pin}&app=${app}${deviceId ? `&deviceId=${deviceId}` : ''}${stationId ? `&stationId=${stationId}` : ''}`;
     return axios.post(url);
   },
   // Credentials login (email, username, or employee ID + password)
   loginWithCredentials: ({ identifier, password, target, deviceId }) => {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+    const backendUrl = BACKEND_BASE;
     return axios.post(`${backendUrl}/api/auth/login/credentials`, {
       identifier,
       password,
@@ -151,11 +155,11 @@ export const authAPI = {
   enableMFA: (totpCode) => api.post(`/auth/enable-mfa?totp_code=${totpCode}`),
   // Super Owner first-run setup
   checkSetupRequired: () => {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+    const backendUrl = BACKEND_BASE;
     return axios.get(`${backendUrl}/api/auth/setup/status`);
   },
   setupSuperOwner: (data) => {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+    const backendUrl = BACKEND_BASE;
     return axios.post(`${backendUrl}/api/auth/setup`, data);
   },
   // Progressive Auth Elevation — verify password or TOTP to unlock sensitive areas

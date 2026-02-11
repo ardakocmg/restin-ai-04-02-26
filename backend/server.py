@@ -246,7 +246,10 @@ dev_origins = [
     "http://localhost:3000", "http://127.0.0.1:3000", 
     "http://localhost:8000", "http://127.0.0.1:8000",
     "http://localhost:3001", "http://127.0.0.1:3001",
-    "http://192.168.31.243:3000", "http://192.168.31.243:8000"
+    "http://192.168.31.243:3000", "http://192.168.31.243:8000",
+    # Production origins
+    "https://restin.ai", "https://www.restin.ai",
+    "http://restin.ai", "http://www.restin.ai",
 ]
 for dev in dev_origins:
     if dev not in cors_origins:
