@@ -602,12 +602,8 @@ function App() {
                                       <Route path="headcount" element={<HeadcountModule />} />
                                       <Route path="turnover" element={<TurnoverModule />} />
                                       <Route path="performance-reviews" element={<PerformanceReviews />} />
-                                      <Route path="contracts" element={<ContractsIndigo />} />
                                       <Route path="tips" element={<TipsManagement />} />
-                                      <Route path="portal-view" element={<EmployeePortal />} />
                                       <Route path="reporting" element={<ReportingHubIndigo />} />
-                                      <Route path="reports/:reportId" element={<ReportViewer />} />
-
                                       <Route path="reports/:reportId" element={<ReportViewer />} />
 
                                       {/* Missing Setup Routes - Mapped to Placeholder for now */}
