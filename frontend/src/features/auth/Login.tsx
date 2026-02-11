@@ -116,8 +116,13 @@ export default function Login() {
             return;
         }
 
-        // Store token
+        // Store token and user ID
         localStorage.setItem('restin_token', token);
+        if (data.user?.id) {
+            localStorage.setItem('restin_user_id', data.user.id);
+        } else if (data.user?.user_id) {
+            localStorage.setItem('restin_user_id', data.user.user_id);
+        }
 
         if (data.allowedVenueIds && data.allowedVenueIds.length > 1) {
             setAllowedVenues(data.allowedVenueIds);
