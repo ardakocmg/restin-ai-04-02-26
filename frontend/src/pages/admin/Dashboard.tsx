@@ -62,7 +62,9 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { activeVenue } = useVenue() as { activeVenue: Venue | null };
   const { user, isManager, isOwner } = useAuth();
-  useAuditLog('DASHBOARD_VIEWED', { resource: 'admin-dashboard' });
+  const { logAction } = useAuditLog();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => { logAction('DASHBOARD_VIEWED', 'admin-dashboard'); }, []);
   const [stats, setStats] = useState<VenueStats | null>(null);
   const [recentOrders, setRecentOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);

@@ -11,7 +11,9 @@ import { Calculator, TrendingUp, DollarSign } from 'lucide-react';
 import { calculateNetFromGross, calculateGrossFromNet, TaxCalculationResult } from '../../utils/calculations';
 
 export default function PayrollCalculator() {
-  useAuditLog('PAYROLL_CALC_VIEWED', { resource: 'payroll-calculator' });
+  const { logAction } = useAuditLog();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => { logAction('PAYROLL_CALC_VIEWED', 'payroll-calculator'); }, []);
   const [grossSalary, setGrossSalary] = useState<string>('');
   const [netSalary, setNetSalary] = useState<string>('');
   const [result, setResult] = useState<TaxCalculationResult | null>(null);
