@@ -19,11 +19,20 @@ class OpenAIService:
     
     def __init__(self):
         self.api_key = os.environ.get("EMERGENT_LLM_KEY", "sk-emergent-2BfB7092316E08a972")
-        if not LlmChat:
-            raise ImportError("emergentintegrations not installed. Run: pip install emergentintegrations --extra-index-url https://d33sy5i8bnduwe.cloudfront.net/simple/")
+        self._available = LlmChat is not None
+        if not self._available:
+            import logging
+            logging.getLogger("openai_integration").warning(
+                "emergentintegrations not installed — OpenAI features disabled"
+            )
+    
+    def _check_available(self):
+        if not self._available:
+            raise ImportError("emergentintegrations not installed. OpenAI features are disabled.")
     
     async def analyze_text(self, prompt: str, context: Optional[str] = None, model: str = "gpt-5.1") -> str:
         """Analyze text using GPT"""
+        self._check_available()
         chat = LlmChat(
             api_key=self.api_key,
             session_id=f"text_analysis_{os.urandom(8).hex()}",
@@ -40,6 +49,7 @@ class OpenAIService:
     
     async def forecast_demand(self, historical_data: list, item_name: str) -> Dict[str, Any]:
         """AI-powered demand forecasting"""
+        self._check_available()
         prompt = f"""
 Analyze the following historical consumption data for {item_name} and provide a demand forecast:
 
@@ -60,6 +70,7 @@ Format your response as JSON.
     
     async def analyze_invoice_image(self, image_base64: str) -> Dict[str, Any]:
         """OCR and analysis of invoice image"""
+        self._check_available()
         chat = LlmChat(
             api_key=self.api_key,
             session_id=f"invoice_ocr_{os.urandom(8).hex()}",
@@ -99,6 +110,7 @@ Format as JSON with this structure:
     
     async def analyze_receipt(self, image_base64: str) -> Dict[str, Any]:
         """OCR for expense receipts"""
+        self._check_available()
         chat = LlmChat(
             api_key=self.api_key,
             session_id=f"receipt_ocr_{os.urandom(8).hex()}",
@@ -123,5 +135,6 @@ Return as JSON: {"vendor": "", "date": "", "amount": 0, "currency": "", "receipt
         return {"ocr_result": response}
 
 
-# Singleton instance
+# Singleton instance — safe even without emergentintegrations
 openai_service = OpenAIService()
+
