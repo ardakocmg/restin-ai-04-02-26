@@ -38,8 +38,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setLoading(false);
     }, []);
 
-    const login = (authToken: string, userData: User) => {
-        logger.info('Login called', { hasToken: !!authToken });
+    const login = (userData: User, authToken: string) => {
+        logger.info('Login called', { hasToken: !!authToken, userName: userData?.name });
         setUser(userData);
         setToken(authToken);
         authStore.setAuth(authToken, userData);
