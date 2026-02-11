@@ -28,9 +28,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const storedToken = authStore.getToken();
         const storedUser = authStore.getUser();
 
+        // Guard: detect corrupt data from login param swap bug
+        // If token looks like JSON (starts with { or [), it's actually user data stored as token
+        if (storedToken && (storedToken.startsWith('{') || storedToken.startsWith('['))) {
+            logger.warn('Corrupt auth detected (token is JSON object), clearing');
+            authStore.clearAuth();
+            setLoading(false);
+            return;
+        }
+
         if (storedToken && storedUser && authStore.isTokenValid()) {
-            setToken(storedToken);
-            setUser(storedUser);
+            // Extra check: ensure user has required fields
+            if (storedUser.id && storedUser.role) {
+                setToken(storedToken);
+                setUser(storedUser);
+            } else {
+                logger.warn('Stored user missing required fields, clearing auth');
+                authStore.clearAuth();
+            }
         } else if (storedToken && !authStore.isTokenValid()) {
             // Token expired, clear it
             authStore.clearAuth();
