@@ -49,6 +49,57 @@ import { Calendar, FileText, DollarSign, Clock, LayoutDashboard } from 'lucide-r
 const EmployeePortalComplete = React.lazy(() => import('./admin/hr/EmployeePortalComplete'));
 
 export default function UserProfileSettings() {
+  // Auth & Settings Hooks
+  const { user } = useAuth();
+  const { settings, updateSettings, enable2FA, verify2FA, disable2FA, loading } = useUserSettings();
+  const { themeMode, toggleTheme } = useDesignSystem();
+
+  // Local UI state for 2FA flow
+  const [message, setMessage] = useState(null);
+  const [twoFASetup, setTwoFASetup] = useState(null);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleEnable2FA = async () => {
+    const result = await enable2FA();
+    if (result.success) {
+      setTwoFASetup({ qrCode: result.qrCode || '', backupCodes: result.backupCodes || [] });
+    } else {
+      setMessage({ type: 'error', text: result.error || 'Failed to enable 2FA' });
+    }
+  };
+
+  const handleVerify2FA = async () => {
+    const result = await verify2FA(verificationCode);
+    if (result.success) {
+      setMessage({ type: 'success', text: '2FA enabled successfully!' });
+      setTwoFASetup(null);
+      setVerificationCode('');
+    } else {
+      setMessage({ type: 'error', text: result.error || 'Invalid code' });
+    }
+  };
+
+  const handleDisable2FA = async () => {
+    const result = await disable2FA('');
+    if (result.success) {
+      setMessage({ type: 'success', text: '2FA disabled.' });
+    } else {
+      setMessage({ type: 'error', text: result.error || 'Failed to disable 2FA' });
+    }
+  };
+
+  const downloadBackupCodes = () => {
+    if (!twoFASetup?.backupCodes) return;
+    const blob = new Blob([twoFASetup.backupCodes.join('\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'restin-backup-codes.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   // Employee Portal Logic
   const { activeVenue } = useVenue();
   const [documents, setDocuments] = useState([]);
