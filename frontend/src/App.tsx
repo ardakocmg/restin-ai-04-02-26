@@ -127,17 +127,6 @@ const EmployeePayrollHistory = React.lazy(() => import("./pages/portal/EmployeeP
 const EmployeeSetupHub = React.lazy(() => import("./pages/admin/hr/EmployeeSetupHub"));
 const Shifts = React.lazy(() => import("./pages/admin/hr/Shifts"));
 
-// HR Reports
-const HeadcountReport = React.lazy(() => import("./pages/admin/hr/reports/HeadcountReport"));
-const TurnoverReport = React.lazy(() => import("./pages/admin/hr/reports/TurnoverReport"));
-const EmployeeDetailsReport = React.lazy(() => import("./pages/admin/hr/reports/EmployeeDetailsReport"));
-const EmploymentDatesReport = React.lazy(() => import("./pages/admin/hr/reports/EmploymentDatesReport"));
-const BirthdaysAnniversariesReport = React.lazy(() => import("./pages/admin/hr/reports/BirthdaysAnniversariesReport"));
-const TrainingExpiringReport = React.lazy(() => import("./pages/admin/hr/reports/TrainingExpiringReport"));
-const TrainingStartingReport = React.lazy(() => import("./pages/admin/hr/reports/TrainingStartingReport"));
-const TrainingOngoingReport = React.lazy(() => import("./pages/admin/hr/reports/TrainingOngoingReport"));
-const KDSPerformanceReport = React.lazy(() => import("./pages/admin/hr/reports/KDSPerformance"));
-
 const UserProfileSettings = React.lazy(() => import("./pages/UserProfileSettings"));
 const POSSetup = React.lazy(() => import("./pages/pos/POSSetup"));
 const POSMain = React.lazy(() => import("./pages/pos/POSMain"));
