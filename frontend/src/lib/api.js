@@ -2,8 +2,8 @@ import axios from "axios";
 import authStore from "./AuthStore";
 import { logger } from "./logger";
 
-// Production: Render backend | Dev: localhost
-const PRODUCTION_BACKEND = 'https://restin-ai-04-02-26.onrender.com';
+// Production: api.restin.ai (custom domain → Render) | Dev: localhost
+const PRODUCTION_BACKEND = 'https://api.restin.ai';
 const isProduction = window.location.hostname === 'restin.ai' || window.location.hostname === 'www.restin.ai';
 const BACKEND_BASE = process.env.REACT_APP_BACKEND_URL || (isProduction ? PRODUCTION_BACKEND : `http://${window.location.hostname}:8000`);
 const API = `${BACKEND_BASE}/api/`;
