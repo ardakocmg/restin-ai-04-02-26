@@ -120,8 +120,6 @@ export default function Login() {
         localStorage.setItem('restin_token', token);
         if (data.user?.id) {
             localStorage.setItem('restin_user_id', data.user.id);
-        } else if (data.user?.user_id) {
-            localStorage.setItem('restin_user_id', data.user.user_id);
         }
 
         if (data.allowedVenueIds && data.allowedVenueIds.length > 1) {
