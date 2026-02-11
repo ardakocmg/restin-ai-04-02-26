@@ -22,7 +22,7 @@ async def seed_product_owner():
     # Check if already exists
     existing = await db.users.find_one({"role": "product_owner"})
     if existing:
-        print("✓ Product Owner already exists")
+        print("[OK] Product Owner already exists")
         return
     
     product_owner = {
@@ -42,7 +42,7 @@ async def seed_product_owner():
     }
     
     await db.users.insert_one(product_owner)
-    print("✓ Product Owner created")
+    print("[OK] Product Owner created")
     print("  Name: Arda Koc")
     print("  PIN: 0000")
     print("  Role: PRODUCT_OWNER (immutable)")

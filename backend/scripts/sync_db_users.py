@@ -16,7 +16,7 @@ async def sync_users():
     print("Starting Employee -> User Sync...")
     
     # 1. Fetch all employees
-    employees = await db.employees.find({"employment_status": "active"}).to_list(1000)
+    employees = await db.employees.find({"$or": [{"employment_status": "active"}, {"status": "active"}]}).to_list(1000)
     print(f"Found {len(employees)} active employees.")
     
     users_created = 0
@@ -50,8 +50,8 @@ async def sync_users():
     for emp in employees:
         emp_id = emp["id"]
         email = emp.get("email") or f"{emp['id']}@placeholder.com"
-        name = emp["name"]
-        venue_id = emp.get("venue_id")
+        name = emp.get("name") or f"{emp.get('first_name', '')} {emp.get('last_name', '')}".strip()
+        venue_id = emp.get("venue_id") or emp.get("venueId")
         
         # Check if user exists by Employee ID or Email
         existing_user = await db.users.find_one({
