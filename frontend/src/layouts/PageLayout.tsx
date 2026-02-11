@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 interface PageLayoutProps {
     children: React.ReactNode;
     className?: string;
-    title?: string;
+    title?: React.ReactNode;
     description?: string;
     actions?: React.ReactNode;
     filters?: React.ReactNode;
