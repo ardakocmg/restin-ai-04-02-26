@@ -123,6 +123,21 @@ const ReportViewer = React.lazy(() => import("./pages/admin/hr/ReportViewer"));
 const HRModulePlaceholder = React.lazy(() => import("./pages/admin/hr/HRModulePlaceholder"));
 const AdminSettingsIndigo = React.lazy(() => import("./pages/admin/hr/AdminSettings"));
 const EmployeePortal = React.lazy(() => import("./pages/admin/hr/EmployeePortalComplete"));
+const EmployeePayrollHistory = React.lazy(() => import("./pages/portal/EmployeePayrollHistory"));
+const EmployeeSetupHub = React.lazy(() => import("./pages/admin/hr/EmployeeSetupHub"));
+const Shifts = React.lazy(() => import("./pages/admin/hr/Shifts"));
+
+// HR Reports
+const HeadcountReport = React.lazy(() => import("./pages/admin/hr/reports/HeadcountReport"));
+const TurnoverReport = React.lazy(() => import("./pages/admin/hr/reports/TurnoverReport"));
+const EmployeeDetailsReport = React.lazy(() => import("./pages/admin/hr/reports/EmployeeDetailsReport"));
+const EmploymentDatesReport = React.lazy(() => import("./pages/admin/hr/reports/EmploymentDatesReport"));
+const BirthdaysAnniversariesReport = React.lazy(() => import("./pages/admin/hr/reports/BirthdaysAnniversariesReport"));
+const TrainingExpiringReport = React.lazy(() => import("./pages/admin/hr/reports/TrainingExpiringReport"));
+const TrainingStartingReport = React.lazy(() => import("./pages/admin/hr/reports/TrainingStartingReport"));
+const TrainingOngoingReport = React.lazy(() => import("./pages/admin/hr/reports/TrainingOngoingReport"));
+const KDSPerformanceReport = React.lazy(() => import("./pages/admin/hr/reports/KDSPerformance"));
+
 const UserProfileSettings = React.lazy(() => import("./pages/UserProfileSettings"));
 const POSSetup = React.lazy(() => import("./pages/pos/POSSetup"));
 const POSMain = React.lazy(() => import("./pages/pos/POSMain"));
@@ -140,7 +155,7 @@ const PayrollPage = React.lazy(() => import("./pages/admin/hr/PayrollPage"));
 const VenueSettings = React.lazy(() => import("./pages/admin/VenueSettings"));
 const SummaryDashboard = React.lazy(() => import("./pages/admin/hr/SummaryDashboard"));
 const SystemDashboard = React.lazy(() => import("./pages/admin/SystemDashboard"));
-const StaffManagement = React.lazy(() => import("./pages/admin/StaffManagement"));
+// StaffManagement removed — consolidated into Users.js
 const POSSettings = React.lazy(() => import("./pages/admin/POSSettings"));
 const Documents = React.lazy(() => import("./pages/admin/Documents"));
 const ReviewRisk = React.lazy(() => import("./pages/admin/ReviewRisk"));
@@ -379,7 +394,7 @@ function App() {
                                     <Route path="dashboard" element={<SystemDashboard />} />
                                     <Route path="venues" element={<VenueSettings />} />
                                     <Route path="menu" element={<POSSettings />} />
-                                    <Route path="staff" element={<StaffManagement />} />
+                                    <Route path="staff" element={<Users />} />
                                     <Route path="inventory" element={<InventoryDashboard />} />
                                     <Route path="pos" element={<POSFeature />} />
                                     <Route path="kds" element={<KDSFeature />} />
@@ -547,6 +562,7 @@ function App() {
                                     </Route>
 
                                     <Route path="hr-setup">
+                                      <Route index element={<EmployeeSetupHub />} />
                                       <Route path="banks" element={<BanksPage />} />
                                       <Route path="departments" element={<DepartmentsPage />} />
                                       <Route path="locations" element={<LocationsPage />} />
@@ -590,7 +606,7 @@ function App() {
                                       <Route path="dashboard" element={<SummaryDashboard />} />
                                       <Route path="clocking" element={<ClockingData />} />
 
-                                      <Route path="payroll" element={<PayrollDashboard />} />
+                                      {/* Duplicate payroll route removed — PayrollPage at line 574 is the canonical route */}
                                       <Route path="payroll/:runId" element={<PayrollRunDetail />} />
                                       <Route path="payroll/view/:employeeId/:period" element={<PayslipViewer />} />
 
@@ -611,6 +627,10 @@ function App() {
                                       <Route path="setup/:moduleName" element={<HRModulePlaceholder />} />
 
                                       <Route path="settings" element={<AdminSettingsIndigo />} />
+
+                                      {/* Previously orphaned — now routed */}
+                                      <Route path="my-documents" element={<EmployeePayrollHistory />} />
+                                      <Route path="shifts" element={<Shifts />} />
                                     </Route>
 
                                     {/* Collaboration */}

@@ -73,14 +73,32 @@ const menuItems = [
   { title: 'Employee Directory', icon: UserCheck, href: '/admin/hr/people', group: 'hr' },
   { title: 'Leave Management', icon: Calendar, href: '/admin/hr/leave-management', group: 'hr' },
   { title: 'Payroll Processing', icon: DollarSign, href: '/admin/hr/payroll', group: 'hr' },
-  { title: 'Staff Management', icon: Users, href: '/admin/staff', group: 'hr' },
+  { title: 'User Management', icon: Users, href: '/admin/staff', group: 'hr' },
   { title: 'Scheduler', icon: Clock, href: '/admin/hr/scheduler', group: 'hr' },
   { title: 'Clocking Data', icon: Activity, href: '/admin/hr/clocking', group: 'hr' },
   { title: 'Contracts', icon: FileText, href: '/admin/hr/contracts', group: 'hr' },
   { title: 'Documents', icon: FileText, href: '/admin/hr/documents', group: 'hr' },
+  { title: 'Shift Planning', icon: Clock, href: '/admin/hr/shifts', group: 'hr' },
+  { title: 'My Documents', icon: FileText, href: '/admin/hr/my-documents', group: 'hr' },
   { title: 'Tips Management', icon: DollarSign, href: '/admin/hr/tips', group: 'hr' },
   { title: 'Timesheets', icon: Clock, href: '/admin/hr/timesheets', group: 'hr' },
   { title: 'Deep Analytics', icon: Activity, href: '/admin/hr/analytics', group: 'hr' },
+  {
+    title: 'HR Reports',
+    icon: FileText,
+    href: '/admin/hr-reports/headcount',
+    group: 'hr',
+    subs: [
+      { title: 'Headcount', id: 'headcount', href: '/admin/hr-reports/headcount' },
+      { title: 'Turnover', id: 'turnover', href: '/admin/hr-reports/turnover' },
+      { title: 'Employee Details', id: 'emp-details', href: '/admin/hr-reports/employee-details' },
+      { title: 'Employment Dates', id: 'emp-dates', href: '/admin/hr-reports/employment-dates' },
+      { title: 'Birthdays & Anniversaries', id: 'birthdays', href: '/admin/hr-reports/birthdays' },
+      { title: 'Training Expiring', id: 'train-exp', href: '/admin/hr-reports/training-expiring' },
+      { title: 'Training Starting', id: 'train-start', href: '/admin/hr-reports/training-starting' },
+      { title: 'Training Ongoing', id: 'train-on', href: '/admin/hr-reports/training-ongoing' }
+    ]
+  },
   {
     title: 'Advanced Modules',
     icon: Layers,
@@ -100,6 +118,7 @@ const menuItems = [
     href: '/admin/hr/settings',
     group: 'hr',
     subs: [
+      { title: 'Setup Hub', id: 'setup-hub', href: '/admin/hr-setup' },
       { title: 'Feature Flags', id: 'flags', href: '/admin/hr/settings' },
       { title: 'Banks', id: 'banks', href: '/admin/hr-setup/banks' },
       { title: 'Departments', id: 'depts', href: '/admin/hr-setup/departments' },

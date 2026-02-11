@@ -86,6 +86,8 @@ export default function EmployeePortalComplete() {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [showLeaveDialog, setShowLeaveDialog] = useState(false);
+  const [showLeaveRequestDialog, setShowLeaveRequestDialog] = useState(false);
+  const [leaveRequestType, setLeaveRequestType] = useState('vacation');
 
   useEffect(() => {
     fetchPortalData();
@@ -275,8 +277,8 @@ export default function EmployeePortalComplete() {
               </div>
 
               <div className="flex gap-2 mt-5">
-                <Button variant="outline" size="sm" className="flex-1 border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800">More details</Button>
-                <Button size="sm" className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white">My Profile</Button>
+                <Button variant="outline" size="sm" className="flex-1 border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800" onClick={() => navigate('/admin/hr/people/' + (data.my_profile.employee_code || 'EMP-001'))}>More details</Button>
+                <Button size="sm" className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white" onClick={() => navigate('/admin/profile')}>My Profile</Button>
               </div>
             </CardContent>
           </Card>
@@ -505,10 +507,10 @@ export default function EmployeePortalComplete() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-4 gap-2 mb-4">
-                <Button size="sm" className="text-xs bg-indigo-600 hover:bg-indigo-500 text-white">Apply ▼</Button>
-                <Button size="sm" variant="outline" className="text-xs border-zinc-700 text-zinc-400 hover:text-white">Cancel ▼</Button>
-                <Button size="sm" className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20">Sick</Button>
-                <Button size="sm" variant="outline" className="text-xs border-zinc-700 text-zinc-400 hover:text-white">Heat Map</Button>
+                <Button size="sm" className="text-xs bg-indigo-600 hover:bg-indigo-500 text-white" onClick={() => { setLeaveRequestType('vacation'); setShowLeaveRequestDialog(true); }}>Apply ▼</Button>
+                <Button size="sm" variant="outline" className="text-xs border-zinc-700 text-zinc-400 hover:text-white" onClick={() => navigate('/admin/hr/leave-management')}>Cancel ▼</Button>
+                <Button size="sm" className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20" onClick={() => { setLeaveRequestType('sick'); setShowLeaveRequestDialog(true); }}>Sick</Button>
+                <Button size="sm" variant="outline" className="text-xs border-zinc-700 text-zinc-400 hover:text-white" onClick={() => navigate('/admin/hr/scheduler')}>Heat Map</Button>
               </div>
 
               <div className="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">
@@ -655,6 +657,84 @@ export default function EmployeePortalComplete() {
               </div>
             )}
             <Button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white" onClick={() => setShowLeaveDialog(false)}>Close</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ─── Leave Request Dialog ─────────────────── */}
+      <Dialog open={showLeaveRequestDialog} onOpenChange={setShowLeaveRequestDialog}>
+        <DialogContent className="bg-zinc-900 border-zinc-800">
+          <DialogHeader>
+            <DialogTitle className="text-white flex items-center gap-2">
+              {leaveRequestType === 'sick' ? (
+                <><Heart className="w-5 h-5 text-red-400" /> Report Sick Leave</>
+              ) : (
+                <><CalendarIcon className="w-5 h-5 text-indigo-400" /> Apply for Leave</>
+              )}
+            </DialogTitle>
+            <DialogDescription className="text-zinc-500">
+              {leaveRequestType === 'sick' ? 'Report your sick leave below' : 'Submit a leave request for approval'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div>
+              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Leave Type</label>
+              <select
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                defaultValue={leaveRequestType === 'sick' ? 'sick' : 'vacation'}
+              >
+                {leaveRequestType === 'sick' ? (
+                  <>
+                    <option value="sick">Sick Leave</option>
+                    <option value="family-sick">Family Emergency</option>
+                  </>
+                ) : (
+                  <>
+                    <option value="vacation">Vacation Leave 2025</option>
+                    <option value="personal">Personal Leave</option>
+                    <option value="parental">Parental Leave</option>
+                    <option value="remote">Working Remotely</option>
+                  </>
+                )}
+              </select>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Start Date</label>
+                <input type="date" className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">End Date</label>
+                <input type="date" className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Duration</label>
+              <div className="grid grid-cols-3 gap-2">
+                <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-300 hover:bg-indigo-600 hover:text-white hover:border-indigo-600">Full Day</Button>
+                <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-300 hover:bg-indigo-600 hover:text-white hover:border-indigo-600">Morning</Button>
+                <Button variant="outline" size="sm" className="border-zinc-700 text-zinc-300 hover:bg-indigo-600 hover:text-white hover:border-indigo-600">Afternoon</Button>
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1.5">Notes</label>
+              <textarea
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 min-h-[80px] resize-none"
+                placeholder={leaveRequestType === 'sick' ? 'Brief description of illness...' : 'Reason for leave request...'}
+              />
+            </div>
+            <div className="flex gap-2 pt-2">
+              <Button variant="outline" className="flex-1 border-zinc-700 text-zinc-400" onClick={() => setShowLeaveRequestDialog(false)}>Cancel</Button>
+              <Button
+                className={`flex-1 text-white ${leaveRequestType === 'sick' ? 'bg-red-600 hover:bg-red-500' : 'bg-indigo-600 hover:bg-indigo-500'}`}
+                onClick={() => {
+                  toast.success(leaveRequestType === 'sick' ? 'Sick leave reported successfully' : 'Leave request submitted for approval');
+                  setShowLeaveRequestDialog(false);
+                }}
+              >
+                {leaveRequestType === 'sick' ? 'Report Sick' : 'Submit Request'}
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
