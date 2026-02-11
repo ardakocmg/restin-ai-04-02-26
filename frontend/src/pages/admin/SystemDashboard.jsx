@@ -59,6 +59,8 @@ export default function SystemDashboard() {
             setLogs((res.data.logs || []).map((log, i) => ({
                 ...log,
                 id: log.id || i,
+                user_name: log.user_name || (typeof log.user === 'string' ? log.user : 'System'),
+                details: typeof log.meta === 'object' ? JSON.stringify(log.meta) : (log.details || log.message || ''),
                 time: log.created_at ? new Date(log.created_at) : new Date()
             })));
         } catch (error) {
@@ -205,9 +207,9 @@ export default function SystemDashboard() {
                                         <div>
                                             <div className="text-sm text-white font-medium flex items-center gap-2">
                                                 {log.action}
-                                                <span className="text-zinc-500 text-xs font-normal">by {log.user}</span>
+                                                <span className="text-zinc-500 text-xs font-normal">by {typeof log.user === 'object' ? (log.user_name || log.user?.name || JSON.stringify(log.user)) : (log.user_name || log.user || 'System')}</span>
                                             </div>
-                                            <div className="text-xs text-zinc-400">{log.details}</div>
+                                            <div className="text-xs text-zinc-400">{typeof log.details === 'object' ? JSON.stringify(log.details) : (log.details || '')}</div>
                                             <div className="text-[10px] text-zinc-600 mt-1">{log.time ? format(log.time, 'HH:mm:ss') : ''}</div>
                                         </div>
                                     </div>

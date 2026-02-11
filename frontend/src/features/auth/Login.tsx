@@ -129,7 +129,7 @@ export default function Login() {
             const venueId = data.allowedVenueIds?.[0] || data.defaultVenueId || data.user?.venueId;
             // Ensure venueId fits User type if we were strictly checking it everywhere
             // For now we cast or assume backend aligns with types
-            login(token, { ...data.user, venueId: venueId || '' } as User);
+            login({ ...data.user, venueId: venueId || '' } as User, token);
 
             if (loginTarget === "pos") navigate("/pos/setup");
             else if (loginTarget === "kds") navigate("/kds/setup");
@@ -168,7 +168,7 @@ export default function Login() {
     const handleVenueSelect = () => {
         if (!selectedVenue || !userData) return;
 
-        login(userToken, { ...userData.user, venueId: selectedVenue } as User);
+        login({ ...userData.user, venueId: selectedVenue } as User, userToken);
 
         if (loginTarget === "pos") navigate("/pos/setup");
         else if (loginTarget === "kds") navigate("/kds/setup");
