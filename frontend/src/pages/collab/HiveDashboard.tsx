@@ -19,6 +19,7 @@ import { parseSmartMessage, SmartToken } from '@/lib/smartParser';
 import { useGlobalPTT, TransmissionResult, LiveSpeaker } from '@/contexts/GlobalPTTContext';
 import { useVoiceDictation, speakMessage, stopSpeaking, isSpeaking, getAvailableVoices, SUPPORTED_LANGUAGES } from '@/hooks/useVoiceDictation';
 import type { TTSConfig } from '@/hooks/useVoiceDictation';
+import { useAuth } from '@/context/AuthContext';
 
 // ─── Channel Definitions ────────────────────────────────────────────────
 interface Channel {
@@ -284,6 +285,14 @@ function AttachmentBubble({ att }: { att: { name: string; type: 'image' | 'file'
 
 // ─── Main Dashboard ─────────────────────────────────────────────────────
 export default function HiveDashboard() {
+    const { user } = useAuth();
+
+    // Derive user identity for sent messages
+    const senderName = user?.name || 'You';
+    const senderInitials = user?.name
+        ? user.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().substring(0, 2)
+        : 'ME';
+
     const [messageInput, setMessageInput] = useState('');
     const [messages, setMessages] = useState<ChatMessage[]>(MOCK_MESSAGES);
     const [searchQuery, setSearchQuery] = useState('');
@@ -385,8 +394,8 @@ export default function HiveDashboard() {
             const voiceMsg: ChatMessage = {
                 id: `voice-${Date.now()}`,
                 channelId: result.channelId,
-                sender: result.speaker,
-                senderInitials: 'ME',
+                sender: senderName,
+                senderInitials: senderInitials,
                 senderColor: 'bg-zinc-600',
                 text: result.transcript || '🎙️ Voice message',
                 timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
@@ -442,8 +451,8 @@ export default function HiveDashboard() {
         const newMsg: ChatMessage = {
             id: `msg-${Date.now()}`,
             channelId: activeChannel,
-            sender: 'You',
-            senderInitials: 'ME',
+            sender: senderName,
+            senderInitials: senderInitials,
             senderColor: 'bg-zinc-600',
             text: messageInput,
             timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
@@ -475,16 +484,16 @@ export default function HiveDashboard() {
             if (m.id !== msgId) return m;
             const reactions = { ...(m.reactions || {}) };
             const users = reactions[emoji] || [];
-            if (users.includes('You')) {
-                reactions[emoji] = users.filter(u => u !== 'You');
+            if (users.includes(senderName)) {
+                reactions[emoji] = users.filter(u => u !== senderName);
                 if (reactions[emoji].length === 0) delete reactions[emoji];
             } else {
-                reactions[emoji] = [...users, 'You'];
+                reactions[emoji] = [...users, senderName];
             }
             return { ...m, reactions };
         }));
         setShowEmojiPicker(null);
-    }, []);
+    }, [senderName]);
 
     // Toggle pin
     const togglePin = useCallback((msgId: string) => {

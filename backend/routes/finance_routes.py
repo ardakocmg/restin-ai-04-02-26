@@ -4,13 +4,14 @@ from datetime import datetime, timezone
 
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
+from core.role_guard import require_owner
 from services.permission_service import effective_permissions, get_allowed_schema, filter_row_by_schema
 
 
 def create_finance_router():
     router = APIRouter(tags=["finance"])
 
-    @router.get("/venues/{venue_id}/finance/summary")
+    @router.get("/venues/{venue_id}/finance/summary", dependencies=[Depends(require_owner)])
     async def get_finance_summary(venue_id: str, current_user: dict = Depends(get_current_user)):
         """Get finance summary (widgets data)"""
         await check_venue_access(current_user, venue_id)
@@ -61,7 +62,7 @@ def create_finance_router():
         
         return summary
 
-    @router.get("/venues/{venue_id}/finance/orders/open")
+    @router.get("/venues/{venue_id}/finance/orders/open", dependencies=[Depends(require_owner)])
     async def get_open_orders(venue_id: str, current_user: dict = Depends(get_current_user)):
         """Get open orders with permission-filtered columns"""
         await check_venue_access(current_user, venue_id)
@@ -103,7 +104,7 @@ def create_finance_router():
             "meta": {"count": len(rows), "currency": currency}
         }
 
-    @router.get("/venues/{venue_id}/finance/checks/closed")
+    @router.get("/venues/{venue_id}/finance/checks/closed", dependencies=[Depends(require_owner)])
     async def get_closed_checks(venue_id: str, current_user: dict = Depends(get_current_user)):
         """Get closed checks with permission-filtered columns"""
         await check_venue_access(current_user, venue_id)
@@ -146,7 +147,7 @@ def create_finance_router():
             "meta": {"count": len(rows), "currency": currency}
         }
 
-    @router.post("/venues/{venue_id}/finance/orders/{order_id}/split")
+    @router.post("/venues/{venue_id}/finance/orders/{order_id}/split", dependencies=[Depends(require_owner)])
     async def split_order(venue_id: str, order_id: str, payload: dict = Body(...), current_user: dict = Depends(get_current_user)):
         """
         Split an Order (Pillar 8).
@@ -154,7 +155,7 @@ def create_finance_router():
         # Logic would go here to update the order in DB
         return {"status": "success", "message": "Order split successfully", "new_orders": ["ORD-123-A", "ORD-123-B"]}
 
-    @router.post("/venues/{venue_id}/finance/kiosk/toggle")
+    @router.post("/venues/{venue_id}/finance/kiosk/toggle", dependencies=[Depends(require_owner)])
     async def toggle_kiosk(venue_id: str, payload: dict = Body(...), current_user: dict = Depends(get_current_user)):
         """
         Toggle Kiosk Mode for a Terminal (Pillar 8).

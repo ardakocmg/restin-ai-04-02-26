@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from core.database import db
 from core.dependencies import get_current_user
+from core.role_guard import require_owner
 from datetime import datetime, timezone
 from uuid import uuid4
 import logging
@@ -16,7 +17,7 @@ EXPORTABLE_COLLECTIONS = [
 ]
 
 
-@router.post("/request")
+@router.post("/request", dependencies=[Depends(require_owner)])
 async def request_export(
     venue_id: str,
     current_user: dict = Depends(get_current_user)
@@ -25,9 +26,6 @@ async def request_export(
     Queue a full data export job for the venue.
     Data Sovereignty: 'Export Everything' button (Rule 58).
     """
-    # Check permission — only owner/admin
-    if current_user.get("role") not in ["owner", "general_manager", "it_admin"]:
-        raise HTTPException(status_code=403, detail="Only owners can export data")
 
     job = {
         "id": str(uuid4()),
@@ -73,7 +71,7 @@ async def request_export(
     return job
 
 
-@router.get("/status/{job_id}")
+@router.get("/status/{job_id}", dependencies=[Depends(require_owner)])
 async def export_status(job_id: str):
     """Check export job status"""
     job = await db.data_export_jobs.find_one({"id": job_id}, {"_id": 0})
@@ -82,7 +80,7 @@ async def export_status(job_id: str):
     return job
 
 
-@router.get("/history")
+@router.get("/history", dependencies=[Depends(require_owner)])
 async def export_history(venue_id: str):
     """List past export jobs for a venue"""
     jobs = await db.data_export_jobs.find(

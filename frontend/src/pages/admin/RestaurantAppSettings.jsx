@@ -17,8 +17,18 @@ import {
     SelectTrigger,
     SelectValue
 } from '../../components/ui/select';
+import { useAuth } from '../../context/AuthContext';
+import PermissionGate from '../../components/shared/PermissionGate';
+import { useAuditLog } from '../../hooks/useAuditLog';
 
 export default function RestaurantAppSettings() {
+    const { user } = useAuth();
+    const { logAction } = useAuditLog();
+
+    React.useEffect(() => {
+        logAction('APP_SETTINGS_VIEWED', 'restaurant_app_settings', undefined, { user_id: user?.id });
+    }, []);
+
     const sections = [
         {
             id: 'basket',
@@ -63,74 +73,76 @@ export default function RestaurantAppSettings() {
     ];
 
     return (
-        <PageContainer
-            title="Restaurant App Settings"
-            description="Configure your POS behavior, kitchen workflows, and customer interaction settings."
-            actions={
-                <div className="flex gap-3">
-                    <Button variant="outline" className="border-white/10 text-zinc-400 hover:bg-zinc-900 rounded-xl px-6">
-                        Discard
-                    </Button>
-                    <Button className="bg-red-600 hover:bg-red-700 text-white rounded-xl px-6 font-bold">
-                        <Save className="w-4 h-4 mr-2" />
-                        Save Changes
-                    </Button>
-                </div>
-            }
-        >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {sections.map((section) => (
-                    <Card key={section.id} className="border-white/5 bg-zinc-900/50 backdrop-blur-xl overflow-hidden flex flex-col">
-                        <CardHeader className="border-b border-white/5 bg-white/5 py-4">
-                            <CardTitle className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 flex items-center gap-3">
-                                <section.icon className="w-4 h-4 text-red-500" />
-                                {section.title}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-0 flex-1">
-                            <div className="divide-y divide-white/5">
-                                {section.settings.map((setting) => (
-                                    <div key={setting.id} className="p-6 hover:bg-white/[0.02] transition-colors group">
-                                        <div className="flex items-start justify-between gap-6">
-                                            <div className="space-y-1">
-                                                <Label className="text-sm font-bold text-white group-hover:text-red-400 transition-colors">
-                                                    {setting.label}
-                                                </Label>
-                                                <p className="text-xs text-zinc-500 line-clamp-2">{setting.desc}</p>
+        <PermissionGate requiredRole="MANAGER">
+            <PageContainer
+                title="Restaurant App Settings"
+                description="Configure your POS behavior, kitchen workflows, and customer interaction settings."
+                actions={
+                    <div className="flex gap-3">
+                        <Button variant="outline" className="border-white/10 text-zinc-400 hover:bg-zinc-900 rounded-xl px-6">
+                            Discard
+                        </Button>
+                        <Button className="bg-red-600 hover:bg-red-700 text-white rounded-xl px-6 font-bold">
+                            <Save className="w-4 h-4 mr-2" />
+                            Save Changes
+                        </Button>
+                    </div>
+                }
+            >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {sections.map((section) => (
+                        <Card key={section.id} className="border-white/5 bg-zinc-900/50 backdrop-blur-xl overflow-hidden flex flex-col">
+                            <CardHeader className="border-b border-white/5 bg-white/5 py-4">
+                                <CardTitle className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 flex items-center gap-3">
+                                    <section.icon className="w-4 h-4 text-red-500" />
+                                    {section.title}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-0 flex-1">
+                                <div className="divide-y divide-white/5">
+                                    {section.settings.map((setting) => (
+                                        <div key={setting.id} className="p-6 hover:bg-white/[0.02] transition-colors group">
+                                            <div className="flex items-start justify-between gap-6">
+                                                <div className="space-y-1">
+                                                    <Label className="text-sm font-bold text-white group-hover:text-red-400 transition-colors">
+                                                        {setting.label}
+                                                    </Label>
+                                                    <p className="text-xs text-zinc-500 line-clamp-2">{setting.desc}</p>
+                                                </div>
+
+                                                {setting.type === 'switch' ? (
+                                                    <Switch defaultChecked={setting.default} className="data-[state=checked]:bg-red-600 mt-1" />
+                                                ) : setting.type === 'select' ? (
+                                                    <Select defaultValue={setting.default}>
+                                                        <SelectTrigger className="w-[140px] bg-zinc-950 border-white/10 h-9 text-xs">
+                                                            <SelectValue />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="bg-zinc-900 border-white/10">
+                                                            {setting.options.map(opt => (
+                                                                <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                ) : (
+                                                    <Input className="w-[140px] bg-zinc-950 border-white/10 h-9 text-xs" />
+                                                )}
                                             </div>
-
-                                            {setting.type === 'switch' ? (
-                                                <Switch defaultChecked={setting.default} className="data-[state=checked]:bg-red-600 mt-1" />
-                                            ) : setting.type === 'select' ? (
-                                                <Select defaultValue={setting.default}>
-                                                    <SelectTrigger className="w-[140px] bg-zinc-950 border-white/10 h-9 text-xs">
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                    <SelectContent className="bg-zinc-900 border-white/10">
-                                                        {setting.options.map(opt => (
-                                                            <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            ) : (
-                                                <Input className="w-[140px] bg-zinc-950 border-white/10 h-9 text-xs" />
-                                            )}
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-
-            <div className="mt-8 bg-blue-500/10 border border-blue-500/20 rounded-2xl p-6 flex items-start gap-4">
-                <Info className="w-6 h-6 text-blue-400 shrink-0 mt-1" />
-                <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-white uppercase tracking-wider">Configuration Note</h4>
-                    <p className="text-sm text-zinc-400">These settings are applied globally across all POS terminals registered to this venue. Changes may take up to 60 seconds to sync with active devices depending on their connection strength.</p>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
                 </div>
-            </div>
-        </PageContainer>
+
+                <div className="mt-8 bg-blue-500/10 border border-blue-500/20 rounded-2xl p-6 flex items-start gap-4">
+                    <Info className="w-6 h-6 text-blue-400 shrink-0 mt-1" />
+                    <div className="space-y-1">
+                        <h4 className="text-sm font-bold text-white uppercase tracking-wider">Configuration Note</h4>
+                        <p className="text-sm text-zinc-400">These settings are applied globally across all POS terminals registered to this venue. Changes may take up to 60 seconds to sync with active devices depending on their connection strength.</p>
+                    </div>
+                </div>
+            </PageContainer>
+        </PermissionGate>
     );
 }

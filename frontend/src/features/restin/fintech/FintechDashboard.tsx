@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fintechService } from './fintech-service';
 import { useVenue } from '../../../context/VenueContext';
+import { useAuth } from '../../../context/AuthContext';
 import { toast } from 'sonner';
 
 // Rule 1: No 'any'
@@ -50,6 +51,7 @@ const FintechDashboard: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { activeVenueId } = useVenue();
+    const { user, isManager, isOwner } = useAuth();
     const queryClient = useQueryClient();
     const [kioskMode, setKioskMode] = useState<boolean>(false);
 

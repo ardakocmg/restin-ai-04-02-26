@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { logger } from '@/lib/logger';
 import {
     Shield, User, Lock, Save, AlertTriangle, Check,
@@ -13,6 +14,9 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import api from '../../lib/api';
+import { useAuth } from '../../context/AuthContext';
+import PermissionGate from '../../components/shared/PermissionGate';
+import { useAuditLog } from '../../hooks/useAuditLog';
 
 // ─── COMPREHENSIVE PERMISSION TREE ─────────────────────────────────────────────
 // Scanned from: App.tsx routes, NewSidebar.jsx menus, backend domain routes
@@ -465,7 +469,10 @@ function PermissionTreeGroup({ group, expanded, onToggle }) {
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function RolesPermissions() {
+    const { user } = useAuth();
+    const { logAction } = useAuditLog();
     const [roles, setRoles] = useState([]);
+    const navigate = useNavigate();
     const [selectedRole, setSelectedRole] = useState(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -551,6 +558,7 @@ export default function RolesPermissions() {
         try {
             await api.put(`/admin/roles/${selectedRole.id}`, selectedRole);
             toast.success("Policy saved successfully");
+            logAction('ROLE_PERMISSIONS_UPDATED', 'roles_permissions', selectedRole.id, { roleName: selectedRole.label });
         } catch (error) {
             logger.error("Failed to save role:", error);
             toast.success("Policy saved successfully");
@@ -639,351 +647,360 @@ export default function RolesPermissions() {
     }
 
     return (
-        <div className="flex h-[calc(100vh-64px)] bg-black text-zinc-100 overflow-hidden">
-            {/* Sidebar - Roles List */}
-            <div className="w-80 border-r border-zinc-800 flex flex-col bg-zinc-900/50">
-                <div className="p-4 border-b border-zinc-800">
-                    <h2 className="text-lg font-semibold flex items-center gap-2">
-                        <Shield className="w-5 h-5 text-indigo-400" />
-                        Roles & Permissions
-                    </h2>
-                    <p className="text-[11px] text-zinc-500 mt-1">{roles.length} roles · {totalPerms} permissions · {permissionGroups.length} groups</p>
-                    <div className="mt-3 relative">
-                        <Search className="w-4 h-4 absolute left-3 top-2.5 text-zinc-500" />
-                        <input
-                            type="text"
-                            placeholder="Search roles..."
-                            value={roleSearch}
-                            onChange={(e) => setRoleSearch(e.target.value)}
-                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500 placeholder-zinc-600"
-                        />
-                    </div>
-                    <button
-                        onClick={() => setShowCreateDialog(true)}
-                        className="w-full mt-3 px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20"
-                    >
-                        <Plus className="w-4 h-4" /> Create Role
-                    </button>
-                </div>
-
-                <div className="flex-1 overflow-y-auto p-2 space-y-1">
-                    {ROLE_CATEGORIES.map(category => {
-                        const categoryRoles = filteredRoles.filter(r => r.category === category);
-                        if (categoryRoles.length === 0) return null;
-                        return (
-                            <div key={category} className="mb-4">
-                                <div className="px-3 py-1.5 text-xs font-medium text-zinc-500 uppercase tracking-wider flex items-center gap-2">
-                                    {category === "Super Admin" && <Fingerprint className="w-3 h-3 text-red-400" />}
-                                    {category}
-                                </div>
-                                {categoryRoles.map(role => {
-                                    const authMethod = AUTH_METHODS.find(a => a.id === role.auth) || AUTH_METHODS[0];
-                                    return (
-                                        <div key={role.id} className="group relative">
-                                            <button
-                                                onClick={() => setSelectedRole(role)}
-                                                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-all ${selectedRole?.id === role.id
-                                                    ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
-                                                    : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 border border-transparent"
-                                                    }`}
-                                            >
-                                                <div className="flex items-center gap-2 min-w-0">
-                                                    {category === "Super Admin" && <Shield className="w-3.5 h-3.5 text-red-400 shrink-0" />}
-                                                    {category === "Management" && <Shield className="w-3.5 h-3.5 shrink-0" />}
-                                                    {category === "Service" && <User className="w-3.5 h-3.5 shrink-0" />}
-                                                    {category === "Kitchen" && <Utensils className="w-3.5 h-3.5 shrink-0" />}
-                                                    {category === "Other" && <Settings className="w-3.5 h-3.5 shrink-0" />}
-                                                    <span className="truncate">{role.label}</span>
-                                                    {role.locked && <Lock className="w-3 h-3 text-red-400/50 shrink-0" />}
-                                                </div>
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${authMethod.color === 'emerald' ? 'bg-emerald-500' : authMethod.color === 'blue' ? 'bg-blue-500' : 'bg-red-500'}`} />
-                                                    {selectedRole?.id === role.id && <ChevronRight className="w-4 h-4" />}
-                                                </div>
-                                            </button>
-                                            {/* Context buttons on hover */}
-                                            {!role.locked && (
-                                                <div className="absolute right-1 top-1 hidden group-hover:flex items-center gap-1">
-                                                    <button onClick={(e) => { e.stopPropagation(); handleCloneRole(role.id); }} className="p-1 hover:bg-zinc-700 rounded text-zinc-500 hover:text-zinc-300" title="Clone">
-                                                        <Copy className="w-3 h-3" />
-                                                    </button>
-                                                    <button onClick={(e) => { e.stopPropagation(); handleDeleteRole(role.id); }} className="p-1 hover:bg-red-900/30 rounded text-zinc-500 hover:text-red-400" title="Delete">
-                                                        <Trash2 className="w-3 h-3" />
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-
-            {/* Main Content - Role Details & Permission Tree */}
-            {selectedRole && (
-                <div className="flex-1 flex flex-col overflow-hidden bg-zinc-950">
-                    {/* Header */}
-                    <div className="p-6 border-b border-zinc-800 flex justify-between items-start bg-zinc-900/30">
-                        <div>
-                            <div className="flex items-center gap-3">
-                                <h1 className="text-2xl font-bold text-white">{selectedRole.label}</h1>
-                                <span className="px-2 py-0.5 rounded-full bg-zinc-800 text-xs font-medium text-zinc-400 border border-zinc-700">
-                                    {selectedRole.category}
-                                </span>
-                                {selectedRole.scope && (
-                                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${selectedRole.scope === 'platform' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                                        selectedRole.scope === 'organization' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
-                                            selectedRole.scope === 'brand' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                                                'bg-zinc-800 text-zinc-400 border-zinc-700'
-                                        }`}>
-                                        {selectedRole.scope}
-                                    </span>
-                                )}
-                                {selectedRole.locked && (
-                                    <span className="px-2 py-0.5 rounded-full bg-red-500/10 text-xs font-medium text-red-400 border border-red-500/20 flex items-center gap-1">
-                                        <Lock className="w-3 h-3" /> System Role
-                                    </span>
-                                )}
-                            </div>
-                            <p className="text-zinc-500 mt-1 max-w-2xl text-sm">
-                                Configure permissions, scopes, and station access for the <strong className="text-zinc-300">{selectedRole.label}</strong> role across all {permissionGroups.length} system modules.
-                            </p>
+        <PermissionGate requiredRole="OWNER">
+            <div className="flex h-[calc(100vh-64px)] bg-black text-zinc-100 overflow-hidden">
+                {/* Sidebar - Roles List */}
+                <div className="w-80 border-r border-zinc-800 flex flex-col bg-zinc-900/50">
+                    <div className="p-4 border-b border-zinc-800">
+                        <h2 className="text-lg font-semibold flex items-center gap-2">
+                            <Shield className="w-5 h-5 text-indigo-400" />
+                            Roles & Permissions
+                        </h2>
+                        <p className="text-[11px] text-zinc-500 mt-1">{roles.length} roles · {totalPerms} permissions · {permissionGroups.length} groups</p>
+                        <div className="mt-3 relative">
+                            <Search className="w-4 h-4 absolute left-3 top-2.5 text-zinc-500" />
+                            <input
+                                type="text"
+                                placeholder="Search roles..."
+                                value={roleSearch}
+                                onChange={(e) => setRoleSearch(e.target.value)}
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-9 pr-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500 placeholder-zinc-600"
+                            />
                         </div>
-                        <div className="flex gap-2">
-                            <button
-                                className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-sm font-medium transition-colors border border-zinc-700 flex items-center gap-2"
-                                onClick={() => toast.info("Simulating role view...")}
-                            >
-                                <Layout className="w-4 h-4" />
-                                Simulate
-                            </button>
-                            <button
-                                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2 shadow-lg shadow-indigo-600/20"
-                                onClick={handleSave}
-                                disabled={saving}
-                            >
-                                <Save className="w-4 h-4" />
-                                {saving ? "Saving..." : "Save Changes"}
-                            </button>
-                        </div>
+                        <button
+                            onClick={() => setShowCreateDialog(true)}
+                            className="w-full mt-3 px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20"
+                        >
+                            <Plus className="w-4 h-4" /> Create Role
+                        </button>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                        {/* Allowed Stations Section */}
-                        <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-5">
-                            <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
-                                <Layout className="w-4 h-4 text-emerald-400" />
-                                Allowed Operating Stations
-                            </h3>
-                            <div className="grid grid-cols-5 gap-3">
-                                {stations.map(station => {
-                                    const isAllowed = selectedRole.allowedStations?.includes(station.id);
-                                    return (
-                                        <button
-                                            key={station.id}
-                                            onClick={() => handleStationToggle(station.id)}
-                                            className={`relative p-4 rounded-lg border text-left transition-all ${isAllowed
-                                                ? "bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/15"
-                                                : "bg-zinc-900 border-zinc-800 opacity-60 hover:opacity-100"
-                                                }`}
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <span className={`text-sm font-medium ${isAllowed ? "text-emerald-400" : "text-zinc-400"}`}>
-                                                    {station.label}
-                                                </span>
-                                                {isAllowed && <Check className="w-4 h-4 text-emerald-400" />}
+                    <div className="flex-1 overflow-y-auto p-2 space-y-1">
+                        {ROLE_CATEGORIES.map(category => {
+                            const categoryRoles = filteredRoles.filter(r => r.category === category);
+                            if (categoryRoles.length === 0) return null;
+                            return (
+                                <div key={category} className="mb-4">
+                                    <div className="px-3 py-1.5 text-xs font-medium text-zinc-500 uppercase tracking-wider flex items-center gap-2">
+                                        {category === "Super Admin" && <Fingerprint className="w-3 h-3 text-red-400" />}
+                                        {category}
+                                    </div>
+                                    {categoryRoles.map(role => {
+                                        const authMethod = AUTH_METHODS.find(a => a.id === role.auth) || AUTH_METHODS[0];
+                                        return (
+                                            <div key={role.id} className="group relative">
+                                                <button
+                                                    onClick={() => setSelectedRole(role)}
+                                                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-all ${selectedRole?.id === role.id
+                                                        ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
+                                                        : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 border border-transparent"
+                                                        }`}
+                                                >
+                                                    <div className="flex items-center gap-2 min-w-0">
+                                                        {category === "Super Admin" && <Shield className="w-3.5 h-3.5 text-red-400 shrink-0" />}
+                                                        {category === "Management" && <Shield className="w-3.5 h-3.5 shrink-0" />}
+                                                        {category === "Service" && <User className="w-3.5 h-3.5 shrink-0" />}
+                                                        {category === "Kitchen" && <Utensils className="w-3.5 h-3.5 shrink-0" />}
+                                                        {category === "Other" && <Settings className="w-3.5 h-3.5 shrink-0" />}
+                                                        <span className="truncate">{role.label}</span>
+                                                        {role.locked && <Lock className="w-3 h-3 text-red-400/50 shrink-0" />}
+                                                    </div>
+                                                    <div className="flex items-center gap-1.5">
+                                                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${authMethod.color === 'emerald' ? 'bg-emerald-500' : authMethod.color === 'blue' ? 'bg-blue-500' : 'bg-red-500'}`} />
+                                                        {selectedRole?.id === role.id && <ChevronRight className="w-4 h-4" />}
+                                                    </div>
+                                                </button>
+                                                {/* Context buttons on hover */}
+                                                {!role.locked && (
+                                                    <div className="absolute right-1 top-1 hidden group-hover:flex items-center gap-1">
+                                                        <button onClick={(e) => { e.stopPropagation(); handleCloneRole(role.id); }} className="p-1 hover:bg-zinc-700 rounded text-zinc-500 hover:text-zinc-300" title="Clone">
+                                                            <Copy className="w-3 h-3" />
+                                                        </button>
+                                                        <button onClick={(e) => { e.stopPropagation(); handleDeleteRole(role.id); }} className="p-1 hover:bg-red-900/30 rounded text-zinc-500 hover:text-red-400" title="Delete">
+                                                            <Trash2 className="w-3 h-3" />
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </div>
-                                            <p className="text-xs text-zinc-500">
-                                                {isAllowed ? "Access Granted" : "Restricted"}
-                                            </p>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
+                                        );
+                                    })}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
 
-                        {/* Authentication Requirements */}
-                        <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-5">
-                            <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
-                                <Fingerprint className="w-4 h-4 text-red-400" />
-                                Default Auth Method
-                                <span className="text-[10px] font-normal text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded">Role Minimum</span>
-                            </h3>
-                            <p className="text-xs text-zinc-500 mb-4">Sets the minimum auth for this role. Individual permissions can override this with stricter methods (configured per-permission below).</p>
-                            <div className="grid grid-cols-3 gap-3">
-                                {AUTH_METHODS.map(method => {
-                                    const isSelected = selectedRole.auth === method.id;
-                                    const MethodIcon = method.icon;
-                                    const isLocked = selectedRole.locked && method.id !== selectedRole.auth;
-                                    return (
-                                        <button
-                                            key={method.id}
-                                            onClick={() => handleAuthChange(method.id)}
-                                            disabled={selectedRole.locked}
-                                            className={`relative p-4 rounded-lg border text-left transition-all ${isLocked ? 'opacity-30 cursor-not-allowed' : ''} ${isSelected
-                                                ? method.color === 'emerald' ? 'bg-emerald-500/10 border-emerald-500/30' :
-                                                    method.color === 'blue' ? 'bg-blue-500/10 border-blue-500/30' :
-                                                        'bg-red-500/10 border-red-500/30'
-                                                : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700'
-                                                }`}
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <MethodIcon className={`w-5 h-5 ${isSelected
-                                                    ? method.color === 'emerald' ? 'text-emerald-400' :
-                                                        method.color === 'blue' ? 'text-blue-400' : 'text-red-400'
-                                                    : 'text-zinc-500'
-                                                    }`} />
-                                                {isSelected && <Check className="w-4 h-4 text-white" />}
-                                            </div>
-                                            <p className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-zinc-400'}`}>{method.label}</p>
-                                            <p className="text-[11px] text-zinc-500 mt-1 leading-relaxed">{method.desc}</p>
-                                        </button>
-                                    );
-                                })}
+                {/* Main Content - Role Details & Permission Tree */}
+                {selectedRole && (
+                    <div className="flex-1 flex flex-col overflow-hidden bg-zinc-950">
+                        {/* Header */}
+                        <div className="p-6 border-b border-zinc-800 flex justify-between items-start bg-zinc-900/30">
+                            <div>
+                                <div className="flex items-center gap-3">
+                                    <h1 className="text-2xl font-bold text-white">{selectedRole.label}</h1>
+                                    <span className="px-2 py-0.5 rounded-full bg-zinc-800 text-xs font-medium text-zinc-400 border border-zinc-700">
+                                        {selectedRole.category}
+                                    </span>
+                                    {selectedRole.scope && (
+                                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${selectedRole.scope === 'platform' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                                            selectedRole.scope === 'organization' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
+                                                selectedRole.scope === 'brand' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
+                                                    'bg-zinc-800 text-zinc-400 border-zinc-700'
+                                            }`}>
+                                            {selectedRole.scope}
+                                        </span>
+                                    )}
+                                    {selectedRole.locked && (
+                                        <span className="px-2 py-0.5 rounded-full bg-red-500/10 text-xs font-medium text-red-400 border border-red-500/20 flex items-center gap-1">
+                                            <Lock className="w-3 h-3" /> System Role
+                                        </span>
+                                    )}
+                                </div>
+                                <p className="text-zinc-500 mt-1 max-w-2xl text-sm">
+                                    Configure permissions, scopes, and station access for the <strong className="text-zinc-300">{selectedRole.label}</strong> role across all {permissionGroups.length} system modules.
+                                </p>
                             </div>
-                            {selectedRole.auth === 'pin' && (
-                                <div className="mt-3 p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-lg">
-                                    <p className="text-xs text-emerald-400 flex items-center gap-2">
-                                        <Smartphone className="w-3.5 h-3.5" />
-                                        <span><strong>PIN Flow:</strong> Device binds to venue on first use → PIN pad shows → User taps PIN → Session created</span>
-                                    </p>
-                                </div>
-                            )}
-                            {selectedRole.auth === '2fa' && (
-                                <div className="mt-3 p-3 bg-red-500/5 border border-red-500/10 rounded-lg">
-                                    <p className="text-xs text-red-400 flex items-center gap-2">
-                                        <Shield className="w-3.5 h-3.5" />
-                                        <span><strong>2FA Enforced:</strong> Email + Password + TOTP/SMS code required for every login</span>
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Permission Tree Header */}
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-base font-semibold text-white flex items-center gap-2">
-                                <Lock className="w-4 h-4 text-indigo-400" />
-                                Permission Matrix
-                                <span className="text-[11px] font-normal text-zinc-500 ml-2">
-                                    {filteredGroups.length} groups · {totalPerms} total permissions
-                                </span>
-                            </h3>
-                            <div className="flex items-center gap-3">
-                                <div className="relative">
-                                    <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-zinc-500" />
-                                    <input
-                                        type="text"
-                                        placeholder="Filter permissions..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="bg-zinc-900 border border-zinc-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-zinc-300 focus:outline-none focus:border-indigo-500/50 w-[200px] placeholder-zinc-600"
-                                    />
-                                </div>
+                            <div className="flex gap-2">
                                 <button
-                                    onClick={handleExpandAll}
-                                    className="px-3 py-1.5 text-xs font-medium rounded-lg border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-sm font-medium transition-colors border border-zinc-700 flex items-center gap-2"
+                                    onClick={() => navigate(`/admin/users?role=${encodeURIComponent(selectedRole.label)}`)}
                                 >
-                                    {expandAll ? "Collapse All" : "Expand All"}
+                                    <Users className="w-4 h-4" />
+                                    View Users
+                                </button>
+                                <button
+                                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-sm font-medium transition-colors border border-zinc-700 flex items-center gap-2"
+                                    onClick={() => toast.info("Simulating role view...")}
+                                >
+                                    <Layout className="w-4 h-4" />
+                                    Simulate
+                                </button>
+                                <button
+                                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2 shadow-lg shadow-indigo-600/20"
+                                    onClick={handleSave}
+                                    disabled={saving}
+                                >
+                                    <Save className="w-4 h-4" />
+                                    {saving ? "Saving..." : "Save Changes"}
                                 </button>
                             </div>
                         </div>
 
-                        {/* Collapsible Permission Tree */}
-                        <div className="space-y-3">
-                            {filteredGroups.map(group => (
-                                <PermissionTreeGroup
-                                    key={group.id}
-                                    group={group}
-                                    expanded={expandedGroups.includes(group.id) || !!searchTerm}
-                                    onToggle={() => toggleGroup(group.id)}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* ─── Create Role Dialog ─── */}
-            {showCreateDialog && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowCreateDialog(false)}>
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-xl w-[480px] shadow-2xl" onClick={e => e.stopPropagation()}>
-                        <div className="p-5 border-b border-zinc-800">
-                            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                <Plus className="w-5 h-5 text-indigo-400" />
-                                {cloneFrom ? 'Clone Role' : 'Create New Role'}
-                            </h3>
-                            {cloneFrom && <p className="text-xs text-zinc-500 mt-1">Cloning permissions from: <span className="text-indigo-400">{roles.find(r => r.id === cloneFrom)?.label}</span></p>}
-                        </div>
-                        <div className="p-5 space-y-4">
-                            <div>
-                                <label className="block text-xs font-medium text-zinc-400 mb-1.5">Role Name</label>
-                                <input
-                                    type="text"
-                                    value={newRoleName}
-                                    onChange={e => setNewRoleName(e.target.value)}
-                                    placeholder="e.g. Barista, Sommelier..."
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500 placeholder-zinc-600"
-                                    autoFocus
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-zinc-400 mb-1.5">Category</label>
-                                <select
-                                    value={newRoleCategory}
-                                    onChange={e => setNewRoleCategory(e.target.value)}
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500"
-                                >
-                                    {ROLE_CATEGORIES.filter(c => c !== "Super Admin").map(c => <option key={c} value={c}>{c}</option>)}
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-zinc-400 mb-1.5">Auth Method</label>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {AUTH_METHODS.map(m => {
-                                        const Icon = m.icon;
+                        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                            {/* Allowed Stations Section */}
+                            <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-5">
+                                <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                                    <Layout className="w-4 h-4 text-emerald-400" />
+                                    Allowed Operating Stations
+                                </h3>
+                                <div className="grid grid-cols-5 gap-3">
+                                    {stations.map(station => {
+                                        const isAllowed = selectedRole.allowedStations?.includes(station.id);
                                         return (
                                             <button
-                                                key={m.id}
-                                                onClick={() => setNewRoleAuth(m.id)}
-                                                className={`p-3 rounded-lg border text-center transition-all ${newRoleAuth === m.id
-                                                    ? m.color === 'emerald' ? 'bg-emerald-500/10 border-emerald-500/30' :
-                                                        m.color === 'blue' ? 'bg-blue-500/10 border-blue-500/30' :
-                                                            'bg-red-500/10 border-red-500/30'
-                                                    : 'bg-zinc-950 border-zinc-800 hover:border-zinc-700'
+                                                key={station.id}
+                                                onClick={() => handleStationToggle(station.id)}
+                                                className={`relative p-4 rounded-lg border text-left transition-all ${isAllowed
+                                                    ? "bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/15"
+                                                    : "bg-zinc-900 border-zinc-800 opacity-60 hover:opacity-100"
                                                     }`}
                                             >
-                                                <Icon className={`w-4 h-4 mx-auto mb-1 ${newRoleAuth === m.id ? 'text-white' : 'text-zinc-500'}`} />
-                                                <p className={`text-xs font-medium ${newRoleAuth === m.id ? 'text-white' : 'text-zinc-500'}`}>{m.label}</p>
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <span className={`text-sm font-medium ${isAllowed ? "text-emerald-400" : "text-zinc-400"}`}>
+                                                        {station.label}
+                                                    </span>
+                                                    {isAllowed && <Check className="w-4 h-4 text-emerald-400" />}
+                                                </div>
+                                                <p className="text-xs text-zinc-500">
+                                                    {isAllowed ? "Access Granted" : "Restricted"}
+                                                </p>
                                             </button>
                                         );
                                     })}
                                 </div>
                             </div>
-                            {!cloneFrom && (
-                                <div>
-                                    <label className="block text-xs font-medium text-zinc-400 mb-1.5">Clone Permissions From (optional)</label>
-                                    <select
-                                        value={cloneFrom}
-                                        onChange={e => setCloneFrom(e.target.value)}
-                                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500"
-                                    >
-                                        <option value="">Start from scratch</option>
-                                        {roles.filter(r => !r.locked).map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
-                                    </select>
+
+                            {/* Authentication Requirements */}
+                            <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-5">
+                                <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
+                                    <Fingerprint className="w-4 h-4 text-red-400" />
+                                    Default Auth Method
+                                    <span className="text-[10px] font-normal text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded">Role Minimum</span>
+                                </h3>
+                                <p className="text-xs text-zinc-500 mb-4">Sets the minimum auth for this role. Individual permissions can override this with stricter methods (configured per-permission below).</p>
+                                <div className="grid grid-cols-3 gap-3">
+                                    {AUTH_METHODS.map(method => {
+                                        const isSelected = selectedRole.auth === method.id;
+                                        const MethodIcon = method.icon;
+                                        const isLocked = selectedRole.locked && method.id !== selectedRole.auth;
+                                        return (
+                                            <button
+                                                key={method.id}
+                                                onClick={() => handleAuthChange(method.id)}
+                                                disabled={selectedRole.locked}
+                                                className={`relative p-4 rounded-lg border text-left transition-all ${isLocked ? 'opacity-30 cursor-not-allowed' : ''} ${isSelected
+                                                    ? method.color === 'emerald' ? 'bg-emerald-500/10 border-emerald-500/30' :
+                                                        method.color === 'blue' ? 'bg-blue-500/10 border-blue-500/30' :
+                                                            'bg-red-500/10 border-red-500/30'
+                                                    : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700'
+                                                    }`}
+                                            >
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <MethodIcon className={`w-5 h-5 ${isSelected
+                                                        ? method.color === 'emerald' ? 'text-emerald-400' :
+                                                            method.color === 'blue' ? 'text-blue-400' : 'text-red-400'
+                                                        : 'text-zinc-500'
+                                                        }`} />
+                                                    {isSelected && <Check className="w-4 h-4 text-white" />}
+                                                </div>
+                                                <p className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-zinc-400'}`}>{method.label}</p>
+                                                <p className="text-[11px] text-zinc-500 mt-1 leading-relaxed">{method.desc}</p>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
-                            )}
-                        </div>
-                        <div className="p-5 border-t border-zinc-800 flex gap-3 justify-end">
-                            <button onClick={() => { setShowCreateDialog(false); setCloneFrom(''); setNewRoleName(''); }} className="px-4 py-2 text-sm text-zinc-400 hover:text-white border border-zinc-800 rounded-lg hover:bg-zinc-800 transition-colors">Cancel</button>
-                            <button onClick={handleCreateRole} className="px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-indigo-600/20 flex items-center gap-2">
-                                <Plus className="w-4 h-4" /> {cloneFrom ? 'Clone Role' : 'Create Role'}
-                            </button>
+                                {selectedRole.auth === 'pin' && (
+                                    <div className="mt-3 p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-lg">
+                                        <p className="text-xs text-emerald-400 flex items-center gap-2">
+                                            <Smartphone className="w-3.5 h-3.5" />
+                                            <span><strong>PIN Flow:</strong> Device binds to venue on first use → PIN pad shows → User taps PIN → Session created</span>
+                                        </p>
+                                    </div>
+                                )}
+                                {selectedRole.auth === '2fa' && (
+                                    <div className="mt-3 p-3 bg-red-500/5 border border-red-500/10 rounded-lg">
+                                        <p className="text-xs text-red-400 flex items-center gap-2">
+                                            <Shield className="w-3.5 h-3.5" />
+                                            <span><strong>2FA Enforced:</strong> Email + Password + TOTP/SMS code required for every login</span>
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Permission Tree Header */}
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-base font-semibold text-white flex items-center gap-2">
+                                    <Lock className="w-4 h-4 text-indigo-400" />
+                                    Permission Matrix
+                                    <span className="text-[11px] font-normal text-zinc-500 ml-2">
+                                        {filteredGroups.length} groups · {totalPerms} total permissions
+                                    </span>
+                                </h3>
+                                <div className="flex items-center gap-3">
+                                    <div className="relative">
+                                        <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-zinc-500" />
+                                        <input
+                                            type="text"
+                                            placeholder="Filter permissions..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="bg-zinc-900 border border-zinc-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-zinc-300 focus:outline-none focus:border-indigo-500/50 w-[200px] placeholder-zinc-600"
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={handleExpandAll}
+                                        className="px-3 py-1.5 text-xs font-medium rounded-lg border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                                    >
+                                        {expandAll ? "Collapse All" : "Expand All"}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Collapsible Permission Tree */}
+                            <div className="space-y-3">
+                                {filteredGroups.map(group => (
+                                    <PermissionTreeGroup
+                                        key={group.id}
+                                        group={group}
+                                        expanded={expandedGroups.includes(group.id) || !!searchTerm}
+                                        onToggle={() => toggleGroup(group.id)}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+
+                {/* ─── Create Role Dialog ─── */}
+                {showCreateDialog && (
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowCreateDialog(false)}>
+                        <div className="bg-zinc-900 border border-zinc-800 rounded-xl w-[480px] shadow-2xl" onClick={e => e.stopPropagation()}>
+                            <div className="p-5 border-b border-zinc-800">
+                                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                    <Plus className="w-5 h-5 text-indigo-400" />
+                                    {cloneFrom ? 'Clone Role' : 'Create New Role'}
+                                </h3>
+                                {cloneFrom && <p className="text-xs text-zinc-500 mt-1">Cloning permissions from: <span className="text-indigo-400">{roles.find(r => r.id === cloneFrom)?.label}</span></p>}
+                            </div>
+                            <div className="p-5 space-y-4">
+                                <div>
+                                    <label className="block text-xs font-medium text-zinc-400 mb-1.5">Role Name</label>
+                                    <input
+                                        type="text"
+                                        value={newRoleName}
+                                        onChange={e => setNewRoleName(e.target.value)}
+                                        placeholder="e.g. Barista, Sommelier..."
+                                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500 placeholder-zinc-600"
+                                        autoFocus
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-medium text-zinc-400 mb-1.5">Category</label>
+                                    <select
+                                        value={newRoleCategory}
+                                        onChange={e => setNewRoleCategory(e.target.value)}
+                                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500"
+                                    >
+                                        {ROLE_CATEGORIES.filter(c => c !== "Super Admin").map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-medium text-zinc-400 mb-1.5">Auth Method</label>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {AUTH_METHODS.map(m => {
+                                            const Icon = m.icon;
+                                            return (
+                                                <button
+                                                    key={m.id}
+                                                    onClick={() => setNewRoleAuth(m.id)}
+                                                    className={`p-3 rounded-lg border text-center transition-all ${newRoleAuth === m.id
+                                                        ? m.color === 'emerald' ? 'bg-emerald-500/10 border-emerald-500/30' :
+                                                            m.color === 'blue' ? 'bg-blue-500/10 border-blue-500/30' :
+                                                                'bg-red-500/10 border-red-500/30'
+                                                        : 'bg-zinc-950 border-zinc-800 hover:border-zinc-700'
+                                                        }`}
+                                                >
+                                                    <Icon className={`w-4 h-4 mx-auto mb-1 ${newRoleAuth === m.id ? 'text-white' : 'text-zinc-500'}`} />
+                                                    <p className={`text-xs font-medium ${newRoleAuth === m.id ? 'text-white' : 'text-zinc-500'}`}>{m.label}</p>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                                {!cloneFrom && (
+                                    <div>
+                                        <label className="block text-xs font-medium text-zinc-400 mb-1.5">Clone Permissions From (optional)</label>
+                                        <select
+                                            value={cloneFrom}
+                                            onChange={e => setCloneFrom(e.target.value)}
+                                            className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500"
+                                        >
+                                            <option value="">Start from scratch</option>
+                                            {roles.filter(r => !r.locked).map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
+                                        </select>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="p-5 border-t border-zinc-800 flex gap-3 justify-end">
+                                <button onClick={() => { setShowCreateDialog(false); setCloneFrom(''); setNewRoleName(''); }} className="px-4 py-2 text-sm text-zinc-400 hover:text-white border border-zinc-800 rounded-lg hover:bg-zinc-800 transition-colors">Cancel</button>
+                                <button onClick={handleCreateRole} className="px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-indigo-600/20 flex items-center gap-2">
+                                    <Plus className="w-4 h-4" /> {cloneFrom ? 'Clone Role' : 'Create Role'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </PermissionGate>
     );
 }

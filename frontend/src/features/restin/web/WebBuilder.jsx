@@ -12,11 +12,13 @@ import { cn } from '../../../lib/utils';
  */
 import { webBuilderService } from './web-service';
 import { useVenue } from '../../../context/VenueContext'; // Updated import
+import { useAuth } from '../../../context/AuthContext';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 export default function WebBuilder() {
     const { activeVenueId } = useVenue(); // Use global venue context
+    const { user, isManager, isOwner } = useAuth();
     const venueId = activeVenueId;
 
     const [device, setDevice] = useState('desktop');

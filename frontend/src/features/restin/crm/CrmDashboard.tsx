@@ -23,6 +23,7 @@ import { crmService } from './crm-service';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useVenue } from '../../../context/VenueContext';
+import { useAuth } from '../../../context/AuthContext';
 
 // Rule 1: Explicit interfaces, no 'any'
 interface GuestProfile {
@@ -66,6 +67,7 @@ const CrmDashboard: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { activeVenueId } = useVenue();
+    const { user, isManager, isOwner } = useAuth();
     const queryClient = useQueryClient();
     const [searchQuery, setSearchQuery] = useState('');
 

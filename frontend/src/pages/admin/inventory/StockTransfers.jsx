@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useVenue } from '../../../context/VenueContext';
+import { useAuth } from '../../../context/AuthContext';
 import api from '../../../lib/api';
 import PageContainer from '../../../layouts/PageContainer';
 import { Card, CardContent } from '../../../components/ui/card';
@@ -13,6 +14,7 @@ import { toast } from 'sonner';
 import { logger } from '@/lib/logger';
 export default function StockTransfers() {
   const { activeVenue } = useVenue();
+  const { user, isManager, isOwner } = useAuth();
   const [items, setItems] = useState([]);
   const [venues, setVenues] = useState([]);
   const [loading, setLoading] = useState(false);

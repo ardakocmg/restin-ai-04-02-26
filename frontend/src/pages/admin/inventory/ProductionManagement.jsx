@@ -1,10 +1,12 @@
 
 import React, { useState } from 'react';
+import { useAuth } from '../../../context/AuthContext';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
 import { ChefHat, ArrowRight } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
 
 export default function ProductionManagement() {
+  const { user, isManager, isOwner } = useAuth();
   // This would typically involve selecting a "Batch Recipe" and declaring "Produced X amount"
   // which triggers stock deduction of ingredients.
 

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import PermissionGate from '@/components/shared/PermissionGate';
+import { useAuditLog } from '@/hooks/useAuditLog';
 
 import PageContainer from '@/layouts/PageContainer';
 
@@ -10,8 +12,11 @@ import { Badge } from '@/components/ui/badge';
 import { Receipt, Plus } from 'lucide-react';
 
 import api from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
 
 export default function ExpenseManagementIndigo() {
+  const { user, isManager, isOwner } = useAuth();
+  useAuditLog('EXPENSE_MGMT_VIEWED', { resource: 'expense-management' });
   const [claims, setClaims] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,12 +43,14 @@ export default function ExpenseManagementIndigo() {
   };
 
   return (
-    <PageContainer title="Expense Management" description="Claims, receipts & approvals" actions={<button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"><Plus className="h-4 w-4" />New Claim</button>}>
-      <div className="space-y-4">
-        {loading ? <Card><CardContent className="p-8 text-center">Loading...</CardContent></Card> : claims.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">No expense claims</CardContent></Card> : claims.map((claim) => (
-          <Card key={claim.id} className="border-slate-700"><CardContent className="p-6"><div className="flex items-start justify-between"><div className="flex-1"><div className="flex items-center gap-3 mb-2"><Receipt className="h-5 w-5 text-blue-400" /><h3 className="text-lg font-semibold text-slate-50">{claim.claim_number}</h3><Badge className={getStatusColor(claim.status)}>{claim.status}</Badge></div><p className="text-sm text-slate-400 mb-3">{claim.employee_name} - {claim.category_name}</p><div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm"><div><p className="text-slate-400">Amount</p><p className="font-medium text-green-400">${claim.amount}</p></div><div><p className="text-slate-400">Date</p><p className="font-medium">{new Date(claim.expense_date).toLocaleDateString()}</p></div><div><p className="text-slate-400">Receipt</p><p className="font-medium">{claim.receipt ? 'Attached' : 'None'}</p></div></div></div></div></CardContent></Card>
-        ))}
-      </div>
-    </PageContainer>
+    <PermissionGate requiredRole="MANAGER">
+      <PageContainer title="Expense Management" description="Claims, receipts & approvals" actions={<button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"><Plus className="h-4 w-4" />New Claim</button>}>
+        <div className="space-y-4">
+          {loading ? <Card><CardContent className="p-8 text-center">Loading...</CardContent></Card> : claims.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">No expense claims</CardContent></Card> : claims.map((claim) => (
+            <Card key={claim.id} className="border-slate-700"><CardContent className="p-6"><div className="flex items-start justify-between"><div className="flex-1"><div className="flex items-center gap-3 mb-2"><Receipt className="h-5 w-5 text-blue-400" /><h3 className="text-lg font-semibold text-slate-50">{claim.claim_number}</h3><Badge className={getStatusColor(claim.status)}>{claim.status}</Badge></div><p className="text-sm text-slate-400 mb-3">{claim.employee_name} - {claim.category_name}</p><div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm"><div><p className="text-slate-400">Amount</p><p className="font-medium text-green-400">${claim.amount}</p></div><div><p className="text-slate-400">Date</p><p className="font-medium">{new Date(claim.expense_date).toLocaleDateString()}</p></div><div><p className="text-slate-400">Receipt</p><p className="font-medium">{claim.receipt ? 'Attached' : 'None'}</p></div></div></div></div></CardContent></Card>
+          ))}
+        </div>
+      </PageContainer>
+    </PermissionGate>
   );
 }

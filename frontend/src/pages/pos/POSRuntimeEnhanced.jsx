@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, ShoppingCart, Send, CreditCard, X, Plus, Trash2 } from 'lucide-react';
+import { Grid, ShoppingCart, Send, CreditCard, X, Plus, Trash2, User } from 'lucide-react';
 import axios from 'axios';
 import ModifierModal from './ModifierModal';
 import { logger } from '../../lib/logger';
 import { toast } from 'sonner';
+import { useAuth } from '../../context/AuthContext';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 function POSRuntimeEnhanced() {
+  const { user } = useAuth();
   const [session, setSession] = useState(null);
   const [order, setOrder] = useState(null);
   const [items, setItems] = useState([]);
@@ -26,7 +28,7 @@ function POSRuntimeEnhanced() {
   const initSession = async () => {
     try {
       const token = localStorage.getItem('restin_token');
-      const userId = localStorage.getItem('userId') || 'user-001';
+      const userId = user?.id || localStorage.getItem('userId') || 'user-001';
       const deviceId = 'device-pos-001';
 
       const response = await axios.post(
@@ -286,6 +288,11 @@ function POSRuntimeEnhanced() {
         <div className="flex items-center gap-3 mb-6">
           <ShoppingCart className="w-7 h-7 text-blue-600 dark:text-blue-400" />
           <h3 className="text-2xl font-bold text-foreground">Order</h3>
+          {user && (
+            <span className="ml-auto text-xs bg-blue-500/10 text-blue-400 px-2 py-1 rounded flex items-center gap-1">
+              <User className="w-3 h-3" /> {user.name}
+            </span>
+          )}
         </div>
 
         {!order ? (

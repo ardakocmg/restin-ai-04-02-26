@@ -1,26 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { Button } from '../components/ui/button';
 import { ScrollArea } from '../components/ui/scroll-area';
+import { useAuth } from '../context/AuthContext';
 import {
   ChevronLeft, ChevronRight, LayoutDashboard, ShoppingCart, Users, FileText,
   DollarSign, BarChart3, Settings, Activity, TrendingUp, Factory, Award,
   Table as TableIcon, Calendar, Truck, PieChart as PieChartIcon,
   UserCheck, Receipt, Clock, Package, Type, Building2, Search, Upload, Monitor,
-  Globe, Mic, Wand2, Radar, LayoutGrid, ShieldAlert, Palette, Server, Layers, X,
+  Globe, Mic, Wand2, Radar, LayoutGrid, ShieldAlert, Shield, Palette, Server, Layers, X,
   RefreshCw, Home, MessageSquare, Radio
 } from 'lucide-react';
 
+// Role hierarchy for sidebar visibility filtering
+const ROLE_HIERARCHY = { STAFF: 1, MANAGER: 2, OWNER: 3 };
+
 const menuItems = [
   // HOME / MAIN
-  { title: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard', group: 'main' },
-  { title: 'Observability', icon: Activity, href: '/admin/observability', group: 'main' },
+  { title: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard', group: 'main', requiredRole: 'MANAGER' },
+  { title: 'Observability', icon: Activity, href: '/admin/observability', group: 'main', requiredRole: 'OWNER' },
 
   // POS & OPERATIONS
-  { title: 'POS Dashboard', icon: LayoutDashboard, href: '/admin/posdashboard', group: 'pos' },
+  { title: 'POS Dashboard', icon: LayoutDashboard, href: '/admin/posdashboard', group: 'pos', requiredRole: 'MANAGER' },
   {
-    title: 'Sales Analytics', icon: BarChart3, href: '/admin/reports/sales', group: 'pos',
+    title: 'Sales Analytics', icon: BarChart3, href: '/admin/reports/sales', group: 'pos', requiredRole: 'MANAGER',
     subs: [
       { title: 'Summary Reports', id: 'summary' },
       { title: 'Revenue Reports', id: 'revenue' },
@@ -37,20 +41,21 @@ const menuItems = [
       { title: 'Export Data', id: 'export' }
     ]
   },
-  { title: 'Products', icon: ShoppingCart, href: '/admin/products', group: 'pos' },
-  { title: 'Physical Tables', icon: TableIcon, href: '/admin/physical-tables', group: 'pos' },
-  { title: 'Floor Plans', icon: LayoutGrid, href: '/admin/floor-plans', group: 'pos' },
-  { title: 'Review Risk', icon: ShieldAlert, href: '/admin/review-risk', group: 'pos' },
-  { title: 'Reservations', icon: Calendar, href: '/admin/reservations', group: 'pos' },
-  { title: 'CRM & Guests', icon: Users, href: '/admin/crm', group: 'pos' },
-  { title: 'Loyalty Program', icon: Award, href: '/admin/loyalty', group: 'pos' },
-  { title: 'Operational Timeline', icon: Clock, href: '/admin/reservations/timeline', group: 'pos' },
-  { title: 'Devices', icon: Activity, href: '/admin/devices', group: 'pos' },
+  { title: 'Products', icon: ShoppingCart, href: '/admin/products', group: 'pos', requiredRole: 'MANAGER' },
+  { title: 'Physical Tables', icon: TableIcon, href: '/admin/physical-tables', group: 'pos', requiredRole: 'MANAGER' },
+  { title: 'Floor Plans', icon: LayoutGrid, href: '/admin/floor-plans', group: 'pos', requiredRole: 'MANAGER' },
+  { title: 'Review Risk', icon: ShieldAlert, href: '/admin/review-risk', group: 'pos', requiredRole: 'MANAGER' },
+  { title: 'Reservations', icon: Calendar, href: '/admin/reservations', group: 'pos', requiredRole: 'MANAGER' },
+  { title: 'CRM & Guests', icon: Users, href: '/admin/crm', group: 'pos', requiredRole: 'MANAGER' },
+  { title: 'Loyalty Program', icon: Award, href: '/admin/loyalty', group: 'pos', requiredRole: 'MANAGER' },
+  { title: 'Operational Timeline', icon: Clock, href: '/admin/reservations/timeline', group: 'pos', requiredRole: 'MANAGER' },
+  { title: 'Devices', icon: Activity, href: '/admin/devices', group: 'pos', requiredRole: 'MANAGER' },
   {
     title: 'Printer Management',
     icon: Receipt,
     group: 'pos',
     href: '/admin/printers',
+    requiredRole: 'MANAGER',
     subs: [
       { title: 'Printers', id: 'printers', href: '/admin/printers?tab=printers' },
       { title: 'Templates', id: 'templates', href: '/admin/printers?tab=templates' },
@@ -58,35 +63,35 @@ const menuItems = [
     ]
   },
 
-
-  { title: 'Tasks Kanban', icon: LayoutDashboard, href: '/admin/tasks-kanban', group: 'pos' },
-  { title: 'Inbox', icon: Activity, href: '/admin/inbox', group: 'pos' },
-  { title: 'Service Day Close', icon: Clock, href: '/admin/service-day-close', group: 'pos' },
-  { title: 'Pre-Go-Live', icon: Activity, href: '/admin/pre-go-live', group: 'pos' },
-  { title: 'App Settings', icon: Settings, href: '/admin/app-settings', group: 'pos' },
-  { title: 'Company Settings', icon: Building2, href: '/admin/company-settings', group: 'pos' },
-  { title: 'POS Setup', icon: Settings, href: '/pos/setup', group: 'pos' },
-  { title: 'KDS Stations', icon: Monitor, href: '/admin/kds/stations', group: 'pos' },
+  { title: 'Tasks Kanban', icon: LayoutDashboard, href: '/admin/tasks-kanban', group: 'pos', requiredRole: 'STAFF' },
+  { title: 'Inbox', icon: Activity, href: '/admin/inbox', group: 'pos', requiredRole: 'STAFF' },
+  { title: 'Service Day Close', icon: Clock, href: '/admin/service-day-close', group: 'pos', requiredRole: 'MANAGER' },
+  { title: 'Pre-Go-Live', icon: Activity, href: '/admin/pre-go-live', group: 'pos', requiredRole: 'OWNER' },
+  { title: 'App Settings', icon: Settings, href: '/admin/app-settings', group: 'pos', requiredRole: 'OWNER' },
+  { title: 'Company Settings', icon: Building2, href: '/admin/company-settings', group: 'pos', requiredRole: 'OWNER' },
+  { title: 'POS Setup', icon: Settings, href: '/pos/setup', group: 'pos', requiredRole: 'OWNER' },
+  { title: 'KDS Stations', icon: Monitor, href: '/admin/kds/stations', group: 'pos', requiredRole: 'MANAGER' },
 
   // HUMAN RESOURCES
-  { title: 'HR Dashboard', icon: Users, href: '/admin/hr', group: 'hr' },
-  { title: 'Employee Directory', icon: UserCheck, href: '/admin/hr/people', group: 'hr' },
-  { title: 'Leave Management', icon: Calendar, href: '/admin/hr/leave-management', group: 'hr' },
-  { title: 'Payroll Processing', icon: DollarSign, href: '/admin/hr/payroll', group: 'hr' },
-  { title: 'Scheduler', icon: Clock, href: '/admin/hr/scheduler', group: 'hr' },
-  { title: 'Clocking Data', icon: Activity, href: '/admin/hr/clocking', group: 'hr' },
-  { title: 'Contracts', icon: FileText, href: '/admin/hr/contracts', group: 'hr' },
-  { title: 'Documents', icon: FileText, href: '/admin/hr/documents', group: 'hr' },
-  { title: 'Shift Planning', icon: Clock, href: '/admin/hr/shifts', group: 'hr' },
-  { title: 'My Documents', icon: FileText, href: '/admin/hr/my-documents', group: 'hr' },
-  { title: 'Tips Management', icon: DollarSign, href: '/admin/hr/tips', group: 'hr' },
-  { title: 'Timesheets', icon: Clock, href: '/admin/hr/timesheets', group: 'hr' },
-  { title: 'Deep Analytics', icon: Activity, href: '/admin/hr/analytics', group: 'hr' },
+  { title: 'HR Dashboard', icon: Users, href: '/admin/hr', group: 'hr', requiredRole: 'MANAGER' },
+  { title: 'Employee Directory', icon: UserCheck, href: '/admin/hr/people', group: 'hr', requiredRole: 'MANAGER' },
+  { title: 'Leave Management', icon: Calendar, href: '/admin/hr/leave-management', group: 'hr', requiredRole: 'MANAGER' },
+  { title: 'Payroll Processing', icon: DollarSign, href: '/admin/hr/payroll', group: 'hr', requiredRole: 'OWNER' },
+  { title: 'Scheduler', icon: Clock, href: '/admin/hr/scheduler', group: 'hr', requiredRole: 'MANAGER' },
+  { title: 'Clocking Data', icon: Activity, href: '/admin/hr/clocking', group: 'hr', requiredRole: 'MANAGER' },
+  { title: 'Contracts', icon: FileText, href: '/admin/hr/contracts', group: 'hr', requiredRole: 'OWNER' },
+  { title: 'Documents', icon: FileText, href: '/admin/hr/documents', group: 'hr', requiredRole: 'MANAGER' },
+  { title: 'Shift Planning', icon: Clock, href: '/admin/hr/shifts', group: 'hr', requiredRole: 'MANAGER' },
+  { title: 'My Documents', icon: FileText, href: '/admin/hr/my-documents', group: 'hr', requiredRole: 'STAFF' },
+  { title: 'Tips Management', icon: DollarSign, href: '/admin/hr/tips', group: 'hr', requiredRole: 'MANAGER' },
+  { title: 'Timesheets', icon: Clock, href: '/admin/hr/timesheets', group: 'hr', requiredRole: 'MANAGER' },
+  { title: 'Deep Analytics', icon: Activity, href: '/admin/hr/analytics', group: 'hr', requiredRole: 'OWNER' },
   {
     title: 'HR Reports',
     icon: FileText,
     href: '/admin/hr-reports/headcount',
     group: 'hr',
+    requiredRole: 'OWNER',
     subs: [
       { title: 'Headcount', id: 'headcount', href: '/admin/hr-reports/headcount' },
       { title: 'Turnover', id: 'turnover', href: '/admin/hr-reports/turnover' },
@@ -103,6 +108,7 @@ const menuItems = [
     icon: Layers,
     href: '#',
     group: 'hr',
+    requiredRole: 'OWNER',
     subs: [
       { title: 'ESG & Sustainability', id: 'esg', href: '/admin/hr/esg' },
       { title: 'Gov Reports', id: 'gov', href: '/admin/hr/gov-reports' },
@@ -116,6 +122,7 @@ const menuItems = [
     icon: Settings,
     href: '/admin/hr/settings',
     group: 'hr',
+    requiredRole: 'OWNER',
     subs: [
       { title: 'Setup Hub', id: 'setup-hub', href: '/admin/hr-setup' },
       { title: 'Feature Flags', id: 'flags', href: '/admin/hr/settings' },
@@ -129,14 +136,15 @@ const menuItems = [
   },
 
   // INVENTORY & SUPPLY CHAIN
-  { title: 'General Settings', icon: Settings, href: '/admin/menu', group: 'menu' },
-  { title: 'Quick Sync (Import)', icon: Upload, href: '/admin/migration', group: 'menu' },
-  { title: 'Menu Import (Legacy)', icon: Upload, href: '/admin/menu-import', group: 'menu' },
+  { title: 'General Settings', icon: Settings, href: '/admin/menu', group: 'menu', requiredRole: 'MANAGER' },
+  { title: 'Quick Sync (Import)', icon: Upload, href: '/admin/migration', group: 'menu', requiredRole: 'OWNER' },
+  { title: 'Menu Import (Legacy)', icon: Upload, href: '/admin/menu-import', group: 'menu', requiredRole: 'OWNER' },
   {
     title: 'Inventory Hub',
     icon: Package,
     href: '/admin/inventory',
     group: 'menu',
+    requiredRole: 'MANAGER',
     subs: [
       { title: 'Items & Stock', id: 'items', href: '/admin/inventory-items' },
       { title: 'Stock Count', id: 'count', href: '/admin/inventory-stock-count' },
@@ -148,24 +156,24 @@ const menuItems = [
       { title: 'Purchase Orders', id: 'po', href: '/admin/inventory-purchase-orders' }
     ]
   },
-  { title: 'Suppliers', icon: Truck, href: '/admin/suppliers', group: 'menu' },
-  { title: 'Recipe Engineering', icon: Factory, href: '/admin/recipe-engineering', group: 'menu' },
-  { title: 'Procurement Hub', icon: ShoppingCart, href: '/admin/procurement', group: 'procurement' },
-  { title: 'RFQ Management', icon: FileText, href: '/admin/procurement/rfq', group: 'procurement' },
-  { title: 'AI Invoice', icon: Activity, href: '/admin/ai-invoice', group: 'procurement' },
-  { title: 'Central Kitchen', icon: Factory, href: '/admin/central-kitchen', group: 'production' },
-  { title: 'Demand Forecasting', icon: TrendingUp, href: '/admin/forecasting', group: 'production' },
-  { title: 'Quality Control', icon: Award, href: '/admin/quality', group: 'production' },
+  { title: 'Suppliers', icon: Truck, href: '/admin/suppliers', group: 'menu', requiredRole: 'MANAGER' },
+  { title: 'Recipe Engineering', icon: Factory, href: '/admin/recipe-engineering', group: 'menu', requiredRole: 'MANAGER' },
+  { title: 'Procurement Hub', icon: ShoppingCart, href: '/admin/procurement', group: 'procurement', requiredRole: 'MANAGER' },
+  { title: 'RFQ Management', icon: FileText, href: '/admin/procurement/rfq', group: 'procurement', requiredRole: 'MANAGER' },
+  { title: 'AI Invoice', icon: Activity, href: '/admin/ai-invoice', group: 'procurement', requiredRole: 'MANAGER' },
+  { title: 'Central Kitchen', icon: Factory, href: '/admin/central-kitchen', group: 'production', requiredRole: 'MANAGER' },
+  { title: 'Demand Forecasting', icon: TrendingUp, href: '/admin/forecasting', group: 'production', requiredRole: 'MANAGER' },
+  { title: 'Quality Control', icon: Award, href: '/admin/quality', group: 'production', requiredRole: 'MANAGER' },
 
   // FINANCE
-  { title: 'Finance Dashboard', icon: DollarSign, href: '/admin/finance', group: 'finance' },
-  { title: 'General Ledger', icon: FileText, href: '/admin/accounting', group: 'finance' },
-  { title: 'HR Accounting', icon: FileText, href: '/admin/hr-advanced/accounting', group: 'finance' },
-  { title: 'Audit Logs', icon: Activity, href: '/admin/audit-logs', group: 'finance' },
+  { title: 'Finance Dashboard', icon: DollarSign, href: '/admin/finance', group: 'finance', requiredRole: 'OWNER' },
+  { title: 'General Ledger', icon: FileText, href: '/admin/accounting', group: 'finance', requiredRole: 'OWNER' },
+  { title: 'HR Accounting', icon: FileText, href: '/admin/hr-advanced/accounting', group: 'finance', requiredRole: 'OWNER' },
+  { title: 'Audit Logs', icon: Activity, href: '/admin/audit-logs', group: 'finance', requiredRole: 'OWNER' },
 
   // ANALYTICS & REPORTS
   {
-    title: 'Reporting Hub', icon: BarChart3, href: '/admin/reporting', group: 'reports',
+    title: 'Reporting Hub', icon: BarChart3, href: '/admin/reporting', group: 'reports', requiredRole: 'MANAGER',
     subs: [
       { title: 'Summary Reports', id: 'summary' },
       { title: 'Revenue Reports', id: 'revenue' },
@@ -182,41 +190,43 @@ const menuItems = [
       { title: 'Export Data', id: 'export' }
     ]
   },
-  { title: 'Business Analytics', icon: TrendingUp, href: '/admin/analytics', group: 'reports' },
-  { title: 'HR Analytics', icon: BarChart3, href: '/admin/hr-advanced/analytics', group: 'reports' },
-  { title: 'KDS Performance', icon: Activity, href: '/admin/reports/kds-performance-detailed', group: 'reports' },
-  { title: 'Inventory Analytics', icon: PieChartIcon, href: '/admin/reports/inventory-detailed', group: 'reports' },
-  { title: 'Headcount Analysis', icon: Users, href: '/admin/hr/headcount', group: 'reports' },
-  { title: 'Turnover Analysis', icon: TrendingUp, href: '/admin/hr/turnover', group: 'reports' },
+  { title: 'Business Analytics', icon: TrendingUp, href: '/admin/analytics', group: 'reports', requiredRole: 'MANAGER' },
+  { title: 'HR Analytics', icon: BarChart3, href: '/admin/hr-advanced/analytics', group: 'reports', requiredRole: 'OWNER' },
+  { title: 'KDS Performance', icon: Activity, href: '/admin/reports/kds-performance-detailed', group: 'reports', requiredRole: 'MANAGER' },
+  { title: 'Inventory Analytics', icon: PieChartIcon, href: '/admin/reports/inventory-detailed', group: 'reports', requiredRole: 'MANAGER' },
+  { title: 'Headcount Analysis', icon: Users, href: '/admin/hr/headcount', group: 'reports', requiredRole: 'OWNER' },
+  { title: 'Turnover Analysis', icon: TrendingUp, href: '/admin/hr/turnover', group: 'reports', requiredRole: 'OWNER' },
 
   // SETTINGS
-  { title: 'Venue Settings', icon: Settings, href: '/admin/settings', group: 'settings' },
-  { title: 'Users', icon: UserCheck, href: '/admin/users', group: 'settings' },
-  { title: 'Access Control', icon: Award, href: '/admin/access-control', group: 'settings' },
-  { title: 'Integration Sync', icon: RefreshCw, href: '/admin/sync', group: 'settings' },
-  { title: 'Door Access (Nuki)', icon: Award, href: '/admin/door-access', group: 'settings' },
-  { title: 'Smart Home', icon: Home, href: '/admin/smart-home', group: 'settings' },
-  { title: 'Event Monitor', icon: Activity, href: '/admin/events', group: 'settings' },
+  { title: 'Venue Settings', icon: Settings, href: '/admin/settings', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'User Accounts', icon: UserCheck, href: '/admin/users', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Roles & Permissions', icon: Shield, href: '/admin/access-control', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Integration Sync', icon: RefreshCw, href: '/admin/sync', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Door Access (Nuki)', icon: Award, href: '/admin/door-access', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Smart Home', icon: Home, href: '/admin/smart-home', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Event Monitor', icon: Activity, href: '/admin/events', group: 'settings', requiredRole: 'OWNER' },
   {
     title: 'Device Manager',
     icon: Monitor,
     group: 'settings',
     href: '/admin/devices',
+    requiredRole: 'MANAGER',
     subs: [
       { title: 'Device List', id: 'list', href: '/admin/devices' },
       { title: 'Device Hub', id: 'hub', href: '/admin/device-hub' },
       { title: 'Device Mapping', id: 'map', href: '/admin/device-mapping' }
     ]
   },
-  { title: 'Content Studio', icon: LayoutDashboard, href: '/admin/content-studio', group: 'settings' },
-  { title: 'Content Editor', icon: Type, href: '/admin/content-editor', group: 'settings' },
-  { title: 'Theme Customizer', icon: Palette, href: '/admin/theme', group: 'settings' },
-  { title: 'Microservices', icon: Server, href: '/admin/microservices', group: 'settings' },
+  { title: 'Content Studio', icon: LayoutDashboard, href: '/admin/content-studio', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Content Editor', icon: Type, href: '/admin/content-editor', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Theme Customizer', icon: Palette, href: '/admin/theme', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Microservices', icon: Server, href: '/admin/microservices', group: 'settings', requiredRole: 'OWNER' },
   {
     title: 'System Intelligence',
     icon: Activity,
     href: '/admin/monitoring',
     group: 'settings',
+    requiredRole: 'OWNER',
     subs: [
       { title: 'Real-time Monitor', id: 'monitor', href: '/admin/monitoring' },
       { title: 'System Logs', id: 'logs', href: '/admin/logs' },
@@ -227,25 +237,31 @@ const menuItems = [
   },
 
   // RESTIN.AI COMMERCIAL MODULES (Protocol v18.0)
-  { title: 'Control Tower', icon: LayoutDashboard, href: '/admin/restin', group: 'restin' },
-  { title: 'Website Builder', icon: Globe, href: '/admin/restin/web', group: 'restin' },
-  { title: 'Voice AI', icon: Mic, href: '/admin/restin/voice', group: 'restin' },
-  { title: 'Autopilot CRM', icon: Users, href: '/admin/restin/crm', group: 'restin' },
-  { title: 'Content Studio', icon: Wand2, href: '/admin/restin/studio', group: 'restin' },
-  { title: 'Market Radar', icon: Radar, href: '/admin/restin/radar', group: 'restin' },
-  { title: 'Ops & Aggregators', icon: Layers, href: '/admin/restin/ops', group: 'restin' },
-  { title: 'Fintech & Payments', icon: DollarSign, href: '/admin/restin/fintech', group: 'restin' },
+  { title: 'Control Tower', icon: LayoutDashboard, href: '/admin/restin', group: 'restin', requiredRole: 'OWNER' },
+  { title: 'Website Builder', icon: Globe, href: '/admin/restin/web', group: 'restin', requiredRole: 'OWNER' },
+  { title: 'Voice AI', icon: Mic, href: '/admin/restin/voice', group: 'restin', requiredRole: 'OWNER' },
+  { title: 'Autopilot CRM', icon: Users, href: '/admin/restin/crm', group: 'restin', requiredRole: 'OWNER' },
+  { title: 'Content Studio', icon: Wand2, href: '/admin/restin/studio', group: 'restin', requiredRole: 'OWNER' },
+  { title: 'Market Radar', icon: Radar, href: '/admin/restin/radar', group: 'restin', requiredRole: 'OWNER' },
+  { title: 'Ops & Aggregators', icon: Layers, href: '/admin/restin/ops', group: 'restin', requiredRole: 'OWNER' },
+  { title: 'Fintech & Payments', icon: DollarSign, href: '/admin/restin/fintech', group: 'restin', requiredRole: 'OWNER' },
 
   // COLLABORATION & COMMUNICATION
-  { title: 'Hive Chat', icon: MessageSquare, href: '/admin/collab/hive', group: 'collab' },
-  { title: 'Tasks Board', icon: LayoutGrid, href: '/admin/collab/tasks', group: 'collab' },
-  { title: 'Inbox', icon: FileText, href: '/admin/collab/inbox', group: 'collab' },
-  { title: 'Gamification', icon: Award, href: '/admin/staff-gamification', group: 'collab' },
+  { title: 'Hive Chat', icon: MessageSquare, href: '/admin/collab/hive', group: 'collab', requiredRole: 'STAFF' },
+  { title: 'Tasks Board', icon: LayoutGrid, href: '/admin/collab/tasks', group: 'collab', requiredRole: 'STAFF' },
+  { title: 'Inbox', icon: FileText, href: '/admin/collab/inbox', group: 'collab', requiredRole: 'STAFF' },
+  { title: 'Gamification', icon: Award, href: '/admin/staff-gamification', group: 'collab', requiredRole: 'STAFF' },
 ];
 
 export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDomainExpand }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // Role-based filtering: user can only see items at or below their role level
+  const userLevel = ROLE_HIERARCHY[user?.role] ?? 0;
+  const canSeeItem = (item) => userLevel >= (ROLE_HIERARCHY[item.requiredRole] ?? 0);
+  const visibleMenuItems = useMemo(() => menuItems.filter(canSeeItem), [userLevel]);
 
   // Domain Groups (Pane 1)
   const domains = [
@@ -274,13 +290,20 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     return 'home';
   };
 
+  // Only show domains that have at least one visible menu item
+  const visibleDomains = useMemo(() => {
+    const visibleDomainIds = new Set(visibleMenuItems.map(item => getDomainForGroup(item.group)));
+    return domains.filter(d => visibleDomainIds.has(d.id));
+  }, [userLevel]);
+
   const findActiveDomain = () => {
-    for (const item of menuItems) {
+    for (const item of visibleMenuItems) {
       if (item.href === location.pathname || item.children?.some(c => c.href === location.pathname)) {
         return getDomainForGroup(item.group);
       }
     }
-    return 'pos';
+    // Fallback to first visible domain
+    return visibleDomains[0]?.id || 'home';
   };
 
   const [activeDomain, setActiveDomain] = useState(() => {
@@ -354,7 +377,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
         </div>
 
         <div className="flex-1 w-full space-y-3">
-          {domains.map((domain) => (
+          {visibleDomains.map((domain) => (
             <button
               key={domain.id}
               onClick={() => handleDomainClick(domain.id)}
@@ -446,7 +469,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                 </div>
               </div>
             )}
-            {menuItems
+            {visibleMenuItems
               .filter(item => {
                 if (searchTerm && !collapsed) {
                   const term = searchTerm.toLowerCase();

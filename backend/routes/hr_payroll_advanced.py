@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
+from core.role_guard import require_owner
 from models.hr_payroll_advanced import PayrollRun, PayrollRunState, DispatchQueue, PayrollRunRequest
 from services.pdf_generation_service import pdf_service
 
@@ -13,7 +14,7 @@ from services.pdf_generation_service import pdf_service
 def create_hr_payroll_advanced_router():
     router = APIRouter(tags=["hr_payroll_advanced"])
     
-    @router.get("/venues/{venue_id}/hr/payroll/runs/{run_id}/dispatch-zip")
+    @router.get("/venues/{venue_id}/hr/payroll/runs/{run_id}/dispatch-zip", dependencies=[Depends(require_owner)])
     async def dispatch_payroll_zip(
         venue_id: str,
         run_id: str,
@@ -60,7 +61,7 @@ def create_hr_payroll_advanced_router():
         if ssc > 50: ssc = 50.0
         return ssc
 
-    @router.post("/venues/{venue_id}/hr/payroll/calculate")
+    @router.post("/venues/{venue_id}/hr/payroll/calculate", dependencies=[Depends(require_owner)])
     async def create_payroll_run_calculated(
         venue_id: str,
         run_data: dict, 
@@ -177,7 +178,7 @@ def create_hr_payroll_advanced_router():
             print(traceback.format_exc())
             raise HTTPException(status_code=500, detail=f"Calculation Error: {str(e)}")
 
-    @router.post("/venues/{venue_id}/hr/payroll/runs")
+    @router.post("/venues/{venue_id}/hr/payroll/runs", dependencies=[Depends(require_owner)])
     async def create_payroll_run(
         venue_id: str,
         run_data: PayrollRunRequest,
@@ -217,7 +218,7 @@ def create_hr_payroll_advanced_router():
         await db["payroll_runs"].insert_one(payroll_run.model_dump())
         return payroll_run.model_dump()
     
-    @router.get("/venues/{venue_id}/hr/payroll/runs")
+    @router.get("/venues/{venue_id}/hr/payroll/runs", dependencies=[Depends(require_owner)])
     async def list_payroll_runs(
         venue_id: str,
         state: Optional[str] = None,
@@ -232,7 +233,7 @@ def create_hr_payroll_advanced_router():
         runs = await db["payroll_runs"].find(query, {"_id": 0}).sort("created_at", -1).to_list(1000)
         return runs
     
-    @router.post("/venues/{venue_id}/hr/payroll/runs/{run_id}/validate")
+    @router.post("/venues/{venue_id}/hr/payroll/runs/{run_id}/validate", dependencies=[Depends(require_owner)])
     async def validate_payroll_run(
         venue_id: str,
         run_id: str,
@@ -253,7 +254,7 @@ def create_hr_payroll_advanced_router():
         
         return {"message": "Payroll run validated"}
     
-    @router.post("/venues/{venue_id}/hr/payroll/runs/{run_id}/approve")
+    @router.post("/venues/{venue_id}/hr/payroll/runs/{run_id}/approve", dependencies=[Depends(require_owner)])
     async def approve_payroll_run(
         venue_id: str,
         run_id: str,
@@ -274,7 +275,7 @@ def create_hr_payroll_advanced_router():
         
         return {"message": "Payroll run approved"}
     
-    @router.post("/venues/{venue_id}/hr/payroll/runs/{run_id}/lock")
+    @router.post("/venues/{venue_id}/hr/payroll/runs/{run_id}/lock", dependencies=[Depends(require_owner)])
     async def lock_payroll_run(
         venue_id: str,
         run_id: str,
@@ -295,7 +296,7 @@ def create_hr_payroll_advanced_router():
         
         return {"message": "Payroll run locked"}
     
-    @router.post("/venues/{venue_id}/hr/payroll/runs/{run_id}/dispatch")
+    @router.post("/venues/{venue_id}/hr/payroll/runs/{run_id}/dispatch", dependencies=[Depends(require_owner)])
     async def dispatch_payroll_run(
         venue_id: str,
         run_id: str,
@@ -338,7 +339,7 @@ def create_hr_payroll_advanced_router():
         
         return {"message": "Payroll run dispatched", "queued": len(run["payslips"])}
 
-    @router.delete("/venues/{venue_id}/hr/payroll/runs/{run_id}")
+    @router.delete("/venues/{venue_id}/hr/payroll/runs/{run_id}", dependencies=[Depends(require_owner)])
     async def delete_payroll_run(
         venue_id: str,
         run_id: str,
@@ -352,7 +353,7 @@ def create_hr_payroll_advanced_router():
             
         return {"message": "Payroll run deleted"}
     
-    @router.get("/venues/{venue_id}/hr/payroll/runs/{run_id}/payslips/{employee_id}/pdf")
+    @router.get("/venues/{venue_id}/hr/payroll/runs/{run_id}/payslips/{employee_id}/pdf", dependencies=[Depends(require_owner)])
     async def download_payslip_pdf(
         venue_id: str,
         run_id: str,
@@ -392,7 +393,7 @@ def create_hr_payroll_advanced_router():
         except Exception as e:
             raise HTTPException(500, f"PDF generation failed: {str(e)}")
     
-    @router.get("/venues/{venue_id}/hr/payroll/dispatch-queue")
+    @router.get("/venues/{venue_id}/hr/payroll/dispatch-queue", dependencies=[Depends(require_owner)])
     async def get_dispatch_queue(
         venue_id: str,
         status: Optional[str] = None,

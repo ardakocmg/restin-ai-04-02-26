@@ -18,6 +18,9 @@ import api from '@/lib/api';
 import { exportToPdf, exportToJpeg } from '../../../lib/exportUtils';
 
 import { useVenue } from '../../../context/VenueContext';
+import { useAuth } from '../../../context/AuthContext';
+import PermissionGate from '../../../components/shared/PermissionGate';
+import { useAuditLog } from '../../../hooks/useAuditLog';
 
 import { toast } from 'sonner';
 
@@ -25,6 +28,8 @@ export default function PayslipViewer() {
     const { employeeId, period } = useParams();
     const navigate = useNavigate();
     const { activeVenue } = useVenue();
+    const { user, isManager, isOwner } = useAuth();
+    useAuditLog('PAYSLIP_VIEWED', { resource: 'payslip-viewer', employeeId, period });
     const [payslipData, setPayslipData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
@@ -121,91 +126,93 @@ export default function PayslipViewer() {
     }
 
     return (
-        <PageContainer
-            title={`Payslip - ${payslipData.employee.name}`}
-            description={`Period: ${payslipData.period.start} to ${payslipData.period.end}`}
-            actions={
-                <div className="flex gap-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => navigate('/admin/hr/payroll')}
-                        className="bg-zinc-900 border-white/10 text-zinc-300 hover:bg-zinc-800"
-                    >
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        Back
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handlePrint}
-                        className="bg-zinc-900 border-white/10 text-zinc-300 hover:bg-zinc-800"
-                    >
-                        <Printer className="h-4 w-4 mr-2" />
-                        Print
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleDownloadPDF}
-                        className="bg-zinc-900 border-white/10 text-zinc-300 hover:bg-zinc-800"
-                    >
-                        <Download className="h-4 w-4 mr-2" />
-                        PDF
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleDownloadJPEG}
-                        className="bg-zinc-900 border-white/10 text-zinc-300 hover:bg-zinc-800"
-                    >
-                        <Image className="h-4 w-4 mr-2" />
-                        JPEG
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleSendEmail}
-                        disabled={sending}
-                        className="bg-blue-600 border-blue-500 text-white hover:bg-blue-700"
-                    >
-                        <Mail className="h-4 w-4 mr-2" />
-                        {sending ? 'Sending...' : 'Send Email'}
-                    </Button>
-                </div>
-            }
-        >
-            {/* Payslip Document */}
-            <div className="print:p-0">
-                <PayslipDocument payslipData={payslipData} />
-            </div>
-
-            {/* Summary Card (Hidden on Print) */}
-            <Card className="mt-6 print:hidden">
-                <CardHeader>
-                    <CardTitle className="text-base">Payslip Summary</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-4 gap-4">
-                        <div className="text-center p-4 bg-zinc-900 rounded-lg">
-                            <div className="text-xs text-zinc-500 uppercase tracking-widest mb-1">Gross Total</div>
-                            <div className="text-2xl font-bold text-white">€ {payslipData.grossTotal.toFixed(2)}</div>
-                        </div>
-                        <div className="text-center p-4 bg-zinc-900 rounded-lg">
-                            <div className="text-xs text-zinc-500 uppercase tracking-widest mb-1">Tax</div>
-                            <div className="text-2xl font-bold text-red-400">€ {payslipData.tax.amount.toFixed(2)}</div>
-                        </div>
-                        <div className="text-center p-4 bg-zinc-900 rounded-lg">
-                            <div className="text-xs text-zinc-500 uppercase tracking-widest mb-1">Social Security</div>
-                            <div className="text-2xl font-bold text-yellow-400">€ {payslipData.socialSecurity.toFixed(2)}</div>
-                        </div>
-                        <div className="text-center p-4 bg-green-600 rounded-lg">
-                            <div className="text-xs text-white uppercase tracking-widest mb-1">Net Pay</div>
-                            <div className="text-2xl font-bold text-white">€ {payslipData.netPay.toFixed(2)}</div>
-                        </div>
+        <PermissionGate requiredRole="MANAGER">
+            <PageContainer
+                title={`Payslip - ${payslipData.employee.name}`}
+                description={`Period: ${payslipData.period.start} to ${payslipData.period.end}`}
+                actions={
+                    <div className="flex gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => navigate('/admin/hr/payroll')}
+                            className="bg-zinc-900 border-white/10 text-zinc-300 hover:bg-zinc-800"
+                        >
+                            <ArrowLeft className="h-4 w-4 mr-2" />
+                            Back
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handlePrint}
+                            className="bg-zinc-900 border-white/10 text-zinc-300 hover:bg-zinc-800"
+                        >
+                            <Printer className="h-4 w-4 mr-2" />
+                            Print
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleDownloadPDF}
+                            className="bg-zinc-900 border-white/10 text-zinc-300 hover:bg-zinc-800"
+                        >
+                            <Download className="h-4 w-4 mr-2" />
+                            PDF
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleDownloadJPEG}
+                            className="bg-zinc-900 border-white/10 text-zinc-300 hover:bg-zinc-800"
+                        >
+                            <Image className="h-4 w-4 mr-2" />
+                            JPEG
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleSendEmail}
+                            disabled={sending}
+                            className="bg-blue-600 border-blue-500 text-white hover:bg-blue-700"
+                        >
+                            <Mail className="h-4 w-4 mr-2" />
+                            {sending ? 'Sending...' : 'Send Email'}
+                        </Button>
                     </div>
-                </CardContent>
-            </Card>
-        </PageContainer>
+                }
+            >
+                {/* Payslip Document */}
+                <div className="print:p-0">
+                    <PayslipDocument payslipData={payslipData} />
+                </div>
+
+                {/* Summary Card (Hidden on Print) */}
+                <Card className="mt-6 print:hidden">
+                    <CardHeader>
+                        <CardTitle className="text-base">Payslip Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-4 gap-4">
+                            <div className="text-center p-4 bg-zinc-900 rounded-lg">
+                                <div className="text-xs text-zinc-500 uppercase tracking-widest mb-1">Gross Total</div>
+                                <div className="text-2xl font-bold text-white">€ {payslipData.grossTotal.toFixed(2)}</div>
+                            </div>
+                            <div className="text-center p-4 bg-zinc-900 rounded-lg">
+                                <div className="text-xs text-zinc-500 uppercase tracking-widest mb-1">Tax</div>
+                                <div className="text-2xl font-bold text-red-400">€ {payslipData.tax.amount.toFixed(2)}</div>
+                            </div>
+                            <div className="text-center p-4 bg-zinc-900 rounded-lg">
+                                <div className="text-xs text-zinc-500 uppercase tracking-widest mb-1">Social Security</div>
+                                <div className="text-2xl font-bold text-yellow-400">€ {payslipData.socialSecurity.toFixed(2)}</div>
+                            </div>
+                            <div className="text-center p-4 bg-green-600 rounded-lg">
+                                <div className="text-xs text-white uppercase tracking-widest mb-1">Net Pay</div>
+                                <div className="text-2xl font-bold text-white">€ {payslipData.netPay.toFixed(2)}</div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </PageContainer>
+        </PermissionGate>
     );
 }

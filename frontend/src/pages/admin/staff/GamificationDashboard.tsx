@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Trophy, Star, Zap, Target, TrendingUp, Award,
-    ChevronUp, Clock, Flame, Crown, Medal, Sparkles
+    ChevronUp, Clock, Flame, Crown, Medal, Sparkles, User
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { levelProgress, xpForNextLevel, getLevelTitle } from '@/lib/gamification';
+import { useAuth } from '@/context/AuthContext';
 
 // ─── Mock Leaderboard Data ─────────────────────────────────────────────
 interface LeaderboardEntry {
@@ -66,6 +67,7 @@ function RankBadge({ rank }: { rank: number }) {
 
 // ─── Main Dashboard ─────────────────────────────────────────────────────
 export default function GamificationDashboard() {
+    const { user } = useAuth();
     const [timeRange, setTimeRange] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
 
     // Top 3 summary
@@ -75,14 +77,22 @@ export default function GamificationDashboard() {
     return (
         <div className="space-y-6 p-8 max-w-[1600px] mx-auto">
             {/* Hero */}
-            <div>
-                <h1 className="text-3xl font-bold text-zinc-100 flex items-center gap-3">
-                    <Trophy className="h-8 w-8 text-amber-400" />
-                    Staff Gamification
-                </h1>
-                <p className="text-zinc-400 mt-2">
-                    XP leaderboard, daily quests, and achievement tracking — turn every shift into a game.
-                </p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold text-zinc-100 flex items-center gap-3">
+                        <Trophy className="h-8 w-8 text-amber-400" />
+                        Staff Gamification
+                    </h1>
+                    <p className="text-zinc-400 mt-2">
+                        XP leaderboard, daily quests, and achievement tracking — turn every shift into a game.
+                    </p>
+                </div>
+                {user && (
+                    <Badge variant="outline" className="py-1.5 px-3 text-sm border-zinc-700 text-zinc-300">
+                        <User className="w-3.5 h-3.5 mr-1.5" />
+                        {user.name} · {user.role || 'Staff'}
+                    </Badge>
+                )}
             </div>
 
             {/* Quick Stats */}
@@ -166,6 +176,7 @@ export default function GamificationDashboard() {
                                 const progress = levelProgress(entry.xp, entry.level);
                                 const nextLevelXP = xpForNextLevel(entry.level);
                                 const title = getLevelTitle(entry.level);
+                                const isCurrentUser = user && (entry.name === user.name || entry.id === user.id);
 
                                 return (
                                     <motion.div
@@ -173,9 +184,11 @@ export default function GamificationDashboard() {
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: idx * 0.05 }}
-                                        className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${rank <= 3
-                                            ? 'bg-zinc-900/80 border-zinc-700'
-                                            : 'bg-zinc-900/30 border-zinc-800/50'
+                                        className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${isCurrentUser
+                                            ? 'bg-blue-500/5 border-blue-500/30 ring-1 ring-blue-500/20'
+                                            : rank <= 3
+                                                ? 'bg-zinc-900/80 border-zinc-700'
+                                                : 'bg-zinc-900/30 border-zinc-800/50'
                                             }`}
                                     >
                                         {/* Rank */}
@@ -192,6 +205,9 @@ export default function GamificationDashboard() {
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2">
                                                 <span className="font-semibold text-sm text-zinc-200">{entry.name}</span>
+                                                {isCurrentUser && (
+                                                    <Badge className="text-[9px] bg-blue-500/10 text-blue-400 border-0">You</Badge>
+                                                )}
                                                 <Badge variant="outline" className="text-[10px] border-zinc-700 text-zinc-400">
                                                     {entry.role}
                                                 </Badge>

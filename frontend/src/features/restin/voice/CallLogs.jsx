@@ -8,9 +8,11 @@ import { Button } from '../../../components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { voiceService } from './voice-service';
 import { useVenue } from '../../../context/VenueContext';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function CallLogs() {
     const { activeVenueId } = useVenue();
+    const { user, isManager, isOwner } = useAuth();
 
     const { data: logs = [], isLoading } = useQuery({
         queryKey: ['voice-logs', activeVenueId],

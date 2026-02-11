@@ -9,8 +9,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar, Users, Clock, Loader2, UserPlus, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import api from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
+import { useAuditLog } from '@/hooks/useAuditLog';
 
 export default function ReservationModal({ open, onOpenChange, venueId, onCreated }) {
+    const { user, isManager, isOwner } = useAuth();
+    const { logAction } = useAuditLog();
     const [loading, setLoading] = useState(false);
     const [checking, setChecking] = useState(false);
     const [slots, setSlots] = useState([]);
@@ -62,6 +66,12 @@ export default function ReservationModal({ open, onOpenChange, venueId, onCreate
             };
 
             await api.post('/reservations/', payload);
+            logAction('RESERVATION_CREATED', 'reservation', venueId, {
+                guest_name: `${formData.first_name} ${formData.last_name}`,
+                date: formData.date,
+                time: formData.time,
+                guests: formData.guests
+            });
             toast.success("Reservation created successfully");
             onCreated();
             onOpenChange(false);
@@ -154,10 +164,10 @@ export default function ReservationModal({ open, onOpenChange, venueId, onCreate
                                             disabled={!s.available}
                                             onClick={() => setFormData({ ...formData, time: s.time })}
                                             className={`text-[10px] p-2 rounded border transition-all ${!s.available
-                                                    ? 'bg-zinc-950 border-white/5 text-zinc-800 cursor-not-allowed'
-                                                    : formData.time === s.time
-                                                        ? 'bg-red-600 border-red-600 text-white font-black'
-                                                        : 'bg-zinc-900 border-white/5 text-zinc-400 hover:border-red-500/50'
+                                                ? 'bg-zinc-950 border-white/5 text-zinc-800 cursor-not-allowed'
+                                                : formData.time === s.time
+                                                    ? 'bg-red-600 border-red-600 text-white font-black'
+                                                    : 'bg-zinc-900 border-white/5 text-zinc-400 hover:border-red-500/50'
                                                 }`}
                                         >
                                             {s.time}

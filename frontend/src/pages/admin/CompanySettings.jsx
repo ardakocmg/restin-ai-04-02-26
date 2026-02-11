@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
 
 import { useVenue } from '../../context/VenueContext';
+import { useAuth } from '../../context/AuthContext';
 
 import { venueAPI } from '../../lib/api';
 
@@ -35,8 +36,13 @@ import { Save, Building2, Plus, Globe, MapPin, Contact2, Receipt, Settings2, Act
 
 import { cn } from '../../lib/utils';
 
+import { useAuditLog } from '../../hooks/useAuditLog';
+
 export default function CompanySettings() {
     const { activeVenue, refreshVenues } = useVenue();
+    const { user, isOwner, isManager } = useAuth();
+    const canEdit = isOwner() || isManager();
+    const { logAction } = useAuditLog();
     const [loading, setLoading] = useState(false);
     const [zones, setZones] = useState([]);
     const [tables, setTables] = useState([]);
@@ -100,6 +106,7 @@ export default function CompanySettings() {
             // Logic for saving both company details and venue identity
             await venueAPI.update(activeVenue.id, venueForm);
             toast.success('Settings saved successfully');
+            logAction('SETTINGS_UPDATED', 'company_settings', activeVenue.id);
             refreshVenues();
         } catch (error) {
             toast.error('Failed to update settings');
@@ -113,7 +120,7 @@ export default function CompanySettings() {
             title="Company & Venue Settings"
             description="Centralized administration for your business identity, physical layout, and regional configuration."
             actions={
-                <Button onClick={handleSave} disabled={loading} className="bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-wider h-10 px-8 shadow-lg">
+                <Button onClick={handleSave} disabled={loading || !canEdit} className="bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-wider h-10 px-8 shadow-lg disabled:opacity-50">
                     <Save className="w-4 h-4 mr-2" />
                     {loading ? 'Saving...' : 'Save All Changes'}
                 </Button>

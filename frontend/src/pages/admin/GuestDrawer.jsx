@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useAuditLog } from '@/hooks/useAuditLog';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 
@@ -19,6 +20,7 @@ import api from '@/lib/api';
 export default function GuestDrawer({ open, onOpenChange, guestId }) {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
+    useAuditLog('GUEST_DRAWER_VIEWED', { resource: 'guest-drawer', guestId });
 
     useEffect(() => {
         if (open && guestId) {

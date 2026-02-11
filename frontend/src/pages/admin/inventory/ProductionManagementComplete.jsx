@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../../context/AuthContext';
 import PageContainer from '../../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
@@ -9,6 +10,7 @@ import { toast } from 'sonner';
 import api from '../../../lib/api';
 
 export default function ProductionManagementComplete() {
+  const { user, isManager, isOwner } = useAuth();
   const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');

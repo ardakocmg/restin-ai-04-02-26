@@ -8,6 +8,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { voiceService } from './voice-service';
 import { useVenue } from '../../../context/VenueContext';
+import { useAuth } from '../../../context/AuthContext';
 import { Card } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
@@ -21,6 +22,7 @@ import { toast } from 'sonner';
  */
 export default function VoiceDashboard() {
     const { activeVenueId } = useVenue();
+    const { user, isManager, isOwner } = useAuth();
     const queryClient = useQueryClient();
     const [simulateText, setSimulateText] = useState('');
     const [aiResponse, setAiResponse] = useState(null);

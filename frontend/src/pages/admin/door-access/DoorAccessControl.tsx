@@ -39,6 +39,9 @@ import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/context/AuthContext';
+import PermissionGate from '@/components/shared/PermissionGate';
+import { useAuditLog } from '@/hooks/useAuditLog';
 
 
 
@@ -1798,53 +1801,62 @@ function KeypadTab() {
 // ==================== MAIN COMPONENT ====================
 
 export default function DoorAccessControl() {
+    const { user } = useAuth();
+    const { logAction } = useAuditLog();
+
+    React.useEffect(() => {
+        logAction('DOOR_ACCESS_VIEWED', 'door_access', undefined, { user_id: user?.id });
+    }, []);
+
     return (
-        <div className="p-6 space-y-6">
-            {/* Header */}
-            <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-emerald-600 to-cyan-600 flex items-center justify-center">
-                    <Lock className="h-5 w-5 text-white" />
+        <PermissionGate requiredRole="OWNER">
+            <div className="p-6 space-y-6">
+                {/* Header */}
+                <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-emerald-600 to-cyan-600 flex items-center justify-center">
+                        <Lock className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold text-zinc-100">Door Access Control</h1>
+                        <p className="text-sm text-zinc-400">Nuki Smart Lock integration — server-authoritative access management</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 className="text-2xl font-bold text-zinc-100">Door Access Control</h1>
-                    <p className="text-sm text-zinc-400">Nuki Smart Lock integration — server-authoritative access management</p>
-                </div>
+
+                {/* Tabs */}
+                <Tabs defaultValue="doors" className="space-y-6">
+                    <TabsList className="bg-zinc-900 border border-zinc-800 p-1 flex-wrap">
+                        <TabsTrigger value="connection" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                            <Wifi className="h-4 w-4 mr-1.5" /> Connection
+                        </TabsTrigger>
+                        <TabsTrigger value="doors" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                            <DoorOpen className="h-4 w-4 mr-1.5" /> Doors
+                        </TabsTrigger>
+                        <TabsTrigger value="permissions" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                            <Shield className="h-4 w-4 mr-1.5" /> Permissions
+                        </TabsTrigger>
+                        <TabsTrigger value="audit" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                            <Eye className="h-4 w-4 mr-1.5" /> Audit Trail
+                        </TabsTrigger>
+                        <TabsTrigger value="reports" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                            <BarChart3 className="h-4 w-4 mr-1.5" /> Reports
+                        </TabsTrigger>
+                        <TabsTrigger value="keypad" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                            <Keyboard className="h-4 w-4 mr-1.5" /> Keypad
+                        </TabsTrigger>
+                        <TabsTrigger value="bridge" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                            <Router className="h-4 w-4 mr-1.5" /> Bridge
+                        </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="connection"><ConnectionTab /></TabsContent>
+                    <TabsContent value="doors"><DoorsTab /></TabsContent>
+                    <TabsContent value="permissions"><PermissionsTab /></TabsContent>
+                    <TabsContent value="audit"><AuditTab /></TabsContent>
+                    <TabsContent value="reports"><ReportsTab /></TabsContent>
+                    <TabsContent value="keypad"><KeypadTab /></TabsContent>
+                    <TabsContent value="bridge"><BridgeTab /></TabsContent>
+                </Tabs>
             </div>
-
-            {/* Tabs */}
-            <Tabs defaultValue="doors" className="space-y-6">
-                <TabsList className="bg-zinc-900 border border-zinc-800 p-1 flex-wrap">
-                    <TabsTrigger value="connection" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
-                        <Wifi className="h-4 w-4 mr-1.5" /> Connection
-                    </TabsTrigger>
-                    <TabsTrigger value="doors" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
-                        <DoorOpen className="h-4 w-4 mr-1.5" /> Doors
-                    </TabsTrigger>
-                    <TabsTrigger value="permissions" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
-                        <Shield className="h-4 w-4 mr-1.5" /> Permissions
-                    </TabsTrigger>
-                    <TabsTrigger value="audit" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
-                        <Eye className="h-4 w-4 mr-1.5" /> Audit Trail
-                    </TabsTrigger>
-                    <TabsTrigger value="reports" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
-                        <BarChart3 className="h-4 w-4 mr-1.5" /> Reports
-                    </TabsTrigger>
-                    <TabsTrigger value="keypad" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
-                        <Keyboard className="h-4 w-4 mr-1.5" /> Keypad
-                    </TabsTrigger>
-                    <TabsTrigger value="bridge" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
-                        <Router className="h-4 w-4 mr-1.5" /> Bridge
-                    </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="connection"><ConnectionTab /></TabsContent>
-                <TabsContent value="doors"><DoorsTab /></TabsContent>
-                <TabsContent value="permissions"><PermissionsTab /></TabsContent>
-                <TabsContent value="audit"><AuditTab /></TabsContent>
-                <TabsContent value="reports"><ReportsTab /></TabsContent>
-                <TabsContent value="keypad"><KeypadTab /></TabsContent>
-                <TabsContent value="bridge"><BridgeTab /></TabsContent>
-            </Tabs>
-        </div>
+        </PermissionGate>
     );
 }

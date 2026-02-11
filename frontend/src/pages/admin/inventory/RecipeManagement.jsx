@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useVenue } from '../../../context/VenueContext';
+import { useAuth } from '../../../context/AuthContext';
 import api from '../../../lib/api';
 import PageContainer from '../../../layouts/PageContainer';
 import { Card, CardContent } from '../../../components/ui/card';
@@ -58,6 +59,7 @@ const ColumnSelector = ({ allColumns, visibleColumns, onToggle }) => {
 
 export default function RecipeManagement() {
   const { activeVenue } = useVenue();
+  const { user, isManager, isOwner } = useAuth();
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
   const [items, setItems] = useState([]); // Inventory Items to pick from

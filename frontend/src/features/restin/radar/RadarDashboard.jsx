@@ -10,6 +10,7 @@ import { cn } from '../../../lib/utils';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { radarService } from './radar-service';
 import { useVenue } from '../../../context/VenueContext';
+import { useAuth } from '../../../context/AuthContext';
 import { toast } from 'sonner';
 
 /**
@@ -18,6 +19,7 @@ import { toast } from 'sonner';
  */
 export default function RadarDashboard() {
     const { activeVenueId } = useVenue();
+    const { user, isManager, isOwner } = useAuth();
     const [region, setRegion] = useState('Valletta');
 
     // Fetch Insights

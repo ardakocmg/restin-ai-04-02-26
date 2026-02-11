@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../../context/AuthContext';
 import api from '../../../lib/api';
 import { toast } from 'sonner';
 import { Loader2, ClipboardList, Save } from 'lucide-react';
@@ -9,6 +10,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '.
 
 import { logger } from '@/lib/logger';
 export default function StockAdjustments() {
+  const { user, isManager, isOwner } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [adjustments, setAdjustments] = useState({});

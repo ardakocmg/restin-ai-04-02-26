@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException, Depends, Query
 
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
+from core.role_guard import require_manager
 from core.search import parse_list_query
 from services.inventory_detail.item_detail_aggregate import item_detail_service
 
@@ -10,7 +11,7 @@ from services.inventory_detail.item_detail_aggregate import item_detail_service
 def create_inventory_items_router():
     router = APIRouter(tags=["inventory_items"])
 
-    @router.get("/inventory/items")
+    @router.get("/inventory/items", dependencies=[Depends(require_manager)])
     async def list_inventory_items(
         venue_id: str = Query(...),
         q: str = Query(None),
@@ -68,7 +69,7 @@ def create_inventory_items_router():
             }
         }
 
-    @router.get("/inventory/items/{sku_id}/detail")
+    @router.get("/inventory/items/{sku_id}/detail", dependencies=[Depends(require_manager)])
     async def get_item_detail(
         sku_id: str,
         venue_id: str = Query(...),
@@ -89,7 +90,7 @@ def create_inventory_items_router():
         
         return detail
 
-    @router.put("/inventory/items/{sku_id}")
+    @router.put("/inventory/items/{sku_id}", dependencies=[Depends(require_manager)])
     async def update_inventory_item(
         sku_id: str,
         venue_id: str = Query(...),

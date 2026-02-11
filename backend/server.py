@@ -557,6 +557,16 @@ from routes.user_sync import create_user_sync_router
 user_sync_router = create_user_sync_router()
 api_main.include_router(user_sync_router)
 
+# Admin User Management (CRUD, Archive, PIN Reset, Employee Linking)
+from routes.admin_user_routes import create_admin_user_router
+admin_user_router = create_admin_user_router()
+api_main.include_router(admin_user_router)
+
+# RBAC (Roles, Context Switching, Audit)
+from routes.rbac_routes import create_rbac_router
+rbac_router = create_rbac_router()
+api_main.include_router(rbac_router)
+
 from routes.clocking_seeder import create_clocking_seeder_router
 clocking_seeder_router = create_clocking_seeder_router()
 api_main.include_router(clocking_seeder_router)

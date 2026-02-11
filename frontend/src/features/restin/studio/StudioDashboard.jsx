@@ -10,6 +10,7 @@ import { cn } from '../../../lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { studioService } from './studio-service';
 import { useVenue } from '../../../context/VenueContext';
+import { useAuth } from '../../../context/AuthContext';
 import { toast } from 'sonner';
 import { Loader2, Settings } from 'lucide-react';
 
@@ -19,6 +20,7 @@ import { Loader2, Settings } from 'lucide-react';
  */
 export default function StudioDashboard() {
     const { activeVenueId } = useVenue();
+    const { user, isManager, isOwner } = useAuth();
     const queryClient = useQueryClient();
     const [activeFilter, setActiveFilter] = useState('all');
 

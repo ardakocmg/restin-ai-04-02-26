@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useAuth } from '@/context/AuthContext';
+import { useAuditLog } from '@/hooks/useAuditLog';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
@@ -18,6 +20,7 @@ import api from '@/lib/api';
 import { toast } from 'sonner';
 
 export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
+    useAuditLog('LEAVE_REQUEST_VIEWED', { resource: 'leave-request-modal' });
     const [leaveTypes, setLeaveTypes] = useState([]);
     const [formData, setFormData] = useState({
         leave_type_id: '',

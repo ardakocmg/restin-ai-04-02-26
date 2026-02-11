@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, Query
 
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
+from core.role_guard import require_owner
 from core.feature_flags import require_feature
 from core.venue_config import VenueConfigRepo
 
@@ -10,7 +11,7 @@ from core.venue_config import VenueConfigRepo
 def create_accounting_mt_router():
     router = APIRouter(tags=["accounting_mt"])
 
-    @router.get("/accounting-mt/accounts")
+    @router.get("/accounting-mt/accounts", dependencies=[Depends(require_owner)])
     async def list_accounts(
         venue_id: str = Query(...),
         current_user: dict = Depends(get_current_user)
@@ -28,7 +29,7 @@ def create_accounting_mt_router():
         
         return {"ok": True, "data": accounts}
 
-    @router.get("/accounting-mt/journals")
+    @router.get("/accounting-mt/journals", dependencies=[Depends(require_owner)])
     async def list_journals(
         venue_id: str = Query(...),
         from_date: str = Query(None, alias="from"),

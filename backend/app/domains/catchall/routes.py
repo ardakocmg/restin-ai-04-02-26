@@ -175,6 +175,20 @@ async def export_audit_logs(venue_id: str):
     return {"venue_id": venue_id, "logs": logs, "count": len(logs)}
 
 
+@router.post("/venues/{venue_id}/audit-logs")
+async def create_audit_log(venue_id: str, entry: GenericCreate):
+    """Create a new audit log entry from the frontend useAuditLog hook."""
+    db = get_database()
+    data = entry.dict()
+    data["id"] = f"audit-{uuid.uuid4().hex[:8]}"
+    data["venue_id"] = venue_id
+    if "timestamp" not in data:
+        data["timestamp"] = datetime.now(timezone.utc).isoformat()
+    await db.audit_logs.insert_one(data)
+    data.pop("_id", None)
+    return data
+
+
 # --- Print Jobs ---
 @router.get("/venues/{venue_id}/print-jobs")
 async def get_print_jobs(venue_id: str, status: Optional[str] = Query(None)):

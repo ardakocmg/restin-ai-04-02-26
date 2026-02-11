@@ -34,14 +34,24 @@ import { cn } from '../../lib/utils';
 import DataTable from '../../components/shared/DataTable';
 
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
+import PermissionGate from '../../components/shared/PermissionGate';
+import { useAuditLog } from '../../hooks/useAuditLog';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function Devices() {
+    const { user } = useAuth();
+    const { logAction } = useAuditLog();
     const [devices, setDevices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedDevice, setSelectedDevice] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+
+    // Audit: log device management access
+    useEffect(() => {
+        if (user?.id) logAction('DEVICES_VIEWED', 'device_management');
+    }, [user?.id]);
 
     useEffect(() => {
         const fetchDevices = async () => {
@@ -315,15 +325,17 @@ export default function Devices() {
     );
 
     return (
-        <PageContainer
-            title="Device Management"
-            description="Manage POS terminals, KDS screens, and handheld tablets across your venue."
-            breadcrumb={[
-                { label: 'Management', href: '#' },
-                { label: 'Devices', href: '/admin/devices' }
-            ]}
-        >
-            {selectedDevice ? renderDeviceDetail(selectedDevice) : renderDeviceList()}
-        </PageContainer>
+        <PermissionGate requiredRole="MANAGER">
+            <PageContainer
+                title="Device Management"
+                description="Manage POS terminals, KDS screens, and handheld tablets across your venue."
+                breadcrumb={[
+                    { label: 'Management', href: '#' },
+                    { label: 'Devices', href: '/admin/devices' }
+                ]}
+            >
+                {selectedDevice ? renderDeviceDetail(selectedDevice) : renderDeviceList()}
+            </PageContainer>
+        </PermissionGate>
     );
 }

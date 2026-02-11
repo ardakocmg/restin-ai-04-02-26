@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
 
 import { useVenue } from '../../context/VenueContext';
+import { useAuth } from '../../context/AuthContext';
 
 import api from '../../lib/api';
 
@@ -11,24 +13,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/ca
 
 import { Badge } from '../../components/ui/badge';
 
-import DataTable from '../../components/shared/DataTable';
-
-import { Inbox, CheckCircle2 } from 'lucide-react';
+import { Inbox, CheckCircle2, User, Bell, Archive, Trash2 } from 'lucide-react';
 
 export default function CollabInbox() {
   const { activeVenue } = useVenue();
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (activeVenue?.id) {
+    if (activeVenue?.id && user?.id) {
       loadInbox();
     }
-  }, [activeVenue?.id]);
+  }, [activeVenue?.id, user?.id]);
 
   const loadInbox = async () => {
     try {
-      const res = await api.get(`/collab/inbox?venue_id=${activeVenue.id}`);
+      const res = await api.get(`/collab/inbox?venue_id=${activeVenue.id}&user_id=${user.id}`);
       setNotifications(res.data?.data || []);
     } catch (error) {
       logger.error('Inbox error:', error);
@@ -37,44 +38,87 @@ export default function CollabInbox() {
     }
   };
 
+  const markAsRead = async (notifId) => {
+    try {
+      await api.patch(`/collab/inbox/${notifId}/read`);
+      setNotifications(prev => prev.map(n => n.id === notifId ? { ...n, status: 'READ' } : n));
+    } catch (error) {
+      logger.error('Mark read failed:', error);
+    }
+  };
+
+  if (!user) {
+    return (
+      <PageContainer title="Inbox" description="Unified notifications">
+        <div className="text-center py-16">
+          <User className="h-12 w-12 mx-auto text-zinc-500 mb-4" />
+          <h2 className="text-xl font-semibold text-zinc-200">Not Authenticated</h2>
+          <p className="text-zinc-500 mt-2">Please log in to access your inbox.</p>
+        </div>
+      </PageContainer>
+    );
+  }
+
   const unreadCount = notifications.filter(n => n.status === 'UNREAD').length;
 
   return (
     <PageContainer
       title="Inbox"
-      description="Unified notifications and updates"
+      description={`${user.name}'s notifications and updates`}
     >
-      <div className="mb-4 flex items-center gap-2">
-        <Inbox className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-        <span className="text-2xl font-bold text-foreground">{unreadCount} Unread</span>
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Inbox className="h-6 w-6 text-blue-400" />
+          <span className="text-2xl font-bold text-zinc-100">{unreadCount} Unread</span>
+        </div>
+        <Badge variant="outline" className="py-1.5 px-3 text-sm border-zinc-700 text-zinc-300">
+          <User className="w-3.5 h-3.5 mr-1.5" />
+          {user.name}
+        </Badge>
       </div>
 
-      <Card>
+      <Card className="bg-zinc-950 border-zinc-800">
         <CardHeader>
-          <CardTitle>Notifications</CardTitle>
+          <CardTitle className="text-zinc-100 flex items-center gap-2">
+            <Bell className="h-5 w-5 text-blue-400" />
+            Notifications
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          {notifications.length === 0 ? (
-            <div className="text-center py-12 text-slate-500">
-              <CheckCircle2 className="h-12 w-12 mx-auto mb-3 text-green-500" />
-              <p>All caught up!</p>
+          {loading ? (
+            <div className="text-center py-12 text-zinc-500">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-3" />
+              <p>Loading notifications...</p>
+            </div>
+          ) : notifications.length === 0 ? (
+            <div className="text-center py-12 text-zinc-500">
+              <CheckCircle2 className="h-12 w-12 mx-auto mb-3 text-emerald-500" />
+              <p className="text-zinc-300 font-medium">All caught up!</p>
+              <p className="text-zinc-500 text-sm mt-1">No notifications for {user.name}</p>
             </div>
           ) : (
             <div className="space-y-2">
               {notifications.map((notif) => (
                 <div
                   key={notif.id}
-                  className={`p-4 rounded border ${
-                    notif.status === 'UNREAD' ? 'bg-blue-50 border-blue-200' : 'bg-slate-50'
-                  }`}
+                  onClick={() => notif.status === 'UNREAD' && markAsRead(notif.id)}
+                  className={`p-4 rounded-lg border cursor-pointer transition-all ${notif.status === 'UNREAD'
+                      ? 'bg-blue-500/5 border-blue-500/20 hover:bg-blue-500/10'
+                      : 'bg-zinc-900/50 border-zinc-800 hover:bg-zinc-900'
+                    }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <Badge variant="outline">{notif.type}</Badge>
-                    <span className="text-xs text-slate-600">
+                    <div className="flex items-center gap-2">
+                      {notif.status === 'UNREAD' && (
+                        <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />
+                      )}
+                      <Badge variant="outline" className="border-zinc-700 text-zinc-400">{notif.type}</Badge>
+                    </div>
+                    <span className="text-xs text-zinc-500">
                       {new Date(notif.created_at).toLocaleString()}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-700">
+                  <p className="text-sm text-zinc-300">
                     Ref: {notif.ref?.type} {notif.ref?.id?.substring(0, 8)}
                   </p>
                 </div>

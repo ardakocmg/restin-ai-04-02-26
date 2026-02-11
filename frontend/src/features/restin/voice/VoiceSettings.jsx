@@ -12,9 +12,11 @@ import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { voiceService } from './voice-service';
 import { useVenue } from '../../../context/VenueContext';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function VoiceSettings() {
     const { activeVenueId } = useVenue();
+    const { user, isManager, isOwner } = useAuth();
     const queryClient = useQueryClient();
     const fileInputRef = useRef(null);
 

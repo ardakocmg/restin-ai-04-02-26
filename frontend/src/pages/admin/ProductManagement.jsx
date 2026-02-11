@@ -4,6 +4,9 @@ import { logger } from '@/lib/logger';
 import { useNavigate } from 'react-router-dom';
 
 import { useVenue } from '../../context/VenueContext';
+import { useAuth } from '../../context/AuthContext';
+import PermissionGate from '../../components/shared/PermissionGate';
+import { useAuditLog } from '../../hooks/useAuditLog';
 
 import api from '../../lib/api';
 
@@ -38,6 +41,12 @@ import { cn } from '../../lib/utils';
 export default function ProductManagement() {
     const navigate = useNavigate();
     const { activeVenue } = useVenue();
+    const { user } = useAuth();
+    const { logAction } = useAuditLog();
+
+    React.useEffect(() => {
+        logAction('PRODUCT_MANAGEMENT_VIEWED', 'product_management', undefined, { user_id: user?.id });
+    }, []);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -69,106 +78,108 @@ export default function ProductManagement() {
     ];
 
     return (
-        <PageContainer
-            title="Product & Menu Management"
-            description="Manage your restaurant menu, categories, and item pricing."
-            actions={
-                <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="bg-zinc-900 border-white/5 text-zinc-400">
-                        Import Menu
-                    </Button>
-                    <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white font-bold">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add New Product
-                    </Button>
-                </div>
-            }
-        >
-            <div className="space-y-6">
-                {/* Category Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {categories.map((cat) => (
-                        <Card key={cat.name} className="bg-zinc-900/50 border-white/5 hover:border-white/10 transition-all cursor-pointer group">
-                            <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-4">
-                                        <div className="h-12 w-12 rounded-2xl bg-zinc-950 flex items-center justify-center border border-white/5 group-hover:border-white/10 transition-all">
-                                            <cat.icon className={cn("h-6 w-6", cat.color)} />
-                                        </div>
-                                        <div>
-                                            <h3 className="text-lg font-black text-white uppercase tracking-tighter">{cat.name}</h3>
-                                            <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest">{cat.count} Items Active</p>
-                                        </div>
-                                    </div>
-                                    <CheckCircle2 className="h-5 w-5 text-zinc-800 group-hover:text-green-500 transition-all" />
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-
-                {/* Main Product Table */}
-                <Card className="bg-zinc-950 border-white/5 shadow-2xl">
-                    <CardHeader className="border-b border-white/5">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <CardTitle>Catalog Items</CardTitle>
-                                <CardDescription>Live pricing and availability across all menus</CardDescription>
-                            </div>
-                            <div className="relative w-64">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
-                                <Input
-                                    placeholder="Search Catalog..."
-                                    className="pl-10 bg-zinc-900 border-white/10"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                        <DataTable
-                            columns={[
-                                {
-                                    key: 'name',
-                                    label: 'Product',
-                                    render: (row) => (
-                                        <div className="flex items-center gap-3">
-                                            <div className="h-8 w-8 rounded bg-zinc-900 border border-white/5 flex items-center justify-center">
-                                                <UtensilsCrossed className="h-4 w-4 text-zinc-500" />
+        <PermissionGate requiredRole="MANAGER">
+            <PageContainer
+                title="Product & Menu Management"
+                description="Manage your restaurant menu, categories, and item pricing."
+                actions={
+                    <div className="flex gap-2">
+                        <Button variant="outline" size="sm" className="bg-zinc-900 border-white/5 text-zinc-400">
+                            Import Menu
+                        </Button>
+                        <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white font-bold">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add New Product
+                        </Button>
+                    </div>
+                }
+            >
+                <div className="space-y-6">
+                    {/* Category Stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {categories.map((cat) => (
+                            <Card key={cat.name} className="bg-zinc-900/50 border-white/5 hover:border-white/10 transition-all cursor-pointer group">
+                                <CardContent className="p-6">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-12 w-12 rounded-2xl bg-zinc-950 flex items-center justify-center border border-white/5 group-hover:border-white/10 transition-all">
+                                                <cat.icon className={cn("h-6 w-6", cat.color)} />
                                             </div>
-                                            <span className="font-bold text-white uppercase tracking-tight">{row.name}</span>
+                                            <div>
+                                                <h3 className="text-lg font-black text-white uppercase tracking-tighter">{cat.name}</h3>
+                                                <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest">{cat.count} Items Active</p>
+                                            </div>
                                         </div>
-                                    )
-                                },
-                                {
-                                    key: 'category',
-                                    label: 'Category',
-                                    render: (row) => <Badge variant="outline" className="text-[10px] uppercase font-bold border-zinc-700 text-zinc-400">DISIIES</Badge>
-                                },
-                                {
-                                    key: 'price',
-                                    label: 'Price',
-                                    render: (row) => <span className="font-black text-zinc-100 italic">€24.50</span>
-                                },
-                                {
-                                    key: 'status',
-                                    label: 'Status',
-                                    render: (row) => (
-                                        <div className="flex items-center gap-2">
-                                            <div className="h-2 w-2 rounded-full bg-green-500" />
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Published</span>
-                                        </div>
-                                    )
-                                }
-                            ]}
-                            data={products}
-                            loading={loading}
-                            emptyMessage="No products found in the catalog"
-                        />
-                    </CardContent>
-                </Card>
-            </div>
-        </PageContainer>
+                                        <CheckCircle2 className="h-5 w-5 text-zinc-800 group-hover:text-green-500 transition-all" />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+
+                    {/* Main Product Table */}
+                    <Card className="bg-zinc-950 border-white/5 shadow-2xl">
+                        <CardHeader className="border-b border-white/5">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <CardTitle>Catalog Items</CardTitle>
+                                    <CardDescription>Live pricing and availability across all menus</CardDescription>
+                                </div>
+                                <div className="relative w-64">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+                                    <Input
+                                        placeholder="Search Catalog..."
+                                        className="pl-10 bg-zinc-900 border-white/10"
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="p-0">
+                            <DataTable
+                                columns={[
+                                    {
+                                        key: 'name',
+                                        label: 'Product',
+                                        render: (row) => (
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-8 w-8 rounded bg-zinc-900 border border-white/5 flex items-center justify-center">
+                                                    <UtensilsCrossed className="h-4 w-4 text-zinc-500" />
+                                                </div>
+                                                <span className="font-bold text-white uppercase tracking-tight">{row.name}</span>
+                                            </div>
+                                        )
+                                    },
+                                    {
+                                        key: 'category',
+                                        label: 'Category',
+                                        render: (row) => <Badge variant="outline" className="text-[10px] uppercase font-bold border-zinc-700 text-zinc-400">DISIIES</Badge>
+                                    },
+                                    {
+                                        key: 'price',
+                                        label: 'Price',
+                                        render: (row) => <span className="font-black text-zinc-100 italic">€24.50</span>
+                                    },
+                                    {
+                                        key: 'status',
+                                        label: 'Status',
+                                        render: (row) => (
+                                            <div className="flex items-center gap-2">
+                                                <div className="h-2 w-2 rounded-full bg-green-500" />
+                                                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Published</span>
+                                            </div>
+                                        )
+                                    }
+                                ]}
+                                data={products}
+                                loading={loading}
+                                emptyMessage="No products found in the catalog"
+                            />
+                        </CardContent>
+                    </Card>
+                </div>
+            </PageContainer>
+        </PermissionGate>
     );
 }

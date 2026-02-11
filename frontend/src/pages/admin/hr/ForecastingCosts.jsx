@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useAuth } from '@/context/AuthContext';
+import PermissionGate from '@/components/shared/PermissionGate';
+import { useAuditLog } from '@/hooks/useAuditLog';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -10,8 +13,17 @@ import { TrendingUp } from 'lucide-react';
 import api from '@/lib/api';
 
 export default function ForecastingCosts() {
+  const { user, isManager, isOwner } = useAuth();
+  const { logAction } = useAuditLog();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Audit: log who viewed forecasting costs
+  useEffect(() => {
+    if (user?.id) {
+      logAction('FORECASTING_COSTS_VIEWED', 'forecasting_costs', 'all');
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     fetchData();
@@ -32,50 +44,52 @@ export default function ForecastingCosts() {
   if (!data) return <div className="p-8">No data available</div>;
 
   return (
-    <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-foreground">Forecasting Costs</h1>
+    <PermissionGate requiredRole="MANAGER">
+      <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
+        <h1 className="text-3xl font-bold text-foreground">Forecasting Costs</h1>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-600">Projected Next Quarter</p>
-                <p className="text-2xl font-bold text-foreground mt-2">€{data.projected_costs_next_quarter.toLocaleString()}</p>
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-600">Projected Next Quarter</p>
+                  <p className="text-2xl font-bold text-foreground mt-2">€{data.projected_costs_next_quarter.toLocaleString()}</p>
+                </div>
+                <TrendingUp className="h-8 w-8 text-blue-500" />
               </div>
-              <TrendingUp className="h-8 w-8 text-blue-500" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <p className="text-sm text-slate-600">Projected Headcount</p>
+              <p className="text-2xl font-bold text-foreground mt-2">{data.projected_headcount_next_quarter}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <p className="text-sm text-slate-600">Cost Variance</p>
+              <p className={`text-2xl font-bold mt-2 ${data.cost_variance > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                }`}>{data.cost_variance > 0 ? '+' : ''}{(data.cost_variance || 0).toFixed(2)}%</p>
+            </CardContent>
+          </Card>
+        </div>
+
         <Card>
-          <CardContent className="p-6">
-            <p className="text-sm text-slate-600">Projected Headcount</p>
-            <p className="text-2xl font-bold text-foreground mt-2">{data.projected_headcount_next_quarter}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <p className="text-sm text-slate-600">Cost Variance</p>
-            <p className={`text-2xl font-bold mt-2 ${data.cost_variance > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-              }`}>{data.cost_variance > 0 ? '+' : ''}{(data.cost_variance || 0).toFixed(2)}%</p>
+          <CardHeader><CardTitle>6-Month Forecast Trend</CardTitle></CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart data={data.trend_forecast}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="cost" stroke="#3B82F6" strokeWidth={2} strokeDasharray="5 5" />
+              </LineChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>
-
-      <Card>
-        <CardHeader><CardTitle>6-Month Forecast Trend</CardTitle></CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={data.trend_forecast}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="cost" stroke="#3B82F6" strokeWidth={2} strokeDasharray="5 5" />
-            </LineChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-    </div>
+    </PermissionGate>
   );
 }

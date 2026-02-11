@@ -2,14 +2,15 @@
 📜 Audit Trail API Routes — Rule 49
 Forensic-grade immutable audit logging with geo-location.
 """
-from fastapi import APIRouter, Request, Query
+from fastapi import APIRouter, Request, Query, Depends
 from services.audit_trail import log_audit_event, get_audit_trail, get_audit_summary
+from core.role_guard import require_owner
 
 
 def create_audit_router():
     router = APIRouter(prefix="/audit", tags=["Audit Trail"])
 
-    @router.get("/")
+    @router.get("/", dependencies=[Depends(require_owner)])
     async def list_audit_events(
         request: Request,
         venue_id: str = Query(...),
@@ -36,7 +37,7 @@ def create_audit_router():
         )
         return events
 
-    @router.get("/summary")
+    @router.get("/summary", dependencies=[Depends(require_owner)])
     async def audit_summary(
         request: Request,
         venue_id: str = Query(...),

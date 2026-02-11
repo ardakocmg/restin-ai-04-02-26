@@ -4,6 +4,7 @@ Backup Routes - Manual backup triggers and status
 
 from fastapi import APIRouter, Depends, HTTPException
 from core.dependencies import get_current_user
+from core.role_guard import require_owner
 from core.database import db
 from services.backup_service import BackupService
 from datetime import datetime, timezone
@@ -12,7 +13,7 @@ def create_backup_router():
     router = APIRouter(prefix="/backup", tags=["backup"])
     backup_service = BackupService(db)
     
-    @router.post("/snapshot")
+    @router.post("/snapshot", dependencies=[Depends(require_owner)])
     async def create_manual_snapshot(
         venue_id: str = None,
         current_user: dict = Depends(get_current_user)
@@ -27,7 +28,7 @@ def create_backup_router():
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     
-    @router.get("/list")
+    @router.get("/list", dependencies=[Depends(require_owner)])
     async def list_backups(
         venue_id: str = None,
         current_user: dict = Depends(get_current_user)
@@ -43,7 +44,7 @@ def create_backup_router():
             "backups": backups
         }
     
-    @router.get("/status")
+    @router.get("/status", dependencies=[Depends(require_owner)])
     async def get_backup_status(current_user: dict = Depends(get_current_user)):
         """Get backup system status"""
         # Count backups by status
@@ -67,7 +68,7 @@ def create_backup_router():
             "total_backups": sum(stats_dict.values())
         }
     
-    @router.post("/cleanup")
+    @router.post("/cleanup", dependencies=[Depends(require_owner)])
     async def cleanup_old_backups(current_user: dict = Depends(get_current_user)):
         """Manually trigger backup cleanup"""
         try:
