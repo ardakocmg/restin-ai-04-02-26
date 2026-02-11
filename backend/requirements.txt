@@ -1,20 +1,47 @@
+# ── Core Framework ──
 fastapi
 uvicorn[standard]
+starlette
 pydantic
 pydantic-settings
-cryptography
 python-multipart
-pymongo[srv]
-email-validator
-motor
-pyjwt
-pandas>=2.0.0
-openpyxl>=3.1.0
-httpx
 python-dotenv
-apscheduler
+
+# ── Database ──
+pymongo[srv]
+motor
+prisma
+
+# ── Auth & Security ──
+pyjwt
+cryptography
+pyotp
+qrcode[pil]
+
+# ── HTTP Clients ──
+httpx
+aiohttp
+requests
+
+# ── Data & Documents ──
+pandas>=2.0.0
+numpy
+openpyxl>=3.1.0
+reportlab
+weasyprint
+pdf2image
+pytesseract
+email-validator
+
+# ── Cloud & Storage ──
 boto3
+
+# ── Images ──
 Pillow>=10.0.0
+
+# ── IoT / Hardware ──
 tuya-connector-python
 meross-iot
-prisma
+
+# ── Scheduling ──
+apscheduler
