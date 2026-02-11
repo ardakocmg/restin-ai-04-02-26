@@ -13,8 +13,8 @@ import {
   RefreshCw, Home, MessageSquare, Radio
 } from 'lucide-react';
 
-// Role hierarchy for sidebar visibility filtering
-const ROLE_HIERARCHY = { STAFF: 1, MANAGER: 2, OWNER: 3 };
+// Role hierarchy from centralized definition (includes product_owner: 99)
+import { ROLE_HIERARCHY } from '../lib/roles';
 
 const menuItems = [
   // HOME / MAIN

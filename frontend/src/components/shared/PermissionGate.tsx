@@ -35,21 +35,7 @@ interface PermissionGateProps {
     silent?: boolean;
 }
 
-const ROLE_HIERARCHY: Record<string, number> = {
-    STAFF: 1,
-    staff: 1,
-    MANAGER: 2,
-    manager: 2,
-    OWNER: 3,
-    owner: 3,
-    product_owner: 99,
-    PRODUCT_OWNER: 99,
-};
-
-function hasAccess(userRole: RoleLevel | undefined, requiredRole: RoleLevel): boolean {
-    if (!userRole) return false;
-    return (ROLE_HIERARCHY[userRole] ?? 0) >= (ROLE_HIERARCHY[requiredRole] ?? 99);
-}
+import { ROLE_HIERARCHY, hasRoleAccess } from '../../lib/roles';
 
 export default function PermissionGate({
     requiredRole,
@@ -60,7 +46,7 @@ export default function PermissionGate({
     const { user } = useAuth();
     const userRole = user?.role as RoleLevel | undefined;
 
-    if (hasAccess(userRole, requiredRole)) {
+    if (hasRoleAccess(userRole, requiredRole)) {
         return <>{children}</>;
     }
 
@@ -114,5 +100,5 @@ export default function PermissionGate({
  */
 export function usePermission(requiredRole: RoleLevel): boolean {
     const { user } = useAuth();
-    return hasAccess(user?.role as RoleLevel | undefined, requiredRole);
+    return hasRoleAccess(user?.role as RoleLevel | undefined, requiredRole);
 }

@@ -15,23 +15,8 @@ import { useNavigate } from 'react-router-dom';
 
 type RoleLevel = 'STAFF' | 'MANAGER' | 'OWNER';
 
-const ROLE_HIERARCHY: Record<string, number> = {
-    STAFF: 1,
-    staff: 1,
-    MANAGER: 2,
-    manager: 2,
-    OWNER: 3,
-    owner: 3,
-    product_owner: 99,
-    PRODUCT_OWNER: 99,
-    admin: 99,
-    ADMIN: 99,
-};
+import { ROLE_HIERARCHY, hasRoleAccess } from '../../lib/roles';
 
-function hasAccess(userRole: string | undefined, requiredRole: RoleLevel): boolean {
-    if (!userRole) return false;
-    return (ROLE_HIERARCHY[userRole] ?? 0) >= (ROLE_HIERARCHY[requiredRole] ?? 99);
-}
 
 interface RoleRouteProps {
     requiredRole: RoleLevel;
