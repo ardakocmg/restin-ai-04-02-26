@@ -168,6 +168,38 @@ def create_venue_router():
             "errors_today": 0
         }
 
+    # ==================== AUDIT LOG ENDPOINTS ====================
+    @router.get("/venues/{venue_id}/audit-logs")
+    async def get_venue_audit_logs(
+        venue_id: str,
+        limit: int = 50,
+        action: Optional[str] = None,
+    ):
+        """Get audit logs for a venue."""
+        query = {"venue_id": venue_id}
+        if action:
+            query["action"] = action
+        logs = await db.audit_logs.find(query, {"_id": 0}).sort("timestamp", -1).to_list(length=limit)
+        return logs
+
+    @router.post("/venues/{venue_id}/audit-logs")
+    async def create_venue_audit_log(venue_id: str, entry: dict):
+        """Create a new audit log entry from the frontend useAuditLog hook."""
+        from datetime import datetime, timezone
+        data = {
+            **entry,
+            "venue_id": venue_id,
+            "timestamp": entry.get("timestamp", datetime.now(timezone.utc).isoformat()),
+        }
+        await db.audit_logs.insert_one(data)
+        return {"status": "ok"}
+
+    @router.get("/venues/{venue_id}/audit-logs/export")
+    async def export_venue_audit_logs(venue_id: str):
+        """Export audit logs for a venue."""
+        logs = await db.audit_logs.find({"venue_id": venue_id}, {"_id": 0}).sort("timestamp", -1).to_list(length=1000)
+        return {"venue_id": venue_id, "logs": logs, "count": len(logs)}
+
     # ==================== ZONE ENDPOINTS ====================
     @router.get("/venues/{venue_id}/zones", response_model=List[Zone])
     async def list_zones(venue_id: str):

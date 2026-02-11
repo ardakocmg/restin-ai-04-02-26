@@ -64,7 +64,14 @@ export default function PermissionGate({
         return <>{children}</>;
     }
 
-    // Log denied access attempt
+    // If user is not logged in yet (null/undefined), don't show "Access Denied"
+    // — the auth flow will redirect to login. This prevents flash of denied UI
+    // during initial page load or when auth is being restored.
+    if (!user) {
+        return null;
+    }
+
+    // Log denied access attempt (only when user IS logged in but lacks role)
     logger.warn('PermissionGate: access denied', {
         userId: user?.id,
         userName: user?.name,
