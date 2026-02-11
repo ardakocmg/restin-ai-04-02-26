@@ -290,8 +290,17 @@ export default function NewTopBar() {
                 )} />
               </div>
               <div className="flex flex-col items-start mr-1">
-                <span className="text-sm font-bold leading-none">{user?.name || 'Administrator'}</span>
-                <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider leading-none mt-1">Super User</span>
+                <span className="text-sm font-bold leading-none">{user?.name || 'User'}</span>
+                <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider leading-none mt-1">
+                  {(() => {
+                    const role = user?.role?.toLowerCase();
+                    if (role === 'product_owner') return 'Product Owner';
+                    if (role === 'owner') return 'Owner';
+                    if (role === 'manager') return 'Manager';
+                    if (role === 'staff') return 'Staff';
+                    return user?.role || 'User';
+                  })()}
+                </span>
               </div>
               <ChevronDown className="h-3 w-3 text-zinc-500" />
             </Button>
