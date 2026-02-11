@@ -226,7 +226,7 @@ const FeatureFlagAdmin = React.lazy(() => import("./pages/admin/settings/Feature
 const DynamicPricingPage = React.lazy(() => import("./pages/admin/pricing/DynamicPricingPage"));
 const HACCPChecklists = React.lazy(() => import("./pages/admin/compliance/HACCPChecklists"));
 const DataExportPage = React.lazy(() => import("./pages/admin/settings/DataExportPage"));
-const SetupWizard = React.lazy(() => import("./pages/admin/onboarding/SetupWizard"));
+const OnboardingWizard = React.lazy(() => import("./pages/admin/onboarding/SetupWizard"));
 const GuestProfiles = React.lazy(() => import("./pages/admin/guests/GuestProfiles"));
 const StaffGamification = React.lazy(() => import("./pages/admin/staff/GamificationDashboard"));
 const HiveDashboard = React.lazy(() => import("./pages/collab/HiveDashboard"));
@@ -497,7 +497,7 @@ function App() {
                                     <Route path="dynamic-pricing" element={<DynamicPricingPage />} />
                                     <Route path="haccp" element={<HACCPChecklists />} />
                                     <Route path="data-export" element={<DataExportPage />} />
-                                    <Route path="setup-wizard" element={<SetupWizard />} />
+                                    <Route path="setup-wizard" element={<OnboardingWizard />} />
                                     <Route path="guest-profiles" element={<GuestProfiles />} />
                                     <Route path="staff-gamification" element={<StaffGamification />} />
                                     <Route path="kiosk-mode" element={<KioskModePage />} />
