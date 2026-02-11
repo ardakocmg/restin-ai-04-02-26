@@ -1,18 +1,15 @@
 /**
- * useAuthElevation — Progressive Authentication with Google Authenticator
+ * useAuthElevation — Progressive Authentication Store
  *
- * All elevation uses TOTP (Google Authenticator) — NO passwords.
- * Two tiers:
- *   - 'protected' = 30 min TTL (HR, inventory, settings)
- *   - 'elevated'  = 15 min TTL (finance, payroll, access control)
+ * Two elevation methods:
+ *   - 'password' → 30 min TTL (HR, inventory, settings)
+ *   - 'elevated' → 15 min TTL via Google Authenticator (finance, payroll, access control)
  *
- * product_owner bypasses ALL elevation — never sees the modal.
+ * product_owner bypasses ALL elevation — never sees any modal.
  *
  * Usage:
  *   const { requireElevation, isElevated } = useAuthElevation();
- *   if (!isElevated('protected')) {
- *     const granted = await requireElevation('protected');
- *   }
+ *   const granted = await requireElevation('password');
  */
 import { create } from 'zustand';
 import { useCallback, useRef } from 'react';
@@ -21,11 +18,11 @@ import { AuthLevel, AUTH_LEVEL_TTL } from '../lib/roles';
 
 // ─── Zustand Store ────────────────────────────────────────
 interface ElevationState {
-    /** Timestamp until 'protected' level is valid */
-    protectedUntil: number | null;
+    /** Timestamp until 'password' level is valid */
+    passwordUntil: number | null;
     /** Timestamp until 'elevated' level is valid */
     elevatedUntil: number | null;
-    /** Whether the TOTP modal is currently showing */
+    /** Whether the elevation modal is currently showing */
     modalOpen: boolean;
     /** Which level the modal is requesting */
     requestedLevel: AuthLevel | null;
@@ -40,31 +37,31 @@ interface ElevationState {
 }
 
 export const useElevationStore = create<ElevationState>((set, get) => ({
-    protectedUntil: null,
+    passwordUntil: null,
     elevatedUntil: null,
     modalOpen: false,
     requestedLevel: null,
     resolveElevation: null,
 
     setElevation: (level: AuthLevel) => {
-        const ttl = AUTH_LEVEL_TTL[level] ?? 15 * 60 * 1000;
+        const ttl = AUTH_LEVEL_TTL[level] ?? 30 * 60 * 1000;
         const until = Date.now() + ttl;
 
         if (level === 'elevated') {
-            // Elevated also grants protected
+            // Elevated also grants password-level access
             sessionStorage.setItem('restin_elev_until', String(until));
-            sessionStorage.setItem('restin_prot_until', String(until));
-            set({ elevatedUntil: until, protectedUntil: until });
-        } else if (level === 'protected') {
-            sessionStorage.setItem('restin_prot_until', String(until));
-            set({ protectedUntil: until });
+            sessionStorage.setItem('restin_pw_until', String(until));
+            set({ elevatedUntil: until, passwordUntil: until });
+        } else if (level === 'password') {
+            sessionStorage.setItem('restin_pw_until', String(until));
+            set({ passwordUntil: until });
         }
     },
 
     clearElevation: () => {
-        sessionStorage.removeItem('restin_prot_until');
+        sessionStorage.removeItem('restin_pw_until');
         sessionStorage.removeItem('restin_elev_until');
-        set({ protectedUntil: null, elevatedUntil: null });
+        set({ passwordUntil: null, elevatedUntil: null });
     },
 
     openModal: (level: AuthLevel, resolver: (granted: boolean) => void) => {
@@ -87,16 +84,16 @@ export const useElevationStore = create<ElevationState>((set, get) => ({
 }));
 
 // ─── Restore from sessionStorage on module load ──────────
-const storedProt = sessionStorage.getItem('restin_prot_until');
+const storedPw = sessionStorage.getItem('restin_pw_until');
 const storedElev = sessionStorage.getItem('restin_elev_until');
 if (storedElev && Number(storedElev) > Date.now()) {
     useElevationStore.setState({
         elevatedUntil: Number(storedElev),
-        protectedUntil: Number(storedProt) || Number(storedElev),
+        passwordUntil: Number(storedPw) || Number(storedElev),
     });
-} else if (storedProt && Number(storedProt) > Date.now()) {
+} else if (storedPw && Number(storedPw) > Date.now()) {
     useElevationStore.setState({
-        protectedUntil: Number(storedProt),
+        passwordUntil: Number(storedPw),
     });
 }
 
@@ -115,18 +112,18 @@ export function useAuthElevation() {
             if (requiredLevel === 'pin') return true;
 
             const now = Date.now();
-            if (requiredLevel === 'protected') {
-                return !!(store.protectedUntil && store.protectedUntil > now);
+            if (requiredLevel === 'password') {
+                return !!(store.passwordUntil && store.passwordUntil > now);
             }
             if (requiredLevel === 'elevated') {
                 return !!(store.elevatedUntil && store.elevatedUntil > now);
             }
             return false;
         },
-        [isSuperAdmin, store.protectedUntil, store.elevatedUntil]
+        [isSuperAdmin, store.passwordUntil, store.elevatedUntil]
     );
 
-    /** Request elevation — shows Google Authenticator modal if needed */
+    /** Request elevation — shows appropriate modal if needed */
     const requireElevation = useCallback(
         (level: AuthLevel): Promise<boolean> => {
             if (isElevated(level)) return Promise.resolve(true);

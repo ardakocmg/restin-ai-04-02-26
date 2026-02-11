@@ -1,12 +1,14 @@
 /**
- * AuthElevationModal — Google Authenticator (TOTP) verification modal
+ * AuthElevationModal — Password or Google Authenticator verification
  *
- * Shows a 6-digit code input when user navigates to a protected area.
- * All elevation uses Google Authenticator — no passwords.
+ * Dual-mode elevation:
+ *   - Password mode: for sensitive areas (HR, inventory, settings)
+ *   - TOTP mode: for critical areas (finance, payroll, access control)
+ *
  * product_owner never sees this (bypassed in useAuthElevation).
  */
 import React, { useState, useEffect, useRef } from 'react';
-import { Shield, Fingerprint, X, AlertTriangle } from 'lucide-react';
+import { Shield, Fingerprint, Lock, X, AlertTriangle, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useElevationStore } from '../../hooks/useAuthElevation';
 import { useAuth } from '../../context/AuthContext';
@@ -17,43 +19,51 @@ export default function AuthElevationModal() {
     const { user } = useAuth();
     const { modalOpen, requestedLevel, closeModal } = useElevationStore();
 
+    const [password, setPassword] = useState('');
     const [totpCode, setTotpCode] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [shake, setShake] = useState(false);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
+    const isPasswordMode = requestedLevel === 'password';
+    const isCritical = requestedLevel === 'elevated';
+
     // Focus input when modal opens
     useEffect(() => {
         if (modalOpen) {
+            setPassword('');
             setTotpCode('');
+            setShowPassword(false);
             setError('');
             setShake(false);
             setTimeout(() => inputRef.current?.focus(), 200);
         }
     }, [modalOpen]);
 
-    const isCritical = requestedLevel === 'elevated';
-
     const handleSubmit = async (e?: React.FormEvent) => {
         e?.preventDefault();
-        if (totpCode.length < 6 || loading) return;
+
+        if (isPasswordMode && !password) return;
+        if (isCritical && totpCode.length < 6) return;
+        if (loading) return;
 
         setLoading(true);
         setError('');
 
         try {
-            await authAPI.elevateAuth({
-                method: 'totp',
-                totp_code: totpCode,
-                requested_level: requestedLevel,
-            });
+            const body = isPasswordMode
+                ? { method: 'password', password }
+                : { method: 'totp', totp_code: totpCode, requested_level: requestedLevel };
+
+            await authAPI.elevateAuth(body);
 
             toast.success(
-                isCritical
-                    ? 'Verified — critical access granted (15 min)'
-                    : 'Verified — access granted (30 min)',
+                isPasswordMode
+                    ? 'Password verified — access granted (30 min)'
+                    : 'Google Authenticator verified — access granted (15 min)',
                 { duration: 2000 }
             );
             closeModal(true);
@@ -63,16 +73,18 @@ export default function AuthElevationModal() {
             setError(msg);
             setShake(true);
             setTimeout(() => setShake(false), 500);
-            setTotpCode('');
+            if (isCritical) {
+                setTotpCode('');
+            }
             setTimeout(() => inputRef.current?.focus(), 100);
         } finally {
             setLoading(false);
         }
     };
 
-    // Auto-submit when 6 digits entered
+    // Auto-submit TOTP when 6 digits entered
     useEffect(() => {
-        if (totpCode.length === 6 && !loading) {
+        if (isCritical && totpCode.length === 6 && !loading) {
             handleSubmit();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,6 +93,9 @@ export default function AuthElevationModal() {
     const handleCancel = () => {
         closeModal(false);
     };
+
+    const accentColor = isCritical ? '#E53935' : '#F59E0B';
+    const accentColorRgb = isCritical ? '229, 57, 53' : '245, 158, 11';
 
     return (
         <AnimatePresence>
@@ -105,7 +120,7 @@ export default function AuthElevationModal() {
                         style={{
                             background: 'linear-gradient(145deg, rgba(39, 39, 42, 0.95) 0%, rgba(24, 24, 27, 0.98) 100%)',
                             border: '1px solid rgba(255, 255, 255, 0.08)',
-                            boxShadow: '0 25px 50px rgba(0,0,0,0.5), 0 0 100px rgba(229, 57, 53, 0.07)',
+                            boxShadow: `0 25px 50px rgba(0,0,0,0.5), 0 0 100px rgba(${accentColorRgb}, 0.07)`,
                         }}
                     >
                         {/* Close button */}
@@ -122,22 +137,24 @@ export default function AuthElevationModal() {
                             <div
                                 className="mx-auto w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
                                 style={{
-                                    background: isCritical
-                                        ? 'linear-gradient(135deg, rgba(229, 57, 53, 0.15) 0%, rgba(229, 57, 53, 0.05) 100%)'
-                                        : 'linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(251, 191, 36, 0.05) 100%)',
-                                    border: `1px solid ${isCritical ? 'rgba(229, 57, 53, 0.25)' : 'rgba(251, 191, 36, 0.25)'}`,
+                                    background: `linear-gradient(135deg, rgba(${accentColorRgb}, 0.15) 0%, rgba(${accentColorRgb}, 0.05) 100%)`,
+                                    border: `1px solid rgba(${accentColorRgb}, 0.25)`,
                                 }}
                             >
-                                <Fingerprint className="w-7 h-7" style={{ color: isCritical ? '#E53935' : '#FBBF24' }} />
+                                {isPasswordMode ? (
+                                    <Lock className="w-7 h-7" style={{ color: accentColor }} />
+                                ) : (
+                                    <Fingerprint className="w-7 h-7" style={{ color: accentColor }} />
+                                )}
                             </div>
 
                             <h2 className="text-lg font-semibold text-zinc-100">
-                                Google Authenticator
+                                {isPasswordMode ? 'Password Required' : 'Google Authenticator'}
                             </h2>
                             <p className="text-sm text-zinc-500 mt-1">
-                                {isCritical
-                                    ? 'Critical area — enter your 6-digit code'
-                                    : 'Sensitive area — verify with authenticator'}
+                                {isPasswordMode
+                                    ? 'Enter your password to access this area'
+                                    : 'Enter your 6-digit code to access this area'}
                             </p>
                         </div>
 
@@ -158,43 +175,70 @@ export default function AuthElevationModal() {
                             </div>
                         </div>
 
-                        {/* TOTP Input */}
+                        {/* Input */}
                         <form onSubmit={handleSubmit} className="px-6 pb-6 pt-2 space-y-4">
-                            <div>
-                                <input
-                                    ref={inputRef}
-                                    type="text"
-                                    value={totpCode}
-                                    onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                    placeholder="000 000"
-                                    className="w-full text-center text-2xl tracking-[0.5em] py-3 rounded-xl text-zinc-100 placeholder-zinc-600 outline-none transition-all font-mono"
-                                    style={{
-                                        background: 'rgba(0,0,0,0.3)',
-                                        border: error ? '1px solid rgba(239, 68, 68, 0.5)' : '1px solid rgba(255,255,255,0.1)',
-                                    }}
-                                    data-testid="elevation-totp-input"
-                                    inputMode="numeric"
-                                    autoComplete="one-time-code"
-                                />
-
-                                {/* Progress dots */}
-                                <div className="flex justify-center gap-2 mt-3">
-                                    {Array(6).fill(0).map((_, i) => (
-                                        <div
-                                            key={i}
-                                            className="w-2 h-2 rounded-full transition-all duration-200"
-                                            style={{
-                                                backgroundColor: i < totpCode.length
-                                                    ? (isCritical ? '#E53935' : '#FBBF24')
-                                                    : 'rgba(255,255,255,0.1)',
-                                                boxShadow: i < totpCode.length
-                                                    ? `0 0 8px ${isCritical ? 'rgba(229, 57, 53, 0.4)' : 'rgba(251, 191, 36, 0.4)'}`
-                                                    : 'none',
-                                            }}
-                                        />
-                                    ))}
+                            {isPasswordMode ? (
+                                /* Password Input */
+                                <div className="relative">
+                                    <input
+                                        ref={inputRef}
+                                        type={showPassword ? 'text' : 'password'}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="Enter your password"
+                                        className="w-full px-4 py-3 rounded-xl text-sm text-zinc-100 placeholder-zinc-600 outline-none transition-all pr-10"
+                                        style={{
+                                            background: 'rgba(0,0,0,0.3)',
+                                            border: error ? '1px solid rgba(239, 68, 68, 0.5)' : '1px solid rgba(255,255,255,0.1)',
+                                        }}
+                                        data-testid="elevation-password-input"
+                                    />
+                                    <button
+                                        type="button"
+                                        title={showPassword ? 'Hide password' : 'Show password'}
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                                    >
+                                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    </button>
                                 </div>
-                            </div>
+                            ) : (
+                                /* TOTP Input */
+                                <div>
+                                    <input
+                                        ref={inputRef}
+                                        type="text"
+                                        value={totpCode}
+                                        onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                        placeholder="000 000"
+                                        className="w-full text-center text-2xl tracking-[0.5em] py-3 rounded-xl text-zinc-100 placeholder-zinc-600 outline-none transition-all font-mono"
+                                        style={{
+                                            background: 'rgba(0,0,0,0.3)',
+                                            border: error ? '1px solid rgba(239, 68, 68, 0.5)' : '1px solid rgba(255,255,255,0.1)',
+                                        }}
+                                        data-testid="elevation-totp-input"
+                                        inputMode="numeric"
+                                        autoComplete="one-time-code"
+                                    />
+                                    {/* Progress dots */}
+                                    <div className="flex justify-center gap-2 mt-3">
+                                        {Array(6).fill(0).map((_, i) => (
+                                            <div
+                                                key={i}
+                                                className="w-2 h-2 rounded-full transition-all duration-200"
+                                                style={{
+                                                    backgroundColor: i < totpCode.length
+                                                        ? accentColor
+                                                        : 'rgba(255,255,255,0.1)',
+                                                    boxShadow: i < totpCode.length
+                                                        ? `0 0 8px rgba(${accentColorRgb}, 0.4)`
+                                                        : 'none',
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Error */}
                             {error && (
@@ -219,15 +263,11 @@ export default function AuthElevationModal() {
                                 </button>
                                 <button
                                     type="submit"
-                                    disabled={loading || totpCode.length < 6}
+                                    disabled={loading || (isPasswordMode ? !password : totpCode.length < 6)}
                                     className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-40"
                                     style={{
-                                        background: isCritical
-                                            ? 'linear-gradient(135deg, #E53935 0%, #C62828 100%)'
-                                            : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                                        boxShadow: isCritical
-                                            ? '0 4px 12px rgba(229, 57, 53, 0.3)'
-                                            : '0 4px 12px rgba(245, 158, 11, 0.3)',
+                                        background: `linear-gradient(135deg, ${accentColor} 0%, ${isCritical ? '#C62828' : '#D97706'} 100%)`,
+                                        boxShadow: `0 4px 12px rgba(${accentColorRgb}, 0.3)`,
                                     }}
                                     data-testid="elevation-submit"
                                 >
@@ -237,9 +277,9 @@ export default function AuthElevationModal() {
 
                             {/* TTL info */}
                             <p className="text-center text-[11px] text-zinc-600">
-                                {isCritical
-                                    ? 'Access valid for 15 minutes'
-                                    : 'Access valid for 30 minutes'}
+                                {isPasswordMode
+                                    ? 'Access valid for 30 minutes'
+                                    : 'Access valid for 15 minutes'}
                             </p>
                         </form>
                     </motion.div>

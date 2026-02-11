@@ -576,54 +576,84 @@ def create_auth_router():
         log_event("pin_changed", {"user_id": user_id})
         return {"success": True}
 
-    # ─── Progressive Auth Elevation (Google Authenticator) ─────────
+    # ─── Progressive Auth Elevation (Password + Google Authenticator) ─
     @router.post("/auth/elevate")
     async def elevate_auth(payload: dict = Body(...), current_user: dict = Depends(get_current_user)):
         """
-        Progressive Authentication: verify Google Authenticator TOTP code.
-        Called when user navigates to a sensitive area (HR, Finance, etc).
+        Progressive Authentication: verify password or Google Authenticator TOTP.
+        - password → 30 min TTL (sensitive areas: HR, inventory, settings)
+        - totp → 15 min TTL (critical areas: finance, payroll, access control)
         product_owner bypass is handled client-side — they never hit this endpoint.
         """
-        totp_code = payload.get("totp_code", "")
-        requested_level = payload.get("requested_level", "protected")
+        method = payload.get("method", "")
         user_id = current_user["id"]
-
-        if not totp_code:
-            raise HTTPException(status_code=400, detail="Google Authenticator code is required")
 
         user = await db.users.find_one({"id": user_id}, {"_id": 0})
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        if not user.get("mfa_enabled"):
-            raise HTTPException(
-                status_code=400,
-                detail="Google Authenticator is not set up. Enable 2FA in your profile settings."
-            )
+        if method == "password":
+            password = payload.get("password", "")
+            if not password:
+                raise HTTPException(status_code=400, detail="Password is required")
 
-        mfa_secret = user.get("mfa_secret", "")
-        if not mfa_secret:
-            raise HTTPException(status_code=400, detail="2FA not configured. Set up Google Authenticator first.")
+            if not user.get("password_hash"):
+                raise HTTPException(
+                    status_code=400,
+                    detail="No password set. Please set a password in your profile first."
+                )
 
-        import pyotp
-        totp = pyotp.TOTP(mfa_secret)
-        if not totp.verify(totp_code, valid_window=1):
+            if not verify_password(password, user["password_hash"]):
+                await create_audit_log(
+                    user.get("venue_id", ""), user_id, user.get("name", ""),
+                    "elevation_failed", "user", user_id,
+                    {"method": "password", "reason": "wrong_password"}
+                )
+                raise HTTPException(status_code=401, detail="Invalid password")
+
             await create_audit_log(
                 user.get("venue_id", ""), user_id, user.get("name", ""),
-                "elevation_failed", "user", user_id,
-                {"method": "google_auth", "level": requested_level, "reason": "invalid_code"}
+                "elevation_granted", "user", user_id,
+                {"method": "password", "ttl_seconds": 1800}
             )
-            raise HTTPException(status_code=401, detail="Invalid code. Check Google Authenticator and try again.")
+            return {"level": "password", "ttl_seconds": 1800}
 
-        # TTL: elevated = 15 min (900s), protected = 30 min (1800s)
-        ttl = 900 if requested_level == "elevated" else 1800
+        elif method == "totp":
+            totp_code = payload.get("totp_code", "")
+            if not totp_code:
+                raise HTTPException(status_code=400, detail="Google Authenticator code is required")
 
-        await create_audit_log(
-            user.get("venue_id", ""), user_id, user.get("name", ""),
-            "elevation_granted", "user", user_id,
-            {"method": "google_auth", "level": requested_level, "ttl_seconds": ttl}
-        )
+            if not user.get("mfa_enabled"):
+                raise HTTPException(
+                    status_code=400,
+                    detail="Google Authenticator is not set up. Enable 2FA in your profile settings."
+                )
 
-        return {"level": requested_level, "ttl_seconds": ttl}
+            mfa_secret = user.get("mfa_secret", "")
+            if not mfa_secret:
+                raise HTTPException(status_code=400, detail="2FA not configured. Set up Google Authenticator first.")
+
+            import pyotp
+            totp = pyotp.TOTP(mfa_secret)
+            if not totp.verify(totp_code, valid_window=1):
+                await create_audit_log(
+                    user.get("venue_id", ""), user_id, user.get("name", ""),
+                    "elevation_failed", "user", user_id,
+                    {"method": "google_auth", "reason": "invalid_code"}
+                )
+                raise HTTPException(status_code=401, detail="Invalid code. Check Google Authenticator and try again.")
+
+            await create_audit_log(
+                user.get("venue_id", ""), user_id, user.get("name", ""),
+                "elevation_granted", "user", user_id,
+                {"method": "google_auth", "ttl_seconds": 900}
+            )
+            return {"level": "elevated", "ttl_seconds": 900}
+
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid method. Use 'password' or 'totp'."
+            )
 
     return router

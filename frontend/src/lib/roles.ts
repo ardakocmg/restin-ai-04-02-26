@@ -54,15 +54,14 @@ export function getRoleLevel(role: string | undefined): number {
 }
 
 // ─── Route Auth Level Mapping ─────────────────────────────────────
-// Maps route prefixes to auth elevation via Google Authenticator (TOTP).
-// Routes not listed here only need base PIN login.
-// All elevation uses TOTP — no passwords needed.
-// Two tiers: 'elevated' (15 min TTL, critical) and 'protected' (30 min TTL, sensitive)
+// Maps route prefixes to the minimum auth elevation needed.
+// 'password' = verify password (30 min TTL) — for sensitive management areas
+// 'elevated' = verify Google Authenticator TOTP (15 min TTL) — for critical areas
 
-export type AuthLevel = 'pin' | 'protected' | 'elevated';
+export type AuthLevel = 'pin' | 'password' | 'elevated';
 
 export const ROUTE_AUTH_LEVELS: Record<string, AuthLevel> = {
-    // ── Critical (15 min TTL) — Finance, access control, destructive actions ──
+    // ── Elevated (Google Auth / TOTP, 15 min) — Critical financial & system actions ──
     '/admin/finance': 'elevated',
     '/admin/payroll': 'elevated',
     '/admin/billing': 'elevated',
@@ -71,19 +70,19 @@ export const ROUTE_AUTH_LEVELS: Record<string, AuthLevel> = {
     '/admin/roles-permissions': 'elevated',
     '/admin/door-access': 'elevated',
 
-    // ── Sensitive (30 min TTL) — Management areas ──
-    '/admin/hr': 'protected',
-    '/admin/settings': 'protected',
-    '/admin/inventory': 'protected',
-    '/admin/procurement': 'protected',
-    '/admin/compliance': 'protected',
-    '/admin/reports': 'protected',
+    // ── Password (30 min) — Sensitive management areas ──
+    '/admin/hr': 'password',
+    '/admin/settings': 'password',
+    '/admin/inventory': 'password',
+    '/admin/procurement': 'password',
+    '/admin/compliance': 'password',
+    '/admin/reports': 'password',
 };
 
 /** TTL in milliseconds for each auth level */
 export const AUTH_LEVEL_TTL: Record<AuthLevel, number> = {
     pin: Infinity,
-    protected: 30 * 60 * 1000,  // 30 minutes
+    password: 30 * 60 * 1000,   // 30 minutes
     elevated: 15 * 60 * 1000,   // 15 minutes
 };
 

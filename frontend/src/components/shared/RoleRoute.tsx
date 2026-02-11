@@ -151,7 +151,7 @@ export default function RoleRoute({ requiredRole, authLevel, children }: RoleRou
                             Verification Required
                         </h2>
                         <p className="text-sm text-muted-foreground">
-                            This area requires Google Authenticator verification.
+                            This area requires {neededLevel === 'elevated' ? 'Google Authenticator' : 'password'} verification.
                         </p>
                     </div>
                     <div className="flex gap-3 justify-center">
