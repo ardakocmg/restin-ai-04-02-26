@@ -1,4 +1,4 @@
-il/**
+/**
  * PermissionGate — Declarative role-based UI gating
  * Wraps content that should only be visible to users with sufficient role.
  * 
