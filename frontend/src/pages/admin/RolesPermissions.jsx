@@ -440,8 +440,8 @@ function PermissionTreeGroup({ group, expanded, onToggle }) {
                                     <select
                                         defaultValue={perm.auth || 'pin'}
                                         className={`rounded px-2 py-1 text-[11px] font-semibold focus:outline-none focus:ring-1 w-[100px] border ${perm.auth === '2fa' ? 'bg-red-500/10 border-red-500/30 text-red-300 focus:ring-red-500/50' :
-                                                perm.auth === 'password' ? 'bg-blue-500/10 border-blue-500/30 text-blue-300 focus:ring-blue-500/50' :
-                                                    'bg-emerald-500/10 border-emerald-500/30 text-emerald-300 focus:ring-emerald-500/50'
+                                            perm.auth === 'password' ? 'bg-blue-500/10 border-blue-500/30 text-blue-300 focus:ring-blue-500/50' :
+                                                'bg-emerald-500/10 border-emerald-500/30 text-emerald-300 focus:ring-emerald-500/50'
                                             }`}
                                     >
                                         <option value="pin">🟢 PIN</option>
@@ -469,7 +469,7 @@ export default function RolesPermissions() {
     const [selectedRole, setSelectedRole] = useState(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
-    const [permissionGroups, setPermissionGroups] = useState(DEFAULT_PERMISSION_GROUPS);
+    const permissionGroups = DEFAULT_PERMISSION_GROUPS;
     const [expandedGroups, setExpandedGroups] = useState(["pos_orders", "payments"]);
     const [searchTerm, setSearchTerm] = useState("");
     const [roleSearch, setRoleSearch] = useState("");
@@ -505,9 +505,8 @@ export default function RolesPermissions() {
                 setRoles(DEFAULT_ROLES);
                 setSelectedRole(DEFAULT_ROLES[0]);
             }
-            if (data.permissionGroups?.length > 0) {
-                setPermissionGroups(data.permissionGroups);
-            }
+            // Note: permissionGroups always use DEFAULT_PERMISSION_GROUPS (source of truth)
+            // API only provides role configs, not the permission structure
         } catch (error) {
             logger.error("Failed to fetch roles from API, using defaults:", error);
             setRoles(DEFAULT_ROLES);
