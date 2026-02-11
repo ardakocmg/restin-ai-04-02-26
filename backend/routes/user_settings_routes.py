@@ -166,4 +166,23 @@ def create_2fa_router():
         
         return {"success": True}
     
+    @router.patch("/{user_id}/profile")
+    async def update_user_profile(user_id: str, profile: dict, current_user: User = Depends(get_current_user)):
+        """Update user profile (name, email, phone only)"""
+        if current_user.id != user_id:
+            raise HTTPException(status_code=403, detail="Not authorized")
+        
+        # Whitelist safe fields only
+        allowed = {"name", "email", "phone"}
+        safe_update = {k: v for k, v in profile.items() if k in allowed}
+        if not safe_update:
+            raise HTTPException(status_code=400, detail="No valid fields to update")
+        
+        await db.users.update_one(
+            {"id": user_id},
+            {"$set": safe_update}
+        )
+        
+        return {"success": True, "updated": list(safe_update.keys())}
+    
     return router

@@ -534,4 +534,38 @@ def create_auth_router():
         
         return {"message": "MFA enabled"}
 
+    # ─── Change PIN ─────────────────────────────────────────────────
+    @router.post("/change-pin")
+    async def change_pin(payload: dict = Body(...), current_user: dict = Depends(get_current_user)):
+        """Change user's login PIN"""
+        user_id = payload.get("user_id")
+        current_pin = payload.get("current_pin", "")
+        new_pin = payload.get("new_pin", "")
+
+        if not user_id or not current_pin or not new_pin:
+            raise HTTPException(status_code=400, detail="user_id, current_pin, and new_pin are required")
+
+        if current_user["id"] != user_id:
+            raise HTTPException(status_code=403, detail="Not authorized")
+
+        if len(new_pin) < 4:
+            raise HTTPException(status_code=400, detail="PIN must be at least 4 digits")
+
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        from core.security import hash_pin
+        stored_hash = user.get("pin_hash", "")
+        if stored_hash and hash_pin(current_pin) != stored_hash:
+            raise HTTPException(status_code=401, detail="Current PIN is incorrect")
+
+        await db.users.update_one(
+            {"id": user_id},
+            {"$set": {"pin_hash": hash_pin(new_pin), "pin": new_pin}}
+        )
+
+        log_event("pin_changed", {"user_id": user_id})
+        return {"success": True}
+
     return router
