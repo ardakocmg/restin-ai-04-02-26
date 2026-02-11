@@ -30,6 +30,19 @@ export default function UserProfileSettings() {
   const { themeMode, toggleTheme } = useDesignSystem();
   const { activeVenue } = useVenue();
 
+  // Guard: user not loaded yet (not authenticated or token expired)
+  if (!user) {
+    return (
+      <div className="container max-w-5xl mx-auto p-6 space-y-6">
+        <div className="text-center py-16">
+          <User className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+          <h2 className="text-xl font-semibold text-foreground">Not Authenticated</h2>
+          <p className="text-muted-foreground mt-2">Please log in to access your profile settings.</p>
+        </div>
+      </div>
+    );
+  }
+
   // ─── Global UI state ─────────────────────────────────────────────
   const [message, setMessage] = useState(null);
   const clearMessage = useCallback(() => { setTimeout(() => setMessage(null), 4000); }, []);

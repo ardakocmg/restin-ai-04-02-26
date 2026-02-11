@@ -17,7 +17,7 @@ export default function SettingsHub() {
   const [saving, setSaving] = useState(false);
   const [settings, setSettings] = useState(null);
   const [modules, setModules] = useState([]);
-  
+
   const venueId = user?.venueId || user?.venue_id || localStorage.getItem('restin_venue');
 
   useEffect(() => {
@@ -25,13 +25,32 @@ export default function SettingsHub() {
   }, []);
 
   const loadData = async () => {
+    if (!venueId) {
+      setLoading(false);
+      return;
+    }
     try {
       const [settingsRes, modulesRes] = await Promise.all([
         api.get(`/venues/${venueId}/settings`),
-        api.get(`/system/modules`)
+        api.get(`/system/modules`).catch(() => ({
+          data: {
+            modules: [
+              { key: 'pos', title: 'Point of Sale', desc: 'Full POS system with order management', status: 'active' },
+              { key: 'kds', title: 'Kitchen Display', desc: 'Kitchen order display system', status: 'active' },
+              { key: 'inventory', title: 'Inventory', desc: 'Stock tracking and recipe management', status: 'active' },
+              { key: 'hr', title: 'HR & Payroll', desc: 'Employee management and payroll', status: 'active' },
+              { key: 'crm', title: 'CRM & Loyalty', desc: 'Guest profiles and loyalty programs', status: 'active' },
+              { key: 'reservations', title: 'Reservations', desc: 'Table booking system', status: 'active' },
+              { key: 'analytics', title: 'Analytics', desc: 'Reports and dashboards', status: 'active' },
+              { key: 'voice', title: 'Voice AI', desc: '24/7 AI phone receptionist', status: 'beta' },
+              { key: 'web', title: 'Web Builder', desc: 'Drag & drop website builder', status: 'beta' },
+              { key: 'studio', title: 'Content Studio', desc: 'AI-powered content generation', status: 'beta' },
+            ]
+          }
+        }))
       ]);
-      setSettings(settingsRes.data.settings);
-      setModules(modulesRes.data.modules);
+      setSettings(settingsRes.data.settings || settingsRes.data);
+      setModules(modulesRes.data.modules || []);
     } catch (error) {
       console.error('Failed to load settings:', error);
       toast.error('Failed to load settings');
