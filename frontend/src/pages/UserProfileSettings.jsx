@@ -44,7 +44,9 @@ import { useVenue } from '../context/VenueContext';
 
 import api from '../lib/api';
 
-import { Calendar, FileText, DollarSign, Clock } from 'lucide-react';
+import { Calendar, FileText, DollarSign, Clock, LayoutDashboard } from 'lucide-react';
+
+const EmployeePortalComplete = React.lazy(() => import('./admin/hr/EmployeePortalComplete'));
 
 export default function UserProfileSettings() {
   // Employee Portal Logic
@@ -102,8 +104,9 @@ export default function UserProfileSettings() {
       )}
 
       <Tabs defaultValue="profile" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5 h-auto">
+        <TabsList className="grid w-full grid-cols-6 h-auto">
           <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="portal" className="flex items-center gap-1.5"><LayoutDashboard className="h-3.5 w-3.5" />Portal</TabsTrigger>
           <TabsTrigger value="work">Work & Pay</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
@@ -135,6 +138,13 @@ export default function UserProfileSettings() {
               <Button>Save Changes</Button>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Portal Tab — Full Employee Portal */}
+        <TabsContent value="portal" className="space-y-4">
+          <React.Suspense fallback={<div className="flex items-center justify-center py-16 text-muted-foreground">Loading Portal...</div>}>
+            <EmployeePortalComplete />
+          </React.Suspense>
         </TabsContent>
 
         {/* Work & Pay Tab (Merged Employee Portal) */}
