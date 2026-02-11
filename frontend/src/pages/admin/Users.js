@@ -24,7 +24,7 @@ import {
 } from '../../components/ui/select';
 import {
   Plus, Shield, Key, Users as UsersIcon, Search, Settings,
-  Archive, RotateCcw, Link2, Unlink, Eye, Loader2,
+  Archive, RotateCcw, Link2, Unlink, Eye, Loader2, Lock, EyeOff,
   UserCheck, AlertCircle, CheckCircle2, XCircle, Clock
 } from 'lucide-react';
 
@@ -59,6 +59,14 @@ export default function Users() {
   const [linkableEmployees, setLinkableEmployees] = useState([]);
   const [linkSearch, setLinkSearch] = useState('');
   const [loadingLinkable, setLoadingLinkable] = useState(false);
+
+  // Set password dialog
+  const [showPwDialog, setShowPwDialog] = useState(false);
+  const [pwTargetUser, setPwTargetUser] = useState(null);
+  const [pwValue, setPwValue] = useState('');
+  const [pwConfirmValue, setPwConfirmValue] = useState('');
+  const [pwShowValue, setPwShowValue] = useState(false);
+  const [pwSaving, setPwSaving] = useState(false);
 
   // ─── Load Users ─────────────────────────────────────────────────────────
   const loadUsers = useCallback(async () => {
@@ -120,6 +128,30 @@ export default function Users() {
     } catch (error) {
       logger.error('PIN reset failed:', error);
       toast.error('Failed to reset PIN');
+    }
+  };
+
+  // ─── Admin Set Password ────────────────────────────────────────────────
+  const openSetPasswordDialog = (user) => {
+    setPwTargetUser(user);
+    setPwValue('');
+    setPwConfirmValue('');
+    setPwShowValue(false);
+    setShowPwDialog(true);
+  };
+
+  const handleAdminSetPassword = async () => {
+    if (!pwValue || pwValue.length < 6) { toast.error('Password must be at least 6 characters'); return; }
+    if (pwValue !== pwConfirmValue) { toast.error('Passwords do not match'); return; }
+    setPwSaving(true);
+    try {
+      await api.post('/auth/admin/set-password', { user_id: pwTargetUser.id, new_password: pwValue });
+      toast.success(`Password set for ${pwTargetUser.name}`);
+      setShowPwDialog(false);
+    } catch (error) {
+      toast.error(error?.response?.data?.detail || 'Failed to set password');
+    } finally {
+      setPwSaving(false);
     }
   };
 
@@ -251,7 +283,7 @@ export default function Users() {
       label: 'Status',
       render: (row) => {
         const status = row.status === 'archived' || row.is_archived ? 'archived' :
-                       row.status === 'suspended' ? 'suspended' : 'active';
+          row.status === 'suspended' ? 'suspended' : 'active';
         const cfg = STATUS_CONFIG[status];
         const StatusIcon = cfg.icon;
         return (
@@ -275,6 +307,10 @@ export default function Users() {
             <Button size="icon" variant="ghost" className="h-7 w-7 text-zinc-500 hover:text-amber-400"
               title="Reset PIN" onClick={(e) => { e.stopPropagation(); handleResetPin(row.id, row.name); }}>
               <Key className="h-3.5 w-3.5" />
+            </Button>
+            <Button size="icon" variant="ghost" className="h-7 w-7 text-zinc-500 hover:text-violet-400"
+              title="Set Password" onClick={(e) => { e.stopPropagation(); openSetPasswordDialog(row); }}>
+              <Lock className="h-3.5 w-3.5" />
             </Button>
             {row.employee_id ? (
               <Button size="icon" variant="ghost" className="h-7 w-7 text-zinc-500 hover:text-rose-400"
@@ -489,6 +525,67 @@ export default function Users() {
                   </button>
                 ))
               )}
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* ─── Set Password Dialog ─────────────────────────────────────── */}
+        <Dialog open={showPwDialog} onOpenChange={setShowPwDialog}>
+          <DialogContent className="bg-zinc-900 border-zinc-800 max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-white flex items-center gap-2">
+                <Lock className="h-5 w-5 text-violet-400" /> Set Password
+              </DialogTitle>
+              <DialogDescription className="text-zinc-500">
+                Set an elevation password for <span className="text-zinc-300 font-bold">{pwTargetUser?.name}</span>. This allows the user to access sensitive areas.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">New Password</Label>
+                <div className="relative">
+                  <Input
+                    type={pwShowValue ? 'text' : 'password'}
+                    value={pwValue}
+                    onChange={e => setPwValue(e.target.value)}
+                    className="bg-zinc-950 border-zinc-800 text-zinc-200 pr-10"
+                    placeholder="Min. 6 characters"
+                  />
+                  <Button type="button" variant="ghost" size="icon"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-zinc-500 hover:text-white"
+                    onClick={() => setPwShowValue(!pwShowValue)}>
+                    {pwShowValue ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                  </Button>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Confirm Password</Label>
+                <Input
+                  type="password"
+                  value={pwConfirmValue}
+                  onChange={e => setPwConfirmValue(e.target.value)}
+                  className="bg-zinc-950 border-zinc-800 text-zinc-200"
+                  placeholder="••••••••"
+                />
+              </div>
+              {pwValue && pwConfirmValue && pwValue !== pwConfirmValue && (
+                <p className="text-xs text-rose-400 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" /> Passwords do not match
+                </p>
+              )}
+              {pwValue && pwValue.length > 0 && pwValue.length < 6 && (
+                <p className="text-xs text-amber-400 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" /> Must be at least 6 characters
+                </p>
+              )}
+              <div className="flex justify-end gap-3 pt-2">
+                <Button variant="outline" className="border-zinc-700 text-zinc-400" onClick={() => setShowPwDialog(false)}>Cancel</Button>
+                <Button onClick={handleAdminSetPassword}
+                  disabled={pwSaving || !pwValue || pwValue.length < 6 || pwValue !== pwConfirmValue}
+                  className="bg-violet-600 hover:bg-violet-500 text-white font-bold">
+                  {pwSaving ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Setting...</> : 'Set Password'}
+                </Button>
+              </div>
             </div>
           </DialogContent>
         </Dialog>

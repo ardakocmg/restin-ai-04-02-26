@@ -36,6 +36,9 @@ export interface UserSettings {
     highContrast: boolean;
     reducedMotion: boolean;
     keyboardShortcuts: boolean;
+
+    // Password
+    hasPassword: boolean;
 }
 
 export interface Enable2FAResult {
@@ -76,7 +79,8 @@ const defaultSettings: UserSettings = {
     allowAnalytics: true,
     highContrast: false,
     reducedMotion: false,
-    keyboardShortcuts: true
+    keyboardShortcuts: true,
+    hasPassword: false
 };
 
 const UserSettingsContext = createContext<UserSettingsContextValue | undefined>(undefined);

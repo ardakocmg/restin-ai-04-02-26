@@ -10,7 +10,6 @@ import qrcode
 import io
 import base64
 import secrets
-from models.auth import User
 from core.dependencies import get_current_user
 from core.database import db
 
@@ -27,9 +26,9 @@ def create_2fa_router():
     router = APIRouter(prefix="/users", tags=["2fa"])
     
     @router.post("/{user_id}/2fa/enable")
-    async def enable_2fa(user_id: str, data: Enable2FARequest, current_user: User = Depends(get_current_user)):
+    async def enable_2fa(user_id: str, data: Enable2FARequest, current_user: dict = Depends(get_current_user)):
         """Enable 2FA for user"""
-        if current_user.id != user_id:
+        if current_user["id"] != user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
         
         # Generate secret
@@ -38,7 +37,7 @@ def create_2fa_router():
         # Generate QR code
         totp = pyotp.TOTP(secret)
         provisioning_uri = totp.provisioning_uri(
-            name=current_user.email or current_user.name,
+            name=current_user.get("email") or current_user.get("name", "user"),
             issuer_name="restin.ai"
         )
         
@@ -72,9 +71,9 @@ def create_2fa_router():
         }
     
     @router.post("/{user_id}/2fa/verify")
-    async def verify_2fa(user_id: str, data: Verify2FARequest, current_user: User = Depends(get_current_user)):
+    async def verify_2fa(user_id: str, data: Verify2FARequest, current_user: dict = Depends(get_current_user)):
         """Verify 2FA token and enable it"""
-        if current_user.id != user_id:
+        if current_user["id"] != user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
         
         # Get temp secret
@@ -100,9 +99,9 @@ def create_2fa_router():
         return {"verified": True}
     
     @router.post("/{user_id}/2fa/disable")
-    async def disable_2fa(user_id: str, data: Disable2FARequest, current_user: User = Depends(get_current_user)):
+    async def disable_2fa(user_id: str, data: Disable2FARequest, current_user: dict = Depends(get_current_user)):
         """Disable 2FA"""
-        if current_user.id != user_id:
+        if current_user["id"] != user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
         
         # Verify password before disabling 2FA
@@ -127,9 +126,9 @@ def create_2fa_router():
         return {"success": True}
     
     @router.get("/{user_id}/settings")
-    async def get_user_settings(user_id: str, current_user: User = Depends(get_current_user)):
+    async def get_user_settings(user_id: str, current_user: dict = Depends(get_current_user)):
         """Get user settings"""
-        if current_user.id != user_id:
+        if current_user["id"] != user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
         
         user = await db.users.find_one({"id": user_id}, {"_id": 0})
@@ -150,13 +149,14 @@ def create_2fa_router():
             "allowAnalytics": user.get('allowAnalytics', True),
             "highContrast": user.get('highContrast', False),
             "reducedMotion": user.get('reducedMotion', False),
-            "keyboardShortcuts": user.get('keyboardShortcuts', True)
+            "keyboardShortcuts": user.get('keyboardShortcuts', True),
+            "hasPassword": bool(user.get('password_hash'))
         }
     
     @router.patch("/{user_id}/settings")
-    async def update_user_settings(user_id: str, settings: dict, current_user: User = Depends(get_current_user)):
+    async def update_user_settings(user_id: str, settings: dict, current_user: dict = Depends(get_current_user)):
         """Update user settings"""
-        if current_user.id != user_id:
+        if current_user["id"] != user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
         
         await db.users.update_one(
@@ -167,9 +167,9 @@ def create_2fa_router():
         return {"success": True}
     
     @router.patch("/{user_id}/profile")
-    async def update_user_profile(user_id: str, profile: dict, current_user: User = Depends(get_current_user)):
+    async def update_user_profile(user_id: str, profile: dict, current_user: dict = Depends(get_current_user)):
         """Update user profile (name, email, phone only)"""
-        if current_user.id != user_id:
+        if current_user["id"] != user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
         
         # Whitelist safe fields only

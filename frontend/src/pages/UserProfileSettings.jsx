@@ -87,6 +87,15 @@ export default function UserProfileSettings() {
   const [pinForm, setPinForm] = useState({ currentPin: '', newPin: '', confirmPin: '' });
   const [pinSaving, setPinSaving] = useState(false);
 
+  // Password management state
+  const [pwCurrent, setPwCurrent] = useState('');
+  const [pwNew, setPwNew] = useState('');
+  const [pwConfirm, setPwConfirm] = useState('');
+  const [pwShowCurrent, setPwShowCurrent] = useState(false);
+  const [pwShowNew, setPwShowNew] = useState(false);
+  const [pwSaving, setPwSaving] = useState(false);
+  const hasPassword = settings?.hasPassword || false;
+
   const handleEnable2FA = async () => {
     try {
       const result = await enable2FA();
@@ -173,6 +182,31 @@ export default function UserProfileSettings() {
       clearMessage();
     } finally {
       setPinSaving(false);
+    }
+  };
+
+  // ─── Password Set / Change ────────────────────────────────────────
+  const handlePasswordSave = async () => {
+    if (!pwNew || pwNew.length < 6) {
+      setMessage({ type: 'error', text: 'Password must be at least 6 characters.' }); clearMessage(); return;
+    }
+    if (pwNew !== pwConfirm) {
+      setMessage({ type: 'error', text: 'Passwords do not match.' }); clearMessage(); return;
+    }
+    if (hasPassword && !pwCurrent) {
+      setMessage({ type: 'error', text: 'Current password is required.' }); clearMessage(); return;
+    }
+    try {
+      setPwSaving(true);
+      await api.post('/auth/set-password', { current_password: pwCurrent, new_password: pwNew });
+      setMessage({ type: 'success', text: hasPassword ? 'Password changed successfully.' : 'Password set successfully.' });
+      setPwCurrent(''); setPwNew(''); setPwConfirm('');
+      clearMessage();
+    } catch (err) {
+      const msg = err?.response?.data?.detail || 'Failed to set password.';
+      setMessage({ type: 'error', text: msg }); clearMessage();
+    } finally {
+      setPwSaving(false);
     }
   };
 
@@ -570,6 +604,71 @@ export default function UserProfileSettings() {
                   <Button variant="destructive" onClick={handleDisable2FA}>Disable 2FA</Button>
                 </div>
               )}
+            </CardContent>
+          </Card>
+
+          {/* Set / Change Password */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><Lock className="h-5 w-5 text-violet-400" />{hasPassword ? 'Change Password' : 'Set Password'}</CardTitle>
+              <CardDescription>Set a password for elevated access to sensitive areas (HR, Inventory, Settings). This is separate from your login PIN.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {hasPassword && (
+                  <div className="space-y-2">
+                    <Label htmlFor="pw-current">Current Password</Label>
+                    <div className="relative">
+                      <Input id="pw-current" type={pwShowCurrent ? 'text' : 'password'}
+                        value={pwCurrent} onChange={e => setPwCurrent(e.target.value)}
+                        placeholder="••••••••" />
+                      <Button type="button" variant="ghost" size="icon"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                        onClick={() => setPwShowCurrent(!pwShowCurrent)}>
+                        {pwShowCurrent ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <Label htmlFor="pw-new">New Password</Label>
+                  <div className="relative">
+                    <Input id="pw-new" type={pwShowNew ? 'text' : 'password'}
+                      value={pwNew} onChange={e => setPwNew(e.target.value)}
+                      placeholder="Min. 6 characters" />
+                    <Button type="button" variant="ghost" size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                      onClick={() => setPwShowNew(!pwShowNew)}>
+                      {pwShowNew ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    </Button>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pw-confirm">Confirm Password</Label>
+                  <Input id="pw-confirm" type="password"
+                    value={pwConfirm} onChange={e => setPwConfirm(e.target.value)}
+                    placeholder="••••••••" />
+                </div>
+              </div>
+              {pwNew && pwConfirm && pwNew !== pwConfirm && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>Passwords do not match</AlertDescription>
+                </Alert>
+              )}
+              {pwNew && pwNew.length > 0 && pwNew.length < 6 && (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>Password must be at least 6 characters</AlertDescription>
+                </Alert>
+              )}
+              <div className="flex justify-end">
+                <Button onClick={handlePasswordSave}
+                  disabled={pwSaving || !pwNew || pwNew.length < 6 || pwNew !== pwConfirm || (hasPassword && !pwCurrent)}>
+                  {pwSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lock className="mr-2 h-4 w-4" />}
+                  {hasPassword ? 'Change Password' : 'Set Password'}
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
