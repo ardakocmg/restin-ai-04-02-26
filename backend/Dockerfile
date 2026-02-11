@@ -5,7 +5,7 @@ WORKDIR /app
 # Install system dependencies (gcc for C extensions, plus libs for PDF/OCR/WeasyPrint)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 \
+    libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf-2.0-0 \
     libffi-dev libcairo2 \
     poppler-utils \
     tesseract-ocr \
