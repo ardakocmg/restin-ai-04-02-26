@@ -51,8 +51,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         authStore.clearAuth();
     };
 
-    const isOwner = () => user?.role === "OWNER";
-    const isManager = () => user?.role === "MANAGER" || isOwner();
+    const isOwner = () => {
+        const role = user?.role?.toLowerCase();
+        return role === "owner" || role === "product_owner";
+    };
+    const isManager = () => {
+        const role = user?.role?.toLowerCase();
+        return role === "manager" || isOwner();
+    };
     const isStaff = () => !!user;
 
     return (

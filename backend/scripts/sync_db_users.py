@@ -22,6 +22,31 @@ async def sync_users():
     users_created = 0
     users_updated = 0
     
+    # Pre-load existing PINs per venue to avoid collisions
+    existing_users_list = await db.users.find({}, {"_id": 0, "venue_id": 1, "pin_hash": 1}).to_list(10000)
+    used_pins_per_venue: dict[str, set] = {}
+    for u in existing_users_list:
+        vid = u.get("venue_id", "")
+        if vid not in used_pins_per_venue:
+            used_pins_per_venue[vid] = set()
+        used_pins_per_venue[vid].add(u.get("pin_hash", ""))
+    
+    def generate_unique_pin(venue_id: str) -> str:
+        """Generate a unique 4-digit PIN not already used in this venue."""
+        import random
+        used = used_pins_per_venue.get(venue_id, set())
+        for _ in range(9000):  # Max attempts
+            pin = str(random.randint(1000, 9999))
+            pin_h = hash_pin(pin)
+            if pin_h not in used:
+                used.add(pin_h)
+                if venue_id not in used_pins_per_venue:
+                    used_pins_per_venue[venue_id] = set()
+                used_pins_per_venue[venue_id].add(pin_h)
+                return pin
+        # Fallback: 5-digit
+        return str(random.randint(10000, 99999))
+    
     for emp in employees:
         emp_id = emp["id"]
         email = emp.get("email") or f"{emp['id']}@placeholder.com"
@@ -36,11 +61,8 @@ async def sync_users():
             ]
         })
         
-        default_pin_hash = hash_pin("1234")
-        
         if existing_user:
-            # OPTIONAL: Reset PIN if requested? No, user said "fill missing parts", not overwrite existing users.
-            # But let's ensure employee_id is linked if missing.
+            # Ensure employee_id is linked if missing.
             update_data = {}
             if "employee_id" not in existing_user:
                  update_data["employee_id"] = emp_id
@@ -52,24 +74,22 @@ async def sync_users():
             else:
                 print(f"   User exists for {name}")
         else:
-            # Create NEW User
+            # Create NEW User with UNIQUE PIN
+            unique_pin = generate_unique_pin(venue_id or "")
             user_doc = {
-                "id": emp_id, # Reuse ID for simplicity if possible, or new UUID. Let's use Emp ID as User ID for 1:1 map if valid UUID.
-                # Actually, auth system might expect specific ID format. Let's use emp["id"] as user["id"] to keep them tight.
+                "id": emp_id,
                 "venue_id": venue_id,
                 "name": name,
                 "email": email,
                 "role": UserRole.STAFF,
-                "pin_hash": default_pin_hash,
+                "pin_hash": hash_pin(unique_pin),
                 "employee_id": emp_id,
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "is_active": True,
-                # Default permissions? Role based.
             }
             try:
-                # Check if ID collision in users (unlikely if UUID)
                 await db.users.insert_one(user_doc)
-                print(f"   Created user for {name} (PIN: 1234)")
+                print(f"   Created user for {name} (PIN: {unique_pin})")
                 users_created += 1
             except Exception as e:
                 print(f"   Error creating user for {name}: {e}")

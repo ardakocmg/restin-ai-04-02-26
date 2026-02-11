@@ -35,10 +35,15 @@ interface PermissionGateProps {
     silent?: boolean;
 }
 
-const ROLE_HIERARCHY: Record<RoleLevel, number> = {
+const ROLE_HIERARCHY: Record<string, number> = {
     STAFF: 1,
+    staff: 1,
     MANAGER: 2,
+    manager: 2,
     OWNER: 3,
+    owner: 3,
+    product_owner: 99,
+    PRODUCT_OWNER: 99,
 };
 
 function hasAccess(userRole: RoleLevel | undefined, requiredRole: RoleLevel): boolean {

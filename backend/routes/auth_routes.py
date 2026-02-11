@@ -80,12 +80,20 @@ def create_auth_router():
                 )
         
         # Get allowed venues
-        allowed_venue_ids = user.get("allowed_venue_ids", [user["venue_id"]])
+        allowed_venue_ids = user.get("allowed_venue_ids", [])
+        
+        # Product Owner / Admin: if allowed_venue_ids is empty, grant ALL venues
+        if not allowed_venue_ids and user["role"] in [UserRole.PRODUCT_OWNER, "product_owner", "admin"]:
+            all_venues = await db.venues.find({}, {"_id": 0, "id": 1}).to_list(100)
+            allowed_venue_ids = [v["id"] for v in all_venues]
+        
         if not allowed_venue_ids:
             allowed_venue_ids = [user["venue_id"]]
         
         default_venue_id = user.get("default_venue_id")
         if not default_venue_id and len(allowed_venue_ids) == 1:
+            default_venue_id = allowed_venue_ids[0]
+        elif not default_venue_id and allowed_venue_ids:
             default_venue_id = allowed_venue_ids[0]
         
         # Check if MFA required
