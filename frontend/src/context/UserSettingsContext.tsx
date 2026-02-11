@@ -7,6 +7,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import api from '../lib/api';
 import { logger } from '../lib/logger';
+import { useAuth } from '../features/auth/AuthContext';
 
 export type MfaMethod = 'google_authenticator' | 'sms' | 'email' | null;
 export type FontSize = 'small' | 'medium' | 'large';
@@ -90,16 +91,18 @@ interface UserSettingsProviderProps {
 }
 
 export function UserSettingsProvider({ children }: UserSettingsProviderProps): JSX.Element {
+    const { user } = useAuth();
+    const userId = user?.id || null;
     const [settings, setSettings] = useState<UserSettings>(defaultSettings);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadUserSettings();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userId]);
 
     const loadUserSettings = async (): Promise<void> => {
         try {
-            const userId = localStorage.getItem('restin_user_id');
             if (!userId) {
                 setLoading(false);
                 return;
@@ -118,7 +121,6 @@ export function UserSettingsProvider({ children }: UserSettingsProviderProps): J
 
     const updateSettings = async (updates: Partial<UserSettings>): Promise<boolean> => {
         try {
-            const userId = localStorage.getItem('restin_user_id');
             if (!userId) return false;
 
             await api.patch(`/users/${userId}/settings`, updates);
@@ -133,7 +135,7 @@ export function UserSettingsProvider({ children }: UserSettingsProviderProps): J
 
     const enable2FA = async (method: MfaMethod = 'google_authenticator'): Promise<Enable2FAResult> => {
         try {
-            const userId = localStorage.getItem('restin_user_id');
+            if (!userId) return { success: false, error: 'Not authenticated' };
             const response = await api.post(`/users/${userId}/2fa/enable`, { method });
 
             return {
@@ -151,7 +153,7 @@ export function UserSettingsProvider({ children }: UserSettingsProviderProps): J
 
     const verify2FA = async (token: string): Promise<Verify2FAResult> => {
         try {
-            const userId = localStorage.getItem('restin_user_id');
+            if (!userId) return { success: false, error: 'Not authenticated' };
             const response = await api.post(`/users/${userId}/2fa/verify`, { token });
 
             if (response.data.verified) {
@@ -168,7 +170,7 @@ export function UserSettingsProvider({ children }: UserSettingsProviderProps): J
 
     const disable2FA = async (password: string): Promise<Verify2FAResult> => {
         try {
-            const userId = localStorage.getItem('restin_user_id');
+            if (!userId) return { success: false, error: 'Not authenticated' };
             await api.post(`/users/${userId}/2fa/disable`, { password });
 
             setSettings(prev => ({ ...prev, mfaEnabled: false, mfaMethod: null }));
