@@ -3,7 +3,7 @@
  *
  * Wraps <Route> elements to enforce:
  *   1. Role-based access (user role >= required role)
- *   2. Progressive auth elevation (PIN → password → 2FA based on route)
+ *   2. Progressive auth elevation (PIN → Google Authenticator based on route)
  *
  * product_owner bypasses ALL checks (role + elevation).
  *
@@ -151,7 +151,7 @@ export default function RoleRoute({ requiredRole, authLevel, children }: RoleRou
                             Verification Required
                         </h2>
                         <p className="text-sm text-muted-foreground">
-                            This area requires {neededLevel === 'elevated' ? '2FA' : 'password'} verification.
+                            This area requires Google Authenticator verification.
                         </p>
                     </div>
                     <div className="flex gap-3 justify-center">

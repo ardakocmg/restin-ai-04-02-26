@@ -54,29 +54,37 @@ export function getRoleLevel(role: string | undefined): number {
 }
 
 // ─── Route Auth Level Mapping ─────────────────────────────────────
-// Maps route prefixes to the minimum auth elevation needed.
+// Maps route prefixes to auth elevation via Google Authenticator (TOTP).
 // Routes not listed here only need base PIN login.
-// 'password' = verify password (30 min TTL)
-// 'elevated' = verify 2FA/TOTP (15 min TTL)
+// All elevation uses TOTP — no passwords needed.
+// Two tiers: 'elevated' (15 min TTL, critical) and 'protected' (30 min TTL, sensitive)
 
-export type AuthLevel = 'pin' | 'password' | 'elevated';
+export type AuthLevel = 'pin' | 'protected' | 'elevated';
 
 export const ROUTE_AUTH_LEVELS: Record<string, AuthLevel> = {
-    // ── Elevated (2FA) — Critical financial / system actions ──
+    // ── Critical (15 min TTL) — Finance, access control, destructive actions ──
     '/admin/finance': 'elevated',
     '/admin/payroll': 'elevated',
     '/admin/billing': 'elevated',
     '/admin/settings/system': 'elevated',
     '/admin/access-control': 'elevated',
     '/admin/roles-permissions': 'elevated',
+    '/admin/door-access': 'elevated',
 
-    // ── Password — Sensitive management areas ──
-    '/admin/hr': 'password',
-    '/admin/settings': 'password',
-    '/admin/inventory': 'password',
-    '/admin/procurement': 'password',
-    '/admin/compliance': 'password',
-    '/admin/reports': 'password',
+    // ── Sensitive (30 min TTL) — Management areas ──
+    '/admin/hr': 'protected',
+    '/admin/settings': 'protected',
+    '/admin/inventory': 'protected',
+    '/admin/procurement': 'protected',
+    '/admin/compliance': 'protected',
+    '/admin/reports': 'protected',
+};
+
+/** TTL in milliseconds for each auth level */
+export const AUTH_LEVEL_TTL: Record<AuthLevel, number> = {
+    pin: Infinity,
+    protected: 30 * 60 * 1000,  // 30 minutes
+    elevated: 15 * 60 * 1000,   // 15 minutes
 };
 
 /**
@@ -96,3 +104,4 @@ export function getRouteAuthLevel(path: string): AuthLevel {
 
     return bestMatch;
 }
+

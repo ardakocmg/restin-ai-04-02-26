@@ -1,83 +1,70 @@
 /**
- * useAuthElevation — Progressive Authentication Elevation Store
+ * useAuthElevation — Progressive Authentication with Google Authenticator
  *
- * Tracks the current session's auth level (pin → password → elevated/2FA).
- * product_owner always bypasses all elevation checks.
+ * All elevation uses TOTP (Google Authenticator) — NO passwords.
+ * Two tiers:
+ *   - 'protected' = 30 min TTL (HR, inventory, settings)
+ *   - 'elevated'  = 15 min TTL (finance, payroll, access control)
+ *
+ * product_owner bypasses ALL elevation — never sees the modal.
  *
  * Usage:
  *   const { requireElevation, isElevated } = useAuthElevation();
- *
- *   // Check if already elevated
- *   if (!isElevated('password')) {
- *     const granted = await requireElevation('password');
- *     if (!granted) return;
+ *   if (!isElevated('protected')) {
+ *     const granted = await requireElevation('protected');
  *   }
- *
- *   // Or use the requestAndProceed helper
- *   requestAndProceed('elevated', () => { doSensitiveThing(); });
  */
 import { create } from 'zustand';
 import { useCallback, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { AuthLevel, AUTH_LEVEL_TTL } from '../lib/roles';
 
-// ─── Types ────────────────────────────────────────────────
-export type AuthLevel = 'pin' | 'password' | 'elevated';
-
+// ─── Zustand Store ────────────────────────────────────────
 interface ElevationState {
-    /** Current highest confirmed auth level */
-    currentLevel: AuthLevel;
-    /** Timestamp until password elevation is valid */
-    passwordUntil: number | null;
-    /** Timestamp until 2FA elevation is valid */
+    /** Timestamp until 'protected' level is valid */
+    protectedUntil: number | null;
+    /** Timestamp until 'elevated' level is valid */
     elevatedUntil: number | null;
-    /** Whether the elevation modal is currently showing */
+    /** Whether the TOTP modal is currently showing */
     modalOpen: boolean;
     /** Which level the modal is requesting */
     requestedLevel: AuthLevel | null;
     /** Promise resolver for the current elevation request */
     resolveElevation: ((granted: boolean) => void) | null;
 
-    // ─── Actions ─────────────────────────────────────
-    setElevation: (level: AuthLevel, ttlMs: number) => void;
+    // Actions
+    setElevation: (level: AuthLevel) => void;
     clearElevation: () => void;
     openModal: (level: AuthLevel, resolver: (granted: boolean) => void) => void;
     closeModal: (granted: boolean) => void;
 }
 
-// TTLs
-const PASSWORD_TTL_MS = 30 * 60 * 1000; // 30 minutes
-const ELEVATED_TTL_MS = 15 * 60 * 1000; // 15 minutes
-
-// ─── Zustand Store ────────────────────────────────────────
 export const useElevationStore = create<ElevationState>((set, get) => ({
-    currentLevel: 'pin',
-    passwordUntil: null,
+    protectedUntil: null,
     elevatedUntil: null,
     modalOpen: false,
     requestedLevel: null,
     resolveElevation: null,
 
-    setElevation: (level: AuthLevel, ttlMs: number) => {
-        const until = Date.now() + ttlMs;
+    setElevation: (level: AuthLevel) => {
+        const ttl = AUTH_LEVEL_TTL[level] ?? 15 * 60 * 1000;
+        const until = Date.now() + ttl;
 
-        // Store in sessionStorage so it survives page refreshes (but not tab close)
-        if (level === 'password') {
-            sessionStorage.setItem('restin_pw_until', String(until));
-            set({ currentLevel: level, passwordUntil: until });
-        } else if (level === 'elevated') {
+        if (level === 'elevated') {
+            // Elevated also grants protected
             sessionStorage.setItem('restin_elev_until', String(until));
-            set({ currentLevel: level, elevatedUntil: until, passwordUntil: until });
+            sessionStorage.setItem('restin_prot_until', String(until));
+            set({ elevatedUntil: until, protectedUntil: until });
+        } else if (level === 'protected') {
+            sessionStorage.setItem('restin_prot_until', String(until));
+            set({ protectedUntil: until });
         }
     },
 
     clearElevation: () => {
-        sessionStorage.removeItem('restin_pw_until');
+        sessionStorage.removeItem('restin_prot_until');
         sessionStorage.removeItem('restin_elev_until');
-        set({
-            currentLevel: 'pin',
-            passwordUntil: null,
-            elevatedUntil: null,
-        });
+        set({ protectedUntil: null, elevatedUntil: null });
     },
 
     openModal: (level: AuthLevel, resolver: (granted: boolean) => void) => {
@@ -100,18 +87,16 @@ export const useElevationStore = create<ElevationState>((set, get) => ({
 }));
 
 // ─── Restore from sessionStorage on module load ──────────
-const storedPw = sessionStorage.getItem('restin_pw_until');
+const storedProt = sessionStorage.getItem('restin_prot_until');
 const storedElev = sessionStorage.getItem('restin_elev_until');
 if (storedElev && Number(storedElev) > Date.now()) {
     useElevationStore.setState({
-        currentLevel: 'elevated',
         elevatedUntil: Number(storedElev),
-        passwordUntil: Number(storedPw) || Number(storedElev),
+        protectedUntil: Number(storedProt) || Number(storedElev),
     });
-} else if (storedPw && Number(storedPw) > Date.now()) {
+} else if (storedProt && Number(storedProt) > Date.now()) {
     useElevationStore.setState({
-        currentLevel: 'password',
-        passwordUntil: Number(storedPw),
+        protectedUntil: Number(storedProt),
     });
 }
 
@@ -126,39 +111,32 @@ export function useAuthElevation() {
     /** Check if current session meets the required auth level */
     const isElevated = useCallback(
         (requiredLevel: AuthLevel): boolean => {
-            // Super-admin bypasses all elevation
             if (isSuperAdmin) return true;
-
-            // PIN level = always granted (base login)
             if (requiredLevel === 'pin') return true;
 
             const now = Date.now();
-            if (requiredLevel === 'password') {
-                return !!(store.passwordUntil && store.passwordUntil > now);
+            if (requiredLevel === 'protected') {
+                return !!(store.protectedUntil && store.protectedUntil > now);
             }
             if (requiredLevel === 'elevated') {
                 return !!(store.elevatedUntil && store.elevatedUntil > now);
             }
             return false;
         },
-        [isSuperAdmin, store.passwordUntil, store.elevatedUntil]
+        [isSuperAdmin, store.protectedUntil, store.elevatedUntil]
     );
 
-    /** Request elevation — returns a promise that resolves to true/false */
+    /** Request elevation — shows Google Authenticator modal if needed */
     const requireElevation = useCallback(
         (level: AuthLevel): Promise<boolean> => {
-            // Already elevated? Resolve immediately
             if (isElevated(level)) return Promise.resolve(true);
-
-            // Prevent duplicate modals
             if (pendingRef.current) return pendingRef.current;
 
             const promise = new Promise<boolean>((resolve) => {
                 store.openModal(level, (granted: boolean) => {
                     pendingRef.current = null;
                     if (granted) {
-                        const ttl = level === 'elevated' ? ELEVATED_TTL_MS : PASSWORD_TTL_MS;
-                        store.setElevation(level, ttl);
+                        store.setElevation(level);
                     }
                     resolve(granted);
                 });
@@ -180,21 +158,13 @@ export function useAuthElevation() {
     );
 
     return {
-        /** Current auth level */
-        currentLevel: isSuperAdmin ? 'elevated' as AuthLevel : store.currentLevel,
-        /** Check if a level is met */
+        currentLevel: isSuperAdmin ? 'elevated' as AuthLevel : 'pin' as AuthLevel,
         isElevated,
-        /** Request elevation (shows modal if needed) */
         requireElevation,
-        /** Require then execute */
         requestAndProceed,
-        /** Whether the elevation modal is open */
         modalOpen: store.modalOpen,
-        /** The level being requested */
         requestedLevel: store.requestedLevel,
-        /** Whether user is super-admin (never prompted) */
         isSuperAdmin,
-        /** Clear all elevation (on logout) */
         clearElevation: store.clearElevation,
     };
 }
