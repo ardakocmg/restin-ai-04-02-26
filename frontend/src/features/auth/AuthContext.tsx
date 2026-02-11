@@ -64,6 +64,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(null);
         setToken(null);
         authStore.clearAuth();
+        // Clear progressive auth elevation
+        sessionStorage.removeItem('restin_pw_until');
+        sessionStorage.removeItem('restin_elev_until');
     };
 
     const isOwner = () => {

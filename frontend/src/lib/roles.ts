@@ -52,3 +52,47 @@ export function getRoleLevel(role: string | undefined): number {
     if (!role) return 0;
     return ROLE_HIERARCHY[role] ?? 0;
 }
+
+// ─── Route Auth Level Mapping ─────────────────────────────────────
+// Maps route prefixes to the minimum auth elevation needed.
+// Routes not listed here only need base PIN login.
+// 'password' = verify password (30 min TTL)
+// 'elevated' = verify 2FA/TOTP (15 min TTL)
+
+export type AuthLevel = 'pin' | 'password' | 'elevated';
+
+export const ROUTE_AUTH_LEVELS: Record<string, AuthLevel> = {
+    // ── Elevated (2FA) — Critical financial / system actions ──
+    '/admin/finance': 'elevated',
+    '/admin/payroll': 'elevated',
+    '/admin/billing': 'elevated',
+    '/admin/settings/system': 'elevated',
+    '/admin/access-control': 'elevated',
+    '/admin/roles-permissions': 'elevated',
+
+    // ── Password — Sensitive management areas ──
+    '/admin/hr': 'password',
+    '/admin/settings': 'password',
+    '/admin/inventory': 'password',
+    '/admin/procurement': 'password',
+    '/admin/compliance': 'password',
+    '/admin/reports': 'password',
+};
+
+/**
+ * Given a route path, find the highest auth level required.
+ * Checks most-specific first (longest prefix match).
+ */
+export function getRouteAuthLevel(path: string): AuthLevel {
+    let bestMatch: AuthLevel = 'pin';
+    let bestLength = 0;
+
+    for (const [prefix, level] of Object.entries(ROUTE_AUTH_LEVELS)) {
+        if (path.startsWith(prefix) && prefix.length > bestLength) {
+            bestMatch = level;
+            bestLength = prefix.length;
+        }
+    }
+
+    return bestMatch;
+}

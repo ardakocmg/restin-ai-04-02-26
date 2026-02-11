@@ -158,6 +158,8 @@ export const authAPI = {
     const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
     return axios.post(`${backendUrl}/api/auth/setup`, data);
   },
+  // Progressive Auth Elevation — verify password or TOTP to unlock sensitive areas
+  elevateAuth: (body) => api.post('/auth/elevate', body),
 };
 
 // Venue APIs

@@ -1,82 +1,182 @@
 /**
- * RoleRoute — Route-level role guard wrapper
+ * RoleRoute — Route-level role + auth-elevation guard
  *
- * Wraps <Route> elements to enforce role-based access at the routing layer.
- * If user lacks the required role, they see an "Access Restricted" panel
- * instead of the target page.
+ * Wraps <Route> elements to enforce:
+ *   1. Role-based access (user role >= required role)
+ *   2. Progressive auth elevation (PIN → password → 2FA based on route)
+ *
+ * product_owner bypasses ALL checks (role + elevation).
  *
  * Usage in App.tsx:
  *   <Route path="finance" element={<RoleRoute requiredRole="OWNER"><FinanceDashboard /></RoleRoute>} />
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Shield, Lock, ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ROLE_HIERARCHY } from '../../lib/roles';
+import { getRouteAuthLevel, AuthLevel } from '../../lib/roles';
+import { useAuthElevation } from '../../hooks/useAuthElevation';
 
 type RoleLevel = 'STAFF' | 'MANAGER' | 'OWNER';
 
-import { ROLE_HIERARCHY, hasRoleAccess } from '../../lib/roles';
-
-
 interface RoleRouteProps {
     requiredRole: RoleLevel;
+    /** Override the auth level required for this route (defaults to route-based mapping) */
+    authLevel?: AuthLevel;
     children: React.ReactNode;
 }
 
-export default function RoleRoute({ requiredRole, children }: RoleRouteProps) {
+export default function RoleRoute({ requiredRole, authLevel, children }: RoleRouteProps) {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    const { isElevated, requireElevation, isSuperAdmin } = useAuthElevation();
+    const [elevationChecked, setElevationChecked] = useState(false);
+    const [elevationDenied, setElevationDenied] = useState(false);
 
+    // ─── Role Check ─────────────────────────────────────────────
     const userRole = user?.role;
     const userHierarchy = ROLE_HIERARCHY[userRole ?? ''] ?? 0;
     const requiredHierarchy = ROLE_HIERARCHY[requiredRole] ?? 99;
-    const granted = userHierarchy >= requiredHierarchy;
+    const roleGranted = userHierarchy >= requiredHierarchy;
 
-    // Debug: always log role checks so we can diagnose access issues
-    console.log(`[RoleRoute] user.role="${userRole}" (${userHierarchy}) vs required="${requiredRole}" (${requiredHierarchy}) → ${granted ? 'GRANTED' : 'DENIED'}`, { user });
+    // ─── Auth Level Check ───────────────────────────────────────
+    const neededLevel = authLevel || getRouteAuthLevel(location.pathname);
 
-    if (granted) {
-        return <>{children}</>;
+    useEffect(() => {
+        // Reset on route change
+        setElevationChecked(false);
+        setElevationDenied(false);
+    }, [location.pathname]);
+
+    useEffect(() => {
+        if (!roleGranted) return; // Role denied — no need to check elevation
+        if (elevationChecked) return; // Already handled
+        if (isSuperAdmin) {
+            // Super admin — skip elevation entirely
+            setElevationChecked(true);
+            return;
+        }
+        if (neededLevel === 'pin') {
+            // No elevation needed for this route
+            setElevationChecked(true);
+            return;
+        }
+
+        // Check if already elevated
+        if (isElevated(neededLevel)) {
+            setElevationChecked(true);
+            return;
+        }
+
+        // Trigger elevation modal
+        requireElevation(neededLevel).then((granted) => {
+            setElevationChecked(true);
+            if (!granted) {
+                setElevationDenied(true);
+            }
+        });
+    }, [roleGranted, neededLevel, isSuperAdmin, isElevated, requireElevation, elevationChecked]);
+
+    // ─── Role Denied ────────────────────────────────────────────
+    if (!roleGranted) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh] p-6">
+                <div className="max-w-md w-full text-center space-y-6">
+                    {/* Icon */}
+                    <div className="mx-auto w-20 h-20 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                        <Shield className="w-10 h-10 text-red-400" />
+                    </div>
+
+                    {/* Title */}
+                    <div className="space-y-2">
+                        <h2 className="text-xl font-semibold text-foreground">
+                            Access Restricted
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                            This section requires <span className="font-medium text-amber-400">{requiredRole}</span> privileges or higher.
+                        </p>
+                    </div>
+
+                    {/* Info Card */}
+                    <div className="bg-card/50 border border-border rounded-xl p-4 text-left space-y-2">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Lock className="w-4 h-4 shrink-0" />
+                            <span>Your current role: <span className="font-medium text-foreground">{user?.role ?? 'Unknown'}</span></span>
+                        </div>
+                        <p className="text-xs text-muted-foreground/70 pl-6">
+                            Contact your administrator to request elevated access.
+                        </p>
+                    </div>
+
+                    {/* Back Button */}
+                    <button
+                        onClick={() => navigate('/admin/dashboard')}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg bg-zinc-800 text-zinc-200 hover:bg-zinc-700 border border-zinc-700 transition-colors"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        Back to Dashboard
+                    </button>
+                </div>
+            </div>
+        );
     }
 
-    return (
-        <div className="flex items-center justify-center min-h-[60vh] p-6">
-            <div className="max-w-md w-full text-center space-y-6">
-                {/* Icon */}
-                <div className="mx-auto w-20 h-20 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center">
-                    <Shield className="w-10 h-10 text-red-400" />
-                </div>
-
-                {/* Title */}
-                <div className="space-y-2">
-                    <h2 className="text-xl font-semibold text-foreground">
-                        Access Restricted
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                        This section requires <span className="font-medium text-amber-400">{requiredRole}</span> privileges or higher.
-                    </p>
-                </div>
-
-                {/* Info Card */}
-                <div className="bg-card/50 border border-border rounded-xl p-4 text-left space-y-2">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Lock className="w-4 h-4 shrink-0" />
-                        <span>Your current role: <span className="font-medium text-foreground">{user?.role ?? 'Unknown'}</span></span>
+    // ─── Elevation in progress ──────────────────────────────────
+    if (!elevationChecked) {
+        // Show loading state while elevation modal is open
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center space-y-4">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto animate-pulse">
+                        <Lock className="w-6 h-6 text-amber-400" />
                     </div>
-                    <p className="text-xs text-muted-foreground/70 pl-6">
-                        Contact your administrator to request elevated access.
-                    </p>
+                    <p className="text-sm text-muted-foreground">Verifying access level...</p>
                 </div>
-
-                {/* Back Button */}
-                <button
-                    onClick={() => navigate('/admin/dashboard')}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg bg-zinc-800 text-zinc-200 hover:bg-zinc-700 border border-zinc-700 transition-colors"
-                >
-                    <ArrowLeft className="w-4 h-4" />
-                    Back to Dashboard
-                </button>
             </div>
-        </div>
-    );
+        );
+    }
+
+    // ─── Elevation Denied ───────────────────────────────────────
+    if (elevationDenied) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh] p-6">
+                <div className="max-w-md w-full text-center space-y-6">
+                    <div className="mx-auto w-20 h-20 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                        <Lock className="w-10 h-10 text-amber-400" />
+                    </div>
+                    <div className="space-y-2">
+                        <h2 className="text-xl font-semibold text-foreground">
+                            Verification Required
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                            This area requires {neededLevel === 'elevated' ? '2FA' : 'password'} verification.
+                        </p>
+                    </div>
+                    <div className="flex gap-3 justify-center">
+                        <button
+                            onClick={() => navigate('/admin/dashboard')}
+                            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg bg-zinc-800 text-zinc-200 hover:bg-zinc-700 border border-zinc-700 transition-colors"
+                        >
+                            <ArrowLeft className="w-4 h-4" />
+                            Back
+                        </button>
+                        <button
+                            onClick={() => {
+                                setElevationChecked(false);
+                                setElevationDenied(false);
+                            }}
+                            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg bg-red-600/20 text-red-300 hover:bg-red-600/30 border border-red-600/30 transition-colors"
+                        >
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // ─── All checks passed ──────────────────────────────────────
+    return <>{children}</>;
 }

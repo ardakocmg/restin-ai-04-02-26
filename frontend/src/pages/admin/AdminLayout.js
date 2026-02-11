@@ -8,6 +8,7 @@ import { logger } from '../../lib/logger';
 import FloatingChat from '../../components/widgets/FloatingChat';
 import FloatingPTT from '../../components/widgets/FloatingPTT';
 import { GlobalPTTProvider } from '../../contexts/GlobalPTTContext';
+import AuthElevationModal from '../../features/auth/AuthElevationModal';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -99,6 +100,9 @@ export default function AdminLayout() {
           {/* Floating Widgets — visible on all admin pages */}
           <FloatingChat />
           <FloatingPTT />
+
+          {/* Auth Elevation Modal — appears when sensitive areas need password/2FA */}
+          <AuthElevationModal />
         </div>
       </div>
     </GlobalPTTProvider>
