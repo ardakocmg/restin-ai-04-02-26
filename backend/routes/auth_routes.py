@@ -576,6 +576,85 @@ def create_auth_router():
         log_event("pin_changed", {"user_id": user_id})
         return {"success": True}
 
+    # ─── Set / Change Password (for elevation) ─────────────────────────
+    @router.post("/auth/set-password")
+    async def set_password(payload: dict = Body(...), current_user: dict = Depends(get_current_user)):
+        """
+        Set or change the user's password for progressive auth elevation.
+        - If no password exists: just set it (no current_password required).
+        - If password exists: require current_password to change.
+        """
+        user_id = current_user["id"]
+        new_password = payload.get("new_password", "")
+        current_password = payload.get("current_password", "")
+
+        if not new_password or len(new_password) < 6:
+            raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        has_existing = bool(user.get("password_hash"))
+
+        # If user already has a password, verify the current one
+        if has_existing:
+            if not current_password:
+                raise HTTPException(status_code=400, detail="Current password is required to change password")
+            if not verify_password(current_password, user["password_hash"]):
+                await create_audit_log(
+                    user.get("venue_id", ""), user_id, user.get("name", ""),
+                    "password_change_failed", "user", user_id,
+                    {"reason": "wrong_current_password"}
+                )
+                raise HTTPException(status_code=401, detail="Current password is incorrect")
+
+        # Hash and save the new password
+        hashed = hash_password(new_password)
+        await db.users.update_one({"id": user_id}, {"$set": {"password_hash": hashed}})
+
+        action = "password_changed" if has_existing else "password_set"
+        await create_audit_log(
+            user.get("venue_id", ""), user_id, user.get("name", ""),
+            action, "user", user_id, {"method": "manual"}
+        )
+
+        return {"success": True, "message": f"Password {'changed' if has_existing else 'set'} successfully"}
+
+    # ─── Admin: Set Password for Another User ────────────────────────
+    @router.post("/auth/admin/set-password")
+    async def admin_set_password(payload: dict = Body(...), current_user: dict = Depends(get_current_user)):
+        """
+        Admin-only: Set a password for a specific user (no current password required).
+        Only product_owner / owner / general_manager can use this.
+        """
+        admin_role = current_user.get("role", "")
+        if admin_role not in ("product_owner", "owner", "general_manager"):
+            raise HTTPException(status_code=403, detail="Insufficient privileges")
+
+        target_user_id = payload.get("user_id", "")
+        new_password = payload.get("new_password", "")
+
+        if not target_user_id:
+            raise HTTPException(status_code=400, detail="user_id is required")
+        if not new_password or len(new_password) < 6:
+            raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+
+        target_user = await db.users.find_one({"id": target_user_id}, {"_id": 0})
+        if not target_user:
+            raise HTTPException(status_code=404, detail="Target user not found")
+
+        hashed = hash_password(new_password)
+        await db.users.update_one({"id": target_user_id}, {"$set": {"password_hash": hashed}})
+
+        await create_audit_log(
+            current_user.get("venue_id", ""), current_user["id"], current_user.get("name", ""),
+            "admin_password_set", "user", target_user_id,
+            {"admin_id": current_user["id"], "target_user": target_user.get("name", "")}
+        )
+
+        return {"success": True, "message": f"Password set for {target_user.get('name', 'user')}"}
+
     # ─── Progressive Auth Elevation (Password + Google Authenticator) ─
     @router.post("/auth/elevate")
     async def elevate_auth(payload: dict = Body(...), current_user: dict = Depends(get_current_user)):

@@ -38,10 +38,10 @@ import {
 import {
   ArrowLeft, User, Briefcase, CreditCard, MapPin, ShieldCheck,
   Clock, Mail, Phone, FileText, Printer, ChevronRight, Download,
-  Calendar, Save, Loader2, Upload, Trash2, Eye, Shield,
+  Calendar, Save, Loader2, Upload, Trash2, Eye, EyeOff, Shield,
   Key, History, StickyNote, AlertCircle, CheckCircle2,
   DollarSign, Building2, Lock, Unlock, RotateCcw, Plus,
-  PanelLeft
+  PanelLeft, KeyRound
 } from 'lucide-react';
 
 // ─── Status Config ────────────────────────────────────────────────────────────
@@ -129,6 +129,15 @@ export default function EmployeeDetailPage() {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState('');
   const [addingNote, setAddingNote] = useState(false);
+
+  // Password management state
+  const [pwCurrent, setPwCurrent] = useState('');
+  const [pwNew, setPwNew] = useState('');
+  const [pwConfirm, setPwConfirm] = useState('');
+  const [pwShowCurrent, setPwShowCurrent] = useState(false);
+  const [pwShowNew, setPwShowNew] = useState(false);
+  const [pwSaving, setPwSaving] = useState(false);
+  const [hasPassword, setHasPassword] = useState(false);
 
   // ─── Load Employee Data ─────────────────────────────────────────────────────
   const fetchEmployee = useCallback(async () => {
@@ -278,6 +287,48 @@ export default function EmployeeDetailPage() {
       toast.success('PIN reset to default (1111). Employee must change on next login.');
     } catch {
       toast.error('Failed to reset PIN');
+    }
+  };
+
+  // ─── Password Set/Change ──────────────────────────────────────────────────
+  const handlePasswordSave = async () => {
+    if (!pwNew || pwNew.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    if (pwNew !== pwConfirm) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    if (hasPassword && !pwCurrent) {
+      toast.error('Current password is required');
+      return;
+    }
+    setPwSaving(true);
+    try {
+      // If admin is setting password for another user via their employee record
+      if (data.user_id) {
+        await api.post('/auth/admin/set-password', {
+          user_id: data.user_id,
+          new_password: pwNew,
+        });
+      } else {
+        // Self-service (unlikely from admin page, but supported)
+        await api.post('/auth/set-password', {
+          current_password: pwCurrent,
+          new_password: pwNew,
+        });
+      }
+      toast.success(hasPassword ? 'Password changed successfully' : 'Password set successfully');
+      setPwCurrent('');
+      setPwNew('');
+      setPwConfirm('');
+      setHasPassword(true);
+    } catch (error) {
+      const msg = error?.response?.data?.detail || 'Failed to set password';
+      toast.error(msg);
+    } finally {
+      setPwSaving(false);
     }
   };
 
@@ -728,6 +779,98 @@ export default function EmployeeDetailPage() {
                         <RotateCcw className="h-3.5 w-3.5 mr-2" /> Reset PIN
                       </Button>
                     </CardContent>
+                  </Card>
+
+                  {/* Password Management Card */}
+                  <Card className="bg-zinc-900/40 border-white/5 md:col-span-2">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-bold text-white flex items-center gap-2">
+                        <KeyRound className="h-4 w-4 text-violet-400" />
+                        {hasPassword ? 'Change Password' : 'Set Password'}
+                      </CardTitle>
+                      <CardDescription className="text-zinc-500 text-xs">
+                        {data.user_id
+                          ? 'Admin: Set a password for this employee\'s linked user account (used for elevation to sensitive areas)'
+                          : 'No user account linked — link one first to enable password management'}
+                      </CardDescription>
+                    </CardHeader>
+                    {data.user_id ? (
+                      <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {hasPassword && (
+                            <div className="space-y-2">
+                              <Label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Current Password</Label>
+                              <div className="relative">
+                                <Input
+                                  type={pwShowCurrent ? 'text' : 'password'}
+                                  value={pwCurrent}
+                                  onChange={e => setPwCurrent(e.target.value)}
+                                  className="bg-zinc-950 border-zinc-800 text-zinc-200 pr-10"
+                                  placeholder="••••••••"
+                                />
+                                <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-zinc-500 hover:text-white" onClick={() => setPwShowCurrent(!pwShowCurrent)}>
+                                  {pwShowCurrent ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                          <div className="space-y-2">
+                            <Label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">New Password</Label>
+                            <div className="relative">
+                              <Input
+                                type={pwShowNew ? 'text' : 'password'}
+                                value={pwNew}
+                                onChange={e => setPwNew(e.target.value)}
+                                className="bg-zinc-950 border-zinc-800 text-zinc-200 pr-10"
+                                placeholder="Min. 6 chars"
+                              />
+                              <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-zinc-500 hover:text-white" onClick={() => setPwShowNew(!pwShowNew)}>
+                                {pwShowNew ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Confirm Password</Label>
+                            <Input
+                              type="password"
+                              value={pwConfirm}
+                              onChange={e => setPwConfirm(e.target.value)}
+                              className="bg-zinc-950 border-zinc-800 text-zinc-200"
+                              placeholder="••••••••"
+                            />
+                          </div>
+                        </div>
+                        {pwNew && pwConfirm && pwNew !== pwConfirm && (
+                          <p className="text-rose-400 text-xs mt-2 flex items-center gap-1">
+                            <AlertCircle className="h-3 w-3" /> Passwords do not match
+                          </p>
+                        )}
+                        {pwNew && pwNew.length > 0 && pwNew.length < 6 && (
+                          <p className="text-amber-400 text-xs mt-2 flex items-center gap-1">
+                            <AlertCircle className="h-3 w-3" /> Password must be at least 6 characters
+                          </p>
+                        )}
+                        <div className="flex justify-end mt-4">
+                          <Button
+                            onClick={handlePasswordSave}
+                            disabled={pwSaving || !pwNew || pwNew.length < 6 || pwNew !== pwConfirm || (hasPassword && !pwCurrent)}
+                            className="bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold uppercase tracking-widest"
+                          >
+                            {pwSaving ? <><Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" /> Saving...</> : <><KeyRound className="h-3.5 w-3.5 mr-2" /> {hasPassword ? 'Change Password' : 'Set Password'}</>}
+                          </Button>
+                        </div>
+                      </CardContent>
+                    ) : (
+                      <CardContent>
+                        <div className="flex items-center gap-3 p-4 rounded-xl bg-zinc-950/50 border border-dashed border-zinc-800">
+                          <AlertCircle className="h-5 w-5 text-zinc-600 flex-shrink-0" />
+                          <div>
+                            <p className="text-sm font-bold text-zinc-400">No linked user account</p>
+                            <p className="text-[10px] text-zinc-600">Go to User Accounts to create and link a user account first</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    )}
                   </Card>
 
                   <Card className="bg-zinc-900/40 border-white/5">
