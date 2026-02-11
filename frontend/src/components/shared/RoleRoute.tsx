@@ -42,7 +42,15 @@ export default function RoleRoute({ requiredRole, children }: RoleRouteProps) {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    if (hasAccess(user?.role, requiredRole)) {
+    const userRole = user?.role;
+    const userHierarchy = ROLE_HIERARCHY[userRole ?? ''] ?? 0;
+    const requiredHierarchy = ROLE_HIERARCHY[requiredRole] ?? 99;
+    const granted = userHierarchy >= requiredHierarchy;
+
+    // Debug: always log role checks so we can diagnose access issues
+    console.log(`[RoleRoute] user.role="${userRole}" (${userHierarchy}) vs required="${requiredRole}" (${requiredHierarchy}) → ${granted ? 'GRANTED' : 'DENIED'}`, { user });
+
+    if (granted) {
         return <>{children}</>;
     }
 

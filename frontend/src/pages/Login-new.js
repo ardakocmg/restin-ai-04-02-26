@@ -9,10 +9,16 @@ import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Building2, Lock, Shield, ChefHat, LayoutGrid, Monitor, Mail, User, KeyRound } from "lucide-react";
+import authStore from "../lib/AuthStore";
 
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  // Force-clear any stale/corrupt auth on login page mount
+  useEffect(() => {
+    authStore.clearAuth();
+  }, []);
 
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
@@ -361,22 +367,20 @@ export default function Login() {
             <div className="inline-flex bg-zinc-900/80 rounded-lg border border-white/10 p-1">
               <button
                 onClick={() => setLoginMode('pin')}
-                className={`px-4 py-2 rounded-md text-xs font-semibold tracking-wide transition-all flex items-center gap-2 ${
-                  loginMode === 'pin'
+                className={`px-4 py-2 rounded-md text-xs font-semibold tracking-wide transition-all flex items-center gap-2 ${loginMode === 'pin'
                     ? 'bg-zinc-700 text-white shadow-sm'
                     : 'text-zinc-400 hover:text-zinc-300'
-                }`}
+                  }`}
               >
                 <KeyRound className="w-3.5 h-3.5" />
                 PIN
               </button>
               <button
                 onClick={() => setLoginMode('credentials')}
-                className={`px-4 py-2 rounded-md text-xs font-semibold tracking-wide transition-all flex items-center gap-2 ${
-                  loginMode === 'credentials'
+                className={`px-4 py-2 rounded-md text-xs font-semibold tracking-wide transition-all flex items-center gap-2 ${loginMode === 'credentials'
                     ? 'bg-zinc-700 text-white shadow-sm'
                     : 'text-zinc-400 hover:text-zinc-300'
-                }`}
+                  }`}
               >
                 <Mail className="w-3.5 h-3.5" />
                 Credentials
