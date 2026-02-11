@@ -73,7 +73,6 @@ const menuItems = [
   { title: 'Employee Directory', icon: UserCheck, href: '/admin/hr/people', group: 'hr' },
   { title: 'Leave Management', icon: Calendar, href: '/admin/hr/leave-management', group: 'hr' },
   { title: 'Payroll Processing', icon: DollarSign, href: '/admin/hr/payroll', group: 'hr' },
-  { title: 'User Management', icon: Users, href: '/admin/staff', group: 'hr' },
   { title: 'Scheduler', icon: Clock, href: '/admin/hr/scheduler', group: 'hr' },
   { title: 'Clocking Data', icon: Activity, href: '/admin/hr/clocking', group: 'hr' },
   { title: 'Contracts', icon: FileText, href: '/admin/hr/contracts', group: 'hr' },

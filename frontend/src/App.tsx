@@ -383,7 +383,7 @@ function App() {
                                     <Route path="dashboard" element={<SystemDashboard />} />
                                     <Route path="venues" element={<VenueSettings />} />
                                     <Route path="menu" element={<POSSettings />} />
-                                    <Route path="staff" element={<Users />} />
+                                    {/* staff route removed — Users accessible at /admin/users */}
                                     <Route path="inventory" element={<InventoryDashboard />} />
                                     <Route path="pos" element={<POSFeature />} />
                                     <Route path="kds" element={<KDSFeature />} />
