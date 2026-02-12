@@ -56,6 +56,27 @@ async def seed_database():
     print(f"[OK] Created {len(venues)} venues from Master Seed")
     
     # ==================== ZONES ====================
+    # [NEW] Create Venue Group
+    group_id = "group-marvin-gauci"
+    venue_group = {
+        "id": group_id,
+        "name": "Marvin Gauci Group",
+        "slug": "marvin-gauci-group",
+        "owner_id": "user-cb-owner", 
+        "venue_ids": ["venue-caviar-bull", "venue-don-royale", "venue-sole-tarragon"],
+        "created_at": now,
+        "updated_at": now
+    }
+    await db.venue_groups.insert_one(venue_group)
+    print(f"[OK] Created Venue Group: {venue_group['name']}")
+
+    # Link Venues to Group
+    await db.venues.update_many(
+        {"id": {"$in": venue_group["venue_ids"]}},
+        {"$set": {"group_id": group_id}}
+    )
+    print(f"[OK] Linked venues to group {group_id}")
+
     zones = [
         # Caviar & Bull
         {"id": "zone-cb-main", "venue_id": "venue-caviar-bull", "name": "Main Dining", "type": "dining", "created_at": now},
@@ -204,6 +225,11 @@ async def seed_database():
         if 'venueId' in u:
             u['venue_id'] = u.pop('venueId')
         
+        # [NEW] Grant Owner access to all venues
+        if u['id'] == 'user-cb-owner':
+            u['allowed_venue_ids'] = ["venue-caviar-bull", "venue-don-royale", "venue-sole-tarragon"]
+            u['is_super_owner'] = True
+            
     await db.users.insert_many(users)
     print(f"[OK] Created {len(users)} users from Master Seed")
     
