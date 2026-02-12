@@ -374,7 +374,7 @@ export default function EmployeeDetailPage() {
                   <span className="text-zinc-300">Personnel File</span>
                 </div>
                 <h1 className="text-3xl font-black text-white uppercase tracking-tighter">
-                  {data.first_name} {data.last_name}
+                  {data.first_name && data.last_name ? `${data.first_name} ${data.last_name}` : data.full_name || data.name || 'Unknown'}
                 </h1>
               </div>
             </div>
@@ -418,13 +418,13 @@ export default function EmployeeDetailPage() {
 
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="h-28 w-28 rounded-3xl bg-zinc-800 border-2 border-white/10 flex items-center justify-center text-4xl font-black text-zinc-500 shadow-2xl overflow-hidden relative group">
-                {data.first_name?.charAt(0)}{data.last_name?.charAt(0)}
+                {(data.first_name || data.full_name || data.name || '?').charAt(0)}{(data.last_name || '').charAt(0)}
                 <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/10 transition-colors" />
               </div>
               <div className="space-y-3 text-center md:text-left flex-1">
                 <div>
                   <h2 className="text-3xl font-black text-white tracking-tighter uppercase leading-none mb-1">
-                    {data.first_name} {data.last_name}
+                    {data.first_name && data.last_name ? `${data.first_name} ${data.last_name}` : data.full_name || data.name || 'Unknown'}
                   </h2>
                   <p className="text-blue-400 font-bold uppercase tracking-widest text-sm italic">
                     {data.role || data.occupation}

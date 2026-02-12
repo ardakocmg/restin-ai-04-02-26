@@ -140,7 +140,7 @@ export default function EmployeeDirectory() {
         >
           <div className="flex flex-col">
             <span className="font-bold text-white group-hover:text-blue-400 transition-colors">
-              {row.first_name} {row.last_name}
+              {row.first_name && row.last_name ? `${row.first_name} ${row.last_name}` : row.full_name || row.name || 'Unknown'}
             </span>
             <span className="text-[10px] text-zinc-500 uppercase tracking-tighter italic">
               {row.role || row.occupation}
@@ -205,7 +205,7 @@ export default function EmployeeDirectory() {
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       list = list.filter(emp =>
-        `${emp.first_name} ${emp.last_name}`.toLowerCase().includes(q) ||
+        (emp.first_name && emp.last_name ? `${emp.first_name} ${emp.last_name}` : emp.full_name || emp.name || '').toLowerCase().includes(q) ||
         (emp.email || '').toLowerCase().includes(q) ||
         (emp.id_card_number || '').toLowerCase().includes(q) ||
         (emp.display_id || '').toLowerCase().includes(q)
