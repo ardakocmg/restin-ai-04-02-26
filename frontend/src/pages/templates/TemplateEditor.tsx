@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -7,7 +7,8 @@ import {
     Settings2, Sparkles, LayoutTemplate, CheckCircle, AlertTriangle,
     FileText, Bookmark, Building2, Receipt, ListOrdered, Package,
     StickyNote, Percent, CreditCard, Heart, Scale, PenLine,
-    ZoomIn, ZoomOut, Printer, Upload, History, GripVertical
+    ZoomIn, ZoomOut, Printer, Upload, History, GripVertical,
+    Download, Copy, Plus, Wifi, WifiOff, Clock, Tag
 } from 'lucide-react';
 import { toast } from 'sonner';
 import api from '../../lib/api';
@@ -132,6 +133,18 @@ export default function TemplateEditor() {
     const [showThermal, setShowThermal] = useState(false);
     const [zoom, setZoom] = useState(100);
 
+    /* ── Drag & Drop state ─────────────────────────────────── */
+    const [draggingBlockType, setDraggingBlockType] = useState<BlockDef | null>(null);
+    const [draggingCanvasId, setDraggingCanvasId] = useState<string | null>(null);
+    const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+
+    /* ── Sidebar tab data ──────────────────────────────────── */
+    const [assets, setAssets] = useState<Array<{ id: string; name: string; url: string }>>([]);
+    const [versions, setVersions] = useState<Array<{ version: number; published_at: string; notes: string }>>([]);
+    const [auditLog, setAuditLog] = useState<Array<{ action: string; user: string; timestamp: string }>>([]);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const assetInputRef = useRef<HTMLInputElement>(null);
+
     const selectedBlock = useMemo(
         () => blocks.find((b: Record<string, unknown>) => b.id === selectedBlockId) || null,
         [blocks, selectedBlockId]
@@ -153,6 +166,23 @@ export default function TemplateEditor() {
             }).catch(() => toast.error(t('Failed to load template')));
         }
     }, [isNew, id, t]);
+
+    /* ── Load sidebar data when tabs change ─────────────────── */
+    useEffect(() => {
+        if (!id || isNew) return;
+        if (sidebarTab === 'assets') {
+            api.get(`/templates/${id}/assets`).then(r => setAssets(r.data || [])).catch(() => setAssets([]));
+        } else if (sidebarTab === 'audit') {
+            api.get(`/templates/${id}/audit`).then(r => setAuditLog(r.data || [])).catch(() => setAuditLog([]));
+        }
+    }, [sidebarTab, id, isNew]);
+
+    useEffect(() => {
+        if (!id || isNew) return;
+        if (viewMode === 'text') {
+            api.get(`/templates/${id}/versions`).then(r => setVersions(r.data || [])).catch(() => setVersions([]));
+        }
+    }, [viewMode, id, isNew]);
 
     /* ── Block Actions ──────────────────────────────────────── */
     const addBlock = useCallback((bt: BlockDef) => {
@@ -205,6 +235,110 @@ export default function TemplateEditor() {
             }));
         }
     }, []);
+
+    /* ── Drag & Drop ────────────────────────────────────────── */
+    const handlePaletteDragStart = useCallback((e: React.DragEvent, bt: BlockDef) => {
+        setDraggingBlockType(bt);
+        e.dataTransfer.effectAllowed = 'copy';
+    }, []);
+
+    const handleCanvasDragStart = useCallback((e: React.DragEvent, blockId: string) => {
+        setDraggingCanvasId(blockId);
+        e.dataTransfer.effectAllowed = 'move';
+    }, []);
+
+    const handleCanvasDragOver = useCallback((e: React.DragEvent, idx: number) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = draggingBlockType ? 'copy' : 'move';
+        setDragOverIdx(idx);
+    }, [draggingBlockType]);
+
+    const handleCanvasDrop = useCallback((e: React.DragEvent, targetIdx: number) => {
+        e.preventDefault();
+        if (draggingBlockType) {
+            const b: Record<string, unknown> = {
+                id: `blk_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+                type: draggingBlockType.type,
+                label: draggingBlockType.label,
+                order: targetIdx,
+                section: draggingBlockType.type === 'logo' || draggingBlockType.type === 'venue_info' || draggingBlockType.type === 'document_title' ? 'header'
+                    : draggingBlockType.type === 'thank_you' || draggingBlockType.type === 'legal_footer' || draggingBlockType.type === 'signature_line' ? 'footer' : 'body',
+                show_if: null,
+                block_width: 100,
+                ...draggingBlockType.defaultProps
+            };
+            setBlocks(prev => {
+                const arr = [...prev];
+                arr.splice(targetIdx, 0, b);
+                return arr.map((bl, i) => ({ ...bl, order: i }));
+            });
+            setSelectedBlockId(b.id as string);
+        } else if (draggingCanvasId) {
+            setBlocks(prev => {
+                const fromIdx = prev.findIndex(b => b.id === draggingCanvasId);
+                if (fromIdx < 0) return prev;
+                const arr = [...prev];
+                const [moved] = arr.splice(fromIdx, 1);
+                const insertAt = targetIdx > fromIdx ? targetIdx - 1 : targetIdx;
+                arr.splice(insertAt, 0, moved);
+                return arr.map((bl, i) => ({ ...bl, order: i }));
+            });
+        }
+        setDraggingBlockType(null);
+        setDraggingCanvasId(null);
+        setDragOverIdx(null);
+    }, [draggingBlockType, draggingCanvasId]);
+
+    const handleDragEnd = useCallback(() => {
+        setDraggingBlockType(null);
+        setDraggingCanvasId(null);
+        setDragOverIdx(null);
+    }, []);
+
+    /* ── Export / Import ────────────────────────────────────── */
+    const exportTemplate = useCallback(() => {
+        const data = { name: templateName, description: templateDesc, type: templateType, blocks, paper_profile: paperProfile };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${templateName.replace(/\s+/g, '_').toLowerCase()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast.success(t('Template exported'));
+    }, [templateName, templateDesc, templateType, blocks, paperProfile, t]);
+
+    const importTemplate = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                const data = JSON.parse(ev.target?.result as string);
+                if (data.name) setTemplateName(data.name);
+                if (data.description) setTemplateDesc(data.description);
+                if (data.type) setTemplateType(data.type);
+                if (data.blocks) setBlocks(data.blocks);
+                if (data.paper_profile) setPaperProfile(data.paper_profile);
+                toast.success(t('Template imported'));
+            } catch { toast.error(t('Invalid template file')); }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+    }, [t]);
+
+    const handleAssetUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || !id) return;
+        const fd = new FormData();
+        fd.append('file', file);
+        try {
+            const res = await api.post(`/templates/${id}/assets`, fd);
+            setAssets(prev => [...prev, res.data]);
+            toast.success(t('Asset uploaded'));
+        } catch { toast.error(t('Upload failed')); }
+        e.target.value = '';
+    }, [id, t]);
 
     /* ── Save / Publish / Preview ───────────────────────────── */
     const handleSave = async () => {
@@ -332,12 +466,21 @@ export default function TemplateEditor() {
                 return <hr style={{ borderStyle: (dp?.style as string) || 'solid', borderColor: '#333', borderWidth: `${dp?.thickness || 1}px`, margin: '4px 0' }} />;
             case 'qr_barcode':
             case 'barcode':
-                return (
-                    <div style={{ textAlign: 'center', padding: '8px 0' }}>
-                        <Barcode style={{ width: 48, height: 24, margin: '0 auto', color: '#555' }} />
-                        <div style={{ fontSize: 9, color: '#888', marginTop: 2 }}>{(bp?.data_source as string) || 'order.id'}</div>
-                    </div>
-                );
+                {
+                    const fmt = (bp?.format as string) || 'CODE128';
+                    const isQr = fmt === 'QR';
+                    return (
+                        <div style={{ textAlign: 'center', padding: '8px 0' }}>
+                            {isQr
+                                ? <QrCode style={{ width: 48, height: 48, margin: '0 auto', color: '#555' }} />
+                                : <Barcode style={{ width: 48, height: 24, margin: '0 auto', color: '#555' }} />}
+                            {Boolean(bp?.show_text) && (
+                                <div style={{ fontSize: 9, color: '#888', marginTop: 2 }}>{(bp?.data_source as string) || 'order.id'}</div>
+                            )}
+                            <div style={{ fontSize: 8, color: '#aaa', marginTop: 1 }}>{fmt}</div>
+                        </div>
+                    );
+                }
             case 'qr':
                 return (
                     <div style={{ textAlign: 'center', padding: '8px 0' }}>
@@ -398,6 +541,22 @@ export default function TemplateEditor() {
                     <span className="ts-type-chip normal" style={{ marginLeft: 'auto' }}>
                         {isTextType ? 'Normal' : isTableType ? 'Data' : type}
                     </span>
+                </div>
+
+                {/* Block Width Control */}
+                <div className="ts-field">
+                    <label className="ts-label">{t('Block Width')}</label>
+                    <div className="ts-width-buttons">
+                        {[25, 50, 75, 100].map(w => (
+                            <button
+                                key={w}
+                                className={`ts-width-btn ${Number(selectedBlock.block_width || 100) === w ? 'active' : ''}`}
+                                onClick={() => setBlocks(prev => prev.map(b => b.id === bid ? { ...b, block_width: w } : b))}
+                            >
+                                {w}%
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Section selector */}
@@ -593,6 +752,20 @@ export default function TemplateEditor() {
                                 <option value="EAN13">EAN-13</option>
                                 <option value="UPC">UPC-A</option>
                             </select>
+                        </div>
+                        <div className="ts-grid-2">
+                            <div className="ts-field">
+                                <label className="ts-label" htmlFor="ts-bc-h">{t('Height')}</label>
+                                <input id="ts-bc-h" type="number" min={20} max={200} className="ts-input" value={Number(bp?.height || 60)} onChange={e => updateProp(bid, 'barcode_props', 'height', Number(e.target.value))} />
+                            </div>
+                            <div className="ts-field">
+                                <label className="ts-label" htmlFor="ts-bc-w">{t('Width')}</label>
+                                <input id="ts-bc-w" type="number" min={1} max={5} className="ts-input" value={Number(bp?.width || 2)} onChange={e => updateProp(bid, 'barcode_props', 'width', Number(e.target.value))} />
+                            </div>
+                        </div>
+                        <div className="ts-checkbox-row">
+                            <input type="checkbox" id="ts-bc-text" checked={Boolean(bp?.show_text)} onChange={e => updateProp(bid, 'barcode_props', 'show_text', e.target.checked)} />
+                            <label htmlFor="ts-bc-text">{t('Show text label')}</label>
                         </div>
                     </>
                 )}
@@ -828,10 +1001,14 @@ export default function TemplateEditor() {
                                     {cat.blocks.map(bt => (
                                         <button
                                             key={bt.type}
-                                            className="ts-block-item"
+                                            className={`ts-block-item ${draggingBlockType?.type === bt.type ? 'dragging' : ''}`}
                                             onClick={() => addBlock(bt)}
                                             title={t(`Add ${bt.label} block`)}
+                                            draggable
+                                            onDragStart={e => handlePaletteDragStart(e, bt)}
+                                            onDragEnd={handleDragEnd}
                                         >
+                                            <GripVertical className="icon" style={{ width: 12, height: 12, opacity: 0.3 }} />
                                             {bt.icon}
                                             <span>{t(bt.label)}</span>
                                         </button>
@@ -862,63 +1039,258 @@ export default function TemplateEditor() {
                         </div>
                     )}
 
-                    {/* Other tabs — placeholder */}
-                    {!['templates', 'paper'].includes(sidebarTab) && (
-                        <div className="ts-blocks-panel" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.4 }}>
-                            <p style={{ fontSize: 12, textAlign: 'center' }}>{t(`${SIDEBAR_TABS.find(t2 => t2.id === sidebarTab)?.label || ''} — Coming Soon`)}</p>
+                    {/* Printer Routing tab */}
+                    {sidebarTab === 'printer' && (
+                        <div className="ts-blocks-panel">
+                            <div className="ts-block-category-title">{t('Printer Routing')}</div>
+                            {[
+                                { name: 'Kitchen Printer', ip: '192.168.1.100', port: '9100', types: 'KOT', online: true },
+                                { name: 'Bar Printer', ip: '192.168.1.101', port: '9100', types: 'KOT (Bar)', online: true },
+                                { name: 'Receipt Printer', ip: '192.168.1.102', port: '9100', types: 'Receipt, Invoice', online: false },
+                            ].map(pr => (
+                                <div key={pr.name} className="ts-printer-card">
+                                    <div className="ts-printer-card-header">
+                                        <strong>{pr.name}</strong>
+                                        <span className={`ts-printer-status ${pr.online ? 'online' : 'offline'}`}>
+                                            {pr.online ? <><Wifi style={{ width: 10, height: 10 }} /> Online</> : <><WifiOff style={{ width: 10, height: 10 }} /> Offline</>}
+                                        </span>
+                                    </div>
+                                    <div className="ts-printer-card-meta">
+                                        <span>{pr.ip}:{pr.port}</span>
+                                        <span>{pr.types}</span>
+                                    </div>
+                                </div>
+                            ))}
+                            <button className="ts-block-item" style={{ justifyContent: 'center', marginTop: 8 }}>
+                                <Plus className="icon" />
+                                <span>{t('Add Printer')}</span>
+                            </button>
                         </div>
                     )}
-                </div>
 
-                {/* Center: Canvas */}
-                <div className="ts-canvas-area">
-                    <div className="ts-paper" style={{ width: paperWidthPx }}>
-                        {/* Top tear */}
-                        <div className="ts-paper-tear" />
-
-                        {/* Paper content */}
-                        <div className="ts-paper-content" style={{
-                            paddingLeft: paperProfile.margin_left * 2,
-                            paddingRight: paperProfile.margin_right * 2,
-                            paddingTop: paperProfile.margin_top * 2,
-                            paddingBottom: paperProfile.margin_bottom * 2,
-                            fontSize: `${Math.round(12 * (zoom / 100))}px`
-                        }}>
-                            {blocks.length === 0 ? (
-                                <div className="ts-canvas-empty">
-                                    <LayoutTemplate className="icon" />
-                                    <p>{t('Drag blocks to build your template')}</p>
+                    {/* Assets tab */}
+                    {sidebarTab === 'assets' && (
+                        <div className="ts-blocks-panel">
+                            <div className="ts-block-category-title">{t('Assets')}</div>
+                            <div className="ts-asset-grid">
+                                <div className="ts-asset-upload" onClick={() => assetInputRef.current?.click()}>
+                                    <Upload className="icon" />
+                                    <span>{t('Upload')}</span>
                                 </div>
-                            ) : blocks.map(block => (
-                                <div
-                                    key={block.id as string}
-                                    className={`ts-canvas-block ${block.id === selectedBlockId ? 'selected' : ''}`}
-                                    onClick={() => setSelectedBlockId(block.id as string)}
-                                >
-                                    {renderBlockOnCanvas(block)}
+                                {assets.map(a => (
+                                    <div key={a.id} className="ts-asset-card" onClick={() => { navigator.clipboard.writeText(a.url); toast.success(t('URL copied')); }}>
+                                        <Image className="icon" style={{ width: 24, height: 24, color: 'var(--muted-foreground)' }} />
+                                        <div className="ts-asset-overlay"><span>{a.name}</span></div>
+                                    </div>
+                                ))}
+                            </div>
+                            <input ref={assetInputRef} type="file" accept="image/*" onChange={handleAssetUpload} style={{ display: 'none' }} />
+                        </div>
+                    )}
 
-                                    {/* Hover actions */}
-                                    <div className="ts-canvas-block-actions">
-                                        <button className="ts-canvas-block-action" title={t('Move up')} onClick={e => { e.stopPropagation(); moveBlock(block.id as string, 'up'); }}>
-                                            <ChevronUp style={{ width: 12, height: 12 }} />
-                                        </button>
-                                        <button className="ts-canvas-block-action" title={t('Move down')} onClick={e => { e.stopPropagation(); moveBlock(block.id as string, 'down'); }}>
-                                            <ChevronDown style={{ width: 12, height: 12 }} />
-                                        </button>
-                                        <button className="ts-canvas-block-action delete" title={t('Remove block')} onClick={e => { e.stopPropagation(); removeBlock(block.id as string); }}>
-                                            <Trash2 style={{ width: 12, height: 12 }} />
-                                        </button>
+                    {/* Import / Export tab */}
+                    {sidebarTab === 'imports' && (
+                        <div className="ts-blocks-panel">
+                            <div className="ts-block-category-title">{t('Import / Export')}</div>
+                            <button className="ts-export-btn" onClick={exportTemplate}>
+                                <Download className="icon" />
+                                <div>
+                                    {t('Export as JSON')}
+                                    <span className="ts-export-desc">{t('Download template configuration')}</span>
+                                </div>
+                            </button>
+                            <button className="ts-export-btn" onClick={() => fileInputRef.current?.click()}>
+                                <Upload className="icon" />
+                                <div>
+                                    {t('Import from JSON')}
+                                    <span className="ts-export-desc">{t('Load a saved template file')}</span>
+                                </div>
+                            </button>
+                            <input ref={fileInputRef} type="file" accept=".json" onChange={importTemplate} style={{ display: 'none' }} />
+                        </div>
+                    )}
+
+                    {/* Audit tab */}
+                    {sidebarTab === 'audit' && (
+                        <div className="ts-blocks-panel">
+                            <div className="ts-block-category-title">{t('Audit Trail')}</div>
+                            {auditLog.length === 0 ? (
+                                <div style={{ fontSize: 12, color: 'var(--muted-foreground)', textAlign: 'center', padding: '24px 0', opacity: 0.6 }}>
+                                    {t('No audit entries yet')}
+                                </div>
+                            ) : auditLog.map((entry, i) => (
+                                <div key={i} className="ts-audit-row">
+                                    <div className="ts-audit-dot" />
+                                    <div className="ts-audit-body">
+                                        <strong>{entry.action}</strong>
+                                        <small>{entry.user} · {new Date(entry.timestamp).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}</small>
                                     </div>
                                 </div>
                             ))}
                         </div>
-
-                        {/* Bottom tear */}
-                        <div className="ts-paper-tear" />
-                    </div>
+                    )}
                 </div>
 
-                {/* Right: Properties Panel */}
+                {/* Center: Canvas or Text View */}
+                {viewMode === 'canvas' ? (
+                    <div className={`ts-canvas-area ${draggingBlockType || draggingCanvasId ? 'drag-active' : ''}`}
+                        onDragOver={e => { e.preventDefault(); if (blocks.length === 0) setDragOverIdx(0); }}
+                        onDrop={e => handleCanvasDrop(e, blocks.length)}
+                    >
+                        <div className="ts-paper" style={{ width: paperWidthPx }}>
+                            {/* Top tear */}
+                            <div className="ts-paper-tear" />
+
+                            {/* Paper content */}
+                            <div className="ts-paper-content" style={{
+                                paddingLeft: paperProfile.margin_left * 2,
+                                paddingRight: paperProfile.margin_right * 2,
+                                paddingTop: paperProfile.margin_top * 2,
+                                paddingBottom: paperProfile.margin_bottom * 2,
+                                fontSize: `${Math.round(12 * (zoom / 100))}px`
+                            }}>
+                                {blocks.length === 0 ? (
+                                    <div className="ts-canvas-empty"
+                                        onDragOver={e => { e.preventDefault(); setDragOverIdx(0); }}
+                                        onDrop={e => handleCanvasDrop(e, 0)}
+                                    >
+                                        <LayoutTemplate className="icon" />
+                                        <p>{t('Drag blocks here to build your template')}</p>
+                                        {dragOverIdx === 0 && <div className="ts-drop-indicator" />}
+                                    </div>
+                                ) : blocks.map((block, idx) => (
+                                    <React.Fragment key={block.id as string}>
+                                        {dragOverIdx === idx && <div className="ts-drop-indicator" />}
+                                        <div
+                                            className={`ts-canvas-block ${block.id === selectedBlockId ? 'selected' : ''} ${draggingCanvasId === block.id ? 'dragging' : ''}`}
+                                            onClick={() => setSelectedBlockId(block.id as string)}
+                                            draggable
+                                            onDragStart={e => handleCanvasDragStart(e, block.id as string)}
+                                            onDragOver={e => handleCanvasDragOver(e, idx)}
+                                            onDrop={e => handleCanvasDrop(e, idx)}
+                                            onDragEnd={handleDragEnd}
+                                            style={{ width: `${Number(block.block_width || 100)}%` }}
+                                        >
+                                            <div className="ts-row" style={{ gap: 4 }}>
+                                                <GripVertical style={{ width: 12, height: 12, color: '#bbb', cursor: 'grab', flexShrink: 0 }} />
+                                                <div style={{ flex: 1 }}>{renderBlockOnCanvas(block)}</div>
+                                            </div>
+
+                                            {/* Hover actions */}
+                                            <div className="ts-canvas-block-actions">
+                                                <button className="ts-canvas-block-action" title={t('Move up')} onClick={e => { e.stopPropagation(); moveBlock(block.id as string, 'up'); }}>
+                                                    <ChevronUp style={{ width: 12, height: 12 }} />
+                                                </button>
+                                                <button className="ts-canvas-block-action" title={t('Move down')} onClick={e => { e.stopPropagation(); moveBlock(block.id as string, 'down'); }}>
+                                                    <ChevronDown style={{ width: 12, height: 12 }} />
+                                                </button>
+                                                <button className="ts-canvas-block-action delete" title={t('Remove block')} onClick={e => { e.stopPropagation(); removeBlock(block.id as string); }}>
+                                                    <Trash2 style={{ width: 12, height: 12 }} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {dragOverIdx === idx + 1 && idx === blocks.length - 1 && <div className="ts-drop-indicator" />}
+                                    </React.Fragment>
+                                ))}
+                            </div>
+
+                            {/* Bottom tear */}
+                            <div className="ts-paper-tear" />
+                        </div>
+                    </div>
+                ) : (
+                    /* Text & Publish View */
+                    <div className="ts-canvas-area">
+                        <div className="ts-text-view">
+                            {/* Template Info */}
+                            <div className="ts-text-section">
+                                <div className="ts-text-section-title">
+                                    <FileText className="icon" />
+                                    {t('Template Info')}
+                                </div>
+                                <div className="ts-field">
+                                    <label className="ts-label" htmlFor="tv-name">{t('Name')}</label>
+                                    <input id="tv-name" type="text" className="ts-input" value={templateName} onChange={e => setTemplateName(e.target.value)} />
+                                </div>
+                                <div className="ts-field">
+                                    <label className="ts-label" htmlFor="tv-desc">{t('Description')}</label>
+                                    <textarea id="tv-desc" className="ts-textarea" rows={3} value={templateDesc} onChange={e => setTemplateDesc(e.target.value)} placeholder={t('Template description...')} />
+                                </div>
+                                <div className="ts-grid-2">
+                                    <div className="ts-field">
+                                        <label className="ts-label" htmlFor="tv-type">{t('Type')}</label>
+                                        <select id="tv-type" title={t('Type')} className="ts-select" value={templateType} onChange={e => setTemplateType(e.target.value)}>
+                                            <option value="receipt">{t('Receipt')}</option>
+                                            <option value="kot">{t('Kitchen Order')}</option>
+                                            <option value="invoice">{t('Invoice')}</option>
+                                            <option value="report">{t('Report')}</option>
+                                            <option value="label">{t('Label')}</option>
+                                            <option value="custom">{t('Custom')}</option>
+                                        </select>
+                                    </div>
+                                    <div className="ts-field">
+                                        <label className="ts-label">{t('Status')}</label>
+                                        <div className={`ts-type-chip ${templateStatus === 'active' ? 'active-chip' : 'normal'}`} style={{ marginTop: 4 }}>
+                                            {templateStatus === 'active' ? <><CheckCircle style={{ width: 12, height: 12 }} /> {t('Published')}</> : t(templateStatus)}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* JSON View */}
+                            <div className="ts-text-section">
+                                <div className="ts-text-section-title">
+                                    <Layers className="icon" />
+                                    {t('Block Structure')} ({blocks.length} {t('blocks')})
+                                </div>
+                                <pre className="ts-json-viewer">
+                                    {JSON.stringify(blocks.map(b => ({ type: b.type, label: b.label, section: b.section, block_width: b.block_width || 100 })), null, 2)}
+                                </pre>
+                            </div>
+
+                            {/* Version History */}
+                            <div className="ts-text-section">
+                                <div className="ts-text-section-title">
+                                    <History className="icon" />
+                                    {t('Version History')}
+                                </div>
+                                {versions.length === 0 ? (
+                                    <div style={{ fontSize: 12, color: 'var(--muted-foreground)', textAlign: 'center', padding: '16px 0' }}>
+                                        {t('No published versions yet')}
+                                    </div>
+                                ) : versions.map((v, i) => (
+                                    <div key={i} className="ts-version-row">
+                                        <div className="ts-version-badge">v{v.version}</div>
+                                        <div className="ts-version-meta">
+                                            <span>{t('Version')} {v.version}</span>
+                                            <small>{v.notes || t('No notes')} · {new Date(v.published_at).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}</small>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Publish Section */}
+                            {canPublish && !isNew && (
+                                <div className="ts-text-section">
+                                    <div className="ts-text-section-title">
+                                        <Sparkles className="icon" />
+                                        {t('Publish')}
+                                    </div>
+                                    <div className="ts-field">
+                                        <label className="ts-label" htmlFor="tv-notes">{t('Publish Notes')}</label>
+                                        <textarea id="tv-notes" className="ts-textarea" rows={2} placeholder={t('What changed in this version...')} />
+                                    </div>
+                                    <button onClick={handlePublish} disabled={publishing} className="ts-btn ts-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                                        <Sparkles style={{ width: 16, height: 16 }} />
+                                        {publishing ? t('Publishing...') : t('Publish Template')}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+
                 <div className="ts-props-panel">
                     <div className="ts-props-tabs">
                         <button

@@ -166,7 +166,7 @@
 .ts-toolbar-tab.active {
   color: var(--foreground);
   background: hsl(240 3.7% 15.9%);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .ts-paper-select {
@@ -204,8 +204,8 @@
 .ts-paper {
   background: #fff;
   box-shadow:
-    0 4px 24px rgba(0,0,0,0.3),
-    0 0 0 1px rgba(0,0,0,0.05);
+    0 4px 24px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
   border-radius: 3px;
   min-height: 600px;
   position: relative;
@@ -223,13 +223,11 @@
   height: 10px;
   width: 100%;
   opacity: 0.25;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 5px,
-    #ddd 5px,
-    #ddd 10px
-  );
+  background: repeating-linear-gradient(90deg,
+      transparent,
+      transparent 5px,
+      #ddd 5px,
+      #ddd 10px);
 }
 
 /* ── Canvas Blocks ──────────────────────────────────────── */
@@ -244,7 +242,7 @@
 }
 
 .ts-canvas-block:hover {
-  border-color: rgba(150,150,150,0.3);
+  border-color: rgba(150, 150, 150, 0.3);
 }
 
 .ts-canvas-block.selected {
@@ -272,7 +270,7 @@
   padding: 3px;
   border-radius: 4px;
   color: #999;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255, 255, 255, 0.9);
   border: none;
   cursor: pointer;
   transition: all 0.1s ease;
@@ -593,9 +591,17 @@
 
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .ts-sidebar { width: 60px; }
-  .ts-sidebar-nav-item span { display: none; }
-  .ts-props-panel { width: 240px; }
+  .ts-sidebar {
+    width: 60px;
+  }
+
+  .ts-sidebar-nav-item span {
+    display: none;
+  }
+
+  .ts-props-panel {
+    width: 240px;
+  }
 }
 
 /* ── Scrollbar ──────────────────────────────────────────── */
@@ -623,11 +629,426 @@
 
 /* ── Animations ─────────────────────────────────────────── */
 @keyframes ts-fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .ts-block-item,
 .ts-canvas-block {
   animation: ts-fadeIn 0.2s ease-out;
+}
+
+/* ── Drag & Drop ───────────────────────────────────────── */
+.ts-drop-indicator {
+  height: 3px;
+  background: hsl(267 100% 64%);
+  border-radius: 2px;
+  margin: 0 4px;
+  transition: opacity 0.15s ease;
+  box-shadow: 0 0 8px hsl(267 100% 64% / 0.4);
+}
+
+.ts-canvas-block.dragging {
+  opacity: 0.35;
+  transform: scale(0.98);
+}
+
+.ts-block-item.dragging {
+  opacity: 0.4;
+  transform: scale(0.95);
+  border-color: hsl(267 100% 64% / 0.4);
+}
+
+.ts-canvas-area.drag-active {
+  background: hsl(240 5% 14%);
+}
+
+/* ── Text & Publish View ───────────────────────────────── */
+.ts-text-view {
+  flex: 1;
+  overflow: auto;
+  padding: 32px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.ts-text-section {
+  margin-bottom: 24px;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.ts-text-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: hsl(267 100% 72%);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ts-text-section-title .icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ── JSON Viewer ───────────────────────────────────────── */
+.ts-json-viewer {
+  background: hsl(240 10% 6%);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: hsl(120 40% 70%);
+  max-height: 400px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* ── Version History ───────────────────────────────────── */
+.ts-version-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  cursor: default;
+}
+
+.ts-version-row:hover {
+  background: hsl(240 3.7% 15.9% / 0.4);
+  border-color: var(--border);
+}
+
+.ts-version-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: hsl(267 100% 64% / 0.15);
+  color: hsl(267 100% 72%);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.ts-version-meta {
+  flex: 1;
+}
+
+.ts-version-meta span {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.ts-version-meta small {
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+
+/* ── Asset Grid ────────────────────────────────────────── */
+.ts-asset-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.ts-asset-card {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  background: hsl(240 3.7% 15.9% / 0.5);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ts-asset-card:hover {
+  border-color: hsl(267 100% 64% / 0.4);
+  transform: scale(1.02);
+}
+
+.ts-asset-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ts-asset-card .ts-asset-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 8px;
+}
+
+.ts-asset-card:hover .ts-asset-overlay {
+  opacity: 1;
+}
+
+.ts-asset-card .ts-asset-overlay span {
+  font-size: 10px;
+  color: #fff;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ts-asset-upload {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  border: 2px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: var(--muted-foreground);
+}
+
+.ts-asset-upload:hover {
+  border-color: hsl(267 100% 64% / 0.4);
+  background: hsl(267 100% 64% / 0.05);
+  color: hsl(267 100% 72%);
+}
+
+.ts-asset-upload .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.ts-asset-upload span {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* ── Audit Log ─────────────────────────────────────────── */
+.ts-audit-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid hsl(240 3.7% 15.9% / 0.4);
+}
+
+.ts-audit-row:last-child {
+  border-bottom: none;
+}
+
+.ts-audit-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: hsl(267 100% 64%);
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.ts-audit-body {
+  flex: 1;
+}
+
+.ts-audit-body strong {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--foreground);
+  display: block;
+}
+
+.ts-audit-body small {
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+
+/* ── Printer Card ──────────────────────────────────────── */
+.ts-printer-card {
+  padding: 12px;
+  border-radius: 10px;
+  background: hsl(240 3.7% 15.9% / 0.4);
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+  transition: all 0.15s ease;
+}
+
+.ts-printer-card:hover {
+  border-color: hsl(267 100% 64% / 0.3);
+}
+
+.ts-printer-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.ts-printer-card-header strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.ts-printer-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.ts-printer-status.online {
+  background: hsl(142 71% 45% / 0.15);
+  color: hsl(142 71% 45%);
+}
+
+.ts-printer-status.offline {
+  background: hsl(0 72% 51% / 0.15);
+  color: hsl(0 72% 51%);
+}
+
+.ts-printer-card-meta {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── Export / Import Buttons ───────────────────────────── */
+.ts-export-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: hsl(240 3.7% 15.9% / 0.4);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  margin-bottom: 8px;
+}
+
+.ts-export-btn:hover {
+  background: hsl(267 100% 64% / 0.08);
+  border-color: hsl(267 100% 64% / 0.3);
+  color: hsl(267 100% 72%);
+}
+
+.ts-export-btn .icon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+}
+
+.ts-export-btn .ts-export-desc {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  display: block;
+  margin-top: 2px;
+}
+
+/* ── Width Control ─────────────────────────────────────── */
+.ts-width-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.ts-width-btn {
+  flex: 1;
+  padding: 6px 0;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: hsl(240 3.7% 15.9% / 0.4);
+  color: var(--muted-foreground);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.ts-width-btn:hover {
+  border-color: hsl(267 100% 64% / 0.3);
+}
+
+.ts-width-btn.active {
+  background: hsl(267 100% 64% / 0.15);
+  color: hsl(267 100% 72%);
+  border-color: hsl(267 100% 64% / 0.4);
+}
+
+/* ── Separator ─────────────────────────────────────────── */
+.ts-separator {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 8px;
+}
+
+/* ── Utility ──────────────────────────────────────────── */
+.ts-row {
+  display: flex;
+  align-items: center;
+}
+
+.ts-textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: hsl(240 5% 10%);
+  color: var(--foreground);
+  font-size: 12px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.ts-textarea:focus {
+  border-color: hsl(267 100% 64% / 0.5);
+}
+
+.ts-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
