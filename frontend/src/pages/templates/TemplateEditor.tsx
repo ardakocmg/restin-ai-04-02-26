@@ -313,7 +313,7 @@ export default function TemplateEditor() {
             case 'payment_summary':
                 return (
                     <div style={{ padding: '4px 0' }}>
-                        {(tbp?.show_header) && (
+                        {Boolean(tbp?.show_header) && (
                             <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid #ccc', paddingBottom: 2, marginBottom: 4 }}>
                                 {((tbp?.columns as Array<Record<string, string>>) || []).map((c, i) => (
                                     <div key={i} style={{ flex: 1, fontSize: 10, fontWeight: 600, textAlign: (c.align as 'left' | 'center' | 'right') || 'left', color: '#666' }}>{c.label}</div>
