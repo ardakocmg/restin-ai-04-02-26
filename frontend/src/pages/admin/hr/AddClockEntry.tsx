@@ -109,7 +109,7 @@ export default function AddClockEntry() {
                 const res = await api.get(`/api/venues/${activeVenue.id}/hr/employees`);
                 setEmployees(res.data || []);
             } catch (err) {
-                logger.error('Failed to fetch employees', err);
+                logger.error('Failed to fetch employees', err as Record<string, unknown>);
             }
         };
         fetchEmployees();

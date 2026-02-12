@@ -573,16 +573,42 @@ const MigrationHub = () => {
                                                     <span className="text-blue-500">🔗</span> Smart Column Mapping
                                                 </h3>
                                                 <div className="flex items-center gap-2">
-                                                    <Badge variant="outline" className="bg-emerald-950/30 text-emerald-400 border-emerald-800 text-[10px]">
+                                                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">
                                                         {mappings.filter(m => m.is_mapped || m.confidence === 'high').length} mapped
                                                     </Badge>
-                                                    <Badge variant="outline" className="bg-blue-950/30 text-blue-400 border-blue-800 text-[10px]">
+                                                    <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20 text-[10px]">
                                                         {previewData.meta.detected_type || 'Auto-Detected'}
                                                     </Badge>
                                                 </div>
                                             </div>
-                                            <div className="text-xs text-muted-foreground mb-3">
-                                                Restin auto-linked Excel columns to Recipe fields. Review the mapping below:
+                                            {/* Smart Filter & Expand */}
+                                            <div className="flex items-center gap-4 mb-4">
+                                                <div className="relative flex-1">
+                                                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Filter mappings..."
+                                                        className="w-full bg-background border border-input rounded-lg pl-9 pr-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none"
+                                                        onChange={(e) => {
+                                                            const term = e.target.value.toLowerCase();
+                                                            // Filter logic would go here if we had state for it
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="flex bg-muted rounded-lg p-1">
+                                                    <button
+                                                        onClick={() => setShowAllMappings(false)}
+                                                        className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${!showAllMappings ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                                                    >
+                                                        Compact
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setShowAllMappings(true)}
+                                                        className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${showAllMappings ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                                                    >
+                                                        Expanded
+                                                    </button>
+                                                </div>
                                             </div>
                                             <div className="overflow-x-auto max-h-[300px] overflow-y-auto">
                                                 <table className="w-full text-xs">

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useVenue } from '../context/VenueContext';
+import { useTheme } from '../context/ThemeContext';
 import { cn } from '@/lib/utils';
-import { Bell, Search, Settings, User, LogOut, ChevronDown, X, Wifi, WifiOff, AlertTriangle, ShieldCheck, ShieldAlert, Moon, Sun, Building2, Check } from 'lucide-react';
+import { Bell, Search, Settings, User, LogOut, ChevronDown, X, Wifi, WifiOff, AlertTriangle, ShieldCheck, ShieldAlert, Moon, Sun, Building2, Check, Monitor } from 'lucide-react';
 import { useSafeMode } from '../context/SafeModeContext';
 import { Button } from '../components/ui/button';
 import {
@@ -18,6 +19,7 @@ import {
 export default function NewTopBar() {
   const { user, logout } = useAuth();
   const { activeVenue, venues, selectVenue } = useVenue();
+  const { mode, setMode } = useTheme();
   const { isSafeMode, setSafeMode } = useSafeMode();
   const location = useLocation();
   const navigate = useNavigate();
@@ -304,9 +306,26 @@ export default function NewTopBar() {
         </div>
 
         {/* Theme Toggle */}
-        <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-white/5 transition-colors">
-          <Moon className="h-5 w-5" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-white/5 transition-colors">
+              {mode === 'dark' ? <Moon className="h-5 w-5" /> :
+                mode === 'light' ? <Sun className="h-5 w-5" /> :
+                  <Monitor className="h-5 w-5" />}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-[#0F0F10] border-white/10 text-zinc-200">
+            <DropdownMenuItem onClick={() => setMode('light')} className={cn("cursor-pointer focus:bg-white/5", mode === 'light' && "bg-white/10")}>
+              <Sun className="mr-2 h-4 w-4" /> Light
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setMode('dark')} className={cn("cursor-pointer focus:bg-white/5", mode === 'dark' && "bg-white/10")}>
+              <Moon className="mr-2 h-4 w-4" /> Dark
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setMode('system')} className={cn("cursor-pointer focus:bg-white/5", mode === 'system' && "bg-white/10")}>
+              <Monitor className="mr-2 h-4 w-4" /> System
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <div className="w-px h-8 bg-white/5"></div>
 

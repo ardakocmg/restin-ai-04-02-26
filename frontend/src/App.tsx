@@ -357,10 +357,11 @@ function RootOverlays() {
 }
 
 function App() {
-  useEffect(() => {
-    document.documentElement.classList.add('dark');
-    document.body.style.backgroundColor = '#0A0A0B';
-  }, []);
+  // Theme is now handled by ThemeContext
+  // useEffect(() => {
+  //   document.documentElement.classList.add('dark');
+  //   document.body.style.backgroundColor = '#0A0A0B';
+  // }, []);
 
   return (
     <ErrorBoundary>

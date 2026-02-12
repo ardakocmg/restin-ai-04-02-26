@@ -22,6 +22,8 @@ export interface ThemeColors {
     sidebarActiveText: string;
 }
 
+export type ThemeMode = 'dark' | 'light' | 'system';
+
 export const PRESET_THEMES: Record<string, ThemeColors> = {
     professional_blue: {
         id: 'professional_blue',
@@ -121,6 +123,8 @@ export interface ThemeContextValue {
     customColors: ThemeColors | null;
     setTheme: (theme: ThemeColors) => void;
     saveTheme: (themeId: string, customTheme?: ThemeColors | null) => Promise<boolean>;
+    mode: ThemeMode;
+    setMode: (mode: ThemeMode) => void;
     loading: boolean;
 }
 
@@ -133,7 +137,48 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps): JSX.Element {
     const [currentTheme, setCurrentTheme] = useState<ThemeColors>(PRESET_THEMES.professional_blue);
     const [customColors, setCustomColors] = useState<ThemeColors | null>(null);
+    const [mode, setModeState] = useState<ThemeMode>(() => {
+        if (typeof window !== 'undefined') {
+            return (localStorage.getItem('restin_theme_mode') as ThemeMode) || 'system';
+        }
+        return 'system';
+    });
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const root = window.document.documentElement;
+        root.classList.remove('light', 'dark');
+
+        if (mode === 'system') {
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            root.classList.add(systemTheme);
+            root.style.colorScheme = systemTheme;
+        } else {
+            root.classList.add(mode);
+            root.style.colorScheme = mode;
+        }
+    }, [mode]);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const handleChange = () => {
+            if (mode === 'system') {
+                const root = window.document.documentElement;
+                const systemTheme = mediaQuery.matches ? 'dark' : 'light';
+                root.classList.remove('light', 'dark');
+                root.classList.add(systemTheme);
+                root.style.colorScheme = systemTheme;
+            }
+        };
+
+        mediaQuery.addEventListener('change', handleChange);
+        return () => mediaQuery.removeEventListener('change', handleChange);
+    }, [mode]);
+
+    const setMode = (newMode: ThemeMode) => {
+        setModeState(newMode);
+        localStorage.setItem('restin_theme_mode', newMode);
+    };
 
     useEffect(() => {
         loadVenueTheme();
@@ -220,6 +265,8 @@ export function ThemeProvider({ children }: ThemeProviderProps): JSX.Element {
         customColors,
         setTheme: applyTheme,
         saveTheme,
+        mode,
+        setMode,
         loading
     };
 
