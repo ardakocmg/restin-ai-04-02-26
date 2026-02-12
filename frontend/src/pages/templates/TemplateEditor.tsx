@@ -161,7 +161,7 @@ export default function TemplateEditor() {
                 setTemplateDesc(d.description || '');
                 setTemplateType(d.type || 'receipt');
                 setTemplateStatus(d.status || 'draft');
-                setBlocks(d.blocks || []);
+                setBlocks(Array.isArray(d.blocks) ? d.blocks : []);
                 if (d.paper_profile) setPaperProfile(d.paper_profile);
             }).catch(() => toast.error(t('Failed to load template')));
         }
@@ -171,16 +171,16 @@ export default function TemplateEditor() {
     useEffect(() => {
         if (!id || isNew) return;
         if (sidebarTab === 'assets') {
-            api.get(`/templates/${id}/assets`).then(r => setAssets(r.data || [])).catch(() => setAssets([]));
+            api.get(`/templates/${id}/assets`).then(r => setAssets(Array.isArray(r.data) ? r.data : [])).catch(() => setAssets([]));
         } else if (sidebarTab === 'audit') {
-            api.get(`/templates/${id}/audit`).then(r => setAuditLog(r.data || [])).catch(() => setAuditLog([]));
+            api.get(`/templates/${id}/audit`).then(r => setAuditLog(Array.isArray(r.data) ? r.data : [])).catch(() => setAuditLog([]));
         }
     }, [sidebarTab, id, isNew]);
 
     useEffect(() => {
         if (!id || isNew) return;
         if (viewMode === 'text') {
-            api.get(`/templates/${id}/versions`).then(r => setVersions(r.data || [])).catch(() => setVersions([]));
+            api.get(`/templates/${id}/versions`).then(r => setVersions(Array.isArray(r.data) ? r.data : [])).catch(() => setVersions([]));
         }
     }, [viewMode, id, isNew]);
 
