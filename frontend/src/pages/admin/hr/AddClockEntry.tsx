@@ -157,7 +157,7 @@ export default function AddClockEntry() {
         } catch (err: unknown) {
             const errorMsg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail || 'Failed to add clock entry';
             toast.error(errorMsg);
-            logger.error('Failed to submit clock entry', err);
+            logger.error('Failed to submit clock entry', err as Record<string, unknown>);
         } finally {
             setSubmitting(false);
         }

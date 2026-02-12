@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useVenue } from '../context/VenueContext';
 import { useTheme } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Bell, Search, Settings, User, LogOut, ChevronDown, X, Wifi, WifiOff, AlertTriangle, ShieldCheck, ShieldAlert, Moon, Sun, Building2, Check, Monitor } from 'lucide-react';
 import { useSafeMode } from '../context/SafeModeContext';
@@ -17,6 +18,7 @@ import {
 } from '../components/ui/dropdown-menu';
 
 export default function NewTopBar() {
+  const { i18n } = useTranslation();
   const { user, logout } = useAuth();
   const { activeVenue, venues, selectVenue } = useVenue();
   const { mode, setMode } = useTheme();
@@ -304,6 +306,36 @@ export default function NewTopBar() {
             )} />
           </button>
         </div>
+
+        {/* Region & Language (Malta) */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-9 w-auto px-2 gap-2 hover:bg-white/5 transition-colors" title="Region: Malta (EUR)">
+              <span className="text-xl leading-none">🇲🇹</span>
+              <span className="text-zinc-400 font-medium text-sm">€</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-[#0F0F10] border-white/10 text-zinc-200 min-w-[140px]">
+            <DropdownMenuLabel className="text-xs text-zinc-500 font-normal uppercase tracking-wider">
+              FISCAL REGION
+            </DropdownMenuLabel>
+            <DropdownMenuItem className="focus:bg-transparent cursor-default">
+              <span className="mr-3 text-lg">🇲🇹</span> Malta (MT)
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator className="bg-white/10" />
+
+            <DropdownMenuLabel className="text-xs text-zinc-500 font-normal uppercase tracking-wider">
+              INTERFACE LANGUAGE
+            </DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => i18n.changeLanguage('en')} className={cn("cursor-pointer focus:bg-white/5 font-medium", i18n.language === 'en' && "bg-white/10 text-blue-400")}>
+              <span className="mr-3 text-lg">🇬🇧</span> English
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => i18n.changeLanguage('mt')} className={cn("cursor-pointer focus:bg-white/5 font-medium", i18n.language === 'mt' && "bg-white/10 text-blue-400")}>
+              <span className="mr-3 text-lg">🇲🇹</span> Malti
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Theme Toggle */}
         <DropdownMenu>
