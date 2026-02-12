@@ -201,7 +201,7 @@ export default function Login() {
 
         try {
             // Load Google Identity Services if not already loaded
-            if (!(window as Record<string, unknown>).google) {
+            if (!(window as unknown as Record<string, unknown>).google) {
                 await new Promise<void>((resolve, reject) => {
                     const script = document.createElement('script');
                     script.src = 'https://accounts.google.com/gsi/client';
@@ -212,7 +212,7 @@ export default function Login() {
                 });
             }
 
-            const google = (window as Record<string, unknown>).google as {
+            const google = (window as unknown as Record<string, unknown>).google as {
                 accounts: {
                     id: {
                         initialize: (config: Record<string, unknown>) => void;
