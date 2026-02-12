@@ -117,7 +117,7 @@ export default function WorkspaceSettings() {
             const promises = [];
 
             // Only Owners can see/edit Workspace Domain settings
-            if (isOwner) {
+            if (isOwner()) {
                 promises.push(api.get(`/workspace/domains?venue_id=${venueId}`).then(res => setConfig(res.data.data)));
             }
 
@@ -279,22 +279,22 @@ export default function WorkspaceSettings() {
                     Google Integration Hub
                 </h1>
                 <p className="text-base text-muted-foreground mt-2">
-                    {isOwner
+                    {isOwner()
                         ? "Manage Single Sign-On, Domain Verification, and Business Profile."
                         : "Manage Venue Presence, Reviews, and Operational Sync."
                     }
                 </p>
             </div>
 
-            <Tabs defaultValue={isOwner ? "workspace" : "marketing"} className="w-full">
-                <TabsList className={`grid w-full ${isOwner ? "grid-cols-3" : "grid-cols-2"} bg-muted/50 p-1 mb-6`}>
-                    {isOwner && <TabsTrigger value="workspace">Workspace & SSO</TabsTrigger>}
+            <Tabs defaultValue={isOwner() ? "workspace" : "marketing"} className="w-full">
+                <TabsList className={`grid w-full ${isOwner() ? "grid-cols-3" : "grid-cols-2"} bg-muted/50 p-1 mb-6`}>
+                    {isOwner() && <TabsTrigger value="workspace">Workspace & SSO</TabsTrigger>}
                     <TabsTrigger value="marketing">Marketing & Presence</TabsTrigger>
                     <TabsTrigger value="operations">Operations</TabsTrigger>
                 </TabsList>
 
                 {/* ── TAB: WORKSPACE & SSO ──────────────────────────────── */}
-                {isOwner && (
+                {isOwner() && (
                     <TabsContent value="workspace" className="space-y-6">
 
                         {/* SSO Status Card */}
