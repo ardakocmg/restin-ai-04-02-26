@@ -115,6 +115,7 @@ const Scheduler = React.lazy(() => import("./pages/admin/hr/Scheduler"));
 const ClockingData = React.lazy(() => import("./pages/admin/hr/ClockingData"));
 const ManualClocking = React.lazy(() => import("./pages/admin/hr/ManualClocking"));
 const ApprovalCenter = React.lazy(() => import("./pages/admin/hr/ApprovalCenter"));
+const ApprovalSettings = React.lazy(() => import("./pages/admin/hr/ApprovalSettings"));
 const HRImport = React.lazy(() => import("./pages/admin/hr/HRImport"));
 const HRMap = React.lazy(() => import("./pages/admin/hr/HRMap"));
 const HRExceptions = React.lazy(() => import("./pages/admin/hr/HRExceptions"));
@@ -607,6 +608,7 @@ function App() {
                                       <Route path="clocking" element={<RoleRoute requiredRole="MANAGER"><ClockingData /></RoleRoute>} />
                                       <Route path="manual-clocking" element={<ManualClocking />} />
                                       <Route path="approvals" element={<RoleRoute requiredRole="STAFF"><ApprovalCenter /></RoleRoute>} />
+                                      <Route path="approval-settings" element={<RoleRoute requiredRole="OWNER"><ApprovalSettings /></RoleRoute>} />
 
                                       {/* Duplicate payroll route removed — PayrollPage at line 574 is the canonical route */}
                                       <Route path="payroll/:runId" element={<RoleRoute requiredRole="OWNER"><PayrollRunDetail /></RoleRoute>} />

@@ -172,6 +172,7 @@ from routes.employee_portal import router as employee_portal_router
 from routes.scheduler import router as scheduler_router
 from routes.clocking_data import router as clocking_data_router
 from routes.approval_routes import router as approval_router
+from routes.approval_settings_routes import router as approval_settings_router
 from routes.employee_setup import router as employee_setup_router
 # Legacy HR Analytics Routes removed (migrated to hr_analytics_advanced)
 from routes.sick_leave_analysis import router as sick_leave_analysis_router
@@ -613,6 +614,7 @@ api_main.include_router(employee_portal_router)
 api_main.include_router(scheduler_router)
 api_main.include_router(clocking_data_router)
 api_main.include_router(approval_router)
+api_main.include_router(approval_settings_router)
 api_main.include_router(employee_setup_router)
 # Migrated: api_main.include_router(headcount_router)
 # Migrated: api_main.include_router(turnover_router)

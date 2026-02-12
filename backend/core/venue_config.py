@@ -30,7 +30,30 @@ DEFAULTS = {
         "stock_deduction_trigger": "ORDER_CLOSED",
         "invoice_matching": "THREE_WAY",
         "negative_stock_policy": "WARN",
-        "fifo_enforced": True
+        "fifo_enforced": True,
+        "approval": {
+            "manual_clocking": {
+                "staff_app_requires_approval": True,
+                "auto_clocking_requires_approval": False,
+                "shift_mismatch_requires_approval": True,
+                "shift_mismatch_tolerance_minutes": 15,
+                "auto_approve_enabled": False,
+                "allowed_approvers": ["manager", "owner", "hr"],
+                "specific_approver_ids": []
+            },
+            "leave": {
+                "requires_approval": True,
+                "auto_approve_enabled": False,
+                "allowed_approvers": ["manager", "owner", "hr"],
+                "specific_approver_ids": []
+            },
+            "expense": {
+                "requires_approval": True,
+                "auto_approve_enabled": False,
+                "allowed_approvers": ["owner"],
+                "specific_approver_ids": []
+            }
+        }
     }
 }
 

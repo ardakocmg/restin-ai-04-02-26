@@ -81,6 +81,7 @@ const menuItems = [
   { title: 'Clocking Data', icon: Activity, href: '/admin/hr/clocking', group: 'hr', requiredRole: 'MANAGER' },
   { title: 'Manual Clocking', icon: Timer, href: '/admin/hr/manual-clocking', group: 'hr', requiredRole: 'STAFF' },
   { title: 'Approval Center', icon: UserCheck, href: '/admin/hr/approvals', group: 'hr', requiredRole: 'STAFF' },
+  { title: 'Approval Settings', icon: Settings, href: '/admin/hr/approval-settings', group: 'hr', requiredRole: 'OWNER' },
   { title: 'Contracts', icon: FileText, href: '/admin/hr/contracts', group: 'hr', requiredRole: 'OWNER' },
   { title: 'Documents', icon: FileText, href: '/admin/hr/documents', group: 'hr', requiredRole: 'MANAGER' },
   { title: 'Shift Planning', icon: Clock, href: '/admin/hr/shifts', group: 'hr', requiredRole: 'MANAGER' },
