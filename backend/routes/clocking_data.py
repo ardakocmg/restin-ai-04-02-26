@@ -145,7 +145,7 @@ async def clock_in(
     current_user: dict = Depends(get_current_user),
     db=Depends(get_database)
 ):
-    """Clock in — creates a new active clocking record"""
+    """Clock in — creates a new active clocking record (or approval request)"""
     venue_id = current_user.get("venueId") or "GLOBAL"
     user_id = current_user.get("userId") or current_user.get("id") or ""
     user_name = current_user.get("fullName") or current_user.get("name") or "Unknown"
@@ -171,6 +171,98 @@ async def clock_in(
     if active:
         raise HTTPException(status_code=409, detail="Employee already clocked in")
 
+    # ── CHECK APPROVAL SETTINGS ──────────────────────────────────────────
+    needs_approval = False
+    approval_reason = ""
+
+    venue_cfg = await db.venue_configs.find_one({"venue_id": venue_id})
+    approval_rules = {}
+    if venue_cfg:
+        rules = venue_cfg.get("rules", {})
+        approval_rules = rules.get("approval", {}).get("manual_clocking", {})
+    else:
+        # Use defaults from venue_config module
+        try:
+            from core.venue_config import DEFAULTS
+            approval_rules = DEFAULTS.get("rules", {}).get("approval", {}).get("manual_clocking", {})
+        except Exception:
+            approval_rules = {}
+
+    # Check if staff app requires approval
+    if approval_rules.get("staff_app_requires_approval", True):
+        needs_approval = True
+        approval_reason = "Staff app manual clocking requires approval"
+
+    # Check auto-approve override
+    if approval_rules.get("auto_approve_enabled", False):
+        needs_approval = False
+
+    # Check shift mismatch
+    if approval_rules.get("shift_mismatch_triggers_approval", True):
+        now_utc = datetime.now(timezone.utc)
+        now_malta = now_utc.astimezone(MALTA_TZ)
+        today_str = now_malta.strftime("%Y-%m-%d")
+        tolerance = approval_rules.get("shift_mismatch_tolerance_minutes", 15)
+
+        scheduled_shift = await db.shifts.find_one({
+            "employee_id": target_emp_id,
+            "date": today_str,
+            "venue_id": venue_id
+        })
+
+        if scheduled_shift:
+            shift_start_str = scheduled_shift.get("start_time", "")
+            if "T" in shift_start_str:
+                shift_start_str = shift_start_str[11:16]
+            try:
+                shift_start_dt = datetime.strptime(f"{today_str} {shift_start_str}", "%Y-%m-%d %H:%M")
+                clock_in_dt = datetime.strptime(f"{today_str} {now_malta.strftime('%H:%M')}", "%Y-%m-%d %H:%M")
+                diff_mins = abs((clock_in_dt - shift_start_dt).total_seconds() / 60)
+                if diff_mins > tolerance:
+                    needs_approval = True
+                    approval_reason = f"Shift mismatch: clocking at {now_malta.strftime('%H:%M')}, shift starts at {shift_start_str} ({int(diff_mins)}min diff)"
+            except Exception:
+                pass
+        elif not scheduled_shift:
+            needs_approval = True
+            approval_reason = "No scheduled shift found for today"
+
+    # ── IF APPROVAL NEEDED → CREATE REQUEST ──────────────────────────────
+    if needs_approval:
+        now_utc = datetime.now(timezone.utc)
+        now_malta = now_utc.astimezone(MALTA_TZ)
+        approval_id = str(uuid.uuid4())
+        approval_doc = {
+            "id": approval_id,
+            "venue_id": venue_id,
+            "type": "manual_clocking",
+            "source": "staff_app",
+            "employee_id": target_emp_id,
+            "employee_name": target_emp_name,
+            "requested_by": user_id,
+            "requested_by_name": user_name,
+            "reason": approval_reason,
+            "details": {
+                "date": now_malta.strftime("%d/%m/%Y"),
+                "time": now_malta.strftime("%H:%M"),
+                "cost_centre": request.cost_centre or request.work_area or "N/A",
+                "work_area": request.work_area,
+                "remark": request.remark,
+                "device_name": request.device_name,
+            },
+            "status": "pending",
+            "created_at": now_utc.isoformat(),
+        }
+        await db.approval_requests.insert_one(approval_doc)
+        return {
+            "success": True,
+            "requires_approval": True,
+            "approval_id": approval_id,
+            "message": f"Clock-in sent for approval: {approval_reason}",
+            "status": "pending_approval",
+        }
+
+    # ── DIRECT CLOCK-IN (no approval needed) ─────────────────────────────
     # Capture client IP — prefer X-Forwarded-For (reverse proxy), else direct
     client_ip = request.ip_address
     if not client_ip:

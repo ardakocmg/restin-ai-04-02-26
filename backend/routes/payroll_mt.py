@@ -162,12 +162,23 @@ def create_payroll_mt_router():
         current_user: dict = Depends(get_current_user)
     ):
         await check_venue_access(current_user, venue_id)
-        
-        from services.reporting_malta import MaltaReportingService
-        svc = MaltaReportingService(db)
-        
-        report = await svc.generate_fs5_data(venue_id, month, year)
-        return {"ok": True, "data": report}
+
+        # Try reporting service first
+        try:
+            from services.reporting_malta import MaltaReportingService
+            svc = MaltaReportingService(db)
+            report = await svc.generate_fs5_data(venue_id, month, year)
+            if report:
+                return {"ok": True, "data": report}
+        except Exception:
+            pass
+
+        # Fallback: query seeded fs5_forms collection directly
+        fs5_id = f"fs5-{year}-{month:02d}"
+        fs5 = await db.fs5_forms.find_one({"id": fs5_id, "venue_id": venue_id}, {"_id": 0})
+        if fs5:
+            return {"ok": True, "data": fs5}
+        return {"ok": False, "error": f"No FS5 data for {year}-{month:02d}"}
 
     @router.get("/payroll-mt/reports/fs3")
     async def get_fs3_report(
@@ -177,12 +188,84 @@ def create_payroll_mt_router():
         current_user: dict = Depends(get_current_user)
     ):
         await check_venue_access(current_user, venue_id)
-        
-        from services.reporting_malta import MaltaReportingService
-        svc = MaltaReportingService(db)
-        
-        report = await svc.get_employee_annual_summary(venue_id, employee_id, year)
-        return {"ok": True, "data": report}
+
+        # Try reporting service first
+        try:
+            from services.reporting_malta import MaltaReportingService
+            svc = MaltaReportingService(db)
+            report = await svc.get_employee_annual_summary(venue_id, employee_id, year)
+            if report:
+                return {"ok": True, "data": report}
+        except Exception:
+            pass
+
+        # Fallback: query seeded fs3_entries by employee_id
+        fs3 = await db.fs3_entries.find_one(
+            {"employee_id": employee_id, "year": year, "venue_id": venue_id},
+            {"_id": 0}
+        )
+        if not fs3:
+            # Try by employee_code (legacy)
+            fs3 = await db.fs3_entries.find_one(
+                {"employee_code": employee_id, "year": year, "venue_id": venue_id},
+                {"_id": 0}
+            )
+        if fs3:
+            return {"ok": True, "data": fs3}
+        return {"ok": False, "error": f"No FS3 data for employee {employee_id}, year {year}"}
+
+    @router.get("/payroll-mt/reports/fs7")
+    async def get_fs7_report(
+        venue_id: str,
+        year: int,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Annual reconciliation statement"""
+        await check_venue_access(current_user, venue_id)
+        fs7 = await db.fs7_forms.find_one(
+            {"venue_id": venue_id, "year": year},
+            {"_id": 0}
+        )
+        if fs7:
+            return {"ok": True, "data": fs7}
+        return {"ok": False, "error": f"No FS7 data for year {year}"}
+
+    # ── LIST endpoints for all compliance forms ──────────────────────────
+    @router.get("/payroll-mt/compliance/fs3")
+    async def list_fs3_entries(
+        venue_id: str,
+        year: int = 2025,
+        current_user: dict = Depends(get_current_user)
+    ):
+        await check_venue_access(current_user, venue_id)
+        entries = await db.fs3_entries.find(
+            {"venue_id": venue_id, "year": year}, {"_id": 0}
+        ).to_list(200)
+        return {"ok": True, "data": entries, "count": len(entries)}
+
+    @router.get("/payroll-mt/compliance/fs5")
+    async def list_fs5_forms(
+        venue_id: str,
+        year: int = 2025,
+        current_user: dict = Depends(get_current_user)
+    ):
+        await check_venue_access(current_user, venue_id)
+        forms = await db.fs5_forms.find(
+            {"venue_id": venue_id, "year": year}, {"_id": 0}
+        ).sort("month", 1).to_list(12)
+        return {"ok": True, "data": forms, "count": len(forms)}
+
+    @router.get("/payroll-mt/compliance/fs7")
+    async def list_fs7_forms(
+        venue_id: str,
+        year: int = 2025,
+        current_user: dict = Depends(get_current_user)
+    ):
+        await check_venue_access(current_user, venue_id)
+        forms = await db.fs7_forms.find(
+            {"venue_id": venue_id, "year": year}, {"_id": 0}
+        ).to_list(10)
+        return {"ok": True, "data": forms, "count": len(forms)}
 
     @router.get("/payroll-mt/run/{run_id}/payslip/{employee_id}/pdf")
     async def get_payslip_pdf(
