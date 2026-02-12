@@ -5,7 +5,10 @@ from core.dependencies import get_current_user, get_database
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 import uuid
+
+MALTA_TZ = ZoneInfo("Europe/Malta")
 
 router = APIRouter(prefix="/clocking", tags=["Clocking Data"])
 
@@ -177,14 +180,15 @@ async def clock_in(
         elif raw_request.client:
             client_ip = raw_request.client.host
 
-    now = datetime.now(timezone.utc)
+    now_utc = datetime.now(timezone.utc)
+    now_malta = now_utc.astimezone(MALTA_TZ)
     record = ClockingRecord(
         id=str(uuid.uuid4()),
         venue_id=venue_id,
         employee_id=target_emp_id,
-        day_of_week=now.strftime("%A"),
-        date=now.strftime("%d/%m/%Y"),
-        clocking_in=now.strftime("%H:%M"),
+        day_of_week=now_malta.strftime("%A"),
+        date=now_malta.strftime("%d/%m/%Y"),
+        clocking_in=now_malta.strftime("%H:%M"),
         clocking_out=None,
         hours_worked=0.0,
         status="active",
@@ -231,8 +235,9 @@ async def clock_out(
     if not active:
         raise HTTPException(status_code=404, detail="No active clocking session found")
 
-    now = datetime.now(timezone.utc)
-    clock_out_time = now.strftime("%H:%M")
+    now_utc = datetime.now(timezone.utc)
+    now_malta = now_utc.astimezone(MALTA_TZ)
+    clock_out_time = now_malta.strftime("%H:%M")
 
     # Calculate hours worked
     try:
