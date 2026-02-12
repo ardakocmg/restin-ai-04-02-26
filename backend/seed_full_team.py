@@ -260,19 +260,27 @@ async def seed():
 
     for e in EMPLOYEES:
         pin = PIN_MAP.get(e["code"], "1234")
+        role_upper = e["role"].upper()
+        # Auth system expects "OWNER" for managers (maps to UserRole.OWNER)
+        if role_upper == "MANAGER":
+            role_upper = "OWNER"
+
         user_doc = {
             "id": emp_ids[e["code"]],
             "name": e["full_name"],
             "fullName": e["full_name"],
             "email": e["email"],
             "pin": pin,
-            "pinHash": _pin_hash(pin),
-            "role": e["role"].upper(),
+            "pin_hash": _pin_hash(pin),
+            "role": role_upper,
+            "venue_id": VENUE_ID,
             "venueId": VENUE_ID,
             "venueName": "Marvin Gauci Group",
             "department": e["department"],
             "employeeCode": e["code"],
             "active": True,
+            "allowed_venue_ids": [VENUE_ID],
+            "default_venue_id": VENUE_ID,
             "profilePicture": None,
             "created_at": datetime.now(timezone.utc).isoformat(),
         }
