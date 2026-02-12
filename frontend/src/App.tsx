@@ -113,6 +113,7 @@ const PayrollRunDetail = React.lazy(() => import("./pages/admin/hr/PayrollRunDet
 const PayslipViewer = React.lazy(() => import("./pages/admin/hr/PayslipViewer"));
 const Scheduler = React.lazy(() => import("./pages/admin/hr/Scheduler"));
 const ClockingData = React.lazy(() => import("./pages/admin/hr/ClockingData"));
+const ManualClocking = React.lazy(() => import("./pages/admin/hr/ManualClocking"));
 const HRImport = React.lazy(() => import("./pages/admin/hr/HRImport"));
 const HRMap = React.lazy(() => import("./pages/admin/hr/HRMap"));
 const HRExceptions = React.lazy(() => import("./pages/admin/hr/HRExceptions"));
@@ -603,6 +604,7 @@ function App() {
                                       <Route path="summary" element={<RoleRoute requiredRole="MANAGER"><SummaryDashboard /></RoleRoute>} />
                                       <Route path="dashboard" element={<RoleRoute requiredRole="MANAGER"><SummaryDashboard /></RoleRoute>} />
                                       <Route path="clocking" element={<RoleRoute requiredRole="MANAGER"><ClockingData /></RoleRoute>} />
+                                      <Route path="manual-clocking" element={<ManualClocking />} />
 
                                       {/* Duplicate payroll route removed — PayrollPage at line 574 is the canonical route */}
                                       <Route path="payroll/:runId" element={<RoleRoute requiredRole="OWNER"><PayrollRunDetail /></RoleRoute>} />

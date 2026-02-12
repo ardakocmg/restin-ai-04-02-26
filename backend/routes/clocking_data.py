@@ -1,32 +1,56 @@
 """Clocking Data Routes"""
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Request
 from models.clocking_data import ClockingRecord, ClockingDataRequest
 from core.dependencies import get_current_user, get_database
-from typing import List
-from datetime import datetime
+from pydantic import BaseModel, Field
+from typing import List, Optional, Dict, Any
+from datetime import datetime, timezone
+import uuid
 
 router = APIRouter(prefix="/clocking", tags=["Clocking Data"])
 
 
+# ── Request / Response Models ────────────────────────────
+class ClockInRequest(BaseModel):
+    employee_id: Optional[str] = None  # Managers can clock in on behalf
+    work_area: Optional[str] = None
+    cost_centre: Optional[str] = None
+    remark: Optional[str] = None
+    device_name: Optional[str] = None
+    # Device & Location tracking
+    device_info: Optional[Dict[str, Any]] = None  # Browser, OS, platform, UA, screen
+    geolocation: Optional[Dict[str, Any]] = None   # lat, lng, accuracy
+    ip_address: Optional[str] = None  # Forwarded from frontend if available
+
+
+class ClockOutRequest(BaseModel):
+    record_id: Optional[str] = None  # Specific record to close
+    employee_id: Optional[str] = None  # Or find active by employee
+    remark: Optional[str] = None
+    geolocation: Optional[Dict[str, Any]] = None  # Location at clock-out
+
+
+class WorkArea(BaseModel):
+    id: str
+    name: str
+    code: str
+
+
+# ── POST /clocking/data — Existing: Get clocking data for range ──
 @router.post("/data", response_model=List[ClockingRecord])
 async def get_clocking_data(
     request: ClockingDataRequest,
     current_user: dict = Depends(get_current_user),
-    db = Depends(get_database)
+    db=Depends(get_database)
 ):
     """Get clocking data for date range (Lazy Seed from Mock)"""
     venue_id = current_user.get("venueId") or "GLOBAL"
 
-    # 1. Check if DB is empty for this venue (or globally if shared)
-    # Using "GLOBAL" concept: data is shared or specific? Mock data is generic.
-    # We will check if ANY records exist.
     count = await db["clocking_records"].count_documents({})
-    
+
     if count == 0:
-        # SEED DATA
         from mock_data_store import MOCK_CLOCKING, MOCK_EMPLOYEES
-        
-        # 1. Ensure Employees Exist First (Foreign Key Requirement)
+
         emp_count = await db.employees.count_documents({})
         if emp_count == 0:
             seed_emps = []
@@ -38,7 +62,7 @@ async def get_clocking_data(
                     "full_name": emp["full_name"],
                     "email": emp["email"],
                     "role": "staff",
-                    "department": emp["department"], 
+                    "department": emp["department"],
                     "employment_status": "active",
                     "start_date": emp.get("employment_date"),
                     "phone": emp.get("mobile"),
@@ -49,80 +73,309 @@ async def get_clocking_data(
                 })
             if seed_emps:
                 await db.employees.insert_many(seed_emps)
-        
-        # 2. Build Map for Linking (Code -> UUID)
-        # We need to link clocking records (which have "code") to the real DB ID
+
         emp_map = {}
         all_emps = await db.employees.find({}, {"id": 1, "display_id": 1}).to_list(2000)
         for e in all_emps:
             if "display_id" in e:
                 emp_map[e["display_id"]] = e["id"]
 
-        # 3. Seed Clocking Data with Links
         seed_docs = []
         for clk in MOCK_CLOCKING:
-            # Resolve Employee ID
-            emp_code = clk.get("employee_code") # Check if mock has this, otherwise fallback
+            emp_code = clk.get("employee_code")
             if not emp_code:
-                # Mock clocking id might look like clk_1001_123, extract 1001
                 parts = clk["id"].split("_")
                 if len(parts) >= 2:
                     emp_code = parts[1]
-            
+
             real_emp_id = emp_map.get(emp_code)
-            
-            # If no employee found (rare in mock consistency), fallback or skip
             if not real_emp_id:
-                # Try finding by name match as fallback
-                found = False
-                for e in all_emps:
-                    # Logic: if name in clocking matches name in emp? Mock store consistency is good usually.
-                    pass
-                
-                # If still failing, generate a placeholder ID or use venue generic?
-                # For integrity we need a value. Let's use a placeholder if missing.
-                real_emp_id = f"missing_link_{emp_code}" 
+                real_emp_id = f"missing_link_{emp_code}"
 
             record = ClockingRecord(
                 id=clk["id"],
                 venue_id=venue_id,
-                employee_id=real_emp_id, # LINKED!
+                employee_id=real_emp_id,
                 day_of_week=datetime.strptime(clk["date"], "%d/%m/%Y").strftime("%A"),
                 date=clk["date"],
                 clocking_in=clk["clock_in"],
                 clocking_out=clk["clock_out"],
                 hours_worked=clk.get("hours_worked", 0.0),
+                status="completed",
                 employee_name=clk["employee_name"],
                 employee_designation=clk.get("designation", "Staff"),
                 cost_centre=clk.get("cost_centre", clk.get("vendor", "N/A")),
+                work_area=clk.get("cost_centre", None),
+                source_device="terminal",
+                device_name=clk.get("device", "Term_01"),
                 modified_by="System",
                 created_by="Term_01",
                 remark=clk["remarks"]
             )
             seed_docs.append(record.model_dump(by_alias=True))
-        
+
         if seed_docs:
             await db["clocking_records"].insert_many(seed_docs)
 
-    # 2. Query DB
-    # Filter by venue? For now, fetch all or matching venue
-    # query = {"venue_id": venue_id} 
-    query = {} # Fetch all for now as seeded data might share context, or strict?
-    # Strict is better:
+    query = {}
     if venue_id != "GLOBAL":
         query["venue_id"] = venue_id
 
     cursor = db["clocking_records"].find(query)
     records = [ClockingRecord(**doc) async for doc in cursor]
-    
-    # 3. Filter (Search)
+
     if request.search_query:
         query_lower = request.search_query.lower()
         records = [
             r for r in records
             if query_lower in r.employee_name.lower()
         ]
-        
-    # Optional: Date filtering could be added here if needed
-    
+
     return records
+
+
+# ── POST /clocking/clock-in — Start a new clocking session ──
+@router.post("/clock-in")
+async def clock_in(
+    request: ClockInRequest,
+    raw_request: Request,
+    current_user: dict = Depends(get_current_user),
+    db=Depends(get_database)
+):
+    """Clock in — creates a new active clocking record"""
+    venue_id = current_user.get("venueId") or "GLOBAL"
+    user_id = current_user.get("userId") or current_user.get("id") or ""
+    user_name = current_user.get("fullName") or current_user.get("name") or "Unknown"
+
+    # Determine which employee is clocking in
+    target_emp_id = request.employee_id or user_id
+    target_emp_name = user_name
+
+    # If clocking on behalf of someone, look up their name
+    if request.employee_id and request.employee_id != user_id:
+        emp_doc = await db.employees.find_one({"id": request.employee_id})
+        if emp_doc:
+            target_emp_name = emp_doc.get("full_name") or emp_doc.get("name") or "Unknown"
+        else:
+            raise HTTPException(status_code=404, detail="Employee not found")
+
+    # Check for existing active session
+    active = await db["clocking_records"].find_one({
+        "employee_id": target_emp_id,
+        "status": "active",
+        "venue_id": venue_id
+    })
+    if active:
+        raise HTTPException(status_code=409, detail="Employee already clocked in")
+
+    # Capture client IP — prefer X-Forwarded-For (reverse proxy), else direct
+    client_ip = request.ip_address
+    if not client_ip:
+        forwarded = raw_request.headers.get("x-forwarded-for")
+        if forwarded:
+            client_ip = forwarded.split(",")[0].strip()
+        elif raw_request.client:
+            client_ip = raw_request.client.host
+
+    now = datetime.now(timezone.utc)
+    record = ClockingRecord(
+        id=str(uuid.uuid4()),
+        venue_id=venue_id,
+        employee_id=target_emp_id,
+        day_of_week=now.strftime("%A"),
+        date=now.strftime("%d/%m/%Y"),
+        clocking_in=now.strftime("%H:%M"),
+        clocking_out=None,
+        hours_worked=0.0,
+        status="active",
+        employee_name=target_emp_name,
+        cost_centre=request.cost_centre or request.work_area or "N/A",
+        work_area=request.work_area,
+        source_device="web_manual",
+        device_name=request.device_name or "Web Browser",
+        ip_address=client_ip,
+        device_info=request.device_info,
+        geolocation=request.geolocation,
+        modified_by=user_name,
+        created_by=user_name,
+        remark=request.remark
+    )
+
+    await db["clocking_records"].insert_one(record.model_dump(by_alias=True))
+
+    return {"success": True, "record_id": record.id, "clocked_in_at": record.clocking_in, "status": "active"}
+
+
+# ── POST /clocking/clock-out — End an active clocking session ──
+@router.post("/clock-out")
+async def clock_out(
+    request: ClockOutRequest,
+    current_user: dict = Depends(get_current_user),
+    db=Depends(get_database)
+):
+    """Clock out — find and close active record, calculate hours"""
+    venue_id = current_user.get("venueId") or "GLOBAL"
+    user_id = current_user.get("userId") or current_user.get("id") or ""
+    user_name = current_user.get("fullName") or current_user.get("name") or "Unknown"
+
+    target_emp_id = request.employee_id or user_id
+
+    # Find active record
+    query = {"status": "active", "venue_id": venue_id}
+    if request.record_id:
+        query["id"] = request.record_id
+    else:
+        query["employee_id"] = target_emp_id
+
+    active = await db["clocking_records"].find_one(query)
+    if not active:
+        raise HTTPException(status_code=404, detail="No active clocking session found")
+
+    now = datetime.now(timezone.utc)
+    clock_out_time = now.strftime("%H:%M")
+
+    # Calculate hours worked
+    try:
+        cin = datetime.strptime(active["clocking_in"], "%H:%M")
+        cout = datetime.strptime(clock_out_time, "%H:%M")
+        diff_minutes = (cout - cin).total_seconds() / 60
+        if diff_minutes < 0:
+            diff_minutes += 1440  # Overnight shift
+        hours_worked = round(diff_minutes / 60, 2)
+    except (ValueError, KeyError):
+        hours_worked = 0.0
+
+    update_set = {
+        "clocking_out": clock_out_time,
+        "hours_worked": hours_worked,
+        "status": "completed",
+        "modified_by": user_name,
+        "remark": request.remark or active.get("remark")
+    }
+    if request.geolocation:
+        update_set["clock_out_geolocation"] = request.geolocation
+
+    await db["clocking_records"].update_one(
+        {"id": active["id"]},
+        {"$set": update_set}
+    )
+
+    return {
+        "success": True,
+        "record_id": active["id"],
+        "clocked_out_at": clock_out_time,
+        "hours_worked": hours_worked,
+        "status": "completed"
+    }
+
+
+# ── GET /clocking/active — Currently clocked-in employees ──
+@router.get("/active")
+async def get_active_sessions(
+    current_user: dict = Depends(get_current_user),
+    db=Depends(get_database)
+):
+    """Get all currently active (clocked in) sessions"""
+    venue_id = current_user.get("venueId") or "GLOBAL"
+    query = {"status": "active"}
+    if venue_id != "GLOBAL":
+        query["venue_id"] = venue_id
+
+    cursor = db["clocking_records"].find(query)
+    records = []
+    async for doc in cursor:
+        records.append({
+            "id": doc.get("id"),
+            "employee_id": doc.get("employee_id"),
+            "employee_name": doc.get("employee_name"),
+            "clocking_in": doc.get("clocking_in"),
+            "date": doc.get("date"),
+            "work_area": doc.get("work_area"),
+            "cost_centre": doc.get("cost_centre"),
+            "source_device": doc.get("source_device"),
+            "device_name": doc.get("device_name"),
+            "ip_address": doc.get("ip_address"),
+            "device_info": doc.get("device_info"),
+            "geolocation": doc.get("geolocation"),
+        })
+
+    return records
+
+
+# ── GET /clocking/my-status — Am I clocked in? ──
+@router.get("/my-status")
+async def my_clocking_status(
+    current_user: dict = Depends(get_current_user),
+    db=Depends(get_database)
+):
+    """Check current user's clocking status"""
+    venue_id = current_user.get("venueId") or "GLOBAL"
+    user_id = current_user.get("userId") or current_user.get("id") or ""
+
+    active = await db["clocking_records"].find_one({
+        "employee_id": user_id,
+        "status": "active",
+        "venue_id": venue_id
+    })
+
+    if active:
+        return {
+            "clocked_in": True,
+            "record_id": active.get("id"),
+            "clocking_in": active.get("clocking_in"),
+            "date": active.get("date"),
+            "work_area": active.get("work_area"),
+            "cost_centre": active.get("cost_centre"),
+        }
+
+    # Last completed session
+    last = await db["clocking_records"].find_one(
+        {"employee_id": user_id, "status": "completed", "venue_id": venue_id},
+        sort=[("created_at", -1)]
+    )
+
+    return {
+        "clocked_in": False,
+        "last_session": {
+            "date": last.get("date"),
+            "clocking_in": last.get("clocking_in"),
+            "clocking_out": last.get("clocking_out"),
+            "hours_worked": last.get("hours_worked"),
+        } if last else None
+    }
+
+
+# ── GET /clocking/work-areas — Available work areas ──
+@router.get("/work-areas")
+async def get_work_areas(
+    current_user: dict = Depends(get_current_user),
+    db=Depends(get_database)
+):
+    """Get available work areas / cost centres for the venue"""
+    venue_id = current_user.get("venueId") or "GLOBAL"
+
+    # Pull distinct cost centres from existing records
+    pipeline = [
+        {"$match": {"venue_id": venue_id} if venue_id != "GLOBAL" else {}},
+        {"$group": {"_id": "$cost_centre"}},
+        {"$sort": {"_id": 1}}
+    ]
+    cursor = db["clocking_records"].aggregate(pipeline)
+    areas = []
+    async for doc in cursor:
+        code = doc["_id"]
+        if code and code != "N/A":
+            areas.append({"id": code, "name": code, "code": code})
+
+    # Add common defaults if empty
+    if not areas:
+        defaults = [
+            {"id": "FOH", "name": "Front of House", "code": "FOH"},
+            {"id": "BOH", "name": "Back of House", "code": "BOH"},
+            {"id": "BAR", "name": "Bar", "code": "BAR"},
+            {"id": "KITCHEN", "name": "Kitchen", "code": "KITCHEN"},
+            {"id": "ADMIN", "name": "Administration", "code": "ADMIN"},
+        ]
+        areas = defaults
+
+    return areas
