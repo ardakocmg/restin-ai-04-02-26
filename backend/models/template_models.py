@@ -14,6 +14,13 @@ from enum import Enum
 class PaperWidth(str, Enum):
     NARROW = "58mm"
     WIDE = "80mm"
+    EXTRA_WIDE = "112mm"
+    A4 = "A4"
+    A5 = "A5"
+    LETTER = "Letter"
+    LABEL_100X50 = "Label100x50"
+    LABEL_62 = "Label62"
+    CUSTOM = "custom"
 
 
 class TemplateStatus(str, Enum):
@@ -27,17 +34,33 @@ class TemplateType(str, Enum):
     KOT = "kot"  # Kitchen Order Ticket
     INVOICE = "invoice"
     REPORT = "report"
+    LABEL = "label"
     CUSTOM = "custom"
 
 
 class BlockType(str, Enum):
+    # Header blocks
+    LOGO = "logo"
+    VENUE_INFO = "venue_info"
+    DOCUMENT_TITLE = "document_title"
+    QR_BARCODE = "qr_barcode"
+    # Content blocks
     TEXT = "text"
     IMAGE = "image"
     TABLE = "table"
+    ITEMS_LIST = "items_list"
+    GROUPED_ITEMS = "grouped_items"
+    NOTES = "notes"
+    DISCOUNTS_CHARGES = "discounts_charges"
+    PAYMENT_SUMMARY = "payment_summary"
     DIVIDER = "divider"
     BARCODE = "barcode"
     QR = "qr"
     FISCAL = "fiscal"  # Reserved for fiscal ID/QR injection
+    # Footer blocks
+    THANK_YOU = "thank_you"
+    LEGAL_FOOTER = "legal_footer"
+    SIGNATURE_LINE = "signature_line"
 
 
 class AssetStatus(str, Enum):

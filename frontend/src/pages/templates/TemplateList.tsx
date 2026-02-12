@@ -147,6 +147,7 @@ export default function TemplateList() {
                     value={filterStatus}
                     onChange={e => setFilterStatus(e.target.value)}
                     className="px-3 py-2.5 rounded-xl bg-card border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-violet-500/40 appearance-none cursor-pointer"
+                    title={t('Filter by status')}
                 >
                     <option value="">{t('All Status')}</option>
                     <option value="draft">{t('Draft')}</option>
@@ -158,12 +159,14 @@ export default function TemplateList() {
                     value={filterType}
                     onChange={e => setFilterType(e.target.value)}
                     className="px-3 py-2.5 rounded-xl bg-card border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-violet-500/40 appearance-none cursor-pointer"
+                    title={t('Filter by type')}
                 >
                     <option value="">{t('All Types')}</option>
                     <option value="receipt">{t('Receipt')}</option>
                     <option value="kot">{t('Kitchen Order')}</option>
                     <option value="invoice">{t('Invoice')}</option>
                     <option value="report">{t('Report')}</option>
+                    <option value="label">{t('Label')}</option>
                     <option value="custom">{t('Custom')}</option>
                 </select>
             </div>

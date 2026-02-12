@@ -1,0 +1,633 @@
+/* ═══════════════════════════════════════════════════════════
+   Template Studio — Dedicated Stylesheet
+   Dark zinc/violet palette, no inline styles
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Layout ─────────────────────────────────────────────── */
+.ts-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--background, hsl(240 10% 3.9%));
+  color: var(--foreground, hsl(0 0% 98%));
+}
+
+.ts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 52px;
+  border-bottom: 1px solid var(--border, hsl(240 3.7% 15.9%));
+  background: var(--card, hsl(240 10% 3.9%));
+}
+
+.ts-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Left Sidebar ───────────────────────────────────────── */
+.ts-sidebar {
+  width: 200px;
+  border-right: 1px solid var(--border, hsl(240 3.7% 15.9%));
+  background: var(--card, hsl(240 10% 3.9%));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.ts-sidebar-nav {
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ts-sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted-foreground, hsl(240 5% 64.9%));
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.ts-sidebar-nav-item:hover {
+  background: hsl(240 3.7% 15.9% / 0.6);
+  color: var(--foreground);
+}
+
+.ts-sidebar-nav-item.active {
+  background: hsl(267 100% 64% / 0.12);
+  color: hsl(267 100% 72%);
+}
+
+/* ── Block Palette ──────────────────────────────────────── */
+.ts-blocks-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.ts-block-category {
+  margin-bottom: 16px;
+}
+
+.ts-block-category-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+  padding: 0 4px;
+  margin-bottom: 6px;
+}
+
+.ts-block-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  background: hsl(240 3.7% 15.9% / 0.4);
+  border: 1px solid transparent;
+  cursor: grab;
+  transition: all 0.15s ease;
+  margin-bottom: 4px;
+  text-align: left;
+}
+
+.ts-block-item:hover {
+  background: hsl(267 100% 64% / 0.08);
+  color: hsl(267 100% 72%);
+  border-color: hsl(267 100% 64% / 0.2);
+}
+
+.ts-block-item:active {
+  cursor: grabbing;
+  transform: scale(0.97);
+}
+
+.ts-block-item .icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+}
+
+/* ── Toolbar ────────────────────────────────────────────── */
+.ts-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  background: hsl(240 10% 5%);
+}
+
+.ts-toolbar-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: hsl(240 3.7% 15.9% / 0.5);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.ts-toolbar-tab {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.ts-toolbar-tab:hover {
+  color: var(--foreground);
+  background: hsl(240 3.7% 15.9% / 0.5);
+}
+
+.ts-toolbar-tab.active {
+  color: var(--foreground);
+  background: hsl(240 3.7% 15.9%);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.ts-paper-select {
+  padding: 6px 28px 6px 10px;
+  border-radius: 8px;
+  background: hsl(240 3.7% 15.9% / 0.5);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.ts-paper-select:focus {
+  outline: none;
+  border-color: hsl(267 100% 64% / 0.4);
+  box-shadow: 0 0 0 2px hsl(267 100% 64% / 0.15);
+}
+
+/* ── Canvas ─────────────────────────────────────────────── */
+.ts-canvas-area {
+  flex: 1;
+  overflow: auto;
+  background: hsl(240 5% 12%);
+  display: flex;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+.ts-paper {
+  background: #fff;
+  box-shadow:
+    0 4px 24px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(0,0,0,0.05);
+  border-radius: 3px;
+  min-height: 600px;
+  position: relative;
+  transition: width 0.3s ease;
+}
+
+.ts-paper-content {
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #000;
+}
+
+.ts-paper-tear {
+  height: 10px;
+  width: 100%;
+  opacity: 0.25;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 5px,
+    #ddd 5px,
+    #ddd 10px
+  );
+}
+
+/* ── Canvas Blocks ──────────────────────────────────────── */
+.ts-canvas-block {
+  position: relative;
+  padding: 6px 4px;
+  margin-bottom: 2px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ts-canvas-block:hover {
+  border-color: rgba(150,150,150,0.3);
+}
+
+.ts-canvas-block.selected {
+  border-color: hsl(267 100% 64%);
+  box-shadow: 0 0 12px hsl(267 100% 64% / 0.15);
+  background: hsl(267 100% 64% / 0.03);
+}
+
+.ts-canvas-block-actions {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.ts-canvas-block:hover .ts-canvas-block-actions {
+  opacity: 1;
+}
+
+.ts-canvas-block-action {
+  padding: 3px;
+  border-radius: 4px;
+  color: #999;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ts-canvas-block-action:hover {
+  color: #333;
+  background: #fff;
+}
+
+.ts-canvas-block-action.delete:hover {
+  color: hsl(0 72% 51%);
+}
+
+/* ── Canvas Empty State ─────────────────────────────────── */
+.ts-canvas-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  color: #bbb;
+  gap: 8px;
+}
+
+.ts-canvas-empty .icon {
+  width: 48px;
+  height: 48px;
+  opacity: 0.3;
+}
+
+.ts-canvas-empty p {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ── Drop Zone ──────────────────────────────────────────── */
+.ts-drop-zone {
+  min-height: 80px;
+  border: 2px dashed transparent;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.ts-drop-zone.drag-over {
+  border-color: hsl(267 100% 64% / 0.4);
+  background: hsl(267 100% 64% / 0.05);
+}
+
+/* ── Right Panel ────────────────────────────────────────── */
+.ts-props-panel {
+  width: 280px;
+  border-left: 1px solid var(--border);
+  background: var(--card);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.ts-props-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+
+.ts-props-tab {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.ts-props-tab:hover {
+  color: var(--foreground);
+}
+
+.ts-props-tab.active {
+  color: hsl(267 100% 72%);
+  border-bottom-color: hsl(267 100% 64%);
+}
+
+.ts-props-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+/* ── Form Controls ──────────────────────────────────────── */
+.ts-field {
+  margin-bottom: 12px;
+}
+
+.ts-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ts-input,
+.ts-select,
+.ts-textarea {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: hsl(240 3.7% 15.9% / 0.5);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  font-size: 13px;
+  transition: all 0.15s ease;
+}
+
+.ts-input:focus,
+.ts-select:focus,
+.ts-textarea:focus {
+  outline: none;
+  border-color: hsl(267 100% 64% / 0.4);
+  box-shadow: 0 0 0 2px hsl(267 100% 64% / 0.12);
+}
+
+.ts-textarea {
+  resize: none;
+  min-height: 60px;
+}
+
+.ts-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+
+.ts-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--foreground);
+}
+
+.ts-checkbox-row input[type="checkbox"] {
+  accent-color: hsl(267 100% 64%);
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+/* ── Grid / Flex Helpers ────────────────────────────────── */
+.ts-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ts-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.ts-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+/* ── Type Chip ──────────────────────────────────────────── */
+.ts-type-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ts-type-chip.normal {
+  background: hsl(240 3.7% 15.9%);
+  color: var(--foreground);
+}
+
+.ts-type-chip.active-chip {
+  background: hsl(267 100% 64% / 0.15);
+  color: hsl(267 100% 72%);
+}
+
+/* ── Buttons ────────────────────────────────────────────── */
+.ts-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.ts-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ts-btn-ghost {
+  background: transparent;
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+}
+
+.ts-btn-ghost:hover:not(:disabled) {
+  background: hsl(240 3.7% 15.9% / 0.5);
+  color: var(--foreground);
+}
+
+.ts-btn-primary {
+  background: hsl(267 100% 64%);
+  color: #fff;
+  box-shadow: 0 2px 12px hsl(267 100% 64% / 0.25);
+}
+
+.ts-btn-primary:hover:not(:disabled) {
+  background: hsl(267 100% 58%);
+  box-shadow: 0 4px 16px hsl(267 100% 64% / 0.35);
+}
+
+.ts-btn-save {
+  background: hsl(240 3.7% 15.9% / 0.5);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+}
+
+.ts-btn-save:hover:not(:disabled) {
+  background: hsl(240 3.7% 15.9%);
+}
+
+/* ── Zoom ───────────────────────────────────────────────── */
+.ts-zoom {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+
+.ts-zoom-btn {
+  padding: 4px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--muted-foreground);
+  display: flex;
+  align-items: center;
+}
+
+.ts-zoom-btn:hover {
+  background: hsl(240 3.7% 15.9% / 0.5);
+  color: var(--foreground);
+}
+
+/* ── Conditional Rules Panel ────────────────────────────── */
+.ts-condition-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  gap: 6px;
+  padding: 8px;
+  background: hsl(240 3.7% 15.9% / 0.3);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.ts-condition-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+/* ── Empty Props State ──────────────────────────────────── */
+.ts-props-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--muted-foreground);
+  gap: 8px;
+  text-align: center;
+  padding: 24px;
+}
+
+.ts-props-empty .icon {
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .ts-sidebar { width: 60px; }
+  .ts-sidebar-nav-item span { display: none; }
+  .ts-props-panel { width: 240px; }
+}
+
+/* ── Scrollbar ──────────────────────────────────────────── */
+.ts-sidebar::-webkit-scrollbar,
+.ts-blocks-panel::-webkit-scrollbar,
+.ts-props-content::-webkit-scrollbar,
+.ts-canvas-area::-webkit-scrollbar {
+  width: 5px;
+}
+
+.ts-sidebar::-webkit-scrollbar-track,
+.ts-blocks-panel::-webkit-scrollbar-track,
+.ts-props-content::-webkit-scrollbar-track,
+.ts-canvas-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ts-sidebar::-webkit-scrollbar-thumb,
+.ts-blocks-panel::-webkit-scrollbar-thumb,
+.ts-props-content::-webkit-scrollbar-thumb,
+.ts-canvas-area::-webkit-scrollbar-thumb {
+  background: hsl(240 3.7% 20%);
+  border-radius: 3px;
+}
+
+/* ── Animations ─────────────────────────────────────────── */
+@keyframes ts-fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ts-block-item,
+.ts-canvas-block {
+  animation: ts-fadeIn 0.2s ease-out;
+}
