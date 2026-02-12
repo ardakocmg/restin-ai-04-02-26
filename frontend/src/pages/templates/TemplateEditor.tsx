@@ -348,7 +348,7 @@ export default function TemplateEditor() {
             case 'image':
                 return (
                     <div style={{ textAlign: (ip?.alignment as 'left' | 'center' | 'right') || 'center', padding: '8px 0' }}>
-                        <div style={{ display: 'inline-block', width: Number(ip?.width || 180), height: 60, background: '#f5f5f5', borderRadius: 4, display2: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ display: 'inline-block', width: Number(ip?.width || 180), height: 60, background: '#f5f5f5', borderRadius: 4, alignItems: 'center', justifyContent: 'center' }}>
                             <Image style={{ width: 24, height: 24, color: '#ccc', margin: '0 auto', display: 'block', paddingTop: 18 }} />
                         </div>
                     </div>
