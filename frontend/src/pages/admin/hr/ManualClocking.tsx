@@ -9,7 +9,7 @@ import {
     Clock, Timer, MapPin, Users, ArrowLeft, LogIn, LogOut,
     CheckCircle2, Loader2, Search, Wifi, WifiOff,
     Activity, Coffee, Utensils, GlassWater, BookOpen, Monitor,
-    Crosshair, Fingerprint, Globe, Navigation
+    Crosshair, Fingerprint, Globe, Navigation, Plus
 } from 'lucide-react';
 import api from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
@@ -231,7 +231,7 @@ export default function ManualClocking() {
             const deviceInfo = collectDeviceInfo();
             setCurrentDeviceInfo(deviceInfo);
 
-            await api.post('clocking/clock-in', {
+            const response = await api.post('clocking/clock-in', {
                 employee_id: selectedEmployee || undefined,
                 work_area: selectedArea || undefined,
                 cost_centre: selectedArea || undefined,
@@ -239,7 +239,13 @@ export default function ManualClocking() {
                 device_info: deviceInfo,
                 geolocation: geo || undefined,
             });
-            toast.success(t('Clocked In Successfully'));
+
+            if (response.data.requires_approval) {
+                toast.info(t('Clock-in submitted for approval') + ': ' + (response.data.message || ''));
+            } else {
+                toast.success(t('Clocked In Successfully'));
+            }
+
             setSelectedEmployee('');
             await fetchAll();
         } catch (err: unknown) {
@@ -597,9 +603,21 @@ export default function ManualClocking() {
                     {/* Device & Location Status */}
                     <Card className="bg-zinc-900 border-zinc-800">
                         <CardContent className="p-4">
-                            <div className="flex items-center gap-2 mb-3">
-                                <Fingerprint className="h-4 w-4 text-amber-400" />
-                                <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider">{t('Device & Location')}</span>
+                            <div className="flex items-center gap-2 mb-3 justify-between">
+                                <div className="flex items-center gap-2">
+                                    <Fingerprint className="h-4 w-4 text-amber-400" />
+                                    <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider">{t('Device & Location')}</span>
+                                </div>
+                                {canManageOthers && (
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => navigate('/admin/hr/clocking/add')}
+                                        className="h-6 text-[9px] px-2 bg-zinc-800 border-zinc-700 hover:bg-zinc-700 text-zinc-400 hover:text-white uppercase tracking-wider font-bold"
+                                    >
+                                        <Plus className="h-3 w-3 mr-1" />{t('Add Past Entry')}
+                                    </Button>
+                                )}
                             </div>
                             <div className="space-y-2">
                                 {/* Device Info */}
@@ -615,8 +633,8 @@ export default function ManualClocking() {
                                 {/* Geolocation */}
                                 <div className="flex items-start gap-2">
                                     <Crosshair className={`h-3 w-3 mt-0.5 flex-shrink-0 ${geoStatus === 'granted' ? 'text-emerald-400' :
-                                            geoStatus === 'acquiring' ? 'text-amber-400 animate-pulse' :
-                                                geoStatus === 'denied' ? 'text-red-400' : 'text-zinc-500'
+                                        geoStatus === 'acquiring' ? 'text-amber-400 animate-pulse' :
+                                            geoStatus === 'denied' ? 'text-red-400' : 'text-zinc-500'
                                         }`} />
                                     <div>
                                         {geoStatus === 'granted' && currentGeo ? (

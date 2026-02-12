@@ -58,6 +58,8 @@ def create_workspace_routes():
                 "group_domains": group_domains,
                 "sso_enabled": settings.get("sso_enabled", False) if settings else False,
                 "sso_enforce": settings.get("sso_enforce", False) if settings else False,
+                "group_id": venue.get("group_id") if venue else None,
+                "is_group_admin": current_user.get("role") in ["owner", "product_owner"] # Simplified check
             }
         }
 
@@ -427,5 +429,42 @@ def create_workspace_routes():
             return {"ok": True, "data": info.model_dump()}
         except ImportError:
             raise HTTPException(status_code=503, detail="Workspace SDK not available")
+
+    @router.patch("/groups/{group_id}/domains")
+    async def update_group_domains(
+        group_id: str,
+        payload: dict = Body(...),
+        current_user: dict = Depends(get_current_user),
+    ):
+        """
+        Update allowed login domains for a Venue Group.
+        These domains are inherited by all venues in the group.
+        Body: { "allowed_login_domains": ["example.com"] }
+        """
+        # Verify user is owner and has access to group
+        # For MVP, we check if user is owner of ANY venue in the group
+        # or just check if user is 'owner' role generally (simplified)
+        
+        if current_user.get("role") not in ["owner", "product_owner"]:
+             raise HTTPException(status_code=403, detail="Only owners can manage group domains")
+
+        group = await db.venue_groups.find_one({"id": group_id}, {"_id": 0})
+        if not group:
+            raise HTTPException(status_code=404, detail="Group not found")
+        
+        domains = payload.get("allowed_login_domains", [])
+        
+        await db.venue_groups.update_one(
+            {"id": group_id},
+            {"$set": {"allowed_login_domains": domains, "updated_at": datetime.now(timezone.utc).isoformat()}}
+        )
+        
+        await create_audit_log(
+            group_id, current_user["id"], current_user.get("name", ""),
+            "group_domains_updated", "venue_group", group_id,
+            {"domains": domains}
+        )
+        
+        return {"ok": True, "message": "Group domains updated", "data": domains}
 
     return router

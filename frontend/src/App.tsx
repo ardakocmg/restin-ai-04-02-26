@@ -44,7 +44,7 @@ const Inbox = React.lazy(() => import("./pages/collab/Inbox"));
 const IntegrationsHub = React.lazy(() => import("./pages/integrations/IntegrationsHub"));
 const DeliveryAggregators = React.lazy(() => import("./pages/integrations/DeliveryAggregators"));
 const FinanceProviderSettings = React.lazy(() => import("./pages/finance/FinanceProviderSettings"));
-const GoogleHub = React.lazy(() => import("./pages/google/GoogleHub"));
+// GoogleHub consolidated into WorkspaceSettings
 const WorkspaceSettings = React.lazy(() => import("./pages/google/WorkspaceSettings"));
 const ProcurementHub = React.lazy(() => import("./pages/admin/procurement/ProcurementHub"));
 const RFQManagement = React.lazy(() => import("./pages/admin/procurement/RFQManagement"));
@@ -113,8 +113,9 @@ const PayrollRunDetail = React.lazy(() => import("./pages/admin/hr/PayrollRunDet
 const PayslipViewer = React.lazy(() => import("./pages/admin/hr/PayslipViewer"));
 const Scheduler = React.lazy(() => import("./pages/admin/hr/Scheduler"));
 const ClockingData = React.lazy(() => import("./pages/admin/hr/ClockingData"));
-const ManualClocking = React.lazy(() => import("./pages/admin/hr/ManualClocking"));
-const ApprovalCenter = React.lazy(() => import("./pages/admin/hr/ApprovalCenter"));
+const ManualClocking = React.lazy(() => import('./pages/admin/hr/ManualClocking'));
+const AddClockEntry = React.lazy(() => import('./pages/admin/hr/AddClockEntry'));
+const ApprovalCenter = React.lazy(() => import('./pages/admin/hr/ApprovalCenter'));
 const ApprovalSettings = React.lazy(() => import("./pages/admin/hr/ApprovalSettings"));
 const HRImport = React.lazy(() => import("./pages/admin/hr/HRImport"));
 const HRMap = React.lazy(() => import("./pages/admin/hr/HRMap"));
@@ -481,8 +482,8 @@ function App() {
                                     <Route path="integrations" element={<RoleRoute requiredRole="OWNER"><IntegrationsHub /></RoleRoute>} />
                                     <Route path="delivery-aggregators" element={<RoleRoute requiredRole="OWNER"><DeliveryAggregators /></RoleRoute>} />
                                     <Route path="finance-provider" element={<RoleRoute requiredRole="OWNER"><FinanceProviderSettings /></RoleRoute>} />
-                                    <Route path="google" element={<RoleRoute requiredRole="OWNER"><GoogleHub /></RoleRoute>} />
-                                    <Route path="google-workspace" element={<RoleRoute requiredRole="OWNER"><WorkspaceSettings /></RoleRoute>} />
+                                    {/* Google Hub Consolidated into WorkspaceSettings - Manager Access for Operations */}
+                                    <Route path="google-workspace" element={<RoleRoute requiredRole="MANAGER"><WorkspaceSettings /></RoleRoute>} />
                                     <Route path="procurement" element={<RoleRoute requiredRole="OWNER"><ProcurementHub /></RoleRoute>} />
                                     <Route path="procurement/rfq" element={<RoleRoute requiredRole="OWNER"><RFQManagement /></RoleRoute>} />
                                     <Route path="procurement/approval" element={<RoleRoute requiredRole="OWNER"><ApprovalWorkflow /></RoleRoute>} />
@@ -607,6 +608,7 @@ function App() {
                                       <Route path="dashboard" element={<RoleRoute requiredRole="MANAGER"><SummaryDashboard /></RoleRoute>} />
                                       <Route path="clocking" element={<RoleRoute requiredRole="MANAGER"><ClockingData /></RoleRoute>} />
                                       <Route path="manual-clocking" element={<ManualClocking />} />
+                                      <Route path="clocking/add" element={<RoleRoute requiredRole="STAFF"><AddClockEntry /></RoleRoute>} />
                                       <Route path="approvals" element={<RoleRoute requiredRole="STAFF"><ApprovalCenter /></RoleRoute>} />
                                       <Route path="approval-settings" element={<RoleRoute requiredRole="OWNER"><ApprovalSettings /></RoleRoute>} />
 

@@ -520,8 +520,8 @@ export default function POSMain() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-red-500 animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-destructive animate-spin" />
       </div>
     );
   }
@@ -529,14 +529,14 @@ export default function POSMain() {
   const { subtotal, tax, total } = calculateTotal();
 
   return (
-    <div className="h-screen flex bg-zinc-950 overflow-hidden">
+    <div className="h-screen flex bg-background overflow-hidden">
       {/* LEFT COLUMN - Categories (Lightspeed Style) */}
-      <div className="w-48 bg-zinc-900 border-r border-white/10 flex flex-col">
+      <div className="w-48 bg-card border-r border-border flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b border-white/10">
-          <h1 className="text-white font-heading font-bold text-lg">RESTIN.AI</h1>
-          <p className="text-zinc-400 text-xs">{venue?.name}</p>
-          <p className="text-zinc-500 text-xs mt-1">{user?.name}</p>
+        <div className="p-4 border-b border-border">
+          <h1 className="text-foreground font-heading font-bold text-lg">RESTIN.AI</h1>
+          <p className="text-muted-foreground text-xs">{venue?.name}</p>
+          <p className="text-muted-foreground text-xs mt-1">{user?.name}</p>
         </div>
 
         {/* Categories */}
@@ -559,18 +559,18 @@ export default function POSMain() {
                     w-full h-20 rounded-lg flex flex-col items-center justify-center gap-1 relative overflow-hidden group
                     transition-all duration-200 border-2
                     ${isActive
-                      ? 'border-white ring-2 ring-white/20'
-                      : 'border-transparent hover:border-white/20'}
-                    ${!cat.image && !cat.color && (isActive ? 'bg-red-600' : 'bg-zinc-800')}
+                      ? 'border-foreground ring-2 ring-foreground/20'
+                      : 'border-transparent hover:border-border'}
+                    ${!cat.image && !cat.color && (isActive ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground')}
                   `}
                 >
                   {/* Overlay for image readability */}
                   {hasImage && <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />}
 
                   {/* Icon (only if no image or if desired) */}
-                  {!hasImage && <Icon className={`w-6 h-6 z-10 ${isActive ? 'text-white' : 'text-zinc-400'}`} />}
+                  {!hasImage && <Icon className={`w-6 h-6 z-10 ${isActive ? 'text-primary-foreground' : 'text-muted-foreground'}`} />}
 
-                  <span className={`text-xs font-bold text-center leading-tight z-10 px-2 ${hasImage || isActive ? 'text-white' : 'text-zinc-400'}`}>
+                  <span className={`text-xs font-bold text-center leading-tight z-10 px-2 ${hasImage || isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
                     {cat.name}
                   </span>
                 </button>
@@ -580,24 +580,24 @@ export default function POSMain() {
         </ScrollArea>
 
         {/* Bottom Actions */}
-        <div className="p-2 border-t border-white/10 space-y-1">
+        <div className="p-2 border-t border-border space-y-1">
           <button
             onClick={() => setShowFloorPlanDialog(true)}
-            className="w-full p-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center gap-2"
+            className="w-full p-3 rounded-lg bg-muted hover:bg-accent text-foreground flex items-center justify-center gap-2 transition-colors"
           >
             <Grid3x3 className="w-5 h-5" />
             <span className="text-sm">Floor Plan</span>
           </button>
           <button
             onClick={() => setShowTableDialog(true)}
-            className="w-full p-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center gap-2"
+            className="w-full p-3 rounded-lg bg-muted hover:bg-accent text-foreground flex items-center justify-center gap-2 transition-colors"
           >
             <Grid3x3 className="w-5 h-5" />
             <span className="text-sm">Tables</span>
           </button>
           <button
             onClick={() => navigate("/admin/dashboard")}
-            className="w-full p-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center gap-2"
+            className="w-full p-3 rounded-lg bg-muted hover:bg-accent text-foreground flex items-center justify-center gap-2 transition-colors"
           >
             <LogOut className="w-5 h-5" />
             <span className="text-sm">Exit</span>
@@ -606,7 +606,7 @@ export default function POSMain() {
       </div>
 
       {/* CENTER COLUMN - Menu Items Grid */}
-      <div className="flex-1 bg-zinc-950 p-4 overflow-auto">
+      <div className="flex-1 bg-background p-4 overflow-auto">
         <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
           {menuItems.map((item) => {
             const style = getItemStyle(item);
@@ -621,25 +621,25 @@ export default function POSMain() {
                     aspect-square rounded-xl p-4 flex flex-col justify-between
                     transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]
                     shadow-lg hover:shadow-xl relative overflow-hidden group
-                    ${!item.image && !item.color ? 'bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/5' : ''}
+                    ${!item.image && !item.color ? 'bg-card border border-border hover:border-primary/50' : ''}
                 `}
               >
                 {/* Gradient Overlay for Text Readability if Has Image */}
                 {hasImage && <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />}
 
                 <div className="z-10 w-full flex justify-between items-start">
-                  <span className={`text-sm font-bold leading-tight text-left ${hasImage || item.color ? 'text-white' : 'text-zinc-100'}`}>
+                  <span className={`text-sm font-bold leading-tight text-left ${hasImage || item.color ? 'text-white' : 'text-foreground'}`}>
                     {item.name}
                   </span>
                 </div>
 
                 {/* ID Badge */}
-                <span className={`z-10 text-[10px] font-mono self-start opacity-60 ${hasImage || item.color ? 'text-white' : 'text-zinc-500'}`}>
+                <span className={`z-10 text-[10px] font-mono self-start opacity-60 ${hasImage || item.color ? 'text-white' : 'text-muted-foreground'}`}>
                   {item.id.substring(0, 4)}
                 </span>
 
                 <div className="z-10 mt-auto flex items-end justify-end w-full">
-                  <span className={`text-lg font-bold ${hasImage || item.color ? 'text-white' : 'text-white'}`}>
+                  <span className={`text-lg font-bold ${hasImage || item.color ? 'text-white' : 'text-foreground'}`}>
                     €{safeNumber(item.price, 0).toFixed(2)}
                   </span>
                 </div>
@@ -650,12 +650,12 @@ export default function POSMain() {
       </div>
 
       {/* RIGHT COLUMN - Order Summary */}
-      <div className="w-96 bg-zinc-900 border-l border-white/10 flex flex-col">
+      <div className="w-96 bg-card border-l border-border flex flex-col">
         {/* ... (Existing Table info & Order Items - No Changes needed) ... */}
         {/* Table Info */}
-        <div className="p-4 border-b border-white/10">
+        <div className="p-4 border-b border-border">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-white font-heading font-bold text-xl">
+            <h2 className="text-foreground font-heading font-bold text-xl">
               {selectedTable ? selectedTable.name : "No Table"}
             </h2>
             {selectedTable && (
@@ -667,7 +667,7 @@ export default function POSMain() {
                   setCurrentOrder(null);
                   setOrderItems([]);
                 }}
-                className="text-zinc-400 hover:text-white"
+                className="text-muted-foreground hover:text-foreground hover:bg-accent"
               >
                 <X className="w-4 h-4" />
               </Button>
@@ -675,7 +675,7 @@ export default function POSMain() {
           </div>
 
           {selectedTable && (
-            <div className="flex items-center gap-2 text-xs text-zinc-400">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Users className="w-3 h-3" />
               <span>{selectedTable.seats} seats</span>
               <span className="mx-1">•</span>
@@ -689,28 +689,28 @@ export default function POSMain() {
           {/* ... (Same as before) ... */}
           {currentOrder && safeArray(currentOrder.send_rounds).length > 0 && (
             <div className="mb-4 space-y-2">
-              <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Sent Items</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Sent Items</p>
               {currentOrder.send_rounds.map((round, roundIdx) => (
-                <div key={roundIdx} className="border-l-4 border-green-500 pl-3 py-2 bg-zinc-800/50 rounded">
+                <div key={roundIdx} className="border-l-4 border-success pl-3 py-2 bg-muted/50 rounded">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-bold text-green-400">Round {round.round_no}</span>
-                    <span className="text-xs text-zinc-500">
+                    <span className="text-sm font-bold text-success">Round {round.round_no}</span>
+                    <span className="text-xs text-muted-foreground">
                       {new Date(round.sent_at).toLocaleTimeString()}
                     </span>
                   </div>
-                  <div className="text-xs text-zinc-400 flex gap-2">
+                  <div className="text-xs text-muted-foreground flex gap-2">
                     {round.do_print && <span>📄 Printed</span>}
                     {round.do_kds && <span>🔪 KDS</span>}
                     {round.do_stock && <span>📦 Stock</span>}
                   </div>
                 </div>
               ))}
-              <div className="border-t border-zinc-700 my-3"></div>
+              <div className="border-t border-border my-3"></div>
             </div>
           )}
 
           {orderItems.length === 0 ? (
-            <div className="text-center py-12 text-zinc-500">
+            <div className="text-center py-12 text-muted-foreground">
               <UtensilsCrossed className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>No items yet</p>
               <p className="text-xs mt-1">Select items to start order</p>
@@ -720,11 +720,11 @@ export default function POSMain() {
               {orderItems.map((item, index) => (
                 <div
                   key={index}
-                  className="p-3 bg-zinc-800 rounded-lg"
+                  className="p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
-                      <span className="text-white font-medium">
+                      <span className="text-foreground font-medium">
                         {safeString(item.menu_item_name || item.name, "Item")}
                       </span>
                       {safeArray(item.modifiers).length > 0 && (
@@ -733,7 +733,7 @@ export default function POSMain() {
                             const modName = typeof mod === 'object' ? safeString(mod.name) : safeString(mod);
                             const priceAdj = typeof mod === 'object' ? safeNumber(mod.price_adjustment, 0) : 0;
                             return modName ? (
-                              <p key={i} className="text-xs text-orange-400">
+                              <p key={i} className="text-xs text-warning">
                                 • {modName}
                                 {priceAdj !== 0 && (
                                   <span className="ml-1">
@@ -748,7 +748,7 @@ export default function POSMain() {
                     </div>
                     <button
                       onClick={() => removeItem(index)}
-                      className="text-red-400 hover:text-red-300"
+                      className="text-destructive/80 hover:text-destructive transition-colors"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -758,19 +758,19 @@ export default function POSMain() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => updateItemQuantity(index, -1)}
-                        className="w-8 h-8 rounded bg-zinc-700 hover:bg-zinc-600 flex items-center justify-center text-white"
+                        className="w-8 h-8 rounded bg-background hover:bg-accent flex items-center justify-center text-foreground border border-border"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
-                      <span className="text-white font-mono w-8 text-center">{safeNumber(item.quantity, 1)}</span>
+                      <span className="text-foreground font-mono w-8 text-center">{safeNumber(item.quantity, 1)}</span>
                       <button
                         onClick={() => updateItemQuantity(index, 1)}
-                        className="w-8 h-8 rounded bg-zinc-700 hover:bg-zinc-600 flex items-center justify-center text-white"
+                        className="w-8 h-8 rounded bg-background hover:bg-accent flex items-center justify-center text-foreground border border-border"
                       >
                         <Plus className="w-4 h-4" />
                       </button>
                     </div>
-                    <span className="text-white font-bold">€{safeNumber(item.total_price || (item.price * item.quantity), 0).toFixed(2)}</span>
+                    <span className="text-foreground font-bold">€{safeNumber(item.total_price || (item.price * item.quantity), 0).toFixed(2)}</span>
                   </div>
                 </div>
               ))}
@@ -779,35 +779,35 @@ export default function POSMain() {
         </ScrollArea>
 
         {/* Totals */}
-        <div className="p-4 border-t border-white/10 space-y-3">
-          <div className="flex items-center justify-between text-zinc-400">
+        <div className="p-4 border-t border-border space-y-3">
+          <div className="flex items-center justify-between text-muted-foreground">
             <span>Subtotal</span>
             <span>€{subtotal.toFixed(2)}</span>
           </div>
-          <div className="flex items-center justify-between text-zinc-400">
+          <div className="flex items-center justify-between text-muted-foreground">
             <span>Tax (18%)</span>
             <span>€{tax.toFixed(2)}</span>
           </div>
-          <div className="flex items-center justify-between text-white text-xl font-bold">
+          <div className="flex items-center justify-between text-foreground text-xl font-bold">
             <span>Total</span>
             <span>€{total.toFixed(2)}</span>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="p-4 border-t border-white/10 space-y-3">
-          <div className="bg-zinc-800/50 p-3 rounded-lg space-y-2">
-            <p className="text-zinc-400 text-sm font-medium mb-2">Send Options</p>
+        <div className="p-4 border-t border-border space-y-3">
+          <div className="bg-muted p-3 rounded-lg space-y-2">
+            <p className="text-muted-foreground text-sm font-medium mb-2">Send Options</p>
 
             {settings?.pos?.send_checkbox_print !== false && (
               <label className="flex items-center space-x-2 cursor-pointer">
                 <Checkbox
                   checked={sendOptions.do_print}
                   onCheckedChange={(checked) => setSendOptions(prev => ({ ...prev, do_print: checked }))}
-                  className="border-zinc-600"
+                  className="border-input"
                 />
-                <Printer className="w-4 h-4 text-zinc-400" />
-                <span className="text-white text-sm">Print</span>
+                <Printer className="w-4 h-4 text-muted-foreground" />
+                <span className="text-foreground text-sm">Print</span>
               </label>
             )}
 
@@ -816,10 +816,10 @@ export default function POSMain() {
                 <Checkbox
                   checked={sendOptions.do_kds}
                   onCheckedChange={(checked) => setSendOptions(prev => ({ ...prev, do_kds: checked }))}
-                  className="border-zinc-600"
+                  className="border-input"
                 />
-                <UtensilsCrossed className="w-4 h-4 text-zinc-400" />
-                <span className="text-white text-sm">Send to KDS</span>
+                <UtensilsCrossed className="w-4 h-4 text-muted-foreground" />
+                <span className="text-foreground text-sm">Send to KDS</span>
               </label>
             )}
 
@@ -828,9 +828,9 @@ export default function POSMain() {
                 <Checkbox
                   checked={sendOptions.do_stock}
                   onCheckedChange={(checked) => setSendOptions(prev => ({ ...prev, do_stock: checked }))}
-                  className="border-zinc-600"
+                  className="border-input"
                 />
-                <span className="text-white text-sm">Deduct Stock</span>
+                <span className="text-foreground text-sm">Deduct Stock</span>
               </label>
             )}
           </div>
@@ -838,7 +838,7 @@ export default function POSMain() {
           <Button
             onClick={sendOrder}
             disabled={orderItems.length === 0 || !selectedTable || sendInProgress}
-            className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-base"
+            className="w-full bg-primary hover:bg-primary/90 h-12 text-base text-primary-foreground"
             type="button"
           >
             {sendInProgress ? (
@@ -857,7 +857,7 @@ export default function POSMain() {
           <Button
             onClick={() => setShowPaymentDialog(true)}
             disabled={!currentOrder || orderItems.length === 0}
-            className="w-full bg-green-600 hover:bg-green-700 h-12 text-base"
+            className="w-full bg-success hover:bg-success/90 h-12 text-base text-success-foreground"
           >
             Pay €{total.toFixed(2)}
           </Button>
@@ -866,7 +866,7 @@ export default function POSMain() {
             onClick={() => setOrderItems([])}
             disabled={orderItems.length === 0}
             variant="outline"
-            className="w-full border-white/10 text-zinc-400 h-10"
+            className="w-full border-border text-muted-foreground h-10 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50"
           >
             <Trash2 className="w-4 h-4 mr-2" />
             Clear Order
@@ -876,9 +876,9 @@ export default function POSMain() {
 
       {/* Table Selection Dialog */}
       <Dialog open={showTableDialog} onOpenChange={setShowTableDialog}>
-        <DialogContent className="bg-zinc-900 border-white/10 max-w-3xl">
+        <DialogContent className="bg-background border-border max-w-3xl">
           <DialogHeader>
-            <DialogTitle className="text-white">Select Table</DialogTitle>
+            <DialogTitle className="text-foreground">Select Table</DialogTitle>
           </DialogHeader>
           <div className="grid grid-cols-4 gap-3 p-4">
             {tables.map((table) => (
@@ -888,8 +888,8 @@ export default function POSMain() {
                 className={`
                   p-4 rounded-lg border-2 transition-all
                   ${table.status === 'occupied'
-                    ? 'bg-red-500/20 border-red-500/50 text-red-400'
-                    : 'bg-zinc-800 border-white/10 text-white hover:border-red-500'}
+                    ? 'bg-destructive/20 border-destructive/50 text-destructive'
+                    : 'bg-card border-border text-foreground hover:border-primary'}
                 `}
               >
                 <div className="text-lg font-bold">{table.name}</div>
@@ -903,33 +903,33 @@ export default function POSMain() {
 
       {/* Payment Dialog */}
       <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
-        <DialogContent className="bg-zinc-900 border-white/10">
+        <DialogContent className="bg-background border-border">
           <DialogHeader>
-            <DialogTitle className="text-white">Process Payment</DialogTitle>
+            <DialogTitle className="text-foreground">Process Payment</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 p-4">
             <div className="text-center py-4">
-              <p className="text-zinc-400 mb-2">Total Amount</p>
-              <p className="text-4xl font-bold text-white">€{total.toFixed(2)}</p>
+              <p className="text-muted-foreground mb-2">Total Amount</p>
+              <p className="text-4xl font-bold text-foreground">€{total.toFixed(2)}</p>
             </div>
 
             <div className="grid grid-cols-3 gap-3">
               <Button
                 onClick={() => handlePayment('cash')}
-                className="h-16 bg-green-600 hover:bg-green-700 text-lg flex flex-col gap-1"
+                className="h-16 bg-success hover:bg-success/90 text-lg flex flex-col gap-1 text-success-foreground"
               >
                 <span>Cash</span>
               </Button>
               <Button
                 onClick={() => handlePayment('card')}
-                className="h-16 bg-blue-600 hover:bg-blue-700 text-lg flex flex-col gap-1"
+                className="h-16 bg-primary hover:bg-primary/90 text-lg flex flex-col gap-1 text-primary-foreground"
               >
                 <span>Card</span>
               </Button>
               {/* MEGA PATCH: Split Payment Button */}
               <Button
                 onClick={() => handlePayment('split')}
-                className="h-16 bg-purple-600 hover:bg-purple-700 text-lg flex flex-col gap-1"
+                className="h-16 bg-purple-600 hover:bg-purple-700 text-lg flex flex-col gap-1 text-white"
               >
                 <span>Split Bill</span>
                 <span className="text-xs opacity-70">(Beta)</span>
@@ -937,12 +937,12 @@ export default function POSMain() {
             </div>
 
             {/* Quick Amount Buttons */}
-            <div className="grid grid-cols-4 gap-2 pt-2 border-t border-white/10">
+            <div className="grid grid-cols-4 gap-2 pt-2 border-t border-border">
               {[total, 50, 100, 200].map(amount => (
                 <button
                   key={amount}
                   onClick={() => handlePayment('cash')}
-                  className="p-3 bg-zinc-800 hover:bg-zinc-700 rounded text-white font-mono"
+                  className="p-3 bg-muted hover:bg-accent rounded text-foreground font-mono"
                 >
                   €{amount.toFixed(2)}
                 </button>
@@ -955,32 +955,32 @@ export default function POSMain() {
       {/* Floor Plan Dialog */}
       <Dialog open={showFloorPlanDialog} onOpenChange={setShowFloorPlanDialog}>
         {/* ... (Existing logic same as before) ... */}
-        <DialogContent className="bg-zinc-900 border-white/10 max-w-6xl">
+        <DialogContent className="bg-background border-border max-w-6xl">
           <DialogHeader>
-            <DialogTitle className="text-white">Floor Plan - Select Table</DialogTitle>
+            <DialogTitle className="text-foreground">Floor Plan - Select Table</DialogTitle>
           </DialogHeader>
           {floorPlan ? (
             <div className="p-4">
               {/* ... Same floor plan rendering ... */}
               <div className="mb-4 flex gap-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-green-500 rounded"></div>
-                  <span className="text-sm text-zinc-400">Available</span>
+                  <div className="w-4 h-4 bg-success rounded"></div>
+                  <span className="text-sm text-muted-foreground">Available</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-red-500 rounded"></div>
-                  <span className="text-sm text-zinc-400">Occupied</span>
+                  <div className="w-4 h-4 bg-destructive rounded"></div>
+                  <span className="text-sm text-muted-foreground">Occupied</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-yellow-500 rounded"></div>
-                  <span className="text-sm text-zinc-400">Reserved</span>
+                  <div className="w-4 h-4 bg-warning rounded"></div>
+                  <span className="text-sm text-muted-foreground">Reserved</span>
                 </div>
               </div>
               <div className="grid grid-cols-6 gap-3">
                 {tables.map((table) => {
-                  const color = table.status === 'available' ? 'bg-green-500/20 border-green-500'
-                    : table.status === 'reserved' ? 'bg-yellow-500/20 border-yellow-500'
-                      : 'bg-red-500/20 border-red-500';
+                  const color = table.status === 'available' ? 'bg-success/20 border-success'
+                    : table.status === 'reserved' ? 'bg-warning/20 border-warning'
+                      : 'bg-destructive/20 border-destructive';
 
                   return (
                     <button
@@ -992,16 +992,16 @@ export default function POSMain() {
                       className={`p-4 rounded-lg border-2 transition-all hover:scale-105 ${color}`}
                       disabled={table.status === 'occupied' && table.id !== selectedTable?.id}
                     >
-                      <div className="text-white font-bold text-lg">{table.name}</div>
-                      <div className="text-xs text-zinc-300 mt-1">{table.seats} seats</div>
-                      <div className="text-xs text-zinc-400 capitalize mt-1">{table.status}</div>
+                      <div className="text-foreground font-bold text-lg">{table.name}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{table.seats} seats</div>
+                      <div className="text-xs text-muted-foreground capitalize mt-1">{table.status}</div>
                     </button>
                   );
                 })}
               </div>
             </div>
           ) : (
-            <div className="p-8 text-center text-zinc-400">
+            <div className="p-8 text-center text-muted-foreground">
               <p>No active floor plan configured</p>
               <p className="text-sm mt-2">Create and activate a floor plan in Admin</p>
             </div>

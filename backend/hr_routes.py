@@ -815,13 +815,19 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
     
     @hr_router.post("/payruns/{payrun_id}/calculate")
     async def calculate_payrun(payrun_id: str, current_user: dict = Depends(get_current_user)):
-        """Calculate payslips based on REAL Clocking Data"""
+        """Calculate payslips based on REAL Clocking Data and Malta Tax Engine"""
         payrun = await db.pay_runs.find_one({"id": payrun_id}, {"_id": 0})
         if not payrun:
             raise HTTPException(status_code=404, detail="Payrun not found")
         
-        # Period dates (important for filtering clocking)
-        # Expected format: "2026-01-01" or similar iso date
+        # Import Malta Engine
+        try:
+            from services.payroll_mt_engine import MaltaPayrollEngine
+        except ImportError:
+            # Fallback if service not found (should not happen in prod)
+            MaltaPayrollEngine = None
+
+        # Period dates
         p_start = payrun.get("period_start")
         p_end = payrun.get("period_end")
 
@@ -831,18 +837,9 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
         from uuid import uuid4
         payslips_created = 0
         
-        # Pre-fetch clocking for efficiency? Or one by one.
-        # One by one is fine for 1000 employees in this scale.
-        
-        filtered_clocking_query = {
-             "venue_id": payrun["venue_id"]
-        }
-        # Add date range filter if dates are valid ISO strings (YYYY-MM-DD or DD/MM/YYYY)
-        # Clocking data stores date as "DD/MM/YYYY" string currently (legacy mock format).
-        # We need to handle this carefully. Mock data seeded with "DD/MM/YYYY".
-        
         # Helper to parse dates
         def parse_date(d_str):
+            if not d_str: return None
             try:
                 # Try ISO YYYY-MM-DD
                 return datetime.strptime(d_str, "%Y-%m-%d")
@@ -853,45 +850,55 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
                 except:
                     return None
 
-        dt_start = parse_date(p_start) if p_start else None
-        dt_end = parse_date(p_end) if p_end else None
+        dt_start = parse_date(p_start)
+        dt_end = parse_date(p_end)
 
         for emp in employees:
             # Get Contract Rate
             contract = await db.contracts.find_one({"employee_id": emp["id"], "status": "active"}, {"_id": 0})
             if not contract:
-                # Fallback to hourly_rate in employee record if no contract (migration support)
-                base_rate = emp.get("hourly_rate", 10.0) # Default 10 EUR
+                base_rate = float(emp.get("hourly_rate", 10.0))
             else:
-                base_rate = contract.get("base_rate", 0.0)
+                base_rate = float(contract.get("base_rate", 0.0))
             
-            # Fetch Clocking Records for this Employee
-            # Since date strings are messy ("DD/MM/YYYY"), complex range queries in Mongo are hard on strings.
-            # We will fetch all for employee and filter in python (safe for small dataset < 5000 records/emp).
-            # Limitation: Performance. Optimization: Store ISODate in ClockingRecord next time.
-            
-            emp_clocking = await db.clocking_records.find({"employee_id": emp["id"]}).to_list(1000)
+            # Fetch Clocking Records for this Employee AND Venue
+            emp_clocking = await db.clocking_records.find({
+                "employee_id": emp["id"], 
+                "venue_id": payrun["venue_id"],
+                "status": "completed"  # Only Pay for completed shifts
+            }).to_list(1000)
             
             total_hours = 0.0
             
             for record in emp_clocking:
-                r_date_str = record.get("date")
+                r_date_str = record.get("date") # Stored as DD/MM/YYYY usually
                 r_date = parse_date(r_date_str)
                 
                 if r_date and dt_start and dt_end:
                     if dt_start <= r_date <= dt_end:
-                        total_hours += record.get("hours_worked", 0.0)
-                else:
-                    # If no valid date range, include nothing (safety)
-                    pass
+                        total_hours += float(record.get("hours_worked", 0.0))
 
             # Calculate Pay
             gross = total_hours * base_rate
             
-            # Simple Tax Rules (Malta Placeholder)
-            tax = gross * 0.10 # 10% FSS
-            social = gross * 0.10 # 10% NI
-            net = gross - tax - social
+            # Tax Logic via Engine
+            tax = 0.0
+            social = 0.0
+            net = gross
+            
+            if MaltaPayrollEngine:
+                # Determine tax status (from employee or default Single)
+                status = emp.get("tax_profile", "Single")
+                # Engine calculates Net from Gross (Monthly assumption)
+                calc = MaltaPayrollEngine.calculate_net_salary(gross, status)
+                tax = calc["tax"]
+                social = calc["ssc"]
+                net = calc["net"]
+            else:
+                # Fallback
+                tax = gross * 0.10
+                social = gross * 0.10
+                net = gross - tax - social
             
             payslip_doc = {
                 "id": str(uuid4()),
@@ -900,21 +907,45 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
                 "employee_id": emp["id"],
                 "period_start": p_start,
                 "period_end": p_end,
-                "worked_hours": total_hours, # Storing the source of truth!
+                "worked_hours": round(total_hours, 2),
                 "hourly_rate": base_rate,
-                "earnings": {"base": gross},
-                "deductions": {"tax": tax, "social": social},
-                "gross": gross,
-                "net": net,
+                "earnings": {"base": round(gross, 2)},
+                "deductions": {"tax": round(tax, 2), "social": round(social, 2)},
+                "gross": round(gross, 2),
+                "net": round(net, 2),
                 "email_status": "pending",
-                "created_at": datetime.now(timezone.utc).isoformat()
+                "calculated_at": datetime.now(timezone.utc).isoformat()
             }
             
             payslip_doc = await ensure_ids(db, "PAYSLIP", payslip_doc, payrun["venue_id"])
-            await db.payslips.insert_one(payslip_doc)
+            
+            # Upsert payslip (to allow re-calculation)
+            await db.payslips.update_one(
+                {"pay_run_id": payrun_id, "employee_id": emp["id"]},
+                {"$set": payslip_doc},
+                upsert=True
+            )
             payslips_created += 1
         
-        await db.pay_runs.update_one({"id": payrun_id}, {"$set": {"status": "calculated"}})
+        # Update Run Totals
+        # Re-fetch all payslips to sum up
+        all_slips = await db.payslips.find({"pay_run_id": payrun_id}).to_list(1000)
+        t_gross = sum(s.get("gross", 0) for s in all_slips)
+        t_net = sum(s.get("net", 0) for s in all_slips)
+        t_tax = sum(s.get("deductions", {}).get("tax", 0) for s in all_slips)
+        
+        await db.pay_runs.update_one(
+            {"id": payrun_id}, 
+            {
+                "$set": {
+                    "status": "calculated", 
+                    "total_gross": round(t_gross, 2),
+                    "total_net": round(t_net, 2),
+                    "total_tax": round(t_tax, 2),
+                    "employee_count": len(all_slips)
+                }
+            }
+        )
         
         return {"message": f"Calculated {payslips_created} payslips using REAL clocking data"}
     

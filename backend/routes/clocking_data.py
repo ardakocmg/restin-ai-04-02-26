@@ -481,3 +481,175 @@ async def get_work_areas(
         areas = defaults
 
     return areas
+
+
+# ── Request model for manual clock entry ──────────────────────
+class AddClockEntryRequest(BaseModel):
+    employee_id: Optional[str] = None          # If HR is adding on behalf
+    date: str                                   # YYYY-MM-DD
+    clock_in: str                               # HH:MM
+    clock_out: str                              # HH:MM
+    work_area: Optional[str] = None
+    cost_centre: Optional[str] = None
+    reason: Optional[str] = None                # Why manual entry is needed
+    device_info: Optional[Dict[str, Any]] = None
+
+
+# ── POST /clocking/add-entry — Add a completed clock entry (past date) ──
+@router.post("/add-entry")
+async def add_clock_entry(
+    request: AddClockEntryRequest,
+    current_user: dict = Depends(get_current_user),
+    db=Depends(get_database)
+):
+    """Add a manual clock entry for a past date. Routes through approval for staff."""
+    venue_id = current_user.get("venueId") or "GLOBAL"
+    user_id = current_user.get("userId") or current_user.get("id") or ""
+    user_name = current_user.get("fullName") or current_user.get("name") or "Unknown"
+    user_role = (current_user.get("role") or "").upper()
+
+    # Determine target employee
+    target_emp_id = request.employee_id or user_id
+    target_emp_name = user_name
+    is_on_behalf = request.employee_id and request.employee_id != user_id
+
+    if is_on_behalf:
+        emp_doc = await db.employees.find_one({"id": request.employee_id})
+        if emp_doc:
+            target_emp_name = emp_doc.get("full_name") or emp_doc.get("name") or "Unknown"
+        else:
+            raise HTTPException(status_code=404, detail="Employee not found")
+
+    # ── Validate inputs ──────────────────────────────────────────
+    try:
+        entry_date = datetime.strptime(request.date, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
+
+    now_malta = datetime.now(timezone.utc).astimezone(MALTA_TZ)
+    if entry_date.date() > now_malta.date():
+        raise HTTPException(status_code=400, detail="Cannot add clock entry for a future date")
+
+    try:
+        ci_h, ci_m = map(int, request.clock_in.split(":"))
+        co_h, co_m = map(int, request.clock_out.split(":"))
+    except (ValueError, AttributeError):
+        raise HTTPException(status_code=400, detail="Invalid time format. Use HH:MM")
+
+    clock_in_mins = ci_h * 60 + ci_m
+    clock_out_mins = co_h * 60 + co_m
+    if clock_out_mins <= clock_in_mins:
+        raise HTTPException(status_code=400, detail="Clock out must be after clock in")
+
+    hours_worked = round((clock_out_mins - clock_in_mins) / 60, 2)
+
+    # Check for overlapping entries on same date
+    existing = await db["clocking_records"].find_one({
+        "employee_id": target_emp_id,
+        "venue_id": venue_id,
+        "date": entry_date.strftime("%d/%m/%Y"),
+        "status": {"$ne": "deleted"},
+        "$or": [
+            {"clocking_in": {"$lte": request.clock_out}, "clocking_out": {"$gte": request.clock_in}},
+        ]
+    })
+    if existing:
+        raise HTTPException(status_code=409, detail="Overlapping clock entry exists for this date/time")
+
+    # Format date for display
+    day_of_week = entry_date.strftime("%A")
+    display_date = entry_date.strftime("%d/%m/%Y")
+
+    # ── Determine approval requirement ─────────────────────────
+    needs_approval = True  # Default: require approval
+    approval_reason = request.reason or "Manual clock entry"
+
+    if user_role in ("OWNER", "MANAGER", "PRODUCT_OWNER"):
+        # Check venue approval settings
+        venue_cfg = await db.venue_configs.find_one({"venue_id": venue_id})
+        approval_rules = {}
+        if venue_cfg:
+            rules = venue_cfg.get("rules", {})
+            approval_rules = rules.get("approval", {}).get("manual_clocking", {})
+
+        if approval_rules.get("auto_approve_enabled", False):
+            needs_approval = False
+        elif not is_on_behalf:
+            # Manager adding their own entry — still needs approval by default
+            needs_approval = True
+        else:
+            # Manager adding on behalf — check config
+            if not approval_rules.get("staff_app_requires_approval", True):
+                needs_approval = False
+
+    # ── Build the record payload ─────────────────────────────────
+    record_id = str(uuid.uuid4())
+    record_payload = {
+        "id": record_id,
+        "venue_id": venue_id,
+        "employee_id": target_emp_id,
+        "employee_name": target_emp_name,
+        "day_of_week": day_of_week,
+        "date": display_date,
+        "clocking_in": request.clock_in,
+        "clocking_out": request.clock_out,
+        "hours_worked": hours_worked,
+        "status": "completed",
+        "cost_centre": request.cost_centre or request.work_area or "N/A",
+        "work_area": request.work_area,
+        "source_device": "manual_entry",
+        "device_name": "Manual Entry",
+        "device_info": request.device_info,
+        "modified_by": user_name,
+        "created_by": user_name,
+        "remark": request.reason,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    # ── Route: approval or direct insert ─────────────────────────
+    if needs_approval:
+        approval_id = str(uuid.uuid4())
+        approval_doc = {
+            "id": approval_id,
+            "venue_id": venue_id,
+            "type": "manual_clock_entry",
+            "source": "manual_entry",
+            "employee_id": target_emp_id,
+            "employee_name": target_emp_name,
+            "requested_by": user_id,
+            "requested_by_name": user_name,
+            "reason": approval_reason,
+            "details": {
+                "date": display_date,
+                "day_of_week": day_of_week,
+                "clock_in": request.clock_in,
+                "clock_out": request.clock_out,
+                "hours_worked": hours_worked,
+                "work_area": request.work_area or "N/A",
+                "cost_centre": request.cost_centre or "N/A",
+                "reason": request.reason,
+            },
+            "payload": record_payload,  # Full record to insert on approval
+            "status": "pending",
+            "priority": "normal",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+        }
+        await db.approval_requests.insert_one(approval_doc)
+        return {
+            "success": True,
+            "requires_approval": True,
+            "approval_id": approval_id,
+            "message": f"Clock entry for {display_date} sent for approval",
+            "status": "pending_approval",
+        }
+    else:
+        # Direct insert — no approval needed
+        await db["clocking_records"].insert_one(record_payload)
+        return {
+            "success": True,
+            "requires_approval": False,
+            "record_id": record_id,
+            "message": f"Clock entry added for {display_date}: {request.clock_in} - {request.clock_out} ({hours_worked}h)",
+            "status": "completed",
+        }

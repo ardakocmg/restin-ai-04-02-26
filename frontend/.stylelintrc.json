@@ -2,18 +2,33 @@
     "extends": [
         "stylelint-config-standard"
     ],
+    "plugins": [
+        "stylelint-declaration-strict-value"
+    ],
     "rules": {
-        "color-named": "never",
-        "declaration-property-value-disallowed-list": {
-            "color": [
-                "/^#/"
+        "scale-unlimited/declaration-strict-value": [
+            [
+                "/color/",
+                "fill",
+                "stroke",
+                "background-color"
             ],
-            "background-color": [
-                "#000000",
-                "#ffffff"
-            ]
-        },
-        "custom-property-pattern": null,
-        "selector-class-pattern": null
+            {
+                "ignoreValues": [
+                    "currentColor",
+                    "transparent",
+                    "inherit",
+                    "initial",
+                    "none"
+                ],
+                "message": "Avoid hardcoded colors. Use CSS variables (var(--...)) for Dark Mode compatibility."
+            }
+        ],
+        "color-no-hex": [
+            true,
+            {
+                "message": "Do not use hex colors. Use theme variables."
+            }
+        ]
     }
 }

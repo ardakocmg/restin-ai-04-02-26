@@ -241,8 +241,7 @@ const menuItems = [
   },
 
   // GOOGLE & INTEGRATION
-  { title: 'Google Hub', icon: Globe, href: '/admin/google', group: 'settings', requiredRole: 'OWNER' },
-  { title: 'Workspace & SSO', icon: Shield, href: '/admin/google-workspace', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Google Integration', icon: Globe, href: '/admin/google-workspace', group: 'settings', requiredRole: 'OWNER' },
   { title: 'Integrations', icon: Layers, href: '/admin/integrations', group: 'settings', requiredRole: 'OWNER' },
 
   // RESTIN.AI COMMERCIAL MODULES (Protocol v18.0)

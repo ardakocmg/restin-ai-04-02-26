@@ -50,6 +50,7 @@ interface ColumnFilters {
 /* ── Constants ────────────────────────────────────── */
 const TYPE_CONFIG: Record<string, { label: string; icon: typeof Clock; color: string }> = {
     manual_clocking: { label: 'Manual Clocking', icon: Timer, color: 'text-blue-400' },
+    manual_clock_entry: { label: 'Clock Entry', icon: Clock, color: 'text-cyan-400' },
     leave: { label: 'Leave Request', icon: Calendar, color: 'text-emerald-400' },
     expense: { label: 'Expense', icon: FileText, color: 'text-amber-400' },
     schedule_change: { label: 'Schedule Change', icon: Clock, color: 'text-purple-400' },
@@ -73,6 +74,7 @@ const PRIORITY_CONFIG: Record<string, { label: string; color: string }> = {
 const TABS = [
     { id: 'all', label: 'All Requests' },
     { id: 'manual_clocking', label: 'Manual Clocking' },
+    { id: 'manual_clock_entry', label: 'Clock Entries' },
     { id: 'leave', label: 'Leave' },
     { id: 'other', label: 'Other' },
 ];

@@ -341,6 +341,15 @@ async def approve_request(
             doc.get("ip_address"), doc.get("device_info"), doc.get("geolocation")
         )
 
+    # If manual_clock_entry → insert the pre-built clocking record directly
+    if doc.get("type") == "manual_clock_entry":
+        payload = doc.get("payload", {})
+        if payload:
+            payload["approved_by"] = reviewer_name
+            payload["approved_at"] = now.isoformat()
+            payload.pop("_id", None)  # Remove mongo _id if present
+            await db["clocking_records"].insert_one(payload)
+
     return {
         "success": True,
         "request_id": request_id,

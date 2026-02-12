@@ -174,14 +174,14 @@ const MigrationHub = () => {
                     <Button
                         variant={viewMode === 'wizard' ? 'default' : 'outline'}
                         onClick={() => setViewMode('wizard')}
-                        className={viewMode === 'wizard' ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'border-border text-foreground hover:bg-accent hover:text-accent-foreground'}
+                        className={viewMode === 'wizard' ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'border-border text-foreground hover:bg-accent hover:text-accent-foreground'}
                     >
                         New Sync
                     </Button>
                     <Button
                         variant={viewMode === 'history' ? 'default' : 'outline'}
                         onClick={() => { setViewMode('history'); fetchHistory(); }}
-                        className={viewMode === 'history' ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'border-border text-foreground hover:bg-accent hover:text-accent-foreground'}
+                        className={viewMode === 'history' ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'border-border text-foreground hover:bg-accent hover:text-accent-foreground'}
                     >
                         History
                     </Button>
@@ -189,7 +189,7 @@ const MigrationHub = () => {
             </div>
 
             {viewMode === 'history' ? (
-                <Card className="bg-zinc-900 border-zinc-800">
+                <Card className="bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between">
                         <CardTitle>Migration Logs</CardTitle>
                         <Button variant="outline" size="sm" onClick={() => setViewMode('wizard')}>
@@ -198,8 +198,8 @@ const MigrationHub = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="overflow-x-auto">
-                            <table className="w-full text-left text-sm text-zinc-400">
-                                <thead className="text-xs uppercase bg-zinc-950 text-zinc-500 font-bold border-b border-zinc-800">
+                            <table className="w-full text-left text-sm text-muted-foreground">
+                                <thead className="text-xs uppercase bg-muted text-muted-foreground font-bold border-b border-border">
                                     <tr>
                                         <th className="px-4 py-3">Date</th>
                                         <th className="px-4 py-3">Filename</th>
@@ -209,32 +209,32 @@ const MigrationHub = () => {
                                         <th className="px-4 py-3">Summary</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-zinc-800">
+                                <tbody className="divide-y divide-border">
                                     {history.length === 0 ? (
                                         <tr>
-                                            <td colSpan="6" className="px-4 py-8 text-center text-zinc-600 italic">No migration history found.</td>
+                                            <td colSpan="6" className="px-4 py-8 text-center text-muted-foreground italic">No migration history found.</td>
                                         </tr>
                                     ) : (
                                         history.map((log) => (
-                                            <tr key={log._id || log.id} className="hover:bg-zinc-800/50 transition-colors">
-                                                <td className="px-4 py-3 font-mono text-xs text-zinc-500">
+                                            <tr key={log._id || log.id} className="hover:bg-muted/50 transition-colors">
+                                                <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
                                                     {log.executed_at ? new Date(log.executed_at).toLocaleString() : (log.started_at ? new Date(log.started_at).toLocaleString() : '-')}
                                                 </td>
                                                 <td className="px-4 py-3">
-                                                    <span className="text-zinc-300 text-xs font-mono truncate max-w-[180px] block" title={log.filename}>
+                                                    <span className="text-foreground text-xs font-mono truncate max-w-[180px] block" title={log.filename}>
                                                         {log.filename || '-'}
                                                     </span>
                                                 </td>
                                                 <td className="px-4 py-3">
-                                                    <Badge variant="outline" className="capitalize bg-zinc-800">{log.source}</Badge>
+                                                    <Badge variant="outline" className="capitalize bg-muted text-muted-foreground border-border">{log.source}</Badge>
                                                 </td>
                                                 <td className="px-4 py-3 capitalize">{log.mode}</td>
                                                 <td className="px-4 py-3">
-                                                    <Badge className={log.status === 'completed' ? 'bg-green-600' : 'bg-red-600'}>
+                                                    <Badge className={log.status === 'completed' ? 'bg-success' : 'bg-destructive'}>
                                                         {log.status}
                                                     </Badge>
                                                 </td>
-                                                <td className="px-4 py-3 text-zinc-300">
+                                                <td className="px-4 py-3 text-muted-foreground">
                                                     {log.stats ? `${log.stats.new || 0} new, ${log.stats.updated || 0} updated` : (log.summary || 'No summary')}
                                                 </td>
                                             </tr>
@@ -249,7 +249,7 @@ const MigrationHub = () => {
                 <>
                     {step > 1 && (
                         <div className="flex justify-end mb-4">
-                            <Button variant="outline" onClick={reset} size="sm" className="border-zinc-600 text-zinc-200 hover:bg-zinc-800 hover:text-white">
+                            <Button variant="outline" onClick={reset} size="sm" className="border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground">
                                 Reset Wizard
                             </Button>
                         </div>
@@ -262,19 +262,19 @@ const MigrationHub = () => {
                                 <Card
                                     key={p.id}
                                     onClick={() => { setSelectedProvider(p); setStep(2); }}
-                                    className="bg-zinc-900 border-zinc-800 hover:border-zinc-600 cursor-pointer transition-all hover:scale-[1.02]"
+                                    className="bg-card border-border hover:border-primary/50 cursor-pointer transition-all hover:scale-[1.02]"
                                 >
                                     <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                                        <CardTitle className="text-xl font-bold text-white">{p.name}</CardTitle>
+                                        <CardTitle className="text-xl font-bold text-foreground">{p.name}</CardTitle>
                                         <span className="text-4xl">{p.icon}</span>
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-zinc-400 font-medium mb-4">{p.type}</div>
+                                        <div className="text-muted-foreground font-medium mb-4">{p.type}</div>
                                         <div className="flex gap-2">
-                                            <Badge variant="outline" className="bg-zinc-800 text-zinc-300">
+                                            <Badge variant="outline" className="bg-muted text-muted-foreground border-border">
                                                 CSV Import
                                             </Badge>
-                                            <Badge variant="outline" className="bg-zinc-800 text-zinc-300">
+                                            <Badge variant="outline" className="bg-muted text-muted-foreground border-border">
                                                 API Link
                                             </Badge>
                                         </div>
@@ -289,7 +289,7 @@ const MigrationHub = () => {
 
                     {/* STEP 2: CONFIGURE */}
                     {step === 2 && selectedProvider && (
-                        <Card className="bg-zinc-900 border-zinc-800 max-w-2xl mx-auto">
+                        <Card className="bg-card border-border max-w-2xl mx-auto">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-3">
                                     <span className="text-2xl">{selectedProvider.icon}</span>
@@ -301,21 +301,21 @@ const MigrationHub = () => {
                                 <div className="grid grid-cols-2 gap-4">
                                     <button
                                         onClick={() => setMode('migrate')}
-                                        className={`p-4 rounded-xl border-2 text-left transition-all ${mode === 'migrate' ? 'border-primary bg-primary/10' : 'border-zinc-700 hover:border-zinc-500'}`}
+                                        className={`p-4 rounded-xl border-2 text-left transition-all ${mode === 'migrate' ? 'border-primary bg-primary/10' : 'border-border hover:border-muted-foreground/50'}`}
                                     >
-                                        <div className="font-bold text-white flex items-center gap-2">
+                                        <div className="font-bold text-foreground flex items-center gap-2">
                                             <Upload className="w-5 h-5" /> Migrate Data
                                         </div>
-                                        <p className="text-xs text-zinc-400 mt-1">One-time import. You own and edit the data in Restin.</p>
+                                        <p className="text-xs text-muted-foreground mt-1">One-time import. You own and edit the data in Restin.</p>
                                     </button>
                                     <button
                                         onClick={() => setMode('link')}
-                                        className={`p-4 rounded-xl border-2 text-left transition-all ${mode === 'link' ? 'border-primary bg-primary/10' : 'border-zinc-700 hover:border-zinc-500'}`}
+                                        className={`p-4 rounded-xl border-2 text-left transition-all ${mode === 'link' ? 'border-primary bg-primary/10' : 'border-border hover:border-muted-foreground/50'}`}
                                     >
-                                        <div className="font-bold text-white flex items-center gap-2">
+                                        <div className="font-bold text-foreground flex items-center gap-2">
                                             <Link className="w-5 h-5" /> API Link (Hybrid)
                                         </div>
-                                        <p className="text-xs text-zinc-400 mt-1">Read-only in Restin. Syncs daily from {selectedProvider.name}.</p>
+                                        <p className="text-xs text-muted-foreground mt-1">Read-only in Restin. Syncs daily from {selectedProvider.name}.</p>
                                     </button>
                                 </div>
 
@@ -329,19 +329,19 @@ const MigrationHub = () => {
                                             ? 'border-primary bg-primary/10 scale-[1.01]'
                                             : file
                                                 ? 'border-green-500/50 bg-green-500/5'
-                                                : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-500 hover:bg-zinc-900'
+                                                : 'border-border bg-muted/50 hover:border-muted-foreground hover:bg-muted'
                                             }`}
                                     >
                                         <div className="flex flex-col items-center gap-4">
-                                            <div className={`p-4 rounded-full transition-transform duration-300 ${isDragging ? 'scale-110 bg-primary/20 text-primary' : file ? 'bg-green-500/20 text-green-500' : 'bg-zinc-800 text-zinc-500'}`}>
+                                            <div className={`p-4 rounded-full transition-transform duration-300 ${isDragging ? 'scale-110 bg-primary/20 text-primary' : file ? 'bg-green-500/20 text-green-500' : 'bg-muted text-muted-foreground'}`}>
                                                 {file ? <Check className="w-8 h-8" /> : <Upload className="w-8 h-8" />}
                                             </div>
 
                                             <div>
-                                                <h3 className="text-xl font-bold text-white mb-1">
+                                                <h3 className="text-xl font-bold text-foreground mb-1">
                                                     {file ? file.name : 'Drop export file here'}
                                                 </h3>
-                                                <p className="text-zinc-400 text-sm max-w-[280px] mx-auto leading-relaxed">
+                                                <p className="text-muted-foreground text-sm max-w-[280px] mx-auto leading-relaxed">
                                                     {file
                                                         ? `${(file.size / 1024).toFixed(1)} KB ready for analysis.`
                                                         : `Drag & drop or Click to upload CSV, Excel (XLSX), or JSON from ${selectedProvider.name}`}
@@ -358,9 +358,9 @@ const MigrationHub = () => {
 
                                             {!file && (
                                                 <div className="flex gap-2 mt-2">
-                                                    <Badge variant="outline" className="bg-zinc-950/50 text-[10px] text-zinc-500 border-zinc-800">CSV</Badge>
-                                                    <Badge variant="outline" className="bg-zinc-950/50 text-[10px] text-zinc-500 border-zinc-800">XLSX</Badge>
-                                                    <Badge variant="outline" className="bg-zinc-950/50 text-[10px] text-zinc-500 border-zinc-800">JSON</Badge>
+                                                    <Badge variant="outline" className="bg-muted/50 text-[10px] text-muted-foreground border-border">CSV</Badge>
+                                                    <Badge variant="outline" className="bg-muted/50 text-[10px] text-muted-foreground border-border">XLSX</Badge>
+                                                    <Badge variant="outline" className="bg-muted/50 text-[10px] text-muted-foreground border-border">JSON</Badge>
                                                 </div>
                                             )}
                                         </div>
@@ -370,8 +370,8 @@ const MigrationHub = () => {
                                 {/* API Key for Link Mode */}
                                 {mode === 'link' && (
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-zinc-300">API Key / Token</label>
-                                        <input type="password" placeholder="Enter API Key" className="w-full bg-zinc-800 border-zinc-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-primary outline-none" />
+                                        <label className="text-sm font-medium text-muted-foreground">API Key / Token</label>
+                                        <input type="password" placeholder="Enter API Key" className="w-full bg-input border-border rounded-lg p-3 text-foreground focus:ring-2 focus:ring-primary outline-none" />
                                     </div>
                                 )}
                             </CardContent>
@@ -387,7 +387,7 @@ const MigrationHub = () => {
 
                     {/* STEP 3: PREVIEW */}
                     {step === 3 && previewData && (
-                        <Card className="bg-zinc-900 border-zinc-800 max-w-3xl mx-auto">
+                        <Card className="bg-card border-border max-w-3xl mx-auto">
                             <CardHeader>
                                 <CardTitle>Migration Preview</CardTitle>
                             </CardHeader>
@@ -413,19 +413,19 @@ const MigrationHub = () => {
                                             {/* New Items Widget */}
                                             <div
                                                 onClick={() => setActiveTab('new')}
-                                                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'new' ? 'bg-green-950/30 border-green-500/50 shadow-[0_0_30px_rgba(34,197,94,0.1)]' : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900'}`}
+                                                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'new' ? 'bg-success/10 border-success/50 shadow-[0_0_30px_rgba(34,197,94,0.1)]' : 'bg-card border-border hover:border-border/80 hover:bg-accent/50'}`}
                                             >
                                                 <div className="flex justify-between items-start mb-4">
-                                                    <div className={`p-3 rounded-xl ${activeTab === 'new' ? 'bg-green-500 text-zinc-950' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700'}`}>
+                                                    <div className={`p-3 rounded-xl ${activeTab === 'new' ? 'bg-success text-success-foreground' : 'bg-muted text-muted-foreground group-hover:bg-accent'}`}>
                                                         <div className="text-xl">📦</div>
                                                     </div>
                                                     {activeTab === 'new' && <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />}
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <div className={`text-4xl font-black tracking-tight ${activeTab === 'new' ? 'text-white' : 'text-zinc-300'}`}>
+                                                    <div className={`text-4xl font-black tracking-tight ${activeTab === 'new' ? 'text-foreground' : 'text-muted-foreground'}`}>
                                                         {previewData.new}
                                                     </div>
-                                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === 'new' ? 'text-green-400' : 'text-zinc-500'}`}>
+                                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === 'new' ? 'text-success' : 'text-muted-foreground'}`}>
                                                         New Items
                                                     </div>
                                                 </div>
@@ -437,19 +437,19 @@ const MigrationHub = () => {
                                             {/* Updates Widget */}
                                             <div
                                                 onClick={() => setActiveTab('update')}
-                                                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'update' ? 'bg-amber-950/30 border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.1)]' : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900'}`}
+                                                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'update' ? 'bg-warning/10 border-warning/50 shadow-[0_0_30px_rgba(245,158,11,0.1)]' : 'bg-card border-border hover:border-border/80 hover:bg-accent/50'}`}
                                             >
                                                 <div className="flex justify-between items-start mb-4">
-                                                    <div className={`p-3 rounded-xl ${activeTab === 'update' ? 'bg-amber-500 text-zinc-950' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700'}`}>
+                                                    <div className={`p-3 rounded-xl ${activeTab === 'update' ? 'bg-warning text-warning-foreground' : 'bg-muted text-muted-foreground group-hover:bg-accent'}`}>
                                                         <div className="text-xl">🔄</div>
                                                     </div>
                                                     {activeTab === 'update' && <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />}
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <div className={`text-4xl font-black tracking-tight ${activeTab === 'update' ? 'text-white' : 'text-zinc-300'}`}>
+                                                    <div className={`text-4xl font-black tracking-tight ${activeTab === 'update' ? 'text-foreground' : 'text-muted-foreground'}`}>
                                                         {previewData.update}
                                                     </div>
-                                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === 'update' ? 'text-amber-400' : 'text-zinc-500'}`}>
+                                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === 'update' ? 'text-warning' : 'text-muted-foreground'}`}>
                                                         Updates
                                                     </div>
                                                 </div>
@@ -461,19 +461,19 @@ const MigrationHub = () => {
                                             {/* Conflicts Widget */}
                                             <div
                                                 onClick={() => setActiveTab('conflict')}
-                                                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'conflict' ? 'bg-red-950/30 border-red-500/50 shadow-[0_0_30px_rgba(239,68,68,0.1)]' : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900'}`}
+                                                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'conflict' ? 'bg-destructive/10 border-destructive/50 shadow-[0_0_30px_rgba(239,68,68,0.1)]' : 'bg-card border-border hover:border-border/80 hover:bg-accent/50'}`}
                                             >
                                                 <div className="flex justify-between items-start mb-4">
-                                                    <div className={`p-3 rounded-xl ${activeTab === 'conflict' ? 'bg-red-500 text-white' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700'}`}>
+                                                    <div className={`p-3 rounded-xl ${activeTab === 'conflict' ? 'bg-destructive text-destructive-foreground' : 'bg-muted text-muted-foreground group-hover:bg-accent'}`}>
                                                         <div className="text-xl">⚠️</div>
                                                     </div>
                                                     {activeTab === 'conflict' && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <div className={`text-4xl font-black tracking-tight ${activeTab === 'conflict' ? 'text-white' : 'text-zinc-300'}`}>
+                                                    <div className={`text-4xl font-black tracking-tight ${activeTab === 'conflict' ? 'text-foreground' : 'text-muted-foreground'}`}>
                                                         {previewData.conflict}
                                                     </div>
-                                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === 'conflict' ? 'text-red-400' : 'text-zinc-500'}`}>
+                                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === 'conflict' ? 'text-destructive' : 'text-muted-foreground'}`}>
                                                         Conflicts
                                                     </div>
                                                 </div>
@@ -533,19 +533,19 @@ const MigrationHub = () => {
                                             {/* Unchanged Widget */}
                                             <div
                                                 onClick={() => setActiveTab('unchanged')}
-                                                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'unchanged' ? 'bg-teal-950/30 border-teal-500/50 shadow-[0_0_30px_rgba(20,184,166,0.1)]' : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900'}`}
+                                                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer group overflow-hidden ${activeTab === 'unchanged' ? 'bg-muted/30 border-muted/50 shadow-[0_0_30px_rgba(20,184,166,0.1)]' : 'bg-card border-border hover:border-border/80 hover:bg-accent/50'}`}
                                             >
                                                 <div className="flex justify-between items-start mb-4">
-                                                    <div className={`p-3 rounded-xl ${activeTab === 'unchanged' ? 'bg-teal-500 text-white' : 'bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700'}`}>
+                                                    <div className={`p-3 rounded-xl ${activeTab === 'unchanged' ? 'bg-muted text-foreground' : 'bg-muted text-muted-foreground group-hover:bg-accent'}`}>
                                                         <div className="text-xl">✓</div>
                                                     </div>
                                                     {activeTab === 'unchanged' && <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />}
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <div className={`text-4xl font-black tracking-tight ${activeTab === 'unchanged' ? 'text-white' : 'text-zinc-300'}`}>
+                                                    <div className={`text-4xl font-black tracking-tight ${activeTab === 'unchanged' ? 'text-foreground' : 'text-muted-foreground'}`}>
                                                         {previewData.unchanged || 0}
                                                     </div>
-                                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === 'unchanged' ? 'text-teal-400' : 'text-zinc-500'}`}>
+                                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === 'unchanged' ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
                                                         Unchanged
                                                     </div>
                                                 </div>
@@ -567,9 +567,9 @@ const MigrationHub = () => {
                                     const hiddenCount = mappings.length - 10;
 
                                     return (
-                                        <div className="mt-4 p-4 bg-zinc-800/30 rounded-xl border border-zinc-700/50">
+                                        <div className="mt-4 p-4 bg-muted/30 rounded-xl border border-border">
                                             <div className="flex items-center justify-between mb-3">
-                                                <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-2">
+                                                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                                                     <span className="text-blue-500">🔗</span> Smart Column Mapping
                                                 </h3>
                                                 <div className="flex items-center gap-2">
@@ -581,13 +581,13 @@ const MigrationHub = () => {
                                                     </Badge>
                                                 </div>
                                             </div>
-                                            <div className="text-xs text-zinc-500 mb-3">
+                                            <div className="text-xs text-muted-foreground mb-3">
                                                 Restin auto-linked Excel columns to Recipe fields. Review the mapping below:
                                             </div>
                                             <div className="overflow-x-auto max-h-[300px] overflow-y-auto">
                                                 <table className="w-full text-xs">
-                                                    <thead className="sticky top-0 bg-zinc-900">
-                                                        <tr className="text-zinc-500 text-left border-b border-zinc-700/50">
+                                                    <thead className="sticky top-0 bg-card">
+                                                        <tr className="text-muted-foreground text-left border-b border-border">
                                                             <th className="pb-2 pr-4 font-medium">Excel Column</th>
                                                             <th className="pb-2 px-2 font-medium text-center">→</th>
                                                             <th className="pb-2 px-4 font-medium">Recipe Field</th>
@@ -621,19 +621,19 @@ const MigrationHub = () => {
 
                                                             return (
                                                                 <tr key={idx} className="border-t border-zinc-800/50 hover:bg-white/5 transition-colors">
-                                                                    <td className="py-2 pr-4 text-zinc-300 font-mono truncate max-w-[180px]" title={originalCol}>
+                                                                    <td className="py-2 pr-4 text-muted-foreground font-mono truncate max-w-[180px]" title={originalCol}>
                                                                         {originalCol.length > 30 ? originalCol.substring(0, 27) + "..." : originalCol}
                                                                     </td>
                                                                     <td className={`py-2 px-2 text-center font-bold ${isHighConfidence ? 'text-green-500' : 'text-zinc-600'}`}>→</td>
                                                                     <td className="py-2 px-4">
                                                                         <span className={`px-2 py-0.5 rounded font-medium ${isHighConfidence
                                                                             ? 'bg-emerald-950/50 text-emerald-400'
-                                                                            : 'bg-zinc-800/50 text-zinc-500'
+                                                                            : 'bg-muted text-muted-foreground'
                                                                             }`}>
                                                                             {targetField}
                                                                         </span>
                                                                     </td>
-                                                                    <td className="py-2 pl-4 text-zinc-500 font-mono text-[10px] truncate max-w-[150px]" title={String(sampleData)}>
+                                                                    <td className="py-2 pl-4 text-muted-foreground font-mono text-[10px] truncate max-w-[150px]" title={String(sampleData)}>
                                                                         {String(sampleData).length > 25 ? String(sampleData).substring(0, 22) + "..." : sampleData}
                                                                     </td>
                                                                 </tr>
@@ -655,7 +655,7 @@ const MigrationHub = () => {
                                             {showAllMappings && hiddenCount > 0 && (
                                                 <button
                                                     onClick={() => setShowAllMappings(false)}
-                                                    className="mt-3 w-full py-2 text-xs text-zinc-400 hover:text-zinc-300 bg-zinc-800/20 hover:bg-zinc-800/40 rounded-lg border border-zinc-700/30 transition-colors"
+                                                    className="mt-3 w-full py-2 text-xs text-muted-foreground hover:text-foreground bg-muted hover:bg-accent rounded-lg border border-border transition-colors"
                                                 >
                                                     Show less
                                                 </button>
@@ -671,18 +671,18 @@ const MigrationHub = () => {
                                 })()}
 
                                 {/* Detailed View Area */}
-                                <div className="min-h-[400px] bg-zinc-900/30 rounded-2xl border border-zinc-800/50 overflow-hidden flex flex-col">
+                                <div className="min-h-[400px] bg-card/30 rounded-2xl border border-border overflow-hidden flex flex-col">
                                     {!previewData.error && (
                                         <>
                                             {/* Header for Detail View */}
-                                            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-zinc-900/50">
+                                            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-card/50">
                                                 <div className="flex items-center gap-3">
                                                     <div className={`w-2 h-2 rounded-full ${activeTab === 'new' ? 'bg-green-500' : activeTab === 'update' ? 'bg-amber-500' : activeTab === 'unchanged' ? 'bg-teal-500' : 'bg-red-500'}`} />
-                                                    <h3 className="font-bold text-white uppercase tracking-wider text-xs">
+                                                    <h3 className="font-bold text-foreground uppercase tracking-wider text-xs">
                                                         {activeTab === 'new' ? 'Incoming Items' : activeTab === 'update' ? 'Updates Logic' : activeTab === 'unchanged' ? 'Synced Items' : 'Conflict Resolution'}
                                                     </h3>
                                                 </div>
-                                                <div className="text-[10px] text-zinc-500 font-mono uppercase">
+                                                <div className="text-[10px] text-muted-foreground font-mono uppercase">
                                                     {activeTab === 'new' ? `${previewData.new} Items` : activeTab === 'update' ? `${previewData.update} Items` : activeTab === 'unchanged' ? `${previewData.unchanged} Items` : `${previewData.conflict} Issues`}
                                                 </div>
                                             </div>
@@ -694,17 +694,17 @@ const MigrationHub = () => {
                                                     <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                                                         <div className="p-2 divide-y divide-white/5">
                                                             {previewData.new === 0 ? (
-                                                                <div className="py-20 text-center text-zinc-600 italic">No new items found.</div>
+                                                                <div className="py-20 text-center text-muted-foreground italic">No new items found.</div>
                                                             ) : (
                                                                 previewData.details.filter(d => d.type === 'new' || d.type === 'new_recipe' || d.type === 'new_employee').slice(0, visibleCount).map((d, i) => (
                                                                     <div key={i} className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors group">
                                                                         <div className="flex items-center gap-4">
-                                                                            <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-500 text-xs font-mono group-hover:bg-zinc-700 group-hover:text-white transition-colors">
+                                                                            <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-xs font-mono group-hover:bg-accent group-hover:text-foreground transition-colors">
                                                                                 {(i + 1).toString().padStart(2, '0')}
                                                                             </div>
                                                                             <div className="flex-1">
-                                                                                <div className="font-semibold text-zinc-200 group-hover:text-white transition-colors">{d.name}</div>
-                                                                                <div className="text-xs text-zinc-500 flex items-center gap-3 mt-0.5">
+                                                                                <div className="font-semibold text-foreground group-hover:text-foreground transition-colors">{d.name}</div>
+                                                                                <div className="text-xs text-muted-foreground flex items-center gap-3 mt-0.5">
                                                                                     <span className="font-mono bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded text-[10px] font-bold">
                                                                                         {d.item_id || `CB/${String(i + 1).padStart(3, '0')}`}
                                                                                     </span>
@@ -712,7 +712,7 @@ const MigrationHub = () => {
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <Badge variant="outline" className="opacity-0 group-hover:opacity-100 transition-opacity bg-zinc-950 border-zinc-800 text-green-500 text-[10px] h-5">READY</Badge>
+                                                                        <Badge variant="outline" className="opacity-0 group-hover:opacity-100 transition-opacity bg-muted border-border text-success text-[10px] h-5">READY</Badge>
                                                                     </div>
                                                                 ))
                                                             )}
@@ -750,9 +750,9 @@ const MigrationHub = () => {
                                                                                 {String(i + 1).padStart(2, '0')}
                                                                             </div>
                                                                             <div className="flex-1">
-                                                                                <div className="text-base text-zinc-100 font-bold">{d.name}</div>
+                                                                                <div className="text-base text-foreground font-bold">{d.name}</div>
                                                                                 <div className="flex items-center gap-3 text-xs mt-1">
-                                                                                    <Badge className="bg-zinc-800 text-zinc-400 font-mono">{d.item_id || d.sku}</Badge>
+                                                                                    <Badge className="bg-card border-border font-mono">{d.item_id || d.sku}</Badge>
                                                                                     <span className="text-amber-500">{d.info}</span>
                                                                                 </div>
                                                                             </div>
@@ -836,8 +836,8 @@ const MigrationHub = () => {
                                                                                 <Check className="w-4 h-4" />
                                                                             </div>
                                                                             <div className="flex-1">
-                                                                                <div className="font-semibold text-zinc-200 group-hover:text-white transition-colors">{d.name}</div>
-                                                                                <div className="text-xs text-zinc-500 flex items-center gap-3 mt-0.5">
+                                                                                <div className="font-semibold text-foreground group-hover:text-foreground transition-colors">{d.name}</div>
+                                                                                <div className="text-xs text-muted-foreground flex items-center gap-3 mt-0.5">
                                                                                     <span className="font-mono bg-teal-950 text-teal-400 px-1.5 py-0.5 rounded text-[10px] font-bold">
                                                                                         {d.item_id || `CB/${String(i + 1).padStart(3, '0')}`}
                                                                                     </span>
