@@ -20,8 +20,19 @@ load_dotenv(BACKEND_DIR / ".env")
 
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
 DB_NAME = os.environ.get("DB_NAME", "restin_ai_db")
-VENUE_ID = "venue-marvin-group"
 MALTA_TZ = ZoneInfo("Europe/Malta")
+
+# ── Venue Architecture ────────────────────────────────────────────────────
+# Marvin Group is the ORGANIZATION (vendor/group), NOT a venue.
+# Real venues are the 3 restaurants:
+ORG_NAME = "Marvin Gauci Group"
+VENDOR_TO_VENUE = {
+    "Don Royale": "venue-don-royale",
+    "Caviar and Bull": "venue-caviar-bull",
+    "Sole by Tarragon": "venue-sole-tarragon",
+}
+ALL_VENUE_IDS = list(VENDOR_TO_VENUE.values())
+DEFAULT_VENUE = "venue-caviar-bull"  # Default primary venue
 
 # ── Employee Roster (10 staff from mock_data_store) ──────────────────────
 EMPLOYEES = [
@@ -206,10 +217,14 @@ async def seed():
         emp_id = str(uuid.uuid4())
         emp_ids[e["code"]] = emp_id
 
+        primary_venue = VENDOR_TO_VENUE.get(e["vendor"], DEFAULT_VENUE)
+
         doc = {
             "id": emp_id,
             "display_id": f"EMP-{e['code']}",
-            "venue_id": VENUE_ID,
+            "venue_id": primary_venue,
+            "organization": ORG_NAME,
+            "allowed_venue_ids": ALL_VENUE_IDS,
             "name": e["full_name"],
             "full_name": e["full_name"],
             "short_name": e["surname"],
@@ -246,7 +261,7 @@ async def seed():
             "updated_at": datetime.now(timezone.utc).isoformat(),
         }
         await db.employees.update_one(
-            {"display_id": f"EMP-{e['code']}", "venue_id": VENUE_ID},
+            {"display_id": f"EMP-{e['code']}"},
             {"$set": doc},
             upsert=True,
         )
@@ -265,6 +280,8 @@ async def seed():
         if role_upper == "MANAGER":
             role_upper = "OWNER"
 
+        primary_venue = VENDOR_TO_VENUE.get(e["vendor"], DEFAULT_VENUE)
+
         user_doc = {
             "id": emp_ids[e["code"]],
             "name": e["full_name"],
@@ -273,14 +290,15 @@ async def seed():
             "pin": pin,
             "pin_hash": _pin_hash(pin),
             "role": role_upper,
-            "venue_id": VENUE_ID,
-            "venueId": VENUE_ID,
-            "venueName": "Marvin Gauci Group",
+            "venue_id": primary_venue,
+            "venueId": primary_venue,
+            "venueName": e["vendor"],
+            "organization": ORG_NAME,
             "department": e["department"],
             "employeeCode": e["code"],
             "active": True,
-            "allowed_venue_ids": [VENUE_ID],
-            "default_venue_id": VENUE_ID,
+            "allowed_venue_ids": ALL_VENUE_IDS,
+            "default_venue_id": primary_venue,
             "profilePicture": None,
             "created_at": datetime.now(timezone.utc).isoformat(),
         }
@@ -296,7 +314,8 @@ async def seed():
     for e in EMPLOYEES:
         detail = {
             "id": emp_ids[e["code"]],
-            "venue_id": VENUE_ID,
+            "venue_id": VENDOR_TO_VENUE.get(e["vendor"], DEFAULT_VENUE),
+            "organization": ORG_NAME,
             "personal_details": {
                 "code": e["code"],
                 "id_number": e["id_number"],
@@ -472,7 +491,8 @@ async def seed():
 
     run_doc = {
         "id": run_id,
-        "venue_id": VENUE_ID,
+        "venue_id": "all",  # Group-wide payroll run
+        "organization": ORG_NAME,
         "run_name": "January 2026",
         "period": "2026-01",
         "period_start": "01/01/2026",
@@ -509,7 +529,8 @@ async def seed():
             "employee_code": e["code"],
             "id_number": e["id_number"],
             "ss_number": e["ss_number"],
-            "venue_id": VENUE_ID,
+            "venue_id": VENDOR_TO_VENUE.get(e["vendor"], DEFAULT_VENUE),
+            "organization": ORG_NAME,
             "year": 2025,
             "gross_emoluments": round(gross_annual, 2),
             "tax_deducted": tax_annual,
@@ -528,7 +549,8 @@ async def seed():
     for month in range(1, 13):
         fs5 = {
             "id": f"fs5-2025-{month:02d}",
-            "venue_id": VENUE_ID,
+            "venue_id": "all",  # Group-wide monthly return
+            "organization": ORG_NAME,
             "month": month,
             "year": 2025,
             "number_of_payees": len(EMPLOYEES),
@@ -550,7 +572,8 @@ async def seed():
     total_fs5_payments = round((total_tax + total_ssc_emp + total_ssc_employer + total_maternity) * 12, 2)
     fs7 = {
         "id": "fs7-2025",
-        "venue_id": VENUE_ID,
+        "venue_id": "all",  # Group-wide annual reconciliation
+        "organization": ORG_NAME,
         "year": 2025,
         "total_gross_emoluments": round(total_gross * 12, 2),
         "total_tax_deducted": round(total_tax * 12, 2),
@@ -570,8 +593,9 @@ async def seed():
     print("\n[8/8] Seeding shifts & clocking records...")
 
     # Clean old data
-    await db.shifts.delete_many({"venue_id": VENUE_ID})
-    await db.clocking_records.delete_many({"venue_id": VENUE_ID})
+    for vid in ALL_VENUE_IDS:
+        await db.shifts.delete_many({"venue_id": vid})
+        await db.clocking_records.delete_many({"venue_id": vid})
 
     # Shift patterns per department
     SHIFT_PATTERNS = {
@@ -621,9 +645,11 @@ async def seed():
             hours = round((end_total - start_total) / 60, 2)
 
             shift_id = str(uuid.uuid4())
+            primary_venue = VENDOR_TO_VENUE.get(e["vendor"], DEFAULT_VENUE)
             shift_doc = {
                 "id": shift_id,
-                "venue_id": VENUE_ID,
+                "venue_id": primary_venue,
+                "organization": ORG_NAME,
                 "employee_id": emp_ids[e["code"]],
                 "employee_name": e["full_name"],
                 "role": e["occupation"],
@@ -659,7 +685,8 @@ async def seed():
 
                 clocking_doc = {
                     "id": f"clk-{e['code']}-{day.strftime('%Y%m%d')}",
-                    "venue_id": VENUE_ID,
+                    "venue_id": primary_venue,
+                    "organization": ORG_NAME,
                     "employee_id": emp_ids[e["code"]],
                     "day_of_week": day.strftime("%A"),
                     "date": day.strftime("%d/%m/%Y"),
@@ -699,7 +726,8 @@ async def seed():
     print(f"  FS7 Form:         1 (2025)")
     print(f"  Shifts:           {shifts_inserted}")
     print(f"  Clocking Records: {clocking_inserted}")
-    print(f"  Venue:            {VENUE_ID}")
+    print(f"  Organization:     {ORG_NAME}")
+    print(f"  Venues:           {', '.join(ALL_VENUE_IDS)}")
     print("=" * 70)
 
     client.close()
