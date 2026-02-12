@@ -284,6 +284,7 @@ async def seed():
 
         user_doc = {
             "id": emp_ids[e["code"]],
+            "employee_id": emp_ids[e["code"]],  # Link user → employee
             "name": e["full_name"],
             "fullName": e["full_name"],
             "email": e["email"],
@@ -296,6 +297,8 @@ async def seed():
             "organization": ORG_NAME,
             "department": e["department"],
             "employeeCode": e["code"],
+            "employee_code": e["code"],  # Canonical field for code lookup
+            "display_id": f"EMP-{e['code']}",  # Match employee display_id
             "active": True,
             "allowed_venue_ids": ALL_VENUE_IDS,
             "default_venue_id": primary_venue,

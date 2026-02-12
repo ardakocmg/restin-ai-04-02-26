@@ -39,8 +39,16 @@ def create_payroll_mt_router():
         cfg = await config_repo.get(venue_id)
         require_feature(cfg, "payroll_mt", "payroll")
         
-        payruns = await db.pay_runs.find(
+        # Support org-wide ("all") and venue-specific payroll runs
+        allowed_venues = current_user.get("allowed_venue_ids", [venue_id])
+        venue_query = {"$or": [
             {"venue_id": venue_id},
+            {"venue_id": "all"},
+            {"venue_id": {"$in": allowed_venues}},
+        ]}
+        
+        payruns = await db.payroll_runs.find(
+            venue_query,
             {"_id": 0}
         ).sort("created_at", -1).to_list(100)
         

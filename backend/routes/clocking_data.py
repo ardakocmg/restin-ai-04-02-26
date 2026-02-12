@@ -47,7 +47,7 @@ async def get_clocking_data(
     db=Depends(get_database)
 ):
     """Get clocking data for date range (Lazy Seed from Mock)"""
-    venue_id = current_user.get("venueId") or "GLOBAL"
+    venue_id = current_user.get("venue_id") or current_user.get("venueId") or "GLOBAL"
 
     count = await db["clocking_records"].count_documents({})
 
@@ -122,7 +122,12 @@ async def get_clocking_data(
 
     query = {}
     if venue_id != "GLOBAL":
-        query["venue_id"] = venue_id
+        # Support multi-venue: show all clocking from user's allowed venues
+        allowed_venues = current_user.get("allowed_venue_ids", [venue_id])
+        if allowed_venues:
+            query["venue_id"] = {"$in": allowed_venues}
+        else:
+            query["venue_id"] = venue_id
 
     cursor = db["clocking_records"].find(query)
     records = [ClockingRecord(**doc) async for doc in cursor]

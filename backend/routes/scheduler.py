@@ -19,30 +19,47 @@ async def get_scheduler_data(
 
     start_dt = datetime.strptime(week_start, "%Y-%m-%d")
     end_dt = start_dt + timedelta(days=num_days)
-    venue_id = current_user.get("venueId")
+    venue_id = current_user.get("venue_id") or current_user.get("venueId")
+    allowed_venue_ids = current_user.get("allowed_venue_ids", [venue_id] if venue_id else [])
 
-    # ── 1. Fetch employees for this venue ────────────────────────────────
-    emp_query = {"venue_id": venue_id, "status": "active"} if venue_id else {"status": "active"}
+    # ── 1. Fetch employees for this venue (or all allowed venues) ──────
+    if allowed_venue_ids:
+        emp_query = {"venue_id": {"$in": allowed_venue_ids}, "status": "active"}
+    elif venue_id:
+        emp_query = {"venue_id": venue_id, "status": "active"}
+    else:
+        emp_query = {"status": "active"}
     employees = await db.employees.find(emp_query, {"_id": 0}).to_list(1000)
 
     if not employees:
         # Fallback: also try without status filter
-        emp_query_fb = {"venue_id": venue_id} if venue_id else {}
+        emp_query_fb = {"venue_id": {"$in": allowed_venue_ids}} if allowed_venue_ids else {}
         employees = await db.employees.find(emp_query_fb, {"_id": 0}).to_list(1000)
 
     # ── 2. Build shift lookup: emp_id -> {date_str: shift_doc} ───────────
-    shift_query = {
-        "venue_id": venue_id,
-        "date": {
-            "$gte": start_dt.strftime("%Y-%m-%d"),
-            "$lt": end_dt.strftime("%Y-%m-%d"),
+    if allowed_venue_ids:
+        shift_query = {
+            "venue_id": {"$in": allowed_venue_ids},
+            "date": {
+                "$gte": start_dt.strftime("%Y-%m-%d"),
+                "$lt": end_dt.strftime("%Y-%m-%d"),
+            }
         }
-    } if venue_id else {
-        "date": {
-            "$gte": start_dt.strftime("%Y-%m-%d"),
-            "$lt": end_dt.strftime("%Y-%m-%d"),
+    elif venue_id:
+        shift_query = {
+            "venue_id": venue_id,
+            "date": {
+                "$gte": start_dt.strftime("%Y-%m-%d"),
+                "$lt": end_dt.strftime("%Y-%m-%d"),
+            }
         }
-    }
+    else:
+        shift_query = {
+            "date": {
+                "$gte": start_dt.strftime("%Y-%m-%d"),
+                "$lt": end_dt.strftime("%Y-%m-%d"),
+            }
+        }
     shifts_cursor = db.shifts.find(shift_query, {"_id": 0})
     all_shifts = await shifts_cursor.to_list(5000)
 

@@ -95,8 +95,11 @@ def create_hr_payroll_advanced_router():
             
             selected_employees = run_data.get("employees", [])
             
-            # Fetch Target Employees
-            query = {"venue_id": venue_id, "status": "active"}
+            # Fetch Target Employees (support multi-venue for org-wide)
+            if venue_id == "all":
+                query = {"status": "active"}
+            else:
+                query = {"venue_id": venue_id, "status": "active"}
             if selected_employees:
                 query["id"] = {"$in": selected_employees}
                 
@@ -226,7 +229,11 @@ def create_hr_payroll_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        query = {"venue_id": venue_id}
+        # Support org-wide ("all") and venue-specific payroll runs
+        if venue_id == "all":
+            query = {"$or": [{"venue_id": "all"}, {"venue_id": {"$exists": True}}]}
+        else:
+            query = {"$or": [{"venue_id": venue_id}, {"venue_id": "all"}]}
         if state:
             query["state"] = state
         
