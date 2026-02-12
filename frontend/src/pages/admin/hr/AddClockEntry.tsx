@@ -86,7 +86,7 @@ export default function AddClockEntry() {
                     setWorkArea(res.data[0].code);
                 }
             } catch (err) {
-                logger.error('Failed to fetch work areas', err);
+                logger.error('Failed to fetch work areas', err as Record<string, unknown>);
                 // Use defaults
                 setWorkAreas([
                     { id: 'FOH', name: 'Front of House', code: 'FOH' },
