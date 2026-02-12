@@ -45,6 +45,7 @@ const IntegrationsHub = React.lazy(() => import("./pages/integrations/Integratio
 const DeliveryAggregators = React.lazy(() => import("./pages/integrations/DeliveryAggregators"));
 const FinanceProviderSettings = React.lazy(() => import("./pages/finance/FinanceProviderSettings"));
 const GoogleHub = React.lazy(() => import("./pages/google/GoogleHub"));
+const WorkspaceSettings = React.lazy(() => import("./pages/google/WorkspaceSettings"));
 const ProcurementHub = React.lazy(() => import("./pages/admin/procurement/ProcurementHub"));
 const RFQManagement = React.lazy(() => import("./pages/admin/procurement/RFQManagement"));
 const ApprovalWorkflow = React.lazy(() => import("./pages/admin/procurement/ApprovalWorkflow"));
@@ -473,6 +474,7 @@ function App() {
                                     <Route path="delivery-aggregators" element={<RoleRoute requiredRole="OWNER"><DeliveryAggregators /></RoleRoute>} />
                                     <Route path="finance-provider" element={<RoleRoute requiredRole="OWNER"><FinanceProviderSettings /></RoleRoute>} />
                                     <Route path="google" element={<RoleRoute requiredRole="OWNER"><GoogleHub /></RoleRoute>} />
+                                    <Route path="google-workspace" element={<RoleRoute requiredRole="OWNER"><WorkspaceSettings /></RoleRoute>} />
                                     <Route path="procurement" element={<RoleRoute requiredRole="OWNER"><ProcurementHub /></RoleRoute>} />
                                     <Route path="procurement/rfq" element={<RoleRoute requiredRole="OWNER"><RFQManagement /></RoleRoute>} />
                                     <Route path="procurement/approval" element={<RoleRoute requiredRole="OWNER"><ApprovalWorkflow /></RoleRoute>} />

@@ -236,6 +236,11 @@ const menuItems = [
     ]
   },
 
+  // GOOGLE & INTEGRATION
+  { title: 'Google Hub', icon: Globe, href: '/admin/google', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Workspace & SSO', icon: Shield, href: '/admin/google-workspace', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Integrations', icon: Layers, href: '/admin/integrations', group: 'settings', requiredRole: 'OWNER' },
+
   // RESTIN.AI COMMERCIAL MODULES (Protocol v18.0)
   { title: 'Control Tower', icon: LayoutDashboard, href: '/admin/restin', group: 'restin', requiredRole: 'OWNER' },
   { title: 'Website Builder', icon: Globe, href: '/admin/restin/web', group: 'restin', requiredRole: 'OWNER' },
