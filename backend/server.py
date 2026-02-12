@@ -163,6 +163,8 @@ from routes.fcm_routes import create_fcm_router  # Mobile Push Notifications
 from routes.orders_routes import create_orders_router  # Frontend /api/orders compatibility
 from routes.google_sso_routes import create_google_sso_router  # Google Workspace SSO
 from google.routes.workspace_routes import create_workspace_routes  # Workspace domain mgmt
+from routes.template_routes import create_template_router  # Template Wizard
+from routes.template_assets_routes import create_template_assets_router  # Template Assets
 
 # Shireburn Indigo Parity Routes
 from routes.summary_dashboard import router as summary_dashboard_router
@@ -393,6 +395,8 @@ workspace_router = create_workspace_routes()
 backup_router = create_backup_router()
 public_content_router = create_public_content_router()
 table_preferences_router = create_table_preferences_router()
+template_router = create_template_router()
+template_assets_router = create_template_assets_router()
 table_presets_router = create_table_presets_router()
 hr_feature_flags_router = create_hr_feature_flags_router()
 hr_audit_router = create_hr_audit_router()
@@ -642,6 +646,8 @@ api_main.include_router(inventory_router_new)
 api_main.include_router(production_router)
 api_main.include_router(pos_session_router)
 api_main.include_router(admin_router_new)
+api_main.include_router(template_router)
+api_main.include_router(template_assets_router)
 
 rbac_router = create_rbac_router()
 api_main.include_router(rbac_router)

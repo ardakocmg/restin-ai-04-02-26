@@ -175,3 +175,12 @@ class AuditActions:
     FISCAL_RECEIPT_ISSUED = "fiscal.receipt_issued"
     FISCAL_VOID = "fiscal.void"
     TAX_REPORT_GENERATED = "fiscal.tax_report"
+
+    # Template Wizard
+    TEMPLATE_CREATED = "template.created"
+    TEMPLATE_UPDATED = "template.updated"
+    TEMPLATE_PUBLISHED = "template.version_published"
+    TEMPLATE_ARCHIVED = "template.archived"
+    TEMPLATE_ASSET_UPLOADED = "template.asset_uploaded"
+    TEMPLATE_RENDERED = "template.rendered"
+    TEMPLATE_REPRINT = "template.reprint_detected"

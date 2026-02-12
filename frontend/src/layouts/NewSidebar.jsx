@@ -218,6 +218,7 @@ const menuItems = [
     ]
   },
   { title: 'Content Studio', icon: LayoutDashboard, href: '/admin/content-studio', group: 'settings', requiredRole: 'OWNER' },
+  { title: 'Template Studio', icon: LayoutDashboard, href: '/admin/templates', group: 'settings', requiredRole: 'MANAGER' },
   { title: 'Content Editor', icon: Type, href: '/admin/content-editor', group: 'settings', requiredRole: 'OWNER' },
   { title: 'Theme Customizer', icon: Palette, href: '/admin/theme', group: 'settings', requiredRole: 'OWNER' },
   { title: 'Microservices', icon: Server, href: '/admin/microservices', group: 'settings', requiredRole: 'OWNER' },

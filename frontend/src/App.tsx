@@ -72,6 +72,8 @@ const SeasonalPatterns = React.lazy(() => import("./pages/admin/forecasting/Seas
 const InternalOrders = React.lazy(() => import("./pages/admin/central-kitchen/InternalOrders"));
 const CostAnalysis = React.lazy(() => import("./pages/admin/recipe-engineering/CostAnalysis"));
 const VisualContentEditor = React.lazy(() => import("./pages/admin/VisualContentEditor"));
+const TemplateList = React.lazy(() => import("./pages/templates/TemplateList"));
+const TemplateEditor = React.lazy(() => import("./pages/templates/TemplateEditor"));
 
 // HR Reports
 const EmployeeDetailsReport = React.lazy(() => import("./pages/admin/hr/reports/EmployeeDetailsReport"));
@@ -412,6 +414,9 @@ function App() {
                                     <Route path="app-settings" element={<RoleRoute requiredRole="OWNER"><RestaurantAppSettings /></RoleRoute>} />
                                     <Route path="physical-tables" element={<RoleRoute requiredRole="MANAGER"><PhysicalTables /></RoleRoute>} />
                                     <Route path="content-studio" element={<RoleRoute requiredRole="OWNER"><ContentStudio /></RoleRoute>} />
+                                    <Route path="templates" element={<RoleRoute requiredRole="MANAGER"><TemplateList /></RoleRoute>} />
+                                    <Route path="templates/new" element={<RoleRoute requiredRole="MANAGER"><TemplateEditor /></RoleRoute>} />
+                                    <Route path="templates/:id" element={<RoleRoute requiredRole="MANAGER"><TemplateEditor /></RoleRoute>} />
                                     <Route path="logs" element={<RoleRoute requiredRole="OWNER"><LogsViewer /></RoleRoute>} />
                                     <Route path="finance" element={<RoleRoute requiredRole="OWNER"><FinanceDashboard /></RoleRoute>} />
                                     <Route path="accounting" element={<RoleRoute requiredRole="OWNER"><AccountingHub /></RoleRoute>} />
