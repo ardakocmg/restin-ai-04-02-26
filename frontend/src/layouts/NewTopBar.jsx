@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useVenue } from '../context/VenueContext';
 import { cn } from '@/lib/utils';
-import { Bell, Search, Settings, User, LogOut, ChevronDown, X, Wifi, WifiOff, AlertTriangle, ShieldCheck, ShieldAlert, Moon, Sun } from 'lucide-react';
+import { Bell, Search, Settings, User, LogOut, ChevronDown, X, Wifi, WifiOff, AlertTriangle, ShieldCheck, ShieldAlert, Moon, Sun, Building2, Check } from 'lucide-react';
 import { useSafeMode } from '../context/SafeModeContext';
 import { Button } from '../components/ui/button';
 import {
@@ -145,22 +145,67 @@ export default function NewTopBar() {
         backdropFilter: 'blur(10px)'
       }}
     >
-      {/* Left: Venue Info (Static Display) */}
+      {/* Left: Venue Switcher */}
       <div className="flex items-center gap-4 flex-shrink-0">
         {activeVenue && (
-          <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/5 hover:border-white/10 transition-all cursor-default group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center border border-white/10 shadow-inner">
-              <span className="text-xs font-bold text-zinc-400 group-hover:text-white transition-colors">{activeVenue.name.charAt(0)}</span>
-            </div>
-            <div>
-              <h2 className="text-sm font-bold text-zinc-200 tracking-tight group-hover:text-white transition-colors">
-                {activeVenue.name}
-              </h2>
-              <p className="text-[10px] uppercase font-black tracking-[0.2em] text-zinc-600 group-hover:text-zinc-500 transition-colors">
-                {activeVenue.type}
-              </p>
-            </div>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/5 hover:border-white/10 transition-all cursor-pointer group outline-none focus:ring-2 focus:ring-blue-500/30">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center border border-white/10 shadow-inner">
+                  <Building2 className="h-4 w-4 text-zinc-400 group-hover:text-white transition-colors" />
+                </div>
+                <div className="text-left">
+                  <h2 className="text-sm font-bold text-zinc-200 tracking-tight group-hover:text-white transition-colors">
+                    {activeVenue.name}
+                  </h2>
+                  <p className="text-[10px] uppercase font-black tracking-[0.2em] text-zinc-600 group-hover:text-zinc-500 transition-colors">
+                    {activeVenue.type || 'VENUE'}
+                  </p>
+                </div>
+                <ChevronDown className="h-3.5 w-3.5 text-zinc-500 group-hover:text-zinc-300 transition-colors ml-1" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-72 bg-[#0F0F10] border-white/10 text-zinc-200">
+              <DropdownMenuLabel className="text-[10px] uppercase font-black tracking-widest text-zinc-500 px-3 py-2">
+                Switch Venue
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-white/5" />
+              {(venues || []).map((venue) => (
+                <DropdownMenuItem
+                  key={venue.id}
+                  onClick={() => selectVenue(venue)}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-3 cursor-pointer font-medium rounded-lg mx-1 my-0.5",
+                    venue.id === activeVenue.id
+                      ? "bg-blue-500/10 text-blue-400"
+                      : "focus:bg-white/5 text-zinc-300 hover:text-white"
+                  )}
+                >
+                  <div className={cn(
+                    "w-8 h-8 rounded-lg flex items-center justify-center border shadow-inner",
+                    venue.id === activeVenue.id
+                      ? "bg-blue-500/10 border-blue-500/20"
+                      : "bg-zinc-900 border-white/5"
+                  )}>
+                    <Building2 className={cn(
+                      "h-4 w-4",
+                      venue.id === activeVenue.id ? "text-blue-400" : "text-zinc-500"
+                    )} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-bold truncate">{venue.name}</div>
+                    <div className="text-[10px] text-zinc-500 uppercase tracking-wider">{venue.type || 'venue'}</div>
+                  </div>
+                  {venue.id === activeVenue.id && (
+                    <Check className="h-4 w-4 text-blue-400 shrink-0" />
+                  )}
+                </DropdownMenuItem>
+              ))}
+              {(!venues || venues.length === 0) && (
+                <div className="px-4 py-3 text-xs text-zinc-600 italic">No venues available</div>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </div>
 
