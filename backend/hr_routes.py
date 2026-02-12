@@ -132,6 +132,18 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
             meta={"employee_id": emp_doc["id"], "display_id": emp_doc.get("display_id")}
         )
         
+        # ── Workspace Auto-Provisioning Hook ──────────────────────
+        # Fire-and-forget: provisions Google Workspace account if
+        # venue has auto_provision enabled. Never blocks HR flow.
+        try:
+            from google.services.onboarding_service import try_workspace_provision
+            import asyncio
+            asyncio.create_task(
+                try_workspace_provision(db, emp_doc, data.get("venue_id"), current_user)
+            )
+        except Exception:
+            pass  # Provisioning failure never blocks employee creation
+        
         return emp_doc
     
     # ==================== SHIFTS ====================
