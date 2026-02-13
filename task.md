@@ -1,46 +1,45 @@
-# Restin.AI — Active Task List
->
-> Last Updated: 2026-02-13 02:19 CET
+# Task: Backend API + i18n + MongoDB Integration (Feb 13, 2026)
 
-## Session: API Stability & App Health (Feb 13, 2026)
+## Context
 
-### ✅ COMPLETED: API Endpoint Mismatches
+Backend APIs were returning 404 errors and frontend modules couldn't display data.
+Three parallel tasks were executed:
 
-- [x] Fix double `/api/` prefix in 7 files (POSSalesReport, ProductionManagement, StockTransfers, RecipeManagement, MonitoringDashboard, AddClockEntry, ForecastingDashboard)
-- [x] Fix incorrect endpoint paths in 8 files (ManualClocking, ApprovalSettings, EmployeesSetupPage, 5x HR Reports)
-- [x] Fix ApprovalSettings venueId source (`user?.venueId` → `useVenue().activeVenueId`)
+## Task 1: i18n Translations ✅
 
----
+- **Problem:** Fintech and Ops dashboards showed raw translation keys (e.g., `restin.ops.title`)
+- **Fix:** Added `restin.*` namespace to both `en.json` and `mt.json` locale files
+- **Keys added:** ops (13 keys), fintech (13 keys), web/voice/studio/radar/crm/billing (2 each)
+- **Files:** `frontend/src/locales/en.json`, `frontend/src/locales/mt.json`
 
-### TASK 1: Fix DesignSystemContext.tsx Crash 🔴 CRITICAL
+## Task 2: Backend → MongoDB Migration ✅
 
-- **Status:** 🔲 In Progress
-- **Problem:** TypeError crashes originating from DesignSystemContext.tsx prevent app from loading
-- **Impact:** Entire application is non-functional
-- **Files:** `frontend/src/context/DesignSystemContext.tsx`
+- **Problem:** All 4 new API routes (billing, fintech, ops, smart-home) used in-memory mock data
+- **Fix:** All routes now use MongoDB collections with auto-seed on first access
+- **Collections created:**
+  - `billing` — Subscription plans, module toggles
+  - `fintech_transactions` — Payment transactions with stats
+  - `ops_metrics` — Operational KPIs (labor cost, revenue, KDS)
+  - `ops_logs` — Event logs with severity levels
+  - `smart_home_devices` — 16 IoT devices with control state
+- **Rules compliance:**
+  - Rule #8: Structured logging only (logger.info/logger.error)
+  - Rule #7 (Time): All timestamps use UTC (`timezone.utc`)
+  - Rule VIII-8: Seed endpoints reset demo data only; production CRUD uses soft-delete pattern
+  - Rule #6: Audit trail ready (timestamps on all mutations)
+- **Files:** `backend/routes/billing_routes.py`, `fintech_routes.py`, `ops_routes.py`, `smart_home_routes.py`
 
-### TASK 2: Start Dev Servers & Smoke Test 🟡 HIGH
+## Task 3: Route Verification ✅
 
-- **Status:** 🔲 Pending
-- **Problem:** Need to verify all API endpoint fixes work end-to-end
-- **Steps:**
-  - Start backend (Python/FastAPI on port 8000)
-  - Start frontend (React on port 3000)
-  - Verify login flow works
-  - Check key pages load without 404s
+- **Problem:** Checked for missing frontend routes (copilot, reports, etc.)
+- **Finding:** All AI Hub pages already exist at `frontend/src/pages/admin/ai/*.tsx`
+  - Routes at `/admin/ai/voice`, `/admin/ai/studio`, `/admin/ai/web-builder`, etc.
+  - Restin control tower at `/admin/restin`
+- **No missing routes identified** — existing structure covers all expected paths
 
-### TASK 3: Clean Unused Imports 🟢 MEDIUM
+## Pending
 
-- **Status:** 🔲 Pending
-- **Problem:** 100+ eslint warnings for unused imports across modified files
-- **Files:** All files touched in this session + other flagged files
-
-### TASK 4: Implement Missing Backend Endpoints 🟡 HIGH
-
-- **Status:** 🔲 Pending
-- **Problem:** Frontend calls endpoints that don't exist on the backend
-- **Known Missing:**
-  - `GET /api/pos/dashboard` — POSDashboard.jsx depends on this
-  - Verify `/api/reports/pos-sales` exists
-  - Verify `/api/forecasting/weekly` and `/api/forecasting/summary` exist
-  - Verify `/api/system/health` exists
+- [ ] Connect remaining mock endpoints to real DB queries (HR Analytics, Inventory Items)
+- [ ] Add zod schemas on frontend for API response validation (Rule #7)
+- [ ] Implement soft-delete pattern for production CRUD operations (Rule VIII-8)
+- [ ] Add i18n keys for `common.sync`, `common.seedDemo` used in other modules

@@ -40,7 +40,10 @@
         "info": "Informazzjoni",
         "retry": "Erġa' Prova",
         "continue": "Kompli",
-        "venue": "Post"
+        "venue": "Post",
+        "sync": "Sinkronizza",
+        "seedDemo": "Seed Demo",
+        "viewAll": "Ara Kollha"
     },
     "auth": {
         "login": "Idħol",
@@ -223,6 +226,62 @@
             "manager": "Maniġer",
             "staff": "Staff",
             "user": "Utent"
+        }
+    },
+    "restin": {
+        "ops": {
+            "title": "Ċentru tal-Operazzjonijiet",
+            "subtitle": "Intelligence operazzjonali f'ħin reali u kontroll tal-aggregaturi tad-delivery",
+            "dispatchEngine": "Magna tad-Dispatch",
+            "pauseStream": "Waqqaf l-Istream",
+            "liveFeed": "Feed tal-Attività Ħajja",
+            "seedDemo": "Seed Demo",
+            "laborCost": "Spiża tal-Ħaddiema %",
+            "kdsPending": "KDS Pending",
+            "revenueToday": "Dħul tal-Lum",
+            "deliveryAggregators": "Aggregaturi tad-Delivery",
+            "liveOrders": "Ordnijiet Ħajjin",
+            "todayRevenue": "Dħul tal-Lum",
+            "viewAuditTrail": "Ara t-Trail tal-Awditjar Sħiħ"
+        },
+        "fintech": {
+            "title": "Ċentru tal-Ħlas Omni",
+            "subtitle": "Proċessar tal-ħlas unifikat, modalità kiosk u analitika tat-tranżazzjonijiet",
+            "kioskInit": "Modalità Kiosk",
+            "kioskExit": "Oħroġ mill-Kiosk",
+            "terminalHub": "Ċentru tat-Terminal",
+            "liveTransactions": "Tranżazzjonijiet Ħajjin",
+            "omniChannelMix": "Taħlita Omni-Channel",
+            "securityCompliance": "Sigurtà u Komplianza",
+            "totalRevenue": "Dħul Totali",
+            "avgTicket": "Medja tat-Ticket",
+            "cloudSync": "Sync tal-Cloud",
+            "seedDemo": "Seed Demo",
+            "viewAll": "Ara Kollha"
+        },
+        "web": {
+            "title": "Arkitett tal-Web",
+            "subtitle": "Benniena ta' website drag & drop sinkronizzata mal-menu ħaj tiegħek"
+        },
+        "voice": {
+            "title": "Vuċi AI",
+            "subtitle": "Riċevitur tat-telefon AI 24/7"
+        },
+        "studio": {
+            "title": "Studio tal-Kontenut",
+            "subtitle": "Fotografija tal-ikel u kontenut tal-media soċjali ġenerat bl-AI"
+        },
+        "radar": {
+            "title": "Radar tas-Suq",
+            "subtitle": "Intelligence tal-kompetizzjoni u perspettivi tal-prezzijiet dinamiċi"
+        },
+        "crm": {
+            "title": "CRM Autopilot",
+            "subtitle": "Magna awtonoma taż-żamma u tkabbir tal-klijenti"
+        },
+        "billing": {
+            "title": "Magna Kummerċjali",
+            "subtitle": "Immaniġġja l-abbonament, moduli attivi, u spejjeż ibbażati fuq l-użu"
         }
     }
 }

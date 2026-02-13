@@ -1,9 +1,10 @@
 """
 Billing Routes (Pillar 0: The Commercial Engine)
 Handles subscription plans, module toggling, and usage-based billing.
+Now connected to MongoDB for persistence.
 """
 from fastapi import APIRouter, Depends, Query
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, Optional
 from core.dependencies import get_current_user, get_database
 from datetime import datetime, timezone
 import logging
@@ -11,16 +12,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/billing", tags=["Billing"])
-
-
-# ─── In-memory billing state (per venue) ─────────────────────────────────
-_billing_state: Dict[str, Dict[str, Any]] = {}
-
-DEFAULT_PLAN = {
-    "name": "Pro",
-    "price": 149.00,
-    "features": ["POS", "HR", "Inventory", "Reports", "KDS"]
-}
 
 MODULE_PRICES = {
     "hasVoice": {"name": "Voice AI", "price": 50.00},
@@ -30,63 +21,70 @@ MODULE_PRICES = {
     "hasFintech": {"name": "Omni-Payment", "price": 25.00},
 }
 
-def _get_billing(venue_id: str) -> Dict[str, Any]:
-    """Get or initialize billing state for a venue."""
-    if venue_id not in _billing_state:
-        _billing_state[venue_id] = {
-            "plan": DEFAULT_PLAN.copy(),
-            "active_modules": ["Voice AI", "Market Radar"],
-            "module_keys": {"hasVoice": True, "hasRadar": True, "hasStudio": False, "hasCRM": False, "hasFintech": False},
-            "ai_tokens_used": 12450,
-            "storage_mb": 2340,
+DEFAULT_BILLING = {
+    "plan": {"name": "Pro", "price": 149.00},
+    "module_keys": {"hasVoice": True, "hasRadar": True, "hasStudio": False, "hasCRM": False, "hasFintech": False},
+    "ai_tokens_used": 12450,
+    "storage_mb": 2340,
+}
+
+
+async def _get_billing(db, venue_id: str) -> Dict[str, Any]:
+    """Get or initialize billing state from MongoDB."""
+    doc = await db.billing.find_one({"venue_id": venue_id})
+    if not doc:
+        doc = {
+            "venue_id": venue_id,
+            **DEFAULT_BILLING,
+            "created_at": datetime.now(timezone.utc).isoformat(),
         }
-    return _billing_state[venue_id]
+        await db.billing.insert_one(doc)
+        # Re-fetch to get _id
+        doc = await db.billing.find_one({"venue_id": venue_id})
+    return doc
 
 
 @router.get("/current")
 async def get_current_billing(
     venue_id: str = Query(...),
     current_user: dict = Depends(get_current_user),
+    db=Depends(get_database),
 ):
     """Get current billing/invoice estimate for the venue."""
-    state = _get_billing(venue_id)
+    state = await _get_billing(db, venue_id)
 
-    # Calculate module costs
+    module_keys = state.get("module_keys", DEFAULT_BILLING["module_keys"])
+    plan = state.get("plan", DEFAULT_BILLING["plan"])
+    ai_tokens = state.get("ai_tokens_used", 12450)
+    storage_mb = state.get("storage_mb", 2340)
+
     active_modules = [
         MODULE_PRICES[k]["name"]
-        for k, v in state["module_keys"].items()
+        for k, v in module_keys.items()
         if v and k in MODULE_PRICES
     ]
     module_total = sum(
         MODULE_PRICES[k]["price"]
-        for k, v in state["module_keys"].items()
+        for k, v in module_keys.items()
         if v and k in MODULE_PRICES
     )
 
-    # Usage-based costs
-    ai_cost = round(state["ai_tokens_used"] * 0.00015, 2)  # $0.15 per 1k tokens
-    storage_cost = round(state["storage_mb"] / 1024 * 2.50, 2)  # $2.50/GB
-
-    total = state["plan"]["price"] + module_total + ai_cost + storage_cost
+    ai_cost = round(ai_tokens * 0.00015, 2)
+    storage_cost = round(storage_mb / 1024 * 2.50, 2)
+    total = plan["price"] + module_total + ai_cost + storage_cost
 
     return {
         "period": datetime.now(timezone.utc).strftime("%B %Y"),
-        "plan": {
-            "name": state["plan"]["name"],
-            "price": state["plan"]["price"]
-        },
-        "modules": {
-            "active": active_modules,
-            "price": module_total
-        },
+        "plan": plan,
+        "modules": {"active": active_modules, "price": module_total},
         "usage": {
             "ai_cost": ai_cost,
             "storage_cost": storage_cost,
-            "ai_tokens": state["ai_tokens_used"],
-            "storage_mb": state["storage_mb"],
+            "ai_tokens": ai_tokens,
+            "storage_mb": storage_mb,
         },
         "total_estimated": round(total, 2),
-        "currency": "€"
+        "currency": "€",
     }
 
 
@@ -96,23 +94,23 @@ async def toggle_module(
     module: str = Query(...),
     enabled: bool = Query(...),
     current_user: dict = Depends(get_current_user),
+    db=Depends(get_database),
 ):
-    """Enable or disable an add-on module."""
-    state = _get_billing(venue_id)
-
+    """Enable or disable an add-on module. Persisted to MongoDB."""
     if module not in MODULE_PRICES:
         return {"error": f"Unknown module: {module}"}
 
-    state["module_keys"][module] = enabled
+    state = await _get_billing(db, venue_id)
+    module_keys = state.get("module_keys", DEFAULT_BILLING["module_keys"])
+    module_keys[module] = enabled
+
+    await db.billing.update_one(
+        {"venue_id": venue_id},
+        {"$set": {"module_keys": module_keys, "updated_at": datetime.now(timezone.utc).isoformat()}},
+    )
+
     module_name = MODULE_PRICES[module]["name"]
-
-    if enabled and module_name not in state["active_modules"]:
-        state["active_modules"].append(module_name)
-    elif not enabled and module_name in state["active_modules"]:
-        state["active_modules"].remove(module_name)
-
     logger.info(f"Module {module_name} {'enabled' if enabled else 'disabled'} for venue {venue_id}")
-
     return {"status": "ok", "module": module_name, "enabled": enabled}
 
 

@@ -40,7 +40,10 @@
         "info": "Info",
         "retry": "Retry",
         "continue": "Continue",
-        "venue": "Venue"
+        "venue": "Venue",
+        "sync": "Sync",
+        "seedDemo": "Seed Demo",
+        "viewAll": "View All"
     },
     "auth": {
         "login": "Login",
@@ -223,6 +226,62 @@
             "manager": "Manager",
             "staff": "Staff",
             "user": "User"
+        }
+    },
+    "restin": {
+        "ops": {
+            "title": "Operations Hub",
+            "subtitle": "Real-time operational intelligence & delivery aggregator control",
+            "dispatchEngine": "Dispatch Engine",
+            "pauseStream": "Pause Stream",
+            "liveFeed": "Live Activity Feed",
+            "seedDemo": "Seed Demo",
+            "laborCost": "Labor Cost %",
+            "kdsPending": "KDS Pending",
+            "revenueToday": "Revenue Today",
+            "deliveryAggregators": "Delivery Aggregators",
+            "liveOrders": "Live Orders",
+            "todayRevenue": "Today's Rev.",
+            "viewAuditTrail": "View Full Audit Trail"
+        },
+        "fintech": {
+            "title": "Omni-Payment Hub",
+            "subtitle": "Unified payment processing, kiosk mode & transaction analytics",
+            "kioskInit": "Kiosk Mode",
+            "kioskExit": "Exit Kiosk",
+            "terminalHub": "Terminal Hub",
+            "liveTransactions": "Live Transactions",
+            "omniChannelMix": "Omni-Channel Mix",
+            "securityCompliance": "Security & Compliance",
+            "totalRevenue": "Total Revenue",
+            "avgTicket": "Avg Ticket",
+            "cloudSync": "Cloud Sync",
+            "seedDemo": "Seed Demo",
+            "viewAll": "View All"
+        },
+        "web": {
+            "title": "Web Architect",
+            "subtitle": "Drag & drop website builder synced with your live menu"
+        },
+        "voice": {
+            "title": "Voice AI",
+            "subtitle": "24/7 AI-powered phone receptionist"
+        },
+        "studio": {
+            "title": "Content Studio",
+            "subtitle": "AI-generated food photography & social media content"
+        },
+        "radar": {
+            "title": "Market Radar",
+            "subtitle": "Competitor intelligence & dynamic pricing insights"
+        },
+        "crm": {
+            "title": "Autopilot CRM",
+            "subtitle": "Autonomous customer retention & growth engine"
+        },
+        "billing": {
+            "title": "Commercial Engine",
+            "subtitle": "Manage your subscription, active modules, and usage-based costs"
         }
     }
 }
