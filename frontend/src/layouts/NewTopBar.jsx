@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../features/auth/AuthContext';
 import { useVenue } from '../context/VenueContext';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { Bell, Search, Settings, User, LogOut, ChevronDown, X, Wifi, WifiOff, AlertTriangle, ShieldCheck, ShieldAlert, Moon, Sun, Building2, Check, Monitor } from 'lucide-react';
+import { Bell, User, LogOut, ChevronDown, Moon, Sun, Monitor, Database, Palette, Settings } from 'lucide-react';
 import { useSafeMode } from '../context/SafeModeContext';
 import { Button } from '../components/ui/button';
 import {
@@ -18,7 +18,7 @@ import {
 } from '../components/ui/dropdown-menu';
 
 export default function NewTopBar() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const { activeVenue, venues, selectVenue } = useVenue();
   const { mode, setMode } = useTheme();
@@ -156,10 +156,10 @@ export default function NewTopBar() {
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/5 hover:border-white/10 transition-all cursor-pointer group outline-none focus:ring-2 focus:ring-blue-500/30">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center border border-white/10 shadow-inner">
-                  <Building2 className="h-4 w-4 text-zinc-400 group-hover:text-white transition-colors" />
+                  <Building2 className="h-4 w-4 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors" />
                 </div>
                 <div className="text-left">
-                  <h2 className="text-sm font-bold text-zinc-200 tracking-tight group-hover:text-white transition-colors">
+                  <h2 className="text-sm font-bold text-zinc-600 dark:text-zinc-200 tracking-tight group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
                     {activeVenue.name}
                   </h2>
                   <p className="text-[10px] uppercase font-black tracking-[0.2em] text-zinc-600 group-hover:text-zinc-500 transition-colors">
@@ -182,7 +182,7 @@ export default function NewTopBar() {
                     "flex items-center gap-3 px-3 py-3 cursor-pointer font-medium rounded-lg mx-1 my-0.5",
                     venue.id === activeVenue.id
                       ? "bg-blue-500/10 text-blue-400"
-                      : "focus:bg-white/5 text-zinc-300 hover:text-white"
+                      : "focus:bg-zinc-100 dark:focus:bg-white/5 text-zinc-500 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white"
                   )}
                 >
                   <div className={cn(
@@ -239,7 +239,7 @@ export default function NewTopBar() {
                 setSearchQuery('');
                 setShowSuggestions(false);
               }}
-              className="absolute right-12 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors z-10 p-1 rounded-full hover:bg-white/10 pointer-events-auto"
+              className="absolute right-12 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors z-10 p-1 rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 pointer-events-auto"
             >
               <X className="h-3 w-3" />
             </button>
@@ -261,7 +261,7 @@ export default function NewTopBar() {
                     <Search className="h-4 w-4 text-zinc-500 group-hover:text-red-500" />
                   </div>
                   <div>
-                    <div className="text-sm font-semibold text-zinc-300 group-hover:text-white transition-colors">
+                    <div className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
                       {suggestion.title}
                     </div>
                     <div className="text-[10px] uppercase tracking-wider text-zinc-600 group-hover:text-zinc-500">
@@ -307,40 +307,10 @@ export default function NewTopBar() {
           </button>
         </div>
 
-        {/* Region & Language (Malta) */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-9 w-auto px-2 gap-2 hover:bg-white/5 transition-colors" title="Region: Malta (EUR)">
-              <span className="text-xl leading-none">🇲🇹</span>
-              <span className="text-zinc-400 font-medium text-sm">€</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-[#0F0F10] border-white/10 text-zinc-200 min-w-[140px]">
-            <DropdownMenuLabel className="text-xs text-zinc-500 font-normal uppercase tracking-wider">
-              FISCAL REGION
-            </DropdownMenuLabel>
-            <DropdownMenuItem className="focus:bg-transparent cursor-default">
-              <span className="mr-3 text-lg">🇲🇹</span> Malta (MT)
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator className="bg-white/10" />
-
-            <DropdownMenuLabel className="text-xs text-zinc-500 font-normal uppercase tracking-wider">
-              INTERFACE LANGUAGE
-            </DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => i18n.changeLanguage('en')} className={cn("cursor-pointer focus:bg-white/5 font-medium", i18n.language === 'en' && "bg-white/10 text-blue-400")}>
-              <span className="mr-3 text-lg">🇬🇧</span> English
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => i18n.changeLanguage('mt')} className={cn("cursor-pointer focus:bg-white/5 font-medium", i18n.language === 'mt' && "bg-white/10 text-blue-400")}>
-              <span className="mr-3 text-lg">🇲🇹</span> Malti
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
         {/* Theme Toggle */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-white/5 transition-colors">
+            <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors">
               {mode === 'dark' ? <Moon className="h-5 w-5" /> :
                 mode === 'light' ? <Sun className="h-5 w-5" /> :
                   <Monitor className="h-5 w-5" />}
@@ -362,7 +332,7 @@ export default function NewTopBar() {
         <div className="w-px h-8 bg-white/5"></div>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-white/5 relative">
+        <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 relative">
           <Bell className="h-5 w-5" />
           <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[#0A0A0B]"></span>
         </Button>
@@ -386,15 +356,15 @@ export default function NewTopBar() {
                 )} />
               </div>
               <div className="flex flex-col items-start mr-1">
-                <span className="text-sm font-bold leading-none">{user?.name || 'User'}</span>
+                <span className="text-sm font-bold leading-none">{user?.name || t('topbar.roles.user')}</span>
                 <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider leading-none mt-1">
                   {(() => {
                     const role = user?.role?.toLowerCase();
-                    if (role === 'product_owner') return 'Product Owner';
-                    if (role === 'owner') return 'Owner';
-                    if (role === 'manager') return 'Manager';
-                    if (role === 'staff') return 'Staff';
-                    return user?.role || 'User';
+                    if (role === 'product_owner') return t('topbar.roles.productOwner');
+                    if (role === 'owner') return t('topbar.roles.owner');
+                    if (role === 'manager') return t('topbar.roles.manager');
+                    if (role === 'staff') return t('topbar.roles.staff');
+                    return user?.role || t('topbar.roles.user');
                   })()}
                 </span>
               </div>
@@ -403,8 +373,8 @@ export default function NewTopBar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-64 bg-[#0F0F10] border-white/10 text-zinc-200">
             <div className="px-4 py-3 border-b border-white/5 mb-1">
-              <p className="text-sm font-bold text-white">My Account</p>
-              <p className="text-xs text-zinc-500">manage your preferences</p>
+              <p className="text-sm font-bold text-zinc-900 dark:text-white">{t('topbar.myAccount')}</p>
+              <p className="text-xs text-zinc-500">{t('topbar.managePreferences')}</p>
             </div>
 
             <DropdownMenuItem
@@ -412,14 +382,14 @@ export default function NewTopBar() {
               className="font-medium cursor-pointer focus:bg-white/5"
             >
               <User className="mr-2 h-4 w-4 text-zinc-500" />
-              Profile
+              {t('topbar.profile')}
             </DropdownMenuItem>
 
             <DropdownMenuSeparator className="bg-white/5" />
 
             {/* System Status */}
             <div className="px-3 py-2">
-              <div className="text-[10px] uppercase font-bold tracking-widest text-zinc-600 mb-2 px-1">System Health</div>
+              <div className="text-[10px] uppercase font-bold tracking-widest text-zinc-600 mb-2 px-1">{t('topbar.systemHealth')}</div>
               <div className={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-widest border border-transparent transition-colors",
                 systemStatus === 'healthy' && "bg-green-500/5 text-green-500 border-green-500/10",
@@ -433,14 +403,73 @@ export default function NewTopBar() {
 
             <DropdownMenuSeparator className="bg-white/5" />
 
+            {/* Admin Actions */}
+            {user?.role === 'product_owner' && (
+              <>
+                <div className="px-3 py-2">
+                  <div className="text-[10px] uppercase font-bold tracking-widest text-zinc-600 mb-2 px-1">{t('topbar.adminControls')}</div>
+                  <DropdownMenuItem
+                    onClick={() => navigate('/admin/migration')}
+                    className="font-medium cursor-pointer focus:bg-white/5"
+                  >
+                    <Database className="mr-2 h-4 w-4 text-zinc-500" />
+                    {t('topbar.migrationHub')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => navigate('/admin/theme')}
+                    className="font-medium cursor-pointer focus:bg-white/5"
+                  >
+                    <Palette className="mr-2 h-4 w-4 text-zinc-500" />
+                    {t('topbar.themeCustomizer')}
+                  </DropdownMenuItem>
+                </div>
+                <DropdownMenuSeparator className="bg-white/5" />
+              </>
+            )}
+
             <DropdownMenuItem onClick={() => navigate('/admin/settings')} className="focus:bg-white/5">
               <Settings className="mr-2 h-4 w-4 text-zinc-500" />
-              Settings
+              {t('topbar.settings')}
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-white/5" />
-            <DropdownMenuItem onClick={handleLogout} className="text-red-500 focus:text-red-400 focus:bg-red-500/5">
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-red-400 focus:text-red-300 focus:bg-red-500/10 cursor-pointer font-medium"
+            >
               <LogOut className="mr-2 h-4 w-4" />
-              Logout
+              {t('topbar.signOut')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <div className="w-px h-8 bg-white/5"></div>
+
+        {/* Region & Language (Malta) - Moved to Far Right */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-9 w-auto px-2 gap-2 hover:bg-white/5 transition-colors" title="Region: Malta (EUR)">
+              <span className="text-xl leading-none">🇲🇹</span>
+              <span className="text-zinc-400 font-medium text-sm">€</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-[#0F0F10] border-white/10 text-zinc-200 min-w-[140px]">
+            <DropdownMenuLabel className="text-xs text-zinc-500 font-normal uppercase tracking-wider">
+              {t('topbar.fiscalRegion')}
+            </DropdownMenuLabel>
+            <DropdownMenuItem className="focus:bg-transparent cursor-default">
+              <span className="mr-3 text-lg">🇲🇹</span> Malta (MT)
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator className="bg-white/10" />
+
+            <DropdownMenuLabel className="text-xs text-zinc-500 font-normal uppercase tracking-wider">
+              {t('topbar.interfaceLanguage')}
+            </DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => i18n.changeLanguage('en')} className={cn("cursor-pointer focus:bg-white/5 font-medium", i18n.language === 'en' && "bg-white/10 text-blue-400")}>
+              <span className="mr-3 text-lg">🇬🇧</span> English
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => i18n.changeLanguage('mt')} className={cn("cursor-pointer focus:bg-white/5 font-medium", i18n.language === 'mt' && "bg-white/10 text-blue-400")}>
+              <span className="mr-3 text-lg">🇲🇹</span> Malti
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

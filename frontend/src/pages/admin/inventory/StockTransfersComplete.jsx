@@ -1,30 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
+import { useVenue } from '../../../context/VenueContext';
 import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../components/ui/card';
+import { Card, CardContent } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
-import { ArrowLeftRight, Plus, ArrowRight, Building2, Package, Calendar, CheckCircle2, Clock, Search } from 'lucide-react';
+import { ArrowLeftRight, Plus, ArrowRight, Building2, Package, Calendar, CheckCircle2, Clock, Search, Loader2 } from 'lucide-react';
 import { Input } from '../../../components/ui/input';
 import { toast } from 'sonner';
 import api from '../../../lib/api';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../../../components/ui/dialog';
+import { Label } from '../../../components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
+import { logger } from '@/lib/logger';
 
 export default function StockTransfersComplete() {
   const { user, isManager, isOwner } = useAuth();
+  const { activeVenue } = useVenue();
   const [transfers, setTransfers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
+  // Create Modal State
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [items, setItems] = useState([]);
+  const [venues, setVenues] = useState([]);
+  const [formData, setFormData] = useState({
+    item_id: '',
+    to_venue_id: '',
+    quantity: '',
+    reason: 'Stock Transfer'
+  });
+
   useEffect(() => {
-    loadTransfers();
-  }, []);
+    if (activeVenue?.id) {
+      loadTransfers();
+      loadCreateData(); // Pre-load data for the modal
+    }
+  }, [activeVenue?.id]);
+
+  const loadCreateData = async () => {
+    try {
+      const [itemsRes, venuesRes] = await Promise.all([
+        api.get(`/inventory/items?venue_id=${activeVenue?.id}`),
+        api.get('/venues')
+      ]);
+      setItems(itemsRes.data || []);
+      // Filter out current venue from targets
+      setVenues((venuesRes.data || []).filter(v => v.id !== activeVenue?.id));
+    } catch (e) {
+      logger.error("Failed to load transfer options", e);
+    }
+  };
 
   const loadTransfers = async () => {
     try {
-      const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
+      const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
       const res = await api.get(`/inventory/transfers?venue_id=${venueId}`);
       setTransfers(res.data || []);
     } catch {
+      // Fallback mock data if API fails
       setTransfers([
         { id: 'TRF-001', from: 'Central Kitchen', to: 'Main Restaurant', items: 12, date: '2026-02-09', status: 'completed', total_value: 45600 },
         { id: 'TRF-002', from: 'Central Kitchen', to: 'Bar', items: 5, date: '2026-02-09', status: 'in_transit', total_value: 12800 },
@@ -34,6 +70,40 @@ export default function StockTransfersComplete() {
       ]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCreateTransfer = async () => {
+    if (!formData.item_id || !formData.to_venue_id || !formData.quantity) {
+      return toast.error("Please fill all fields");
+    }
+
+    const qty = parseFloat(formData.quantity);
+    if (isNaN(qty) || qty <= 0) return toast.error("Invalid quantity");
+
+    // Check stock locally first
+    const item = items.find(i => i.id === formData.item_id);
+    if (item && item.quantity < qty) {
+      return toast.error(`Insufficient stock! Available: ${item.quantity}`);
+    }
+
+    setCreateLoading(true);
+    try {
+      await api.post(`/venues/${activeVenue?.id}/inventory/transfer`, {
+        item_id: formData.item_id,
+        to_venue_id: formData.to_venue_id,
+        quantity: qty,
+        reason: formData.reason
+      });
+      toast.success("Transfer initiated successfully!");
+      setFormData({ ...formData, quantity: '', item_id: '' }); // Reset partial
+      setIsCreateOpen(false);
+      loadTransfers(); // Refresh list
+    } catch (e) {
+      logger.error(e);
+      toast.error(e.response?.data?.detail || "Transfer failed");
+    } finally {
+      setCreateLoading(false);
     }
   };
 
@@ -48,18 +118,114 @@ export default function StockTransfersComplete() {
 
   const filtered = transfers.filter(t =>
     t.id.toLowerCase().includes(search.toLowerCase()) ||
-    t.from.toLowerCase().includes(search.toLowerCase()) ||
-    t.to.toLowerCase().includes(search.toLowerCase())
+    t.from?.toLowerCase().includes(search.toLowerCase()) ||
+    t.to?.toLowerCase().includes(search.toLowerCase())
   );
+
+  const selectedItem = items.find(i => i.id === formData.item_id);
 
   return (
     <PageContainer
       title="Stock Transfers"
       description="Central Kitchen to branch transfer management"
       actions={
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" /> New Transfer
-        </Button>
+        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <DialogTrigger asChild>
+            <Button className="gap-2">
+              <Plus className="h-4 w-4" /> New Transfer
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-zinc-950 border-zinc-800 text-white sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>Create Stock Transfer</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-6 py-4">
+              {/* Source/Dest */}
+              <div className="flex items-center justify-between text-zinc-400">
+                <div className="text-center w-1/3">
+                  <div className="text-[10px] uppercase font-bold mb-1">From</div>
+                  <div className="p-2 bg-zinc-900 rounded border border-white/5 font-bold text-white text-xs truncate">
+                    {activeVenue?.name || 'Current Venue'}
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-zinc-600" />
+                <div className="text-center w-1/2">
+                  <div className="text-[10px] uppercase font-bold mb-1">To Destination</div>
+                  <Select value={formData.to_venue_id} onValueChange={v => setFormData({ ...formData, to_venue_id: v })}>
+                    <SelectTrigger className="bg-zinc-900 border-white/10 h-9">
+                      <SelectValue placeholder="Select Venue" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {venues.map(v => (
+                        <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Item Selection */}
+              <div className="space-y-2">
+                <Label>Item to Transfer</Label>
+                <Select value={formData.item_id} onValueChange={v => setFormData({ ...formData, item_id: v })}>
+                  <SelectTrigger className="bg-zinc-900 border-white/10">
+                    <SelectValue placeholder="Select Product..." />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[200px]">
+                    {items.map(i => (
+                      <SelectItem key={i.id} value={i.id}>
+                        <div className="flex justify-between w-full items-center gap-4">
+                          <span>{i.name}</span>
+                          <span className="text-zinc-500 text-xs">{i.quantity} {i.unit}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {selectedItem && (
+                  <p className="text-xs text-zinc-400 flex items-center gap-2">
+                    <Package className="w-3 h-3" />
+                    Available: <span className="text-emerald-400 font-bold">{selectedItem.quantity} {selectedItem.unit}</span>
+                  </p>
+                )}
+              </div>
+
+              {/* Quantity */}
+              <div className="space-y-2">
+                <Label>Quantity to Move</Label>
+                <div className="relative">
+                  <Input
+                    type="number"
+                    value={formData.quantity}
+                    onChange={e => setFormData({ ...formData, quantity: e.target.value })}
+                    className="bg-zinc-900 border-white/10 pl-3 pr-12"
+                    placeholder="0.00"
+                  />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 font-bold text-xs">{selectedItem?.unit || 'QTY'}</div>
+                </div>
+              </div>
+
+              {/* Note */}
+              <div className="space-y-2">
+                <Label>Reference Note</Label>
+                <Input
+                  value={formData.reason}
+                  onChange={e => setFormData({ ...formData, reason: e.target.value })}
+                  className="bg-zinc-900 border-white/10"
+                />
+              </div>
+
+              <Button
+                onClick={handleCreateTransfer}
+                disabled={createLoading || !formData.to_venue_id || !formData.item_id}
+                className="w-full bg-blue-600 hover:bg-blue-700 font-bold"
+              >
+                {createLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ArrowLeftRight className="w-4 h-4 mr-2" />}
+                Confirm Transfer
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       }
     >
       {/* Stats */}

@@ -204,5 +204,25 @@
         "eur": "Ewro",
         "usd": "Dollaru Amerikan",
         "gbp": "Lira Ingliża"
+    },
+    "topbar": {
+        "fiscalRegion": "REĠJUN FISKALI",
+        "interfaceLanguage": "LINGWA TAL-INTERFAĊĊA",
+        "myAccount": "Il-Kont Tiegħi",
+        "managePreferences": "immaniġġja l-preferenzi tiegħek",
+        "profile": "Profil",
+        "systemHealth": "Saħħet is-Sistema",
+        "adminControls": "Kontrolli Amministrattivi",
+        "migrationHub": "Ċentru tal-Migrazzjoni",
+        "themeCustomizer": "Personalizzazzjoni tat-Tema",
+        "settings": "Settings",
+        "signOut": "Oħroġ",
+        "roles": {
+            "productOwner": "Sid il-Prodott",
+            "owner": "Sid",
+            "manager": "Maniġer",
+            "staff": "Staff",
+            "user": "Utent"
+        }
     }
 }

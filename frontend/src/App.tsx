@@ -200,7 +200,7 @@ const PurchaseOrdersAdmin = React.lazy(() => import("./pages/admin/PurchaseOrder
 const Receiving = React.lazy(() => import("./pages/admin/Receiving"));
 const InventoryPage = React.lazy(() => import("./pages/admin/Inventory"));
 const InventoryItemsNew = React.lazy(() => import("./pages/admin/inventory/InventoryItemsNew"));
-const InventoryItems = React.lazy(() => import("./pages/admin/inventory/InventoryItems"));
+// const InventoryItems = React.lazy(() => import("./pages/admin/inventory/InventoryItems")); // Removed - file deleted
 const Suppliers = React.lazy(() => import("./pages/admin/Suppliers"));
 const PurchaseOrdersNew = React.lazy(() => import("./pages/admin/inventory/PurchaseOrdersNew"));
 const StockCount = React.lazy(() => import("./pages/admin/inventory/StockCount"));
@@ -389,14 +389,14 @@ function App() {
                                   <Route path="/payroll" element={<PayrollPage />} />
                                   <Route path="/admin" element={<AdminLayout />}>
                                     <Route index element={<Navigate to="dashboard" replace />} />
-                                    <Route path="dashboard" element={<SystemDashboard />} />
+                                    <Route path="dashboard" element={<RoleRoute requiredRole="MANAGER"><SystemDashboard /></RoleRoute>} />
                                     {/* NOTE: dashboard is STAFF-accessible (no guard) */}
                                     <Route path="venues" element={<RoleRoute requiredRole="OWNER"><VenueSettings /></RoleRoute>} />
                                     <Route path="menu" element={<RoleRoute requiredRole="MANAGER"><POSSettings /></RoleRoute>} />
                                     {/* staff route removed — Users accessible at /admin/users */}
                                     <Route path="inventory" element={<RoleRoute requiredRole="MANAGER"><InventoryDashboard /></RoleRoute>} />
-                                    <Route path="pos" element={<POSFeature />} />
-                                    <Route path="kds" element={<KDSFeature />} />
+                                    <Route path="pos" element={<RoleRoute requiredRole="MANAGER"><POSFeature /></RoleRoute>} />
+                                    <Route path="kds" element={<RoleRoute requiredRole="MANAGER"><KDSFeature /></RoleRoute>} />
                                     <Route path="documents" element={<RoleRoute requiredRole="MANAGER"><Documents /></RoleRoute>} />
                                     <Route path="review-risk" element={<RoleRoute requiredRole="MANAGER"><ReviewRisk /></RoleRoute>} />
                                     <Route path="audit-logs" element={<RoleRoute requiredRole="OWNER"><AuditLogs /></RoleRoute>} />
@@ -425,7 +425,7 @@ function App() {
                                     <Route path="logs" element={<RoleRoute requiredRole="OWNER"><LogsViewer /></RoleRoute>} />
                                     <Route path="finance" element={<RoleRoute requiredRole="OWNER"><FinanceDashboard /></RoleRoute>} />
                                     <Route path="accounting" element={<RoleRoute requiredRole="OWNER"><AccountingHub /></RoleRoute>} />
-                                    <Route path="updates" element={<UpdatesPage />} />
+                                    <Route path="updates" element={<RoleRoute requiredRole="OWNER"><UpdatesPage /></RoleRoute>} />
                                     <Route path="reporting" element={<RoleRoute requiredRole="MANAGER"><ReportingHub /></RoleRoute>} />
                                     <Route path="observability/logs" element={<RoleRoute requiredRole="OWNER"><ObservabilityLogs /></RoleRoute>} />
                                     <Route path="users" element={<RoleRoute requiredRole="OWNER"><Users /></RoleRoute>} />
@@ -433,7 +433,7 @@ function App() {
                                     <Route path="access-control" element={<RoleRoute requiredRole="OWNER"><RolesPermissions /></RoleRoute>} />
                                     <Route path="door-access" element={<RoleRoute requiredRole="OWNER"><DoorAccessControl /></RoleRoute>} />
                                     <Route path="billing" element={<RoleRoute requiredRole="OWNER"><BillingDashboard /></RoleRoute>} />
-                                    <Route path="theme" element={<ThemeCustomizer />} />
+                                    <Route path="theme" element={<RoleRoute requiredRole="OWNER"><ThemeCustomizer /></RoleRoute>} />
                                     <Route path="microservices" element={<RoleRoute requiredRole="OWNER"><Microservices /></RoleRoute>} />
                                     <Route path="events" element={<RoleRoute requiredRole="OWNER"><EventMonitor /></RoleRoute>} />
                                     <Route path="payroll-calculator" element={<RoleRoute requiredRole="OWNER"><PayrollCalculator /></RoleRoute>} />
@@ -442,7 +442,7 @@ function App() {
                                     <Route path="receiving" element={<RoleRoute requiredRole="MANAGER"><Receiving /></RoleRoute>} />
                                     <Route path="inventory-detail" element={<RoleRoute requiredRole="MANAGER"><InventoryPage /></RoleRoute>} />
                                     <Route path="inventory-items" element={<RoleRoute requiredRole="MANAGER"><InventoryItemsNew /></RoleRoute>} />
-                                    <Route path="inventory-items-list" element={<RoleRoute requiredRole="MANAGER"><InventoryItems /></RoleRoute>} />
+                                    <Route path="inventory-items-list" element={<RoleRoute requiredRole="MANAGER"><InventoryItemsNew /></RoleRoute>} />
                                     <Route path="inventory-suppliers" element={<RoleRoute requiredRole="OWNER"><Suppliers /></RoleRoute>} />
                                     <Route path="inventory-purchase-orders" element={<RoleRoute requiredRole="OWNER"><PurchaseOrdersNew /></RoleRoute>} />
                                     <Route path="inventory-stock-count" element={<RoleRoute requiredRole="MANAGER"><StockCount /></RoleRoute>} />
@@ -476,9 +476,9 @@ function App() {
                                     <Route path="diagnostics" element={<RoleRoute requiredRole="OWNER"><SelfDiagnostics /></RoleRoute>} />
                                     <Route path="service-day-close" element={<RoleRoute requiredRole="MANAGER"><ServiceDayClose /></RoleRoute>} />
                                     <Route path="pre-go-live" element={<RoleRoute requiredRole="OWNER"><PreGoLive /></RoleRoute>} />
-                                    <Route path="tasks-kanban" element={<TasksKanban />} />
+                                    <Route path="tasks-kanban" element={<RoleRoute requiredRole="STAFF"><TasksKanban /></RoleRoute>} />
                                     <Route path="printers" element={<RoleRoute requiredRole="MANAGER"><Printers /></RoleRoute>} />
-                                    <Route path="inbox" element={<Inbox />} />
+                                    <Route path="inbox" element={<RoleRoute requiredRole="STAFF"><Inbox /></RoleRoute>} />
                                     <Route path="smart-home" element={<RoleRoute requiredRole="OWNER"><SmartHomeDashboard /></RoleRoute>} />
                                     <Route path="integrations" element={<RoleRoute requiredRole="OWNER"><IntegrationsHub /></RoleRoute>} />
                                     <Route path="delivery-aggregators" element={<RoleRoute requiredRole="OWNER"><DeliveryAggregators /></RoleRoute>} />
@@ -518,7 +518,7 @@ function App() {
                                     <Route path="data-export" element={<RoleRoute requiredRole="OWNER"><DataExportPage /></RoleRoute>} />
                                     <Route path="setup-wizard" element={<RoleRoute requiredRole="OWNER"><OnboardingWizard /></RoleRoute>} />
                                     <Route path="guest-profiles" element={<RoleRoute requiredRole="MANAGER"><GuestProfiles /></RoleRoute>} />
-                                    <Route path="staff-gamification" element={<StaffGamification />} />
+                                    <Route path="staff-gamification" element={<RoleRoute requiredRole="STAFF"><StaffGamification /></RoleRoute>} />
                                     <Route path="kiosk-mode" element={<RoleRoute requiredRole="OWNER"><KioskModePage /></RoleRoute>} />
                                     <Route path="carbon-footprint" element={<RoleRoute requiredRole="OWNER"><CarbonFootprint /></RoleRoute>} />
                                     <Route path="competitor-monitoring" element={<RoleRoute requiredRole="OWNER"><CompetitorMonitoring /></RoleRoute>} />

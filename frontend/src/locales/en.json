@@ -204,5 +204,25 @@
         "eur": "Euro",
         "usd": "US Dollar",
         "gbp": "British Pound"
+    },
+    "topbar": {
+        "fiscalRegion": "FISCAL REGION",
+        "interfaceLanguage": "INTERFACE LANGUAGE",
+        "myAccount": "My Account",
+        "managePreferences": "manage your preferences",
+        "profile": "Profile",
+        "systemHealth": "System Health",
+        "adminControls": "Admin Controls",
+        "migrationHub": "Migration Hub",
+        "themeCustomizer": "Theme Customizer",
+        "settings": "Settings",
+        "signOut": "Sign out",
+        "roles": {
+            "productOwner": "Product Owner",
+            "owner": "Owner",
+            "manager": "Manager",
+            "staff": "Staff",
+            "user": "User"
+        }
     }
 }

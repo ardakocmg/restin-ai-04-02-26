@@ -1,16 +1,23 @@
 import React, { useState, useMemo } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { cn } from '../lib/utils';
-import { Button } from '../components/ui/button';
-import { ScrollArea } from '../components/ui/scroll-area';
-import { useAuth } from '../context/AuthContext';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  ChevronLeft, ChevronRight, LayoutDashboard, ShoppingCart, Users, FileText,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from '../features/auth/AuthContext';
+import { useVenue } from '../context/VenueContext';
+import {
+  LayoutDashboard, ShoppingCart, Users, FileText,
   DollarSign, BarChart3, Settings, Activity, TrendingUp, Factory, Award,
   Table as TableIcon, Calendar, Truck, PieChart as PieChartIcon,
-  UserCheck, Receipt, Clock, Package, Type, Building2, Search, Upload, Monitor,
-  Globe, Mic, Wand2, Radar, LayoutGrid, ShieldAlert, Shield, Palette, Server, Layers, X,
-  RefreshCw, Home, MessageSquare, Radio, Timer
+  UserCheck, Receipt, Clock, Package, Upload, Monitor,
+  Building2, LayoutGrid, ShieldAlert, Shield, Layers,
+  RefreshCw, Home, Timer, Type, Palette, Server, Globe, Mic, Wand2, Radar, MessageSquare, Cpu, Zap, Archive, Briefcase, Menu
 } from 'lucide-react';
 
 // Role hierarchy from centralized definition (includes product_owner: 99)
@@ -368,17 +375,17 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
             className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
           >
             <div className="h-10 w-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-500/20 active:scale-95 transition-transform">
-              <span className="text-2xl font-black text-white italic transform -skew-x-6">R</span>
+              <span className="text-2xl font-black text-white dark:text-white text-zinc-900 italic transform -skew-x-6">R</span>
             </div>
             {domainBarExpanded && (
               <div className="flex flex-col items-start">
-                <span className="text-xl font-black text-white italic tracking-tighter leading-none">restin.ai</span>
+                <span className="text-xl font-black text-white dark:text-white text-zinc-900 italic tracking-tighter leading-none">restin.ai</span>
                 <span className="text-[10px] font-bold text-red-500 tracking-[0.3em] uppercase">Enterprise</span>
               </div>
             )}
           </button>
           {domainBarExpanded && (
-            <Button variant="ghost" size="icon" onClick={toggleDomainExpand} className="text-zinc-500 hover:text-white h-8 w-8 hover:bg-white/5">
+            <Button variant="ghost" size="icon" onClick={toggleDomainExpand} className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white h-8 w-8 hover:bg-zinc-100 dark:hover:bg-white/5">
               <ChevronLeft className="h-4 w-4" />
             </Button>
           )}
@@ -421,7 +428,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
               size="icon"
               onClick={onToggle}
               className={cn(
-                "h-12 w-12 rounded-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all border border-transparent hover:border-white/5",
+                "h-12 w-12 rounded-xl text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 transition-all border border-transparent hover:border-zinc-200 dark:hover:border-white/5",
                 domainBarExpanded && "w-full justify-start px-4 gap-4"
               )}
             >
@@ -432,7 +439,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
           <button
             onClick={toggleDomainExpand}
             className={cn(
-              "h-12 w-12 flex items-center justify-center rounded-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all border border-transparent hover:border-white/5",
+              "h-12 w-12 flex items-center justify-center rounded-xl text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 transition-all border border-transparent hover:border-zinc-200 dark:hover:border-white/5",
               domainBarExpanded && "w-full justify-start px-4 gap-4"
             )}
           >
@@ -455,7 +462,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
               {domains.find(d => d.id === activeDomain)?.title || 'Navigation'}
             </h1>
           )}
-          <Button variant="ghost" size="icon" onClick={onToggle} className="text-zinc-500 hover:text-white hover:bg-white/5 h-8 w-8 rounded-lg">
+          <Button variant="ghost" size="icon" onClick={onToggle} className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 h-8 w-8 rounded-lg">
             {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
           </Button>
         </div>
@@ -472,7 +479,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                     placeholder="Search features..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-zinc-900/50 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-red-500/50 transition-all"
+                    className="w-full bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-red-500/50 transition-all"
                   />
                 </div>
               </div>
@@ -575,7 +582,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
               </h2>
               <button
                 onClick={() => setActiveSubItem(null)}
-                className="p-1 hover:bg-white/10 rounded-lg transition-colors text-zinc-500 hover:text-white"
+                className="p-1 hover:bg-zinc-100 dark:hover:bg-white/10 rounded-lg transition-colors text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -595,16 +602,16 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                 className={cn(
                   'w-full h-auto rounded-xl text-xs font-bold transition-all border border-transparent group relative overflow-hidden',
                   collapsed ? 'justify-center px-2 py-4' : 'justify-start gap-3 px-4 py-6',
-                  location.search.includes(`type=${sub.id}`)
+                  location.search.includes(`type = ${sub.id} `)
                     ? 'bg-red-600/5 text-red-500 border-red-600/10'
                     : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-200'
                 )}
                 onClick={() => {
-                  navigate(`${activeSubItem.href}?type=${sub.id}`);
+                  navigate(`${activeSubItem.href}?type = ${sub.id} `);
                 }}
                 title={collapsed ? sub.title : undefined}
               >
-                <div className={cn("w-1.5 h-1.5 rounded-full shrink-0 transition-all", location.search.includes(`type=${sub.id}`) ? "bg-red-500 shadow-[0_0_5px_rgba(229,57,53,0.5)]" : "bg-zinc-800 group-hover:bg-zinc-600")}></div>
+                <div className={cn("w-1.5 h-1.5 rounded-full shrink-0 transition-all", location.search.includes(`type = ${sub.id} `) ? "bg-red-500 shadow-[0_0_5px_rgba(229,57,53,0.5)]" : "bg-zinc-800 group-hover:bg-zinc-600")}></div>
                 {!collapsed && sub.title}
               </Button>
             ))}
