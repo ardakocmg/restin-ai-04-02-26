@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import api from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
+import { useVenue } from '@/context/VenueContext';
 import { toast } from 'sonner';
 
 /* ── Device & Location Helpers ──────────────────────── */
@@ -135,6 +136,7 @@ export default function ManualClocking() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { user, isManager, isOwner } = useAuth();
+    const { activeVenueId } = useVenue();
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const [myStatus, setMyStatus] = useState<MyStatus | null>(null);
@@ -179,9 +181,9 @@ export default function ManualClocking() {
             if (activeRes.status === 'fulfilled') setActiveSessions(Array.isArray(activeRes.value.data) ? activeRes.value.data : []);
             if (areasRes.status === 'fulfilled') setWorkAreas(Array.isArray(areasRes.value.data) ? areasRes.value.data : []);
 
-            if (canManageOthers) {
+            if (canManageOthers && activeVenueId) {
                 try {
-                    const empRes = await api.get('employees');
+                    const empRes = await api.get(`/venues/${activeVenueId}/hr/employees`);
                     const empData = empRes.data;
                     setEmployees(Array.isArray(empData) ? empData : Array.isArray(empData?.employees) ? empData.employees : []);
                 } catch { setEmployees([]); }

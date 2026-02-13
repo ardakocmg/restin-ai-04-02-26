@@ -5,7 +5,7 @@ import { useVenue } from '../context/VenueContext';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { Bell, User, LogOut, ChevronDown, Moon, Sun, Monitor, Database, Palette, Settings } from 'lucide-react';
+import { Bell, User, LogOut, ChevronDown, Moon, Sun, Monitor, Database, Palette, Settings, Building2, Search, X, Check, Wifi, WifiOff, AlertTriangle, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { useSafeMode } from '../context/SafeModeContext';
 import { Button } from '../components/ui/button';
 import {

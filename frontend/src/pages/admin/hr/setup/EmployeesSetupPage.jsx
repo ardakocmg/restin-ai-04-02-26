@@ -24,7 +24,7 @@ export default function EmployeesSetupPage() {
   const loadEmployees = async () => {
     try {
       const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
-      const res = await api.get(`/hr/employees?venue_id=${venueId}`);
+      const res = await api.get(`/venues/${venueId}/hr/employees`);
       setEmployees(res.data || []);
     } catch {
       setEmployees([]);
@@ -39,7 +39,7 @@ export default function EmployeesSetupPage() {
     }
     try {
       const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
-      await api.post(`/hr/employees?venue_id=${venueId}`, {
+      await api.post(`/venues/${venueId}/hr/employees`, {
         ...newEmployee,
         venue_id: venueId,
         status: 'active',

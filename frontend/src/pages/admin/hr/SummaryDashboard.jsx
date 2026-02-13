@@ -63,7 +63,7 @@ const ReportTile = ({ title, onClick }) => (
 
 export default function SummaryDashboard() {
   const navigate = useNavigate();
-  const { venueId } = useVenue();
+  const { activeVenueId: venueId } = useVenue();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedCompany, setSelectedCompany] = useState('All');

@@ -27,12 +27,28 @@ const STATUS_COLORS = {
   no_show: "bg-red-500/20 text-red-400"
 };
 
+const safeDate = (dateStr) => {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  return isNaN(d.getTime()) ? null : d;
+};
+
+const formatDateTime = (dateStr) => {
+  const d = safeDate(dateStr);
+  return d ? d.toLocaleString() : '—';
+};
+
+const formatTime = (dateStr) => {
+  const d = safeDate(dateStr);
+  return d ? d.toLocaleTimeString() : '—';
+};
+
 export default function ShiftsPage() {
   const { user } = useAuth();
   const { getAccess, loading: flagsLoading } = useHRFeatureFlags();
   const [loading, setLoading] = useState(true);
   const [shifts, setShifts] = useState([]);
-  
+
   const venueId = user?.venueId || user?.venue_id;
   const access = getAccess('shifts');
 
@@ -44,7 +60,8 @@ export default function ShiftsPage() {
     setLoading(true);
     try {
       const response = await api.get(`/hr/shifts?venue_id=${venueId}`);
-      setShifts(response.data);
+      const data = Array.isArray(response.data) ? response.data : (response.data?.shifts || []);
+      setShifts(data);
     } catch (error) {
       logger.error("Failed to load shifts:", error);
       if (error.response?.status !== 403) {
@@ -125,17 +142,17 @@ export default function ShiftsPage() {
                   <div>
                     <p className="text-zinc-500">Scheduled</p>
                     <p className="text-white">
-                      {new Date(shift.scheduled_start).toLocaleString()} -<br/>
-                      {new Date(shift.scheduled_end).toLocaleTimeString()}
+                      {formatDateTime(shift.scheduled_start)} -<br />
+                      {formatTime(shift.scheduled_end)}
                     </p>
                   </div>
-                  
+
                   {shift.actual_start && (
                     <div>
                       <p className="text-zinc-500">Actual</p>
                       <p className="text-white">
-                        {new Date(shift.actual_start).toLocaleTimeString()}
-                        {shift.actual_end && ` - ${new Date(shift.actual_end).toLocaleTimeString()}`}
+                        {formatTime(shift.actual_start)}
+                        {shift.actual_end && ` - ${formatTime(shift.actual_end)}`}
                       </p>
                     </div>
                   )}

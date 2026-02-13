@@ -41,7 +41,7 @@ export default function RecipeManagementComplete() {
     try {
       setLoading(true);
       if (!user?.venue_id) return;
-      const response = await api.get(`/api/venues/${user.venue_id}/recipes/engineered`);
+      const response = await api.get(`/venues/${user.venue_id}/recipes/engineered`);
       setRecipes(response.data.items || []);
     } catch (error) {
       logger.error('Failed to load recipes:', error);
@@ -65,10 +65,10 @@ export default function RecipeManagementComplete() {
       };
 
       if (editingRecipe?.id) {
-        await api.put(`/api/venues/${user.venue_id}/recipes/engineered/${editingRecipe.id}`, recipeData);
+        await api.put(`/venues/${user.venue_id}/recipes/engineered/${editingRecipe.id}`, recipeData);
         toast.success('Recipe updated');
       } else {
-        await api.post(`/api/venues/${user.venue_id}/recipes/engineered`, recipeData);
+        await api.post(`/venues/${user.venue_id}/recipes/engineered`, recipeData);
         toast.success('Recipe created');
       }
 

@@ -9,7 +9,8 @@ export const studioService = {
      * List Assets
      */
     listAssets: async (venueId: string) => {
-        return api.get(`/media/assets?venue_id=${venueId}`);
+        const res = await api.get(`/media/assets?venue_id=${venueId}`);
+        return Array.isArray(res.data) ? res.data : (res.data?.assets || []);
     },
 
     /**

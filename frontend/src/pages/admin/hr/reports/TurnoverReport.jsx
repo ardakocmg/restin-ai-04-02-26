@@ -18,7 +18,7 @@ export default function TurnoverReport() {
   const loadData = async () => {
     try {
       const venueId = localStorage.getItem("restin_venue_id") || "venue-caviar-bull";
-      const response = await api.get('/hr/employees', { params: { venue_id: venueId } });
+      const response = await api.get(`/venues/${venueId}/hr/employees`);
 
       // Simulating turnover logic (as mock doesn't retain history well)
       // In real app, we would query historical logs or `end_date`

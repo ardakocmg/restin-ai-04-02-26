@@ -20,7 +20,7 @@ export default function EmployeeDetailsReport() {
   const loadData = async () => {
     try {
       const venueId = localStorage.getItem("restin_venue_id") || "venue-caviar-bull";
-      const response = await api.get('/hr/employees', { params: { venue_id: venueId } });
+      const response = await api.get(`/venues/${venueId}/hr/employees`);
       setData(response.data || []);
       setLoading(false);
     } catch (error) {

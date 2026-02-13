@@ -8,7 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     Clock, CheckCircle2, XCircle, AlertTriangle, Filter, Search,
     ChevronDown, ChevronUp, User, Calendar, FileText, Timer,
-    Loader2, Shield, MapPin, Monitor, Fingerprint, ArrowLeft
+    Loader2, Shield, MapPin, Monitor, Fingerprint, ArrowLeft,
+    ArrowUpDown, ArrowUp, ArrowDown
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -86,6 +87,10 @@ export default function ApprovalCenter() {
 
     const canReview = Boolean(isManager) || Boolean(isOwner);
 
+    /* ── Sort Types ─────────────────────────────────── */
+    type SortField = 'requester_name' | 'type' | 'details' | 'priority' | 'status' | 'created_at';
+    type SortDirection = 'asc' | 'desc';
+
     /* ── State ─────────────────────────────────────── */
     const [requests, setRequests] = useState<ApprovalRequest[]>([]);
     const [stats, setStats] = useState<ApprovalStats | null>(null);
@@ -104,6 +109,9 @@ export default function ApprovalCenter() {
     const [rejectionReason, setRejectionReason] = useState('');
     const [processing, setProcessing] = useState<string | null>(null);
     const [expandedRow, setExpandedRow] = useState<string | null>(null);
+    const [sortField, setSortField] = useState<SortField>('created_at');
+    const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+    const [activeStatFilter, setActiveStatFilter] = useState<string | null>(null);
 
     /* ── Fetch ─────────────────────────────────────── */
     const fetchData = useCallback(async () => {
@@ -125,7 +133,36 @@ export default function ApprovalCenter() {
 
     useEffect(() => { fetchData(); }, [fetchData]);
 
-    /* ── Filtered data ─────────────────────────────── */
+    /* ── Handle stat card click ─────────────────────── */
+    const handleStatCardClick = (statusKey: string) => {
+        if (activeStatFilter === statusKey) {
+            // Toggle off — clear filter
+            setActiveStatFilter(null);
+            setFilters(f => ({ ...f, status: '' }));
+        } else {
+            setActiveStatFilter(statusKey);
+            setFilters(f => ({ ...f, status: statusKey === 'total' ? '' : statusKey }));
+        }
+    };
+
+    /* ── Handle sort toggle ───────────────────────── */
+    const handleSort = (field: SortField) => {
+        if (sortField === field) {
+            setSortDirection(d => d === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortDirection('desc');
+        }
+    };
+
+    const SortIcon = ({ field }: { field: SortField }) => {
+        if (sortField !== field) return <ArrowUpDown className="h-3 w-3 opacity-40" />;
+        return sortDirection === 'asc'
+            ? <ArrowUp className="h-3 w-3 text-blue-400" />
+            : <ArrowDown className="h-3 w-3 text-blue-400" />;
+    };
+
+    /* ── Filtered & Sorted data ────────────────────── */
     const filtered = useMemo(() => {
         let result = [...requests];
 
@@ -157,8 +194,37 @@ export default function ApprovalCenter() {
             result = result.filter(r => r.created_at.startsWith(filters.date));
         }
 
+        // Sorting
+        const priorityOrder: Record<string, number> = { urgent: 4, high: 3, normal: 2, low: 1 };
+        const statusOrder: Record<string, number> = { pending: 4, approved: 3, rejected: 2, cancelled: 1 };
+
+        result.sort((a, b) => {
+            let cmp = 0;
+            switch (sortField) {
+                case 'requester_name':
+                    cmp = a.requester_name.localeCompare(b.requester_name);
+                    break;
+                case 'type':
+                    cmp = a.type.localeCompare(b.type);
+                    break;
+                case 'details':
+                    cmp = (getPayloadSummary(a)).localeCompare(getPayloadSummary(b));
+                    break;
+                case 'priority':
+                    cmp = (priorityOrder[a.priority] || 0) - (priorityOrder[b.priority] || 0);
+                    break;
+                case 'status':
+                    cmp = (statusOrder[a.status] || 0) - (statusOrder[b.status] || 0);
+                    break;
+                case 'created_at':
+                    cmp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+                    break;
+            }
+            return sortDirection === 'asc' ? cmp : -cmp;
+        });
+
         return result;
-    }, [requests, activeTab, filters]);
+    }, [requests, activeTab, filters, sortField, sortDirection]);
 
     /* ── Actions ───────────────────────────────────── */
     const handleApprove = async (id: string) => {
@@ -212,6 +278,7 @@ export default function ApprovalCenter() {
 
     const getPayloadSummary = (req: ApprovalRequest) => {
         const p = req.payload;
+        if (!p) return req.reason || 'No details';
         if (req.type === 'manual_clocking') {
             return `${p.date || 'N/A'} • ${p.time_in || '?'} → ${p.time_out || '?'} • ${p.work_area || ''}`;
         }
@@ -257,22 +324,31 @@ export default function ApprovalCenter() {
                 </button>
             </div>
 
-            {/* Stats Cards (managers only) */}
+            {/* Stats Cards (managers only) — Clickable to filter */}
             {canReview && stats && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
-                        { label: 'Pending', value: stats.by_status.pending || 0, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-                        { label: 'Approved', value: stats.by_status.approved || 0, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-                        { label: 'Rejected', value: stats.by_status.rejected || 0, color: 'text-red-400', bg: 'bg-red-500/10' },
-                        { label: 'Total', value: Object.values(stats.by_status).reduce((a, b) => a + b, 0), color: 'text-blue-400', bg: 'bg-blue-500/10' },
+                        { key: 'pending', label: 'Pending', value: stats.by_status.pending || 0, color: 'text-amber-400', bg: 'bg-amber-500/10', activeBorder: 'border-amber-500' },
+                        { key: 'approved', label: 'Approved', value: stats.by_status.approved || 0, color: 'text-emerald-400', bg: 'bg-emerald-500/10', activeBorder: 'border-emerald-500' },
+                        { key: 'rejected', label: 'Rejected', value: stats.by_status.rejected || 0, color: 'text-red-400', bg: 'bg-red-500/10', activeBorder: 'border-red-500' },
+                        { key: 'total', label: 'Total', value: Object.values(stats.by_status).reduce((a, b) => a + b, 0), color: 'text-blue-400', bg: 'bg-blue-500/10', activeBorder: 'border-blue-500' },
                     ].map(card => (
                         <motion.div
                             key={card.label}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className={`${card.bg} rounded-xl border border-border p-4`}
+                            onClick={() => handleStatCardClick(card.key)}
+                            className={`${card.bg} rounded-xl border p-4 cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98] ${activeStatFilter === card.key
+                                ? `${card.activeBorder} ring-1 ring-offset-0 ring-current shadow-lg`
+                                : 'border-border hover:border-muted-foreground/30'
+                                }`}
                         >
-                            <p className="text-xs text-muted-foreground uppercase tracking-wider">{t(card.label)}</p>
+                            <p className="text-xs text-muted-foreground uppercase tracking-wider flex items-center justify-between">
+                                {t(card.label)}
+                                {activeStatFilter === card.key && (
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-foreground">✕ {t('Clear')}</span>
+                                )}
+                            </p>
                             <p className={`text-3xl font-bold mt-1 ${card.color}`}>{card.value}</p>
                         </motion.div>
                     ))}
@@ -338,6 +414,7 @@ export default function ApprovalCenter() {
                                 <select
                                     value={filters.type}
                                     onChange={e => setFilters(f => ({ ...f, type: e.target.value }))}
+                                    title="Filter by Type"
                                     className="w-full px-3 py-2 bg-muted rounded-lg border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
                                     <option value="">{t('All Types')}</option>
@@ -351,6 +428,7 @@ export default function ApprovalCenter() {
                                 <select
                                     value={filters.status}
                                     onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
+                                    title="Filter by Status"
                                     className="w-full px-3 py-2 bg-muted rounded-lg border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
                                     <option value="">{t('All Statuses')}</option>
@@ -364,6 +442,7 @@ export default function ApprovalCenter() {
                                 <select
                                     value={filters.priority}
                                     onChange={e => setFilters(f => ({ ...f, priority: e.target.value }))}
+                                    title="Filter by Priority"
                                     className="w-full px-3 py-2 bg-muted rounded-lg border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
                                     <option value="">{t('All Priorities')}</option>
@@ -378,6 +457,7 @@ export default function ApprovalCenter() {
                                     type="date"
                                     value={filters.date}
                                     onChange={e => setFilters(f => ({ ...f, date: e.target.value }))}
+                                    title="Filter by Date"
                                     className="w-full px-3 py-2 bg-muted rounded-lg border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 />
                             </div>
@@ -399,12 +479,25 @@ export default function ApprovalCenter() {
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b border-border">
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('Requester')}</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('Type')}</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('Details')}</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('Priority')}</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('Status')}</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('Submitted')}</th>
+                                    {[
+                                        { field: 'requester_name' as SortField, label: 'Requester' },
+                                        { field: 'type' as SortField, label: 'Type' },
+                                        { field: 'details' as SortField, label: 'Details' },
+                                        { field: 'priority' as SortField, label: 'Priority' },
+                                        { field: 'status' as SortField, label: 'Status' },
+                                        { field: 'created_at' as SortField, label: 'Submitted' },
+                                    ].map(col => (
+                                        <th
+                                            key={col.field}
+                                            onClick={() => handleSort(col.field)}
+                                            className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider cursor-pointer hover:text-foreground transition-colors select-none group"
+                                        >
+                                            <span className="inline-flex items-center gap-1.5">
+                                                {t(col.label)}
+                                                <SortIcon field={col.field} />
+                                            </span>
+                                        </th>
+                                    ))}
                                     {canReview && <th className="px-4 py-3 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('Actions')}</th>}
                                 </tr>
                             </thead>

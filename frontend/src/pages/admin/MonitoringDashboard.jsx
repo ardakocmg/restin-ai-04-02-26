@@ -24,7 +24,7 @@ export default function MonitoringDashboard() {
 
   const loadHealth = useCallback(async () => {
     try {
-      const res = await api.get('/api/system/health');
+      const res = await api.get('/system/health');
       setHealth(res.data);
       setError(null);
       setLastRefresh(new Date());

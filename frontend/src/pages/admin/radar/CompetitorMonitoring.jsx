@@ -18,8 +18,8 @@ import api from '../../../lib/api';
  * Real-time competitor intelligence using Google Grounding.
  */
 export default function CompetitorMonitoring() {
-    const { currentVenue } = useVenue();
-    const venueId = currentVenue?.id || localStorage.getItem('currentVenueId') || 'default';
+    const { activeVenue } = useVenue();
+    const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
     const [expandedCompetitor, setExpandedCompetitor] = useState(null);
 
@@ -27,7 +27,7 @@ export default function CompetitorMonitoring() {
         queryKey: ['radar-competitors', venueId],
         queryFn: async () => {
             const { data } = await api.get(`/radar/competitors?venue_id=${venueId}`);
-            return data;
+            return Array.isArray(data) ? data : (data?.competitors || []);
         }
     });
 
@@ -35,7 +35,7 @@ export default function CompetitorMonitoring() {
         queryKey: ['radar-insights', venueId],
         queryFn: async () => {
             const { data } = await api.get(`/radar/insights?venue_id=${venueId}`);
-            return data;
+            return Array.isArray(data) ? data : (data?.insights || []);
         }
     });
 
@@ -76,9 +76,9 @@ export default function CompetitorMonitoring() {
                 <Button
                     variant="outline" size="sm"
                     onClick={() => scanMutation.mutate()}
-                    disabled={scanMutation.isLoading}
+                    disabled={scanMutation.isPending}
                 >
-                    {scanMutation.isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <RefreshCw className="w-4 h-4 mr-1" />}
+                    {scanMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <RefreshCw className="w-4 h-4 mr-1" />}
                     Scan Market
                 </Button>
             </div>

@@ -15,7 +15,7 @@ import api from '@/lib/api';
 const COLORS = ['#EF4444', '#F59E0B', '#10B981'];
 
 export default function TurnoverModule() {
-  const { venueId } = useVenue();
+  const { activeVenueId: venueId } = useVenue();
   const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
   const [data, setData] = useState(null);

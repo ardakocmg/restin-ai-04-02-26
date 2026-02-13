@@ -37,7 +37,7 @@ export default function ForecastingDashboard() {
     const { data: weeklyData = [], isLoading: loadingWeekly } = useQuery({
         queryKey: ['forecast-weekly', activeVenueId],
         queryFn: async () => {
-            const res = await api.get(`/api/forecasting/weekly?venue_id=${activeVenueId}`);
+            const res = await api.get(`/forecasting/weekly?venue_id=${activeVenueId}`);
             return res.data;
         },
         enabled: !!activeVenueId,
@@ -47,7 +47,7 @@ export default function ForecastingDashboard() {
     const { data: summary, isLoading: loadingSummary } = useQuery({
         queryKey: ['forecast-summary', activeVenueId],
         queryFn: async () => {
-            const res = await api.get(`/api/forecasting/summary?venue_id=${activeVenueId}`);
+            const res = await api.get(`/forecasting/summary?venue_id=${activeVenueId}`);
             return res.data;
         },
         enabled: !!activeVenueId,

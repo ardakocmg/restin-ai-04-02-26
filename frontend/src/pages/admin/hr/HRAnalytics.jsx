@@ -43,7 +43,7 @@ import {
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 export default function HRAnalyticsIndigo() {
-  const { venueId } = useVenue();
+  const { activeVenueId: venueId } = useVenue();
   const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
   const [data, setData] = useState(null);
@@ -90,7 +90,7 @@ export default function HRAnalyticsIndigo() {
         <div className="space-y-6">
           {/* KPI Cards */}
           <div className="grid gap-4 md:grid-cols-3">
-            {data.kpi_metrics.map((kpi, idx) => (
+            {(data.kpi_metrics || []).map((kpi, idx) => (
               <Card key={idx} className="border-white/5 bg-zinc-900/50 backdrop-blur-xl">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
@@ -162,7 +162,7 @@ export default function HRAnalyticsIndigo() {
                         dataKey="count"
                         nameKey="gender"
                       >
-                        {data.headcount_by_gender.map((entry, index) => (
+                        {(data.headcount_by_gender || []).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
@@ -220,7 +220,7 @@ export default function HRAnalyticsIndigo() {
                         dataKey="count"
                         nameKey="type_name"
                       >
-                        {data.headcount_by_employment_type.map((entry, index) => (
+                        {(data.headcount_by_employment_type || []).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[(index + 2) % COLORS.length]} />
                         ))}
                       </Pie>

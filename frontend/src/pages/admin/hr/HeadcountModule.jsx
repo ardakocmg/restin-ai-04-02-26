@@ -13,7 +13,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import api from '@/lib/api';
 
 export default function HeadcountModule() {
-  const { venueId } = useVenue();
+  const { activeVenueId: venueId } = useVenue();
   const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
   const [data, setData] = useState(null);

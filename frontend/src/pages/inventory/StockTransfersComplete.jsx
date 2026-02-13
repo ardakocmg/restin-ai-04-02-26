@@ -48,9 +48,9 @@ export default function StockTransfersComplete() {
       setLoading(true);
       setLoading(true);
       const [transfersRes, locationsRes, inventoryRes] = await Promise.all([
-        api.get(`/api/venues/${user?.venue_id}/inventory/transfer`).catch(() => ({ data: [] })),
-        api.get('/api/venues'),
-        api.get(`/api/venues/${user?.venue_id}/inventory`)
+        api.get(`/venues/${user?.venue_id}/inventory/transfer`).catch(() => ({ data: [] })),
+        api.get('/venues'),
+        api.get(`/venues/${user?.venue_id}/inventory`)
       ]);
       setTransfers(transfersRes.data || []);
       setLocations(locationsRes.data || []);
@@ -69,7 +69,7 @@ export default function StockTransfersComplete() {
     }
 
     try {
-      await api.post(`/api/venues/${user?.venue_id}/inventory/transfer`, {
+      await api.post(`/venues/${user?.venue_id}/inventory/transfer`, {
         to_venue_id: newTransfer.to_venue_id,
         item_id: newTransfer.item_id,
         quantity: parseFloat(newTransfer.quantity),

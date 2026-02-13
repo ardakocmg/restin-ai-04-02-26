@@ -48,8 +48,8 @@ export default function ProductionManagementComplete() {
     try {
       setLoading(true);
       const [batchesRes, recipesRes] = await Promise.all([
-        api.get(`/api/inventory/production-batches?venue_id=${user?.venue_id}`),
-        api.get(`/api/venues/${user?.venue_id}/recipes/engineered?active=true`)
+        api.get(`/inventory/production-batches?venue_id=${user?.venue_id}`),
+        api.get(`/venues/${user?.venue_id}/recipes/engineered?active=true`)
       ]);
       setBatches(batchesRes.data || []);
       setRecipes(recipesRes.data || []);
@@ -67,7 +67,7 @@ export default function ProductionManagementComplete() {
     }
 
     try {
-      await api.post('/api/inventory/production-batches', {
+      await api.post('/inventory/production-batches', {
         venue_id: user?.venue_id,
         recipe_id: newBatch.recipe_id,
         batch_number: `BATCH-${Date.now()}`,

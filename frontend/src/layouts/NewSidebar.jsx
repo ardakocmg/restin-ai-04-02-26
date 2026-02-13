@@ -17,7 +17,7 @@ import {
   Table as TableIcon, Calendar, Truck, PieChart as PieChartIcon,
   UserCheck, Receipt, Clock, Package, Upload, Monitor,
   Building2, LayoutGrid, ShieldAlert, Shield, Layers,
-  RefreshCw, Home, Timer, Type, Palette, Server, Globe, Mic, Wand2, Radar, MessageSquare, Cpu, Zap, Archive, Briefcase, Menu
+  RefreshCw, Home, Timer, Type, Palette, Server, Globe, Mic, Wand2, Radar, MessageSquare, Cpu, Zap, Archive, Briefcase, Menu, ChevronRight, ChevronLeft, Search, X
 } from 'lucide-react';
 
 // Role hierarchy from centralized definition (includes product_owner: 99)

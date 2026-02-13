@@ -106,7 +106,7 @@ export default function POSSalesReport() {
         shift: globalFilters.activeShift
       };
 
-      const response = await api.get('/api/reports/pos-sales', { params });
+      const response = await api.get('/reports/pos-sales', { params });
       setSalesData(response.data);
     } catch (error) {
       logger.error('Failed to fetch POS report:', error);

@@ -24,13 +24,12 @@ async def bolt_webhook(payload: Dict[str, Any]):
 async def get_aggregator_status(venue_id: str):
     """
     Get connection status for delivery platforms.
-    Mocked for demo purposes.
+    Returns data in the format expected by OpsDashboard.tsx
     """
     return [
-        {"name": "UberEats", "status": "Online", "orders": 12, "revenue": "€240.50", "color": "bg-green-500"},
-        {"name": "Wolt", "status": "Online", "orders": 8, "revenue": "€160.00", "color": "bg-blue-500"},
-        {"name": "Bolt Food", "status": "Busy", "orders": 15, "revenue": "€310.20", "color": "bg-amber-500"},
-        {"name": "Glovo", "status": "Offline", "orders": 0, "revenue": "€0.00", "color": "bg-zinc-500"},
+        {"platform": "uber_eats", "status": "online", "orders_today": 12, "revenue_today_cents": 24050, "commission_pct": 25.0},
+        {"platform": "wolt", "status": "online", "orders_today": 8, "revenue_today_cents": 16000, "commission_pct": 22.0},
+        {"platform": "bolt_food", "status": "paused", "orders_today": 15, "revenue_today_cents": 31020, "commission_pct": 20.0},
     ]
 
 def create_aggregator_router():

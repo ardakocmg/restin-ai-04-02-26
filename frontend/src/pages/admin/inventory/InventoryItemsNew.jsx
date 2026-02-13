@@ -44,7 +44,8 @@ export default function InventoryItemsNew() {
     setLoading(true);
     try {
       const res = await api.get(`/inventory/items?venue_id=${activeVenue.id}`);
-      setItems(res.data || []);
+      const data = Array.isArray(res.data) ? res.data : (res.data?.items || []);
+      setItems(data);
     } catch (error) {
       logger.error("Failed to load inventory items:", error);
       toast.error("Failed to load inventory");
@@ -107,7 +108,8 @@ export default function InventoryItemsNew() {
   };
 
   // Filtering
-  const filteredItems = items.filter(item => {
+  const safeItems = Array.isArray(items) ? items : [];
+  const filteredItems = safeItems.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase()) ||
       (item.sku || '').toLowerCase().includes(search.toLowerCase());
     const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
@@ -115,7 +117,7 @@ export default function InventoryItemsNew() {
   });
 
   // Unique Categories
-  const categories = ['General', ...new Set(items.map(i => i.category).filter(Boolean))];
+  const categories = ['General', ...new Set(safeItems.map(i => i.category).filter(Boolean))];
 
   return (
     <PageContainer

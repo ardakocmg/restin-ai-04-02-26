@@ -106,8 +106,10 @@ from routes.connectors import create_connectors_router
 from routes.voice_routes import router as voice_router
 from routes.media_routes import router as media_router
 from routes.radar_routes import router as radar_router
-from routes.ops_routes import router as ops_router
-from routes.ops_routes import router as ops_router
+from routes.ops_routes import create_ops_router
+from routes.billing_routes import create_billing_router
+from routes.smart_home_routes import create_smart_home_router
+from routes.fintech_routes import create_fintech_router
 from routes.pay_routes import router as pay_router
 from routes.production_routes import create_production_router
 from routes.pos_session_routes import create_pos_session_router
@@ -454,7 +456,10 @@ api_main.include_router(system_router)
 api_main.include_router(venue_router)
 api_main.include_router(menu_router)
 api_main.include_router(radar_router)
-api_main.include_router(ops_router)
+api_main.include_router(create_ops_router())
+api_main.include_router(create_billing_router())
+api_main.include_router(create_smart_home_router())
+api_main.include_router(create_fintech_router())
 api_main.include_router(pay_router)
 api_main.include_router(create_aggregator_router(), prefix="/aggregators")
 api_main.include_router(guest_router)

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
+import { useVenue } from '@/context/VenueContext';
 import api from '@/lib/api';
 import { logger } from '@/lib/logger';
 import { toast } from 'sonner';
@@ -78,7 +79,7 @@ export default function ApprovalSettings() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { user } = useAuth();
-    const venueId = user?.venueId || '';
+    const { activeVenueId: venueId } = useVenue();
 
     const [settings, setSettings] = useState<ApprovalSettings>(DEFAULTS);
     const [employees, setEmployees] = useState<Employee[]>([]);
@@ -92,7 +93,7 @@ export default function ApprovalSettings() {
             setLoading(true);
             const [settingsRes, employeesRes] = await Promise.all([
                 api.get(`config/venues/${venueId}/approval-settings`),
-                api.get('employees').catch(() => ({ data: [] })),
+                api.get(`/venues/${venueId}/hr/employees`).catch(() => ({ data: [] })),
             ]);
 
             const data = settingsRes.data?.data || settingsRes.data;
@@ -355,6 +356,7 @@ export default function ApprovalSettings() {
                             max={120}
                             value={settings.manual_clocking.shift_mismatch_tolerance_minutes}
                             onChange={e => updateClocking('shift_mismatch_tolerance_minutes', parseInt(e.target.value) || 15)}
+                            title="Tolerance minutes"
                             className="w-24 px-3 py-2 bg-muted rounded-lg border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
                         <p className="text-xs text-muted-foreground">{t('Clock-ins within this window of the scheduled shift are accepted')}</p>

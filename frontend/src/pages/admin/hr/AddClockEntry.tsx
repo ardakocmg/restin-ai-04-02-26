@@ -80,7 +80,7 @@ export default function AddClockEntry() {
     useEffect(() => {
         const fetchWorkAreas = async () => {
             try {
-                const res = await api.get('/api/clocking/work-areas');
+                const res = await api.get('/clocking/work-areas');
                 setWorkAreas(res.data || []);
                 if (res.data?.length > 0 && !workArea) {
                     setWorkArea(res.data[0].code);
@@ -106,7 +106,7 @@ export default function AddClockEntry() {
         if (!isManager || !activeVenue?.id) return;
         const fetchEmployees = async () => {
             try {
-                const res = await api.get(`/api/venues/${activeVenue.id}/hr/employees`);
+                const res = await api.get(`/venues/${activeVenue.id}/hr/employees`);
                 setEmployees(res.data || []);
             } catch (err) {
                 logger.error('Failed to fetch employees', err as Record<string, unknown>);
@@ -145,7 +145,7 @@ export default function AddClockEntry() {
                 payload.employee_id = selectedEmployeeId;
             }
 
-            const res = await api.post('/api/clocking/add-entry', payload);
+            const res = await api.post('/clocking/add-entry', payload);
             setSubmitResult(res.data);
             setSubmitted(true);
 
@@ -269,6 +269,7 @@ export default function AddClockEntry() {
                                     <select
                                         value={selectedEmployeeId}
                                         onChange={(e) => setSelectedEmployeeId(e.target.value)}
+                                        title="Select Employee"
                                         className="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-sm text-zinc-200 appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 outline-none transition-all"
                                     >
                                         <option value="">Myself ({user?.name || 'Current User'})</option>

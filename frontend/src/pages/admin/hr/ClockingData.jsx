@@ -25,7 +25,7 @@ const DEVICE_BADGE = {
 };
 
 export default function ClockingData() {
-  const { venueId } = useVenue();
+  const { activeVenueId: venueId } = useVenue();
   const { user, isManager, isOwner } = useAuth();
   useAuditLog('CLOCKING_DATA_VIEWED', { resource: 'clocking-data' });
   const navigate = useNavigate();

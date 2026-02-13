@@ -46,9 +46,11 @@ export default function StockTransfersComplete() {
         api.get(`/inventory/items?venue_id=${activeVenue?.id}`),
         api.get('/venues')
       ]);
-      setItems(itemsRes.data || []);
+      const itemsData = Array.isArray(itemsRes.data) ? itemsRes.data : (itemsRes.data?.items || []);
+      setItems(itemsData);
       // Filter out current venue from targets
-      setVenues((venuesRes.data || []).filter(v => v.id !== activeVenue?.id));
+      const venuesData = Array.isArray(venuesRes.data) ? venuesRes.data : (venuesRes.data?.venues || []);
+      setVenues(venuesData.filter(v => v.id !== activeVenue?.id));
     } catch (e) {
       logger.error("Failed to load transfer options", e);
     }
@@ -81,8 +83,9 @@ export default function StockTransfersComplete() {
     const qty = parseFloat(formData.quantity);
     if (isNaN(qty) || qty <= 0) return toast.error("Invalid quantity");
 
-    // Check stock locally first
-    const item = items.find(i => i.id === formData.item_id);
+    // Check stock locally first (defensive: ensure items is always an array)
+    const safeItems = Array.isArray(items) ? items : [];
+    const item = safeItems.find(i => i.id === formData.item_id);
     if (item && item.quantity < qty) {
       return toast.error(`Insufficient stock! Available: ${item.quantity}`);
     }

@@ -412,6 +412,7 @@ function App() {
                                     <Route path="observability" element={<RoleRoute requiredRole="MANAGER"><Observability /></RoleRoute>} />
                                     <Route path="operations" element={<RoleRoute requiredRole="MANAGER"><Operations /></RoleRoute>} />
                                     <Route path="posdashboard" element={<RoleRoute requiredRole="MANAGER"><POSDashboard /></RoleRoute>} />
+                                    <Route path="pos-dashboard" element={<RoleRoute requiredRole="MANAGER"><POSDashboard /></RoleRoute>} />
                                     <Route path="products" element={<RoleRoute requiredRole="MANAGER"><ProductManagement /></RoleRoute>} />
                                     <Route path="company-settings" element={<RoleRoute requiredRole="OWNER"><CompanySettings /></RoleRoute>} />
                                     <Route path="settings" element={<RoleRoute requiredRole="OWNER"><SettingsHub /></RoleRoute>} />

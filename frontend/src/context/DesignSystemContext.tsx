@@ -172,7 +172,7 @@ interface DesignSystemProviderProps {
 }
 
 export function DesignSystemProvider({ children }: DesignSystemProviderProps): JSX.Element {
-    const [themeMode, setThemeModeState] = useState<'light' | 'dark'>('light');
+    const [themeMode, setThemeModeState] = useState<'light' | 'dark'>('dark');
     const [currency, setCurrency] = useState<CurrencyCode>('EUR');
     const [venueColors, setVenueColors] = useState<Record<string, string> | null>(null);
     const [userPreferences, setUserPreferences] = useState<UserPreferences>({
@@ -188,10 +188,13 @@ export function DesignSystemProvider({ children }: DesignSystemProviderProps): J
 
     const loadDesignSettings = async (): Promise<void> => {
         try {
-            // Load from localStorage first
-            const savedTheme = localStorage.getItem('restin_theme_mode') as 'light' | 'dark' | null;
-            if (savedTheme) {
+            // Load from localStorage first - validate it's actually 'light' or 'dark'
+            const savedTheme = localStorage.getItem('restin_theme_mode');
+            if (savedTheme === 'light' || savedTheme === 'dark') {
                 setThemeModeState(savedTheme);
+            } else if (savedTheme) {
+                // Invalid value in localStorage, clean it up
+                localStorage.removeItem('restin_theme_mode');
             }
 
             const savedPrefs = localStorage.getItem('restin_user_preferences');
@@ -232,17 +235,24 @@ export function DesignSystemProvider({ children }: DesignSystemProviderProps): J
     };
 
     const applyTheme = (mode: 'light' | 'dark'): void => {
-        const theme = THEME_MODES[mode];
+        // Validate mode and always fall back to dark (matching CSS :root defaults)
+        const safeMode = (mode === 'light' || mode === 'dark') ? mode : 'dark';
+        const theme = THEME_MODES[safeMode];
         const root = document.documentElement;
 
         // Remove previous theme class
         root.classList.remove('light', 'dark');
-        root.classList.add(mode);
+        root.classList.add(safeMode);
 
-        // Apply CSS variables
+        // Safety check - theme should always exist but guard just in case
+        if (!theme || typeof theme !== 'object') return;
+
+        // Apply CSS variables - convert camelCase keys to kebab-case
         Object.entries(theme).forEach(([key, value]) => {
-            if (key !== 'id' && key !== 'name') {
-                root.style.setProperty(`--${key}`, value);
+            if (key !== 'id' && key !== 'name' && typeof value === 'string') {
+                // Convert camelCase to kebab-case: cardForeground → card-foreground
+                const cssKey = key.replace(/([A-Z])/g, '-$1').toLowerCase();
+                root.style.setProperty(`--${cssKey}`, value);
             }
         });
 
