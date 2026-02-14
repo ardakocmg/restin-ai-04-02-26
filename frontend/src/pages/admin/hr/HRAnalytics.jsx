@@ -9,8 +9,8 @@ import { useVenue } from '@/context/VenueContext';
 import PermissionGate from '@/components/shared/PermissionGate';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import api from '@/services/api';
-import logger from '@/utils/logger';
+import api from '@/lib/api';
+import logger from '@/lib/logger';
 import {
   BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell,
   ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Legend
