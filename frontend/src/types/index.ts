@@ -2,7 +2,8 @@
 // PROTOCOL v3.5: INTEGRATION-READY STANDARDS
 // ==========================================
 
-export type UserRole = 'OWNER' | 'MANAGER' | 'STAFF';
+export type UserRole = 'OWNER' | 'MANAGER' | 'STAFF' | 'GENERAL_MANAGER' | 'PRODUCT_OWNER'
+    | 'owner' | 'manager' | 'staff' | 'general_manager' | 'product_owner';
 
 // 1. CORE & AUTH (Google Workspace)
 export interface User {

@@ -5,7 +5,7 @@ import { useVenue } from '../context/VenueContext';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { buildSearchIndex } from '@/lib/searchRegistry';
+import { buildSearchIndex, type SearchableItem } from '@/lib/searchRegistry';
 import { Bell, User, LogOut, ChevronDown, Moon, Sun, Monitor, Database, Palette, Settings, Building2, Search, X, Check, Wifi, WifiOff, AlertTriangle, ShieldAlert, ShieldCheck, Clock } from 'lucide-react';
 import { useSafeMode } from '../context/SafeModeContext';
 import { Button } from '../components/ui/button';
@@ -18,7 +18,9 @@ import {
   DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu';
 
-export default function NewTopBar() {
+type SystemStatus = 'healthy' | 'degraded' | 'offline';
+
+export default function NewTopBar(): React.ReactElement {
   const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const { activeVenue, venues, selectVenue } = useVenue();
@@ -26,19 +28,19 @@ export default function NewTopBar() {
   const { isSafeMode, setSafeMode } = useSafeMode();
   const location = useLocation();
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [systemStatus, setSystemStatus] = useState('healthy'); // 'healthy', 'degraded', 'offline'
-  const [selectedSuggestionIdx, setSelectedSuggestionIdx] = useState(0);
-  const [currentTime, setCurrentTime] = useState('');
-  const searchInputRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+  const [systemStatus, _setSystemStatus] = useState<SystemStatus>('healthy');
+  const [selectedSuggestionIdx, setSelectedSuggestionIdx] = useState<number>(0);
+  const [currentTime, setCurrentTime] = useState<string>('');
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   // Build role-filtered search index from shared registry
-  const searchIndex = useMemo(() => buildSearchIndex(user?.role), [user?.role]);
+  const searchIndex = useMemo<SearchableItem[]>(() => buildSearchIndex(user?.role), [user?.role]);
 
   // Live clock — Malta timezone
   useEffect(() => {
-    const updateClock = () => {
+    const updateClock = (): void => {
       const now = new Date();
       setCurrentTime(now.toLocaleTimeString('en-GB', {
         hour: '2-digit', minute: '2-digit',
@@ -52,7 +54,7 @@ export default function NewTopBar() {
 
   // ⌘K / Ctrl+K global shortcut to focus search bar
   useEffect(() => {
-    const handleGlobalKey = (e) => {
+    const handleGlobalKey = (e: KeyboardEvent): void => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         searchInputRef.current?.focus();
@@ -68,7 +70,7 @@ export default function NewTopBar() {
     return () => window.removeEventListener('keydown', handleGlobalKey);
   }, [showSuggestions]);
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     logout();
     navigate('/login');
   };
@@ -78,15 +80,15 @@ export default function NewTopBar() {
     if (!searchQuery.trim()) return [];
     const q = searchQuery.toLowerCase();
     return searchIndex
-      .filter(item => {
+      .filter((item: SearchableItem) => {
         return (
           item.title.toLowerCase().includes(q) ||
           item.breadcrumb.toLowerCase().includes(q) ||
           item.path.toLowerCase().includes(q) ||
-          item.keywords.some(kw => kw.includes(q))
+          item.keywords.some((kw: string) => kw.includes(q))
         );
       })
-      .slice(0, 8); // Show up to 8 results
+      .slice(0, 8);
   }, [searchQuery, searchIndex]);
 
   // Reset selected suggestion when suggestions change
@@ -96,7 +98,7 @@ export default function NewTopBar() {
 
   // Keyboard navigation for suggestions
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (!showSuggestions || suggestions.length === 0) return;
 
       if (e.key === 'ArrowDown') {
@@ -115,7 +117,7 @@ export default function NewTopBar() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showSuggestions, suggestions, selectedSuggestionIdx]);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.FormEvent): void => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
 
@@ -127,13 +129,13 @@ export default function NewTopBar() {
     setShowSuggestions(false);
   };
 
-  const handleSuggestionClick = (path) => {
+  const handleSuggestionClick = (path: string): void => {
     navigate(path);
     setSearchQuery('');
     setShowSuggestions(false);
   };
 
-  const getStatusColor = () => {
+  const getStatusColor = (): string => {
     switch (systemStatus) {
       case 'healthy': return 'text-green-500';
       case 'degraded': return 'text-yellow-500';
@@ -142,7 +144,7 @@ export default function NewTopBar() {
     }
   };
 
-  const getStatusIcon = () => {
+  const getStatusIcon = (): React.ReactElement => {
     switch (systemStatus) {
       case 'healthy': return <Wifi className="h-3 w-3" />;
       case 'degraded': return <AlertTriangle className="h-3 w-3" />;
@@ -151,7 +153,7 @@ export default function NewTopBar() {
     }
   };
 
-  const getStatusText = () => {
+  const getStatusText = (): string => {
     switch (systemStatus) {
       case 'healthy': return 'CLOUD ONLINE';
       case 'degraded': return 'PARTIAL OUTAGE';
@@ -178,7 +180,7 @@ export default function NewTopBar() {
                     {activeVenue.name}
                   </h2>
                   <p className="text-[10px] uppercase font-black tracking-[0.2em] text-zinc-600 group-hover:text-zinc-500 transition-colors">
-                    {activeVenue.type || 'VENUE'}
+                    {(activeVenue.type as string) || 'VENUE'}
                   </p>
                 </div>
                 <ChevronDown className="h-3.5 w-3.5 text-zinc-500 group-hover:text-zinc-300 transition-colors ml-1" />
@@ -213,7 +215,7 @@ export default function NewTopBar() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold truncate">{venue.name}</div>
-                    <div className="text-[10px] text-zinc-500 uppercase tracking-wider">{venue.type || 'venue'}</div>
+                    <div className="text-[10px] text-zinc-500 uppercase tracking-wider">{(venue.type as string) || 'venue'}</div>
                   </div>
                   {venue.id === activeVenue.id && (
                     <Check className="h-4 w-4 text-blue-400 shrink-0" />
@@ -254,6 +256,7 @@ export default function NewTopBar() {
           {searchQuery && (
             <button
               type="button"
+              aria-label="Clear search"
               onClick={() => {
                 setSearchQuery('');
                 setShowSuggestions(false);
@@ -336,6 +339,7 @@ export default function NewTopBar() {
             </span>
           </div>
           <button
+            aria-label={isSafeMode ? 'Disable safe mode' : 'Enable safe mode'}
             onClick={() => setSafeMode(!isSafeMode)}
             className={cn(
               "w-10 h-6 rounded-full p-1 transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-zinc-700",

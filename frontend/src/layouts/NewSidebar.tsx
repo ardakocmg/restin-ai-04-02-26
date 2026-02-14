@@ -1,29 +1,43 @@
 ﻿import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '../features/auth/AuthContext';
-import { MENU_ITEMS, DOMAINS, getDomainForGroup } from '@/lib/searchRegistry';
+import { MENU_ITEMS, DOMAINS, getDomainForGroup, type MenuItem, type Domain } from '@/lib/searchRegistry';
 import { ChevronRight, ChevronLeft, Search, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-
-// Role hierarchy from centralized definition (includes product_owner: 99)
 import { ROLE_HIERARCHY } from '../lib/roles';
 
-// Use the shared menu items from searchRegistry
-const menuItems = MENU_ITEMS;
+// ─── Types ───────────────────────────────────────────────────────────
 
-export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDomainExpand }) {
+interface SidebarProps {
+  collapsed: boolean;
+  onToggle: () => void;
+  onTertiaryToggle?: (open: boolean) => void;
+  onDomainExpand?: (expanded: boolean) => void;
+}
+
+type PageType = 'settings' | 'dashboard' | 'report' | 'page';
+
+interface FlatNavItem {
+  title: string;
+  href?: string;
+  group?: string;
+  type: 'link' | 'group' | 'child';
+}
+
+const menuItems: MenuItem[] = MENU_ITEMS;
+
+export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDomainExpand }: SidebarProps): React.ReactElement {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
 
   // Role-based filtering: user can only see items at or below their role level
-  const userLevel = ROLE_HIERARCHY[user?.role] ?? 0;
-  const canSeeItem = (item) => userLevel >= (ROLE_HIERARCHY[item.requiredRole] ?? 0);
-  const visibleMenuItems = useMemo(() => menuItems.filter(canSeeItem), [userLevel]);
+  const userLevel = ROLE_HIERARCHY[user?.role ?? ''] ?? 0;
+  const canSeeItem = (item: MenuItem): boolean => userLevel >= (ROLE_HIERARCHY[item.requiredRole] ?? 0);
+  const visibleMenuItems = useMemo<MenuItem[]>(() => menuItems.filter(canSeeItem), [userLevel]);
 
   // Domain Groups â€” from shared searchRegistry
   const domains = DOMAINS;
@@ -32,29 +46,28 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
   const visibleDomains = useMemo(() => {
     const visibleDomainIds = new Set(visibleMenuItems.map(item => getDomainForGroup(item.group)));
     return domains.filter(d => visibleDomainIds.has(d.id));
-  }, [userLevel]);
+  }, [userLevel]) as Domain[];
 
-  const findActiveDomain = () => {
+  const findActiveDomain = (): string => {
     for (const item of visibleMenuItems) {
-      if (item.href === location.pathname || item.children?.some(c => c.href === location.pathname)) {
+      if (item.href === location.pathname || item.children?.some((c: MenuItem) => c.href === location.pathname)) {
         return getDomainForGroup(item.group);
       }
     }
-    // Fallback to first visible domain
     return visibleDomains[0]?.id || 'home';
   };
 
-  const [activeDomain, setActiveDomain] = useState(() => {
+  const [activeDomain, setActiveDomain] = useState<string>(() => {
     const d = findActiveDomain();
     return d || 'home';
   });
-  const [expandedGroups, setExpandedGroups] = useState(['main', 'pos', 'hr', 'reports']);
-  const [activeSubItem, setActiveSubItem] = useState(null);
-  const [domainBarExpanded, setDomainBarExpanded] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(['main', 'pos', 'hr', 'reports']);
+  const [activeSubItem, setActiveSubItem] = useState<MenuItem | null>(null);
+  const [domainBarExpanded, setDomainBarExpanded] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const isActive = (href) => location.pathname === href || location.pathname.startsWith(href + '/');
-  const isGroupActive = (children) => children?.some(c => isActive(c.href));
+  const isActive = (href: string): boolean => location.pathname === href || location.pathname.startsWith(href + '/');
+  const isGroupActive = (children?: MenuItem[]): boolean => !!children?.some((c: MenuItem) => isActive(c.href));
 
   // Detect when the domain bar should show
   // Sync activeDomain whenever the URL changes
@@ -73,7 +86,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
   };
 
   // ─── Cmd/Ctrl+click support — open in new tab ───
-  const handleNavClick = (href, e, extraFn) => {
+  const handleNavClick = (href: string, e?: React.MouseEvent, extraFn?: () => void): void => {
     if (e?.metaKey || e?.ctrlKey) {
       e.preventDefault();
       window.open(href, '_blank');
@@ -83,8 +96,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     extraFn?.();
   };
 
-  // ─── Domain notification badges (mock counts, will be fed by real data later) ───
-  const domainNotifications = useMemo(() => ({
+  const domainNotifications = useMemo<Record<string, number>>(() => ({
     home: 0,
     pos: 2,
     hr: 5,
@@ -97,37 +109,36 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
 
   // ─── Page Pinning: favorites persisted to localStorage ───
   const PINS_KEY = 'restin:pinned-pages';
-  const [pinnedPages, setPinnedPages] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(PINS_KEY) || '[]'); }
+  const [pinnedPages, setPinnedPages] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem(PINS_KEY) || '[]') as string[]; }
     catch { return []; }
   });
 
-  const togglePin = useCallback((href) => {
-    setPinnedPages(prev => {
+  const togglePin = useCallback((href: string): void => {
+    setPinnedPages((prev: string[]) => {
       const next = prev.includes(href)
-        ? prev.filter(p => p !== href)
+        ? prev.filter((p: string) => p !== href)
         : [...prev, href];
       try { localStorage.setItem(PINS_KEY, JSON.stringify(next)); } catch { /* ignore */ }
       return next;
     });
   }, []);
 
-  const isPinned = (href) => pinnedPages.includes(href);
+  const isPinned = (href: string): boolean => pinnedPages.includes(href);
 
-  // Resolve pinned hrefs back to menu items for rendering
   const pinnedItems = useMemo(() => {
-    const allItems = [];
+    const allItems: Array<MenuItem & { icon?: MenuItem['icon'] }> = [];
     visibleMenuItems.forEach(item => {
       if (item.href) allItems.push(item);
       item.children?.forEach(c => allItems.push({ ...c, icon: item.icon }));
     });
     return pinnedPages
       .map(href => allItems.find(i => i.href === href))
-      .filter(Boolean);
+      .filter((item): item is MenuItem & { icon?: MenuItem['icon'] } => Boolean(item));
   }, [pinnedPages, visibleMenuItems]);
 
   // ─── Visual type distinction: infer page type from href ───
-  const getItemType = (href) => {
+  const getItemType = (href: string): PageType => {
     if (!href) return 'page';
     if (href.includes('settings') || href.includes('setup') || href.includes('config')) return 'settings';
     if (href.includes('dashboard') || href === '/admin' || href === '/admin/hr') return 'dashboard';
@@ -135,7 +146,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     return 'page';
   };
 
-  const getTypeIndicator = (href) => {
+  const getTypeIndicator = (href: string): string => {
     const type = getItemType(href);
     switch (type) {
       case 'settings': return 'border-l-2 border-l-amber-500/40';
@@ -145,16 +156,16 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     }
   };
 
-  const hasTertiary = activeSubItem?.subs?.length > 0;
+  const hasTertiary = (activeSubItem?.subs?.length ?? 0) > 0;
 
   React.useEffect(() => {
     onTertiaryToggle?.(hasTertiary);
   }, [hasTertiary, onTertiaryToggle]);
 
-  const toggleGroup = (group) => {
-    setExpandedGroups(prev =>
+  const toggleGroup = (group: string): void => {
+    setExpandedGroups((prev: string[]) =>
       prev.includes(group)
-        ? prev.filter(g => g !== group)
+        ? prev.filter((g: string) => g !== group)
         : [...prev, group]
     );
   };
@@ -162,17 +173,17 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
   // ─── Domain Memory: remember last visited page per domain ───
   const DOMAIN_MEMORY_KEY = 'restin:domain-memory';
 
-  const saveDomainPage = useCallback((domain, path) => {
+  const saveDomainPage = useCallback((domain: string, path: string): void => {
     try {
-      const mem = JSON.parse(localStorage.getItem(DOMAIN_MEMORY_KEY) || '{}');
+      const mem = JSON.parse(localStorage.getItem(DOMAIN_MEMORY_KEY) || '{}') as Record<string, string>;
       mem[domain] = path;
       localStorage.setItem(DOMAIN_MEMORY_KEY, JSON.stringify(mem));
     } catch { /* ignore */ }
   }, []);
 
-  const getDomainPage = useCallback((domain) => {
+  const getDomainPage = useCallback((domain: string): string | null => {
     try {
-      const mem = JSON.parse(localStorage.getItem(DOMAIN_MEMORY_KEY) || '{}');
+      const mem = JSON.parse(localStorage.getItem(DOMAIN_MEMORY_KEY) || '{}') as Record<string, string>;
       return mem[domain] || null;
     } catch { return null; }
   }, []);
@@ -186,7 +197,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
   }, [location.pathname]);
 
   // Navigate to saved page on domain switch
-  const handleDomainClickWithMemory = (id) => {
+  const handleDomainClickWithMemory = (id: string): void => {
     setActiveDomain(id);
     if (collapsed) {
       onToggle?.();
@@ -198,29 +209,29 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
   };
 
   // ─── Keyboard Navigation: ↑↓ traverse menu, Enter to select ───
-  const [focusedIdx, setFocusedIdx] = useState(-1);
-  const menuContainerRef = useRef(null);
+  const [focusedIdx, setFocusedIdx] = useState<number>(-1);
+  const menuContainerRef = useRef<HTMLElement | null>(null);
 
   // Flatten visible items + their children into navigable list
-  const flatNavItems = useMemo(() => {
-    const items = [];
+  const flatNavItems = useMemo<FlatNavItem[]>(() => {
+    const items: FlatNavItem[] = [];
     visibleMenuItems
-      .filter(item => {
+      .filter((item: MenuItem) => {
         if (searchTerm && !collapsed) {
           const term = searchTerm.toLowerCase();
           const matchesTitle = item.title.toLowerCase().includes(term);
-          const matchesSub = item.children?.some(c => c.title.toLowerCase().includes(term));
+          const matchesSub = item.children?.some((c: MenuItem) => c.title.toLowerCase().includes(term));
           return matchesTitle || matchesSub;
         }
         return getDomainForGroup(item.group) === activeDomain;
       })
-      .forEach(item => {
+      .forEach((item: MenuItem) => {
         if (item.href && !item.children) {
           items.push({ title: item.title, href: item.href, type: 'link' });
         } else if (item.children) {
           items.push({ title: item.title, group: item.group, type: 'group' });
           if (expandedGroups.includes(item.group)) {
-            item.children.forEach(c => {
+            item.children.forEach((c: MenuItem) => {
               items.push({ title: c.title, href: c.href, type: 'child' });
             });
           }
@@ -239,19 +250,19 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     const container = menuContainerRef.current;
     if (!container || collapsed) return;
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (flatNavItems.length === 0) return;
 
       if (e.key === 'ArrowDown') {
         e.preventDefault();
-        setFocusedIdx(prev => Math.min(prev + 1, flatNavItems.length - 1));
+        setFocusedIdx((prev: number) => Math.min(prev + 1, flatNavItems.length - 1));
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        setFocusedIdx(prev => Math.max(prev - 1, 0));
+        setFocusedIdx((prev: number) => Math.max(prev - 1, 0));
       } else if (e.key === 'Enter' && focusedIdx >= 0) {
         e.preventDefault();
         const item = flatNavItems[focusedIdx];
-        if (item.type === 'group') {
+        if (item.type === 'group' && item.group) {
           toggleGroup(item.group);
         } else if (item.href) {
           navigate(item.href);

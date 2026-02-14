@@ -264,8 +264,8 @@ Organization (Marvin Gauci Group)
 #### 6.2 TSX Migration (In Progress)
 
 - [x] `AdminLayout.js` → `AdminLayout.tsx` (full TypeScript, typed state, explicit return)
-- [ ] `NewSidebar.jsx` → `NewSidebar.tsx`
-- [ ] `NewTopBar.jsx` → `NewTopBar.tsx`
+- [x] `NewSidebar.jsx` → `NewSidebar.tsx` (SidebarProps interface, typed state/handlers, FlatNavItem type, PageType union, type-predicate filter, Record<string,number> notifications)
+- [x] `NewTopBar.jsx` → `NewTopBar.tsx` (SystemStatus union, SearchableItem import, typed state/handlers, venue.type cast, aria-labels for a11y)
 - [ ] Ensure all sidebar items have matching routes in App.tsx
 - [ ] Remove orphan routes (routes with no sidebar entry)
 
