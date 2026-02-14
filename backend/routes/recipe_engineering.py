@@ -110,8 +110,8 @@ def create_recipe_engineering_router():
             ]
             
         if limit is None and page is None:
-            # Legacy mode: Return list up to 50k
-            recipes = await db.recipes_engineered.find(query, {"_id": 0}).to_list(50000)
+            # Legacy mode: Return list up to 200 (prevents timeout on free tiers)
+            recipes = await db.recipes_engineered.find(query, {"_id": 0}).sort("created_at", -1).to_list(200)
             return recipes
             
         # Pagination Mode

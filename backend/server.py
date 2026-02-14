@@ -282,25 +282,6 @@ app.add_middleware(
     expose_headers=["*"]
 )
 
-# Debug CORS
-@app.middleware("http")
-async def debug_cors(request: Request, call_next):
-    origin = request.headers.get("origin")
-    response = await call_next(request)
-    if origin:
-        logging.info(f"🔍 DEBUG CORS: {request.method} {request.url.path} from {origin}")
-        logging.info(f"   Response Headers: {response.headers}")
-    return response
-
-@app.middleware("http")
-async def debug_headers_middleware(request: Request, call_next):
-    response = await call_next(request)
-    if request.url.path.startswith("/api/"):
-        origin = request.headers.get("origin")
-        logger.info(f"🔍 DEBUG CORS: {request.method} {request.url.path} from {origin}")
-        logger.info(f"   Response Headers: {response.headers}")
-    return response
-
 # Exception Handlers
 setup_exception_handlers(app)
 

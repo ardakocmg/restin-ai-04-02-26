@@ -17,8 +17,10 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         self.last_cleanup = time.time()
 
     async def dispatch(self, request: Request, call_next):
-        # Skip rate limiting for health checks
+        # Skip rate limiting for health checks and CORS preflight
         if request.url.path in ['/health', '/api/health']:
+            return await call_next(request)
+        if request.method == 'OPTIONS':
             return await call_next(request)
 
         # Get client identifier
