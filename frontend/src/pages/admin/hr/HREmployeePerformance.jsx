@@ -4,7 +4,7 @@
  */
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { useVenue } from '@/hooks/useVenue';
+import { useVenue } from '@/context/VenueContext';
 import { PermissionGate } from '@/components/PermissionGate';
 import { PageContainer } from '@/components/ui/PageContainer';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -175,8 +175,8 @@ export default function HREmployeePerformance() {
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${activeTab === tab.id
-                                                ? 'bg-white/10 text-white shadow-sm'
-                                                : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5'
+                                            ? 'bg-white/10 text-white shadow-sm'
+                                            : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5'
                                             }`}
                                     >
                                         <Icon className="h-3.5 w-3.5" />
@@ -194,8 +194,8 @@ export default function HREmployeePerformance() {
                                     key={preset.id}
                                     onClick={() => setDatePreset(preset.id)}
                                     className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${datePreset === preset.id
-                                            ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                                            : 'text-zinc-500 hover:text-zinc-300'
+                                        ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                                        : 'text-zinc-500 hover:text-zinc-300'
                                         }`}
                                 >
                                     {preset.label}
