@@ -22,7 +22,9 @@ class ReactionUpdate(BaseModel):
     user_name: str
 
 class MessageCreate(BaseModel):
+    venue_id: str = ""  # Venue scope — empty for org-wide channels
     channel_id: str
+    scope: str = "group"  # "venue" | "group" | "dm"
     sender: str
     sender_initials: str
     sender_color: str = "bg-zinc-600"
@@ -40,7 +42,9 @@ class MessageCreate(BaseModel):
 class MessageEdit(BaseModel):
     text: str
 
-class TaskCreate(BaseModel):
+class HiveTaskCreate(BaseModel):
+    """Hive micro-task creation — writes to unified tasks collection."""
+    venue_id: str = ""  # Required for venue-scoped tasks
     title: str
     urgency: str = "MEDIUM"
     xp: int = 50
@@ -68,13 +72,20 @@ def _serialize(doc: dict) -> dict:
 # ─── Messages ────────────────────────────────────────────────────────────
 
 @router.get("/messages")
-async def list_messages(channel: str = "general", limit: int = 100, before: Optional[str] = None):
-    """Get messages for a channel, newest last."""
+async def list_messages(
+    channel: str = "general",
+    venue_id: Optional[str] = None,
+    limit: int = 100,
+    before: Optional[str] = None,
+):
+    """Get messages for a channel, filtered by venue if provided."""
     db = get_database()
-    query = {"channel_id": channel}
+    query: dict = {"channel_id": channel}
+    if venue_id:
+        query["venue_id"] = venue_id
     if before:
         query["created_at"] = {"$lt": before}
-    
+
     cursor = db.hive_messages.find(query).sort("created_at", 1).limit(limit)
     messages = []
     async for doc in cursor:
@@ -89,7 +100,9 @@ async def send_message(msg: MessageCreate):
     now = datetime.now(timezone.utc)
     
     doc = {
+        "venue_id": msg.venue_id,
         "channel_id": msg.channel_id,
+        "scope": msg.scope,
         "sender": msg.sender,
         "sender_initials": msg.sender_initials,
         "sender_color": msg.sender_color,
@@ -216,73 +229,114 @@ async def toggle_priority(message_id: str):
     return {"status": "ok", "is_priority": new_val}
 
 
-# ─── Tasks ───────────────────────────────────────────────────────────────
+# ─── Tasks (Unified: reads/writes shared `tasks` collection) ─────────────
 
 @router.get("/tasks")
-async def list_tasks():
-    """Get all active tasks."""
+async def list_tasks(venue_id: Optional[str] = None):
+    """Get tasks from the unified collection, translated to Hive status format."""
     db = get_database()
-    cursor = db.hive_tasks.find().sort("created_at", -1)
+    query: dict = {}
+    if venue_id:
+        query["venue_id"] = venue_id
+    cursor = db.tasks.find(query).sort("created_at", -1)
     tasks = []
     async for doc in cursor:
-        tasks.append(_serialize(doc))
+        serialized = _serialize(doc)
+        # Translate Kanban status → Hive status for frontend compatibility
+        kanban_status = serialized.get("status", "TODO")
+        has_assignee = bool(serialized.get("assigned_to") or serialized.get("assignee") or serialized.get("assignee_id"))
+        hive_status_map = {"TODO": "pool", "IN_PROGRESS": "in-progress", "REVIEW": "in-progress", "DONE": "done"}
+        hive_status = hive_status_map.get(kanban_status, kanban_status)
+        if hive_status == "pool" and has_assignee:
+            hive_status = "assigned"
+        serialized["status"] = hive_status
+        tasks.append(serialized)
     return {"tasks": tasks, "count": len(tasks)}
 
 
 @router.post("/tasks")
-async def create_task(task: TaskCreate):
-    """Create a new micro-task."""
+async def create_task(task: HiveTaskCreate):
+    """Create a new task in the unified tasks collection (Hive origin)."""
     db = get_database()
     now = datetime.now(timezone.utc)
-    
+
+    # Map Hive urgency → priority (for Kanban display)
+    urgency_to_priority = {"LOW": "LOW", "MEDIUM": "MED", "HIGH": "HIGH", "CRITICAL": "HIGH"}
+    # Map Hive status → Kanban status
+    kanban_status = "TODO"
+    if task.assigned_to:
+        kanban_status = "TODO"  # Assigned but not started
+
     doc = {
+        "venue_id": task.venue_id,
         "title": task.title,
+        "description": "",
+        "status": kanban_status,
+        "priority": urgency_to_priority.get(task.urgency, "MED"),
+        "view": "KANBAN",
+        "assignee": task.assigned_to,
+        "assignee_id": "",
+        "department": task.department,
+        "tags": [],
+        # Hive-specific fields
         "urgency": task.urgency,
         "xp": task.xp,
-        "assigned_to": task.assigned_to,
-        "department": task.department,
-        "deadline": task.deadline,
-        "status": "assigned" if task.assigned_to else "pool",
         "recurrence": task.recurrence,
+        "source": "hive",
+        # Message linking
         "source_message_id": task.source_message_id,
         "source_message_text": task.source_message_text,
         "source_channel_id": task.source_channel_id,
+        # Timestamps
+        "deadline": task.deadline,
         "started_at": None,
         "completed_at": None,
         "created_at": now.isoformat(),
+        "updated_at": now.isoformat(),
     }
-    
-    result = await db.hive_tasks.insert_one(doc)
+
+    result = await db.tasks.insert_one(doc)
     doc["_id"] = result.inserted_id
-    return _serialize(doc)
+    serialized = _serialize(doc)
+    # Return Hive-friendly status
+    serialized["status"] = "assigned" if task.assigned_to else "pool"
+    return serialized
 
 
 @router.put("/tasks/{task_id}")
 async def update_task(task_id: str, update: TaskUpdate):
-    """Update task status or assignment."""
+    """Update task status or assignment in the unified collection."""
     db = get_database()
     now = datetime.now(timezone.utc)
-    
-    set_fields = {}
+
+    set_fields: dict = {"updated_at": now.isoformat()}
+
     if update.status:
-        set_fields["status"] = update.status
+        # Map Hive status → Kanban status for storage
+        hive_to_kanban = {"pool": "TODO", "assigned": "TODO", "in-progress": "IN_PROGRESS", "done": "DONE"}
+        kanban_status = hive_to_kanban.get(update.status, update.status)
+        set_fields["status"] = kanban_status
+
         if update.status == "in-progress":
             set_fields["started_at"] = now.strftime("%H:%M")
         elif update.status == "done":
             set_fields["completed_at"] = now.strftime("%H:%M")
+
     if update.assigned_to is not None:
+        set_fields["assignee"] = update.assigned_to
         set_fields["assigned_to"] = update.assigned_to
-    
+
     if not set_fields:
         raise HTTPException(status_code=400, detail="No fields to update")
-    
-    result = await db.hive_tasks.update_one(
+
+    result = await db.tasks.update_one(
         {"_id": ObjectId(task_id)},
         {"$set": set_fields}
     )
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Task not found")
     return {"status": "ok", "id": task_id}
+
 
 
 # ─── Online Staff ────────────────────────────────────────────────────────

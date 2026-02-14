@@ -20,6 +20,7 @@ import { useGlobalPTT, TransmissionResult, LiveSpeaker } from '@/contexts/Global
 import { useVoiceDictation, speakMessage, stopSpeaking, isSpeaking, getAvailableVoices, SUPPORTED_LANGUAGES } from '@/hooks/useVoiceDictation';
 import type { TTSConfig } from '@/hooks/useVoiceDictation';
 import { useAuth } from '@/context/AuthContext';
+import { useVenue } from '@/context/VenueContext';
 import { useNavigate } from 'react-router-dom';
 
 // ─── Channel Definitions ────────────────────────────────────────────────
@@ -271,6 +272,8 @@ function AttachmentBubble({ att }: { att: { name: string; type: 'image' | 'file'
 // ─── Main Dashboard ─────────────────────────────────────────────────────
 export default function HiveDashboard() {
     const { user } = useAuth();
+    const { activeVenue } = useVenue();
+    const venueId = activeVenue?.id || '';
     const navigate = useNavigate();
 
     // Smart navigation callback for context-aware chat links
@@ -291,7 +294,7 @@ export default function HiveDashboard() {
     // Load messages from API
     const fetchMessages = useCallback(async (channel: string) => {
         try {
-            const res = await fetch(`${API_BASE}/api/hive/messages?channel=${channel}&limit=100`);
+            const res = await fetch(`${API_BASE}/api/hive/messages?channel=${channel}&venue_id=${venueId}&limit=100`);
             if (res.ok) {
                 const data = await res.json();
                 setMessages(prev => {
@@ -306,7 +309,7 @@ export default function HiveDashboard() {
     // Load all channels on mount
     useEffect(() => {
         ['general', 'kitchen', 'bar', 'management', 'alerts'].forEach(ch => fetchMessages(ch));
-    }, [fetchMessages]);
+    }, [fetchMessages, venueId]);
 
     // Load online staff from API
     useEffect(() => {
@@ -493,6 +496,7 @@ export default function HiveDashboard() {
             const res = await fetch(`${API_BASE}/api/hive/messages`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    venue_id: venueId, scope: 'venue',
                     channel_id: activeChannel, sender: senderName,
                     sender_initials: senderInitials, sender_color: 'bg-zinc-600',
                     text: newMsg.text, reply_to: newMsg.replyTo, reply_preview: newMsg.replyPreview,
@@ -747,7 +751,7 @@ export default function HiveDashboard() {
     useEffect(() => {
         (async () => {
             try {
-                const res = await fetch(`${API_BASE}/api/hive/tasks`);
+                const res = await fetch(`${API_BASE}/api/hive/tasks?venue_id=${venueId}`);
                 if (res.ok) {
                     const data = await res.json();
                     setTasks((data.tasks || []).map((t: Record<string, unknown>) => ({
@@ -846,6 +850,7 @@ export default function HiveDashboard() {
             const res = await fetch(`${API_BASE}/api/hive/messages`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    venue_id: venueId, scope: 'venue',
                     channel_id: activeChannel, sender: senderName,
                     sender_initials: senderInitials, sender_color: 'bg-emerald-600',
                     text: announcementText,
@@ -890,6 +895,7 @@ export default function HiveDashboard() {
             const res = await fetch(`${API_BASE}/api/hive/tasks`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    venue_id: venueId,
                     title: tempTask.title, urgency: tempTask.urgency, xp,
                     assigned_to: tempTask.assignedTo, deadline: tempTask.deadline,
                     recurrence: tempTask.recurrence, source_message_id: tempTask.sourceMessageId,
