@@ -26,9 +26,10 @@ from app.core.database import get_database
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-# Credentials (later: from DB IntegrationConfig)
-MEROSS_EMAIL = "arda@marvingauci.com"
-MEROSS_PASSWORD = "Mg2026"
+# Credentials from environment (never hardcode)
+import os
+MEROSS_EMAIL = os.environ.get("MEROSS_EMAIL", "")
+MEROSS_PASSWORD = os.environ.get("MEROSS_PASSWORD", "")
 MEROSS_API_BASE = "https://iotx-eu.meross.com"
 
 

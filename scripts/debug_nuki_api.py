@@ -2,8 +2,10 @@ import httpx
 import asyncio
 import os
 
-# Hardcoded from .env for debugging
-TOKEN = "81a5c80dfb1eaa8c8146527312842a50c9328162c0b89ccba8e47957c69f967209c67e5d06b17dcf"
+TOKEN = os.environ.get("NUKI_API_TOKEN")
+if not TOKEN:
+    print("❌ NUKI_API_TOKEN env var not set. Aborting.")
+    exit(1)
 
 async def main():
     print(f"Checking Nuki API with token: {TOKEN[:10]}...")
