@@ -653,6 +653,7 @@ export default function DataTable<TData, TValue>({
         )}
 
         <div className="relative border border-white/10 rounded-lg overflow-hidden">
+          {/* eslint-disable-next-line react/forbid-dom-props */}
           <div className="overflow-x-auto" ref={tableContainerRef} style={{ maxHeight: virtualizationEnabled ? '480px' : 'auto' }}>
             <Table data-testid={tableTestId || 'datatable-table'}>
               <TableHeader className="sticky top-0 bg-zinc-900/95 backdrop-blur">

@@ -57,6 +57,7 @@ function StatCard({ label, value, icon: Icon, gradient, delay }: { label: string
             transition={{ duration: 0.5, delay }}
             className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-zinc-900/60 backdrop-blur-xl p-6"
         >
+            {/* eslint-disable-next-line react/forbid-dom-props */}
             <div className="absolute inset-0 opacity-[0.03]" style={{ background: `linear-gradient(135deg, ${gradient})` }} />
             <div className="relative flex items-center gap-4">
                 <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg`}>

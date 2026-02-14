@@ -596,6 +596,7 @@ export default function PremiumDataTable<TData>({
                                 stickyHeader && 'sticky top-0 z-10'
                             )}
                         >
+                            {/* eslint-disable react/forbid-dom-props */}
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <tr key={headerGroup.id}>
                                     {headerGroup.headers.map((header) => (
@@ -621,6 +622,7 @@ export default function PremiumDataTable<TData>({
                         </thead>
 
                         {/* Body */}
+                        {/* eslint-disable-next-line react/forbid-dom-props */}
                         <tbody style={{ height: `${totalSize}px`, position: 'relative' }}>
                             {virtualRows.map((virtualRow) => {
                                 const row = rows[virtualRow.index] as Row<TData>;
@@ -717,6 +719,6 @@ export default function PremiumDataTable<TData>({
                     </div>
                 )
             }
-        </div >
+        </div>
     );
 }
