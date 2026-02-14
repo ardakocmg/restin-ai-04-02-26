@@ -40,7 +40,7 @@ export interface LogListResponse {
 
 class LogService {
     async getErrorCodes(): Promise<ErrorCode[]> {
-        const response = await api.get('/admin/error-codes');
+        const response = await api.get('/manager/error-codes');
         return response.data.codes;
     }
 
@@ -56,12 +56,12 @@ class LogService {
         if (params.limit) urlParams.append('limit', String(params.limit));
         if (params.cursor) urlParams.append('cursor', params.cursor);
 
-        const response = await api.get(`/admin/logs?${urlParams}`);
+        const response = await api.get(`/manager/logs?${urlParams}`);
         return response.data;
     }
 
     async ackLog(logId: string): Promise<LogEntry> {
-        const response = await api.post(`/admin/logs/${logId}/ack`, {
+        const response = await api.post(`/manager/logs/${logId}/ack`, {
             acknowledged: true
         });
         return response.data;

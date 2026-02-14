@@ -59,7 +59,7 @@ export const RuntimeProvider: React.FC<RuntimeProviderProps> = ({ children }) =>
         } else if (location.pathname.startsWith('/kds')) {
             setAppMode('KDS');
             setSafeModeState(true);
-        } else if (location.pathname.startsWith('/admin')) {
+        } else if (location.pathname.startsWith('/manager')) {
             setAppMode('ADMIN');
             setSafeModeState(false);
         } else {

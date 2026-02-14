@@ -202,7 +202,7 @@ export default function AddClockEntry() {
                                     Add Another Entry
                                 </Button>
                                 <Button
-                                    onClick={() => navigate('/admin/hr/clocking')}
+                                    onClick={() => navigate('/manager/hr/clocking')}
                                     variant="outline"
                                     className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
                                 >
@@ -210,7 +210,7 @@ export default function AddClockEntry() {
                                 </Button>
                                 {submitResult.requires_approval && (
                                     <Button
-                                        onClick={() => navigate('/admin/hr/approvals')}
+                                        onClick={() => navigate('/manager/hr/approvals')}
                                         variant="outline"
                                         className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
                                     >
@@ -232,7 +232,7 @@ export default function AddClockEntry() {
                 <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => navigate('/admin/hr/clocking')}
+                    onClick={() => navigate('/manager/hr/clocking')}
                     className="text-zinc-400 hover:text-white hover:bg-white/5"
                     title="Back to Clocking Data"
                 >

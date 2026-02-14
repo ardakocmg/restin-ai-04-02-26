@@ -21,7 +21,7 @@ export default function EmployeeLink({ code, name, subtitle, showIcon = false, c
             type="button"
             onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/admin/hr/people/${code}`);
+                navigate(`/manager/hr/people/${code}`);
             }}
             className={`group text-left inline-flex items-center gap-1.5 hover:underline decoration-blue-500/40 underline-offset-2 transition-colors ${className}`}
         >

@@ -4,10 +4,10 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Factory, Package, Truck, ClipboardList } from 'lucide-react';
 
 const MODULES = [
-  { title: 'Production Batches', desc: 'Manage production runs', icon: Factory, path: '/admin/central-kitchen/batches' },
-  { title: 'Internal Orders', desc: 'Outlet requests', icon: ClipboardList, path: '/admin/central-kitchen/orders' },
-  { title: 'Distribution', desc: 'Track deliveries', icon: Truck, path: '/admin/central-kitchen/distribution' },
-  { title: 'Inventory Transfer', desc: 'Cross-location stock', icon: Package, path: '/admin/central-kitchen/transfer' }
+  { title: 'Production Batches', desc: 'Manage production runs', icon: Factory, path: '/manager/central-kitchen/batches' },
+  { title: 'Internal Orders', desc: 'Outlet requests', icon: ClipboardList, path: '/manager/central-kitchen/orders' },
+  { title: 'Distribution', desc: 'Track deliveries', icon: Truck, path: '/manager/central-kitchen/distribution' },
+  { title: 'Inventory Transfer', desc: 'Cross-location stock', icon: Package, path: '/manager/central-kitchen/transfer' }
 ];
 
 export default function CentralKitchenHub() {

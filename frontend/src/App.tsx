@@ -387,9 +387,9 @@ function App() {
                                   <Route path="/modules" element={<ModulesCatalog />} />
                                   <Route path="/login" element={<Login />} />
                                   <Route path="/setup" element={<React.Suspense fallback={<div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-400">Loading...</div>}><SetupWizard /></React.Suspense>} />
-                                  <Route path="/profile" element={<Navigate to="/admin/profile" replace />} />
+                                  <Route path="/profile" element={<Navigate to="/manager/profile" replace />} />
                                   <Route path="/payroll" element={<PayrollPage />} />
-                                  <Route path="/admin" element={<AdminLayout />}>
+                                  <Route path="/manager" element={<AdminLayout />}>
                                     <Route index element={<Navigate to="dashboard" replace />} />
                                     <Route path="dashboard" element={<RoleRoute requiredRole="MANAGER"><SystemDashboard /></RoleRoute>} />
                                     {/* NOTE: dashboard is STAFF-accessible (no guard) */}
@@ -397,24 +397,24 @@ function App() {
                                     <Route path="menu" element={<RoleRoute requiredRole="MANAGER"><POSSettings /></RoleRoute>} />
                                     {/* staff route removed — Users accessible at /admin/users */}
                                     <Route path="inventory" element={<RoleRoute requiredRole="MANAGER"><InventoryDashboard /></RoleRoute>} />
-                                    <Route path="pos" element={<Navigate to="/admin/posdashboard" replace />} />
+                                    <Route path="pos" element={<Navigate to="/manager/posdashboard" replace />} />
                                     <Route path="kds" element={<RoleRoute requiredRole="MANAGER"><KDSFeature /></RoleRoute>} />
-                                    <Route path="documents" element={<Navigate to="/admin/hr/documents" replace />} />
+                                    <Route path="documents" element={<Navigate to="/manager/hr/documents" replace />} />
                                     <Route path="review-risk" element={<RoleRoute requiredRole="MANAGER"><ReviewRisk /></RoleRoute>} />
                                     <Route path="audit-logs" element={<RoleRoute requiredRole="OWNER"><AuditLogs /></RoleRoute>} />
                                     <Route path="floor-plans" element={<RoleRoute requiredRole="MANAGER"><FloorPlans /></RoleRoute>} />
                                     <Route path="floor-plans/:planId/edit" element={<RoleRoute requiredRole="MANAGER"><FloorPlanEditor /></RoleRoute>} />
                                     <Route path="menu-import" element={<RoleRoute requiredRole="OWNER"><MenuImportWizard /></RoleRoute>} />
                                     <Route path="migration" element={<RoleRoute requiredRole="OWNER"><MigrationHub /></RoleRoute>} />
-                                    <Route path="guests" element={<Navigate to="/admin/crm" replace />} />
+                                    <Route path="guests" element={<Navigate to="/manager/crm" replace />} />
                                     <Route path="reservations" element={<RoleRoute requiredRole="MANAGER"><Reservations /></RoleRoute>} />
                                     <Route path="reservations/timeline" element={<RoleRoute requiredRole="MANAGER"><ReservationTimeline /></RoleRoute>} />
                                     <Route path="device-hub" element={<RoleRoute requiredRole="MANAGER"><DeviceHub /></RoleRoute>} />
                                     <Route path="device-mapping" element={<RoleRoute requiredRole="MANAGER"><DeviceMapping /></RoleRoute>} />
                                     <Route path="observability" element={<RoleRoute requiredRole="MANAGER"><Observability /></RoleRoute>} />
-                                    <Route path="operations" element={<Navigate to="/admin/pos-dashboard" replace />} />
+                                    <Route path="operations" element={<Navigate to="/manager/pos-dashboard" replace />} />
                                     {/* Canonical: pos-dashboard. Legacy alias redirects. */}
-                                    <Route path="posdashboard" element={<Navigate to="/admin/pos-dashboard" replace />} />
+                                    <Route path="posdashboard" element={<Navigate to="/manager/pos-dashboard" replace />} />
                                     <Route path="pos-dashboard" element={<RoleRoute requiredRole="MANAGER"><POSDashboard /></RoleRoute>} />
                                     <Route path="products" element={<RoleRoute requiredRole="MANAGER"><ProductManagement /></RoleRoute>} />
                                     <Route path="company-settings" element={<RoleRoute requiredRole="OWNER"><OrganizationProfile /></RoleRoute>} />
@@ -423,7 +423,7 @@ function App() {
                                     <Route path="devices" element={<RoleRoute requiredRole="MANAGER"><Devices /></RoleRoute>} />
                                     <Route path="app-settings" element={<RoleRoute requiredRole="OWNER"><RestaurantAppSettings /></RoleRoute>} />
                                     <Route path="physical-tables" element={<RoleRoute requiredRole="MANAGER"><PhysicalTables /></RoleRoute>} />
-                                    <Route path="content-studio" element={<Navigate to="/admin/restin/studio" replace />} />
+                                    <Route path="content-studio" element={<Navigate to="/manager/restin/studio" replace />} />
                                     <Route path="templates" element={<RoleRoute requiredRole="MANAGER"><TemplateList /></RoleRoute>} />
                                     <Route path="templates/new" element={<RoleRoute requiredRole="MANAGER"><TemplateEditor /></RoleRoute>} />
                                     <Route path="templates/:id" element={<RoleRoute requiredRole="MANAGER"><TemplateEditor /></RoleRoute>} />
@@ -441,14 +441,14 @@ function App() {
                                     <Route path="theme" element={<RoleRoute requiredRole="OWNER"><ThemeCustomizer /></RoleRoute>} />
                                     <Route path="microservices" element={<RoleRoute requiredRole="OWNER"><Microservices /></RoleRoute>} />
                                     <Route path="events" element={<RoleRoute requiredRole="OWNER"><EventMonitor /></RoleRoute>} />
-                                    <Route path="payroll-calculator" element={<Navigate to="/admin/hr/payroll" replace />} />
+                                    <Route path="payroll-calculator" element={<Navigate to="/manager/hr/payroll" replace />} />
                                     <Route path="suppliers" element={<RoleRoute requiredRole="OWNER"><SuppliersAdmin /></RoleRoute>} />
-                                    <Route path="purchase-orders" element={<Navigate to="/admin/inventory-purchase-orders" replace />} />
-                                    <Route path="receiving" element={<Navigate to="/admin/inventory" replace />} />
+                                    <Route path="purchase-orders" element={<Navigate to="/manager/inventory-purchase-orders" replace />} />
+                                    <Route path="receiving" element={<Navigate to="/manager/inventory" replace />} />
                                     <Route path="inventory-detail" element={<RoleRoute requiredRole="MANAGER"><InventoryPage /></RoleRoute>} />
                                     <Route path="inventory-items" element={<RoleRoute requiredRole="MANAGER"><InventoryItemsNew /></RoleRoute>} />
                                     {/* Legacy alias redirects to canonical */}
-                                    <Route path="inventory-items-list" element={<Navigate to="/admin/inventory-items" replace />} />
+                                    <Route path="inventory-items-list" element={<Navigate to="/manager/inventory-items" replace />} />
                                     <Route path="inventory-suppliers" element={<RoleRoute requiredRole="OWNER"><Suppliers /></RoleRoute>} />
                                     <Route path="inventory-purchase-orders" element={<RoleRoute requiredRole="OWNER"><PurchaseOrdersNew /></RoleRoute>} />
                                     <Route path="inventory-stock-count" element={<RoleRoute requiredRole="MANAGER"><StockCount /></RoleRoute>} />
@@ -469,26 +469,26 @@ function App() {
                                     <Route path="observability/testpanel" element={<RoleRoute requiredRole="OWNER"><TestPanel /></RoleRoute>} />
                                     <Route path="observability/error-inbox" element={<RoleRoute requiredRole="OWNER"><ErrorInbox /></RoleRoute>} />
                                     <Route path="analytics" element={<RoleRoute requiredRole="MANAGER"><Analytics /></RoleRoute>} />
-                                    <Route path="payroll-malta" element={<Navigate to="/admin/hr/payroll" replace />} />
+                                    <Route path="payroll-malta" element={<Navigate to="/manager/hr/payroll" replace />} />
                                     <Route path="accounting-malta" element={<RoleRoute requiredRole="OWNER"><AccountingMalta /></RoleRoute>} />
                                     <Route path="crm" element={<RoleRoute requiredRole="MANAGER"><CRM /></RoleRoute>} />
                                     <Route path="loyalty" element={<RoleRoute requiredRole="MANAGER"><Loyalty /></RoleRoute>} />
-                                    <Route path="automations" element={<Navigate to="/admin/app-settings" replace />} />
-                                    <Route path="connectors" element={<Navigate to="/admin/sync" replace />} />
-                                    <Route path="trust" element={<Navigate to="/admin/access-control" replace />} />
-                                    <Route path="system-health" element={<Navigate to="/admin/system-health-advanced" replace />} />
-                                    <Route path="integrity" element={<Navigate to="/admin/audit-logs" replace />} />
-                                    <Route path="advanced-observability" element={<Navigate to="/admin/observability" replace />} />
-                                    <Route path="diagnostics" element={<Navigate to="/admin/observability" replace />} />
+                                    <Route path="automations" element={<Navigate to="/manager/app-settings" replace />} />
+                                    <Route path="connectors" element={<Navigate to="/manager/sync" replace />} />
+                                    <Route path="trust" element={<Navigate to="/manager/access-control" replace />} />
+                                    <Route path="system-health" element={<Navigate to="/manager/system-health-advanced" replace />} />
+                                    <Route path="integrity" element={<Navigate to="/manager/audit-logs" replace />} />
+                                    <Route path="advanced-observability" element={<Navigate to="/manager/observability" replace />} />
+                                    <Route path="diagnostics" element={<Navigate to="/manager/observability" replace />} />
                                     <Route path="service-day-close" element={<RoleRoute requiredRole="MANAGER"><ServiceDayClose /></RoleRoute>} />
                                     <Route path="pre-go-live" element={<RoleRoute requiredRole="OWNER"><PreGoLive /></RoleRoute>} />
-                                    <Route path="tasks-kanban" element={<Navigate to="/admin/collab/tasks" replace />} />
+                                    <Route path="tasks-kanban" element={<Navigate to="/manager/collab/tasks" replace />} />
                                     <Route path="printers" element={<RoleRoute requiredRole="MANAGER"><Printers /></RoleRoute>} />
-                                    <Route path="inbox" element={<Navigate to="/admin/collab/inbox" replace />} />
+                                    <Route path="inbox" element={<Navigate to="/manager/collab/inbox" replace />} />
                                     <Route path="smart-home" element={<RoleRoute requiredRole="OWNER"><SmartHomeDashboard /></RoleRoute>} />
                                     {/* Integrations consolidated into Sync — redirect for backward compat */}
-                                    <Route path="integrations" element={<Navigate to="/admin/sync" replace />} />
-                                    <Route path="delivery-aggregators" element={<Navigate to="/admin/restin/ops" replace />} />
+                                    <Route path="integrations" element={<Navigate to="/manager/sync" replace />} />
+                                    <Route path="delivery-aggregators" element={<Navigate to="/manager/restin/ops" replace />} />
                                     <Route path="finance-provider" element={<RoleRoute requiredRole="OWNER"><FinanceProviderSettings /></RoleRoute>} />
                                     {/* Google Hub Consolidated into WorkspaceSettings - Manager Access for Operations */}
                                     <Route path="google-workspace" element={<RoleRoute requiredRole="MANAGER"><WorkspaceSettings /></RoleRoute>} />
@@ -518,22 +518,22 @@ function App() {
                                     <Route path="forecasting/seasonal" element={<RoleRoute requiredRole="OWNER"><SeasonalPatterns /></RoleRoute>} />
                                     <Route path="central-kitchen/orders" element={<RoleRoute requiredRole="OWNER"><InternalOrders /></RoleRoute>} />
                                     <Route path="recipe-engineering/cost" element={<RoleRoute requiredRole="OWNER"><CostAnalysis /></RoleRoute>} />
-                                    <Route path="content-editor" element={<Navigate to="/admin/restin/studio" replace />} />
+                                    <Route path="content-editor" element={<Navigate to="/manager/restin/studio" replace />} />
                                     <Route path="feature-flags" element={<RoleRoute requiredRole="OWNER"><FeatureFlagAdmin /></RoleRoute>} />
-                                    <Route path="dynamic-pricing" element={<Navigate to="/admin/products" replace />} />
-                                    <Route path="haccp" element={<Navigate to="/admin/quality" replace />} />
+                                    <Route path="dynamic-pricing" element={<Navigate to="/manager/products" replace />} />
+                                    <Route path="haccp" element={<Navigate to="/manager/quality" replace />} />
                                     <Route path="data-export" element={<RoleRoute requiredRole="OWNER"><DataExportPage /></RoleRoute>} />
-                                    <Route path="setup-wizard" element={<Navigate to="/admin/settings" replace />} />
-                                    <Route path="guest-profiles" element={<Navigate to="/admin/crm" replace />} />
+                                    <Route path="setup-wizard" element={<Navigate to="/manager/settings" replace />} />
+                                    <Route path="guest-profiles" element={<Navigate to="/manager/crm" replace />} />
                                     <Route path="staff-gamification" element={<RoleRoute requiredRole="STAFF"><StaffGamification /></RoleRoute>} />
-                                    <Route path="kiosk-mode" element={<Navigate to="/admin/posdashboard" replace />} />
-                                    <Route path="carbon-footprint" element={<Navigate to="/admin/hr/esg" replace />} />
-                                    <Route path="competitor-monitoring" element={<Navigate to="/admin/restin/radar" replace />} />
-                                    <Route path="floorplan" element={<Navigate to="/admin/floor-plans" replace />} />
-                                    <Route path="split-bill" element={<Navigate to="/admin/posdashboard" replace />} />
-                                    <Route path="print-preview" element={<Navigate to="/admin/printers" replace />} />
-                                    <Route path="recipe-videos" element={<Navigate to="/admin/inventory-recipes" replace />} />
-                                    <Route path="plugin-marketplace" element={<Navigate to="/admin/app-settings" replace />} />
+                                    <Route path="kiosk-mode" element={<Navigate to="/manager/posdashboard" replace />} />
+                                    <Route path="carbon-footprint" element={<Navigate to="/manager/hr/esg" replace />} />
+                                    <Route path="competitor-monitoring" element={<Navigate to="/manager/restin/radar" replace />} />
+                                    <Route path="floorplan" element={<Navigate to="/manager/floor-plans" replace />} />
+                                    <Route path="split-bill" element={<Navigate to="/manager/posdashboard" replace />} />
+                                    <Route path="print-preview" element={<Navigate to="/manager/printers" replace />} />
+                                    <Route path="recipe-videos" element={<Navigate to="/manager/inventory-recipes" replace />} />
+                                    <Route path="plugin-marketplace" element={<Navigate to="/manager/app-settings" replace />} />
                                     {/* door-access route is defined above at line ~414 */}
                                     <Route path="sync" element={<RoleRoute requiredRole="OWNER"><SyncDashboard /></RoleRoute>} />
 
@@ -614,7 +614,7 @@ function App() {
                                       <Route path="people/:employeeCode" element={<RoleRoute requiredRole="MANAGER"><EmployeeDetailPage /></RoleRoute>} />
                                       <Route path="leave-management" element={<RoleRoute requiredRole="MANAGER"><LeaveManagement /></RoleRoute>} />
                                       {/* summary is a legacy alias for dashboard */}
-                                      <Route path="summary" element={<Navigate to="/admin/hr/dashboard" replace />} />
+                                      <Route path="summary" element={<Navigate to="/manager/hr/dashboard" replace />} />
                                       <Route path="dashboard" element={<RoleRoute requiredRole="MANAGER"><SummaryDashboard /></RoleRoute>} />
                                       <Route path="clocking" element={<RoleRoute requiredRole="MANAGER"><ClockingData /></RoleRoute>} />
                                       <Route path="manual-clocking" element={<ManualClocking />} />
@@ -663,10 +663,12 @@ function App() {
                                   <Route path="/kds/setup" element={<KDSSetup />} />
                                   <Route path="/kds" element={<KDSMain />} />
                                   <Route path="/kds/stations" element={<KDSStations />} />
-                                  <Route path="/admin/kds/stations" element={<KDSStations />} />
-                                  <Route path="/admin/kds/stations/:stationKey" element={<KDSStationDetail />} />
+                                  <Route path="/manager/kds/stations" element={<KDSStations />} />
+                                  <Route path="/manager/kds/stations/:stationKey" element={<KDSStationDetail />} />
                                   <Route path="/kds/runtime/:stationKey" element={<KDSRuntime />} />
                                   <Route path="/book/:venueId" element={<BookingWidget />} />
+                                  {/* Backward compat: /admin/* → /manager/* */}
+                                  <Route path="/admin/*" element={<AdminRedirect />} />
                                   <Route path="*" element={<NotFound />} />
                                 </Routes>
                               </Suspense>
@@ -687,6 +689,12 @@ function App() {
     </ErrorBoundary>
   );
 }
+
+const AdminRedirect = () => {
+  const location = useLocation();
+  const newPath = location.pathname.replace(/^\/admin/, '/manager');
+  return <Navigate to={newPath + location.search + location.hash} replace />;
+};
 
 const LogRoute = () => {
   const location = useLocation();

@@ -115,7 +115,7 @@ export default function PayslipViewer() {
                 <Card>
                     <CardContent className="p-8 text-center">
                         <div className="text-zinc-400 mb-4">Payslip not found</div>
-                        <Button onClick={() => navigate('/admin/hr/payroll')}>
+                        <Button onClick={() => navigate('/manager/hr/payroll')}>
                             <ArrowLeft className="h-4 w-4 mr-2" />
                             Back to Payroll
                         </Button>
@@ -135,7 +135,7 @@ export default function PayslipViewer() {
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => navigate('/admin/hr/payroll')}
+                            onClick={() => navigate('/manager/hr/payroll')}
                             className="bg-zinc-900 border-white/10 text-zinc-300 hover:bg-zinc-800"
                         >
                             <ArrowLeft className="h-4 w-4 mr-2" />

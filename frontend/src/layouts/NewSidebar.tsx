@@ -141,7 +141,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
   const getItemType = (href: string): PageType => {
     if (!href) return 'page';
     if (href.includes('settings') || href.includes('setup') || href.includes('config')) return 'settings';
-    if (href.includes('dashboard') || href === '/admin' || href === '/admin/hr') return 'dashboard';
+    if (href.includes('dashboard') || href === '/manager' || href === '/manager/hr') return 'dashboard';
     if (href.includes('report') || href.includes('analytics') || href.includes('sales')) return 'report';
     return 'page';
   };
@@ -191,7 +191,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
   // Save current page whenever route changes
   useEffect(() => {
     const domain = findActiveDomain();
-    if (domain && location.pathname !== '/admin/dashboard') {
+    if (domain && location.pathname !== '/manager/dashboard') {
       saveDomainPage(domain, location.pathname);
     }
   }, [location.pathname]);

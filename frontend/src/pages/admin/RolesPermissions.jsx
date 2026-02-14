@@ -502,7 +502,7 @@ export default function RolesPermissions() {
 
     const fetchRoles = async () => {
         try {
-            const response = await api.get('/admin/roles');
+            const response = await api.get('/manager/roles');
             const data = response.data;
             const fetchedRoles = data.roles || [];
             if (fetchedRoles.length > 0) {
@@ -556,7 +556,7 @@ export default function RolesPermissions() {
         if (!selectedRole) return;
         setSaving(true);
         try {
-            await api.put(`/admin/roles/${selectedRole.id}`, selectedRole);
+            await api.put(`/manager/roles/${selectedRole.id}`, selectedRole);
             toast.success("Policy saved successfully");
             logAction('ROLE_PERMISSIONS_UPDATED', 'roles_permissions', selectedRole.id, { roleName: selectedRole.label });
         } catch (error) {
@@ -763,7 +763,7 @@ export default function RolesPermissions() {
                             <div className="flex gap-2">
                                 <button
                                     className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-sm font-medium transition-colors border border-zinc-700 flex items-center gap-2"
-                                    onClick={() => navigate(`/admin/users?role=${encodeURIComponent(selectedRole.label)}`)}
+                                    onClick={() => navigate(`/manager/users?role=${encodeURIComponent(selectedRole.label)}`)}
                                 >
                                     <Users className="w-4 h-4" />
                                     View Users

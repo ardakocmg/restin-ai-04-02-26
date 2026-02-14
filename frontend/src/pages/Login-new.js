@@ -212,7 +212,7 @@ export default function Login() {
         navigate("/kds/setup");
         break;
       default:
-        navigate("/admin/dashboard");
+        navigate("/manager/dashboard");
     }
   };
 

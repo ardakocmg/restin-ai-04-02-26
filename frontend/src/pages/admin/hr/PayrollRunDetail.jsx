@@ -90,7 +90,7 @@ export default function PayrollRunDetail() {
                 <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
                     <AlertCircle className="h-12 w-12 text-red-500" />
                     <h3 className="text-xl font-bold text-white">Run Not Found</h3>
-                    <Button onClick={() => navigate('/admin/hr/payroll')}>Back to Payroll</Button>
+                    <Button onClick={() => navigate('/manager/hr/payroll')}>Back to Payroll</Button>
                 </div>
             </PageContainer>
         );
@@ -103,7 +103,7 @@ export default function PayrollRunDetail() {
                 description={`${run.period_start} - ${run.period_end} • ${run.state}`}
                 actions={
                     <>
-                        <Button variant="outline" onClick={() => navigate('/admin/hr/payroll')}>
+                        <Button variant="outline" onClick={() => navigate('/manager/hr/payroll')}>
                             <ArrowLeft className="mr-2 h-4 w-4" /> Back
                         </Button>
                         <Button variant="outline" className="border-green-500/20 text-green-500 hover:bg-green-500/10">

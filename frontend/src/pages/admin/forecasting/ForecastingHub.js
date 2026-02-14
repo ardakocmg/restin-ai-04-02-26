@@ -4,10 +4,10 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { TrendingUp, BarChart, Calendar, Settings } from 'lucide-react';
 
 const MODULES = [
-  { title: 'Demand Dashboard', desc: 'View forecasts & predictions', icon: TrendingUp, path: '/admin/forecasting/dashboard' },
-  { title: 'Forecast Models', desc: 'Configure forecasting methods', icon: BarChart, path: '/admin/forecasting/models' },
-  { title: 'Seasonal Patterns', desc: 'Detect seasonality', icon: Calendar, path: '/admin/forecasting/seasonal' },
-  { title: 'Settings', desc: 'AI & algorithm config', icon: Settings, path: '/admin/forecasting/settings' }
+  { title: 'Demand Dashboard', desc: 'View forecasts & predictions', icon: TrendingUp, path: '/manager/forecasting/dashboard' },
+  { title: 'Forecast Models', desc: 'Configure forecasting methods', icon: BarChart, path: '/manager/forecasting/models' },
+  { title: 'Seasonal Patterns', desc: 'Detect seasonality', icon: Calendar, path: '/manager/forecasting/seasonal' },
+  { title: 'Settings', desc: 'AI & algorithm config', icon: Settings, path: '/manager/forecasting/settings' }
 ];
 
 export default function ForecastingHub() {

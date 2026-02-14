@@ -299,7 +299,7 @@ export default function VenueSettings() {
                     </SelectContent>
                   </Select>
                   <button
-                    onClick={() => navigate('/admin/legal-entities')}
+                    onClick={() => navigate('/manager/legal-entities')}
                     className="text-xs text-violet-400 hover:text-violet-300 flex items-center gap-1 transition-colors"
                   >
                     <ExternalLink className="w-3 h-3" />

@@ -90,13 +90,13 @@ export default function InventoryDashboard() {
                 {/* Module Navigation Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
                     {[
-                        { label: 'Stock Count', path: '/admin/inventory-stock-count', color: 'border-blue-500/20 text-blue-400' },
-                        { label: 'Waste Log', path: '/admin/inventory-waste', color: 'border-red-500/20 text-red-400' },
-                        { label: 'Purchasing', path: '/admin/inventory-purchase-orders', color: 'border-green-500/20 text-green-400' },
-                        { label: 'Recipes', path: '/admin/inventory-recipes', color: 'border-orange-500/20 text-orange-400' },
-                        { label: 'Production', path: '/admin/inventory-production', color: 'border-purple-500/20 text-purple-400' },
-                        { label: 'Transfers', path: '/admin/inventory-transfers', color: 'border-cyan-500/20 text-cyan-400' },
-                        { label: 'Suppliers', path: '/admin/suppliers', color: 'border-pink-500/20 text-pink-400' },
+                        { label: 'Stock Count', path: '/manager/inventory-stock-count', color: 'border-blue-500/20 text-blue-400' },
+                        { label: 'Waste Log', path: '/manager/inventory-waste', color: 'border-red-500/20 text-red-400' },
+                        { label: 'Purchasing', path: '/manager/inventory-purchase-orders', color: 'border-green-500/20 text-green-400' },
+                        { label: 'Recipes', path: '/manager/inventory-recipes', color: 'border-orange-500/20 text-orange-400' },
+                        { label: 'Production', path: '/manager/inventory-production', color: 'border-purple-500/20 text-purple-400' },
+                        { label: 'Transfers', path: '/manager/inventory-transfers', color: 'border-cyan-500/20 text-cyan-400' },
+                        { label: 'Suppliers', path: '/manager/suppliers', color: 'border-pink-500/20 text-pink-400' },
                     ].map(mod => (
                         <div
                             key={mod.label}

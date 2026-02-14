@@ -66,7 +66,7 @@ function KDSStations() {
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-4xl font-bold text-foreground">KDS Stations</h1>
           <button
-            onClick={() => navigate('/admin/kds/stations/new')}
+            onClick={() => navigate('/manager/kds/stations/new')}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
           >
             <Plus className="w-5 h-5" />
@@ -82,7 +82,7 @@ function KDSStations() {
           <div
             key={station.id}
             className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition cursor-pointer"
-            onClick={() => navigate(`/admin/kds/stations/${station.station_key}`)}
+            onClick={() => navigate(`/manager/kds/stations/${station.station_key}`)}
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
@@ -144,7 +144,7 @@ function KDSStations() {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/admin/kds/stations/${station.station_key}`);
+                  navigate(`/manager/kds/stations/${station.station_key}`);
                 }}
                 className="p-2 text-gray-600 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
               >
@@ -162,7 +162,7 @@ function KDSStations() {
               <h3 className="text-lg font-medium text-foreground mb-2">No stations configured</h3>
               <p className="text-gray-500 mb-4">Get started by creating your first KDS station</p>
               <button
-                onClick={() => navigate('/admin/kds/stations/new')}
+                onClick={() => navigate('/manager/kds/stations/new')}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
               >
                 <Plus className="w-5 h-5" />

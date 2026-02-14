@@ -5,10 +5,10 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Upload, FileText, AlertTriangle, CheckCircle } from 'lucide-react';
 
 const MODULES = [
-  { key: 'ocr', title: 'Invoice OCR', desc: 'AI-powered invoice scanning', icon: Upload, path: '/admin/ai-invoice/ocr', color: 'blue' },
-  { key: 'variance', title: 'Variance Analysis', desc: 'Detect price & quantity differences', icon: AlertTriangle, path: '/admin/ai-invoice/variance', color: 'yellow' },
-  { key: 'matching', title: 'PO Matching', desc: 'Match invoices to purchase orders', icon: CheckCircle, path: '/admin/ai-invoice/matching', color: 'green' },
-  { key: 'list', title: 'Invoice List', desc: 'View all processed invoices', icon: FileText, path: '/admin/ai-invoice/list', color: 'purple' }
+  { key: 'ocr', title: 'Invoice OCR', desc: 'AI-powered invoice scanning', icon: Upload, path: '/manager/ai-invoice/ocr', color: 'blue' },
+  { key: 'variance', title: 'Variance Analysis', desc: 'Detect price & quantity differences', icon: AlertTriangle, path: '/manager/ai-invoice/variance', color: 'yellow' },
+  { key: 'matching', title: 'PO Matching', desc: 'Match invoices to purchase orders', icon: CheckCircle, path: '/manager/ai-invoice/matching', color: 'green' },
+  { key: 'list', title: 'Invoice List', desc: 'View all processed invoices', icon: FileText, path: '/manager/ai-invoice/list', color: 'purple' }
 ];
 
 export default function AIInvoiceHub() {

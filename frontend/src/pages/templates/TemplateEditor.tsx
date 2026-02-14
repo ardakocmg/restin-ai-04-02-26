@@ -348,7 +348,7 @@ export default function TemplateEditor() {
             if (isNew) {
                 const res = await api.post('/templates', payload);
                 toast.success(t('Template created'));
-                navigate(`/admin/templates/${res.data.id}`, { replace: true });
+                navigate(`/manager/templates/${res.data.id}`, { replace: true });
             } else {
                 await api.put(`/templates/${id}`, payload);
                 toast.success(t('Template saved'));
@@ -858,7 +858,7 @@ export default function TemplateEditor() {
             <div className="ts-header">
                 <div className="ts-row" style={{ gap: 12 }}>
                     <button
-                        onClick={() => navigate('/admin/templates')}
+                        onClick={() => navigate('/manager/templates')}
                         className="ts-zoom-btn"
                         title={t('Back to templates')}
                     >

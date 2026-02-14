@@ -66,7 +66,7 @@ export default function HRImport() {
                     </div>
                     <Button
                         variant="outline"
-                        onClick={() => navigate('/admin/hr/summary')}
+                        onClick={() => navigate('/manager/hr/summary')}
                         className="border-white/10 hover:bg-white/5 text-zinc-400 text-[10px] font-bold uppercase"
                     >
                         Back to Hub
@@ -212,7 +212,7 @@ export default function HRImport() {
                             </Button>
                             <Button
                                 className="flex-1 py-8 bg-blue-600 hover:bg-blue-500 font-bold uppercase tracking-widest text-xs shadow-lg shadow-blue-600/20"
-                                onClick={() => navigate(importType === 'clocking' ? '/admin/hr/clocking' : '/admin/hr/people')}
+                                onClick={() => navigate(importType === 'clocking' ? '/manager/hr/clocking' : '/manager/hr/people')}
                             >
                                 View Imported Data
                             </Button>

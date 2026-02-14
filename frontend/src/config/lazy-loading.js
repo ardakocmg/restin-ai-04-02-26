@@ -6,32 +6,32 @@
 
 export const LAZY_LOAD_ROUTES = [
     // Admin Pages (loaded on demand)
-    '/admin/analytics',
-    '/admin/payroll-malta',
-    '/admin/accounting-malta',
-    '/admin/crm',
-    '/admin/loyalty',
+    '/manager/analytics',
+    '/manager/payroll-malta',
+    '/manager/accounting-malta',
+    '/manager/crm',
+    '/manager/loyalty',
 
     // Reports (loaded on demand)
-    '/admin/reports/*',
+    '/manager/reports/*',
 
     // Inventory (loaded on demand)
-    '/admin/inventory-detail',
-    '/admin/inventory-recipes',
-    '/admin/inventory-production',
+    '/manager/inventory-detail',
+    '/manager/inventory-recipes',
+    '/manager/inventory-production',
 
     // HR Pages (loaded on demand)
-    '/admin/hr/*',
+    '/manager/hr/*',
 
     // Integrations (loaded on demand)
-    '/admin/integrations',
-    '/admin/delivery-aggregators',
+    '/manager/integrations',
+    '/manager/delivery-aggregators',
 ];
 
 // Critical pages loaded immediately
 export const EAGER_LOAD_ROUTES = [
     '/login',
-    '/admin/dashboard',
+    '/manager/dashboard',
     '/pos/*',
     '/kds/*',
 ];

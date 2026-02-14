@@ -312,7 +312,7 @@ export default function ManualClocking() {
             <div className="flex items-center gap-4 mb-8">
                 <Button
                     variant="ghost"
-                    onClick={() => navigate('/admin/hr/clocking')}
+                    onClick={() => navigate('/manager/hr/clocking')}
                     className="text-zinc-500 hover:text-zinc-300 h-9 w-9 p-0"
                     title={t('Back')}
                 >
@@ -614,7 +614,7 @@ export default function ManualClocking() {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        onClick={() => navigate('/admin/hr/clocking/add')}
+                                        onClick={() => navigate('/manager/hr/clocking/add')}
                                         className="h-6 text-[9px] px-2 bg-zinc-800 border-zinc-700 hover:bg-zinc-700 text-zinc-400 hover:text-white uppercase tracking-wider font-bold"
                                     >
                                         <Plus className="h-3 w-3 mr-1" />{t('Add Past Entry')}

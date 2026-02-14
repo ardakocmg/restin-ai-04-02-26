@@ -596,7 +596,7 @@ export default function POSMain() {
             <span className="text-sm">Tables</span>
           </button>
           <button
-            onClick={() => navigate("/admin/dashboard")}
+            onClick={() => navigate("/manager/dashboard")}
             className="w-full p-3 rounded-lg bg-muted hover:bg-accent text-foreground flex items-center justify-center gap-2 transition-colors"
           >
             <LogOut className="w-5 h-5" />

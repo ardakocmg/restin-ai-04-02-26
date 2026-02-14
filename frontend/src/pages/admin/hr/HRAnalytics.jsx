@@ -400,7 +400,7 @@ export default function HRAnalyticsIndigo() {
 
   const handleEmployeeClick = (employeeId) => {
     if (employeeId && employeeId !== 'unknown') {
-      navigate(`/admin/hr/employee-performance/${employeeId}?from=${dateRange.from}&to=${dateRange.to}`);
+      navigate(`/manager/hr/employee-performance/${employeeId}?from=${dateRange.from}&to=${dateRange.to}`);
     }
   };
 

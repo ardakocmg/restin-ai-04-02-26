@@ -56,7 +56,7 @@ export default function FloorPlanEditor() {
       }
     } catch (error) {
       toast.error("Failed to load floor plan");
-      navigate("/admin/floor-plans");
+      navigate("/manager/floor-plans");
     }
   };
 
@@ -265,7 +265,7 @@ export default function FloorPlanEditor() {
           <div className="flex items-center gap-4">
             <Button
               variant="outline"
-              onClick={() => navigate("/admin/floor-plans")}
+              onClick={() => navigate("/manager/floor-plans")}
               className="border-white/10"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

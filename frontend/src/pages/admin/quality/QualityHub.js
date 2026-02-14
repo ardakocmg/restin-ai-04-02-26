@@ -4,10 +4,10 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { ShieldCheck, AlertCircle, FileCheck, Award } from 'lucide-react';
 
 const MODULES = [
-  { title: 'Quality Audits', desc: 'HACCP & safety audits', icon: ShieldCheck, path: '/admin/quality/audits' },
-  { title: 'Allergen Matrix', desc: 'Track allergens', icon: AlertCircle, path: '/admin/quality/allergens' },
-  { title: 'Compliance', desc: 'Licenses & certificates', icon: FileCheck, path: '/admin/quality/compliance' },
-  { title: 'Standards', desc: 'Quality standards', icon: Award, path: '/admin/quality/standards' }
+  { title: 'Quality Audits', desc: 'HACCP & safety audits', icon: ShieldCheck, path: '/manager/quality/audits' },
+  { title: 'Allergen Matrix', desc: 'Track allergens', icon: AlertCircle, path: '/manager/quality/allergens' },
+  { title: 'Compliance', desc: 'Licenses & certificates', icon: FileCheck, path: '/manager/quality/compliance' },
+  { title: 'Standards', desc: 'Quality standards', icon: Award, path: '/manager/quality/standards' }
 ];
 
 export default function QualityHub() {

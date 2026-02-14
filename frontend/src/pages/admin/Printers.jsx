@@ -187,7 +187,7 @@ export default function Printers() {
                 description="Manage printers, templates, and cash drawers for Caviar & Bull."
                 breadcrumb={[
                     { label: 'Management', href: '#' },
-                    { label: 'Printers', href: '/admin/printers' }
+                    { label: 'Printers', href: '/manager/printers' }
                 ]}
             >
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

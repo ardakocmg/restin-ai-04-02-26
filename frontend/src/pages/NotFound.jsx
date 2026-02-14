@@ -40,7 +40,7 @@ export default function NotFound() {
             Go Back
           </Button>
           <Button 
-            onClick={() => navigate('/admin/dashboard')}
+            onClick={() => navigate('/manager/dashboard')}
             className="flex items-center gap-2"
           >
             <Home className="h-4 w-4" />

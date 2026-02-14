@@ -4,10 +4,10 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { ChefHat, DollarSign, Apple, GitBranch } from 'lucide-react';
 
 const MODULES = [
-  { title: 'Recipe List', desc: 'Engineered recipes', icon: ChefHat, path: '/admin/recipe-engineering/list' },
-  { title: 'Cost Analysis', desc: 'Profitability insights', icon: DollarSign, path: '/admin/recipe-engineering/cost' },
-  { title: 'Nutrition Tracking', desc: 'Allergens & nutrition', icon: Apple, path: '/admin/recipe-engineering/nutrition' },
-  { title: 'Version Control', desc: 'Recipe history', icon: GitBranch, path: '/admin/recipe-engineering/versions' }
+  { title: 'Recipe List', desc: 'Engineered recipes', icon: ChefHat, path: '/manager/recipe-engineering/list' },
+  { title: 'Cost Analysis', desc: 'Profitability insights', icon: DollarSign, path: '/manager/recipe-engineering/cost' },
+  { title: 'Nutrition Tracking', desc: 'Allergens & nutrition', icon: Apple, path: '/manager/recipe-engineering/nutrition' },
+  { title: 'Version Control', desc: 'Recipe history', icon: GitBranch, path: '/manager/recipe-engineering/versions' }
 ];
 
 export default function RecipeEngineeringHub() {

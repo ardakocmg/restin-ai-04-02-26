@@ -165,7 +165,7 @@ const CrmDashboard: React.FC = () => {
                     <Card
                         key={i}
                         className="bg-zinc-900/50 border-zinc-800 backdrop-blur-xl group overflow-hidden relative cursor-pointer hover:border-blue-500/50 transition-all"
-                        onClick={() => navigate(`/admin/restin/crm/stats/${stat.label.toLowerCase().replace(' ', '-')}`)}
+                        onClick={() => navigate(`/manager/restin/crm/stats/${stat.label.toLowerCase().replace(' ', '-')}`)}
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                         <CardHeader className="pb-2">
@@ -222,7 +222,7 @@ const CrmDashboard: React.FC = () => {
                                 <div
                                     key={c.id || i}
                                     className="py-4 flex items-center justify-between group hover:bg-white/[0.02] -mx-6 px-6 transition-colors cursor-pointer"
-                                    onClick={() => navigate(`/admin/restin/crm/guests/${c.id}`)}
+                                    onClick={() => navigate(`/manager/restin/crm/guests/${c.id}`)}
                                 >
                                     <div className="flex items-center gap-4">
                                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-zinc-700 to-zinc-800 flex items-center justify-center font-bold text-zinc-400">

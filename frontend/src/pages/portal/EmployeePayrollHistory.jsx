@@ -137,7 +137,7 @@ export default function EmployeePayrollHistory() {
                                         <FileText className="text-blue-500" />
                                         <div><h4 className="font-bold text-white">{p.month}</h4><p className="text-xs text-zinc-500">Paid on {p.date}</p></div>
                                     </div>
-                                    <Button variant="outline" size="sm" onClick={() => navigate(`/admin/hr/payroll/view/emp-arda-koc/dec-2025`)}><Eye className="h-4 w-4 mr-2" /> View</Button>
+                                    <Button variant="outline" size="sm" onClick={() => navigate(`/manager/hr/payroll/view/emp-arda-koc/dec-2025`)}><Eye className="h-4 w-4 mr-2" /> View</Button>
                                 </CardContent>
                             </Card>
                         ))}

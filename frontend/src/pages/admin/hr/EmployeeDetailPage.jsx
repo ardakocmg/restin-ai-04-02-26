@@ -362,7 +362,7 @@ export default function EmployeeDetailPage() {
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
-                onClick={() => navigate('/admin/hr/people')}
+                onClick={() => navigate('/manager/hr/people')}
                 className="p-2 hover:bg-white/5 rounded-full"
               >
                 <ArrowLeft className="h-5 w-5 text-zinc-400" />
@@ -479,13 +479,13 @@ export default function EmployeeDetailPage() {
               <Section title="Quick Actions" icon={ChevronRight}>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                   {[
-                    { icon: Clock, label: 'Clocking History', desc: 'View clock-in/out records', path: '/admin/hr/clocking' },
-                    { icon: FileText, label: 'Timesheets', desc: 'Weekly timesheet summaries', path: '/admin/hr/timesheets' },
-                    { icon: Calendar, label: 'Leave Management', desc: 'Requests & balances', path: '/admin/hr/leave' },
-                    { icon: CreditCard, label: 'Payroll', desc: 'Pay runs & payslips', path: '/admin/hr/payroll' },
-                    { icon: Briefcase, label: 'Schedule', desc: 'Shift assignments', path: '/admin/hr/scheduler' },
-                    { icon: FileText, label: 'Documents', desc: 'Contracts & files', path: '/admin/hr/documents' },
-                    { icon: Shield, label: 'User Account', desc: 'Login & permissions', path: `/admin/users` },
+                    { icon: Clock, label: 'Clocking History', desc: 'View clock-in/out records', path: '/manager/hr/clocking' },
+                    { icon: FileText, label: 'Timesheets', desc: 'Weekly timesheet summaries', path: '/manager/hr/timesheets' },
+                    { icon: Calendar, label: 'Leave Management', desc: 'Requests & balances', path: '/manager/hr/leave' },
+                    { icon: CreditCard, label: 'Payroll', desc: 'Pay runs & payslips', path: '/manager/hr/payroll' },
+                    { icon: Briefcase, label: 'Schedule', desc: 'Shift assignments', path: '/manager/hr/scheduler' },
+                    { icon: FileText, label: 'Documents', desc: 'Contracts & files', path: '/manager/hr/documents' },
+                    { icon: Shield, label: 'User Account', desc: 'Login & permissions', path: `/manager/users` },
                   ].map((action, i) => (
                     <button
                       key={i}
@@ -921,7 +921,7 @@ export default function EmployeeDetailPage() {
                         <Button
                           variant="outline"
                           className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10 text-xs font-bold uppercase"
-                          onClick={() => navigate(`/admin/users/${data.user_id}/access`)}
+                          onClick={() => navigate(`/manager/users/${data.user_id}/access`)}
                         >
                           <Eye className="h-3.5 w-3.5 mr-2" /> View User Account
                         </Button>
@@ -940,7 +940,7 @@ export default function EmployeeDetailPage() {
                         <Button
                           variant="outline"
                           className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 text-xs font-bold uppercase"
-                          onClick={() => navigate('/admin/users')}
+                          onClick={() => navigate('/manager/users')}
                         >
                           <Plus className="h-3.5 w-3.5 mr-2" /> Create User Account
                         </Button>

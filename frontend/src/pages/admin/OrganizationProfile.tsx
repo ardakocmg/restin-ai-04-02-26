@@ -413,7 +413,7 @@ export default function OrganizationProfile() {
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => navigate('/admin/legal-entities')}
+                            onClick={() => navigate('/manager/legal-entities')}
                             className="border-white/10 text-zinc-300 hover:bg-white/5"
                         >
                             <ExternalLink className="w-4 h-4 mr-2" />
@@ -427,7 +427,7 @@ export default function OrganizationProfile() {
                             <p className="text-sm text-zinc-500">No legal entities configured</p>
                             <Button
                                 variant="link"
-                                onClick={() => navigate('/admin/legal-entities')}
+                                onClick={() => navigate('/manager/legal-entities')}
                                 className="text-violet-400 mt-2"
                             >
                                 Create your first legal entity →
@@ -439,7 +439,7 @@ export default function OrganizationProfile() {
                                 <div
                                     key={le._id}
                                     className="flex items-center justify-between p-4 rounded-xl bg-zinc-800/50 border border-white/5 hover:border-white/10 transition-colors cursor-pointer"
-                                    onClick={() => navigate('/admin/legal-entities')}
+                                    onClick={() => navigate('/manager/legal-entities')}
                                 >
                                     <div>
                                         <p className="text-sm font-semibold text-zinc-200">{le.registered_name}</p>

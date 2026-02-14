@@ -947,21 +947,21 @@ const MigrationHub = () => {
 
                                 {/* Dynamic Navigation Based on Data Type */}
                                 {previewData?.type === 'recipes' ? (
-                                    <Button className="h-12 px-8 bg-orange-600 hover:bg-orange-700 text-lg font-bold shadow-lg shadow-orange-900/20" onClick={() => window.location.href = '/admin/inventory-recipes'}>
+                                    <Button className="h-12 px-8 bg-orange-600 hover:bg-orange-700 text-lg font-bold shadow-lg shadow-orange-900/20" onClick={() => window.location.href = '/manager/inventory-recipes'}>
                                         Go to Recipe Engineering <ArrowRight className="w-5 h-5 ml-2" />
                                     </Button>
                                 ) : selectedProvider?.id === 'apicbase' && (
-                                    <Button className="h-12 px-8 bg-blue-600 hover:bg-blue-700 text-lg font-bold shadow-lg shadow-blue-900/20" onClick={() => window.location.href = '/admin/inventory'}>
+                                    <Button className="h-12 px-8 bg-blue-600 hover:bg-blue-700 text-lg font-bold shadow-lg shadow-blue-900/20" onClick={() => window.location.href = '/manager/inventory'}>
                                         Go to Inventory Hub <ArrowRight className="w-5 h-5 ml-2" />
                                     </Button>
                                 )}
                                 {selectedProvider?.id === 'lightspeed' && (
-                                    <Button className="h-12 px-8 bg-red-600 hover:bg-red-700 text-lg font-bold shadow-lg shadow-red-900/40" onClick={() => window.location.href = '/admin/products'}>
+                                    <Button className="h-12 px-8 bg-red-600 hover:bg-red-700 text-lg font-bold shadow-lg shadow-red-900/40" onClick={() => window.location.href = '/manager/products'}>
                                         View Products <ArrowRight className="w-5 h-5 ml-2" />
                                     </Button>
                                 )}
                                 {selectedProvider?.id === 'shireburn' && (
-                                    <Button className="h-12 px-8 bg-indigo-600 hover:bg-indigo-700 text-lg font-bold shadow-lg shadow-indigo-900/20" onClick={() => window.location.href = '/admin/hr/people'}>
+                                    <Button className="h-12 px-8 bg-indigo-600 hover:bg-indigo-700 text-lg font-bold shadow-lg shadow-indigo-900/20" onClick={() => window.location.href = '/manager/hr/people'}>
                                         Open Employee Directory <ArrowRight className="w-5 h-5 ml-2" />
                                     </Button>
                                 )}

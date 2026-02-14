@@ -158,7 +158,7 @@ export default function Login() {
 
             if (loginTarget === "pos") navigate("/pos/setup");
             else if (loginTarget === "kds") navigate("/kds/setup");
-            else navigate("/admin/dashboard");
+            else navigate("/manager/dashboard");
         }
     };
 
@@ -278,7 +278,7 @@ export default function Login() {
 
         if (loginTarget === "pos") navigate("/pos/setup");
         else if (loginTarget === "kds") navigate("/kds/setup");
-        else navigate("/admin/dashboard");
+        else navigate("/manager/dashboard");
     };
 
     // PIN display boxes

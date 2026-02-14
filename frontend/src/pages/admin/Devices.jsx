@@ -331,7 +331,7 @@ export default function Devices() {
                 description="Manage POS terminals, KDS screens, and handheld tablets across your venue."
                 breadcrumb={[
                     { label: 'Management', href: '#' },
-                    { label: 'Devices', href: '/admin/devices' }
+                    { label: 'Devices', href: '/manager/devices' }
                 ]}
             >
                 {selectedDevice ? renderDeviceDetail(selectedDevice) : renderDeviceList()}

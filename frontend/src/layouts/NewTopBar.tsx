@@ -469,14 +469,14 @@ export default function NewTopBar(): React.ReactElement {
                 <div className="px-3 py-2">
                   <div className="text-[10px] uppercase font-bold tracking-widest text-zinc-600 mb-2 px-1">{t('topbar.adminControls')}</div>
                   <DropdownMenuItem
-                    onClick={() => navigate('/admin/migration')}
+                    onClick={() => navigate('/manager/migration')}
                     className="font-medium cursor-pointer focus:bg-white/5"
                   >
                     <Database className="mr-2 h-4 w-4 text-zinc-500" />
                     {t('topbar.migrationHub')}
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => navigate('/admin/theme')}
+                    onClick={() => navigate('/manager/theme')}
                     className="font-medium cursor-pointer focus:bg-white/5"
                   >
                     <Palette className="mr-2 h-4 w-4 text-zinc-500" />
@@ -487,7 +487,7 @@ export default function NewTopBar(): React.ReactElement {
               </>
             )}
 
-            <DropdownMenuItem onClick={() => navigate('/admin/settings')} className="focus:bg-white/5">
+            <DropdownMenuItem onClick={() => navigate('/manager/settings')} className="focus:bg-white/5">
               <Settings className="mr-2 h-4 w-4 text-zinc-500" />
               {t('topbar.settings')}
             </DropdownMenuItem>

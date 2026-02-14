@@ -630,7 +630,7 @@ export default function RecipeManagement() {
             variant="outline"
             size="sm"
             className="border-orange-500/50 text-orange-400 hover:bg-orange-500/10"
-            onClick={() => navigate('/admin/migration')}
+            onClick={() => navigate('/manager/migration')}
           >
             <UploadCloud className="w-4 h-4 mr-2" />
             Apicbase Import

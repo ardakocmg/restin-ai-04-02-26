@@ -228,7 +228,7 @@ export default function KDSSetup() {
 
           <div className="flex gap-3">
             <Button
-              onClick={() => navigate("/admin/dashboard")}
+              onClick={() => navigate("/manager/dashboard")}
               variant="outline"
               className="flex-1 border-white/10 text-zinc-100 hover:bg-white/5"
             >

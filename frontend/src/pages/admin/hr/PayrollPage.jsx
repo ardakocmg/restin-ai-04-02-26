@@ -398,7 +398,7 @@ export default function PayrollPage() {
                                             </div>
                                             <div className="flex gap-3">
                                                 <Button
-                                                    onClick={() => navigate(`/admin/hr/payroll/view/emp/${featuredEmp.id}`)}
+                                                    onClick={() => navigate(`/manager/hr/payroll/view/emp/${featuredEmp.id}`)}
                                                     className="bg-zinc-100 hover:bg-white text-black font-black uppercase tracking-widest text-[10px] px-8 py-6 rounded-xl shadow-2xl"
                                                 >
                                                     Inspect Payslip <Eye className="ml-2 h-4 w-4" />
@@ -449,7 +449,7 @@ export default function PayrollPage() {
                                     {runs.map((run) => (
                                         <Card
                                             key={run.id}
-                                            onClick={() => navigate(`/admin/hr/payroll/runs/${run.id}`)}
+                                            onClick={() => navigate(`/manager/hr/payroll/runs/${run.id}`)}
                                             className="bg-zinc-900/50 border-white/5 hover:border-blue-500/30 transition-all cursor-pointer group shadow-2xl relative overflow-hidden"
                                         >
                                             <div className="absolute top-0 left-0 w-1 h-full bg-zinc-800 group-hover:bg-blue-500 transition-colors" />
@@ -675,7 +675,7 @@ export default function PayrollPage() {
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
                                         {runs.length > 0 ? runs.map(run => (
-                                            <tr key={run.id} className="hover:bg-white/5 transition-all cursor-pointer" onClick={() => navigate(`/admin/hr/payroll/${run.id}`)}>
+                                            <tr key={run.id} className="hover:bg-white/5 transition-all cursor-pointer" onClick={() => navigate(`/manager/hr/payroll/${run.id}`)}>
                                                 <td className="px-4 py-3 text-xs font-bold text-white">{run.run_name}</td>
                                                 <td className="px-4 py-3 text-xs text-zinc-400">{run.period_start} — {run.period_end}</td>
                                                 <td className="px-4 py-3 text-xs font-mono text-white">{run.employee_count}</td>

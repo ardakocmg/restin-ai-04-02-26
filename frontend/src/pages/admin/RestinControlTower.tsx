@@ -41,7 +41,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         icon: Globe,
         color: 'blue',
         description: 'Synchronized digital storefront with live inventory mapping.',
-        route: '/admin/restin/web',
+        route: '/manager/restin/web',
         metricsEndpoint: '/web/site',
         metricsExtractor: (d) => d?.site_name ? 'Published' : 'Draft',
         statusExtractor: (d) => d?.site_name ? 'Live' : 'Setup'
@@ -52,7 +52,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         icon: Mic,
         color: 'red',
         description: '24/7 RAG-based receptionist handling guest inquiries.',
-        route: '/admin/restin/voice',
+        route: '/manager/restin/voice',
         metricsEndpoint: '/voice/analytics',
         metricsExtractor: (d) => `${d?.total_calls || 0} Calls`,
         statusExtractor: (d) => (d?.total_calls as number) > 0 ? 'Active' : 'Ready'
@@ -63,7 +63,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         icon: Wand2,
         color: 'purple',
         description: 'Reality-first generative content pipeline for menu visuals.',
-        route: '/admin/restin/studio',
+        route: '/manager/restin/studio',
         metricsEndpoint: '/media/assets',
         metricsExtractor: (d) => `${Array.isArray(d) ? d.length : 0} Assets`,
         statusExtractor: (d) => Array.isArray(d) && d.length > 0 ? 'Active' : 'Empty'
@@ -74,7 +74,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         icon: Radar,
         color: 'orange',
         description: 'Real-time competitive intelligence and yield management.',
-        route: '/admin/restin/radar',
+        route: '/manager/restin/radar',
         metricsEndpoint: '/radar/competitors',
         metricsExtractor: (d) => `${Array.isArray(d) ? d.length : 0} Tracked`,
         statusExtractor: (d) => Array.isArray(d) && d.length > 0 ? 'Scanning' : 'Idle'
@@ -85,7 +85,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         icon: Zap,
         color: 'yellow',
         description: 'Autonomous churn detection and boomerang outreach.',
-        route: '/admin/restin/crm',
+        route: '/manager/restin/crm',
         metricsEndpoint: '/crm/stats',
         metricsExtractor: (d) => `${d?.high_risk || 0} At Risk`,
         statusExtractor: (d) => (d?.campaigns_sent as number) > 0 ? 'Triggered' : 'Monitoring'
@@ -96,7 +96,7 @@ const PILLAR_CONFIGS: PillarConfig[] = [
         icon: CreditCard,
         color: 'emerald',
         description: 'Omni-channel settlement and embedded financial logic.',
-        route: '/admin/restin/fintech',
+        route: '/manager/restin/fintech',
         metricsEndpoint: '/fintech/stats',
         metricsExtractor: (d) => {
             const rev = (d?.total_revenue_cents as number) || 0;
@@ -306,7 +306,7 @@ export default function RestinControlTower() {
                                 <div className="flex gap-4 pt-4">
                                     <Button
                                         className="h-14 px-8 bg-red-600 text-white font-black rounded-2xl hover:bg-red-700 shadow-[0_10px_40px_rgba(220,38,38,0.3)] border-none"
-                                        onClick={() => navigate('/admin/restin/radar')}
+                                        onClick={() => navigate('/manager/restin/radar')}
                                     >
                                         View Market Map
                                     </Button>

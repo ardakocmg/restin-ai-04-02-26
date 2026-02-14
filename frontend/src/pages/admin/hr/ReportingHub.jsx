@@ -4,14 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { FileText, Users, TrendingDown, Calendar, Cake, Award } from 'lucide-react';
 
 const reports = [
-  { id: 'employee-details', title: 'Employee Details', icon: Users, path: '/admin/hr-reports/employee-details' },
-  { id: 'headcount', title: 'Head Count', icon: Users, path: '/admin/hr-reports/headcount' },
-  { id: 'turnover', title: 'Staff Turnover', icon: TrendingDown, path: '/admin/hr-reports/turnover' },
-  { id: 'employment-termination', title: 'Employment & Termination Dates', icon: Calendar, path: '/admin/hr-reports/employment-dates' },
-  { id: 'birthdays', title: 'Birthdays & Anniversaries', icon: Cake, path: '/admin/hr-reports/birthdays' },
-  { id: 'training-expiring', title: 'Training & Certifications Expiring Soon', icon: Award, path: '/admin/hr-reports/training-expiring' },
-  { id: 'training-starting', title: 'Training & Certifications Starting Soon', icon: Award, path: '/admin/hr-reports/training-starting' },
-  { id: 'training-ongoing', title: 'Ongoing Training & Certifications', icon: Award, path: '/admin/hr-reports/training-ongoing' },
+  { id: 'employee-details', title: 'Employee Details', icon: Users, path: '/manager/hr-reports/employee-details' },
+  { id: 'headcount', title: 'Head Count', icon: Users, path: '/manager/hr-reports/headcount' },
+  { id: 'turnover', title: 'Staff Turnover', icon: TrendingDown, path: '/manager/hr-reports/turnover' },
+  { id: 'employment-termination', title: 'Employment & Termination Dates', icon: Calendar, path: '/manager/hr-reports/employment-dates' },
+  { id: 'birthdays', title: 'Birthdays & Anniversaries', icon: Cake, path: '/manager/hr-reports/birthdays' },
+  { id: 'training-expiring', title: 'Training & Certifications Expiring Soon', icon: Award, path: '/manager/hr-reports/training-expiring' },
+  { id: 'training-starting', title: 'Training & Certifications Starting Soon', icon: Award, path: '/manager/hr-reports/training-starting' },
+  { id: 'training-ongoing', title: 'Ongoing Training & Certifications', icon: Award, path: '/manager/hr-reports/training-ongoing' },
 ];
 
 export default function ReportingHub() {

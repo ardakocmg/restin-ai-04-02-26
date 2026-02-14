@@ -14,11 +14,11 @@ export interface BreadcrumbSegment {
  * Resolves the current URL into an array of breadcrumb segments
  * by matching against the centralized searchRegistry.
  *
- * Example output for `/admin/hr/clocking`:
+ * Example output for `/manager/hr/clocking`:
  * [
- *   { label: 'Home',        href: '/admin',            icon: Home,  isLast: false },
- *   { label: 'HR & People', href: '/admin/hr',         icon: Users, isLast: false },
- *   { label: 'Clocking',    href: '/admin/hr/clocking', icon: Clock, isLast: true  },
+ *   { label: 'Home',        href: '/manager',            icon: Home,  isLast: false },
+ *   { label: 'HR & People', href: '/manager/hr',         icon: Users, isLast: false },
+ *   { label: 'Clocking',    href: '/manager/hr/clocking', icon: Clock, isLast: true  },
  * ]
  */
 export function useBreadcrumb(): BreadcrumbSegment[] {
@@ -31,12 +31,12 @@ export function useBreadcrumb(): BreadcrumbSegment[] {
         // 1. Always start with Home
         segments.push({
             label: 'Home',
-            href: '/admin',
+            href: '/manager',
             icon: Home,
             isLast: false,
         });
 
-        if (pathname === '/admin' || pathname === '/admin/') {
+        if (pathname === '/manager' || pathname === '/manager/') {
             segments[0].isLast = true;
             return segments;
         }
@@ -70,7 +70,7 @@ export function useBreadcrumb(): BreadcrumbSegment[] {
             if (domain && domainId !== 'home') {
                 segments.push({
                     label: domain.title,
-                    href: matchedItem.href || '/admin',
+                    href: matchedItem.href || '/manager',
                     icon: domain.icon,
                     isLast: false,
                 });
@@ -104,10 +104,10 @@ export function useBreadcrumb(): BreadcrumbSegment[] {
         } else {
             // 4. Fallback: parse pathname segments for unregistered routes
             //    e.g. /admin/hr/people/abc123 → HR & People > People > abc123
-            const parts = pathname.replace('/admin/', '').split('/').filter(Boolean);
+            const parts = pathname.replace('/manager/', '').split('/').filter(Boolean);
 
             // Try matching the first part(s) to build partial crumbs
-            let partialPath = '/admin';
+            let partialPath = '/manager';
             for (let i = 0; i < parts.length; i++) {
                 partialPath += `/${parts[i]}`;
                 const isLast = i === parts.length - 1;

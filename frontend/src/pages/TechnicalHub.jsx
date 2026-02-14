@@ -108,10 +108,10 @@ const defaultContent = {
     { title: 'Kitchen Control', items: ['Ticket Prioritization', 'Station Routing', 'Timing Analysis'] }
   ],
   menuTable: [
-    { menu: 'Envanter', item: 'Stok Hareketleri (Ledger)', route: '/admin/inventory/ledger', status: 'Active', visibility: 'Primary' },
-    { menu: 'Satınalma', item: 'AI Fatura OCR', route: '/admin/ai-invoice', status: 'Active', visibility: 'Primary' },
-    { menu: 'Operasyon', item: 'Merkezi Mutfak (CPU)', route: '/admin/central-kitchen', status: 'Active', visibility: 'Primary' },
-    { menu: 'HR', item: 'Shireburn Indigo Entegrasyonu', route: '/admin/hr/dashboard', status: 'Active', visibility: 'Primary' },
+    { menu: 'Envanter', item: 'Stok Hareketleri (Ledger)', route: '/manager/inventory/ledger', status: 'Active', visibility: 'Primary' },
+    { menu: 'Satınalma', item: 'AI Fatura OCR', route: '/manager/ai-invoice', status: 'Active', visibility: 'Primary' },
+    { menu: 'Operasyon', item: 'Merkezi Mutfak (CPU)', route: '/manager/central-kitchen', status: 'Active', visibility: 'Primary' },
+    { menu: 'HR', item: 'Shireburn Indigo Entegrasyonu', route: '/manager/hr/dashboard', status: 'Active', visibility: 'Primary' },
     { menu: 'Sistem', item: 'Talep Tahminleme (AI)', route: '—', status: 'Planned', visibility: 'Upcoming' }
   ],
   eventFlows: [

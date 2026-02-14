@@ -40,7 +40,7 @@ export default function HRDevices() {
                             <Button
                                 variant="outline"
                                 size="icon"
-                                onClick={() => navigate('/admin/hr/summary')}
+                                onClick={() => navigate('/manager/hr/summary')}
                                 className="bg-zinc-900 border-white/10 rounded-xl"
                             >
                                 <ChevronLeft className="w-5 h-5 text-zinc-400" />

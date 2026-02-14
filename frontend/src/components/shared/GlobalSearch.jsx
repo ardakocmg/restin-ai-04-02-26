@@ -158,11 +158,11 @@ export default function GlobalSearch({ open, onOpenChange }) {
     } else {
       // Navigate to the relevant section/page for data results
       const entityId = item.data.id || item.data._id;
-      if (item.type === 'menu_items') navigate(`/admin/products`);
-      else if (item.type === 'users') navigate(`/admin/hr/people`);
-      else if (item.type === 'guests') navigate(`/admin/crm`);
-      else if (item.type === 'orders') navigate(`/admin/posdashboard`);
-      else navigate('/admin/dashboard');
+      if (item.type === 'menu_items') navigate(`/manager/products`);
+      else if (item.type === 'users') navigate(`/manager/hr/people`);
+      else if (item.type === 'guests') navigate(`/manager/crm`);
+      else if (item.type === 'orders') navigate(`/manager/posdashboard`);
+      else navigate('/manager/dashboard');
     }
     onOpenChange(false);
     setQuery('');

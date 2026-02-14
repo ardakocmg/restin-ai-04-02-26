@@ -179,7 +179,7 @@ export default function LeaveManagement() {
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              if (r.employee_id || r.employee_code) navigate(`/admin/hr/people/${r.employee_id || r.employee_code}`);
+                              if (r.employee_id || r.employee_code) navigate(`/manager/hr/people/${r.employee_id || r.employee_code}`);
                             }}
                             className="hover:text-blue-400 transition-colors hover:underline decoration-blue-500/40 underline-offset-2"
                           >

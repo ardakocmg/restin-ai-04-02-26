@@ -69,7 +69,7 @@ export default function Reservations() {
       description="Guest bookings and table management"
       actions={
         <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={() => navigate('/admin/reservations/timeline')}>
+          <Button size="sm" variant="outline" onClick={() => navigate('/manager/reservations/timeline')}>
             <Calendar className="w-4 h-4 mr-2" />
             Timeline View
           </Button>

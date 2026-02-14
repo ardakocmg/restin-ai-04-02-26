@@ -112,7 +112,7 @@ export default function RoleRoute({ requiredRole, authLevel, children }: RoleRou
 
                     {/* Back Button */}
                     <button
-                        onClick={() => navigate('/admin/dashboard')}
+                        onClick={() => navigate('/manager/dashboard')}
                         className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg bg-zinc-800 text-zinc-200 hover:bg-zinc-700 border border-zinc-700 transition-colors"
                     >
                         <ArrowLeft className="w-4 h-4" />
@@ -156,7 +156,7 @@ export default function RoleRoute({ requiredRole, authLevel, children }: RoleRou
                     </div>
                     <div className="flex gap-3 justify-center">
                         <button
-                            onClick={() => navigate('/admin/dashboard')}
+                            onClick={() => navigate('/manager/dashboard')}
                             className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg bg-zinc-800 text-zinc-200 hover:bg-zinc-700 border border-zinc-700 transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />

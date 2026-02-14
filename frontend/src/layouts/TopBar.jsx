@@ -105,7 +105,7 @@ export default function TopBar({ onMenuToggle, user }) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate('/admin/profile')}>
+              <DropdownMenuItem onClick={() => navigate('/manager/profile')}>
                 <User className="mr-2 h-4 w-4" />
                 Profile
               </DropdownMenuItem>

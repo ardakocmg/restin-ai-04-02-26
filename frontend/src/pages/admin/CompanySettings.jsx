@@ -347,7 +347,7 @@ export default function CompanySettings() {
                         </div>
                         <h3 className="text-lg font-bold text-white mb-2">Import/Export Wizard</h3>
                         <p className="text-sm text-zinc-500 max-w-sm mb-6">Bulk upload configuration, menus, and data via CSV or Excel mapping.</p>
-                        <Button variant="outline" className="border-white/10 hover:bg-zinc-800" onClick={() => window.location.href = '/admin/menu-import'}>Start Import Wizard</Button>
+                        <Button variant="outline" className="border-white/10 hover:bg-zinc-800" onClick={() => window.location.href = '/manager/menu-import'}>Start Import Wizard</Button>
                     </Card>
                 </TabsContent>
             </Tabs>

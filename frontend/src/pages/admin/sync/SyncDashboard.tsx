@@ -243,14 +243,14 @@ const PROVIDERS: ProviderDef[] = [
     // HR & Payroll
     { key: 'SHIREBURN', label: 'Shireburn Indigo', desc: 'HR, Payroll, Leave', icon: Users, category: 'hr' },
     // Google Suite
-    { key: 'GOOGLE_BUSINESS', label: 'Business Profile', desc: 'Maps, Reservations & Reviews', icon: Building2, category: 'google', color: '#4285F4', appLink: '/admin/google-workspace', appLabel: 'Workspace' },
-    { key: 'GOOGLE_WORKSPACE', label: 'Workspace SSO', desc: 'Single Sign-On, Domain Auth', icon: Lock, category: 'google', color: '#4285F4', appLink: '/admin/google-workspace', appLabel: 'Workspace' },
+    { key: 'GOOGLE_BUSINESS', label: 'Business Profile', desc: 'Maps, Reservations & Reviews', icon: Building2, category: 'google', color: '#4285F4', appLink: '/manager/google-workspace', appLabel: 'Workspace' },
+    { key: 'GOOGLE_WORKSPACE', label: 'Workspace SSO', desc: 'Single Sign-On, Domain Auth', icon: Lock, category: 'google', color: '#4285F4', appLink: '/manager/google-workspace', appLabel: 'Workspace' },
     { key: 'GOOGLE_MAPS', label: 'Maps API', desc: 'Location Services, Geocoding', icon: Globe, category: 'google', color: '#34A853' },
     { key: 'GOOGLE_ANALYTICS', label: 'Analytics', desc: 'Website & App Tracking', icon: Activity, category: 'google', color: '#E37400' },
     // IoT & Smart Home
-    { key: 'NUKI', label: 'Nuki Smart Lock', desc: 'Door Access, Keypad Codes', icon: Lock, category: 'iot', appLink: '/admin/door-access', appLabel: 'Door Control' },
-    { key: 'TUYA', label: 'Tuya Smart Life', desc: 'Lights, Switches, Climate', icon: Smartphone, category: 'iot', appLink: '/admin/smart-home', appLabel: 'Smart Home' },
-    { key: 'MEROSS', label: 'Meross IoT', desc: 'Plugs, Garage Doors, Sensors', icon: Smartphone, category: 'iot', appLink: '/admin/smart-home', appLabel: 'Smart Home' },
+    { key: 'NUKI', label: 'Nuki Smart Lock', desc: 'Door Access, Keypad Codes', icon: Lock, category: 'iot', appLink: '/manager/door-access', appLabel: 'Door Control' },
+    { key: 'TUYA', label: 'Tuya Smart Life', desc: 'Lights, Switches, Climate', icon: Smartphone, category: 'iot', appLink: '/manager/smart-home', appLabel: 'Smart Home' },
+    { key: 'MEROSS', label: 'Meross IoT', desc: 'Plugs, Garage Doors, Sensors', icon: Smartphone, category: 'iot', appLink: '/manager/smart-home', appLabel: 'Smart Home' },
     { key: 'QINGPING', label: 'Qingping Sensors', desc: 'Temp & Humidity Monitoring', icon: Server, category: 'iot' },
     // API Services
     { key: 'STRIPE', label: 'Stripe', desc: 'Payment Processing', icon: CreditCard, category: 'api', color: '#635BFF' },

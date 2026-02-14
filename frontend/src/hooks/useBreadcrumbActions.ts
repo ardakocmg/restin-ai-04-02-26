@@ -44,7 +44,7 @@ export function useBreadcrumbActions(): BreadcrumbAction[] {
         }
 
         // ─── HR People/Directory: Add Employee ───
-        if (path === '/admin/hr/people' || path === '/admin/hr') {
+        if (path === '/manager/hr/people' || path === '/manager/hr') {
             return [
                 { id: 'add-employee', label: 'Add Employee', icon: Plus, variant: 'primary' },
                 { id: 'export-csv', label: 'Export', icon: Download, variant: 'default' },
@@ -55,7 +55,7 @@ export function useBreadcrumbActions(): BreadcrumbAction[] {
         // ─── Clocking Data ───
         if (path.includes('/hr/clocking')) {
             return [
-                { id: 'add-entry', label: 'Add Entry', icon: Plus, variant: 'primary', href: '/admin/hr/clocking/add' },
+                { id: 'add-entry', label: 'Add Entry', icon: Plus, variant: 'primary', href: '/manager/hr/clocking/add' },
                 { id: 'export-csv', label: 'Export', icon: Download, variant: 'default' },
                 { id: 'date-range', label: 'Date Range', icon: Calendar, variant: 'ghost' },
             ];
@@ -87,7 +87,7 @@ export function useBreadcrumbActions(): BreadcrumbAction[] {
         }
 
         // ─── Products ───
-        if (path === '/admin/products') {
+        if (path === '/manager/products') {
             return [
                 { id: 'add-product', label: 'Add Product', icon: Plus, variant: 'primary' },
                 { id: 'import', label: 'Import', icon: FileSpreadsheet, variant: 'default' },
@@ -100,7 +100,7 @@ export function useBreadcrumbActions(): BreadcrumbAction[] {
             return [
                 { id: 'add-item', label: 'Add Item', icon: Plus, variant: 'primary' },
                 { id: 'export', label: 'Export', icon: Download, variant: 'default' },
-                { id: 'stock-count', label: 'Stock Count', icon: RefreshCw, variant: 'ghost', href: '/admin/inventory-stock-count' },
+                { id: 'stock-count', label: 'Stock Count', icon: RefreshCw, variant: 'ghost', href: '/manager/inventory-stock-count' },
             ];
         }
 
@@ -129,7 +129,7 @@ export function useBreadcrumbActions(): BreadcrumbAction[] {
         }
 
         // ─── Reservations ───
-        if (path === '/admin/reservations') {
+        if (path === '/manager/reservations') {
             return [
                 { id: 'add-reservation', label: 'New Booking', icon: Plus, variant: 'primary' },
                 { id: 'date-range', label: 'Date Range', icon: Calendar, variant: 'ghost' },
@@ -137,7 +137,7 @@ export function useBreadcrumbActions(): BreadcrumbAction[] {
         }
 
         // ─── CRM & Guests ───
-        if (path === '/admin/crm' || path === '/admin/guest-profiles') {
+        if (path === '/manager/crm' || path === '/manager/guest-profiles') {
             return [
                 { id: 'add-guest', label: 'Add Guest', icon: Plus, variant: 'primary' },
                 { id: 'export', label: 'Export', icon: Download, variant: 'default' },
@@ -152,7 +152,7 @@ export function useBreadcrumbActions(): BreadcrumbAction[] {
         }
 
         // ─── Dashboard pages: just refresh ───
-        if (path.includes('dashboard') || path === '/admin') {
+        if (path.includes('dashboard') || path === '/manager') {
             return [
                 { id: 'refresh', label: 'Refresh', icon: RefreshCw, variant: 'ghost' },
             ];

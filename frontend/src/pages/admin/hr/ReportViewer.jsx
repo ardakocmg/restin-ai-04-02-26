@@ -71,7 +71,7 @@ export default function ReportViewer() {
                     <div className="flex items-center gap-4">
                         <Button
                             variant="ghost"
-                            onClick={() => navigate('/admin/hr')}
+                            onClick={() => navigate('/manager/hr')}
                             className="hover:bg-white/5 rounded-full p-2"
                         >
                             <ArrowLeft className="h-5 w-5 text-zinc-400" />

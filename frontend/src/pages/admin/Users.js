@@ -262,7 +262,7 @@ export default function Users() {
       label: 'Employee Link',
       render: (row) => row.employee_id ? (
         <Badge variant="outline" className="text-[10px] bg-blue-500/10 text-blue-400 border-blue-500/30 cursor-pointer"
-          onClick={(e) => { e.stopPropagation(); navigate(`/admin/hr/people/${row.employee_id}`); }}>
+          onClick={(e) => { e.stopPropagation(); navigate(`/manager/hr/people/${row.employee_id}`); }}>
           <Link2 className="h-3 w-3 mr-1" /> {row.employee_id}
         </Badge>
       ) : (
@@ -301,7 +301,7 @@ export default function Users() {
         return (
           <div className="flex gap-1">
             <Button size="icon" variant="ghost" className="h-7 w-7 text-zinc-500 hover:text-white"
-              title="Manage Access" onClick={(e) => { e.stopPropagation(); navigate(`/admin/users/${row.id}/access`); }}>
+              title="Manage Access" onClick={(e) => { e.stopPropagation(); navigate(`/manager/users/${row.id}/access`); }}>
               <Shield className="h-3.5 w-3.5" />
             </Button>
             <Button size="icon" variant="ghost" className="h-7 w-7 text-zinc-500 hover:text-amber-400"
@@ -349,7 +349,7 @@ export default function Users() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => navigate('/admin/access-control')} variant="outline"
+            <Button onClick={() => navigate('/manager/access-control')} variant="outline"
               className="border-zinc-800 text-zinc-400 hover:text-white text-xs font-bold uppercase tracking-widest h-10">
               <Shield className="w-4 h-4 mr-2" /> Roles & Permissions
             </Button>
@@ -399,7 +399,7 @@ export default function Users() {
             columns={columns}
             data={filteredUsers}
             loading={false}
-            onRowClick={(row) => navigate(`/admin/users/${row.id}/access`)}
+            onRowClick={(row) => navigate(`/manager/users/${row.id}/access`)}
             emptyMessage={searchQuery ? "No users match your search" : "No users found"}
             enableRowSelection={true}
             tableId="user-accounts"

@@ -7,10 +7,10 @@ import { ShoppingCart, FileText, TrendingUp, Settings, CheckCircle } from 'lucid
 import api from '../../../lib/api';
 
 const PROCUREMENT_MODULES = [
-  { key: 'rfq', title: 'RFQ Management', desc: 'Request for Quotation workflow', icon: FileText, path: '/admin/procurement/rfq', color: 'blue' },
-  { key: 'approval', title: 'Approval Workflow', desc: 'Configure approval rules', icon: CheckCircle, path: '/admin/procurement/approval', color: 'green' },
-  { key: 'auto-order', title: 'Auto-Ordering', desc: 'Automatic reorder rules', icon: Settings, path: '/admin/procurement/auto-order', color: 'purple' },
-  { key: 'analytics', title: 'Supplier Analytics', desc: 'Performance & insights', icon: TrendingUp, path: '/admin/procurement/analytics', color: 'orange' }
+  { key: 'rfq', title: 'RFQ Management', desc: 'Request for Quotation workflow', icon: FileText, path: '/manager/procurement/rfq', color: 'blue' },
+  { key: 'approval', title: 'Approval Workflow', desc: 'Configure approval rules', icon: CheckCircle, path: '/manager/procurement/approval', color: 'green' },
+  { key: 'auto-order', title: 'Auto-Ordering', desc: 'Automatic reorder rules', icon: Settings, path: '/manager/procurement/auto-order', color: 'purple' },
+  { key: 'analytics', title: 'Supplier Analytics', desc: 'Performance & insights', icon: TrendingUp, path: '/manager/procurement/analytics', color: 'orange' }
 ];
 
 export default function ProcurementHub() {

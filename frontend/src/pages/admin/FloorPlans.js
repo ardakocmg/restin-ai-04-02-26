@@ -79,7 +79,7 @@ export default function FloorPlans() {
                   variant="outline"
                   size="sm"
                   className="w-full bg-zinc-900 border-white/10 hover:bg-red-600 hover:text-white hover:border-none font-black uppercase tracking-widest text-[10px] h-10"
-                  onClick={() => navigate(`/admin/floor-plans/${plan.id}/edit`)}
+                  onClick={() => navigate(`/manager/floor-plans/${plan.id}/edit`)}
                 >
                   <Edit className="w-4 h-4 mr-2" />
                   Design Layout

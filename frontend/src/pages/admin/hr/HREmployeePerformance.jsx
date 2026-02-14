@@ -161,7 +161,7 @@ export default function HREmployeePerformance() {
                 <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                     <div className="flex items-center gap-3">
                         <button
-                            onClick={() => navigate('/admin/hr/analytics')}
+                            onClick={() => navigate('/manager/hr/analytics')}
                             className="p-2 rounded-lg bg-zinc-900/60 border border-white/5 hover:bg-white/5 transition-all"
                         >
                             <ArrowLeft className="h-4 w-4 text-zinc-400" />

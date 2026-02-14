@@ -54,7 +54,7 @@ export default function SystemDashboard() {
     const loadDashboardData = async () => {
         try {
             const params = activeVenue?.id ? { venue_id: activeVenue.id } : {};
-            const res = await api.get('/admin/dashboard-stats', { params });
+            const res = await api.get('/manager/dashboard-stats', { params });
             setStats(res.data.stats || { revenue: 0, activeOrders: 0, onlineDevices: 0, syncHealth: '100%' });
             setLogs((res.data.logs || []).map((log, i) => ({
                 ...log,
@@ -111,7 +111,7 @@ export default function SystemDashboard() {
 
                     {/* KPI Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div onClick={() => window.location.href = '/admin/reports/sales?type=revenue'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-green-500/50 transition-colors group">
+                        <div onClick={() => window.location.href = '/manager/reports/sales?type=revenue'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-green-500/50 transition-colors group">
                             <div>
                                 <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">Today's Revenue</div>
                                 <div className="text-2xl font-bold text-white">€{(stats?.revenue || 0).toFixed(2)}</div>
@@ -125,7 +125,7 @@ export default function SystemDashboard() {
                             </div>
                             <Users className="w-8 h-8 text-blue-500 opacity-50 group-hover:opacity-100 transition-opacity" />
                         </div>
-                        <div onClick={() => window.location.href = '/admin/devices'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-indigo-500/50 transition-colors group">
+                        <div onClick={() => window.location.href = '/manager/devices'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-indigo-500/50 transition-colors group">
                             <div>
                                 <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">Online Devices</div>
                                 <div className="text-2xl font-bold text-white">{stats?.onlineDevices || 0}</div>

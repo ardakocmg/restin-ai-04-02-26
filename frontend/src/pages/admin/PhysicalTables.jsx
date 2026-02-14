@@ -181,7 +181,7 @@ export default function PhysicalTables() {
                 description="Manage table inventory and visual floorplans for Caviar & Bull."
                 breadcrumb={[
                     { label: 'Management', href: '#' },
-                    { label: 'Tables', href: '/admin/physical-tables' }
+                    { label: 'Tables', href: '/manager/physical-tables' }
                 ]}
                 actions={
                     <div className="flex gap-3">

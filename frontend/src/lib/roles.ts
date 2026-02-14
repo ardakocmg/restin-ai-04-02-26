@@ -62,21 +62,21 @@ export type AuthLevel = 'pin' | 'password' | 'elevated';
 
 export const ROUTE_AUTH_LEVELS: Record<string, AuthLevel> = {
     // ── Elevated (Google Auth / TOTP, 15 min) — Critical financial & system actions ──
-    '/admin/finance': 'elevated',
-    '/admin/payroll': 'elevated',
-    '/admin/billing': 'elevated',
-    '/admin/settings/system': 'elevated',
-    '/admin/access-control': 'elevated',
-    '/admin/roles-permissions': 'elevated',
-    '/admin/door-access': 'elevated',
+    '/manager/finance': 'elevated',
+    '/manager/payroll': 'elevated',
+    '/manager/billing': 'elevated',
+    '/manager/settings/system': 'elevated',
+    '/manager/access-control': 'elevated',
+    '/manager/roles-permissions': 'elevated',
+    '/manager/door-access': 'elevated',
 
     // ── Password (30 min) — Sensitive management areas ──
-    '/admin/hr': 'password',
-    '/admin/settings': 'password',
-    '/admin/inventory': 'password',
-    '/admin/procurement': 'password',
-    '/admin/compliance': 'password',
-    '/admin/reports': 'password',
+    '/manager/hr': 'password',
+    '/manager/settings': 'password',
+    '/manager/inventory': 'password',
+    '/manager/procurement': 'password',
+    '/manager/compliance': 'password',
+    '/manager/reports': 'password',
 };
 
 /** TTL in milliseconds for each auth level */

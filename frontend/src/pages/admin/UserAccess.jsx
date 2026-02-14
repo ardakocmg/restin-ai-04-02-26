@@ -57,9 +57,9 @@ export default function UserAccess() {
             // Wait, we can fetch assignments and context directly.
 
             const [assignmentsRes, contextRes, auditRes] = await Promise.all([
-                api.get(`/admin/users/${userId}/assignments`),
-                api.get(`/admin/users/${userId}/context`),
-                api.get(`/admin/users/${userId}/audit`),
+                api.get(`/manager/users/${userId}/assignments`),
+                api.get(`/manager/users/${userId}/context`),
+                api.get(`/manager/users/${userId}/audit`),
             ]);
 
             setAssignments(assignmentsRes.data);
@@ -78,7 +78,7 @@ export default function UserAccess() {
 
     const handleArchiveUser = async (shouldArchive) => {
         try {
-            await api.post(`/admin/users/${userId}/status`, {
+            await api.post(`/manager/users/${userId}/status`, {
                 status: shouldArchive ? 'archived' : 'active',
                 is_archived: shouldArchive
             });
@@ -92,7 +92,7 @@ export default function UserAccess() {
 
     const handleResetContext = async () => {
         try {
-            await api.post(`/admin/users/${userId}/context/reset`);
+            await api.post(`/manager/users/${userId}/context/reset`);
             toast.success("Active context reset");
             loadData();
         } catch (error) {
@@ -164,7 +164,7 @@ export default function UserAccess() {
                                             variant="ghost"
                                             size="sm"
                                             className="w-full text-xs text-blue-400 hover:text-blue-300"
-                                            onClick={() => navigate(`/admin/hr/people/${user.employee_id}`)}
+                                            onClick={() => navigate(`/manager/hr/people/${user.employee_id}`)}
                                         >
                                             View Employee Details →
                                         </Button>

@@ -93,7 +93,7 @@ function KDSStationDetail() {
       {/* Header */}
       <div className="mb-6">
         <button
-          onClick={() => navigate('/admin/kds/stations')}
+          onClick={() => navigate('/manager/kds/stations')}
           className="flex items-center gap-2 text-gray-600 hover:text-foreground mb-4"
         >
           <ArrowLeft className="w-5 h-5" />

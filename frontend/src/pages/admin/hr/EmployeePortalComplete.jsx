@@ -281,8 +281,8 @@ export default function EmployeePortalComplete() {
                 </div>
 
                 <div className="flex gap-2 mt-5">
-                  <Button variant="outline" size="sm" className="flex-1 border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800" onClick={() => navigate('/admin/hr/people/' + (data.my_profile.employee_code || 'EMP-001'))}>More details</Button>
-                  <Button size="sm" className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white" onClick={() => navigate('/admin/profile')}>My Profile</Button>
+                  <Button variant="outline" size="sm" className="flex-1 border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-800" onClick={() => navigate('/manager/hr/people/' + (data.my_profile.employee_code || 'EMP-001'))}>More details</Button>
+                  <Button size="sm" className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white" onClick={() => navigate('/manager/profile')}>My Profile</Button>
                 </div>
               </CardContent>
             </Card>
@@ -347,7 +347,7 @@ export default function EmployeePortalComplete() {
                   variant="ghost"
                   size="sm"
                   className="text-indigo-400 hover:text-indigo-300 text-xs font-semibold"
-                  onClick={() => navigate('/admin/hr/payroll')}
+                  onClick={() => navigate('/manager/hr/payroll')}
                 >
                   View All
                 </Button>
@@ -512,9 +512,9 @@ export default function EmployeePortalComplete() {
               <CardContent>
                 <div className="grid grid-cols-4 gap-2 mb-4">
                   <Button size="sm" className="text-xs bg-indigo-600 hover:bg-indigo-500 text-white" onClick={() => { setLeaveRequestType('vacation'); setShowLeaveRequestDialog(true); }}>Apply ▼</Button>
-                  <Button size="sm" variant="outline" className="text-xs border-zinc-700 text-zinc-400 hover:text-white" onClick={() => navigate('/admin/hr/leave-management')}>Cancel ▼</Button>
+                  <Button size="sm" variant="outline" className="text-xs border-zinc-700 text-zinc-400 hover:text-white" onClick={() => navigate('/manager/hr/leave-management')}>Cancel ▼</Button>
                   <Button size="sm" className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20" onClick={() => { setLeaveRequestType('sick'); setShowLeaveRequestDialog(true); }}>Sick</Button>
-                  <Button size="sm" variant="outline" className="text-xs border-zinc-700 text-zinc-400 hover:text-white" onClick={() => navigate('/admin/hr/scheduler')}>Heat Map</Button>
+                  <Button size="sm" variant="outline" className="text-xs border-zinc-700 text-zinc-400 hover:text-white" onClick={() => navigate('/manager/hr/scheduler')}>Heat Map</Button>
                 </div>
 
                 <div className="space-y-2 max-h-80 overflow-y-auto custom-scrollbar">

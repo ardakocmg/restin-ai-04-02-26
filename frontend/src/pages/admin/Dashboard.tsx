@@ -104,11 +104,11 @@ export default function Dashboard() {
 
   // Drill-down handlers
   const handleOpenOrdersClick = () => {
-    navigate('/admin/orders?status=open');
+    navigate('/manager/orders?status=open');
   };
 
   const handleOccupancyClick = () => {
-    navigate('/admin/tables?status=occupied');
+    navigate('/manager/tables?status=occupied');
   };
 
   const handleKdsClick = () => {
@@ -116,7 +116,7 @@ export default function Dashboard() {
   };
 
   const handleLowStockClick = () => {
-    navigate('/admin/inventory?filter=low_stock');
+    navigate('/manager/inventory?filter=low_stock');
   };
 
   return (
@@ -204,7 +204,7 @@ export default function Dashboard() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate('/admin/finance')}
+                    onClick={() => navigate('/manager/finance')}
                     className="text-red-500 hover:text-red-400 hover:bg-red-500/10 font-bold uppercase text-[10px] tracking-widest gap-2"
                   >
                     View All <ArrowRight className="h-4 w-4" />
@@ -228,7 +228,7 @@ export default function Dashboard() {
                   data={recentOrders}
                   loading={loading}
                   emptyMessage="No recent orders"
-                  onRowClick={(order: Order) => navigate(`/admin/orders/${order.id}`)}
+                  onRowClick={(order: Order) => navigate(`/manager/orders/${order.id}`)}
                 />
               </CardContent>
             </Card>
@@ -294,7 +294,7 @@ export default function Dashboard() {
                       variant="outline"
                       size="sm"
                       className="w-full btn-secondary text-zinc-100 dark:text-zinc-100 hover:text-white"
-                      onClick={() => navigate('/admin/inventory')}
+                      onClick={() => navigate('/manager/inventory')}
                     >
                       View Inventory
                     </Button>
@@ -333,7 +333,7 @@ export default function Dashboard() {
                 <Button
                   variant="outline"
                   className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
-                  onClick={() => navigate('/admin/menu')}
+                  onClick={() => navigate('/manager/menu')}
                 >
                   <Utensils className="h-4 w-4 mr-2 text-green-400" />
                   Manage Menu
@@ -343,7 +343,7 @@ export default function Dashboard() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
-                    onClick={() => navigate('/admin/hr/clocking')}
+                    onClick={() => navigate('/manager/hr/clocking')}
                   >
                     <Clock className="h-4 w-4 mr-2 text-emerald-400" />
                     Clock In / Out
@@ -355,7 +355,7 @@ export default function Dashboard() {
                     <Button
                       variant="outline"
                       className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
-                      onClick={() => navigate('/admin/finance')}
+                      onClick={() => navigate('/manager/finance')}
                     >
                       <DollarSign className="h-4 w-4 mr-2 text-yellow-500" />
                       Finance Dashboard
@@ -363,7 +363,7 @@ export default function Dashboard() {
                     <Button
                       variant="outline"
                       className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
-                      onClick={() => navigate('/admin/hr/analytics')}
+                      onClick={() => navigate('/manager/hr/analytics')}
                     >
                       <BarChart3 className="h-4 w-4 mr-2 text-purple-400" />
                       HR Reports
@@ -375,7 +375,7 @@ export default function Dashboard() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
-                    onClick={() => navigate('/admin/audit-logs')}
+                    onClick={() => navigate('/manager/audit-logs')}
                   >
                     <ClipboardList className="h-4 w-4 mr-2 text-red-400" />
                     Audit Trail
@@ -432,7 +432,7 @@ export default function Dashboard() {
                   <Button
                     variant="outline"
                     className="w-full justify-center bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors mt-4"
-                    onClick={() => navigate('/admin/settings/venues')}
+                    onClick={() => navigate('/manager/settings/venues')}
                   >
                     <Users className="h-4 w-4 mr-2 text-blue-400" />
                     Manage Venues

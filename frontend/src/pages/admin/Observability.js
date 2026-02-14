@@ -130,7 +130,7 @@ export default function Observability() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-xs font-bold text-zinc-500 uppercase tracking-tight">Run safe API calls and capture run artifacts.</p>
-            <Link to="/admin/observability/testpanel">
+            <Link to="/manager/observability/testpanel">
               <Button
                 variant="outline"
                 className="w-full bg-zinc-950 border-white/10 text-white hover:bg-zinc-900 transition-all font-black uppercase tracking-widest text-[10px] h-12"
@@ -149,7 +149,7 @@ export default function Observability() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-xs font-bold text-zinc-500 uppercase tracking-tight">Triaged errors with safe retry workflows.</p>
-            <Link to="/admin/observability/error-inbox">
+            <Link to="/manager/observability/error-inbox">
               <Button
                 variant="outline"
                 className="w-full bg-zinc-950 border-white/10 text-white hover:bg-zinc-900 transition-all font-black uppercase tracking-widest text-[10px] h-12"

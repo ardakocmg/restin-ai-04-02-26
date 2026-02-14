@@ -161,7 +161,7 @@ const OpsDashboard: React.FC = () => {
                     <Card
                         key={i}
                         className="bg-zinc-900 border-zinc-800 overflow-hidden relative group cursor-pointer hover:border-red-500/50 transition-all"
-                        onClick={() => navigate(`/admin/restin/ops/metrics/${m.label.toLowerCase().replace(' ', '-')}`)}
+                        onClick={() => navigate(`/manager/restin/ops/metrics/${m.label.toLowerCase().replace(' ', '-')}`)}
                     >
                         <CardHeader className="pb-2">
                             <div className="flex justify-between items-center">

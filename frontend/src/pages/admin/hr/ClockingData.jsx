@@ -224,14 +224,14 @@ export default function ClockingData() {
             </Button>
 
             <Button
-              onClick={() => navigate('/admin/hr/clocking/add')}
+              onClick={() => navigate('/manager/hr/clocking/add')}
               className="bg-violet-600 hover:bg-violet-500 text-white h-10 px-5"
             >
               <Plus className="h-4 w-4 mr-2" />Add Entry
             </Button>
 
             <Button
-              onClick={() => navigate('/admin/hr/manual-clocking')}
+              onClick={() => navigate('/manager/hr/manual-clocking')}
               className="bg-emerald-600 hover:bg-emerald-500 text-white h-10 px-5"
             >
               <Timer className="h-4 w-4 mr-2" />Manual Clock
@@ -305,7 +305,7 @@ export default function ClockingData() {
                             onClick={(e) => {
                               e.stopPropagation();
                               if (record.employee_code || record.employee_id)
-                                navigate(`/admin/hr/people/${record.employee_code || record.employee_id}`);
+                                navigate(`/manager/hr/people/${record.employee_code || record.employee_id}`);
                             }}
                             className="group/emp text-left"
                           >

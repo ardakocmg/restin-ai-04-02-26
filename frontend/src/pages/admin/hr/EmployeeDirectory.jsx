@@ -134,7 +134,7 @@ export default function EmployeeDirectory() {
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            navigate(`/admin/hr/people/${row.employee_code || row.id}`);
+            navigate(`/manager/hr/people/${row.employee_code || row.id}`);
           }}
           className="group text-left"
         >
@@ -281,7 +281,7 @@ export default function EmployeeDirectory() {
               columns={columns}
               data={filteredEmployees}
               loading={false}
-              onRowClick={(row) => navigate(`/admin/hr/people/${row.employee_code || row.id}`)}
+              onRowClick={(row) => navigate(`/manager/hr/people/${row.employee_code || row.id}`)}
               emptyMessage="No personnel records found for this filter"
               enableRowSelection={true}
               tableId="hr-employee-directory"

@@ -69,25 +69,25 @@ export default function SummaryDashboard() {
   const [selectedCompany, setSelectedCompany] = useState('All');
 
   const mainActions = [
-    { title: 'People & Talent', icon: Users, path: '/admin/hr/people' },
-    { title: 'Scheduler', icon: Calendar, path: '/admin/hr/scheduler' },
-    { title: 'Import Clocking Data', icon: Upload, path: '/admin/hr/import' },
-    { title: 'Clocking Data', icon: Clock, path: '/admin/hr/clocking' },
-    { title: 'Clocking Map View', icon: Map, path: '/admin/hr/map' },
-    { title: 'Attendance Exceptions', icon: AlertCircle, path: '/admin/hr/exceptions' },
+    { title: 'People & Talent', icon: Users, path: '/manager/hr/people' },
+    { title: 'Scheduler', icon: Calendar, path: '/manager/hr/scheduler' },
+    { title: 'Import Clocking Data', icon: Upload, path: '/manager/hr/import' },
+    { title: 'Clocking Data', icon: Clock, path: '/manager/hr/clocking' },
+    { title: 'Clocking Map View', icon: Map, path: '/manager/hr/map' },
+    { title: 'Attendance Exceptions', icon: AlertCircle, path: '/manager/hr/exceptions' },
   ];
 
   const setupActions = [
-    { title: 'Shift Presets', icon: Layout, path: '/admin/hr/setup/presets' },
-    { title: 'Shift Patterns', icon: Layers, path: '/admin/hr/setup/patterns' },
-    { title: 'Daily Attendance Profiles', icon: UserCheck, path: '/admin/hr-setup/work-schedules' },
-    { title: 'Target Attendance Profiles', icon: Activity, path: '/admin/hr/setup/targets' },
-    { title: 'Rewards', icon: Gift, path: '/admin/hr/setup/rewards' },
-    { title: 'Penalties', icon: XCircle, path: '/admin/hr/setup/penalties' },
-    { title: 'Clocking Devices', icon: Settings, path: '/admin/hr/setup/devices' },
-    { title: 'Invite to Mobile App', icon: Smartphone, path: '/admin/hr/setup/mobile' },
-    { title: 'Banks', icon: Landmark, path: '/admin/hr-setup/banks' },
-    { title: 'Departments', icon: Briefcase, path: '/admin/hr-setup/departments' },
+    { title: 'Shift Presets', icon: Layout, path: '/manager/hr/setup/presets' },
+    { title: 'Shift Patterns', icon: Layers, path: '/manager/hr/setup/patterns' },
+    { title: 'Daily Attendance Profiles', icon: UserCheck, path: '/manager/hr-setup/work-schedules' },
+    { title: 'Target Attendance Profiles', icon: Activity, path: '/manager/hr/setup/targets' },
+    { title: 'Rewards', icon: Gift, path: '/manager/hr/setup/rewards' },
+    { title: 'Penalties', icon: XCircle, path: '/manager/hr/setup/penalties' },
+    { title: 'Clocking Devices', icon: Settings, path: '/manager/hr/setup/devices' },
+    { title: 'Invite to Mobile App', icon: Smartphone, path: '/manager/hr/setup/mobile' },
+    { title: 'Banks', icon: Landmark, path: '/manager/hr-setup/banks' },
+    { title: 'Departments', icon: Briefcase, path: '/manager/hr-setup/departments' },
   ];
 
   const reports = [
@@ -153,14 +153,14 @@ export default function SummaryDashboard() {
       {/* QUICK NAVIGATION (MATCHING PREFERRED STYLE) */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
         {[
-          { title: "Directory", icon: Users, path: "/admin/hr/people" },
-          { title: "Leave", icon: Umbrella, path: "/admin/hr/leave-management" },
-          { title: "Payroll", icon: Wallet, path: "/admin/hr/payroll" },
-          { title: "Scheduler", icon: Calendar, path: "/admin/hr/scheduler" },
-          { title: "Clocking", icon: Clock, path: "/admin/hr/clocking" },
-          { title: "Contracts", icon: FileText, path: "/admin/hr/contracts" },
-          { title: "Audits", icon: ClipboardList, path: "/admin/hr/audit-trail" },
-          { title: "Settings", icon: SlidersHorizontal, path: "/admin/hr/settings" },
+          { title: "Directory", icon: Users, path: "/manager/hr/people" },
+          { title: "Leave", icon: Umbrella, path: "/manager/hr/leave-management" },
+          { title: "Payroll", icon: Wallet, path: "/manager/hr/payroll" },
+          { title: "Scheduler", icon: Calendar, path: "/manager/hr/scheduler" },
+          { title: "Clocking", icon: Clock, path: "/manager/hr/clocking" },
+          { title: "Contracts", icon: FileText, path: "/manager/hr/contracts" },
+          { title: "Audits", icon: ClipboardList, path: "/manager/hr/audit-trail" },
+          { title: "Settings", icon: SlidersHorizontal, path: "/manager/hr/settings" },
         ].map((item) => (
           <button
             key={item.title}
@@ -320,7 +320,7 @@ export default function SummaryDashboard() {
               <ReportTile
                 key={idx}
                 title={report}
-                onClick={() => navigate(`/admin/hr/reports/${report.toLowerCase().replace(/ /g, '-')}`)}
+                onClick={() => navigate(`/manager/hr/reports/${report.toLowerCase().replace(/ /g, '-')}`)}
               />
             ))}
           </div>

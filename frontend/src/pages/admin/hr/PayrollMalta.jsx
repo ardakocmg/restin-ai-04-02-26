@@ -200,7 +200,7 @@ export default function PayrollMalta() {
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              if (slip.employee_id) navigate(`/admin/hr/people/${slip.employee_id}`);
+                              if (slip.employee_id) navigate(`/manager/hr/people/${slip.employee_id}`);
                             }}
                             className="font-bold text-white hover:text-blue-400 transition-colors hover:underline decoration-blue-500/40 underline-offset-2"
                           >

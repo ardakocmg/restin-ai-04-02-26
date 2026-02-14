@@ -7,27 +7,27 @@ const mobileMenuItems = [
   {
     title: 'Dashboard',
     icon: LayoutDashboard,
-    href: '/admin/dashboard'
+    href: '/manager/dashboard'
   },
   {
     title: 'Operations',
     icon: ShoppingCart,
-    href: '/admin/operations'
+    href: '/manager/operations'
   },
   {
     title: 'People',
     icon: Users,
-    href: '/admin/staff'
+    href: '/manager/staff'
   },
   {
     title: 'Reports',
     icon: BarChart3,
-    href: '/admin/reports'
+    href: '/manager/reports'
   },
   {
     title: 'Settings',
     icon: Settings,
-    href: '/admin/settings'
+    href: '/manager/settings'
   }
 ];
 

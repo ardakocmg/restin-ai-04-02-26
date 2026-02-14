@@ -173,7 +173,7 @@ const FintechDashboard: React.FC = () => {
                     <Card
                         key={i}
                         className="bg-zinc-900 border-zinc-800 overflow-hidden group cursor-pointer hover:border-blue-500/50 transition-all"
-                        onClick={() => navigate(`/admin/restin/fintech/metrics/${m.label.toLowerCase().replace(' ', '-')}`)}
+                        onClick={() => navigate(`/manager/restin/fintech/metrics/${m.label.toLowerCase().replace(' ', '-')}`)}
                     >
                         <CardContent className="pt-6">
                             <div className="flex justify-between items-start mb-4">

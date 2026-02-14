@@ -91,7 +91,7 @@ const NotFound: React.FC = () => {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => navigate('/admin/dashboard')}
+                        onClick={() => navigate('/manager/dashboard')}
                         style={{
                             padding: '0.75rem 1.5rem',
                             borderRadius: '0.75rem',

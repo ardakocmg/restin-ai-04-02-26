@@ -35,7 +35,7 @@ export default function HRModulePlaceholder() {
 
                 <div className="flex gap-4">
                     <Button
-                        onClick={() => navigate('/admin/hr')}
+                        onClick={() => navigate('/manager/hr')}
                         variant="outline"
                         className="border-white/10 bg-zinc-900/50 hover:bg-white/5 text-[10px] font-bold uppercase tracking-widest h-12 px-8 rounded-xl"
                     >

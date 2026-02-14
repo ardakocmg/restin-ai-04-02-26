@@ -100,31 +100,31 @@ export default function HRHomeIndigo() {
     const navigate = useNavigate();
 
     const mainActions = [
-        { title: 'Scheduler', icon: Calendar, path: '/admin/hr/scheduler' },
-        { title: 'Payroll Processing', icon: DollarSign, path: '/admin/hr/payroll' },
-        { title: 'Employee Directory', icon: UserCheck, path: '/admin/hr/people' },
-        { title: 'Import Clocking Data', icon: Upload, path: '/admin/hr/import' },
-        { title: 'Clocking Data', icon: Clock, path: '/admin/hr/clocking' },
-        { title: 'Clocking Map View', icon: Map, path: '/admin/hr/map' },
-        { title: 'Attendance Exceptions', icon: AlertCircle, path: '/admin/hr/exceptions' },
-        { title: 'Device Manager', icon: Settings, path: '/admin/hr/devices' },
-        { title: 'Settings', icon: Settings, path: '/admin/hr/settings' },
-        { title: 'Employee Performance', icon: Activity, path: '/admin/hr/analytics', highlight: true },
-        { title: 'POS / KDS Analytics', icon: ShoppingCart, path: '/admin/hr/analytics' },
-        { title: 'System Usage', icon: Layers, path: '/admin/hr/analytics' },
+        { title: 'Scheduler', icon: Calendar, path: '/manager/hr/scheduler' },
+        { title: 'Payroll Processing', icon: DollarSign, path: '/manager/hr/payroll' },
+        { title: 'Employee Directory', icon: UserCheck, path: '/manager/hr/people' },
+        { title: 'Import Clocking Data', icon: Upload, path: '/manager/hr/import' },
+        { title: 'Clocking Data', icon: Clock, path: '/manager/hr/clocking' },
+        { title: 'Clocking Map View', icon: Map, path: '/manager/hr/map' },
+        { title: 'Attendance Exceptions', icon: AlertCircle, path: '/manager/hr/exceptions' },
+        { title: 'Device Manager', icon: Settings, path: '/manager/hr/devices' },
+        { title: 'Settings', icon: Settings, path: '/manager/hr/settings' },
+        { title: 'Employee Performance', icon: Activity, path: '/manager/hr/analytics', highlight: true },
+        { title: 'POS / KDS Analytics', icon: ShoppingCart, path: '/manager/hr/analytics' },
+        { title: 'System Usage', icon: Layers, path: '/manager/hr/analytics' },
     ];
 
     const setupActions = [
-        { title: 'Shift Presets', icon: Layout, path: '/admin/hr/setup/presets' },
-        { title: 'Shift Patterns', icon: Layers, path: '/admin/hr/setup/patterns' },
-        { title: 'Daily Attendance Profiles', icon: UserCheck, path: '/admin/hr-setup/work-schedules' }, // Mapping to existing
-        { title: 'Target Attendance Profiles', icon: Activity, path: '/admin/hr/setup/targets' },
-        { title: 'Rewards', icon: Gift, path: '/admin/hr/setup/rewards' },
-        { title: 'Penalties', icon: XCircle, path: '/admin/hr/setup/penalties' },
-        { title: 'Clocking Devices', icon: Settings, path: '/admin/hr/setup/devices' },
-        { title: 'Invite to Mobile App', icon: Smartphone, path: '/admin/hr/setup/mobile' },
-        { title: 'Banks', icon: Landmark, path: '/admin/hr-setup/banks' }, // Added to show more connectivity
-        { title: 'Departments', icon: Briefcase, path: '/admin/hr-setup/departments' },
+        { title: 'Shift Presets', icon: Layout, path: '/manager/hr/setup/presets' },
+        { title: 'Shift Patterns', icon: Layers, path: '/manager/hr/setup/patterns' },
+        { title: 'Daily Attendance Profiles', icon: UserCheck, path: '/manager/hr-setup/work-schedules' }, // Mapping to existing
+        { title: 'Target Attendance Profiles', icon: Activity, path: '/manager/hr/setup/targets' },
+        { title: 'Rewards', icon: Gift, path: '/manager/hr/setup/rewards' },
+        { title: 'Penalties', icon: XCircle, path: '/manager/hr/setup/penalties' },
+        { title: 'Clocking Devices', icon: Settings, path: '/manager/hr/setup/devices' },
+        { title: 'Invite to Mobile App', icon: Smartphone, path: '/manager/hr/setup/mobile' },
+        { title: 'Banks', icon: Landmark, path: '/manager/hr-setup/banks' }, // Added to show more connectivity
+        { title: 'Departments', icon: Briefcase, path: '/manager/hr-setup/departments' },
     ];
 
     const reports = [
@@ -190,7 +190,7 @@ export default function HRHomeIndigo() {
                             <ReportTile
                                 key={idx}
                                 title={report}
-                                onClick={() => navigate(`/admin/hr/reports/${report.toLowerCase().replace(/ /g, '-')}`)}
+                                onClick={() => navigate(`/manager/hr/reports/${report.toLowerCase().replace(/ /g, '-')}`)}
                             />
                         ))}
                     </div>
