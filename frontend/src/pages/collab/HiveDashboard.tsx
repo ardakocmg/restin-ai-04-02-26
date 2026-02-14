@@ -20,6 +20,7 @@ import { useGlobalPTT, TransmissionResult, LiveSpeaker } from '@/contexts/Global
 import { useVoiceDictation, speakMessage, stopSpeaking, isSpeaking, getAvailableVoices, SUPPORTED_LANGUAGES } from '@/hooks/useVoiceDictation';
 import type { TTSConfig } from '@/hooks/useVoiceDictation';
 import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 // ─── Channel Definitions ────────────────────────────────────────────────
 interface Channel {
@@ -80,61 +81,35 @@ interface ChatMessage {
     templateId?: string;
 }
 
-const MOCK_MESSAGES: ChatMessage[] = [
-    {
-        id: '1', channelId: 'general', sender: 'Maria L.', senderInitials: 'ML',
-        senderColor: 'bg-pink-600', text: 'Staff meeting at 4 PM today. Everyone must attend.',
-        timestamp: '14:32', isPinned: true, readBy: ['JK', 'CM', 'SP'],
-        reactions: { '👍': ['John K.', 'Sarah P.'], '🎉': ['Chef Marco'] },
-    },
-    {
-        id: '2', channelId: 'general', sender: 'John K.', senderInitials: 'JK',
-        senderColor: 'bg-blue-600', text: 'Got it! Will be there.',
-        timestamp: '14:35', readBy: ['ML'],
-    },
-    {
-        id: '3', channelId: 'kitchen', sender: 'Chef Marco', senderInitials: 'CM',
-        senderColor: 'bg-orange-600', text: '#Order847 needs to be medium-rare, NOT well done! Please double check before plating.',
-        timestamp: '14:40', reactions: { '🔥': ['Sarah P.'] },
-    },
-    {
-        id: '4', channelId: 'kitchen', sender: 'Sarah P.', senderInitials: 'SP',
-        senderColor: 'bg-teal-600', text: 'Confirmed! Fixing it now for @Table12.',
-        timestamp: '14:41:22', replyTo: '3', replyPreview: '#Order847 needs to be medium-rare...',
-    },
-    {
-        id: '5', channelId: 'general', sender: 'Alex R.', senderInitials: 'AR',
-        senderColor: 'bg-violet-600', text: 'VIP guests on @Table3 — please prioritize their #Order902.',
-        timestamp: '14:45:10', reactions: { '⭐': ['Maria L.', 'John K.'] },
-    },
-    {
-        id: '5b', channelId: 'kitchen', sender: 'Chef Marco', senderInitials: 'CM',
-        senderColor: 'bg-orange-600', text: 'Hey team, the supplier just called — fresh sea bass is arriving at 4pm, let\'s prep the station now.',
-        timestamp: '14:47:33', isVoice: true, voiceDuration: 8,
-    },
-    {
-        id: '6', channelId: 'alerts', sender: 'System', senderInitials: '⚡',
-        senderColor: 'bg-red-600', text: 'Low stock alert: $ItemFlour is below reorder threshold.',
-        timestamp: '14:50:00',
-    },
-    {
-        id: '7', channelId: 'alerts', sender: 'System', senderInitials: '⚡',
-        senderColor: 'bg-red-600', text: 'IoT: Coffee machine temperature above normal range (96°C).',
-        timestamp: '14:52:15',
-    },
-    {
-        id: '8', channelId: 'bar', sender: 'Tony B.', senderInitials: 'TB',
-        senderColor: 'bg-purple-600', text: 'Running low on Aperol. Please add to next order.',
-        timestamp: '15:01:44',
-        attachments: [{ name: 'aperol-photo.jpg', type: 'image', size: '1.2 MB' }],
-    },
-    {
-        id: '9', channelId: 'management', sender: 'Maria L.', senderInitials: 'ML',
-        senderColor: 'bg-pink-600', text: 'Labor cost at 32% this week — target is 28%. Need to optimize weekend shifts.',
-        timestamp: '15:10',
-        attachments: [{ name: 'labor-report.pdf', type: 'file', size: '245 KB' }],
-    },
-];
+// API helpers
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+function mapApiMessage(m: Record<string, unknown>): ChatMessage {
+    return {
+        id: (m.id as string) || '',
+        channelId: (m.channel_id as string) || 'general',
+        sender: (m.sender as string) || '',
+        senderInitials: (m.sender_initials as string) || '',
+        senderColor: (m.sender_color as string) || 'bg-zinc-600',
+        text: (m.text as string) || '',
+        timestamp: (m.timestamp as string) || '',
+        isPinned: (m.is_pinned as boolean) || false,
+        reactions: (m.reactions as Record<string, string[]>) || {},
+        readBy: (m.read_by as string[]) || [],
+        isEdited: (m.is_edited as boolean) || false,
+        isBookmarked: (m.is_bookmarked as boolean) || false,
+        isPriority: (m.is_priority as boolean) || false,
+        replyTo: (m.reply_to as string) || undefined,
+        replyPreview: (m.reply_preview as string) || undefined,
+        isVoice: (m.is_voice as boolean) || false,
+        voiceDuration: (m.voice_duration as number) || undefined,
+        audioUrl: (m.audio_url as string) || undefined,
+        attachments: (m.attachments as ChatMessage['attachments']) || [],
+        poll: (m.poll as ChatMessage['poll']) || undefined,
+        isScheduled: (m.is_scheduled as boolean) || false,
+        scheduledTime: (m.scheduled_time as string) || undefined,
+    };
+}
 
 // ─── Online Staff ───────────────────────────────────────────────────────
 interface OnlineStaff {
@@ -145,14 +120,7 @@ interface OnlineStaff {
     status: 'online' | 'busy' | 'away';
 }
 
-const ONLINE_STAFF: OnlineStaff[] = [
-    { name: 'Maria L.', initials: 'ML', color: 'bg-pink-600', role: 'Manager', status: 'online' },
-    { name: 'Chef Marco', initials: 'CM', color: 'bg-orange-600', role: 'Head Chef', status: 'busy' },
-    { name: 'John K.', initials: 'JK', color: 'bg-blue-600', role: 'Waiter', status: 'online' },
-    { name: 'Sarah P.', initials: 'SP', color: 'bg-teal-600', role: 'Waitress', status: 'online' },
-    { name: 'Tony B.', initials: 'TB', color: 'bg-purple-600', role: 'Bartender', status: 'away' },
-    { name: 'Alex R.', initials: 'AR', color: 'bg-violet-600', role: 'Host', status: 'online' },
-];
+// Online staff loaded from API (see useEffect below)
 
 // ─── Micro-Tasks ────────────────────────────────────────────────────────
 interface MicroTask {
@@ -168,16 +136,11 @@ interface MicroTask {
     startedAt?: string;
     completedAt?: string;
     sourceMessageId?: string;
+    sourceMessageText?: string;
+    sourceChannelId?: string;
 }
 
-const SEED_TASKS: MicroTask[] = [
-    { id: 't1', title: 'Clean coffee machine', urgency: 'HIGH', xp: 100, deadline: '15:30', status: 'pool', recurrence: 'daily' },
-    { id: 't2', title: 'Restock napkins at Table 5-8', urgency: 'MEDIUM', xp: 50, status: 'pool' },
-    { id: 't3', title: 'Polish wine glasses', urgency: 'LOW', xp: 30, status: 'pool' },
-    { id: 't4', title: 'Update daily specials board', urgency: 'MEDIUM', xp: 50, deadline: '16:00', status: 'assigned', assignedTo: 'Sarah P.', department: 'floor' },
-    { id: 't5', title: 'Inventory count — freezer', urgency: 'HIGH', xp: 150, deadline: '17:00', status: 'assigned', assignedTo: 'You', department: 'kitchen' },
-    { id: 't6', title: 'Check walk-in fridge temps', urgency: 'CRITICAL', xp: 80, status: 'pool', recurrence: 'shift-start' },
-];
+// Tasks loaded from API (see useEffect below)
 
 // ─── AVAILABLE REACTIONS ────────────────────────────────────────────────
 const REACTION_EMOJIS = ['👍', '❤️', '😂', '🔥', '🎉', '⭐', '👀', '✅'];
@@ -201,38 +164,60 @@ const QUICK_MESSAGES: QuickMessage[] = [
     { command: '/help', label: 'Need Help', emoji: '\ud83c\udd98', text: '\ud83c\udd98 Need assistance at my station immediately' },
 ];
 
-// ─── Smart Token Renderer ──────────────────────────────────────────────
-function SmartTokenSpan({ token }: { token: SmartToken }) {
-    if (token.type === 'ORDER_LINK') {
-        return (
-            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 text-xs font-medium cursor-pointer hover:bg-blue-500/30 transition-colors">
-                📋 {token.text}
-            </span>
-        );
-    }
-    if (token.type === 'TABLE_LINK') {
-        return (
-            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-xs font-medium cursor-pointer hover:bg-emerald-500/30 transition-colors">
-                🪑 {token.text}
-            </span>
-        );
-    }
-    if (token.type === 'ITEM_LINK') {
-        return (
-            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-xs font-medium cursor-pointer hover:bg-amber-500/30 transition-colors">
-                📦 {token.text}
-            </span>
-        );
-    }
-    return <span>{token.text}</span>;
+// ─── Smart Token Renderer (with navigation + premium design) ────────────
+const SMART_CHIP_STYLES: Record<string, { bg: string; text: string; border: string; glow: string; icon: string; label: string }> = {
+    ORDER_LINK: { bg: 'bg-blue-500/15', text: 'text-blue-300', border: 'border-blue-500/30', glow: 'shadow-blue-500/20', icon: '📋', label: 'Order' },
+    TABLE_LINK: { bg: 'bg-emerald-500/15', text: 'text-emerald-300', border: 'border-emerald-500/30', glow: 'shadow-emerald-500/20', icon: '🪑', label: 'Table' },
+    ITEM_LINK: { bg: 'bg-amber-500/15', text: 'text-amber-300', border: 'border-amber-500/30', glow: 'shadow-amber-500/20', icon: '📦', label: 'Inventory' },
+    RECIPE_LINK: { bg: 'bg-rose-500/15', text: 'text-rose-300', border: 'border-rose-500/30', glow: 'shadow-rose-500/20', icon: '🍳', label: 'Recipe' },
+    RESERVATION_LINK: { bg: 'bg-violet-500/15', text: 'text-violet-300', border: 'border-violet-500/30', glow: 'shadow-violet-500/20', icon: '📅', label: 'Reservation' },
+    STAFF_MENTION: { bg: 'bg-cyan-500/15', text: 'text-cyan-300', border: 'border-cyan-500/30', glow: 'shadow-cyan-500/20', icon: '👤', label: 'Staff' },
+    GUEST_LINK: { bg: 'bg-pink-500/15', text: 'text-pink-300', border: 'border-pink-500/30', glow: 'shadow-pink-500/20', icon: '🎯', label: 'Guest' },
+};
+
+interface SmartTokenSpanProps {
+    token: SmartToken;
+    onNavigate?: (route: string) => void;
 }
 
-function SmartMessageRenderer({ text }: { text: string }) {
+function SmartTokenSpan({ token, onNavigate }: SmartTokenSpanProps) {
+    const style = SMART_CHIP_STYLES[token.type];
+    if (!style) return <span>{token.text}</span>;
+
+    const handleClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (token.route && onNavigate) onNavigate(token.route);
+    };
+
+    return (
+        <motion.span
+            onClick={handleClick}
+            whileHover={{ scale: 1.05, y: -1 }}
+            whileTap={{ scale: 0.97 }}
+            className={`
+                inline-flex items-center gap-1 px-2 py-0.5 rounded-md
+                ${style.bg} ${style.text} border ${style.border}
+                text-xs font-semibold cursor-pointer
+                backdrop-blur-sm
+                hover:shadow-lg ${style.glow}
+                transition-all duration-200
+                select-none
+            `}
+            title={`Go to ${style.label}: ${token.id || token.text}`}
+        >
+            <span className="text-[11px]">{style.icon}</span>
+            <span>{token.text}</span>
+            <ArrowRight className="h-2.5 w-2.5 opacity-0 group-hover:opacity-60 -mr-0.5 transition-opacity" />
+        </motion.span>
+    );
+}
+
+function SmartMessageRenderer({ text, onNavigate }: { text: string; onNavigate?: (route: string) => void }) {
     const tokens = useMemo(() => parseSmartMessage(text), [text]);
     return (
-        <span>
+        <span className="leading-relaxed">
             {tokens.map((token, i) => (
-                <SmartTokenSpan key={i} token={token} />
+                <SmartTokenSpan key={i} token={token} onNavigate={onNavigate} />
             ))}
         </span>
     );
@@ -286,6 +271,12 @@ function AttachmentBubble({ att }: { att: { name: string; type: 'image' | 'file'
 // ─── Main Dashboard ─────────────────────────────────────────────────────
 export default function HiveDashboard() {
     const { user } = useAuth();
+    const navigate = useNavigate();
+
+    // Smart navigation callback for context-aware chat links
+    const handleSmartNavigate = useCallback((route: string) => {
+        navigate(route);
+    }, [navigate]);
 
     // Derive user identity for sent messages
     const senderName = user?.name || 'You';
@@ -294,7 +285,45 @@ export default function HiveDashboard() {
         : 'ME';
 
     const [messageInput, setMessageInput] = useState('');
-    const [messages, setMessages] = useState<ChatMessage[]>(MOCK_MESSAGES);
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [onlineStaff, setOnlineStaff] = useState<OnlineStaff[]>([]);
+
+    // Load messages from API
+    const fetchMessages = useCallback(async (channel: string) => {
+        try {
+            const res = await fetch(`${API_BASE}/api/hive/messages?channel=${channel}&limit=100`);
+            if (res.ok) {
+                const data = await res.json();
+                setMessages(prev => {
+                    const otherChannels = prev.filter(m => m.channelId !== channel);
+                    const mapped = (data.messages || []).map(mapApiMessage);
+                    return [...otherChannels, ...mapped];
+                });
+            }
+        } catch (e) { /* offline fallback */ }
+    }, []);
+
+    // Load all channels on mount
+    useEffect(() => {
+        ['general', 'kitchen', 'bar', 'management', 'alerts'].forEach(ch => fetchMessages(ch));
+    }, [fetchMessages]);
+
+    // Load online staff from API
+    useEffect(() => {
+        (async () => {
+            try {
+                const res = await fetch(`${API_BASE}/api/hive/staff/online`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setOnlineStaff((data.staff || []).map((s: Record<string, unknown>) => ({
+                        name: s.name as string, initials: s.initials as string,
+                        color: s.color as string, role: s.role as string,
+                        status: (s.status as OnlineStaff['status']) || 'online',
+                    })));
+                }
+            } catch { /* offline */ }
+        })();
+    }, []);
     const [searchQuery, setSearchQuery] = useState('');
     const [replyingTo, setReplyingTo] = useState<ChatMessage | null>(null);
     const [editingId, setEditingId] = useState<string | null>(null);
@@ -445,41 +474,61 @@ export default function HiveDashboard() {
         }
     }, []);
 
-    // Send message
-    const handleSend = useCallback(() => {
+    // Send message (API + optimistic)
+    const handleSend = useCallback(async () => {
         if (!messageInput.trim()) return;
+        const tempId = `msg-${Date.now()}`;
+        const ts = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         const newMsg: ChatMessage = {
-            id: `msg-${Date.now()}`,
-            channelId: activeChannel,
-            sender: senderName,
-            senderInitials: senderInitials,
-            senderColor: 'bg-zinc-600',
-            text: messageInput,
-            timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-            replyTo: replyingTo?.id,
+            id: tempId, channelId: activeChannel, sender: senderName,
+            senderInitials, senderColor: 'bg-zinc-600', text: messageInput,
+            timestamp: ts, replyTo: replyingTo?.id,
             replyPreview: replyingTo ? replyingTo.text.substring(0, 60) + (replyingTo.text.length > 60 ? '...' : '') : undefined,
         };
         setMessages(prev => [...prev, newMsg]);
         setMessageInput('');
         setReplyingTo(null);
         playNotifSound();
-    }, [messageInput, activeChannel, replyingTo, playNotifSound]);
+        try {
+            const res = await fetch(`${API_BASE}/api/hive/messages`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    channel_id: activeChannel, sender: senderName,
+                    sender_initials: senderInitials, sender_color: 'bg-zinc-600',
+                    text: newMsg.text, reply_to: newMsg.replyTo, reply_preview: newMsg.replyPreview,
+                }),
+            });
+            if (res.ok) {
+                const saved = await res.json();
+                setMessages(prev => prev.map(m => m.id === tempId ? mapApiMessage(saved) : m));
+            }
+        } catch { /* offline - keep optimistic */ }
+    }, [messageInput, activeChannel, replyingTo, playNotifSound, senderName, senderInitials]);
 
-    // Edit message
-    const handleSaveEdit = useCallback((msgId: string) => {
+    // Edit message (API + optimistic)
+    const handleSaveEdit = useCallback(async (msgId: string) => {
         if (!editText.trim()) return;
         setMessages(prev => prev.map(m => m.id === msgId ? { ...m, text: editText, isEdited: true } : m));
         setEditingId(null);
         setEditText('');
+        try {
+            await fetch(`${API_BASE}/api/hive/messages/${msgId}`, {
+                method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: editText }),
+            });
+        } catch { /* offline */ }
     }, [editText]);
 
-    // Delete message
-    const handleDelete = useCallback((msgId: string) => {
+    // Delete message (API + optimistic)
+    const handleDelete = useCallback(async (msgId: string) => {
         setMessages(prev => prev.filter(m => m.id !== msgId));
+        try {
+            await fetch(`${API_BASE}/api/hive/messages/${msgId}`, { method: 'DELETE' });
+        } catch { /* offline */ }
     }, []);
 
-    // Add reaction
-    const addReaction = useCallback((msgId: string, emoji: string) => {
+    // Add reaction (API + optimistic)
+    const addReaction = useCallback(async (msgId: string, emoji: string) => {
         setMessages(prev => prev.map(m => {
             if (m.id !== msgId) return m;
             const reactions = { ...(m.reactions || {}) };
@@ -493,11 +542,20 @@ export default function HiveDashboard() {
             return { ...m, reactions };
         }));
         setShowEmojiPicker(null);
+        try {
+            await fetch(`${API_BASE}/api/hive/messages/${msgId}/reaction`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ emoji, user_name: senderName }),
+            });
+        } catch { /* offline */ }
     }, [senderName]);
 
-    // Toggle pin
-    const togglePin = useCallback((msgId: string) => {
+    // Toggle pin (API + optimistic)
+    const togglePin = useCallback(async (msgId: string) => {
         setMessages(prev => prev.map(m => m.id === msgId ? { ...m, isPinned: !m.isPinned } : m));
+        try {
+            await fetch(`${API_BASE}/api/hive/messages/${msgId}/pin`, { method: 'PUT' });
+        } catch { /* offline */ }
     }, []);
 
     // ─── Audio playback (voice messages & call log) ──────────────────
@@ -551,14 +609,20 @@ export default function HiveDashboard() {
         setForwardingMsg(null);
     }, []);
 
-    // ─── Tier 1: Bookmark ────────────────────────────────────────────────
-    const toggleBookmark = useCallback((msgId: string) => {
+    // ─── Tier 1: Bookmark (API + optimistic) ────────────────────────────
+    const toggleBookmark = useCallback(async (msgId: string) => {
         setMessages(prev => prev.map(m => m.id === msgId ? { ...m, isBookmarked: !m.isBookmarked } : m));
+        try {
+            await fetch(`${API_BASE}/api/hive/messages/${msgId}/bookmark`, { method: 'PUT' });
+        } catch { /* offline */ }
     }, []);
 
-    // ─── Tier 1: Priority Flag ───────────────────────────────────────────
-    const togglePriority = useCallback((msgId: string) => {
+    // ─── Tier 1: Priority Flag (API + optimistic) ───────────────────────
+    const togglePriority = useCallback(async (msgId: string) => {
         setMessages(prev => prev.map(m => m.id === msgId ? { ...m, isPriority: !m.isPriority } : m));
+        try {
+            await fetch(`${API_BASE}/api/hive/messages/${msgId}/priority`, { method: 'PUT' });
+        } catch { /* offline */ }
     }, []);
 
     // ─── Tier 2: Translate Message (simulated — Google Translate API in prod) ──
@@ -677,7 +741,35 @@ export default function HiveDashboard() {
     const bookmarkedMessages = useMemo(() => messages.filter(m => m.isBookmarked), [messages]);
 
     // Task management (stateful)
-    const [tasks, setTasks] = useState<MicroTask[]>(SEED_TASKS);
+    const [tasks, setTasks] = useState<MicroTask[]>([]);
+
+    // Load tasks from API on mount
+    useEffect(() => {
+        (async () => {
+            try {
+                const res = await fetch(`${API_BASE}/api/hive/tasks`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setTasks((data.tasks || []).map((t: Record<string, unknown>) => ({
+                        id: t.id as string,
+                        title: t.title as string,
+                        urgency: (t.urgency as MicroTask['urgency']) || 'MEDIUM',
+                        xp: (t.xp as number) || 50,
+                        assignedTo: t.assigned_to as string | undefined,
+                        department: t.department as string | undefined,
+                        deadline: t.deadline as string | undefined,
+                        status: (t.status as MicroTask['status']) || 'pool',
+                        recurrence: (t.recurrence as MicroTask['recurrence']) || 'none',
+                        startedAt: t.started_at as string | undefined,
+                        completedAt: t.completed_at as string | undefined,
+                        sourceMessageId: t.source_message_id as string | undefined,
+                        sourceMessageText: t.source_message_text as string | undefined,
+                        sourceChannelId: t.source_channel_id as string | undefined,
+                    })));
+                }
+            } catch { /* offline */ }
+        })();
+    }, []);
     const [showCreateTask, setShowCreateTask] = useState(false);
     const [createFromMessage, setCreateFromMessage] = useState<ChatMessage | null>(null);
     const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -686,23 +778,41 @@ export default function HiveDashboard() {
     const [newTaskDeadline, setNewTaskDeadline] = useState('');
     const [newTaskRecurrence, setNewTaskRecurrence] = useState<MicroTask['recurrence']>('none');
 
-    // Task actions
-    const claimTask = useCallback((taskId: string) => {
+    // Task actions (API + optimistic)
+    const claimTask = useCallback(async (taskId: string) => {
         setTasks(prev => prev.map(t =>
             t.id === taskId ? { ...t, status: 'assigned' as const, assignedTo: 'You' } : t
         ));
-    }, []);
+        try {
+            await fetch(`${API_BASE}/api/hive/tasks/${taskId}`, {
+                method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'assigned', assigned_to: senderName }),
+            });
+        } catch { /* offline */ }
+    }, [senderName]);
 
-    const startTask = useCallback((taskId: string) => {
+    const startTask = useCallback(async (taskId: string) => {
         setTasks(prev => prev.map(t =>
             t.id === taskId ? { ...t, status: 'in-progress' as const, startedAt: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) } : t
         ));
+        try {
+            await fetch(`${API_BASE}/api/hive/tasks/${taskId}`, {
+                method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'in-progress' }),
+            });
+        } catch { /* offline */ }
     }, []);
 
-    const completeTask = useCallback((taskId: string) => {
+    const completeTask = useCallback(async (taskId: string) => {
         setTasks(prev => prev.map(t =>
             t.id === taskId ? { ...t, status: 'done' as const, completedAt: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) } : t
         ));
+        try {
+            await fetch(`${API_BASE}/api/hive/tasks/${taskId}`, {
+                method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'done' }),
+            });
+        } catch { /* offline */ }
     }, []);
 
     const createTaskFromMessage = useCallback((msg: ChatMessage) => {
@@ -715,24 +825,84 @@ export default function HiveDashboard() {
         setShowCreateTask(true);
     }, []);
 
-    const submitNewTask = useCallback(() => {
+    // Announce a task as a chat message in the active channel
+    const announceTaskInChat = useCallback(async (task: MicroTask) => {
+        const urgencyEmoji = task.urgency === 'CRITICAL' ? '🚨' : task.urgency === 'HIGH' ? '🔴' : task.urgency === 'MEDIUM' ? '🟡' : '🟢';
+        const assigneeText = task.assignedTo ? ` → Assigned to @${task.assignedTo}` : ' → Open for claims';
+        const deadlineText = task.deadline ? ` ⏰ Due by ${task.deadline}` : '';
+        const xpText = ` ⚡${task.xp} XP`;
+        const announcementText = `📋 **New Task Created** ${urgencyEmoji} ${task.urgency}\n${task.title}${assigneeText}${deadlineText}${xpText}`;
+
+        const tempId = `msg-${Date.now()}`;
+        const ts = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const newMsg: ChatMessage = {
+            id: tempId, channelId: activeChannel, sender: senderName,
+            senderInitials, senderColor: 'bg-emerald-600', text: announcementText,
+            timestamp: ts,
+        };
+        setMessages(prev => [...prev, newMsg]);
+        playNotifSound();
+        try {
+            const res = await fetch(`${API_BASE}/api/hive/messages`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    channel_id: activeChannel, sender: senderName,
+                    sender_initials: senderInitials, sender_color: 'bg-emerald-600',
+                    text: announcementText,
+                }),
+            });
+            if (res.ok) {
+                const saved = await res.json();
+                setMessages(prev => prev.map(m => m.id === tempId ? mapApiMessage(saved) : m));
+            }
+        } catch { /* offline */ }
+    }, [activeChannel, senderName, senderInitials, playNotifSound]);
+
+    const [announceAfterCreate, setAnnounceAfterCreate] = useState(true);
+
+    const submitNewTask = useCallback(async () => {
         if (!newTaskTitle.trim()) return;
-        const task: MicroTask = {
+        const xp = newTaskUrgency === 'CRITICAL' ? 200 : newTaskUrgency === 'HIGH' ? 100 : newTaskUrgency === 'MEDIUM' ? 50 : 30;
+        const tempTask: MicroTask = {
             id: `task-${Date.now()}`,
             title: newTaskTitle.trim(),
             urgency: newTaskUrgency,
-            xp: newTaskUrgency === 'CRITICAL' ? 200 : newTaskUrgency === 'HIGH' ? 100 : newTaskUrgency === 'MEDIUM' ? 50 : 30,
+            xp,
             status: newTaskAssignee ? 'assigned' : 'pool',
             assignedTo: newTaskAssignee || undefined,
             deadline: newTaskDeadline || undefined,
             recurrence: newTaskRecurrence,
             sourceMessageId: createFromMessage?.id,
+            sourceMessageText: createFromMessage?.text?.substring(0, 120),
+            sourceChannelId: createFromMessage?.channelId,
         };
-        setTasks(prev => [task, ...prev]);
+        setTasks(prev => [tempTask, ...prev]);
         setShowCreateTask(false);
         setCreateFromMessage(null);
         setNewTaskTitle('');
-    }, [newTaskTitle, newTaskUrgency, newTaskAssignee, newTaskDeadline, newTaskRecurrence, createFromMessage]);
+
+        // Auto-announce task in chat
+        if (announceAfterCreate) {
+            announceTaskInChat(tempTask);
+        }
+
+        try {
+            const res = await fetch(`${API_BASE}/api/hive/tasks`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: tempTask.title, urgency: tempTask.urgency, xp,
+                    assigned_to: tempTask.assignedTo, deadline: tempTask.deadline,
+                    recurrence: tempTask.recurrence, source_message_id: tempTask.sourceMessageId,
+                    source_message_text: tempTask.sourceMessageText,
+                    source_channel_id: tempTask.sourceChannelId,
+                }),
+            });
+            if (res.ok) {
+                const saved = await res.json();
+                setTasks(prev => prev.map(t => t.id === tempTask.id ? { ...t, id: saved.id } : t));
+            }
+        } catch { /* offline */ }
+    }, [newTaskTitle, newTaskUrgency, newTaskAssignee, newTaskDeadline, newTaskRecurrence, createFromMessage, announceAfterCreate, announceTaskInChat]);
 
     const poolTasks = tasks.filter(t => t.status === 'pool');
     const myTasks = tasks.filter(t => (t.status === 'assigned' || t.status === 'in-progress') && t.assignedTo === 'You');
@@ -743,46 +913,49 @@ export default function HiveDashboard() {
         <div className="h-[calc(100vh-5rem)] -m-4 lg:-m-6 flex bg-zinc-950 text-zinc-100 overflow-hidden">
 
             {/* ─── LEFT: Channels & Staff ───────────────────────────────── */}
-            <div className="w-64 flex-shrink-0 border-r border-zinc-800 flex flex-col bg-zinc-950/80">
-                {/* Header */}
-                <div className="p-4 border-b border-zinc-800">
+            <div className="w-64 flex-shrink-0 border-r border-zinc-800/50 flex flex-col bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900/80">
+                {/* Header — Premium Gradient */}
+                <div className="p-4 border-b border-zinc-800/50 bg-gradient-to-r from-amber-500/5 via-zinc-950 to-violet-500/5">
                     <h2 className="text-lg font-bold flex items-center gap-2">
                         <motion.span
-                            className="text-2xl"
+                            className="text-2xl drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]"
                             animate={{ rotate: [0, 10, -10, 0] }}
                             transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                         >
                             🐝
                         </motion.span>
-                        THE HIVE
+                        <span className="bg-gradient-to-r from-amber-200 via-zinc-100 to-violet-200 bg-clip-text text-transparent">THE HIVE</span>
                     </h2>
-                    <p className="text-xs text-zinc-500 mt-1">Team Communication Hub</p>
+                    <p className="text-[10px] text-zinc-500 mt-1 tracking-wider uppercase">Team Communication Hub</p>
                 </div>
 
-                {/* Search */}
-                <div className="px-3 py-2">
+                {/* Search — Glassmorphism */}
+                <div className="px-3 py-2.5">
                     <div className="relative">
                         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
                         <Input
                             placeholder="Search messages..."
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
-                            className="bg-zinc-900 border-zinc-800 text-zinc-300 placeholder:text-zinc-600 pl-8 h-8 text-xs"
+                            className="bg-zinc-900/60 border-zinc-800/60 text-zinc-300 placeholder:text-zinc-600 pl-8 h-8 text-xs rounded-lg backdrop-blur-sm focus:ring-1 focus:ring-amber-500/30 focus:border-amber-500/30 transition-all"
                         />
                     </div>
                 </div>
 
-                {/* Channels */}
+                {/* Channels — Premium List */}
                 <div className="px-3 py-2">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-2">Channels</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-600 mb-2 flex items-center gap-1.5">
+                        <Hash className="h-3 w-3" />
+                        Channels
+                    </p>
                     <div className="space-y-0.5">
                         {CHANNELS.map(ch => (
                             <button
                                 key={ch.id}
                                 onClick={() => setActiveChannel(ch.id)}
-                                className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm transition-all ${activeChannel === ch.id
-                                    ? 'bg-zinc-800 text-zinc-100'
-                                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
+                                className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-sm transition-all duration-200 ${activeChannel === ch.id
+                                    ? 'bg-gradient-to-r from-zinc-800 to-zinc-800/60 text-zinc-100 shadow-sm shadow-zinc-900/50 border border-zinc-700/30'
+                                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50'
                                     }`}
                             >
                                 <ch.icon className={`h-4 w-4 ${ch.color}`} />
@@ -799,17 +972,20 @@ export default function HiveDashboard() {
 
                 {/* Direct Messages */}
                 <div className="px-3 py-2">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-2">Direct Messages</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-600 mb-2 flex items-center gap-1.5">
+                        <MessageSquare className="h-3 w-3" />
+                        Direct Messages
+                    </p>
                     <div className="space-y-0.5">
-                        {ONLINE_STAFF.filter(s => s.status === 'online').slice(0, 3).map(s => {
+                        {onlineStaff.filter(s => s.status === 'online').slice(0, 3).map(s => {
                             const dmId = `dm-${s.name.toLowerCase().replace(/\s+/g, '-')}`;
                             return (
                                 <button
                                     key={dmId}
                                     onClick={() => setActiveChannel(dmId)}
-                                    className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm transition-all ${activeChannel === dmId
-                                        ? 'bg-zinc-800 text-zinc-100'
-                                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
+                                    className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-sm transition-all duration-200 ${activeChannel === dmId
+                                        ? 'bg-gradient-to-r from-zinc-800 to-zinc-800/60 text-zinc-100 shadow-sm border border-zinc-700/30'
+                                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50'
                                         }`}
                                     title={`DM ${s.name}`}
                                 >
@@ -828,16 +1004,20 @@ export default function HiveDashboard() {
 
                 {/* Online Staff */}
                 <div className="px-3 py-2 flex-1 overflow-auto">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-2">
-                        Online — {ONLINE_STAFF.filter(s => s.status === 'online').length}
+                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-600 mb-2 flex items-center gap-1.5">
+                        <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                        </span>
+                        Online — {onlineStaff.filter(s => s.status === 'online').length}
                     </p>
-                    <div className="space-y-1">
-                        {ONLINE_STAFF.map(s => {
+                    <div className="space-y-0.5">
+                        {onlineStaff.map(s => {
                             const dmId = `dm-${s.name.toLowerCase().replace(/\s+/g, '-')}`;
                             return (
                                 <div
                                     key={s.name}
-                                    className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-zinc-900 cursor-pointer transition-colors"
+                                    className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-zinc-900/50 cursor-pointer transition-all duration-200"
                                     onClick={() => setActiveChannel(dmId)}
                                     title={`Open DM with ${s.name}`}
                                 >
@@ -949,7 +1129,7 @@ export default function HiveDashboard() {
                         {mutedChannels.includes(activeChannel) ? 'Muted' : 'Mute'}
                     </Button>
                     <Button variant="ghost" size="sm" className="h-7 text-xs text-zinc-400 hover:text-zinc-100" title="Online staff">
-                        <Users className="h-3 w-3 mr-1" /> {ONLINE_STAFF.length}
+                        <Users className="h-3 w-3 mr-1" /> {onlineStaff.length}
                     </Button>
                     {/* Staff Status Picker */}
                     <div className="relative">
@@ -1151,10 +1331,18 @@ export default function HiveDashboard() {
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className={`flex gap-3 group relative ${msg.isPriority ? 'border-l-2 border-red-500 pl-2' : ''}`}
+                                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                                            className={`flex gap-3 group relative rounded-xl px-3 py-2.5 transition-all duration-200
+                                                hover:bg-zinc-900/40 hover:backdrop-blur-sm
+                                                ${msg.isPriority ? 'border-l-2 border-red-500/70 bg-red-500/[0.03] shadow-[inset_0_0_20px_rgba(239,68,68,0.03)]' : ''}
+                                                ${msg.isBookmarked ? 'border-l-2 border-amber-500/50' : ''}
+                                            `}
                                         >
-                                            <div className={`h-8 w-8 rounded-full flex-shrink-0 mt-0.5 ${msg.senderColor} flex items-center justify-center`}>
-                                                <span className="text-white text-[10px] font-bold">{msg.senderInitials}</span>
+                                            {/* Avatar with status ring */}
+                                            <div className="relative flex-shrink-0">
+                                                <div className={`h-9 w-9 rounded-full mt-0.5 ${msg.senderColor} flex items-center justify-center ring-2 ring-zinc-900 shadow-lg`}>
+                                                    <span className="text-white text-[11px] font-bold tracking-tight">{msg.senderInitials}</span>
+                                                </div>
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 {/* Reply Reference */}
@@ -1239,7 +1427,7 @@ export default function HiveDashboard() {
                                                     </div>
                                                 ) : (
                                                     <p className="text-sm text-zinc-300 mt-0.5 leading-relaxed">
-                                                        <SmartMessageRenderer text={msg.text} />
+                                                        <SmartMessageRenderer text={msg.text} onNavigate={handleSmartNavigate} />
                                                     </p>
                                                 )}
 
@@ -1372,10 +1560,14 @@ export default function HiveDashboard() {
                                                 </button>
                                                 <button
                                                     onClick={() => createTaskFromMessage(msg)}
-                                                    className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 hover:text-emerald-400 flex items-center justify-center transition-colors"
-                                                    title="Create task from message"
+                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors relative ${tasks.some(t => t.sourceMessageId === msg.id) ? 'text-emerald-400' : 'text-zinc-400 hover:text-emerald-400'
+                                                        }`}
+                                                    title={tasks.some(t => t.sourceMessageId === msg.id) ? 'Task created from this message ✓' : 'Create task from message'}
                                                 >
                                                     <CheckSquare className="h-3.5 w-3.5" />
+                                                    {tasks.some(t => t.sourceMessageId === msg.id) && (
+                                                        <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-500 ring-1 ring-zinc-900" />
+                                                    )}
                                                 </button>
                                                 <button
                                                     onClick={() => setForwardingMsg(forwardingMsg?.id === msg.id ? null : msg)}
@@ -1496,7 +1688,7 @@ export default function HiveDashboard() {
                                                         ))}
                                                         <div className="border-t border-zinc-800 my-1" />
                                                         <p className="text-[9px] uppercase text-zinc-600 px-1 mb-0.5">Direct Messages</p>
-                                                        {ONLINE_STAFF.map(staff => (
+                                                        {onlineStaff.map(staff => (
                                                             <button
                                                                 key={staff.name}
                                                                 onClick={() => forwardMessage(msg, `dm-${staff.initials.toLowerCase()}`)}
@@ -1624,30 +1816,30 @@ export default function HiveDashboard() {
                     )}
                 </AnimatePresence>
 
-                {/* Message Input */}
-                <div className="p-4 border-t border-zinc-800 bg-zinc-950/80 flex-shrink-0">
+                {/* Message Input — Premium Glassmorphism */}
+                <div className="p-4 border-t border-zinc-800/50 bg-gradient-to-r from-zinc-950/90 via-zinc-950 to-zinc-950/90 backdrop-blur-sm flex-shrink-0">
                     <div className="flex gap-2 max-w-3xl relative">
                         {/* Attachment Button */}
                         <div className="relative">
                             <button
                                 title="Attach file"
                                 onClick={() => setShowAttachMenu(!showAttachMenu)}
-                                className="h-9 w-9 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-zinc-200 transition-colors"
+                                className="h-10 w-10 rounded-xl bg-zinc-900/80 border border-zinc-800/50 hover:bg-zinc-800 hover:border-zinc-700 flex items-center justify-center text-zinc-400 hover:text-zinc-200 transition-all duration-200"
                             >
                                 <Paperclip className="h-4 w-4" />
                             </button>
                             <AnimatePresence>
                                 {showAttachMenu && (
                                     <motion.div
-                                        className="absolute bottom-12 left-0 bg-zinc-900 border border-zinc-700 rounded-xl shadow-xl w-40 overflow-hidden z-10"
-                                        initial={{ opacity: 0, y: 5 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 5 }}
+                                        className="absolute bottom-12 left-0 bg-zinc-900/95 backdrop-blur-md border border-zinc-700/50 rounded-xl shadow-2xl shadow-black/40 w-44 overflow-hidden z-10"
+                                        initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: 5, scale: 0.95 }}
                                     >
-                                        <button className="w-full flex items-center gap-2 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors">
+                                        <button className="w-full flex items-center gap-2 px-3 py-2.5 text-xs text-zinc-300 hover:bg-zinc-800/80 transition-colors">
                                             <Image className="h-3.5 w-3.5 text-blue-400" /> Upload Image
                                         </button>
-                                        <button className="w-full flex items-center gap-2 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors">
+                                        <button className="w-full flex items-center gap-2 px-3 py-2.5 text-xs text-zinc-300 hover:bg-zinc-800/80 transition-colors">
                                             <FileText className="h-3.5 w-3.5 text-amber-400" /> Upload File
                                         </button>
                                     </motion.div>
@@ -1657,14 +1849,14 @@ export default function HiveDashboard() {
 
                         <Input
                             ref={inputRef}
-                            placeholder={`Message #${activeChannelData?.name || 'channel'}... (use / for shortcuts)`}
+                            placeholder={`Message #${activeChannelData?.name || 'channel'}... (use / for shortcuts, # for orders, @ for tables)`}
                             value={messageInput}
                             onChange={e => {
                                 setMessageInput(e.target.value);
                                 setShowQuickPicker(e.target.value === '/');
                             }}
                             onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
-                            className="bg-zinc-900 border-zinc-800 text-zinc-200 placeholder:text-zinc-600 flex-1 h-9"
+                            className="bg-zinc-900/60 border-zinc-800/50 text-zinc-200 placeholder:text-zinc-600 flex-1 h-10 rounded-xl backdrop-blur-sm focus:ring-1 focus:ring-amber-500/30 focus:border-amber-500/30 transition-all duration-200"
                         />
 
                         {/* Quick Message Picker */}
@@ -1715,7 +1907,7 @@ export default function HiveDashboard() {
                         )}
                         <Button
                             size="sm"
-                            className="bg-blue-600 hover:bg-blue-500 text-white px-4 h-9"
+                            className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white px-5 h-10 rounded-xl shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 transition-all duration-200 disabled:opacity-40 disabled:shadow-none"
                             onClick={handleSend}
                             disabled={!messageInput.trim()}
                         >
@@ -1726,9 +1918,9 @@ export default function HiveDashboard() {
             </div>
 
             {/* ─── RIGHT: Tasks + Call Log + PTT Panel ─────────────────── */}
-            <div className="w-72 flex-shrink-0 border-l border-zinc-800 flex flex-col bg-zinc-950/80">
+            <div className="w-72 flex-shrink-0 border-l border-zinc-800/50 flex flex-col bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900/80">
                 <Tabs defaultValue="tasks" className="flex flex-col h-full">
-                    <TabsList className="bg-zinc-900 border-b border-zinc-800 rounded-none h-14 px-2 flex-shrink-0">
+                    <TabsList className="bg-zinc-900/60 backdrop-blur-sm border-b border-zinc-800/50 rounded-none h-14 px-2 flex-shrink-0">
                         <TabsTrigger value="tasks" className="text-xs">
                             <CheckSquare className="h-3.5 w-3.5 mr-1" /> Tasks
                         </TabsTrigger>
@@ -1757,81 +1949,122 @@ export default function HiveDashboard() {
                             <Plus className="h-3.5 w-3.5" /> New Task
                         </button>
 
-                        {/* Create Task Form (Popover) */}
+                        {/* Create Task Form (Premium) */}
                         <AnimatePresence>
                             {showCreateTask && (
                                 <motion.div
-                                    className="p-3 rounded-lg bg-zinc-900 border border-zinc-700 space-y-2"
+                                    className="p-3.5 rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-900/80 border border-zinc-700/50 space-y-2.5 backdrop-blur-sm shadow-xl shadow-black/20"
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: 'auto' }}
                                     exit={{ opacity: 0, height: 0 }}
                                 >
+                                    {/* Header */}
                                     <div className="flex items-center justify-between">
-                                        <p className="text-xs font-bold text-zinc-300">
-                                            {createFromMessage ? '📋 From Message' : '➕ New Task'}
+                                        <p className="text-xs font-bold text-zinc-200 flex items-center gap-1.5">
+                                            {createFromMessage ? (
+                                                <><MessageSquare className="h-3.5 w-3.5 text-blue-400" /> Task from Message</>
+                                            ) : (
+                                                <><Plus className="h-3.5 w-3.5 text-emerald-400" /> New Task</>
+                                            )}
                                         </p>
-                                        <button onClick={() => setShowCreateTask(false)} className="text-zinc-500 hover:text-zinc-300" title="Close">
+                                        <button onClick={() => setShowCreateTask(false)} className="text-zinc-500 hover:text-zinc-300 transition-colors" title="Close">
                                             <X className="h-3.5 w-3.5" />
                                         </button>
                                     </div>
+
+                                    {/* Source Message Preview (when created from a message) */}
+                                    {createFromMessage && (
+                                        <div className="relative pl-3 py-2 bg-zinc-800/50 rounded-lg border-l-2 border-blue-500/50">
+                                            <div className="flex items-center gap-1.5 mb-1">
+                                                <span className="text-[10px] font-semibold text-blue-400">{createFromMessage.sender}</span>
+                                                <span className="text-[9px] text-zinc-600">in #{createFromMessage.channelId}</span>
+                                            </div>
+                                            <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-2">{createFromMessage.text}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Task Title */}
                                     <Input
                                         placeholder="Task title..."
                                         value={newTaskTitle}
                                         onChange={e => setNewTaskTitle(e.target.value)}
-                                        className="bg-zinc-800 border-zinc-700 text-zinc-200 h-8 text-xs"
+                                        className="bg-zinc-800/60 border-zinc-700/50 text-zinc-200 h-8 text-xs rounded-lg focus:ring-1 focus:ring-emerald-500/30"
                                     />
+
+                                    {/* Urgency + Assignee */}
                                     <div className="grid grid-cols-2 gap-2">
                                         <select
                                             value={newTaskUrgency}
                                             onChange={e => setNewTaskUrgency(e.target.value as MicroTask['urgency'])}
-                                            className="bg-zinc-800 border border-zinc-700 rounded-md text-xs text-zinc-300 h-8 px-2"
+                                            className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg text-xs text-zinc-300 h-8 px-2"
                                             title="Task urgency level"
                                         >
-                                            <option value="LOW">Low</option>
-                                            <option value="MEDIUM">Medium</option>
-                                            <option value="HIGH">High</option>
-                                            <option value="CRITICAL">Critical</option>
+                                            <option value="LOW">🟢 Low</option>
+                                            <option value="MEDIUM">🟡 Medium</option>
+                                            <option value="HIGH">🔴 High</option>
+                                            <option value="CRITICAL">🚨 Critical</option>
                                         </select>
                                         <select
                                             value={newTaskAssignee}
                                             onChange={e => setNewTaskAssignee(e.target.value)}
-                                            className="bg-zinc-800 border border-zinc-700 rounded-md text-xs text-zinc-300 h-8 px-2"
+                                            className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg text-xs text-zinc-300 h-8 px-2"
                                             title="Assign task to staff"
                                         >
                                             <option value="">Unassigned (Pool)</option>
                                             <option value="You">Assign to Me</option>
-                                            {ONLINE_STAFF.map(s => (
+                                            {onlineStaff.map(s => (
                                                 <option key={s.name} value={s.name}>{s.name}</option>
                                             ))}
                                         </select>
                                     </div>
+
+                                    {/* Deadline + Recurrence */}
                                     <div className="grid grid-cols-2 gap-2">
                                         <Input
                                             placeholder="Deadline (HH:MM)"
                                             value={newTaskDeadline}
                                             onChange={e => setNewTaskDeadline(e.target.value)}
-                                            className="bg-zinc-800 border-zinc-700 text-zinc-200 h-8 text-xs"
+                                            className="bg-zinc-800/60 border-zinc-700/50 text-zinc-200 h-8 text-xs rounded-lg"
                                         />
                                         <select
                                             value={newTaskRecurrence}
                                             onChange={e => setNewTaskRecurrence(e.target.value as MicroTask['recurrence'])}
-                                            className="bg-zinc-800 border border-zinc-700 rounded-md text-xs text-zinc-300 h-8 px-2"
+                                            className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg text-xs text-zinc-300 h-8 px-2"
                                             title="Task recurrence schedule"
                                         >
                                             <option value="none">No Repeat</option>
-                                            <option value="daily">Daily</option>
-                                            <option value="weekly">Weekly</option>
-                                            <option value="shift-start">Shift Start</option>
-                                            <option value="shift-end">Shift End</option>
+                                            <option value="daily">🔄 Daily</option>
+                                            <option value="weekly">📅 Weekly</option>
+                                            <option value="shift-start">▶ Shift Start</option>
+                                            <option value="shift-end">⏹ Shift End</option>
                                         </select>
                                     </div>
+
+                                    {/* Announce Toggle */}
+                                    <div className="flex items-center justify-between py-1 px-1">
+                                        <label className="text-[10px] text-zinc-400 flex items-center gap-1.5 cursor-pointer" htmlFor="announce-toggle">
+                                            <MessageSquarePlus className="h-3 w-3 text-blue-400" />
+                                            Announce in #{activeChannelData?.name || 'channel'}
+                                        </label>
+                                        <button
+                                            id="announce-toggle"
+                                            onClick={() => setAnnounceAfterCreate(!announceAfterCreate)}
+                                            className={`relative w-8 h-4 rounded-full transition-all duration-200 ${announceAfterCreate ? 'bg-emerald-600' : 'bg-zinc-700'}`}
+                                            title={announceAfterCreate ? 'Will post announcement' : 'No announcement'}
+                                        >
+                                            <span className={`absolute top-0.5 h-3 w-3 rounded-full bg-white transition-all duration-200 ${announceAfterCreate ? 'left-4.5' : 'left-0.5'}`} />
+                                        </button>
+                                    </div>
+
+                                    {/* Submit */}
                                     <Button
                                         size="sm"
-                                        className="w-full h-8 bg-emerald-600 hover:bg-emerald-500 text-white text-xs"
+                                        className="w-full h-9 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white text-xs rounded-lg shadow-lg shadow-emerald-600/15 transition-all duration-200 disabled:opacity-40 disabled:shadow-none"
                                         onClick={submitNewTask}
                                         disabled={!newTaskTitle.trim()}
                                     >
                                         <Check className="h-3.5 w-3.5 mr-1" /> Create Task
+                                        {announceAfterCreate && <span className="ml-1 text-emerald-200/60">& Announce</span>}
                                     </Button>
                                 </motion.div>
                             )}
@@ -1851,7 +2084,7 @@ export default function HiveDashboard() {
                                             initial={{ opacity: 0, scale: 0.95 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.95, height: 0 }}
-                                            className="p-3 rounded-lg bg-zinc-900 border border-blue-500/20 space-y-2"
+                                            className="p-3 rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-900/70 border border-blue-500/20 space-y-2 backdrop-blur-sm"
                                         >
                                             <div className="flex items-start justify-between gap-2">
                                                 <p className="text-sm font-medium text-zinc-200">{task.title}</p>
@@ -1860,6 +2093,24 @@ export default function HiveDashboard() {
                                                     {task.urgency}
                                                 </Badge>
                                             </div>
+
+                                            {/* Source Message Back-Link */}
+                                            {task.sourceMessageId && task.sourceMessageText && (
+                                                <button
+                                                    onClick={() => {
+                                                        if (task.sourceChannelId) setActiveChannel(task.sourceChannelId);
+                                                    }}
+                                                    className="w-full text-left pl-2.5 py-1.5 bg-zinc-800/40 rounded-lg border-l-2 border-blue-500/40 hover:border-blue-400/60 hover:bg-zinc-800/60 transition-all group/src"
+                                                    title="Go to source message"
+                                                >
+                                                    <div className="flex items-center gap-1">
+                                                        <MessageSquare className="h-2.5 w-2.5 text-blue-400/60" />
+                                                        <span className="text-[9px] text-zinc-600 group-hover/src:text-zinc-400 transition-colors">Source message</span>
+                                                    </div>
+                                                    <p className="text-[10px] text-zinc-500 truncate mt-0.5 group-hover/src:text-zinc-300 transition-colors">{task.sourceMessageText}</p>
+                                                </button>
+                                            )}
+
                                             {task.deadline && (
                                                 <p className="text-[10px] text-zinc-500 flex items-center gap-1">
                                                     <Clock className="h-2.5 w-2.5" /> Due by {task.deadline}
@@ -1880,6 +2131,16 @@ export default function HiveDashboard() {
                                                     <Zap className="h-3 w-3 text-amber-400" /> {task.xp} XP
                                                 </span>
                                                 <div className="flex gap-1.5">
+                                                    {/* Announce in Chat */}
+                                                    <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        className="h-6 px-2 text-[10px] text-zinc-500 hover:text-blue-400"
+                                                        onClick={() => announceTaskInChat(task)}
+                                                        title="Announce task in chat"
+                                                    >
+                                                        <MessageSquarePlus className="h-3 w-3" />
+                                                    </Button>
                                                     {task.status === 'assigned' && (
                                                         <Button
                                                             size="sm"
@@ -1924,7 +2185,7 @@ export default function HiveDashboard() {
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95, height: 0 }}
                                     whileHover={{ scale: 1.01 }}
-                                    className="p-3 rounded-lg bg-zinc-900 border border-zinc-800 space-y-2"
+                                    className="p-3 rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-900/70 border border-zinc-800/60 space-y-2 backdrop-blur-sm"
                                 >
                                     <div className="flex items-start justify-between gap-2">
                                         <p className="text-sm font-medium text-zinc-200">{task.title}</p>
@@ -1933,6 +2194,24 @@ export default function HiveDashboard() {
                                             {task.urgency}
                                         </Badge>
                                     </div>
+
+                                    {/* Source Message Back-Link */}
+                                    {task.sourceMessageId && task.sourceMessageText && (
+                                        <button
+                                            onClick={() => {
+                                                if (task.sourceChannelId) setActiveChannel(task.sourceChannelId);
+                                            }}
+                                            className="w-full text-left pl-2.5 py-1.5 bg-zinc-800/40 rounded-lg border-l-2 border-blue-500/40 hover:border-blue-400/60 hover:bg-zinc-800/60 transition-all group/src"
+                                            title="Go to source message"
+                                        >
+                                            <div className="flex items-center gap-1">
+                                                <MessageSquare className="h-2.5 w-2.5 text-blue-400/60" />
+                                                <span className="text-[9px] text-zinc-600 group-hover/src:text-zinc-400 transition-colors">Source message</span>
+                                            </div>
+                                            <p className="text-[10px] text-zinc-500 truncate mt-0.5 group-hover/src:text-zinc-300 transition-colors">{task.sourceMessageText}</p>
+                                        </button>
+                                    )}
+
                                     {task.deadline && (
                                         <p className="text-[10px] text-zinc-500 flex items-center gap-1">
                                             <Clock className="h-2.5 w-2.5" /> Due by {task.deadline}
@@ -2086,7 +2365,7 @@ export default function HiveDashboard() {
                             <div className="pt-4 border-t border-zinc-800 w-full">
                                 <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-3">On this channel</p>
                                 <div className="flex flex-wrap justify-center gap-2">
-                                    {ONLINE_STAFF.filter(s => s.status === 'online').slice(0, 4).map(s => {
+                                    {onlineStaff.filter(s => s.status === 'online').slice(0, 4).map(s => {
                                         const isLive = liveSpeakers.some(ls => ls.initials === s.initials && ls.channelId === activeChannel);
                                         return (
                                             <div key={s.name} className="flex flex-col items-center gap-1">
