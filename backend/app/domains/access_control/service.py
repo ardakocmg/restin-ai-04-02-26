@@ -23,30 +23,49 @@ logger = logging.getLogger(__name__)
 
 
 # ==================== ENCRYPTION HELPERS ====================
-# Simple symmetric encryption for at-rest credential protection.
-# In production, replace with EnvelopeCrypto / KMS.
+# Fernet (AES-128-CBC + HMAC) for at-rest credential protection.
+# Backward compatible: reads legacy XOR tokens if Fernet decode fails.
 
-def _get_encryption_key() -> bytes:
-    """Derive encryption key from JWT_SECRET (available at boot)."""
+from cryptography.fernet import Fernet, InvalidToken
+
+def _get_fernet() -> Fernet:
+    """Derive Fernet instance from JWT_SECRET."""
     secret = os.environ.get("JWT_SECRET", "fallback-not-for-prod")
     if secret == "fallback-not-for-prod":
         logger.warning("⚠️  JWT_SECRET not set — access control encryption using INSECURE fallback!")
-    return hashlib.sha256(secret.encode()).digest()
+    # Fernet needs 32 bytes urlsafe-b64 key
+    raw_key = hashlib.sha256(secret.encode()).digest()
+    fernet_key = base64.urlsafe_b64encode(raw_key)
+    return Fernet(fernet_key)
 
 
-def encrypt_value(plaintext: str) -> str:
-    """XOR-based obfuscation + base64. Replace with AES/KMS in production."""
-    key = _get_encryption_key()
-    encrypted = bytes(b ^ key[i % len(key)] for i, b in enumerate(plaintext.encode()))
-    return base64.urlsafe_b64encode(encrypted).decode()
-
-
-def decrypt_value(ciphertext: str) -> str:
-    """Reverse the encryption."""
-    key = _get_encryption_key()
+def _legacy_xor_decrypt(ciphertext: str) -> str:
+    """Legacy XOR decryption for backward compatibility with old tokens."""
+    secret = os.environ.get("JWT_SECRET", "fallback-not-for-prod")
+    key = hashlib.sha256(secret.encode()).digest()
     encrypted = base64.urlsafe_b64decode(ciphertext.encode())
     decrypted = bytes(b ^ key[i % len(key)] for i, b in enumerate(encrypted))
     return decrypted.decode()
+
+
+def encrypt_value(plaintext: str) -> str:
+    """Encrypt a value using Fernet (AES-128-CBC + HMAC-SHA256)."""
+    f = _get_fernet()
+    return f.encrypt(plaintext.encode()).decode()
+
+
+def decrypt_value(ciphertext: str) -> str:
+    """Decrypt a value. Tries Fernet first, falls back to legacy XOR."""
+    f = _get_fernet()
+    try:
+        return f.decrypt(ciphertext.encode()).decode()
+    except (InvalidToken, Exception):
+        # Backward compat: try legacy XOR decode
+        try:
+            return _legacy_xor_decrypt(ciphertext)
+        except Exception:
+            logger.error("Failed to decrypt value with both Fernet and legacy XOR")
+            raise
 
 
 def _build_audit(

@@ -20,6 +20,22 @@ JWT_SECRET = os.environ.get('JWT_SECRET', '')
 JWT_ALGORITHM = "HS256"  # Legacy default; actual algorithm chosen by jwt_config
 JWT_EXPIRATION_HOURS = 12
 
+# JWT Secret strength check
+import logging as _logging
+_config_logger = _logging.getLogger("core.config")
+
+_WEAK_SECRETS = {
+    "", "secret", "jwt_secret", "change_me", "password",
+    "super_secret_key_for_development_only_123456",
+}
+
+if JWT_SECRET in _WEAK_SECRETS:
+    _config_logger.critical("🚨 JWT_SECRET is EMPTY or using a KNOWN WEAK value! Set a strong secret (64+ chars).")
+elif len(JWT_SECRET) < 32:
+    _config_logger.warning("⚠️  JWT_SECRET is too short (%d chars). Recommended: 64+ random characters.", len(JWT_SECRET))
+elif len(JWT_SECRET) < 64:
+    _config_logger.info("JWT_SECRET length: %d chars (acceptable, 64+ recommended)", len(JWT_SECRET))
+
 # Validate JWT config at startup (supports HS256_ONLY and RS256_ONLY modes)
 from app.core.auth.jwt_config import validate_jwt_startup
 validate_jwt_startup()
