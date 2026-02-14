@@ -11,7 +11,10 @@ import random
 from datetime import datetime, timezone, timedelta
 from motor.motor_asyncio import AsyncIOMotorClient
 
-MONGO_URL = os.environ.get("MONGO_URL", "mongodb+srv://ardakoc:TSDfkm8788.@main-cluster.kznqr.mongodb.net/?retryWrites=true&w=majority&appName=main-cluster")
+MONGO_URL = os.environ.get("MONGO_URL")
+if not MONGO_URL:
+    print("❌ MONGO_URL environment variable not set. Aborting.")
+    import sys; sys.exit(1)
 DB_NAME = os.environ.get("DB_NAME", "restin_v2")
 
 VENUES = ["venue-caviar-bull", "venue-don-royale", "venue-sole-tarragon"]

@@ -14,10 +14,10 @@ from pymongo import MongoClient
 from bson import json_util
 
 # Configuration
-MONGO_URL = os.environ.get(
-    "MONGO_URL",
-    "mongodb+srv://restinai:MzTr8%C2%A36_4%2AF%40@cluster0.5ndlsdd.mongodb.net/restin_v2?retryWrites=true&w=majority"
-)
+MONGO_URL = os.environ.get("MONGO_URL")
+if not MONGO_URL:
+    print("❌ MONGO_URL environment variable not set. Aborting.")
+    sys.exit(1)
 DB_NAME = os.environ.get("DB_NAME", "restin_v2")
 BACKUP_DIR = os.environ.get("BACKUP_DIR", "./backups")
 
