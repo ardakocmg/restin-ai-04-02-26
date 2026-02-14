@@ -8,6 +8,9 @@ from typing import Optional
 import os
 import base64
 import hashlib
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Derive key from env or generate one
 _ENCRYPTION_KEY = os.getenv("PII_ENCRYPTION_KEY")
@@ -17,6 +20,8 @@ if _ENCRYPTION_KEY:
 else:
     # Fallback for dev — deterministic from a secret
     secret = os.getenv("SECRET_KEY", "restin-ai-dev-secret-key-change-me")
+    if secret == "restin-ai-dev-secret-key-change-me":
+        logger.warning("⚠️  PII_ENCRYPTION_KEY and SECRET_KEY not set — using INSECURE dev fallback!")
     key = base64.urlsafe_b64encode(hashlib.sha256(secret.encode()).digest())
 
 _fernet = Fernet(key)
@@ -57,6 +62,8 @@ def hash_pii(value: str) -> str:
     Uses SHA-256 with a salt.
     """
     salt = os.getenv("PII_HASH_SALT", "restin-pii-salt")
+    if salt == "restin-pii-salt":
+        logger.warning("⚠️  PII_HASH_SALT not set — using INSECURE dev fallback!")
     return hashlib.sha256(f"{salt}:{value}".encode()).hexdigest()
 
 

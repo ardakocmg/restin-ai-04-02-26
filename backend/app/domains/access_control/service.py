@@ -29,6 +29,8 @@ logger = logging.getLogger(__name__)
 def _get_encryption_key() -> bytes:
     """Derive encryption key from JWT_SECRET (available at boot)."""
     secret = os.environ.get("JWT_SECRET", "fallback-not-for-prod")
+    if secret == "fallback-not-for-prod":
+        logger.warning("⚠️  JWT_SECRET not set — access control encryption using INSECURE fallback!")
     return hashlib.sha256(secret.encode()).digest()
 
 
@@ -541,9 +543,8 @@ class AccessControlService:
         """
         db = get_database()
 
-        # 0. Emergency/Dev Bypass for "admin"
-        if user_id == "admin":
-             return True
+        # NOTE: Admin bypass removed for production security.
+        # Admin users should have permissions assigned via role-based system.
 
         # 1. User-specific permission (highest priority)
         user_perm = await db.door_permissions.find_one({
