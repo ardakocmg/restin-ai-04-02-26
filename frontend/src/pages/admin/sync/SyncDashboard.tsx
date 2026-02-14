@@ -13,7 +13,8 @@ import {
     RefreshCw, Database, Server, Smartphone, ShoppingCart, Users, Cloud,
     Settings, Key, Eye, EyeOff, CheckCircle2, AlertTriangle, Clock, Power,
     Activity, Loader2, Globe, CreditCard, MessageSquare, Mail, Star, Zap,
-    ExternalLink, Building2, Search, Lock, ArrowUpDown, BookOpen, ChevronDown, ChevronUp
+    ExternalLink, Building2, Search, Lock, ArrowUpDown, BookOpen, ChevronDown, ChevronUp,
+    LayoutGrid, Store
 } from 'lucide-react';
 import { toast } from "sonner";
 import api from '@/lib/api';
@@ -293,6 +294,18 @@ interface SyncRun {
 }
 
 // ─── Main Dashboard ─────────────────────────────────────────────────────
+// ─── Group integration types ────────────────────────────────────────────
+interface GroupVenue {
+    id: string;
+    name: string;
+    brand: string;
+}
+interface GroupData {
+    venues: GroupVenue[];
+    matrix: Record<string, Record<string, { status: string; enabled: boolean; lastSync: string | null; configured_by: string | null; configured_at: string | null; scope: string }>>;
+    summary: { total_venues: number; total_connected: number; providers_used: string[] };
+}
+
 export default function SyncDashboard() {
     const { activeVenueId } = useVenue();
     const [configs, setConfigs] = useState<IntegrationConfig[]>([]);
@@ -313,6 +326,16 @@ export default function SyncDashboard() {
 
     // Sync History
     const [syncHistory, setSyncHistory] = useState<SyncRun[]>([]);
+
+    // Group Overview
+    const [groupData, setGroupData] = useState<GroupData | null>(null);
+    const [groupLoading, setGroupLoading] = useState(false);
+
+    // User role
+    const userStr = typeof window !== 'undefined' ? localStorage.getItem('restin_user') : null;
+    const currentUser = userStr ? JSON.parse(userStr) : {};
+    const userRole = (currentUser.role || '').toUpperCase();
+    const isGroupViewer = ['PRODUCT_OWNER', 'SUPER_ADMIN', 'ADMIN', 'OWNER'].includes(userRole);
 
     // ─── Fetch Configs ──────────────────────────────────────────────────
     const fetchConfigs = useCallback(async () => {
@@ -349,7 +372,20 @@ export default function SyncDashboard() {
         }
     }, [activeVenueId]);
 
-    useEffect(() => { fetchConfigs(); fetchSyncHistory(); }, [fetchConfigs, fetchSyncHistory]);
+    const fetchGroupData = useCallback(async () => {
+        if (!isGroupViewer) return;
+        setGroupLoading(true);
+        try {
+            const res = await api.get('/group/integrations');
+            setGroupData(res.data);
+        } catch {
+            setGroupData(null);
+        } finally {
+            setGroupLoading(false);
+        }
+    }, [isGroupViewer]);
+
+    useEffect(() => { fetchConfigs(); fetchSyncHistory(); fetchGroupData(); }, [fetchConfigs, fetchSyncHistory, fetchGroupData]);
 
     // ─── Helpers ────────────────────────────────────────────────────────
     const getConfig = (provider: string) => configs.find(c => c.key === provider);
@@ -449,7 +485,7 @@ export default function SyncDashboard() {
                         <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
                             <RefreshCw className="h-5 w-5 text-white" />
                         </div>
-                        Integration Control Plane
+                        Integration Control
                     </h1>
                     <p className="text-zinc-400 mt-2 text-sm">
                         Manage all venue connections, APIs, Google services, and IoT — with full audit trail.
@@ -473,8 +509,8 @@ export default function SyncDashboard() {
                                 key={opt.id}
                                 onClick={() => setSortBy(opt.id)}
                                 className={`px-2.5 py-1.5 rounded-md text-[11px] font-semibold transition-all ${sortBy === opt.id
-                                        ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                                        : 'text-zinc-500 hover:text-zinc-300'
+                                    ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                                    : 'text-zinc-500 hover:text-zinc-300'
                                     }`}
                             >
                                 {opt.label}
@@ -536,6 +572,12 @@ export default function SyncDashboard() {
             <Tabs defaultValue="overview" className="space-y-5">
                 <TabsList className="bg-zinc-900 border border-zinc-800">
                     <TabsTrigger value="overview">Overview</TabsTrigger>
+                    {isGroupViewer && (
+                        <TabsTrigger value="group" className="flex items-center gap-1.5">
+                            <LayoutGrid className="h-3.5 w-3.5" />
+                            Group Overview
+                        </TabsTrigger>
+                    )}
                     <TabsTrigger value="runs">Sync History</TabsTrigger>
                     <TabsTrigger value="settings">Policies</TabsTrigger>
                 </TabsList>
@@ -619,6 +661,199 @@ export default function SyncDashboard() {
                         </div>
                     )}
                 </TabsContent>
+
+                {/* ─── Group Overview Tab ──────────────────────────────────────── */}
+                {isGroupViewer && (
+                    <TabsContent value="group" className="space-y-5">
+                        {groupLoading ? (
+                            <div className="flex items-center justify-center py-20 text-zinc-500">
+                                <Loader2 className="h-6 w-6 animate-spin mr-3" />
+                                Loading group integrations...
+                            </div>
+                        ) : groupData ? (
+                            <>
+                                {/* Group Summary Cards */}
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                    <Card className="bg-zinc-950/80 border-zinc-800 border-l-2 border-l-violet-500/50">
+                                        <CardContent className="p-4 flex items-center gap-3">
+                                            <div className="h-9 w-9 rounded-lg bg-violet-500/10 flex items-center justify-center">
+                                                <Store className="h-4 w-4 text-violet-400" />
+                                            </div>
+                                            <div>
+                                                <p className="text-xl font-bold text-zinc-100 tabular-nums">{groupData.summary.total_venues}</p>
+                                                <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Venues</p>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                    <Card className="bg-zinc-950/80 border-zinc-800 border-l-2 border-l-emerald-500/50">
+                                        <CardContent className="p-4 flex items-center gap-3">
+                                            <div className="h-9 w-9 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                                                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                                            </div>
+                                            <div>
+                                                <p className="text-xl font-bold text-zinc-100 tabular-nums">{groupData.summary.total_connected}</p>
+                                                <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Active Links</p>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                    <Card className="bg-zinc-950/80 border-zinc-800 border-l-2 border-l-blue-500/50">
+                                        <CardContent className="p-4 flex items-center gap-3">
+                                            <div className="h-9 w-9 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                                <Zap className="h-4 w-4 text-blue-400" />
+                                            </div>
+                                            <div>
+                                                <p className="text-xl font-bold text-zinc-100 tabular-nums">{groupData.summary.providers_used.length}</p>
+                                                <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Providers Used</p>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </div>
+
+                                {/* Venue × Provider Matrix */}
+                                <Card className="bg-zinc-950 border-zinc-800">
+                                    <CardHeader className="pb-3">
+                                        <CardTitle className="text-zinc-100 text-base flex items-center gap-2">
+                                            <LayoutGrid className="h-4 w-4 text-blue-400" />
+                                            Venue × Provider Matrix
+                                        </CardTitle>
+                                        <p className="text-xs text-zinc-500">Integration status per venue. Click any cell to manage.</p>
+                                    </CardHeader>
+                                    <CardContent className="overflow-x-auto">
+                                        <table className="w-full text-xs">
+                                            <thead>
+                                                <tr className="border-b border-zinc-800">
+                                                    <th className="text-left py-3 px-3 text-zinc-500 font-semibold uppercase tracking-wider sticky left-0 bg-zinc-950 z-10 min-w-[180px]">
+                                                        Venue
+                                                    </th>
+                                                    {PROVIDERS.map(p => (
+                                                        <th key={p.key} className="text-center py-3 px-2 text-zinc-500 font-semibold uppercase tracking-wider min-w-[80px]">
+                                                            <div className="flex flex-col items-center gap-1">
+                                                                <p.icon className="h-3.5 w-3.5" />
+                                                                <span className="text-[9px] leading-tight">{p.label.split(' ')[0]}</span>
+                                                            </div>
+                                                        </th>
+                                                    ))}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {groupData.venues.map(venue => {
+                                                    const venueMatrix = groupData.matrix[venue.id] || {};
+                                                    return (
+                                                        <tr key={venue.id} className="border-b border-zinc-800/50 hover:bg-zinc-900/50 transition-colors">
+                                                            <td className="py-3 px-3 sticky left-0 bg-zinc-950 z-10">
+                                                                <div className="flex items-center gap-2">
+                                                                    <Store className="h-3.5 w-3.5 text-zinc-500 flex-shrink-0" />
+                                                                    <div>
+                                                                        <p className="text-zinc-200 font-medium text-xs">{venue.name}</p>
+                                                                        {venue.brand && (
+                                                                            <p className="text-[10px] text-zinc-600">{venue.brand}</p>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            {PROVIDERS.map(p => {
+                                                                const cfg = venueMatrix[p.key];
+                                                                const isConnected = cfg && (cfg.status === 'CONNECTED' || cfg.enabled);
+                                                                const isError = cfg?.status === 'ERROR';
+                                                                const isDisabled = cfg && cfg.status === 'DISABLED';
+                                                                return (
+                                                                    <td key={p.key} className="text-center py-3 px-2">
+                                                                        {isConnected ? (
+                                                                            <div className="flex flex-col items-center gap-0.5" title={cfg?.configured_by ? `Set up by ${cfg.configured_by}` : undefined}>
+                                                                                <div className="h-6 w-6 rounded-full bg-emerald-500/15 flex items-center justify-center">
+                                                                                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                                                                                </div>
+                                                                                {cfg?.scope === 'global' && (
+                                                                                    <span className="text-[8px] text-blue-400/70">Global</span>
+                                                                                )}
+                                                                            </div>
+                                                                        ) : isError ? (
+                                                                            <div className="h-6 w-6 rounded-full bg-red-500/15 flex items-center justify-center mx-auto">
+                                                                                <AlertTriangle className="h-3 w-3 text-red-400" />
+                                                                            </div>
+                                                                        ) : isDisabled ? (
+                                                                            <div className="h-6 w-6 rounded-full bg-zinc-800 flex items-center justify-center mx-auto">
+                                                                                <Power className="h-3 w-3 text-zinc-600" />
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div className="h-6 w-6 rounded-full bg-zinc-900 flex items-center justify-center mx-auto">
+                                                                                <span className="text-zinc-700 text-[10px]">—</span>
+                                                                            </div>
+                                                                        )}
+                                                                    </td>
+                                                                );
+                                                            })}
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </CardContent>
+                                </Card>
+
+                                {/* Provider Usage List */}
+                                <Card className="bg-zinc-950 border-zinc-800">
+                                    <CardHeader className="pb-3">
+                                        <CardTitle className="text-zinc-100 text-sm">Active Providers Across Group</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-2">
+                                        {groupData.summary.providers_used.length === 0 ? (
+                                            <p className="text-sm text-zinc-500 text-center py-4">No integrations connected yet.</p>
+                                        ) : (
+                                            groupData.summary.providers_used.map(provKey => {
+                                                const pDef = PROVIDERS.find(p => p.key === provKey);
+                                                const venuesWithIt = groupData.venues.filter(v => {
+                                                    const cfg = groupData.matrix[v.id]?.[provKey];
+                                                    return cfg && (cfg.status === 'CONNECTED' || cfg.enabled);
+                                                });
+                                                const ProvIcon = pDef?.icon || Zap;
+                                                return (
+                                                    <div key={provKey} className="flex items-center justify-between p-3 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                                                <ProvIcon className="h-4 w-4 text-blue-400" />
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-sm font-medium text-zinc-200">{pDef?.label || provKey}</p>
+                                                                <p className="text-[10px] text-zinc-500">{pDef?.desc || ''}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <Badge className="bg-emerald-600/20 text-emerald-400 border-emerald-500/20 text-[10px]">
+                                                                {venuesWithIt.length} venue{venuesWithIt.length !== 1 ? 's' : ''}
+                                                            </Badge>
+                                                            <div className="flex -space-x-1">
+                                                                {venuesWithIt.slice(0, 3).map(v => (
+                                                                    <div
+                                                                        key={v.id}
+                                                                        className="h-5 w-5 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center"
+                                                                        title={v.name}
+                                                                    >
+                                                                        <span className="text-[8px] text-zinc-400 font-bold">{v.name.charAt(0)}</span>
+                                                                    </div>
+                                                                ))}
+                                                                {venuesWithIt.length > 3 && (
+                                                                    <div className="h-5 w-5 rounded-full bg-zinc-700 border border-zinc-600 flex items-center justify-center">
+                                                                        <span className="text-[8px] text-zinc-300 font-bold">+{venuesWithIt.length - 3}</span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            </>
+                        ) : (
+                            <div className="text-center py-16 text-zinc-500">
+                                <AlertTriangle className="h-8 w-8 mx-auto mb-3 opacity-50" />
+                                <p className="text-sm">Unable to load group data. Check permissions.</p>
+                            </div>
+                        )}
+                    </TabsContent>
+                )}
 
                 {/* Sync History Tab */}
                 <TabsContent value="runs">

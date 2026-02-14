@@ -670,6 +670,11 @@ api_main.include_router(template_assets_router)
 rbac_router = create_rbac_router()
 api_main.include_router(rbac_router)
 
+# Group-level integration overview (cross-venue matrix)
+from routes.group_integrations import create_group_integrations_router
+group_integrations_router = create_group_integrations_router()
+api_main.include_router(group_integrations_router)
+
 # NEW: Version endpoint for system health
 @api_main.get("/system/version")
 async def get_system_version():

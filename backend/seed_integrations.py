@@ -41,10 +41,10 @@ integrations = [
     },
     {
         "provider": "OPENAI",
-        "isEnabled": True,
-        "status": "CONNECTED",
+        "isEnabled": False,
+        "status": "NOT_CONFIGURED",
         "credentials": {
-            "api_key": "sk-placeholder"
+            "api_key": ""
         },
     },
 ]
