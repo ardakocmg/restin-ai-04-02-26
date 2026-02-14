@@ -5,8 +5,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useVenue } from '@/context/VenueContext';
-import { PermissionGate } from '@/components/PermissionGate';
-import { PageContainer } from '@/components/ui/PageContainer';
+import PermissionGate from '@/components/shared/PermissionGate';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import api from '@/services/api';
