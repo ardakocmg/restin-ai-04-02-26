@@ -143,6 +143,8 @@ async def backfill_item_ids(
     from core.database import get_database
     db = get_database()
     
+    venue_id = user["venue_id"]
+    
     # Fetch venue details to get name for code generation
     venue = await db.venues.find_one({"id": venue_id})
     venue_name = venue.get("name", "VEN") if venue else "VEN"
@@ -150,8 +152,16 @@ async def backfill_item_ids(
     
     prefix = f"MG{venue_code}"
     
+    # Get recipes without item_id
+    recipes_without_id = await db.recipes_engineered.find(
+        {"venue_id": venue_id, "$or": [{"item_id": {"$exists": False}}, {"item_id": None}, {"item_id": ""}]}
+    ).to_list(500)
+    
+    if not recipes_without_id:
+        return {"status": "success", "message": "All recipes already have item_id", "updated": 0}
+    
     # Get current max sequence using the new format
-    max_recipe = await db.RecipesEngineered.find_one(
+    max_recipe = await db.recipes_engineered.find_one(
         {"venue_id": venue_id, "item_id": {"$regex": f"^{prefix}"}},
         sort=[("item_id", -1)]
     )
@@ -166,7 +176,7 @@ async def backfill_item_ids(
             
     # If no existing sequences, make sure we account for total existing to avoid collision if regex failed
     if current_seq == 0:
-        count = await db.RecipesEngineered.count_documents({"venue_id": venue_id})
+        count = await db.recipes_engineered.count_documents({"venue_id": venue_id})
         if count > len(recipes_without_id):
              current_seq = count - len(recipes_without_id)
 
@@ -182,7 +192,7 @@ async def backfill_item_ids(
             "raw_import_data.Sku": new_item_id  # Also set Sku as fallback
         }
         
-        await db.RecipesEngineered.update_one(
+        await db.recipes_engineered.update_one(
             {"_id": recipe["_id"]},
             {"$set": update_data}
         )

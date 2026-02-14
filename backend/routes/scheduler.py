@@ -61,7 +61,7 @@ async def get_scheduler_data(
             }
         }
     shifts_cursor = db.shifts.find(shift_query, {"_id": 0})
-    all_shifts = await shifts_cursor.to_list(5000)
+    all_shifts = await shifts_cursor.to_list(2000)
 
     shift_map: dict = {}  # {employee_id: {date: shift}}
     for s in all_shifts:

@@ -53,7 +53,7 @@ def create_kds_reports_router():
             query["day"] = day
         
         cursor = db.rm_kds_item_stats_daily.find(query, {"_id": 0})
-        docs = await cursor.to_list(10000)
+        docs = await cursor.to_list(1000)
         
         if not docs:
             return {

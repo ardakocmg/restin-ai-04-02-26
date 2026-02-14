@@ -67,7 +67,7 @@ class OutboxConsumer:
         entries = await db.stock_ledger.find(
             {"venue_id": venue_id, "item_id": sku_id},
             {"_id": 0}
-        ).to_list(10000)
+        ).to_list(2000)
         
         balance = 0.0
         for entry in entries:

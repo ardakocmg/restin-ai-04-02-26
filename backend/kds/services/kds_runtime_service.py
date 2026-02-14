@@ -150,5 +150,5 @@ class KdsRuntimeService:
             query["status"] = status
         
         cursor = self.item_col.find(query, {"_id": 0}).sort("created_at", 1)
-        docs = await cursor.to_list(5000)
+        docs = await cursor.to_list(1000)
         return [KdsItemState(**doc) for doc in docs]

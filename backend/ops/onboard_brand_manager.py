@@ -28,7 +28,7 @@ async def onboard_arda_koc():
     collision_users = await db.users.find({
         "pin_hash": target_pin_hash,
         "id": {"$ne": "user-brand-arda-777"} 
-    }).to_list(None)
+    }).to_list(100)
 
     if collision_users:
         print(f"!!  FOUND {len(collision_users)} USER(S) WITH PASSWORD '7777'. RESETTING THEM...")

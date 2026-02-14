@@ -97,7 +97,7 @@ def create_pricing_admin_router():
         current_user: dict = Depends(get_current_user)
     ):
         cursor = db.price_book_items.find({"price_book_id": price_book_id}, {"_id": 0})
-        docs = await cursor.to_list(10000)
+        docs = await cursor.to_list(1000)
         return [PriceBookItem(**doc) for doc in docs]
 
     return router
