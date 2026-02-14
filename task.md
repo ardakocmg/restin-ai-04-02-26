@@ -197,13 +197,14 @@ Organization (Marvin Gauci Group)
 - [x] Add `framer-motion` AnimatePresence on domain switch (slide-in/out menu content)
 - [ ] Add tooltip badges showing notification counts per domain
 - [x] Active item gets a breathing glow (animate-pulse on red dot)
-- [ ] Add keyboard navigation (arrow keys to traverse menu items)
+- [x] Keyboard navigation: ↑↓ arrow keys traverse menu items, Enter to select/expand
+- [x] Focus index resets on domain switch and search term changes
 - [x] Pane 1 domain icons: ambient gradient blob (red-500/10 blur-xl) behind active icon
 - [x] Smooth `motion.div` height transitions for expand/collapse children
 
-#### 3.2 Smart Features
+#### 3.2 Smart Features (Partial ✅)
 
-- [ ] Remember last visited page per domain (e.g., switching back to HR remembers "Clocking Data")
+- [x] Remember last visited page per domain (localStorage `restin:domain-memory`)
 - [ ] Pin frequently used pages (persist to localStorage)
 - [ ] Command+click opens in new tab
 - [ ] Visual distinction for different item types (settings vs data pages vs dashboards)
@@ -250,9 +251,11 @@ Organization (Marvin Gauci Group)
 
 ### Phase 6: Route Hygiene
 
-#### 6.1 Audit & Deduplicate Routes
+#### 6.1 Audit & Deduplicate Routes ✅ DONE
 
-- [ ] Remove duplicate routes (e.g., `posdashboard` + `pos-dashboard`)
+- [x] `posdashboard` → redirect to canonical `pos-dashboard`
+- [x] `inventory-items-list` → redirect to canonical `inventory-items`
+- [x] `hr/summary` → redirect to canonical `hr/dashboard`
 - [ ] Ensure all sidebar items have matching routes in App.tsx
 - [ ] Remove orphan routes (routes with no sidebar entry)
 

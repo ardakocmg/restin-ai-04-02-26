@@ -413,7 +413,8 @@ function App() {
                                     <Route path="device-mapping" element={<RoleRoute requiredRole="MANAGER"><DeviceMapping /></RoleRoute>} />
                                     <Route path="observability" element={<RoleRoute requiredRole="MANAGER"><Observability /></RoleRoute>} />
                                     <Route path="operations" element={<RoleRoute requiredRole="MANAGER"><Operations /></RoleRoute>} />
-                                    <Route path="posdashboard" element={<RoleRoute requiredRole="MANAGER"><POSDashboard /></RoleRoute>} />
+                                    {/* Canonical: pos-dashboard. Legacy alias redirects. */}
+                                    <Route path="posdashboard" element={<Navigate to="/admin/pos-dashboard" replace />} />
                                     <Route path="pos-dashboard" element={<RoleRoute requiredRole="MANAGER"><POSDashboard /></RoleRoute>} />
                                     <Route path="products" element={<RoleRoute requiredRole="MANAGER"><ProductManagement /></RoleRoute>} />
                                     <Route path="company-settings" element={<RoleRoute requiredRole="OWNER"><OrganizationProfile /></RoleRoute>} />
@@ -446,7 +447,8 @@ function App() {
                                     <Route path="receiving" element={<RoleRoute requiredRole="MANAGER"><Receiving /></RoleRoute>} />
                                     <Route path="inventory-detail" element={<RoleRoute requiredRole="MANAGER"><InventoryPage /></RoleRoute>} />
                                     <Route path="inventory-items" element={<RoleRoute requiredRole="MANAGER"><InventoryItemsNew /></RoleRoute>} />
-                                    <Route path="inventory-items-list" element={<RoleRoute requiredRole="MANAGER"><InventoryItemsNew /></RoleRoute>} />
+                                    {/* Legacy alias redirects to canonical */}
+                                    <Route path="inventory-items-list" element={<Navigate to="/admin/inventory-items" replace />} />
                                     <Route path="inventory-suppliers" element={<RoleRoute requiredRole="OWNER"><Suppliers /></RoleRoute>} />
                                     <Route path="inventory-purchase-orders" element={<RoleRoute requiredRole="OWNER"><PurchaseOrdersNew /></RoleRoute>} />
                                     <Route path="inventory-stock-count" element={<RoleRoute requiredRole="MANAGER"><StockCount /></RoleRoute>} />
@@ -611,7 +613,8 @@ function App() {
                                       {/* Restored Sub-Routes */}
                                       <Route path="people/:employeeCode" element={<RoleRoute requiredRole="MANAGER"><EmployeeDetailPage /></RoleRoute>} />
                                       <Route path="leave-management" element={<RoleRoute requiredRole="MANAGER"><LeaveManagement /></RoleRoute>} />
-                                      <Route path="summary" element={<RoleRoute requiredRole="MANAGER"><SummaryDashboard /></RoleRoute>} />
+                                      {/* summary is a legacy alias for dashboard */}
+                                      <Route path="summary" element={<Navigate to="/admin/hr/dashboard" replace />} />
                                       <Route path="dashboard" element={<RoleRoute requiredRole="MANAGER"><SummaryDashboard /></RoleRoute>} />
                                       <Route path="clocking" element={<RoleRoute requiredRole="MANAGER"><ClockingData /></RoleRoute>} />
                                       <Route path="manual-clocking" element={<ManualClocking />} />

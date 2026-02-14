@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from "@/components/ui/button";
@@ -83,6 +83,110 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     );
   };
 
+  // ─── Domain Memory: remember last visited page per domain ───
+  const DOMAIN_MEMORY_KEY = 'restin:domain-memory';
+
+  const saveDomainPage = useCallback((domain, path) => {
+    try {
+      const mem = JSON.parse(localStorage.getItem(DOMAIN_MEMORY_KEY) || '{}');
+      mem[domain] = path;
+      localStorage.setItem(DOMAIN_MEMORY_KEY, JSON.stringify(mem));
+    } catch { /* ignore */ }
+  }, []);
+
+  const getDomainPage = useCallback((domain) => {
+    try {
+      const mem = JSON.parse(localStorage.getItem(DOMAIN_MEMORY_KEY) || '{}');
+      return mem[domain] || null;
+    } catch { return null; }
+  }, []);
+
+  // Save current page whenever route changes
+  useEffect(() => {
+    const domain = findActiveDomain();
+    if (domain && location.pathname !== '/admin/dashboard') {
+      saveDomainPage(domain, location.pathname);
+    }
+  }, [location.pathname]);
+
+  // Navigate to saved page on domain switch
+  const handleDomainClickWithMemory = (id) => {
+    setActiveDomain(id);
+    if (collapsed) {
+      onToggle?.();
+    }
+    const savedPage = getDomainPage(id);
+    if (savedPage) {
+      navigate(savedPage);
+    }
+  };
+
+  // ─── Keyboard Navigation: ↑↓ traverse menu, Enter to select ───
+  const [focusedIdx, setFocusedIdx] = useState(-1);
+  const menuContainerRef = useRef(null);
+
+  // Flatten visible items + their children into navigable list
+  const flatNavItems = useMemo(() => {
+    const items = [];
+    visibleMenuItems
+      .filter(item => {
+        if (searchTerm && !collapsed) {
+          const term = searchTerm.toLowerCase();
+          const matchesTitle = item.title.toLowerCase().includes(term);
+          const matchesSub = item.children?.some(c => c.title.toLowerCase().includes(term));
+          return matchesTitle || matchesSub;
+        }
+        return getDomainForGroup(item.group) === activeDomain;
+      })
+      .forEach(item => {
+        if (item.href && !item.children) {
+          items.push({ title: item.title, href: item.href, type: 'link' });
+        } else if (item.children) {
+          items.push({ title: item.title, group: item.group, type: 'group' });
+          if (expandedGroups.includes(item.group)) {
+            item.children.forEach(c => {
+              items.push({ title: c.title, href: c.href, type: 'child' });
+            });
+          }
+        }
+      });
+    return items;
+  }, [visibleMenuItems, activeDomain, searchTerm, collapsed, expandedGroups]);
+
+  // Reset focus idx on domain switch or search
+  useEffect(() => {
+    setFocusedIdx(-1);
+  }, [activeDomain, searchTerm]);
+
+  // Keyboard handler for sidebar navigation
+  useEffect(() => {
+    const container = menuContainerRef.current;
+    if (!container || collapsed) return;
+
+    const handleKeyDown = (e) => {
+      if (flatNavItems.length === 0) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setFocusedIdx(prev => Math.min(prev + 1, flatNavItems.length - 1));
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setFocusedIdx(prev => Math.max(prev - 1, 0));
+      } else if (e.key === 'Enter' && focusedIdx >= 0) {
+        e.preventDefault();
+        const item = flatNavItems[focusedIdx];
+        if (item.type === 'group') {
+          toggleGroup(item.group);
+        } else if (item.href) {
+          navigate(item.href);
+        }
+      }
+    };
+
+    container.addEventListener('keydown', handleKeyDown);
+    return () => container.removeEventListener('keydown', handleKeyDown);
+  }, [flatNavItems, focusedIdx, collapsed]);
+
   return (
     <div className="flex h-full font-body">
       {/* Pane 1: Slim Domain Bar */}
@@ -118,7 +222,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
           {visibleDomains.map((domain) => (
             <button
               key={domain.id}
-              onClick={() => handleDomainClick(domain.id)}
+              onClick={() => handleDomainClickWithMemory(domain.id)}
               className={cn(
                 'group relative flex items-center rounded-xl transition-all duration-300 w-full outline-none focus:ring-2 focus:ring-red-500/20',
                 domainBarExpanded ? 'px-4 py-3.5 gap-4' : 'h-12 w-12 justify-center mx-auto',
@@ -195,7 +299,12 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
         </div>
 
         <ScrollArea className={cn("flex-1 py-6", collapsed ? "px-2" : "px-4")}>
-          <nav className="space-y-1.5">
+          <nav
+            ref={menuContainerRef}
+            tabIndex={0}
+            className="space-y-1.5 outline-none"
+            aria-label="Sidebar navigation"
+          >
             {/* Search Bar - Hidden in Icon Mode */}
             {!collapsed && (
               <div className="px-3 pb-4">
