@@ -678,6 +678,10 @@ async def get_system_version():
 # Finally, mount api_main onto the app
 app.include_router(api_main)
 
+# Access Control (Nuki) — has /api/access-control prefix baked in, mount on app directly
+from app.domains.access_control.routes import router as access_control_router
+app.include_router(access_control_router)
+
 
 
 # ==================== STARTUP/SHUTDOWN EVENTS ====================
