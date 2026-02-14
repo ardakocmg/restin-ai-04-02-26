@@ -83,6 +83,9 @@ backend/collection_audit.py
 backend/test_api_prod.py
 backend/fix_openai_phantom.py
 backend/seed_integrations.py
+backend/migrate_to_atlas.py
 backend/stdout.txt
 backend/worker_heartbeat.log
 backend/worker_health_check.txt
+backend/scripts/test_meross_direct.py
+backend/scripts/test_meross_control.py
