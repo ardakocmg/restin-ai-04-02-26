@@ -7,6 +7,45 @@ Make all navigation bars globally consistent and add intelligent breadcrumb rout
 
 ---
 
+## ✅ COMPLETED: Settings & Sidebar Refactoring (2026-02-14)
+
+### What Was Done:
+
+1. **Sidebar Audit** — Full audit of all MENU_ITEMS in `searchRegistry.ts`
+2. **Moved to System Admin** (PRODUCT_OWNER only):
+   - Observability (was Home)
+   - Pre-Go-Live (was POS)
+   - Audit Logs (was Finance)
+   - Billing & Plans (was Org)
+   - Feature Flags (was Org)
+   - Data Export (was Org)
+3. **Removed Duplicates**:
+   - Content Studio (org) → exists in Restin OS
+   - Content Editor (org) → exists in Restin OS
+   - Headcount Analysis (reports) → exists in HR Reports
+   - Turnover Analysis (reports) → exists in HR Reports
+   - Tasks Kanban (POS) → exists in Collab
+   - Inbox (POS) → exists in Collab
+4. **New: Legal Entities** page added under Org Settings
+   - Backend: `routes/legal_entities.py` (CRUD + venue assignment)
+   - Frontend: `pages/admin/LegalEntities.tsx`
+   - Route: `/admin/legal-entities`
+5. **Renamed** Company Profile → Organization Profile
+6. **SettingsHub** removed from routing (orphan → replaced by VenueSettings)
+
+### 4-Tier Hierarchy Established:
+```
+Organization (Marvin Gauci Group)
+  ├── Legal Entity (MG Hospitality Ltd) → VAT, PE, Reg
+  │   ├── Venue: Caviar & Bull
+  │   └── Venue: Don Royale
+  └── Legal Entity (Sole Restaurant Ltd)
+      └── Venue: Sole
+```
+
+---
+
+
 ## 🏗️ Current State Analysis
 
 ### Files Involved

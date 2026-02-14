@@ -107,7 +107,6 @@ export const MENU_ITEMS: MenuItem[] = [
     // HOME / MAIN
     // ═══════════════════════════════════════════════════════════════════
     { title: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard', group: 'main', requiredRole: 'MANAGER' },
-    { title: 'Observability', icon: Activity, href: '/admin/observability', group: 'main', requiredRole: 'OWNER' },
 
     // ═══════════════════════════════════════════════════════════════════
     // POS & OPERATIONS
@@ -147,10 +146,7 @@ export const MENU_ITEMS: MenuItem[] = [
             { title: 'Cash Drawers', id: 'drawers', href: '/admin/printers?tab=cash-drawers' },
         ],
     },
-    { title: 'Tasks Kanban', icon: LayoutDashboard, href: '/admin/tasks-kanban', group: 'pos', requiredRole: 'STAFF' },
-    { title: 'Inbox', icon: Activity, href: '/admin/inbox', group: 'pos', requiredRole: 'STAFF' },
     { title: 'Service Day Close', icon: Clock, href: '/admin/service-day-close', group: 'pos', requiredRole: 'MANAGER' },
-    { title: 'Pre-Go-Live', icon: Activity, href: '/admin/pre-go-live', group: 'pos', requiredRole: 'OWNER' },
     { title: 'POS Setup', icon: Settings, href: '/pos/setup', group: 'pos', requiredRole: 'OWNER' },
     { title: 'KDS Stations', icon: Monitor, href: '/admin/kds/stations', group: 'pos', requiredRole: 'MANAGER' },
 
@@ -244,7 +240,6 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Finance Dashboard', icon: DollarSign, href: '/admin/finance', group: 'finance', requiredRole: 'OWNER' },
     { title: 'General Ledger', icon: FileText, href: '/admin/accounting', group: 'finance', requiredRole: 'OWNER' },
     { title: 'HR Accounting', icon: FileText, href: '/admin/hr-advanced/accounting', group: 'finance', requiredRole: 'OWNER' },
-    { title: 'Audit Logs', icon: Activity, href: '/admin/audit-logs', group: 'finance', requiredRole: 'OWNER' },
 
     // ═══════════════════════════════════════════════════════════════════
     // ANALYTICS & REPORTS
@@ -271,8 +266,6 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'HR Analytics', icon: BarChart3, href: '/admin/hr-advanced/analytics', group: 'reports', requiredRole: 'OWNER' },
     { title: 'KDS Performance', icon: Activity, href: '/admin/reports/kds-performance-detailed', group: 'reports', requiredRole: 'MANAGER' },
     { title: 'Inventory Analytics', icon: PieChartIcon, href: '/admin/reports/inventory-detailed', group: 'reports', requiredRole: 'MANAGER' },
-    { title: 'Headcount Analysis', icon: Users, href: '/admin/hr/headcount', group: 'reports', requiredRole: 'OWNER' },
-    { title: 'Turnover Analysis', icon: TrendingUp, href: '/admin/hr/turnover', group: 'reports', requiredRole: 'OWNER' },
 
     // ═══════════════════════════════════════════════════════════════════
     // 🏪 VENUE SETTINGS — Branch-specific (per-location hardware & config)
@@ -293,23 +286,20 @@ export const MENU_ITEMS: MenuItem[] = [
     // ═══════════════════════════════════════════════════════════════════
     // 🏢 ORG SETTINGS — Company-wide (policies, users, branding)
     // ═══════════════════════════════════════════════════════════════════
-    { title: 'Company Profile', icon: Building2, href: '/admin/company-settings', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'Organization Profile', icon: Building2, href: '/admin/company-settings', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'Legal Entities', icon: FileText, href: '/admin/legal-entities', group: 'org-settings', requiredRole: 'OWNER' },
     { title: 'Venue Management', icon: Building2, href: '/admin/venues', group: 'org-settings', requiredRole: 'OWNER' },
     { title: 'User Accounts', icon: UserCheck, href: '/admin/users', group: 'org-settings', requiredRole: 'OWNER' },
     { title: 'Roles & Permissions', icon: Shield, href: '/admin/access-control', group: 'org-settings', requiredRole: 'OWNER' },
     { title: 'Integration Sync', icon: RefreshCw, href: '/admin/sync', group: 'org-settings', requiredRole: 'OWNER' },
-    { title: 'Billing & Plans', icon: DollarSign, href: '/admin/billing', group: 'org-settings', requiredRole: 'OWNER' },
     { title: 'Theme & Branding', icon: Palette, href: '/admin/theme', group: 'org-settings', requiredRole: 'OWNER' },
-    { title: 'Content Studio', icon: LayoutDashboard, href: '/admin/content-studio', group: 'org-settings', requiredRole: 'OWNER' },
     { title: 'Template Studio', icon: LayoutDashboard, href: '/admin/templates', group: 'org-settings', requiredRole: 'MANAGER' },
-    { title: 'Content Editor', icon: Type, href: '/admin/content-editor', group: 'org-settings', requiredRole: 'OWNER' },
     { title: 'Google Workspace', icon: Globe, href: '/admin/google-workspace', group: 'org-settings', requiredRole: 'MANAGER' },
-    { title: 'Feature Flags', icon: Shield, href: '/admin/feature-flags', group: 'org-settings', requiredRole: 'OWNER' },
-    { title: 'Data Export', icon: Database, href: '/admin/data-export', group: 'org-settings', requiredRole: 'OWNER' },
 
     // ═══════════════════════════════════════════════════════════════════
     // ⚙️ SYSTEM ADMIN — Platform infrastructure (product_owner only)
     // ═══════════════════════════════════════════════════════════════════
+    { title: 'Observability', icon: Activity, href: '/admin/observability', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
     {
         title: 'System Intelligence', icon: Activity, href: '/admin/monitoring', group: 'system-admin', requiredRole: 'PRODUCT_OWNER',
         subs: [
@@ -320,6 +310,11 @@ export const MENU_ITEMS: MenuItem[] = [
             { title: 'Test Panel', id: 'test', href: '/admin/observability/testpanel' },
         ],
     },
+    { title: 'Pre-Go-Live', icon: Activity, href: '/admin/pre-go-live', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+    { title: 'Audit Logs', icon: Activity, href: '/admin/audit-logs', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+    { title: 'Billing & Plans', icon: DollarSign, href: '/admin/billing', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+    { title: 'Feature Flags', icon: Shield, href: '/admin/feature-flags', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+    { title: 'Data Export', icon: Database, href: '/admin/data-export', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
     { title: 'Microservices', icon: Server, href: '/admin/microservices', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
     { title: 'Event Monitor', icon: Activity, href: '/admin/events', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
     { title: 'Updates & Changelog', icon: Activity, href: '/admin/updates', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },

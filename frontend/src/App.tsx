@@ -172,7 +172,8 @@ const Operations = React.lazy(() => import("./pages/admin/Operations"));
 const POSDashboard = React.lazy(() => import("./pages/admin/POSDashboard"));
 const ProductManagement = React.lazy(() => import("./pages/admin/ProductManagement"));
 const CompanySettings = React.lazy(() => import("./pages/admin/CompanySettings"));
-const SettingsHub = React.lazy(() => import("./pages/admin/SettingsHub"));
+// SettingsHub removed — orphan page, route now points to VenueSettings
+const LegalEntities = React.lazy(() => import("./pages/admin/LegalEntities"));
 const ESGModule = React.lazy(() => import("./pages/admin/hr/ESGModule"));
 const GovReportsPage = React.lazy(() => import("./pages/admin/hr/GovReportsPage"));
 const SickLeaveAnalysis = React.lazy(() => import("./pages/admin/hr/SickLeaveAnalysis"));
@@ -416,7 +417,8 @@ function App() {
                                     <Route path="pos-dashboard" element={<RoleRoute requiredRole="MANAGER"><POSDashboard /></RoleRoute>} />
                                     <Route path="products" element={<RoleRoute requiredRole="MANAGER"><ProductManagement /></RoleRoute>} />
                                     <Route path="company-settings" element={<RoleRoute requiredRole="OWNER"><CompanySettings /></RoleRoute>} />
-                                    <Route path="settings" element={<RoleRoute requiredRole="OWNER"><SettingsHub /></RoleRoute>} />
+                                    <Route path="settings" element={<RoleRoute requiredRole="OWNER"><VenueSettings /></RoleRoute>} />
+                                    <Route path="legal-entities" element={<RoleRoute requiredRole="OWNER"><LegalEntities /></RoleRoute>} />
                                     <Route path="devices" element={<RoleRoute requiredRole="MANAGER"><Devices /></RoleRoute>} />
                                     <Route path="app-settings" element={<RoleRoute requiredRole="OWNER"><RestaurantAppSettings /></RoleRoute>} />
                                     <Route path="physical-tables" element={<RoleRoute requiredRole="MANAGER"><PhysicalTables /></RoleRoute>} />

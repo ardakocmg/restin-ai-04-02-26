@@ -92,6 +92,9 @@ app.include_router(smart_home_router, prefix="/api/smart-home", tags=["smart-hom
 from routes.hive_routes import router as hive_router
 app.include_router(hive_router, prefix="/api/hive", tags=["hive"])
 
+from routes.legal_entities import router as legal_entities_router
+app.include_router(legal_entities_router)
+
 app.include_router(catchall_router)
 app.include_router(system_router)
 
