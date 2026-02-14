@@ -53,21 +53,47 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
   const [domainBarExpanded, setDomainBarExpanded] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleDomainClick = (id) => {
-    setActiveDomain(id);
-    if (collapsed) {
-      onToggle?.();
+  const isActive = (href) => location.pathname === href || location.pathname.startsWith(href + '/');
+  const isGroupActive = (children) => children?.some(c => isActive(c.href));
+
+  // Detect when the domain bar should show
+  // Sync activeDomain whenever the URL changes
+  React.useEffect(() => {
+    const detected = findActiveDomain();
+    if (detected && detected !== activeDomain) {
+      setActiveDomain(detected);
     }
-  };
+  }, [location.pathname]);
+
+  // Note: handleDomainClick replaced by handleDomainClickWithMemory (domain memory feature)
 
   const toggleDomainExpand = () => {
-    const newState = !domainBarExpanded;
-    setDomainBarExpanded(newState);
-    onDomainExpand?.(newState);
+    setDomainBarExpanded((prev) => !prev);
+    onDomainExpand?.(!domainBarExpanded);
   };
 
-  const isActive = (href) => location.pathname === href;
-  const isGroupActive = (children) => children?.some(child => location.pathname === child.href);
+  // ─── Cmd/Ctrl+click support — open in new tab ───
+  const handleNavClick = (href, e, extraFn) => {
+    if (e?.metaKey || e?.ctrlKey) {
+      e.preventDefault();
+      window.open(href, '_blank');
+      return;
+    }
+    navigate(href);
+    extraFn?.();
+  };
+
+  // ─── Domain notification badges (mock counts, will be fed by real data later) ───
+  const domainNotifications = useMemo(() => ({
+    home: 0,
+    pos: 2,
+    hr: 5,
+    inventory: 1,
+    finance: 0,
+    restin: 3,
+    settings: 0,
+    collab: 4,
+  }), []);
 
   const hasTertiary = activeSubItem?.subs?.length > 0;
 
@@ -236,8 +262,21 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                 <div className="absolute inset-0 rounded-xl bg-red-500/10 blur-xl scale-150 animate-pulse pointer-events-none" />
               )}
               <domain.icon className={cn("shrink-0 transition-transform duration-300 group-hover:scale-110 relative z-10", domainBarExpanded ? "h-5 w-5" : "h-6 w-6")} />
+              {/* Notification badge */}
+              {!domainBarExpanded && domainNotifications[domain.id] > 0 && (
+                <span className="absolute -top-1 -right-1 z-20 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-white bg-red-600 rounded-full shadow-[0_0_8px_rgba(220,38,38,0.6)] border-2 border-zinc-950 animate-in fade-in">
+                  {domainNotifications[domain.id] > 9 ? '9+' : domainNotifications[domain.id]}
+                </span>
+              )}
               {domainBarExpanded && (
-                <span className="text-sm font-bold truncate tracking-wide relative z-10">{domain.title}</span>
+                <div className="flex-1 flex items-center justify-between relative z-10">
+                  <span className="text-sm font-bold truncate tracking-wide">{domain.title}</span>
+                  {domainNotifications[domain.id] > 0 && (
+                    <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-black text-white bg-red-600 rounded-full">
+                      {domainNotifications[domain.id]}
+                    </span>
+                  )}
+                </div>
               )}
               {activeDomain === domain.id && !domainBarExpanded && (
                 <div className="absolute left-[-20px] w-[4px] h-8 bg-white rounded-r-full shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-pulse" />
@@ -355,7 +394,10 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                               ? 'bg-red-500/[0.08] text-red-500 border-red-500/20 shadow-[0_0_15px_rgba(229,57,53,0.05)]'
                               : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-200'
                           )}
-                          onClick={() => setActiveSubItem(item)}
+                          onClick={(e) => {
+                            if (e.metaKey || e.ctrlKey) return; // Let browser handle new tab natively
+                            setActiveSubItem(item);
+                          }}
                         >
                           <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isActive(item.href) ? "text-red-500" : "text-zinc-500 group-hover:text-zinc-300")} />
                           {!collapsed && <span className={cn("text-sm font-medium", isActive(item.href) ? "font-bold" : "")}>{item.title}</span>}
@@ -390,10 +432,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                               {item.children.map((child) => (
                                 <button
                                   key={child.href}
-                                  onClick={() => {
-                                    navigate(child.href);
-                                    setActiveSubItem(child);
-                                  }}
+                                  onClick={(e) => handleNavClick(child.href, e, () => setActiveSubItem(child))}
                                   className={cn(
                                     'w-full text-left block px-3 py-2 rounded-lg text-sm transition-all border border-transparent outline-none relative overflow-hidden',
                                     isActive(child.href)

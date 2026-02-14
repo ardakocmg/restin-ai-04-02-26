@@ -195,18 +195,18 @@ Organization (Marvin Gauci Group)
 
 - [x] Replace all `style={}` attributes with Tailwind `cn()` classes (3/3 done)
 - [x] Add `framer-motion` AnimatePresence on domain switch (slide-in/out menu content)
-- [ ] Add tooltip badges showing notification counts per domain
+- [x] Add notification badges showing counts per domain (red pill on Pane 1 icons)
 - [x] Active item gets a breathing glow (animate-pulse on red dot)
 - [x] Keyboard navigation: ↑↓ arrow keys traverse menu items, Enter to select/expand
 - [x] Focus index resets on domain switch and search term changes
 - [x] Pane 1 domain icons: ambient gradient blob (red-500/10 blur-xl) behind active icon
 - [x] Smooth `motion.div` height transitions for expand/collapse children
 
-#### 3.2 Smart Features (Partial ✅)
+#### 3.2 Smart Features ✅ DONE
 
 - [x] Remember last visited page per domain (localStorage `restin:domain-memory`)
 - [ ] Pin frequently used pages (persist to localStorage)
-- [ ] Command+click opens in new tab
+- [x] Cmd/Ctrl+click opens sidebar links in new tab (window.open + native Link handling)
 - [ ] Visual distinction for different item types (settings vs data pages vs dashboards)
 
 ---
@@ -226,7 +226,10 @@ Organization (Marvin Gauci Group)
 
 - [x] Breadcrumb strip below TopBar, above content
 - [x] Shows: `🏠 Home › HR & People › Clocking Data`
-- [ ] Quick-action buttons contextual to current page (e.g., "Export" on reports)
+- [x] Contextual quick-action buttons via `useBreadcrumbActions` hook
+- [x] Route-aware: Export CSV/PDF on reports, Add Employee on HR, New PO on procurement, etc.
+- [x] Actions emit CustomEvent `breadcrumb-action` for page-level handling
+- [x] Visual variants: primary (red), default (subtle), ghost (minimal)
 
 ---
 
