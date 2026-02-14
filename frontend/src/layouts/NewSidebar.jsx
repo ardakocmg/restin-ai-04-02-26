@@ -3,23 +3,10 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useAuth } from '../features/auth/AuthContext';
-import { useVenue } from '../context/VenueContext';
 import { MENU_ITEMS, DOMAINS, getDomainForGroup } from '@/lib/searchRegistry';
-import {
-  LayoutDashboard, ShoppingCart, Users, FileText,
-  DollarSign, BarChart3, Settings, Activity, TrendingUp, Factory, Award,
-  Table as TableIcon, Calendar, Truck, PieChart as PieChartIcon,
-  UserCheck, Receipt, Clock, Package, Upload, Monitor,
-  Building2, LayoutGrid, ShieldAlert, Shield, Layers,
-  RefreshCw, Home, Timer, Type, Palette, Server, Globe, Mic, Wand2, Radar, MessageSquare, Cpu, Zap, Archive, Briefcase, Menu, ChevronRight, ChevronLeft, Search, X
-} from 'lucide-react';
+import { ChevronRight, ChevronLeft, Search } from 'lucide-react';
+
 
 // Role hierarchy from centralized definition (includes product_owner: 99)
 import { ROLE_HIERARCHY } from '../lib/roles';
@@ -239,14 +226,11 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                       to={item.href}
                       className={cn(
                         'group flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 border border-transparent',
-                        collapsed && 'justify-center px-2 py-3'
+                        collapsed && 'justify-center px-2 py-3',
+                        isActive(item.href)
+                          ? 'bg-red-500/[0.08] text-red-500 border-red-500/20 shadow-[0_0_15px_rgba(229,57,53,0.05)]'
+                          : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-200'
                       )}
-                      style={isActive(item.href) ? {
-                        backgroundColor: 'rgba(229, 57, 53, 0.08)',
-                        color: '#EF4444',
-                        borderColor: 'rgba(229, 57, 53, 0.2)',
-                        boxShadow: '0 0 15px rgba(229, 57, 53, 0.05)'
-                      } : { color: '#A1A1AA' }}
                       onClick={() => setActiveSubItem(item)}
                     >
                       <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isActive(item.href) ? "text-red-500" : "text-zinc-500 group-hover:text-zinc-300")} />
@@ -259,11 +243,9 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                         onClick={() => !collapsed ? toggleGroup(item.group) : null}
                         className={cn(
                           'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 group hover:bg-white/5',
-                          collapsed && 'justify-center px-2 py-3'
+                          collapsed && 'justify-center px-2 py-3',
+                          isGroupActive(item.children) ? 'text-zinc-100' : 'text-zinc-500'
                         )}
-                        style={{
-                          color: isGroupActive(item.children) ? '#F4F4F5' : '#71717A'
-                        }}
                       >
                         <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isGroupActive(item.children) ? "text-zinc-200" : "text-zinc-600 group-hover:text-zinc-400")} />
                         {!collapsed && (
@@ -282,13 +264,12 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                                 navigate(child.href);
                                 setActiveSubItem(child);
                               }}
-                              className={cn('w-full text-left block px-3 py-2 rounded-lg text-sm transition-all border border-transparent outline-none relative overflow-hidden')}
-                              style={isActive(child.href) ? {
-                                backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                                color: '#EF4444',
-                                borderColor: 'rgba(229, 57, 53, 0.1)',
-                                fontWeight: 600
-                              } : { color: '#71717A' }}
+                              className={cn(
+                                'w-full text-left block px-3 py-2 rounded-lg text-sm transition-all border border-transparent outline-none relative overflow-hidden',
+                                isActive(child.href)
+                                  ? 'bg-white/[0.03] text-red-500 border-red-500/10 font-semibold'
+                                  : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]'
+                              )}
                             >
                               <span className="relative z-10">{child.title}</span>
                               {isActive(child.href) && <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)]"></div>}

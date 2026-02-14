@@ -93,12 +93,16 @@ Organization (Marvin Gauci Group)
 
 | Component | File | Lines | Status |
 | --- | --- | --- | --- |
-| AdminLayout | `pages/admin/AdminLayout.js` | 112 | Shell (wraps sidebar + topbar + `<Outlet>`) |
-| Domain Sidebar (Active) | `layouts/NewSidebar.jsx` | 362 | 3-pane: Domain bar + Accordion + Tertiary |
-| Legacy Sidebar | `layouts/Sidebar.jsx` | 371 | Old accordion-only sidebar (UNUSED) |
+| AdminLayout | `pages/admin/AdminLayout.js` | 105 | Shell (sidebar + topbar + breadcrumb + `<Outlet>`) |
+| Domain Sidebar (Active) | `layouts/NewSidebar.jsx` | 343 | 3-pane: Domain bar + Accordion + Tertiary (cleaned) |
+| ~~Legacy Sidebar~~ | ~~`layouts/Sidebar.jsx`~~ | ~~371~~ | 🗑️ DELETED |
+| ~~AdminLayout_old~~ | ~~`pages/admin/AdminLayout_old.js`~~ | -- | 🗑️ DELETED |
 | Top Bar | `layouts/NewTopBar.jsx` | 493 | Venue switcher + Search + User + Status |
-| Page Layout (TS) | `layouts/PageLayout.tsx` | 78 | Sticky header + filters + content area |
-| Page Container (JS) | `layouts/PageContainer.jsx` | 72 | Simple header + back button + content |
+| **Breadcrumb Hook** | `hooks/useBreadcrumb.ts` | 140 | ✅ NEW — Route→segment resolver |
+| **Breadcrumb Component** | `components/shared/Breadcrumb.tsx` | 80 | ✅ NEW — Premium breadcrumb strip |
+| **PageShell (Unified)** | `layouts/PageShell.tsx` | 120 | ✅ NEW — Replaces PageLayout + PageContainer |
+| Page Layout (Legacy) | `layouts/PageLayout.tsx` | 78 | ⚠️ Deprecated — use PageShell |
+| Page Container (Legacy) | `layouts/PageContainer.jsx` | 72 | ⚠️ Deprecated — use PageShell |
 | Search Registry | `lib/searchRegistry.ts` | 365 | Single source of truth for all routes/domains |
 
 ### Current Architecture
@@ -122,16 +126,16 @@ Organization (Marvin Gauci Group)
 
 ### Pain Points
 
-1. **No Breadcrumbs** — Users have no "where am I?" indicator
-2. **Two Page Wrappers** — `PageLayout.tsx` (TS) vs `PageContainer.jsx` (JS) — inconsistent
-3. **NewSidebar is .jsx** — Not TypeScript, no type safety
-4. **NewTopBar is .jsx** — Same issue
-5. **AdminLayout is .js** — Same issue
-6. **Sidebar has inline styles** — `style={}` throughout instead of CSS classes
+1. ~~**No Breadcrumbs**~~ ✅ FIXED — `useBreadcrumb` + `<Breadcrumb>` integrated into AdminLayout
+2. ~~**Two Page Wrappers**~~ ✅ FIXED — Unified `PageShell.tsx` created
+3. **NewSidebar is .jsx** — Not TypeScript (planned for Phase 1.2)
+4. **NewTopBar is .jsx** — Same issue (planned for Phase 1.2)
+5. **AdminLayout is .js** — Same issue (planned for Phase 1.2)
+6. ~~**Sidebar has inline styles**~~ ✅ FIXED — All 3 `style={}` converted to Tailwind cn()
 7. **No route transition animations** — Page switches are instant/jarring
-8. **Pane 3 has broken URL queries** — `type = ${sub.id}` with extra spaces
-9. **Legacy Sidebar.jsx** — Still exists but unused, creates confusion
-10. **Some pages use neither wrapper** — Direct `<div>` rendering in Outlet
+8. ~~**Pane 3 has broken URL queries**~~ ✅ FIXED — `type=${sub.id}` (no spaces)
+9. ~~**Legacy Sidebar.jsx**~~ ✅ DELETED
+10. **Some pages use neither wrapper** — Need to migrate to PageShell
 
 ---
 
@@ -139,55 +143,57 @@ Organization (Marvin Gauci Group)
 
 ### Phase 1: Foundation (TypeScript Migration + Cleanup)
 
-#### 1.1 Delete Legacy Files
+#### 1.1 Delete Legacy Files ✅ DONE
 
-- [ ] Delete `layouts/Sidebar.jsx` (unused)
-- [ ] Delete `pages/admin/AdminLayout_old.js` (unused)
+- [x] Delete `layouts/Sidebar.jsx` (unused)
+- [x] Delete `pages/admin/AdminLayout_old.js` (unused)
+- [x] Clean unused imports from AdminLayout.js (Button, pane width vars)
+- [x] Clean 45+ unused icon imports from NewSidebar.jsx
 
 #### 1.2 Convert to TypeScript
 
 - [ ] `AdminLayout.js` → `AdminLayout.tsx` (with proper prop types)
 - [ ] `NewSidebar.jsx` → `NewSidebar.tsx` (with MenuItem/Domain types from searchRegistry)
 - [ ] `NewTopBar.jsx` → `NewTopBar.tsx` (with typed props)
-- [ ] `PageContainer.jsx` → Merge into `PageLayout.tsx` (consolidate to one wrapper)
+- [x] `PageContainer.jsx` + `PageLayout.tsx` → Merged into `PageShell.tsx`
 
-#### 1.3 Fix Broken Pane 3 URLs
+#### 1.3 Fix Broken Pane 3 URLs ✅ DONE
 
-- [ ] Fix `type = ${sub.id}` → `type=${sub.id}` (remove spaces in query params)
+- [x] Fix `type = ${sub.id}` → `type=${sub.id}` (remove spaces in query params)
 
 ---
 
-### Phase 2: Premium Breadcrumb System
+### Phase 2: Premium Breadcrumb System ✅ DONE
 
-#### 2.1 Create `useBreadcrumb` Hook
+#### 2.1 Create `useBreadcrumb` Hook ✅
 
-- [ ] Create `hooks/useBreadcrumb.ts`
-- [ ] Reads current `location.pathname` and matches against `searchRegistry`
-- [ ] Produces: `[{ label: 'HR & People', icon: Users, path: '/admin/hr' }, { label: 'Clocking Data', path: '/admin/hr/clocking' }]`
-- [ ] Supports dynamic segments: `/admin/hr/people/:id` → `Employee #123`
-- [ ] Integrates with domain mapping for root-level breadcrumb
+- [x] Create `hooks/useBreadcrumb.ts`
+- [x] Reads current `location.pathname` and matches against `searchRegistry`
+- [x] Produces: `[{ label, icon, href, isLast }]` hierarchical segments
+- [x] Handles unregistered routes via URL parsing fallback
+- [x] Integrates with domain mapping for root-level breadcrumb
 
-#### 2.2 Create `<Breadcrumb>` Component
+#### 2.2 Create `<Breadcrumb>` Component ✅
 
-- [ ] Create `components/shared/Breadcrumb.tsx`
-- [ ] Premium design: `Home › HR & People › Clocking Data`
-- [ ] Each segment is clickable and navigates
-- [ ] Animated chevron separators with `framer-motion`
-- [ ] Current page segment is highlighted (bold + accent color)
-- [ ] Truncation for mobile (show only last 2 segments)
+- [x] Create `components/shared/Breadcrumb.tsx`
+- [x] Premium design: `🏠 Home › HR & People › Clocking Data`
+- [x] Each ancestor is clickable Link, current page is highlighted span
+- [x] Chevron separators (lucide ChevronRight)
+- [x] Current page: bold + accent color + subtle bg
+- [x] Truncation for overflow (max-w + truncate)
 
-#### 2.3 Integrate into TopBar
+#### 2.3 Integrate into AdminLayout ✅
 
-- [ ] Add breadcrumb below the search bar or in a dedicated row
-- [ ] Shows domain icon + text path, animated on route change
+- [x] Added breadcrumb strip between TopBar and `<Outlet>`
+- [x] Styled: subtle bottom border + backdrop blur
 
 ---
 
 ### Phase 3: Premium Sidebar Refinement
 
-#### 3.1 Design Upgrades (NewSidebar.tsx)
+#### 3.1 Design Upgrades (NewSidebar.jsx)
 
-- [ ] Replace all `style={}` attributes with Tailwind classes
+- [x] Replace all `style={}` attributes with Tailwind `cn()` classes (3/3 done)
 - [ ] Add `framer-motion` page transition animations on domain switch
 - [ ] Add tooltip badges showing notification counts per domain
 - [ ] Active item gets a subtle gradient glow animation (breathing effect)
