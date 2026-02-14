@@ -330,7 +330,7 @@ def create_hr_payroll_advanced_router():
                 method=method,
                 email=dispatch_data.get("emails", {}).get(payslip["employee_id"])
             )
-            await db.DispatchQueue.insert_one(dispatch_entry.model_dump())
+            await db.dispatch_queue.insert_one(dispatch_entry.model_dump())
         
         # Update run state
         await db["payroll_runs"].update_one(
@@ -413,7 +413,7 @@ def create_hr_payroll_advanced_router():
             query["status"] = status
         
         # Get all dispatch entries
-        queue = await db.DispatchQueue.find(query, {"_id": 0}).to_list(10000)
+        queue = await db.dispatch_queue.find(query, {"_id": 0}).to_list(500)
         
         # Filter by venue (need to check payroll run)
         result = []

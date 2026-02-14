@@ -23,7 +23,7 @@ async def deduplicate_collection(db: AsyncIOMotorDatabase, collection_name: str,
         {"$match": {"count": {"$gt": 1}}}
     ]
     
-    duplicate_groups = await collection.aggregate(pipeline).to_list(None)
+    duplicate_groups = await collection.aggregate(pipeline).to_list(1000)
     
     for group in duplicate_groups:
         key_val = group["_id"]

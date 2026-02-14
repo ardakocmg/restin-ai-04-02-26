@@ -22,7 +22,7 @@ def create_invoice_ai_router():
         # Get PO data if provided
         po_data = None
         if request.po_id:
-            po_data = await db.PurchaseOrders.find_one({"id": request.po_id}, {"_id": 0})
+            po_data = await db.purchase_orders.find_one({"id": request.po_id}, {"_id": 0})
         
         # Process OCR
         result = await invoice_ocr_service.process_invoice(request.image_base64, po_data)
@@ -55,7 +55,7 @@ def create_invoice_ai_router():
         elif request.po_id:
             ai_invoice.status = InvoiceStatus.MATCHED
         
-        await db.AIInvoices.insert_one(ai_invoice.model_dump())
+        await db.ai_invoices.insert_one(ai_invoice.model_dump())
         
         return ai_invoice.model_dump()
     
@@ -71,7 +71,7 @@ def create_invoice_ai_router():
         if status:
             query["status"] = status
         
-        invoices = await db.AIInvoices.find(query, {"_id": 0, "image_base64": 0}).to_list(1000)
+        invoices = await db.ai_invoices.find(query, {"_id": 0, "image_base64": 0}).to_list(1000)
         return invoices
     
     @router.get("/venues/{venue_id}/invoices/ai/{invoice_id}")
@@ -82,7 +82,7 @@ def create_invoice_ai_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        invoice = await db.AIInvoices.find_one(
+        invoice = await db.ai_invoices.find_one(
             {"id": invoice_id, "venue_id": venue_id},
             {"_id": 0}
         )
@@ -100,7 +100,7 @@ def create_invoice_ai_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.AIInvoices.update_one(
+        await db.ai_invoices.update_one(
             {"id": invoice_id, "venue_id": venue_id},
             {"$set": {"status": "approved"}}
         )
@@ -116,7 +116,7 @@ def create_invoice_ai_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.AIInvoices.update_one(
+        await db.ai_invoices.update_one(
             {"id": invoice_id, "venue_id": venue_id},
             {"$set": {"status": "rejected"}}
         )

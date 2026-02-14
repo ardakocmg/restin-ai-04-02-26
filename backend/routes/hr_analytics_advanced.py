@@ -19,7 +19,7 @@ def create_hr_analytics_advanced_router():
         await check_venue_access(current_user, venue_id)
         
         # Get all employees
-        employees = await db.Employees.find({"venue_id": venue_id}, {"_id": 0}).to_list(10000)
+        employees = await db.employees.find({"venue_id": venue_id}, {"_id": 0}).to_list(500)
         
         # Headcount metrics
         total_employees = len(employees)
@@ -81,7 +81,7 @@ def create_hr_analytics_advanced_router():
             performance_summary={}
         )
         
-        await db.HRAnalyticsSnapshots.insert_one(snapshot.model_dump())
+        await db.hr_analytics_snapshots.insert_one(snapshot.model_dump())
         return snapshot.model_dump()
     
     @router.get("/venues/{venue_id}/hr/analytics/snapshots")
@@ -92,7 +92,7 @@ def create_hr_analytics_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        snapshots = await db.HRAnalyticsSnapshots.find(
+        snapshots = await db.hr_analytics_snapshots.find(
             {"venue_id": venue_id},
             {"_id": 0}
         ).sort("snapshot_date", -1).limit(limit).to_list(limit)
@@ -106,7 +106,7 @@ def create_hr_analytics_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        employees = await db.Employees.find({"venue_id": venue_id}, {"_id": 0}).to_list(10000)
+        employees = await db.employees.find({"venue_id": venue_id}, {"_id": 0}).to_list(500)
         
         total = len(employees)
         active = len([e for e in employees if e.get("status") == "active"])
@@ -161,16 +161,16 @@ def create_hr_analytics_advanced_router():
         now = datetime.now(timezone.utc)
         start_date = (now - timedelta(days=period_days)).isoformat()
         
-        terminated = await db.Employees.find(
+        terminated = await db.employees.find(
             {
                 "venue_id": venue_id,
                 "status": "terminated",
                 "termination_date": {"$gte": start_date}
             },
             {"_id": 0}
-        ).to_list(10000)
+        ).to_list(500)
         
-        total_employees = await db.Employees.count_documents({"venue_id": venue_id})
+        total_employees = await db.employees.count_documents({"venue_id": venue_id})
         
         turnover_count = len(terminated)
         turnover_rate = (turnover_count / total_employees * 100) if total_employees > 0 else 0
@@ -216,7 +216,7 @@ def create_hr_analytics_advanced_router():
         now = datetime.now(timezone.utc)
         three_months_ago = (now - timedelta(days=90)).isoformat()
         
-        payroll_runs = await db.PayrollRuns.find(
+        payroll_runs = await db.payroll_runs.find(
             {
                 "venue_id": venue_id,
                 "created_at": {"$gte": three_months_ago}
@@ -227,7 +227,7 @@ def create_hr_analytics_advanced_router():
         total_payroll = sum(run.get("total_net", 0) for run in payroll_runs)
         avg_payroll = total_payroll / len(payroll_runs) if payroll_runs else 0
         
-        total_employees = await db.Employees.count_documents({"venue_id": venue_id, "status": "active"})
+        total_employees = await db.employees.count_documents({"venue_id": venue_id, "status": "active"})
         cost_per_employee = total_payroll / total_employees if total_employees > 0 else 0
         
         return {

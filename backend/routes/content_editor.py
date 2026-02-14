@@ -33,7 +33,7 @@ def create_content_editor_router():
         }
         
         # Upsert
-        await db.VisualContent.update_one(
+        await db.visual_content.update_one(
             {"id": content_record["id"]},
             {"$set": content_record},
             upsert=True
@@ -49,7 +49,7 @@ def create_content_editor_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        content = await db.VisualContent.find_one(
+        content = await db.visual_content.find_one(
             {"id": content_id, "venue_id": venue_id},
             {"_id": 0}
         )
@@ -71,7 +71,7 @@ def create_content_editor_router():
         if content_type:
             query["content_type"] = content_type
         
-        content_list = await db.VisualContent.find(query, {"_id": 0}).sort("updated_at", -1).to_list(1000)
+        content_list = await db.visual_content.find(query, {"_id": 0}).sort("updated_at", -1).to_list(1000)
         return content_list
     
     return router

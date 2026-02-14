@@ -39,7 +39,7 @@ def create_quality_control_router():
             follow_up_date=audit_data.follow_up_date
         )
         
-        await db.QualityAudits.insert_one(audit.model_dump())
+        await db.quality_audits.insert_one(audit.model_dump())
         return audit.model_dump()
     
     @router.get("/venues/{venue_id}/quality/audits")
@@ -54,7 +54,7 @@ def create_quality_control_router():
         if audit_type:
             query["audit_type"] = audit_type
         
-        audits = await db.QualityAudits.find(query, {"_id": 0}).sort("audit_date", -1).to_list(1000)
+        audits = await db.quality_audits.find(query, {"_id": 0}).sort("audit_date", -1).to_list(1000)
         return audits
     
     @router.post("/venues/{venue_id}/quality/audits/{audit_id}/sign-off")
@@ -65,7 +65,7 @@ def create_quality_control_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.QualityAudits.update_one(
+        await db.quality_audits.update_one(
             {"id": audit_id, "venue_id": venue_id},
             {"$set": {"signed_off": True}}
         )
@@ -90,7 +90,7 @@ def create_quality_control_router():
         )
         
         # Upsert
-        await db.AllergenInfo.update_one(
+        await db.allergen_info.update_one(
             {"item_id": allergen_data["item_id"]},
             {"$set": allergen_info.model_dump()},
             upsert=True
@@ -106,7 +106,7 @@ def create_quality_control_router():
         await check_venue_access(current_user, venue_id)
         
         # Get all items for venue and their allergen info
-        allergens = await db.AllergenInfo.find({}, {"_id": 0}).to_list(10000)
+        allergens = await db.allergen_info.find({}, {"_id": 0}).to_list(500)
         return allergens
     
     @router.post("/venues/{venue_id}/compliance/documents")
@@ -140,7 +140,7 @@ def create_quality_control_router():
             status=status
         )
         
-        await db.ComplianceDocuments.insert_one(document.model_dump())
+        await db.compliance_documents.insert_one(document.model_dump())
         return document.model_dump()
     
     @router.get("/venues/{venue_id}/compliance/documents")
@@ -155,7 +155,7 @@ def create_quality_control_router():
         if status:
             query["status"] = status
         
-        documents = await db.ComplianceDocuments.find(query, {"_id": 0}).to_list(1000)
+        documents = await db.compliance_documents.find(query, {"_id": 0}).to_list(1000)
         return documents
     
     @router.get("/venues/{venue_id}/compliance/expiring-soon")
@@ -165,7 +165,7 @@ def create_quality_control_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        documents = await db.ComplianceDocuments.find(
+        documents = await db.compliance_documents.find(
             {"venue_id": venue_id, "status": {"$in": ["expiring_soon", "expired"]}},
             {"_id": 0}
         ).to_list(1000)

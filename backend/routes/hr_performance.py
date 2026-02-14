@@ -29,7 +29,7 @@ def create_hr_performance_router():
             created_by=current_user["id"]
         )
         
-        await db.Goals.insert_one(goal.model_dump())
+        await db.goals.insert_one(goal.model_dump())
         return goal.model_dump()
     
     @router.get("/venues/{venue_id}/hr/goals")
@@ -47,7 +47,7 @@ def create_hr_performance_router():
         if status:
             query["status"] = status
         
-        goals = await db.Goals.find(query, {"_id": 0}).to_list(1000)
+        goals = await db.goals.find(query, {"_id": 0}).to_list(1000)
         return goals
     
     @router.put("/venues/{venue_id}/hr/goals/{goal_id}")
@@ -61,7 +61,7 @@ def create_hr_performance_router():
         
         goal_data["updated_at"] = datetime.now(timezone.utc).isoformat()
         
-        await db.Goals.update_one(
+        await db.goals.update_one(
             {"id": goal_id, "venue_id": venue_id},
             {"$set": goal_data}
         )
@@ -88,7 +88,7 @@ def create_hr_performance_router():
             questions=review_data.get("questions", [])
         )
         
-        await db.PerformanceReviews.insert_one(review.model_dump())
+        await db.performance_reviews.insert_one(review.model_dump())
         return review.model_dump()
     
     @router.get("/venues/{venue_id}/hr/reviews")
@@ -106,7 +106,7 @@ def create_hr_performance_router():
         if status:
             query["status"] = status
         
-        reviews = await db.PerformanceReviews.find(query, {"_id": 0}).sort("created_at", -1).to_list(1000)
+        reviews = await db.performance_reviews.find(query, {"_id": 0}).sort("created_at", -1).to_list(1000)
         return reviews
     
     @router.post("/venues/{venue_id}/hr/reviews/{review_id}/complete")
@@ -123,7 +123,7 @@ def create_hr_performance_router():
         ratings = [q.get("rating", 0) for q in questions if q.get("rating")]
         overall_rating = sum(ratings) / len(ratings) if ratings else None
         
-        await db.PerformanceReviews.update_one(
+        await db.performance_reviews.update_one(
             {"id": review_id, "venue_id": venue_id},
             {
                 "$set": {
@@ -149,7 +149,7 @@ def create_hr_performance_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.PerformanceReviews.update_one(
+        await db.performance_reviews.update_one(
             {"id": review_id, "venue_id": venue_id},
             {
                 "$set": {
@@ -184,7 +184,7 @@ def create_hr_performance_router():
             aggregated_rating=aggregated_rating
         )
         
-        await db.Feedback360.insert_one(feedback_360.model_dump())
+        await db.feedback_360.insert_one(feedback_360.model_dump())
         return feedback_360.model_dump()
     
     @router.get("/venues/{venue_id}/hr/360-feedback")

@@ -16,7 +16,7 @@ class GlobalSearchService:
         
         # Search inventory
         if "inventory" in modules:
-            inventory_results = await db.InventoryItems.find(
+            inventory_results = await db.inventory_items.find(
                 {
                     "venue_id": venue_id,
                     "$or": [
@@ -36,7 +36,7 @@ class GlobalSearchService:
         
         # Search menu items
         if "menu" in modules:
-            menu_results = await db.MenuItems.find(
+            menu_results = await db.menu_items.find(
                 {
                     "venue_id": venue_id,
                     "$or": [
@@ -56,7 +56,7 @@ class GlobalSearchService:
         
         # Search employees
         if "employees" in modules:
-            employee_results = await db.Employees.find(
+            employee_results = await db.employees.find(
                 {
                     "venue_id": venue_id,
                     "$or": [
@@ -76,7 +76,7 @@ class GlobalSearchService:
         
         # Search suppliers
         if "suppliers" in modules:
-            supplier_results = await db.Suppliers.find(
+            supplier_results = await db.suppliers.find(
                 {
                     "venue_id": venue_id,
                     "name": {"$regex": query, "$options": "i"}

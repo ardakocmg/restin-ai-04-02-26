@@ -32,7 +32,7 @@ def create_central_kitchen_router():
             created_by=current_user["id"]
         )
         
-        await db.InternalOrders.insert_one(order.model_dump())
+        await db.internal_orders.insert_one(order.model_dump())
         return order.model_dump()
     
     @router.get("/venues/{venue_id}/internal-orders")
@@ -52,7 +52,7 @@ def create_central_kitchen_router():
         if status:
             query["status"] = status
         
-        orders = await db.InternalOrders.find(query, {"_id": 0}).to_list(1000)
+        orders = await db.internal_orders.find(query, {"_id": 0}).to_list(1000)
         return orders
     
     @router.post("/venues/{venue_id}/production/batches")
@@ -71,7 +71,7 @@ def create_central_kitchen_router():
             internal_orders=batch_data.internal_orders
         )
         
-        await db.ProductionBatches.insert_one(batch.model_dump())
+        await db.production_batches.insert_one(batch.model_dump())
         return batch.model_dump()
     
     @router.get("/venues/{venue_id}/production/batches")
@@ -86,7 +86,7 @@ def create_central_kitchen_router():
         if status:
             query["status"] = status
         
-        batches = await db.ProductionBatches.find(query, {"_id": 0}).to_list(1000)
+        batches = await db.production_batches.find(query, {"_id": 0}).to_list(1000)
         return batches
     
     @router.post("/venues/{venue_id}/production/batches/{batch_id}/start")
@@ -97,7 +97,7 @@ def create_central_kitchen_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.ProductionBatches.update_one(
+        await db.production_batches.update_one(
             {"id": batch_id, "venue_id": venue_id},
             {
                 "$set": {
@@ -119,7 +119,7 @@ def create_central_kitchen_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.ProductionBatches.update_one(
+        await db.production_batches.update_one(
             {"id": batch_id, "venue_id": venue_id},
             {
                 "$set": {
@@ -148,7 +148,7 @@ def create_central_kitchen_router():
             items=distribution_data["items"]
         )
         
-        await db.DistributionRecords.insert_one(distribution.model_dump())
+        await db.distribution_records.insert_one(distribution.model_dump())
         return distribution.model_dump()
     
     @router.get("/venues/{venue_id}/distribution")
@@ -168,7 +168,7 @@ def create_central_kitchen_router():
         if status:
             query["status"] = status
         
-        distributions = await db.DistributionRecords.find(query, {"_id": 0}).to_list(1000)
+        distributions = await db.distribution_records.find(query, {"_id": 0}).to_list(1000)
         return distributions
     
     @router.post("/venues/{venue_id}/distribution/{distribution_id}/ship")
@@ -179,7 +179,7 @@ def create_central_kitchen_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.DistributionRecords.update_one(
+        await db.distribution_records.update_one(
             {"id": distribution_id, "from_venue_id": venue_id},
             {
                 "$set": {
@@ -200,7 +200,7 @@ def create_central_kitchen_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.DistributionRecords.update_one(
+        await db.distribution_records.update_one(
             {"id": distribution_id, "to_venue_id": venue_id},
             {
                 "$set": {

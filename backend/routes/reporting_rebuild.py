@@ -35,7 +35,7 @@ def create_reporting_rebuild_router():
         if topics:
             query["topic"] = {"$in": topics}
         
-        events = await db.outbox_events.find(query, {"_id": 0}).to_list(10000)
+        events = await db.outbox_events.find(query, {"_id": 0}).to_list(500)
         
         # Process events to rebuild
         from workers.outbox_consumer import outbox_consumer

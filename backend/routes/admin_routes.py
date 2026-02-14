@@ -69,7 +69,7 @@ def create_admin_router():
         for venue in venues:
             venue_id = venue["id"]
             
-            orders = await db.orders.find({"venue_id": venue_id, "display_id": {"$exists": False}}, {"_id": 0}).to_list(10000)
+            orders = await db.orders.find({"venue_id": venue_id, "display_id": {"$exists": False}}, {"_id": 0}).to_list(500)
             
             for order in orders:
                 from services.id_service import ensure_ids

@@ -34,7 +34,7 @@ def create_procurement_advanced_router():
             deadline=rfq_data.get("deadline")
         )
         
-        result = await db.RFQs.insert_one(rfq.model_dump())
+        result = await db.rfqs.insert_one(rfq.model_dump())
         rfq_dict = rfq.model_dump()
         rfq_dict["_id"] = str(result.inserted_id)
         return rfq_dict
@@ -51,7 +51,7 @@ def create_procurement_advanced_router():
         if status:
             query["status"] = status
         
-        rfqs = await db.RFQs.find(query, {"_id": 0}).to_list(1000)
+        rfqs = await db.rfqs.find(query, {"_id": 0}).to_list(1000)
         return rfqs
     
     @router.post("/venues/{venue_id}/rfq/{rfq_id}/quote")
@@ -63,7 +63,7 @@ def create_procurement_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        rfq = await db.RFQs.find_one({"id": rfq_id, "venue_id": venue_id}, {"_id": 0})
+        rfq = await db.rfqs.find_one({"id": rfq_id, "venue_id": venue_id}, {"_id": 0})
         if not rfq:
             raise HTTPException(404, "RFQ not found")
         
@@ -77,7 +77,7 @@ def create_procurement_advanced_router():
             "submitted_at": datetime.now(timezone.utc).isoformat()
         }
         
-        await db.RFQs.update_one(
+        await db.rfqs.update_one(
             {"id": rfq_id},
             {
                 "$push": {"quotes": quote},
@@ -96,7 +96,7 @@ def create_procurement_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.RFQs.update_one(
+        await db.rfqs.update_one(
             {"id": rfq_id, "venue_id": venue_id},
             {
                 "$set": {
@@ -125,7 +125,7 @@ def create_procurement_advanced_router():
             escalation_hours=rule_data.get("escalation_hours")
         )
         
-        await db.ApprovalRules.insert_one(rule.model_dump())
+        await db.approval_rules.insert_one(rule.model_dump())
         return rule.model_dump()
     
     @router.get("/venues/{venue_id}/procurement/approval-rules")
@@ -135,7 +135,7 @@ def create_procurement_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        rules = await db.ApprovalRules.find(
+        rules = await db.approval_rules.find(
             {"venue_id": venue_id, "active": True},
             {"_id": 0}
         ).to_list(1000)
@@ -158,7 +158,7 @@ def create_procurement_advanced_router():
             lead_time_days=rule_data["lead_time_days"]
         )
         
-        await db.AutoOrderRules.insert_one(rule.model_dump())
+        await db.auto_order_rules.insert_one(rule.model_dump())
         return rule.model_dump()
     
     @router.get("/venues/{venue_id}/procurement/auto-order-rules")
@@ -168,7 +168,7 @@ def create_procurement_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        rules = await db.AutoOrderRules.find(
+        rules = await db.auto_order_rules.find(
             {"venue_id": venue_id, "active": True},
             {"_id": 0}
         ).to_list(1000)

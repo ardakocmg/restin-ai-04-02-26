@@ -33,7 +33,7 @@ def create_hr_leave_advanced_router():
             probation_period_months=rule_data.get("probation_period_months", 0)
         )
         
-        await db.LeaveAccrualRules.insert_one(rule.model_dump())
+        await db.leave_accrual_rules.insert_one(rule.model_dump())
         return rule.model_dump()
     
     @router.get("/venues/{venue_id}/hr/leave/accrual-rules")
@@ -43,7 +43,7 @@ def create_hr_leave_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        rules = await db.LeaveAccrualRules.find(
+        rules = await db.leave_accrual_rules.find(
             {"venue_id": venue_id, "active": True},
             {"_id": 0}
         ).to_list(1000)
@@ -66,7 +66,7 @@ def create_hr_leave_advanced_router():
             applies_to_roles=blackout_data.get("applies_to_roles", [])
         )
         
-        await db.BlackoutDates.insert_one(blackout.model_dump())
+        await db.blackout_dates.insert_one(blackout.model_dump())
         return blackout.model_dump()
     
     @router.get("/venues/{venue_id}/hr/leave/blackout-dates")
@@ -76,7 +76,7 @@ def create_hr_leave_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        blackouts = await db.BlackoutDates.find(
+        blackouts = await db.blackout_dates.find(
             {"venue_id": venue_id},
             {"_id": 0}
         ).to_list(1000)
@@ -90,7 +90,7 @@ def create_hr_leave_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        balances = await db.LeaveBalances.find(
+        balances = await db.leave_balances.find(
             {"venue_id": venue_id, "employee_id": employee_id},
             {"_id": 0}
         ).to_list(100)
@@ -106,7 +106,7 @@ def create_hr_leave_advanced_router():
         await check_venue_access(current_user, venue_id)
         
         # Check blackout dates
-        blackouts = await db.BlackoutDates.find(
+        blackouts = await db.blackout_dates.find(
             {"venue_id": venue_id},
             {"_id": 0}
         ).to_list(1000)
@@ -123,7 +123,7 @@ def create_hr_leave_advanced_router():
                     raise HTTPException(400, f"Leave overlaps with blackout period: {blackout['name']}")
         
         # Check balance
-        balance_record = await db.LeaveBalances.find_one(
+        balance_record = await db.leave_balances.find_one(
             {
                 "venue_id": venue_id,
                 "employee_id": request_data["employee_id"],
@@ -149,7 +149,7 @@ def create_hr_leave_advanced_router():
             balance_at_request=balance_record["balance"] if balance_record else None
         )
         
-        await db.LeaveRequests.insert_one(leave_request.model_dump())
+        await db.leave_requests.insert_one(leave_request.model_dump())
         return leave_request.model_dump()
     
     @router.get("/venues/{venue_id}/hr/leave/requests")
@@ -167,7 +167,7 @@ def create_hr_leave_advanced_router():
         if employee_id:
             query["employee_id"] = employee_id
         
-        requests = await db.LeaveRequests.find(query, {"_id": 0}).sort("created_at", -1).to_list(1000)
+        requests = await db.leave_requests.find(query, {"_id": 0}).sort("created_at", -1).to_list(1000)
         return requests
     
     @router.post("/venues/{venue_id}/hr/leave/requests/{request_id}/approve")
@@ -179,7 +179,7 @@ def create_hr_leave_advanced_router():
         await check_venue_access(current_user, venue_id)
         
         # Update request
-        await db.LeaveRequests.update_one(
+        await db.leave_requests.update_one(
             {"id": request_id, "venue_id": venue_id},
             {
                 "$set": {
@@ -191,9 +191,9 @@ def create_hr_leave_advanced_router():
         )
         
         # Update balance
-        request = await db.LeaveRequests.find_one({"id": request_id}, {"_id": 0})
+        request = await db.leave_requests.find_one({"id": request_id}, {"_id": 0})
         if request:
-            await db.LeaveBalances.update_one(
+            await db.leave_balances.update_one(
                 {
                     "venue_id": venue_id,
                     "employee_id": request["employee_id"],
@@ -219,7 +219,7 @@ def create_hr_leave_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.LeaveRequests.update_one(
+        await db.leave_requests.update_one(
             {"id": request_id, "venue_id": venue_id},
             {
                 "$set": {

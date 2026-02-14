@@ -50,7 +50,7 @@ def create_hr_documents_advanced_router():
             uploaded_by=current_user["id"]
         )
         
-        await db.EmployeeDocuments.insert_one(document.model_dump())
+        await db.employee_documents.insert_one(document.model_dump())
         return document.model_dump()
     
     @router.get("/venues/{venue_id}/hr/documents")
@@ -72,10 +72,10 @@ def create_hr_documents_advanced_router():
             query["status"] = status
         
         # Exclude file content from list
-        documents = await db.EmployeeDocuments.find(
+        documents = await db.employee_documents.find(
             query,
             {"_id": 0, "file_base64": 0}
-        ).to_list(10000)
+        ).to_list(500)
         return documents
     
     @router.get("/venues/{venue_id}/hr/documents/expiring-soon")
@@ -85,13 +85,13 @@ def create_hr_documents_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        documents = await db.EmployeeDocuments.find(
+        documents = await db.employee_documents.find(
             {
                 "venue_id": venue_id,
                 "status": {"$in": ["expiring_soon", "expired"]}
             },
             {"_id": 0, "file_base64": 0}
-        ).to_list(10000)
+        ).to_list(500)
         
         return documents
     
@@ -103,7 +103,7 @@ def create_hr_documents_advanced_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.EmployeeDocuments.update_one(
+        await db.employee_documents.update_one(
             {"id": document_id, "venue_id": venue_id},
             {
                 "$set": {
@@ -136,7 +136,7 @@ def create_hr_documents_advanced_router():
             score=certificate_data.get("score")
         )
         
-        await db.TrainingCertificates.insert_one(certificate.model_dump())
+        await db.training_certificates.insert_one(certificate.model_dump())
         return certificate.model_dump()
     
     @router.get("/venues/{venue_id}/hr/training-certificates")
@@ -151,7 +151,7 @@ def create_hr_documents_advanced_router():
         if employee_id:
             query["employee_id"] = employee_id
         
-        certificates = await db.TrainingCertificates.find(query, {"_id": 0}).to_list(10000)
+        certificates = await db.training_certificates.find(query, {"_id": 0}).to_list(500)
         return certificates
     
     return router

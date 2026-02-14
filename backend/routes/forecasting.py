@@ -29,7 +29,7 @@ def create_forecasting_router():
         end_date = datetime.now(timezone.utc)
         start_date = end_date - timedelta(days=days)
         
-        ledger_entries = await db.StockLedger.find(
+        ledger_entries = await db.stock_ledger.find(
             {
                 "venue_id": venue_id,
                 "item_id": item_id,
@@ -37,7 +37,7 @@ def create_forecasting_router():
                 "timestamp": {"$gte": start_date.isoformat(), "$lte": end_date.isoformat()}
             },
             {"_id": 0}
-        ).to_list(10000)
+        ).to_list(1000)
         
         # Aggregate by date
         daily_data = {}
@@ -83,7 +83,7 @@ def create_forecasting_router():
             ai_insights = ai_result.get("analysis", "")
         
         # Create forecast record
-        item_data = await db.InventoryItems.find_one({"id": item_id}, {"_id": 0})
+        item_data = await db.inventory_items.find_one({"id": item_id}, {"_id": 0})
         
         forecast = DemandForecast(
             venue_id=venue_id,
@@ -99,7 +99,7 @@ def create_forecasting_router():
             valid_until=(end_date + timedelta(days=7)).isoformat()
         )
         
-        await db.DemandForecasts.insert_one(forecast.model_dump())
+        await db.demand_forecasts.insert_one(forecast.model_dump())
         
         return forecast.model_dump()
     
@@ -115,7 +115,7 @@ def create_forecasting_router():
         if item_id:
             query["item_id"] = item_id
         
-        forecasts = await db.DemandForecasts.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
+        forecasts = await db.demand_forecasts.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
         return forecasts
     
     @router.get("/venues/{venue_id}/forecasting/seasonal-patterns")
@@ -130,7 +130,7 @@ def create_forecasting_router():
         end_date = datetime.now(timezone.utc)
         start_date = end_date - timedelta(days=days)
         
-        ledger_entries = await db.StockLedger.find(
+        ledger_entries = await db.stock_ledger.find(
             {
                 "venue_id": venue_id,
                 "item_id": item_id,
@@ -138,7 +138,7 @@ def create_forecasting_router():
                 "timestamp": {"$gte": start_date.isoformat()}
             },
             {"_id": 0}
-        ).to_list(10000)
+        ).to_list(1000)
         
         daily_data = []
         for entry in ledger_entries:

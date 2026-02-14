@@ -308,7 +308,7 @@ def create_recipe_engineering_router():
         recipes = await db.recipes_engineered.find(query, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
         
         # Get venue trash retention settings (default 30 days)
-        venue = await db.Venues.find_one({"id": venue_id}, {"trash_retention_days": 1})
+        venue = await db.venues.find_one({"id": venue_id}, {"trash_retention_days": 1})
         retention_days = venue.get("trash_retention_days", 30) if venue else 30
         
         return {
@@ -433,7 +433,7 @@ def create_recipe_engineering_router():
             cost_change=cost_change,
             created_by=current_user["id"]
         )
-        await db.RecipeVersions.insert_one(version_record.model_dump())
+        await db.recipe_versions.insert_one(version_record.model_dump())
         
         # Update recipe
         recipe_data["version"] = new_version
@@ -454,7 +454,7 @@ def create_recipe_engineering_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        versions = await db.RecipeVersions.find(
+        versions = await db.recipe_versions.find(
             {"recipe_id": recipe_id},
             {"_id": 0}
         ).sort("version", -1).to_list(100)
@@ -591,7 +591,7 @@ def create_recipe_engineering_router():
         )
         
         # Log this critical action
-        await db.AuditLogs.insert_one({
+        await db.audit_logs.insert_one({
             "id": str(uuid.uuid4()),
             "venue_id": venue_id,
             "action": "PERMANENT_DELETE_RECIPES",

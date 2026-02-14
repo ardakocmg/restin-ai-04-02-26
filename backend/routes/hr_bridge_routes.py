@@ -42,7 +42,7 @@ async def get_leave_requests_bridge(
     if status:
         query["status"] = status
 
-    requests = await db.LeaveRequests.find(query, {"_id": 0}).sort("created_at", -1).to_list(500)
+    requests = await db.leave_requests.find(query, {"_id": 0}).sort("created_at", -1).to_list(500)
     return requests
 
 
@@ -66,7 +66,7 @@ async def update_leave_request_bridge(
             update["rejected_by"] = current_user.get("id", "system")
             update["rejection_reason"] = body.get("reason", "")
 
-    result = await db.LeaveRequests.update_one(
+    result = await db.leave_requests.update_one(
         {"id": request_id, "venue_id": venue_id},
         {"$set": update},
     )
@@ -93,7 +93,7 @@ async def get_leave_balances_bridge(
             {"employee_code": employee_code},
         ]
 
-    balances = await db.LeaveBalances.find(query, {"_id": 0}).to_list(500)
+    balances = await db.leave_balances.find(query, {"_id": 0}).to_list(500)
 
     # If no records found, return sensible defaults for Malta
     if not balances and employee_code:

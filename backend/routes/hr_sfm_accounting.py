@@ -27,7 +27,7 @@ def create_hr_sfm_accounting_router():
             parent_account=account_data.get("parent_account")
         )
         
-        await db.GLAccounts.insert_one(account.model_dump())
+        await db.gl_accounts.insert_one(account.model_dump())
         return account.model_dump()
     
     @router.get("/venues/{venue_id}/accounting/gl-accounts")
@@ -42,7 +42,7 @@ def create_hr_sfm_accounting_router():
         if account_type:
             query["account_type"] = account_type
         
-        accounts = await db.GLAccounts.find(query, {"_id": 0}).to_list(10000)
+        accounts = await db.gl_accounts.find(query, {"_id": 0}).to_list(500)
         return accounts
     
     @router.post("/venues/{venue_id}/accounting/ledger-entries")
@@ -68,12 +68,12 @@ def create_hr_sfm_accounting_router():
         
         # Update account balance
         balance_change = entry.debit - entry.credit
-        await db.GLAccounts.update_one(
+        await db.gl_accounts.update_one(
             {"id": entry.account_id},
             {"$inc": {"balance": balance_change}}
         )
         
-        await db.LedgerEntries.insert_one(entry.model_dump())
+        await db.ledger_entries.insert_one(entry.model_dump())
         return entry.model_dump()
     
     @router.get("/venues/{venue_id}/accounting/ledger-entries")
@@ -99,7 +99,7 @@ def create_hr_sfm_accounting_router():
             if end_date:
                 query["entry_date"]["$lte"] = end_date
         
-        entries = await db.LedgerEntries.find(query, {"_id": 0}).sort("entry_date", -1).to_list(10000)
+        entries = await db.ledger_entries.find(query, {"_id": 0}).sort("entry_date", -1).to_list(500)
         return entries
     
     @router.post("/venues/{venue_id}/accounting/bank-reconciliation")
@@ -121,7 +121,7 @@ def create_hr_sfm_accounting_router():
             deposits_in_transit=reconciliation_data.get("deposits_in_transit", [])
         )
         
-        await db.BankReconciliations.insert_one(reconciliation.model_dump())
+        await db.bank_reconciliations.insert_one(reconciliation.model_dump())
         return reconciliation.model_dump()
     
     @router.get("/venues/{venue_id}/accounting/bank-reconciliation")
@@ -136,7 +136,7 @@ def create_hr_sfm_accounting_router():
         if bank_account_id:
             query["bank_account_id"] = bank_account_id
         
-        reconciliations = await db.BankReconciliations.find(query, {"_id": 0}).sort("statement_date", -1).to_list(1000)
+        reconciliations = await db.bank_reconciliations.find(query, {"_id": 0}).sort("statement_date", -1).to_list(1000)
         return reconciliations
     
     @router.post("/venues/{venue_id}/accounting/vat-returns")
@@ -158,7 +158,7 @@ def create_hr_sfm_accounting_router():
             vat_payable=vat_data["vat_payable"]
         )
         
-        await db.VATReturns.insert_one(vat_return.model_dump())
+        await db.vat_returns.insert_one(vat_return.model_dump())
         return vat_return.model_dump()
     
     @router.get("/venues/{venue_id}/accounting/vat-returns")
@@ -168,7 +168,7 @@ def create_hr_sfm_accounting_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        returns = await db.VATReturns.find(
+        returns = await db.vat_returns.find(
             {"venue_id": venue_id},
             {"_id": 0}
         ).sort("period_start", -1).to_list(1000)

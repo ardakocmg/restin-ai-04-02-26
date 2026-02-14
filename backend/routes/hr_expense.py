@@ -30,7 +30,7 @@ def create_hr_expense_router():
             approvers=category_data.get("approvers", [])
         )
         
-        await db.ExpenseCategories.insert_one(category.model_dump())
+        await db.expense_categories.insert_one(category.model_dump())
         return category.model_dump()
     
     @router.get("/venues/{venue_id}/hr/expense/categories")
@@ -40,7 +40,7 @@ def create_hr_expense_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        categories = await db.ExpenseCategories.find(
+        categories = await db.expense_categories.find(
             {"venue_id": venue_id, "active": True},
             {"_id": 0}
         ).to_list(1000)
@@ -79,7 +79,7 @@ def create_hr_expense_router():
                 receipt = ExpenseReceipt(image_base64=claim_data["receipt_image_base64"])
         
         # Get category info
-        category = await db.ExpenseCategories.find_one(
+        category = await db.expense_categories.find_one(
             {"id": claim_data["category_id"]},
             {"_id": 0}
         )
@@ -98,7 +98,7 @@ def create_hr_expense_router():
             receipt=receipt.model_dump() if receipt else None
         )
         
-        await db.ExpenseClaims.insert_one(claim.model_dump())
+        await db.expense_claims.insert_one(claim.model_dump())
         return claim.model_dump()
     
     @router.get("/venues/{venue_id}/hr/expense/claims")
@@ -117,7 +117,7 @@ def create_hr_expense_router():
             query["employee_id"] = employee_id
         
         # Exclude base64 images from list
-        claims = await db.ExpenseClaims.find(
+        claims = await db.expense_claims.find(
             query,
             {"_id": 0, "receipt.image_base64": 0}
         ).sort("created_at", -1).to_list(1000)
@@ -131,7 +131,7 @@ def create_hr_expense_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.ExpenseClaims.update_one(
+        await db.expense_claims.update_one(
             {"id": claim_id, "venue_id": venue_id},
             {
                 "$set": {
@@ -152,7 +152,7 @@ def create_hr_expense_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.ExpenseClaims.update_one(
+        await db.expense_claims.update_one(
             {"id": claim_id, "venue_id": venue_id},
             {
                 "$set": {
@@ -175,7 +175,7 @@ def create_hr_expense_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.ExpenseClaims.update_one(
+        await db.expense_claims.update_one(
             {"id": claim_id, "venue_id": venue_id},
             {
                 "$set": {
@@ -198,7 +198,7 @@ def create_hr_expense_router():
     ):
         await check_venue_access(current_user, venue_id)
         
-        await db.ExpenseClaims.update_one(
+        await db.expense_claims.update_one(
             {"id": claim_id, "venue_id": venue_id},
             {
                 "$set": {
