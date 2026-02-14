@@ -406,7 +406,11 @@ export default function HRAnalyticsIndigo() {
 
   return (
     <PermissionGate requiredRole="MANAGER">
-      <PageContainer title="HR Workforce Analytics" description="POS, KDS & System insights per employee">
+      <div className="p-6 space-y-6">
+        <div className="mb-2">
+          <h1 className="text-2xl font-bold text-zinc-100">HR Workforce Analytics</h1>
+          <p className="text-sm text-zinc-500">POS, KDS & System insights per employee</p>
+        </div>
         {/* Command Bar: Date + Tabs */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           {/* Tabs */}
@@ -473,7 +477,7 @@ export default function HRAnalyticsIndigo() {
             {activeTab === 'system' && <SystemTab data={systemData} onEmployeeClick={handleEmployeeClick} />}
           </div>
         )}
-      </PageContainer>
+      </div>
     </PermissionGate>
   );
 }
