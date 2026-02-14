@@ -13,7 +13,7 @@ import {
     RefreshCw, Database, Server, Smartphone, ShoppingCart, Users, Cloud,
     Settings, Key, Eye, EyeOff, CheckCircle2, AlertTriangle, Clock, Power,
     Activity, Loader2, Globe, CreditCard, MessageSquare, Mail, Star, Zap,
-    ExternalLink, Building2, Search, Lock
+    ExternalLink, Building2, Search, Lock, ArrowUpDown, BookOpen, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { toast } from "sonner";
 import api from '@/lib/api';
@@ -62,9 +62,9 @@ const PROVIDER_FIELDS: Record<string, CredField[]> = {
         { key: 'api_secret', label: 'API Secret', type: 'password', placeholder: '••••••••' },
     ],
     NUKI: [
-        { key: 'api_token', label: 'API Token', type: 'password', placeholder: 'nk_...' },
-        { key: 'bridge_ip', label: 'Bridge IP', type: 'text', placeholder: '192.168.1.100' },
-        { key: 'bridge_port', label: 'Bridge Port', type: 'text', placeholder: '8080' },
+        { key: 'api_token', label: 'API Token (auto-filled via OAuth)', type: 'password', placeholder: 'Connect via OAuth below...' },
+        { key: 'bridge_ip', label: 'Bridge IP (optional)', type: 'text', placeholder: '192.168.1.100' },
+        { key: 'bridge_port', label: 'Bridge Port (optional)', type: 'text', placeholder: '8080' },
     ],
     TUYA: [
         { key: 'access_id', label: 'Access ID', type: 'text', placeholder: 'p9jnc...' },
@@ -123,6 +123,105 @@ const PORTAL_URLS: Record<string, { url: string; label: string }> = {
     OPENAI: { url: 'https://platform.openai.com/api-keys', label: 'OpenAI Platform →' },
     TRIPADVISOR: { url: 'https://www.tripadvisor.com/developers', label: 'TripAdvisor API →' },
 };
+
+// ─── Per-Provider Setup Guides ("How to Configure") ─────────────────────
+const PROVIDER_SETUP_GUIDES: Record<string, string[]> = {
+    LIGHTSPEED: [
+        '1. Go to Lightspeed Restaurant → Settings → Integrations → API',
+        '2. Create a new API Client (set redirect to your Restin.ai URL)',
+        '3. Copy Client ID, Client Secret, and your Restaurant ID',
+        '4. Paste them into the fields below and enable the integration',
+    ],
+    SHIREBURN: [
+        '1. Contact Shireburn support to request an API key for Indigo',
+        '2. Ask for your Company Code and the Payroll Endpoint URL',
+        '3. Paste the API Key, Company Code, and Endpoint below',
+    ],
+    APICBASE: [
+        '1. Log in to Apicbase → Settings → API → Generate Key',
+        '2. Copy your API Key and Restaurant UUID',
+        '3. Paste them into the fields below',
+    ],
+    GOOGLE_BUSINESS: [
+        '1. Go to console.cloud.google.com → APIs & Services → Credentials',
+        '2. Create an OAuth 2.0 Client ID (Web Application type)',
+        '3. Add https://restin.ai/api/google/callback as redirect URI',
+        '4. Copy Client ID & Secret, find your Location ID in Business Profile',
+    ],
+    GOOGLE_WORKSPACE: [
+        '1. Go to Google Admin Console → Security → API Controls',
+        '2. Create a Service Account with domain-wide delegation',
+        '3. Download the JSON key file',
+        '4. Paste the JSON content into Service Account Key field',
+    ],
+    GOOGLE_MAPS: [
+        '1. Go to console.cloud.google.com → APIs & Services → Credentials',
+        '2. Create or select an API Key',
+        '3. Enable Maps JavaScript API, Geocoding API, Places API',
+        '4. Copy the API Key and paste below',
+    ],
+    GOOGLE_ANALYTICS: [
+        '1. Go to Google Analytics → Admin → Data Streams',
+        '2. Copy your Measurement ID (G-XXXXXXXXXX)',
+        '3. Create an API Secret under Admin → Data API → Secrets',
+    ],
+    NUKI: [
+        '1. Click "Connect with Nuki" below — you\'ll be redirected to Nuki',
+        '2. Log in with your Nuki account and authorize Restin.ai',
+        '3. Your API Token will be auto-saved after authorization',
+        '4. Bridge IP/Port are optional — only needed for LAN-direct control',
+    ],
+    TUYA: [
+        '1. Go to iot.tuya.com → Cloud → Create a Project',
+        '2. Select your Data Center (e.g., Central Europe)',
+        '3. Copy your Access ID and Access Key from the project overview',
+        '4. The endpoint matches your data center (e.g., openapi.tuyaeu.com)',
+    ],
+    MEROSS: [
+        '1. Use your Meross app login credentials (email + password)',
+        '2. The API Region should match your account (EU, US, or Asia)',
+        '3. Default EU endpoint: https://iotx-eu.meross.com',
+    ],
+    QINGPING: [
+        '1. Go to developer.qingping.co → My Apps → Create App',
+        '2. Copy your App Key and App Secret',
+    ],
+    STRIPE: [
+        '1. Go to dashboard.stripe.com → Developers → API Keys',
+        '2. Copy your Secret Key (sk_live_...) and Publishable Key',
+        '3. Set up a Webhook endpoint and copy the Webhook Secret',
+    ],
+    TWILIO: [
+        '1. Go to console.twilio.com → Dashboard',
+        '2. Copy your Account SID and Auth Token',
+        '3. Buy a phone number and enter it as the From Phone',
+    ],
+    SENDGRID: [
+        '1. Go to app.sendgrid.com → Settings → API Keys → Create Key',
+        '2. Copy the API Key (starts with SG.)',
+        '3. Verify your sender email under Sender Authentication',
+    ],
+    OPENAI: [
+        '1. Go to platform.openai.com → API Keys → Create Key',
+        '2. Copy the API Key (starts with sk-)',
+        '3. Organization ID is found in Settings → Organization',
+    ],
+    TRIPADVISOR: [
+        '1. Go to tripadvisor.com/developers → Request API access',
+        '2. Find your Location ID from your listing URL',
+        '3. Enter the API Key and Location ID below',
+    ],
+};
+
+// ─── Sort options ─────────────────────────────────────────────────────────
+type SortMode = 'status' | 'name' | 'lastSync';
+const SORT_OPTIONS: { id: SortMode; label: string }[] = [
+    { id: 'status', label: 'Active First' },
+    { id: 'name', label: 'A → Z' },
+    { id: 'lastSync', label: 'Last Sync' },
+];
+
+const STATUS_WEIGHT: Record<string, number> = { CONNECTED: 0, ERROR: 1, DISABLED: 2, NOT_CONFIGURED: 3 };
 
 // ─── Provider Definitions (Categorized) ─────────────────────────────────
 interface ProviderDef {
@@ -201,6 +300,8 @@ export default function SyncDashboard() {
     const [syncing, setSyncing] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState('all');
+    const [sortBy, setSortBy] = useState<SortMode>('status');
+    const [guideOpen, setGuideOpen] = useState(false);
 
     // Config Modal
     const [configOpen, setConfigOpen] = useState(false);
@@ -315,11 +416,27 @@ export default function SyncDashboard() {
             p.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
             p.desc.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
+    }).sort((a, b) => {
+        if (sortBy === 'name') return a.label.localeCompare(b.label);
+        if (sortBy === 'lastSync') {
+            const aSync = getConfig(a.key)?.lastSync || '';
+            const bSync = getConfig(b.key)?.lastSync || '';
+            return bSync.localeCompare(aSync); // newest first
+        }
+        // Default: status — active first, then alpha
+        const aStatus = getConfig(a.key)?.status || 'NOT_CONFIGURED';
+        const bStatus = getConfig(b.key)?.status || 'NOT_CONFIGURED';
+        const wA = STATUS_WEIGHT[aStatus] ?? 3;
+        const wB = STATUS_WEIGHT[bStatus] ?? 3;
+        if (wA !== wB) return wA - wB;
+        return a.label.localeCompare(b.label);
     });
 
     const currentFields = configProvider ? (PROVIDER_FIELDS[configProvider] || []) : [];
     const currentProviderLabel = PROVIDERS.find(p => p.key === configProvider)?.label || configProvider;
     const currentPortal = configProvider ? PORTAL_URLS[configProvider] : null;
+    const currentGuide = configProvider ? (PROVIDER_SETUP_GUIDES[configProvider] || []) : [];
+    const isNuki = configProvider === 'NUKI';
 
     const categories = Object.keys(CATEGORY_META);
 
@@ -338,14 +455,32 @@ export default function SyncDashboard() {
                         Manage all venue connections, APIs, Google services, and IoT — with full audit trail.
                     </p>
                 </div>
-                <div className="relative w-full lg:w-72">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
-                    <Input
-                        placeholder="Search integrations..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-9 bg-zinc-900 border-zinc-800 text-zinc-200 placeholder:text-zinc-600"
-                    />
+                <div className="flex items-center gap-3">
+                    <div className="relative w-full lg:w-72">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+                        <Input
+                            placeholder="Search integrations..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="pl-9 bg-zinc-900 border-zinc-800 text-zinc-200 placeholder:text-zinc-600"
+                        />
+                    </div>
+                    {/* Sort Dropdown */}
+                    <div className="flex items-center gap-1 bg-zinc-900 rounded-lg p-1 border border-zinc-800">
+                        <ArrowUpDown className="h-3.5 w-3.5 text-zinc-500 ml-2" />
+                        {SORT_OPTIONS.map(opt => (
+                            <button
+                                key={opt.id}
+                                onClick={() => setSortBy(opt.id)}
+                                className={`px-2.5 py-1.5 rounded-md text-[11px] font-semibold transition-all ${sortBy === opt.id
+                                        ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                                        : 'text-zinc-500 hover:text-zinc-300'
+                                    }`}
+                            >
+                                {opt.label}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 
@@ -585,6 +720,43 @@ export default function SyncDashboard() {
                                 Credentials are encrypted with AES-256 before storage. Raw values are never logged or returned via API.
                             </p>
                         </div>
+
+                        {/* Setup Guide (collapsible) */}
+                        {currentGuide.length > 0 && (
+                            <div className="rounded-lg border border-emerald-500/10 bg-emerald-500/5 overflow-hidden">
+                                <button
+                                    onClick={() => setGuideOpen(!guideOpen)}
+                                    className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-emerald-400 hover:bg-emerald-500/10 transition-colors"
+                                >
+                                    <span className="flex items-center gap-2">
+                                        <BookOpen className="h-4 w-4" />
+                                        How to Configure
+                                    </span>
+                                    {guideOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                </button>
+                                {guideOpen && (
+                                    <div className="px-3 pb-3 space-y-1.5">
+                                        {currentGuide.map((step, i) => (
+                                            <p key={i} className="text-xs text-emerald-300/70 leading-relaxed">
+                                                {step}
+                                            </p>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Nuki OAuth Connect Button */}
+                        {isNuki && (
+                            <a
+                                href={`/api/integrations/nuki/oauth/start`}
+                                className="flex items-center justify-center gap-2 p-3 rounded-lg bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-semibold text-sm transition-all shadow-lg shadow-blue-500/20"
+                            >
+                                <Lock className="h-4 w-4" />
+                                Connect with Nuki (OAuth2)
+                                <ExternalLink className="h-3 w-3 opacity-70" />
+                            </a>
+                        )}
 
                         {/* Portal link in dialog */}
                         {currentPortal && (
