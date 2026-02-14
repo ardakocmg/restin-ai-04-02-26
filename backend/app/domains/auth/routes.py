@@ -40,13 +40,29 @@ async def login_with_pin(
     db = get_database()
     
     # Try both plain PIN and hashed PIN lookup
+    # When multiple users share the same PIN, prioritize by role:
+    # product_owner (0) > owner (1) > general_manager (2) > manager (3) > staff (4)
     pin_hash = hash_pin(pin)
-    user = await db.users.find_one({
+    _role_sort_map = {
+        "product_owner": 0, "owner": 1, "OWNER": 1,
+        "general_manager": 2, "GENERAL_MANAGER": 2,
+        "manager": 3, "MANAGER": 3,
+        "staff": 4, "STAFF": 4
+    }
+    candidates = await db.users.find({
         "$or": [
             {"pin": pin},
             {"pin_hash": pin_hash}
         ]
-    })
+    }).to_list(length=20)
+    
+    if candidates:
+        # Sort: product_owner first, then owner, etc.
+        candidates.sort(key=lambda u: _role_sort_map.get(u.get("role", "staff"), 5))
+        user = candidates[0]
+        print(f"[AUTH] PIN MATCH: Found {len(candidates)} users, selected '{user.get('name')}' (role={user.get('role')})")
+    else:
+        user = None
     
     if not user:
         print(f"[AUTH] LOGIN FAILED: No user found for PIN={pin}")
@@ -61,15 +77,17 @@ async def login_with_pin(
     
     # Owner/Admin gets all venues, others get their assigned venue
     role = user.get("role", "STAFF")
-    if role in ["OWNER", "ADMIN"]:
+    if role in ["OWNER", "ADMIN", "product_owner", "owner"]:
         allowed_venues = all_venue_ids
     else:
         allowed_venues = [user_venue_id] if user_venue_id else all_venue_ids
     
     default_venue = allowed_venues[0] if allowed_venues else None
     
+    user_id = user.get("id", str(user.get("_id", "")))
+    
     user_response = {
-        "id": user.get("id", str(user.get("_id", ""))),
+        "id": user_id,
         "name": user.get("name", "Unknown"),
         "role": role,
         "email": user.get("email", ""),
@@ -77,11 +95,22 @@ async def login_with_pin(
         "allowedVenueIds": allowed_venues
     }
     
+    # Update last_login so user shows as "online" in Hive staff list
+    now_iso = datetime.now(timezone.utc).isoformat()
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"last_login": now_iso, "device_id": deviceId}}
+    )
+    
+    # Create a REAL JWT token (not a fake string)
+    from core.security import create_jwt_token
+    real_token = create_jwt_token(user_id, user_venue_id or default_venue or "", role, deviceId)
+    
     print(f"[AUTH] LOGIN SUCCESS: {user_response['name']} ({role})")
     
     return {
-        "token": f"jwt-{user_response['id']}-{datetime.now(timezone.utc).timestamp()}",
-        "accessToken": f"jwt-{user_response['id']}-{datetime.now(timezone.utc).timestamp()}",
+        "token": real_token,
+        "accessToken": real_token,
         "allowedVenueIds": allowed_venues,
         "defaultVenueId": default_venue,
         "user": user_response,
