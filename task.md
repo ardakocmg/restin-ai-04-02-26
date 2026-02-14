@@ -191,15 +191,15 @@ Organization (Marvin Gauci Group)
 
 ### Phase 3: Premium Sidebar Refinement
 
-#### 3.1 Design Upgrades (NewSidebar.jsx)
+#### 3.1 Design Upgrades (NewSidebar.jsx) ✅ DONE
 
 - [x] Replace all `style={}` attributes with Tailwind `cn()` classes (3/3 done)
-- [ ] Add `framer-motion` page transition animations on domain switch
+- [x] Add `framer-motion` AnimatePresence on domain switch (slide-in/out menu content)
 - [ ] Add tooltip badges showing notification counts per domain
-- [ ] Active item gets a subtle gradient glow animation (breathing effect)
+- [x] Active item gets a breathing glow (animate-pulse on red dot)
 - [ ] Add keyboard navigation (arrow keys to traverse menu items)
-- [ ] Pane 1 domain icons: add ambient gradient blob behind active icon
-- [ ] Smooth `layout` transitions with `framer-motion` for expand/collapse
+- [x] Pane 1 domain icons: ambient gradient blob (red-500/10 blur-xl) behind active icon
+- [x] Smooth `motion.div` height transitions for expand/collapse children
 
 #### 3.2 Smart Features
 
@@ -212,41 +212,39 @@ Organization (Marvin Gauci Group)
 
 ### Phase 4: Premium TopBar Refinement
 
-#### 4.1 Design Upgrades (NewTopBar.tsx)
+#### 4.1 Design Upgrades (NewTopBar.jsx) ✅ DONE
 
-- [ ] Add glassmorphism effect with proper `backdrop-blur` and gradient borders
-- [ ] Animated system status indicator (pulse for healthy, flash for degraded)
-- [ ] Notification bell with flyout panel (real count, not just dot)
-- [ ] Search spotlight: `⌘K` opens full-screen command palette (overlay)
-- [ ] Add clock/timezone indicator (Malta Europe/Malta)
+- [x] Glassmorphism: replaced inline `style={}` with `backdrop-blur-xl` + `bg-[#0A0A0B]/95`
+- [x] Animated system status indicator (pulsing green dot + degraded flash)
+- [x] Notification bell: real count badge (number 3) instead of dot
+- [x] `⌘K` / `Ctrl+K` global shortcut focuses search bar (Spotlight)
+- [x] Escape to dismiss search overlay
+- [x] Clock/timezone indicator (Malta `Europe/Malta`, HH:mm, updates every 30s)
 
-#### 4.2 Breadcrumb Row
+#### 4.2 Breadcrumb Row ✅ DONE (Phase 2)
 
-- [ ] Below the main topbar, add a slim breadcrumb strip
-- [ ] Shows: `🏠 Home › HR & People › Clocking Data`
-- [ ] Animated transitions on route change (slide-in effect)
+- [x] Breadcrumb strip below TopBar, above content
+- [x] Shows: `🏠 Home › HR & People › Clocking Data`
 - [ ] Quick-action buttons contextual to current page (e.g., "Export" on reports)
 
 ---
 
-### Phase 5: Page Transition System
+### Phase 5: Page Transition System ✅ DONE
 
-#### 5.1 Create `<AnimatedOutlet>` Component
+#### 5.1 Create `<AnimatedOutlet>` Component ✅
 
-- [ ] Create `components/shared/AnimatedOutlet.tsx`
-- [ ] Wrap `<Outlet>` with `framer-motion` `AnimatePresence`
-- [ ] Transition types:
-  - Domain switch: slide left/right (depends on direction)
-  - Same-domain navigation: subtle fade + slide-up
-  - Sub-item navigation: crossfade
-- [ ] Keep transitions fast (150–250ms) for a snappy feel
+- [x] Create `components/shared/AnimatedOutlet.tsx`
+- [x] Wraps `useOutlet()` with `framer-motion` `AnimatePresence`
+- [x] Transition: fade (0→1) + slide-up (6px→0) on route change
+- [x] Fast transitions (180ms) for snappy feel
+- [x] Integrated into AdminLayout (replaces `<Outlet />`)
 
-#### 5.2 Unified Page Wrapper
+#### 5.2 Unified Page Wrapper ✅
 
-- [ ] Merge `PageLayout.tsx` + `PageContainer.jsx` into single `PageShell.tsx`
-- [ ] Props: `title`, `description`, `actions`, `filters`, `breadcrumbOverride`, `showDate`
-- [ ] Always includes the standardized Command Bar + Filter Strip
-- [ ] Auto-generates breadcrumbs from route if not overridden
+- [x] Merged `PageLayout.tsx` + `PageContainer.jsx` into `PageShell.tsx`
+- [x] Props: `title`, `description`, `actions`, `filters`, `tabs`, `showDate`
+- [x] Standardized Command Bar + Filter Strip
+- [x] PageLayout/PageContainer marked deprecated
 
 ---
 

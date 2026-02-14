@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from '../features/auth/AuthContext';
 import { MENU_ITEMS, DOMAINS, getDomainForGroup } from '@/lib/searchRegistry';
-import { ChevronRight, ChevronLeft, Search } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Search, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 
 // Role hierarchy from centralized definition (includes product_owner: 99)
@@ -126,9 +127,13 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                   : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/5 border border-transparent'
               )}
             >
-              <domain.icon className={cn("shrink-0 transition-transform duration-300 group-hover:scale-110", domainBarExpanded ? "h-5 w-5" : "h-6 w-6")} />
+              {/* Ambient gradient blob behind active domain icon */}
+              {activeDomain === domain.id && !domainBarExpanded && (
+                <div className="absolute inset-0 rounded-xl bg-red-500/10 blur-xl scale-150 animate-pulse pointer-events-none" />
+              )}
+              <domain.icon className={cn("shrink-0 transition-transform duration-300 group-hover:scale-110 relative z-10", domainBarExpanded ? "h-5 w-5" : "h-6 w-6")} />
               {domainBarExpanded && (
-                <span className="text-sm font-bold truncate tracking-wide">{domain.title}</span>
+                <span className="text-sm font-bold truncate tracking-wide relative z-10">{domain.title}</span>
               )}
               {activeDomain === domain.id && !domainBarExpanded && (
                 <div className="absolute left-[-20px] w-[4px] h-8 bg-white rounded-r-full shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-pulse" />
@@ -204,83 +209,101 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                     autoComplete="off"
                     data-1p-ignore
                     data-lpignore="true"
-                    className="w-full bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-red-500/50 transition-all"
+                    className="w-full bg-zinc-900/50 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-red-500/50 transition-all"
                   />
                 </div>
               </div>
             )}
-            {visibleMenuItems
-              .filter(item => {
-                if (searchTerm && !collapsed) {
-                  const term = searchTerm.toLowerCase();
-                  const matchesTitle = item.title.toLowerCase().includes(term);
-                  const matchesSub = item.children?.some(c => c.title.toLowerCase().includes(term) || c.href?.toLowerCase().includes(term));
-                  return matchesTitle || matchesSub;
-                }
-                return getDomainForGroup(item.group) === activeDomain;
-              })
-              .map((item) => (
-                <div key={item.title}>
-                  {item.href && !item.children ? (
-                    <Link
-                      to={item.href}
-                      className={cn(
-                        'group flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 border border-transparent',
-                        collapsed && 'justify-center px-2 py-3',
-                        isActive(item.href)
-                          ? 'bg-red-500/[0.08] text-red-500 border-red-500/20 shadow-[0_0_15px_rgba(229,57,53,0.05)]'
-                          : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-200'
-                      )}
-                      onClick={() => setActiveSubItem(item)}
-                    >
-                      <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isActive(item.href) ? "text-red-500" : "text-zinc-500 group-hover:text-zinc-300")} />
-                      {!collapsed && <span className={cn("text-sm font-medium", isActive(item.href) ? "font-bold" : "")}>{item.title}</span>}
-                      {isActive(item.href) && !collapsed && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)]"></div>}
-                    </Link>
-                  ) : (
-                    <div className="space-y-1">
-                      <button
-                        onClick={() => !collapsed ? toggleGroup(item.group) : null}
-                        className={cn(
-                          'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 group hover:bg-white/5',
-                          collapsed && 'justify-center px-2 py-3',
-                          isGroupActive(item.children) ? 'text-zinc-100' : 'text-zinc-500'
-                        )}
-                      >
-                        <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isGroupActive(item.children) ? "text-zinc-200" : "text-zinc-600 group-hover:text-zinc-400")} />
-                        {!collapsed && (
-                          <>
-                            <span className="flex-1 text-left text-sm font-medium tracking-wide">{item.title}</span>
-                            <ChevronRight className={cn('h-4 w-4 transition-transform duration-300 opacity-50', expandedGroups.includes(item.group) && 'rotate-90 opacity-100')} />
-                          </>
-                        )}
-                      </button>
-                      {!collapsed && expandedGroups.includes(item.group) && item.children && (
-                        <div className="ml-4 pl-4 border-l border-white/5 space-y-1 mt-1 py-1">
-                          {item.children.map((child) => (
-                            <button
-                              key={child.href}
-                              onClick={() => {
-                                navigate(child.href);
-                                setActiveSubItem(child);
-                              }}
-                              className={cn(
-                                'w-full text-left block px-3 py-2 rounded-lg text-sm transition-all border border-transparent outline-none relative overflow-hidden',
-                                isActive(child.href)
-                                  ? 'bg-white/[0.03] text-red-500 border-red-500/10 font-semibold'
-                                  : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]'
-                              )}
+            {/* Animated menu content — transitions when domain switches */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={searchTerm ? 'search' : activeDomain}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 8 }}
+                transition={{ duration: 0.15, ease: 'easeOut' }}
+                className="space-y-1.5"
+              >
+                {visibleMenuItems
+                  .filter(item => {
+                    if (searchTerm && !collapsed) {
+                      const term = searchTerm.toLowerCase();
+                      const matchesTitle = item.title.toLowerCase().includes(term);
+                      const matchesSub = item.children?.some(c => c.title.toLowerCase().includes(term) || c.href?.toLowerCase().includes(term));
+                      return matchesTitle || matchesSub;
+                    }
+                    return getDomainForGroup(item.group) === activeDomain;
+                  })
+                  .map((item) => (
+                    <div key={item.title}>
+                      {item.href && !item.children ? (
+                        <Link
+                          to={item.href}
+                          className={cn(
+                            'group flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 border border-transparent',
+                            collapsed && 'justify-center px-2 py-3',
+                            isActive(item.href)
+                              ? 'bg-red-500/[0.08] text-red-500 border-red-500/20 shadow-[0_0_15px_rgba(229,57,53,0.05)]'
+                              : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-200'
+                          )}
+                          onClick={() => setActiveSubItem(item)}
+                        >
+                          <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isActive(item.href) ? "text-red-500" : "text-zinc-500 group-hover:text-zinc-300")} />
+                          {!collapsed && <span className={cn("text-sm font-medium", isActive(item.href) ? "font-bold" : "")}>{item.title}</span>}
+                          {isActive(item.href) && !collapsed && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)] animate-pulse"></div>}
+                        </Link>
+                      ) : (
+                        <div className="space-y-1">
+                          <button
+                            onClick={() => !collapsed ? toggleGroup(item.group) : null}
+                            className={cn(
+                              'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 group hover:bg-white/5',
+                              collapsed && 'justify-center px-2 py-3',
+                              isGroupActive(item.children) ? 'text-zinc-100' : 'text-zinc-500'
+                            )}
+                          >
+                            <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isGroupActive(item.children) ? "text-zinc-200" : "text-zinc-600 group-hover:text-zinc-400")} />
+                            {!collapsed && (
+                              <>
+                                <span className="flex-1 text-left text-sm font-medium tracking-wide">{item.title}</span>
+                                <ChevronRight className={cn('h-4 w-4 transition-transform duration-300 opacity-50', expandedGroups.includes(item.group) && 'rotate-90 opacity-100')} />
+                              </>
+                            )}
+                          </button>
+                          {!collapsed && expandedGroups.includes(item.group) && item.children && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2, ease: 'easeOut' }}
+                              className="ml-4 pl-4 border-l border-white/5 space-y-1 mt-1 py-1 overflow-hidden"
                             >
-                              <span className="relative z-10">{child.title}</span>
-                              {isActive(child.href) && <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)]"></div>}
-                            </button>
-                          ))}
+                              {item.children.map((child) => (
+                                <button
+                                  key={child.href}
+                                  onClick={() => {
+                                    navigate(child.href);
+                                    setActiveSubItem(child);
+                                  }}
+                                  className={cn(
+                                    'w-full text-left block px-3 py-2 rounded-lg text-sm transition-all border border-transparent outline-none relative overflow-hidden',
+                                    isActive(child.href)
+                                      ? 'bg-white/[0.03] text-red-500 border-red-500/10 font-semibold'
+                                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]'
+                                  )}
+                                >
+                                  <span className="relative z-10">{child.title}</span>
+                                  {isActive(child.href) && <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)]"></div>}
+                                </button>
+                              ))}
+                            </motion.div>
+                          )}
                         </div>
                       )}
                     </div>
-                  )}
-                </div>
-              ))}
+                  ))}
+              </motion.div>
+            </AnimatePresence>
           </nav>
         </ScrollArea>
       </aside>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import NewSidebar from '../../layouts/NewSidebar';
 import NewTopBar from '../../layouts/NewTopBar';
@@ -9,6 +9,7 @@ import FloatingPTT from '../../components/widgets/FloatingPTT';
 import { GlobalPTTProvider } from '../../contexts/GlobalPTTContext';
 import AuthElevationModal from '../../features/auth/AuthElevationModal';
 import Breadcrumb from '../../components/shared/Breadcrumb';
+import AnimatedOutlet from '../../components/shared/AnimatedOutlet';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -84,9 +85,9 @@ export default function AdminLayout() {
             <Breadcrumb />
           </div>
 
-          {/* Page Content */}
+          {/* Page Content — Animated route transitions */}
           <main className="flex-1 overflow-auto p-4 lg:p-6 pb-24 lg:pb-6"> {/* Extra bottom padding for mobile usage */}
-            <Outlet />
+            <AnimatedOutlet />
           </main>
 
           {/* Floating Widgets — visible on all admin pages */}

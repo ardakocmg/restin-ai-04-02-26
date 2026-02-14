@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
 import { useVenue } from '../context/VenueContext';
@@ -6,7 +6,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { buildSearchIndex } from '@/lib/searchRegistry';
-import { Bell, User, LogOut, ChevronDown, Moon, Sun, Monitor, Database, Palette, Settings, Building2, Search, X, Check, Wifi, WifiOff, AlertTriangle, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { Bell, User, LogOut, ChevronDown, Moon, Sun, Monitor, Database, Palette, Settings, Building2, Search, X, Check, Wifi, WifiOff, AlertTriangle, ShieldAlert, ShieldCheck, Clock } from 'lucide-react';
 import { useSafeMode } from '../context/SafeModeContext';
 import { Button } from '../components/ui/button';
 import {
@@ -30,9 +30,43 @@ export default function NewTopBar() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [systemStatus, setSystemStatus] = useState('healthy'); // 'healthy', 'degraded', 'offline'
   const [selectedSuggestionIdx, setSelectedSuggestionIdx] = useState(0);
+  const [currentTime, setCurrentTime] = useState('');
+  const searchInputRef = useRef(null);
 
   // Build role-filtered search index from shared registry
   const searchIndex = useMemo(() => buildSearchIndex(user?.role), [user?.role]);
+
+  // Live clock — Malta timezone
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('en-GB', {
+        hour: '2-digit', minute: '2-digit',
+        timeZone: 'Europe/Malta'
+      }));
+    };
+    updateClock();
+    const interval = setInterval(updateClock, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // ⌘K / Ctrl+K global shortcut to focus search bar
+  useEffect(() => {
+    const handleGlobalKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+        setShowSuggestions(true);
+      }
+      // Escape to close search
+      if (e.key === 'Escape' && showSuggestions) {
+        setShowSuggestions(false);
+        searchInputRef.current?.blur();
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKey);
+    return () => window.removeEventListener('keydown', handleGlobalKey);
+  }, [showSuggestions]);
 
   const handleLogout = () => {
     logout();
@@ -128,13 +162,7 @@ export default function NewTopBar() {
 
   return (
     <header
-      className="h-20 flex items-center justify-between px-8 gap-6 z-20 relative transition-all duration-300"
-      style={{
-        backgroundColor: '#0A0A0B',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-        background: 'linear-gradient(to bottom, rgba(10,10,11,1) 0%, rgba(10,10,11,0.95) 100%)',
-        backdropFilter: 'blur(10px)'
-      }}
+      className="h-20 flex items-center justify-between px-8 gap-6 z-20 relative transition-all duration-300 bg-[#0A0A0B]/95 backdrop-blur-xl border-b border-white/5"
     >
       {/* Left: Venue Switcher */}
       <div className="flex items-center gap-4 flex-shrink-0">
@@ -205,6 +233,7 @@ export default function NewTopBar() {
         <div className="relative group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 group-focus-within:text-red-500 transition-colors z-10 duration-300" />
           <input
+            ref={searchInputRef}
             type="search"
             placeholder="Search pages, modules, features..."
             value={searchQuery}
@@ -220,7 +249,7 @@ export default function NewTopBar() {
             className="w-full bg-zinc-900/50 border border-white/5 rounded-2xl px-12 py-3 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-red-500/30 focus:bg-zinc-900 focus:ring-4 focus:ring-red-500/10 shadow-inner hover:bg-zinc-900/80 transition-all duration-300"
           />
           <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
-            <span className="text-[10px] font-mono text-zinc-700 border border-zinc-800 rounded px-1.5 py-0.5">⌘ K</span>
+            <kbd className="text-[10px] font-mono text-zinc-600 bg-zinc-800/60 border border-zinc-700/50 rounded px-1.5 py-0.5 shadow-sm">⌘K</kbd>
           </div>
           {searchQuery && (
             <button
@@ -342,12 +371,20 @@ export default function NewTopBar() {
           </DropdownMenuContent>
         </DropdownMenu>
 
+        {/* Clock — Malta Timezone */}
+        <div className="flex items-center gap-1.5 text-zinc-500">
+          <Clock className="h-3.5 w-3.5" />
+          <span className="text-xs font-mono font-medium tabular-nums tracking-wide">{currentTime}</span>
+        </div>
+
         <div className="w-px h-8 bg-white/5"></div>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 relative">
+        <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-white/5 relative">
           <Bell className="h-5 w-5" />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[#0A0A0B]"></span>
+          <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 rounded-full border-2 border-[#0A0A0B] flex items-center justify-center">
+            <span className="text-[8px] font-black text-white leading-none">3</span>
+          </span>
         </Button>
 
         {/* User Menu with System Status Indicator */}
@@ -409,6 +446,12 @@ export default function NewTopBar() {
                 systemStatus === 'degraded' && "bg-yellow-500/5 text-yellow-500 border-yellow-500/10",
                 systemStatus === 'offline' && "bg-red-500/5 text-red-500 border-red-500/10"
               )}>
+                <span className={cn(
+                  "inline-block w-2 h-2 rounded-full",
+                  systemStatus === 'healthy' && "bg-green-500 animate-pulse",
+                  systemStatus === 'degraded' && "bg-yellow-500 animate-[pulse_0.5s_ease-in-out_infinite]",
+                  systemStatus === 'offline' && "bg-red-500"
+                )} />
                 {getStatusIcon()}
                 <span>{getStatusText()}</span>
               </div>
