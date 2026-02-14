@@ -3,12 +3,12 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import NewSidebar from '../../layouts/NewSidebar';
 import NewTopBar from '../../layouts/NewTopBar';
-import { Button } from '../../components/ui/button';
 import { logger } from '../../lib/logger';
 import FloatingChat from '../../components/widgets/FloatingChat';
 import FloatingPTT from '../../components/widgets/FloatingPTT';
 import { GlobalPTTProvider } from '../../contexts/GlobalPTTContext';
 import AuthElevationModal from '../../features/auth/AuthElevationModal';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -33,20 +33,7 @@ export default function AdminLayout() {
     setMobileMenuOpen(false); // Close mobile menu on route change
   }, [location.pathname]);
 
-  // Calculate Sidebar Width dynamically based on state
-  // Pane 1: w-20 (5rem) or w-64 (16rem)
-  const pane1Width = domainBarExpanded ? 16 : 5;
 
-  // Pane 2: w-72 (18rem) or w-16 (4rem)
-  const pane2Width = sidebarCollapsed ? 4 : 18;
-
-  // Pane 3: w-60 (15rem) or w-16 (4rem) or 0
-  const pane3Width = isTertiaryOpen ? (sidebarCollapsed ? 4 : 15) : 0;
-
-  // Mobile: 0 margin, Desktop: calculated
-  // We use CSS media query logic or simple class toggling. 
-  // Since we can't easily perform media queries in JS variables without hooks, we'll control layout via classes.
-  const desktopSidebarOffset = `${pane1Width + pane2Width + pane3Width}rem`;
 
   return (
     <GlobalPTTProvider>
@@ -90,6 +77,11 @@ export default function AdminLayout() {
           {/* Top Bar */}
           <div className="pl-16 lg:pl-0"> {/* Add padding on mobile for hamburger */}
             <NewTopBar />
+          </div>
+
+          {/* Breadcrumb Strip */}
+          <div className="px-4 lg:px-6 py-2 border-b border-white/[0.04] bg-[#0A0A0B]/80 backdrop-blur-sm">
+            <Breadcrumb />
           </div>
 
           {/* Page Content */}

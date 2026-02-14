@@ -340,16 +340,16 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                 className={cn(
                   'w-full h-auto rounded-xl text-xs font-bold transition-all border border-transparent group relative overflow-hidden',
                   collapsed ? 'justify-center px-2 py-4' : 'justify-start gap-3 px-4 py-6',
-                  location.search.includes(`type = ${sub.id} `)
+                  location.search.includes(`type=${sub.id}`)
                     ? 'bg-red-600/5 text-red-500 border-red-600/10'
                     : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-200'
                 )}
                 onClick={() => {
-                  navigate(`${activeSubItem.href}?type = ${sub.id} `);
+                  navigate(`${activeSubItem.href}?type=${sub.id}`);
                 }}
                 title={collapsed ? sub.title : undefined}
               >
-                <div className={cn("w-1.5 h-1.5 rounded-full shrink-0 transition-all", location.search.includes(`type = ${sub.id} `) ? "bg-red-500 shadow-[0_0_5px_rgba(229,57,53,0.5)]" : "bg-zinc-800 group-hover:bg-zinc-600")}></div>
+                <div className={cn("w-1.5 h-1.5 rounded-full shrink-0 transition-all", location.search.includes(`type=${sub.id}`) ? "bg-red-500 shadow-[0_0_5px_rgba(229,57,53,0.5)]" : "bg-zinc-800 group-hover:bg-zinc-600")}></div>
                 {!collapsed && sub.title}
               </Button>
             ))}
