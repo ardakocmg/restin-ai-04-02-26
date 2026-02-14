@@ -50,7 +50,7 @@ Make all navigation bars globally consistent and add intelligent breadcrumb rout
 
 ### 4-Tier Hierarchy Established
 
-```
+```text
 Organization (Marvin Gauci Group)
   ├── Legal Entity (MG Hospitality Ltd) → VAT, PE, Reg
   │   ├── Venue: Caviar & Bull
@@ -61,7 +61,7 @@ Organization (Marvin Gauci Group)
 
 ### Responsibility Separation
 
-```
+```text
 📁 Organization Profile (/admin/company-settings)
    └── Org name, display name, description
    └── Registered address
@@ -107,7 +107,7 @@ Organization (Marvin Gauci Group)
 
 ### Current Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │ AdminLayout.js                                       │
 │ ┌──────────────────────┐ ┌────────────────────────┐  │
@@ -261,15 +261,35 @@ Organization (Marvin Gauci Group)
 - [x] `inventory-items-list` → redirect to canonical `inventory-items`
 - [x] `hr/summary` → redirect to canonical `hr/dashboard`
 
-#### 6.2 TSX Migration (In Progress)
+#### 6.2 TSX Migration ✅ DONE
 
 - [x] `AdminLayout.js` → `AdminLayout.tsx` (full TypeScript, typed state, explicit return)
 - [x] `NewSidebar.jsx` → `NewSidebar.tsx` (SidebarProps interface, typed state/handlers, FlatNavItem type, PageType union, type-predicate filter, Record<string,number> notifications)
 - [x] `NewTopBar.jsx` → `NewTopBar.tsx` (SystemStatus union, SearchableItem import, typed state/handlers, venue.type cast, aria-labels for a11y)
-- [ ] Ensure all sidebar items have matching routes in App.tsx
-- [ ] Remove orphan routes (routes with no sidebar entry)
+- [x] All 121 sidebar items have matching routes in App.tsx (0 missing)
+- [x] Orphan route cleanup: 32 flat-path duplicates converted to `<Navigate>` redirects
 
-#### 6.2 Consistent URL Structure
+#### 6.3 Orphan → Redirect Conversions ✅ DONE (32 routes)
+
+Flat paths converted to `<Navigate to="canonical" replace />`:
+
+- `pos` → `posdashboard`, `documents` → `hr/documents`, `guests` → `crm`
+- `operations` → `pos-dashboard`, `payroll-calculator` → `hr/payroll`
+- `purchase-orders` → `inventory-purchase-orders`, `receiving` → `inventory`
+- `payroll-malta` → `hr/payroll`, `automations` → `app-settings`
+- `connectors` → `sync`, `trust` → `access-control`, `system-health` → `system-health-advanced`
+- `integrity` → `audit-logs`, `advanced-observability` → `observability`
+- `diagnostics` → `observability`, `tasks-kanban` → `collab/tasks`
+- `inbox` → `collab/inbox`, `delivery-aggregators` → `restin/ops`
+- `content-editor` → `restin/studio`, `content-studio` → `restin/studio`
+- `dynamic-pricing` → `products`, `haccp` → `quality`
+- `setup-wizard` → `settings`, `guest-profiles` → `crm`
+- `kiosk-mode` → `posdashboard`, `carbon-footprint` → `hr/esg`
+- `competitor-monitoring` → `restin/radar`, `floorplan` → `floor-plans`
+- `split-bill` → `posdashboard`, `print-preview` → `printers`
+- `recipe-videos` → `inventory-recipes`, `plugin-marketplace` → `app-settings`
+
+#### 6.4 Consistent URL Structure
 
 - [ ] Namespace all routes properly:
   - `/admin/pos/...` (POS & Operations)
@@ -286,7 +306,7 @@ Organization (Marvin Gauci Group)
 
 ## 🎯 Execution Order
 
-```
+```text
 Phase 1.1 → Delete legacy files
 Phase 1.3 → Fix Pane 3 URL bug
 Phase 2   → Breadcrumb system (hook + component + integration)
@@ -314,9 +334,10 @@ Phase 6   → Route audit (last, to avoid breaking changes mid-work)
 ## Status
 
 - [x] Analysis Complete
-- [ ] Phase 1: Foundation
-- [ ] Phase 2: Breadcrumb System
-- [ ] Phase 3: Premium Sidebar
-- [ ] Phase 4: Premium TopBar
-- [ ] Phase 5: Page Transitions
-- [ ] Phase 6: Route Hygiene
+- [x] Phase 1: Foundation (legacy file cleanup + TSX migration)
+- [x] Phase 2: Breadcrumb System
+- [x] Phase 3: Premium Sidebar
+- [x] Phase 4: Premium TopBar
+- [x] Phase 5: Page Transitions
+- [x] Phase 6: Route Hygiene (audit + 32 orphan redirects)
+- [ ] Phase 6.4: URL Namespace Restructure (optional — breaking change)
