@@ -339,18 +339,19 @@ async def update_task(task_id: str, update: TaskUpdate):
 
 
 
-# ─── Online Staff ────────────────────────────────────────────────────────
+# ─── Staff Directory (Online + Offline) ──────────────────────────────────
 
 @router.get("/staff/online")
 async def get_online_staff():
-    """Get staff list with online status (derived from active users)."""
+    """Get ALL staff with online/away/offline status based on last_login."""
+    from datetime import datetime, timezone, timedelta
     db = get_database()
     
-    # Get active employees with user accounts
+    # Get all non-inactive employees (includes offline ones for DM support)
     cursor = db.users.find(
         {"status": {"$ne": "INACTIVE"}},
-        {"name": 1, "email": 1, "role": 1, "status": 1}
-    ).limit(20)
+        {"name": 1, "email": 1, "role": 1, "status": 1, "last_login": 1, "id": 1}
+    ).sort("name", 1).limit(50)
     
     COLORS = [
         "bg-pink-600", "bg-orange-600", "bg-blue-600", "bg-teal-600",
@@ -358,6 +359,7 @@ async def get_online_staff():
         "bg-amber-600", "bg-cyan-600",
     ]
     
+    now = datetime.now(timezone.utc)
     staff = []
     async for doc in cursor:
         name = doc.get("name", "Unknown")
@@ -365,17 +367,33 @@ async def get_online_staff():
         initials = "".join(p[0].upper() for p in parts[:2]) if parts else "??"
         role = doc.get("role", "Staff")
         
-        # Simple heuristic: users with recent activity are "online"
-        # In production, this would check WebSocket connections or heartbeat
-        import random
-        statuses = ["online", "online", "online", "busy", "away"]
+        # Determine status from last_login timestamp
+        last_login_str = doc.get("last_login")
+        status = "offline"
+        if last_login_str:
+            try:
+                last_login = datetime.fromisoformat(last_login_str.replace("Z", "+00:00"))
+                age = now - last_login
+                if age < timedelta(minutes=30):
+                    status = "online"
+                elif age < timedelta(hours=2):
+                    status = "away"
+                else:
+                    status = "offline"
+            except (ValueError, TypeError):
+                status = "offline"
         
         staff.append({
+            "id": doc.get("id", ""),
             "name": name,
             "initials": initials,
             "color": COLORS[len(staff) % len(COLORS)],
             "role": role.replace("_", " ").title() if role else "Staff",
-            "status": random.choice(statuses),
+            "status": status,
         })
+    
+    # Sort: online first, then away, then offline
+    status_order = {"online": 0, "busy": 1, "away": 2, "offline": 3}
+    staff.sort(key=lambda s: status_order.get(s["status"], 3))
     
     return {"staff": staff, "count": len(staff)}

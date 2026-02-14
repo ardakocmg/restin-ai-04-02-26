@@ -40,11 +40,24 @@ def create_auth_router():
             )
         
         # Hash PIN and find user
+        # When multiple users share the same PIN, prioritize by role:
+        # product_owner (99) > owner (3) > manager (2) > staff (1)
         pin_hash = hash_pin(pin)
-        user = await db.users.find_one(
+        _role_sort_map = {
+            "product_owner": 0, "owner": 1, "general_manager": 2,
+            "manager": 3, "staff": 4
+        }
+        candidates = await db.users.find(
             {"pin_hash": pin_hash},
             {"_id": 0}
-        )
+        ).to_list(20)
+        
+        if candidates:
+            # Sort: product_owner first, then owner, etc.
+            candidates.sort(key=lambda u: _role_sort_map.get(u.get("role", "staff"), 5))
+            user = candidates[0]
+        else:
+            user = None
         
         if not user:
             await log_login_attempt(deviceId, pin, app, False, "Invalid PIN")

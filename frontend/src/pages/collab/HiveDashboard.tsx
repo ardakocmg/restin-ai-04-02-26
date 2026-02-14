@@ -118,7 +118,8 @@ interface OnlineStaff {
     initials: string;
     color: string;
     role: string;
-    status: 'online' | 'busy' | 'away';
+    status: 'online' | 'busy' | 'away' | 'offline';
+    id?: string;
 }
 
 // Online staff loaded from API (see useEffect below)
@@ -1008,17 +1009,18 @@ export default function HiveDashboard() {
                     </div>
                 </div>
 
-                {/* Online Staff */}
+                {/* Staff Directory (Online + Offline) */}
                 <div className="px-3 py-2 flex-1 overflow-auto">
+                    {/* Online & Away */}
                     <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-600 mb-2 flex items-center gap-1.5">
                         <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                         </span>
-                        Online — {onlineStaff.filter(s => s.status === 'online').length}
+                        Online — {onlineStaff.filter(s => s.status === 'online' || s.status === 'away').length}
                     </p>
                     <div className="space-y-0.5">
-                        {onlineStaff.map(s => {
+                        {onlineStaff.filter(s => s.status !== 'offline').map(s => {
                             const dmId = `dm-${s.name.toLowerCase().replace(/\s+/g, '-')}`;
                             return (
                                 <div
@@ -1042,6 +1044,39 @@ export default function HiveDashboard() {
                                 </div>);
                         })}
                     </div>
+
+                    {/* Offline */}
+                    {onlineStaff.filter(s => s.status === 'offline').length > 0 && (
+                        <>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-700 mt-4 mb-2 flex items-center gap-1.5">
+                                <span className="h-2 w-2 rounded-full bg-zinc-700" />
+                                Offline — {onlineStaff.filter(s => s.status === 'offline').length}
+                            </p>
+                            <div className="space-y-0.5">
+                                {onlineStaff.filter(s => s.status === 'offline').map(s => {
+                                    const dmId = `dm-${s.name.toLowerCase().replace(/\s+/g, '-')}`;
+                                    return (
+                                        <div
+                                            key={s.name}
+                                            className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-zinc-900/50 cursor-pointer transition-all duration-200 opacity-60 hover:opacity-100"
+                                            onClick={() => setActiveChannel(dmId)}
+                                            title={`Send DM to ${s.name} (offline)`}
+                                        >
+                                            <div className="relative">
+                                                <div className={`h-7 w-7 rounded-full ${s.color} flex items-center justify-center`}>
+                                                    <span className="text-white text-[10px] font-bold">{s.initials}</span>
+                                                </div>
+                                                <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-zinc-950 bg-zinc-700" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-xs font-medium text-zinc-500 truncate">{s.name}</p>
+                                                <p className="text-[10px] text-zinc-700">{s.role}</p>
+                                            </div>
+                                        </div>);
+                                })}
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 {/* PTT Quick Access */}
