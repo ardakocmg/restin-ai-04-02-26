@@ -171,8 +171,8 @@ const Observability = React.lazy(() => import("./pages/admin/Observability"));
 const Operations = React.lazy(() => import("./pages/admin/Operations"));
 const POSDashboard = React.lazy(() => import("./pages/admin/POSDashboard"));
 const ProductManagement = React.lazy(() => import("./pages/admin/ProductManagement"));
-const CompanySettings = React.lazy(() => import("./pages/admin/CompanySettings"));
-// SettingsHub removed — orphan page, route now points to VenueSettings
+const OrganizationProfile = React.lazy(() => import("./pages/admin/OrganizationProfile"));
+// CompanySettings.jsx preserved but no longer routed — replaced by OrganizationProfile.tsx
 const LegalEntities = React.lazy(() => import("./pages/admin/LegalEntities"));
 const ESGModule = React.lazy(() => import("./pages/admin/hr/ESGModule"));
 const GovReportsPage = React.lazy(() => import("./pages/admin/hr/GovReportsPage"));
@@ -416,7 +416,7 @@ function App() {
                                     <Route path="posdashboard" element={<RoleRoute requiredRole="MANAGER"><POSDashboard /></RoleRoute>} />
                                     <Route path="pos-dashboard" element={<RoleRoute requiredRole="MANAGER"><POSDashboard /></RoleRoute>} />
                                     <Route path="products" element={<RoleRoute requiredRole="MANAGER"><ProductManagement /></RoleRoute>} />
-                                    <Route path="company-settings" element={<RoleRoute requiredRole="OWNER"><CompanySettings /></RoleRoute>} />
+                                    <Route path="company-settings" element={<RoleRoute requiredRole="OWNER"><OrganizationProfile /></RoleRoute>} />
                                     <Route path="settings" element={<RoleRoute requiredRole="OWNER"><VenueSettings /></RoleRoute>} />
                                     <Route path="legal-entities" element={<RoleRoute requiredRole="OWNER"><LegalEntities /></RoleRoute>} />
                                     <Route path="devices" element={<RoleRoute requiredRole="MANAGER"><Devices /></RoleRoute>} />

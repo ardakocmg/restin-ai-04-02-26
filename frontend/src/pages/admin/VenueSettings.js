@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useVenue } from "../../context/VenueContext";
 import { useAuth } from "../../context/AuthContext";
 import { venueAPI } from "../../lib/api";
+import api from "../../lib/api";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
@@ -11,9 +12,10 @@ import { Switch } from "../../components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../../components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
-import { MapPin, Table2, Plus, Settings, Package, ChevronDown, ChevronUp, Palette, Scale, UserCheck, Upload, Loader2 } from "lucide-react";
+import { MapPin, Table2, Plus, Settings, Package, ChevronDown, ChevronUp, Upload, Loader2, Building2, ExternalLink } from "lucide-react";
 import { documentAPI } from "../../lib/api";
 import { cn } from "../../lib/utils";
+import { useNavigate } from "react-router-dom";
 
 export default function VenueSettings() {
   const { activeVenue, refreshVenues } = useVenue();
@@ -29,6 +31,8 @@ export default function VenueSettings() {
   const [newZone, setNewZone] = useState({ name: "", type: "dining" });
   const [newTable, setNewTable] = useState({ zone_id: "", name: "", seats: 4 });
   const [uploading, setUploading] = useState(false);
+  const [legalEntities, setLegalEntities] = useState([]);
+  const navigate = useNavigate();
 
   const [venueModules, setVenueModules] = useState([]);
   const [expandedModule, setExpandedModule] = useState(null);
@@ -57,6 +61,16 @@ export default function VenueSettings() {
       loadData();
     }
   }, [activeVenue?.id]);
+
+  useEffect(() => {
+    const fetchLegalEntities = async () => {
+      try {
+        const res = await api.get('/api/legal-entities');
+        setLegalEntities(res.data?.legal_entities || []);
+      } catch { /* silent */ }
+    };
+    fetchLegalEntities();
+  }, []);
 
   const loadData = async () => {
     try {
@@ -150,7 +164,7 @@ export default function VenueSettings() {
         <div className="mb-8 p-1 bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/5 rounded-xl inline-flex h-12">
           <TabsList className="bg-transparent border-none p-0 flex gap-2 h-full">
             <TabsTrigger value="general" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md px-6 h-full rounded-lg text-zinc-600 dark:text-zinc-400">General</TabsTrigger>
-            <TabsTrigger value="legal" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md px-6 h-full rounded-lg text-zinc-600 dark:text-zinc-400">Legal & Branding</TabsTrigger>
+            <TabsTrigger value="branding" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md px-6 h-full rounded-lg text-zinc-600 dark:text-zinc-400">Branding</TabsTrigger>
             <TabsTrigger value="zones" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md px-6 h-full rounded-lg text-zinc-600 dark:text-zinc-400">Zones</TabsTrigger>
             <TabsTrigger value="tables" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md px-6 h-full rounded-lg text-zinc-600 dark:text-zinc-400">Tables</TabsTrigger>
             <TabsTrigger value="modules" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md px-6 h-full rounded-lg text-zinc-600 dark:text-zinc-400">Modules</TabsTrigger>
@@ -260,6 +274,40 @@ export default function VenueSettings() {
                 </div>
               </div>
 
+              {/* Legal Entity Link */}
+              <div className="border-t border-zinc-200 dark:border-white/5 pt-6">
+                <h3 className="text-lg font-heading text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-violet-400" />
+                  Legal Entity
+                </h3>
+                <div className="space-y-3">
+                  <Select
+                    value={venueForm.legal_entity_id || ""}
+                    onValueChange={(v) => setVenueForm({ ...venueForm, legal_entity_id: v === "none" ? "" : v })}
+                    disabled={!isManager()}
+                  >
+                    <SelectTrigger className="bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white h-12">
+                      <SelectValue placeholder="Select a legal entity..." />
+                    </SelectTrigger>
+                    <SelectContent className="bg-zinc-900 border-white/10">
+                      <SelectItem value="none" className="text-zinc-400">No legal entity</SelectItem>
+                      {legalEntities.map(le => (
+                        <SelectItem key={le._id} value={le._id} className="text-white">
+                          {le.registered_name}{le.vat_number ? ` (${le.vat_number})` : ''}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <button
+                    onClick={() => navigate('/admin/legal-entities')}
+                    className="text-xs text-violet-400 hover:text-violet-300 flex items-center gap-1 transition-colors"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    Manage Legal Entities
+                  </button>
+                </div>
+              </div>
+
               {isManager() && (
                 <Button
                   data-testid="save-venue-btn"
@@ -273,185 +321,88 @@ export default function VenueSettings() {
           </Card>
         </TabsContent>
 
-        {/* Legal & Branding Settings */}
-        <TabsContent value="legal">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
-              <Card className="bg-zinc-900/50 border-white/5">
-                <CardHeader>
-                  <CardTitle className="text-white font-heading flex items-center gap-2 text-sm uppercase tracking-widest">
-                    <Scale className="w-4 h-4 text-zinc-400" />
-                    Legal Entity Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6 p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Registered Company Name</Label>
-                      <Input
-                        value={venueForm.legal_info?.registered_name || ""}
-                        onChange={(e) => setVenueForm({ ...venueForm, legal_info: { ...(venueForm.legal_info || {}), registered_name: e.target.value } })}
-                        className="bg-zinc-950 border-white/10 text-white"
-                        placeholder="e.g., Caviar & Bull Limited"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">PE Number (Malta)</Label>
-                      <Input
-                        value={venueForm.legal_info?.pe_number || ""}
-                        onChange={(e) => setVenueForm({ ...venueForm, legal_info: { ...(venueForm.legal_info || {}), pe_number: e.target.value } })}
-                        className="bg-zinc-950 border-white/10 text-white"
-                        placeholder="e.g., 456398"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Registered Business Address</Label>
+        {/* Branding Tab (logo + accent color only — legal info is in Legal Entities page) */}
+        <TabsContent value="branding">
+          <Card className="bg-zinc-900/50 border-white/5">
+            <CardHeader>
+              <CardTitle className="text-white font-heading flex items-center gap-2 text-sm uppercase tracking-widest">
+                Venue Branding
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6 p-6">
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Establishment Logo</Label>
+                <div className="flex gap-4 items-start">
+                  <div className="flex-1 space-y-2">
                     <Input
-                      value={venueForm.legal_info?.registered_address || ""}
-                      onChange={(e) => setVenueForm({ ...venueForm, legal_info: { ...(venueForm.legal_info || {}), registered_address: e.target.value } })}
+                      value={venueForm.branding?.logo_url || ""}
+                      onChange={(e) => setVenueForm({ ...venueForm, branding: { ...(venueForm.branding || {}), logo_url: e.target.value } })}
                       className="bg-zinc-950 border-white/10 text-white"
-                      placeholder="Corinthia Hotel, St. Georges Bay, St. Julians"
+                      placeholder="Paste Logo URL or Upload ->"
                     />
+                    <p className="text-[10px] text-zinc-500 italic">Accepts direct URLs or uploaded files.</p>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">VAT Number</Label>
-                      <Input
-                        value={venueForm.legal_info?.vat_number || ""}
-                        onChange={(e) => setVenueForm({ ...venueForm, legal_info: { ...(venueForm.legal_info || {}), vat_number: e.target.value } })}
-                        className="bg-zinc-950 border-white/10 text-white"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Company Reg No.</Label>
-                      <Input
-                        value={venueForm.legal_info?.registration_number || ""}
-                        onChange={(e) => setVenueForm({ ...venueForm, legal_info: { ...(venueForm.legal_info || {}), registration_number: e.target.value } })}
-                        className="bg-zinc-950 border-white/10 text-white"
-                      />
-                    </div>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="logo-upload"
+                      className="hidden"
+                      accept="image/*"
+                      onChange={handleLogoUpload}
+                      disabled={uploading}
+                    />
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="bg-zinc-900 border-white/10 text-white cursor-pointer hover:bg-zinc-800"
+                    >
+                      <label htmlFor="logo-upload">
+                        {uploading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Upload className="w-4 h-4 mr-2" />
+                        )}
+                        {uploading ? 'Uploading...' : 'Upload'}
+                      </label>
+                    </Button>
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-zinc-900/50 border-white/5">
-                <CardHeader>
-                  <CardTitle className="text-white font-heading flex items-center gap-2 text-sm uppercase tracking-widest">
-                    <UserCheck className="w-4 h-4 text-zinc-400" />
-                    HR & Management
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6 p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">HR Manager Name</Label>
-                      <Input
-                        value={venueForm.legal_info?.hr_manager_name || "Jacqueline Portelli"}
-                        onChange={(e) => setVenueForm({ ...venueForm, legal_info: { ...(venueForm.legal_info || {}), hr_manager_name: e.target.value } })}
-                        className="bg-zinc-950 border-white/10 text-white"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Director/Principal Payer</Label>
-                      <Input
-                        value={venueForm.legal_info?.principal_name || ""}
-                        onChange={(e) => setVenueForm({ ...venueForm, legal_info: { ...(venueForm.legal_info || {}), principal_name: e.target.value } })}
-                        className="bg-zinc-950 border-white/10 text-white"
-                        placeholder="e.g., Marvin Gauci"
-                      />
+                </div>
+                {venueForm.branding?.logo_url && (
+                  <div className="mt-2 p-4 bg-white rounded-lg flex items-center justify-center relative group"> {/* eslint-disable-line restin-guardrails/no-hardcoded-colors */}
+                    <img src={venueForm.branding.logo_url} alt="Logo Preview" className="max-h-12 object-contain" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
+                      <span className="text-[10px] font-black text-white uppercase tracking-widest">Preview</span>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="space-y-6">
-              <Card className="bg-zinc-900/50 border-white/5">
-                <CardHeader>
-                  <CardTitle className="text-white font-heading flex items-center gap-2 text-sm uppercase tracking-widest">
-                    <Palette className="w-4 h-4 text-zinc-400" />
-                    Branding
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6 p-6">
-                  <div className="space-y-4">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Establishment Logo</Label>
-
-                    <div className="flex gap-4 items-start">
-                      <div className="flex-1 space-y-2">
-                        <Input
-                          value={venueForm.branding?.logo_url || ""}
-                          onChange={(e) => setVenueForm({ ...venueForm, branding: { ...(venueForm.branding || {}), logo_url: e.target.value } })}
-                          className="bg-zinc-950 border-white/10 text-white"
-                          placeholder="Paste Logo URL or Upload ->"
-                        />
-                        <p className="text-[10px] text-zinc-500 italic">Accepts direct URLs or uploaded files.</p>
-                      </div>
-
-                      <div className="relative">
-                        <input
-                          type="file"
-                          id="logo-upload"
-                          className="hidden"
-                          accept="image/*"
-                          onChange={handleLogoUpload}
-                          disabled={uploading}
-                        />
-                        <Button
-                          asChild
-                          variant="outline"
-                          className="bg-zinc-900 border-white/10 text-white cursor-pointer hover:bg-zinc-800"
-                        >
-                          <label htmlFor="logo-upload">
-                            {uploading ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <Upload className="w-4 h-4 mr-2" />
-                            )}
-                            {uploading ? 'Uploading...' : 'Upload'}
-                          </label>
-                        </Button>
-                      </div>
-                    </div>
-
-                    {venueForm.branding?.logo_url && (
-                      <div className="mt-2 p-4 bg-white rounded-lg flex items-center justify-center relative group"> {/* eslint-disable-line restin-guardrails/no-hardcoded-colors */}
-                        <img src={venueForm.branding.logo_url} alt="Logo Preview" className="max-h-12 object-contain" />
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
-                          <span className="text-[10px] font-black text-white uppercase tracking-widest">Preview</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="space-y-4">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Document Accent Color</Label>
-                    <div className="flex gap-3">
-                      <Input
-                        type="color"
-                        value={venueForm.branding?.primary_color || "#dc2626"}
-                        onChange={(e) => setVenueForm({ ...venueForm, branding: { ...(venueForm.branding || {}), primary_color: e.target.value } })}
-                        className="bg-zinc-950 border-white/10 w-12 h-10 p-1"
-                      />
-                      <Input
-                        value={venueForm.branding?.primary_color || "#dc2626"}
-                        onChange={(e) => setVenueForm({ ...venueForm, branding: { ...(venueForm.branding || {}), primary_color: e.target.value } })}
-                        className="bg-zinc-950 border-white/10 text-white font-mono"
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Button
-                onClick={handleUpdateVenue}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 font-black uppercase tracking-widest"
-                disabled={!isManager()}
-              >
-                Save Branding & Legal
-              </Button>
-            </div>
-          </div>
+                )}
+              </div>
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Document Accent Color</Label>
+                <div className="flex gap-3">
+                  <Input
+                    type="color"
+                    value={venueForm.branding?.primary_color || "#dc2626"}
+                    onChange={(e) => setVenueForm({ ...venueForm, branding: { ...(venueForm.branding || {}), primary_color: e.target.value } })}
+                    className="bg-zinc-950 border-white/10 w-12 h-10 p-1"
+                  />
+                  <Input
+                    value={venueForm.branding?.primary_color || "#dc2626"}
+                    onChange={(e) => setVenueForm({ ...venueForm, branding: { ...(venueForm.branding || {}), primary_color: e.target.value } })}
+                    className="bg-zinc-950 border-white/10 text-white font-mono"
+                  />
+                </div>
+              </div>
+              {isManager() && (
+                <Button
+                  onClick={handleUpdateVenue}
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 h-12 font-black uppercase tracking-widest"
+                  disabled={!isManager()}
+                >
+                  Save Branding
+                </Button>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Zones */}
