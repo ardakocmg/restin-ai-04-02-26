@@ -34,6 +34,8 @@ dist/
 *.env.*
 *token.json*
 *credentials.json*
+*.secret
+*.secrets
 
 # Logs and debug files
 npm-debug.log*
@@ -45,7 +47,14 @@ dump.rdb
 
 # System files
 .DS_Store
+
+# Crypto keys & certificates (NEVER commit)
 *.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
 
 # Python
 __pycache__/
