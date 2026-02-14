@@ -113,8 +113,8 @@ async def compare_and_sync(execute: bool = False):
         local_coll = local_db[coll_name]
 
         # Fetch all docs from both
-        atlas_docs = await atlas_coll.find({}).to_list(10000)
-        local_docs = await local_coll.find({}).to_list(10000)
+        atlas_docs = await atlas_coll.find({}).to_list(5000)
+        local_docs = await local_coll.find({}).to_list(5000)
 
         atlas_count = len(atlas_docs)
         local_count = len(local_docs)

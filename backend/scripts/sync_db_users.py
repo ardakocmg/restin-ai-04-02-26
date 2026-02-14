@@ -23,7 +23,7 @@ async def sync_users():
     users_updated = 0
     
     # Pre-load existing PINs per venue to avoid collisions
-    existing_users_list = await db.users.find({}, {"_id": 0, "venue_id": 1, "pin_hash": 1}).to_list(10000)
+    existing_users_list = await db.users.find({}, {"_id": 0, "venue_id": 1, "pin_hash": 1}).to_list(5000)
     used_pins_per_venue: dict[str, set] = {}
     for u in existing_users_list:
         vid = u.get("venue_id", "")
