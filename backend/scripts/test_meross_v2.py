@@ -40,8 +40,11 @@ async def main():
     print("=" * 55)
     print()
 
-    email = "arda@marvingauci.com"
-    password = "Mg2026"
+    email = os.environ.get("MEROSS_EMAIL", "arda@marvingauci.com")
+    password = os.environ.get("MEROSS_PASSWORD")
+    if not password:
+        print("❌ MEROSS_PASSWORD env var not set. Aborting.")
+        return
     api_base_url = "https://iotx-eu.meross.com"
 
     manager = None

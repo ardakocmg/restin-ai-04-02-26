@@ -29,25 +29,30 @@ now = datetime.now(timezone.utc)
 
 # Tuya Config
 tuya_creds = {
-    "access_id": "m885873995f2694d5098",
-    "access_secret": "31274577888743d5b78b5ce53460613a",
+    "access_id": os.environ.get("TUYA_ACCESS_ID", ""),
+    "access_secret": os.environ.get("TUYA_ACCESS_SECRET", ""),
     "endpoint": "https://openapi.tuyaeu.com"
 }
+if not tuya_creds["access_id"] or not tuya_creds["access_secret"]:
+    print("⚠️  TUYA_ACCESS_ID / TUYA_ACCESS_SECRET not set, skipping Tuya")
+
 tuya_data = {
     "organizationId": org_id,
     "provider": "TUYA",
     "isEnabled": True,
     "credentials": tuya_creds,
-    "status": "CONNECTED", # Assuming success based on direct test
+    "status": "CONNECTED",
     "updatedAt": now,
     "createdAt": now 
 }
 
 # Meross Config
 meross_creds = {
-    "email": "arda@marvingauci.com",
-    "password": "Mg2026"
+    "email": os.environ.get("MEROSS_EMAIL", "arda@marvingauci.com"),
+    "password": os.environ.get("MEROSS_PASSWORD", "")
 }
+if not meross_creds["password"]:
+    print("⚠️  MEROSS_PASSWORD not set, skipping Meross")
 meross_data = {
     "organizationId": org_id,
     "provider": "MEROSS",

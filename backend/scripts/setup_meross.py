@@ -30,9 +30,12 @@ async def main():
 
     # 2. Config Data
     creds = {
-        "email": "arda@marvingauci.com",
-        "password": "Mg2026"
+        "email": os.environ.get("MEROSS_EMAIL", "arda@marvingauci.com"),
+        "password": os.environ.get("MEROSS_PASSWORD")
     }
+    if not creds["password"]:
+        print("❌ MEROSS_PASSWORD env var not set. Aborting.")
+        return
 
     # 3. Upsert
     print("Configuring Meross...")
