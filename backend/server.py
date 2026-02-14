@@ -606,6 +606,10 @@ api_main.include_router(recipe_engineering_router)
 api_main.include_router(quality_control_router)
 api_main.include_router(hr_leave_advanced_router)
 api_main.include_router(hr_payroll_advanced_router)
+
+# HR Bridge: maps frontend hyphenated URLs to existing collections
+from routes.hr_bridge_routes import create_hr_bridge_router
+api_main.include_router(create_hr_bridge_router())
 api_main.include_router(hr_expense_router)
 api_main.include_router(migration_router)
 api_main.include_router(recipe_engineering_router)
