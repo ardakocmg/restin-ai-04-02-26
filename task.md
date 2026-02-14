@@ -205,9 +205,10 @@ Organization (Marvin Gauci Group)
 #### 3.2 Smart Features ✅ DONE
 
 - [x] Remember last visited page per domain (localStorage `restin:domain-memory`)
-- [ ] Pin frequently used pages (persist to localStorage)
+- [x] Pin frequently used pages (localStorage `restin:pinned-pages`, star icon on hover)
+- [x] Pinned pages section at top of Pane 2 with amber styling
 - [x] Cmd/Ctrl+click opens sidebar links in new tab (window.open + native Link handling)
-- [ ] Visual distinction for different item types (settings vs data pages vs dashboards)
+- [x] Visual distinction: settings=amber border, dashboard=emerald, report=blue (inferred from href)
 
 ---
 
@@ -259,6 +260,12 @@ Organization (Marvin Gauci Group)
 - [x] `posdashboard` → redirect to canonical `pos-dashboard`
 - [x] `inventory-items-list` → redirect to canonical `inventory-items`
 - [x] `hr/summary` → redirect to canonical `hr/dashboard`
+
+#### 6.2 TSX Migration (In Progress)
+
+- [x] `AdminLayout.js` → `AdminLayout.tsx` (full TypeScript, typed state, explicit return)
+- [ ] `NewSidebar.jsx` → `NewSidebar.tsx`
+- [ ] `NewTopBar.jsx` → `NewTopBar.tsx`
 - [ ] Ensure all sidebar items have matching routes in App.tsx
 - [ ] Remove orphan routes (routes with no sidebar entry)
 

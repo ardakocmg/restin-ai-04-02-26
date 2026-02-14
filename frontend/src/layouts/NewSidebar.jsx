@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from '../features/auth/AuthContext';
 import { MENU_ITEMS, DOMAINS, getDomainForGroup } from '@/lib/searchRegistry';
-import { ChevronRight, ChevronLeft, Search, X } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Search, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 
@@ -94,6 +94,56 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     settings: 0,
     collab: 4,
   }), []);
+
+  // ─── Page Pinning: favorites persisted to localStorage ───
+  const PINS_KEY = 'restin:pinned-pages';
+  const [pinnedPages, setPinnedPages] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(PINS_KEY) || '[]'); }
+    catch { return []; }
+  });
+
+  const togglePin = useCallback((href) => {
+    setPinnedPages(prev => {
+      const next = prev.includes(href)
+        ? prev.filter(p => p !== href)
+        : [...prev, href];
+      try { localStorage.setItem(PINS_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+      return next;
+    });
+  }, []);
+
+  const isPinned = (href) => pinnedPages.includes(href);
+
+  // Resolve pinned hrefs back to menu items for rendering
+  const pinnedItems = useMemo(() => {
+    const allItems = [];
+    visibleMenuItems.forEach(item => {
+      if (item.href) allItems.push(item);
+      item.children?.forEach(c => allItems.push({ ...c, icon: item.icon }));
+    });
+    return pinnedPages
+      .map(href => allItems.find(i => i.href === href))
+      .filter(Boolean);
+  }, [pinnedPages, visibleMenuItems]);
+
+  // ─── Visual type distinction: infer page type from href ───
+  const getItemType = (href) => {
+    if (!href) return 'page';
+    if (href.includes('settings') || href.includes('setup') || href.includes('config')) return 'settings';
+    if (href.includes('dashboard') || href === '/admin' || href === '/admin/hr') return 'dashboard';
+    if (href.includes('report') || href.includes('analytics') || href.includes('sales')) return 'report';
+    return 'page';
+  };
+
+  const getTypeIndicator = (href) => {
+    const type = getItemType(href);
+    switch (type) {
+      case 'settings': return 'border-l-2 border-l-amber-500/40';
+      case 'dashboard': return 'border-l-2 border-l-emerald-500/40';
+      case 'report': return 'border-l-2 border-l-blue-500/40';
+      default: return '';
+    }
+  };
 
   const hasTertiary = activeSubItem?.subs?.length > 0;
 
@@ -372,6 +422,37 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                 transition={{ duration: 0.15, ease: 'easeOut' }}
                 className="space-y-1.5"
               >
+                {/* ─── Pinned Pages Section ─── */}
+                {!collapsed && !searchTerm && pinnedItems.length > 0 && (
+                  <div className="mb-4">
+                    <div className="flex items-center gap-2 px-3 mb-2">
+                      <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">Pinned</span>
+                    </div>
+                    {pinnedItems.map((item) => (
+                      <Link
+                        key={`pin-${item.href}`}
+                        to={item.href}
+                        className={cn(
+                          'group flex items-center gap-3 px-3.5 py-2 rounded-xl transition-all duration-200 border border-transparent',
+                          isActive(item.href)
+                            ? 'bg-amber-500/[0.06] text-amber-400 border-amber-500/15'
+                            : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-300'
+                        )}
+                      >
+                        {item.icon && <item.icon className="h-4 w-4 flex-shrink-0 text-amber-500/60" />}
+                        <span className="text-xs font-medium truncate">{item.title}</span>
+                        <button
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); togglePin(item.href); }}
+                          className="ml-auto opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-white/10 transition-all"
+                        >
+                          <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                        </button>
+                      </Link>
+                    ))}
+                    <div className="mx-3 mt-2 border-b border-white/5" />
+                  </div>
+                )}
                 {visibleMenuItems
                   .filter(item => {
                     if (searchTerm && !collapsed) {
@@ -390,18 +471,30 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
                           className={cn(
                             'group flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 border border-transparent',
                             collapsed && 'justify-center px-2 py-3',
+                            !collapsed && getTypeIndicator(item.href),
                             isActive(item.href)
                               ? 'bg-red-500/[0.08] text-red-500 border-red-500/20 shadow-[0_0_15px_rgba(229,57,53,0.05)]'
                               : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-200'
                           )}
                           onClick={(e) => {
-                            if (e.metaKey || e.ctrlKey) return; // Let browser handle new tab natively
+                            if (e.metaKey || e.ctrlKey) return;
                             setActiveSubItem(item);
                           }}
                         >
                           <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isActive(item.href) ? "text-red-500" : "text-zinc-500 group-hover:text-zinc-300")} />
-                          {!collapsed && <span className={cn("text-sm font-medium", isActive(item.href) ? "font-bold" : "")}>{item.title}</span>}
-                          {isActive(item.href) && !collapsed && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)] animate-pulse"></div>}
+                          {!collapsed && <span className={cn("text-sm font-medium flex-1", isActive(item.href) ? "font-bold" : "")}>{item.title}</span>}
+                          {!collapsed && (
+                            <button
+                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); togglePin(item.href); }}
+                              className={cn(
+                                'p-0.5 rounded hover:bg-white/10 transition-all shrink-0',
+                                isPinned(item.href) ? 'opacity-100' : 'opacity-0 group-hover:opacity-60'
+                              )}
+                            >
+                              <Star className={cn('w-3 h-3', isPinned(item.href) ? 'text-amber-500 fill-amber-500' : 'text-zinc-600')} />
+                            </button>
+                          )}
+                          {isActive(item.href) && !collapsed && <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)] animate-pulse shrink-0"></div>}
                         </Link>
                       ) : (
                         <div className="space-y-1">
