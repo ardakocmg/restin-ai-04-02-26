@@ -205,6 +205,7 @@ from routes.hr_performance import create_hr_performance_router
 from routes.hr_documents_advanced import create_hr_documents_advanced_router
 from routes.hr_sfm_accounting import create_hr_sfm_accounting_router
 from routes.hr_analytics_advanced import create_hr_analytics_advanced_router
+from routes.hr_employee_analytics import create_hr_employee_analytics_router
 from routes.content_editor import create_content_editor_router
 from routes.analytics_routes import create_analytics_routes as create_dashboard_analytics_router
 
@@ -423,6 +424,7 @@ hr_performance_router = create_hr_performance_router()
 hr_documents_advanced_router = create_hr_documents_advanced_router()
 hr_sfm_accounting_router = create_hr_sfm_accounting_router()
 hr_analytics_advanced_router = create_hr_analytics_advanced_router()
+hr_employee_analytics_router = create_hr_employee_analytics_router()
 content_editor_router = create_content_editor_router()
 hr_compliance_mt_router = create_hr_compliance_mt_router()
 dashboard_analytics_router = create_dashboard_analytics_router()
@@ -610,6 +612,7 @@ api_main.include_router(hr_performance_router)
 api_main.include_router(hr_documents_advanced_router)
 api_main.include_router(hr_sfm_accounting_router)
 api_main.include_router(hr_analytics_advanced_router)
+api_main.include_router(hr_employee_analytics_router)
 api_main.include_router(content_editor_router)
 api_main.include_router(dashboard_analytics_router)
 

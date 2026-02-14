@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
 import { useVenue } from '../context/VenueContext';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import { buildSearchIndex } from '@/lib/searchRegistry';
 import { Bell, User, LogOut, ChevronDown, Moon, Sun, Monitor, Database, Palette, Settings, Building2, Search, X, Check, Wifi, WifiOff, AlertTriangle, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { useSafeMode } from '../context/SafeModeContext';
 import { Button } from '../components/ui/button';
@@ -28,78 +29,64 @@ export default function NewTopBar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [systemStatus, setSystemStatus] = useState('healthy'); // 'healthy', 'degraded', 'offline'
+  const [selectedSuggestionIdx, setSelectedSuggestionIdx] = useState(0);
+
+  // Build role-filtered search index from shared registry
+  const searchIndex = useMemo(() => buildSearchIndex(user?.role), [user?.role]);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
-  // All available pages for search
-  const allPages = [
-    { title: 'Dashboard', path: '/admin/dashboard', category: 'Main', keywords: ['home', 'overview', 'main'] },
-    { title: 'HR Dashboard', path: '/admin/hr', category: 'Human Resources', keywords: ['human', 'resources', 'people'] },
-    { title: 'Scheduler', path: '/admin/hr/scheduler', category: 'Human Resources', keywords: ['schedule', 'shifts', 'roster', 'planning'] },
-    { title: 'Personnel', path: '/admin/hr/personnel', category: 'Human Resources', keywords: ['employees', 'staff', 'team', 'people'] },
-    { title: 'Payroll', path: '/admin/hr/payroll', category: 'Human Resources', keywords: ['salary', 'wages', 'payment', 'compensation'] },
-    { title: 'Clocking Data', path: '/admin/hr/clocking', category: 'Human Resources', keywords: ['attendance', 'time', 'clock'] },
-    { title: 'Settings', path: '/admin/settings', category: 'System', keywords: ['config', 'preferences', 'options'] },
-    { title: 'Observability', path: '/admin/observability', category: 'System', keywords: ['monitoring', 'logs', 'metrics'] },
-    { title: 'Operations', path: '/admin/operations', category: 'Main', keywords: ['ops', 'orders', 'service'] },
-    { title: 'Menu & Inventory', path: '/admin/menu', category: 'Main', keywords: ['food', 'items', 'stock'] },
-  ];
+  // Filter suggestions based on search query — searches title, breadcrumb, keywords, path
+  const suggestions = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase();
+    return searchIndex
+      .filter(item => {
+        return (
+          item.title.toLowerCase().includes(q) ||
+          item.breadcrumb.toLowerCase().includes(q) ||
+          item.path.toLowerCase().includes(q) ||
+          item.keywords.some(kw => kw.includes(q))
+        );
+      })
+      .slice(0, 8); // Show up to 8 results
+  }, [searchQuery, searchIndex]);
 
-  // Filter suggestions based on search query
-  const suggestions = searchQuery.trim()
-    ? allPages.filter(page => {
-      const query = searchQuery.toLowerCase();
-      return (
-        page.title.toLowerCase().includes(query) ||
-        page.category.toLowerCase().includes(query) ||
-        page.keywords.some(kw => kw.includes(query))
-      );
-    }).slice(0, 5) // Limit to 5 suggestions
-    : []
-
-  // PERF: Use browser events instead of polling for online/offline detection
+  // Reset selected suggestion when suggestions change
   useEffect(() => {
-    const checkSystemHealth = () => {
-      setSystemStatus(navigator.onLine ? 'healthy' : 'offline');
+    setSelectedSuggestionIdx(0);
+  }, [suggestions.length, searchQuery]);
+
+  // Keyboard navigation for suggestions
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!showSuggestions || suggestions.length === 0) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setSelectedSuggestionIdx(prev => Math.min(prev + 1, suggestions.length - 1));
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setSelectedSuggestionIdx(prev => Math.max(prev - 1, 0));
+      } else if (e.key === 'Enter' && suggestions[selectedSuggestionIdx]) {
+        e.preventDefault();
+        handleSuggestionClick(suggestions[selectedSuggestionIdx].path);
+      }
     };
 
-    checkSystemHealth();
-
-    // Use native events (zero CPU) instead of 30s polling
-    window.addEventListener('online', checkSystemHealth);
-    window.addEventListener('offline', checkSystemHealth);
-
-    // Also re-check when tab becomes visible
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') checkSystemHealth();
-    };
-    document.addEventListener('visibilitychange', handleVisibility);
-
-    return () => {
-      window.removeEventListener('online', checkSystemHealth);
-      window.removeEventListener('offline', checkSystemHealth);
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
-  }, []);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showSuggestions, suggestions, selectedSuggestionIdx]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
 
-    // If there are suggestions, navigate to the first one
     if (suggestions.length > 0) {
-      navigate(suggestions[0].path);
-    } else {
-      // Fallback navigation
-      const query = searchQuery.toLowerCase();
-      if (query.includes('scheduler')) navigate('/admin/hr/scheduler');
-      else if (query.includes('personnel')) navigate('/admin/hr/personnel');
-      else if (query.includes('payroll')) navigate('/admin/hr/payroll');
-      else if (query.includes('hr')) navigate('/admin/hr');
-      else navigate('/admin/dashboard');
+      navigate(suggestions[selectedSuggestionIdx]?.path || suggestions[0].path);
     }
 
     setSearchQuery('');
@@ -218,7 +205,7 @@ export default function NewTopBar() {
         <div className="relative group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 group-focus-within:text-red-500 transition-colors z-10 duration-300" />
           <input
-            type="text"
+            type="search"
             placeholder="Search pages, modules, features..."
             value={searchQuery}
             onChange={(e) => {
@@ -227,6 +214,9 @@ export default function NewTopBar() {
             }}
             onFocus={() => setShowSuggestions(true)}
             onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+            autoComplete="off"
+            data-1p-ignore
+            data-lpignore="true"
             className="w-full bg-zinc-900/50 border border-white/5 rounded-2xl px-12 py-3 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-red-500/30 focus:bg-zinc-900 focus:ring-4 focus:ring-red-500/10 shadow-inner hover:bg-zinc-900/80 transition-all duration-300"
           />
           <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
@@ -249,29 +239,52 @@ export default function NewTopBar() {
         {/* Autocomplete Suggestions Dropdown */}
         {showSuggestions && suggestions.length > 0 && (
           <div className="absolute top-full left-0 right-0 mt-2 bg-[#0F0F10] border border-white/10 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden z-50 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
-            <div className="px-3 py-2 text-[10px] uppercase font-bold tracking-widest text-zinc-600 bg-white/5">Suggestions</div>
-            {suggestions.map((suggestion, idx) => (
-              <div
-                key={idx}
-                onClick={() => handleSuggestionClick(suggestion.path)}
-                className="flex items-center justify-between px-4 py-3.5 hover:bg-white/5 cursor-pointer transition-all group border-b border-white/5 last:border-b-0"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center border border-white/5 group-hover:border-red-500/30 group-hover:bg-red-500/10 transition-all">
-                    <Search className="h-4 w-4 text-zinc-500 group-hover:text-red-500" />
+            <div className="px-3 py-2 text-[10px] uppercase font-bold tracking-widest text-zinc-600 bg-white/5">Pages & Features</div>
+            {suggestions.map((suggestion, idx) => {
+              const Icon = suggestion.icon;
+              const isSelected = idx === selectedSuggestionIdx;
+              return (
+                <div
+                  key={`${suggestion.path}-${idx}`}
+                  onClick={() => handleSuggestionClick(suggestion.path)}
+                  className={cn(
+                    "flex items-center justify-between px-4 py-3 cursor-pointer transition-all group border-b border-white/5 last:border-b-0",
+                    isSelected ? "bg-red-500/10" : "hover:bg-white/5"
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "w-8 h-8 rounded-lg flex items-center justify-center border transition-all",
+                      isSelected
+                        ? "bg-red-500/10 border-red-500/30"
+                        : "bg-zinc-900 border-white/5 group-hover:border-red-500/30 group-hover:bg-red-500/10"
+                    )}>
+                      <Icon className={cn("h-4 w-4", isSelected ? "text-red-500" : "text-zinc-500 group-hover:text-red-500")} />
+                    </div>
+                    <div>
+                      <div className={cn(
+                        "text-sm font-semibold transition-colors",
+                        isSelected ? "text-white" : "text-zinc-300 group-hover:text-white"
+                      )}>
+                        {suggestion.title}
+                      </div>
+                      <div className="text-[10px] uppercase tracking-wider text-zinc-600">
+                        {suggestion.breadcrumb}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
-                      {suggestion.title}
-                    </div>
-                    <div className="text-[10px] uppercase tracking-wider text-zinc-600 group-hover:text-zinc-500">
-                      {suggestion.category} • {suggestion.path}
-                    </div>
+                  <div className="flex items-center gap-2">
+                    {isSelected && (
+                      <span className="text-[10px] font-mono text-zinc-600 border border-zinc-800 rounded px-1.5 py-0.5">↵</span>
+                    )}
+                    <ChevronDown className={cn(
+                      "h-3 w-3 -rotate-90 transition-transform",
+                      isSelected ? "text-red-400 translate-x-1" : "text-zinc-700 group-hover:text-zinc-400 group-hover:translate-x-1"
+                    )} />
                   </div>
                 </div>
-                <ChevronDown className="h-3 w-3 text-zinc-700 group-hover:text-zinc-400 -rotate-90 transition-transform group-hover:translate-x-1" />
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </form>

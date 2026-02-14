@@ -31,7 +31,8 @@ export default function StockCount() {
     setLoading(true);
     try {
       const res = await api.get(`/inventory/items?venue_id=${activeVenue.id}`);
-      setItems(res.data || []);
+      const data = res.data;
+      setItems(Array.isArray(data) ? data : (data?.items || []));
       setCounts({}); // Reset counts on reload
     } catch (error) {
       logger.error(error);

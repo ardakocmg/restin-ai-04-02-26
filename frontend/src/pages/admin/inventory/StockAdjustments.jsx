@@ -23,7 +23,8 @@ export default function StockAdjustments() {
     try {
       const venueId = localStorage.getItem("restin_venue_id") || "venue-caviar-bull";
       const res = await api.get(`/inventory/items?venue_id=${venueId}`);
-      setItems(res.data || []);
+      const data = res.data;
+      setItems(Array.isArray(data) ? data : (data?.items || []));
       setLoading(false);
     } catch (error) {
       logger.error(error);

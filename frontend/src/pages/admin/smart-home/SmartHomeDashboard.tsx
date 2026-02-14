@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Power, Wifi, WifiOff, Zap, DoorOpen, DoorClosed, Shield, Droplets,
     Flame, Radio, RefreshCw, ChevronRight, Activity, Home, AlertTriangle,
-    CheckCircle2, XCircle, ToggleLeft, ToggleRight, Loader2, Plug, Server
+    CheckCircle2, XCircle, ToggleLeft, ToggleRight, Loader2, Plug, Server,
+    CloudOff, Cloud
 } from 'lucide-react';
 import api from '../../../lib/api';
 
@@ -18,6 +19,7 @@ interface SmartDevice {
     hardware: string | null;
     device_category: string;
     provider?: string;
+    last_synced?: string;
 }
 
 interface DevicesResponse {
@@ -25,6 +27,8 @@ interface DevicesResponse {
     online: number;
     offline: number;
     devices: SmartDevice[];
+    syncing?: boolean;
+    last_sync_error?: string | null;
 }
 
 // ─── Category Helpers ───────────────────────────────────────────────────
@@ -137,7 +141,7 @@ function SensorBadge({ type, online }: { type: 'leak' | 'smoke' | 'door'; online
         door: { safe: 'Closed', danger: 'Open', safeColor: 'blue', dangerColor: 'amber' },
     };
     const cfg = configs[type];
-    const isSafe = online; // Online = normal operation = safe for sensors
+    const isSafe = online;
 
     return (
         <div className={`
@@ -291,8 +295,8 @@ function DeviceCard({ device, index, onControl }: {
                             <span className="text-[10px] font-mono text-zinc-700 uppercase">{device.type}</span>
                             {device.provider && (
                                 <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded ${device.provider === 'tuya'
-                                        ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
-                                        : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                    ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
+                                    : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                                     }`}>
                                     {device.provider}
                                 </span>
@@ -315,30 +319,72 @@ export default function SmartHomeDashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-    const [refreshing, setRefreshing] = useState(false);
+    const [syncing, setSyncing] = useState(false);
+    const [syncError, setSyncError] = useState<string | null>(null);
+    const syncPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    const fetchDevices = useCallback(async (isRefresh = false) => {
+    // ── Fetch cached devices from DB (instant) ──
+    const fetchDevices = useCallback(async (showLoader = false) => {
         try {
-            if (isRefresh) setRefreshing(true); else setLoading(true);
+            if (showLoader) setLoading(true);
             setError(null);
             const { data } = await api.get<DevicesResponse>('/smart-home/devices');
             setDevices(data.devices);
             setStats({ total: data.total, online: data.online, offline: data.offline });
             setLastUpdated(new Date());
+            if (data.syncing) setSyncing(true);
+            if (data.last_sync_error) setSyncError(data.last_sync_error);
         } catch (err: unknown) {
             const message = err instanceof Error ? err.message : 'Failed to fetch devices';
             setError(message);
         } finally {
             setLoading(false);
-            setRefreshing(false);
         }
     }, []);
 
-    useEffect(() => {
-        fetchDevices();
-        const interval = setInterval(() => fetchDevices(true), 30000);
-        return () => clearInterval(interval);
+    // ── Trigger background sync ──
+    const triggerSync = useCallback(async () => {
+        try {
+            setSyncing(true);
+            setSyncError(null);
+            await api.post('/smart-home/sync');
+
+            // Poll for completion every 3s
+            if (syncPollRef.current) clearInterval(syncPollRef.current);
+            syncPollRef.current = setInterval(async () => {
+                try {
+                    const { data } = await api.get<{ syncing: boolean; last_error: string | null }>('/smart-home/sync/status');
+                    if (!data.syncing) {
+                        // Sync complete — refresh device list
+                        setSyncing(false);
+                        if (data.last_error) setSyncError(data.last_error);
+                        if (syncPollRef.current) clearInterval(syncPollRef.current);
+                        syncPollRef.current = null;
+                        fetchDevices(); // Refresh to show newly synced devices
+                    }
+                } catch {
+                    // Ignore poll errors
+                }
+            }, 3000);
+        } catch (err: unknown) {
+            setSyncing(false);
+            const message = err instanceof Error ? err.message : 'Sync failed';
+            setSyncError(message);
+        }
     }, [fetchDevices]);
+
+    // ── On mount: load cached devices instantly, then trigger background sync ──
+    useEffect(() => {
+        fetchDevices(true).then(() => {
+            // After showing cached data, trigger background sync
+            triggerSync();
+        });
+
+        return () => {
+            if (syncPollRef.current) clearInterval(syncPollRef.current);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleControl = async (uuid: string, command: string, channel = 0) => {
         await api.post(`/smart-home/devices/${uuid}/control`, { command, channel });
@@ -387,15 +433,30 @@ export default function SmartHomeDashboard() {
                         </div>
                     </div>
 
-                    <button
-                        onClick={() => fetchDevices(true)}
-                        disabled={refreshing}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-sm font-bold
+                    <div className="flex items-center gap-3">
+                        {/* Sync Status Badge */}
+                        {syncing && (
+                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                <span className="text-[10px] font-bold uppercase tracking-wider">Syncing from cloud...</span>
+                            </div>
+                        )}
+                        {syncError && !syncing && (
+                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
+                                <CloudOff className="h-3.5 w-3.5" />
+                                <span className="text-[10px] font-bold uppercase tracking-wider">Sync issue</span>
+                            </div>
+                        )}
+                        <button
+                            onClick={() => { fetchDevices(); triggerSync(); }}
+                            disabled={syncing}
+                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-sm font-bold
               hover:bg-white/[0.08] hover:border-white/[0.12] active:scale-95 transition-all duration-200 disabled:opacity-50"
-                    >
-                        <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-                        {refreshing ? 'Syncing...' : 'Refresh'}
-                    </button>
+                        >
+                            <RefreshCw className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
+                            {syncing ? 'Syncing...' : 'Refresh'}
+                        </button>
+                    </div>
                 </div>
             </motion.div>
 
@@ -423,7 +484,7 @@ export default function SmartHomeDashboard() {
                             </div>
                             <div className="absolute -inset-2 rounded-2xl border-2 border-emerald-500/20 animate-ping" />
                         </div>
-                        <p className="text-sm font-bold text-zinc-500 uppercase tracking-wider">Discovering devices...</p>
+                        <p className="text-sm font-bold text-zinc-500 uppercase tracking-wider">Loading devices...</p>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -441,7 +502,7 @@ export default function SmartHomeDashboard() {
                         <p className="text-xs text-red-400/60 mt-1">{error}</p>
                     </div>
                     <button
-                        onClick={() => fetchDevices()}
+                        onClick={() => fetchDevices(true)}
                         className="ml-auto px-4 py-2 rounded-lg bg-red-500/10 text-red-400 text-xs font-bold hover:bg-red-500/20 transition-colors"
                     >
                         Retry
@@ -497,8 +558,20 @@ export default function SmartHomeDashboard() {
                     </div>
                     <h3 className="text-lg font-bold text-zinc-400">No Devices Found</h3>
                     <p className="text-sm text-zinc-600 max-w-md text-center">
-                        Connect your Meross smart home devices to get started. Make sure your account credentials are configured.
+                        {syncing
+                            ? 'Discovering devices from Meross & Tuya cloud... This may take a moment.'
+                            : 'No devices synced yet. Make sure your Meross/Tuya credentials are configured in Sync Dashboard, then click Refresh.'}
                     </p>
+                    {!syncing && (
+                        <button
+                            onClick={() => triggerSync()}
+                            className="mt-4 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-sm font-bold
+                hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] active:scale-95 transition-all duration-200 flex items-center gap-2"
+                        >
+                            <Cloud className="h-4 w-4" />
+                            Sync from Cloud
+                        </button>
+                    )}
                 </motion.div>
             )}
         </div>

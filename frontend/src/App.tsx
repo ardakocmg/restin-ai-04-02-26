@@ -66,6 +66,7 @@ const ExpenseManagementIndigo = React.lazy(() => import("./pages/admin/hr/Expens
 const PerformanceManagementIndigo = React.lazy(() => import("./pages/admin/hr/PerformanceManagement"));
 const DocumentManagementIndigo = React.lazy(() => import("./pages/admin/hr/DocumentManagement"));
 const HRAnalyticsIndigo = React.lazy(() => import("./pages/admin/hr/HRAnalytics"));
+const HREmployeePerformance = React.lazy(() => import("./pages/admin/hr/HREmployeePerformance"));
 const SFMAccountingIndigo = React.lazy(() => import("./pages/admin/hr/SFMAccounting"));
 const VarianceAnalysis = React.lazy(() => import("./pages/admin/ai-invoice/VarianceAnalysis"));
 const SeasonalPatterns = React.lazy(() => import("./pages/admin/forecasting/SeasonalPatterns"));
@@ -481,7 +482,8 @@ function App() {
                                     <Route path="printers" element={<RoleRoute requiredRole="MANAGER"><Printers /></RoleRoute>} />
                                     <Route path="inbox" element={<RoleRoute requiredRole="STAFF"><Inbox /></RoleRoute>} />
                                     <Route path="smart-home" element={<RoleRoute requiredRole="OWNER"><SmartHomeDashboard /></RoleRoute>} />
-                                    <Route path="integrations" element={<RoleRoute requiredRole="OWNER"><IntegrationsHub /></RoleRoute>} />
+                                    {/* Integrations consolidated into Sync — redirect for backward compat */}
+                                    <Route path="integrations" element={<Navigate to="/admin/sync" replace />} />
                                     <Route path="delivery-aggregators" element={<RoleRoute requiredRole="OWNER"><DeliveryAggregators /></RoleRoute>} />
                                     <Route path="finance-provider" element={<RoleRoute requiredRole="OWNER"><FinanceProviderSettings /></RoleRoute>} />
                                     {/* Google Hub Consolidated into WorkspaceSettings - Manager Access for Operations */}
@@ -591,6 +593,7 @@ function App() {
                                       <Route index element={<RoleRoute requiredRole="MANAGER"><HRHomeIndigoPage /></RoleRoute>} />
                                       <Route path="people" element={<RoleRoute requiredRole="MANAGER"><EmployeeDirectory /></RoleRoute>} />
                                       <Route path="analytics" element={<RoleRoute requiredRole="OWNER"><HRAnalyticsIndigo /></RoleRoute>} />
+                                      <Route path="employee-performance/:employeeId" element={<RoleRoute requiredRole="MANAGER"><HREmployeePerformance /></RoleRoute>} />
                                       <Route path="payroll" element={<RoleRoute requiredRole="OWNER"><PayrollPage /></RoleRoute>} />
                                       {/* Restored Legacy Modules */}
                                       <Route path="esg" element={<RoleRoute requiredRole="OWNER"><ESGModule /></RoleRoute>} />

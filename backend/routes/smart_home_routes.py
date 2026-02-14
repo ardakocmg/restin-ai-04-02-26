@@ -1,61 +1,195 @@
 """
 Smart Home / IoT Routes (Pillar 4: IoT Sentinel)
 Provides device listing, status, and control for Meross/Tuya smart home devices.
-Connected to MongoDB for persistence.
+Reads from iot_devices collection (real synced data). Background sync via connectors.
 """
 from fastapi import APIRouter, Depends, HTTPException
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from pydantic import BaseModel
 from core.dependencies import get_current_user, get_database
+from core.database import db as module_db
 from datetime import datetime, timezone
 import logging
-import uuid
+import asyncio
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/smart-home", tags=["Smart Home / IoT"])
 
+# ─── Meross device category mapping (type string → frontend category) ────
+MEROSS_CATEGORY_MAP = {
+    "mss310": "plug",
+    "mss210": "plug",
+    "mss110": "plug",
+    "mss425f": "surge_protector",
+    "mss425e": "surge_protector",
+    "mss620": "plug",
+    "msg200": "gate",
+    "msg100": "gate",
+    "msh300": "hub",
+    "ms400": "leak_sensor",
+    "gs559a": "smoke_alarm",
+    "gs559": "door_sensor",
+    "bl100": "bulb",
+    "msl120": "bulb",
+    "msl100": "bulb",
+}
 
-DEFAULT_DEVICES = [
-    {"name": "Coffee Machine", "type": "MSS310", "device_category": "plug", "online": True, "is_on": True, "firmware": "3.2.1", "hardware": "2.0.0", "provider": "meross"},
-    {"name": "Dishwasher Line", "type": "MSS310", "device_category": "plug", "online": True, "is_on": True, "firmware": "3.2.1", "hardware": "2.0.0", "provider": "meross"},
-    {"name": "Ice Machine", "type": "MSS310", "device_category": "plug", "online": True, "is_on": False, "firmware": "3.2.1", "hardware": "2.0.0", "provider": "meross"},
-    {"name": "Bar Fridge", "type": "MSS310", "device_category": "plug", "online": True, "is_on": True, "firmware": "3.1.8", "hardware": "2.0.0", "provider": "meross"},
-    {"name": "Prep Table Heater", "type": "MSS310", "device_category": "plug", "online": False, "is_on": None, "firmware": "3.1.8", "hardware": "2.0.0", "provider": "meross"},
-    {"name": "POS Terminal Strip", "type": "MSS425F", "device_category": "surge_protector", "online": True, "is_on": True, "firmware": "4.1.3", "hardware": "3.0.0", "provider": "meross"},
-    {"name": "Server Rack Power", "type": "MSS425F", "device_category": "surge_protector", "online": True, "is_on": True, "firmware": "4.1.3", "hardware": "3.0.0", "provider": "meross"},
-    {"name": "Main Entrance Gate", "type": "MSG200", "device_category": "gate", "online": True, "is_on": None, "firmware": "5.0.2", "hardware": "1.0.0", "provider": "meross"},
-    {"name": "Kitchen Hub Pro", "type": "MSH300", "device_category": "hub", "online": True, "is_on": None, "firmware": "6.1.0", "hardware": "2.0.0", "provider": "meross"},
-    {"name": "Kitchen Floor Sensor", "type": "MS400", "device_category": "leak_sensor", "online": True, "is_on": None, "firmware": "2.0.1", "hardware": "1.0.0", "provider": "meross"},
-    {"name": "Walk-in Cooler Sensor", "type": "MS400", "device_category": "leak_sensor", "online": True, "is_on": None, "firmware": "2.0.1", "hardware": "1.0.0", "provider": "meross"},
-    {"name": "Kitchen Hood Alarm", "type": "GS559A", "device_category": "smoke_alarm", "online": True, "is_on": None, "firmware": "1.3.0", "hardware": "1.0.0", "provider": "meross"},
-    {"name": "Back Door Sensor", "type": "GS559", "device_category": "door_sensor", "online": True, "is_on": None, "firmware": "1.2.5", "hardware": "1.0.0", "provider": "meross"},
-    {"name": "Storage Room Door", "type": "GS559", "device_category": "door_sensor", "online": False, "is_on": None, "firmware": "1.2.5", "hardware": "1.0.0", "provider": "meross"},
-    {"name": "Dining Area Ambient", "type": "BL100", "device_category": "bulb", "online": True, "is_on": True, "firmware": "2.1.0", "hardware": "1.0.0", "provider": "tuya"},
-    {"name": "Bar Counter Lights", "type": "BL100", "device_category": "bulb", "online": True, "is_on": True, "firmware": "2.1.0", "hardware": "1.0.0", "provider": "tuya"},
-]
+# ─── Tuya device category mapping (Tuya category code → frontend category) ────
+TUYA_CATEGORY_MAP = {
+    "cz": "plug",       # socket/plug
+    "kg": "plug",       # switch
+    "dj": "bulb",       # light
+    "dd": "bulb",       # dimmer
+    "fwd": "bulb",      # dimmer
+    "cl": "gate",       # curtain/gate
+    "mc": "gate",       # garage door
+    "rqbj": "smoke_alarm",
+    "ywbj": "smoke_alarm",
+    "sj": "leak_sensor",
+    "mcs": "door_sensor",
+    "wk": "plug",       # thermostat
+}
 
 
-async def _ensure_devices(db) -> List[Dict[str, Any]]:
-    """Ensure devices exist in MongoDB."""
-    count = await db.smart_home_devices.count_documents({})
-    if count == 0:
-        devices_to_insert = []
-        for dev in DEFAULT_DEVICES:
-            dev_copy = dev.copy()
-            dev_copy["uuid"] = str(uuid.uuid5(uuid.NAMESPACE_DNS, dev["name"]))
-            dev_copy["created_at"] = datetime.now(timezone.utc).isoformat()
-            devices_to_insert.append(dev_copy)
-        await db.smart_home_devices.insert_many(devices_to_insert)
-        logger.info(f"Auto-seeded {len(devices_to_insert)} smart home devices")
+def _map_iot_device(doc: Dict[str, Any]) -> Dict[str, Any]:
+    """Map an iot_devices document to the SmartDevice format expected by the frontend."""
+    provider = (doc.get("provider") or "unknown").lower()
+    dev_type = (doc.get("type") or "unknown").lower()
+    raw = doc.get("raw_data") or {}
 
-    cursor = db.smart_home_devices.find({}, {"_id": 0})
-    return await cursor.to_list(length=100)
+    # Determine device_category
+    if provider == "meross":
+        device_category = MEROSS_CATEGORY_MAP.get(dev_type, "unknown")
+    elif provider == "tuya":
+        device_category = TUYA_CATEGORY_MAP.get(dev_type, "unknown")
+    else:
+        device_category = "unknown"
+
+    return {
+        "name": doc.get("name", "Unknown Device"),
+        "uuid": doc.get("external_id") or doc.get("uuid") or str(doc.get("_id", "")),
+        "type": doc.get("type", "unknown").upper(),
+        "online": doc.get("is_online", False),
+        "is_on": doc.get("is_on"),
+        "firmware": raw.get("fw") or raw.get("firmware"),
+        "hardware": raw.get("hw") or raw.get("hardware"),
+        "device_category": device_category,
+        "provider": provider,
+        "last_synced": doc.get("last_synced_at"),
+    }
 
 
 class ControlRequest(BaseModel):
-    command: str  # ON, OFF, OPEN, CLOSE
+    command: str  # ON, OFF, OPEN, CLOSE, TOGGLE
     channel: int = 0
+
+
+class SyncResponse(BaseModel):
+    syncing: bool
+    message: str
+
+
+# ─── Sync State (in-memory flag) ─────────────────────────────────────────
+_sync_in_progress = False
+_last_sync_error: Optional[str] = None
+_sync_task = None  # Store reference to prevent GC
+
+
+async def _run_background_sync():
+    """Background task: sync devices from Meross + Tuya APIs into iot_devices collection."""
+    global _sync_in_progress, _last_sync_error
+    print("[SYNC] _run_background_sync STARTED")
+    _sync_in_progress = True
+    _last_sync_error = None
+    db = module_db  # Use the module-level singleton
+    print(f"[SYNC] db object: {type(db)}")
+
+    try:
+        # Read credentials from integration_configs
+        configs = {}
+        print("[SYNC] Looking for MEROSS/TUYA configs in integration_configs...")
+        async for doc in db.integration_configs.find(
+            {"provider": {"$in": ["MEROSS", "TUYA"]}, "isEnabled": True},
+            {"_id": 0}
+        ):
+            provider = doc["provider"]
+            creds = doc.get("credentials", {})
+            configs[provider] = creds
+            print(f"[SYNC] Found {provider}: keys={list(creds.keys())}")
+
+        print(f"[SYNC] Total configs found: {list(configs.keys())}")
+        if not configs:
+            print("[SYNC] WARNING: No enabled MEROSS/TUYA configs found!")
+            # Debug: check what IS in the collection
+            all_count = await db.integration_configs.count_documents({})
+            print(f"[SYNC] Total docs in integration_configs: {all_count}")
+            async for doc in db.integration_configs.find({}, {"_id": 0, "credentials": 0}):
+                print(f"[SYNC]   - provider={doc.get('provider')}, isEnabled={doc.get('isEnabled')}, status={doc.get('status')}")
+
+        total_processed = 0
+        total_failed = 0
+
+        # ── Meross Sync ──
+        if "MEROSS" in configs:
+            try:
+                from app.domains.integrations.connectors.meross import MerossConnector, MEROSS_AVAILABLE
+                if MEROSS_AVAILABLE:
+                    connector = MerossConnector(
+                        organization_id="default",
+                        credentials=configs["MEROSS"],
+                        settings={}
+                    )
+                    result = await connector.sync()
+                    total_processed += result.get("processed", 0)
+                    total_failed += result.get("failed", 0)
+                    logger.info("[SmartHome] Meross sync: processed=%d, failed=%d", 
+                               result.get("processed", 0), result.get("failed", 0))
+                else:
+                    logger.warning("[SmartHome] meross-iot library not installed, skipping Meross sync")
+            except ImportError:
+                logger.warning("[SmartHome] Meross connector import failed, skipping")
+            except Exception as e:
+                logger.error("[SmartHome] Meross sync error: %s", str(e))
+                _last_sync_error = f"Meross: {str(e)}"
+
+        # ── Tuya Sync ──
+        if "TUYA" in configs:
+            try:
+                from app.domains.integrations.connectors.tuya import TuyaConnector, TUYA_AVAILABLE
+                if TUYA_AVAILABLE:
+                    connector = TuyaConnector(
+                        organization_id="default",
+                        credentials=configs["TUYA"],
+                        settings={}
+                    )
+                    result = await connector.sync()
+                    total_processed += result.get("processed", 0)
+                    total_failed += result.get("failed", 0)
+                    logger.info("[SmartHome] Tuya sync: processed=%d, failed=%d",
+                               result.get("processed", 0), result.get("failed", 0))
+                else:
+                    logger.warning("[SmartHome] tuya-connector library not installed, skipping Tuya sync")
+            except ImportError:
+                logger.warning("[SmartHome] Tuya connector import failed, skipping")
+            except Exception as e:
+                logger.error("[SmartHome] Tuya sync error: %s", str(e))
+                _last_sync_error = f"Tuya: {str(e)}"
+
+        # Update last sync timestamp on integration_configs
+        now = datetime.now(timezone.utc)
+        await db.integration_configs.update_many(
+            {"provider": {"$in": ["MEROSS", "TUYA"]}, "isEnabled": True},
+            {"$set": {"lastSync": now.isoformat()}}
+        )
+
+        logger.info("[SmartHome] Background sync complete: %d processed, %d failed", total_processed, total_failed)
+
+    except Exception as e:
+        logger.error("[SmartHome] Background sync fatal error: %s", str(e))
+        _last_sync_error = str(e)
+    finally:
+        _sync_in_progress = False
 
 
 @router.get("/devices")
@@ -63,8 +197,13 @@ async def get_devices(
     current_user: dict = Depends(get_current_user),
     db=Depends(get_database),
 ):
-    """Get all smart home devices with status from MongoDB."""
-    devices = await _ensure_devices(db)
+    """
+    Get all smart home devices from iot_devices collection (cached/synced data).
+    Returns instantly from DB — no blocking API calls.
+    """
+    devices_raw = await db.iot_devices.find({}, {"_id": 0}).to_list(length=200)
+
+    devices = [_map_iot_device(doc) for doc in devices_raw]
     online = sum(1 for d in devices if d.get("online"))
     offline = len(devices) - online
 
@@ -73,6 +212,37 @@ async def get_devices(
         "online": online,
         "offline": offline,
         "devices": devices,
+        "syncing": _sync_in_progress,
+        "last_sync_error": _last_sync_error,
+    }
+
+
+@router.post("/sync")
+async def trigger_sync(
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Trigger a background sync from Meross + Tuya cloud APIs.
+    Returns immediately — devices will update in DB asynchronously.
+    """
+    global _sync_in_progress, _sync_task
+    if _sync_in_progress:
+        return {"syncing": True, "message": "Sync already in progress"}
+
+    print("[SYNC] Creating background sync task...")
+    _sync_task = asyncio.create_task(_run_background_sync())
+    print(f"[SYNC] Task created: {_sync_task}")
+    return {"syncing": True, "message": "Sync started in background"}
+
+
+@router.get("/sync/status")
+async def get_sync_status(
+    current_user: dict = Depends(get_current_user),
+):
+    """Check if a background sync is currently running."""
+    return {
+        "syncing": _sync_in_progress,
+        "last_error": _last_sync_error,
     }
 
 
@@ -83,31 +253,76 @@ async def control_device(
     current_user: dict = Depends(get_current_user),
     db=Depends(get_database),
 ):
-    """Send a control command to a smart home device. Persists state to MongoDB."""
-    device = await db.smart_home_devices.find_one({"uuid": device_uuid})
+    """
+    Send a control command to a smart home device.
+    Tries real connector first, falls back to DB-only state update.
+    """
+    device = await db.iot_devices.find_one({"external_id": device_uuid})
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
 
-    # Update device state based on command
+    provider = (device.get("provider") or "").upper()
+    command_sent = False
+
+    # Try real connector
+    if provider == "MEROSS":
+        try:
+            from app.domains.integrations.connectors.meross import MerossConnector, MEROSS_AVAILABLE
+            if MEROSS_AVAILABLE:
+                creds_doc = await db.integration_configs.find_one({"provider": "MEROSS", "isEnabled": True})
+                if creds_doc:
+                    connector = MerossConnector(
+                        organization_id=device.get("organization_id", "default"),
+                        credentials=creds_doc.get("credentials", {}),
+                        settings={}
+                    )
+                    command_sent = await connector.execute_command(
+                        request.command.upper(),
+                        {"uuid": device_uuid}
+                    )
+        except Exception as e:
+            logger.error("[SmartHome] Meross control error: %s", str(e))
+
+    elif provider == "TUYA":
+        try:
+            from app.domains.integrations.connectors.tuya import TuyaConnector, TUYA_AVAILABLE
+            if TUYA_AVAILABLE:
+                creds_doc = await db.integration_configs.find_one({"provider": "TUYA", "isEnabled": True})
+                if creds_doc:
+                    connector = TuyaConnector(
+                        organization_id=device.get("organization_id", "default"),
+                        credentials=creds_doc.get("credentials", {}),
+                        settings={}
+                    )
+                    command_sent = await connector.execute_command(
+                        request.command.upper(),
+                        {"device_id": device_uuid}
+                    )
+        except Exception as e:
+            logger.error("[SmartHome] Tuya control error: %s", str(e))
+
+    # Always update local state (optimistic)
     update_fields: Dict[str, Any] = {"updated_at": datetime.now(timezone.utc).isoformat()}
     if request.command.upper() in ("ON", "OPEN"):
         update_fields["is_on"] = True
     elif request.command.upper() in ("OFF", "CLOSE"):
         update_fields["is_on"] = False
 
-    await db.smart_home_devices.update_one(
-        {"uuid": device_uuid},
+    await db.iot_devices.update_one(
+        {"external_id": device_uuid},
         {"$set": update_fields},
     )
 
-    logger.info(f"IoT Control: device={device_uuid} command={request.command} channel={request.channel}")
+    logger.info("[SmartHome] Control: device=%s command=%s sent_to_hw=%s",
+                device_uuid, request.command, command_sent)
 
     return {
         "status": "ok",
         "device_uuid": device_uuid,
         "command": request.command,
         "channel": request.channel,
-        "message": f"Command '{request.command}' sent successfully",
+        "hardware_confirmed": command_sent,
+        "message": f"Command '{request.command}' {'sent to device' if command_sent else 'saved locally'}",
     }
 
 

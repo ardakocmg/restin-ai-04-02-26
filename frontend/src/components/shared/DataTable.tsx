@@ -407,6 +407,7 @@ export default function DataTable<TData, TValue>({
               placeholder="Search..."
               className="w-[220px] bg-zinc-900 border-white/10 focus:border-red-500/50 transition-all"
               data-testid="datatable-global-search"
+              autoComplete="off"
             />
           )}
           {enableFilters && serverMode && (

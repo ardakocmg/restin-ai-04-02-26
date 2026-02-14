@@ -1,45 +1,55 @@
-# Task: Backend API + i18n + MongoDB Integration (Feb 13, 2026)
+# Task: Sync & Integrations Consolidation (Feb 13, 2026)
 
 ## Context
 
-Backend APIs were returning 404 errors and frontend modules couldn't display data.
-Three parallel tasks were executed:
+Refactoring the sync and integrations pages into a unified "Integration Control Plane".
+All venue/restaurant connections (POS, HR, Google, IoT, API Services) are centralized under `/admin/sync`.
 
-## Task 1: i18n Translations ✅
+## Task 1: Backend — Unified Integration API ✅
 
-- **Problem:** Fintech and Ops dashboards showed raw translation keys (e.g., `restin.ops.title`)
-- **Fix:** Added `restin.*` namespace to both `en.json` and `mt.json` locale files
-- **Keys added:** ops (13 keys), fintech (13 keys), web/voice/studio/radar/crm/billing (2 each)
-- **Files:** `frontend/src/locales/en.json`, `frontend/src/locales/mt.json`
+- **Problem:** SyncDashboard read from `venue_settings.integrations` but real data was in `integration_configs` (Tuya/Meross), `doors` (Nuki), and `google_settings` (Workspace).
+- **Fix:** Rewrote `venue_integrations_routes.py` to read from **all 4 sources**:
+  1. `integration_configs` — Tuya (CONNECTED), Meross (CONNECTED), and any new configs
+  2. `doors` — Nuki Smart Lock (3 doors detected, auto-shows as CONNECTED)
+  3. `google_settings` — Google Workspace domain config
+  4. `venue_settings.integrations` — Legacy fallback
+- **Audit trail:** Every config change writes `configured_by` (name), `configured_by_id` (user ID), `configured_at` timestamp
+- **Audit logs:** Writes to `audit_logs` collection on configure/toggle actions
+- **New endpoint:** `GET /venues/{id}/integrations/sync-history` — returns sync execution log
+- **Soft delete:** Rule VIII-8 compliant — disables but preserves record
 
-## Task 2: Backend → MongoDB Migration ✅
+## Task 2: Frontend — SyncDashboard Redesign ✅
 
-- **Problem:** All 4 new API routes (billing, fintech, ops, smart-home) used in-memory mock data
-- **Fix:** All routes now use MongoDB collections with auto-seed on first access
-- **Collections created:**
-  - `billing` — Subscription plans, module toggles
-  - `fintech_transactions` — Payment transactions with stats
-  - `ops_metrics` — Operational KPIs (labor cost, revenue, KDS)
-  - `ops_logs` — Event logs with severity levels
-  - `smart_home_devices` — 16 IoT devices with control state
-- **Rules compliance:**
-  - Rule #8: Structured logging only (logger.info/logger.error)
-  - Rule #7 (Time): All timestamps use UTC (`timezone.utc`)
-  - Rule VIII-8: Seed endpoints reset demo data only; production CRUD uses soft-delete pattern
-  - Rule #6: Audit trail ready (timestamps on all mutations)
-- **Files:** `backend/routes/billing_routes.py`, `fintech_routes.py`, `ops_routes.py`, `smart_home_routes.py`
+- **ProviderCard** now shows:
+  - Configured by whom (user name)
+  - Configured when (relative time: "3d ago")
+  - Config summary (non-sensitive values like domain, device count)
+  - Accent color per provider (Google blue, Stripe purple, etc.)
+  - **Portal link** → directs to provider's API key management page
+- **Portal URLs** added for all 16 providers:
+  - Nuki: `web.nuki.io/#/pages/web-api`
+  - Tuya: `iot.tuya.com`
+  - Stripe: `dashboard.stripe.com/apikeys`
+  - Google: `console.cloud.google.com/apis/credentials`
+  - etc.
+- **Configure dialog** includes portal link prominently
+- **Category pills** show connected/total count (e.g., "IoT 2/4")
+- **Sync History tab** loads from backend with triggered_by info
 
-## Task 3: Route Verification ✅
+## Task 3: Route & Navigation Cleanup ✅
 
-- **Problem:** Checked for missing frontend routes (copilot, reports, etc.)
-- **Finding:** All AI Hub pages already exist at `frontend/src/pages/admin/ai/*.tsx`
-  - Routes at `/admin/ai/voice`, `/admin/ai/studio`, `/admin/ai/web-builder`, etc.
-  - Restin control tower at `/admin/restin`
-- **No missing routes identified** — existing structure covers all expected paths
+- `/admin/integrations` → Redirects to `/admin/sync`
+- NewSidebar: Consolidated under "Integration Sync"
+- Sidebar (legacy): Updated hrefs
+
+## Verified
+
+- [x] TypeScript: `npx tsc --noEmit` → 0 errors
+- [x] Python: AST parse → OK
+- [x] MongoDB data confirmed: Tuya CONNECTED, Meross CONNECTED, Nuki 3 doors
 
 ## Pending
 
-- [ ] Connect remaining mock endpoints to real DB queries (HR Analytics, Inventory Items)
-- [ ] Add zod schemas on frontend for API response validation (Rule #7)
-- [ ] Implement soft-delete pattern for production CRUD operations (Rule VIII-8)
-- [ ] Add i18n keys for `common.sync`, `common.seedDemo` used in other modules
+- [ ] Add Organization/Group info to UserProfileSettings
+- [ ] Create `/admin/profile/integrations` for personal Google integrations
+- [ ] Owner should see their group (MG Group) and restaurants (Caviar & Bull, Don Royale, Sole by Tarragon)

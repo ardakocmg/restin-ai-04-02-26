@@ -352,6 +352,7 @@ export default function PremiumDataTable<TData>({
                             value={globalFilter}
                             onChange={(e) => setGlobalFilter(e.target.value)}
                             className="pl-10 bg-card border-border/50 focus:border-primary/50 h-10"
+                            autoComplete="off"
                         />
                         {globalFilter && (
                             <button

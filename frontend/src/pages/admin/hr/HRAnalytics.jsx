@@ -1,268 +1,480 @@
-import { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
-
-import { useVenue } from '@/context/VenueContext';
-import { useAuth } from '@/context/AuthContext';
-import PermissionGate from '@/components/shared/PermissionGate';
-import { useAuditLog } from '@/hooks/useAuditLog';
-
-import PageContainer from '@/layouts/PageContainer';
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
+/**
+ * HRAnalytics.jsx — Peak HR Analytics Dashboard
+ * Tabs: Overview | POS Analytics | KDS Analytics | System Usage
+ * Date-filtered, employee-filtered, period comparison
+ */
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useVenue } from '@/hooks/useVenue';
+import { PermissionGate } from '@/components/PermissionGate';
+import { PageContainer } from '@/components/ui/PageContainer';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import api from '@/services/api';
+import logger from '@/utils/logger';
 import {
-  Users,
-  TrendingUp,
-  UserPlus,
-  UserMinus,
-  PieChart as PieIcon,
-  BarChart as BarIcon,
-  Activity
+  BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell,
+  ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Legend
+} from 'recharts';
+import {
+  TrendingUp, TrendingDown, ShoppingCart, Flame, Timer,
+  Users, BookOpen, Clock, Activity, Layers, ChefHat,
+  Euro, BarChart3, Calendar, Filter, ArrowUpRight, ArrowDownRight,
+  Minus, RefreshCw
 } from 'lucide-react';
 
-import api from '@/lib/api';
+// ── Constants ────────────────────────────────────────────────
+const TABS = [
+  { id: 'overview', label: 'Overview', icon: Activity },
+  { id: 'pos', label: 'POS Analytics', icon: ShoppingCart },
+  { id: 'kds', label: 'KDS Analytics', icon: Flame },
+  { id: 'system', label: 'System Usage', icon: Layers },
+];
 
-import {
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend
-} from 'recharts';
+const DATE_PRESETS = [
+  { id: 'today', label: 'Today', days: 0 },
+  { id: '7d', label: '7 Days', days: 7 },
+  { id: '30d', label: '30 Days', days: 30 },
+  { id: '90d', label: '90 Days', days: 90 },
+];
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+const CHART_COLORS = ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#6366f1'];
 
+// ── Helpers ──────────────────────────────────────────────────
+function getDateRange(days) {
+  const end = new Date();
+  const start = new Date();
+  start.setDate(end.getDate() - (days || 30));
+  return { from: start.toISOString(), to: end.toISOString() };
+}
+
+function ChangeIndicator({ value }) {
+  if (value === 0 || value === null || value === undefined) return <Minus className="h-3 w-3 text-zinc-500" />;
+  if (value > 0) return (
+    <span className="flex items-center gap-0.5 text-emerald-400 text-xs font-bold">
+      <ArrowUpRight className="h-3 w-3" /> +{value}%
+    </span>
+  );
+  return (
+    <span className="flex items-center gap-0.5 text-red-400 text-xs font-bold">
+      <ArrowDownRight className="h-3 w-3" /> {value}%
+    </span>
+  );
+}
+
+function KpiCard({ label, value, icon: Icon, change, subtitle }) {
+  return (
+    <Card className="border-white/5 bg-zinc-900/60 backdrop-blur-xl hover:bg-zinc-900/80 transition-all duration-300">
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">{label}</p>
+            <p className="text-2xl font-black text-white">{value}</p>
+            {subtitle && <p className="text-xs text-zinc-500">{subtitle}</p>}
+          </div>
+          <div className="flex flex-col items-end gap-2">
+            <div className="h-9 w-9 rounded-lg bg-white/5 flex items-center justify-center">
+              {Icon && <Icon className="h-4 w-4 text-blue-400" />}
+            </div>
+            <ChangeIndicator value={change} />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function DataTable({ columns, data, onRowClick }) {
+  if (!data || data.length === 0) {
+    return <p className="text-zinc-500 text-sm p-4 text-center">No data for this period</p>;
+  }
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-white/5">
+            {columns.map((col, i) => (
+              <th key={i} className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                {col.header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, ri) => (
+            <tr
+              key={ri}
+              className={`border-b border-white/5 hover:bg-white/[0.02] transition-colors ${onRowClick ? 'cursor-pointer' : ''}`}
+              onClick={() => onRowClick?.(row)}
+            >
+              {columns.map((col, ci) => (
+                <td key={ci} className="py-3 px-3 text-zinc-300">
+                  {col.render ? col.render(row[col.key], row) : row[col.key]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// ── Tab Content Components ───────────────────────────────────
+function OverviewTab({ data }) {
+  if (!data) return null;
+  const kpis = data.kpis || [];
+  const iconMap = {
+    'shopping-cart': ShoppingCart, 'flame': Flame, 'timer': Timer,
+    'euro': Euro, 'book-open': BookOpen, 'users': Users, 'clock': Clock,
+  };
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {kpis.map((kpi, i) => (
+          <KpiCard
+            key={i}
+            label={kpi.label}
+            value={typeof kpi.value === 'number' ? kpi.value.toLocaleString() : kpi.value}
+            icon={iconMap[kpi.icon] || Activity}
+            change={kpi.change_pct}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PosTab({ data, onEmployeeClick }) {
+  if (!data) return null;
+  const { summary = {}, employees = [], daily_trend = [] } = data;
+  return (
+    <div className="space-y-6">
+      {/* Summary KPIs */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <KpiCard label="Total Orders" value={summary.total_orders?.toLocaleString() || 0} icon={ShoppingCart} />
+        <KpiCard label="Total Revenue" value={`€${(summary.total_revenue || 0).toLocaleString()}`} icon={Euro} />
+        <KpiCard label="Avg Ticket" value={`€${summary.avg_ticket || 0}`} icon={BarChart3} />
+        <KpiCard label="Active Staff" value={summary.active_staff || 0} icon={Users} subtitle={`${summary.avg_orders_per_staff || 0} orders/staff`} />
+      </div>
+
+      {/* Daily Trend Chart */}
+      {daily_trend.length > 0 && (
+        <Card className="border-white/5 bg-zinc-900/40">
+          <CardHeader><CardTitle className="text-sm font-bold flex items-center gap-2"><Activity className="h-4 w-4 text-blue-400" />Daily Orders & Revenue</CardTitle></CardHeader>
+          <CardContent>
+            <div className="h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={daily_trend}>
+                  <defs>
+                    <linearGradient id="gradOrders" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.3} />
+                      <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                  <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 11 }} tickFormatter={(d) => d.slice(5)} />
+                  <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
+                  <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} />
+                  <Area type="monotone" dataKey="orders" stroke="#3b82f6" fill="url(#gradOrders)" strokeWidth={2} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Employee Ranking Table */}
+      <Card className="border-white/5 bg-zinc-900/40">
+        <CardHeader><CardTitle className="text-sm font-bold">POS Leaderboard</CardTitle></CardHeader>
+        <CardContent className="p-0">
+          <DataTable
+            onRowClick={(row) => onEmployeeClick?.(row.employee_id)}
+            columns={[
+              { key: 'employee_name', header: 'Employee' },
+              { key: 'department', header: 'Department' },
+              { key: 'total_orders', header: 'Orders', render: (v) => <span className="font-bold text-white">{v}</span> },
+              { key: 'total_revenue', header: 'Revenue', render: (v) => <span>€{v?.toLocaleString()}</span> },
+              { key: 'avg_ticket', header: 'Avg Ticket', render: (v) => <span>€{v}</span> },
+              { key: 'orders_change_pct', header: 'vs Prev', render: (v) => <ChangeIndicator value={v} /> },
+              { key: 'vs_team_avg_orders', header: 'vs Team', render: (v) => <ChangeIndicator value={v} /> },
+            ]}
+            data={employees}
+          />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function KdsTab({ data, onEmployeeClick }) {
+  if (!data) return null;
+  const { summary = {}, employees = [], hourly_distribution = [] } = data;
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <KpiCard label="Total Tickets" value={summary.total_tickets?.toLocaleString() || 0} icon={Flame} />
+        <KpiCard label="Avg Prep Time" value={`${summary.team_avg_completion_min || 0}m`} icon={Timer} />
+        <KpiCard label="Kitchen Staff" value={summary.active_kitchen_staff || 0} icon={ChefHat} />
+        <KpiCard label="Avg Tickets/Staff" value={summary.avg_tickets_per_staff || 0} icon={BarChart3} />
+      </div>
+
+      {/* Hourly Distribution */}
+      {hourly_distribution.length > 0 && (
+        <Card className="border-white/5 bg-zinc-900/40">
+          <CardHeader><CardTitle className="text-sm font-bold flex items-center gap-2"><Clock className="h-4 w-4 text-purple-400" />Hourly Ticket Volume</CardTitle></CardHeader>
+          <CardContent>
+            <div className="h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={hourly_distribution}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                  <XAxis dataKey="hour" tick={{ fill: '#71717a', fontSize: 11 }} tickFormatter={(h) => `${h}:00`} />
+                  <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
+                  <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} />
+                  <Bar dataKey="tickets" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* KDS Leaderboard */}
+      <Card className="border-white/5 bg-zinc-900/40">
+        <CardHeader><CardTitle className="text-sm font-bold">KDS Performance Ranking</CardTitle></CardHeader>
+        <CardContent className="p-0">
+          <DataTable
+            onRowClick={(row) => onEmployeeClick?.(row.employee_id)}
+            columns={[
+              { key: 'employee_name', header: 'Employee' },
+              { key: 'tickets_completed', header: 'Completed', render: (v) => <span className="font-bold text-white">{v}</span> },
+              { key: 'avg_completion_min', header: 'Avg Time', render: (v) => <span>{v}m</span> },
+              { key: 'items_per_hour', header: 'Items/Hr', render: (v) => <span className="font-semibold">{v}</span> },
+              {
+                key: 'on_time_rate', header: 'On-Time', render: (v) => (
+                  <Badge variant={v >= 90 ? 'success' : v >= 70 ? 'warning' : 'destructive'} className="text-xs">{v}%</Badge>
+                )
+              },
+              {
+                key: 'vs_team_avg_sec', header: 'vs Team Avg', render: (v) => (
+                  v !== null ? <span className={v < 0 ? 'text-emerald-400' : 'text-red-400'}>{v > 0 ? '+' : ''}{v}s</span> : <span className="text-zinc-500">—</span>
+                )
+              },
+              { key: 'volume_change_pct', header: 'vs Prev', render: (v) => <ChangeIndicator value={v} /> },
+            ]}
+            data={employees}
+          />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function SystemTab({ data, onEmployeeClick }) {
+  if (!data) return null;
+  const { summary = {}, employees = [] } = data;
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <KpiCard label="Recipes Created" value={summary.total_recipes_created || 0} icon={BookOpen} />
+        <KpiCard label="Orders Taken" value={summary.total_orders_taken || 0} icon={ShoppingCart} />
+        <KpiCard label="Hours Worked" value={`${summary.total_hours_worked || 0}h`} icon={Clock} />
+        <KpiCard label="System Actions" value={summary.total_system_actions || 0} icon={Layers} />
+        <KpiCard label="Active Employees" value={summary.active_employees || 0} icon={Users} />
+      </div>
+
+      {/* Pie Chart: Orders vs Recipes vs Actions */}
+      {employees.length > 0 && (
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card className="border-white/5 bg-zinc-900/40">
+            <CardHeader><CardTitle className="text-sm font-bold">Activity Distribution (Top 8)</CardTitle></CardHeader>
+            <CardContent>
+              <div className="h-[280px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={employees.slice(0, 8).map(e => ({ name: e.employee_name, value: e.orders_taken + e.total_system_actions }))}
+                      cx="50%" cy="50%" innerRadius={50} outerRadius={100}
+                      paddingAngle={2} dataKey="value"
+                    >
+                      {employees.slice(0, 8).map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
+                    </Pie>
+                    <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} />
+                    <Legend wrapperStyle={{ fontSize: 11, color: '#a1a1aa' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Hours Distribution */}
+          <Card className="border-white/5 bg-zinc-900/40">
+            <CardHeader><CardTitle className="text-sm font-bold">Hours Worked (Top 10)</CardTitle></CardHeader>
+            <CardContent>
+              <div className="h-[280px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={employees.slice(0, 10)} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                    <XAxis type="number" tick={{ fill: '#71717a', fontSize: 11 }} />
+                    <YAxis dataKey="employee_name" type="category" tick={{ fill: '#71717a', fontSize: 10 }} width={100} />
+                    <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} />
+                    <Bar dataKey="total_hours_worked" fill="#06b6d4" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Full Table */}
+      <Card className="border-white/5 bg-zinc-900/40">
+        <CardHeader><CardTitle className="text-sm font-bold">Employee System Usage</CardTitle></CardHeader>
+        <CardContent className="p-0">
+          <DataTable
+            onRowClick={(row) => onEmployeeClick?.(row.employee_id)}
+            columns={[
+              { key: 'employee_name', header: 'Employee' },
+              { key: 'role', header: 'Role' },
+              { key: 'orders_taken', header: 'Orders', render: (v) => <span className="font-bold text-white">{v}</span> },
+              { key: 'recipes_created', header: 'Recipes', render: (v) => v > 0 ? <span className="text-emerald-400 font-bold">{v}</span> : <span className="text-zinc-600">0</span> },
+              { key: 'total_shifts', header: 'Shifts' },
+              { key: 'total_hours_worked', header: 'Hours', render: (v) => <span>{v}h</span> },
+              {
+                key: 'attendance_rate', header: 'Attendance', render: (v) => (
+                  <Badge variant={v >= 90 ? 'success' : v >= 70 ? 'warning' : 'destructive'} className="text-xs">{v}%</Badge>
+                )
+              },
+              { key: 'total_system_actions', header: 'Actions' },
+              { key: 'features_used_count', header: 'Features' },
+            ]}
+            data={employees}
+          />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ── Main Page Component ──────────────────────────────────────
 export default function HRAnalyticsIndigo() {
   const { activeVenueId: venueId } = useVenue();
-  const { user, isManager, isOwner } = useAuth();
-  const { logAction } = useAuditLog();
-  const [data, setData] = useState(null);
+  const navigate = useNavigate();
+
+  const [activeTab, setActiveTab] = useState('overview');
+  const [datePreset, setDatePreset] = useState('30d');
+  const [overviewData, setOverviewData] = useState(null);
+  const [posData, setPosData] = useState(null);
+  const [kdsData, setKdsData] = useState(null);
+  const [systemData, setSystemData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Audit: log who viewed HR analytics
-  useEffect(() => {
-    if (user?.id && venueId) {
-      logAction('HR_ANALYTICS_VIEWED', 'hr_analytics', venueId);
-    }
-  }, [user?.id, venueId]);
+  const dateRange = useMemo(() => {
+    const preset = DATE_PRESETS.find(p => p.id === datePreset);
+    return getDateRange(preset?.days || 30);
+  }, [datePreset]);
 
-  useEffect(() => {
-    if (venueId) {
-      fetchDashboardData();
-    }
-  }, [venueId]);
-
-  const fetchDashboardData = async () => {
+  const fetchData = async () => {
+    if (!venueId) return;
+    setLoading(true);
+    const params = `from_date=${dateRange.from}&to_date=${dateRange.to}`;
     try {
-      // Fetching from the fixed summary dashboard endpoint
-      const response = await api.get(`/venues/${venueId}/summary/dashboard`);
-      setData(response.data);
-    } catch (error) {
-      logger.error('Failed to fetch HR dashboard data:', error);
+      const base = `/venues/${venueId}/hr/employee-analytics`;
+      const [summaryRes, posRes, kdsRes, sysRes] = await Promise.allSettled([
+        api.get(`${base}/summary?${params}`),
+        api.get(`${base}/pos?${params}`),
+        api.get(`${base}/kds?${params}`),
+        api.get(`${base}/system?${params}`),
+      ]);
+      if (summaryRes.status === 'fulfilled') setOverviewData(summaryRes.value.data);
+      if (posRes.status === 'fulfilled') setPosData(posRes.value.data);
+      if (kdsRes.status === 'fulfilled') setKdsData(kdsRes.value.data);
+      if (sysRes.status === 'fulfilled') setSystemData(sysRes.value.data);
+    } catch (err) {
+      logger.error('Failed to fetch HR analytics:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Activity className="h-8 w-8 text-blue-500 animate-spin" />
-      </div>
-    );
-  }
+  useEffect(() => { fetchData(); }, [venueId, dateRange]);
 
-  if (!data) return <div className="p-8 text-center text-slate-400">No data available</div>;
+  const handleEmployeeClick = (employeeId) => {
+    if (employeeId && employeeId !== 'unknown') {
+      navigate(`/admin/hr/employee-performance/${employeeId}?from=${dateRange.from}&to=${dateRange.to}`);
+    }
+  };
 
   return (
     <PermissionGate requiredRole="MANAGER">
-      <PageContainer title="HR Insights & Workforce Analytics" description="Experience-driven workforce intelligence">
-        <div className="space-y-6">
-          {/* KPI Cards */}
-          <div className="grid gap-4 md:grid-cols-3">
-            {(data.kpi_metrics || []).map((kpi, idx) => (
-              <Card key={idx} className="border-white/5 bg-zinc-900/50 backdrop-blur-xl">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-1">{kpi.label}</p>
-                      <p className="text-3xl font-black text-white">{kpi.value.toLocaleString()}</p>
-                    </div>
-                    <div className="h-12 w-12 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                      {kpi.icon === 'users' && <Users className="h-6 w-6 text-blue-400" />}
-                      {kpi.icon === 'user-plus' && <UserPlus className="h-6 w-6 text-green-400" />}
-                      {kpi.icon === 'user-x' && <UserMinus className="h-6 w-6 text-red-400" />}
-                    </div>
-                  </div>
-                </CardContent>
+      <PageContainer title="HR Workforce Analytics" description="POS, KDS & System insights per employee">
+        {/* Command Bar: Date + Tabs */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+          {/* Tabs */}
+          <div className="flex items-center gap-1 bg-zinc-900/60 rounded-lg p-1 border border-white/5">
+            {TABS.map(tab => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${activeTab === tab.id
+                      ? 'bg-white/10 text-white shadow-sm'
+                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5'
+                    }`}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Date Presets */}
+          <div className="flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-zinc-500" />
+            <div className="flex gap-1 bg-zinc-900/60 rounded-lg p-1 border border-white/5">
+              {DATE_PRESETS.map(preset => (
+                <button
+                  key={preset.id}
+                  onClick={() => setDatePreset(preset.id)}
+                  className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${datePreset === preset.id
+                      ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                      : 'text-zinc-500 hover:text-zinc-300'
+                    }`}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={fetchData}
+              className="p-1.5 rounded-md bg-zinc-900/60 border border-white/5 hover:bg-white/5 transition-all"
+              title="Refresh"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 text-zinc-400 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+        </div>
+
+        {/* Loading Skeleton */}
+        {loading ? (
+          <div className="grid gap-4 md:grid-cols-4">
+            {[1, 2, 3, 4].map(i => (
+              <Card key={i} className="border-white/5 bg-zinc-900/40 animate-pulse">
+                <CardContent className="p-6"><div className="h-16 bg-zinc-800/50 rounded" /></CardContent>
               </Card>
             ))}
           </div>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {/* Yearly Headcount Trend */}
-            <Card className="md:col-span-2 border-white/5 bg-zinc-900/40">
-              <CardHeader>
-                <CardTitle className="text-sm font-bold flex items-center gap-2">
-                  <Activity className="h-4 w-4 text-blue-400" />
-                  Headcount Growth Trend
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%" minHeight={300}>
-                    <AreaChart data={data.headcount_by_year}>
-                      <defs>
-                        <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                      <XAxis dataKey="year" stroke="#71717a" fontSize={12} />
-                      <YAxis stroke="#71717a" fontSize={12} />
-                      <Tooltip
-                        contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '8px' }}
-                        itemStyle={{ color: '#fff' }}
-                      />
-                      <Area type="monotone" dataKey="count" stroke="#3b82f6" fillOpacity={1} fill="url(#colorCount)" strokeWidth={3} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Gender Diversity */}
-            <Card className="border-white/5 bg-zinc-900/40">
-              <CardHeader>
-                <CardTitle className="text-sm font-bold flex items-center gap-2">
-                  <PieIcon className="h-4 w-4 text-pink-400" />
-                  Gender Diversity
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={data.headcount_by_gender}
-                        innerRadius={60}
-                        outerRadius={80}
-                        paddingAngle={5}
-                        dataKey="count"
-                        nameKey="gender"
-                      >
-                        {(data.headcount_by_gender || []).map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '8px' }}
-                      />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Age Distribution */}
-            <Card className="border-white/5 bg-zinc-900/40">
-              <CardHeader>
-                <CardTitle className="text-sm font-bold flex items-center gap-2">
-                  <BarIcon className="h-4 w-4 text-orange-400" />
-                  Age Brackets
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%" minHeight={300}>
-                    <BarChart data={data.headcount_by_age_bracket} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" horizontal={false} />
-                      <XAxis type="number" hide />
-                      <YAxis dataKey="bracket" type="category" stroke="#71717a" fontSize={10} width={100} />
-                      <Tooltip
-                        contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '8px' }}
-                      />
-                      <Bar dataKey="count" fill="#f59e0b" radius={[0, 4, 4, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Employment Type */}
-            <Card className="border-white/5 bg-zinc-900/40">
-              <CardHeader>
-                <CardTitle className="text-sm font-bold flex items-center gap-2">
-                  <Activity className="h-4 w-4 text-emerald-400" />
-                  Employment Setup
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%" minHeight={300}>
-                    <PieChart>
-                      <Pie
-                        data={data.headcount_by_employment_type}
-                        innerRadius={0}
-                        outerRadius={80}
-                        dataKey="count"
-                        nameKey="type_name"
-                      >
-                        {(data.headcount_by_employment_type || []).map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[(index + 2) % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '8px' }}
-                      />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Engagement vs Termination */}
-            <Card className="border-white/5 bg-zinc-900/40">
-              <CardHeader>
-                <CardTitle className="text-sm font-bold flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-indigo-400" />
-                  Stability Metrics
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={data.engagements_terminations}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-                      <XAxis dataKey="year" stroke="#71717a" fontSize={12} />
-                      <YAxis stroke="#71717a" fontSize={12} />
-                      <Tooltip
-                        contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '8px' }}
-                      />
-                      <Legend />
-                      <Bar dataKey="engagements" fill="#10b981" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="terminations" fill="#ef4444" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
+        ) : (
+          <div>
+            {activeTab === 'overview' && <OverviewTab data={overviewData} />}
+            {activeTab === 'pos' && <PosTab data={posData} onEmployeeClick={handleEmployeeClick} />}
+            {activeTab === 'kds' && <KdsTab data={kdsData} onEmployeeClick={handleEmployeeClick} />}
+            {activeTab === 'system' && <SystemTab data={systemData} onEmployeeClick={handleEmployeeClick} />}
           </div>
-        </div>
+        )}
       </PageContainer>
-    </PermissionGate >
+    </PermissionGate>
   );
 }

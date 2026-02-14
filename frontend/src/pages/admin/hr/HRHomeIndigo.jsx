@@ -30,7 +30,9 @@ import {
     HardDrive,
     Activity,
     UserCheck,
-    Landmark
+    Landmark,
+    ShoppingCart,
+    Flame
 } from 'lucide-react';
 
 const icons = {
@@ -107,6 +109,9 @@ export default function HRHomeIndigo() {
         { title: 'Attendance Exceptions', icon: AlertCircle, path: '/admin/hr/exceptions' },
         { title: 'Device Manager', icon: Settings, path: '/admin/hr/devices' },
         { title: 'Settings', icon: Settings, path: '/admin/hr/settings' },
+        { title: 'Employee Performance', icon: Activity, path: '/admin/hr/analytics', highlight: true },
+        { title: 'POS / KDS Analytics', icon: ShoppingCart, path: '/admin/hr/analytics' },
+        { title: 'System Usage', icon: Layers, path: '/admin/hr/analytics' },
     ];
 
     const setupActions = [
@@ -126,7 +131,8 @@ export default function HRHomeIndigo() {
         'Allocation Return', 'Allocations', 'Attendance Reconciliation', 'Breaks', 'Clocking Details', 'Clocking Exceptions', 'Clocking Summary',
         'Clocking Weekly', 'Costs Detailed', 'Daily Manning', 'Daily Schedule', 'Device Access Control Audit', 'Device Manager Audit', 'Device List',
         'Employee Schedule', 'Geo-Tagging Exceptions', 'Late Arrival/Early Departure', 'Scheduled Hours', 'Scheduled Hours Validation', 'Scheduled Staff by Hour',
-        'Who\'s In', 'Scheduler Report'
+        'Who\'s In', 'Scheduler Report',
+        'POS Usage by Employee', 'KDS Speed Analysis', 'System Activity Log', 'Employee Performance',
     ];
 
     return (

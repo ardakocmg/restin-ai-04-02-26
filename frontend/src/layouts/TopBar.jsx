@@ -64,11 +64,12 @@ export default function TopBar({ onMenuToggle, user }) {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              type="text"
+              type="search"
               placeholder="Search orders, items, staff..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 h-9 bg-gray-50 border-gray-200 focus:bg-white"
+              autoComplete="off"
             />
           </div>
         </form>
@@ -77,7 +78,7 @@ export default function TopBar({ onMenuToggle, user }) {
         <div className="flex items-center gap-3">
           {/* Venue Switcher */}
           <VenueSwitcher />
-          
+
           {/* Notifications */}
           <Button variant="ghost" size="icon" className="relative hidden sm:flex">
             <Bell className="h-5 w-5" />

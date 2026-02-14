@@ -41,7 +41,8 @@ export default function WasteLog() {
         // Fetch recent ledger entries that look like waste (OUT action)
         api.get(`/venues/${activeVenue.id}/inventory/ledger`)
       ]);
-      setItems(itemsRes.data || []);
+      const itemsData = itemsRes.data;
+      setItems(Array.isArray(itemsData) ? itemsData : (itemsData?.items || []));
 
       // Client side filter for "waste" like reasons or just OUT actions
       const allLogs = logsRes.data || [];

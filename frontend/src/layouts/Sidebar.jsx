@@ -35,11 +35,10 @@ const menuItems = [
     icon: Users,
     group: 'people',
     children: [
-      { title: 'Staff Management', href: '/admin/staff' },
+      { title: 'Staff Management', href: '/admin/users' },
       { title: 'HR Hub', href: '/admin/hr' },
       { title: 'Users', href: '/admin/users' },
-      { title: 'Payroll Calculator', href: '/admin/payroll-calculator' },
-      { title: 'Employee Portal', href: '/employee' }
+      { title: 'Payroll Calculator', href: '/admin/payroll-calculator' }
     ]
   },
   {
@@ -142,12 +141,12 @@ const menuItems = [
     children: [
       { title: 'Venue Settings', href: '/admin/settings' },
       { title: 'Device Hub', href: '/admin/devices' },
-      { title: 'Settings Hub', href: '/admin/settings-hub' },
+      { title: 'Settings Hub', href: '/admin/settings' },
       { title: 'Theme Customizer', href: '/admin/theme' },
       { title: 'Updates', href: '/admin/updates' },
-      { title: '🔌 Integration Hub', href: '/admin/integrations' },
+      { title: '🔌 Integration Sync', href: '/admin/sync' },
       { title: '🚚 Delivery Aggregators', href: '/admin/delivery-aggregators' },
-      { title: '🔵 External Connector', href: '/admin/google' },
+      { title: '🔵 Google Workspace', href: '/admin/google-workspace' },
       { title: '🚀 Microservices', href: '/admin/microservices' },
       { title: '⚡ Event Monitor', href: '/admin/events' },
       { title: '⚙️ Automations', href: '/admin/automations' },
