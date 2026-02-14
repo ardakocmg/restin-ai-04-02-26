@@ -129,15 +129,12 @@ async def get_clocking_data(
         else:
             query["venue_id"] = venue_id
 
-    cursor = db["clocking_records"].find(query)
-    records = [ClockingRecord(**doc) async for doc in cursor]
-
+    # Apply search filter at DB level if possible
     if request.search_query:
-        query_lower = request.search_query.lower()
-        records = [
-            r for r in records
-            if query_lower in r.employee_name.lower()
-        ]
+        query["employee_name"] = {"$regex": request.search_query, "$options": "i"}
+
+    cursor = db["clocking_records"].find(query, {"_id": 0}).sort("date", -1).limit(2000)
+    records = [ClockingRecord(**doc) async for doc in cursor]
 
     return records
 

@@ -470,8 +470,8 @@ def create_recipe_engineering_router():
         
         recipes = await db.recipes_engineered.find(
             {"venue_id": venue_id, "active": True},
-            {"_id": 0}
-        ).to_list(50000)
+            {"_id": 0, "id": 1, "recipe_name": 1, "cost_analysis": 1}
+        ).to_list(500)
         
         analysis = []
         for recipe in recipes:
