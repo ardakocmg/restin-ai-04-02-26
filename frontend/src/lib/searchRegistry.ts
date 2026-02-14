@@ -7,6 +7,11 @@
  *   - GlobalSearch (Cmd+K command palette)
  *
  * All pages, groups, domains, and role requirements are defined here.
+ *
+ * SETTINGS ARCHITECTURE (3-Tier):
+ *   🏪 Venue Settings  — Branch-specific (devices, tables, IoT, door access)
+ *   🏢 Org Settings    — Company-wide (users, roles, branding, integrations)
+ *   ⚙️ System Admin    — Platform infra (monitoring, logs, microservices) — product_owner only
  */
 
 import {
@@ -16,6 +21,7 @@ import {
     UserCheck, Receipt, Clock, Package, Upload, Monitor,
     Building2, LayoutGrid, ShieldAlert, Shield, Layers,
     RefreshCw, Home, Timer, Type, Palette, Server, Globe, Mic, Wand2, Radar, MessageSquare,
+    Wrench, Cog, Database,
     type LucideIcon
 } from 'lucide-react';
 
@@ -59,6 +65,8 @@ export interface SearchableItem {
 }
 
 // ─── Domain Groups ──────────────────────────────────────────────────────
+//
+// 3-tier settings: venue → org → system (nested hierarchy in sidebar)
 
 export const DOMAINS: Domain[] = [
     { id: 'home', title: 'Home', icon: LayoutDashboard },
@@ -69,7 +77,9 @@ export const DOMAINS: Domain[] = [
     { id: 'analytics', title: 'Reporting', icon: BarChart3 },
     { id: 'restin', title: 'Restin OS', icon: Globe },
     { id: 'collab', title: 'Collaborate', icon: MessageSquare },
-    { id: 'settings', title: 'Settings', icon: Settings },
+    { id: 'venue-settings', title: 'Venue', icon: Wrench },
+    { id: 'org-settings', title: 'Organization', icon: Building2 },
+    { id: 'system-admin', title: 'System', icon: Cog },
 ];
 
 // ─── Group → Domain Mapping ─────────────────────────────────────────────
@@ -83,18 +93,25 @@ export function getDomainForGroup(group: string): string {
     if (['reports'].includes(group)) return 'analytics';
     if (['restin'].includes(group)) return 'restin';
     if (['collab'].includes(group)) return 'collab';
-    if (['settings'].includes(group)) return 'settings';
+    // 3-tier settings
+    if (['venue-settings'].includes(group)) return 'venue-settings';
+    if (['org-settings'].includes(group)) return 'org-settings';
+    if (['system-admin'].includes(group)) return 'system-admin';
     return 'home';
 }
 
 // ─── Full Menu Items Registry ───────────────────────────────────────────
 
 export const MENU_ITEMS: MenuItem[] = [
+    // ═══════════════════════════════════════════════════════════════════
     // HOME / MAIN
+    // ═══════════════════════════════════════════════════════════════════
     { title: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard', group: 'main', requiredRole: 'MANAGER' },
     { title: 'Observability', icon: Activity, href: '/admin/observability', group: 'main', requiredRole: 'OWNER' },
 
+    // ═══════════════════════════════════════════════════════════════════
     // POS & OPERATIONS
+    // ═══════════════════════════════════════════════════════════════════
     { title: 'POS Dashboard', icon: LayoutDashboard, href: '/admin/posdashboard', group: 'pos', requiredRole: 'MANAGER' },
     {
         title: 'Sales Analytics', icon: BarChart3, href: '/admin/reports/sales', group: 'pos', requiredRole: 'MANAGER',
@@ -122,7 +139,6 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'CRM & Guests', icon: Users, href: '/admin/crm', group: 'pos', requiredRole: 'MANAGER' },
     { title: 'Loyalty Program', icon: Award, href: '/admin/loyalty', group: 'pos', requiredRole: 'MANAGER' },
     { title: 'Operational Timeline', icon: Clock, href: '/admin/reservations/timeline', group: 'pos', requiredRole: 'MANAGER' },
-    { title: 'Devices', icon: Activity, href: '/admin/devices', group: 'pos', requiredRole: 'MANAGER' },
     {
         title: 'Printer Management', icon: Receipt, group: 'pos', href: '/admin/printers', requiredRole: 'MANAGER',
         subs: [
@@ -135,12 +151,12 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Inbox', icon: Activity, href: '/admin/inbox', group: 'pos', requiredRole: 'STAFF' },
     { title: 'Service Day Close', icon: Clock, href: '/admin/service-day-close', group: 'pos', requiredRole: 'MANAGER' },
     { title: 'Pre-Go-Live', icon: Activity, href: '/admin/pre-go-live', group: 'pos', requiredRole: 'OWNER' },
-    { title: 'App Settings', icon: Settings, href: '/admin/app-settings', group: 'pos', requiredRole: 'OWNER' },
-    { title: 'Company Settings', icon: Building2, href: '/admin/company-settings', group: 'pos', requiredRole: 'OWNER' },
     { title: 'POS Setup', icon: Settings, href: '/pos/setup', group: 'pos', requiredRole: 'OWNER' },
     { title: 'KDS Stations', icon: Monitor, href: '/admin/kds/stations', group: 'pos', requiredRole: 'MANAGER' },
 
+    // ═══════════════════════════════════════════════════════════════════
     // HUMAN RESOURCES
+    // ═══════════════════════════════════════════════════════════════════
     { title: 'HR Dashboard', icon: Users, href: '/admin/hr', group: 'hr', requiredRole: 'MANAGER' },
     { title: 'Employee Directory', icon: UserCheck, href: '/admin/hr/people', group: 'hr', requiredRole: 'MANAGER' },
     { title: 'Leave Management', icon: Calendar, href: '/admin/hr/leave-management', group: 'hr', requiredRole: 'MANAGER' },
@@ -194,7 +210,9 @@ export const MENU_ITEMS: MenuItem[] = [
         ],
     },
 
+    // ═══════════════════════════════════════════════════════════════════
     // INVENTORY & SUPPLY CHAIN
+    // ═══════════════════════════════════════════════════════════════════
     { title: 'General Settings', icon: Settings, href: '/admin/menu', group: 'menu', requiredRole: 'MANAGER' },
     { title: 'Quick Sync (Import)', icon: Upload, href: '/admin/migration', group: 'menu', requiredRole: 'OWNER' },
     { title: 'Menu Import (Legacy)', icon: Upload, href: '/admin/menu-import', group: 'menu', requiredRole: 'OWNER' },
@@ -220,13 +238,17 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Demand Forecasting', icon: TrendingUp, href: '/admin/forecasting', group: 'production', requiredRole: 'MANAGER' },
     { title: 'Quality Control', icon: Award, href: '/admin/quality', group: 'production', requiredRole: 'MANAGER' },
 
+    // ═══════════════════════════════════════════════════════════════════
     // FINANCE
+    // ═══════════════════════════════════════════════════════════════════
     { title: 'Finance Dashboard', icon: DollarSign, href: '/admin/finance', group: 'finance', requiredRole: 'OWNER' },
     { title: 'General Ledger', icon: FileText, href: '/admin/accounting', group: 'finance', requiredRole: 'OWNER' },
     { title: 'HR Accounting', icon: FileText, href: '/admin/hr-advanced/accounting', group: 'finance', requiredRole: 'OWNER' },
     { title: 'Audit Logs', icon: Activity, href: '/admin/audit-logs', group: 'finance', requiredRole: 'OWNER' },
 
+    // ═══════════════════════════════════════════════════════════════════
     // ANALYTICS & REPORTS
+    // ═══════════════════════════════════════════════════════════════════
     {
         title: 'Reporting Hub', icon: BarChart3, href: '/admin/reporting', group: 'reports', requiredRole: 'MANAGER',
         subs: [
@@ -252,29 +274,44 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Headcount Analysis', icon: Users, href: '/admin/hr/headcount', group: 'reports', requiredRole: 'OWNER' },
     { title: 'Turnover Analysis', icon: TrendingUp, href: '/admin/hr/turnover', group: 'reports', requiredRole: 'OWNER' },
 
-    // SETTINGS
-    { title: 'Venue Settings', icon: Settings, href: '/admin/settings', group: 'settings', requiredRole: 'OWNER' },
-    { title: 'User Accounts', icon: UserCheck, href: '/admin/users', group: 'settings', requiredRole: 'OWNER' },
-    { title: 'Roles & Permissions', icon: Shield, href: '/admin/access-control', group: 'settings', requiredRole: 'OWNER' },
-    { title: 'Integration Sync', icon: RefreshCw, href: '/admin/sync', group: 'settings', requiredRole: 'OWNER' },
-    { title: 'Door Access (Nuki)', icon: Award, href: '/admin/door-access', group: 'settings', requiredRole: 'OWNER' },
-    { title: 'Smart Home', icon: Home, href: '/admin/smart-home', group: 'settings', requiredRole: 'OWNER' },
-    { title: 'Event Monitor', icon: Activity, href: '/admin/events', group: 'settings', requiredRole: 'OWNER' },
+    // ═══════════════════════════════════════════════════════════════════
+    // 🏪 VENUE SETTINGS — Branch-specific (per-location hardware & config)
+    // ═══════════════════════════════════════════════════════════════════
+    { title: 'Venue Profile', icon: Settings, href: '/admin/settings', group: 'venue-settings', requiredRole: 'OWNER' },
+    { title: 'App Settings', icon: Settings, href: '/admin/app-settings', group: 'venue-settings', requiredRole: 'OWNER' },
     {
-        title: 'Device Manager', icon: Monitor, group: 'settings', href: '/admin/devices', requiredRole: 'MANAGER',
+        title: 'Device Manager', icon: Monitor, group: 'venue-settings', href: '/admin/devices', requiredRole: 'MANAGER',
         subs: [
             { title: 'Device List', id: 'list', href: '/admin/devices' },
             { title: 'Device Hub', id: 'hub', href: '/admin/device-hub' },
             { title: 'Device Mapping', id: 'map', href: '/admin/device-mapping' },
         ],
     },
-    { title: 'Content Studio', icon: LayoutDashboard, href: '/admin/content-studio', group: 'settings', requiredRole: 'OWNER' },
-    { title: 'Template Studio', icon: LayoutDashboard, href: '/admin/templates', group: 'settings', requiredRole: 'MANAGER' },
-    { title: 'Content Editor', icon: Type, href: '/admin/content-editor', group: 'settings', requiredRole: 'OWNER' },
-    { title: 'Theme Customizer', icon: Palette, href: '/admin/theme', group: 'settings', requiredRole: 'OWNER' },
-    { title: 'Microservices', icon: Server, href: '/admin/microservices', group: 'settings', requiredRole: 'OWNER' },
+    { title: 'Door Access (Nuki)', icon: Award, href: '/admin/door-access', group: 'venue-settings', requiredRole: 'OWNER' },
+    { title: 'Smart Home & IoT', icon: Home, href: '/admin/smart-home', group: 'venue-settings', requiredRole: 'OWNER' },
+
+    // ═══════════════════════════════════════════════════════════════════
+    // 🏢 ORG SETTINGS — Company-wide (policies, users, branding)
+    // ═══════════════════════════════════════════════════════════════════
+    { title: 'Company Profile', icon: Building2, href: '/admin/company-settings', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'Venue Management', icon: Building2, href: '/admin/venues', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'User Accounts', icon: UserCheck, href: '/admin/users', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'Roles & Permissions', icon: Shield, href: '/admin/access-control', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'Integration Sync', icon: RefreshCw, href: '/admin/sync', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'Billing & Plans', icon: DollarSign, href: '/admin/billing', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'Theme & Branding', icon: Palette, href: '/admin/theme', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'Content Studio', icon: LayoutDashboard, href: '/admin/content-studio', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'Template Studio', icon: LayoutDashboard, href: '/admin/templates', group: 'org-settings', requiredRole: 'MANAGER' },
+    { title: 'Content Editor', icon: Type, href: '/admin/content-editor', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'Google Workspace', icon: Globe, href: '/admin/google-workspace', group: 'org-settings', requiredRole: 'MANAGER' },
+    { title: 'Feature Flags', icon: Shield, href: '/admin/feature-flags', group: 'org-settings', requiredRole: 'OWNER' },
+    { title: 'Data Export', icon: Database, href: '/admin/data-export', group: 'org-settings', requiredRole: 'OWNER' },
+
+    // ═══════════════════════════════════════════════════════════════════
+    // ⚙️ SYSTEM ADMIN — Platform infrastructure (product_owner only)
+    // ═══════════════════════════════════════════════════════════════════
     {
-        title: 'System Intelligence', icon: Activity, href: '/admin/monitoring', group: 'settings', requiredRole: 'OWNER',
+        title: 'System Intelligence', icon: Activity, href: '/admin/monitoring', group: 'system-admin', requiredRole: 'PRODUCT_OWNER',
         subs: [
             { title: 'Real-time Monitor', id: 'monitor', href: '/admin/monitoring' },
             { title: 'System Logs', id: 'logs', href: '/admin/logs' },
@@ -283,8 +320,13 @@ export const MENU_ITEMS: MenuItem[] = [
             { title: 'Test Panel', id: 'test', href: '/admin/observability/testpanel' },
         ],
     },
+    { title: 'Microservices', icon: Server, href: '/admin/microservices', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+    { title: 'Event Monitor', icon: Activity, href: '/admin/events', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+    { title: 'Updates & Changelog', icon: Activity, href: '/admin/updates', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
 
+    // ═══════════════════════════════════════════════════════════════════
     // RESTIN.AI COMMERCIAL MODULES
+    // ═══════════════════════════════════════════════════════════════════
     { title: 'Control Tower', icon: LayoutDashboard, href: '/admin/restin', group: 'restin', requiredRole: 'OWNER' },
     { title: 'Website Builder', icon: Globe, href: '/admin/restin/web', group: 'restin', requiredRole: 'OWNER' },
     { title: 'Voice AI', icon: Mic, href: '/admin/restin/voice', group: 'restin', requiredRole: 'OWNER' },
@@ -294,7 +336,9 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Ops & Aggregators', icon: Layers, href: '/admin/restin/ops', group: 'restin', requiredRole: 'OWNER' },
     { title: 'Fintech & Payments', icon: DollarSign, href: '/admin/restin/fintech', group: 'restin', requiredRole: 'OWNER' },
 
+    // ═══════════════════════════════════════════════════════════════════
     // COLLABORATION & COMMUNICATION
+    // ═══════════════════════════════════════════════════════════════════
     { title: 'Hive Chat', icon: MessageSquare, href: '/admin/collab/hive', group: 'collab', requiredRole: 'STAFF' },
     { title: 'Tasks Board', icon: LayoutGrid, href: '/admin/collab/tasks', group: 'collab', requiredRole: 'STAFF' },
     { title: 'Inbox', icon: FileText, href: '/admin/collab/inbox', group: 'collab', requiredRole: 'STAFF' },
