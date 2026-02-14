@@ -10,6 +10,39 @@ from core.venue_config import VenueConfigRepo
 def create_payroll_mt_router():
     router = APIRouter(tags=["payroll_mt"])
 
+    # ── Shared helper: resolve venue legal entity ───────────────────────
+    async def _resolve_employer(venue_id: str) -> dict:
+        """Look up venue → legal_entity → employer info (PE, VAT, name)."""
+        venue_doc = await db.venues.find_one({"id": venue_id}) or await db.venues.find_one({"_id": venue_id})
+        if not venue_doc:
+            return {}
+        le_id = venue_doc.get("legal_entity_id")
+        if le_id:
+            from bson import ObjectId
+            try:
+                le = await db.legal_entities.find_one({"_id": ObjectId(le_id), "deleted_at": None})
+            except Exception:
+                le = await db.legal_entities.find_one({"id": le_id, "deleted_at": None})
+            if le:
+                return {
+                    "legal_entity_id": le_id,
+                    "pe_number": le.get("pe_number", ""),
+                    "registered_name": le.get("registered_name", ""),
+                    "employer_name": le.get("registered_name", ""),
+                    "vat_number": le.get("vat_number", ""),
+                    "registered_address": le.get("registered_address", ""),
+                }
+        # Fallback: legacy venue.legal_info
+        legacy = venue_doc.get("legal_info", {})
+        return {
+            "legal_entity_id": None,
+            "pe_number": legacy.get("pe_number", ""),
+            "registered_name": legacy.get("registered_name", venue_doc.get("name", "")),
+            "employer_name": legacy.get("registered_name", venue_doc.get("name", "")),
+            "vat_number": legacy.get("vat_number", ""),
+            "registered_address": legacy.get("registered_address", ""),
+        }
+
     @router.get("/payroll-mt/profiles")
     async def list_profiles(
         venue_id: str = Query(...),
@@ -86,12 +119,17 @@ def create_payroll_mt_router():
         """
         Generate a payroll run for a venue.
         Payload: { "venue_id": "...", "year": 2025, "month": 1, "commit": false }
+        Now resolves the Legal Entity associated with the venue for
+        PE number, VAT, and employer name on FS5/FS3 reports.
         """
         venue_id = payload.get("venue_id")
         await check_venue_access(current_user, venue_id)
         
         year = int(payload.get("year"))
         month = int(payload.get("month"))
+        
+        # ── Resolve Legal Entity from Venue ──────────────────────────────
+        employer_info = await _resolve_employer(venue_id)
         
         # 1. Fetch profiles
         profiles = await db.payroll_profiles.find({"venue_id": venue_id}).to_list(1000)
@@ -140,8 +178,9 @@ def create_payroll_mt_router():
             "venue_id": venue_id,
             "period": period_str,
             "period_start": f"{year}-{month:02d}-01",
-            "period_end": f"{year}-{month:02d}-28", # Simplified end date
-            "state": "draft", # match enum in other files
+            "period_end": f"{year}-{month:02d}-28",  # Simplified end date
+            "state": "draft",  # match enum in other files
+            "employer": employer_info,
             "employee_count": len(profiles),
             "total_gross": round(total_gross, 2),
             "total_tax": round(total_tax, 2),
@@ -171,12 +210,17 @@ def create_payroll_mt_router():
     ):
         await check_venue_access(current_user, venue_id)
 
+        # ── Resolve Legal Entity for FS5 header (PE Number, Employer) ─
+        legal_entity_meta = await _resolve_employer(venue_id)
+
         # Try reporting service first
         try:
             from services.reporting_malta import MaltaReportingService
             svc = MaltaReportingService(db)
             report = await svc.generate_fs5_data(venue_id, month, year)
             if report:
+                # Inject legal entity meta into report
+                report["employer"] = legal_entity_meta
                 return {"ok": True, "data": report}
         except Exception:
             pass
@@ -185,6 +229,7 @@ def create_payroll_mt_router():
         fs5_id = f"fs5-{year}-{month:02d}"
         fs5 = await db.fs5_forms.find_one({"id": fs5_id, "venue_id": venue_id}, {"_id": 0})
         if fs5:
+            fs5["employer"] = legal_entity_meta
             return {"ok": True, "data": fs5}
         return {"ok": False, "error": f"No FS5 data for {year}-{month:02d}"}
 
@@ -197,12 +242,16 @@ def create_payroll_mt_router():
     ):
         await check_venue_access(current_user, venue_id)
 
+        # Resolve employer for FS3 header
+        employer_meta = await _resolve_employer(venue_id)
+
         # Try reporting service first
         try:
             from services.reporting_malta import MaltaReportingService
             svc = MaltaReportingService(db)
             report = await svc.get_employee_annual_summary(venue_id, employee_id, year)
             if report:
+                report["employer"] = employer_meta
                 return {"ok": True, "data": report}
         except Exception:
             pass
@@ -219,6 +268,7 @@ def create_payroll_mt_router():
                 {"_id": 0}
             )
         if fs3:
+            fs3["employer"] = employer_meta
             return {"ok": True, "data": fs3}
         return {"ok": False, "error": f"No FS3 data for employee {employee_id}, year {year}"}
 

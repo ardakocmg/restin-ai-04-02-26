@@ -9,7 +9,7 @@ Make all navigation bars globally consistent and add intelligent breadcrumb rout
 
 ## ✅ COMPLETED: Settings & Sidebar Refactoring (2026-02-14)
 
-### What Was Done:
+### What Was Done
 
 1. **Sidebar Audit** — Full audit of all MENU_ITEMS in `searchRegistry.ts`
 2. **Moved to System Admin** (PRODUCT_OWNER only):
@@ -31,9 +31,25 @@ Make all navigation bars globally consistent and add intelligent breadcrumb rout
    - Frontend: `pages/admin/LegalEntities.tsx`
    - Route: `/admin/legal-entities`
 5. **Renamed** Company Profile → Organization Profile
-6. **SettingsHub** removed from routing (orphan → replaced by VenueSettings)
+6. **SettingsHub.js** — Deleted (orphan file, no longer routed)
+7. **VenueSettings.js** — Refactored:
+   - Removed "Legal & Branding" tab (legal info now in Legal Entities)
+   - Added separate "Branding" tab (logo + accent color only)
+   - Added Legal Entity dropdown in General tab (links to `/admin/legal-entities`)
+8. **OrganizationProfile.tsx** — Created (replaces CompanySettings.jsx):
+   - Clean TypeScript page with org-level data only
+   - Sections: Company Identity, Address, Contact & Web, Regional & Tax
+   - Legal Entities quick-view with navigation
+   - DB-driven (no hardcoded data)
+   - Route: `/admin/company-settings`
+9. **Payroll ↔ Legal Entity Integration** (Backend):
+   - `routes/payroll_mt.py`: shared `_resolve_employer()` helper
+   - Pay Run generation embeds `employer` info (PE, VAT, name, address)
+   - FS5, FS3 reports inject `employer` metadata from legal entity
+   - Fallback to legacy `venue.legal_info` for backwards compatibility
 
-### 4-Tier Hierarchy Established:
+### 4-Tier Hierarchy Established
+
 ```
 Organization (Marvin Gauci Group)
   ├── Legal Entity (MG Hospitality Ltd) → VAT, PE, Reg
@@ -43,8 +59,33 @@ Organization (Marvin Gauci Group)
       └── Venue: Sole
 ```
 
----
+### Responsibility Separation
 
+```
+📁 Organization Profile (/admin/company-settings)
+   └── Org name, display name, description
+   └── Registered address
+   └── Contact info (tel, fax, email, website)
+   └── Regional config (currency, timezone, locale)
+   └── Legal Entities quick-view
+
+📁 Venue Settings (/admin/settings)
+   └── General: venue name, type, pacing, review policy, legal entity dropdown
+   └── Branding: logo, accent color
+   └── Zones: zone CRUD
+   └── Tables: table CRUD
+   └── Modules: feature toggles
+
+📁 Legal Entities (/admin/legal-entities)
+   └── Full CRUD: registered name, VAT, PE, company reg, address
+   └── Venue assignment
+
+📁 Payroll (Backend routes/payroll_mt.py)
+   └── Pay Run embeds employer info from Legal Entity
+   └── FS5/FS3/FS7 reports include PE/VAT from Legal Entity
+```
+
+---
 
 ## 🏗️ Current State Analysis
 
