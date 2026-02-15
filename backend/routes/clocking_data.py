@@ -125,9 +125,11 @@ async def get_clocking_data(
         # Support multi-venue: show all clocking from user's allowed venues
         allowed_venues = current_user.get("allowed_venue_ids", [venue_id])
         if allowed_venues:
-            query["venue_id"] = {"$in": allowed_venues}
+            # Always include GLOBAL for legacy/shared records
+            venue_filter = list(set(allowed_venues + ["GLOBAL"]))
+            query["venue_id"] = {"$in": venue_filter}
         else:
-            query["venue_id"] = venue_id
+            query["venue_id"] = {"$in": [venue_id, "GLOBAL"]}
 
     # Apply search filter at DB level if possible
     if request.search_query:

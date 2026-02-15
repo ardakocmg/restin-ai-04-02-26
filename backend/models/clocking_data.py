@@ -32,15 +32,15 @@ class ClockingRecord(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     venue_id: str
     employee_id: str  # Link to employees collection
-    day_of_week: str  # "Tuesday", "Wednesday"
+    day_of_week: Optional[str] = None  # "Tuesday", "Wednesday"
     date: str  # "27/01/2026"
-    clocking_in: str  # "16:26"
+    clocking_in: Optional[str] = None  # "16:26" — None for manual entries
     clocking_out: Optional[str] = None  # "23:52" — None while active
     hours_worked: float = 0.0
-    status: Literal["active", "completed"] = "completed"
+    status: Literal["active", "completed", "approved", "rejected", "pending"] = "completed"
     employee_name: str
     employee_designation: Optional[str] = None  # "(SUBCONTRACTED)"
-    cost_centre: str  # "CAVFOH", "C&B FC"
+    cost_centre: Optional[str] = None  # "CAVFOH", "C&B FC"
     work_area: Optional[str] = None  # "FOH", "Kitchen", "Bar"
     source_device: Literal["terminal", "web_manual", "mobile_app", "kiosk", "import"] = "terminal"
     device_name: Optional[str] = None  # "Term_01", "Chrome/Desktop"
@@ -49,8 +49,8 @@ class ClockingRecord(BaseModel):
     device_info: Optional[Dict[str, Any]] = None  # DeviceInfo dict
     geolocation: Optional[Dict[str, Any]] = None  # GeoLocation dict
     clock_out_geolocation: Optional[Dict[str, Any]] = None  # GeoLocation at clock-out
-    modified_by: str  # "DeviceManager@00471"
-    created_by: str
+    modified_by: Optional[str] = None  # "DeviceManager@00471"
+    created_by: Optional[str] = None
     remark: Optional[str] = None
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
