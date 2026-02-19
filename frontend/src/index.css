@@ -97,6 +97,17 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   SMOOTH THEME TRANSITION
+   150ms ease transition on all theme-sensitive properties.
+   Makes light↔dark toggle feel instant and premium.
+   ═══════════════════════════════════════════════════════════════ */
+*,
+*::before,
+*::after {
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    LIGHT MODE: Override hardcoded dark Tailwind classes
    Many components use bg-zinc-950, bg-zinc-900, text-white, etc.
    These overrides remap them to correct light theme colors.
