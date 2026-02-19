@@ -260,7 +260,7 @@ export default function GamificationDashboard() {
                                                     <div className="flex-1 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                                                         <div
                                                             className="h-full bg-amber-500 rounded-full transition-all gamification-xp-bar"
-                                                            style={{ '--xp-progress': `${progress}%` } as React.CSSProperties}
+                                                            style={{ width: `${progress}%` }}
                                                         />
                                                     </div>
                                                     <span className="text-[10px] text-zinc-500 whitespace-nowrap">
@@ -340,7 +340,7 @@ export default function GamificationDashboard() {
                                                 <div className="flex-1 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                                                     <div
                                                         className="h-full bg-emerald-500 rounded-full transition-all gamification-quest-bar"
-                                                        style={{ '--quest-progress': `${pct}%` } as React.CSSProperties}
+                                                        style={{ width: `${pct}%` }}
                                                     />
                                                 </div>
                                                 <span className="text-[10px] text-zinc-500">{quest.progress}/{quest.goal}</span>

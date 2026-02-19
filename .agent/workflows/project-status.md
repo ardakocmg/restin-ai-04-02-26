@@ -86,6 +86,12 @@ description: Restin.AI project completion status — check before suggesting wor
 - ✅ Google Integration revamp (OAuth, multi-service)
 - ✅ Forecasting Dashboard (real API data)
 - ✅ RestinControlTower live KPIs
+- ✅ Sidebar links for Lightspeed pages (tip-presets, combos, order-anywhere, pulse, tableside)
+- ✅ TablesideConfig.tsx (frontend page + route)
+- ✅ Billing Dashboard (BillingDashboard.tsx + 8 endpoints)
+- ✅ Pillar 6 Radar: Allergen Guard + Yield Pricing widgets
+- ✅ Pillar 7 Ops: Labor Alerts widget + aggregator config fix
+- ✅ Pillar 8 Fintech: Kiosk config fetch + endpoint fix
 
 ## 🟠 BEKLEYEN İŞLER
 
@@ -96,10 +102,41 @@ description: Restin.AI project completion status — check before suggesting wor
 ### Lightspeed POS Parity
 
 - [x] L/K Series analiz + feature gap (implementation_plan.md)
-- [ ] Phase 1: Tip Presets + Alphanumeric Tables + Combo Builder
-- [ ] Phase 2: Order Anywhere (QR + Online)
-- [ ] Phase 3: Tableside Ordering (Mobile POS)
-- [ ] Phase 4: Pulse Analytics (Mobile Dashboard)
+- [x] Phase 1: Tip Presets + Combo Builder (backend + frontend + routes)
+- [x] Phase 2: Order Anywhere QR + Online (backend + GuestOrderPage + OrderAnywhereDashboard)
+- [x] Phase 3: Tableside Ordering (backend + routes registered)
+- [x] Phase 4: Pulse Analytics (backend + PulseAnalytics.tsx + CSS)
+
+### Deployment & Production
+
+- [x] api.restin.ai DNS → Render CNAME (verified healthy)
+- [x] Frontend → Vercel (restin.ai)
+- [x] Backend → Render (api.restin.ai, Free plan)
+- [x] deploy_monitor.py script
+
+## 🟡 SIRADAKI ADAYLAR
+
+### Frontend Polish & Missing Pages
+
+- [x] Sidebar navigation links for new Lightspeed pages (tip-presets, combos, order-anywhere, pulse)
+- [x] Tableside Ordering frontend page (TablesideConfig.tsx — already exists with route)
+
+### Production Hardening
+
+- [ ] Render cold-start keep-alive (cron job / UptimeRobot)
+- [ ] MASTER_SEED / MASTER_KEY proper env vars on Render
+
+### Revenue Pillars (Pillar 0-8 — Master Plan)
+
+- [x] Pillar 0: Billing Engine (BillingDashboard.tsx + 8 endpoints)
+- [x] Pillar 1: AI Infrastructure (10+ providers, model registry, cascade config, routes registered)
+- [x] Pillar 2: Web Architect (WebBuilder.jsx + web-service.ts + backend routes)
+- [x] Pillar 3: Autopilot CRM (CrmDashboard.tsx + crm-service.ts + crm/crm_enhanced routes)
+- [x] Pillar 4: Voice AI (VoiceDashboard.jsx + CallLogs + VoiceSettings + voice routes)
+- [x] Pillar 5: Studio (StudioDashboard.jsx + studio-service.ts + studio routes)
+- [x] Pillar 6: Market Radar (Allergen Guard, Yield Management) — dashboard widgets done
+- [x] Pillar 7: Ops Hub (Labor Alerts, Aggregator Config) — all registered
+- [x] Pillar 8: Fintech (Kiosk Mode, Split Pay) — kiosk config wired
 
 ## 🔧 ERTELENEN (Tamamlandi)
 

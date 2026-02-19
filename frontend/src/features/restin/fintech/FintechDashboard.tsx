@@ -55,6 +55,17 @@ const FintechDashboard: React.FC = () => {
     const queryClient = useQueryClient();
     const [kioskMode, setKioskMode] = useState<boolean>(false);
 
+    // Fetch kiosk config on mount
+    useQuery<{ enabled: boolean }>({
+        queryKey: ['fintech-kiosk-config', activeVenueId],
+        queryFn: async () => {
+            const config = await fintechService.getKioskConfig(activeVenueId || 'default');
+            setKioskMode(config?.enabled || false);
+            return config;
+        },
+        enabled: !!activeVenueId,
+    });
+
     // Fetch real stats
     const { data: stats } = useQuery<FintechStats>({
         queryKey: ['fintech-stats', activeVenueId],

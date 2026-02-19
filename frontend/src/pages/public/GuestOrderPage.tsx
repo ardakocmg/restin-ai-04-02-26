@@ -202,10 +202,16 @@ export default function GuestOrderPage() {
 
     const primaryColor = config?.theme?.primary_color || '#e53935';
 
+    // Set the --guest-primary CSS custom property on document root for dynamic theming
+    useEffect(() => {
+        document.documentElement.style.setProperty('--guest-primary', primaryColor);
+        return () => { document.documentElement.style.removeProperty('--guest-primary'); };
+    }, [primaryColor]);
+
     // Loading
     if (loading) {
         return (
-            <div className="min-h-screen bg-zinc-950 flex items-center justify-center guest-order-page" style={{ '--guest-primary': primaryColor } as React.CSSProperties}>
+            <div className="min-h-screen bg-zinc-950 flex items-center justify-center guest-order-page">
                 <Loader2 className="w-8 h-8 animate-spin guest-primary-text" />
             </div>
         );
@@ -227,7 +233,7 @@ export default function GuestOrderPage() {
     // ORDER CONFIRMED
     if (view === 'confirmed' || view === 'tracking') {
         return (
-            <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center px-6 guest-order-page" style={{ '--guest-primary': primaryColor } as React.CSSProperties}>
+            <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center px-6 guest-order-page">
                 <Toaster theme="dark" position="top-center" />
                 <div className="text-center max-w-sm space-y-6">
                     <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center guest-primary-bg-faded-wrap">

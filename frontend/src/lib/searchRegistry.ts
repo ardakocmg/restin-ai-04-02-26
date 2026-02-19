@@ -138,6 +138,7 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Order Anywhere', icon: Smartphone, href: '/manager/order-anywhere', group: 'pos', requiredRole: 'MANAGER' },
     { title: 'Combo Builder', icon: Combine, href: '/manager/combos', group: 'pos', requiredRole: 'MANAGER' },
     { title: 'Tip Presets', icon: Banknote, href: '/manager/tip-presets', group: 'pos', requiredRole: 'OWNER' },
+    { title: 'Tableside Ordering', icon: Smartphone, href: '/manager/tableside', group: 'pos', requiredRole: 'MANAGER' },
     { title: 'POS Setup', icon: Settings, href: '/pos/setup', group: 'pos', requiredRole: 'OWNER' },
     { title: 'KDS Stations', icon: Monitor, href: '/manager/kds/stations', group: 'pos', requiredRole: 'MANAGER' },
 

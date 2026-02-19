@@ -409,7 +409,7 @@ export default function PulseAnalytics() {
                             <div className="flex flex-wrap gap-3 mt-3 justify-center">
                                 {revenueBreakdown.map((d, i) => (
                                     <div key={i} className="flex items-center gap-1.5">
-                                        <span className="w-2 h-2 rounded-full pulse-legend-dot" style={{ '--dot-color': d.color } as React.CSSProperties} />
+                                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }} />
                                         <span className="text-[10px] text-zinc-500 font-bold">{d.name}</span>
                                         <span className="text-[10px] text-zinc-400 font-bold">€{d.value.toFixed(0)}</span>
                                     </div>
@@ -494,7 +494,7 @@ export default function PulseAnalytics() {
                                         (labor?.labor_percent || 0) > 30 ? "bg-red-500" :
                                             (labor?.labor_percent || 0) > 25 ? "bg-amber-500" : "bg-emerald-500"
                                     )}
-                                    style={{ '--gauge-pct': `${Math.min(100, labor?.labor_percent || 0)}%` } as React.CSSProperties}
+                                    style={{ width: `${Math.min(100, labor?.labor_percent || 0)}%` }}
                                 />
                             </div>
                             <div className="flex justify-between mt-1.5">
