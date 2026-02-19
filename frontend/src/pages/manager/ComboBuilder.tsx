@@ -277,6 +277,7 @@ export default function ComboBuilder() {
                                         <button
                                             onClick={(e) => { e.stopPropagation(); deleteCombo(combo.id); }}
                                             className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-600/20 rounded-lg transition-all"
+                                            title="Delete combo"
                                         >
                                             <Trash2 className="w-3.5 h-3.5 text-red-400" />
                                         </button>
@@ -309,11 +310,12 @@ export default function ComboBuilder() {
                                                 onChange={(e) => updateComboField('name', e.target.value)}
                                                 className="bg-zinc-950 border border-white/10 rounded-lg px-3 py-1.5 text-white text-lg font-bold w-full outline-none focus:border-emerald-500"
                                                 onKeyDown={(e) => e.key === 'Enter' && setEditingName(false)}
+                                                aria-label="Combo name"
                                             />
-                                            <button onClick={() => setEditingName(false)} className="p-1"><Check className="w-4 h-4 text-emerald-400" /></button>
+                                            <button onClick={() => setEditingName(false)} className="p-1" title="Confirm name"><Check className="w-4 h-4 text-emerald-400" /></button>
                                         </div>
                                     ) : (
-                                        <button onClick={() => setEditingName(true)} className="flex items-center gap-2 group">
+                                        <button onClick={() => setEditingName(true)} className="flex items-center gap-2 group" title="Edit combo name">
                                             <h2 className="text-lg font-bold text-white">{selectedCombo.name}</h2>
                                             <Edit3 className="w-3.5 h-3.5 text-zinc-600 opacity-0 group-hover:opacity-100" />
                                         </button>
@@ -336,6 +338,7 @@ export default function ComboBuilder() {
                                                 onChange={(e) => updateComboField('price_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
                                                 step="0.50"
                                                 className="w-24 h-9 bg-zinc-950 border border-white/10 rounded-lg text-white font-bold text-sm text-right pr-2 pl-6 outline-none focus:border-emerald-500"
+                                                aria-label="Base price"
                                             />
                                         </div>
                                     </div>
@@ -378,6 +381,7 @@ export default function ComboBuilder() {
                                                     onChange={(e) => updateGroup(group.id, 'name', e.target.value)}
                                                     onClick={(e) => e.stopPropagation()}
                                                     className="bg-transparent border-none text-sm font-bold text-white outline-none w-full"
+                                                    aria-label="Group name"
                                                 />
                                                 <p className="text-[10px] text-zinc-600 mt-0.5">
                                                     Select {group.min_select}-{group.max_select} · {group.items.length} items
@@ -391,6 +395,7 @@ export default function ComboBuilder() {
                                                     onChange={(e) => updateGroup(group.id, 'min_select', parseInt(e.target.value) || 0)}
                                                     className="w-12 h-7 bg-zinc-950 border border-white/10 rounded-lg text-white text-xs text-center outline-none"
                                                     min={0}
+                                                    aria-label="Minimum selections"
                                                 />
                                                 <label className="text-[9px] text-zinc-600 font-bold">Max</label>
                                                 <input
@@ -399,10 +404,12 @@ export default function ComboBuilder() {
                                                     onChange={(e) => updateGroup(group.id, 'max_select', parseInt(e.target.value) || 1)}
                                                     className="w-12 h-7 bg-zinc-950 border border-white/10 rounded-lg text-white text-xs text-center outline-none"
                                                     min={1}
+                                                    aria-label="Maximum selections"
                                                 />
                                                 <button
                                                     onClick={() => removeGroup(group.id)}
                                                     className="p-1 hover:bg-red-600/20 rounded-lg"
+                                                    title="Remove group"
                                                 >
                                                     <X className="w-3.5 h-3.5 text-red-400" />
                                                 </button>
@@ -444,11 +451,13 @@ export default function ComboBuilder() {
                                                                 onChange={(e) => updateItemInGroup(group.id, ii, 'price_delta_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
                                                                 step="0.50"
                                                                 className="w-16 h-7 bg-zinc-900 border border-white/10 rounded-lg text-white text-xs text-right pr-1 outline-none"
+                                                                aria-label="Price delta"
                                                             />
                                                         </div>
                                                         <button
                                                             onClick={() => removeItemFromGroup(group.id, ii)}
                                                             className="p-1 hover:bg-red-600/20 rounded-lg"
+                                                            title="Remove item"
                                                         >
                                                             <Trash2 className="w-3 h-3 text-red-400" />
                                                         </button>
@@ -476,7 +485,7 @@ export default function ComboBuilder() {
                                     {(selectedCombo.tags || []).map((tag, i) => (
                                         <span key={i} className="px-3 py-1 bg-zinc-800 rounded-lg text-xs font-bold text-zinc-400 flex items-center gap-1.5">
                                             {tag}
-                                            <button onClick={() => updateComboField('tags', selectedCombo.tags.filter((_, ti) => ti !== i))}>
+                                            <button onClick={() => updateComboField('tags', selectedCombo.tags.filter((_, ti) => ti !== i))} title="Remove tag">
                                                 <X className="w-3 h-3 text-zinc-600 hover:text-red-400" />
                                             </button>
                                         </span>

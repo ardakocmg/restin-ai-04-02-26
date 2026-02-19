@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import PageContainer from '../../layouts/PageContainer';
 import { cn } from '../../lib/utils';
 import { toast } from 'sonner';
+import './PulseAnalytics.css';
 import api from '@/lib/api';
 import { useVenue } from '@/context/VenueContext';
 import {
@@ -181,8 +182,8 @@ export default function PulseAnalytics() {
                                     <span className="text-[10px] text-zinc-600 font-mono w-8 text-right">{h.hour}:00</span>
                                     <div className="flex-1 h-5 bg-zinc-950 rounded-full overflow-hidden">
                                         <div
-                                            className="h-full bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-full transition-all duration-500"
-                                            style={{ width: `${Math.max(2, (h.revenue_cents / maxHourlyRev) * 100)}%` }}
+                                            className="h-full bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-full transition-all duration-500 pulse-hourly-bar"
+                                            style={{ '--bar-width': `${Math.max(2, (h.revenue_cents / maxHourlyRev) * 100)}%` } as React.CSSProperties}
                                         />
                                     </div>
                                     <span className="text-[10px] text-zinc-500 font-mono w-16 text-right">{fmt(h.revenue_cents)}</span>

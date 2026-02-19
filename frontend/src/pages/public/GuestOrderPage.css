@@ -1,0 +1,54 @@
+/* GuestOrderPage — Dynamic theme via CSS custom properties */
+/* --guest-primary is set at runtime from venue config */
+
+.guest-order-page {
+    --guest-primary: #e53935;
+}
+
+/* Primary colored backgrounds */
+.guest-primary-bg {
+    background-color: var(--guest-primary);
+}
+
+.guest-primary-bg-faded {
+    background-color: var(--guest-primary);
+    opacity: 0.12;
+}
+
+/* Wrapper to apply faded bg without affecting child opacity */
+.guest-primary-bg-faded-wrap {
+    position: relative;
+}
+
+.guest-primary-bg-faded-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--guest-primary);
+    opacity: 0.12;
+    border-radius: inherit;
+}
+
+.guest-primary-text {
+    color: var(--guest-primary);
+}
+
+.guest-primary-border {
+    border-color: var(--guest-primary);
+}
+
+/* Status step active circle */
+.guest-step-active {
+    background-color: var(--guest-primary);
+}
+
+/* Category pill active */
+.guest-category-active {
+    background-color: var(--guest-primary);
+}
+
+/* Button active state for order type / tip */
+.guest-btn-active {
+    background-color: var(--guest-primary);
+    border-color: var(--guest-primary);
+}

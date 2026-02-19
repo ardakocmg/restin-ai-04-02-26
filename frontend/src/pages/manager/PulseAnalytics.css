@@ -1,0 +1,6 @@
+/* PulseAnalytics — Chart and visualization styles */
+
+/* Hourly bar chart — width set via --bar-width custom property */
+.pulse-hourly-bar {
+    width: var(--bar-width, 2%);
+}

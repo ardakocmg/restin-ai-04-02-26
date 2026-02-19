@@ -178,6 +178,7 @@ export default function TipPresetsSettings() {
                                         value={val}
                                         onChange={(e) => updatePercentOption(i, e.target.value)}
                                         className="w-full h-12 bg-zinc-900/50 border border-white/10 rounded-xl text-white text-center text-lg font-bold focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
+                                        aria-label={`Tip percentage option ${i + 1}`}
                                     />
                                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 font-bold">%</span>
                                 </div>
@@ -200,6 +201,7 @@ export default function TipPresetsSettings() {
                                         onChange={(e) => updateFixedOption(i, Math.round(parseFloat(e.target.value) * 100))}
                                         step="0.50"
                                         className="w-full h-12 bg-zinc-900/50 border border-white/10 rounded-xl text-white text-center text-lg font-bold pl-8 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
+                                        aria-label={`Fixed tip amount option ${i + 1}`}
                                     />
                                 </div>
                             ))}

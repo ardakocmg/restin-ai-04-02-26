@@ -7,6 +7,7 @@ import {
     Clock, MapPin, ChefHat, Loader2, CheckCircle2,
     UtensilsCrossed, Heart, Tag, Search
 } from 'lucide-react';
+import './GuestOrderPage.css';
 
 const API_BASE = process.env.REACT_APP_BACKEND_URL
     ? `${process.env.REACT_APP_BACKEND_URL}/api`
@@ -204,8 +205,8 @@ export default function GuestOrderPage() {
     // Loading
     if (loading) {
         return (
-            <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 animate-spin" style={{ color: primaryColor }} />
+            <div className="min-h-screen bg-zinc-950 flex items-center justify-center guest-order-page" style={{ '--guest-primary': primaryColor } as React.CSSProperties}>
+                <Loader2 className="w-8 h-8 animate-spin guest-primary-text" />
             </div>
         );
     }
@@ -226,16 +227,16 @@ export default function GuestOrderPage() {
     // ORDER CONFIRMED
     if (view === 'confirmed' || view === 'tracking') {
         return (
-            <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center px-6">
+            <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center px-6 guest-order-page" style={{ '--guest-primary': primaryColor } as React.CSSProperties}>
                 <Toaster theme="dark" position="top-center" />
                 <div className="text-center max-w-sm space-y-6">
-                    <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center" style={{ backgroundColor: `${primaryColor}20` }}>
-                        <CheckCircle2 className="w-10 h-10" style={{ color: primaryColor }} />
+                    <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center guest-primary-bg-faded-wrap">
+                        <CheckCircle2 className="w-10 h-10 guest-primary-text" />
                     </div>
                     <div>
                         <h1 className="text-2xl font-black">Order Placed!</h1>
                         <p className="text-zinc-500 text-sm mt-1">Your order number is</p>
-                        <p className="text-3xl font-black mt-2" style={{ color: primaryColor }}>{orderId}</p>
+                        <p className="text-3xl font-black mt-2 guest-primary-text">{orderId}</p>
                     </div>
 
                     {/* Status tracker */}
@@ -249,8 +250,8 @@ export default function GuestOrderPage() {
                                 <div className={cn(
                                     "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold",
                                     ['pending', 'accepted', 'preparing', 'ready', 'completed'].indexOf(orderStatus) >= i
-                                        ? "text-white" : "bg-zinc-800 text-zinc-600"
-                                )} style={['pending', 'accepted', 'preparing', 'ready', 'completed'].indexOf(orderStatus) >= i ? { backgroundColor: primaryColor } : {}}>
+                                        ? "text-white guest-step-active" : "bg-zinc-800 text-zinc-600"
+                                )}>
                                     {i + 1}
                                 </div>
                                 <span className={cn(
@@ -275,7 +276,7 @@ export default function GuestOrderPage() {
     }
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-white max-w-lg mx-auto relative pb-[80px]">
+        <div className="min-h-screen bg-zinc-950 text-white max-w-lg mx-auto relative pb-[80px] guest-order-page" style={{ '--guest-primary': primaryColor } as React.CSSProperties}>
             <Toaster theme="dark" position="top-center" />
 
             {/* Header */}
@@ -301,7 +302,7 @@ export default function GuestOrderPage() {
                         >
                             <ShoppingBag className="w-5 h-5" />
                             {cartCount > 0 && (
-                                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center text-white" style={{ backgroundColor: primaryColor }}>
+                                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center text-white guest-primary-bg">
                                     {cartCount}
                                 </span>
                             )}
@@ -319,9 +320,8 @@ export default function GuestOrderPage() {
                                 className={cn(
                                     "px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border",
                                     activeCategory === cat.id
-                                        ? "text-white border-transparent" : "bg-transparent border-white/10 text-zinc-500"
+                                        ? "text-white border-transparent guest-category-active" : "bg-transparent border-white/10 text-zinc-500"
                                 )}
-                                style={activeCategory === cat.id ? { backgroundColor: primaryColor } : {}}
                             >
                                 {cat.name}
                             </button>
@@ -374,7 +374,7 @@ export default function GuestOrderPage() {
                                         </div>
                                     )}
                                     <div className="flex items-center justify-between mt-2">
-                                        <span className="text-sm font-bold" style={{ color: primaryColor }}>
+                                        <span className="text-sm font-bold guest-primary-text">
                                             €{(price / 100).toFixed(2)}
                                         </span>
                                         {inCart ? (
@@ -383,12 +383,12 @@ export default function GuestOrderPage() {
                                                     <Minus className="w-3 h-3" />
                                                 </button>
                                                 <span className="text-sm font-bold w-4 text-center">{inCart.quantity}</span>
-                                                <button onClick={() => addToCart(item)} className="w-7 h-7 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: primaryColor }} title="Add one more">
+                                                <button onClick={() => addToCart(item)} className="w-7 h-7 rounded-full flex items-center justify-center text-white guest-primary-bg" title="Add one more">
                                                     <Plus className="w-3 h-3" />
                                                 </button>
                                             </div>
                                         ) : (
-                                            <button onClick={() => addToCart(item)} className="px-3 py-1.5 rounded-full text-[10px] font-bold text-white transition-all" style={{ backgroundColor: primaryColor }}>
+                                            <button onClick={() => addToCart(item)} className="px-3 py-1.5 rounded-full text-[10px] font-bold text-white transition-all guest-primary-bg">
                                                 Add
                                             </button>
                                         )}
@@ -410,9 +410,8 @@ export default function GuestOrderPage() {
                                 onClick={() => setOrderType('dine_in')}
                                 className={cn(
                                     "flex-1 py-3 rounded-xl text-sm font-bold transition-all border-2",
-                                    orderType === 'dine_in' ? "text-white border-transparent" : "bg-transparent border-white/10 text-zinc-500"
+                                    orderType === 'dine_in' ? "text-white guest-btn-active" : "bg-transparent border-white/10 text-zinc-500"
                                 )}
-                                style={orderType === 'dine_in' ? { backgroundColor: primaryColor, borderColor: primaryColor } : {}}
                             >
                                 Dine-In
                             </button>
@@ -422,9 +421,8 @@ export default function GuestOrderPage() {
                                 onClick={() => setOrderType('takeaway')}
                                 className={cn(
                                     "flex-1 py-3 rounded-xl text-sm font-bold transition-all border-2",
-                                    orderType === 'takeaway' ? "text-white border-transparent" : "bg-transparent border-white/10 text-zinc-500"
+                                    orderType === 'takeaway' ? "text-white guest-btn-active" : "bg-transparent border-white/10 text-zinc-500"
                                 )}
-                                style={orderType === 'takeaway' ? { backgroundColor: primaryColor, borderColor: primaryColor } : {}}
                             >
                                 Takeaway
                             </button>
@@ -461,7 +459,7 @@ export default function GuestOrderPage() {
                                         <Minus className="w-3 h-3" />
                                     </button>
                                     <span className="text-sm font-bold w-4 text-center">{c.quantity}</span>
-                                    <button onClick={() => addToCart(c.item)} className="w-7 h-7 rounded-full flex items-center justify-center text-white" style={{ backgroundColor: primaryColor }} title="Add">
+                                    <button onClick={() => addToCart(c.item)} className="w-7 h-7 rounded-full flex items-center justify-center text-white guest-primary-bg" title="Add">
                                         <Plus className="w-3 h-3" />
                                     </button>
                                 </div>
@@ -489,9 +487,8 @@ export default function GuestOrderPage() {
                                         onClick={() => setSelectedTip(pct)}
                                         className={cn(
                                             "flex-1 py-2 rounded-xl text-sm font-bold transition-all border",
-                                            selectedTip === pct ? "text-white border-transparent" : "border-white/10 text-zinc-500"
+                                            selectedTip === pct ? "text-white guest-btn-active" : "border-white/10 text-zinc-500"
                                         )}
-                                        style={selectedTip === pct ? { backgroundColor: primaryColor, borderColor: primaryColor } : {}}
                                     >
                                         {pct}%
                                     </button>
@@ -522,7 +519,7 @@ export default function GuestOrderPage() {
                         )}
                         <div className="flex justify-between text-base font-bold text-white pt-2 border-t border-white/5">
                             <span>Total</span>
-                            <span style={{ color: primaryColor }}>€{(total / 100).toFixed(2)}</span>
+                            <span className="guest-primary-text">€{(total / 100).toFixed(2)}</span>
                         </div>
                     </div>
                 </div>
@@ -533,8 +530,7 @@ export default function GuestOrderPage() {
                 <div className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto p-4 z-30">
                     <button
                         onClick={() => setView('checkout')}
-                        className="w-full py-4 rounded-2xl text-white font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
-                        style={{ backgroundColor: primaryColor }}
+                        className="w-full py-4 rounded-2xl text-white font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] guest-primary-bg"
                     >
                         <ShoppingBag className="w-5 h-5" />
                         View Cart ({cartCount}) — €{(subtotal / 100).toFixed(2)}
@@ -548,8 +544,7 @@ export default function GuestOrderPage() {
                     <button
                         onClick={submitOrder}
                         disabled={submitting}
-                        className="w-full py-4 rounded-2xl text-white font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
-                        style={{ backgroundColor: primaryColor }}
+                        className="w-full py-4 rounded-2xl text-white font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50 guest-primary-bg"
                     >
                         {submitting ? (
                             <><Loader2 className="w-5 h-5 animate-spin" /> Placing Order...</>
