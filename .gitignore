@@ -100,3 +100,6 @@ backend/worker_health_check.txt
 backend/scripts/test_meross_direct.py
 backend/scripts/test_meross_control.py
 backend/stderr.txt
+
+# Secrets installer for 2nd PC
+setup-env-secrets.ps1
