@@ -6,6 +6,22 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import api from '../lib/api';
 import { logger } from '../lib/logger';
 
+// CSS variables that DesignSystemContext sets as inline styles.
+// Must be cleared on mode change so .dark/:root class selectors take effect.
+const THEME_CSS_VARS = [
+    '--background', '--foreground', '--card', '--card-foreground',
+    '--popover', '--popover-foreground', '--primary', '--primary-foreground',
+    '--secondary', '--secondary-foreground', '--muted', '--muted-foreground',
+    '--accent', '--accent-foreground', '--destructive', '--destructive-foreground',
+    '--border', '--input', '--ring',
+    '--sidebar', '--sidebar-border', '--sidebar-text',
+    '--sidebar-active', '--sidebar-active-text',
+];
+
+const clearInlineThemeVars = (root: HTMLElement): void => {
+    THEME_CSS_VARS.forEach(v => root.style.removeProperty(v));
+};
+
 export interface ThemeColors {
     id: string;
     name: string;
@@ -148,6 +164,7 @@ export function ThemeProvider({ children }: ThemeProviderProps): JSX.Element {
     useEffect(() => {
         const root = window.document.documentElement;
         root.classList.remove('light', 'dark');
+        clearInlineThemeVars(root);
 
         if (mode === 'system') {
             const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -166,6 +183,7 @@ export function ThemeProvider({ children }: ThemeProviderProps): JSX.Element {
                 const root = window.document.documentElement;
                 const systemTheme = mediaQuery.matches ? 'dark' : 'light';
                 root.classList.remove('light', 'dark');
+                clearInlineThemeVars(root);
                 root.classList.add(systemTheme);
                 root.style.colorScheme = systemTheme;
             }
@@ -182,6 +200,10 @@ export function ThemeProvider({ children }: ThemeProviderProps): JSX.Element {
         // Apply class change IMMEDIATELY (don't wait for useEffect render cycle)
         const root = window.document.documentElement;
         root.classList.remove('light', 'dark');
+
+        // Clear inline CSS vars so .dark/:root class selectors in index.css take effect
+        clearInlineThemeVars(root);
+
         if (newMode === 'system') {
             const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             root.classList.add(systemTheme);
