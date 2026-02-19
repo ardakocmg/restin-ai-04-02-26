@@ -4,6 +4,7 @@
  * 
  * Supported engines:
  * - l-series: POSRuntimeEnhanced (Lightspeed clone)
+ * - k-series: POSRuntimeEnhanced (K-Series — same runtime as L-Series)
  * - restin:   POSMain (Classic Restin.AI via POSLayoutRestin)
  * - pro:      POSMain (iPad full-service via POSLayoutPro)
  * - express:  POSMain (Quick service via POSLayoutExpress)
@@ -51,7 +52,7 @@ export default function POSThemeRouter() {
 
     return (
         <Suspense fallback={<LoadingFallback />}>
-            {engine === 'l-series' && <POSRuntimeEnhanced />}
+            {(engine === 'l-series' || engine === 'k-series') && <POSRuntimeEnhanced />}
             {(engine === 'restin' || engine === 'pro' || engine === 'express') && <POSMain />}
             {engine === 'custom' && <POSRuntimeEnhanced />}
         </Suspense>

@@ -27,6 +27,25 @@ export const BUILTIN_THEMES: POSThemeConfig[] = [
         createdBy: 'system',
     },
     {
+        id: 'theme-kseries',
+        engine: 'k-series',
+        meta: {
+            name: 'K-Series',
+            description: 'K-Series style. Dark, professional layout with the same powerful runtime as L-Series. Distinct orange accent with warm tones.',
+            thumbnail: '/themes/kseries-thumb.png',
+            author: 'Restin.AI',
+            version: '1.0.0',
+            tags: ['dark', 'ipad', 'full-service', 'professional', 'k-series'],
+            businessType: ['full-service', 'bar', 'fine-dining', 'casual-dining'],
+        },
+        styles: DEFAULT_ENGINE_STYLES['k-series'],
+        isBuiltIn: true,
+        isActive: false,
+        createdAt: '2025-01-01T00:00:00Z',
+        updatedAt: '2025-01-01T00:00:00Z',
+        createdBy: 'system',
+    },
+    {
         id: 'theme-restin',
         engine: 'restin',
         meta: {

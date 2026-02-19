@@ -11,6 +11,7 @@
 /** Supported POS layout engines */
 export type POSLayoutEngine =
     | 'l-series'    // POSRuntimeEnhanced.jsx — Lightspeed clone
+    | 'k-series'    // POSRuntimeEnhanced.jsx — K-Series (same runtime as L-Series)
     | 'restin'      // POSLayoutRestin.jsx — Classic Restin.AI
     | 'pro'         // POSLayoutPro.jsx — iPad full-service
     | 'express'     // POSLayoutExpress.jsx — Quick service / counter
@@ -75,6 +76,27 @@ export const DEFAULT_ENGINE_STYLES: Record<POSLayoutEngine, ThemeStyles> = {
         sidebarBg: '#111111',
         accentColor: '#2A9D8F',
         accentColorHover: '#34B5A5',
+        textPrimary: '#ffffff',
+        textSecondary: '#888888',
+        tileRadius: 12,
+        tileBg: '#E07A5F',
+        orderPanelBg: '#0d0d0d',
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        categoryColors: {
+            drinks: '#5B8DEF',
+            starters: '#E8947A',
+            mains: '#E07A5F',
+            desserts: '#C77DBA',
+            sides: '#81B29A',
+            steaks: '#D4534B',
+        },
+    },
+    'k-series': {
+        rootBg: '#000000',
+        topBarBg: '#1a1a1a',
+        sidebarBg: '#111111',
+        accentColor: '#F97316',
+        accentColorHover: '#FB923C',
         textPrimary: '#ffffff',
         textSecondary: '#888888',
         tileRadius: 12,
