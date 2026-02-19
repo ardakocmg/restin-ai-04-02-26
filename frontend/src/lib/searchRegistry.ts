@@ -21,7 +21,7 @@ import {
     UserCheck, Receipt, Clock, Package, Upload, Monitor,
     Building2, LayoutGrid, ShieldAlert, Shield, Layers,
     RefreshCw, Home, Timer, Type, Palette, Server, Globe, Mic, Wand2, Radar, MessageSquare,
-    Wrench, Cog, Database, Brain,
+    Wrench, Cog, Database, Brain, Smartphone, Combine, Banknote, Gauge,
     type LucideIcon
 } from 'lucide-react';
 
@@ -135,6 +135,9 @@ export const MENU_ITEMS: MenuItem[] = [
         ],
     },
     { title: 'Service Day Close', icon: Clock, href: '/manager/service-day-close', group: 'pos', requiredRole: 'MANAGER' },
+    { title: 'Order Anywhere', icon: Smartphone, href: '/manager/order-anywhere', group: 'pos', requiredRole: 'MANAGER' },
+    { title: 'Combo Builder', icon: Combine, href: '/manager/combos', group: 'pos', requiredRole: 'MANAGER' },
+    { title: 'Tip Presets', icon: Banknote, href: '/manager/tip-presets', group: 'pos', requiredRole: 'OWNER' },
     { title: 'POS Setup', icon: Settings, href: '/pos/setup', group: 'pos', requiredRole: 'OWNER' },
     { title: 'KDS Stations', icon: Monitor, href: '/manager/kds/stations', group: 'pos', requiredRole: 'MANAGER' },
 
@@ -249,6 +252,7 @@ export const MENU_ITEMS: MenuItem[] = [
         ],
     },
     { title: 'Business Analytics', icon: TrendingUp, href: '/manager/analytics', group: 'reports', requiredRole: 'MANAGER' },
+    { title: 'Pulse Analytics', icon: Gauge, href: '/manager/pulse', group: 'reports', requiredRole: 'MANAGER' },
     { title: 'HR Analytics', icon: BarChart3, href: '/manager/hr-advanced/analytics', group: 'reports', requiredRole: 'OWNER' },
     { title: 'KDS Performance', icon: Activity, href: '/manager/reports/kds-performance-detailed', group: 'reports', requiredRole: 'MANAGER' },
     { title: 'Inventory Analytics', icon: PieChartIcon, href: '/manager/reports/inventory-detailed', group: 'reports', requiredRole: 'MANAGER' },
