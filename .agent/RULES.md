@@ -2,7 +2,26 @@
 
 > **IMPORTANT:** If you are a new Antigravity agent on a different PC, READ THIS FILE FIRST.
 > These are the project's immutable rules. Follow them without exception.
-> Also read all workflows in `.agent/workflows/` — especially `dual-pc.md`.
+> Also read all workflows in `.agent/workflows/` — especially `dual-pc.md` and `pre-session.md`.
+
+---
+
+## 🚦 PRE-SESSION PROTOCOL (MANDATORY — DO THIS FIRST)
+
+**Every new conversation MUST complete these 4 stages before writing ANY code:**
+
+| Stage | Action | Command / File |
+|-------|--------|---------------|
+| 1 | **📖 READ RULES** | Read `.agent/RULES.md` + `memory/MASTER_RULES.md` |
+| 2 | **📡 CHECK CHANNEL** | `git fetch origin && cat channel.md` — see what the other PC did |
+| 3 | **🔄 SYNC** | `git pull origin main` + `cat .worklock` — get latest, check locks |
+| 4 | **📋 READ TASK** | `cat task.md` — understand current project state |
+
+**After EVERY work session:**
+1. Update `channel.md` with a dated entry of what you did
+2. `git add -A && git commit -m "msg" && git push origin main`
+
+> See `.agent/workflows/pre-session.md` for full details.
 
 ---
 
