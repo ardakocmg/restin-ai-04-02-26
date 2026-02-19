@@ -4,7 +4,7 @@ description: Check if backend and frontend are running and healthy, auto-restart
 
 # Health Check & Auto-Recovery
 
-## Quick Check
+## Quick Check (Local)
 
 // turbo
 
@@ -41,16 +41,32 @@ if (-not $frontendOk) {
 }
 ```
 
+## Production Health Check
+
+// turbo
+
+```powershell
+python backend/scripts/deploy_monitor.py --verbose
+```
+
+## Production Auto-Recovery (if down)
+
+```powershell
+python backend/scripts/deploy_monitor.py --check-and-fix
+```
+
 ---
 
 **Manual Check:**
 
-- Backend: <http://localhost:8000/docs>
-- Frontend: <http://localhost:3000>
+- Local Backend: <http://localhost:8000/docs>
+- Local Frontend: <http://localhost:3000>
+- Prod Monitor: `GET /api/system/monitor/status`
+- Prod Redeploy: `/monitor-prod` workflow
 
 ---
 
-## ⚡ Quality Gates
+## Quality Gates
 
 - **No Animation Delays:** NEVER use `setTimeout` to gate login, navigation, or submissions. Instant callbacks only.
 - **No 404 Before Commit:** Every UI route/link MUST have a working backend + page. Fix or hide before commit.

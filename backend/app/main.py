@@ -789,6 +789,10 @@ async def get_system_version():
 from routes.hive_routes import router as hive_router
 api_main.include_router(hive_router, prefix="/hive", tags=["hive"])
 
+# Deployment Monitor (Vercel/Render Health Check & Auto-Redeploy)
+from routes.monitor_routes import router as monitor_router
+api_main.include_router(monitor_router)
+
 # Finally, mount api_main onto the app
 app.include_router(api_main)
 
