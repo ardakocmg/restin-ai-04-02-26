@@ -3,7 +3,7 @@ Fintech Routes (Pillar 8: Omni-Payment)
 Handles transaction stats, transaction listing, kiosk mode, and seeding.
 Connected to MongoDB for persistence.
 """
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Body, HTTPException
 from typing import Dict, Any, List
 from core.dependencies import get_current_user, get_database
 from datetime import datetime, timezone, timedelta
@@ -115,6 +115,97 @@ async def seed_fintech_data(
     if txns:
         await db.fintech_transactions.insert_many(txns)
     return {"status": "ok", "count": len(txns)}
+
+
+# === KIOSK MODE ===
+
+@router.get("/kiosk/config")
+async def get_kiosk_config(
+    venue_id: str = Query(...),
+    db=Depends(get_database),
+):
+    """Get kiosk mode configuration."""
+    config = await db.kiosk_configs.find_one({"venue_id": venue_id}, {"_id": 0})
+    if not config:
+        return {
+            "venue_id": venue_id,
+            "enabled": False,
+            "idle_timeout_seconds": 120,
+            "allow_cash": False,
+            "allow_tips": True,
+            "tip_suggestions": [10, 15, 20],
+            "theme": "dark",
+            "logo_url": None,
+        }
+    return config
+
+
+@router.post("/kiosk/config")
+async def update_kiosk_config(
+    venue_id: str = Query(...),
+    payload: Dict[str, Any] = Body(...),
+    current_user: dict = Depends(get_current_user),
+    db=Depends(get_database),
+):
+    """Toggle kiosk mode and configure settings."""
+    from uuid import uuid4
+
+    payload["venue_id"] = venue_id
+    payload["updated_at"] = datetime.now(timezone.utc).isoformat()
+
+    await db.kiosk_configs.update_one(
+        {"venue_id": venue_id},
+        {"$set": payload},
+        upsert=True,
+    )
+    logger.info("Kiosk config updated for venue %s (enabled=%s)", venue_id, payload.get("enabled"))
+    return {"status": "ok", **payload}
+
+
+# === SPLIT PAY ===
+
+@router.post("/split")
+async def create_split(
+    venue_id: str = Query(...),
+    payload: Dict[str, Any] = Body(...),
+    current_user: dict = Depends(get_current_user),
+    db=Depends(get_database),
+):
+    """Create a split payment for an order."""
+    from uuid import uuid4
+
+    order_id = payload.get("order_id")
+    method = payload.get("method", "equal")  # equal, by_seat, by_item, custom
+    split_count = payload.get("split_count", 2)
+    total_cents = payload.get("total_cents", 0)
+
+    splits = []
+    if method == "equal":
+        per_person = total_cents // split_count
+        remainder = total_cents % split_count
+        for i in range(split_count):
+            splits.append({
+                "id": str(uuid4()),
+                "label": f"Guest {i + 1}",
+                "amount_cents": per_person + (1 if i < remainder else 0),
+                "status": "pending",
+            })
+
+    split_record = {
+        "id": str(uuid4()),
+        "venue_id": venue_id,
+        "order_id": order_id,
+        "method": method,
+        "total_cents": total_cents,
+        "splits": splits,
+        "status": "active",
+        "created_by": current_user.get("id"),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.split_payments.insert_one(split_record)
+    split_record.pop("_id", None)
+
+    return split_record
 
 
 def create_fintech_router():

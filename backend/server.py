@@ -730,6 +730,11 @@ async def startup_event():
         tasks_service.start()
         logger.info("✓ Scheduled tasks started (backup, cleanup)")
         
+        # Keep-alive self-ping for Render free tier (prevents cold starts)
+        from scripts.keep_alive import start_keep_alive
+        start_keep_alive()
+        logger.info("✓ Keep-alive ping started (14min interval)")
+        
     except Exception as e:
         logger.error(f"Startup error: {e}")
 

@@ -158,3 +158,92 @@ async def list_scans(venue_id: str, limit: int = 20):
         {"venue_id": venue_id}, {"_id": 0}
     ).sort("created_at", -1).limit(limit).to_list(limit)
     return scans
+
+
+# === ALLERGEN GUARD ===
+
+@router.get("/allergens")
+async def allergen_guard(venue_id: str):
+    """
+    Auto-detect allergens in menu items based on ingredients.
+    Scans recipe ingredients and flags common allergens.
+    """
+    ALLERGEN_KEYWORDS = {
+        "gluten": ["wheat", "flour", "bread", "pasta", "barley", "rye", "couscous"],
+        "dairy": ["milk", "cream", "butter", "cheese", "yogurt", "whey"],
+        "nuts": ["almond", "walnut", "pecan", "cashew", "pistachio", "hazelnut", "peanut"],
+        "shellfish": ["shrimp", "prawn", "crab", "lobster", "mussel", "clam", "oyster"],
+        "eggs": ["egg", "eggs", "mayonnaise", "meringue"],
+        "soy": ["soy", "soya", "tofu", "edamame"],
+        "fish": ["fish", "salmon", "tuna", "cod", "anchovy", "sardine"],
+        "sesame": ["sesame", "tahini"],
+    }
+
+    items = await db.menu_items.find(
+        {"venue_id": venue_id}, {"_id": 0, "name": 1, "ingredients": 1, "category": 1}
+    ).to_list(200)
+
+    flagged = []
+    for item in items:
+        ingredients_text = " ".join(item.get("ingredients", [])).lower()
+        if not ingredients_text:
+            continue
+        detected = []
+        for allergen, keywords in ALLERGEN_KEYWORDS.items():
+            if any(kw in ingredients_text for kw in keywords):
+                detected.append(allergen)
+        if detected:
+            flagged.append({
+                "item": item.get("name", "Unknown"),
+                "category": item.get("category", ""),
+                "allergens": detected,
+            })
+
+    return {
+        "total_scanned": len(items),
+        "flagged_count": len(flagged),
+        "items": flagged,
+    }
+
+
+# === YIELD PRICING ===
+
+@router.get("/yield-rules")
+async def list_yield_rules(venue_id: str):
+    """List dynamic pricing rules (Happy Hour, Surge, etc.)."""
+    rules = await db.yield_rules.find(
+        {"venue_id": venue_id}, {"_id": 0}
+    ).sort("priority", 1).to_list(50)
+
+    if not rules:
+        return [
+            {"id": "rule-1", "venue_id": venue_id, "name": "Happy Hour", "type": "discount", "pct": -15, "trigger": "time", "condition": "16:00-18:00", "active": True, "priority": 1},
+            {"id": "rule-2", "venue_id": venue_id, "name": "Weekend Surge", "type": "surcharge", "pct": 10, "trigger": "day", "condition": "Fri,Sat", "active": True, "priority": 2},
+            {"id": "rule-3", "venue_id": venue_id, "name": "High Occupancy", "type": "surcharge", "pct": 5, "trigger": "occupancy", "condition": ">85%", "active": False, "priority": 3},
+        ]
+    return rules
+
+
+@router.post("/yield-rules")
+async def upsert_yield_rule(
+    venue_id: str,
+    payload: Dict[str, Any] = Body(...),
+    current_user: dict = Depends(get_current_user),
+):
+    """Create or update a dynamic pricing rule."""
+    rule_id = payload.get("id", str(uuid4()))
+    rule = {
+        "id": rule_id,
+        "venue_id": venue_id,
+        "name": payload.get("name", "New Rule"),
+        "type": payload.get("type", "discount"),
+        "pct": payload.get("pct", 0),
+        "trigger": payload.get("trigger", "manual"),
+        "condition": payload.get("condition", ""),
+        "active": payload.get("active", True),
+        "priority": payload.get("priority", 10),
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.yield_rules.update_one({"id": rule_id}, {"$set": rule}, upsert=True)
+    logger.info("Yield rule upserted: %s for venue %s", rule_id, venue_id)
+    return rule
