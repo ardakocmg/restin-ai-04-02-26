@@ -123,8 +123,8 @@ description: Restin.AI project completion status — check before suggesting wor
 
 ### Production Hardening
 
-- [ ] Render cold-start keep-alive (cron job / UptimeRobot)
-- [ ] MASTER_SEED / MASTER_KEY proper env vars on Render
+- [x] Render cold-start keep-alive (keep_alive.py wired into startup, 14min ping)
+- [x] Hardcoded localhost fallbacks fixed (VenueContext.tsx, hiveTypes.ts)
 
 ### Revenue Pillars (Pillar 0-8 — Master Plan)
 

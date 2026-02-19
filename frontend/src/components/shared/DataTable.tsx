@@ -155,7 +155,8 @@ export default function DataTable<TData, TValue>({
 
   const serverMode = typeof onQueryChange === 'function';
   const canRolePreset = ['owner', 'product_owner'].includes(user?.role as string);
-  const virtualizationEnabled = enableVirtualization;
+  const VIRTUALIZATION_THRESHOLD = 50; // Rule I.6: Virtualize all lists > 50 items
+  const virtualizationEnabled = enableVirtualization || (data && data.length > VIRTUALIZATION_THRESHOLD);
 
   const selectionColumn = useMemo(() => ({
     id: 'select',
