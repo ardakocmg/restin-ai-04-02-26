@@ -6,6 +6,7 @@ No auth required for guest endpoints; admin endpoints require auth.
 from fastapi import APIRouter, Depends, HTTPException, Body, Query
 from core.dependencies import get_current_user, get_database
 from datetime import datetime, timezone
+from services.order_anywhere_kds_integration import OrderAnywhereKdsIntegration
 import logging
 import uuid
 
@@ -135,8 +136,19 @@ def create_order_anywhere_router():
         if result.modified_count == 0:
             raise HTTPException(status_code=404, detail="Order not found")
 
+        # ── KDS Injection: accepted/preparing → send to kitchen ──────────
+        kds_ticket_ids = []
+        if new_status in ("accepted", "preparing"):
+            order_doc = await db.online_orders.find_one({"id": order_id}, {"_id": 0})
+            if order_doc and not order_doc.get("kds_sent"):
+                venue_id_for_kds = order_doc.get("venue_id", "")
+                kds_service = OrderAnywhereKdsIntegration(db)
+                kds_ticket_ids = await kds_service.send_to_kds(
+                    order_id, venue_id_for_kds, current_user["id"]
+                )
+
         logger.info(f"Order {order_id} status -> {new_status} by {current_user['id']}")
-        return {"success": True, "status": new_status}
+        return {"success": True, "status": new_status, "kds_tickets": kds_ticket_ids}
 
     @router.get("/qr/{venue_id}")
     async def generate_qr_data(
@@ -284,6 +296,14 @@ def create_order_anywhere_router():
         await db.online_orders.insert_one(order)
         logger.info(f"Guest order created: {order['id']} for venue {venue_id}")
 
+        # ── Auto-accept → also inject into KDS immediately ──────────────
+        kds_ticket_ids = []
+        if config.get("auto_accept_orders"):
+            kds_service = OrderAnywhereKdsIntegration(db)
+            kds_ticket_ids = await kds_service.send_to_kds(
+                order["id"], venue_id, "auto_accept"
+            )
+
         return {
             "success": True,
             "order": {
@@ -291,6 +311,7 @@ def create_order_anywhere_router():
                 "status": order["status"],
                 "total_cents": order["total_cents"],
                 "estimated_prep_minutes": config.get("estimated_prep_minutes", 20),
+                "kds_tickets": kds_ticket_ids,
             },
         }
 

@@ -8,7 +8,7 @@ import {
     QrCode, Globe, Settings, ShoppingBag, Clock, DollarSign,
     ToggleLeft, ToggleRight, Save, Copy, ExternalLink,
     TrendingUp, Package, AlertCircle, CheckCircle2, XCircle,
-    Loader2, RefreshCw, Eye
+    Loader2, RefreshCw, Eye, ChefHat
 } from 'lucide-react';
 
 interface OrderAnywhereConfig {
@@ -43,6 +43,7 @@ interface Order {
     total_cents: number;
     status: string;
     created_at: string;
+    kds_sent?: boolean;
 }
 
 interface Stats {
@@ -106,9 +107,10 @@ export default function OrderAnywhereDashboard() {
 
     const updateOrderStatus = async (orderId: string, status: string) => {
         try {
-            await api.put(`/order-anywhere/orders/${orderId}/status`, { status });
-            setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
-            toast.success(`Order ${status}`);
+            const res = await api.put(`/order-anywhere/orders/${orderId}/status`, { status });
+            const kdsSent = res.data?.kds_tickets?.length > 0;
+            setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status, kds_sent: kdsSent || o.kds_sent } : o));
+            toast.success(`Order ${status}${kdsSent ? ' — Sent to Kitchen' : ''}`);
         } catch {
             toast.error('Failed to update');
         }
@@ -270,9 +272,16 @@ export default function OrderAnywhereDashboard() {
                                             {order.items.length} item{order.items.length !== 1 ? 's' : ''} · €{(order.total_cents / 100).toFixed(2)} · {order.table_name ? `Table ${order.table_name}` : order.order_type}
                                         </p>
                                     </div>
-                                    <span className={cn("px-3 py-1 rounded-full text-[10px] font-bold uppercase border", statusColors[order.status] || 'bg-zinc-800 text-zinc-500')}>
-                                        {order.status}
-                                    </span>
+                                    <div className="flex items-center gap-2">
+                                        <span className={cn("px-3 py-1 rounded-full text-[10px] font-bold uppercase border", statusColors[order.status] || 'bg-zinc-800 text-zinc-500')}>
+                                            {order.status}
+                                        </span>
+                                        {order.kds_sent && (
+                                            <span className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-bold uppercase bg-orange-600/15 text-orange-400 border border-orange-500/20">
+                                                <ChefHat className="w-3 h-3" /> KDS
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -299,6 +308,11 @@ export default function OrderAnywhereDashboard() {
                                             <span className={cn("px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border", statusColors[order.status])}>
                                                 {order.status}
                                             </span>
+                                            {order.kds_sent && (
+                                                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-orange-600/15 text-orange-400 border border-orange-500/20">
+                                                    <ChefHat className="w-3 h-3" /> Sent to Kitchen
+                                                </span>
+                                            )}
                                         </div>
                                         <p className="text-[10px] text-zinc-500 mt-1">
                                             {order.guest_name || 'Guest'} · {order.order_type} · {order.table_name ? `Table ${order.table_name}` : ''}
