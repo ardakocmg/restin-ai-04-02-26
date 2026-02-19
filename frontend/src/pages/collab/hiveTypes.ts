@@ -120,7 +120,7 @@ export const SMART_CHIP_STYLES: Record<string, { bg: string; text: string; borde
 };
 
 // ─── API Helpers ────────────────────────────────────────────────────────
-export const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+export const API_BASE = process.env.REACT_APP_BACKEND_URL || '';
 
 export function mapApiMessage(m: Record<string, unknown>): ChatMessage {
     return {

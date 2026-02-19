@@ -456,6 +456,12 @@ pos_session_router = create_pos_session_router()
 # ==================== MOUNT ALL ROUTERS ON API PREFIX ====================
 api_main = APIRouter(prefix="/api")
 
+# ─── Lightweight Health Ping (no DB, <5ms) ───
+@api_main.get("/health", tags=["system"])
+async def api_health_ping():
+    """Ultra-fast ping for keep-alive and uptime monitors."""
+    return {"status": "ok", "service": "restin-ai-backend"}
+
 # Foundational routers
 api_main.include_router(auth_router)
 api_main.include_router(jwks_router)  # JWKS (.well-known/jwks.json)
@@ -1096,6 +1102,13 @@ async def startup_event():
         tasks_service = get_scheduled_tasks(db)
         tasks_service.start()
         logger.info("✓ Scheduled tasks started (backup, cleanup)")
+
+        # Start keep-alive self-ping (Render Free Tier cold-start prevention)
+        import os
+        if os.getenv("RENDER") or os.getenv("RENDER_EXTERNAL_URL"):
+            from scripts.keep_alive import start_keep_alive
+            start_keep_alive()
+            logger.info("✓ Keep-alive pinger started (Render)")
         
     except Exception as e:
         logger.error(f"Startup error: {e}")
@@ -1140,7 +1153,7 @@ if frontend_available():
     # Root health redirect
     @app.get("/health", include_in_schema=False)
     async def root_health():
-        return RedirectResponse(url="/api/health")
+        return {"status": "ok", "service": "restin-ai-backend"}
     
     # SPA fallback
     @app.get("/{full_path:path}", include_in_schema=False)

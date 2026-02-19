@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useRef, ReactNod
 import axios from 'axios';
 import { logger } from '../lib/logger';
 
-const API = `${process.env.REACT_APP_BACKEND_URL || `http://${window.location.hostname}:8000`}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || ''}/api`;
 
 export interface Venue {
     id: string;
