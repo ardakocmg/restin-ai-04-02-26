@@ -7,8 +7,9 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        default: "",
-        destructive: "",
+        default: "bg-background text-foreground",
+        destructive:
+          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
       },
     },
     defaultVariants: {
@@ -18,25 +19,11 @@ const alertVariants = cva(
 )
 
 const Alert = React.forwardRef(({ className, variant, ...props }, ref) => {
-  const styles = {
-    default: {
-      backgroundColor: 'rgba(59, 130, 246, 0.1)',
-      border: '1px solid rgba(59, 130, 246, 0.3)',
-      color: '#93C5FD'
-    },
-    destructive: {
-      backgroundColor: 'rgba(229, 57, 53, 0.1)',
-      border: '1px solid rgba(229, 57, 53, 0.3)',
-      color: '#FCA5A5'
-    }
-  };
-
   return (
     <div
       ref={ref}
       role="alert"
       className={cn(alertVariants({ variant }), className)}
-      style={styles[variant] || styles.default}
       {...props}
     />
   )
@@ -47,7 +34,6 @@ const AlertTitle = React.forwardRef(({ className, ...props }, ref) => (
   <h5
     ref={ref}
     className={cn("mb-1 font-medium leading-none tracking-tight", className)}
-    style={{ color: '#F5F5F7' }}
     {...props}
   />
 ))
@@ -57,7 +43,6 @@ const AlertDescription = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
     className={cn("text-sm [&_p]:leading-relaxed", className)}
-    style={{ color: '#D4D4D8' }}
     {...props}
   />
 ))

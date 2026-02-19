@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
  */
 export default function PageContainer({ children, className = '', title, description, actions }) {
   return (
-    <div className={cn('min-h-screen', className)} style={{ backgroundColor: '#0A0A0B' }}>
+    <div className={cn('min-h-screen bg-background', className)}>
       {/* Page Content — no header, actions moved to breadcrumb bar */}
       <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {children}

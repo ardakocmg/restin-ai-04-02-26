@@ -22,7 +22,7 @@ const defaultContent = {
     ],
     metrics: [
       { key: 'uptime', value: '99.95%', label: 'Service continuity target' },
-      { key: 'modules', value: '22+', label: 'Active production modules' },
+      { key: 'latency', value: '<50ms', label: 'Edge response time' },
       { key: 'venues', value: 'Multi-venue', label: 'Built for scaled groups' }
     ]
   },
@@ -199,14 +199,11 @@ const defaultContent = {
     }
   ],
   roadmap: [
-    'Voice AI Receptionist — 24/7 phone answering with auto-reservations',
-    'CRM & Guest Profiles — Taste tags, churn detection, personalized outreach',
-    'Embedded Payments — Kiosk mode, tap-to-pay, smart settlement',
-    'Content Studio — AI-powered food photography and social media',
-    'Web Architect — Drag & drop website builder synced with live menu',
-    'Loyalty Program — Tiers, points, rewards, and referral programs',
-    'Marketing Automations — Email, WhatsApp, and Telegram campaigns',
-    'Dynamic Scheduling — AI-powered workforce rostering and optimization'
+    'Mermaid-based system diagrams + live topology',
+    'Automated backup validation and restore drills',
+    'Unified guest intelligence & CRM insights',
+    'Dynamic workforce scheduling and forecasting',
+    'Embedded payments & smart settlement workflows'
   ],
   cta: {
     title: 'Ready to see it live?',
@@ -228,7 +225,6 @@ export default function MarketingLanding() {
           : await api.get('/public-content/current', { params: { type: 'marketing' } });
         if (response.data?.content) {
           const apiData = response.data.content;
-          // Only merge text content from API — pricing/modules stay from code defaults
           setContent({
             ...defaultContent,
             hero: apiData.hero || defaultContent.hero,
@@ -253,72 +249,32 @@ export default function MarketingLanding() {
   const cta = content.cta || defaultContent.cta;
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-[#050505] text-[#F5F5F7]" data-testid="marketing-landing-page">
+    <div className="min-h-screen relative overflow-hidden bg-white text-gray-900" data-testid="marketing-landing-page">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-        .glow-mesh {
-          background-image:
-            radial-gradient(at 20% 0%, rgba(220, 38, 38, 0.06) 0px, transparent 50%),
-            radial-gradient(at 80% 10%, rgba(249, 115, 22, 0.04) 0px, transparent 50%),
-            radial-gradient(at 50% 100%, rgba(220, 38, 38, 0.05) 0px, transparent 50%);
-        }
-
-        @keyframes scan {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(1000%); }
-        }
-
-        .scan-line {
-          position: absolute;
-          width: 100%;
-          height: 100px;
-          background: linear-gradient(to bottom, transparent, rgba(220, 38, 38, 0.02), transparent);
-          animation: scan 8s linear infinite;
-        }
-
-        .glass-card {
-          background: rgba(22, 22, 23, 0.4);
-          backdrop-filter: blur(24px);
-          border: 1px solid rgba(255, 255, 255, 0.05);
+        .light-card {
+          background: #FFFFFF;
+          border: 1px solid #E5E7EB;
           border-radius: 16px;
-          transition: all 0.5s ease;
+          transition: all 0.4s ease;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
 
-        .glass-card:hover {
-          border-color: rgba(255, 255, 255, 0.1);
+        .light-card:hover {
+          border-color: #D1D5DB;
           transform: translateY(-2px);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .gradient-border {
-          position: relative;
-        }
-
-        .gradient-border::before {
-          content: '';
-          position: absolute;
-          inset: -1px;
-          background: linear-gradient(135deg, rgba(220, 38, 38, 0.4) 0%, transparent 50%, rgba(220, 38, 38, 0.4) 100%);
-          border-radius: 17px;
-          opacity: 0;
-          transition: opacity 0.5s ease;
-          pointer-events: none;
-          z-index: -1;
-        }
-
-        .gradient-border:hover::before {
-          opacity: 1;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
         }
 
         .premium-btn {
           background: linear-gradient(135deg, #DC2626, #B91C1C);
-          box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+          box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
           transition: all 0.3s ease;
         }
 
         .premium-btn:hover {
-          box-shadow: 0 0 35px rgba(220, 38, 38, 0.5);
+          box-shadow: 0 6px 20px rgba(220, 38, 38, 0.35);
           transform: scale(1.02);
         }
 
@@ -326,28 +282,27 @@ export default function MarketingLanding() {
           width: 48px;
           height: 48px;
           border-radius: 14px;
-          background: rgba(220, 38, 38, 0.08);
-          border: 1px solid rgba(220, 38, 38, 0.15);
+          background: #FEF2F2;
+          border: 1px solid #FECACA;
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 20px;
-          box-shadow: 0 0 15px rgba(220, 38, 38, 0.08);
         }
 
         .tag-pill {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          padding: 4px 12px;
+          padding: 4px 14px;
           border-radius: 9999px;
-          background: rgba(220, 38, 38, 0.08);
-          border: 1px solid rgba(220, 38, 38, 0.15);
+          background: #FEF2F2;
+          border: 1px solid #FECACA;
           font-size: 10px;
           font-weight: 800;
           letter-spacing: 0.15em;
           text-transform: uppercase;
-          color: #EF4444;
+          color: #DC2626;
         }
 
         .popular-badge {
@@ -362,28 +317,24 @@ export default function MarketingLanding() {
         }
       `}</style>
 
-      {/* Background Effects */}
-      <div className="fixed inset-0 glow-mesh pointer-events-none" />
-      <div className="fixed inset-0 scan-line pointer-events-none opacity-30" />
-
       {isPreview && (
-        <div className="fixed top-0 left-0 w-full z-50 text-center py-2 text-[10px] font-black uppercase tracking-widest bg-red-600/20 backdrop-blur-md border-b border-red-600/30 text-red-500" data-testid="marketing-preview-banner">
+        <div className="fixed top-0 left-0 w-full z-50 text-center py-2 text-[10px] font-black uppercase tracking-widest bg-red-50 border-b border-red-200 text-red-600" data-testid="marketing-preview-banner">
           Preview Mode · Staged Changes Pending Approval
         </div>
       )}
 
       {/* Top Navigation */}
-      <header className="sticky top-0 z-40 px-6 lg:px-12 py-5 bg-black/40 backdrop-blur-xl border-b border-white/5" data-testid="marketing-nav">
+      <header className="sticky top-0 z-40 px-6 lg:px-12 py-4 bg-white/80 backdrop-blur-xl border-b border-gray-200" data-testid="marketing-nav">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4" data-testid="marketing-brand">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-red-600 to-red-900 p-[1px]">
-              <div className="w-full h-full rounded-2xl bg-black flex items-center justify-center">
-                <span className="text-red-500 text-sm font-black tracking-widest">R</span>
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-red-500 to-red-700 p-[1px]">
+              <div className="w-full h-full rounded-2xl bg-white flex items-center justify-center">
+                <span className="text-red-600 text-sm font-black tracking-widest">R</span>
               </div>
             </div>
             <div>
-              <div className="text-lg font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>restin.ai</div>
-              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">Enterprise Restaurant OS</div>
+              <div className="text-lg font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>restin.ai</div>
+              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Enterprise Restaurant OS</div>
             </div>
           </div>
 
@@ -395,16 +346,16 @@ export default function MarketingLanding() {
               { label: 'Roadmap', href: '#roadmap' },
             ].map(item => (
               <a key={item.label} href={item.href}
-                className="px-4 py-2 rounded-full text-xs font-semibold text-zinc-400 hover:text-white hover:bg-white/5 transition-all"
+                className="px-4 py-2 rounded-full text-xs font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all"
               >{item.label}</a>
             ))}
-            <div className="h-4 w-[1px] bg-white/10 mx-2" />
-            <a href="/modules" className="px-4 py-2 rounded-full text-xs font-semibold text-zinc-400 hover:text-white hover:bg-white/5 transition-all">Module Catalog</a>
-            <a href="/technic" className="px-4 py-2 rounded-full text-xs font-semibold text-zinc-400 hover:text-white hover:bg-white/5 transition-all">Technical Hub</a>
+            <div className="h-4 w-[1px] bg-gray-200 mx-2" />
+            <a href="/modules" className="px-4 py-2 rounded-full text-xs font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all">Module Catalog</a>
+            <a href="/technic" className="px-4 py-2 rounded-full text-xs font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all">Technical Hub</a>
           </nav>
 
           <div className="flex items-center gap-3">
-            <a href="/login" className="px-4 py-2 rounded-full text-xs font-semibold text-zinc-400 hover:text-white hover:bg-white/5 transition-all border border-white/10" data-testid="marketing-cta-login">
+            <a href="/login" className="px-4 py-2 rounded-full text-xs font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all border border-gray-200" data-testid="marketing-cta-login">
               Operator Login
             </a>
             <button className="premium-btn px-5 py-2.5 rounded-xl text-xs font-bold text-white" data-testid="marketing-cta-primary">
@@ -425,15 +376,11 @@ export default function MarketingLanding() {
                 {hero.tag}
               </div>
 
-              <h1 className="text-5xl lg:text-7xl font-bold leading-[1.08] tracking-tighter" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-hero-title">
-                {hero.title.split(' ').map((word, i) => (
-                  <span key={i} className={word === 'deserve.' ? 'text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400' : 'text-white'}>
-                    {word}{' '}
-                  </span>
-                ))}
+              <h1 className="text-5xl lg:text-7xl font-bold leading-[1.08] tracking-tighter text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-hero-title">
+                OPERATE EVERY VENUE WITH TOTAL CONTROL, EVEN WHEN THE CLOUD DISAPPEARS.
               </h1>
 
-              <p className="text-xl text-zinc-400 max-w-2xl leading-relaxed font-light" data-testid="marketing-hero-subtitle">
+              <p className="text-lg text-gray-500 max-w-2xl leading-relaxed font-light" data-testid="marketing-hero-subtitle">
                 {hero.subtitle}
               </p>
 
@@ -441,7 +388,7 @@ export default function MarketingLanding() {
                 <button className="premium-btn px-6 py-3.5 rounded-xl font-bold text-white" data-testid="marketing-hero-cta-primary">
                   Request a live walkthrough
                 </button>
-                <a href="/technic" className="px-6 py-3.5 rounded-xl border border-white/10 text-zinc-300 hover:text-white hover:border-white/20 transition-all inline-flex items-center gap-2 font-semibold" data-testid="marketing-hero-cta-secondary">
+                <a href="/technic" className="px-6 py-3.5 rounded-xl border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300 transition-all inline-flex items-center gap-2 font-semibold" data-testid="marketing-hero-cta-secondary">
                   View technical blueprint
                   <span className="text-xs">→</span>
                 </a>
@@ -449,9 +396,9 @@ export default function MarketingLanding() {
 
               <div className="grid grid-cols-3 gap-4" data-testid="marketing-hero-metrics">
                 {(hero.metrics || defaultContent.hero.metrics).map(metric => (
-                  <div key={metric.key} className="glass-card p-5" data-testid={`marketing-stat-${metric.key}`}>
-                    <div className="text-2xl font-bold text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{metric.value}</div>
-                    <div className="text-xs text-zinc-400 mt-1 font-medium">{metric.label}</div>
+                  <div key={metric.key} className="light-card p-5" data-testid={`marketing-stat-${metric.key}`}>
+                    <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{metric.value}</div>
+                    <div className="text-xs text-gray-400 mt-1 font-medium">{metric.label}</div>
                   </div>
                 ))}
               </div>
@@ -459,19 +406,18 @@ export default function MarketingLanding() {
 
             {/* Hero Card */}
             <div className="relative group" data-testid="marketing-hero-card">
-              <div className="absolute -inset-[1px] bg-gradient-to-r from-red-600/40 via-transparent to-red-600/40 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm pointer-events-none" />
-              <div className="relative p-8 rounded-3xl bg-gradient-to-br from-zinc-900 to-black border border-white/5 shadow-2xl overflow-hidden">
+              <div className="relative p-8 rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 shadow-2xl overflow-hidden">
                 <div className="absolute top-0 right-0 p-8 opacity-5 scale-150 rotate-12 transition-transform group-hover:rotate-0 duration-700">
                   <span className="text-8xl">🚀</span>
                 </div>
-                <h4 className="text-xs font-black uppercase tracking-[0.3em] text-red-500 mb-6" data-testid="marketing-hero-card-title">{hero.cardTitle}</h4>
+                <h4 className="text-xs font-black uppercase tracking-[0.3em] text-red-400 mb-6" data-testid="marketing-hero-card-title">{hero.cardTitle}</h4>
                 <ul className="space-y-4" data-testid="marketing-hero-card-list">
                   {(hero.cardItems || defaultContent.hero.cardItems).map((item, i) => (
                     <li key={i} className="flex gap-4 group/item">
-                      <div className="w-6 h-6 rounded-lg bg-red-600/10 border border-red-600/20 flex items-center justify-center text-red-500 shrink-0 group-hover/item:scale-110 transition-transform">
+                      <div className="w-6 h-6 rounded-lg bg-red-600/10 border border-red-600/20 flex items-center justify-center text-red-400 shrink-0 group-hover/item:scale-110 transition-transform">
                         <span className="text-xs">✓</span>
                       </div>
-                      <span className="text-sm font-medium text-zinc-300 leading-snug">{item}</span>
+                      <span className="text-sm font-medium text-gray-200 leading-snug">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -484,15 +430,15 @@ export default function MarketingLanding() {
         <section id="features" className="pb-24 scroll-mt-20" data-testid="marketing-features-section">
           <div className="text-center mb-12">
             <div className="tag-pill mx-auto mb-4">Why restin.ai</div>
-            <h2 className="text-4xl font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Built different, by design</h2>
-            <p className="text-zinc-400 mt-3 max-w-2xl mx-auto">Every architectural decision serves one goal: keep your restaurants running perfectly, no matter what.</p>
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Built different, by design</h2>
+            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">Every architectural decision serves one goal: keep your restaurants running perfectly, no matter what.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map(feature => (
-              <div key={feature.key} className="glass-card gradient-border p-6" data-testid={`marketing-feature-${feature.key}`}>
+              <div key={feature.key} className="light-card p-6" data-testid={`marketing-feature-${feature.key}`}>
                 <div className="feature-icon mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{feature.title}</h3>
-                <p className="text-sm text-zinc-400 leading-relaxed">{feature.description}</p>
+                <h3 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{feature.title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -503,30 +449,30 @@ export default function MarketingLanding() {
           <div className="flex items-center justify-between mb-12">
             <div>
               <div className="tag-pill mb-4">22+ Active Modules</div>
-              <h2 className="text-4xl font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-modules-title">Modules built to scale</h2>
-              <p className="text-zinc-400 mt-3 max-w-xl">Every module is designed as a microservice with shared observability and offline sync.</p>
+              <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-modules-title">Modules built to scale</h2>
+              <p className="text-gray-500 mt-3 max-w-xl">Every module is designed as a microservice with shared observability and offline sync.</p>
             </div>
-            <a href="/modules" className="hidden lg:flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 text-sm text-zinc-400 hover:text-white hover:border-white/20 transition-all">
+            <a href="/modules" className="hidden lg:flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-500 hover:text-gray-900 hover:border-gray-300 transition-all">
               View full catalog <span>→</span>
             </a>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {modulesList.map(mod => (
-              <div key={mod.key} className={`glass-card gradient-border p-6 ${mod.status === 'coming_soon' ? 'opacity-60' : ''}`} data-testid={`marketing-module-${mod.key}`}>
+              <div key={mod.key} className={`light-card p-6 ${mod.status === 'coming_soon' ? 'opacity-70' : ''}`} data-testid={`marketing-module-${mod.key}`}>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-base font-bold text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{mod.title}</h3>
+                  <h3 className="text-base font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{mod.title}</h3>
                   {mod.status === 'coming_soon' ? (
-                    <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">Coming Soon</span>
+                    <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-50 text-amber-600 border border-amber-200">Coming Soon</span>
                   ) : (
-                    <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span>
+                    <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-200">Active</span>
                   )}
                 </div>
-                <p className="text-xs text-zinc-400 mb-4 leading-relaxed">{mod.description}</p>
+                <p className="text-xs text-gray-500 mb-4 leading-relaxed">{mod.description}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {(mod.capabilities || []).map(cap => (
                     <span key={cap} className={`px-2 py-0.5 rounded text-[9px] font-semibold border ${mod.status === 'active'
-                      ? 'text-emerald-400 bg-emerald-500/5 border-emerald-500/15'
-                      : 'text-amber-400 bg-amber-500/5 border-amber-500/15'
+                      ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                      : 'text-amber-700 bg-amber-50 border-amber-200'
                       }`}>{cap}</span>
                   ))}
                 </div>
@@ -539,40 +485,40 @@ export default function MarketingLanding() {
         <section id="pricing" className="pb-24 scroll-mt-20" data-testid="marketing-pricing-section">
           <div className="text-center mb-12">
             <div className="tag-pill mx-auto mb-4">Simple Pricing</div>
-            <h2 className="text-4xl font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="pricing-title">Pricing aligned to EU market averages</h2>
-            <p className="text-zinc-400 mt-3 max-w-2xl mx-auto" data-testid="pricing-subtitle">Transparent packages with future-ready upgrades built in. No hidden fees.</p>
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="pricing-title">Pricing aligned to EU market averages</h2>
+            <p className="text-gray-500 mt-3 max-w-2xl mx-auto" data-testid="pricing-subtitle">Transparent packages with future-ready upgrades built in. No hidden fees.</p>
           </div>
           <div className="grid lg:grid-cols-3 gap-6">
             {pricingList.map(plan => (
-              <div key={plan.key} className={`glass-card gradient-border p-7 relative ${plan.popular ? 'ring-1 ring-red-600/30' : ''}`} data-testid={`pricing-card-${plan.key}`}>
+              <div key={plan.key} className={`light-card p-7 relative ${plan.popular ? 'ring-2 ring-red-500/30 shadow-lg' : ''}`} data-testid={`pricing-card-${plan.key}`}>
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <span className="popular-badge">Most Popular</span>
                   </div>
                 )}
-                <div className="text-xs text-zinc-400 mb-2 font-medium" data-testid={`pricing-tagline-${plan.key}`}>{plan.tagline}</div>
-                <h3 className="text-xl font-bold" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid={`pricing-name-${plan.key}`}>{plan.name}</h3>
+                <div className="text-xs text-gray-400 mb-2 font-medium" data-testid={`pricing-tagline-${plan.key}`}>{plan.tagline}</div>
+                <h3 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid={`pricing-name-${plan.key}`}>{plan.name}</h3>
                 <div className="mt-4 flex items-end gap-2" data-testid={`pricing-price-${plan.key}`}>
-                  <span className="text-5xl font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{plan.price}</span>
-                  <span className="text-sm text-zinc-500 mb-1">{plan.period}</span>
+                  <span className="text-5xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{plan.price}</span>
+                  <span className="text-sm text-gray-400 mb-1">{plan.period}</span>
                 </div>
-                <div className="text-[10px] text-zinc-600 mt-1 font-semibold" data-testid={`pricing-yearly-${plan.key}`}>{plan.yearly}</div>
+                <div className="text-[10px] text-gray-400 mt-1 font-semibold" data-testid={`pricing-yearly-${plan.key}`}>{plan.yearly}</div>
 
                 <ul className="mt-6 space-y-3" data-testid={`pricing-highlights-${plan.key}`}>
                   {plan.highlights.map(item => (
-                    <li key={item} className="flex items-start gap-3 text-sm text-zinc-300">
+                    <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
                       <span className="text-emerald-500 mt-0.5 text-xs">✓</span>
                       {item}
                     </li>
                   ))}
                 </ul>
 
-                <div className="mt-5 pt-4 border-t border-white/5">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2" data-testid={`pricing-future-title-${plan.key}`}>Future-ready additions</div>
+                <div className="mt-5 pt-4 border-t border-gray-100">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2" data-testid={`pricing-future-title-${plan.key}`}>Future-ready additions</div>
                   <ul className="space-y-1.5" data-testid={`pricing-future-${plan.key}`}>
                     {plan.future.map(item => (
-                      <li key={item} className="text-xs text-zinc-500 flex items-start gap-2">
-                        <span className="text-amber-500/60 mt-0.5">◇</span>
+                      <li key={item} className="text-xs text-gray-400 flex items-start gap-2">
+                        <span className="text-amber-400 mt-0.5">◇</span>
                         {item}
                       </li>
                     ))}
@@ -581,7 +527,7 @@ export default function MarketingLanding() {
 
                 <button className={`mt-6 w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-95 ${plan.popular
                   ? 'premium-btn text-white'
-                  : 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
+                  : 'bg-gray-50 border border-gray-200 text-gray-900 hover:bg-gray-100'
                   }`} data-testid={`pricing-cta-${plan.key}`}>
                   Choose {plan.name}
                 </button>
@@ -595,17 +541,17 @@ export default function MarketingLanding() {
           <div className="grid lg:grid-cols-[1fr_1.2fr] gap-12 items-start">
             <div>
               <div className="tag-pill mb-4">Always Evolving</div>
-              <h2 className="text-4xl font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="roadmap-title">Future roadmap</h2>
-              <p className="text-zinc-400 mt-3 leading-relaxed" data-testid="roadmap-subtitle">
+              <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="roadmap-title">Future roadmap</h2>
+              <p className="text-gray-500 mt-3 leading-relaxed" data-testid="roadmap-subtitle">
                 Everything below is already planned and in active development — you keep the same contract tier. No surprise upsells.
               </p>
             </div>
-            <div className="glass-card p-6" data-testid="roadmap-list">
+            <div className="light-card p-6" data-testid="roadmap-list">
               <div className="space-y-4">
                 {roadmapList.map((item, i) => (
-                  <div key={i} className="relative pl-6 border-l border-white/10 group/item">
-                    <div className="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-zinc-800 ring-4 ring-[#161617] group-hover/item:bg-red-500 transition-colors" />
-                    <p className="text-sm text-zinc-300 group-hover/item:text-white transition-colors font-medium">{item}</p>
+                  <div key={i} className="relative pl-6 border-l-2 border-gray-200 group/item">
+                    <div className="absolute -left-[6px] top-1.5 w-2.5 h-2.5 rounded-full bg-white border-2 border-gray-300 group-hover/item:border-red-500 group-hover/item:bg-red-50 transition-colors" />
+                    <p className="text-sm text-gray-600 group-hover/item:text-gray-900 transition-colors font-medium">{item}</p>
                   </div>
                 ))}
               </div>
@@ -615,18 +561,17 @@ export default function MarketingLanding() {
 
         {/* ═══════════ FINAL CTA ═══════════ */}
         <section className="pb-24" data-testid="marketing-final-cta">
-          <div className="relative group">
-            <div className="absolute -inset-[1px] bg-gradient-to-r from-red-600/50 via-transparent to-orange-600/50 rounded-3xl opacity-60 blur-sm pointer-events-none" />
-            <div className="relative p-12 rounded-3xl bg-gradient-to-br from-zinc-900 to-black border border-white/5 flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div className="relative">
+            <div className="relative p-12 rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl">
               <div>
-                <h2 className="text-4xl font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-final-cta-title">{cta.title}</h2>
-                <p className="text-zinc-400 mt-2 text-lg" data-testid="marketing-final-cta-subtitle">{cta.subtitle}</p>
+                <h2 className="text-4xl font-bold tracking-tight text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-final-cta-title">{cta.title}</h2>
+                <p className="text-gray-300 mt-2 text-lg" data-testid="marketing-final-cta-subtitle">{cta.subtitle}</p>
               </div>
               <div className="flex gap-4 shrink-0">
                 <button className="premium-btn px-6 py-3.5 rounded-xl font-bold text-white" data-testid="marketing-final-cta-demo">
                   Schedule a demo
                 </button>
-                <a href="/technic" className="px-6 py-3.5 rounded-xl border border-white/10 text-zinc-300 hover:text-white hover:border-white/20 transition-all font-semibold" data-testid="marketing-final-cta-tech">
+                <a href="/technic" className="px-6 py-3.5 rounded-xl border border-gray-500 text-gray-200 hover:text-white hover:border-gray-400 transition-all font-semibold" data-testid="marketing-final-cta-tech">
                   Review technical hub
                 </a>
               </div>
@@ -636,14 +581,14 @@ export default function MarketingLanding() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 px-6 lg:px-12 py-10" data-testid="marketing-footer">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-6 text-sm text-zinc-500">
+      <footer className="border-t border-gray-200 px-6 lg:px-12 py-10 bg-gray-50" data-testid="marketing-footer">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-6 text-sm text-gray-500">
           <div className="font-medium">© 2026 restin.ai — All rights reserved.</div>
           <div className="flex flex-wrap gap-6">
-            <a href="/technic" className="hover:text-white transition-colors" data-testid="marketing-footer-technical">Technical Hub</a>
-            <a href="/modules" className="hover:text-white transition-colors" data-testid="marketing-footer-modules">Module Catalog</a>
-            <a href="/login" className="hover:text-white transition-colors" data-testid="marketing-footer-login">Operator Login</a>
-            <a href="mailto:hello@restin.ai" className="hover:text-white transition-colors" data-testid="marketing-footer-contact">hello@restin.ai</a>
+            <a href="/technic" className="hover:text-gray-900 transition-colors" data-testid="marketing-footer-technical">Technical Hub</a>
+            <a href="/modules" className="hover:text-gray-900 transition-colors" data-testid="marketing-footer-modules">Module Catalog</a>
+            <a href="/login" className="hover:text-gray-900 transition-colors" data-testid="marketing-footer-login">Operator Login</a>
+            <a href="mailto:hello@restin.ai" className="hover:text-gray-900 transition-colors" data-testid="marketing-footer-contact">hello@restin.ai</a>
           </div>
         </div>
       </footer>
