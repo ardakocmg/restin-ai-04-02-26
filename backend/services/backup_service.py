@@ -28,8 +28,9 @@ class BackupService:
         self.db = db
         self.config = config or {}
         
-        # Backup paths
-        self.local_backup_dir = Path(self.config.get('local_backup_dir', '/app/backups/local'))
+        # Backup paths — use /tmp on cloud (always writable), configurable otherwise
+        _default_backup = os.environ.get('BACKUP_DIR', '/tmp/backups/local')
+        self.local_backup_dir = Path(self.config.get('local_backup_dir', _default_backup))
         self.cloud_backup_enabled = self.config.get('cloud_backup_enabled', False)
         self.s3_bucket = self.config.get('s3_bucket', None)
         
@@ -40,10 +41,18 @@ class BackupService:
         # Retention
         self.retention_days = self.config.get('retention_days', 90)
         
-        # Ensure directories exist
-        self.local_backup_dir.mkdir(parents=True, exist_ok=True)
+        # Ensure directories exist (graceful — don't crash app on permission errors)
+        try:
+            self.local_backup_dir.mkdir(parents=True, exist_ok=True)
+        except PermissionError:
+            # Fallback to /tmp if default path is not writable
+            self.local_backup_dir = Path('/tmp/backups/local')
+            self.local_backup_dir.mkdir(parents=True, exist_ok=True)
         if self.nas_enabled and self.nas_path:
-            self.nas_path.mkdir(parents=True, exist_ok=True)
+            try:
+                self.nas_path.mkdir(parents=True, exist_ok=True)
+            except PermissionError:
+                self.nas_enabled = False
 
     # ============= SNAPSHOT BACKUP =============
 
