@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
     Radar, Target, TrendingUp, TrendingDown,
-    MapPin, Search, Filter, ArrowUpRight,
+    MapPin, Filter, ArrowUpRight,
     BarChart3, AlertCircle, RefreshCcw, ExternalLink,
     ShieldAlert, Zap, Clock, ToggleLeft, ToggleRight
 } from 'lucide-react';
