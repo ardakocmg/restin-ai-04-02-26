@@ -3,20 +3,71 @@ import PageLayout from '../../layouts/PageLayout';
 import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
-import { useMockData } from '../../hooks/useMockData'; // Reuse seed data for menu
-import { Order, OrderItem, Ingredient } from '../../types';
+import { OrderItem, Ingredient } from '../../types';
 import { POSService } from './POSService';
 import { toast } from 'sonner';
+import logger from '../../lib/logger';
+
+interface MenuItem {
+    id: string;
+    name: string;
+    category: string;
+    priceCents: number;
+    price?: number;
+}
 
 export default function POSFeature() {
-    const { data } = useMockData();
+    const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
     const [cart, setCart] = useState<OrderItem[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
+    const [loading, setLoading] = useState(true);
 
-    // Menu Categories (Dynamically derived from seed data would be better in real app)
-    const categories = ['All', 'Starters', 'Mains', 'Desserts', 'Drinks'];
+    // Fetch real menu items from API
+    useEffect(() => {
+        const fetchMenu = async () => {
+            try {
+                const token = localStorage.getItem('accessToken') || '';
+                const venueId = localStorage.getItem('selectedVenueId') || 'venue-caviar-bull';
+                const res = await fetch(`/api/venues/${venueId}/menus`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    // Menus contain items — flatten if nested
+                    const menus = Array.isArray(data) ? data : (data.menus || []);
+                    const allItems: MenuItem[] = [];
+                    for (const menu of menus) {
+                        const categories = menu.categories || [];
+                        for (const cat of categories) {
+                            for (const item of (cat.items || [])) {
+                                allItems.push({
+                                    id: item.id || item.sku_id || item.name,
+                                    name: item.name,
+                                    category: cat.name || 'Uncategorized',
+                                    priceCents: item.priceCents || Math.round((item.price || 0) * 100),
+                                });
+                            }
+                        }
+                    }
+                    setMenuItems(allItems);
+                }
+            } catch (err) {
+                // Offline-first: fail silently
+                logger.warn('POS: Could not fetch menu from API');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchMenu();
+    }, []);
 
-    const addToCart = (item: Ingredient) => {
+    // Menu Categories (dynamically derived from loaded data)
+    const categories = ['All', ...Array.from(new Set(menuItems.map(i => i.category)))];
+
+    // Filter by category
+    const filteredItems = selectedCategory === 'All' ? menuItems : menuItems.filter(i => i.category === selectedCategory);
+
+    const addToCart = (item: MenuItem) => {
         setCart((prev: OrderItem[]) => {
             const existing = prev.find(i => i.name === item.name);
             if (existing) {
@@ -28,27 +79,20 @@ export default function POSFeature() {
 
     const handleCheckout = async () => {
         if (cart.length === 0) return;
-
         const totalCents = cart.reduce((sum, item) => sum + (item.priceCents * item.quantity), 0);
-
+        const venueId = localStorage.getItem('selectedVenueId') || 'venue-caviar-bull';
         const newOrder = {
-            venueId: 'venue-caviar-bull', // Context driven in real app
-            tableId: 'T-1', // Selector needed
+            venueId,
+            tableId: 'T-1',
             userId: 'user-cb-server1',
             status: 'PENDING' as const,
-            totalCents: totalCents,
+            totalCents,
             items: cart,
             createdAt: new Date().toISOString()
         };
-
-        const success = await POSService.submitOrder(newOrder);
-        if (success || !success) { // Always clear cart if queued or sent (optimistic)
-            setCart([]);
-        }
+        await POSService.submitOrder(newOrder);
+        setCart([]);
     };
-
-    // Filter Menu (Mock Inventory as Menu Items)
-    const menuItems = data?.inventory.filter(i => selectedCategory === 'All' || i.category === selectedCategory) || [];
 
     return (
         <PageLayout title="Point of Sale" description="Take orders (Offline Capable)" actions={<Button variant="outline" onClick={() => POSService.syncQueue()}>Force Sync</Button>}>
@@ -67,18 +111,24 @@ export default function POSFeature() {
                         ))}
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto">
-                        {menuItems.map(item => (
-                            <Card
-                                key={item.id}
-                                className="p-4 cursor-pointer hover:bg-zinc-900 transition-colors border-zinc-800 flex flex-col justify-between"
-                                onClick={() => addToCart(item)}
-                            >
-                                <div className="font-bold text-zinc-100">{item.name}</div>
-                                <div className="text-zinc-400">€{(item.priceCents / 100).toFixed(2)}</div>
-                            </Card>
-                        ))}
-                    </div>
+                    {loading ? (
+                        <div className="flex-1 flex items-center justify-center text-zinc-500">Loading menu...</div>
+                    ) : filteredItems.length === 0 ? (
+                        <div className="flex-1 flex items-center justify-center text-zinc-500">No menu items found</div>
+                    ) : (
+                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto">
+                            {filteredItems.map(item => (
+                                <Card
+                                    key={item.id}
+                                    className="p-4 cursor-pointer hover:bg-zinc-900 transition-colors border-zinc-800 flex flex-col justify-between"
+                                    onClick={() => addToCart(item)}
+                                >
+                                    <div className="font-bold text-zinc-100">{item.name}</div>
+                                    <div className="text-zinc-400">€{(item.priceCents / 100).toFixed(2)}</div>
+                                </Card>
+                            ))}
+                        </div>
+                    )}
                 </Card>
 
                 {/* Cart Section */}

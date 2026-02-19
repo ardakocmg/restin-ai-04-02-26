@@ -1,8 +1,4 @@
-/**
- * VenueContext - Active venue management
- * @module context/VenueContext
- */
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import axios from 'axios';
 import { logger } from '../lib/logger';
 
@@ -43,8 +39,11 @@ export const VenueProvider: React.FC<VenueProviderProps> = ({ children }) => {
     const [activeVenue, setActiveVenue] = useState<Venue | null>(null);
     const [activeVenueId, setActiveVenueId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const fetchingRef = useRef(false);
 
     const loadVenues = async (): Promise<void> => {
+        if (fetchingRef.current) return; // Dedup: skip if already fetching
+        fetchingRef.current = true;
         try {
             const response = await axios.get(`${API}/venues`);
             setVenues(response.data);
@@ -60,6 +59,7 @@ export const VenueProvider: React.FC<VenueProviderProps> = ({ children }) => {
             logger.error('Failed to load venues', { error });
         } finally {
             setLoading(false);
+            fetchingRef.current = false;
         }
     };
 

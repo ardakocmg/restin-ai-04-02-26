@@ -90,7 +90,7 @@ export interface PremiumDataTableProps<TData> {
     // Selection
     enableRowSelection?: boolean;
     onSelectionChange?: (selectedRows: TData[]) => void;
-    getRowId?: (row: TData) => string;
+    getRowId?: (row: TData, index: number) => string;
 
     // Filtering
     filters?: FilterConfig[];
@@ -144,7 +144,7 @@ export default function PremiumDataTable<TData>({
     onRetry,
     enableRowSelection = false,
     onSelectionChange,
-    getRowId = (row: TData) => (row as Record<string, unknown>).id as string,
+    getRowId = (row: TData, index: number) => (row as Record<string, unknown>).id as string || `row-${index}`,
     filters = [],
     onFilterChange,
     enableGlobalSearch = true,
@@ -181,6 +181,48 @@ export default function PremiumDataTable<TData>({
     const tableColumns = useMemo(() => {
         const mapColumns = (cols: ColumnDef<TData>[]): RTColumnDef<TData>[] => {
             return cols.map((col) => {
+                // Passthrough: if column already has native TanStack `accessorKey` + `cell`, use as-is
+                if ((col as unknown as Record<string, unknown>).accessorKey && typeof (col as unknown as Record<string, unknown>).cell === 'function') {
+                    const native = col as unknown as RTColumnDef<TData>;
+                    // Wrap the header to add our sorting UI if it's a plain string
+                    if (typeof native.header === 'string') {
+                        const label = native.header;
+                        return {
+                            ...native,
+                            header: ({ column }: { column: { getIsSorted: () => false | 'asc' | 'desc'; toggleSorting: () => void } }) => {
+                                const canSort = col.enableSorting !== false;
+                                const sorted = column.getIsSorted();
+                                return (
+                                    <div
+                                        className={cn(
+                                            'flex items-center gap-1.5 select-none',
+                                            canSort && 'cursor-pointer hover:text-foreground transition-colors'
+                                        )}
+                                        onClick={() => canSort && column.toggleSorting()}
+                                    >
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                            {label}
+                                        </span>
+                                        {canSort && (
+                                            <span className="text-muted-foreground/50">
+                                                {sorted === 'asc' ? (
+                                                    <ChevronUp className="w-3.5 h-3.5" />
+                                                ) : sorted === 'desc' ? (
+                                                    <ChevronDown className="w-3.5 h-3.5" />
+                                                ) : (
+                                                    <ChevronsUpDown className="w-3.5 h-3.5" />
+                                                )}
+                                            </span>
+                                        )}
+                                    </div>
+                                );
+                            },
+                            enableSorting: col.enableSorting !== false,
+                        } as RTColumnDef<TData>;
+                    }
+                    return native;
+                }
+
                 if (col.columns) {
                     return {
                         id: col.key || col.id,
@@ -281,7 +323,7 @@ export default function PremiumDataTable<TData>({
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         enableRowSelection,
-        getRowId: (row) => getRowId(row),
+        getRowId: (row, index) => getRowId(row, index),
     });
 
     // Notify selection changes
@@ -299,7 +341,7 @@ export default function PremiumDataTable<TData>({
     const rowVirtualizer = useVirtualizer({
         count: rows.length,
         getScrollElement: () => tableContainerRef.current,
-        estimateSize: () => (compactMode ? 40 : 56),
+        estimateSize: () => (compactMode ? 52 : 56),
         overscan: 10,
     });
 
@@ -588,11 +630,11 @@ export default function PremiumDataTable<TData>({
 
                 {/* Table */}
                 {!error && data.length > 0 && (
-                    <table className="w-full border-collapse">
+                    <table className="w-full border-collapse table-fixed">
                         {/* Header */}
                         <thead
                             className={cn(
-                                'bg-muted/30 backdrop-blur-md',
+                                'bg-card border-b border-border/30',
                                 stickyHeader && 'sticky top-0 z-10'
                             )}
                         >
@@ -629,9 +671,9 @@ export default function PremiumDataTable<TData>({
                                 return (
                                     <motion.tr
                                         key={row.id}
-                                        initial={animateRows ? { opacity: 0, y: 10 } : false}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.15, delay: virtualRow.index * 0.01 }}
+                                        initial={animateRows ? { opacity: 0 } : false}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.15, delay: Math.min(virtualRow.index * 0.01, 0.3) }}
                                         onClick={() => onRowClick?.(row.original)}
                                         className={cn(
                                             'group border-b border-border/10 transition-all duration-200',
@@ -653,11 +695,14 @@ export default function PremiumDataTable<TData>({
                                             <td
                                                 key={cell.id}
                                                 className={cn(
-                                                    'px-4 text-sm',
-                                                    compactMode ? 'py-2' : 'py-4'
+                                                    'px-4 text-sm overflow-hidden',
+                                                    compactMode ? 'py-1.5' : 'py-4'
                                                 )}
+                                                style={{ width: cell.column.columnDef.size }}
                                             >
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                <div className="line-clamp-2">
+                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                </div>
                                             </td>
                                         ))}
                                     </motion.tr>

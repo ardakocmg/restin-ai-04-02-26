@@ -1,4 +1,6 @@
 """Shift management routes - shift scheduling, check-in/out"""
+import asyncio
+import logging
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Optional
 from datetime import datetime, timezone
@@ -7,6 +9,8 @@ from core.database import db
 from core.dependencies import get_current_user, check_venue_access
 from models import Shift, ShiftCreate, UserRole
 from services.audit_service import create_audit_log
+
+logger = logging.getLogger("shifts")
 
 
 def create_shift_router():
@@ -35,7 +39,10 @@ def create_shift_router():
             "create_shift", "shift", shift.id,
             {"user_id": shift_data.user_id, "start": shift_data.start_time, "end": shift_data.end_time}
         )
-        
+
+        # Auto-sync to Google Calendar (non-blocking)
+        asyncio.create_task(_auto_sync_shift_to_calendar(shift.model_dump(), venue_id))
+
         return shift.model_dump()
 
     @router.get("/venues/{venue_id}/shifts")
@@ -137,4 +144,25 @@ def create_shift_router():
         
         return {"message": "Checked out successfully"}
 
+    async def _auto_sync_shift_to_calendar(shift: dict, venue_id: str):
+        """Background task: sync shift to employee's Google Calendar if enabled."""
+        try:
+            from google.services.google_sync_service import sync_shift_to_calendar, get_sync_config
+
+            employee_id = shift.get("user_id", "")
+            if not employee_id:
+                return
+
+            config = await get_sync_config(employee_id)
+            if not config.get("calendar_shift_sync"):
+                return
+
+            venue = await db.venues.find_one({"id": venue_id}, {"_id": 0, "name": 1})
+            venue_name = venue.get("name", "") if venue else ""
+
+            await sync_shift_to_calendar(employee_id, shift, venue_name, "create")
+        except Exception as e:
+            logger.warning("Auto-sync shift to calendar failed: %s", e)
+
     return router
+

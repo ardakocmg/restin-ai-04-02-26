@@ -7,6 +7,7 @@ from fastapi import FastAPI, APIRouter, Request, Depends
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.gzip import GZipMiddleware
 import os
 import logging
 from pathlib import Path
@@ -80,6 +81,7 @@ from routes.review_routes import create_review_router
 from routes.audit_routes import create_audit_router
 from routes.employee_routes import create_employee_router
 from routes.inventory_suppliers import create_inventory_suppliers_router
+from routes.inventory_data import create_inventory_data_router
 from routes.inventory_purchase_orders import create_inventory_purchase_orders_router
 from routes.inventory_receiving import create_inventory_receiving_router
 from routes.inventory_items import create_inventory_items_router
@@ -100,6 +102,9 @@ from routes.observability_routes import create_observability_router
 from routes.payroll_mt import create_payroll_mt_router
 from routes.accounting_mt import create_accounting_mt_router
 from routes.crm import create_crm_router
+from routes.studio_routes import create_studio_router
+from routes.web_routes import create_web_router
+from routes.marketing_routes import create_marketing_router
 from routes.loyalty import create_loyalty_router
 from routes.automations import create_automations_router
 from routes.connectors import create_connectors_router
@@ -116,6 +121,7 @@ from routes.production_routes import create_production_router
 from routes.pos_session_routes import create_pos_session_router
 from routes.haccp_routes import router as haccp_router
 from routes.data_export_routes import router as data_export_router
+from routes.print_templates import router as print_templates_router
 from app.domains.reporting.routes.reports_summary import create_summary_report_router
 from routes.venue_config import create_venue_config_router
 from routes.reservation_routes import router as reservation_router
@@ -148,6 +154,8 @@ from cash.routes.cash import create_cash_router
 from forecast.routes.forecast import create_forecast_router
 from legal.routes.legal import create_legal_router
 from google.routes.google import create_google_router
+from google.routes.google_personal_routes import create_google_personal_router
+from google.routes.google_sync_routes import create_google_sync_router
 from reputation.routes.reputation import create_reputation_router
 from res_ch.routes.res_ch import create_res_ch_router
 from payments.routes.payments import create_payments_router
@@ -168,6 +176,9 @@ from routes.google_sso_routes import create_google_sso_router  # Google Workspac
 from google.routes.workspace_routes import create_workspace_routes  # Workspace domain mgmt
 from routes.template_routes import create_template_router  # Template Wizard
 from routes.template_assets_routes import create_template_assets_router  # Template Assets
+from routes.import_template_routes import router as import_template_router  # Import Templates
+from routes.crm_enhanced import router as crm_enhanced_router  # CRM 360 Guest Profiles
+from routes.spotify_routes import create_spotify_router  # Spotify Music Control
 
 # HR Parity Routes
 from routes.summary_dashboard import router as summary_dashboard_router
@@ -248,6 +259,9 @@ app.middleware("http")(subdomain_middleware)
 # 4. Rate Limiting
 app.add_middleware(RateLimitMiddleware, requests_per_minute=2000)
 
+# 4.5. GZip Compression (compress JSON responses >500 bytes)
+app.add_middleware(GZipMiddleware, minimum_size=500)
+
 # 5. Outermost: CORS (processes response LAST)
 cors_origins_env = os.environ.get('CORS_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
 cors_origins = [o.strip() for o in cors_origins_env if o.strip()]
@@ -279,8 +293,13 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"]
+    expose_headers=["*"],
+    max_age=600,  # Cache OPTIONS preflight for 10 minutes
 )
+
+# GZip compression — shrinks JSON responses by ~60-80%
+from starlette.middleware.gzip import GZipMiddleware
+app.add_middleware(GZipMiddleware, minimum_size=500)  # Only compress responses > 500 bytes
 
 # Exception Handlers
 setup_exception_handlers(app)
@@ -323,6 +342,7 @@ review_router = create_review_router()
 audit_router = create_audit_router()
 employee_router = create_employee_router()
 inventory_suppliers_router = create_inventory_suppliers_router()
+inventory_data_router = create_inventory_data_router()
 inventory_purchase_orders_router = create_inventory_purchase_orders_router()
 inventory_receiving_router = create_inventory_receiving_router()
 inventory_items_router = create_inventory_items_router()
@@ -333,6 +353,9 @@ analytics_router = create_analytics_router()
 payroll_mt_router = create_payroll_mt_router()
 accounting_mt_router = create_accounting_mt_router()
 crm_router = create_crm_router()
+studio_router_inst = create_studio_router()
+web_router_inst = create_web_router()
+marketing_router_inst = create_marketing_router()
 loyalty_router = create_loyalty_router()
 automations_router = create_automations_router()
 connectors_router = create_connectors_router()
@@ -472,6 +495,7 @@ api_main.include_router(audit_router)
 api_main.include_router(event_router)
 api_main.include_router(employee_router)
 api_main.include_router(inventory_suppliers_router)
+api_main.include_router(inventory_data_router)
 api_main.include_router(inventory_purchase_orders_router)
 api_main.include_router(inventory_receiving_router)
 api_main.include_router(inventory_items_router)
@@ -482,6 +506,9 @@ api_main.include_router(analytics_router)
 api_main.include_router(payroll_mt_router)
 api_main.include_router(accounting_mt_router)
 api_main.include_router(crm_router)
+api_main.include_router(studio_router_inst)
+api_main.include_router(web_router_inst)
+api_main.include_router(marketing_router_inst)
 api_main.include_router(loyalty_router)
 api_main.include_router(automations_router)
 api_main.include_router(connectors_router)
@@ -502,6 +529,7 @@ api_main.include_router(system_integrity_router)
 api_main.include_router(system_jobs_router)
 api_main.include_router(haccp_router)
 api_main.include_router(data_export_router)
+api_main.include_router(print_templates_router)
 api_main.include_router(system_observability_router)
 api_main.include_router(system_diagnostic_router)
 api_main.include_router(ops_service_day_close_router)
@@ -521,6 +549,10 @@ api_main.include_router(cash_router)
 api_main.include_router(forecast_router)
 api_main.include_router(legal_router)
 api_main.include_router(google_router)
+google_personal_router = create_google_personal_router()
+api_main.include_router(google_personal_router)
+google_sync_router = create_google_sync_router()
+api_main.include_router(google_sync_router)
 api_main.include_router(reputation_router)
 api_main.include_router(res_ch_router)
 api_main.include_router(payments_router)
@@ -574,6 +606,18 @@ from routes.rbac_routes import create_rbac_router
 rbac_router = create_rbac_router()
 api_main.include_router(rbac_router)
 
+# Restin AI Module Settings (Copilot, Voice, Studio, Radar, CRM)
+from routes.restin_settings_routes import router as restin_settings_router
+api_main.include_router(restin_settings_router)
+
+# AI Provider Key Management (Multi-Provider Integration)
+from routes.ai_keys_routes import router as ai_keys_router
+api_main.include_router(ai_keys_router)
+
+# AI Free Model Seed & Setup Guide
+from routes.ai_seed_routes import router as ai_seed_router
+api_main.include_router(ai_seed_router)
+
 from routes.clocking_seeder import create_clocking_seeder_router
 clocking_seeder_router = create_clocking_seeder_router()
 api_main.include_router(clocking_seeder_router)
@@ -596,6 +640,8 @@ api_main.include_router(migration_router)
 api_main.include_router(recipe_engineering_router)
 
 api_main.include_router(hr_performance_router)
+api_main.include_router(crm_enhanced_router)  # CRM Enhanced (Guest 360)
+api_main.include_router(create_spotify_router())  # Spotify Music Control
 api_main.include_router(hr_documents_advanced_router)
 api_main.include_router(hr_sfm_accounting_router)
 api_main.include_router(hr_analytics_advanced_router)
@@ -623,6 +669,74 @@ api_main.include_router(employee_detail_router)
 api_main.include_router(bank_export_router)
 api_main.include_router(gov_reports_router)
 api_main.include_router(hr_compliance_mt_router)
+
+# AI Copilot Routes
+from routes.ai_routes import router as ai_copilot_router
+api_main.include_router(ai_copilot_router)
+
+# Studio Routes (Pillar 5)
+from routes.studio_routes import create_studio_router
+api_main.include_router(create_studio_router())
+
+# Voice AI Routes (Pillar 4)
+from routes.voice_routes import router as voice_router
+api_main.include_router(voice_router)
+
+# Market Radar Routes (Pillar 6)
+from routes.radar_routes import router as radar_router
+api_main.include_router(radar_router)
+
+# CRM Routes (Pillar 3)
+from routes.crm import create_crm_router
+api_main.include_router(create_crm_router())
+
+# Loyalty Routes
+from routes.loyalty import create_loyalty_router
+api_main.include_router(create_loyalty_router())
+
+# Payroll Malta Routes
+from routes.payroll_mt import create_payroll_mt_router
+api_main.include_router(create_payroll_mt_router())
+
+# Web Architect Routes (Pillar 2)
+from routes.web_routes import create_web_router
+api_main.include_router(create_web_router())
+
+# Ops Routes (Pillar 7)
+from routes.ops_routes import create_ops_router
+api_main.include_router(create_ops_router())
+
+# Fintech Routes (Pillar 8)
+from routes.fintech_routes import create_fintech_router
+api_main.include_router(create_fintech_router())
+
+# Tip Presets Routes (Lightspeed Parity)
+from routes.tip_presets_routes import create_tip_presets_router
+api_main.include_router(create_tip_presets_router())
+
+# Combo / Item Group Routes (Lightspeed Parity)
+from routes.combo_routes import create_combo_router
+api_main.include_router(create_combo_router())
+
+# Order Anywhere Routes (Lightspeed Parity Phase 2)
+from routes.order_anywhere_routes import create_order_anywhere_router
+api_main.include_router(create_order_anywhere_router())
+
+# Tableside Ordering Routes (Lightspeed Parity Phase 3)
+from routes.tableside_routes import create_tableside_router
+api_main.include_router(create_tableside_router())
+
+# Pulse Analytics Routes (Lightspeed Parity Phase 4)
+from routes.pulse_analytics_routes import create_pulse_analytics_router
+api_main.include_router(create_pulse_analytics_router())
+
+# Finance Routes (Kiosk, Split, Reports)
+from routes.finance_routes import create_finance_router
+api_main.include_router(create_finance_router())
+
+# Aggregator Routes (Wolt/Uber/Bolt)
+from routes.aggregators import create_aggregator_router
+api_main.include_router(create_aggregator_router())
 api_main.include_router(leave_parity_router)
 api_main.include_router(create_summary_report_router())
 
@@ -644,9 +758,14 @@ api_main.include_router(create_pos_split_bill_router())
 api_main.include_router(inventory_router_new)
 api_main.include_router(production_router)
 api_main.include_router(pos_session_router)
+
+# POS/KDS Theme Builder API
+from routes.pos_theme_routes import router as pos_theme_router
+api_main.include_router(pos_theme_router)
 api_main.include_router(admin_router_new)
 api_main.include_router(template_router)
 api_main.include_router(template_assets_router)
+api_main.include_router(import_template_router)  # Import Template CRUD
 
 rbac_router = create_rbac_router()
 api_main.include_router(rbac_router)

@@ -17,7 +17,7 @@ load_dotenv(ROOT_DIR / '.env')
 
 mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ.get('DB_NAME', 'restin_ai_db')]
+db = client[os.environ.get('DB_NAME', 'restin_v2')]
 
 async def seed_hr():
     print("Seeding HR data from mock_data_store.py...")

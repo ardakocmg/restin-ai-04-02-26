@@ -19,7 +19,7 @@ async def backfill_item_ids():
     # We need a venue_id. Since this is a script, we'll strip the first one we find or process ALL venues.
     # Let's process per venue to ensure sequencing is correct.
     
-    recipes = await database.RecipesEngineered.find({
+    recipes = await database.recipes.find({
         "$or": [
             {"item_id": {"$exists": False}},
             {"item_id": ""},
@@ -47,7 +47,7 @@ async def backfill_item_ids():
         venue_prefix = venue_id[:2].upper() if venue_id and venue_id != "UNKNOWN" else "XX"
         
         # Get current max sequence for this venue
-        max_recipe = await database.RecipesEngineered.find_one(
+        max_recipe = await database.recipes.find_one(
             {"venue_id": venue_id, "item_id": {"$regex": f"^{venue_prefix}/"}},
             sort=[("item_id", -1)]
         )
@@ -61,7 +61,7 @@ async def backfill_item_ids():
         
         # If sequence is 0, maybe check count of all valid ones
         if current_seq == 0:
-             current_seq = await database.RecipesEngineered.count_documents({
+             current_seq = await database.recipes.count_documents({
                 "venue_id": venue_id,
                 "item_id": {"$exists": True, "$ne": "", "$ne": None}
             })
@@ -73,7 +73,7 @@ async def backfill_item_ids():
             current_seq += 1
             new_item_id = f"{venue_prefix}/{str(current_seq).zfill(3)}"
             
-            await database.RecipesEngineered.update_one(
+            await database.recipes.update_one(
                 {"_id": recipe["_id"]},
                 {"$set": {"item_id": new_item_id}}
             )

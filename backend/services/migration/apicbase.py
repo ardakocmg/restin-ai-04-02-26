@@ -302,7 +302,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         existing_index = {} # Map 'sku:X' or 'name:X' -> document_id
         
         # Only fetch identification fields
-        cursor = db.recipes_engineered.find(
+        cursor = db.recipes.find(
             {"venue_id": self.venue_id},
             {"_id": 0, "id": 1, "sku": 1, "recipe_name": 1, "active": 1, "deleted_at": 1} 
         )
@@ -343,7 +343,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         
         if needed_ids:
             # Batch fetch full documents including raw_import_data
-            full_docs_cursor = db.recipes_engineered.find(
+            full_docs_cursor = db.recipes.find(
                 {"venue_id": self.venue_id, "id": {"$in": list(needed_ids)}}
             )
             async for recipe in full_docs_cursor:
@@ -357,7 +357,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                     existing_recipes[f"name:{name.lower()}"] = recipe
 
         # Get max sequence for auto Item ID
-        max_seq = await db.recipes_engineered.count_documents({"venue_id": self.venue_id})
+        max_seq = await db.recipes.count_documents({"venue_id": self.venue_id})
         
         for index, row in data.iterrows():
             name = row.get("Name", "Unknown Recipe")
@@ -629,8 +629,8 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                     }
                 }
                 
-                # Insert into RecipesEngineered
-                await db.recipes_engineered.insert_one(doc)
+                # Insert into recipes collection
+                await db.recipes.insert_one(doc)
                 processed += 1
             except Exception as e:
                 print(f"Error recipe {item}: {e}")
@@ -655,7 +655,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
         venue_prefix = self.venue_id[:2].upper() if self.venue_id else "XX"
         
         # Get current max sequence for item_id
-        existing_count = await db.recipes_engineered.count_documents({"venue_id": self.venue_id})
+        existing_count = await db.recipes.count_documents({"venue_id": self.venue_id})
         current_seq = existing_count
         
         for item in data:
@@ -703,7 +703,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                 # Handle RESTORE FROM TRASH
                 if item_type == "restore_from_trash" and existing_id:
                     # Restore from trash + update
-                    await db.recipes_engineered.update_one(
+                    await db.recipes.update_one(
                         {"id": existing_id, "venue_id": self.venue_id},
                         {
                             "$set": {
@@ -735,7 +735,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                     
                 # Handle RESTORE FROM ARCHIVE  
                 elif item_type == "restore_from_archive" and existing_id:
-                    await db.recipes_engineered.update_one(
+                    await db.recipes.update_one(
                         {"id": existing_id, "venue_id": self.venue_id},
                         {
                             "$set": {
@@ -766,7 +766,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                 # Handle regular UPDATE
                 elif item_type == "update" and existing_id:
                     # Fetch existing document to compare
-                    existing_doc = await db.recipes_engineered.find_one(
+                    existing_doc = await db.recipes.find_one(
                         {"id": existing_id, "venue_id": self.venue_id},
                         {"_id": 0, "recipe_name": 1, "target_sales_price": 1, "description": 1,
                          "category": 1, "subcategory": 1, "product_type": 1, "portions": 1,
@@ -806,7 +806,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                         has_changes = True  # No existing doc, so definitely has changes
                     
                     if has_changes:
-                        await db.recipes_engineered.update_one(
+                        await db.recipes.update_one(
                             {"id": existing_id, "venue_id": self.venue_id},
                             {
                                 "$set": update_data,
@@ -882,7 +882,7 @@ class ApicbaseAdapter(BaseMigrationAdapter):
                         }
                     }
                     
-                    await db.recipes_engineered.insert_one(doc)
+                    await db.recipes.insert_one(doc)
                     processed += 1
                 
             except Exception as e:

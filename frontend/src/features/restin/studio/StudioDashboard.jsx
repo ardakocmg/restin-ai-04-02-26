@@ -48,7 +48,7 @@ export default function StudioDashboard() {
     const seedMutation = useMutation({
         mutationFn: async () => {
             const api = await import('../../../lib/api').then(m => m.default);
-            return api.post(`/media/seed?venue_id=${activeVenueId}`);
+            return api.post(`/studio/seed?venue_id=${activeVenueId}`);
         },
         onSuccess: () => {
             queryClient.invalidateQueries(['studio-assets']);

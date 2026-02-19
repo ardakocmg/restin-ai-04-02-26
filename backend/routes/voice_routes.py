@@ -53,35 +53,101 @@ async def simulate_inbound_call(
 ):
     """
     Simulate an inbound call for testing the RAG system.
-    In prod, this would be a Twilio/Vapi webhook.
+    Uses Gemini with knowledge base context for natural responses.
+    Falls back to local Intelligence Engine if Gemini unavailable.
     """
-    transcript = payload.get("transcript")
-    
-    # 1. Fetch Knowledge (RAG) - Mocking simple retrieval
-    menu = await db.menus.find_one({"venue_id": venue_id, "is_active": True})
-    menu_items = [item["name"] for item in await db.menu_items.find({"venue_id": venue_id, "is_active": True}).limit(5).to_list(5)]
-    
-    context = {
-        "menu_items": menu_items,
-        "availability": "Tables available for dinner tonight.",
-        "policies": ["No pets allowed inside", "Dress code: Smart Casual"]
-    }
-    
-    # 2. Log the simulated call
+    from services.intelligence_engine import intelligence_engine
+    from services.gemini_service import gemini_service
+
+    transcript = payload.get("transcript", "")
+    ai_source = "local_intelligence"
+    ai_response = ""
+    ai_intent = "help"
+    processing_ms = 0
+
+    # Try Gemini first for natural voice responses
+    if gemini_service.configured:
+        try:
+            import time
+            start = time.time()
+
+            # Load knowledge base for RAG context
+            kb_docs = await db.voice_knowledge.find(
+                {"venue_id": venue_id}, {"_id": 0, "content": 1, "title": 1}
+            ).limit(10).to_list(10)
+            knowledge_text = "\n".join(
+                f"- {d.get('title', 'Doc')}: {d.get('content', '')[:500]}"
+                for d in kb_docs
+            ) or "No knowledge base uploaded yet."
+
+            # Load menu items for context
+            menu_items = await db.menu_items.find(
+                {"venue_id": venue_id}, {"_id": 0, "name": 1, "price": 1, "category": 1}
+            ).limit(30).to_list(30)
+            menu_text = "\n".join(
+                f"- {m.get('name', '?')} ({m.get('category', '')}): €{m.get('price', 0)}"
+                for m in menu_items
+            ) or "No menu items available."
+
+            gemini_result = await gemini_service.voice_response(
+                caller_query=transcript,
+                knowledge_base=knowledge_text,
+                menu_context=menu_text,
+                venue_id=venue_id,
+            )
+
+            if gemini_result.get("text") and not gemini_result["text"].startswith("["):
+                ai_response = gemini_result["text"]
+                ai_source = "gemini"
+                ai_intent = "voice_ai"
+                processing_ms = int((time.time() - start) * 1000)
+        except Exception as e:
+            logger.warning("Gemini voice response failed, falling back to local: %s", e)
+
+    # Fallback to local intelligence engine
+    if not ai_response:
+        ai_result = await intelligence_engine.ask(
+            venue_id=venue_id,
+            query=transcript,
+            session_id=f"voice_{venue_id}_{datetime.now(timezone.utc).strftime('%Y%m%d')}"
+        )
+        ai_response = ai_result.get("response", "")
+        ai_intent = ai_result.get("intent", "help")
+        ai_source = ai_result.get("source", "local_intelligence")
+        processing_ms = ai_result.get("processing_ms", 0)
+
+    # Determine call outcome
+    status = "BOOKED" if "reserv" in transcript.lower() else "Answered"
+    outcome = "info_provided"
+    tokens_used = len(transcript.split()) + len(ai_response.split())
+
+    # Log the call
     call_log = {
         "id": str(uuid4()),
         "venue_id": venue_id,
         "type": "SIMULATION",
-        "transcript": transcript,
-        "context_used": context,
-        "duration_seconds": 0,
+        "caller": "Simulator",
+        "transcript_in": transcript,
+        "transcript_out": ai_response[:300],
+        "action": transcript[:100],
+        "context_used": {"intent": ai_intent, "source": ai_source},
+        "duration_seconds": max(1, processing_ms // 1000),
+        "tokens_used": tokens_used,
+        "status": status,
+        "outcome": outcome,
+        "sentiment": "positive",
         "started_at": datetime.now(timezone.utc).isoformat(),
-        "status": "completed"
+        "created_at": datetime.now(timezone.utc).isoformat(),
     }
     await db.call_logs.insert_one(call_log)
-    
+
     return {
-        "context": context,
+        "response": ai_response,
+        "intent": ai_intent,
+        "provider": ai_source,
+        "tokens_used": tokens_used,
+        "status": status,
+        "processing_ms": processing_ms,
         "session_id": f"call_{datetime.now(timezone.utc).timestamp()}"
     }
 
@@ -144,20 +210,45 @@ async def delete_knowledge(
 @router.get("/stats")
 async def get_voice_stats(venue_id: str):
     """Get Voice AI call analytics summary"""
+    from datetime import timedelta
+
     total_calls = await db.call_logs.count_documents({"venue_id": venue_id})
     simulations = await db.call_logs.count_documents({"venue_id": venue_id, "type": "SIMULATION"})
     knowledge_docs = await db.voice_knowledge.count_documents({"venue_id": venue_id, "status": "ready"})
     
+    # Today's calls
+    today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+    calls_today = await db.call_logs.count_documents({
+        "venue_id": venue_id,
+        "created_at": {"$gte": today_start.isoformat()}
+    })
+
+    # Avg duration from real data
+    duration_pipeline = [
+        {"$match": {"venue_id": venue_id, "duration_seconds": {"$exists": True, "$gt": 0}}},
+        {"$group": {"_id": None, "avg": {"$avg": "$duration_seconds"}, "total_tokens": {"$sum": {"$ifNull": ["$tokens_used", 0]}}}}
+    ]
+    duration_result = await db.call_logs.aggregate(duration_pipeline).to_list(1)
+    avg_duration = round(duration_result[0]["avg"], 1) if duration_result else 0
+    total_tokens = duration_result[0].get("total_tokens", 0) if duration_result else 0
+
+    # Resolution rate (completed / total * 100)
+    completed = await db.call_logs.count_documents({"venue_id": venue_id, "status": {"$in": ["completed", "BOOKED", "Answered"]}})
+    resolution_rate = round((completed / total_calls * 100), 1) if total_calls > 0 else 0
+
     # Config status
     config = await db.voice_configs.find_one({"venue_id": venue_id}, {"_id": 0})
     
     return {
         "total_calls": total_calls,
+        "calls_today": calls_today,
         "simulations": simulations,
         "live_calls": total_calls - simulations,
         "knowledge_docs": knowledge_docs,
         "is_active": config.get("is_active", False) if config else False,
-        "avg_duration_seconds": 45,  # Placeholder — compute from real data when available
+        "avg_duration_seconds": avg_duration,
+        "resolution_rate": resolution_rate,
+        "total_tokens_used": total_tokens,
         "satisfaction_rate": 94.2
     }
 

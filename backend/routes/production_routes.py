@@ -41,7 +41,7 @@ def create_production_router():
         await check_venue_access(current_user, data.venue_id)
         
         # Verify recipe exists
-        recipe = await db.recipes_engineered.find_one({"id": data.recipe_id, "venue_id": data.venue_id})
+        recipe = await db.recipes.find_one({"id": data.recipe_id, "venue_id": data.venue_id})
         if not recipe:
             raise HTTPException(status_code=404, detail="Recipe not found")
             

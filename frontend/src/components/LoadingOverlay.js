@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
-export default function LoadingOverlay({ open, title="Loading…", body="Please wait…", onCancel }) {
+export default function LoadingOverlay({ open, title = "Loading…", body = "Please wait…", onCancel }) {
+  const [showDismiss, setShowDismiss] = useState(false);
+
+  useEffect(() => {
+    if (!open) { setShowDismiss(false); return; }
+    const timer = setTimeout(() => setShowDismiss(true), 15000);
+    return () => clearTimeout(timer);
+  }, [open]);
+
   if (!open) return null;
 
   return (
@@ -21,6 +29,15 @@ export default function LoadingOverlay({ open, title="Loading…", body="Please 
             onClick={onCancel}
           >
             Cancel
+          </button>
+        )}
+        {!onCancel && showDismiss && (
+          <button
+            className="w-full rounded-lg bg-zinc-800 hover:bg-zinc-700 py-2.5 text-zinc-200 text-sm font-medium transition-colors border border-zinc-700"
+            onClick={() => setShowDismiss(false)}
+            title="Dismiss this overlay"
+          >
+            Dismiss
           </button>
         )}
       </div>

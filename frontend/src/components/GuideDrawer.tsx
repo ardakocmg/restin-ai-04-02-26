@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logger from '../lib/logger';
 import {
   X,
   Image as ImageIcon,
@@ -64,7 +65,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
       const data = await GuideService.getGuideByEntity(entityType, entityId, guideKind);
       setGuide(data);
     } catch (error) {
-      console.error('Failed to load guide:', error);
+      logger.error('Failed to load guide', { error, entityType, entityId });
       setGuide(null);
     } finally {
       setLoading(false);
@@ -119,15 +120,15 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
           <div
             key={index}
             className={`rounded-lg border p-4 ${step.critical
-                ? 'bg-red-950/20 border-red-900/50'
-                : 'bg-zinc-900/50 border-zinc-800'
+              ? 'bg-red-950/20 border-red-900/50'
+              : 'bg-zinc-900/50 border-zinc-800'
               }`}
           >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${step.critical
-                    ? 'bg-red-400/10 text-red-400 ring-red-400/20'
-                    : 'bg-zinc-400/10 text-zinc-400 ring-zinc-400/20'
+                  ? 'bg-red-400/10 text-red-400 ring-red-400/20'
+                  : 'bg-zinc-400/10 text-zinc-400 ring-zinc-400/20'
                   }`}>
                   Step {step.step_no}
                 </span>

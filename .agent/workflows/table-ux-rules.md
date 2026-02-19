@@ -131,3 +131,18 @@ Whenever you are working on ANY page that contains a data table or stat/summary 
 > **NOTE:** Do NOT batch-apply to all pages at once. Apply these patterns **incrementally** whenever you are already touching a page for another reason. This avoids introducing regressions.
 
 Reference implementation: `ApprovalCenter.tsx`
+
+---
+
+## 5. No Animation Delays on Critical Paths
+
+**Rule:** NEVER use `setTimeout` or transition delays to gate login, navigation, or form submissions. Animations may run in parallel but must NEVER block the next action.
+
+- ❌ `setTimeout(() => callback(), 300)` on login success
+- ✅ `callback()` immediately, animate in parallel
+
+---
+
+## 6. No 404 Pages Before Commit
+
+**Rule:** NEVER commit code that results in a 404 or broken page. If a button/link/route exists in the UI, the backend API and page component MUST exist and work. If incomplete, hide the UI element.

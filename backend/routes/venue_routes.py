@@ -197,7 +197,7 @@ def create_venue_router():
     @router.get("/venues/{venue_id}/audit-logs/export")
     async def export_venue_audit_logs(venue_id: str):
         """Export audit logs for a venue."""
-        logs = await db.audit_logs.find({"venue_id": venue_id}, {"_id": 0}).sort("timestamp", -1).to_list(length=1000)
+        logs = await db.audit_logs.find({"venue_id": venue_id}, {"_id": 0}).sort("timestamp", -1).to_list(length=50)
         return {"venue_id": venue_id, "logs": logs, "count": len(logs)}
 
     # ==================== ZONE ENDPOINTS ====================

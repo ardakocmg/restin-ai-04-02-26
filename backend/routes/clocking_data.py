@@ -46,79 +46,8 @@ async def get_clocking_data(
     current_user: dict = Depends(get_current_user),
     db=Depends(get_database)
 ):
-    """Get clocking data for date range (Lazy Seed from Mock)"""
+    """Get clocking data for date range"""
     venue_id = current_user.get("venue_id") or current_user.get("venueId") or "GLOBAL"
-
-    count = await db["clocking_records"].count_documents({})
-
-    if count == 0:
-        from mock_data_store import MOCK_CLOCKING, MOCK_EMPLOYEES
-
-        emp_count = await db.employees.count_documents({})
-        if emp_count == 0:
-            seed_emps = []
-            for code, emp in MOCK_EMPLOYEES.items():
-                seed_emps.append({
-                    "id": str(uuid.uuid4()),
-                    "display_id": code,
-                    "venue_id": venue_id,
-                    "full_name": emp["full_name"],
-                    "email": emp["email"],
-                    "role": "staff",
-                    "department": emp["department"],
-                    "employment_status": "active",
-                    "start_date": emp.get("employment_date"),
-                    "phone": emp.get("mobile"),
-                    "occupation": emp["occupation"],
-                    "cost_centre": emp["cost_centre"],
-                    "vendor": emp.get("vendor"),
-                    "created_at": datetime.now(timezone.utc).isoformat()
-                })
-            if seed_emps:
-                await db.employees.insert_many(seed_emps)
-
-        emp_map = {}
-        all_emps = await db.employees.find({}, {"id": 1, "display_id": 1}).to_list(2000)
-        for e in all_emps:
-            if "display_id" in e:
-                emp_map[e["display_id"]] = e["id"]
-
-        seed_docs = []
-        for clk in MOCK_CLOCKING:
-            emp_code = clk.get("employee_code")
-            if not emp_code:
-                parts = clk["id"].split("_")
-                if len(parts) >= 2:
-                    emp_code = parts[1]
-
-            real_emp_id = emp_map.get(emp_code)
-            if not real_emp_id:
-                real_emp_id = f"missing_link_{emp_code}"
-
-            record = ClockingRecord(
-                id=clk["id"],
-                venue_id=venue_id,
-                employee_id=real_emp_id,
-                day_of_week=datetime.strptime(clk["date"], "%d/%m/%Y").strftime("%A"),
-                date=clk["date"],
-                clocking_in=clk["clock_in"],
-                clocking_out=clk["clock_out"],
-                hours_worked=clk.get("hours_worked", 0.0),
-                status="completed",
-                employee_name=clk["employee_name"],
-                employee_designation=clk.get("designation", "Staff"),
-                cost_centre=clk.get("cost_centre", clk.get("vendor", "N/A")),
-                work_area=clk.get("cost_centre", None),
-                source_device="terminal",
-                device_name=clk.get("device", "Term_01"),
-                modified_by="System",
-                created_by="Term_01",
-                remark=clk["remarks"]
-            )
-            seed_docs.append(record.model_dump(by_alias=True))
-
-        if seed_docs:
-            await db["clocking_records"].insert_many(seed_docs)
 
     query = {}
     if venue_id != "GLOBAL":

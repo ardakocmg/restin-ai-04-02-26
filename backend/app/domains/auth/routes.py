@@ -5,15 +5,14 @@ from fastapi import APIRouter, HTTPException, Request, Query
 from typing import Optional
 from datetime import datetime, timezone
 import hashlib
+import logging
+
+logger = logging.getLogger("auth.routes")
 
 from app.core.database import get_database
+from core.security import verify_pin, hash_pin, compute_pin_index
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
-
-
-def hash_pin(pin: str) -> str:
-    """Hash PIN for comparison with stored hash."""
-    return hashlib.sha256(pin.encode()).hexdigest()
 
 
 @router.post("/login/pin")
@@ -35,37 +34,58 @@ async def login_with_pin(
         "login_at": datetime.now(timezone.utc).isoformat()
     }
     
-    print(f"[AUTH] LOGIN ATTEMPT: PIN={pin} DEVICE={device_data}")
+    logger.info("[AUTH] LOGIN ATTEMPT: PIN=****%s DEVICE=%s", pin[-1] if pin else '?', device_data.get('ip', 'unknown'))
     
     db = get_database()
     
-    # Try both plain PIN and hashed PIN lookup
-    # When multiple users share the same PIN, prioritize by role:
-    # product_owner (0) > owner (1) > general_manager (2) > manager (3) > staff (4)
-    pin_hash = hash_pin(pin)
     _role_sort_map = {
         "product_owner": 0, "owner": 1, "OWNER": 1,
         "general_manager": 2, "GENERAL_MANAGER": 2,
         "manager": 3, "MANAGER": 3,
         "staff": 4, "STAFF": 4
     }
-    candidates = await db.users.find({
-        "$or": [
-            {"pin": pin},
-            {"pin_hash": pin_hash}
-        ]
-    }).to_list(length=20)
+    
+    # --- FAST PATH: use pin_index (SHA256) for O(1) DB lookup ---
+    idx = compute_pin_index(pin)
+    indexed_users = await db.users.find({"pin_index": idx}).to_list(length=10)
+    
+    # Verify bcrypt on the small candidate set (typically 1-2 users)
+    candidates = [u for u in indexed_users if verify_pin(pin, u.get("pin_hash", ""))]
+    
+    # --- FALLBACK: if no pin_index matches, scan + backfill (one-time migration) ---
+    if not candidates:
+        all_users = await db.users.find(
+            {"pin_hash": {"$exists": True, "$ne": ""}},
+        ).to_list(length=200)
+        
+        candidates = []
+        for u in all_users:
+            if verify_pin(pin, u.get("pin_hash", "")):
+                candidates.append(u)
+                # Backfill pin_index for this user so future logins are instant
+                stored = u.get("pin_hash", "")
+                update_fields = {"pin_index": idx}
+                unset_fields = {}
+                # Also auto-upgrade legacy SHA256 hash to bcrypt
+                if len(stored) == 64 and all(c in '0123456789abcdef' for c in stored):
+                    update_fields["pin_hash"] = hash_pin(pin)
+                    unset_fields["pin"] = ""
+                update_op = {"$set": update_fields}
+                if unset_fields:
+                    update_op["$unset"] = unset_fields
+                await db.users.update_one({"_id": u["_id"]}, update_op)
+                logger.info("[AUTH] Backfilled pin_index for user_id=%s", u.get('id', '?'))
     
     if candidates:
         # Sort: product_owner first, then owner, etc.
         candidates.sort(key=lambda u: _role_sort_map.get(u.get("role", "staff"), 5))
         user = candidates[0]
-        print(f"[AUTH] PIN MATCH: Found {len(candidates)} users, selected '{user.get('name')}' (role={user.get('role')})")
+        logger.info("[AUTH] PIN MATCH: Found %d candidates, selected user_id=%s (role=%s)", len(candidates), user.get('id', '?'), user.get('role', '?'))
     else:
         user = None
     
     if not user:
-        print(f"[AUTH] LOGIN FAILED: No user found for PIN={pin}")
+        logger.warning("[AUTH] LOGIN FAILED: No user found for PIN=****%s from IP=%s", pin[-1] if pin else '?', client_ip)
         raise HTTPException(status_code=401, detail="Invalid PIN")
     
     # Get all venues this user has access to
@@ -106,7 +126,7 @@ async def login_with_pin(
     from core.security import create_jwt_token
     real_token = create_jwt_token(user_id, user_venue_id or default_venue or "", role, deviceId)
     
-    print(f"[AUTH] LOGIN SUCCESS: {user_response['name']} ({role})")
+    logger.info("[AUTH] LOGIN SUCCESS: user_id=%s role=%s venue=%s", user_id, role, user_venue_id or default_venue)
     
     return {
         "token": real_token,

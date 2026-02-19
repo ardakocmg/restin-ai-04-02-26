@@ -1,6 +1,6 @@
 /**
  * GoogleIntegrationHub — Centralized Google Services Management
- * @route /admin/google-workspace
+ * @route /manager/google-workspace
  * Wraps Workspace SSO, Business Profile, Maps, and Reviews.
  */
 import React, { useState, useEffect, useCallback } from 'react';

@@ -5,270 +5,32 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     MessageSquare, Hash, Mic, MicOff, Send, Users, Radio,
-    ChefHat, Wine, Briefcase, Bell, Search, Pin, Star,
+    Search, Pin, Star,
     CheckSquare, Clock, Zap, Volume2, Paperclip, Smile,
     Reply, Trash2, Edit3, MoreHorizontal, Image, FileText,
-    X, Check, ArrowRight, PhoneCall, FileAudio, Share2,
+    X, Check, PhoneCall, FileAudio, Share2,
     Play, Pause, Square, Calendar, UserPlus, ListTodo, RotateCw, Timer, GripVertical, Plus,
     Settings, Globe, Volume1, Bookmark, Flag, BarChart3,
     AlarmClock, Languages, Sparkles, Eye, MessageSquarePlus,
     Copy, Sticker, LayoutTemplate, Layout, VolumeX
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { parseSmartMessage, SmartToken } from '@/lib/smartParser';
 import { useGlobalPTT, TransmissionResult, LiveSpeaker } from '@/contexts/GlobalPTTContext';
 import { useVoiceDictation, speakMessage, stopSpeaking, isSpeaking, getAvailableVoices, SUPPORTED_LANGUAGES } from '@/hooks/useVoiceDictation';
 import type { TTSConfig } from '@/hooks/useVoiceDictation';
 import { useAuth } from '@/context/AuthContext';
 import { useVenue } from '@/context/VenueContext';
 import { useNavigate } from 'react-router-dom';
+import api from '@/lib/api';
 
-// ─── Channel Definitions ────────────────────────────────────────────────
-interface Channel {
-    id: string;
-    name: string;
-    icon: React.ElementType;
-    color: string;
-    unread: number;
-    description: string;
-}
+// ─── Extracted types, constants & helpers ────────────────────────────────
+import type { Channel, ChatMessage, OnlineStaff, MicroTask, QuickMessage } from './hiveTypes';
+import {
+    CHANNELS, QUICK_MESSAGES, REACTION_EMOJIS, MESSAGE_TEMPLATES,
+    API_BASE, mapApiMessage,
+} from './hiveTypes';
+import { SmartMessageRenderer, TypingIndicator, AttachmentBubble } from './HiveComponents';
 
-const CHANNELS: Channel[] = [
-    { id: 'general', name: 'General', icon: Hash, color: 'text-blue-400', unread: 3, description: 'Team-wide announcements' },
-    { id: 'kitchen', name: 'Kitchen', icon: ChefHat, color: 'text-orange-400', unread: 1, description: 'Kitchen comms & orders' },
-    { id: 'bar', name: 'Bar', icon: Wine, color: 'text-purple-400', unread: 0, description: 'Bar operations' },
-    { id: 'management', name: 'Management', icon: Briefcase, color: 'text-emerald-400', unread: 0, description: 'Managers only' },
-    { id: 'alerts', name: 'Alerts', icon: Bell, color: 'text-red-400', unread: 5, description: 'System alerts & IoT' },
-];
-
-// ─── Message Types ──────────────────────────────────────────────────────
-interface PollOption {
-    id: string;
-    text: string;
-    votes: string[]; // voter names
-}
-
-interface ChatMessage {
-    id: string;
-    channelId: string;
-    sender: string;
-    senderInitials: string;
-    senderColor: string;
-    text: string;
-    timestamp: string;
-    isPinned?: boolean;
-    reactions?: Record<string, string[]>;
-    replyTo?: string;
-    replyPreview?: string;
-    attachments?: { name: string; type: 'image' | 'file'; size: string }[];
-    isEdited?: boolean;
-    readBy?: string[];
-    // Voice
-    isVoice?: boolean;
-    voiceDuration?: number;
-    audioUrl?: string;
-    transcriptConfidence?: number; // 0-1
-    // Tier 1
-    isBookmarked?: boolean;
-    isPriority?: boolean;
-    isScheduled?: boolean;
-    scheduledTime?: string;
-    poll?: { question: string; options: PollOption[]; multiSelect?: boolean };
-    reminder?: { time: string; label?: string };
-    // Tier 2
-    isTranslated?: boolean;
-    translatedText?: string;
-    // Tier 3
-    templateId?: string;
-}
-
-// API helpers
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-
-function mapApiMessage(m: Record<string, unknown>): ChatMessage {
-    return {
-        id: (m.id as string) || '',
-        channelId: (m.channel_id as string) || 'general',
-        sender: (m.sender as string) || '',
-        senderInitials: (m.sender_initials as string) || '',
-        senderColor: (m.sender_color as string) || 'bg-zinc-600',
-        text: (m.text as string) || '',
-        timestamp: (m.timestamp as string) || '',
-        isPinned: (m.is_pinned as boolean) || false,
-        reactions: (m.reactions as Record<string, string[]>) || {},
-        readBy: (m.read_by as string[]) || [],
-        isEdited: (m.is_edited as boolean) || false,
-        isBookmarked: (m.is_bookmarked as boolean) || false,
-        isPriority: (m.is_priority as boolean) || false,
-        replyTo: (m.reply_to as string) || undefined,
-        replyPreview: (m.reply_preview as string) || undefined,
-        isVoice: (m.is_voice as boolean) || false,
-        voiceDuration: (m.voice_duration as number) || undefined,
-        audioUrl: (m.audio_url as string) || undefined,
-        attachments: (m.attachments as ChatMessage['attachments']) || [],
-        poll: (m.poll as ChatMessage['poll']) || undefined,
-        isScheduled: (m.is_scheduled as boolean) || false,
-        scheduledTime: (m.scheduled_time as string) || undefined,
-    };
-}
-
-// ─── Online Staff ───────────────────────────────────────────────────────
-interface OnlineStaff {
-    name: string;
-    initials: string;
-    color: string;
-    role: string;
-    status: 'online' | 'busy' | 'away' | 'offline';
-    id?: string;
-}
-
-// Online staff loaded from API (see useEffect below)
-
-// ─── Micro-Tasks ────────────────────────────────────────────────────────
-interface MicroTask {
-    id: string;
-    title: string;
-    urgency: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-    xp: number;
-    assignedTo?: string;
-    department?: string;
-    deadline?: string;
-    status: 'pool' | 'assigned' | 'in-progress' | 'done';
-    recurrence?: 'none' | 'daily' | 'weekly' | 'shift-start' | 'shift-end';
-    startedAt?: string;
-    completedAt?: string;
-    sourceMessageId?: string;
-    sourceMessageText?: string;
-    sourceChannelId?: string;
-}
-
-// Tasks loaded from API (see useEffect below)
-
-// ─── AVAILABLE REACTIONS ────────────────────────────────────────────────
-const REACTION_EMOJIS = ['👍', '❤️', '😂', '🔥', '🎉', '⭐', '👀', '✅'];
-
-// ─── Smart Token Renderer ──────────────────────────────────────────────
-
-// ─── Quick Message Shortcuts ────────────────────────────────────────────
-interface QuickMessage {
-    command: string;
-    label: string;
-    emoji: string;
-    text: string;
-}
-
-const QUICK_MESSAGES: QuickMessage[] = [
-    { command: '/86', label: '86 Item', emoji: '\ud83d\udeab', text: '\ud83d\udeab 86d \u2014 Item is no longer available' },
-    { command: '/vip', label: 'VIP Alert', emoji: '\u2b50', text: '\u2b50 VIP guest arriving \u2014 priority service required' },
-    { command: '/fire', label: 'Fire Course', emoji: '\ud83d\udd25', text: '\ud83d\udd25 FIRE \u2014 Send the next course NOW' },
-    { command: '/hold', label: 'Hold Course', emoji: '\u23f8\ufe0f', text: '\u23f8\ufe0f HOLD \u2014 Do NOT send next course yet' },
-    { command: '/clean', label: 'Cleanup', emoji: '\ud83e\uddf9', text: '\ud83e\uddf9 Table needs immediate cleanup' },
-    { command: '/help', label: 'Need Help', emoji: '\ud83c\udd98', text: '\ud83c\udd98 Need assistance at my station immediately' },
-];
-
-// ─── Smart Token Renderer (with navigation + premium design) ────────────
-const SMART_CHIP_STYLES: Record<string, { bg: string; text: string; border: string; glow: string; icon: string; label: string }> = {
-    ORDER_LINK: { bg: 'bg-blue-500/15', text: 'text-blue-300', border: 'border-blue-500/30', glow: 'shadow-blue-500/20', icon: '📋', label: 'Order' },
-    TABLE_LINK: { bg: 'bg-emerald-500/15', text: 'text-emerald-300', border: 'border-emerald-500/30', glow: 'shadow-emerald-500/20', icon: '🪑', label: 'Table' },
-    ITEM_LINK: { bg: 'bg-amber-500/15', text: 'text-amber-300', border: 'border-amber-500/30', glow: 'shadow-amber-500/20', icon: '📦', label: 'Inventory' },
-    RECIPE_LINK: { bg: 'bg-rose-500/15', text: 'text-rose-300', border: 'border-rose-500/30', glow: 'shadow-rose-500/20', icon: '🍳', label: 'Recipe' },
-    RESERVATION_LINK: { bg: 'bg-violet-500/15', text: 'text-violet-300', border: 'border-violet-500/30', glow: 'shadow-violet-500/20', icon: '📅', label: 'Reservation' },
-    STAFF_MENTION: { bg: 'bg-cyan-500/15', text: 'text-cyan-300', border: 'border-cyan-500/30', glow: 'shadow-cyan-500/20', icon: '👤', label: 'Staff' },
-    GUEST_LINK: { bg: 'bg-pink-500/15', text: 'text-pink-300', border: 'border-pink-500/30', glow: 'shadow-pink-500/20', icon: '🎯', label: 'Guest' },
-};
-
-interface SmartTokenSpanProps {
-    token: SmartToken;
-    onNavigate?: (route: string) => void;
-}
-
-function SmartTokenSpan({ token, onNavigate }: SmartTokenSpanProps) {
-    const style = SMART_CHIP_STYLES[token.type];
-    if (!style) return <span>{token.text}</span>;
-
-    const handleClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (token.route && onNavigate) onNavigate(token.route);
-    };
-
-    return (
-        <motion.span
-            onClick={handleClick}
-            whileHover={{ scale: 1.05, y: -1 }}
-            whileTap={{ scale: 0.97 }}
-            className={`
-                inline-flex items-center gap-1 px-2 py-0.5 rounded-md
-                ${style.bg} ${style.text} border ${style.border}
-                text-xs font-semibold cursor-pointer
-                backdrop-blur-sm
-                hover:shadow-lg ${style.glow}
-                transition-all duration-200
-                select-none
-            `}
-            title={`Go to ${style.label}: ${token.id || token.text}`}
-        >
-            <span className="text-[11px]">{style.icon}</span>
-            <span>{token.text}</span>
-            <ArrowRight className="h-2.5 w-2.5 opacity-0 group-hover:opacity-60 -mr-0.5 transition-opacity" />
-        </motion.span>
-    );
-}
-
-function SmartMessageRenderer({ text, onNavigate }: { text: string; onNavigate?: (route: string) => void }) {
-    const tokens = useMemo(() => parseSmartMessage(text), [text]);
-    return (
-        <span className="leading-relaxed">
-            {tokens.map((token, i) => (
-                <SmartTokenSpan key={i} token={token} onNavigate={onNavigate} />
-            ))}
-        </span>
-    );
-}
-
-// ─── Typing Indicator ──────────────────────────────────────────────────
-function TypingIndicator({ names }: { names: string[] }) {
-    if (names.length === 0) return null;
-    const text = names.length === 1
-        ? `${names[0]} is typing`
-        : names.length === 2
-            ? `${names[0]} and ${names[1]} are typing`
-            : `${names[0]} and ${names.length - 1} others are typing`;
-    return (
-        <motion.div
-            className="flex items-center gap-2 px-4 py-1.5"
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 5 }}
-        >
-            <div className="flex gap-[3px]">
-                {[0, 1, 2].map(i => (
-                    <motion.div
-                        key={i}
-                        className="h-1.5 w-1.5 rounded-full bg-zinc-500"
-                        animate={{ y: [0, -4, 0] }}
-                        transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
-                    />
-                ))}
-            </div>
-            <span className="text-[10px] text-zinc-500 italic">{text}</span>
-        </motion.div>
-    );
-}
-
-// ─── Attachment Preview ─────────────────────────────────────────────────
-function AttachmentBubble({ att }: { att: { name: string; type: 'image' | 'file'; size: string } }) {
-    return (
-        <div className="mt-1.5 inline-flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-zinc-800/60 border border-zinc-700/50 hover:bg-zinc-700/60 transition-colors cursor-pointer">
-            {att.type === 'image' ? (
-                <Image className="h-3.5 w-3.5 text-blue-400" />
-            ) : (
-                <FileText className="h-3.5 w-3.5 text-amber-400" />
-            )}
-            <span className="text-xs text-zinc-300">{att.name}</span>
-            <span className="text-[10px] text-zinc-600">{att.size}</span>
-        </div>
-    );
-}
 
 // ─── Main Dashboard ─────────────────────────────────────────────────────
 export default function HiveDashboard() {
@@ -342,6 +104,7 @@ export default function HiveDashboard() {
     const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [forwardingMsg, setForwardingMsg] = useState<ChatMessage | null>(null);
+    const [threadViewMsg, setThreadViewMsg] = useState<ChatMessage | null>(null);
 
     // ─── Tier 1-3 Feature State ─────────────────────────────────────────
     const [showBookmarks, setShowBookmarks] = useState(false);
@@ -451,6 +214,22 @@ export default function HiveDashboard() {
         return msgs;
     }, [messages, activeChannel, searchQuery]);
 
+    // Thread support: count replies per parent message
+    const replyCountMap = useMemo(() => {
+        const map: Record<string, number> = {};
+        messages.forEach(m => {
+            if (m.replyTo) {
+                map[m.replyTo] = (map[m.replyTo] || 0) + 1;
+            }
+        });
+        return map;
+    }, [messages]);
+
+    const threadReplies = useMemo(() => {
+        if (!threadViewMsg) return [];
+        return messages.filter(m => m.replyTo === threadViewMsg.id);
+    }, [messages, threadViewMsg]);
+
     const activeChannelData = CHANNELS.find(c => c.id === activeChannel);
     const pinnedMessages = channelMessages.filter(m => m.isPinned);
 
@@ -493,6 +272,37 @@ export default function HiveDashboard() {
         setMessageInput('');
         setReplyingTo(null);
         playNotifSound();
+
+        // ─── AI Channel: route to copilot backend ────────────────────
+        if (activeChannel === 'restin-ai') {
+            try {
+                const res = await api.post('/ai/ask', { query: newMsg.text, session_id: `hive-${Date.now()}` }, { params: { venue_id: venueId } });
+                const data = res.data;
+                const aiReply: ChatMessage = {
+                    id: `ai-${Date.now()}`,
+                    channelId: 'restin-ai',
+                    sender: '✨ Restin AI',
+                    senderInitials: 'AI',
+                    senderColor: 'bg-gradient-to-r from-violet-600 to-purple-600',
+                    text: data.response || 'Bir hata oluştu.',
+                    timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                };
+                setMessages(prev => [...prev, aiReply]);
+                playNotifSound();
+            } catch {
+                setMessages(prev => [...prev, {
+                    id: `ai-err-${Date.now()}`,
+                    channelId: 'restin-ai',
+                    sender: '✨ Restin AI',
+                    senderInitials: 'AI',
+                    senderColor: 'bg-gradient-to-r from-violet-600 to-purple-600',
+                    text: '⚠️ AI servisine bağlanamadı. Lütfen tekrar deneyin.',
+                    timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                }]);
+            }
+            return;
+        }
+
         try {
             const res = await fetch(`${API_BASE}/api/hive/messages`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -508,7 +318,37 @@ export default function HiveDashboard() {
                 setMessages(prev => prev.map(m => m.id === tempId ? mapApiMessage(saved) : m));
             }
         } catch { /* offline - keep optimistic */ }
-    }, [messageInput, activeChannel, replyingTo, playNotifSound, senderName, senderInitials]);
+    }, [messageInput, activeChannel, replyingTo, playNotifSound, senderName, senderInitials, venueId]);
+
+    // ─── AI Channel Welcome Message ───────────────────────────────
+    const aiWelcomeInjected = useRef(false);
+    useEffect(() => {
+        if (activeChannel === 'restin-ai' && !aiWelcomeInjected.current) {
+            const hasAiMsgs = messages.some(m => m.channelId === 'restin-ai');
+            if (!hasAiMsgs) {
+                aiWelcomeInjected.current = true;
+                setMessages(prev => [...prev, {
+                    id: 'ai-welcome',
+                    channelId: 'restin-ai',
+                    sender: '\u2728 Restin AI',
+                    senderInitials: 'AI',
+                    senderColor: 'bg-gradient-to-r from-violet-600 to-purple-600',
+                    text: [
+                        '\ud83e\udd16 **Merhaba! Ben Hey Rin.**\n',
+                        'Venue verilerinize tam h\u00e2kimim. Bana \u015funlar\u0131 sorabilirsiniz:\n',
+                        '\u2022 \ud83d\udcb0 _Bug\u00fcnk\u00fc sat\u0131\u015flar nedir?_',
+                        '\u2022 \ud83d\udce6 _Envanter \u00f6zeti g\u00f6ster_',
+                        '\u2022 \u26a0\ufe0f _D\u00fc\u015f\u00fck stok var m\u0131?_',
+                        '\u2022 \ud83d\udc68\u200d\ud83c\udf73 _Kimler \u00e7al\u0131\u015f\u0131yor?_',
+                        '\u2022 \ud83d\udccb _Ka\u00e7 tarif var?_',
+                        '\u2022 \ud83d\uddd1\ufe0f _Fire raporu_\n',
+                        '_T\u00fcrk\u00e7e veya \u0130ngilizce sorabilirsiniz!_',
+                    ].join('\n'),
+                    timestamp: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                }]);
+            }
+        }
+    }, [activeChannel, messages]);
 
     // Edit message (API + optimistic)
     const handleSaveEdit = useCallback(async (msgId: string) => {
@@ -1556,6 +1396,19 @@ export default function HiveDashboard() {
                                                     <p className="text-[10px] text-zinc-600 mt-1 flex items-center gap-1">
                                                         <Check className="h-2.5 w-2.5" /> Seen by {msg.readBy.join(', ')}
                                                     </p>
+                                                )}
+
+                                                {/* Thread Reply Count */}
+                                                {replyCountMap[msg.id] && replyCountMap[msg.id] > 0 && (
+                                                    <button
+                                                        onClick={() => setThreadViewMsg(msg)}
+                                                        className="flex items-center gap-1.5 mt-1.5 px-2 py-1 rounded-md bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 hover:border-blue-500/30 text-blue-400 text-[11px] font-medium transition-all w-fit group/thread"
+                                                        title="View thread"
+                                                    >
+                                                        <MessageSquare className="h-3 w-3" />
+                                                        <span>{replyCountMap[msg.id]} {replyCountMap[msg.id] === 1 ? 'reply' : 'replies'}</span>
+                                                        <span className="text-[10px] text-blue-500/60 group-hover/thread:text-blue-400 transition-colors">View thread &rarr;</span>
+                                                    </button>
                                                 )}
                                             </div>
 
@@ -2630,6 +2483,144 @@ export default function HiveDashboard() {
                     </TabsContent>
                 </Tabs>
             </div>
+
+            {/* ─── THREAD SIDEBAR (Slide-over) ────────────────────────── */}
+            <AnimatePresence>
+                {threadViewMsg && (
+                    <motion.div
+                        className="w-80 flex-shrink-0 border-l border-zinc-800/50 flex flex-col bg-zinc-950 overflow-hidden"
+                        initial={{ width: 0, opacity: 0 }}
+                        animate={{ width: 320, opacity: 1 }}
+                        exit={{ width: 0, opacity: 0 }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                    >
+                        {/* Thread Header */}
+                        <div className="p-3 border-b border-zinc-800/50 bg-gradient-to-r from-blue-500/5 via-zinc-950 to-zinc-950 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <MessageSquare className="h-4 w-4 text-blue-400" />
+                                <h3 className="text-sm font-bold text-zinc-200">Thread</h3>
+                                <Badge className="text-[9px] bg-blue-500/15 text-blue-300 border-0 px-1.5">
+                                    {threadReplies.length} {threadReplies.length === 1 ? 'reply' : 'replies'}
+                                </Badge>
+                            </div>
+                            <button
+                                onClick={() => setThreadViewMsg(null)}
+                                className="h-6 w-6 rounded-lg hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors"
+                                title="Close thread"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+
+                        {/* Parent Message */}
+                        <div className="p-3 border-b border-zinc-800/30 bg-zinc-900/30">
+                            <div className="flex items-start gap-2">
+                                <div className={`h-8 w-8 rounded-full ${threadViewMsg.senderColor} flex items-center justify-center ring-2 ring-zinc-900 flex-shrink-0`}>
+                                    <span className="text-white text-[10px] font-bold">{threadViewMsg.senderInitials}</span>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="text-xs font-semibold text-zinc-200">{threadViewMsg.sender}</span>
+                                        <span className="text-[10px] text-zinc-600">{threadViewMsg.timestamp}</span>
+                                    </div>
+                                    <p className="text-xs text-zinc-300 mt-0.5 leading-relaxed">
+                                        <SmartMessageRenderer text={threadViewMsg.text} onNavigate={handleSmartNavigate} />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Thread Replies */}
+                        <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2">
+                            {threadReplies.length === 0 ? (
+                                <div className="flex flex-col items-center justify-center py-8 text-center">
+                                    <Reply className="h-8 w-8 text-zinc-700 mb-2" />
+                                    <p className="text-xs text-zinc-600">No replies yet</p>
+                                    <p className="text-[10px] text-zinc-700 mt-0.5">Click Reply on a message to start a thread</p>
+                                </div>
+                            ) : (
+                                threadReplies.map(reply => (
+                                    <motion.div
+                                        key={reply.id}
+                                        className="flex items-start gap-2 p-2 rounded-lg hover:bg-zinc-900/50 transition-colors"
+                                        initial={{ opacity: 0, x: 10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                    >
+                                        <div className={`h-7 w-7 rounded-full ${reply.senderColor} flex items-center justify-center ring-1 ring-zinc-800 flex-shrink-0`}>
+                                            <span className="text-white text-[9px] font-bold">{reply.senderInitials}</span>
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-1.5">
+                                                <span className="text-[11px] font-semibold text-zinc-300">{reply.sender}</span>
+                                                <span className="text-[9px] text-zinc-600">{reply.timestamp}</span>
+                                                {reply.isEdited && <span className="text-[9px] text-zinc-600 italic">(edited)</span>}
+                                            </div>
+                                            <p className="text-[11px] text-zinc-400 mt-0.5 leading-relaxed">
+                                                <SmartMessageRenderer text={reply.text} onNavigate={handleSmartNavigate} />
+                                            </p>
+                                            {/* Thread reply reactions */}
+                                            {reply.reactions && Object.keys(reply.reactions).length > 0 && (
+                                                <div className="flex flex-wrap gap-1 mt-1">
+                                                    {Object.entries(reply.reactions).map(([emoji, users]) => (
+                                                        <button
+                                                            key={emoji}
+                                                            onClick={() => addReaction(reply.id, emoji)}
+                                                            className={`inline-flex items-center gap-0.5 px-1 py-0.5 rounded-full text-[10px] transition-colors ${users.includes('You') ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-zinc-800 hover:bg-zinc-700'
+                                                                }`}
+                                                        >
+                                                            <span>{emoji}</span>
+                                                            <span className="text-zinc-400">{users.length}</span>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                ))
+                            )}
+                        </div>
+
+                        {/* Thread Reply Input */}
+                        <div className="p-3 border-t border-zinc-800/50 bg-zinc-950">
+                            <div className="flex gap-2">
+                                <Input
+                                    placeholder="Reply in thread..."
+                                    value={replyingTo?.id === threadViewMsg.id ? messageInput : ''}
+                                    onChange={e => {
+                                        if (!replyingTo || replyingTo.id !== threadViewMsg.id) {
+                                            setReplyingTo(threadViewMsg);
+                                        }
+                                        setMessageInput(e.target.value);
+                                    }}
+                                    onKeyDown={e => {
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault();
+                                            if (!replyingTo || replyingTo.id !== threadViewMsg.id) {
+                                                setReplyingTo(threadViewMsg);
+                                            }
+                                            handleSend();
+                                        }
+                                    }}
+                                    className="bg-zinc-900/80 border-zinc-800/60 text-zinc-300 placeholder:text-zinc-600 text-xs h-9 rounded-lg flex-1 focus:ring-1 focus:ring-blue-500/30 focus:border-blue-500/30"
+                                />
+                                <Button
+                                    size="sm"
+                                    onClick={() => {
+                                        if (!replyingTo || replyingTo.id !== threadViewMsg.id) {
+                                            setReplyingTo(threadViewMsg);
+                                        }
+                                        handleSend();
+                                    }}
+                                    className="h-9 w-9 p-0 bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                    title="Send reply"
+                                >
+                                    <Send className="h-3.5 w-3.5" />
+                                </Button>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

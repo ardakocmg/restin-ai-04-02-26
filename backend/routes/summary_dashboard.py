@@ -7,7 +7,6 @@ from models.summary_dashboard import (
 )
 from core.dependencies import get_current_user, get_database, check_venue_access
 from datetime import datetime, timezone
-import random
 
 router = APIRouter(tags=["Summary Dashboard"])
 
@@ -27,15 +26,21 @@ async def get_summary_dashboard(
         except Exception:
             pass  # Allow through for demo
 
-    """Get summary dashboard data"""
-    
-    from mock_data_store import MOCK_CLOCKING
-    total_earnings = sum(clk["total_cost"] for clk in MOCK_CLOCKING)
-    
-    # Mock data (replace with real queries)
+    # Real DB queries for KPI metrics
+    emp_count = await db["employees"].count_documents({"employment_status": {"$ne": "terminated"}})
+    clocking_count = await db["clocking_records"].count_documents({})
+
+    # Aggregate total earnings from clocking records
+    pipeline = [{"$group": {"_id": None, "total": {"$sum": "$hours_worked"}}}]
+    agg_result = await db["clocking_records"].aggregate(pipeline).to_list(1)
+    total_hours = agg_result[0]["total"] if agg_result else 0
+
+    # Estimate earnings (avg €12/hr)
+    total_earnings = total_hours * 12.0
+
     kpi_metrics = [
-        KPIMetric(label="Headcount", value=len(set(clk["employee_code"] for clk in MOCK_CLOCKING)), icon="users"),
-        KPIMetric(label="Active Clockings", value=len(MOCK_CLOCKING), icon="clock"),
+        KPIMetric(label="Headcount", value=emp_count, icon="users"),
+        KPIMetric(label="Active Clockings", value=clocking_count, icon="clock"),
         KPIMetric(label="Total Forecasted Earnings", value=f"€{total_earnings:,.2f}", icon="wallet")
     ]
     

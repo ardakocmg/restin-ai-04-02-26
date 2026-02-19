@@ -22,7 +22,9 @@ function Suppliers() {
         `${API_URL}/api/inventory/suppliers?venue_id=${venueId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setSuppliers(response.data.suppliers || []);
+      // Handle both array and {suppliers: [...]} response formats
+      const data = response.data;
+      setSuppliers(Array.isArray(data) ? data : (data.suppliers || []));
     } catch (error) {
       logger.error('Error fetching suppliers:', error);
     }
@@ -50,14 +52,14 @@ function Suppliers() {
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-foreground mb-1">{supplier.name}</h3>
                 <p className="text-sm text-gray-500 mb-3">{supplier.code || 'No code'}</p>
-                
+
                 {supplier.email && (
                   <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
                     <Mail className="w-4 h-4" />
                     {supplier.email}
                   </div>
                 )}
-                
+
                 {supplier.phone && (
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <Phone className="w-4 h-4" />

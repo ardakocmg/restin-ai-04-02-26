@@ -12,6 +12,7 @@ class IntegrationProvider(str, Enum):
     TUYA = "TUYA"
     MEROSS = "MEROSS"
     QINGPING = "QINGPING"
+    SPOTIFY = "SPOTIFY"
 
 class SyncStatus(str, Enum):
     PENDING = "PENDING"

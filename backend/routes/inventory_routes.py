@@ -308,6 +308,23 @@ def create_inventory_router():
 
         return {"message": "Transfer successful", "source_entry": entry_src.model_dump(), "dest_entry": entry_dest.model_dump()}
 
+    @router.get("/inventory/waste")
+    async def list_waste_logs(
+        venue_id: str = None,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """List waste logs for a venue."""
+        if not venue_id:
+            raise HTTPException(400, "venue_id is required")
+        await check_venue_access(current_user, venue_id)
+        
+        logs = await db.waste_logs.find(
+            {"venue_id": venue_id},
+            {"_id": 0}
+        ).sort("created_at", -1).to_list(500)
+        
+        return {"logs": logs}
+
     @router.post("/inventory/waste", response_model=WasteLog)
     async def report_waste(
         data: WasteLogCreate,

@@ -558,12 +558,16 @@ class AccessControlService:
     async def check_permission(user_id: str, door_id: str, action: DoorAction) -> bool:
         """
         Check if a user has permission for an action on a door.
-        Checks: user-specific overrides first, then role-based.
+        Checks: elevated role bypass first, then user-specific, then role-based.
         """
         db = get_database()
 
-        # NOTE: Admin bypass removed for production security.
-        # Admin users should have permissions assigned via role-based system.
+        # 0. Elevated role bypass — product_owner / admin have full door access
+        ELEVATED_ROLES = {"product_owner", "admin", "owner", "super_admin"}
+        user = await db.users.find_one({"id": user_id})
+        if user and user.get("role", "") in ELEVATED_ROLES:
+            logger.info("Door access granted via elevated role bypass: user=%s role=%s", user_id, user.get("role"))
+            return True
 
         # 1. User-specific permission (highest priority)
         user_perm = await db.door_permissions.find_one({
@@ -573,12 +577,7 @@ class AccessControlService:
         if user_perm:
             return _action_allowed(user_perm, action)
 
-        # 2. Role-based permission — get user's role(s)
-        # Handle "admin" shortcut for development/demo if user doesn't exist?
-        # No, strictness. But if user_id="admin" and not in DB, it fails.
-        # This matches previous behavior.
-        
-        user = await db.users.find_one({"id": user_id})
+        # 2. Role-based permission
         if not user:
             return False
 

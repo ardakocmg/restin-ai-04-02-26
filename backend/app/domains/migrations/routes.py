@@ -319,7 +319,7 @@ async def execute_migration(
     if recipes_to_insert:
         for recipe in recipes_to_insert:
             recipe["migration_id"] = migration_id
-        await db.recipes_engineered.insert_many(recipes_to_insert)
+        await db.recipes.insert_many(recipes_to_insert)
     
     return {
         "status": "success",

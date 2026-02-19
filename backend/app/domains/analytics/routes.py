@@ -9,6 +9,7 @@ router = APIRouter(prefix="/api", tags=["analytics"])
 logger = logging.getLogger(__name__)
 
 @router.get("/admin/dashboard-stats")
+@router.get("/manager/dashboard-stats")
 async def get_dashboard_stats(
     venue_id: Optional[str] = None,
     current_user: dict = Depends(get_current_user)

@@ -22,7 +22,7 @@ class PosOrder(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     display_id: str
     venue_id: str
-    session_id: str
+    session_id: Optional[str] = None
     table_id: Optional[str] = None
     table_name: Optional[str] = None
     order_type: str = "DINE_IN"  # DINE_IN|TAKEAWAY|DELIVERY
@@ -39,7 +39,7 @@ class PosOrder(BaseModel):
 
 class PosOrderCreate(BaseModel):
     venue_id: str
-    session_id: str
+    session_id: Optional[str] = None
     table_id: Optional[str] = None
     order_type: str = "DINE_IN"
     seats_enabled: bool = False

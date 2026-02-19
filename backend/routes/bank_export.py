@@ -4,7 +4,7 @@ from models.payroll import PayrollRun
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
-router = APIRouter(prefix="/hr/payroll", tags=["Payroll Banking"])
+router = APIRouter(prefix="/hr/payroll/banking", tags=["Payroll Banking"])
 
 @router.get("/runs/{run_id}/sepa-xml")
 async def generate_sepa_xml(

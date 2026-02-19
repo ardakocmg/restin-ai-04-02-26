@@ -48,3 +48,10 @@ Should return 3 venues:
 
 **Problem:** Unicode error (emoji in print)
 **Fix:** Already patched - emojis removed from print statements
+
+---
+
+## ⚡ General Quality Rules
+
+- **No Animation Delays:** NEVER use `setTimeout` to gate login, navigation, or submissions. Instant callbacks only.
+- **No 404 Before Commit:** Every UI route/link MUST have a working backend + page. Fix or hide before commit.

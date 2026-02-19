@@ -155,7 +155,7 @@ class PDFGenerationService:
     def generate_payslip_reportlab(self, payslip_data: dict) -> bytes:
         """
         Generate a refined Maltese payslip using ReportLab.
-        Matches Shireburn Indigo layout (Arda Koc reference).
+        Matches Malta payroll layout (Restin.ai format).
         """
         if not REPORTLAB_AVAILABLE:
             raise ImportError("ReportLab not installed")
@@ -313,7 +313,7 @@ class PDFGenerationService:
         c.drawString(col_earn, y_curr, f"€{payslip_data.get('gross_pay', 0.0):.2f}")
         c.drawString(col_deduct, y_curr, f"€{payslip_data.get('total_deductions', 0.0):.2f}")
         
-        # --- Leave Balances Boxes (Indigo Style) ---
+        # --- Leave Balances Boxes (Malta Style) ---
         y_balances = 65*mm
         c.line(MARGIN_L, y_balances+5, MARGIN_R, y_balances+5)
         
@@ -346,7 +346,7 @@ class PDFGenerationService:
         
         # --- Footer ---
         c.setFont("Helvetica", 6)
-        c.drawCentredString(width/2, 10*mm, "Printed from Restin.ai | Shireburn Indigo Parity Edition")
+        c.drawCentredString(width/2, 10*mm, "Printed from Restin.ai | Malta Payroll Parity Edition")
         
         c.showPage()
         c.save()

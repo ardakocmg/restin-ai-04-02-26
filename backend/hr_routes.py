@@ -37,32 +37,7 @@ def create_hr_router(db, ensure_ids, log_event, check_venue_access, get_current_
         else:
             query = {"venue_id": venue_id}
         
-        # --- SEEDING LOGIC START ---
-        count = await db.employees.count_documents({})
-        if count == 0:
-            from mock_data_store import MOCK_EMPLOYEES
-            seed_docs = []
-            for code, emp in MOCK_EMPLOYEES.items():
-                seed_docs.append({
-                    "id": str(uuid4()), # Generate new ID internal
-                    "display_id": code, # Use code as display ID
-                    "venue_id": venue_id, # Seed into current venue context
-                    "full_name": emp["full_name"],
-                    "email": emp["email"],
-                    "role": "staff",
-                    "department": emp["department"],
-                    "employment_status": "active",
-                    "start_date": emp.get("employment_date"),
-                    "phone": emp.get("mobile"),
-                    # Add extra fields to match schema
-                    "occupation": emp["occupation"],
-                    "cost_centre": emp["cost_centre"],
-                    "vendor": emp.get("vendor"),
-                    "created_at": datetime.now(timezone.utc).isoformat()
-                })
-            if seed_docs:
-                await db.employees.insert_many(seed_docs)
-        # --- SEEDING LOGIC END ---
+
 
         employees = await db.employees.find(query, {"_id": 0}).to_list(1000)
         

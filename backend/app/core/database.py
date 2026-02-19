@@ -27,6 +27,9 @@ def get_database():
         _async_db = _async_client[DB_NAME]
     return _async_db
 
+# Alias for backward compatibility
+get_db = get_database
+
 
 def get_sync_database():
     """Get the sync MongoDB database instance (PyMongo - for large queries)."""

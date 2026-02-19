@@ -1,0 +1,132 @@
+/* Login.tsx - Extracted Styles */
+
+/* ─── Background ─── */
+.login-bg-image {
+    background-size: cover;
+    background-position: center;
+    opacity: 0.45;
+}
+
+.login-overlay {
+    background-color: rgba(10, 10, 11, 0.55);
+}
+
+/* ─── Frosted Glass Card ─── */
+.login-glass-card {
+    background-color: rgba(15, 15, 17, 0.65);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+/* ─── Typography ─── */
+.login-title {
+    color: #F5F5F7;
+}
+
+.login-accent {
+    color: #E53935;
+}
+
+.login-subtitle {
+    color: #A1A1AA;
+}
+
+.login-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.login-divider-subtle {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ─── PIN Box States ─── */
+.pin-box {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: #F5F5F7;
+}
+
+.pin-box.filled {
+    background-color: rgba(229, 57, 53, 0.15);
+    border: 2px solid rgba(229, 57, 53, 0.4);
+    box-shadow: 0 0 20px rgba(229, 57, 53, 0.3);
+}
+
+.pin-box.error {
+    background-color: rgba(239, 68, 68, 0.2);
+    border: 2px solid #EF4444;
+}
+
+.pin-box.success {
+    background-color: rgba(74, 222, 128, 0.2);
+    border: 2px solid #4ADE80;
+}
+
+/* ─── Module Selector ─── */
+.login-module-btn {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #A1A1AA;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-module-btn.active {
+    background-color: rgba(229, 57, 53, 0.15);
+    color: #E53935;
+    border: 2px solid rgba(229, 57, 53, 0.4);
+    box-shadow: 0 0 20px rgba(229, 57, 53, 0.3);
+}
+
+/* ─── Numpad ─── */
+.numpad-btn-digit {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #F5F5F7;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    font-size: 24px;
+}
+
+.numpad-btn-clear {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #EF4444;
+    border: 2px solid rgba(239, 68, 68, 0.3);
+    font-size: 14px;
+}
+
+.numpad-btn-undo {
+    background-color: rgba(251, 140, 0, 0.15);
+    color: #FB8C00;
+    border: 2px solid rgba(251, 140, 0, 0.3);
+    font-size: 14px;
+}
+
+/* ─── Credential Inputs ─── */
+.login-input {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #F5F5F7;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-input:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ─── Submit Button ─── */
+.login-submit-btn {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #71717A;
+    border: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.login-submit-btn.ready {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: #22C55E;
+    border: 2px solid rgba(34, 197, 94, 0.3);
+}
+
+/* ─── Google SSO ─── */
+.login-google-btn {
+    background-color: rgba(255, 255, 255, 0.07);
+    color: #F5F5F7;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+}

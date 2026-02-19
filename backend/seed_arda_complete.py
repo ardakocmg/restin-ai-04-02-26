@@ -1,12 +1,12 @@
 """
-Arda KOC — Complete HR Data Seed
+Arda KOC â€” Complete HR Data Seed
 =================================
 1. Cleans duplicate uploads (keeps 1 of each unique file)
 2. Seeds clocking_records aligned with payslip gross amounts
 3. Seeds shifts (approved, matching clocking)
-4. Seeds payroll_runs per month (Aug 2024 → Jan 2026)
+4. Seeds payroll_runs per month (Aug 2024 â†’ Jan 2026)
 5. Seeds fs3_entries, fs5_forms, fs7_forms for compliance
-6. Ensures end-to-end: clocking → shifts → payroll → FS3/FS5/FS7
+6. Ensures end-to-end: clocking â†’ shifts â†’ payroll â†’ FS3/FS5/FS7
 
 Run:  python seed_arda_complete.py
 """
@@ -25,7 +25,7 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
 
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
-DB_NAME = os.environ.get("DB_NAME", "restin_ai_db")
+DB_NAME = os.environ.get("DB_NAME", "restin_v2")
 VENUE_ID = "venue-caviar-bull"
 EMPLOYEE_ID = "0307741A"
 EMPLOYEE_CODE = "AKO01"
@@ -33,21 +33,21 @@ EMPLOYEE_NAME = "ARDA KOC"
 HOURLY_RATE = 25.13
 UPLOAD_DIR = ROOT_DIR.parent / "data" / "uploads" / VENUE_ID
 
-# ─────────────────────────────────────────────────────────────────
+# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 # Payslip data derived from actual documents (seed_hr_documents.py + seed_arda_koc.py)
 # Format: (year, month, basic_pay, gov_bonus, gross, tax, net, hours)
 # hours = basic_pay / HOURLY_RATE (rounded)
-# ─────────────────────────────────────────────────────────────────
+# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 MONTHLY_DATA = [
-    # 2024 — Arda started 22/08/2024 (FS3 2024 total: €9,995 gross, €1,000 tax)
+    # 2024 â€” Arda started 22/08/2024 (FS3 2024 total: â‚¬9,995 gross, â‚¬1,000 tax)
     # Spread across Aug-Dec 2024 with realistic hours
     (2024, 8,  1800.00, 0.00,   1800.00, 180.00, 1620.00,  72),  # Aug (partial, started 22nd)
     (2024, 9,  2100.00, 0.00,   2100.00, 210.00, 1890.00,  84),  # Sep
     (2024, 10, 2050.00, 0.00,   2050.00, 205.00, 1845.00,  82),  # Oct
     (2024, 11, 2000.00, 0.00,   2000.00, 200.00, 1800.00,  80),  # Nov
-    (2024, 12, 2045.00, 0.00,   2045.00, 205.00, 1840.00,  81),  # Dec (FS3 total ~€9,995)
+    (2024, 12, 2045.00, 0.00,   2045.00, 205.00, 1840.00,  81),  # Dec (FS3 total ~â‚¬9,995)
 
-    # 2025 — Part-time arrangement (32 hrs/month at €25.13)
+    # 2025 â€” Part-time arrangement (32 hrs/month at â‚¬25.13)
     (2025, 1,  804.16, 0.00,    804.16,  80.00,  724.16,   32),
     (2025, 2,  804.16, 0.00,    804.16,  80.00,  724.16,   32),
     (2025, 3,  804.16, 25.83,   829.99,  83.00,  746.99,   32),  # Gov bonus (March)
@@ -61,7 +61,7 @@ MONTHLY_DATA = [
     (2025, 11, 900.00, 0.00,    900.00,  80.00,  820.00,   36),  # Nov (from payslip)
     (2025, 12, 804.16, 25.83,   829.99,  83.00,  746.99,   32),  # Dec (from payslip)
 
-    # 2026 — Current year
+    # 2026 â€” Current year
     (2026, 1,  804.16, 0.00,    804.16,  80.00,  724.16,   32),
 ]
 
@@ -71,49 +71,49 @@ async def main():
     db = client[DB_NAME]
 
     print("=" * 70)
-    print("  ARDA KOC — COMPLETE HR DATA SEED")
+    print("  ARDA KOC â€” COMPLETE HR DATA SEED")
     print("=" * 70)
 
-    # ── STEP 1: Clean Duplicate Uploads ───────────────────────────────
+    # â”€â”€ STEP 1: Clean Duplicate Uploads â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     await clean_duplicate_uploads(db)
 
-    # ── STEP 2: Ensure Employee Record ────────────────────────────────
+    # â”€â”€ STEP 2: Ensure Employee Record â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     await ensure_employee(db)
 
-    # ── STEP 3: Seed Clocking Records ─────────────────────────────────
+    # â”€â”€ STEP 3: Seed Clocking Records â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     await seed_clocking_records(db)
 
-    # ── STEP 4: Seed Shifts ───────────────────────────────────────────
+    # â”€â”€ STEP 4: Seed Shifts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     await seed_shifts(db)
 
-    # ── STEP 5: Seed Payroll Runs ─────────────────────────────────────
+    # â”€â”€ STEP 5: Seed Payroll Runs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     await seed_payroll_runs(db)
 
-    # ── STEP 6: Seed FS3 Entries ──────────────────────────────────────
+    # â”€â”€ STEP 6: Seed FS3 Entries â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     await seed_fs3_entries(db)
 
-    # ── STEP 7: Seed FS5 Forms ────────────────────────────────────────
+    # â”€â”€ STEP 7: Seed FS5 Forms â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     await seed_fs5_forms(db)
 
-    # ── STEP 8: Seed FS7 Forms ────────────────────────────────────────
+    # â”€â”€ STEP 8: Seed FS7 Forms â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     await seed_fs7_forms(db)
 
     print("\n" + "=" * 70)
-    print("  ✅ ALL DONE — Full HR pipeline seeded for Arda KOC")
+    print("  âœ… ALL DONE â€” Full HR pipeline seeded for Arda KOC")
     print("=" * 70)
     await print_summary(db)
 
     client.close()
 
 
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # STEP 1: CLEAN DUPLICATE UPLOADS
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async def clean_duplicate_uploads(db):
     print("\n[1/8] Cleaning duplicate uploads...")
 
     if not UPLOAD_DIR.exists():
-        print("  ⚠ Upload directory not found, skipping cleanup")
+        print("  âš  Upload directory not found, skipping cleanup")
         return
 
     # Group files by content hash
@@ -140,14 +140,14 @@ async def clean_duplicate_uploads(db):
             dup.unlink()
             removed += 1
 
-    print(f"  ✓ Removed {removed} duplicate files")
+    print(f"  âœ“ Removed {removed} duplicate files")
     remaining = len(list(UPLOAD_DIR.iterdir()))
-    print(f"  ✓ {remaining} unique files remain")
+    print(f"  âœ“ {remaining} unique files remain")
 
 
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # STEP 2: ENSURE EMPLOYEE EXISTS
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async def ensure_employee(db):
     print("\n[2/8] Ensuring employee record...")
 
@@ -211,12 +211,12 @@ async def ensure_employee(db):
         {"$set": employee},
         upsert=True
     )
-    print(f"  ✓ Employee '{EMPLOYEE_NAME}' — role: branch_manager")
+    print(f"  âœ“ Employee '{EMPLOYEE_NAME}' â€” role: branch_manager")
 
 
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # STEP 3: SEED CLOCKING RECORDS
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async def seed_clocking_records(db):
     print("\n[3/8] Seeding clocking records...")
 
@@ -224,7 +224,7 @@ async def seed_clocking_records(db):
     deleted = await db.clocking_records.delete_many({
         "employee_id": EMPLOYEE_ID, "venue_id": VENUE_ID
     })
-    print(f"  ↻ Cleared {deleted.deleted_count} old clocking records")
+    print(f"  â†» Cleared {deleted.deleted_count} old clocking records")
 
     all_records = []
 
@@ -234,7 +234,7 @@ async def seed_clocking_records(db):
 
     if all_records:
         await db.clocking_records.insert_many(all_records)
-    print(f"  ✓ Inserted {len(all_records)} clocking records ({MONTHLY_DATA[0][0]}/{MONTHLY_DATA[0][1]:02d} → {MONTHLY_DATA[-1][0]}/{MONTHLY_DATA[-1][1]:02d})")
+    print(f"  âœ“ Inserted {len(all_records)} clocking records ({MONTHLY_DATA[0][0]}/{MONTHLY_DATA[0][1]:02d} â†’ {MONTHLY_DATA[-1][0]}/{MONTHLY_DATA[-1][1]:02d})")
 
 
 def _generate_month_clockings(year: int, month: int, target_hours: int) -> list:
@@ -245,11 +245,11 @@ def _generate_month_clockings(year: int, month: int, target_hours: int) -> list:
     # Part-time: work ~8 shifts per month, each ~4 hours
     # For months with more hours (2024), more shifts or longer shifts
     if target_hours >= 70:
-        # Full-time-ish: ~20 shifts × ~4 hrs
+        # Full-time-ish: ~20 shifts Ã— ~4 hrs
         num_shifts = min(20, days_in_month - 4)
         hrs_per_shift = target_hours / num_shifts
     else:
-        # Part-time: ~8 shifts × ~4 hrs
+        # Part-time: ~8 shifts Ã— ~4 hrs
         num_shifts = max(4, round(target_hours / 4))
         hrs_per_shift = target_hours / num_shifts
 
@@ -315,16 +315,16 @@ def _generate_month_clockings(year: int, month: int, target_hours: int) -> list:
     return records
 
 
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # STEP 4: SEED SHIFTS (mirrors clocking records for payroll)
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async def seed_shifts(db):
     print("\n[4/8] Seeding shifts...")
 
     deleted = await db.shifts.delete_many({
         "employee_id": EMPLOYEE_ID, "venue_id": VENUE_ID
     })
-    print(f"  ↻ Cleared {deleted.deleted_count} old shifts")
+    print(f"  â†» Cleared {deleted.deleted_count} old shifts")
 
     all_shifts = []
 
@@ -359,12 +359,12 @@ async def seed_shifts(db):
 
     if all_shifts:
         await db.shifts.insert_many(all_shifts)
-    print(f"  ✓ Inserted {len(all_shifts)} shift records")
+    print(f"  âœ“ Inserted {len(all_shifts)} shift records")
 
 
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # STEP 5: SEED PAYROLL RUNS (one per month)
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async def seed_payroll_runs(db):
     print("\n[5/8] Seeding payroll runs...")
 
@@ -373,7 +373,7 @@ async def seed_payroll_runs(db):
         "payslips.employee_id": EMPLOYEE_ID,
         "employee_count": 1  # Only single-employee runs (Arda's individual)
     })
-    print(f"  ↻ Cleared {deleted.deleted_count} old individual payroll runs")
+    print(f"  â†» Cleared {deleted.deleted_count} old individual payroll runs")
 
     runs = []
     for year, month, basic, bonus, gross, tax, net, hours in MONTHLY_DATA:
@@ -437,12 +437,12 @@ async def seed_payroll_runs(db):
             {"$set": run},
             upsert=True
         )
-    print(f"  ✓ Upserted {len(runs)} payroll runs")
+    print(f"  âœ“ Upserted {len(runs)} payroll runs")
 
 
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # STEP 6: SEED FS3 ENTRIES (Annual Tax Certificate per employee)
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async def seed_fs3_entries(db):
     print("\n[6/8] Seeding FS3 entries...")
 
@@ -498,12 +498,12 @@ async def seed_fs3_entries(db):
             {"$set": e},
             upsert=True
         )
-    print(f"  ✓ Upserted {len(entries)} FS3 entries ({', '.join(str(y) for y in years)})")
+    print(f"  âœ“ Upserted {len(entries)} FS3 entries ({', '.join(str(y) for y in years)})")
 
 
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # STEP 7: SEED FS5 FORMS (Monthly SSC/Tax Return)
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async def seed_fs5_forms(db):
     print("\n[7/8] Seeding FS5 forms...")
 
@@ -538,12 +538,12 @@ async def seed_fs5_forms(db):
             {"$set": f},
             upsert=True
         )
-    print(f"  ✓ Upserted {len(forms)} FS5 monthly forms")
+    print(f"  âœ“ Upserted {len(forms)} FS5 monthly forms")
 
 
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # STEP 8: SEED FS7 FORMS (Annual Reconciliation)
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async def seed_fs7_forms(db):
     print("\n[8/8] Seeding FS7 forms...")
 
@@ -582,12 +582,12 @@ async def seed_fs7_forms(db):
             {"$set": f},
             upsert=True
         )
-    print(f"  ✓ Upserted {len(forms)} FS7 annual forms")
+    print(f"  âœ“ Upserted {len(forms)} FS7 annual forms")
 
 
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # SUMMARY
-# ═══════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async def print_summary(db):
     clk_count = await db.clocking_records.count_documents({"employee_id": EMPLOYEE_ID})
     shift_count = await db.shifts.count_documents({"employee_id": EMPLOYEE_ID})
@@ -597,19 +597,19 @@ async def print_summary(db):
     fs7_count = await db.fs7_forms.count_documents({"venue_id": VENUE_ID, "id": {"$regex": "arda"}})
 
     print(f"""
-┌─────────────────────────────────────────┐
-│  ARDA KOC — Data Summary               │
-├─────────────────────────────────────────┤
-│  Clocking Records:  {clk_count:>5}               │
-│  Shifts:            {shift_count:>5}               │
-│  Payroll Runs:      {run_count:>5}               │
-│  FS3 Entries:       {fs3_count:>5}               │
-│  FS5 Forms:         {fs5_count:>5}               │
-│  FS7 Forms:         {fs7_count:>5}               │
-├─────────────────────────────────────────┤
-│  Pipeline: Clocking → Shift → Payroll   │
-│            → FS3 → FS5 → FS7  ✅        │
-└─────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  ARDA KOC â€” Data Summary               â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚  Clocking Records:  {clk_count:>5}               â”‚
+â”‚  Shifts:            {shift_count:>5}               â”‚
+â”‚  Payroll Runs:      {run_count:>5}               â”‚
+â”‚  FS3 Entries:       {fs3_count:>5}               â”‚
+â”‚  FS5 Forms:         {fs5_count:>5}               â”‚
+â”‚  FS7 Forms:         {fs7_count:>5}               â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚  Pipeline: Clocking â†’ Shift â†’ Payroll   â”‚
+â”‚            â†’ FS3 â†’ FS5 â†’ FS7  âœ…        â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 """)
 
 

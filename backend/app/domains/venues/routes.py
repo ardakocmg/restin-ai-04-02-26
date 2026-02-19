@@ -99,13 +99,13 @@ async def get_recipe_stats(venue_id: str):
         sdb = get_sync_database()
         
         # Use efficient counts instead of loading all 37K docs
-        eng_count = sdb.recipes_engineered.estimated_document_count()
+        eng_count = sdb.recipes.estimated_document_count()
         
         if eng_count > 0:
             total = eng_count
             # Sample to get category count
-            categories = sdb.recipes_engineered.distinct("category")
-            trash_count = sdb.recipes_engineered.count_documents({"deleted": True})
+            categories = sdb.recipes.distinct("category")
+            trash_count = sdb.recipes.count_documents({"deleted": True})
             active_count = total - trash_count
         else:
             # Fallback to menu_items
@@ -146,7 +146,7 @@ def get_recipes(
     skip = (page - 1) * limit
     
     # Check recipes_engineered first
-    eng_count = sdb.recipes_engineered.estimated_document_count()
+    eng_count = sdb.recipes.estimated_document_count()
     print(f"[RECIPES] eng_count={eng_count}, skip={skip}, limit={limit}")
     
     if eng_count > 0:
@@ -154,7 +154,7 @@ def get_recipes(
         if active is not None:
             query["active"] = active
         
-        docs = list(sdb.recipes_engineered.find(query).skip(skip).limit(limit))
+        docs = list(sdb.recipes.find(query).skip(skip).limit(limit))
         total = eng_count
         print(f"[RECIPES] found {len(docs)} docs from recipes_engineered")
     else:
@@ -208,9 +208,9 @@ async def get_recipe_trash(
     db = get_database()
     
     query = {"deleted": True}
-    total = await db.recipes_engineered.count_documents(query)
+    total = await db.recipes.count_documents(query)
     skip = (page - 1) * limit
-    recipes = await db.recipes_engineered.find(query).skip(skip).limit(limit).to_list(length=limit)
+    recipes = await db.recipes.find(query).skip(skip).limit(limit).to_list(length=limit)
     
     for r in recipes:
         r["_id"] = str(r["_id"])
@@ -229,7 +229,7 @@ async def _update_recipes(ids: List[str], updates: dict):
     db = get_database()
     
     # Update by string id
-    res1 = await db.recipes_engineered.update_many(
+    res1 = await db.recipes.update_many(
         {"id": {"$in": ids}}, {"$set": updates}
     )
     
@@ -237,7 +237,7 @@ async def _update_recipes(ids: List[str], updates: dict):
     obj_ids = [ObjectId(i) for i in ids if ObjectId.is_valid(i)]
     count = res1.modified_count
     if obj_ids:
-        res2 = await db.recipes_engineered.update_many(
+        res2 = await db.recipes.update_many(
             {"_id": {"$in": obj_ids}}, {"$set": updates}
         )
         count += res2.modified_count
@@ -265,11 +265,11 @@ async def bulk_restore(venue_id: str, request: BulkActionRequest):
 @router.post("/{venue_id}/recipes/engineered/bulk-purge")
 async def bulk_purge(venue_id: str, request: BulkActionRequest):
     db = get_database()
-    res1 = await db.recipes_engineered.delete_many({"id": {"$in": request.recipe_ids}})
+    res1 = await db.recipes.delete_many({"id": {"$in": request.recipe_ids}})
     obj_ids = [ObjectId(i) for i in request.recipe_ids if ObjectId.is_valid(i)]
     total = res1.deleted_count
     if obj_ids:
-        res2 = await db.recipes_engineered.delete_many({"_id": {"$in": obj_ids}})
+        res2 = await db.recipes.delete_many({"_id": {"$in": obj_ids}})
         total += res2.deleted_count
     return {"status": "success", "purged": total}
 

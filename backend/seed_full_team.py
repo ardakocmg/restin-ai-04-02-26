@@ -19,7 +19,7 @@ BACKEND_DIR = Path(__file__).parent
 load_dotenv(BACKEND_DIR / ".env")
 
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
-DB_NAME = os.environ.get("DB_NAME", "restin_ai_db")
+DB_NAME = os.environ.get("DB_NAME", "restin_v2")
 MALTA_TZ = ZoneInfo("Europe/Malta")
 
 # ── Venue Architecture ────────────────────────────────────────────────────
@@ -414,7 +414,7 @@ async def seed():
                 "daily_attendance_type": "Scheduler",
                 "daily_attendance_profile": "Scheduler",
             },
-            "external_links": [{"source": "shireburn_indigo", "id": e["code"]}],
+            "external_links": [{"source": "shireburn_hr", "id": e["code"]}],
             "created_at": datetime.now(timezone.utc).isoformat(),
             "updated_at": datetime.now(timezone.utc).isoformat(),
         }

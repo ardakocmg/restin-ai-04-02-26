@@ -11,7 +11,7 @@ BACKEND_DIR = PROJ_ROOT / "backend"
 load_dotenv(BACKEND_DIR / ".env")
 
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
-DB_NAME = os.environ.get("DB_NAME", "restin_ai_db")
+DB_NAME = os.environ.get("DB_NAME", "restin_v2")
 VENUE_ID = "venue-caviar-bull"
 EMPLOYEE_ID = "0307741A" # Arda
 

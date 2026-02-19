@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 import api from '../../lib/api';
 import Drawer from '../shared/Drawer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 import OverviewTab from './tabs/OverviewTab';
 import SuppliersPricingTab from './tabs/SuppliersPricingTab';
 import RecipeTab from './tabs/RecipeTab';
@@ -10,6 +13,8 @@ import MovementsTab from './tabs/MovementsTab';
 import ProductionTab from './tabs/ProductionTab';
 import WasteTab from './tabs/WasteTab';
 import AuditTab from './tabs/AuditTab';
+import AllergensTab from './tabs/AllergensTab';
+import NutritionTab from './tabs/NutritionTab';
 
 export default function ItemDetailDrawer({ open, onClose, skuId, venueId }) {
   const [detail, setDetail] = useState(null);
@@ -27,11 +32,25 @@ export default function ItemDetailDrawer({ open, onClose, skuId, venueId }) {
       const res = await api.get(`/inventory/items/${skuId}/detail?venue_id=${venueId}`);
       setDetail(res.data);
     } catch (error) {
-      console.error('Failed to load item detail:', error);
+      logger.error('Failed to load item detail:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  const handleSaveField = async (updates) => {
+    try {
+      await api.put(`/inventory/items/${skuId}?venue_id=${venueId}`, updates);
+      toast.success('Item updated');
+      loadItemDetail();
+    } catch (error) {
+      logger.error('Failed to update item:', error);
+      toast.error('Failed to update item');
+    }
+  };
+
+  const sku = detail?.sku || {};
+  const allergenCount = sku.allergens?.length || 0;
 
   return (
     <Drawer
@@ -48,14 +67,23 @@ export default function ItemDetailDrawer({ open, onClose, skuId, venueId }) {
         </div>
       ) : detail ? (
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-7">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="suppliers">Suppliers</TabsTrigger>
-            <TabsTrigger value="recipe">Recipe</TabsTrigger>
-            <TabsTrigger value="movements">Movements</TabsTrigger>
-            <TabsTrigger value="production">Production</TabsTrigger>
-            <TabsTrigger value="waste">Waste</TabsTrigger>
-            <TabsTrigger value="audit">Audit</TabsTrigger>
+          <TabsList className="flex w-full overflow-x-auto">
+            <TabsTrigger value="overview" className="text-xs">Overview</TabsTrigger>
+            <TabsTrigger value="suppliers" className="text-xs">Suppliers</TabsTrigger>
+            <TabsTrigger value="allergens" className="text-xs">
+              Allergens
+              {allergenCount > 0 && (
+                <Badge variant="destructive" className="ml-1 h-4 w-4 p-0 text-[10px] flex items-center justify-center rounded-full">
+                  {allergenCount}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="nutrition" className="text-xs">Nutrition</TabsTrigger>
+            <TabsTrigger value="recipe" className="text-xs">Recipe</TabsTrigger>
+            <TabsTrigger value="movements" className="text-xs">Movements</TabsTrigger>
+            <TabsTrigger value="production" className="text-xs">Production</TabsTrigger>
+            <TabsTrigger value="waste" className="text-xs">Waste</TabsTrigger>
+            <TabsTrigger value="audit" className="text-xs">Audit</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="mt-4">
@@ -64,6 +92,14 @@ export default function ItemDetailDrawer({ open, onClose, skuId, venueId }) {
 
           <TabsContent value="suppliers" className="mt-4">
             <SuppliersPricingTab data={detail.suppliers_pricing} sku={detail.sku} />
+          </TabsContent>
+
+          <TabsContent value="allergens" className="mt-4">
+            <AllergensTab data={detail} sku={detail.sku} onSave={handleSaveField} />
+          </TabsContent>
+
+          <TabsContent value="nutrition" className="mt-4">
+            <NutritionTab data={detail} sku={detail.sku} onSave={handleSaveField} />
           </TabsContent>
 
           <TabsContent value="recipe" className="mt-4">

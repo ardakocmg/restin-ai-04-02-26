@@ -3,7 +3,7 @@
  *
  * Used by:
  *   - NewSidebar (navigation menu rendering)
- *   - NewTopBar (inline search suggestions)
+ *   - NewTopBar (inline search suggestions + domain dropdowns)
  *   - GlobalSearch (Cmd+K command palette)
  *
  * All pages, groups, domains, and role requirements are defined here.
@@ -21,7 +21,7 @@ import {
     UserCheck, Receipt, Clock, Package, Upload, Monitor,
     Building2, LayoutGrid, ShieldAlert, Shield, Layers,
     RefreshCw, Home, Timer, Type, Palette, Server, Globe, Mic, Wand2, Radar, MessageSquare,
-    Wrench, Cog, Database,
+    Wrench, Cog, Database, Brain,
     type LucideIcon
 } from 'lucide-react';
 
@@ -29,19 +29,12 @@ import { ROLE_HIERARCHY } from './roles';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 
-export interface SubItem {
-    title: string;
-    id: string;
-    href?: string;
-}
-
 export interface MenuItem {
     title: string;
     icon: LucideIcon;
     href: string;
     group: string;
     requiredRole: string;
-    subs?: SubItem[];
     children?: MenuItem[];
 }
 
@@ -111,23 +104,18 @@ export const MENU_ITEMS: MenuItem[] = [
     // ═══════════════════════════════════════════════════════════════════
     // POS & OPERATIONS
     // ═══════════════════════════════════════════════════════════════════
-    { title: 'POS Dashboard', icon: LayoutDashboard, href: '/manager/posdashboard', group: 'pos', requiredRole: 'MANAGER' },
+    { title: 'POS Dashboard', icon: LayoutDashboard, href: '/manager/pos-dashboard', group: 'pos', requiredRole: 'MANAGER' },
+    { title: 'POS Themes', icon: Palette, href: '/manager/pos-themes', group: 'pos', requiredRole: 'MANAGER' },
     {
         title: 'Sales Analytics', icon: BarChart3, href: '/manager/reports/sales', group: 'pos', requiredRole: 'MANAGER',
-        subs: [
-            { title: 'Summary Reports', id: 'summary' },
-            { title: 'Revenue Reports', id: 'revenue' },
-            { title: 'Shift Reports', id: 'shift' },
-            { title: 'Hour Reports', id: 'hour' },
-            { title: 'Day Reports', id: 'day' },
-            { title: 'Week Reports', id: 'week' },
-            { title: 'Month Reports', id: 'month' },
-            { title: 'Product Reports', id: 'product' },
-            { title: 'Category Reports', id: 'category' },
-            { title: 'User Reports', id: 'user' },
-            { title: 'Labour Reports', id: 'labour' },
-            { title: 'Advanced Reports', id: 'advanced' },
-            { title: 'Export Data', id: 'export' },
+        children: [
+            { title: 'Summary Reports', icon: BarChart3, href: '/manager/reports/sales?type=summary', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Revenue Reports', icon: BarChart3, href: '/manager/reports/sales?type=revenue', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Shift Reports', icon: BarChart3, href: '/manager/reports/sales?type=shift', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Product Reports', icon: BarChart3, href: '/manager/reports/sales?type=product', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Category Reports', icon: BarChart3, href: '/manager/reports/sales?type=category', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Labour Reports', icon: BarChart3, href: '/manager/reports/sales?type=labour', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Export Data', icon: BarChart3, href: '/manager/reports/sales?type=export', group: 'pos', requiredRole: 'MANAGER' },
         ],
     },
     { title: 'Products', icon: ShoppingCart, href: '/manager/products', group: 'pos', requiredRole: 'MANAGER' },
@@ -140,10 +128,10 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Operational Timeline', icon: Clock, href: '/manager/reservations/timeline', group: 'pos', requiredRole: 'MANAGER' },
     {
         title: 'Printer Management', icon: Receipt, group: 'pos', href: '/manager/printers', requiredRole: 'MANAGER',
-        subs: [
-            { title: 'Printers', id: 'printers', href: '/manager/printers?tab=printers' },
-            { title: 'Templates', id: 'templates', href: '/manager/printers?tab=templates' },
-            { title: 'Cash Drawers', id: 'drawers', href: '/manager/printers?tab=cash-drawers' },
+        children: [
+            { title: 'Printers', icon: Receipt, href: '/manager/printers?tab=printers', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Templates', icon: Receipt, href: '/manager/printers?tab=templates', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Cash Drawers', icon: Receipt, href: '/manager/printers?tab=cash-drawers', group: 'pos', requiredRole: 'MANAGER' },
         ],
     },
     { title: 'Service Day Close', icon: Clock, href: '/manager/service-day-close', group: 'pos', requiredRole: 'MANAGER' },
@@ -171,38 +159,38 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Deep Analytics', icon: Activity, href: '/manager/hr/analytics', group: 'hr', requiredRole: 'OWNER' },
     {
         title: 'HR Reports', icon: FileText, href: '/manager/hr-reports/headcount', group: 'hr', requiredRole: 'OWNER',
-        subs: [
-            { title: 'Headcount', id: 'headcount', href: '/manager/hr-reports/headcount' },
-            { title: 'Turnover', id: 'turnover', href: '/manager/hr-reports/turnover' },
-            { title: 'Employee Details', id: 'emp-details', href: '/manager/hr-reports/employee-details' },
-            { title: 'Employment Dates', id: 'emp-dates', href: '/manager/hr-reports/employment-dates' },
-            { title: 'Birthdays & Anniversaries', id: 'birthdays', href: '/manager/hr-reports/birthdays' },
-            { title: 'Training Expiring', id: 'train-exp', href: '/manager/hr-reports/training-expiring' },
-            { title: 'Training Starting', id: 'train-start', href: '/manager/hr-reports/training-starting' },
-            { title: 'Training Ongoing', id: 'train-on', href: '/manager/hr-reports/training-ongoing' },
+        children: [
+            { title: 'Headcount', icon: FileText, href: '/manager/hr-reports/headcount', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Turnover', icon: FileText, href: '/manager/hr-reports/turnover', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Employee Details', icon: FileText, href: '/manager/hr-reports/employee-details', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Employment Dates', icon: FileText, href: '/manager/hr-reports/employment-dates', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Birthdays & Anniversaries', icon: FileText, href: '/manager/hr-reports/birthdays', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Training Expiring', icon: FileText, href: '/manager/hr-reports/training-expiring', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Training Starting', icon: FileText, href: '/manager/hr-reports/training-starting', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Training Ongoing', icon: FileText, href: '/manager/hr-reports/training-ongoing', group: 'hr', requiredRole: 'OWNER' },
         ],
     },
     {
-        title: 'Advanced Modules', icon: Layers, href: '#', group: 'hr', requiredRole: 'OWNER',
-        subs: [
-            { title: 'ESG & Sustainability', id: 'esg', href: '/manager/hr/esg' },
-            { title: 'Gov Reports', id: 'gov', href: '/manager/hr/gov-reports' },
-            { title: 'Sick Leave Analysis', id: 'sick', href: '/manager/hr/sick-leave' },
-            { title: 'Cost Forecasting', id: 'cost', href: '/manager/hr/forecasting-costs' },
-            { title: 'Employee Portal View', id: 'portal', href: '/manager/hr/portal-view' },
+        title: 'Advanced Modules', icon: Layers, href: '/manager/hr/esg', group: 'hr', requiredRole: 'OWNER',
+        children: [
+            { title: 'ESG & Sustainability', icon: Layers, href: '/manager/hr/esg', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Gov Reports', icon: Layers, href: '/manager/hr/gov-reports', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Sick Leave Analysis', icon: Layers, href: '/manager/hr/sick-leave', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Cost Forecasting', icon: Layers, href: '/manager/hr/forecasting-costs', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Employee Portal View', icon: Layers, href: '/manager/hr/portal-view', group: 'hr', requiredRole: 'OWNER' },
         ],
     },
     {
         title: 'HR Settings', icon: Settings, href: '/manager/hr/settings', group: 'hr', requiredRole: 'OWNER',
-        subs: [
-            { title: 'Setup Hub', id: 'setup-hub', href: '/manager/hr-setup' },
-            { title: 'Feature Flags', id: 'flags', href: '/manager/hr/settings' },
-            { title: 'Banks', id: 'banks', href: '/manager/hr-setup/banks' },
-            { title: 'Departments', id: 'depts', href: '/manager/hr-setup/departments' },
-            { title: 'Locations', id: 'locs', href: '/manager/hr-setup/locations' },
-            { title: 'Occupations', id: 'jobs', href: '/manager/hr-setup/occupations' },
-            { title: 'Work Schedules', id: 'sched', href: '/manager/hr-setup/work-schedules' },
-            { title: 'Tax Profiles', id: 'tax', href: '/manager/hr-setup/tax-profiles' },
+        children: [
+            { title: 'Setup Hub', icon: Settings, href: '/manager/hr-setup', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Feature Flags', icon: Settings, href: '/manager/hr/settings', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Banks', icon: Settings, href: '/manager/hr-setup/banks', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Departments', icon: Settings, href: '/manager/hr-setup/departments', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Locations', icon: Settings, href: '/manager/hr-setup/locations', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Occupations', icon: Settings, href: '/manager/hr-setup/occupations', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Work Schedules', icon: Settings, href: '/manager/hr-setup/work-schedules', group: 'hr', requiredRole: 'OWNER' },
+            { title: 'Tax Profiles', icon: Settings, href: '/manager/hr-setup/tax-profiles', group: 'hr', requiredRole: 'OWNER' },
         ],
     },
 
@@ -211,18 +199,23 @@ export const MENU_ITEMS: MenuItem[] = [
     // ═══════════════════════════════════════════════════════════════════
     { title: 'General Settings', icon: Settings, href: '/manager/menu', group: 'menu', requiredRole: 'MANAGER' },
     { title: 'Quick Sync (Import)', icon: Upload, href: '/manager/migration', group: 'menu', requiredRole: 'OWNER' },
-    { title: 'Menu Import (Legacy)', icon: Upload, href: '/manager/menu-import', group: 'menu', requiredRole: 'OWNER' },
     {
         title: 'Inventory Hub', icon: Package, href: '/manager/inventory', group: 'menu', requiredRole: 'MANAGER',
-        subs: [
-            { title: 'Items & Stock', id: 'items', href: '/manager/inventory-items' },
-            { title: 'Stock Count', id: 'count', href: '/manager/inventory-stock-count' },
-            { title: 'Waste Log', id: 'waste', href: '/manager/inventory-waste' },
-            { title: 'Recipes', id: 'recipes', href: '/manager/inventory-recipes' },
-            { title: 'Production', id: 'production', href: '/manager/inventory-production' },
-            { title: 'Transfers', id: 'transfers', href: '/manager/inventory-transfers' },
-            { title: 'Suppliers', id: 'suppliers', href: '/manager/suppliers' },
-            { title: 'Purchase Orders', id: 'po', href: '/manager/inventory-purchase-orders' },
+        children: [
+            { title: 'Items & Stock', icon: Package, href: '/manager/inventory-items', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Stock Count', icon: Package, href: '/manager/inventory-stock-count', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Waste Log', icon: Package, href: '/manager/inventory-waste', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Recipes', icon: Package, href: '/manager/inventory-recipes', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Production', icon: Factory, href: '/manager/inventory-production', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Transfers', icon: Package, href: '/manager/inventory-transfers', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Goods Received', icon: Package, href: '/manager/inventory-grn', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Ordering Suggestions', icon: TrendingUp, href: '/manager/inventory-ordering', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Adjustments', icon: Package, href: '/manager/inventory-adjustments', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Suppliers', icon: Truck, href: '/manager/suppliers', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Purchase Orders', icon: FileText, href: '/manager/inventory-purchase-orders', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Menu Engineering', icon: PieChartIcon, href: '/manager/menu-engineering', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Sales Mix', icon: BarChart3, href: '/manager/sales-mix', group: 'menu', requiredRole: 'MANAGER' },
+            { title: 'Meal Planning', icon: Calendar, href: '/manager/meal-planning', group: 'menu', requiredRole: 'MANAGER' },
         ],
     },
     { title: 'Suppliers', icon: Truck, href: '/manager/suppliers', group: 'menu', requiredRole: 'MANAGER' },
@@ -246,20 +239,13 @@ export const MENU_ITEMS: MenuItem[] = [
     // ═══════════════════════════════════════════════════════════════════
     {
         title: 'Reporting Hub', icon: BarChart3, href: '/manager/reporting', group: 'reports', requiredRole: 'MANAGER',
-        subs: [
-            { title: 'Summary Reports', id: 'summary' },
-            { title: 'Revenue Reports', id: 'revenue' },
-            { title: 'Shift Reports', id: 'shift' },
-            { title: 'Hour Reports', id: 'hour' },
-            { title: 'Day Reports', id: 'day' },
-            { title: 'Week Reports', id: 'week' },
-            { title: 'Month Reports', id: 'month' },
-            { title: 'Product Reports', id: 'product' },
-            { title: 'Category Reports', id: 'category' },
-            { title: 'User Reports', id: 'user' },
-            { title: 'Labour Reports', id: 'labour' },
-            { title: 'Advanced Reports', id: 'advanced' },
-            { title: 'Export Data', id: 'export' },
+        children: [
+            { title: 'Summary Reports', icon: BarChart3, href: '/manager/reporting?type=summary', group: 'reports', requiredRole: 'MANAGER' },
+            { title: 'Revenue Reports', icon: BarChart3, href: '/manager/reporting?type=revenue', group: 'reports', requiredRole: 'MANAGER' },
+            { title: 'Product Reports', icon: BarChart3, href: '/manager/reporting?type=product', group: 'reports', requiredRole: 'MANAGER' },
+            { title: 'Category Reports', icon: BarChart3, href: '/manager/reporting?type=category', group: 'reports', requiredRole: 'MANAGER' },
+            { title: 'Labour Reports', icon: BarChart3, href: '/manager/reporting?type=labour', group: 'reports', requiredRole: 'MANAGER' },
+            { title: 'Export Data', icon: BarChart3, href: '/manager/reporting?type=export', group: 'reports', requiredRole: 'MANAGER' },
         ],
     },
     { title: 'Business Analytics', icon: TrendingUp, href: '/manager/analytics', group: 'reports', requiredRole: 'MANAGER' },
@@ -268,16 +254,31 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Inventory Analytics', icon: PieChartIcon, href: '/manager/reports/inventory-detailed', group: 'reports', requiredRole: 'MANAGER' },
 
     // ═══════════════════════════════════════════════════════════════════
+    // RESTIN OS (AI & Platform Features — Unified)
+    //   • Hey Rin & AI Config live under /manager/ai/ (unique pages)
+    //   • All pillar dashboards live under /manager/restin/ (rich UIs)
+    // ═══════════════════════════════════════════════════════════════════
+    { title: 'Hey Rin', icon: Brain, href: '/manager/ai/copilot', group: 'restin', requiredRole: 'OWNER' },
+    { title: 'Control Tower', icon: LayoutDashboard, href: '/manager/restin', group: 'restin', requiredRole: 'OWNER' },
+    { title: 'Voice AI', icon: Mic, href: '/manager/restin/voice', group: 'restin', requiredRole: 'OWNER' },
+    { title: 'Content Studio', icon: Wand2, href: '/manager/restin/studio', group: 'restin', requiredRole: 'OWNER' },
+    { title: 'Market Radar', icon: Radar, href: '/manager/restin/radar', group: 'restin', requiredRole: 'OWNER' },
+    { title: 'Website Builder', icon: Globe, href: '/manager/restin/web', group: 'restin', requiredRole: 'OWNER' },
+    { title: 'Autopilot CRM', icon: Users, href: '/manager/restin/crm', group: 'restin', requiredRole: 'OWNER' },
+    { title: 'Ops & Aggregators', icon: Layers, href: '/manager/restin/ops', group: 'restin', requiredRole: 'OWNER' },
+    { title: 'Fintech & Payments', icon: DollarSign, href: '/manager/restin/fintech', group: 'restin', requiredRole: 'OWNER' },
+
+    // ═══════════════════════════════════════════════════════════════════
     // 🏪 VENUE SETTINGS — Branch-specific (per-location hardware & config)
     // ═══════════════════════════════════════════════════════════════════
     { title: 'Venue Profile', icon: Settings, href: '/manager/settings', group: 'venue-settings', requiredRole: 'OWNER' },
     { title: 'App Settings', icon: Settings, href: '/manager/app-settings', group: 'venue-settings', requiredRole: 'OWNER' },
     {
         title: 'Device Manager', icon: Monitor, group: 'venue-settings', href: '/manager/devices', requiredRole: 'MANAGER',
-        subs: [
-            { title: 'Device List', id: 'list', href: '/manager/devices' },
-            { title: 'Device Hub', id: 'hub', href: '/manager/device-hub' },
-            { title: 'Device Mapping', id: 'map', href: '/manager/device-mapping' },
+        children: [
+            { title: 'Device List', icon: Monitor, href: '/manager/devices', group: 'venue-settings', requiredRole: 'MANAGER' },
+            { title: 'Device Hub', icon: Monitor, href: '/manager/device-hub', group: 'venue-settings', requiredRole: 'MANAGER' },
+            { title: 'Device Mapping', icon: Monitor, href: '/manager/device-mapping', group: 'venue-settings', requiredRole: 'MANAGER' },
         ],
     },
     { title: 'Door Access (Nuki)', icon: Award, href: '/manager/door-access', group: 'venue-settings', requiredRole: 'OWNER' },
@@ -295,6 +296,8 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Theme & Branding', icon: Palette, href: '/manager/theme', group: 'org-settings', requiredRole: 'OWNER' },
     { title: 'Template Studio', icon: LayoutDashboard, href: '/manager/templates', group: 'org-settings', requiredRole: 'MANAGER' },
     { title: 'Google Workspace', icon: Globe, href: '/manager/google-workspace', group: 'org-settings', requiredRole: 'MANAGER' },
+    { title: 'My Google', icon: Globe, href: '/manager/my-google', group: 'org-settings', requiredRole: 'STAFF' },
+    { title: 'AI Config', icon: Brain, href: '/manager/ai/models', group: 'org-settings', requiredRole: 'OWNER' },
 
     // ═══════════════════════════════════════════════════════════════════
     // ⚙️ SYSTEM ADMIN — Platform infrastructure (product_owner only)
@@ -302,12 +305,12 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Observability', icon: Activity, href: '/manager/observability', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
     {
         title: 'System Intelligence', icon: Activity, href: '/manager/monitoring', group: 'system-admin', requiredRole: 'PRODUCT_OWNER',
-        subs: [
-            { title: 'Real-time Monitor', id: 'monitor', href: '/manager/monitoring' },
-            { title: 'System Logs', id: 'logs', href: '/manager/logs' },
-            { title: 'Advanced Health', id: 'health', href: '/manager/system-health-advanced' },
-            { title: 'Error Inbox', id: 'errors', href: '/manager/observability/error-inbox' },
-            { title: 'Test Panel', id: 'test', href: '/manager/observability/testpanel' },
+        children: [
+            { title: 'Real-time Monitor', icon: Activity, href: '/manager/monitoring', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+            { title: 'System Logs', icon: Activity, href: '/manager/logs', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+            { title: 'Advanced Health', icon: Activity, href: '/manager/system-health-advanced', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+            { title: 'Error Inbox', icon: Activity, href: '/manager/observability/error-inbox', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+            { title: 'Test Panel', icon: Activity, href: '/manager/observability/testpanel', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
         ],
     },
     { title: 'Pre-Go-Live', icon: Activity, href: '/manager/pre-go-live', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
@@ -318,18 +321,8 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Microservices', icon: Server, href: '/manager/microservices', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
     { title: 'Event Monitor', icon: Activity, href: '/manager/events', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
     { title: 'Updates & Changelog', icon: Activity, href: '/manager/updates', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
-
-    // ═══════════════════════════════════════════════════════════════════
-    // RESTIN.AI COMMERCIAL MODULES
-    // ═══════════════════════════════════════════════════════════════════
-    { title: 'Control Tower', icon: LayoutDashboard, href: '/manager/restin', group: 'restin', requiredRole: 'OWNER' },
-    { title: 'Website Builder', icon: Globe, href: '/manager/restin/web', group: 'restin', requiredRole: 'OWNER' },
-    { title: 'Voice AI', icon: Mic, href: '/manager/restin/voice', group: 'restin', requiredRole: 'OWNER' },
-    { title: 'Autopilot CRM', icon: Users, href: '/manager/restin/crm', group: 'restin', requiredRole: 'OWNER' },
-    { title: 'Content Studio', icon: Wand2, href: '/manager/restin/studio', group: 'restin', requiredRole: 'OWNER' },
-    { title: 'Market Radar', icon: Radar, href: '/manager/restin/radar', group: 'restin', requiredRole: 'OWNER' },
-    { title: 'Ops & Aggregators', icon: Layers, href: '/manager/restin/ops', group: 'restin', requiredRole: 'OWNER' },
-    { title: 'Fintech & Payments', icon: DollarSign, href: '/manager/restin/fintech', group: 'restin', requiredRole: 'OWNER' },
+    { title: 'AI Models & Config', icon: Brain, href: '/manager/ai/models', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+    { title: 'AI Control Center', icon: Brain, href: '/manager/ai/settings', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
 
     // ═══════════════════════════════════════════════════════════════════
     // COLLABORATION & COMMUNICATION
@@ -372,21 +365,22 @@ export function buildSearchIndex(userRole: string | undefined): SearchableItem[]
             keywords: generateKeywords(item.title, item.href),
         });
 
-        // Add sub-items
-        if (item.subs) {
-            for (const sub of item.subs) {
-                const subPath = sub.href || item.href;
+        // Add children (accordion sub-items)
+        if (item.children) {
+            for (const child of item.children) {
+                const childLevel = ROLE_HIERARCHY[child.requiredRole] ?? 0;
+                if (userLevel < childLevel) continue;
                 items.push({
-                    title: sub.title,
-                    path: subPath,
+                    title: child.title,
+                    path: child.href,
                     group: item.group,
                     domain: domainId,
                     domainTitle,
-                    breadcrumb: `${domainTitle} › ${item.title} › ${sub.title}`,
+                    breadcrumb: `${domainTitle} › ${item.title} › ${child.title}`,
                     parentTitle: item.title,
-                    icon: item.icon,
-                    requiredRole: item.requiredRole,
-                    keywords: generateKeywords(sub.title, subPath),
+                    icon: child.icon || item.icon,
+                    requiredRole: child.requiredRole,
+                    keywords: generateKeywords(child.title, child.href),
                 });
             }
         }
@@ -398,6 +392,6 @@ export function buildSearchIndex(userRole: string | undefined): SearchableItem[]
 /** Generate additional search keywords from title and path */
 function generateKeywords(title: string, path: string): string[] {
     const words = title.toLowerCase().split(/[\s&\-/]+/).filter(Boolean);
-    const pathParts = path.replace(/^\/admin\//, '').split(/[\s/\-?=]+/).filter(Boolean);
+    const pathParts = path.replace(/^\/manager\//, '').split(/[\s/\-?=]+/).filter(Boolean);
     return Array.from(new Set([...words, ...pathParts]));
 }

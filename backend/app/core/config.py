@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     
     # JWT Settings
     # We provide a default to unblock non-critical deployments, but it should be overridden in prod for security.
-    JWT_SECRET: str = "temporary-secret-key-change-in-production-please-123456"
+    JWT_SECRET: str = ""  # MUST be set via .env or environment variable
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_HOURS: int = 12
 

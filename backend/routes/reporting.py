@@ -115,13 +115,13 @@ async def get_birthdays_anniversaries(
     ]
 
 
-@router.get("/indigo/{report_slug}")
-async def get_indigo_report(
+@router.get("/hr/{report_slug}")
+async def get_hr_report(
     report_slug: str,
     current_user: dict = Depends(get_current_user),
     db = Depends(get_database)
 ):
-    """Factory for all Indigo-parity reports"""
+    """Factory for all HR parity reports"""
     title = report_slug.replace("-", " ").title()
     
     # Common mock columns
@@ -140,8 +140,9 @@ async def get_indigo_report(
     ]
     
     return {
-        "title": f"Indigo {title}",
+        "title": f"HR {title}",
         "slug": report_slug,
         "data": mock_data,
         "columns": columns
     }
+

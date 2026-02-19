@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 /**
  * FS3Document - Exact replica of the Maltese FS3 (Final Settlement System)
- * Payee Statement of Earnings as per the Indigo Payroll standard.
+ * Payee Statement of Earnings as per the Malta FSS standard.
  */
 export default function FS3Document({ fs3Data, venue = null }) {
     const { payee, payer, period, emoluments, deductions, sscTable, year } = fs3Data;
@@ -36,7 +36,7 @@ export default function FS3Document({ fs3Data, venue = null }) {
                 </div>
                 <div className="text-right">
                     <div className="text-[10px] font-bold uppercase">{payee.surname}</div>
-                    <div className="text-[8px] text-gray-500 italic">Indigo Payroll Standard</div>
+                    <div className="text-[8px] text-gray-500 italic">Restin.ai Payroll</div>
                 </div>
             </div>
 
@@ -296,7 +296,7 @@ export default function FS3Document({ fs3Data, venue = null }) {
 
             {/* Footer Logo */}
             <div className="mt-8 pt-4 border-t border-gray-300 flex items-center gap-2">
-                <div className="text-sm font-black text-gray-800 tracking-tighter">INDIGO</div>
+                <div className="text-sm font-black text-gray-800 tracking-tighter">RESTIN.AI</div>
                 <div className="text-[9px] text-gray-400 uppercase tracking-widest">Payroll Services</div>
             </div>
         </div>

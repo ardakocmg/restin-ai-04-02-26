@@ -5,11 +5,12 @@ import { useAuth } from "./AuthContext";
 import { authAPI } from "../../lib/api";
 import api from "../../lib/api";
 import { toast } from "sonner";
-import { ChefHat, LayoutGrid, Monitor, Undo2 } from "lucide-react";
+import { ChefHat, LayoutGrid, Monitor, Undo2, KeyRound, Mail } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { LoginResponse } from "./types";
 import { User } from "../../types";
 import { logger } from "../../lib/logger";
+import './Login.css';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -21,6 +22,11 @@ export default function Login() {
     const [loginTarget, setLoginTarget] = useState<"pos" | "kds" | "admin">("pos");
     const [pinError, setPinError] = useState(false);
     const [pinSuccess, setPinSuccess] = useState(false);
+
+    // Login mode toggle: PIN vs Credentials
+    const [loginMode, setLoginMode] = useState<'pin' | 'credentials'>('pin');
+    const [credEmail, setCredEmail] = useState('');
+    const [credPassword, setCredPassword] = useState('');
 
     const [showVenueSelection, setShowVenueSelection] = useState(false);
     const [allowedVenues, setAllowedVenues] = useState<string[]>([]);
@@ -37,8 +43,12 @@ export default function Login() {
     const [googleClientId, setGoogleClientId] = useState<string | null>(null);
     const googleBtnRef = useRef<HTMLDivElement>(null);
 
-    // Fetch Google SSO config on mount
+    // Fetch Google SSO config on mount + prefetch dashboard chunks
     useEffect(() => {
+        // Prefetch dashboard so it's ready instantly after login
+        import("../../pages/manager/SystemDashboard.jsx");
+        import("../../pages/manager/ManagerLayout");
+
         const fetchSSOConfig = async () => {
             try {
                 const res = await api.get('/auth/google/config');
@@ -58,6 +68,30 @@ export default function Login() {
             handlePinLogin();
         }
     }, [pin]);
+
+    // Keyboard support: type PIN with number keys, Backspace to undo, Escape to clear
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (mfaRequired || showVenueSelection) return;
+
+            if (e.key >= '0' && e.key <= '9') {
+                e.preventDefault();
+                handlePinInput(e.key);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                // Enter confirms PIN if 4 digits entered
+                if (pin.length === 4 && !loading) handlePinLogin();
+            } else if (e.key === 'Backspace') {
+                e.preventDefault();
+                handlePinUndo();
+            } else if (e.key === 'Escape' || e.key === 'Delete') {
+                e.preventDefault();
+                handlePinClear();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [mfaRequired, showVenueSelection, pin, loading, pinError]);
 
     const handlePinInput = (digit: string) => {
         if (pin.length < 4 && !loading && !pinError) {
@@ -85,11 +119,13 @@ export default function Login() {
     };
 
     const resetPinWithError = () => {
+        setLoading(false);
         setPinError(true);
+        setPinSuccess(false);
         setTimeout(() => {
             setPin("");
             setPinError(false);
-        }, 400);
+        }, 200);
     };
 
     const handlePinLogin = async () => {
@@ -111,7 +147,9 @@ export default function Login() {
                 toast.info("MFA verification required");
             } else {
                 setPinSuccess(true);
-                setTimeout(() => handleLoginSuccess(data), 300);
+                // Brief pause so user sees the green pulse before navigating
+                await new Promise(r => setTimeout(r, 150));
+                handleLoginSuccess(data);
             }
         } catch (error: unknown) {
             const axiosError = error as { response?: { status?: number; data?: { detail?: string } } };
@@ -122,9 +160,50 @@ export default function Login() {
                 resetPinWithError();
                 toast.error(t('auth.invalidCredentials'));
             } else {
+                resetPinWithError();
                 toast.error(message);
-                setLoading(false);
             }
+        }
+    };
+
+    // ── Credentials (email/password) login handler ──
+    const handleCredentialsLogin = async () => {
+        if (!credEmail || !credPassword || loading) return;
+        setLoading(true);
+        setPinError(false);
+        try {
+            const response = await authAPI.loginWithCredentials({
+                identifier: credEmail,
+                password: credPassword,
+                target: loginTarget,
+                deviceId: `web-${navigator.userAgent.slice(0, 32)}`,
+            });
+            const data: LoginResponse = response.data;
+
+            if (data.requires_mfa) {
+                setMfaRequired(true);
+                setMfaUserId(data.user_id || "");
+                setAllowedVenues(data.allowedVenueIds || []);
+                toast.info("MFA verification required — enter your Google Authenticator code");
+            } else {
+                setPinSuccess(true);
+                await new Promise(r => setTimeout(r, 150));
+                handleLoginSuccess(data);
+            }
+        } catch (error: unknown) {
+            const axiosError = error as { response?: { status?: number; data?: { detail?: string } } };
+            const status = axiosError.response?.status;
+            const message = axiosError.response?.data?.detail || "Login failed";
+
+            if (status === 401) {
+                toast.error(t('auth.invalidCredentials'));
+            } else if (status === 429) {
+                toast.error("Too many attempts. Please try again in 5 minutes.");
+            } else {
+                toast.error(message);
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -142,6 +221,15 @@ export default function Login() {
         localStorage.setItem('restin_token', token);
         if (data.user?.id) {
             localStorage.setItem('restin_user_id', data.user.id);
+        }
+
+        // Fire-and-forget: prefetch critical data so dashboard loads instantly
+        const venueId = data.allowedVenueIds?.[0] || data.defaultVenueId || data.user?.venueId;
+        if (venueId) {
+            const headers = { Authorization: `Bearer ${token}` };
+            // These calls warm the browser HTTP cache + React Query will pick up stale data
+            api.get(`/venues`, { headers }).catch(() => { });
+            api.get(`/venues/${venueId}/stats`, { headers }).catch(() => { });
         }
 
         if (data.allowedVenueIds && data.allowedVenueIds.length > 1) {
@@ -244,7 +332,7 @@ export default function Login() {
                         const msg = typeof detail === 'string'
                             ? detail
                             : (detail as { message?: string })?.message || 'Google SSO failed';
-                        toast.error(msg);
+                        toast.error(msg as string);
                         logger.error('Google SSO error', { error: msg });
                     } finally {
                         setGoogleLoading(false);
@@ -285,21 +373,10 @@ export default function Login() {
     const pinBoxes = Array(4).fill(0).map((_, i) => (
         <div
             key={i}
-            className={`w-16 h-16 rounded-xl flex items-center justify-center text-2xl font-bold transition-all duration-200 ${pinError ? 'animate-shake' : ''
+            className={`w-16 h-16 rounded-xl flex items-center justify-center text-2xl font-bold transition-all duration-200 pin-box ${pin[i] ? (pinError ? 'error' : pinSuccess ? 'success' : 'filled') : ''
+                } ${pinError ? 'animate-shake' : ''
                 } ${pinSuccess ? 'success-pulse' : ''
                 }`}
-            style={{
-                backgroundColor: pin[i]
-                    ? (pinError ? 'rgba(239, 68, 68, 0.2)' : pinSuccess ? 'rgba(74, 222, 128, 0.2)' : 'rgba(229, 57, 53, 0.15)')
-                    : 'rgba(255, 255, 255, 0.05)',
-                border: pin[i]
-                    ? (pinError ? '2px solid #EF4444' : pinSuccess ? '2px solid #4ADE80' : '2px solid rgba(229, 57, 53, 0.4)')
-                    : '2px solid rgba(255, 255, 255, 0.1)',
-                boxShadow: pin[i] && !pinError && !pinSuccess
-                    ? '0 0 20px rgba(229, 57, 53, 0.3)'
-                    : 'none',
-                color: '#F5F5F7'
-            }}
         >
             {pin[i] ? '•' : ''}
         </div>
@@ -317,21 +394,16 @@ export default function Login() {
         <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
             {/* Background Image */}
             <div
-                className="absolute inset-0 z-0"
-                style={{
-                    backgroundImage: `url(https://images.unsplash.com/photo-1709396759771-07c3644794c8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwzfHxyZXN0YXVyYW50JTIwa2l0Y2hlbiUyMGJ1c3klMjBjaGVmJTIwcGxhdGluZyUyMGZpbmUlMjBkaW5pbmclMjBkYXJrJTIwYXRtb3NwaGVyZXxlbnwwfHx8fDE3NjkxMjMyNTZ8MA&ixlib=rb-4.1.0&q=85)`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    opacity: 0.15
-                }}
+                className="absolute inset-0 z-0 login-bg-image"
+                style={{ backgroundImage: `url(https://images.unsplash.com/photo-1709396759771-07c3644794c8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwzfHxyZXN0YXVyYW50JTIwa2l0Y2hlbiUyMGJ1c3klMjBjaGVmJTIwcGxhdGluZyUyMGZpbmUlMjBkaW5pbmclMjBkYXJrJTIwYXRtb3NwaGVyZXxlbnwwfHx8fDE3NjkxMjMyNTZ8MA&ixlib=rb-4.1.0&q=85)` }}
             />
 
             {/* Dark overlay */}
-            <div className="absolute inset-0 z-0" style={{ backgroundColor: 'rgba(10, 10, 11, 0.85)' }} />
+            <div className="absolute inset-0 z-0 login-overlay" />
 
-            {/* Content */}
-            <div className="relative z-10 w-full max-w-md space-y-8">{!showVenueSelection ? (
-                <div className="w-full max-w-md space-y-8">
+            {/* Content — frosted glass card */}
+            <div className="relative z-10 w-full max-w-md">{!showVenueSelection ? (
+                <div className="w-full max-w-md space-y-8 rounded-2xl p-8 login-glass-card">
                     {/* Logo */}
                     <div className="text-center mb-12">
                         <h1 className="text-6xl font-bold mb-2" style={{ color: '#F5F5F7' }}>
@@ -474,8 +546,76 @@ export default function Login() {
                                     <p className="text-sm" style={{ color: '#A1A1AA' }}>{t('common.loading')}</p>
                                 )}
 
-                                {/* Google SSO — Only for Admin login */}
-                                {loginTarget === 'admin' && googleClientId && (
+                                {/* Toggle: PIN ↔ Credentials */}
+                                <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                                    <button
+                                        onClick={() => setLoginMode(loginMode === 'pin' ? 'credentials' : 'pin')}
+                                        className="w-full flex items-center justify-center gap-2 text-sm py-2 rounded-lg transition-all"
+                                        style={{ color: '#A1A1AA' }}
+                                        data-testid="login-mode-toggle"
+                                    >
+                                        {loginMode === 'pin' ? (
+                                            <><Mail className="w-4 h-4" /> Sign in with Email & Password</>
+                                        ) : (
+                                            <><KeyRound className="w-4 h-4" /> Sign in with PIN</>
+                                        )}
+                                    </button>
+                                </div>
+
+                                {/* Credentials Form */}
+                                {loginMode === 'credentials' && (
+                                    <div className="mt-4 space-y-3">
+                                        <input
+                                            type="email"
+                                            placeholder="Email, username, or employee ID"
+                                            value={credEmail}
+                                            onChange={e => setCredEmail(e.target.value)}
+                                            autoComplete="email"
+                                            data-testid="login-email"
+                                            className="w-full px-4 py-3 rounded-xl text-sm transition-all outline-none"
+                                            style={{
+                                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                                color: '#F5F5F7',
+                                                border: '2px solid rgba(255,255,255,0.1)',
+                                            }}
+                                            onFocus={e => e.target.style.borderColor = 'rgba(255,255,255,0.3)'}
+                                            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+                                        />
+                                        <input
+                                            type="password"
+                                            placeholder="Password"
+                                            value={credPassword}
+                                            onChange={e => setCredPassword(e.target.value)}
+                                            autoComplete="current-password"
+                                            data-testid="login-password"
+                                            className="w-full px-4 py-3 rounded-xl text-sm transition-all outline-none"
+                                            style={{
+                                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                                color: '#F5F5F7',
+                                                border: '2px solid rgba(255,255,255,0.1)',
+                                            }}
+                                            onFocus={e => e.target.style.borderColor = 'rgba(255,255,255,0.3)'}
+                                            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+                                            onKeyDown={e => { if (e.key === 'Enter') handleCredentialsLogin(); }}
+                                        />
+                                        <button
+                                            onClick={handleCredentialsLogin}
+                                            disabled={loading || !credEmail || !credPassword}
+                                            data-testid="login-credentials-submit"
+                                            className="w-full py-3.5 rounded-xl font-bold text-sm transition-all"
+                                            style={{
+                                                backgroundColor: (!credEmail || !credPassword) ? 'rgba(255,255,255,0.05)' : 'rgba(34, 197, 94, 0.2)',
+                                                color: (!credEmail || !credPassword) ? '#71717A' : '#22C55E',
+                                                border: (!credEmail || !credPassword) ? '2px solid rgba(255,255,255,0.05)' : '2px solid rgba(34, 197, 94, 0.3)',
+                                            }}
+                                        >
+                                            {loading ? t('common.loading') : 'Sign In'}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* Google SSO — visible when configured */}
+                                {googleClientId && (
                                     <div className="mt-6 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                                         <button
                                             onClick={handleGoogleLogin}

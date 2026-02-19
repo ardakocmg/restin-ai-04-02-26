@@ -14,10 +14,10 @@ async def check_data_status():
     
     database = get_database()
     
-    total = await database.RecipesEngineered.count_documents({})
-    active_count = await database.RecipesEngineered.count_documents({"active": True})
-    archived_count = await database.RecipesEngineered.count_documents({"active": False})
-    missing_active_field = await database.RecipesEngineered.count_documents({"active": {"$exists": False}})
+    total = await database.recipes.count_documents({})
+    active_count = await database.recipes.count_documents({"active": True})
+    archived_count = await database.recipes.count_documents({"active": False})
+    missing_active_field = await database.recipes.count_documents({"active": {"$exists": False}})
     
     print(f"Total Recipes: {total}")
     print(f"Active: {active_count}")
@@ -26,7 +26,7 @@ async def check_data_status():
     
     # Sample archived item to see why
     if archived_count > 0:
-        sample = await database.RecipesEngineered.find_one({"active": False})
+        sample = await database.recipes.find_one({"active": False})
         print("\nSample Archived Item:")
         print(sample)
 

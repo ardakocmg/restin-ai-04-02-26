@@ -1,5 +1,20 @@
 import api from '../../../lib/api';
 
+interface MenuItemResponse {
+    id: string;
+    name: string;
+    price_cents: number;
+    description?: string;
+    category_id: string;
+    image_url?: string;
+}
+
+interface WebSiteConfig {
+    sections: Array<{ id: string; type: string; content: Record<string, unknown> }>;
+    theme: Record<string, unknown>;
+    metadata?: Record<string, string>;
+}
+
 /**
  * 🕸️ Web Architect Service (Pillar 2)
  * Handles data fetching and persistence for the Digital Storefront.
@@ -26,7 +41,7 @@ export const webBuilderService = {
         return {
             menuName: menuRes.data.name,
             categories: categories,
-            items: items.map((item: any) => ({
+            items: items.map((item: MenuItemResponse) => ({
                 id: item.id,
                 name: item.name,
                 price: (item.price_cents / 100).toFixed(2),
@@ -41,7 +56,7 @@ export const webBuilderService = {
      * Publish the site configuration.
      * Saves the current builder state to Public Content API.
      */
-    publishSite: async (siteConfig: any) => {
+    publishSite: async (siteConfig: WebSiteConfig) => {
         return api.post('/public-content', {
             type: 'web_builder_config',
             content: siteConfig,

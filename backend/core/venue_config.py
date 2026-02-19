@@ -23,7 +23,17 @@ DEFAULTS = {
         "POS_SPLIT_MERGE_ENABLED": True,
         "POS_OFFLINE_ENABLED": True,
         "POS_CASH_CONTROL_ENABLED": True,
-        "POS_MULTI_TENDER_ENABLED": True
+        "POS_MULTI_TENDER_ENABLED": True,
+        "payroll_mt": True,
+        "haccp": True,
+        "crm": True,
+        "reservations": True,
+        "billing": True,
+        "scheduler": True,
+        "voice_ai": True,
+        "smart_home": True,
+        "gamification": True,
+        "aggregators": True,
     },
     "rules": {
         "po_requires_approval": True,

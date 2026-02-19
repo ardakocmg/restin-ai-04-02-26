@@ -15,9 +15,9 @@ async def reset_recipes():
     
     database = get_database()
     
-    # 1. Clear RecipesEngineered
+    # 1. Clear recipes collection
     print("Deleting all Engineered Recipes...")
-    result = await database.RecipesEngineered.delete_many({})
+    result = await database.recipes.delete_many({})
     print(f"Deleted {result.deleted_count} recipes.")
     
     # 2. Clear RecipeVersions (History)

@@ -47,3 +47,10 @@ if (-not $frontendOk) {
 
 - Backend: <http://localhost:8000/docs>
 - Frontend: <http://localhost:3000>
+
+---
+
+## ⚡ Quality Gates
+
+- **No Animation Delays:** NEVER use `setTimeout` to gate login, navigation, or submissions. Instant callbacks only.
+- **No 404 Before Commit:** Every UI route/link MUST have a working backend + page. Fix or hide before commit.

@@ -69,3 +69,10 @@ Check that these patterns exist in `.gitignore`:
 1. **Summary:**
 If all scans return exit code 1 (no results), the codebase is clean.
 If any scan finds results, fix them before deploying.
+
+---
+
+## ⚡ General Quality Rules
+
+- **No Animation Delays:** NEVER use `setTimeout` to gate login, navigation, or submissions. Instant callbacks only.
+- **No 404 Before Commit:** Every UI route/link MUST have a working backend + page. Fix or hide before commit.

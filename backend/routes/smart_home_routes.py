@@ -51,6 +51,17 @@ TUYA_CATEGORY_MAP = {
     "wk": "plug",       # thermostat
 }
 
+# ─── Spotify device category mapping ─────────────────────────────────────
+SPOTIFY_CATEGORY_MAP = {
+    "speaker": "music_player",
+    "computer": "music_player",
+    "smartphone": "music_player",
+    "castgroup": "music_player",
+    "castavideo": "music_player",
+    "castaudio": "music_player",
+    "automobile": "music_player",
+}
+
 
 def _map_iot_device(doc: Dict[str, Any]) -> Dict[str, Any]:
     """Map an iot_devices document to the SmartDevice format expected by the frontend."""
@@ -63,10 +74,12 @@ def _map_iot_device(doc: Dict[str, Any]) -> Dict[str, Any]:
         device_category = MEROSS_CATEGORY_MAP.get(dev_type, "unknown")
     elif provider == "tuya":
         device_category = TUYA_CATEGORY_MAP.get(dev_type, "unknown")
+    elif provider == "spotify":
+        device_category = SPOTIFY_CATEGORY_MAP.get(dev_type, "music_player")
     else:
         device_category = "unknown"
 
-    return {
+    result = {
         "name": doc.get("name", "Unknown Device"),
         "uuid": doc.get("external_id") or doc.get("uuid") or str(doc.get("_id", "")),
         "type": doc.get("type", "unknown").upper(),
@@ -78,6 +91,25 @@ def _map_iot_device(doc: Dict[str, Any]) -> Dict[str, Any]:
         "provider": provider,
         "last_synced": doc.get("last_synced_at"),
     }
+
+    # Attach Spotify playback metadata for music_player devices
+    if provider == "spotify":
+        playback = doc.get("playback", {})
+        result["playback"] = {
+            "is_playing": playback.get("is_playing", False),
+            "track_name": playback.get("track_name", ""),
+            "artist": playback.get("artist", ""),
+            "album_name": playback.get("album_name", ""),
+            "album_art": playback.get("album_art"),
+            "duration_ms": playback.get("duration_ms", 0),
+            "progress_ms": playback.get("progress_ms", 0),
+            "volume_percent": doc.get("volume_percent", 0),
+            "shuffle": playback.get("shuffle", False),
+            "repeat": playback.get("repeat", "off"),
+            "playlist_uri": playback.get("playlist_uri", ""),
+        }
+
+    return result
 
 
 class ControlRequest(BaseModel):
@@ -108,9 +140,9 @@ async def _run_background_sync():
     try:
         # Read credentials from integration_configs
         configs = {}
-        print("[SYNC] Looking for MEROSS/TUYA configs in integration_configs...")
+        print("[SYNC] Looking for MEROSS/TUYA/SPOTIFY configs in integration_configs...")
         async for doc in db.integration_configs.find(
-            {"provider": {"$in": ["MEROSS", "TUYA"]}, "isEnabled": True},
+            {"provider": {"$in": ["MEROSS", "TUYA", "SPOTIFY"]}, "isEnabled": True},
             {"_id": 0}
         ):
             provider = doc["provider"]
@@ -176,10 +208,33 @@ async def _run_background_sync():
                 logger.error("[SmartHome] Tuya sync error: %s", str(e))
                 _last_sync_error = f"Tuya: {str(e)}"
 
+        # ── Spotify Sync ──
+        if "SPOTIFY" in configs:
+            try:
+                from app.domains.integrations.connectors.spotify import SpotifyConnector, SPOTIFY_AVAILABLE
+                if SPOTIFY_AVAILABLE:
+                    connector = SpotifyConnector(
+                        organization_id="default",
+                        credentials=configs["SPOTIFY"],
+                        settings={}
+                    )
+                    result = await connector.sync()
+                    total_processed += result.get("processed", 0)
+                    total_failed += result.get("failed", 0)
+                    logger.info("[SmartHome] Spotify sync: processed=%d, failed=%d",
+                               result.get("processed", 0), result.get("failed", 0))
+                else:
+                    logger.warning("[SmartHome] spotipy library not installed, skipping Spotify sync")
+            except ImportError:
+                logger.warning("[SmartHome] Spotify connector import failed, skipping")
+            except Exception as e:
+                logger.error("[SmartHome] Spotify sync error: %s", str(e))
+                _last_sync_error = f"Spotify: {str(e)}"
+
         # Update last sync timestamp on integration_configs
         now = datetime.now(timezone.utc)
         await db.integration_configs.update_many(
-            {"provider": {"$in": ["MEROSS", "TUYA"]}, "isEnabled": True},
+            {"provider": {"$in": ["MEROSS", "TUYA", "SPOTIFY"]}, "isEnabled": True},
             {"$set": {"lastSync": now.isoformat()}}
         )
 
@@ -300,6 +355,24 @@ async def control_device(
                     )
         except Exception as e:
             logger.error("[SmartHome] Tuya control error: %s", str(e))
+
+    elif provider == "SPOTIFY":
+        try:
+            from app.domains.integrations.connectors.spotify import SpotifyConnector, SPOTIFY_AVAILABLE
+            if SPOTIFY_AVAILABLE:
+                creds_doc = await db.integration_configs.find_one({"provider": "SPOTIFY", "isEnabled": True})
+                if creds_doc:
+                    connector = SpotifyConnector(
+                        organization_id=device.get("organization_id", "default"),
+                        credentials=creds_doc.get("credentials", {}),
+                        settings={}
+                    )
+                    command_sent = await connector.execute_command(
+                        request.command.upper(),
+                        {"device_id": device_uuid}
+                    )
+        except Exception as e:
+            logger.error("[SmartHome] Spotify control error: %s", str(e))
 
     # Always update local state (optimistic)
     update_fields: Dict[str, Any] = {"updated_at": datetime.now(timezone.utc).isoformat()}

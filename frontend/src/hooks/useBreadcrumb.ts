@@ -103,7 +103,7 @@ export function useBreadcrumb(): BreadcrumbSegment[] {
             }
         } else {
             // 4. Fallback: parse pathname segments for unregistered routes
-            //    e.g. /admin/hr/people/abc123 → HR & People > People > abc123
+            //    e.g. /manager/hr/people/abc123 → HR & People > People > abc123
             const parts = pathname.replace('/manager/', '').split('/').filter(Boolean);
 
             // Try matching the first part(s) to build partial crumbs

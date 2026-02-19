@@ -80,6 +80,7 @@ from routes.review_routes import create_review_router
 from routes.audit_routes import create_audit_router
 from routes.employee_routes import create_employee_router
 from routes.inventory_suppliers import create_inventory_suppliers_router
+from routes.inventory_data import create_inventory_data_router
 from routes.inventory_purchase_orders import create_inventory_purchase_orders_router
 from routes.inventory_receiving import create_inventory_receiving_router
 from routes.inventory_items import create_inventory_items_router
@@ -109,6 +110,7 @@ from routes.radar_routes import router as radar_router
 from routes.ops_routes import create_ops_router
 from routes.billing_routes import create_billing_router
 from routes.smart_home_routes import create_smart_home_router
+from routes.spotify_routes import create_spotify_router
 from routes.nuki_oauth_routes import create_nuki_oauth_router
 from routes.fintech_routes import create_fintech_router
 from routes.pay_routes import router as pay_router
@@ -168,8 +170,10 @@ from routes.google_sso_routes import create_google_sso_router  # Google Workspac
 from google.routes.workspace_routes import create_workspace_routes  # Workspace domain mgmt
 from routes.template_routes import create_template_router  # Template Wizard
 from routes.template_assets_routes import create_template_assets_router  # Template Assets
+from routes.import_template_routes import router as import_template_router  # Import Templates
+from routes.ai_routes import router as ai_copilot_router  # AI Copilot
 
-# Shireburn Indigo Parity Routes
+# HR Parity Routes
 from routes.summary_dashboard import router as summary_dashboard_router
 from routes.employee_portal import router as employee_portal_router
 from routes.scheduler import router as scheduler_router
@@ -323,6 +327,7 @@ review_router = create_review_router()
 audit_router = create_audit_router()
 employee_router = create_employee_router()
 inventory_suppliers_router = create_inventory_suppliers_router()
+inventory_data_router = create_inventory_data_router()
 inventory_purchase_orders_router = create_inventory_purchase_orders_router()
 inventory_receiving_router = create_inventory_receiving_router()
 inventory_items_router = create_inventory_items_router()
@@ -443,6 +448,7 @@ api_main.include_router(radar_router)
 api_main.include_router(create_ops_router())
 api_main.include_router(create_billing_router())
 api_main.include_router(create_smart_home_router())
+api_main.include_router(create_spotify_router())
 api_main.include_router(create_nuki_oauth_router())
 api_main.include_router(create_fintech_router())
 api_main.include_router(pay_router)
@@ -472,6 +478,7 @@ api_main.include_router(audit_router)
 api_main.include_router(event_router)
 api_main.include_router(employee_router)
 api_main.include_router(inventory_suppliers_router)
+api_main.include_router(inventory_data_router)
 api_main.include_router(inventory_purchase_orders_router)
 api_main.include_router(inventory_receiving_router)
 api_main.include_router(inventory_items_router)
@@ -603,7 +610,7 @@ api_main.include_router(hr_employee_analytics_router)
 api_main.include_router(content_editor_router)
 api_main.include_router(dashboard_analytics_router)
 
-# Shireburn Indigo Parity Routers
+# HR Parity Routers
 api_main.include_router(summary_dashboard_router)
 api_main.include_router(employee_portal_router)
 api_main.include_router(scheduler_router)
@@ -647,6 +654,10 @@ api_main.include_router(pos_session_router)
 api_main.include_router(admin_router_new)
 api_main.include_router(template_router)
 api_main.include_router(template_assets_router)
+api_main.include_router(import_template_router)  # Import Template CRUD
+api_main.include_router(ai_copilot_router)  # AI Copilot
+from routes.restin_settings_routes import router as restin_settings_router
+api_main.include_router(restin_settings_router)  # Restin AI Module Settings
 
 rbac_router = create_rbac_router()
 api_main.include_router(rbac_router)
@@ -659,7 +670,7 @@ api_main.include_router(group_integrations_router)
 # NEW: Version endpoint for system health
 @api_main.get("/system/version")
 async def get_system_version():
-    return {"version": "1.0.0-restin-indigo", "status": "healthy"}
+    return {"version": "1.0.0-restin", "status": "healthy"}
 
 # Finally, mount api_main onto the app
 app.include_router(api_main)

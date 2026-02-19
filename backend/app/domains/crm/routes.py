@@ -50,24 +50,30 @@ async def get_crm_summary(venue_id: str = Query(...)):
     """CRM dashboard metrics."""
     db = get_database()
 
-    total_guests = await db.guests.count_documents({})
-    high_risk = await db.guests.count_documents({"churn_risk": "high"})
-    medium_risk = await db.guests.count_documents({"churn_risk": "medium"})
-    active_campaigns = await db.crm_campaigns.count_documents({"status": "active"})
+    total_guests = await db.guests.count_documents({"venue_id": venue_id})
+    unique_guests = total_guests  # 1:1 in our model
+    high_risk = await db.guests.count_documents({"venue_id": venue_id, "churn_risk": "high"})
+    medium_risk = await db.guests.count_documents({"venue_id": venue_id, "churn_risk": "medium"})
+    active_campaigns = await db.crm_campaigns.count_documents({"venue_id": venue_id, "status": "active"})
 
     # Calculate retention rate
     recently_active = await db.guests.count_documents({
+        "venue_id": venue_id,
         "last_visit": {"$gte": (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()}
     })
     retention_rate = round((recently_active / max(total_guests, 1)) * 100, 1)
 
     # Total LTV
-    pipeline = [{"$group": {"_id": None, "total": {"$sum": "$total_spent_cents"}}}]
+    pipeline = [
+        {"$match": {"venue_id": venue_id}},
+        {"$group": {"_id": None, "total": {"$sum": "$total_spent_cents"}}}
+    ]
     ltv_result = await db.guests.aggregate(pipeline).to_list(length=1)
     total_ltv = ltv_result[0]["total"] if ltv_result else 0
 
     return {
         "total_guests": total_guests,
+        "total_unique_guests": unique_guests,
         "high_risk_count": high_risk,
         "medium_risk_count": medium_risk,
         "active_campaigns": active_campaigns,
@@ -88,7 +94,7 @@ async def list_guests(
 ):
     """List guests with optional filtering by segment or search."""
     db = get_database()
-    query: dict[str, Any] = {}
+    query: dict[str, Any] = {"venue_id": venue_id}
 
     if segment and segment != "all":
         query["churn_risk"] = segment.lower()

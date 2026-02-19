@@ -1,0 +1,617 @@
+[
+    {
+        "name": "A.C.E Foods Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Agius Fish Shop",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Alfred Gera & Sons Ltd",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Ambiental Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Ami Fish",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Aniello Ingino",
+        "type": "Supplier",
+        "total_orders": "2610.00"
+    },
+    {
+        "name": "Attard & Co Food Ltd",
+        "type": "Supplier",
+        "total_orders": "1041.48"
+    },
+    {
+        "name": "B&M Supplies",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Banjas Ltd",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "B.B.S. Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Beef Master",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Borg Cardona & Co. Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Borg Glass Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Borg Metal Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Borg's Gourmet",
+        "type": "Supplier",
+        "total_orders": "567.58"
+    },
+    {
+        "name": "Borg&Aquilina",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Botter Wines",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "B&S Group",
+        "type": "Supplier",
+        "total_orders": "423.85"
+    },
+    {
+        "name": "Calleja Trading Ltd",
+        "type": "Supplier",
+        "total_orders": "70.50"
+    },
+    {
+        "name": "Camilleri & Cini Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "C&H Bartoli Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Charles Grech",
+        "type": "Supplier",
+        "total_orders": "2459.73"
+    },
+    {
+        "name": "Checkouts Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Cordina Wine & Spirits",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Cremona Food Ltd",
+        "type": "Supplier",
+        "total_orders": "541.90"
+    },
+    {
+        "name": "Crosscraft",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Darmanin Fruits Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Deacon Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Deguara Ltd.",
+        "type": "Supplier",
+        "total_orders": "328.60"
+    },
+    {
+        "name": "Delicious Ltd",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Direct Wine Import Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Distrib-8 LTD",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "DOK Malta",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Dozers",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Dr. Juice",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "DSV Malta",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Dunlop Fish Shop",
+        "type": "Supplier",
+        "total_orders": "561.46"
+    },
+    {
+        "name": "E&L Enterprises Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Eliper Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Emanuel's Fish shop",
+        "type": "Supplier",
+        "total_orders": "121.75"
+    },
+    {
+        "name": "Envy Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Equisite Trading",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Express Logigroup",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Express Trailers",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Farsons Direct",
+        "type": "Supplier",
+        "total_orders": "625.32"
+    },
+    {
+        "name": "Farsons Wholesale",
+        "type": "Supplier",
+        "total_orders": "6886.68"
+    },
+    {
+        "name": "Festa Gourmet",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Fish and Fish Ltd.",
+        "type": "Supplier",
+        "total_orders": "1337.89"
+    },
+    {
+        "name": "Florida Trading",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Fofolla Ltd",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Fonda Fruits",
+        "type": "Supplier",
+        "total_orders": "10344.82"
+    },
+    {
+        "name": "Food Import Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Foster Clark Products Ltd",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Francis Busuttil & Sons",
+        "type": "Supplier",
+        "total_orders": "308.20"
+    },
+    {
+        "name": "Fresh Plus",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Galdos Wines",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Galea's Kitchen Supplies",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Gauci Poultry",
+        "type": "Supplier",
+        "total_orders": "1468.61"
+    },
+    {
+        "name": "Gauci's Fish Shop",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "General Soft Drinks",
+        "type": "Supplier",
+        "total_orders": "6243.60"
+    },
+    {
+        "name": "Genuis Distribution",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Goodearth Distributors Ltd.",
+        "type": "Supplier",
+        "total_orders": "22.68"
+    },
+    {
+        "name": "Gorg Grech Butcher",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Gourmet Solutions Ltd.",
+        "type": "Supplier",
+        "total_orders": "395.00"
+    },
+    {
+        "name": "Green's Supermarket",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Grima & Grima Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Grimaldi Lines",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Gzira Fish Shop",
+        "type": "Supplier",
+        "total_orders": "2170.42"
+    },
+    {
+        "name": "Hansa Wines & Spirits",
+        "type": "Supplier",
+        "total_orders": "386.92"
+    },
+    {
+        "name": "Interbrands Limited",
+        "type": "Supplier",
+        "total_orders": "18.20"
+    },
+    {
+        "name": "J Calleja Imports & Exports LTD",
+        "type": "Supplier",
+        "total_orders": "1052.19"
+    },
+    {
+        "name": "J&C Pisani Ltd",
+        "type": "Supplier",
+        "total_orders": "348.50"
+    },
+    {
+        "name": "Jolly Imports & Distribution Ltd",
+        "type": "Supplier",
+        "total_orders": "73.20"
+    },
+    {
+        "name": "Joseph Borg Ltd.",
+        "type": "Supplier",
+        "total_orders": "306.33"
+    },
+    {
+        "name": "JP Imports",
+        "type": "Supplier",
+        "total_orders": "5107.56"
+    },
+    {
+        "name": "Kirsty Toppers",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Kontrada",
+        "type": "Supplier",
+        "total_orders": "1082.08"
+    },
+    {
+        "name": "Liver Kft.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Logic International Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Mac Bake Importers & Distributors",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Mark Schembri Wines",
+        "type": "Supplier",
+        "total_orders": "497.79"
+    },
+    {
+        "name": "Marvin Gauci Garage",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Marvin Gauci Limited",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "MCV Ltd. / Italiano",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "M Demajo Group",
+        "type": "Supplier",
+        "total_orders": "1065.83"
+    },
+    {
+        "name": "Michael Chirchop",
+        "type": "Supplier",
+        "total_orders": "102.44"
+    },
+    {
+        "name": "Mirachem",
+        "type": "Supplier",
+        "total_orders": "666.60"
+    },
+    {
+        "name": "Monolith Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "MT Coast",
+        "type": "Supplier",
+        "total_orders": "908.20"
+    },
+    {
+        "name": "M&Z Marketing",
+        "type": "Supplier",
+        "total_orders": "994.95"
+    },
+    {
+        "name": "NATURE LINE LIMITED",
+        "type": "Supplier",
+        "total_orders": "238.08"
+    },
+    {
+        "name": "N. Calleja Trading",
+        "type": "Supplier",
+        "total_orders": "422.65"
+    },
+    {
+        "name": "Neriku Catering",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Neville Montfort",
+        "type": "Supplier",
+        "total_orders": "279.88"
+    },
+    {
+        "name": "NM Arrigo",
+        "type": "Supplier",
+        "total_orders": "436.72"
+    },
+    {
+        "name": "Patrick's wine",
+        "type": "Supplier",
+        "total_orders": "7925.00"
+    },
+    {
+        "name": "P Cutajar",
+        "type": "Supplier",
+        "total_orders": "664.66"
+    },
+    {
+        "name": "Red October",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Renny",
+        "type": "Supplier",
+        "total_orders": "277.00"
+    },
+    {
+        "name": "Rimus Trading Agency",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Rioja Wines",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Robert Debono",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Rossini Caviar",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Smina",
+        "type": "Supplier",
+        "total_orders": "48.60"
+    },
+    {
+        "name": "Spaniche Wines Malta",
+        "type": "Supplier",
+        "total_orders": "40.00"
+    },
+    {
+        "name": "S Rausi Trading",
+        "type": "Supplier",
+        "total_orders": "969.40"
+    },
+    {
+        "name": "Steve Malta Wines",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Stivala Wholesale Caterers",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Supermarket",
+        "type": "Supplier",
+        "total_orders": "122.00"
+    },
+    {
+        "name": "Sutters&Co",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Ta Betta",
+        "type": "Supplier",
+        "total_orders": "180.00"
+    },
+    {
+        "name": "Ta Gauci",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Tal-Plitt Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Tarragon",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Tettiera",
+        "type": "Supplier",
+        "total_orders": "398.01"
+    },
+    {
+        "name": "The Beer Venture Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Tutto Marketing LTS",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Valhmor Borg Imp/Exp Ltd",
+        "type": "Supplier",
+        "total_orders": "391.55"
+    },
+    {
+        "name": "Venesia Fine Food Imports",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Vintage & Co",
+        "type": "Supplier",
+        "total_orders": "1057.32"
+    },
+    {
+        "name": "Vivian Corporation Ltd.",
+        "type": "Supplier",
+        "total_orders": "0"
+    },
+    {
+        "name": "Wine Merchants",
+        "type": "Supplier",
+        "total_orders": "420.47"
+    },
+    {
+        "name": "Worldwide Company Ltd.",
+        "type": "Supplier",
+        "total_orders": "385.23"
+    }
+]

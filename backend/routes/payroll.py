@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException, Body
 from typing import List
 from models.payroll import PayrollRun, Payslip, PayrollItem, PayrollRunCreate
 from core.dependencies import get_current_user, get_database
-from mock_data_store import MOCK_EMPLOYEES
 import uuid
 from datetime import datetime
 
@@ -52,43 +51,53 @@ async def create_payroll_run(
     current_user: dict = Depends(get_current_user),
     db = Depends(get_database)
 ):
-    """Calculate and create a new payroll run"""
-    
+    """Calculate and create a new payroll run from real DB data"""
+
     payslips = []
     total_gross = 0
     total_net = 0
     total_tax = 0
-    
-    from mock_data_store import MOCK_CLOCKING, MOCK_EMPLOYEES
-    
-    for emp_code, emp_data in MOCK_EMPLOYEES.items():
+
+    # Fetch real employees from DB
+    emp_query = {"employment_status": {"$ne": "terminated"}}
+    employees = await db["employees"].find(emp_query).to_list(500)
+
+    for emp in employees:
+        emp_id = emp.get("id") or str(emp.get("_id"))
+        emp_code = emp.get("display_id", emp_id)
+
         if request.employees and emp_code not in request.employees:
             continue
-            
-        # Sum hours and cost from clocking records for this employee
-        emp_clockings = [c for c in MOCK_CLOCKING if c["employee_code"] == emp_code]
-        total_hours = sum(c["hours_worked"] for c in emp_clockings)
-        basic_pay = sum(c["total_cost"] for c in emp_clockings)
-        
-        # Add some mock bonus/overtime if they worked a lot
+
+        # Sum hours from real clocking_records for this employee
+        clock_query = {"employee_id": emp_id}
+        clockings = await db["clocking_records"].find(clock_query).to_list(5000)
+        total_hours = sum(c.get("hours_worked", 0.0) for c in clockings)
+
+        # Use payroll profile hourly rate if available, else default
+        profile = await db["payroll_profiles"].find_one({"employee_id": emp_id})
+        hourly_rate = profile.get("hourly_rate", 12.0) if profile else 12.0
+        basic_pay = round(total_hours * hourly_rate, 2)
+
+        # Overtime bonus
         overtime = 100.0 if total_hours > 40 else 0.0
         gross = basic_pay + overtime
-        
+
         tax = calculate_tax(gross, "Single")
         ssc = calculate_ssc(gross)
         net = gross - tax - ssc
-        
+
         items = [
-            PayrollItem(item_code="ABS", description=f"Basic Pay ({total_hours} hrs)", amount=basic_pay, type="EARNING"),
+            PayrollItem(item_code="ABS", description=f"Basic Pay ({total_hours:.1f} hrs)", amount=basic_pay, type="EARNING"),
             PayrollItem(item_code="OVT", description="Performance Bonus", amount=overtime, type="EARNING"),
             PayrollItem(item_code="TAX", description="FSS Tax", amount=tax, type="TAX"),
             PayrollItem(item_code="SSC", description="Social Security", amount=ssc, type="SSC")
         ]
-        
+
         payslip = Payslip(
             employee_code=emp_code,
-            employee_name=emp_data['full_name'],
-            employee_role=emp_data['occupation'],
+            employee_name=emp.get("full_name", emp.get("name", "Unknown")),
+            employee_role=emp.get("occupation", emp.get("role", "Staff")),
             basic_pay=basic_pay,
             overtime_pay=overtime,
             gross_pay=gross,
@@ -98,7 +107,7 @@ async def create_payroll_run(
             items=items
         )
         payslips.append(payslip)
-        
+
         total_gross += gross
         total_net += net
         total_tax += tax
@@ -116,7 +125,7 @@ async def create_payroll_run(
         created_at=datetime.now().strftime("%d/%m/%Y"),
         payslips=payslips
     )
-    
+
     await db["payroll_runs"].insert_one(new_run.dict())
     return new_run
 

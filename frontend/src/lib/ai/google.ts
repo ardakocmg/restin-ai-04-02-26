@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import logger from '../logger';
 
 // 🏗️ ANTIGRAVITY AI ARCHITECTURE (Protocol v30.0)
 // Primary Brain: Google Vertex AI (via Generative AI SDK)
@@ -8,15 +9,17 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_API_KEY || "";
 
 if (!API_KEY) {
-    console.warn("⚠️ Vertex AI: No API Key found. AI features will be disabled.");
+    logger.warn("Vertex AI: No API Key found. AI features will be disabled.");
 }
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export const AiModels = {
-    FLASH: "gemini-1.5-flash",
-    PRO: "gemini-1.5-pro",
-    VISION: "gemini-1.5-flash" // Flash supports vision now
+    FLASH: "gemini-2.0-flash",        // Free tier — fast, high-throughput
+    STANDARD: "gemini-2.5-flash",     // Standard — best reasoning (free tier available)
+    PRO: "gemini-2.5-pro",            // Premium — deep analysis (free tier: 5 RPM)
+    VISION: "gemini-2.0-flash",       // Flash supports vision natively
+    NEXT_GEN: "gemini-3-flash",       // Latest gen (preview)
 };
 
 export interface GenerationOptions {
@@ -48,7 +51,7 @@ export const generateText = async (
         const response = await result.response;
         return response.text();
     } catch (error) {
-        console.error(`❌ Vertex AI Error (${modelName}):`, error);
+        logger.error(`Vertex AI Error (${modelName})`, { error });
         throw error;
     }
 };
@@ -69,7 +72,7 @@ export const identifyImage = async (
         const result = await model.generateContent([prompt, base64Data]);
         return result.response.text();
     } catch (error) {
-        console.error("❌ Vertex Image Analysis Error:", error);
+        logger.error("Vertex Image Analysis Error", { error });
         throw error;
     }
 };
@@ -96,7 +99,13 @@ async function fileToGenerativePart(file: File): Promise<{ inlineData: { data: s
 export class AiServiceFactory {
     static async promptWithGrounding(prompt: string, modelType: string = 'GEMINI_FLASH'): Promise<string> {
         // Map legacy string to real model name
-        const modelName = modelType === 'GEMINI_FLASH' ? AiModels.FLASH : AiModels.PRO;
+        const modelMap: Record<string, string> = {
+            'GEMINI_FLASH': AiModels.FLASH,         // gemini-2.0-flash (free)
+            'GEMINI_STANDARD': AiModels.STANDARD,   // gemini-2.5-flash
+            'GEMINI_PRO': AiModels.PRO,             // gemini-2.5-pro
+            'GEMINI_NEXT': AiModels.NEXT_GEN,       // gemini-3-flash
+        };
+        const modelName = modelMap[modelType] || AiModels.FLASH;
         return generateText(prompt, modelName);
     }
 }

@@ -318,7 +318,7 @@ def create_hr_employee_analytics_router():
                 "recipes_created": {"$sum": 1},
             }}
         ]
-        recipe_results = await db.recipes_engineered.aggregate(recipe_pipeline).to_list(500)
+        recipe_results = await db.recipes.aggregate(recipe_pipeline).to_list(500)
         recipe_map = {r["_id"]: r["recipes_created"] for r in recipe_results}
 
         # 2. Clocking summary per employee
@@ -434,7 +434,7 @@ def create_hr_employee_analytics_router():
         ticket_count = await db.kds_tickets.count_documents({
             "venue_id": venue_id, "created_at": {"$gte": start_iso, "$lte": end_iso}
         })
-        recipe_count = await db.recipes_engineered.count_documents({
+        recipe_count = await db.recipes.count_documents({
             "venue_id": venue_id, "created_at": {"$gte": start_iso, "$lte": end_iso}
         })
         clock_count = await db["clocking_records"].count_documents({

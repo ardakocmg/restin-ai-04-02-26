@@ -29,8 +29,8 @@ async def sync_tiers():
         print(f"Using Organization ID: {org_id}")
 
     # 1. Fetch all Engineered Recipes
-    cursor = db.recipes_engineered.find({})
-    total_engineered = await db.recipes_engineered.count_documents({})
+    cursor = db.recipes.find({})
+    total_engineered = await db.recipes.count_documents({})
     print(f"Found {total_engineered} engineered recipes.")
     
     synced_count = 0

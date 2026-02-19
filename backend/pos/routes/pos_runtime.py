@@ -78,26 +78,47 @@ def create_pos_runtime_router():
         idempotency_key: Optional[str] = Header(None),
         current_user: dict = Depends(get_current_user)
     ):
-        # Get session to resolve menu item from snapshot
+        # Get order to check session
         order = await order_service.get_order(order_id, data.venue_id)
         if not order:
             return {"ok": False, "error": {"code": "ORDER_NOT_FOUND"}}
         
-        session = await session_service.get_session(order.session_id, data.venue_id)
-        snapshot = await db.pos_menu_snapshots.find_one(
-            {"snapshot_id": session.menu_snapshot.snapshot_id},
-            {"_id": 0}
-        )
-        
-        # Find menu item in snapshot
         menu_item = None
-        for item in snapshot["payload"]["items"]:
-            if item["id"] == data.menu_item_id:
-                menu_item = item
-                break
+        
+        # Try snapshot-based lookup first (if session exists)
+        if order.session_id:
+            try:
+                session = await session_service.get_session(order.session_id, data.venue_id)
+                if session and session.menu_snapshot:
+                    snapshot = await db.pos_menu_snapshots.find_one(
+                        {"snapshot_id": session.menu_snapshot.snapshot_id},
+                        {"_id": 0}
+                    )
+                    if snapshot and "payload" in snapshot:
+                        for item in snapshot["payload"].get("items", []):
+                            if item["id"] == data.menu_item_id:
+                                menu_item = item
+                                break
+            except Exception:
+                pass  # Fall through to direct lookup
+        
+        # Fallback: direct menu item lookup from database
+        if not menu_item:
+            menu_item_doc = await db.menu_items.find_one(
+                {"id": data.menu_item_id, "venue_id": data.venue_id},
+                {"_id": 0}
+            )
+            if not menu_item_doc:
+                # Also try _id based lookup
+                menu_item_doc = await db.menu_items.find_one(
+                    {"_id": data.menu_item_id},
+                    {"_id": 0}
+                )
+            if menu_item_doc:
+                menu_item = menu_item_doc
         
         if not menu_item:
-            return {"ok": False, "error": {"code": "ITEM_NOT_IN_SNAPSHOT"}}
+            return {"ok": False, "error": {"code": "ITEM_NOT_FOUND", "message": "Menu item not found in snapshot or database"}}
         
         item = await order_service.add_item(data, menu_item, current_user["id"])
         return {"ok": True, "item": item.model_dump()}

@@ -6,15 +6,21 @@ from datetime import datetime, timezone
 import pyotp
 import jwt
 import uuid
+import logging
 
 from core.database import db
 from core.config import JWT_SECRET, JWT_ALGORITHM
-from core.security import hash_pin, create_jwt_token, hash_password, verify_password
+from core.security import hash_pin, verify_pin, create_jwt_token, hash_password, verify_password, compute_pin_index
 from core.dependencies import get_current_user, security
 from models import UserRole
 from services.auth_service import check_rate_limit, log_login_attempt
 from services.audit_service import create_audit_log
 from utils.helpers import log_event
+
+logger = logging.getLogger("auth_routes")
+
+# ── In-memory PIN cache: pin_index → user_id for instant lookups ──
+_pin_cache: dict[str, str] = {}  # pin_index → user_id
 
 
 def create_auth_router():
@@ -28,8 +34,7 @@ def create_auth_router():
         stationId: Optional[str] = Query(None)
     ):
         """
-        New PIN-first login flow.
-        Returns user info + allowed venues for venue selection.
+        PIN-first login — O(1) lookup via pin_index + in-memory cache.
         """
         # Check rate limit
         if deviceId and await check_rate_limit(deviceId):
@@ -39,25 +44,65 @@ def create_auth_router():
                 detail="Too many failed attempts. Please try again in 5 minutes."
             )
         
-        # Hash PIN and find user
-        # When multiple users share the same PIN, prioritize by role:
-        # product_owner (99) > owner (3) > manager (2) > staff (1)
-        pin_hash = hash_pin(pin)
         _role_sort_map = {
             "product_owner": 0, "owner": 1, "general_manager": 2,
             "manager": 3, "staff": 4
         }
-        candidates = await db.users.find(
-            {"pin_hash": pin_hash},
-            {"_id": 0}
-        ).to_list(20)
         
-        if candidates:
-            # Sort: product_owner first, then owner, etc.
-            candidates.sort(key=lambda u: _role_sort_map.get(u.get("role", "staff"), 5))
-            user = candidates[0]
-        else:
-            user = None
+        idx = compute_pin_index(pin)
+        user = None
+        
+        # ── FAST PATH 1: In-memory cache hit ──
+        cached_uid = _pin_cache.get(idx)
+        if cached_uid:
+            u = await db.users.find_one({"id": cached_uid}, {"_id": 0})
+            if u and verify_pin(pin, u.get("pin_hash", "")):
+                user = u
+        
+        # ── FAST PATH 2: DB index lookup ──
+        if not user:
+            indexed_users = await db.users.find({"pin_index": idx}).to_list(length=10)
+            candidates = [u for u in indexed_users if verify_pin(pin, u.get("pin_hash", ""))]
+            if candidates:
+                candidates.sort(key=lambda u: _role_sort_map.get(u.get("role", "staff"), 5))
+                user = candidates[0]
+                # Populate cache
+                _pin_cache[idx] = user["id"]
+        
+        # ── FALLBACK: Only scan users WITHOUT pin_index (un-migrated) ──
+        if not user:
+            unmigrated_count = await db.users.count_documents({
+                "pin_hash": {"$exists": True, "$ne": ""},
+                "pin_index": {"$exists": False}
+            })
+            
+            if unmigrated_count > 0:
+                # Only scan un-migrated users, not ALL users
+                unmigrated_users = await db.users.find(
+                    {"pin_hash": {"$exists": True, "$ne": ""}, "pin_index": {"$exists": False}}
+                ).to_list(200)
+                
+                candidates = []
+                for u in unmigrated_users:
+                    if verify_pin(pin, u.get("pin_hash", "")):
+                        candidates.append(u)
+                        # Backfill pin_index for instant future logins
+                        update_fields = {"pin_index": idx}
+                        unset_fields = {}
+                        stored = u.get("pin_hash", "")
+                        if len(stored) == 64 and all(c in '0123456789abcdef' for c in stored):
+                            update_fields["pin_hash"] = hash_pin(pin)
+                            unset_fields["pin"] = ""
+                        update_op = {"$set": update_fields}
+                        if unset_fields:
+                            update_op["$unset"] = unset_fields
+                        await db.users.update_one({"_id": u["_id"]}, update_op)
+                        logger.info("[AUTH] Backfilled pin_index for user_id=%s", u.get("id", "?"))
+                
+                if candidates:
+                    candidates.sort(key=lambda u: _role_sort_map.get(u.get("role", "staff"), 5))
+                    user = candidates[0]
+                    _pin_cache[idx] = user["id"]
         
         if not user:
             await log_login_attempt(deviceId, pin, app, False, "Invalid PIN")
@@ -450,11 +495,11 @@ def create_auth_router():
 
     @router.post("/auth/login")
     async def login(venue_id: str, pin: str, device_id: Optional[str] = None):
-        pin_hash = hash_pin(pin)
-        user = await db.users.find_one(
-            {"venue_id": venue_id, "pin_hash": pin_hash},
+        venue_users = await db.users.find(
+            {"venue_id": venue_id, "pin_hash": {"$exists": True, "$ne": ""}},
             {"_id": 0}
-        )
+        ).to_list(100)
+        user = next((u for u in venue_users if verify_pin(pin, u.get("pin_hash", ""))), None)
         if not user:
             raise HTTPException(status_code=401, detail="Invalid PIN")
         
@@ -576,17 +621,20 @@ def create_auth_router():
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        from core.security import hash_pin
         stored_hash = user.get("pin_hash", "")
-        if stored_hash and hash_pin(current_pin) != stored_hash:
+        if stored_hash and not verify_pin(current_pin, stored_hash):
             raise HTTPException(status_code=401, detail="Current PIN is incorrect")
 
         await db.users.update_one(
             {"id": user_id},
-            {"$set": {"pin_hash": hash_pin(new_pin), "pin": new_pin}}
+            {"$set": {"pin_hash": hash_pin(new_pin), "pin_index": compute_pin_index(new_pin)}, "$unset": {"pin": ""}}
         )
+        # Invalidate old cache entry (find and remove any entry pointing to this user)
+        stale_keys = [k for k, v in _pin_cache.items() if v == user_id]
+        for k in stale_keys:
+            del _pin_cache[k]
 
-        log_event("pin_changed", {"user_id": user_id})
+        await log_event(db, level="SECURITY", code="PIN_CHANGED", message=f"PIN changed for user {user_id}", meta={"user_id": user_id})
         return {"success": True}
 
     # ─── Set / Change Password (for elevation) ─────────────────────────

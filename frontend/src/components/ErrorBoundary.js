@@ -26,7 +26,7 @@ class ErrorBoundary extends React.Component {
             <p className="text-zinc-300 mb-6">
               Please refresh the page. If this persists, contact your manager.
             </p>
-            <div className="space-y-4">
+            <div className="space-y-3">
               <Button
                 onClick={() => window.location.reload()}
                 className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-6 px-4 text-lg"
@@ -34,12 +34,31 @@ class ErrorBoundary extends React.Component {
                 Refresh Page
               </Button>
               <Button
-                onClick={() => this.setState({ hasError: false })}
+                onClick={() => {
+                  this.setState({ hasError: false });
+                  window.history.back();
+                }}
                 variant="outline"
                 className="w-full border-zinc-700 text-zinc-200 hover:bg-zinc-800 hover:text-white py-4"
               >
-                Try Again
+                ← Go Back
               </Button>
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => this.setState({ hasError: false })}
+                  variant="outline"
+                  className="flex-1 border-zinc-700 text-zinc-200 hover:bg-zinc-800 hover:text-white py-3 text-sm"
+                >
+                  Try Again
+                </Button>
+                <Button
+                  onClick={() => { window.location.href = '/manager/dashboard'; }}
+                  variant="outline"
+                  className="flex-1 border-zinc-700 text-zinc-200 hover:bg-zinc-800 hover:text-white py-3 text-sm"
+                >
+                  Dashboard
+                </Button>
+              </div>
             </div>
             {process.env.NODE_ENV === 'development' && (
               <details className="mt-4 text-left">

@@ -21,7 +21,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useVenue } from '../context/VenueContext';
 import api from '../lib/api';
 
-const EmployeePortalComplete = React.lazy(() => import('./admin/hr/EmployeePortalComplete'));
+const EmployeePortalComplete = React.lazy(() => import('./manager/hr/EmployeePortalComplete'));
 
 export default function UserProfileSettings() {
   // ─── Hooks ───────────────────────────────────────────────────────

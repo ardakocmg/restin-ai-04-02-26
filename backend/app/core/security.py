@@ -1,8 +1,8 @@
 import hashlib
-import jwt
-from datetime import datetime, timezone, timedelta
+import logging
 from typing import Optional
-from .config import settings
+
+logger = logging.getLogger("app.core.security")
 
 def hash_pin(pin: str) -> str:
     return hashlib.sha256(pin.encode()).hexdigest()
@@ -12,25 +12,18 @@ def compute_hash(data: dict, prev_hash: str) -> str:
     return hashlib.sha256(payload.encode()).hexdigest()
 
 def create_jwt_token(user_id: str, venue_id: str, role: str, device_id: Optional[str] = None) -> str:
-    payload = {
-        "user_id": user_id,
-        "venue_id": venue_id,
-        "role": role,
-        "device_id": device_id,
-        "exp": datetime.now(timezone.utc) + timedelta(hours=settings.JWT_EXPIRATION_HOURS)
-    }
-    return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+    """Delegate to unified JWT signing system."""
+    from .auth.jwt_sign import sign_access_token
+    return sign_access_token(user_id, venue_id, role, device_id)
 
 def verify_jwt_token(token: str, allow_expired: bool = False) -> dict:
+    """Delegate to unified JWT verify system (same secret used for sign+verify)."""
+    from .auth.jwt_verify import verify_jwt, JwtAuthError
     try:
-        options = {"verify_exp": not allow_expired}
-        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM], options=options)
-        return payload
-    except jwt.ExpiredSignatureError:
-        if not allow_expired:
-            raise
-        # If allow_expired, decode without verification
-        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM], options={"verify_signature": False})
-        return payload
-    except jwt.InvalidTokenError:
+        return verify_jwt(token, allow_expired=allow_expired)
+    except JwtAuthError as exc:
+        logger.warning("JWT verification failed: %s", exc.code)
+        if exc.code == "TOKEN_EXPIRED" and not allow_expired:
+            import jwt as pyjwt
+            raise pyjwt.ExpiredSignatureError(exc.message)
         return None

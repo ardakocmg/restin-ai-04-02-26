@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Shield,
   Cpu,
@@ -52,14 +54,14 @@ const GlassCard = ({ children, className = "", title, icon: Icon, tag }) => (
 const defaultContent = {
   hero: {
     tag: 'Enterprise Core · Multi-Venue Mesh',
-    title: 'Modern Gastronomi Operasyonlarının Dijital Omurgası.',
-    subtitle: 'restin.ai; çevrimdışı öncelikli (offline-first), denetim odaklı (audit-first) ve idempotent mimarisiyle en yüksek operasyonel sürekliliği sağlar. Ultimate paket özellikleriyle tam uyumlu, modüler ve güvenli altyapı.',
+    title: 'The Digital Backbone of Modern Restaurant Operations.',
+    subtitle: 'restin.ai delivers maximum operational continuity with its offline-first, audit-first, and idempotent architecture. Fully modular, secure infrastructure aligned with enterprise-grade capabilities.',
     pills: ['Offline-First', 'Audit-First', 'Idempotent Mutations', 'Feature-Flag Modularity'],
     assurances: [
-      'Resilient Core: 3 katmanlı failover (Bulut → Edge → Yerel)',
-      'Veri Bütünlüğü: Hash-chain imzalı immutable günlükler',
-      'Ölçeklenebilirlik: Micro-domain izole servis mimarisi',
-      'Güvenlik: Kurumsal MFA ve venue-scoped erişim kontrolü'
+      'Resilient Core: 3-layer failover (Cloud → Edge → Local)',
+      'Data Integrity: Hash-chain signed immutable audit logs',
+      'Scalability: Micro-domain isolated service architecture',
+      'Security: Enterprise MFA and venue-scoped access control'
     ]
   },
   frontendSchema: [
@@ -68,7 +70,7 @@ const defaultContent = {
       items: [
         'Central Dashboard: Unified multi-venue monitoring',
         'HR & People: Advanced shift, leave & payroll management',
-        'Inventory Core: Reçete and stock lifecycle tracking',
+        'Inventory Core: Recipe and stock lifecycle tracking',
         'Finance Hub: Procurement matching & revenue analysis'
       ]
     },
@@ -86,19 +88,19 @@ const defaultContent = {
     {
       title: 'Ultimate Data Models',
       items: [
-        'InventoryItems: Çok lokasyonlu stok & lot takibi',
-        'StockLedger: Immutable stok hareket günlüğü',
-        'PurchaseOrder & Supplier: Tedarikçi & Satınalma',
-        'Invoice: AI destekli fatura & varyans analizi'
+        'InventoryItems: Multi-location stock & lot tracking',
+        'StockLedger: Immutable stock movement journal',
+        'PurchaseOrder & Supplier: Procurement & vendor management',
+        'Invoice: AI-powered invoice OCR & variance analysis'
       ]
     },
     {
       title: 'Core Architecture',
       items: [
-        'Recipe & MenuItem: Otomatik reçete maliyetleri',
-        'InternalOrder & ProductionBatch: Merkezi Mutfak (CPU)',
-        'Journal & Forecast: COGS & Talep Tahminleme',
-        'Observability: Sistem sağlığı & hata yönetimi'
+        'Recipe & MenuItem: Automated recipe costing',
+        'InternalOrder & ProductionBatch: Central Kitchen (CPU)',
+        'Journal & Forecast: COGS & demand forecasting',
+        'Observability: System health & error management'
       ]
     }
   ],
@@ -108,41 +110,46 @@ const defaultContent = {
     { title: 'Kitchen Control', items: ['Ticket Prioritization', 'Station Routing', 'Timing Analysis'] }
   ],
   menuTable: [
-    { menu: 'Envanter', item: 'Stok Hareketleri (Ledger)', route: '/manager/inventory/ledger', status: 'Active', visibility: 'Primary' },
-    { menu: 'Satınalma', item: 'AI Fatura OCR', route: '/manager/ai-invoice', status: 'Active', visibility: 'Primary' },
-    { menu: 'Operasyon', item: 'Merkezi Mutfak (CPU)', route: '/manager/central-kitchen', status: 'Active', visibility: 'Primary' },
-    { menu: 'HR', item: 'Shireburn Indigo Entegrasyonu', route: '/manager/hr/dashboard', status: 'Active', visibility: 'Primary' },
-    { menu: 'Sistem', item: 'Talep Tahminleme (AI)', route: '—', status: 'Planned', visibility: 'Upcoming' }
+    { menu: 'Inventory', item: 'Stock Movements (Ledger)', status: 'Active', visibility: 'Primary' },
+    { menu: 'Procurement', item: 'AI Invoice OCR', status: 'Active', visibility: 'Primary' },
+    { menu: 'Operations', item: 'Central Kitchen (CPU)', status: 'Active', visibility: 'Primary' },
+    { menu: 'HR', item: 'HR & Payroll Integration', status: 'Active', visibility: 'Primary' },
+    { menu: 'Intelligence', item: 'Demand Forecasting (AI)', status: 'Active', visibility: 'Primary' },
+    { menu: 'Intelligence', item: 'AI Copilot (Hey Rin)', status: 'Active', visibility: 'Primary' },
+    { menu: 'Intelligence', item: 'Market Radar', status: 'Active', visibility: 'Primary' },
+    { menu: 'Compliance', item: 'Quality & HACCP', status: 'Active', visibility: 'Primary' },
+    { menu: 'Compliance', item: 'Sustainability & ESG', status: 'Active', visibility: 'Primary' },
+    { menu: 'Hardware', item: 'Smart Home & IoT', status: 'Active', visibility: 'Primary' }
   ],
   eventFlows: [
     {
-      title: 'İşlem Yaşam Döngüsü',
-      description: 'POS\'tan Finans ve Envantere bir siparişin yolculuğu.',
+      title: 'Transaction Lifecycle',
+      description: 'The journey of an order from POS to Finance and Inventory.',
       steps: [
-        'POS Yakalama → Yerel Önbellek',
-        'Edge Sync → Bulut Kaydı',
-        'Envanter: Reçete tabanlı otomatik stok düşümü',
-        'Finans: Gelir ve COGS defter kaydı oluşturma'
+        'POS Capture → Local Cache',
+        'Edge Sync → Cloud Commit',
+        'Inventory: Recipe-based automatic stock deduction',
+        'Finance: Revenue and COGS journal entry creation'
       ]
     },
     {
-      title: 'Tedarik Zinciri Akışı',
-      description: 'Satınalmadan terminal stok mevcudiyetine.',
+      title: 'Supply Chain Flow',
+      description: 'From purchase order to terminal stock availability.',
       steps: [
-        'Satınalma Siparişi Onayı (PO Approval)',
-        'Mal Kabul ve Kalite Kontrol (GRN)',
-        'Stok Defteri Değerlemesi (WAC/FIFO)',
-        'Envanter Mevcudiyet Güncellemeleri'
+        'Purchase Order Approval (PO Approval)',
+        'Goods Receipt & Quality Control (GRN)',
+        'Stock Ledger Valuation (WAC/FIFO)',
+        'Inventory Availability Updates'
       ]
     },
     {
-      title: 'Sistem Kendi Kendini İyileştirme',
-      description: 'Otomatik hata algılama ve kurtarma.',
+      title: 'System Self-Healing',
+      description: 'Automatic error detection and recovery.',
       steps: [
-        'Küresel Gelen Kutusunda Hata Yakalama',
-        'Otomatik Yeniden Deneme Analizi',
-        'Idempotent Payload Yeniden Oynatma',
-        'Çözüm Doğrulama ve Raporlama'
+        'Error Capture in Global Inbox',
+        'Automatic Retry Analysis',
+        'Idempotent Payload Replay',
+        'Resolution Verification & Reporting'
       ]
     }
   ],
@@ -203,7 +210,7 @@ Unified Operational Hub: Centralized control for POS, KDS, and backend managemen
       title: 'Inventory Item Template',
       code: `{
   "item_id": "item_123",
-  "name": "Mozerella Peyniri",
+  "name": "Mozzarella Cheese",
   "uom": "kg",
   "cost_method": "WAC",
   "current_cost": 120.50,
@@ -350,9 +357,9 @@ export default function TechnicalHub() {
 
           <nav className="flex flex-wrap items-center gap-2">
             {[
-              { label: 'Genel Bakış', href: '#technical-content', icon: Layout },
-              { label: 'Altyapı', href: '#architecture', icon: Layers },
-              { label: 'Entegrasyon', href: '#api', icon: Globe }
+              { label: 'Overview', href: '#technical-content', icon: Layout },
+              { label: 'Infrastructure', href: '#architecture', icon: Layers },
+              { label: 'Integration', href: '#api', icon: Globe }
             ].map((item) => (
               <a
                 key={item.label}
@@ -469,7 +476,7 @@ export default function TechnicalHub() {
                     <tr className="bg-white/[0.02] border-b border-white/5">
                       <th className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Namespace</th>
                       <th className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Component</th>
-                      <th className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Route Persistence</th>
+                      <th className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Scope</th>
                       <th className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-red-500">Deployment Status</th>
                     </tr>
                   </thead>
@@ -480,7 +487,7 @@ export default function TechnicalHub() {
                           <span className="text-xs font-black text-zinc-200 px-2 py-1 rounded bg-white/5">{row.menu}</span>
                         </td>
                         <td className="px-6 py-4 font-bold text-white text-sm">{row.item}</td>
-                        <td className="px-6 py-4 font-mono text-[10px] text-zinc-500 group-hover:text-zinc-300">{row.route}</td>
+                        <td className="px-6 py-4 text-[10px] font-semibold text-zinc-500 uppercase tracking-wider">{row.visibility}</td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
                             <span className={`w-1.5 h-1.5 rounded-full ${row.status === 'Active' ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />

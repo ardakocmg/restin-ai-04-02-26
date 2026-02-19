@@ -6,29 +6,13 @@ import { venueAPI, menuAPI, orderAPI } from "../../lib/api";
 import api from "../../lib/api";
 import { logger } from "../../lib/logger";
 import { toast } from "sonner";
-import { safeNumber, safeArray, safeString } from "../../lib/safe";
+import { safeNumber, safeArray } from "../../lib/safe";
 import { useVenueSettings } from "../../hooks/useVenueSettings";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
-import { Checkbox } from "../../components/ui/checkbox";
-import { ScrollArea } from "../../components/ui/scroll-area";
-import ModifierDialog from "../../components/ModifierDialog";
-import {
-  LogOut, X, Send, Trash2, Users, Grid3x3,
-  UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus, Loader2, AlertTriangle, Printer
-} from "lucide-react";
-
-const CATEGORY_ICONS = {
-  appetizers: UtensilsCrossed,
-  mains: UtensilsCrossed,
-  breakfast: Coffee,
-  soups: UtensilsCrossed,
-  pizza: Pizza,
-  drinks: Wine,
-  desserts: Dessert,
-  default: UtensilsCrossed
-};
+import { usePOSTheme } from "../../hooks/usePOSTheme";
+import POSLayoutRestin from "../../components/pos/layouts/POSLayoutRestin";
+import POSLayoutPro from "../../components/pos/layouts/POSLayoutPro";
+import POSLayoutExpress from "../../components/pos/layouts/POSLayoutExpress";
+import { Loader2, Monitor, Tablet, Zap } from "lucide-react";
 
 export default function POSMain() {
   const navigate = useNavigate();
@@ -66,6 +50,7 @@ export default function POSMain() {
 
   const venueId = localStorage.getItem("restin_pos_venue");
   const { settings, loading: settingsLoading } = useVenueSettings(venueId);
+  const { theme, setTheme, themes } = usePOSTheme({ venueDefault: settings?.pos?.theme });
 
   // Initialize send options from venue settings
   useEffect(() => {
@@ -237,7 +222,8 @@ export default function POSMain() {
   };
 
   const addItemToOrder = async (item) => {
-    if (!selectedTable) {
+    // Express theme is counter-service — no table selection needed
+    if (!selectedTable && theme !== 'express') {
       setShowTableDialog(true);
       return;
     }
@@ -307,8 +293,14 @@ export default function POSMain() {
   };
 
   const sendOrder = async () => {
-    if (!selectedTable || orderItems.length === 0) {
+    if (orderItems.length === 0) {
       toast.error("No items in order");
+      return;
+    }
+
+    // For non-express themes, a table is required
+    if (!selectedTable && theme !== 'express') {
+      toast.error("Please select a table first");
       return;
     }
 
@@ -325,16 +317,18 @@ export default function POSMain() {
       let orderId = currentOrder?.id;
 
       // Generate stable idempotency key
+      const tableRef = selectedTable?.id || 'counter';
       const idempotencyKey = orderId
         ? `order:${orderId}:send:${Date.now()}`
-        : `order:new:${selectedTable.id}:${Date.now()}`;
+        : `order:new:${tableRef}:${Date.now()}`;
 
       if (!orderId) {
         // Create new order with idempotency
         const response = await orderAPI.create({
           venue_id: venueId,
-          table_id: selectedTable.id,
-          server_id: user.id
+          table_id: selectedTable?.id || 'counter',
+          server_id: user.id,
+          order_type: theme === 'express' ? 'counter' : 'dine_in'
         });
 
         if (response.data.order) {
@@ -481,42 +475,8 @@ export default function POSMain() {
     }
   };
 
-  const getCategoryIcon = (categoryName) => {
-    const name = categoryName.toLowerCase();
-    for (const [key, Icon] of Object.entries(CATEGORY_ICONS)) {
-      if (name.includes(key)) return Icon;
-    }
-    return CATEGORY_ICONS.default;
-  };
-
-  const getCategoryStyle = (cat) => {
-    if (cat.image) {
-      return {
-        backgroundImage: `url(${cat.image})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        textShadow: '0 2px 4px rgba(0,0,0,0.8)'
-      };
-    }
-    if (cat.color) {
-      return { backgroundColor: cat.color }; // Direct hex color
-    }
-    return {}; // Fallback to CSS classes
-  };
-
-  const getItemStyle = (item) => {
-    if (item.image) {
-      return {
-        backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8) 100%), url(${item.image})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      };
-    }
-    if (item.color) {
-      return { backgroundColor: item.color };
-    }
-    return {}; // Fallback
-  };
+  // Theme icon map
+  const THEME_ICONS = { restin: Monitor, pro: Tablet, express: Zap };
 
   if (loading) {
     return (
@@ -528,497 +488,103 @@ export default function POSMain() {
 
   const { subtotal, tax, total } = calculateTotal();
 
-  return (
-    <div className="h-screen flex bg-background overflow-hidden">
-      {/* LEFT COLUMN - Categories (Lightspeed Style) */}
-      <div className="w-48 bg-card border-r border-border flex flex-col">
-        {/* Header */}
-        <div className="p-4 border-b border-border">
-          <h1 className="text-foreground font-heading font-bold text-lg">RESTIN.AI</h1>
-          <p className="text-muted-foreground text-xs">{venue?.name}</p>
-          <p className="text-muted-foreground text-xs mt-1">{user?.name}</p>
-        </div>
-
-        {/* Categories */}
-        <ScrollArea className="flex-1">
-          <div className="p-2 space-y-2">
-            {categories.map((cat) => {
-              const Icon = getCategoryIcon(cat.name);
-              const isActive = activeCategory === cat.id;
-
-              // Dynamic Style
-              const style = getCategoryStyle(cat);
-              const hasImage = !!cat.image;
-
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => loadCategoryItems(cat.id)}
-                  style={style}
-                  className={`
-                    w-full h-20 rounded-lg flex flex-col items-center justify-center gap-1 relative overflow-hidden group
-                    transition-all duration-200 border-2
-                    ${isActive
-                      ? 'border-foreground ring-2 ring-foreground/20'
-                      : 'border-transparent hover:border-border'}
-                    ${!cat.image && !cat.color && (isActive ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground')}
-                  `}
-                >
-                  {/* Overlay for image readability */}
-                  {hasImage && <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />}
-
-                  {/* Icon (only if no image or if desired) */}
-                  {!hasImage && <Icon className={`w-6 h-6 z-10 ${isActive ? 'text-primary-foreground' : 'text-muted-foreground'}`} />}
-
-                  <span className={`text-xs font-bold text-center leading-tight z-10 px-2 ${hasImage || isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
-                    {cat.name}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </ScrollArea>
-
-        {/* Bottom Actions */}
-        <div className="p-2 border-t border-border space-y-1">
-          <button
-            onClick={() => setShowFloorPlanDialog(true)}
-            className="w-full p-3 rounded-lg bg-muted hover:bg-accent text-foreground flex items-center justify-center gap-2 transition-colors"
-          >
-            <Grid3x3 className="w-5 h-5" />
-            <span className="text-sm">Floor Plan</span>
-          </button>
-          <button
-            onClick={() => setShowTableDialog(true)}
-            className="w-full p-3 rounded-lg bg-muted hover:bg-accent text-foreground flex items-center justify-center gap-2 transition-colors"
-          >
-            <Grid3x3 className="w-5 h-5" />
-            <span className="text-sm">Tables</span>
-          </button>
-          <button
-            onClick={() => navigate("/manager/dashboard")}
-            className="w-full p-3 rounded-lg bg-muted hover:bg-accent text-foreground flex items-center justify-center gap-2 transition-colors"
-          >
-            <LogOut className="w-5 h-5" />
-            <span className="text-sm">Exit</span>
-          </button>
-        </div>
-      </div>
-
-      {/* CENTER COLUMN - Menu Items Grid */}
-      <div className="flex-1 bg-background p-4 overflow-auto">
-        <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-          {menuItems.map((item) => {
-            const style = getItemStyle(item);
-            const hasImage = !!item.image;
-
-            return (
-              <button
-                key={item.id}
-                onClick={() => addItemToOrder(item)}
-                style={style}
-                className={`
-                    aspect-square rounded-xl p-4 flex flex-col justify-between
-                    transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]
-                    shadow-lg hover:shadow-xl relative overflow-hidden group
-                    ${!item.image && !item.color ? 'bg-card border border-border hover:border-primary/50' : ''}
-                `}
-              >
-                {/* Gradient Overlay for Text Readability if Has Image */}
-                {hasImage && <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />}
-
-                <div className="z-10 w-full flex justify-between items-start">
-                  <span className={`text-sm font-bold leading-tight text-left ${hasImage || item.color ? 'text-white' : 'text-foreground'}`}>
-                    {item.name}
-                  </span>
-                </div>
-
-                {/* ID Badge */}
-                <span className={`z-10 text-[10px] font-mono self-start opacity-60 ${hasImage || item.color ? 'text-white' : 'text-muted-foreground'}`}>
-                  {item.id.substring(0, 4)}
-                </span>
-
-                <div className="z-10 mt-auto flex items-end justify-end w-full">
-                  <span className={`text-lg font-bold ${hasImage || item.color ? 'text-white' : 'text-foreground'}`}>
-                    €{safeNumber(item.price, 0).toFixed(2)}
-                  </span>
-                </div>
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* RIGHT COLUMN - Order Summary */}
-      <div className="w-96 bg-card border-l border-border flex flex-col">
-        {/* ... (Existing Table info & Order Items - No Changes needed) ... */}
-        {/* Table Info */}
-        <div className="p-4 border-b border-border">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-foreground font-heading font-bold text-xl">
-              {selectedTable ? selectedTable.name : "No Table"}
-            </h2>
-            {selectedTable && (
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => {
-                  setSelectedTable(null);
-                  setCurrentOrder(null);
-                  setOrderItems([]);
-                }}
-                className="text-muted-foreground hover:text-foreground hover:bg-accent"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            )}
-          </div>
-
-          {selectedTable && (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Users className="w-3 h-3" />
-              <span>{selectedTable.seats} seats</span>
-              <span className="mx-1">•</span>
-              <span className="capitalize">{selectedTable.status}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Order Items */}
-        <ScrollArea className="flex-1 p-4">
-          {/* ... (Same as before) ... */}
-          {currentOrder && safeArray(currentOrder.send_rounds).length > 0 && (
-            <div className="mb-4 space-y-2">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Sent Items</p>
-              {currentOrder.send_rounds.map((round, roundIdx) => (
-                <div key={roundIdx} className="border-l-4 border-success pl-3 py-2 bg-muted/50 rounded">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-bold text-success">Round {round.round_no}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(round.sent_at).toLocaleTimeString()}
-                    </span>
-                  </div>
-                  <div className="text-xs text-muted-foreground flex gap-2">
-                    {round.do_print && <span>📄 Printed</span>}
-                    {round.do_kds && <span>🔪 KDS</span>}
-                    {round.do_stock && <span>📦 Stock</span>}
-                  </div>
-                </div>
-              ))}
-              <div className="border-t border-border my-3"></div>
-            </div>
-          )}
-
-          {orderItems.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <UtensilsCrossed className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>No items yet</p>
-              <p className="text-xs mt-1">Select items to start order</p>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {orderItems.map((item, index) => (
-                <div
-                  key={index}
-                  className="p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1">
-                      <span className="text-foreground font-medium">
-                        {safeString(item.menu_item_name || item.name, "Item")}
-                      </span>
-                      {safeArray(item.modifiers).length > 0 && (
-                        <div className="mt-1 space-y-0.5">
-                          {safeArray(item.modifiers).map((mod, i) => {
-                            const modName = typeof mod === 'object' ? safeString(mod.name) : safeString(mod);
-                            const priceAdj = typeof mod === 'object' ? safeNumber(mod.price_adjustment, 0) : 0;
-                            return modName ? (
-                              <p key={i} className="text-xs text-warning">
-                                • {modName}
-                                {priceAdj !== 0 && (
-                                  <span className="ml-1">
-                                    ({priceAdj > 0 ? '+' : ''}€{priceAdj.toFixed(2)})
-                                  </span>
-                                )}
-                              </p>
-                            ) : null;
-                          })}
-                        </div>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => removeItem(index)}
-                      className="text-destructive/80 hover:text-destructive transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => updateItemQuantity(index, -1)}
-                        className="w-8 h-8 rounded bg-background hover:bg-accent flex items-center justify-center text-foreground border border-border"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="text-foreground font-mono w-8 text-center">{safeNumber(item.quantity, 1)}</span>
-                      <button
-                        onClick={() => updateItemQuantity(index, 1)}
-                        className="w-8 h-8 rounded bg-background hover:bg-accent flex items-center justify-center text-foreground border border-border"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <span className="text-foreground font-bold">€{safeNumber(item.total_price || (item.price * item.quantity), 0).toFixed(2)}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </ScrollArea>
-
-        {/* Totals */}
-        <div className="p-4 border-t border-border space-y-3">
-          <div className="flex items-center justify-between text-muted-foreground">
-            <span>Subtotal</span>
-            <span>€{subtotal.toFixed(2)}</span>
-          </div>
-          <div className="flex items-center justify-between text-muted-foreground">
-            <span>Tax (18%)</span>
-            <span>€{tax.toFixed(2)}</span>
-          </div>
-          <div className="flex items-center justify-between text-foreground text-xl font-bold">
-            <span>Total</span>
-            <span>€{total.toFixed(2)}</span>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="p-4 border-t border-border space-y-3">
-          <div className="bg-muted p-3 rounded-lg space-y-2">
-            <p className="text-muted-foreground text-sm font-medium mb-2">Send Options</p>
-
-            {settings?.pos?.send_checkbox_print !== false && (
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <Checkbox
-                  checked={sendOptions.do_print}
-                  onCheckedChange={(checked) => setSendOptions(prev => ({ ...prev, do_print: checked }))}
-                  className="border-input"
-                />
-                <Printer className="w-4 h-4 text-muted-foreground" />
-                <span className="text-foreground text-sm">Print</span>
-              </label>
-            )}
-
-            {settings?.pos?.send_checkbox_kds !== false && (
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <Checkbox
-                  checked={sendOptions.do_kds}
-                  onCheckedChange={(checked) => setSendOptions(prev => ({ ...prev, do_kds: checked }))}
-                  className="border-input"
-                />
-                <UtensilsCrossed className="w-4 h-4 text-muted-foreground" />
-                <span className="text-foreground text-sm">Send to KDS</span>
-              </label>
-            )}
-
-            {settings?.pos?.send_checkbox_stock !== false && (
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <Checkbox
-                  checked={sendOptions.do_stock}
-                  onCheckedChange={(checked) => setSendOptions(prev => ({ ...prev, do_stock: checked }))}
-                  className="border-input"
-                />
-                <span className="text-foreground text-sm">Deduct Stock</span>
-              </label>
-            )}
-          </div>
-
-          <Button
-            onClick={sendOrder}
-            disabled={orderItems.length === 0 || !selectedTable || sendInProgress}
-            className="w-full bg-primary hover:bg-primary/90 h-12 text-base text-primary-foreground"
-            type="button"
-          >
-            {sendInProgress ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Sending...
-              </>
-            ) : (
-              <>
-                <Send className="w-5 h-5 mr-2" />
-                {sendOptions.do_kds ? "Send to Kitchen" : "Print Only"}
-              </>
-            )}
-          </Button>
-
-          <Button
-            onClick={() => setShowPaymentDialog(true)}
-            disabled={!currentOrder || orderItems.length === 0}
-            className="w-full bg-success hover:bg-success/90 h-12 text-base text-success-foreground"
-          >
-            Pay €{total.toFixed(2)}
-          </Button>
-
-          <Button
-            onClick={() => setOrderItems([])}
-            disabled={orderItems.length === 0}
-            variant="outline"
-            className="w-full border-border text-muted-foreground h-10 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50"
-          >
-            <Trash2 className="w-4 h-4 mr-2" />
-            Clear Order
-          </Button>
-        </div>
-      </div>
-
-      {/* Table Selection Dialog */}
-      <Dialog open={showTableDialog} onOpenChange={setShowTableDialog}>
-        <DialogContent className="bg-background border-border max-w-3xl">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Select Table</DialogTitle>
-          </DialogHeader>
-          <div className="grid grid-cols-4 gap-3 p-4">
-            {tables.map((table) => (
-              <button
-                key={table.id}
-                onClick={() => selectTable(table)}
-                className={`
-                  p-4 rounded-lg border-2 transition-all
-                  ${table.status === 'occupied'
-                    ? 'bg-destructive/20 border-destructive/50 text-destructive'
-                    : 'bg-card border-border text-foreground hover:border-primary'}
-                `}
-              >
-                <div className="text-lg font-bold">{table.name}</div>
-                <div className="text-xs mt-1 capitalize">{table.status}</div>
-                <div className="text-xs">{table.seats} seats</div>
-              </button>
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Payment Dialog */}
-      <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
-        <DialogContent className="bg-background border-border">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Process Payment</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 p-4">
-            <div className="text-center py-4">
-              <p className="text-muted-foreground mb-2">Total Amount</p>
-              <p className="text-4xl font-bold text-foreground">€{total.toFixed(2)}</p>
-            </div>
-
-            <div className="grid grid-cols-3 gap-3">
-              <Button
-                onClick={() => handlePayment('cash')}
-                className="h-16 bg-success hover:bg-success/90 text-lg flex flex-col gap-1 text-success-foreground"
-              >
-                <span>Cash</span>
-              </Button>
-              <Button
-                onClick={() => handlePayment('card')}
-                className="h-16 bg-primary hover:bg-primary/90 text-lg flex flex-col gap-1 text-primary-foreground"
-              >
-                <span>Card</span>
-              </Button>
-              {/* MEGA PATCH: Split Payment Button */}
-              <Button
-                onClick={() => handlePayment('split')}
-                className="h-16 bg-purple-600 hover:bg-purple-700 text-lg flex flex-col gap-1 text-white"
-              >
-                <span>Split Bill</span>
-                <span className="text-xs opacity-70">(Beta)</span>
-              </Button>
-            </div>
-
-            {/* Quick Amount Buttons */}
-            <div className="grid grid-cols-4 gap-2 pt-2 border-t border-border">
-              {[total, 50, 100, 200].map(amount => (
-                <button
-                  key={amount}
-                  onClick={() => handlePayment('cash')}
-                  className="p-3 bg-muted hover:bg-accent rounded text-foreground font-mono"
-                >
-                  €{amount.toFixed(2)}
-                </button>
-              ))}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Floor Plan Dialog */}
-      <Dialog open={showFloorPlanDialog} onOpenChange={setShowFloorPlanDialog}>
-        {/* ... (Existing logic same as before) ... */}
-        <DialogContent className="bg-background border-border max-w-6xl">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Floor Plan - Select Table</DialogTitle>
-          </DialogHeader>
-          {floorPlan ? (
-            <div className="p-4">
-              {/* ... Same floor plan rendering ... */}
-              <div className="mb-4 flex gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-success rounded"></div>
-                  <span className="text-sm text-muted-foreground">Available</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-destructive rounded"></div>
-                  <span className="text-sm text-muted-foreground">Occupied</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-warning rounded"></div>
-                  <span className="text-sm text-muted-foreground">Reserved</span>
-                </div>
+  // --- Theme Selector (compact dropdown injected into layouts) ---
+  const themeSelector = (
+    <div className="relative group">
+      <button
+        className="w-full p-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-foreground flex items-center justify-center gap-2 transition-colors text-xs font-medium"
+        title="Switch POS Theme"
+      >
+        {(() => { const TIcon = THEME_ICONS[theme] || Monitor; return <TIcon className="w-4 h-4" />; })()}
+        <span>{themes.find(t => t.id === theme)?.name || 'Classic'}</span>
+      </button>
+      <div className="absolute bottom-full left-0 w-full bg-popover border border-border rounded-lg shadow-xl mb-1 hidden group-hover:block z-50">
+        {themes.map(t => {
+          const TIcon = THEME_ICONS[t.id] || Monitor;
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTheme(t.id)}
+              className={`w-full p-2 flex items-center gap-2 text-xs hover:bg-accent transition-colors first:rounded-t-lg last:rounded-b-lg
+                ${theme === t.id ? 'bg-primary/10 text-primary font-bold' : 'text-foreground'}`}
+            >
+              <TIcon className="w-4 h-4" />
+              <div className="text-left">
+                <div>{t.name}</div>
+                <div className="text-[10px] text-muted-foreground">{t.target}</div>
               </div>
-              <div className="grid grid-cols-6 gap-3">
-                {tables.map((table) => {
-                  const color = table.status === 'available' ? 'bg-success/20 border-success'
-                    : table.status === 'reserved' ? 'bg-warning/20 border-warning'
-                      : 'bg-destructive/20 border-destructive';
-
-                  return (
-                    <button
-                      key={table.id}
-                      onClick={() => {
-                        selectTable(table);
-                        setShowFloorPlanDialog(false);
-                      }}
-                      className={`p-4 rounded-lg border-2 transition-all hover:scale-105 ${color}`}
-                      disabled={table.status === 'occupied' && table.id !== selectedTable?.id}
-                    >
-                      <div className="text-foreground font-bold text-lg">{table.name}</div>
-                      <div className="text-xs text-muted-foreground mt-1">{table.seats} seats</div>
-                      <div className="text-xs text-muted-foreground capitalize mt-1">{table.status}</div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ) : (
-            <div className="p-8 text-center text-muted-foreground">
-              <p>No active floor plan configured</p>
-              <p className="text-sm mt-2">Create and activate a floor plan in Admin</p>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Modifier Dialog */}
-      <ModifierDialog
-        item={selectedItem}
-        open={showModifierDialog}
-        onClose={() => {
-          setShowModifierDialog(false);
-          setSelectedItem(null);
-        }}
-        onConfirm={confirmItemWithModifiers}
-      />
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
+
+  // --- Shared layout props (all themes receive the same data + actions) ---
+  const layoutProps = {
+    // Data
+    venue,
+    user,
+    categories,
+    menuItems,
+    tables,
+    activeCategory,
+    selectedTable,
+    currentOrder,
+    orderItems,
+    settings,
+    sendOptions,
+    sendInProgress,
+    floorPlan,
+    selectedItem,
+    // Dialog states
+    showTableDialog,
+    showPaymentDialog,
+    showFloorPlanDialog,
+    showModifierDialog,
+    // Calculated values
+    subtotal,
+    tax,
+    total,
+    // Actions
+    onLoadCategoryItems: loadCategoryItems,
+    onSelectTable: selectTable,
+    onAddItemToOrder: addItemToOrder,
+    onConfirmItemWithModifiers: confirmItemWithModifiers,
+    onUpdateItemQuantity: updateItemQuantity,
+    onRemoveItem: removeItem,
+    onSendOrder: sendOrder,
+    onHandlePayment: handlePayment,
+    onClearOrder: () => setOrderItems([]),
+    onDeselectTable: () => {
+      setSelectedTable(null);
+      setCurrentOrder(null);
+      setOrderItems([]);
+    },
+    onSetSendOptions: setSendOptions,
+    onSetShowTableDialog: setShowTableDialog,
+    onSetShowPaymentDialog: setShowPaymentDialog,
+    onSetShowFloorPlanDialog: setShowFloorPlanDialog,
+    onSetShowModifierDialog: setShowModifierDialog,
+    onCloseModifierDialog: () => {
+      setShowModifierDialog(false);
+      setSelectedItem(null);
+    },
+    onNavigate: navigate,
+    // Theme switcher slot
+    themeSelector,
+  };
+
+  // --- Theme Layout Delegation ---
+  // Currently only Restin layout is implemented.
+  // Pro and Express layouts will be added in Phase 3 and 4.
+  switch (theme) {
+    case 'pro':
+      return <POSLayoutPro {...layoutProps} />;
+    case 'express':
+      return <POSLayoutExpress {...layoutProps} />;
+    case 'restin':
+    default:
+      return <POSLayoutRestin {...layoutProps} />;
+  }
 }

@@ -55,10 +55,13 @@ class SuppliersService:
         return {"message": "Supplier archived"}
     
     async def list_suppliers(self, venue_id: str, include_archived: bool = False):
-        """List suppliers for a venue"""
-        query = {"venue_id": venue_id}
+        """List suppliers for a venue (including shared suppliers)"""
+        query = {"$or": [
+            {"venue_id": venue_id},
+            {"venues": venue_id},
+        ]}
         if not include_archived:
-            query["is_active"] = True
+            query["is_active"] = {"$ne": False}
         
         suppliers = await db.suppliers.find(query, {"_id": 0}).sort("name", 1).to_list(500)
         return suppliers

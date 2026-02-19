@@ -69,3 +69,10 @@ python seed_data.py
 - API Docs: <http://localhost:8000/docs>
 
 **Test Login:** PIN `0000` (Product Owner - Arda Koc)
+
+---
+
+## ⚡ Performance \u0026 Quality Rules
+
+- **No Animation Delays:** NEVER use `setTimeout` to gate login, navigation, or form submissions. Animations may run in parallel, not block.
+- **No 404 Before Commit:** NEVER commit if clicking a UI element shows a 404 or blank page. Fix or hide the element first.

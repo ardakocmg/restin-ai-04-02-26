@@ -1,29 +1,49 @@
-import axios from 'axios';
+import api from '../../lib/api';
 import { Ingredient, StockAdjustment } from '../../types';
 import { initDB } from '../../lib/db';
+import logger from '../../lib/logger';
 
-// Mock API for development since backend might not fully support new structure yet
-import seedData from '../../data/seed-master.json';
-
-const API_URL = '/api/inventory';
+const API_URL = '/inventory';
 
 export const InventoryService = {
-    // Fetch everything (uses API, falls back to IDB)
+    // Fetch everything from real API, fall back to IndexedDB
     getItems: async (): Promise<Ingredient[]> => {
-        // For Phase 9 demo, pull directly from the new Seed Master to ensure UI shows new fields
-        // In realprod, this would hit API.
-        return seedData.inventory as Ingredient[];
-
-        /* 
-        // Real Implementation
         try {
-            const response = await axios.get<Ingredient[]>(`${API_URL}/items`);
+            const venueId = localStorage.getItem('activeVenueId') || 'venue-caviar-bull';
+            const response = await api.get<Ingredient[]>(`${API_URL}/items`, {
+                params: { venue_id: venueId }
+            });
             const items = response.data;
+
+            // Cache in IndexedDB for offline use
+            try {
+                const db = await initDB();
+                if (db && items.length > 0) {
+                    const tx = db.transaction('inventory_items', 'readwrite');
+                    for (const item of items) {
+                        tx.store.put(item);
+                    }
+                    await tx.done;
+                }
+            } catch {
+                // IndexedDB cache failure is non-critical
+            }
+
             return items;
         } catch (error) {
-           // ...
-        } 
-        */
+            logger.error('Failed to fetch inventory from API, trying IndexedDB', error as Record<string, unknown>);
+            // Fallback to IndexedDB cache
+            try {
+                const db = await initDB();
+                if (db) {
+                    const cached = await db.getAll('inventory_items');
+                    if (cached.length > 0) return cached as Ingredient[];
+                }
+            } catch {
+                // IndexedDB also failed
+            }
+            return [];
+        }
     },
 
     getValuation: async () => {
@@ -32,6 +52,6 @@ export const InventoryService = {
 
     // Save changes locally if offline, or push to API
     adjustStock: async (adjustment: StockAdjustment) => {
-        return axios.post(`${API_URL}/adjust`, adjustment);
+        return api.post(`${API_URL}/adjust`, adjustment);
     }
 };

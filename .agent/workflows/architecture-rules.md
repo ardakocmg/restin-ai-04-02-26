@@ -197,3 +197,44 @@ python -X utf8 _integrity_check.py
 - Shifts: 275
 - Orders: 50
 - Menus: 1, Categories: 4, Items: 24
+
+---
+
+## Rule 11: NO ANIMATION DELAYS ON CRITICAL PATHS
+
+**NEVER** use `setTimeout`, `requestAnimationFrame`, or CSS transition delays to gate login, navigation, or data submission.
+
+- ❌ `setTimeout(() => handleLoginSuccess(data), 300)` — blocks the user for no reason
+- ✅ `handleLoginSuccess(data)` — instant, no waiting
+
+**Animations may run in parallel** (e.g., a checkmark fading in) but must NEVER block the next step.
+
+**Applies to:** Login flows, page transitions, form submissions, API callbacks, post-auth navigation.
+
+---
+
+## Rule 12: NO 404 PAGES BEFORE COMMIT
+
+**NEVER** commit code that results in a 404 or broken page. If a UI button/link/route exists, its backend MUST also exist and work.
+
+**Pre-commit checklist:**
+
+1. If you added a frontend route → verify the backend API exists and is registered in `app/main.py`.
+2. If you added a sidebar link → verify the target page component exists and is routed in `App.tsx`.
+3. If a 404 is found → trace the route, find the missing handler, implement it, THEN commit.
+4. If a feature is incomplete → hide the UI element (don't show a dead link).
+
+**Rule of thumb:** If clicking something shows a 404 or blank page, the commit is NOT ready.
+
+---
+
+## Rule 13: LOGIN PAGE VISUALS — LOCKED 🔒
+
+The following elements in `Login.tsx` are **FINAL** and must **NEVER** be modified:
+
+1. **Green success animation** (`setPinSuccess(true)` + `success-pulse` CSS class + green border/glow on PIN dots)
+2. **Background image** (Unsplash restaurant kitchen photo + dark overlay)
+3. **Frosted glass card** (backdrop-blur, semi-transparent dark bg, shadow, border)
+4. **150ms delay** between green pulse and navigation (`await new Promise(r => setTimeout(r, 150))`)
+
+**These are approved by the product owner and are part of the brand identity.** Do not remove, replace, or "optimize" them.

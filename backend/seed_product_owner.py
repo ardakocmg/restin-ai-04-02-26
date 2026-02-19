@@ -11,7 +11,7 @@ load_dotenv(ROOT_DIR / '.env')
 
 mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ.get('DB_NAME', 'restinai')]
+db = client[os.environ.get('DB_NAME', 'restin_v2')]
 
 def hash_pin(pin: str) -> str:
     return hashlib.sha256(pin.encode()).hexdigest()
@@ -38,6 +38,7 @@ async def seed_product_owner():
         "immutable": True,
         "cannot_delete": True,
         "cannot_change_role": True,
+        "status": "active",
         "created_at": "2026-01-01T00:00:00Z"
     }
     

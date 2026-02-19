@@ -45,7 +45,7 @@ class ShireburnAdapter(BaseMigrationAdapter):
             "update": 0,
             "conflict": 0,
             "details": details,
-            "summary": "Shireburn Indigo Employee Export Detected"
+            "summary": "Shireburn HR Employee Export Detected"
         }
 
     async def execute(self, data: Any, mode: str = "migrate", options: Dict = None):

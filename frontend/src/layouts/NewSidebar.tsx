@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '../features/auth/AuthContext';
 import { MENU_ITEMS, DOMAINS, getDomainForGroup, type MenuItem, type Domain } from '@/lib/searchRegistry';
-import { ChevronRight, ChevronLeft, Search, X, Star } from 'lucide-react';
+import { ChevronRight, ChevronLeft, ChevronDown, Search, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ROLE_HIERARCHY } from '../lib/roles';
 
@@ -18,28 +18,17 @@ interface SidebarProps {
   onDomainExpand?: (expanded: boolean) => void;
 }
 
-type PageType = 'settings' | 'dashboard' | 'report' | 'page';
-
-interface FlatNavItem {
-  title: string;
-  href?: string;
-  group?: string;
-  type: 'link' | 'group' | 'child';
-}
-
 const menuItems: MenuItem[] = MENU_ITEMS;
 
-export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDomainExpand }: SidebarProps): React.ReactElement {
+export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: SidebarProps): React.ReactElement {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Role-based filtering: user can only see items at or below their role level
   const userLevel = ROLE_HIERARCHY[user?.role ?? ''] ?? 0;
   const canSeeItem = (item: MenuItem): boolean => userLevel >= (ROLE_HIERARCHY[item.requiredRole] ?? 0);
   const visibleMenuItems = useMemo<MenuItem[]>(() => menuItems.filter(canSeeItem), [userLevel]);
 
-  // Domain Groups â€” from shared searchRegistry
   const domains = DOMAINS;
 
   // Only show domains that have at least one visible menu item
@@ -48,66 +37,31 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
     return domains.filter(d => visibleDomainIds.has(d.id));
   }, [userLevel]) as Domain[];
 
-  const findActiveDomain = (): string => {
-    for (const item of visibleMenuItems) {
-      if (item.href === location.pathname || item.children?.some((c: MenuItem) => c.href === location.pathname)) {
-        return getDomainForGroup(item.group);
-      }
-    }
-    return visibleDomains[0]?.id || 'home';
-  };
-
-  const [activeDomain, setActiveDomain] = useState<string>(() => {
-    const d = findActiveDomain();
-    return d || 'home';
-  });
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(['main', 'pos', 'hr', 'reports']);
-  const [activeSubItem, setActiveSubItem] = useState<MenuItem | null>(null);
-  const [domainBarExpanded, setDomainBarExpanded] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const isActive = (href: string): boolean => location.pathname === href || location.pathname.startsWith(href + '/');
-  const isGroupActive = (children?: MenuItem[]): boolean => !!children?.some((c: MenuItem) => isActive(c.href));
-
-  // Detect when the domain bar should show
-  // Sync activeDomain whenever the URL changes
-  React.useEffect(() => {
-    const detected = findActiveDomain();
-    if (detected && detected !== activeDomain) {
-      setActiveDomain(detected);
+  // Track which domain sections are expanded
+  const [expandedDomains, setExpandedDomains] = useState<string[]>(() => {
+    // Auto-expand domain of current page
+    for (const item of MENU_ITEMS) {
+      if (item.href === location.pathname || item.children?.some(c => c.href === location.pathname)) {
+        return [getDomainForGroup(item.group)];
+      }
     }
-  }, [location.pathname]);
+    return ['home'];
+  });
 
-  // Note: handleDomainClick replaced by handleDomainClickWithMemory (domain memory feature)
-
-  const toggleDomainExpand = () => {
-    setDomainBarExpanded((prev) => !prev);
-    onDomainExpand?.(!domainBarExpanded);
-  };
-
-  // ─── Cmd/Ctrl+click support — open in new tab ───
-  const handleNavClick = (href: string, e?: React.MouseEvent, extraFn?: () => void): void => {
-    if (e?.metaKey || e?.ctrlKey) {
-      e.preventDefault();
-      window.open(href, '_blank');
-      return;
+  // Track which accordion parents are expanded (items with children)
+  const [expandedAccordions, setExpandedAccordions] = useState<string[]>(() => {
+    const expanded: string[] = [];
+    for (const item of MENU_ITEMS) {
+      if (item.children?.some(c => c.href === location.pathname || location.pathname.startsWith(c.href))) {
+        expanded.push(item.title);
+      }
     }
-    navigate(href);
-    extraFn?.();
-  };
+    return expanded;
+  });
 
-  const domainNotifications = useMemo<Record<string, number>>(() => ({
-    home: 0,
-    pos: 2,
-    hr: 5,
-    inventory: 1,
-    finance: 0,
-    restin: 3,
-    settings: 0,
-    collab: 4,
-  }), []);
-
-  // ─── Page Pinning: favorites persisted to localStorage ───
+  // Pinned pages
   const PINS_KEY = 'restin:pinned-pages';
   const [pinnedPages, setPinnedPages] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem(PINS_KEY) || '[]') as string[]; }
@@ -126,492 +80,463 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle, onDo
 
   const isPinned = (href: string): boolean => pinnedPages.includes(href);
 
-  const pinnedItems = useMemo(() => {
-    const allItems: Array<MenuItem & { icon?: MenuItem['icon'] }> = [];
-    visibleMenuItems.forEach(item => {
-      if (item.href) allItems.push(item);
-      item.children?.forEach(c => allItems.push({ ...c, icon: item.icon }));
-    });
-    return pinnedPages
-      .map(href => allItems.find(i => i.href === href))
-      .filter((item): item is MenuItem & { icon?: MenuItem['icon'] } => Boolean(item));
-  }, [pinnedPages, visibleMenuItems]);
+  const isActive = (href: string): boolean => location.pathname === href || location.pathname.startsWith(href + '/');
+  const isChildActive = (children?: MenuItem[]): boolean => !!children?.some((c: MenuItem) => isActive(c.href));
 
-  // ─── Visual type distinction: infer page type from href ───
-  const getItemType = (href: string): PageType => {
-    if (!href) return 'page';
-    if (href.includes('settings') || href.includes('setup') || href.includes('config')) return 'settings';
-    if (href.includes('dashboard') || href === '/manager' || href === '/manager/hr') return 'dashboard';
-    if (href.includes('report') || href.includes('analytics') || href.includes('sales')) return 'report';
-    return 'page';
+  // Check if any item in a domain is currently active
+  const isDomainActive = (domainId: string): boolean => {
+    const items = itemsByDomain[domainId] || [];
+    return items.some(item => isActive(item.href) || isChildActive(item.children));
   };
 
-  const getTypeIndicator = (href: string): string => {
-    const type = getItemType(href);
-    switch (type) {
-      case 'settings': return 'border-l-2 border-l-amber-500/40';
-      case 'dashboard': return 'border-l-2 border-l-emerald-500/40';
-      case 'report': return 'border-l-2 border-l-blue-500/40';
-      default: return '';
+  // Notification badges per domain (mock — replace with real data)
+  const domainNotifications = useMemo<Record<string, number>>(() => ({
+    home: 0, pos: 2, hr: 5, inventory: 1, finance: 0,
+    analytics: 0, restin: 3, collab: 4,
+    'venue-settings': 0, 'org-settings': 0, 'system-admin': 0,
+  }), []);
+
+  // Per-item notification badges (mock — replace with real data from API)
+  // Key = href, Value = count of pending actions/alerts
+  const itemNotifications = useMemo<Record<string, number>>(() => ({
+    '/manager/pos-dashboard': 1,
+    '/manager/review-risk': 1,
+    '/manager/hr/approvals': 3,
+    '/manager/hr/leave-management': 2,
+    '/manager/inventory-waste': 1,          // cascades: Inventory domain (1) → Inventory Hub (1) → Waste Log (1)
+    '/manager/collab/inbox': 2,
+    '/manager/collab/tasks': 2,
+    '/manager/restin/voice': 1,
+    '/manager/restin/crm': 2,
+  }), []);
+
+  const getItemBadge = (href: string): number => itemNotifications[href] || 0;
+
+  // Get total badges for an accordion parent (sum of its children)
+  const getAccordionBadge = (item: MenuItem): number => {
+    let count = getItemBadge(item.href);
+    if (item.children) {
+      count += item.children.reduce((sum, c) => sum + (itemNotifications[c.href] || 0), 0);
     }
+    return count;
   };
 
-  const hasTertiary = (activeSubItem?.subs?.length ?? 0) > 0;
-
-  React.useEffect(() => {
-    onTertiaryToggle?.(hasTertiary);
-  }, [hasTertiary, onTertiaryToggle]);
-
-  const toggleGroup = (group: string): void => {
-    setExpandedGroups((prev: string[]) =>
-      prev.includes(group)
-        ? prev.filter((g: string) => g !== group)
-        : [...prev, group]
-    );
-  };
-
-  // ─── Domain Memory: remember last visited page per domain ───
-  const DOMAIN_MEMORY_KEY = 'restin:domain-memory';
-
-  const saveDomainPage = useCallback((domain: string, path: string): void => {
-    try {
-      const mem = JSON.parse(localStorage.getItem(DOMAIN_MEMORY_KEY) || '{}') as Record<string, string>;
-      mem[domain] = path;
-      localStorage.setItem(DOMAIN_MEMORY_KEY, JSON.stringify(mem));
-    } catch { /* ignore */ }
-  }, []);
-
-  const getDomainPage = useCallback((domain: string): string | null => {
-    try {
-      const mem = JSON.parse(localStorage.getItem(DOMAIN_MEMORY_KEY) || '{}') as Record<string, string>;
-      return mem[domain] || null;
-    } catch { return null; }
-  }, []);
-
-  // Save current page whenever route changes
+  // Auto-expand domain & accordion for current route
   useEffect(() => {
-    const domain = findActiveDomain();
-    if (domain && location.pathname !== '/manager/dashboard') {
-      saveDomainPage(domain, location.pathname);
+    for (const item of visibleMenuItems) {
+      const domainId = getDomainForGroup(item.group);
+      const directMatch = item.href === location.pathname;
+      const childMatch = item.children?.some(c => isActive(c.href));
+
+      if (directMatch || childMatch) {
+        if (!expandedDomains.includes(domainId)) {
+          setExpandedDomains(prev => [...prev, domainId]);
+        }
+        if (childMatch && !expandedAccordions.includes(item.title)) {
+          setExpandedAccordions(prev => [...prev, item.title]);
+        }
+      }
     }
   }, [location.pathname]);
 
-  // Navigate to saved page on domain switch
-  const handleDomainClickWithMemory = (id: string): void => {
-    setActiveDomain(id);
-    if (collapsed) {
-      onToggle?.();
-    }
-    const savedPage = getDomainPage(id);
-    if (savedPage) {
-      navigate(savedPage);
-    }
-  };
-
-  // ─── Keyboard Navigation: ↑↓ traverse menu, Enter to select ───
-  const [focusedIdx, setFocusedIdx] = useState<number>(-1);
-  const menuContainerRef = useRef<HTMLElement | null>(null);
-
-  // Flatten visible items + their children into navigable list
-  const flatNavItems = useMemo<FlatNavItem[]>(() => {
-    const items: FlatNavItem[] = [];
-    visibleMenuItems
-      .filter((item: MenuItem) => {
-        if (searchTerm && !collapsed) {
-          const term = searchTerm.toLowerCase();
-          const matchesTitle = item.title.toLowerCase().includes(term);
-          const matchesSub = item.children?.some((c: MenuItem) => c.title.toLowerCase().includes(term));
-          return matchesTitle || matchesSub;
-        }
-        return getDomainForGroup(item.group) === activeDomain;
-      })
-      .forEach((item: MenuItem) => {
-        if (item.href && !item.children) {
-          items.push({ title: item.title, href: item.href, type: 'link' });
-        } else if (item.children) {
-          items.push({ title: item.title, group: item.group, type: 'group' });
-          if (expandedGroups.includes(item.group)) {
-            item.children.forEach((c: MenuItem) => {
-              items.push({ title: c.title, href: c.href, type: 'child' });
-            });
-          }
-        }
-      });
-    return items;
-  }, [visibleMenuItems, activeDomain, searchTerm, collapsed, expandedGroups]);
-
-  // Reset focus idx on domain switch or search
+  // No tertiary panel
   useEffect(() => {
-    setFocusedIdx(-1);
-  }, [activeDomain, searchTerm]);
+    onTertiaryToggle?.(false);
+  }, [onTertiaryToggle]);
 
-  // Keyboard handler for sidebar navigation
-  useEffect(() => {
-    const container = menuContainerRef.current;
-    if (!container || collapsed) return;
+  const toggleDomain = useCallback((id: string): void => {
+    setExpandedDomains(prev =>
+      prev.includes(id) ? prev.filter(d => d !== id) : [...prev, id]
+    );
+  }, []);
 
-    const handleKeyDown = (e: KeyboardEvent): void => {
-      if (flatNavItems.length === 0) return;
+  const toggleAccordion = useCallback((title: string): void => {
+    setExpandedAccordions(prev =>
+      prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title]
+    );
+  }, []);
 
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        setFocusedIdx((prev: number) => Math.min(prev + 1, flatNavItems.length - 1));
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        setFocusedIdx((prev: number) => Math.max(prev - 1, 0));
-      } else if (e.key === 'Enter' && focusedIdx >= 0) {
-        e.preventDefault();
-        const item = flatNavItems[focusedIdx];
-        if (item.type === 'group' && item.group) {
-          toggleGroup(item.group);
-        } else if (item.href) {
-          navigate(item.href);
-        }
-      }
-    };
+  const handleNavClick = useCallback((href: string, e?: React.MouseEvent): void => {
+    if (e?.metaKey || e?.ctrlKey) {
+      e.preventDefault();
+      window.open(href, '_blank');
+      return;
+    }
+    navigate(href);
+  }, [navigate]);
 
-    container.addEventListener('keydown', handleKeyDown);
-    return () => container.removeEventListener('keydown', handleKeyDown);
-  }, [flatNavItems, focusedIdx, collapsed]);
+  // Group menu items by domain
+  const itemsByDomain = useMemo(() => {
+    const map: Record<string, MenuItem[]> = {};
+    for (const item of visibleMenuItems) {
+      const domainId = getDomainForGroup(item.group);
+      if (!map[domainId]) map[domainId] = [];
+      map[domainId].push(item);
+    }
+    return map;
+  }, [visibleMenuItems]);
+
+  // Search filter
+  const filteredDomains = useMemo(() => {
+    if (!searchTerm.trim()) return visibleDomains;
+    const term = searchTerm.toLowerCase();
+    return visibleDomains.filter(domain => {
+      const items = itemsByDomain[domain.id] || [];
+      return (
+        domain.title.toLowerCase().includes(term) ||
+        items.some(item =>
+          item.title.toLowerCase().includes(term) ||
+          item.children?.some(c => c.title.toLowerCase().includes(term))
+        )
+      );
+    });
+  }, [searchTerm, visibleDomains, itemsByDomain]);
+
+  const getFilteredItems = useCallback((domainId: string): MenuItem[] => {
+    const items = itemsByDomain[domainId] || [];
+    if (!searchTerm.trim()) return items;
+    const term = searchTerm.toLowerCase();
+    return items.filter(item =>
+      item.title.toLowerCase().includes(term) ||
+      item.children?.some(c => c.title.toLowerCase().includes(term))
+    );
+  }, [itemsByDomain, searchTerm]);
+
+  // Count total notifications for a domain
+  const getDomainBadge = (domainId: string): number => domainNotifications[domainId] || 0;
 
   return (
-    <div className="flex h-full font-body">
-      {/* Pane 1: Slim Domain Bar */}
-      <aside
-        className={cn(
-          "h-full flex flex-col items-center py-4 gap-4 border-r border-white/5 transition-all duration-300 shadow-[20px_0_40px_rgba(0,0,0,0.5)] z-50",
-          domainBarExpanded ? "w-64 px-4 bg-zinc-950/95 backdrop-blur-xl" : "w-20 bg-zinc-950"
-        )}
-      >
-        <div className={cn("flex items-center w-full mb-8", domainBarExpanded ? "justify-between px-2" : "justify-center")}>
-          <button
-            onClick={toggleDomainExpand}
-            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
-          >
-            <div className="h-10 w-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-500/20 active:scale-95 transition-transform">
-              <span className="text-2xl font-black text-white dark:text-white text-zinc-900 italic transform -skew-x-6">R</span>
+    <aside
+      className={cn(
+        "h-full flex flex-col transition-all duration-300 border-r border-white/5 bg-zinc-950 z-50",
+        collapsed ? "w-20" : "w-72"
+      )}
+    >
+      {/* ─── Header: Logo + Collapse ─── */}
+      <div className={cn("flex items-center h-20 shrink-0 border-b border-white/5 bg-zinc-950", collapsed ? "justify-center px-2" : "justify-between px-5")}>
+        <button
+          onClick={() => onToggle()}
+          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+        >
+          <div className="h-10 w-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-500/20 active:scale-95 transition-transform">
+            <span className="text-2xl font-black text-white italic transform -skew-x-6">R</span>
+          </div>
+          {!collapsed && (
+            <div className="flex flex-col items-start">
+              <span className="text-lg font-black text-white italic tracking-tighter leading-none">restin.ai</span>
+              <span className="text-[9px] font-bold text-red-500 tracking-[0.3em] uppercase">Enterprise</span>
             </div>
-            {domainBarExpanded && (
-              <div className="flex flex-col items-start">
-                <span className="text-xl font-black text-white dark:text-white text-zinc-900 italic tracking-tighter leading-none">restin.ai</span>
-                <span className="text-[10px] font-bold text-red-500 tracking-[0.3em] uppercase">Enterprise</span>
-              </div>
-            )}
-          </button>
-          {domainBarExpanded && (
-            <Button variant="ghost" size="icon" onClick={toggleDomainExpand} className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white h-8 w-8 hover:bg-zinc-100 dark:hover:bg-white/5">
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
           )}
-        </div>
+        </button>
+        {!collapsed && (
+          <Button variant="ghost" size="icon" onClick={onToggle} className="text-zinc-500 hover:text-white h-8 w-8 hover:bg-white/5">
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
 
-        <div className="flex-1 w-full space-y-3">
-          {visibleDomains.map((domain) => (
-            <button
-              key={domain.id}
-              onClick={() => handleDomainClickWithMemory(domain.id)}
-              className={cn(
-                'group relative flex items-center rounded-xl transition-all duration-300 w-full outline-none focus:ring-2 focus:ring-red-500/20',
-                domainBarExpanded ? 'px-4 py-3.5 gap-4' : 'h-12 w-12 justify-center mx-auto',
-                activeDomain === domain.id
-                  ? 'bg-gradient-to-r from-red-600 to-red-700 shadow-[0_0_20px_rgba(229,57,53,0.4)] text-white border border-red-500/20'
-                  : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/5 border border-transparent'
-              )}
-            >
-              {/* Ambient gradient blob behind active domain icon */}
-              {activeDomain === domain.id && !domainBarExpanded && (
-                <div className="absolute inset-0 rounded-xl bg-red-500/10 blur-xl scale-150 animate-pulse pointer-events-none" />
-              )}
-              <domain.icon className={cn("shrink-0 transition-transform duration-300 group-hover:scale-110 relative z-10", domainBarExpanded ? "h-5 w-5" : "h-6 w-6")} />
-              {/* Notification badge */}
-              {!domainBarExpanded && domainNotifications[domain.id] > 0 && (
-                <span className="absolute -top-1 -right-1 z-20 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-white bg-red-600 rounded-full shadow-[0_0_8px_rgba(220,38,38,0.6)] border-2 border-zinc-950 animate-in fade-in">
-                  {domainNotifications[domain.id] > 9 ? '9+' : domainNotifications[domain.id]}
-                </span>
-              )}
-              {domainBarExpanded && (
-                <div className="flex-1 flex items-center justify-between relative z-10">
-                  <span className="text-sm font-bold truncate tracking-wide">{domain.title}</span>
-                  {domainNotifications[domain.id] > 0 && (
-                    <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-black text-white bg-red-600 rounded-full">
-                      {domainNotifications[domain.id]}
+      {/* ─── Search ─── */}
+      {!collapsed && (
+        <div className="px-4 py-3 border-b border-white/5">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <input
+              type="search"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              autoComplete="off"
+              data-1p-ignore
+              data-lpignore="true"
+              className="w-full bg-zinc-900/50 border border-white/10 rounded-lg py-2 pl-9 pr-8 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-red-500/50 transition-all"
+            />
+            {searchTerm && (
+              <button onClick={() => setSearchTerm('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white p-0.5">
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ─── Scrollable Navigation ─── */}
+      <ScrollArea className="flex-1">
+        <nav className={cn("py-4", collapsed ? "px-2" : "px-3")} aria-label="Sidebar navigation">
+
+          {/* ─── Pinned Section ─── */}
+          {!collapsed && !searchTerm && pinnedPages.length > 0 && (
+            <div className="mb-4">
+              <div className="flex items-center gap-2 px-3 mb-2">
+                <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">Pinned</span>
+              </div>
+              {pinnedPages.map(href => {
+                const allItems = visibleMenuItems.flatMap(i => i.children ? [i, ...i.children] : [i]);
+                const item = allItems.find(i => i.href === href);
+                if (!item) return null;
+                return (
+                  <Link
+                    key={`pin-${href}`}
+                    to={href}
+                    className={cn(
+                      'group flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-sm',
+                      isActive(href)
+                        ? 'bg-amber-500/[0.06] text-amber-400'
+                        : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-300'
+                    )}
+                  >
+                    <item.icon className="h-4 w-4 flex-shrink-0 text-amber-500/60" />
+                    <span className="truncate font-medium">{item.title}</span>
+                  </Link>
+                );
+              })}
+              <div className="mx-3 mt-2 border-b border-white/5" />
+            </div>
+          )}
+
+          {/* ─── Domain Sections ─── */}
+          {filteredDomains.map(domain => {
+            const domainItems = getFilteredItems(domain.id);
+            if (domainItems.length === 0) return null;
+            const isExpanded = expandedDomains.includes(domain.id) || !!searchTerm;
+
+            return (
+              <div key={domain.id} className="mb-1">
+                {/* Domain Header — Premium Style */}
+                <button
+                  onClick={() => {
+                    if (collapsed) {
+                      onToggle();
+                      // Also expand this domain section
+                      if (!expandedDomains.includes(domain.id)) {
+                        setExpandedDomains(prev => [...prev, domain.id]);
+                      }
+                      return;
+                    }
+                    toggleDomain(domain.id);
+                  }}
+                  className={cn(
+                    "w-full flex items-center rounded-xl transition-all duration-300 group relative outline-none",
+                    collapsed ? "justify-center h-12 w-12 mx-auto" : "gap-3 px-3.5 py-3",
+                    isDomainActive(domain.id)
+                      ? "bg-gradient-to-r from-red-600/90 to-red-700/80 shadow-[0_0_20px_rgba(229,57,53,0.3)] text-white border border-red-500/20"
+                      : isExpanded && !collapsed
+                        ? "bg-white/[0.04] text-white border border-white/5"
+                        : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5 border border-transparent"
+                  )}
+                >
+                  {/* Ambient glow behind active domain in collapsed mode */}
+                  {isDomainActive(domain.id) && collapsed && (
+                    <div className="absolute inset-0 rounded-xl bg-red-500/10 blur-xl scale-150 animate-pulse pointer-events-none" />
+                  )}
+                  {/* Active domain left edge glow — expanded mode */}
+                  {isDomainActive(domain.id) && !collapsed && (
+                    <div className="absolute left-[-1px] top-2 bottom-2 w-[3px] bg-white rounded-r-full shadow-[0_0_12px_rgba(255,255,255,0.6)]" />
+                  )}
+                  {/* White left bar when just expanded (not active) */}
+                  {!isDomainActive(domain.id) && isExpanded && !collapsed && (
+                    <div className="absolute left-[-1px] top-2 bottom-2 w-[2px] bg-zinc-600 rounded-r-full" />
+                  )}
+                  <domain.icon className={cn(
+                    "shrink-0 transition-all duration-300 group-hover:scale-110 relative z-10",
+                    collapsed ? "h-6 w-6" : "h-4.5 w-4.5",
+                    isDomainActive(domain.id) ? "text-white" : isExpanded ? "text-zinc-300" : "text-zinc-600 group-hover:text-zinc-400"
+                  )} />
+                  {/* Collapsed: notification badge */}
+                  {collapsed && getDomainBadge(domain.id) > 0 && (
+                    <span className="absolute -top-1 -right-1 z-20 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-white bg-red-600 rounded-full shadow-[0_0_8px_rgba(220,38,38,0.6)] border-2 border-zinc-950 animate-in fade-in">
+                      {getDomainBadge(domain.id) > 9 ? '9+' : getDomainBadge(domain.id)}
                     </span>
                   )}
-                </div>
-              )}
-              {activeDomain === domain.id && !domainBarExpanded && (
-                <div className="absolute left-[-20px] w-[4px] h-8 bg-white rounded-r-full shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-pulse" />
-              )}
-              {!domainBarExpanded && (
-                <div className="absolute left-16 px-4 py-2 bg-zinc-900 text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 translate-x-2 group-hover:translate-x-0 whitespace-nowrap z-50 uppercase tracking-widest border border-white/10 shadow-2xl">
-                  {domain.title}
-                  <div className="absolute left-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-zinc-900 rotate-45 border-l border-b border-white/10"></div>
-                </div>
-              )}
-            </button>
-          ))}
-        </div>
-
-        <div className="mt-auto w-full flex flex-col items-center gap-2 pb-4">
-          {collapsed && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onToggle}
-              className={cn(
-                "h-12 w-12 rounded-xl text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 transition-all border border-transparent hover:border-zinc-200 dark:hover:border-white/5",
-                domainBarExpanded && "w-full justify-start px-4 gap-4"
-              )}
-            >
-              <ChevronRight className="h-5 w-5" />
-              {domainBarExpanded && <span className="text-sm font-bold tracking-wide">Open Menu</span>}
-            </Button>
-          )}
-          <button
-            onClick={toggleDomainExpand}
-            className={cn(
-              "h-12 w-12 flex items-center justify-center rounded-xl text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 transition-all border border-transparent hover:border-zinc-200 dark:hover:border-white/5",
-              domainBarExpanded && "w-full justify-start px-4 gap-4"
-            )}
-          >
-            {domainBarExpanded ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
-            {domainBarExpanded && <span className="text-sm font-bold tracking-wide">Collapse Bar</span>}
-          </button>
-        </div>
-      </aside>
-
-      {/* Pane 2: Original Accordion Bar - Now with Icon Mode */}
-      <aside
-        className={cn(
-          'h-full flex flex-col transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] border-r border-white/5 overflow-hidden shadow-[10px_0_30px_rgba(0,0,0,0.3)] z-40 bg-zinc-950',
-          collapsed ? 'w-16' : 'w-72'
-        )}
-      >
-        <div className={cn("flex items-center h-20 shrink-0 border-b border-white/5 bg-zinc-950/50 backdrop-blur-sm", collapsed ? "justify-center px-0" : "justify-between px-6")}>
-          {!collapsed && (
-            <h1 className="text-xs font-black uppercase tracking-[0.25em] text-zinc-400">
-              {domains.find(d => d.id === activeDomain)?.title || 'Navigation'}
-            </h1>
-          )}
-          <Button variant="ghost" size="icon" onClick={onToggle} className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 h-8 w-8 rounded-lg">
-            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </Button>
-        </div>
-
-        <ScrollArea className={cn("flex-1 py-6", collapsed ? "px-2" : "px-4")}>
-          <nav
-            ref={menuContainerRef}
-            tabIndex={0}
-            className="space-y-1.5 outline-none"
-            aria-label="Sidebar navigation"
-          >
-            {/* Search Bar - Hidden in Icon Mode */}
-            {!collapsed && (
-              <div className="px-3 pb-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                  <input
-                    type="search"
-                    placeholder="Search features..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    autoComplete="off"
-                    data-1p-ignore
-                    data-lpignore="true"
-                    className="w-full bg-zinc-900/50 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-red-500/50 transition-all"
-                  />
-                </div>
-              </div>
-            )}
-            {/* Animated menu content — transitions when domain switches */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={searchTerm ? 'search' : activeDomain}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 8 }}
-                transition={{ duration: 0.15, ease: 'easeOut' }}
-                className="space-y-1.5"
-              >
-                {/* ─── Pinned Pages Section ─── */}
-                {!collapsed && !searchTerm && pinnedItems.length > 0 && (
-                  <div className="mb-4">
-                    <div className="flex items-center gap-2 px-3 mb-2">
-                      <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">Pinned</span>
+                  {!collapsed && (
+                    <>
+                      <span className={cn(
+                        "flex-1 text-left text-[11px] font-black uppercase tracking-[0.15em]",
+                        isDomainActive(domain.id) ? "text-white" : ""
+                      )}>
+                        {domain.title}
+                      </span>
+                      {getDomainBadge(domain.id) > 0 && (
+                        <span className={cn(
+                          "flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black rounded-full",
+                          isDomainActive(domain.id)
+                            ? "text-red-600 bg-white shadow-sm"
+                            : "text-white bg-red-600 shadow-[0_0_6px_rgba(220,38,38,0.4)]"
+                        )}>
+                          {getDomainBadge(domain.id)}
+                        </span>
+                      )}
+                      <ChevronDown className={cn(
+                        'h-3.5 w-3.5 transition-transform duration-200',
+                        isDomainActive(domain.id) ? "text-white/60" : "text-zinc-600",
+                        isExpanded && 'rotate-180 text-zinc-400'
+                      )} />
+                    </>
+                  )}
+                  {/* Collapsed tooltip */}
+                  {collapsed && (
+                    <div className="absolute left-16 px-4 py-2 bg-zinc-900 text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 translate-x-2 group-hover:translate-x-0 whitespace-nowrap z-50 uppercase tracking-widest border border-white/10 shadow-2xl">
+                      {domain.title}
+                      <div className="absolute left-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-zinc-900 rotate-45 border-l border-b border-white/10" />
                     </div>
-                    {pinnedItems.map((item) => (
-                      <Link
-                        key={`pin-${item.href}`}
-                        to={item.href}
-                        className={cn(
-                          'group flex items-center gap-3 px-3.5 py-2 rounded-xl transition-all duration-200 border border-transparent',
-                          isActive(item.href)
-                            ? 'bg-amber-500/[0.06] text-amber-400 border-amber-500/15'
-                            : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-300'
-                        )}
-                      >
-                        {item.icon && <item.icon className="h-4 w-4 flex-shrink-0 text-amber-500/60" />}
-                        <span className="text-xs font-medium truncate">{item.title}</span>
-                        <button
-                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); togglePin(item.href); }}
-                          className="ml-auto opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-white/10 transition-all"
-                        >
-                          <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                        </button>
-                      </Link>
-                    ))}
-                    <div className="mx-3 mt-2 border-b border-white/5" />
-                  </div>
-                )}
-                {visibleMenuItems
-                  .filter(item => {
-                    if (searchTerm && !collapsed) {
-                      const term = searchTerm.toLowerCase();
-                      const matchesTitle = item.title.toLowerCase().includes(term);
-                      const matchesSub = item.children?.some(c => c.title.toLowerCase().includes(term) || c.href?.toLowerCase().includes(term));
-                      return matchesTitle || matchesSub;
-                    }
-                    return getDomainForGroup(item.group) === activeDomain;
-                  })
-                  .map((item) => (
-                    <div key={item.title}>
-                      {item.href && !item.children ? (
-                        <Link
-                          to={item.href}
-                          className={cn(
-                            'group flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 border border-transparent',
-                            collapsed && 'justify-center px-2 py-3',
-                            !collapsed && getTypeIndicator(item.href),
-                            isActive(item.href)
-                              ? 'bg-red-500/[0.08] text-red-500 border-red-500/20 shadow-[0_0_15px_rgba(229,57,53,0.05)]'
-                              : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-200'
-                          )}
-                          onClick={(e) => {
-                            if (e.metaKey || e.ctrlKey) return;
-                            setActiveSubItem(item);
-                          }}
-                        >
-                          <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isActive(item.href) ? "text-red-500" : "text-zinc-500 group-hover:text-zinc-300")} />
-                          {!collapsed && <span className={cn("text-sm font-medium flex-1", isActive(item.href) ? "font-bold" : "")}>{item.title}</span>}
-                          {!collapsed && (
-                            <button
-                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); togglePin(item.href); }}
+                  )}
+                </button>
+
+                {/* Domain Items */}
+                {!collapsed && isExpanded && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                    className="ml-2 pl-3 border-l border-white/5 space-y-0.5 mt-1 mb-2 overflow-hidden"
+                  >
+                    {domainItems.map(item => (
+                      <div key={item.title + item.href}>
+                        {!item.children ? (
+                          /* ── Simple Link ── */
+                          <button
+                            onClick={(e) => handleNavClick(item.href, e)}
+                            className={cn(
+                              'group w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all relative',
+                              isActive(item.href)
+                                ? 'bg-red-500/[0.08] text-red-500 font-semibold'
+                                : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.03]'
+                            )}
+                          >
+                            <item.icon className={cn("h-4 w-4 flex-shrink-0", isActive(item.href) ? "text-red-500" : "text-zinc-600")} />
+                            <span className="flex-1 text-left truncate">{item.title}</span>
+                            {getItemBadge(item.href) > 0 && !isActive(item.href) && (
+                              <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-white bg-red-600 rounded-full shadow-[0_0_4px_rgba(220,38,38,0.4)]">
+                                {getItemBadge(item.href)}
+                              </span>
+                            )}
+                            {isActive(item.href) && (
+                              <>
+                                <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)] animate-pulse shrink-0" />
+                                <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-red-500 rounded-full shadow-[0_0_8px_rgba(229,57,53,0.6)]" />
+                              </>
+                            )}
+                            {/* Pin button — uses span to avoid button-in-button nesting */}
+                            <span
+                              role="button"
+                              tabIndex={0}
+                              onClick={(e) => { e.stopPropagation(); e.preventDefault(); togglePin(item.href); }}
+                              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); e.preventDefault(); togglePin(item.href); } }}
                               className={cn(
-                                'p-0.5 rounded hover:bg-white/10 transition-all shrink-0',
+                                'p-0.5 rounded hover:bg-white/10 transition-all shrink-0 cursor-pointer',
                                 isPinned(item.href) ? 'opacity-100' : 'opacity-0 group-hover:opacity-60'
                               )}
                             >
                               <Star className={cn('w-3 h-3', isPinned(item.href) ? 'text-amber-500 fill-amber-500' : 'text-zinc-600')} />
-                            </button>
-                          )}
-                          {isActive(item.href) && !collapsed && <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)] animate-pulse shrink-0"></div>}
-                        </Link>
-                      ) : (
-                        <div className="space-y-1">
-                          <button
-                            onClick={() => !collapsed ? toggleGroup(item.group) : null}
-                            className={cn(
-                              'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 group hover:bg-white/5',
-                              collapsed && 'justify-center px-2 py-3',
-                              isGroupActive(item.children) ? 'text-zinc-100' : 'text-zinc-500'
-                            )}
-                          >
-                            <item.icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isGroupActive(item.children) ? "text-zinc-200" : "text-zinc-600 group-hover:text-zinc-400")} />
-                            {!collapsed && (
-                              <>
-                                <span className="flex-1 text-left text-sm font-medium tracking-wide">{item.title}</span>
-                                <ChevronRight className={cn('h-4 w-4 transition-transform duration-300 opacity-50', expandedGroups.includes(item.group) && 'rotate-90 opacity-100')} />
-                              </>
-                            )}
+                            </span>
                           </button>
-                          {!collapsed && expandedGroups.includes(item.group) && item.children && (
-                            <motion.div
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: 'auto' }}
-                              exit={{ opacity: 0, height: 0 }}
-                              transition={{ duration: 0.2, ease: 'easeOut' }}
-                              className="ml-4 pl-4 border-l border-white/5 space-y-1 mt-1 py-1 overflow-hidden"
+                        ) : (
+                          /* ── Accordion Parent ── */
+                          <div>
+                            <button
+                              onClick={(e) => {
+                                // Navigate to the page AND expand the accordion
+                                handleNavClick(item.href, e);
+                                if (!expandedAccordions.includes(item.title)) {
+                                  toggleAccordion(item.title);
+                                }
+                              }}
+                              className={cn(
+                                'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all group',
+                                isActive(item.href) || isChildActive(item.children) ? 'text-zinc-100' : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]'
+                              )}
                             >
-                              {item.children.map((child) => (
-                                <button
-                                  key={child.href}
-                                  onClick={(e) => handleNavClick(child.href, e, () => setActiveSubItem(child))}
-                                  className={cn(
-                                    'w-full text-left block px-3 py-2 rounded-lg text-sm transition-all border border-transparent outline-none relative overflow-hidden',
-                                    isActive(child.href)
-                                      ? 'bg-white/[0.03] text-red-500 border-red-500/10 font-semibold'
-                                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]'
-                                  )}
+                              <item.icon className={cn("h-4 w-4 flex-shrink-0", isActive(item.href) || isChildActive(item.children) ? "text-red-400" : "text-zinc-600")} />
+                              <span className="flex-1 text-left truncate font-medium">{item.title}</span>
+                              {getAccordionBadge(item) > 0 && !expandedAccordions.includes(item.title) && (
+                                <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-white bg-red-600 rounded-full shadow-[0_0_4px_rgba(220,38,38,0.4)]">
+                                  {getAccordionBadge(item)}
+                                </span>
+                              )}
+                              <div
+                                onClick={(e) => { e.stopPropagation(); toggleAccordion(item.title); }}
+                                className="p-0.5 rounded hover:bg-white/10 transition-all shrink-0"
+                              >
+                                <ChevronRight className={cn(
+                                  'h-3.5 w-3.5 transition-transform duration-200 text-zinc-600',
+                                  expandedAccordions.includes(item.title) && 'rotate-90 text-zinc-400'
+                                )} />
+                              </div>
+                            </button>
+                            {/* Accordion Children */}
+                            <AnimatePresence>
+                              {expandedAccordions.includes(item.title) && (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: 'auto' }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                                  className="ml-4 pl-3 border-l border-white/5 space-y-0.5 mt-0.5 mb-1 overflow-hidden"
                                 >
-                                  <span className="relative z-10">{child.title}</span>
-                                  {isActive(child.href) && <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-red-500 shadow-[0_0_8px_rgba(229,57,53,0.8)]"></div>}
-                                </button>
-                              ))}
-                            </motion.div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-              </motion.div>
-            </AnimatePresence>
-          </nav>
-        </ScrollArea>
-      </aside>
-
-      {/* Pane 3: Tertiary Segment - Collapsible */}
-      <aside
-        className={cn(
-          'h-full flex flex-col transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] border-r border-white/5 shadow-inner z-30 bg-[#050506]',
-          hasTertiary ? (collapsed ? 'w-16 opacity-100 translate-x-0' : 'w-60 opacity-100 translate-x-0') : 'w-0 opacity-0 -translate-x-full overflow-hidden border-none'
-        )}
-      >
-        <div className={cn("h-20 flex items-center border-b border-white/5 bg-[#050506]/80 backdrop-blur-sm", collapsed ? "justify-center px-0" : "justify-between px-6")}>
-          {!collapsed && (
-            <div className="flex items-center justify-between w-full">
-              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700"></span>
-                {activeSubItem?.title}
-              </h2>
-              <button
-                onClick={() => setActiveSubItem(null)}
-                className="p-1 hover:bg-zinc-100 dark:hover:bg-white/10 rounded-lg transition-colors text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          )}
-          {/* Auto-collapse based on Pane 2, essentially mimicking its state or could be independent. 
-               User requested 3rd column to be icon mode too.
-               If header is collapsed, we show just a dot or icon.
-           */}
-        </div>
-        <ScrollArea className={cn("flex-1 py-6", collapsed ? "px-2" : "px-4")}>
-          <nav className="space-y-2">
-            {activeSubItem?.subs?.map((sub) => (
-              <Button
-                key={sub.id}
-                variant="ghost"
-                className={cn(
-                  'w-full h-auto rounded-xl text-xs font-bold transition-all border border-transparent group relative overflow-hidden',
-                  collapsed ? 'justify-center px-2 py-4' : 'justify-start gap-3 px-4 py-6',
-                  location.search.includes(`type=${sub.id}`)
-                    ? 'bg-red-600/5 text-red-500 border-red-600/10'
-                    : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-200'
+                                  {item.children.map(child => (
+                                    <button
+                                      key={child.href}
+                                      onClick={(e) => handleNavClick(child.href, e)}
+                                      className={cn(
+                                        'w-full text-left px-3 py-1.5 rounded-md text-[13px] transition-all relative overflow-hidden',
+                                        isActive(child.href)
+                                          ? 'bg-red-500/[0.06] text-red-500 font-semibold border border-red-500/10'
+                                          : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03] border border-transparent'
+                                      )}
+                                    >
+                                      <span className="relative z-10 flex items-center gap-2">
+                                        {child.title}
+                                        {getItemBadge(child.href) > 0 && !isActive(child.href) && (
+                                          <span className="flex items-center justify-center min-w-[16px] h-4 px-1 text-[9px] font-black text-white bg-red-600 rounded-full">
+                                            {getItemBadge(child.href)}
+                                          </span>
+                                        )}
+                                        {isActive(child.href) && (
+                                          <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_6px_rgba(229,57,53,0.8)] animate-pulse shrink-0" />
+                                        )}
+                                      </span>
+                                      {isActive(child.href) && (
+                                        <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-red-500 rounded-full shadow-[0_0_6px_rgba(229,57,53,0.8)]" />
+                                      )}
+                                    </button>
+                                  ))}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </motion.div>
                 )}
-                onClick={() => {
-                  navigate(`${activeSubItem.href}?type=${sub.id}`);
-                }}
-                title={collapsed ? sub.title : undefined}
-              >
-                <div className={cn("w-1.5 h-1.5 rounded-full shrink-0 transition-all", location.search.includes(`type=${sub.id}`) ? "bg-red-500 shadow-[0_0_5px_rgba(229,57,53,0.5)]" : "bg-zinc-800 group-hover:bg-zinc-600")}></div>
-                {!collapsed && sub.title}
-              </Button>
-            ))}
-          </nav>
-        </ScrollArea>
-      </aside>
-    </div>
+              </div>
+            );
+          })}
+        </nav>
+      </ScrollArea>
+
+      {/* ─── Footer: Collapse toggle ─── */}
+      <div className="shrink-0 border-t border-white/5 p-3">
+        {collapsed ? (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onToggle}
+            className="w-full h-10 rounded-xl text-zinc-500 hover:text-white hover:bg-white/5"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
+        ) : (
+          <button
+            onClick={onToggle}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-500 hover:text-zinc-300 hover:bg-white/5 transition-all text-sm"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span className="font-medium">Collapse</span>
+          </button>
+        )}
+      </div>
+    </aside>
   );
 }

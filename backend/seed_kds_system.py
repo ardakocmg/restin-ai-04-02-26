@@ -6,20 +6,20 @@ from datetime import datetime, timezone
 
 async def seed_kds():
     client = AsyncIOMotorClient(os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
-    db_name = os.environ.get("DB_NAME", "test_database")
+    db_name = os.environ.get("DB_NAME", "restin_v2")
     db = client[db_name]
     
-    print("🔧 Seeding KDS System...")
-    print(f"📊 Database: {db_name}")
+    print("ğŸ”§ Seeding KDS System...")
+    print(f"ğŸ“Š Database: {db_name}")
     
     # Get first venue
     venue = await db.venues.find_one({}, {"_id": 0})
     if not venue:
-        print("❌ No venue found. Please run venue seed first.")
+        print("âŒ No venue found. Please run venue seed first.")
         return
     
     venue_id = venue["id"]
-    print(f"✅ Using venue: {venue['name']} ({venue_id})")
+    print(f"âœ… Using venue: {venue['name']} ({venue_id})")
     
     # Enable KDS feature flags
     await db.venue_configs.update_one(
@@ -33,7 +33,7 @@ async def seed_kds():
         }},
         upsert=True
     )
-    print("✅ Feature flags enabled")
+    print("âœ… Feature flags enabled")
     
     # Create KDS stations
     stations = [
@@ -99,7 +99,7 @@ async def seed_kds():
             {"$set": station},
             upsert=True
         )
-    print(f"✅ Created {len(stations)} KDS stations")
+    print(f"âœ… Created {len(stations)} KDS stations")
     
     # Create default station settings
     for station in stations:
@@ -141,7 +141,7 @@ async def seed_kds():
             {"$set": settings},
             upsert=True
         )
-    print(f"✅ Created settings for {len(stations)} stations")
+    print(f"âœ… Created settings for {len(stations)} stations")
     
     # Create a test device
     device = {
@@ -165,7 +165,7 @@ async def seed_kds():
         {"$set": device},
         upsert=True
     )
-    print("✅ Created test device")
+    print("âœ… Created test device")
     
     # Create a default price book
     price_book = {
@@ -189,7 +189,7 @@ async def seed_kds():
         {"$set": price_book},
         upsert=True
     )
-    print("✅ Created default price book")
+    print("âœ… Created default price book")
     
     # Create indexes
     await db.kds_stations.create_index([("venue_id", 1), ("station_key", 1)], unique=True)
@@ -203,9 +203,9 @@ async def seed_kds():
     await db.price_book_items.create_index([("price_book_id", 1), ("item_id", 1)], unique=True)
     await db.rm_kds_item_stats_daily.create_index([("venue_id", 1), ("day", -1), ("station_key", 1)])
     
-    print("✅ Created database indexes")
+    print("âœ… Created database indexes")
     
-    print("🎉 KDS System seed complete!")
+    print("ğŸ‰ KDS System seed complete!")
     client.close()
 
 if __name__ == "__main__":

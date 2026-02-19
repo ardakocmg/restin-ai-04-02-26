@@ -1,8 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
   useReactTable,
   ColumnDef as RTColumnDef,
   SortingState,
@@ -16,7 +19,7 @@ import {
   CellContext,
 } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { ChevronDown, ChevronLeft, ChevronRight, GripVertical, Pin, PinOff } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, GripVertical, MoreHorizontal, Pin, PinOff } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Card } from '../ui/card';
@@ -216,7 +219,9 @@ export default function DataTable<TData, TValue>({
       columnOrder,
       columnPinning, // @ts-ignore
       columnSizing,
-      rowSelection
+      rowSelection,
+      ...(!serverMode && { globalFilter: globalSearch }),
+      ...(!serverMode && { pagination: { pageIndex, pageSize } }),
     },
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
@@ -225,11 +230,26 @@ export default function DataTable<TData, TValue>({
     onColumnPinningChange: setColumnPinning,
     onColumnSizingChange: setColumnSizing,
     onRowSelectionChange: setRowSelection,
-    manualSorting: true,
-    manualFiltering: true,
-    manualPagination: true,
+    manualSorting: serverMode,
+    manualFiltering: serverMode,
+    manualPagination: serverMode,
     getCoreRowModel: getCoreRowModel(),
-    columnResizeMode: 'onChange'
+    ...(!serverMode && {
+      getSortedRowModel: getSortedRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+    }),
+    // @ts-ignore
+    onGlobalFilterChange: serverMode ? undefined : setGlobalSearch,
+    onPaginationChange: serverMode ? undefined : (updater: PaginationState | ((prev: PaginationState) => PaginationState)) => {
+      const next = typeof updater === 'function'
+        ? updater({ pageIndex, pageSize })
+        : updater;
+      setPageIndex(next.pageIndex);
+      setPageSize(next.pageSize);
+    },
+    globalFilterFn: 'includesString',
+    columnResizeMode: 'onChange',
   });
 
   const totalPages = pageCount || (totalCount ? Math.ceil(totalCount / pageSize) : undefined);
@@ -315,24 +335,24 @@ export default function DataTable<TData, TValue>({
     overscan: 8
   });
 
-  const handleRowClick = (row: Row<TData>) => {
+  const handleRowClick = useCallback((row: Row<TData>) => {
     if (renderRowDrawer) {
       setActiveRow(row.original);
       setDrawerOpen(true);
       return;
     }
     onRowClick?.(row.original);
-  };
+  }, [renderRowDrawer, onRowClick]);
 
   const selectedRows = table.getSelectedRowModel().rows.map((row) => row.original);
 
-  const handleBulkAction = (actionId: string) => {
+  const handleBulkAction = useCallback((actionId: string) => {
     if (typeof onBulkAction === 'function') {
       onBulkAction(actionId, selectedRows);
     }
-  };
+  }, [onBulkAction, selectedRows]);
 
-  const applyPreset = (preset: TablePreset) => {
+  const applyPreset = useCallback((preset: TablePreset) => {
     if (!preset?.state) return;
     setColumnVisibility((preset.state.columnVisibility as VisibilityState) || {});
     setColumnOrder((preset.state.columnOrder as string[]) || []);
@@ -342,7 +362,7 @@ export default function DataTable<TData, TValue>({
     setSorting((preset.state.sorting as SortingState) || []);
     setGlobalSearch((preset.state.globalSearch as string) || '');
     setColumnFilters((preset.state.filters as FilterState) || {});
-  };
+  }, [pageSize]);
 
   const handleSavePreset = async () => {
     if (!presetName || !resolvedTableId || !resolvedVenueId) return;
@@ -400,7 +420,7 @@ export default function DataTable<TData, TValue>({
     <Card className={cn('p-4 space-y-3 bg-zinc-950/50 border-white/5 shadow-2xl', className)}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          {enableGlobalSearch && serverMode && (
+          {enableGlobalSearch && (
             <Input
               value={globalSearch}
               onChange={(e) => setGlobalSearch(e.target.value)}
@@ -410,7 +430,7 @@ export default function DataTable<TData, TValue>({
               autoComplete="off"
             />
           )}
-          {enableFilters && serverMode && (
+          {enableFilters && (
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" data-testid="datatable-filter-button">
@@ -421,13 +441,13 @@ export default function DataTable<TData, TValue>({
                 <div className="space-y-4">
                   {columns.map((col) => {
                     const filterType = col.filterType || 'text';
-                    const value = (columnFilters as any)[col.key] || (filterType === 'multiSelect' ? [] : '');
+                    const value = (columnFilters as FilterState)[col.key] || (filterType === 'multiSelect' ? [] : '');
                     return (
                       <div key={col.key} className="space-y-2">
                         <label className="text-xs font-bold text-zinc-300 uppercase tracking-widest">{col.label}</label>
                         {filterType === 'text' && (
                           <Input
-                            value={value}
+                            value={value as string}
                             onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: e.target.value }))}
                             data-testid={`datatable-filter-${col.key}`}
                           />
@@ -437,14 +457,14 @@ export default function DataTable<TData, TValue>({
                             <Input
                               type="number"
                               placeholder="Min"
-                              value={value?.min || ''}
+                              value={(value as { min?: string; max?: string })?.min || ''}
                               onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: { ...(value as Record<string, string>), min: e.target.value } }))}
                               data-testid={`datatable-filter-${col.key}-min`}
                             />
                             <Input
                               type="number"
                               placeholder="Max"
-                              value={value?.max || ''}
+                              value={(value as { min?: string; max?: string })?.max || ''}
                               onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: { ...(value as Record<string, string>), max: e.target.value } }))}
                               data-testid={`datatable-filter-${col.key}-max`}
                             />
@@ -454,13 +474,13 @@ export default function DataTable<TData, TValue>({
                           <div className="flex gap-2">
                             <Input
                               type="date"
-                              value={value?.start || ''}
+                              value={(value as { start?: string; end?: string })?.start || ''}
                               onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: { ...(value as Record<string, string>), start: e.target.value } }))}
                               data-testid={`datatable-filter-${col.key}-start`}
                             />
                             <Input
                               type="date"
-                              value={value?.end || ''}
+                              value={(value as { start?: string; end?: string })?.end || ''}
                               onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: { ...(value as Record<string, string>), end: e.target.value } }))}
                               data-testid={`datatable-filter-${col.key}-end`}
                             />
@@ -502,143 +522,153 @@ export default function DataTable<TData, TValue>({
               Export CSV
             </Button>
           )}
+
+          {/* ⋮ Table Settings — Presets + Columns in one 3-dot menu */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="bg-zinc-900 border-white/10 hover:border-red-500/30 hover:bg-red-500/5 transition-all text-zinc-100 font-bold"
-                data-testid="datatable-presets-button"
+                size="icon"
+                className="bg-zinc-900 border-white/10 hover:border-red-500/30 hover:bg-red-500/5 transition-all text-zinc-400 hover:text-white"
+                data-testid="datatable-settings-button"
               >
-                Presets <ChevronDown className="ml-2 h-4 w-4" />
+                <MoreHorizontal className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[320px] p-4" data-testid="datatable-presets-panel">
-              <div className="space-y-3">
-                <Select
-                  value={selectedPresetId}
-                  onValueChange={(value) => {
-                    setSelectedPresetId(value);
-                    const preset = presets.find((item) => item.id === value);
-                    if (preset) applyPreset(preset);
-                  }}
-                >
-                  <SelectTrigger data-testid="datatable-presets-select">
-                    <SelectValue placeholder="Select preset" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {presets.map((preset) => (
-                      <SelectItem key={preset.id} value={preset.id}>
-                        {preset.name} ({preset.scope})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            <PopoverContent className="w-[360px] p-0 bg-[#0F0F10] border-white/10" align="end" data-testid="datatable-settings-panel">
+              {/* ── Presets Section ── */}
+              <div className="p-4 border-b border-white/5">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-3">Presets</p>
+                <div className="space-y-2">
+                  <Select
+                    value={selectedPresetId}
+                    onValueChange={(value) => {
+                      setSelectedPresetId(value);
+                      const preset = presets.find((item) => item.id === value);
+                      if (preset) applyPreset(preset);
+                    }}
+                  >
+                    <SelectTrigger className="bg-zinc-900 border-white/10" data-testid="datatable-presets-select">
+                      <SelectValue placeholder="Load a preset..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {presets.map((preset) => (
+                        <SelectItem key={preset.id} value={preset.id}>
+                          {preset.name} ({preset.scope})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-                <Input
-                  value={presetName}
-                  onChange={(e) => setPresetName(e.target.value)}
-                  placeholder="Preset name"
-                  data-testid="datatable-presets-name"
-                />
-
-                <Select value={presetScope} onValueChange={setPresetScope}>
-                  <SelectTrigger data-testid="datatable-presets-scope">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USER">Personal</SelectItem>
-                    {canRolePreset && <SelectItem value="ROLE">Role</SelectItem>}
-                  </SelectContent>
-                </Select>
-
-                <Button onClick={handleSavePreset} data-testid="datatable-presets-save">Save preset</Button>
+                  <div className="flex gap-2">
+                    <Input
+                      value={presetName}
+                      onChange={(e) => setPresetName(e.target.value)}
+                      placeholder="New preset name..."
+                      className="bg-zinc-900 border-white/10 flex-1 text-xs"
+                      data-testid="datatable-presets-name"
+                    />
+                    <Select value={presetScope} onValueChange={setPresetScope}>
+                      <SelectTrigger className="w-[90px] bg-zinc-900 border-white/10 text-xs" data-testid="datatable-presets-scope">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="USER">Personal</SelectItem>
+                        {canRolePreset && <SelectItem value="ROLE">Role</SelectItem>}
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      size="sm"
+                      onClick={handleSavePreset}
+                      disabled={!presetName}
+                      className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold shrink-0"
+                      data-testid="datatable-presets-save"
+                    >
+                      Save
+                    </Button>
+                  </div>
+                </div>
               </div>
+
+              {/* ── Column Visibility Section ── */}
+              {enableColumnControls && (
+                <div className="p-4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-3">Columns</p>
+                  <div className="space-y-1 max-h-60 overflow-y-auto pr-1">
+                    {table && table.getAllLeafColumns ? table.getAllLeafColumns().map((column) => (
+                      <div key={column.id} className="flex items-center justify-between gap-2 py-1 rounded-lg px-2 hover:bg-white/[0.03] transition-all group">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <GripVertical className="h-3.5 w-3.5 text-zinc-700 group-hover:text-zinc-500 cursor-grab shrink-0 transition-colors" />
+                          <Checkbox
+                            checked={column.getIsVisible()}
+                            onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                            data-testid={`datatable-column-toggle-${column.id}`}
+                          />
+                          <span className="text-xs text-zinc-400 font-medium truncate">
+                            {/* @ts-ignore */}
+                            {typeof column.columnDef.header === 'function' ? column.columnDef.header({ column, table }) : column.columnDef.header}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-6 w-6 text-zinc-600 hover:text-white"
+                            onClick={() => {
+                              const currentOrder = table.getState().columnOrder;
+                              if (!currentOrder.length) return;
+                              const newOrder = [...currentOrder];
+                              const columnIndex = newOrder.indexOf(column.id);
+                              if (columnIndex > 0) {
+                                [newOrder[columnIndex - 1], newOrder[columnIndex]] = [newOrder[columnIndex], newOrder[columnIndex - 1]];
+                                table.setColumnOrder(newOrder);
+                              }
+                            }}
+                            data-testid={`datatable-column-move-up-${column.id}`}
+                          >
+                            ↑
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-6 w-6 text-zinc-600 hover:text-white"
+                            onClick={() => {
+                              const currentOrder = table.getState().columnOrder;
+                              if (!currentOrder.length) return;
+                              const newOrder = [...currentOrder];
+                              const columnIndex = newOrder.indexOf(column.id);
+                              if (columnIndex < newOrder.length - 1) {
+                                [newOrder[columnIndex + 1], newOrder[columnIndex]] = [newOrder[columnIndex], newOrder[columnIndex + 1]];
+                                table.setColumnOrder(newOrder);
+                              }
+                            }}
+                            data-testid={`datatable-column-move-down-${column.id}`}
+                          >
+                            ↓
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-6 w-6 text-zinc-600 hover:text-white"
+                            onClick={() => {
+                              if (column.getIsPinned()) {
+                                column.pin(false);
+                              } else {
+                                column.pin('left');
+                              }
+                            }}
+                            data-testid={`datatable-column-pin-${column.id}`}
+                          >
+                            {column.getIsPinned() ? <PinOff className="h-3 w-3" /> : <Pin className="h-3 w-3" />}
+                          </Button>
+                        </div>
+                      </div>
+                    )) : null}
+                  </div>
+                </div>
+              )}
             </PopoverContent>
           </Popover>
-
-          {enableColumnControls && (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="bg-zinc-900 border-white/10 hover:border-red-500/30 hover:bg-red-500/5 transition-all text-zinc-100 font-bold"
-                  data-testid="datatable-columns-button"
-                >
-                  Columns <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[320px] p-4" data-testid="datatable-columns-panel">
-                <div className="space-y-3">
-                  {table && table.getAllLeafColumns ? table.getAllLeafColumns().map((column) => (
-                    <div key={column.id} className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <GripVertical className="h-4 w-4 text-zinc-500" />
-                        <Checkbox
-                          checked={column.getIsVisible()}
-                          onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                          data-testid={`datatable-column-toggle-${column.id}`}
-                        />
-                        <span className="text-xs text-zinc-300">
-                          {/* @ts-ignore */}
-                          {typeof column.columnDef.header === 'function' ? column.columnDef.header({ column, table }) : column.columnDef.header}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => {
-                            const currentOrder = table.getState().columnOrder;
-                            if (!currentOrder.length) return;
-                            const newOrder = [...currentOrder];
-                            const columnIndex = newOrder.indexOf(column.id);
-                            if (columnIndex > 0) {
-                              [newOrder[columnIndex - 1], newOrder[columnIndex]] = [newOrder[columnIndex], newOrder[columnIndex - 1]];
-                              table.setColumnOrder(newOrder);
-                            }
-                          }}
-                          data-testid={`datatable-column-move-up-${column.id}`}
-                        >
-                          ↑
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => {
-                            const currentOrder = table.getState().columnOrder;
-                            if (!currentOrder.length) return;
-                            const newOrder = [...currentOrder];
-                            const columnIndex = newOrder.indexOf(column.id);
-                            if (columnIndex < newOrder.length - 1) {
-                              [newOrder[columnIndex + 1], newOrder[columnIndex]] = [newOrder[columnIndex], newOrder[columnIndex + 1]];
-                              table.setColumnOrder(newOrder);
-                            }
-                          }}
-                          data-testid={`datatable-column-move-down-${column.id}`}
-                        >
-                          ↓
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => {
-                            if (column.getIsPinned()) {
-                              column.pin(false);
-                            } else {
-                              column.pin('left');
-                            }
-                          }}
-                          data-testid={`datatable-column-pin-${column.id}`}
-                        >
-                          {column.getIsPinned() ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
-                        </Button>
-                      </div>
-                    </div>
-                  )) : null}
-                </div>
-              </PopoverContent>
-            </Popover>
-          )}
         </div>
 
         {selectedRows.length > 0 && bulkActions.length > 0 && (
@@ -755,7 +785,7 @@ export default function DataTable<TData, TValue>({
           </div>
         </div>
 
-        {enablePagination && serverMode && (
+        {enablePagination && (
           <div className="flex flex-wrap items-center justify-between gap-3" data-testid="datatable-pagination">
             <div className="flex items-center gap-2">
               <span className="text-xs text-zinc-400">Rows per page</span>
@@ -774,20 +804,20 @@ export default function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
-                disabled={pageIndex === 0}
+                onClick={() => { if (serverMode) { setPageIndex((prev) => Math.max(prev - 1, 0)); } else { table.previousPage(); } }}
+                disabled={serverMode ? pageIndex === 0 : !table.getCanPreviousPage()}
                 data-testid="datatable-page-prev"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <span className="text-xs text-zinc-400" data-testid="datatable-page-indicator">
-                Page {pageIndex + 1} {totalPages ? `of ${totalPages}` : ''}
+                Page {(serverMode ? pageIndex : table.getState().pagination.pageIndex) + 1} of {serverMode ? (totalPages || '?') : table.getPageCount()}
               </span>
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => setPageIndex((prev) => (totalPages ? Math.min(prev + 1, totalPages - 1) : prev + 1))}
-                disabled={totalPages ? pageIndex + 1 >= totalPages : false}
+                onClick={() => { if (serverMode) { setPageIndex((prev) => (totalPages ? Math.min(prev + 1, totalPages - 1) : prev + 1)); } else { table.nextPage(); } }}
+                disabled={serverMode ? (totalPages ? pageIndex + 1 >= totalPages : false) : !table.getCanNextPage()}
                 data-testid="datatable-page-next"
               >
                 <ChevronRight className="h-4 w-4" />

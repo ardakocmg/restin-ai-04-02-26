@@ -134,7 +134,7 @@ export const authAPI = {
   loginWithPin: (pin, app, deviceId, stationId = null) => {
     const backendUrl = BACKEND_BASE;
     const url = `${backendUrl}/api/auth/login/pin?pin=${pin}&app=${app}${deviceId ? `&deviceId=${deviceId}` : ''}${stationId ? `&stationId=${stationId}` : ''}`;
-    return axios.post(url);
+    return axios.post(url, null, { timeout: 8000 });
   },
   // Credentials login (email, username, or employee ID + password)
   loginWithCredentials: ({ identifier, password, target, deviceId }) => {

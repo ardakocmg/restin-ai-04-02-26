@@ -2,8 +2,8 @@ import { Card } from '../ui/card';
 import { QRCodeCanvas } from 'qrcode.react';
 
 /**
- * PayslipDocument - Exact replica of Shireburn Indigo payslip design
- * This component renders a payslip matching the Indigo People HR system format
+ * PayslipDocument - Malta payslip design (Restin.ai format)
+ * This component renders a payslip matching the Malta HR payroll standard
  */
 export default function PayslipDocument({ payslipData }) {
     const {

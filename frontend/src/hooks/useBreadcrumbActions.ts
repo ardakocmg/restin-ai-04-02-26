@@ -104,13 +104,8 @@ export function useBreadcrumbActions(): BreadcrumbAction[] {
             ];
         }
 
-        // ─── Inventory Recipes ───
-        if (path.includes('/inventory-recipes')) {
-            return [
-                { id: 'add-recipe', label: 'New Recipe', icon: Plus, variant: 'primary' },
-                { id: 'import', label: 'Import', icon: FileSpreadsheet, variant: 'default' },
-            ];
-        }
+        // ─── Inventory Recipes ── (actions are in the page command row)
+        // Intentionally empty – New Recipe & Import live in the compact command bar
 
         // ─── Suppliers ───
         if (path.includes('/suppliers') || path.includes('/inventory-suppliers')) {

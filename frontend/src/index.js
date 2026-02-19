@@ -13,8 +13,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './lib/i18n/config'; // Initialize i18n
-import "@/index.css";
-import App from "@/App";
+import "./index.css";
+import App from "./App";
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 const queryClient = new QueryClient({
@@ -22,6 +22,8 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
+      staleTime: 2 * 60_000,   // 2 min — config/menu data rarely changes mid-session
+      gcTime: 10 * 60_000,     // 10 min — keep cache warm across navigations
     },
   },
 });

@@ -100,7 +100,7 @@ export interface Supplier {
     contact_phone: string;
 }
 
-// 6. HR & PAYROLL (Shireburn Indigo - Malta)
+// 6. HR & PAYROLL (Shireburn - Malta)
 export interface Employee {
     id: string;
     venueId: string;
@@ -145,14 +145,4 @@ export interface StockAdjustment {
     user_id: string;
 }
 
-// Aggregated Seed Data Type
-export interface SeedData {
-    venues: Venue[];
-    users: User[];
-    inventory: Ingredient[]; // Updated to Ingredient
-    suppliers: Supplier[];
-    orders: Order[];
-    employees: Employee[];
-    guests?: Guest[];
-    menu_items?: MenuItem[];
-}
+

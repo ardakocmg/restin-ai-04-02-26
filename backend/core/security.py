@@ -2,11 +2,34 @@ import hashlib
 import hmac
 import os
 import logging
+import bcrypt
 from typing import Optional
 
 logger = logging.getLogger("core.security")
 
+def compute_pin_index(pin: str) -> str:
+    """Fast SHA256 index for PIN lookup. NOT for security — only for DB query."""
+    return hashlib.sha256(f"restin:pin:{pin}".encode()).hexdigest()
+
 def hash_pin(pin: str) -> str:
+    """Hash PIN with bcrypt (salted). Rounds=6 for PINs (rate-limited, 4-digit)."""
+    return bcrypt.hashpw(pin.encode(), bcrypt.gensalt(rounds=6)).decode()
+
+def verify_pin(pin: str, stored_hash: str) -> bool:
+    """Verify PIN against stored bcrypt hash. Also handles legacy SHA256 hashes."""
+    if not stored_hash:
+        return False
+    # Legacy SHA256 hashes are 64-char hex strings
+    if len(stored_hash) == 64 and all(c in '0123456789abcdef' for c in stored_hash):
+        return hashlib.sha256(pin.encode()).hexdigest() == stored_hash
+    # Bcrypt hashes start with $2b$ or $2a$
+    try:
+        return bcrypt.checkpw(pin.encode(), stored_hash.encode())
+    except (ValueError, TypeError):
+        return False
+
+def _legacy_sha256_pin(pin: str) -> str:
+    """Legacy SHA256 hash — used only for migration lookups."""
     return hashlib.sha256(pin.encode()).hexdigest()
 
 def hash_password(password: str) -> str:

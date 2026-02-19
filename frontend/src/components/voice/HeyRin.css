@@ -1,0 +1,1409 @@
+/* ─── Hey Rin — Compact Futuristic Popup Panels ──────────────── */
+
+/* ─── FAB Group (composite) ───────────────────────────────────── */
+.rin-fab-group {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+}
+
+.rin-fab-main {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    background: linear-gradient(145deg, rgba(15, 15, 18, 0.95) 0%, rgba(40, 10, 10, 0.9) 60%, rgba(120, 20, 20, 0.7) 100%);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(220, 38, 38, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.rin-fab-main:hover {
+    transform: scale(1.08);
+    border-color: rgba(220, 38, 38, 0.4);
+    box-shadow:
+        0 6px 32px rgba(0, 0, 0, 0.6),
+        0 0 35px rgba(220, 38, 38, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.rin-fab-main.wake-active {
+    border-color: rgba(239, 68, 68, 0.5);
+    box-shadow:
+        0 0 0 3px rgba(239, 68, 68, 0.15),
+        0 4px 24px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(220, 38, 38, 0.2);
+}
+
+/* ─── Mini satellite buttons ──────────────────────────────────── */
+.rin-fab-mini {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    border: 2px solid var(--bg-primary, #09090b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+    font-size: 0;
+}
+
+.rin-fab-mini:hover {
+    transform: scale(1.15);
+}
+
+/* Walkie-talkie badge — top right */
+.rin-fab-walkie {
+    top: -6px;
+    right: -6px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+}
+
+/* Hive badge — bottom right */
+.rin-fab-hive {
+    bottom: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+}
+
+.rin-wake-dot {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: 2px solid var(--bg-primary, #09090b);
+    animation: rin-pulse-dot 2s ease-in-out infinite;
+}
+
+/* ─── Compact Popup Panel ─────────────────────────────────────── */
+.rin-popup {
+    position: fixed;
+    bottom: 90px;
+    right: 24px;
+    width: 360px;
+    max-height: 520px;
+    background: var(--bg-primary, #0a0a0a);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    z-index: 10001;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 0 40px rgba(220, 38, 38, 0.08);
+    animation: rin-popup-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+}
+
+/* ─── Overlay ─────────────────────────────────────────────────── */
+.rin-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    animation: rin-fade-in 0.15s ease;
+}
+
+/* ─── Tabs ────────────────────────────────────────────────────── */
+.rin-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    flex-shrink: 0;
+    padding: 0 4px;
+}
+
+.rin-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted, #71717a);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.rin-tab:hover {
+    color: var(--text-primary, #fafafa);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.rin-tab.active {
+    color: #ef4444;
+    border-bottom-color: #ef4444;
+}
+
+/* ─── Header ──────────────────────────────────────────────────── */
+.rin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    flex-shrink: 0;
+}
+
+.rin-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rin-title {
+    font-size: 14px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #dc2626);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.5px;
+}
+
+.rin-badge {
+    font-size: 8px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 1px 5px;
+    border-radius: 5px;
+    letter-spacing: 0.5px;
+}
+
+.rin-badge-blue {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.rin-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.rin-icon-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted, #71717a);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.rin-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary, #fafafa);
+}
+
+.rin-icon-btn.active {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.12);
+}
+
+/* ─── Flag Emoji Fix ──────────────────────────────────────────── */
+.rin-flag {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif;
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* ─── Language Dropdown ───────────────────────────────────────── */
+.rin-lang-wrap {
+    position: relative;
+}
+
+.rin-lang-dropdown {
+    position: absolute;
+    top: 32px;
+    right: 0;
+    background: var(--bg-secondary, #18181b);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    animation: rin-slide-down 0.15s ease;
+}
+
+.rin-lang-opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 7px 10px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--text-primary, #fafafa);
+    cursor: pointer;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+}
+
+.rin-lang-opt:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.rin-lang-opt.sel {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+}
+
+/* ─── Messages ────────────────────────────────────────────────── */
+.rin-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 200px;
+    max-height: 320px;
+}
+
+.rin-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 8px;
+    color: var(--text-muted, #71717a);
+    text-align: center;
+    padding: 20px 0;
+}
+
+.rin-empty h3 {
+    font-size: 16px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+
+.rin-empty p {
+    font-size: 12px;
+    margin: 0;
+    max-width: 240px;
+    line-height: 1.4;
+}
+
+.rin-hints {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 6px;
+}
+
+.rin-hints button {
+    padding: 5px 10px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary, #fafafa);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.rin-hints button:hover {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.08);
+}
+
+/* ─── Message Bubbles ─────────────────────────────────────────── */
+.rin-msg {
+    display: flex;
+    gap: 6px;
+    max-width: 92%;
+    animation: rin-msg-in 0.2s ease;
+}
+
+.rin-msg.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.rin-msg.assistant {
+    align-self: flex-start;
+}
+
+.rin-msg-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.rin-msg-bubble {
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.rin-msg.user .rin-msg-bubble {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.rin-msg.assistant .rin-msg-bubble {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-primary, #fafafa);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom-left-radius: 4px;
+}
+
+.rin-msg-bubble.thinking {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted, #71717a);
+}
+
+/* ─── Message Action Buttons (Copy / Forward) ────────────────── */
+.rin-msg-actions {
+    display: flex;
+    gap: 2px;
+    margin-top: 4px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.rin-msg:hover .rin-msg-actions {
+    opacity: 1;
+}
+
+.rin-msg-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted, #71717a);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.rin-msg-action-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary, #fafafa);
+}
+
+.rin-transcript {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    background: rgba(239, 68, 68, 0.06);
+    border: 1px dashed rgba(239, 68, 68, 0.2);
+    border-radius: 8px;
+    color: #ef4444;
+    font-size: 12px;
+    font-style: italic;
+    animation: rin-pulse 1.5s ease-in-out infinite;
+}
+
+/* ─── Bottom Controls ─────────────────────────────────────────── */
+.rin-bottom,
+.rin-controls {
+    padding: 10px 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.rin-mic-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.rin-mic-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+}
+
+.rin-mic-btn.listening {
+    background: #1f2937;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4);
+    animation: rin-pulse-mic 1s ease-in-out infinite;
+}
+
+.rin-mic-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.rin-text-form,
+.rin-input-form {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rin-text-input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary, #fafafa);
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.rin-text-input:focus {
+    border-color: #ef4444;
+}
+
+.rin-text-input::placeholder {
+    color: var(--text-muted, #52525b);
+}
+
+.rin-send-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.rin-send-btn:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.rin-send-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+
+/* ─── Voice Body (scrollable) ─────────────────────────────────── */
+.rin-voice-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* ─── Walkie / Hive Content ───────────────────────────────────── */
+.rin-compact-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    text-align: center;
+    gap: 10px;
+}
+
+.rin-compact-icon {
+    color: #ef4444;
+    opacity: 0.8;
+}
+
+.rin-compact-content h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary, #fafafa);
+    margin: 0;
+}
+
+.rin-compact-content p {
+    font-size: 12px;
+    color: var(--text-muted, #71717a);
+    margin: 0;
+    max-width: 220px;
+}
+
+.rin-open-btn {
+    padding: 8px 18px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 4px;
+}
+
+.rin-open-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+}
+
+/* ─── Open Full Page Button (bottom of each tab) ──────────────── */
+.rin-open-full {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(59, 130, 246, 0.05);
+    color: #60a5fa;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+}
+
+.rin-open-full:hover {
+    background: rgba(59, 130, 246, 0.1);
+    color: #93bbfc;
+}
+
+/* ─── Clear History Button ────────────────────────────────────── */
+.rin-clear-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: transparent;
+    color: var(--text-muted, #71717a);
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.rin-clear-btn:hover {
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+    background: rgba(239, 68, 68, 0.06);
+}
+
+/* ─── Message Metadata ────────────────────────────────────────── */
+.rin-msg-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 9px;
+    color: var(--text-muted, #52525b);
+    margin-top: 4px;
+    padding-top: 3px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ─── Markdown in Messages ────────────────────────────────────── */
+.rin-msg-bubble h1,
+.rin-msg-bubble h2,
+.rin-msg-bubble h3 {
+    margin: 6px 0 4px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.rin-msg-bubble h1 {
+    font-size: 14px;
+}
+
+.rin-msg-bubble h2 {
+    font-size: 13px;
+}
+
+.rin-msg-bubble h3 {
+    font-size: 12px;
+}
+
+.rin-msg-bubble strong {
+    font-weight: 700;
+    color: var(--text-primary, #fafafa);
+}
+
+.rin-msg-bubble em {
+    font-style: italic;
+    color: var(--text-secondary, #a1a1aa);
+}
+
+.rin-msg-bubble ul,
+.rin-msg-bubble ol {
+    margin: 4px 0;
+    padding-left: 16px;
+}
+
+.rin-msg-bubble li {
+    margin: 2px 0;
+    font-size: 12px;
+}
+
+.rin-msg-bubble table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6px 0;
+    font-size: 11px;
+}
+
+.rin-msg-bubble th,
+.rin-msg-bubble td {
+    padding: 4px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: left;
+}
+
+.rin-msg-bubble th {
+    background: rgba(255, 255, 255, 0.04);
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rin-msg-bubble code {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.rin-msg-bubble p {
+    margin: 2px 0;
+}
+
+/* ─── Animations ──────────────────────────────────────────────── */
+@keyframes rin-popup-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes rin-slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rin-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes rin-msg-in {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rin-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes rin-pulse-dot {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+}
+
+@keyframes rin-pulse-mic {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ─── Walkie-Talkie (Apple Watch Style) ────────────────────── */
+.wk-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.wk-channel-bar {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+}
+
+.wk-channel-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary, #fafafa);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.wk-channel-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.wk-online-count {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 400;
+    color: #22c55e;
+}
+
+.wk-channel-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 14px;
+    right: 14px;
+    background: var(--bg-secondary, #18181b);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 4px;
+    z-index: 10;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    animation: rin-slide-down 0.15s ease;
+}
+
+.wk-ch-opt {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 7px 10px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--text-primary, #fafafa);
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.15s ease;
+}
+
+.wk-ch-opt:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.wk-ch-opt.sel {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+}
+
+.wk-ptt-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px 16px;
+    gap: 12px;
+    flex: 1;
+}
+
+/* Signal bars */
+.wk-signal {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 20px;
+}
+
+.wk-signal span {
+    width: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.15);
+    transition: all 0.2s ease;
+}
+
+.wk-signal span:nth-child(1) {
+    height: 4px;
+}
+
+.wk-signal span:nth-child(2) {
+    height: 7px;
+}
+
+.wk-signal span:nth-child(3) {
+    height: 10px;
+}
+
+.wk-signal span:nth-child(4) {
+    height: 14px;
+}
+
+.wk-signal span:nth-child(5) {
+    height: 10px;
+}
+
+.wk-signal span:nth-child(6) {
+    height: 7px;
+}
+
+.wk-signal span:nth-child(7) {
+    height: 4px;
+}
+
+.wk-signal.active span {
+    background: #22c55e;
+    animation: wk-bar-pulse 0.4s ease-in-out infinite alternate;
+}
+
+.wk-signal.active span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.wk-signal.active span:nth-child(2) {
+    animation-delay: 0.05s;
+}
+
+.wk-signal.active span:nth-child(3) {
+    animation-delay: 0.1s;
+}
+
+.wk-signal.active span:nth-child(4) {
+    animation-delay: 0.15s;
+}
+
+.wk-signal.active span:nth-child(5) {
+    animation-delay: 0.1s;
+}
+
+.wk-signal.active span:nth-child(6) {
+    animation-delay: 0.05s;
+}
+
+.wk-signal.active span:nth-child(7) {
+    animation-delay: 0s;
+}
+
+@keyframes wk-bar-pulse {
+    from {
+        transform: scaleY(0.6);
+        opacity: 0.5;
+    }
+
+    to {
+        transform: scaleY(1.4);
+        opacity: 1;
+    }
+}
+
+/* PTT Mic Circle */
+.wk-mic-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-muted, #71717a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.wk-mic-circle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.wk-mic-circle.talking {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.15), 0 4px 20px rgba(34, 197, 94, 0.4);
+    transform: scale(1.05);
+}
+
+.wk-mic-circle.muted {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.wk-hint {
+    font-size: 11px;
+    color: var(--text-muted, #71717a);
+    margin: 0;
+    letter-spacing: 0.3px;
+}
+
+/* Members */
+.wk-members {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 10px 14px;
+}
+
+.wk-members-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-muted, #52525b);
+    margin-bottom: 8px;
+}
+
+.wk-member-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.wk-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px 4px 4px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.wk-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+}
+
+.wk-name {
+    font-size: 11px;
+    color: var(--text-primary, #fafafa);
+    white-space: nowrap;
+}
+
+/* ─── Hive Mini Chat ──────────────────────────────────────────── */
+.hv-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.hv-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 180px;
+    max-height: 280px;
+}
+
+.hv-msg {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    max-width: 90%;
+    animation: rin-msg-in 0.2s ease;
+}
+
+.hv-msg.me {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.hv-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.hv-bubble {
+    display: flex;
+    flex-direction: column;
+    padding: 6px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom-left-radius: 4px;
+}
+
+.hv-msg.me .hv-bubble {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 4px;
+}
+
+.hv-sender {
+    font-size: 10px;
+    font-weight: 600;
+    color: #ef4444;
+    margin-bottom: 1px;
+}
+
+.hv-text {
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-primary, #fafafa);
+}
+
+.hv-msg.me .hv-text {
+    color: white;
+}
+
+.hv-time {
+    font-size: 9px;
+    color: var(--text-muted, #71717a);
+    align-self: flex-end;
+    margin-top: 2px;
+}
+
+.hv-msg.me .hv-time {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.hv-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.hv-input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary, #fafafa);
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.hv-input:focus {
+    border-color: #ef4444;
+}
+
+.hv-input::placeholder {
+    color: var(--text-muted, #52525b);
+}
+
+.hv-send {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.hv-send:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+
+.hv-expand {
+    padding: 6px;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    background: transparent;
+    color: var(--text-muted, #71717a);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+}
+
+.hv-expand:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.04);
+}
+
+/* ─── Mobile ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .rin-popup {
+        width: calc(100vw - 32px);
+        right: 16px;
+        bottom: 80px;
+        max-height: 60vh;
+    }
+
+    .rin-fab-group {
+        bottom: 16px;
+        right: 16px;
+    }
+}
+
+/* ─── Action Confirmation Card ────────────────────────────────── */
+.rin-action-card {
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(59, 130, 246, 0.06);
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    animation: rin-msg-in 0.25s ease;
+}
+
+.rin-action-card.sensitive {
+    background: rgba(245, 158, 11, 0.06);
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+.rin-action-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-primary, #fafafa);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rin-action-icon {
+    font-size: 14px;
+}
+
+.rin-action-label {
+    flex: 1;
+}
+
+.rin-action-warn {
+    font-size: 10px;
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.rin-action-params {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 10px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.rin-action-param {
+    display: flex;
+    gap: 6px;
+    font-size: 11px;
+}
+
+.rin-param-key {
+    color: var(--text-muted, #71717a);
+    min-width: 60px;
+    text-transform: capitalize;
+}
+
+.rin-param-val {
+    color: var(--text-primary, #fafafa);
+    font-weight: 600;
+}
+
+.rin-action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.rin-action-cancel-btn,
+.rin-action-confirm-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.rin-action-cancel-btn {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-muted, #a1a1aa);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rin-action-cancel-btn:hover {
+    background: rgba(239, 68, 68, 0.08);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.rin-action-confirm-btn {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+}
+
+.rin-action-confirm-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.4);
+}
+
+.rin-action-confirm-btn:disabled,
+.rin-action-cancel-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.rin-action-card.sensitive .rin-action-confirm-btn {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.rin-action-card.sensitive .rin-action-confirm-btn:hover {
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
+}

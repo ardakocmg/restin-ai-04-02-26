@@ -22,6 +22,10 @@ export const ROLE_HIERARCHY: Record<string, number> = {
     GENERAL_MANAGER: 2.5,
     general_manager: 2.5,
 
+    // Admin — alias for Owner-level (login mode "ADMIN")
+    ADMIN: 3,
+    admin: 3,
+
     // Owner-level
     OWNER: 3,
     owner: 3,

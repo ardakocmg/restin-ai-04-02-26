@@ -1,7 +1,11 @@
 """Advanced Leave Management Routes"""
+import asyncio
+import logging
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Optional
 from datetime import datetime, timezone, timedelta
+
+logger = logging.getLogger("hr.leave")
 
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
@@ -208,6 +212,10 @@ def create_hr_leave_advanced_router():
                 }
             )
         
+        # Auto-sync to Google Calendar (non-blocking)
+        if request:
+            asyncio.create_task(_auto_sync_leave_to_calendar(request, venue_id))
+
         return {"message": "Leave request approved"}
     
     @router.post("/venues/{venue_id}/hr/leave/requests/{request_id}/reject")
@@ -232,5 +240,28 @@ def create_hr_leave_advanced_router():
         )
         
         return {"message": "Leave request rejected"}
-    
+
+    async def _auto_sync_leave_to_calendar(leave: dict, venue_id: str):
+        """Background task: sync approved leave to employee's Google Calendar."""
+        try:
+            from google.services.google_sync_service import sync_leave_to_calendar, get_sync_config
+
+            employee_id = leave.get("employee_id", "")
+            if not employee_id:
+                return
+
+            config = await get_sync_config(employee_id)
+            if not config.get("calendar_leave_sync"):
+                return
+
+            employee = await db.users.find_one({"id": employee_id}, {"_id": 0, "name": 1})
+            employee_name = employee.get("name", "") if employee else ""
+
+            venue = await db.venues.find_one({"id": venue_id}, {"_id": 0, "name": 1})
+            venue_name = venue.get("name", "") if venue else ""
+
+            await sync_leave_to_calendar(employee_id, leave, employee_name, venue_name, "create")
+        except Exception as e:
+            logger.warning("Auto-sync leave to calendar failed: %s", e)
+
     return router
