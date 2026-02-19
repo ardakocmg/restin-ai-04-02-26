@@ -103,3 +103,6 @@ backend/stderr.txt
 
 # Secrets installer for 2nd PC
 setup-env-secrets.ps1
+
+worker_heartbeat.log
+worker_health_check.txt
