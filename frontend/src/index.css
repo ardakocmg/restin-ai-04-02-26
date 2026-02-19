@@ -103,20 +103,43 @@
    Only active when .dark class is NOT present.
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Background overrides ── */
+/* ── Background overrides: primary dark backgrounds → light ── */
 :root:not(.dark) .bg-zinc-950,
 :root:not(.dark) .bg-\[\#0A0A0B\],
-:root:not(.dark) .bg-\[\#0F0F10\] {
+:root:not(.dark) .bg-\[\#0F0F10\],
+:root:not(.dark) .bg-\[\#09090b\],
+:root:not(.dark) .bg-\[\#050505\],
+:root:not(.dark) .bg-\[\#0d0d0f\] {
   background-color: var(--background) !important;
 }
 
+/* ── Background overrides: card-level dark backgrounds → card ── */
 :root:not(.dark) .bg-zinc-900,
 :root:not(.dark) .bg-zinc-900\/50,
 :root:not(.dark) .bg-zinc-900\/40,
 :root:not(.dark) .bg-zinc-900\/30,
-:root:not(.dark) .bg-zinc-900\/20 {
+:root:not(.dark) .bg-zinc-900\/20,
+:root:not(.dark) .bg-\[\#161617\],
+:root:not(.dark) .bg-\[\#161617\]\/40,
+:root:not(.dark) .bg-\[\#161617\]\/50,
+:root:not(.dark) .bg-\[\#18181b\],
+:root:not(.dark) .bg-\[\#1a1a1a\],
+:root:not(.dark) .bg-\[\#111\],
+:root:not(.dark) .bg-\[\#0f172a\],
+:root:not(.dark) .bg-\[\#1e293b\],
+:root:not(.dark) .bg-\[\#0d0d0d\] {
   background-color: var(--card) !important;
 }
+
+/* ── Background overrides: alternating table row backgrounds ── */
+:root:not(.dark) .odd\:bg-\[\#0f0f11\]:nth-child(odd) {
+  background-color: var(--background) !important;
+}
+
+:root:not(.dark) .even\:bg-\[\#151518\]:nth-child(even) {
+  background-color: var(--card) !important;
+}
+
 
 :root:not(.dark) .bg-zinc-800 {
   background-color: var(--secondary) !important;

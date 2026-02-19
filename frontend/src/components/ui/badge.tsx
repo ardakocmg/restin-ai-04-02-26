@@ -8,10 +8,13 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "",
-        secondary: "",
-        destructive: "",
-        outline: "",
+        default:
+          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        secondary:
+          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive:
+          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+        outline: "text-foreground",
       },
     },
     defaultVariants: {
@@ -26,36 +29,10 @@ export interface BadgeProps
 
 const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   ({ className, variant, ...props }, ref) => {
-    const styles: Record<string, React.CSSProperties> = {
-      default: {
-        backgroundColor: 'var(--brand-accent-soft)',
-        border: '1px solid var(--brand-accent-glow)',
-        color: 'var(--brand-accent)'
-      },
-      secondary: {
-        backgroundColor: 'var(--secondary)',
-        border: '1px solid var(--border)',
-        color: 'var(--secondary-foreground)'
-      },
-      destructive: {
-        backgroundColor: 'var(--destructive)',
-        border: '1px solid var(--destructive)',
-        color: 'var(--destructive-foreground)'
-      },
-      outline: {
-        backgroundColor: 'transparent',
-        border: '1px solid var(--border)',
-        color: 'var(--foreground)'
-      }
-    };
-
-    const variantKey = variant || "default";
-
     return (
       <div
         ref={ref}
         className={cn(badgeVariants({ variant }), className)}
-        style={styles[variantKey] || styles.default}
         {...props}
       />
     )

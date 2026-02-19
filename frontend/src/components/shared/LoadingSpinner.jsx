@@ -2,11 +2,11 @@ import React from 'react';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export default function LoadingSpinner({ 
-  size = 'default', 
-  text = 'Loading...', 
+export default function LoadingSpinner({
+  size = 'default',
+  text = 'Loading...',
   fullScreen = false,
-  className 
+  className
 }) {
   const sizes = {
     sm: 'h-4 w-4',
@@ -17,12 +17,11 @@ export default function LoadingSpinner({
 
   const spinner = (
     <div className={cn('flex flex-col items-center justify-center gap-3', className)}>
-      <Loader2 
-        className={cn('animate-spin', sizes[size])}
-        style={{ color: '#E53935' }}
+      <Loader2
+        className={cn('animate-spin text-primary', sizes[size])}
       />
       {text && (
-        <p className="text-sm" style={{ color: '#A1A1AA' }}>
+        <p className="text-sm text-muted-foreground">
           {text}
         </p>
       )}
@@ -31,10 +30,7 @@ export default function LoadingSpinner({
 
   if (fullScreen) {
     return (
-      <div 
-        className="flex items-center justify-center min-h-screen"
-        style={{ backgroundColor: '#0A0A0B' }}
-      >
+      <div className="flex items-center justify-center min-h-screen bg-background">
         {spinner}
       </div>
     );
