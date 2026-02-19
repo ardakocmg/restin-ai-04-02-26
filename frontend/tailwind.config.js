@@ -46,6 +46,7 @@ module.exports = {
 				border: 'var(--border)',
 				input: 'var(--input)',
 				ring: 'var(--ring)',
+				sidebar: 'var(--sidebar)',
 				chart: {
 					'1': 'hsl(var(--chart-1))',
 					'2': 'hsl(var(--chart-2))',

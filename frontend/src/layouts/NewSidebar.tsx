@@ -208,12 +208,12 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
   return (
     <aside
       className={cn(
-        "h-full flex flex-col transition-all duration-300 border-r border-white/5 bg-zinc-950 z-50",
+        "h-full flex flex-col transition-all duration-300 border-r border-border bg-sidebar z-50",
         collapsed ? "w-20" : "w-72"
       )}
     >
       {/* ─── Header: Logo + Collapse ─── */}
-      <div className={cn("flex items-center h-20 shrink-0 border-b border-white/5 bg-zinc-950", collapsed ? "justify-center px-2" : "justify-between px-5")}>
+      <div className={cn("flex items-center h-20 shrink-0 border-b border-border bg-sidebar", collapsed ? "justify-center px-2" : "justify-between px-5")}>
         <button
           onClick={() => onToggle()}
           className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
@@ -223,13 +223,13 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
           </div>
           {!collapsed && (
             <div className="flex flex-col items-start">
-              <span className="text-lg font-black text-white italic tracking-tighter leading-none">restin.ai</span>
+              <span className="text-lg font-black text-foreground italic tracking-tighter leading-none">restin.ai</span>
               <span className="text-[9px] font-bold text-red-500 tracking-[0.3em] uppercase">Enterprise</span>
             </div>
           )}
         </button>
         {!collapsed && (
-          <Button variant="ghost" size="icon" onClick={onToggle} className="text-zinc-500 hover:text-white h-8 w-8 hover:bg-white/5">
+          <Button variant="ghost" size="icon" onClick={onToggle} className="text-muted-foreground hover:text-foreground h-8 w-8 hover:bg-secondary">
             <ChevronLeft className="h-4 w-4" />
           </Button>
         )}
@@ -237,9 +237,9 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
 
       {/* ─── Search ─── */}
       {!collapsed && (
-        <div className="px-4 py-3 border-b border-white/5">
+        <div className="px-4 py-3 border-b border-border">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="search"
               placeholder="Search..."
@@ -248,10 +248,10 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
               autoComplete="off"
               data-1p-ignore
               data-lpignore="true"
-              className="w-full bg-zinc-900/50 border border-white/10 rounded-lg py-2 pl-9 pr-8 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-red-500/50 transition-all"
+              className="w-full bg-secondary border border-border rounded-lg py-2 pl-9 pr-8 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-red-500/50 transition-all"
             />
             {searchTerm && (
-              <button onClick={() => setSearchTerm('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white p-0.5">
+              <button onClick={() => setSearchTerm('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5">
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
@@ -268,7 +268,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
             <div className="mb-4">
               <div className="flex items-center gap-2 px-3 mb-2">
                 <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">Pinned</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Pinned</span>
               </div>
               {pinnedPages.map(href => {
                 const allItems = visibleMenuItems.flatMap(i => i.children ? [i, ...i.children] : [i]);
@@ -282,7 +282,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                       'group flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-sm',
                       isActive(href)
                         ? 'bg-amber-500/[0.06] text-amber-400'
-                        : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-300'
+                        : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                     )}
                   >
                     <item.icon className="h-4 w-4 flex-shrink-0 text-amber-500/60" />
@@ -290,7 +290,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                   </Link>
                 );
               })}
-              <div className="mx-3 mt-2 border-b border-white/5" />
+              <div className="mx-3 mt-2 border-b border-border" />
             </div>
           )}
 
@@ -321,8 +321,8 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                     isDomainActive(domain.id)
                       ? "bg-gradient-to-r from-red-600/90 to-red-700/80 shadow-[0_0_20px_rgba(229,57,53,0.3)] text-white border border-red-500/20"
                       : isExpanded && !collapsed
-                        ? "bg-white/[0.04] text-white border border-white/5"
-                        : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5 border border-transparent"
+                        ? "bg-white/[0.04] text-foreground border border-border"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent"
                   )}
                 >
                   {/* Ambient glow behind active domain in collapsed mode */}
@@ -340,11 +340,11 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                   <domain.icon className={cn(
                     "shrink-0 transition-all duration-300 group-hover:scale-110 relative z-10",
                     collapsed ? "h-6 w-6" : "h-4.5 w-4.5",
-                    isDomainActive(domain.id) ? "text-white" : isExpanded ? "text-zinc-300" : "text-zinc-600 group-hover:text-zinc-400"
+                    isDomainActive(domain.id) ? "text-white" : isExpanded ? "text-foreground/80" : "text-muted-foreground group-hover:text-foreground/60"
                   )} />
                   {/* Collapsed: notification badge */}
                   {collapsed && getDomainBadge(domain.id) > 0 && (
-                    <span className="absolute -top-1 -right-1 z-20 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-white bg-red-600 rounded-full shadow-[0_0_8px_rgba(220,38,38,0.6)] border-2 border-zinc-950 animate-in fade-in">
+                    <span className="absolute -top-1 -right-1 z-20 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-white bg-red-600 rounded-full shadow-[0_0_8px_rgba(220,38,38,0.6)] border-2 border-sidebar animate-in fade-in">
                       {getDomainBadge(domain.id) > 9 ? '9+' : getDomainBadge(domain.id)}
                     </span>
                   )}
@@ -368,16 +368,16 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                       )}
                       <ChevronDown className={cn(
                         'h-3.5 w-3.5 transition-transform duration-200',
-                        isDomainActive(domain.id) ? "text-white/60" : "text-zinc-600",
+                        isDomainActive(domain.id) ? "text-white/60" : "text-muted-foreground",
                         isExpanded && 'rotate-180 text-zinc-400'
                       )} />
                     </>
                   )}
                   {/* Collapsed tooltip */}
                   {collapsed && (
-                    <div className="absolute left-16 px-4 py-2 bg-zinc-900 text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 translate-x-2 group-hover:translate-x-0 whitespace-nowrap z-50 uppercase tracking-widest border border-white/10 shadow-2xl">
+                    <div className="absolute left-16 px-4 py-2 bg-popover text-foreground text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 translate-x-2 group-hover:translate-x-0 whitespace-nowrap z-50 uppercase tracking-widest border border-border shadow-2xl">
                       {domain.title}
-                      <div className="absolute left-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-zinc-900 rotate-45 border-l border-b border-white/10" />
+                      <div className="absolute left-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-popover rotate-45 border-l border-b border-border" />
                     </div>
                   )}
                 </button>
@@ -389,7 +389,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2, ease: 'easeOut' }}
-                    className="ml-2 pl-3 border-l border-white/5 space-y-0.5 mt-1 mb-2 overflow-hidden"
+                    className="ml-2 pl-3 border-l border-border space-y-0.5 mt-1 mb-2 overflow-hidden"
                   >
                     {domainItems.map(item => (
                       <div key={item.title + item.href}>
@@ -401,10 +401,10 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                               'group w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all relative',
                               isActive(item.href)
                                 ? 'bg-red-500/[0.08] text-red-500 font-semibold'
-                                : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.03]'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
                             )}
                           >
-                            <item.icon className={cn("h-4 w-4 flex-shrink-0", isActive(item.href) ? "text-red-500" : "text-zinc-600")} />
+                            <item.icon className={cn("h-4 w-4 flex-shrink-0", isActive(item.href) ? "text-red-500" : "text-muted-foreground")} />
                             <span className="flex-1 text-left truncate">{item.title}</span>
                             {getItemBadge(item.href) > 0 && !isActive(item.href) && (
                               <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-white bg-red-600 rounded-full shadow-[0_0_4px_rgba(220,38,38,0.4)]">
@@ -428,7 +428,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                                 isPinned(item.href) ? 'opacity-100' : 'opacity-0 group-hover:opacity-60'
                               )}
                             >
-                              <Star className={cn('w-3 h-3', isPinned(item.href) ? 'text-amber-500 fill-amber-500' : 'text-zinc-600')} />
+                              <Star className={cn('w-3 h-3', isPinned(item.href) ? 'text-amber-500 fill-amber-500' : 'text-muted-foreground')} />
                             </span>
                           </button>
                         ) : (
@@ -444,10 +444,10 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                               }}
                               className={cn(
                                 'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all group',
-                                isActive(item.href) || isChildActive(item.children) ? 'text-zinc-100' : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]'
+                                isActive(item.href) || isChildActive(item.children) ? 'text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
                               )}
                             >
-                              <item.icon className={cn("h-4 w-4 flex-shrink-0", isActive(item.href) || isChildActive(item.children) ? "text-red-400" : "text-zinc-600")} />
+                              <item.icon className={cn("h-4 w-4 flex-shrink-0", isActive(item.href) || isChildActive(item.children) ? "text-red-400" : "text-muted-foreground")} />
                               <span className="flex-1 text-left truncate font-medium">{item.title}</span>
                               {getAccordionBadge(item) > 0 && !expandedAccordions.includes(item.title) && (
                                 <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-black text-white bg-red-600 rounded-full shadow-[0_0_4px_rgba(220,38,38,0.4)]">
@@ -459,8 +459,8 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                                 className="p-0.5 rounded hover:bg-white/10 transition-all shrink-0"
                               >
                                 <ChevronRight className={cn(
-                                  'h-3.5 w-3.5 transition-transform duration-200 text-zinc-600',
-                                  expandedAccordions.includes(item.title) && 'rotate-90 text-zinc-400'
+                                  'h-3.5 w-3.5 transition-transform duration-200 text-muted-foreground',
+                                  expandedAccordions.includes(item.title) && 'rotate-90 text-foreground/60'
                                 )} />
                               </div>
                             </button>
@@ -472,7 +472,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                                   animate={{ opacity: 1, height: 'auto' }}
                                   exit={{ opacity: 0, height: 0 }}
                                   transition={{ duration: 0.15, ease: 'easeOut' }}
-                                  className="ml-4 pl-3 border-l border-white/5 space-y-0.5 mt-0.5 mb-1 overflow-hidden"
+                                  className="ml-4 pl-3 border-l border-border space-y-0.5 mt-0.5 mb-1 overflow-hidden"
                                 >
                                   {item.children.map(child => (
                                     <button
@@ -482,7 +482,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
                                         'w-full text-left px-3 py-1.5 rounded-md text-[13px] transition-all relative overflow-hidden',
                                         isActive(child.href)
                                           ? 'bg-red-500/[0.06] text-red-500 font-semibold border border-red-500/10'
-                                          : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03] border border-transparent'
+                                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent'
                                       )}
                                     >
                                       <span className="relative z-10 flex items-center gap-2">
@@ -517,20 +517,20 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
       </ScrollArea>
 
       {/* ─── Footer: Collapse toggle ─── */}
-      <div className="shrink-0 border-t border-white/5 p-3">
+      <div className="shrink-0 border-t border-border p-3">
         {collapsed ? (
           <Button
             variant="ghost"
             size="icon"
             onClick={onToggle}
-            className="w-full h-10 rounded-xl text-zinc-500 hover:text-white hover:bg-white/5"
+            className="w-full h-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary"
           >
             <ChevronRight className="h-5 w-5" />
           </Button>
         ) : (
           <button
             onClick={onToggle}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-500 hover:text-zinc-300 hover:bg-white/5 transition-all text-sm"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-all text-sm"
           >
             <ChevronLeft className="h-4 w-4" />
             <span className="font-medium">Collapse</span>

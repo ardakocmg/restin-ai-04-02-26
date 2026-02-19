@@ -165,33 +165,33 @@ export default function NewTopBar(): React.ReactElement {
 
   return (
     <header
-      className="h-20 flex items-center justify-between px-8 gap-6 z-20 relative transition-all duration-300 bg-[#0A0A0B]/95 backdrop-blur-xl border-b border-white/5"
+      className="h-20 flex items-center justify-between px-8 gap-6 z-20 relative transition-all duration-300 bg-background/95 backdrop-blur-xl border-b border-border"
     >
       {/* Left: Venue Switcher */}
       <div className="flex items-center gap-4 flex-shrink-0">
         {activeVenue && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/5 hover:border-white/10 transition-all cursor-pointer group outline-none focus:ring-2 focus:ring-blue-500/30">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center border border-white/10 shadow-inner">
-                  <Building2 className="h-4 w-4 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors" />
+              <button className="flex items-center gap-3 px-4 py-2 rounded-xl bg-secondary border border-border hover:border-primary/20 transition-all cursor-pointer group outline-none focus:ring-2 focus:ring-blue-500/30">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center border border-border shadow-inner">
+                  <Building2 className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
                 </div>
                 <div className="text-left">
-                  <h2 className="text-sm font-bold text-zinc-600 dark:text-zinc-200 tracking-tight group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
+                  <h2 className="text-sm font-bold text-foreground tracking-tight group-hover:text-foreground transition-colors">
                     {activeVenue.name}
                   </h2>
-                  <p className="text-[10px] uppercase font-black tracking-[0.2em] text-zinc-600 group-hover:text-zinc-500 transition-colors">
+                  <p className="text-[10px] uppercase font-black tracking-[0.2em] text-muted-foreground group-hover:text-muted-foreground transition-colors">
                     {(activeVenue.type as string) || 'VENUE'}
                   </p>
                 </div>
-                <ChevronDown className="h-3.5 w-3.5 text-zinc-500 group-hover:text-zinc-300 transition-colors ml-1" />
+                <ChevronDown className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors ml-1" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-72 bg-[#0F0F10] border-white/10 text-zinc-200">
-              <DropdownMenuLabel className="text-[10px] uppercase font-black tracking-widest text-zinc-500 px-3 py-2">
+            <DropdownMenuContent align="start" className="w-72 bg-popover border-border text-popover-foreground">
+              <DropdownMenuLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground px-3 py-2">
                 Switch Venue
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-white/5" />
+              <DropdownMenuSeparator className="bg-border" />
               {(venues || []).map((venue) => (
                 <DropdownMenuItem
                   key={venue.id}
@@ -200,14 +200,14 @@ export default function NewTopBar(): React.ReactElement {
                     "flex items-center gap-3 px-3 py-3 cursor-pointer font-medium rounded-lg mx-1 my-0.5",
                     venue.id === activeVenue.id
                       ? "bg-blue-500/10 text-blue-400"
-                      : "focus:bg-zinc-100 dark:focus:bg-white/5 text-zinc-500 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white"
+                      : "focus:bg-secondary text-muted-foreground hover:text-foreground"
                   )}
                 >
                   <div className={cn(
                     "w-8 h-8 rounded-lg flex items-center justify-center border shadow-inner",
                     venue.id === activeVenue.id
                       ? "bg-blue-500/10 border-blue-500/20"
-                      : "bg-zinc-900 border-white/5"
+                      : "bg-secondary border-border"
                   )}>
                     <Building2 className={cn(
                       "h-4 w-4",
@@ -216,7 +216,7 @@ export default function NewTopBar(): React.ReactElement {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold truncate">{venue.name}</div>
-                    <div className="text-[10px] text-zinc-500 uppercase tracking-wider">{(venue.type as string) || 'venue'}</div>
+                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider">{(venue.type as string) || 'venue'}</div>
                   </div>
                   {venue.id === activeVenue.id && (
                     <Check className="h-4 w-4 text-blue-400 shrink-0" />
@@ -224,7 +224,7 @@ export default function NewTopBar(): React.ReactElement {
                 </DropdownMenuItem>
               ))}
               {(!venues || venues.length === 0) && (
-                <div className="px-4 py-3 text-xs text-zinc-600 italic">No venues available</div>
+                <div className="px-4 py-3 text-xs text-muted-foreground italic">No venues available</div>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -234,7 +234,7 @@ export default function NewTopBar(): React.ReactElement {
       {/* Center: Search Bar */}
       <form onSubmit={handleSearch} className="flex-1 max-w-2xl relative">
         <div className="relative group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 group-focus-within:text-red-500 transition-colors z-10 duration-300" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-red-500 transition-colors z-10 duration-300" />
           <input
             ref={searchInputRef}
             type="search"
@@ -249,10 +249,10 @@ export default function NewTopBar(): React.ReactElement {
             autoComplete="off"
             data-1p-ignore
             data-lpignore="true"
-            className="w-full bg-zinc-900/50 border border-white/5 rounded-2xl px-12 py-3 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none focus:border-red-500/30 focus:bg-zinc-900 focus:ring-4 focus:ring-red-500/10 shadow-inner hover:bg-zinc-900/80 transition-all duration-300"
+            className="w-full bg-secondary border border-border rounded-2xl px-12 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-red-500/30 focus:bg-card focus:ring-4 focus:ring-red-500/10 shadow-inner hover:bg-card transition-all duration-300"
           />
           <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
-            <kbd className="text-[10px] font-mono text-zinc-600 bg-zinc-800/60 border border-zinc-700/50 rounded px-1.5 py-0.5 shadow-sm">⌘K</kbd>
+            <kbd className="text-[10px] font-mono text-muted-foreground bg-secondary border border-border rounded px-1.5 py-0.5 shadow-sm">⌘K</kbd>
           </div>
           {searchQuery && (
             <button
@@ -262,7 +262,7 @@ export default function NewTopBar(): React.ReactElement {
                 setSearchQuery('');
                 setShowSuggestions(false);
               }}
-              className="absolute right-12 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors z-10 p-1 rounded-full hover:bg-zinc-100 dark:hover:bg-white/10 pointer-events-auto"
+              className="absolute right-12 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors z-10 p-1 rounded-full hover:bg-secondary pointer-events-auto"
             >
               <X className="h-3 w-3" />
             </button>
@@ -271,8 +271,8 @@ export default function NewTopBar(): React.ReactElement {
 
         {/* Autocomplete Suggestions Dropdown */}
         {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-[#0F0F10] border border-white/10 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden z-50 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
-            <div className="px-3 py-2 text-[10px] uppercase font-bold tracking-widest text-zinc-600 bg-white/5">Pages & Features</div>
+          <div className="absolute top-full left-0 right-0 mt-2 bg-popover border border-border rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden z-50 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-3 py-2 text-[10px] uppercase font-bold tracking-widest text-muted-foreground bg-secondary/50">Pages & Features</div>
             {suggestions.map((suggestion, idx) => {
               const Icon = suggestion.icon;
               const isSelected = idx === selectedSuggestionIdx;
@@ -281,8 +281,8 @@ export default function NewTopBar(): React.ReactElement {
                   key={`${suggestion.path}-${idx}`}
                   onClick={() => handleSuggestionClick(suggestion.path)}
                   className={cn(
-                    "flex items-center justify-between px-4 py-3 cursor-pointer transition-all group border-b border-white/5 last:border-b-0",
-                    isSelected ? "bg-red-500/10" : "hover:bg-white/5"
+                    "flex items-center justify-between px-4 py-3 cursor-pointer transition-all group border-b border-border last:border-b-0",
+                    isSelected ? "bg-red-500/10" : "hover:bg-secondary"
                   )}
                 >
                   <div className="flex items-center gap-3">
@@ -290,29 +290,29 @@ export default function NewTopBar(): React.ReactElement {
                       "w-8 h-8 rounded-lg flex items-center justify-center border transition-all",
                       isSelected
                         ? "bg-red-500/10 border-red-500/30"
-                        : "bg-zinc-900 border-white/5 group-hover:border-red-500/30 group-hover:bg-red-500/10"
+                        : "bg-secondary border-border group-hover:border-red-500/30 group-hover:bg-red-500/10"
                     )}>
-                      <Icon className={cn("h-4 w-4", isSelected ? "text-red-500" : "text-zinc-500 group-hover:text-red-500")} />
+                      <Icon className={cn("h-4 w-4", isSelected ? "text-red-500" : "text-muted-foreground group-hover:text-red-500")} />
                     </div>
                     <div>
                       <div className={cn(
                         "text-sm font-semibold transition-colors",
-                        isSelected ? "text-white" : "text-zinc-300 group-hover:text-white"
+                        isSelected ? "text-foreground" : "text-foreground/80 group-hover:text-foreground"
                       )}>
                         {suggestion.title}
                       </div>
-                      <div className="text-[10px] uppercase tracking-wider text-zinc-600">
+                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                         {suggestion.breadcrumb}
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     {isSelected && (
-                      <span className="text-[10px] font-mono text-zinc-600 border border-zinc-800 rounded px-1.5 py-0.5">↵</span>
+                      <span className="text-[10px] font-mono text-muted-foreground border border-border rounded px-1.5 py-0.5">↵</span>
                     )}
                     <ChevronDown className={cn(
                       "h-3 w-3 -rotate-90 transition-transform",
-                      isSelected ? "text-red-400 translate-x-1" : "text-zinc-700 group-hover:text-zinc-400 group-hover:translate-x-1"
+                      isSelected ? "text-red-400 translate-x-1" : "text-muted-foreground group-hover:text-foreground/60 group-hover:translate-x-1"
                     )} />
                   </div>
                 </div>
@@ -325,7 +325,7 @@ export default function NewTopBar(): React.ReactElement {
       {/* Right: Actions */}
       <div className="flex items-center gap-4 flex-shrink-0">
         {/* Global Context Switcher */}
-        <div className="flex items-center gap-3 px-1 py-1 rounded-full bg-black/40 border border-white/5 hover:border-white/10 transition-all">
+        <div className="flex items-center gap-3 px-1 py-1 rounded-full bg-secondary border border-border hover:border-primary/20 transition-all">
           <div className="flex items-center gap-2 pl-3">
             {isSafeMode ? (
               <ShieldAlert className="h-3.5 w-3.5 text-red-500 animate-pulse" />
@@ -334,7 +334,7 @@ export default function NewTopBar(): React.ReactElement {
             )}
             <span className={cn(
               "text-[10px] font-black tracking-widest uppercase",
-              isSafeMode ? "text-red-500" : "text-zinc-500"
+              isSafeMode ? "text-red-500" : "text-muted-foreground"
             )}>
               {isSafeMode ? "SAFE MODE" : "LIVE MODE"}
             </span>
@@ -343,8 +343,8 @@ export default function NewTopBar(): React.ReactElement {
             aria-label={isSafeMode ? 'Disable safe mode' : 'Enable safe mode'}
             onClick={() => setSafeMode(!isSafeMode)}
             className={cn(
-              "w-10 h-6 rounded-full p-1 transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-zinc-700",
-              isSafeMode ? "bg-red-900/40" : "bg-zinc-800"
+              "w-10 h-6 rounded-full p-1 transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-border",
+              isSafeMode ? "bg-red-900/40" : "bg-secondary"
             )}
           >
             <div className={cn(
@@ -357,37 +357,37 @@ export default function NewTopBar(): React.ReactElement {
         {/* Theme Toggle */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
               {mode === 'dark' ? <Moon className="h-5 w-5" /> :
                 mode === 'light' ? <Sun className="h-5 w-5" /> :
                   <Monitor className="h-5 w-5" />}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-[#0F0F10] border-white/10 text-zinc-200">
-            <DropdownMenuItem onClick={() => setMode('light')} className={cn("cursor-pointer focus:bg-white/5", mode === 'light' && "bg-white/10")}>
+          <DropdownMenuContent align="end" className="bg-popover border-border text-popover-foreground">
+            <DropdownMenuItem onClick={() => setMode('light')} className={cn("cursor-pointer focus:bg-secondary", mode === 'light' && "bg-secondary")}>
               <Sun className="mr-2 h-4 w-4" /> Light
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setMode('dark')} className={cn("cursor-pointer focus:bg-white/5", mode === 'dark' && "bg-white/10")}>
+            <DropdownMenuItem onClick={() => setMode('dark')} className={cn("cursor-pointer focus:bg-secondary", mode === 'dark' && "bg-secondary")}>
               <Moon className="mr-2 h-4 w-4" /> Dark
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setMode('system')} className={cn("cursor-pointer focus:bg-white/5", mode === 'system' && "bg-white/10")}>
+            <DropdownMenuItem onClick={() => setMode('system')} className={cn("cursor-pointer focus:bg-secondary", mode === 'system' && "bg-secondary")}>
               <Monitor className="mr-2 h-4 w-4" /> System
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
         {/* Clock — Malta Timezone */}
-        <div className="flex items-center gap-1.5 text-zinc-500">
+        <div className="flex items-center gap-1.5 text-muted-foreground">
           <Clock className="h-3.5 w-3.5" />
           <span className="text-xs font-mono font-medium tabular-nums tracking-wide">{currentTime}</span>
         </div>
 
-        <div className="w-px h-8 bg-white/5"></div>
+        <div className="w-px h-8 bg-border"></div>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white hover:bg-white/5 relative">
+        <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-secondary relative">
           <Bell className="h-5 w-5" />
-          <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 rounded-full border-2 border-[#0A0A0B] flex items-center justify-center">
+          <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 rounded-full border-2 border-background flex items-center justify-center">
             <span className="text-[8px] font-black text-white leading-none">3</span>
           </span>
         </Button>
@@ -397,14 +397,14 @@ export default function NewTopBar(): React.ReactElement {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="flex items-center gap-3 text-zinc-100 font-medium hover:bg-white/5 relative px-2 py-1 h-auto rounded-xl border border-transparent hover:border-white/5 transition-all"
+              className="flex items-center gap-3 text-foreground font-medium hover:bg-secondary relative px-2 py-1 h-auto rounded-xl border border-transparent hover:border-border transition-all"
             >
               <div className="relative">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-zinc-700 to-zinc-900 flex items-center justify-center border border-white/10 shadow-lg">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-900 flex items-center justify-center border border-border shadow-lg">
                   <User className={cn("h-4 w-4", getStatusColor())} />
                 </div>
                 <div className={cn(
-                  "absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-[#0A0A0B]",
+                  "absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-background",
                   systemStatus === 'healthy' && "bg-green-500",
                   systemStatus === 'degraded' && "bg-yellow-500",
                   systemStatus === 'offline' && "bg-red-500"
@@ -412,7 +412,7 @@ export default function NewTopBar(): React.ReactElement {
               </div>
               <div className="flex flex-col items-start mr-1">
                 <span className="text-sm font-bold leading-none">{user?.name || t('topbar.roles.user')}</span>
-                <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider leading-none mt-1">
+                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider leading-none mt-1">
                   {(() => {
                     const role = user?.role?.toLowerCase();
                     if (role === 'product_owner') return t('topbar.roles.productOwner');
@@ -423,28 +423,28 @@ export default function NewTopBar(): React.ReactElement {
                   })()}
                 </span>
               </div>
-              <ChevronDown className="h-3 w-3 text-zinc-500" />
+              <ChevronDown className="h-3 w-3 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64 bg-[#0F0F10] border-white/10 text-zinc-200">
-            <div className="px-4 py-3 border-b border-white/5 mb-1">
-              <p className="text-sm font-bold text-zinc-900 dark:text-white">{t('topbar.myAccount')}</p>
-              <p className="text-xs text-zinc-500">{t('topbar.managePreferences')}</p>
+          <DropdownMenuContent align="end" className="w-64 bg-popover border-border text-popover-foreground">
+            <div className="px-4 py-3 border-b border-border mb-1">
+              <p className="text-sm font-bold text-foreground">{t('topbar.myAccount')}</p>
+              <p className="text-xs text-muted-foreground">{t('topbar.managePreferences')}</p>
             </div>
 
             <DropdownMenuItem
               onClick={() => navigate('/profile')}
-              className="font-medium cursor-pointer focus:bg-white/5"
+              className="font-medium cursor-pointer focus:bg-secondary"
             >
-              <User className="mr-2 h-4 w-4 text-zinc-500" />
+              <User className="mr-2 h-4 w-4 text-muted-foreground" />
               {t('topbar.profile')}
             </DropdownMenuItem>
 
-            <DropdownMenuSeparator className="bg-white/5" />
+            <DropdownMenuSeparator className="bg-border" />
 
             {/* System Status */}
             <div className="px-3 py-2">
-              <div className="text-[10px] uppercase font-bold tracking-widest text-zinc-600 mb-2 px-1">{t('topbar.systemHealth')}</div>
+              <div className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mb-2 px-1">{t('topbar.systemHealth')}</div>
               <div className={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-widest border border-transparent transition-colors",
                 systemStatus === 'healthy' && "bg-green-500/5 text-green-500 border-green-500/10",
@@ -466,10 +466,10 @@ export default function NewTopBar(): React.ReactElement {
 
             {/* Quick Access */}
             <div className="px-3 py-2">
-              <div className="text-[10px] uppercase font-bold tracking-widest text-zinc-600 mb-2 px-1">QUICK ACCESS</div>
+              <div className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mb-2 px-1">QUICK ACCESS</div>
               <DropdownMenuItem
                 onClick={() => navigate('/manager/my-google')}
-                className="font-medium cursor-pointer focus:bg-white/5"
+                className="font-medium cursor-pointer focus:bg-secondary"
               >
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" /><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" /><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" /><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" /></svg>
                 My Google
@@ -497,7 +497,7 @@ export default function NewTopBar(): React.ReactElement {
               </DropdownMenuItem>
             </div>
 
-            <DropdownMenuSeparator className="bg-white/5" />
+            <DropdownMenuSeparator className="bg-border" />
             <DropdownMenuItem
               onClick={handleLogout}
               className="text-red-400 focus:text-red-300 focus:bg-red-500/10 cursor-pointer font-medium"
@@ -508,33 +508,33 @@ export default function NewTopBar(): React.ReactElement {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <div className="w-px h-8 bg-white/5"></div>
+        <div className="w-px h-8 bg-border"></div>
 
         {/* Region & Language (Malta) - Moved to Far Right */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-9 w-auto px-2 gap-2 hover:bg-white/5 transition-colors" title="Region: Malta (EUR)">
+            <Button variant="ghost" className="h-9 w-auto px-2 gap-2 hover:bg-secondary transition-colors" title="Region: Malta (EUR)">
               <span className="text-xl leading-none">🇲🇹</span>
-              <span className="text-zinc-400 font-medium text-sm">€</span>
+              <span className="text-muted-foreground font-medium text-sm">€</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-[#0F0F10] border-white/10 text-zinc-200 min-w-[140px]">
-            <DropdownMenuLabel className="text-xs text-zinc-500 font-normal uppercase tracking-wider">
+          <DropdownMenuContent align="end" className="bg-popover border-border text-popover-foreground min-w-[140px]">
+            <DropdownMenuLabel className="text-xs text-muted-foreground font-normal uppercase tracking-wider">
               {t('topbar.fiscalRegion')}
             </DropdownMenuLabel>
             <DropdownMenuItem className="focus:bg-transparent cursor-default">
               <span className="mr-3 text-lg">🇲🇹</span> Malta (MT)
             </DropdownMenuItem>
 
-            <DropdownMenuSeparator className="bg-white/10" />
+            <DropdownMenuSeparator className="bg-border" />
 
             <DropdownMenuLabel className="text-xs text-zinc-500 font-normal uppercase tracking-wider">
               {t('topbar.interfaceLanguage')}
             </DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => i18n.changeLanguage('en')} className={cn("cursor-pointer focus:bg-white/5 font-medium", i18n.language === 'en' && "bg-white/10 text-blue-400")}>
+            <DropdownMenuItem onClick={() => i18n.changeLanguage('en')} className={cn("cursor-pointer focus:bg-secondary font-medium", i18n.language === 'en' && "bg-secondary text-blue-500")}>
               <span className="mr-3 text-lg">🇬🇧</span> English
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => i18n.changeLanguage('mt')} className={cn("cursor-pointer focus:bg-white/5 font-medium", i18n.language === 'mt' && "bg-white/10 text-blue-400")}>
+            <DropdownMenuItem onClick={() => i18n.changeLanguage('mt')} className={cn("cursor-pointer focus:bg-secondary font-medium", i18n.language === 'mt' && "bg-secondary text-blue-500")}>
               <span className="mr-3 text-lg">🇲🇹</span> Malti
             </DropdownMenuItem>
           </DropdownMenuContent>
