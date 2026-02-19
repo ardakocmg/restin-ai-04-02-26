@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import { venueAPI, deviceAPI } from "../../lib/api";
 import { toast } from "sonner";
+import { logger } from "../../lib/logger";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -90,7 +91,7 @@ export default function POSSetup() {
       setKitchenPrinterIp(savedPrinter.kitchen_ip || "");
 
     } catch (error) {
-      console.error("Failed to load setup data:", error);
+      logger.error("Failed to load setup data:", { error });
       toast.error("Failed to load configuration data");
     } finally {
       setLoading(false);
@@ -103,7 +104,7 @@ export default function POSSetup() {
       const response = await venueAPI.getZones(venueId);
       setZones(response.data || []);
     } catch (error) {
-      console.error("Failed to load zones:", error);
+      logger.error("Failed to load zones:", { error });
     }
   };
 
@@ -111,21 +112,7 @@ export default function POSSetup() {
     try {
       setSaving(true);
 
-      // 1. Bind Device (Backend)
-      await deviceAPI.bind({
-        device_id: deviceId,
-        venue_id: selectedVenue,
-        station: selectedZone || 'pos-main',
-        station_name: zones.find(z => z.id === selectedZone)?.name || deviceName || 'POS Terminal',
-        config: {
-          printer_type: printerType,
-          printer_ip: printerIp,
-          kitchen_printer_ip: kitchenPrinterIp,
-          kds_enabled: enableKds
-        }
-      });
-
-      // 2. Save Local Storage (Persistent)
+      // 1. Save Local Storage FIRST (Critical — POS won't load without this)
       localStorage.setItem("restin_pos_venue", selectedVenue);
       localStorage.setItem("restin_pos_zone", selectedZone || '');
       localStorage.setItem("restin_pos_device_name", deviceName);
@@ -135,11 +122,30 @@ export default function POSSetup() {
         kitchen_ip: kitchenPrinterIp
       }));
 
+      // 2. Bind Device (Backend — non-blocking, nice-to-have)
+      try {
+        await deviceAPI.bind({
+          device_id: deviceId,
+          venue_id: selectedVenue,
+          station: selectedZone || 'pos-main',
+          station_name: zones.find(z => z.id === selectedZone)?.name || deviceName || 'POS Terminal',
+          config: {
+            printer_type: printerType,
+            printer_ip: printerIp,
+            kitchen_printer_ip: kitchenPrinterIp,
+            kds_enabled: enableKds
+          }
+        });
+      } catch (bindErr) {
+        // Device binding is non-critical — POS works with localStorage alone
+        logger.warn('[POS Setup] Device bind failed (non-blocking)', { error: bindErr });
+      }
+
       toast.success("POS Configuration Saved!");
       navigate("/pos");
 
     } catch (error) {
-      console.error("Save failed:", error);
+      logger.error("Save failed:", { error });
       toast.error("Failed to save configuration");
     } finally {
       setSaving(false);

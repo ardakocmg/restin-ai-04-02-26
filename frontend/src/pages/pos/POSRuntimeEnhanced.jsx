@@ -138,6 +138,10 @@ export default function POSRuntimeEnhanced() {
   useEffect(() => {
     if (venueId) {
       loadData();
+    } else {
+      // No venue configured — redirect to setup (same as POSMain.js)
+      logger.warn('[L-Series POS] No venue configured — redirecting to /pos/setup');
+      window.location.href = '/pos/setup';
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [venueId]);
