@@ -17,6 +17,8 @@ import {
     DollarSign,
     Users,
     Flame,
+    AlertTriangle,
+    TrendingUp,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -50,6 +52,15 @@ interface OpsLogEntry {
     id: string;
     event: string;
     severity: string;
+    created_at: string;
+}
+
+interface LaborAlert {
+    id: string;
+    severity: 'critical' | 'warning' | 'info';
+    message: string;
+    labor_pct: number;
+    threshold: number;
     created_at: string;
 }
 
@@ -94,6 +105,16 @@ const OpsDashboard: React.FC = () => {
         queryKey: ['ops-logs', activeVenueId],
         queryFn: async () => {
             const res = await opsService.getLogs(activeVenueId || 'default');
+            return Array.isArray(res) ? res : [];
+        },
+        enabled: !!activeVenueId
+    });
+
+    // Fetch Labor Alerts
+    const { data: laborAlerts = [] } = useQuery<LaborAlert[]>({
+        queryKey: ['ops-labor-alerts', activeVenueId],
+        queryFn: async () => {
+            const res = await opsService.getLaborAlerts(activeVenueId || 'default');
             return Array.isArray(res) ? res : [];
         },
         enabled: !!activeVenueId
@@ -257,6 +278,62 @@ const OpsDashboard: React.FC = () => {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Labor Alerts Section */}
+            <Card className="bg-zinc-900 border-zinc-800">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-white text-lg font-bold">
+                        <AlertTriangle className="w-5 h-5 text-amber-500" />
+                        Labor Cost Alerts
+                        {laborAlerts.length > 0 && (
+                            <Badge className="bg-amber-500/10 text-amber-500 border-none ml-2 text-[10px] font-black">
+                                {laborAlerts.length} Active
+                            </Badge>
+                        )}
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {laborAlerts.length === 0 ? (
+                        <div className="text-center py-6 text-zinc-500">
+                            <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-500 opacity-50" />
+                            <p className="text-sm font-bold">All labor metrics within threshold</p>
+                            <p className="text-xs mt-1 text-zinc-600">Current: {metrics?.labor_percentage || 0}% — Target: ≤28%</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-3">
+                            {laborAlerts.map((alert, i) => (
+                                <div key={alert.id || i} className={`flex items-center justify-between p-4 rounded-xl border transition-all ${alert.severity === 'critical' ? 'bg-red-500/5 border-red-500/20' :
+                                        alert.severity === 'warning' ? 'bg-amber-500/5 border-amber-500/20' :
+                                            'bg-green-500/5 border-green-500/20'
+                                    }`}>
+                                    <div className="flex items-center gap-4">
+                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${alert.severity === 'critical' ? 'bg-red-500/10' :
+                                                alert.severity === 'warning' ? 'bg-amber-500/10' :
+                                                    'bg-green-500/10'
+                                            }`}>
+                                            {alert.severity === 'critical' ? <AlertCircle className="w-5 h-5 text-red-500" /> :
+                                                alert.severity === 'warning' ? <AlertTriangle className="w-5 h-5 text-amber-500" /> :
+                                                    <TrendingUp className="w-5 h-5 text-green-500" />}
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold text-white">{alert.message}</p>
+                                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">
+                                                Labor: {alert.labor_pct}% • Threshold: {alert.threshold}%
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <Badge className={`border-none text-[10px] font-black uppercase ${alert.severity === 'critical' ? 'bg-red-500/10 text-red-500' :
+                                            alert.severity === 'warning' ? 'bg-amber-500/10 text-amber-500' :
+                                                'bg-green-500/10 text-green-500'
+                                        }`}>
+                                        {alert.severity}
+                                    </Badge>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
         </div>
     );
 };

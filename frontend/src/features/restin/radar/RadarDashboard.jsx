@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import {
     Radar, Target, TrendingUp, TrendingDown,
     MapPin, Search, Filter, ArrowUpRight,
-    BarChart3, AlertCircle, RefreshCcw, ExternalLink
+    BarChart3, AlertCircle, RefreshCcw, ExternalLink,
+    ShieldAlert, Zap, Clock, ToggleLeft, ToggleRight
 } from 'lucide-react';
 import { Card } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
@@ -15,7 +16,7 @@ import { toast } from 'sonner';
 
 /**
  * 🔬 MARKET RADAR (Pillar 6)
- * Competitive Intelligence & Yield Management.
+ * Competitive Intelligence, Allergen Guard & Yield Management.
  */
 export default function RadarDashboard() {
     const { activeVenueId } = useVenue();
@@ -36,6 +37,20 @@ export default function RadarDashboard() {
         enabled: !!activeVenueId
     });
 
+    // Fetch Allergen Guard
+    const { data: allergens } = useQuery({
+        queryKey: ['radar-allergens', activeVenueId],
+        queryFn: () => radarService.getAllergens(activeVenueId || 'default'),
+        enabled: !!activeVenueId
+    });
+
+    // Fetch Yield Rules
+    const { data: yieldRules = [] } = useQuery({
+        queryKey: ['radar-yield-rules', activeVenueId],
+        queryFn: () => radarService.getYieldRules(activeVenueId || 'default'),
+        enabled: !!activeVenueId
+    });
+
     // Scan Mutation
     const scanMutation = useMutation({
         mutationFn: async () => {
@@ -45,6 +60,17 @@ export default function RadarDashboard() {
         onSuccess: (data) => toast.success("Scan Started", { description: data.message }),
         onError: () => toast.error("Scan Failed")
     });
+
+    const ALLERGEN_COLORS = {
+        gluten: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+        dairy: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+        nuts: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+        shellfish: 'bg-pink-500/20 text-pink-400 border-pink-500/30',
+        eggs: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+        soy: 'bg-green-500/20 text-green-400 border-green-500/30',
+        fish: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+        sesame: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+    };
 
     return (
         <div className="flex flex-col gap-8 animate-in fade-in zoom-in duration-700">
@@ -88,7 +114,6 @@ export default function RadarDashboard() {
                 {/* Dynamic Pricing Engine (Left) */}
                 <div className="lg:col-span-12 xl:col-span-8 flex flex-col gap-6">
                     <Card className="bg-zinc-950 border-zinc-800/50 p-8 relative overflow-hidden group">
-                        {/* Radar Grid Background */}
                         <div className="absolute inset-0 opacity-5 pointer-events-none">
                             <div className="w-full h-full bg-[radial-gradient(circle,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:30px_30px]"></div>
                         </div>
@@ -219,6 +244,120 @@ export default function RadarDashboard() {
                     </Card>
                 </div>
             </div>
+
+            {/* === ALLERGEN GUARD === */}
+            <Card className="bg-zinc-950 border-zinc-800/50 p-8 relative overflow-hidden">
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                            <ShieldAlert className="text-amber-400" size={22} />
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-black text-white italic tracking-tight">Allergen Guard</h2>
+                            <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">
+                                {allergens?.total_scanned || 0} items scanned • {allergens?.flagged_count || 0} flagged
+                            </p>
+                        </div>
+                    </div>
+                    {allergens?.flagged_count > 0 && (
+                        <div className="px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                            <span className="text-amber-400 font-black text-sm">{allergens.flagged_count} Alerts</span>
+                        </div>
+                    )}
+                </div>
+
+                {allergens?.items?.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-72 overflow-y-auto">
+                        {allergens.items.map((item, i) => (
+                            <div key={i} className="p-4 bg-zinc-900/60 rounded-xl border border-zinc-800/50 hover:border-amber-500/30 transition-all">
+                                <div className="flex justify-between items-start mb-3">
+                                    <div>
+                                        <p className="text-sm font-bold text-white">{item.item}</p>
+                                        <p className="text-[10px] text-zinc-500 uppercase tracking-widest">{item.category}</p>
+                                    </div>
+                                </div>
+                                <div className="flex flex-wrap gap-1.5">
+                                    {item.allergens.map((a) => (
+                                        <span key={a} className={cn("text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-lg border", ALLERGEN_COLORS[a] || 'bg-zinc-800 text-zinc-400 border-zinc-700')}>
+                                            {a}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-8 text-zinc-600">
+                        <ShieldAlert size={32} className="mx-auto mb-2 opacity-50" />
+                        <p className="text-sm font-bold">No allergens detected in menu</p>
+                        <p className="text-xs text-zinc-700 mt-1">Add ingredients to menu items to enable scanning</p>
+                    </div>
+                )}
+            </Card>
+
+            {/* === YIELD PRICING RULES === */}
+            <Card className="bg-zinc-950 border-zinc-800/50 p-8">
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                            <Zap className="text-emerald-400" size={22} />
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-black text-white italic tracking-tight">Dynamic Pricing Rules</h2>
+                            <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">
+                                Happy Hour • Surge Pricing • Occupancy Rules
+                            </p>
+                        </div>
+                    </div>
+                    <Button variant="outline" className="border-zinc-700 text-zinc-400 hover:text-white h-9 text-xs font-black uppercase tracking-wider gap-2">
+                        <Zap size={12} /> Add Rule
+                    </Button>
+                </div>
+
+                <div className="space-y-3">
+                    {yieldRules.map((rule, i) => (
+                        <div key={rule.id || i} className={cn(
+                            "flex items-center justify-between p-4 rounded-xl border transition-all",
+                            rule.active
+                                ? "bg-emerald-500/5 border-emerald-500/20"
+                                : "bg-zinc-900/40 border-zinc-800/50 opacity-60"
+                        )}>
+                            <div className="flex items-center gap-4">
+                                <div className={cn(
+                                    "w-10 h-10 rounded-xl flex items-center justify-center",
+                                    rule.type === 'discount' ? "bg-blue-500/10" : "bg-red-500/10"
+                                )}>
+                                    {rule.type === 'discount'
+                                        ? <TrendingDown size={18} className="text-blue-400" />
+                                        : <TrendingUp size={18} className="text-red-400" />}
+                                </div>
+                                <div>
+                                    <p className="text-sm font-bold text-white">{rule.name}</p>
+                                    <div className="flex items-center gap-3 mt-1">
+                                        <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest flex items-center gap-1">
+                                            <Clock size={10} /> {rule.trigger}: {rule.condition}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <span className={cn(
+                                    "text-lg font-black italic",
+                                    rule.pct < 0 ? "text-blue-400" : "text-red-400"
+                                )}>
+                                    {rule.pct > 0 ? '+' : ''}{rule.pct}%
+                                </span>
+                                {rule.active
+                                    ? <ToggleRight size={24} className="text-emerald-400" />
+                                    : <ToggleLeft size={24} className="text-zinc-600" />}
+                            </div>
+                        </div>
+                    ))}
+                    {yieldRules.length === 0 && (
+                        <div className="text-center py-6 text-zinc-600 text-sm">No pricing rules configured</div>
+                    )}
+                </div>
+            </Card>
         </div>
     );
 }
