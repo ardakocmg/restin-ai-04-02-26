@@ -81,7 +81,7 @@ function CustomTooltip({ active, payload, label, formatter }: CustomTooltipProps
             <p className="pulse-tooltip-label">{label}</p>
             {payload.map((p, i) => (
                 <div key={i} className="flex items-center gap-2 mt-1">
-                    <Circle className="w-2 h-2 fill-current" style={{ color: p.color }} />
+                    <Circle className="w-2 h-2 fill-current pulse-tooltip-dot" style={{ '--dot-color': p.color } as React.CSSProperties} />
                     <span className="pulse-tooltip-value">{fmt(p.value || 0)}</span>
                     <span className="pulse-tooltip-sub">{p.name}</span>
                 </div>
@@ -409,7 +409,7 @@ export default function PulseAnalytics() {
                             <div className="flex flex-wrap gap-3 mt-3 justify-center">
                                 {revenueBreakdown.map((d, i) => (
                                     <div key={i} className="flex items-center gap-1.5">
-                                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }} />
+                                        <span className="w-2 h-2 rounded-full pulse-legend-dot" style={{ '--dot-color': d.color } as React.CSSProperties} />
                                         <span className="text-[10px] text-zinc-500 font-bold">{d.name}</span>
                                         <span className="text-[10px] text-zinc-400 font-bold">€{d.value.toFixed(0)}</span>
                                     </div>

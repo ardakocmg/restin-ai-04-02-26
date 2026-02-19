@@ -11,6 +11,7 @@
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     border-radius: 12px !important;
     padding: 10px 14px !important;
+    -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
@@ -92,4 +93,14 @@
     border-radius: 4px;
     transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
     width: var(--gauge-pct, 0%);
+}
+
+/* Tooltip dot — color set via CSS custom property */
+.pulse-tooltip-dot {
+    color: var(--dot-color, #71717a);
+}
+
+/* Legend dot — background set via CSS custom property */
+.pulse-legend-dot {
+    background-color: var(--dot-color, #71717a);
 }
