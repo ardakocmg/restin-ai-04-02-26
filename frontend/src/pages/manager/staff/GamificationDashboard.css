@@ -1,0 +1,22 @@
+/* Gamification Dashboard — CSS Custom Properties for dynamic widths */
+
+.gamification-stat-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gamification-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* XP progress bar — uses CSS custom property set by JS */
+.gamification-xp-bar {
+    width: var(--xp-progress, 0%);
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Quest progress bar — uses CSS custom property set by JS */
+.gamification-quest-bar {
+    width: var(--quest-progress, 0%);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}

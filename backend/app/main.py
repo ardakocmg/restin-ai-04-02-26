@@ -579,6 +579,11 @@ api_main.include_router(observability_router)
 api_main.include_router(migration_router, tags=["Migration"])
 api_main.include_router(user_settings_router)
 
+# Gamification (Leaderboard, Quests, XP)
+from routes.gamification_routes import create_gamification_router
+gamification_router = create_gamification_router()
+api_main.include_router(gamification_router)
+
 # WebSocket for real-time notifications
 websocket_router = create_websocket_router()
 api_main.include_router(websocket_router)
