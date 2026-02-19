@@ -96,10 +96,40 @@ description: Restin.AI project completion status — check before suggesting wor
 ### Lightspeed POS Parity
 
 - [x] L/K Series analiz + feature gap (implementation_plan.md)
-- [ ] Phase 1: Tip Presets + Alphanumeric Tables + Combo Builder
-- [ ] Phase 2: Order Anywhere (QR + Online)
-- [ ] Phase 3: Tableside Ordering (Mobile POS)
-- [ ] Phase 4: Pulse Analytics (Mobile Dashboard)
+- [x] Phase 1: Tip Presets + Combo Builder (backend + frontend + routes)
+- [x] Phase 2: Order Anywhere QR + Online (backend + GuestOrderPage + OrderAnywhereDashboard)
+- [x] Phase 3: Tableside Ordering (backend + routes registered)
+- [x] Phase 4: Pulse Analytics (backend + PulseAnalytics.tsx + CSS)
+
+### Deployment & Production
+
+- [x] api.restin.ai DNS → Render CNAME (verified healthy)
+- [x] Frontend → Vercel (restin.ai)
+- [x] Backend → Render (api.restin.ai, Free plan)
+- [x] deploy_monitor.py script
+
+## 🟡 SIRADAKI ADAYLAR
+
+### Frontend Polish & Missing Pages
+
+- [ ] Sidebar navigation links for new Lightspeed pages (tip-presets, combos, order-anywhere, pulse)
+- [ ] Tableside Ordering frontend page (TablesideConfig.tsx — backend exists, no frontend page)
+
+### Production Hardening
+
+- [ ] Render cold-start keep-alive (cron job / UptimeRobot)
+- [ ] MASTER_SEED / MASTER_KEY proper env vars on Render
+
+### Revenue Pillars (Pillar 0-8 — Master Plan)
+
+- [ ] Pillar 0: Billing Engine (SubscriptionPlan, ModuleConfig, AiBrokerConfig, StorageBilling)
+- [ ] Pillar 1: AI Infrastructure (AiServiceFactory, Vertex AI wrapper)
+- [ ] Pillar 2: Web Architect (MarketingSite, Live Menu sync)
+- [ ] Pillar 3: Autopilot CRM (Churn detection, Boomerang campaigns)
+- [ ] Pillar 4: Voice AI RAG (Knowledge base, call logging, cost tracking)
+- [ ] Pillar 5: Studio (Reality-First content generation)
+- [ ] Pillar 6: Market Radar (Allergen Guard, Yield Management)
+- [ ] Pillar 8: Fintech (Kiosk Mode, Advanced Split Pay)
 
 ## 🔧 ERTELENEN (Tamamlandi)
 

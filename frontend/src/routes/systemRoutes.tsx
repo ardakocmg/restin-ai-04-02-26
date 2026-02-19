@@ -70,11 +70,12 @@ const TemplateList = React.lazy(() => import('../pages/templates/TemplateList'))
 const TemplateEditor = React.lazy(() => import('../pages/templates/TemplateEditor'));
 const SystemDashboard = React.lazy(() => import('../pages/manager/SystemDashboard'));
 
-// ─── Lightspeed Parity (Phase 1) ────────────────────────────────────────────────
+// ─── Lightspeed Parity ──────────────────────────────────────────────────────────
 const TipPresetsSettings = React.lazy(() => import('../pages/manager/TipPresetsSettings'));
 const ComboBuilder = React.lazy(() => import('../pages/manager/ComboBuilder'));
 const OrderAnywhereDashboard = React.lazy(() => import('../pages/manager/OrderAnywhereDashboard'));
 const PulseAnalytics = React.lazy(() => import('../pages/manager/PulseAnalytics'));
+const TablesideConfig = React.lazy(() => import('../pages/manager/TablesideConfig'));
 
 export const systemRoutes = (
     <>
@@ -138,6 +139,7 @@ export const systemRoutes = (
         <Route path="combos" element={<RoleRoute requiredRole="MANAGER"><ComboBuilder /></RoleRoute>} />
         <Route path="order-anywhere" element={<RoleRoute requiredRole="MANAGER"><OrderAnywhereDashboard /></RoleRoute>} />
         <Route path="pulse" element={<RoleRoute requiredRole="MANAGER"><PulseAnalytics /></RoleRoute>} />
+        <Route path="tableside" element={<RoleRoute requiredRole="MANAGER"><TablesideConfig /></RoleRoute>} />
 
         {/* Misc */}
         <Route path="migration" element={<RoleRoute requiredRole="OWNER"><MigrationHub /></RoleRoute>} />

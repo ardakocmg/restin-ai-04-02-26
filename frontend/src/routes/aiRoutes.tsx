@@ -28,6 +28,8 @@ const CallLogs = React.lazy(() => import('../features/restin/voice/CallLogs'));
 const StudioDashboard = React.lazy(() => import('../features/restin/studio/StudioDashboard'));
 const RadarDashboard = React.lazy(() => import('../features/restin/radar/RadarDashboard'));
 const CrmDashboard = React.lazy(() => import('../features/restin/crm').then(m => ({ default: m.CrmDashboard })));
+const FintechDashboard = React.lazy(() => import('../features/restin/fintech/FintechDashboard'));
+const OpsDashboard = React.lazy(() => import('../features/restin/ops/OpsDashboard'));
 
 export const aiRoutes = (
     <>
@@ -56,6 +58,8 @@ export const aiRoutes = (
             <Route path="studio" element={<RoleRoute requiredRole="OWNER"><StudioDashboard /></RoleRoute>} />
             <Route path="radar" element={<RoleRoute requiredRole="OWNER"><RadarDashboard /></RoleRoute>} />
             <Route path="crm" element={<RoleRoute requiredRole="OWNER"><CrmDashboard /></RoleRoute>} />
+            <Route path="fintech" element={<RoleRoute requiredRole="OWNER"><FintechDashboard /></RoleRoute>} />
+            <Route path="ops" element={<RoleRoute requiredRole="OWNER"><OpsDashboard /></RoleRoute>} />
         </Route>
     </>
 );
