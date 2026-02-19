@@ -15,6 +15,7 @@ prisma
 # ── Auth & Security ──
 pyjwt
 cryptography
+bcrypt
 pyotp
 qrcode[pil]
 
