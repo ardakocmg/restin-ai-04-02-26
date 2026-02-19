@@ -68,44 +68,7 @@ const QUADRANTS = {
     },
 };
 
-// ── Demo data generator ────────────────────────────────────────────
-function generateDemoItems() {
-    const items = [
-        // Stars
-        { name: 'Australian Wagyu 100g', category: 'Main Course', times_sold: 345, revenue: 13110, food_cost: 2829, sell_price: 38.00, cost: 8.20 },
-        { name: 'Lobster Thermidor', category: 'Main Course', times_sold: 289, revenue: 12730, food_cost: 3468, sell_price: 44.00, cost: 12.00 },
-        { name: 'Tiramisu', category: 'Dessert', times_sold: 412, revenue: 5768, food_cost: 824, sell_price: 14.00, cost: 2.00 },
-        { name: 'Caesar Salad', category: 'Starter', times_sold: 523, revenue: 6799, food_cost: 1569, sell_price: 13.00, cost: 3.00 },
-        // Puzzles (high margin, low sales)
-        { name: 'Truffle Risotto', category: 'Main Course', times_sold: 67, revenue: 2345, food_cost: 402, sell_price: 35.00, cost: 6.00 },
-        { name: 'Wagyu Tartare', category: 'Starter', times_sold: 45, revenue: 1350, food_cost: 270, sell_price: 30.00, cost: 6.00 },
-        { name: 'Crème Brûlée', category: 'Dessert', times_sold: 89, revenue: 1157, food_cost: 178, sell_price: 13.00, cost: 2.00 },
-        // Plow Horses (popular but thin margin)
-        { name: 'Fish & Chips', category: 'Main Course', times_sold: 467, revenue: 7472, food_cost: 4202, sell_price: 16.00, cost: 9.00 },
-        { name: 'Margherita Pizza', category: 'Main Course', times_sold: 634, revenue: 8242, food_cost: 4444, sell_price: 13.00, cost: 7.00 },
-        { name: 'Club Sandwich', category: 'Lunch', times_sold: 389, revenue: 5446, food_cost: 3112, sell_price: 14.00, cost: 8.00 },
-        { name: 'Pasta Carbonara', category: 'Main Course', times_sold: 512, revenue: 7680, food_cost: 4608, sell_price: 15.00, cost: 9.00 },
-        // Dogs
-        { name: 'Liver Paté', category: 'Starter', times_sold: 23, revenue: 253, food_cost: 161, sell_price: 11.00, cost: 7.00 },
-        { name: 'Sorbet Trio', category: 'Dessert', times_sold: 34, revenue: 340, food_cost: 204, sell_price: 10.00, cost: 6.00 },
-        { name: 'Anchovy Bruschetta', category: 'Starter', times_sold: 18, revenue: 216, food_cost: 126, sell_price: 12.00, cost: 7.00 },
-        { name: 'Steamed Vegetables', category: 'Side', times_sold: 56, revenue: 392, food_cost: 224, sell_price: 7.00, cost: 4.00 },
-        { name: 'Iced Tea (Home)', category: 'Beverage', times_sold: 78, revenue: 312, food_cost: 195, sell_price: 4.00, cost: 2.50 },
-        { name: 'Espresso Martini', category: 'Beverage', times_sold: 267, revenue: 3738, food_cost: 534, sell_price: 14.00, cost: 2.00 },
-        { name: 'Cheese Platter', category: 'Starter', times_sold: 102, revenue: 2040, food_cost: 918, sell_price: 20.00, cost: 9.00 },
-    ];
-
-    return items.map((item, idx) => {
-        const margin_pct = ((item.sell_price - item.cost) / item.sell_price) * 100;
-        return {
-            id: `menu-${idx}`,
-            ...item,
-            margin_pct: Math.round(margin_pct * 10) / 10,
-            profit: item.revenue - item.food_cost,
-            food_cost_pct: Math.round((item.cost / item.sell_price) * 100 * 10) / 10,
-        };
-    });
-}
+// Demo data removed — all data comes from the profitability API endpoint.
 
 function classifyItem(item, avgPopularity, avgMargin) {
     const isPopular = item.times_sold >= avgPopularity;
@@ -146,17 +109,13 @@ export default function MenuEngineering() {
         try {
             if (venueId) {
                 const res = await api.get(`/venues/${venueId}/recipes/engineered/analytics/profitability?days=${dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90}`);
-                if (res.data?.recipes?.length > 0) {
-                    setItems(res.data.recipes);
-                } else {
-                    setItems(generateDemoItems());
-                }
+                setItems(res.data?.recipes || []);
             } else {
-                setItems(generateDemoItems());
+                setItems([]);
             }
         } catch {
             logger.error('Failed to load menu engineering data');
-            setItems(generateDemoItems());
+            setItems([]);
         } finally {
             setLoading(false);
         }

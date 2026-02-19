@@ -1,5 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { logger } from '@/lib/logger';
 import { useVenue } from '@/context/VenueContext';
+import api from '@/lib/api';
 import PageContainer from '@/layouts/PageContainer';
 import DataTable from '@/components/shared/DataTable';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,43 +9,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
-    BarChart3, TrendingUp, TrendingDown, DollarSign, ShoppingBag,
+    BarChart3, TrendingUp, DollarSign, ShoppingBag,
     AlertTriangle, Target, Download, RefreshCw, Filter,
-    Percent, Star, Minus, ArrowUpDown,
+    Percent, Star, ArrowUpDown, Loader2,
 } from 'lucide-react';
 import { toast } from 'sonner';
-
-// ── Demo Sales Data ──────────────────────────────────────────
-const generateSalesData = () => {
-    const items = [
-        { name: 'Margherita Pizza', category: 'Pizza', sold: 482, revenue: 5784, food_cost: 1620, theo_cost: 1540 },
-        { name: 'Carbonara Pasta', category: 'Pasta', sold: 318, revenue: 4452, food_cost: 1338, theo_cost: 1272 },
-        { name: 'Caesar Salad', category: 'Salad', sold: 247, revenue: 2470, food_cost: 618, theo_cost: 580 },
-        { name: 'Grilled Salmon', category: 'Mains', sold: 176, revenue: 4400, food_cost: 1936, theo_cost: 1848 },
-        { name: 'Tiramisu', category: 'Dessert', sold: 203, revenue: 1827, food_cost: 365, theo_cost: 340 },
-        { name: 'Bruschetta', category: 'Starter', sold: 312, revenue: 2496, food_cost: 499, theo_cost: 468 },
-        { name: 'Risotto Mushroom', category: 'Mains', sold: 156, revenue: 2808, food_cost: 936, theo_cost: 890 },
-        { name: 'Pepperoni Pizza', category: 'Pizza', sold: 389, revenue: 5057, food_cost: 1820, theo_cost: 1700 },
-        { name: 'Panna Cotta', category: 'Dessert', sold: 134, revenue: 1072, food_cost: 214, theo_cost: 201 },
-        { name: 'Minestrone Soup', category: 'Starter', sold: 98, revenue: 784, food_cost: 196, theo_cost: 186 },
-        { name: 'Lobster Linguine', category: 'Pasta', sold: 87, revenue: 2610, food_cost: 1305, theo_cost: 1218 },
-        { name: 'Chicken Milanese', category: 'Mains', sold: 201, revenue: 3015, food_cost: 804, theo_cost: 760 },
-        { name: 'Gelato (3 Scoops)', category: 'Dessert', sold: 267, revenue: 1602, food_cost: 320, theo_cost: 308 },
-        { name: 'Caprese Salad', category: 'Salad', sold: 145, revenue: 1305, food_cost: 348, theo_cost: 320 },
-        { name: 'Osso Buco', category: 'Mains', sold: 62, revenue: 1860, food_cost: 868, theo_cost: 810 },
-    ].map((item, i) => ({
-        ...item,
-        id: `sm-${i}`,
-        margin: item.revenue - item.food_cost,
-        margin_pct: ((item.revenue - item.food_cost) / item.revenue * 100),
-        food_cost_pct: (item.food_cost / item.revenue * 100),
-        theo_cost_pct: (item.theo_cost / item.revenue * 100),
-        variance: item.food_cost - item.theo_cost,
-        variance_pct: ((item.food_cost - item.theo_cost) / item.theo_cost * 100),
-        avg_price: (item.revenue / item.sold),
-    }));
-    return items;
-};
 
 // ── KPI Card ─────────────────────────────────────────────────
 function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
@@ -65,21 +35,95 @@ function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground'
     );
 }
 
+// ── Date range to days mapping ───────────────────────────────
+const PERIOD_DAYS = {
+    today: 1,
+    this_week: 7,
+    this_month: 30,
+    last_month: 60,
+    this_quarter: 90,
+};
+
 // ── Main Page ────────────────────────────────────────────────
 export default function SalesMixAnalysis() {
     const { activeVenue } = useVenue();
+    const venueId = activeVenue?.id;
     const [dateRange, setDateRange] = useState('this_month');
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [sortBy, setSortBy] = useState('revenue');
+    const [salesData, setSalesData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const salesData = useMemo(() => generateSalesData(), []);
+    // ── Fetch real data from profitability endpoint ──────────
+    const loadData = useCallback(async () => {
+        if (!venueId) {
+            setLoading(false);
+            return;
+        }
+        setLoading(true);
+        try {
+            const days = PERIOD_DAYS[dateRange] || 30;
+            const res = await api.get(
+                `/venues/${venueId}/recipes/engineered/analytics/profitability?days=${days}`
+            );
+            const recipes = res.data?.recipes || [];
 
+            // Enrich with derived fields needed by the Sales Mix UI
+            const enriched = recipes.map((item, i) => {
+                const revenue = item.revenue || 0;
+                const foodCost = item.food_cost || 0;
+                const cost = item.cost || 0;
+                const sellPrice = item.sell_price || 0;
+                const timesSold = item.times_sold || 0;
+
+                // Theoretical cost = cost_per_serving × quantity sold
+                const theoCost = Math.round(cost * timesSold * 100) / 100;
+                const margin = revenue - foodCost;
+                const marginPct = revenue > 0 ? ((revenue - foodCost) / revenue) * 100 : 0;
+                const foodCostPct = revenue > 0 ? (foodCost / revenue) * 100 : 0;
+                const theoCostPct = revenue > 0 ? (theoCost / revenue) * 100 : 0;
+                const variance = Math.round((foodCost - theoCost) * 100) / 100;
+                const variancePct = theoCost > 0 ? ((foodCost - theoCost) / theoCost) * 100 : 0;
+                const avgPrice = timesSold > 0 ? revenue / timesSold : sellPrice;
+
+                return {
+                    id: item.id || `sm-${i}`,
+                    name: item.name || 'Unknown',
+                    category: item.category || 'Uncategorized',
+                    sold: timesSold,
+                    revenue,
+                    food_cost: foodCost,
+                    theo_cost: theoCost,
+                    margin,
+                    margin_pct: marginPct,
+                    food_cost_pct: foodCostPct,
+                    theo_cost_pct: theoCostPct,
+                    variance,
+                    variance_pct: variancePct,
+                    avg_price: avgPrice,
+                };
+            });
+
+            setSalesData(enriched);
+        } catch (error) {
+            logger.error('Failed to load sales mix data', { error });
+            setSalesData([]);
+        } finally {
+            setLoading(false);
+        }
+    }, [venueId, dateRange]);
+
+    useEffect(() => {
+        loadData();
+    }, [loadData]);
+
+    // ── Filtering & Sorting ─────────────────────────────────
     const filtered = useMemo(() => {
         let data = salesData;
         if (categoryFilter !== 'all') {
             data = data.filter(d => d.category === categoryFilter);
         }
-        data.sort((a, b) => b[sortBy] - a[sortBy]);
+        data = [...data].sort((a, b) => (b[sortBy] || 0) - (a[sortBy] || 0));
         return data;
     }, [salesData, categoryFilter, sortBy]);
 
@@ -102,6 +146,7 @@ export default function SalesMixAnalysis() {
         };
     }, [filtered]);
 
+    // ── Table Columns ───────────────────────────────────────
     const COLUMNS = useMemo(() => [
         {
             key: 'name', label: 'Item', enableSorting: true, size: 180,
@@ -141,7 +186,7 @@ export default function SalesMixAnalysis() {
                 const v = row.variance;
                 if (v > 0) return (
                     <span className="text-red-500 font-bold tabular-nums flex items-center gap-0.5 text-xs">
-                        <TrendingUp className="h-3 w-3" />+€{v} ({row.variance_pct.toFixed(1)}%)
+                        <TrendingUp className="h-3 w-3" />+€{v.toFixed(2)} ({row.variance_pct.toFixed(1)}%)
                     </span>
                 );
                 return <span className="text-green-500 tabular-nums text-xs">€0 OK</span>;
@@ -170,6 +215,29 @@ export default function SalesMixAnalysis() {
         },
     ], []);
 
+    // ── Export CSV ───────────────────────────────────────────
+    const handleExport = useCallback(() => {
+        if (filtered.length === 0) {
+            toast.error('No data to export');
+            return;
+        }
+        const headers = ['Item', 'Category', 'Qty Sold', 'Revenue', 'Actual Cost', 'Cost %', 'Theo Cost', 'Variance', 'Margin', 'Margin %', 'Avg Price'];
+        const rows = filtered.map(r => [
+            r.name, r.category, r.sold, r.revenue.toFixed(2), r.food_cost.toFixed(2),
+            r.food_cost_pct.toFixed(1), r.theo_cost.toFixed(2), r.variance.toFixed(2),
+            r.margin.toFixed(2), r.margin_pct.toFixed(1), r.avg_price.toFixed(2),
+        ]);
+        const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `sales-mix-${dateRange}-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast.success('CSV exported');
+    }, [filtered, dateRange]);
+
     return (
         <PageContainer
             title="Sales Mix Analysis"
@@ -177,89 +245,105 @@ export default function SalesMixAnalysis() {
             icon={<BarChart3 className="h-6 w-6 text-blue-500" />}
         >
             {/* KPI Strip */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
-                <StatCard icon={ShoppingBag} label="Items Sold" value={totals.sold.toLocaleString()} color="text-blue-500" />
-                <StatCard icon={DollarSign} label="Total Revenue" value={`€${totals.revenue.toLocaleString()}`} color="text-green-500" />
-                <StatCard icon={Percent} label="Actual Food Cost %" value={`${totals.food_cost_pct.toFixed(1)}%`}
-                    subtext={`€${totals.food_cost.toLocaleString()}`} color={totals.food_cost_pct > 30 ? 'text-red-500' : 'text-green-500'} />
-                <StatCard icon={Target} label="Theo Food Cost %" value={`${totals.theo_cost_pct.toFixed(1)}%`}
-                    subtext={`€${totals.theo_cost.toLocaleString()}`} color="text-blue-500" />
-                <StatCard icon={AlertTriangle} label="Total Variance" value={`€${totals.variance.toLocaleString()}`}
-                    subtext="Actual - Theoretical" color={totals.variance > 0 ? 'text-red-500' : 'text-green-500'} />
-                <StatCard icon={TrendingUp} label="Gross Margin" value={`${totals.margin_pct.toFixed(1)}%`}
-                    subtext={`€${totals.margin.toLocaleString()}`} color="text-emerald-500" />
-            </div>
-
-            {/* Filters */}
-            <div className="flex items-center gap-3 mb-4 flex-wrap">
-                <Select value={dateRange} onValueChange={setDateRange}>
-                    <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="today">Today</SelectItem>
-                        <SelectItem value="this_week">This Week</SelectItem>
-                        <SelectItem value="this_month">This Month</SelectItem>
-                        <SelectItem value="last_month">Last Month</SelectItem>
-                        <SelectItem value="this_quarter">This Quarter</SelectItem>
-                    </SelectContent>
-                </Select>
-
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">All Categories</SelectItem>
-                        {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-                    </SelectContent>
-                </Select>
-
-                <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="w-36">
-                        <ArrowUpDown className="h-3 w-3 mr-1" /><SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="revenue">Revenue</SelectItem>
-                        <SelectItem value="sold">Qty Sold</SelectItem>
-                        <SelectItem value="food_cost_pct">Cost %</SelectItem>
-                        <SelectItem value="margin_pct">Margin %</SelectItem>
-                        <SelectItem value="variance">Variance</SelectItem>
-                    </SelectContent>
-                </Select>
-
-                <div className="ml-auto flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => toast.success('Refreshed')}>
-                        <RefreshCw className="h-3.5 w-3.5 mr-1" /> Refresh
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => toast.success('Export started')}>
-                        <Download className="h-3.5 w-3.5 mr-1" /> Export CSV
-                    </Button>
+            {loading ? (
+                <div className="flex items-center justify-center h-64">
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
-            </div>
+            ) : salesData.length === 0 ? (
+                <div className="text-center py-16">
+                    <BarChart3 className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-30" />
+                    <p className="text-muted-foreground">No sales data available for this period.</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                        Sales data is aggregated from completed orders matched against your recipes.
+                    </p>
+                </div>
+            ) : (
+                <>
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
+                        <StatCard icon={ShoppingBag} label="Items Sold" value={totals.sold.toLocaleString()} color="text-blue-500" />
+                        <StatCard icon={DollarSign} label="Total Revenue" value={`€${totals.revenue.toLocaleString()}`} color="text-green-500" />
+                        <StatCard icon={Percent} label="Actual Food Cost %" value={`${totals.food_cost_pct.toFixed(1)}%`}
+                            subtext={`€${totals.food_cost.toLocaleString()}`} color={totals.food_cost_pct > 30 ? 'text-red-500' : 'text-green-500'} />
+                        <StatCard icon={Target} label="Theo Food Cost %" value={`${totals.theo_cost_pct.toFixed(1)}%`}
+                            subtext={`€${totals.theo_cost.toLocaleString()}`} color="text-blue-500" />
+                        <StatCard icon={AlertTriangle} label="Total Variance" value={`€${totals.variance.toLocaleString()}`}
+                            subtext="Actual - Theoretical" color={totals.variance > 0 ? 'text-red-500' : 'text-green-500'} />
+                        <StatCard icon={TrendingUp} label="Gross Margin" value={`${totals.margin_pct.toFixed(1)}%`}
+                            subtext={`€${totals.margin.toLocaleString()}`} color="text-emerald-500" />
+                    </div>
 
-            {/* Category Summary Bar */}
-            <div className="flex gap-2 mb-4 flex-wrap">
-                {categories.map(cat => {
-                    const catItems = salesData.filter(d => d.category === cat);
-                    const catRevenue = catItems.reduce((s, d) => s + d.revenue, 0);
-                    const catCostPct = catItems.reduce((s, d) => s + d.food_cost, 0) / catRevenue * 100;
-                    return (
-                        <button key={cat}
-                            onClick={() => setCategoryFilter(cat === categoryFilter ? 'all' : cat)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all
-                ${cat === categoryFilter ? 'bg-primary text-primary-foreground border-primary' : 'bg-card border-border hover:border-primary/30'}`}>
-                            {cat} <span className="text-[10px] opacity-70 ml-1">€{catRevenue.toLocaleString()} · {catCostPct.toFixed(0)}%</span>
-                        </button>
-                    );
-                })}
-            </div>
+                    {/* Filters */}
+                    <div className="flex items-center gap-3 mb-4 flex-wrap">
+                        <Select value={dateRange} onValueChange={setDateRange}>
+                            <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="today">Today</SelectItem>
+                                <SelectItem value="this_week">This Week</SelectItem>
+                                <SelectItem value="this_month">This Month</SelectItem>
+                                <SelectItem value="last_month">Last Month</SelectItem>
+                                <SelectItem value="this_quarter">This Quarter</SelectItem>
+                            </SelectContent>
+                        </Select>
 
-            {/* Main Table */}
-            <DataTable
-                data={filtered}
-                columns={COLUMNS}
-                pageSize={20}
-                searchable
-                searchPlaceholder="Search items..."
-                emptyMessage="No sales data available"
-            />
+                        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                            <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Categories</SelectItem>
+                                {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                            </SelectContent>
+                        </Select>
+
+                        <Select value={sortBy} onValueChange={setSortBy}>
+                            <SelectTrigger className="w-36">
+                                <ArrowUpDown className="h-3 w-3 mr-1" /><SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="revenue">Revenue</SelectItem>
+                                <SelectItem value="sold">Qty Sold</SelectItem>
+                                <SelectItem value="food_cost_pct">Cost %</SelectItem>
+                                <SelectItem value="margin_pct">Margin %</SelectItem>
+                                <SelectItem value="variance">Variance</SelectItem>
+                            </SelectContent>
+                        </Select>
+
+                        <div className="ml-auto flex gap-2">
+                            <Button variant="outline" size="sm" onClick={loadData} disabled={loading}>
+                                <RefreshCw className={`h-3.5 w-3.5 mr-1 ${loading ? 'animate-spin' : ''}`} /> Refresh
+                            </Button>
+                            <Button variant="outline" size="sm" onClick={handleExport}>
+                                <Download className="h-3.5 w-3.5 mr-1" /> Export CSV
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* Category Summary Bar */}
+                    <div className="flex gap-2 mb-4 flex-wrap">
+                        {categories.map(cat => {
+                            const catItems = salesData.filter(d => d.category === cat);
+                            const catRevenue = catItems.reduce((s, d) => s + d.revenue, 0);
+                            const catCostPct = catRevenue > 0 ? catItems.reduce((s, d) => s + d.food_cost, 0) / catRevenue * 100 : 0;
+                            return (
+                                <button key={cat}
+                                    onClick={() => setCategoryFilter(cat === categoryFilter ? 'all' : cat)}
+                                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all
+                    ${cat === categoryFilter ? 'bg-primary text-primary-foreground border-primary' : 'bg-card border-border hover:border-primary/30'}`}>
+                                    {cat} <span className="text-[10px] opacity-70 ml-1">€{catRevenue.toLocaleString()} · {catCostPct.toFixed(0)}%</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* Main Table */}
+                    <DataTable
+                        data={filtered}
+                        columns={COLUMNS}
+                        pageSize={20}
+                        searchable
+                        searchPlaceholder="Search items..."
+                        emptyMessage="No sales data available"
+                    />
+                </>
+            )}
         </PageContainer>
     );
 }
