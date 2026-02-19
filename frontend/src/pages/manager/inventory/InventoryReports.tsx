@@ -89,107 +89,7 @@ function KPICard({ icon: Icon, label, value, subtext, color = 'text-foreground' 
     );
 }
 
-// ── Demo Data Generators ──
-function generateMovements(): StockMovement[] {
-    const types = ['Purchase', 'Transfer In', 'Transfer Out', 'Adjustment', 'Waste', 'Production'];
-    const items = [
-        { name: 'Olive Oil Extra Virgin', cat: 'Oils & Fats', unit: 'L' },
-        { name: 'Flour Type 00', cat: 'Dry Goods', unit: 'kg' },
-        { name: 'Atlantic Salmon Fillet', cat: 'Seafood', unit: 'kg' },
-        { name: 'Cherry Tomatoes', cat: 'Produce', unit: 'kg' },
-        { name: 'Parmigiano Reggiano', cat: 'Dairy', unit: 'kg' },
-        { name: 'Fresh Basil', cat: 'Herbs', unit: 'bunch' },
-        { name: 'Chicken Breast', cat: 'Meat', unit: 'kg' },
-        { name: 'Arborio Rice', cat: 'Dry Goods', unit: 'kg' },
-        { name: 'White Wine (Cooking)', cat: 'Beverages', unit: 'L' },
-        { name: 'Garlic Cloves', cat: 'Produce', unit: 'kg' },
-        { name: 'Balsamic Vinegar', cat: 'Condiments', unit: 'L' },
-        { name: 'Heavy Cream', cat: 'Dairy', unit: 'L' },
-    ];
-
-    return Array.from({ length: 25 }, (_, i) => {
-        const item = items[i % items.length];
-        const type = types[i % types.length];
-        const qty = +(Math.random() * 20 + 1).toFixed(2);
-        const isOut = type === 'Transfer Out' || type === 'Waste' || type === 'Production';
-        return {
-            id: `mov-${i + 1}`,
-            item_name: item.name,
-            category: item.cat,
-            type,
-            quantity: isOut ? -qty : qty,
-            unit: item.unit,
-            date: new Date(Date.now() - i * 86400000 * Math.random()).toISOString().split('T')[0],
-            reference: type === 'Purchase' ? `PO-${1000 + i}` : type === 'Waste' ? `WL-${500 + i}` : `TRF-${200 + i}`,
-            cost_impact: +(qty * (Math.random() * 15 + 2)).toFixed(2) * (isOut ? -1 : 1),
-        };
-    }).sort((a, b) => b.date.localeCompare(a.date));
-}
-
-function generateVariances(): VarianceItem[] {
-    const items = [
-        { name: 'Olive Oil Extra Virgin', cat: 'Oils & Fats', unit: 'L' },
-        { name: 'Flour Type 00', cat: 'Dry Goods', unit: 'kg' },
-        { name: 'Atlantic Salmon Fillet', cat: 'Seafood', unit: 'kg' },
-        { name: 'Cherry Tomatoes', cat: 'Produce', unit: 'kg' },
-        { name: 'Parmigiano Reggiano', cat: 'Dairy', unit: 'kg' },
-        { name: 'Fresh Basil', cat: 'Herbs', unit: 'bunch' },
-        { name: 'Chicken Breast', cat: 'Meat', unit: 'kg' },
-        { name: 'Arborio Rice', cat: 'Dry Goods', unit: 'kg' },
-    ];
-
-    return items.map((item, i) => {
-        const expected = +(Math.random() * 50 + 10).toFixed(2);
-        const actual = +(expected + (Math.random() * 10 - 5)).toFixed(2);
-        const variance = +(actual - expected).toFixed(2);
-        const variancePct = +((variance / expected) * 100).toFixed(1);
-        return {
-            id: `var-${i + 1}`,
-            item_name: item.name,
-            category: item.cat,
-            expected_stock: expected,
-            actual_stock: actual,
-            variance,
-            variance_pct: variancePct,
-            unit: item.unit,
-            cost_impact: +(variance * (Math.random() * 12 + 3)).toFixed(2),
-            last_count_date: new Date(Date.now() - i * 86400000 * 2).toISOString().split('T')[0],
-        };
-    });
-}
-
-function generateWaste(): WasteEntry[] {
-    const reasons = ['Expired', 'Spoiled', 'Over-production', 'Preparation Trim', 'Dropped', 'Quality Issue', 'Customer Return'];
-    const items = [
-        { name: 'Atlantic Salmon Fillet', cat: 'Seafood', unit: 'kg' },
-        { name: 'Cherry Tomatoes', cat: 'Produce', unit: 'kg' },
-        { name: 'Fresh Basil', cat: 'Herbs', unit: 'bunch' },
-        { name: 'Heavy Cream', cat: 'Dairy', unit: 'L' },
-        { name: 'Chicken Breast', cat: 'Meat', unit: 'kg' },
-        { name: 'Mixed Greens', cat: 'Produce', unit: 'kg' },
-        { name: 'Bread Rolls', cat: 'Bakery', unit: 'pcs' },
-        { name: 'Lemon Juice', cat: 'Beverages', unit: 'L' },
-        { name: 'Mozzarella', cat: 'Dairy', unit: 'kg' },
-        { name: 'Avocado', cat: 'Produce', unit: 'pcs' },
-    ];
-    const staff = ['Marco P.', 'Sarah L.', 'James T.', 'Anna M.', 'Chef Rui'];
-
-    return Array.from({ length: 15 }, (_, i) => {
-        const item = items[i % items.length];
-        const qty = +(Math.random() * 5 + 0.2).toFixed(2);
-        return {
-            id: `waste-${i + 1}`,
-            item_name: item.name,
-            category: item.cat,
-            quantity: qty,
-            unit: item.unit,
-            reason: reasons[i % reasons.length],
-            cost: +(qty * (Math.random() * 18 + 3)).toFixed(2),
-            date: new Date(Date.now() - i * 86400000 * Math.random() * 3).toISOString().split('T')[0],
-            logged_by: staff[i % staff.length],
-        };
-    }).sort((a, b) => b.date.localeCompare(a.date));
-}
+// Demo data generators removed — all data comes from API endpoints.
 
 // ── Table column definitions ──
 const MOVEMENT_COLUMNS = [
@@ -310,14 +210,14 @@ export default function InventoryReports() {
             const varData = varRes.status === 'fulfilled' ? (varRes.value.data?.items || varRes.value.data || []) : [];
             const wasteData = wasteRes.status === 'fulfilled' ? (wasteRes.value.data?.items || wasteRes.value.data || []) : [];
 
-            setMovements(movData.length > 0 ? movData : generateMovements());
-            setVariances(varData.length > 0 ? varData : generateVariances());
-            setWaste(wasteData.length > 0 ? wasteData : generateWaste());
+            setMovements(movData);
+            setVariances(varData);
+            setWaste(wasteData);
         } catch (err) {
             logger.error('Failed to load reports', { error: String(err) });
-            setMovements(generateMovements());
-            setVariances(generateVariances());
-            setWaste(generateWaste());
+            setMovements([]);
+            setVariances([]);
+            setWaste([]);
         } finally {
             setLoading(false);
         }
