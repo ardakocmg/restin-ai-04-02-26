@@ -8,6 +8,7 @@ import { MENU_ITEMS, DOMAINS, getDomainForGroup, type MenuItem, type Domain } fr
 import { ChevronRight, ChevronLeft, ChevronDown, Search, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ROLE_HIERARCHY } from '../lib/roles';
+import { useNotifications } from '@/hooks/useNotifications';
 
 // ─── Types ───────────────────────────────────────────────────────────
 
@@ -89,34 +90,16 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
     return items.some(item => isActive(item.href) || isChildActive(item.children));
   };
 
-  // Notification badges per domain (mock — replace with real data)
-  const domainNotifications = useMemo<Record<string, number>>(() => ({
-    home: 0, pos: 2, hr: 5, inventory: 1, finance: 0,
-    analytics: 0, restin: 3, collab: 4,
-    'venue-settings': 0, 'org-settings': 0, 'system-admin': 0,
-  }), []);
+  // Live notification badge counts from API (30s polling)
+  const { domainBadges, itemBadges } = useNotifications();
 
-  // Per-item notification badges (mock — replace with real data from API)
-  // Key = href, Value = count of pending actions/alerts
-  const itemNotifications = useMemo<Record<string, number>>(() => ({
-    '/manager/pos-dashboard': 1,
-    '/manager/review-risk': 1,
-    '/manager/hr/approvals': 3,
-    '/manager/hr/leave-management': 2,
-    '/manager/inventory-waste': 1,          // cascades: Inventory domain (1) → Inventory Hub (1) → Waste Log (1)
-    '/manager/collab/inbox': 2,
-    '/manager/collab/tasks': 2,
-    '/manager/restin/voice': 1,
-    '/manager/restin/crm': 2,
-  }), []);
-
-  const getItemBadge = (href: string): number => itemNotifications[href] || 0;
+  const getItemBadge = (href: string): number => itemBadges[href] || 0;
 
   // Get total badges for an accordion parent (sum of its children)
   const getAccordionBadge = (item: MenuItem): number => {
     let count = getItemBadge(item.href);
     if (item.children) {
-      count += item.children.reduce((sum, c) => sum + (itemNotifications[c.href] || 0), 0);
+      count += item.children.reduce((sum, c) => sum + (itemBadges[c.href] || 0), 0);
     }
     return count;
   };
@@ -203,7 +186,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
   }, [itemsByDomain, searchTerm]);
 
   // Count total notifications for a domain
-  const getDomainBadge = (domainId: string): number => domainNotifications[domainId] || 0;
+  const getDomainBadge = (domainId: string): number => domainBadges[domainId] || 0;
 
   return (
     <aside

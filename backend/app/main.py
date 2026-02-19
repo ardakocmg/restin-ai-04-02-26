@@ -592,6 +592,11 @@ api_main.include_router(websocket_router)
 fcm_router = create_fcm_router()
 api_main.include_router(fcm_router)
 
+# Notification badge counts for sidebar/header
+from routes.notification_routes import create_notification_badge_router
+notif_badge_router = create_notification_badge_router()
+api_main.include_router(notif_badge_router)
+
 # Orders API for frontend compatibility (/api/orders)
 orders_router = create_orders_router()
 api_main.include_router(orders_router)

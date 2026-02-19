@@ -9,6 +9,7 @@ import { buildSearchIndex, MENU_ITEMS, type SearchableItem } from '@/lib/searchR
 import { ROLE_HIERARCHY } from '../lib/roles';
 import { Bell, User, LogOut, ChevronDown, Moon, Sun, Monitor, Database, Palette, Settings, Building2, Search, X, Check, Wifi, WifiOff, AlertTriangle, ShieldAlert, ShieldCheck, Clock, Bot, Radio, MessageSquare } from 'lucide-react';
 import { useSafeMode } from '../context/SafeModeContext';
+import { useNotifications } from '@/hooks/useNotifications';
 import { Button } from '../components/ui/button';
 import {
   DropdownMenu,
@@ -27,6 +28,7 @@ export default function NewTopBar(): React.ReactElement {
   const { activeVenue, venues, selectVenue } = useVenue();
   const { mode, setMode } = useTheme();
   const { isSafeMode, setSafeMode } = useSafeMode();
+  const { totalCount: notifTotal } = useNotifications();
   const location = useLocation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -387,9 +389,11 @@ export default function NewTopBar(): React.ReactElement {
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-secondary relative">
           <Bell className="h-5 w-5" />
-          <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 rounded-full border-2 border-background flex items-center justify-center">
-            <span className="text-[8px] font-black text-white leading-none">3</span>
-          </span>
+          {notifTotal > 0 && (
+            <span className="absolute top-1 right-1 w-5 h-5 bg-red-500 rounded-full border-2 border-background flex items-center justify-center">
+              <span className="text-[10px] font-black text-white leading-none">{notifTotal > 9 ? '9+' : notifTotal}</span>
+            </span>
+          )}
         </Button>
 
         {/* User Menu with System Status Indicator */}

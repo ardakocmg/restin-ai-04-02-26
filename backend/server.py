@@ -562,6 +562,8 @@ api_main.include_router(websocket_router)
 fcm_router = create_fcm_router()
 api_main.include_router(fcm_router)
 
+
+
 # Orders API for frontend compatibility (/api/orders)
 orders_router = create_orders_router()
 api_main.include_router(orders_router)
