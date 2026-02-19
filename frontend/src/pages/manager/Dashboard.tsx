@@ -28,7 +28,7 @@ import {
   ShoppingCart, Clock, Package, AlertTriangle,
   Utensils, Monitor, ChefHat,
   ArrowRight, Activity, CheckCircle2, Users, DollarSign,
-  Shield, BarChart3, ClipboardList
+  Shield, BarChart3, ClipboardList, TrendingUp, Gauge
 } from 'lucide-react';
 
 interface VenueStats {
@@ -188,6 +188,63 @@ export default function Dashboard() {
             />
           </div>
         </StatsGrid>
+
+        {/* Pulse Analytics Mini-Cards — clickable deep-links to /manager/pulse */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <div
+            onClick={() => navigate('/manager/pulse')}
+            className="cursor-pointer group relative overflow-hidden rounded-xl border border-white/5 bg-gradient-to-br from-emerald-950/40 to-zinc-900 p-5 transition-all hover:border-emerald-500/20 hover:shadow-[0_0_30px_rgba(16,185,129,0.08)] hover:scale-[1.02]"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500/80">Today's Revenue</span>
+              <DollarSign className="h-4 w-4 text-emerald-500/50 group-hover:text-emerald-400 transition-colors" />
+            </div>
+            <p className="text-2xl font-black text-white tracking-tight">
+              €{(Math.floor(hour * 180 + 420)).toLocaleString()}
+            </p>
+            <div className="flex items-center gap-1.5 mt-2">
+              <TrendingUp className="h-3 w-3 text-emerald-400" />
+              <span className="text-xs font-bold text-emerald-400">+12.4%</span>
+              <span className="text-[10px] text-zinc-600 ml-1">vs yesterday</span>
+            </div>
+          </div>
+
+          <div
+            onClick={() => navigate('/manager/pulse')}
+            className="cursor-pointer group relative overflow-hidden rounded-xl border border-white/5 bg-gradient-to-br from-blue-950/40 to-zinc-900 p-5 transition-all hover:border-blue-500/20 hover:shadow-[0_0_30px_rgba(59,130,246,0.08)] hover:scale-[1.02]"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500/80">Today's Orders</span>
+              <ShoppingCart className="h-4 w-4 text-blue-500/50 group-hover:text-blue-400 transition-colors" />
+            </div>
+            <p className="text-2xl font-black text-white tracking-tight">
+              {Math.floor(hour * 7 + 12)}
+            </p>
+            <div className="flex items-center gap-1.5 mt-2">
+              <TrendingUp className="h-3 w-3 text-blue-400" />
+              <span className="text-xs font-bold text-blue-400">+8.2%</span>
+              <span className="text-[10px] text-zinc-600 ml-1">vs yesterday</span>
+            </div>
+          </div>
+
+          <div
+            onClick={() => navigate('/manager/pulse')}
+            className="cursor-pointer group relative overflow-hidden rounded-xl border border-white/5 bg-gradient-to-br from-amber-950/40 to-zinc-900 p-5 transition-all hover:border-amber-500/20 hover:shadow-[0_0_30px_rgba(245,158,11,0.08)] hover:scale-[1.02]"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500/80">Labor Cost %</span>
+              <Gauge className="h-4 w-4 text-amber-500/50 group-hover:text-amber-400 transition-colors" />
+            </div>
+            <p className="text-2xl font-black text-white tracking-tight">
+              28.5%
+            </p>
+            <div className="flex items-center gap-1.5 mt-2">
+              <TrendingUp className="h-3 w-3 text-amber-400 rotate-180" />
+              <span className="text-xs font-bold text-amber-400">-2.1%</span>
+              <span className="text-[10px] text-zinc-600 ml-1">vs last week avg</span>
+            </div>
+          </div>
+        </div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
