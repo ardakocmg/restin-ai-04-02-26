@@ -197,11 +197,13 @@ export function ThemeProvider({ children }: ThemeProviderProps): JSX.Element {
         setModeState(newMode);
         localStorage.setItem('restin_theme_mode', newMode);
 
-        // Apply class change IMMEDIATELY (don't wait for useEffect render cycle)
         const root = window.document.documentElement;
-        root.classList.remove('light', 'dark');
 
-        // Clear inline CSS vars so .dark/:root class selectors in index.css take effect
+        // 1. Hide page to prevent partial flash
+        root.style.opacity = '0';
+
+        // 2. Apply all changes while hidden
+        root.classList.remove('light', 'dark');
         clearInlineThemeVars(root);
 
         if (newMode === 'system') {
@@ -212,6 +214,10 @@ export function ThemeProvider({ children }: ThemeProviderProps): JSX.Element {
             root.classList.add(newMode);
             root.style.colorScheme = newMode;
         }
+
+        // 3. Force reflow so all styles compute, then reveal
+        void root.offsetHeight;
+        root.style.opacity = '1';
     };
 
     useEffect(() => {
