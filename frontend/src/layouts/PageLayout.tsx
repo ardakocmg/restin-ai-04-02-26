@@ -27,18 +27,18 @@ export default function PageLayout({
             {/* Command Bar (Page Header) */}
             {(title || actions || showDate) && (
                 <div
-                    className="sticky top-0 z-10 px-6 py-4 flex flex-col gap-4 border-b border-white/5 backdrop-blur-xl bg-[#0A0A0B]/80 transition-all duration-200"
+                    className="sticky top-0 z-10 px-6 py-4 flex flex-col gap-4 border-b border-border backdrop-blur-xl bg-background/80 transition-all duration-200"
                 >
                     <div className="flex items-start justify-between gap-4">
                         {/* Title & Description */}
                         <div className="flex-1 min-w-0">
                             {title && (
-                                <h1 className="text-2xl font-black uppercase tracking-tighter text-white">
+                                <h1 className="text-2xl font-black uppercase tracking-tighter text-foreground">
                                     {title}
                                 </h1>
                             )}
                             {description && (
-                                <p className="mt-1 text-sm font-medium text-zinc-400">
+                                <p className="mt-1 text-sm font-medium text-muted-foreground">
                                     {description}
                                 </p>
                             )}
@@ -47,7 +47,7 @@ export default function PageLayout({
                         {/* Right Side: Date & Actions */}
                         <div className="flex flex-col items-end gap-2">
                             {showDate && (
-                                <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
+                                <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
                                     {format(new Date(), 'dd/MM/yyyy HH:mm')}
                                 </div>
                             )}

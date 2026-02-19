@@ -66,18 +66,18 @@ export default function PageShell({
         >
             {/* ─── Command Bar (Page Header) ──────────────────────────── */}
             {hasHeader && (
-                <div className="sticky top-0 z-10 border-b border-white/5 backdrop-blur-xl bg-[#0A0A0B]/80 transition-all duration-200">
+                <div className="sticky top-0 z-10 border-b border-border backdrop-blur-xl bg-background/80 transition-all duration-200">
                     {/* Main Row: Title + Actions */}
                     <div className="px-6 py-4 flex items-start justify-between gap-4">
                         {/* Left: Title & Description */}
                         <div className="flex-1 min-w-0">
                             {title && (
-                                <h1 className="text-2xl font-black uppercase tracking-tighter text-white leading-tight">
+                                <h1 className="text-2xl font-black uppercase tracking-tighter text-foreground leading-tight">
                                     {title}
                                 </h1>
                             )}
                             {description && (
-                                <p className="mt-1 text-sm font-medium text-zinc-400">
+                                <p className="mt-1 text-sm font-medium text-muted-foreground">
                                     {description}
                                 </p>
                             )}
@@ -86,7 +86,7 @@ export default function PageShell({
                         {/* Right: Date + Actions */}
                         <div className="flex flex-col items-end gap-2 shrink-0">
                             {showDate && (
-                                <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
+                                <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
                                     {format(new Date(), 'dd/MM/yyyy HH:mm')}
                                 </div>
                             )}
@@ -107,7 +107,7 @@ export default function PageShell({
 
                     {/* Tab Bar */}
                     {tabs && (
-                        <div className="px-6 border-t border-white/[0.03]">
+                        <div className="px-6 border-t border-border">
                             {tabs}
                         </div>
                     )}

@@ -51,7 +51,7 @@ export default function ManagerLayout(): React.ReactElement {
 
     return (
         <GlobalPTTProvider>
-            <div className="flex h-screen overflow-hidden bg-[#0A0A0B]">
+            <div className="flex h-screen overflow-hidden bg-background">
                 {/* Mobile Logo Toggle (Favicon) */}
                 <div className="lg:hidden fixed top-4 left-4 z-50">
                     <button
@@ -94,7 +94,7 @@ export default function ManagerLayout(): React.ReactElement {
                     </div>
 
                     {/* Breadcrumb + Actions */}
-                    <div className="px-4 lg:px-6 py-2 border-b border-white/[0.04] bg-[#0A0A0B]/80 backdrop-blur-sm">
+                    <div className="px-4 lg:px-6 py-2 border-b border-border bg-background/80 backdrop-blur-sm">
                         <Breadcrumb />
                     </div>
                     {/* Page Content — Animated route transitions */}

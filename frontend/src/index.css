@@ -96,6 +96,170 @@
   --text-on-dark-bg: #F5F5F7;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT MODE: Override hardcoded dark Tailwind classes
+   Many components use bg-zinc-950, bg-zinc-900, text-white, etc.
+   These overrides remap them to correct light theme colors.
+   Only active when .dark class is NOT present.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Background overrides ── */
+:root:not(.dark) .bg-zinc-950,
+:root:not(.dark) .bg-\[\#0A0A0B\],
+:root:not(.dark) .bg-\[\#0F0F10\] {
+  background-color: var(--background) !important;
+}
+
+:root:not(.dark) .bg-zinc-900,
+:root:not(.dark) .bg-zinc-900\/50,
+:root:not(.dark) .bg-zinc-900\/40,
+:root:not(.dark) .bg-zinc-900\/30,
+:root:not(.dark) .bg-zinc-900\/20 {
+  background-color: var(--card) !important;
+}
+
+:root:not(.dark) .bg-zinc-800 {
+  background-color: var(--secondary) !important;
+}
+
+:root:not(.dark) .bg-\[\#0A0A0B\]\/80,
+:root:not(.dark) .bg-\[\#0F0F10\]\/80,
+:root:not(.dark) .bg-zinc-950\/95,
+:root:not(.dark) .bg-zinc-950\/80 {
+  background-color: rgb(255 255 255 / 0.85) !important;
+}
+
+/* ── Text overrides ── */
+:root:not(.dark) .text-white {
+  color: var(--foreground) !important;
+}
+
+:root:not(.dark) .text-zinc-100,
+:root:not(.dark) .text-zinc-200 {
+  color: var(--foreground) !important;
+}
+
+:root:not(.dark) .text-zinc-300,
+:root:not(.dark) .text-zinc-400 {
+  color: var(--muted-foreground) !important;
+}
+
+:root:not(.dark) .text-zinc-500,
+:root:not(.dark) .text-zinc-600 {
+  color: #94A3B8 !important;
+}
+
+/* Exceptions: keep text-white on colored badges/buttons */
+:root:not(.dark) .bg-red-600 .text-white,
+:root:not(.dark) .bg-red-700 .text-white,
+:root:not(.dark) .bg-green-600 .text-white,
+:root:not(.dark) .bg-blue-600 .text-white,
+:root:not(.dark) .bg-primary .text-white,
+:root:not(.dark) .bg-gradient-to-r .text-white,
+:root:not(.dark) .bg-gradient-to-br .text-white {
+  color: #FFFFFF !important;
+}
+
+/* ── Border overrides ── */
+:root:not(.dark) .border-white\/5,
+:root:not(.dark) .border-white\/10,
+:root:not(.dark) .border-white\/\[0\.03\],
+:root:not(.dark) .border-white\/\[0\.04\],
+:root:not(.dark) .border-white\/\[0\.05\] {
+  border-color: var(--border) !important;
+}
+
+:root:not(.dark) .border-zinc-800,
+:root:not(.dark) .border-zinc-700 {
+  border-color: var(--border) !important;
+}
+
+:root:not(.dark) .hover\:border-white\/10:hover,
+:root:not(.dark) .hover\:border-white\/15:hover {
+  border-color: #CBD5E1 !important;
+}
+
+/* ── Divide overrides ── */
+:root:not(.dark) .divide-white\/5>*+* {
+  border-color: var(--border) !important;
+}
+
+/* ── Ring overrides ── */
+:root:not(.dark) .ring-white\/10 {
+  --tw-ring-color: var(--border) !important;
+}
+
+/* ── Placeholder overrides ── */
+:root:not(.dark) .placeholder\:text-zinc-600::placeholder {
+  color: #94A3B8 !important;
+}
+
+:root:not(.dark) .placeholder\:text-zinc-500::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* ── Shadow adjustments ── */
+:root:not(.dark) .shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.08) !important;
+}
+
+/* ── Backdrop / overlay ── */
+:root:not(.dark) .bg-black\/80 {
+  background-color: rgb(0 0 0 / 0.4) !important;
+}
+
+:root:not(.dark) .bg-black\/50 {
+  background-color: rgb(0 0 0 / 0.2) !important;
+}
+
+/* ── bg-black (solid) — buttons, badges ── */
+:root:not(.dark) .bg-black {
+  background-color: var(--secondary) !important;
+}
+
+:root:not(.dark) .bg-black\/40 {
+  background-color: rgb(241 245 249 / 0.6) !important;
+}
+
+/* ── Gradient overrides: dark gradients to light ── */
+:root:not(.dark) .from-red-900\/20 {
+  --tw-gradient-from: rgb(254 242 242 / 0.5) !important;
+}
+
+:root:not(.dark) .from-blue-900\/20 {
+  --tw-gradient-from: rgb(239 246 255 / 0.5) !important;
+}
+
+:root:not(.dark) .to-zinc-900 {
+  --tw-gradient-to: var(--card) !important;
+}
+
+/* ── Hover state overrides ── */
+:root:not(.dark) .hover\:bg-zinc-800:hover {
+  background-color: #E2E8F0 !important;
+}
+
+:root:not(.dark) .hover\:bg-zinc-700:hover {
+  background-color: #CBD5E1 !important;
+}
+
+/* ── Focus border override ── */
+:root:not(.dark) .focus\:border-white\/15:focus {
+  border-color: #CBD5E1 !important;
+}
+
+:root:not(.dark) .focus\:border-white\/30:focus {
+  border-color: #94A3B8 !important;
+}
+
+/* ── bg-white/10 and bg-white/5 — used for subtle bg in dark mode ── */
+:root:not(.dark) .bg-white\/5,
+:root:not(.dark) .bg-white\/10,
+:root:not(.dark) .bg-white\/\[0\.03\],
+:root:not(.dark) .bg-white\/\[0\.05\] {
+  background-color: rgb(241 245 249 / 0.5) !important;
+}
+
 * {
   box-sizing: border-box;
 }
