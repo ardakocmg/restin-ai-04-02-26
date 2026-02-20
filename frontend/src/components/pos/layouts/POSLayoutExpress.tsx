@@ -18,7 +18,7 @@
  * This is a PURE UI component — all business logic comes via props from POSMain.js
  */
 import {
-    LogOut, X, Hash,
+    LogOut, X, Hash, MapPin, Search,
     UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus
 } from "lucide-react";
 import { ScrollArea } from "../../../components/ui/scroll-area";
@@ -62,6 +62,10 @@ export default function POSLayoutExpress({
     subtotal,
     tax,
     total,
+    searchQuery,
+    onSearchChange,
+    isKeyboardOpen,
+    onSetKeyboardOpen,
     // Actions
     onLoadCategoryItems,
     onSelectTable,
@@ -138,6 +142,26 @@ export default function POSLayoutExpress({
                         )}
                     </div>
                     <div className="flex items-center gap-2">
+                        {/* Search Input */}
+                        <div className="relative flex items-center">
+                            <Search className="w-3.5 h-3.5 absolute left-2 text-muted-foreground" />
+                            <input
+                                type="text"
+                                placeholder="Search menu..."
+                                value={searchQuery || ''}
+                                readOnly
+                                onClick={() => onSetKeyboardOpen?.(true)}
+                                className="w-40 h-7 bg-secondary/50 border border-border/50 rounded-md pl-7 pr-7 text-xs text-secondary-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 cursor-pointer"
+                            />
+                            {searchQuery && (
+                                <button
+                                    onClick={() => onSearchChange?.('')}
+                                    className="absolute right-1.5 p-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded-sm text-muted-foreground hover:text-foreground"
+                                >
+                                    <X className="w-3 h-3" />
+                                </button>
+                            )}
+                        </div>
                         {/* Counter / Order Number */}
                         <div className="flex items-center gap-1 bg-secondary rounded-lg px-2 py-1">
                             <Hash className="w-3.5 h-3.5 text-muted-foreground" />
@@ -158,6 +182,48 @@ export default function POSLayoutExpress({
                             <LogOut className="w-4 h-4" />
                         </button>
                     </div>
+                </div>
+
+                {/* Quick Table Selector — Compact horizontal strip */}
+                <div className="h-9 bg-card/30 border-b border-border/30 flex items-center px-2 gap-1 overflow-x-auto shrink-0">
+                    <MapPin className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                    <button
+                        onClick={() => onDeselectTable?.()}
+                        className={`
+                            h-6 rounded-md px-2.5 text-[11px] font-semibold whitespace-nowrap shrink-0 transition-all
+                            ${!selectedTable
+                                ? 'bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/40'
+                                : 'bg-secondary/40 text-muted-foreground hover:bg-secondary hover:text-secondary-foreground'
+                            }
+                        `}
+                        title="Counter order (no table)"
+                    >
+                        Counter
+                    </button>
+                    <div className="w-px h-4 bg-border/50 shrink-0 mx-0.5" />
+                    {safeArray(tables).filter(t => t.status !== 'reserved').map((table) => {
+                        const isActive = selectedTable?.id === table.id;
+                        const isOccupied = table.status === 'occupied';
+                        return (
+                            <button
+                                key={table.id}
+                                onClick={() => onSelectTable(table)}
+                                className={`
+                                    h-6 rounded-md px-2 text-[11px] font-medium whitespace-nowrap shrink-0 transition-all
+                                    ${isActive
+                                        ? 'bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/40'
+                                        : isOccupied
+                                            ? 'bg-amber-500/10 text-amber-500/70 hover:bg-amber-500/20'
+                                            : 'bg-secondary/40 text-muted-foreground hover:bg-secondary hover:text-secondary-foreground'
+                                    }
+                                `}
+                                title={`${table.name}${isOccupied ? ' (occupied)' : ''}`}
+                            >
+                                {table.name}
+                                {isOccupied && <span className="ml-0.5 text-[9px]">●</span>}
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {/* Category Strip — Horizontal, scrollable */}

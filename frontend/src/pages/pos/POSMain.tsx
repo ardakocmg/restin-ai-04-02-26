@@ -13,6 +13,7 @@ import { usePOSTheme } from "../../hooks/usePOSTheme";
 import POSLayoutRestin from "../../components/pos/layouts/POSLayoutRestin";
 import POSLayoutPro from "../../components/pos/layouts/POSLayoutPro";
 import POSLayoutExpress from "../../components/pos/layouts/POSLayoutExpress";
+import SmartKeyboard from "../../components/pos/SmartKeyboard"; // Added import
 import { Loader2, Monitor, Tablet, Zap } from "lucide-react";
 
 export default function POSMain() {
@@ -25,9 +26,12 @@ export default function POSMain() {
   const [venue, setVenue] = useState(null);
   const [categories, setCategories] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
+  const [allMenuItems, setAllMenuItems] = useState([]); // For search
   const [tables, setTables] = useState([]);
 
   // UI states
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // Existing state
   const [activeCategory, setActiveCategory] = useState(null);
   const [selectedTable, setSelectedTable] = useState(null);
   const [currentOrder, setCurrentOrder] = useState(null);
@@ -170,6 +174,14 @@ export default function POSMain() {
       } else {
         logger.warn('[POS] No categories found');
         setMenuItems([]);
+      }
+
+      // Also load ALL active items for fast client-side searching
+      try {
+        const allItemsRes = await menuAPI.getItems(venueId);
+        setAllMenuItems(allItemsRes.data || []);
+      } catch (err) {
+        logger.warn('[POS] Failed to load all items for search', { err });
       }
 
       // Get menu version for polling
@@ -422,6 +434,28 @@ export default function POSMain() {
   // ... (existing code)
 
   const handlePayment = async (method) => {
+    // Express auto-send: if items exist but no order yet, send first
+    if (!currentOrder && theme === 'express' && orderItems.length > 0) {
+      try {
+        await sendOrder();
+        const ordersRes = await venueAPI.getOrders(venueId, 'sent', selectedTable?.id || 'counter');
+        const latestOrder = ordersRes.data?.[0];
+        if (latestOrder) {
+          await orderAPI.close(latestOrder.id);
+          toast.success("Payment processed!");
+          setSelectedTable(null);
+          setCurrentOrder(null);
+          setOrderItems([]);
+          const tablesRes = await venueAPI.getTables(venueId);
+          setTables(tablesRes.data);
+          return;
+        }
+      } catch (error: any) {
+        console.error("Express auto-send failed:", error);
+        toast.error(error.response?.data?.detail || "Failed to process order");
+        return;
+      }
+    }
     if (!currentOrder) {
       toast.error("No active order");
       return;
@@ -521,13 +555,20 @@ export default function POSMain() {
     </div>
   );
 
+  // Calculate displayed items (search vs category)
+  const displayedItems = searchQuery.trim() !== ""
+    ? allMenuItems.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.short_name && item.short_name.toLowerCase().includes(searchQuery.toLowerCase())))
+    : menuItems;
+
   // --- Shared layout props (all themes receive the same data + actions) ---
   const layoutProps = {
     // Data
     venue,
     user,
     categories,
-    menuItems,
+    menuItems: displayedItems,
+    searchQuery,
     tables,
     activeCategory,
     selectedTable,
@@ -548,6 +589,7 @@ export default function POSMain() {
     tax,
     total,
     // Actions
+    onSearchChange: setSearchQuery,
     onLoadCategoryItems: loadCategoryItems,
     onSelectTable: selectTable,
     onAddItemToOrder: addItemToOrder,
@@ -574,18 +616,30 @@ export default function POSMain() {
     onNavigate: navigate,
     // Theme switcher slot
     themeSelector,
+    // Keyboard
+    isKeyboardOpen,
+    onSetKeyboardOpen: setIsKeyboardOpen
   };
 
   // --- Theme Layout Delegation ---
   // Currently only Restin layout is implemented.
   // Pro and Express layouts will be added in Phase 3 and 4.
-  switch (theme) {
-    case 'pro':
-      return <POSLayoutPro {...layoutProps} />;
-    case 'express':
-      return <POSLayoutExpress {...layoutProps} />;
-    case 'restin':
-    default:
-      return <POSLayoutRestin {...layoutProps} />;
-  }
+  let ActiveLayout = POSLayoutRestin; // Default
+  if (theme === 'pro') ActiveLayout = POSLayoutPro;
+  if (theme === 'express') ActiveLayout = POSLayoutExpress;
+
+  return (
+    <div className="relative h-screen w-full bg-background overflow-hidden">
+      <ActiveLayout {...layoutProps} />
+
+      {/* Smart On-Screen Keyboard */}
+      <SmartKeyboard
+        isOpen={isKeyboardOpen}
+        onClose={() => setIsKeyboardOpen(false)}
+        value={searchQuery}
+        onChange={setSearchQuery}
+        items={allMenuItems}
+      />
+    </div>
+  );
 }

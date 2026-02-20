@@ -12,7 +12,7 @@
  */
 import {
     LogOut, X, Send, Trash2, Users, Grid3x3,
-    UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus, Loader2, Printer
+    UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus, Loader2, Printer, Search
 } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../components/ui/dialog";
@@ -57,6 +57,10 @@ export default function POSLayoutRestin({
     subtotal,
     tax,
     total,
+    searchQuery,
+    onSearchChange,
+    isKeyboardOpen,
+    onSetKeyboardOpen,
     // Actions
     onLoadCategoryItems,
     onSelectTable,
@@ -191,41 +195,64 @@ export default function POSLayoutRestin({
             </div>
 
             {/* CENTER COLUMN - Menu Items Grid */}
-            <div className="flex-1 bg-background p-4 overflow-auto">
-                <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                    {menuItems.map((item) => {
-                        const style = getItemStyle(item);
-                        const hasImage = !!item.image;
-
-                        return (
+            <div className="flex-1 bg-background flex flex-col overflow-hidden">
+                <div className="p-4 border-b border-border shrink-0 flex items-center bg-card/50">
+                    <div className="relative flex-1 max-w-md">
+                        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        <input
+                            type="text"
+                            placeholder="Arama..."
+                            value={searchQuery || ''}
+                            readOnly
+                            onClick={() => onSetKeyboardOpen?.(true)}
+                            className="w-full h-10 bg-secondary/80 border border-border/50 rounded-xl pl-10 pr-10 text-sm text-secondary-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow cursor-pointer"
+                        />
+                        {searchQuery && (
                             <button
-                                key={item.id}
-                                onClick={() => onAddItemToOrder(item)}
-                                style={style}
-                                className={`
+                                onClick={() => onSearchChange?.('')}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 rounded-sm hover:bg-muted"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        )}
+                    </div>
+                </div>
+                <div className="flex-1 p-4 overflow-auto">
+                    <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                        {menuItems.map((item) => {
+                            const style = getItemStyle(item);
+                            const hasImage = !!item.image;
+
+                            return (
+                                <button
+                                    key={item.id}
+                                    onClick={() => onAddItemToOrder(item)}
+                                    style={style}
+                                    className={`
                     aspect-square rounded-xl p-4 flex flex-col justify-between
                     transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]
                     shadow-lg hover:shadow-xl relative overflow-hidden group
                     ${!item.image && !item.color ? 'bg-card border border-border hover:border-primary/50' : ''}
                 `}
-                            >
-                                {hasImage && <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />}
-                                <div className="z-10 w-full flex justify-between items-start">
-                                    <span className={`text-sm font-bold leading-tight text-left ${hasImage || item.color ? 'text-foreground' : 'text-foreground'}`}>
-                                        {item.name}
+                                >
+                                    {hasImage && <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />}
+                                    <div className="z-10 w-full flex justify-between items-start">
+                                        <span className={`text-sm font-bold leading-tight text-left ${hasImage || item.color ? 'text-foreground' : 'text-foreground'}`}>
+                                            {item.name}
+                                        </span>
+                                    </div>
+                                    <span className={`z-10 text-[10px] font-mono self-start opacity-60 ${hasImage || item.color ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                        {item.id.substring(0, 4)}
                                     </span>
-                                </div>
-                                <span className={`z-10 text-[10px] font-mono self-start opacity-60 ${hasImage || item.color ? 'text-foreground' : 'text-muted-foreground'}`}>
-                                    {item.id.substring(0, 4)}
-                                </span>
-                                <div className="z-10 mt-auto flex items-end justify-end w-full">
-                                    <span className={`text-lg font-bold ${hasImage || item.color ? 'text-foreground' : 'text-foreground'}`}>
-                                        €{safeNumber(item.price, 0).toFixed(2)}
-                                    </span>
-                                </div>
-                            </button>
-                        );
-                    })}
+                                    <div className="z-10 mt-auto flex items-end justify-end w-full">
+                                        <span className={`text-lg font-bold ${hasImage || item.color ? 'text-foreground' : 'text-foreground'}`}>
+                                            €{safeNumber(item.price, 0).toFixed(2)}
+                                        </span>
+                                    </div>
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
 

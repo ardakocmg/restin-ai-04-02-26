@@ -23,7 +23,7 @@ import { useState } from "react";
 import {
     LogOut, X, Send, Trash2, Users, Grid3x3, ChevronRight,
     UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus,
-    Loader2, Printer, Flame, CreditCard, MoreHorizontal, Receipt
+    Loader2, Printer, Flame, CreditCard, MoreHorizontal, Receipt, Search
 } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../components/ui/dialog";
@@ -70,6 +70,10 @@ export default function POSLayoutPro({
     subtotal,
     tax,
     total,
+    searchQuery,
+    onSearchChange,
+    isKeyboardOpen,
+    onSetKeyboardOpen,
     // Actions
     onLoadCategoryItems,
     onSelectTable,
@@ -368,15 +372,38 @@ export default function POSLayoutPro({
 
                     {/* Items Grid */}
                     <div className="flex-1 bg-background p-3 overflow-auto">
-                        {/* Active category breadcrumb */}
-                        <div className="flex items-center gap-2 mb-3">
-                            <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">
-                                {categories.find(c => c.id === activeCategory)?.name || 'Menu'}
-                            </span>
-                            <ChevronRight className="w-3 h-3 text-muted-foreground" />
-                            <span className="text-secondary-foreground text-xs font-medium">
-                                {menuItems.length} items
-                            </span>
+                        {/* Active category breadcrumb & Search */}
+                        <div className="flex items-center justify-between gap-4 mb-3">
+                            <div className="flex items-center gap-2">
+                                <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider whitespace-nowrap">
+                                    {categories.find(c => c.id === activeCategory)?.name || 'Menu'}
+                                </span>
+                                <ChevronRight className="w-3 h-3 text-muted-foreground shrink-0" />
+                                <span className="text-secondary-foreground text-xs font-medium whitespace-nowrap">
+                                    {menuItems.length} items
+                                </span>
+                            </div>
+
+                            {/* Search Input */}
+                            <div className="relative flex-1 max-w-sm">
+                                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                                <input
+                                    type="text"
+                                    placeholder="Search menu..."
+                                    value={searchQuery || ''}
+                                    readOnly
+                                    onClick={() => onSetKeyboardOpen?.(true)}
+                                    className="w-full h-9 bg-secondary border border-border/50 rounded-lg pl-9 pr-8 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 cursor-pointer"
+                                />
+                                {searchQuery && (
+                                    <button
+                                        onClick={() => onSearchChange?.('')}
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-black/10 dark:hover:bg-white/10 rounded-sm text-muted-foreground hover:text-foreground"
+                                    >
+                                        <X className="w-3.5 h-3.5" />
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">

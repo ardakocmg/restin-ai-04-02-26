@@ -11,6 +11,7 @@ import { useAuth } from '@/features/auth/AuthContext';
 import api from '../../lib/api';
 import { smartCopy } from '../../lib/copyUtils';
 import RinMascot from './RinMascot';
+import { motion } from 'framer-motion';
 import './HeyRin.css';
 
 /* ─── Markdown-lite Renderer (ported from AICopilot) ──────────── */
@@ -551,7 +552,12 @@ export default function HeyRin() {
         <>
             {/* ─── Composite FAB ──────────────────────────────── */}
             {!isOpen && (
-                <div className="rin-fab-group">
+                <motion.div
+                    className="rin-fab-group"
+                    drag
+                    dragMomentum={false}
+                    dragElastic={0.1}
+                >
                     <button
                         className={`rin-fab-main ${isWakeListening ? 'wake-active' : ''}`}
                         onClick={() => { setActiveTab('voice'); setIsOpen(true); }}
@@ -579,15 +585,22 @@ export default function HeyRin() {
                     >
                         <MessageSquare size={11} />
                     </button>
-                </div>
+                </motion.div>
             )}
 
 
             {/* ─── Compact Popup Panel ────────────────────────── */}
             {isOpen && (
-                <div className="rin-popup">
+                <motion.div
+                    className="rin-popup"
+                    drag
+                    dragMomentum={false}
+                    dragElastic={0.1}
+                    dragHandle=".rin-header"
+                    style={{ touchAction: "none" }}
+                >
                     {/* Header */}
-                    <div className="rin-header">
+                    <div className="rin-header" style={{ cursor: "move" }}>
                         <div className="rin-header-left">
                             <RinMascot size={24} listening={isProcessing} />
                             <span className="rin-title">Hey Rin</span>
@@ -924,7 +937,7 @@ export default function HeyRin() {
                             </button>
                         </div>
                     )}
-                </div>
+                </motion.div>
             )}
         </>
     );
