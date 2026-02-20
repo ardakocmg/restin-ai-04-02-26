@@ -1,59 +1,71 @@
 // Event Bus for Cross-Component Communication
+
+interface AppEvent {
+  type: string;
+  timestamp: string;
+  payload: Record<string, unknown>;
+}
+
+type EventCallback = (event: AppEvent) => void;
+
 class AppEvents {
+  private listeners: Map<string, EventCallback[]>;
+  private offlineBuffer: AppEvent[];
+
   constructor() {
     this.listeners = new Map();
     this.offlineBuffer = [];
   }
 
-  subscribe(eventType, callback) {
+  subscribe(eventType: string, callback: EventCallback): () => void {
     if (!this.listeners.has(eventType)) {
       this.listeners.set(eventType, []);
     }
-    this.listeners.get(eventType).push(callback);
-    
+    this.listeners.get(eventType)!.push(callback);
+
     // Return unsubscribe function
     return () => {
       const callbacks = this.listeners.get(eventType);
-      const index = callbacks?.indexOf(callback);
+      const index = callbacks?.indexOf(callback) ?? -1;
       if (index > -1) {
-        callbacks.splice(index, 1);
+        callbacks!.splice(index, 1);
       }
     };
   }
 
-  publish(eventType, payload = {}) {
-    const event = {
+  publish(eventType: string, payload: Record<string, unknown> = {}): void {
+    const event: AppEvent = {
       type: eventType,
       timestamp: new Date().toISOString(),
       payload
     };
-    
+
     // Log event (dev only)
     if (process.env.NODE_ENV === 'development') {
       console.log('[Event]', event);
     }
-    
+
     // Notify listeners
     const callbacks = this.listeners.get(eventType) || [];
     callbacks.forEach(cb => {
       try {
         cb(event);
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error(`Event listener error for ${eventType}:`, error);
       }
     });
-    
+
     // Buffer if offline (optional)
     if (!navigator.onLine) {
       this.offlineBuffer.push(event);
     }
   }
 
-  getBuffer() {
+  getBuffer(): AppEvent[] {
     return this.offlineBuffer;
   }
 
-  clearBuffer() {
+  clearBuffer(): void {
     this.offlineBuffer = [];
   }
 }

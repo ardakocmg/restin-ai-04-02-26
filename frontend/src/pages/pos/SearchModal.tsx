@@ -5,7 +5,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, X } from 'lucide-react';
 
-const s = {
+interface SearchItem {
+    id?: string;
+    name?: string;
+    sku?: string;
+    code?: string;
+    category_name?: string;
+    sell_price?: number;
+    price?: number;
+}
+
+interface SearchModalProps {
+    allItems: SearchItem[];
+    onSelect: (item: SearchItem) => void;
+    onClose: () => void;
+}
+
+const s: Record<string, React.CSSProperties> = {
     overlay: {
         position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)',
         display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
@@ -38,16 +54,16 @@ const s = {
     empty: { textAlign: 'center', color: '#666', padding: 40, fontSize: 13 },
 };
 
-export default function SearchModal({ allItems, onSelect, onClose }) {
+export default function SearchModal({ allItems, onSelect, onClose }: SearchModalProps) {
     const [query, setQuery] = useState('');
-    const inputRef = useRef(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         inputRef.current?.focus();
     }, []);
 
     const filtered = query.length > 0
-        ? (allItems || []).filter(i =>
+        ? (allItems || []).filter((i: SearchItem) =>
             i.name?.toLowerCase().includes(query.toLowerCase()) ||
             i.sku?.toLowerCase().includes(query.toLowerCase()) ||
             i.code?.toLowerCase().includes(query.toLowerCase())
@@ -56,7 +72,7 @@ export default function SearchModal({ allItems, onSelect, onClose }) {
 
     return (
         <div style={s.overlay} onClick={onClose}>
-            <div style={s.modal} onClick={e => e.stopPropagation()}>
+            <div style={s.modal} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                 <div style={s.searchBar}>
                     <Search size={18} color="#888" />
                     <input
@@ -64,7 +80,7 @@ export default function SearchModal({ allItems, onSelect, onClose }) {
                         style={s.input}
                         placeholder="Search products by name or code..."
                         value={query}
-                        onChange={e => setQuery(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
                     />
                     <button style={s.closeBtn} onClick={onClose}>
                         <X size={18} color="#888" />
@@ -74,14 +90,14 @@ export default function SearchModal({ allItems, onSelect, onClose }) {
                     {query.length === 0 ? (
                         <div style={s.empty}>Start typing to search products</div>
                     ) : filtered.length === 0 ? (
-                        <div style={s.empty}>No products found for "{query}"</div>
+                        <div style={s.empty}>No products found for &quot;{query}&quot;</div>
                     ) : (
-                        filtered.map((item, idx) => (
+                        filtered.map((item: SearchItem, idx: number) => (
                             <button
                                 key={item.id || idx}
                                 style={s.resultItem}
-                                onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#333'; }}
-                                onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                                onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => { e.currentTarget.style.backgroundColor = '#333'; }}
+                                onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                                 onClick={() => { onSelect(item); onClose(); }}
                             >
                                 <div>

@@ -1,33 +1,49 @@
 import { useState } from 'react';
 import {
     Layout, Type, Image as ImageIcon,
-    Hash, Smartphone, Monitor, Tablet
+    Hash, Smartphone, Monitor, Tablet,
+    Plus, Eye, Globe, MousePointer2, Rocket
 } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
+import { Card } from '../../../components/ui/card';
 import { cn } from '../../../lib/utils';
+import type { LucideIcon } from 'lucide-react';
 
 /**
  * 🕸️ WEB ARCHITECT (Pillar 2)
  * Drag & Drop Website Builder synced with POS Inventory.
  */
 import { webBuilderService } from './web-service';
-import { useVenue } from '../../../context/VenueContext'; // Updated import
+import { useVenue } from '../../../context/VenueContext';
 import { useAuth } from '../../../context/AuthContext';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+interface MenuItem {
+    name: string;
+    price: number;
+    description?: string;
+}
+
+
+interface SectionItem {
+    id: string;
+    title: string;
+    icon: LucideIcon;
+}
+
 export default function WebBuilder() {
-    const { activeVenueId } = useVenue(); // Use global venue context
+    const { activeVenueId } = useVenue();
     const { user, isManager, isOwner } = useAuth();
     const venueId = activeVenueId;
 
-    const [device, setDevice] = useState('desktop');
-    const [activeTab, setActiveTab] = useState('sections');
+    const [device, setDevice] = useState<string>('desktop');
+    const [activeTab, setActiveTab] = useState<string>('sections');
 
     // Fetch Live Menu Data
     const { data: menuData, isLoading } = useQuery({
         queryKey: ['web-builder-menu', venueId],
-        queryFn: () => webBuilderService.getActiveMenuItems(venueId || 'default'), // Fallback for dev
+        queryFn: () => webBuilderService.getActiveMenuItems(venueId || 'default'),
         enabled: !!venueId
     });
 
@@ -38,15 +54,18 @@ export default function WebBuilder() {
         onError: () => toast.error('Failed to publish website.')
     });
 
-    const handlePublish = () => {
+    const handlePublish = (): void => {
         const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
         publishMutation.mutate({
-            theme: currentTheme,
-            sections: ['hero', 'menu']
+            theme: { mode: currentTheme },
+            sections: [{ id: 'hero', type: 'hero', content: {} }, { id: 'menu', type: 'menu', content: {} }]
         });
     };
 
-    const sections = [
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const menuItems: MenuItem[] = (menuData as any)?.items ?? [];
+
+    const sections: SectionItem[] = [
         { id: 'hero', title: 'Hero Header', icon: Layout },
         { id: 'menu', title: 'Live Menu', icon: Hash },
         { id: 'gallery', title: 'Food Gallery', icon: ImageIcon },
@@ -151,7 +170,7 @@ export default function WebBuilder() {
                         <section className="h-64 bg-gradient-to-br from-red-600 to-red-900 flex items-center justify-center p-12 text-center relative overflow-hidden">
                             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop')] mix-blend-overlay opacity-30 grayscale saturate-0"></div>
                             <div className="relative z-10">
-                                <h2 className="text-4xl font-black text-foreground italic tracking-tighter uppercase leading-none">The Artisan's <br /> Kitchen</h2>
+                                <h2 className="text-4xl font-black text-foreground italic tracking-tighter uppercase leading-none">The Artisan&apos;s <br /> Kitchen</h2>
                                 <Button className="mt-6 bg-card text-foreground font-black hover:bg-zinc-200 dark:hover:bg-secondary/80">Order Now</Button>
                             </div>
                         </section>
@@ -166,7 +185,7 @@ export default function WebBuilder() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {isLoading ? (
                                     <div className="text-foreground text-center col-span-2">Loading menu data...</div>
-                                ) : menuData?.items?.slice(0, 4).map((item, i) => (
+                                ) : menuItems.slice(0, 4).map((item: MenuItem, i: number) => (
                                     <div key={i} className="p-4 bg-white/5 rounded-2xl border border-border hover:border-border transition-all cursor-pointer">
                                         <div className="flex justify-between items-start mb-2">
                                             <h4 className="font-bold text-foreground">{item.name}</h4>

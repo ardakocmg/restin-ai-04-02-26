@@ -20,8 +20,8 @@ import api from '../../../lib/api';
  * Wires to existing /pricing/price-books backend.
  */
 export default function DynamicPricingPage() {
-    const { currentVenue } = useVenue();
-    const venueId = currentVenue?.id || localStorage.getItem('currentVenueId') || 'default';
+    const { activeVenue } = useVenue();
+    const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
     const [showCreate, setShowCreate] = useState(false);
     const [newBook, setNewBook] = useState({ name: '', type: 'happy_hour', modifier_type: 'PERCENTAGE', modifier_value: -15 });
@@ -55,17 +55,17 @@ export default function DynamicPricingPage() {
             toast.success('Price book created');
             setShowCreate(false);
             setNewBook({ name: '', type: 'happy_hour', modifier_type: 'PERCENTAGE', modifier_value: -15 });
-            queryClient.invalidateQueries(['price-books']);
+            queryClient.invalidateQueries({ queryKey: ['price-books'] });
         },
         onError: () => toast.error('Failed to create price book')
     });
 
     const toggleMutation = useMutation({
-        mutationFn: async ({ id, active }) => {
+        mutationFn: async ({ id, active }: { id: string; active: boolean }) => {
             return api.patch(`/pricing/price-books/${id}?venue_id=${venueId}`, { active: !active });
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(['price-books']);
+            queryClient.invalidateQueries({ queryKey: ['price-books'] });
             toast.success('Price book updated');
         }
     });
@@ -182,10 +182,10 @@ export default function DynamicPricingPage() {
                         <Button
                             size="sm"
                             onClick={() => createMutation.mutate()}
-                            disabled={!newBook.name || createMutation.isLoading}
+                            disabled={!newBook.name || createMutation.isPending}
                             className="bg-emerald-600 hover:bg-emerald-700 text-foreground"
                         >
-                            {createMutation.isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create'}
+                            {createMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create'}
                         </Button>
                     </div>
                 </Card>

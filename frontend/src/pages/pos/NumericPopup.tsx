@@ -4,7 +4,16 @@
  */
 import React, { useState } from 'react';
 
-const s = {
+interface NumericPopupProps {
+    title: string;
+    subtitle?: string;
+    onConfirm: (value: number) => void;
+    onCancel: () => void;
+    prefix?: string;
+    allowDecimal?: boolean;
+}
+
+const s: Record<string, React.CSSProperties> = {
     overlay: {
         position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100,
@@ -40,10 +49,10 @@ const s = {
     },
 };
 
-export default function NumericPopup({ title, subtitle, onConfirm, onCancel, prefix = '', allowDecimal = false }) {
+export default function NumericPopup({ title, subtitle, onConfirm, onCancel, prefix = '', allowDecimal = false }: NumericPopupProps) {
     const [value, setValue] = useState('');
 
-    const handleKey = (k) => {
+    const handleKey = (k: string): void => {
         if (k === 'C') { setValue(''); return; }
         if (k === '⌫') { setValue(v => v.slice(0, -1)); return; }
         if (k === '.' && !allowDecimal) return;
@@ -51,14 +60,14 @@ export default function NumericPopup({ title, subtitle, onConfirm, onCancel, pre
         setValue(v => v + k);
     };
 
-    const handleConfirm = () => {
+    const handleConfirm = (): void => {
         const num = parseFloat(value) || 0;
         if (num > 0) onConfirm(num);
     };
 
     return (
         <div style={s.overlay} onClick={onCancel}>
-            <div style={s.modal} onClick={e => e.stopPropagation()}>
+            <div style={s.modal} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                 <div style={s.title}>{title}</div>
                 {subtitle && <div style={s.subtitle}>{subtitle}</div>}
                 <div style={s.display}>{prefix}{value || '0'}</div>
