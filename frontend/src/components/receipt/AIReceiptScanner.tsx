@@ -5,7 +5,8 @@
 import React, { useState, useCallback, useRef } from 'react';
 import {
     Upload, Camera, Sparkles, Loader2, CheckCircle, X, Wand2,
-    FileImage, ZoomIn, RotateCcw, AlertTriangle
+    FileImage, ZoomIn, RotateCcw, AlertTriangle, FileSpreadsheet,
+    FileText, File, Image
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
@@ -19,6 +20,40 @@ interface AIReceiptScannerProps {
 }
 
 type ScanPhase = 'upload' | 'analyzing' | 'review' | 'error';
+
+/* ─── Supported File Formats ─── */
+const ACCEPTED_FORMATS = [
+    // Images
+    'image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif',
+    'image/tiff', 'image/bmp', 'image/gif', 'image/avif',
+    // Documents
+    'application/pdf',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+    'application/msword', // .doc
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+    'application/vnd.ms-excel', // .xls
+    'text/csv',
+];
+
+const ACCEPT_STRING = 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.heic,.heif,.tiff,.bmp,.avif';
+
+const getFileFormatInfo = (file: File): { icon: React.ElementType; label: string; color: string } => {
+    const ext = file.name.split('.').pop()?.toLowerCase() || '';
+    const type = file.type;
+
+    if (type.startsWith('image/')) return { icon: Image, label: ext.toUpperCase(), color: '#3B82F6' };
+    if (type === 'application/pdf') return { icon: FileText, label: 'PDF', color: '#EF4444' };
+    if (ext === 'docx' || ext === 'doc') return { icon: FileText, label: 'WORD', color: '#2563EB' };
+    if (ext === 'xlsx' || ext === 'xls') return { icon: FileSpreadsheet, label: 'EXCEL', color: '#16A34A' };
+    if (ext === 'csv') return { icon: FileSpreadsheet, label: 'CSV', color: '#F59E0B' };
+    return { icon: File, label: ext.toUpperCase() || 'FILE', color: '#6B7280' };
+};
+
+const isFileSupported = (file: File): boolean => {
+    if (ACCEPTED_FORMATS.includes(file.type)) return true;
+    const ext = file.name.split('.').pop()?.toLowerCase() || '';
+    return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif', 'tiff', 'bmp', 'avif', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv'].includes(ext);
+};
 
 /* ─── Simulated AI Analysis ─── */
 const simulateAIAnalysis = async (imageFile: File): Promise<AIScanResult> => {
@@ -65,17 +100,20 @@ const simulateAIAnalysis = async (imageFile: File): Promise<AIScanResult> => {
 
 /* ─── Analysis Step Labels ─── */
 const ANALYSIS_STEPS = [
-    { label: 'Uploading image...', duration: 400 },
-    { label: 'Detecting receipt layout...', duration: 600 },
-    { label: 'Reading header text...', duration: 500 },
-    { label: 'Extracting line items...', duration: 500 },
+    { label: 'Uploading file...', duration: 400 },
+    { label: 'Detecting document format...', duration: 400 },
+    { label: 'Extracting receipt layout...', duration: 600 },
+    { label: 'Reading header & venue info...', duration: 500 },
+    { label: 'Extracting line items & prices...', duration: 500 },
     { label: 'Identifying tax & totals...', duration: 400 },
-    { label: 'Detecting footer & QR codes...', duration: 400 },
+    { label: 'Detecting footer, QR & barcodes...', duration: 400 },
+    { label: 'Generating template config...', duration: 300 },
 ];
 
 export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClose, onTemplateCreated }) => {
     const [phase, setPhase] = useState<ScanPhase>('upload');
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const [isDragOver, setIsDragOver] = useState(false);
     const [analysisStep, setAnalysisStep] = useState(0);
     const [result, setResult] = useState<AIScanResult | null>(null);
@@ -85,6 +123,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
     const reset = useCallback(() => {
         setPhase('upload');
         setImagePreview(null);
+        setUploadedFile(null);
         setIsDragOver(false);
         setAnalysisStep(0);
         setResult(null);
@@ -92,15 +131,22 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
     }, []);
 
     const handleFile = useCallback(async (file: File) => {
-        if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+        if (!isFileSupported(file)) {
             setPhase('error');
             return;
         }
 
-        // Show image preview
-        const reader = new FileReader();
-        reader.onload = (e) => setImagePreview(e.target?.result as string);
-        reader.readAsDataURL(file);
+        setUploadedFile(file);
+
+        // Show preview for images, placeholder for docs
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => setImagePreview(e.target?.result as string);
+            reader.readAsDataURL(file);
+        } else {
+            // Non-image files show a format badge instead of preview
+            setImagePreview(null);
+        }
 
         // Start analysis
         setPhase('analyzing');
@@ -183,7 +229,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                             onDrop={handleDrop}
                             onClick={() => fileInputRef.current?.click()}
                         >
-                            <input ref={fileInputRef} type="file" accept="image/*,.pdf" className="hidden" onChange={handleInputChange} />
+                            <input ref={fileInputRef} type="file" accept={ACCEPT_STRING} className="hidden" onChange={handleInputChange} />
 
                             <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-violet-500/20 to-blue-500/20 border border-white/5 flex items-center justify-center">
                                 <Upload className="w-7 h-7 text-violet-400" />
@@ -191,18 +237,37 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
 
                             <h3 className="text-lg font-semibold text-white mb-2">Drop your receipt here</h3>
                             <p className="text-sm text-zinc-500 mb-4">
-                                JPG, PNG, or PDF — AI will extract everything automatically
+                                Upload any receipt — AI will extract everything automatically
                             </p>
+
+                            {/* Supported format badges */}
+                            <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
+                                <span className="flex items-center gap-1 text-[10px] text-blue-400 bg-blue-500/10 px-2 py-1 rounded-full">
+                                    <Image className="w-3 h-3" /> JPG / PNG / WebP / HEIC
+                                </span>
+                                <span className="flex items-center gap-1 text-[10px] text-red-400 bg-red-500/10 px-2 py-1 rounded-full">
+                                    <FileText className="w-3 h-3" /> PDF
+                                </span>
+                                <span className="flex items-center gap-1 text-[10px] text-blue-400 bg-blue-400/10 px-2 py-1 rounded-full">
+                                    <FileText className="w-3 h-3" /> Word (.docx)
+                                </span>
+                                <span className="flex items-center gap-1 text-[10px] text-green-400 bg-green-500/10 px-2 py-1 rounded-full">
+                                    <FileSpreadsheet className="w-3 h-3" /> Excel (.xlsx)
+                                </span>
+                                <span className="flex items-center gap-1 text-[10px] text-amber-400 bg-amber-500/10 px-2 py-1 rounded-full">
+                                    <FileSpreadsheet className="w-3 h-3" /> CSV
+                                </span>
+                            </div>
 
                             <div className="flex items-center justify-center gap-6 text-xs text-zinc-600">
                                 <span className="flex items-center gap-1"><FileImage className="w-3.5 h-3.5" /> Photo of receipt</span>
                                 <span className="flex items-center gap-1"><Camera className="w-3.5 h-3.5" /> Camera capture</span>
-                                <span className="flex items-center gap-1"><Upload className="w-3.5 h-3.5" /> PDF scan</span>
+                                <span className="flex items-center gap-1"><Upload className="w-3.5 h-3.5" /> Scanned document</span>
                             </div>
 
                             <div className="mt-6 pt-4 border-t border-white/5">
                                 <p className="text-[11px] text-zinc-600">
-                                    Works with: Customer receipts • Invoices • Kitchen tickets • Reports • Any POS printout
+                                    Works with: Customer receipts • Invoices • Kitchen tickets • Reports • Fiscal documents • Any POS printout
                                 </p>
                             </div>
                         </div>
@@ -211,14 +276,29 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                     {/* ── ANALYZING PHASE ── */}
                     {phase === 'analyzing' && (
                         <div className="flex gap-6">
-                            {/* Image preview */}
-                            {imagePreview && (
-                                <div className="w-48 flex-shrink-0">
-                                    <div className="rounded-lg overflow-hidden border border-white/10 bg-zinc-900">
+                            {/* File preview */}
+                            <div className="w-48 flex-shrink-0">
+                                <div className="rounded-lg overflow-hidden border border-white/10 bg-zinc-900">
+                                    {imagePreview ? (
                                         <img src={imagePreview} alt="Receipt" className="w-full h-auto opacity-80" />
-                                    </div>
+                                    ) : uploadedFile ? (
+                                        <div className="flex flex-col items-center justify-center py-10 px-4">
+                                            {(() => {
+                                                const info = getFileFormatInfo(uploadedFile);
+                                                const Icon = info.icon;
+                                                return (
+                                                    <>
+                                                        <Icon className="w-10 h-10 mb-2" style={{ color: info.color }} />
+                                                        <span className="text-xs font-bold" style={{ color: info.color }}>{info.label}</span>
+                                                        <span className="text-[10px] text-zinc-500 mt-1 text-center truncate max-w-full">{uploadedFile.name}</span>
+                                                        <span className="text-[9px] text-zinc-600 mt-0.5">{(uploadedFile.size / 1024).toFixed(0)} KB</span>
+                                                    </>
+                                                );
+                                            })()}
+                                        </div>
+                                    ) : null}
                                 </div>
-                            )}
+                            </div>
 
                             {/* Analysis progress */}
                             <div className="flex-1">
