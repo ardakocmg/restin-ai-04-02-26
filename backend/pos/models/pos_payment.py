@@ -12,6 +12,7 @@ class TenderType(str, Enum):
     SPLIT = "SPLIT"  # Multiple tender types
     VOUCHER = "VOUCHER"
     ACCOUNT = "ACCOUNT"  # House account
+    ROOM_CHARGE = "ROOM_CHARGE"  # Hotel room folio (OPERA PMS)
     OTHER = "OTHER"
 
 
@@ -60,6 +61,10 @@ class PosPayment(BaseModel):
     
     # Meta
     meta: Optional[Dict[str, Any]] = None
+    # Room Charge metadata (OPERA PMS)
+    room_number: Optional[str] = None
+    guest_name: Optional[str] = None
+    reservation_id: Optional[str] = None
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     created_by: str
     completed_at: Optional[str] = None
@@ -73,6 +78,10 @@ class PosPaymentCreate(BaseModel):
     amount: float
     tip_amount: float = 0
     external_ref: Optional[str] = None
+    # Room Charge metadata (OPERA PMS)
+    room_number: Optional[str] = None
+    guest_name: Optional[str] = None
+    reservation_id: Optional[str] = None
 
 
 class SplitBillRequest(BaseModel):

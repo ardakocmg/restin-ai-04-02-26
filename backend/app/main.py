@@ -70,6 +70,7 @@ from routes.order_ops_routes import create_order_ops_router
 from routes.log_routes import create_log_router
 from routes.procurement_routes import create_procurement_router
 from routes.shift_routes import create_shift_router
+from routes.staff_unified_routes import create_staff_unified_router
 from routes.manager_override_routes import create_manager_override_router
 from routes.floor_plan_routes import create_floor_plan_router
 from routes.utils_routes import create_utils_router
@@ -166,6 +167,7 @@ from meta.routes.meta import create_meta_router
 from routes.venue_group_routes import create_venue_group_router
 from routes.user_settings_routes import create_2fa_router
 from routes.venue_integrations_routes import create_venue_integrations_router
+from routes.room_charge_routes import create_room_charge_router  # Room Charge (PMS)
 from routes.global_search_routes import create_global_search_router
 from routes.pos_report_routes import create_pos_report_router
 from routes.migration_routes import router as migration_router # Quick Sync
@@ -331,6 +333,7 @@ order_ops_router = create_order_ops_router()
 log_router = create_log_router()
 procurement_router = create_procurement_router()
 shift_router = create_shift_router()
+staff_unified_router = create_staff_unified_router()
 manager_override_router = create_manager_override_router()
 floor_plan_router = create_floor_plan_router()
 utils_router = create_utils_router()
@@ -487,6 +490,7 @@ api_main.include_router(inventory_router)
 api_main.include_router(log_router)
 api_main.include_router(procurement_router)
 api_main.include_router(shift_router)
+api_main.include_router(staff_unified_router)  # Unified Staff (POS + HR cross-module)
 api_main.include_router(manager_override_router)
 api_main.include_router(floor_plan_router)
 api_main.include_router(utils_router)
@@ -569,6 +573,7 @@ api_main.include_router(meta_router)
 api_main.include_router(venue_group_router)
 api_main.include_router(user_settings_router)
 api_main.include_router(venue_integrations_router)
+api_main.include_router(create_room_charge_router())  # Room Charge (PMS)
 api_main.include_router(global_search_router)
 api_main.include_router(google_sso_router)
 api_main.include_router(workspace_router)

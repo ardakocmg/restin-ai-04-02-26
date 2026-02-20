@@ -30,7 +30,7 @@ import { Alert, AlertDescription } from '../../components/ui/alert';
 import {
   MessageSquare, Mail, Globe, Star, Zap, CheckCircle2, XCircle,
   Settings, Key, Info, TrendingUp, Clock, ExternalLink, Copy, Eye, EyeOff,
-  DollarSign, Brain
+  DollarSign, Brain, Hotel, Building2
 } from 'lucide-react';
 
 import { toast } from 'sonner';
@@ -131,6 +131,37 @@ const AVAILABLE_INTEGRATIONS = [
     requiredFields: [
       { key: 'custom_domain', label: 'Custom Domain', type: 'text', placeholder: 'book.yourrestaurant.com' }
     ]
+  },
+  {
+    key: 'oracle_micros',
+    name: 'Oracle Micros (Simphony)',
+    category: 'pms',
+    description: 'POS interface for hotel room charge posting via Simphony Cloud',
+    icon: Building2,
+    color: '#C74634',
+    requiredFields: [
+      { key: 'simphony_host', label: 'Simphony API Host', type: 'text', placeholder: 'https://tenant.hospitality.oracleindustry.com', helpText: 'Your Simphony Cloud tenant URL. Found in Oracle Hospitality Cloud Portal → API Settings.' },
+      { key: 'client_id', label: 'OAuth Client ID', type: 'text', placeholder: 'micros-client-id', helpText: 'From Oracle Hospitality Integration Platform (OHIP) → App Registrations → Client ID.' },
+      { key: 'client_secret', label: 'OAuth Client Secret', type: 'password', placeholder: '...', helpText: 'Generated once when creating the OHIP App Registration. Keep it safe — cannot be retrieved again.' },
+      { key: 'org_short_name', label: 'Org Short Name', type: 'text', placeholder: 'ACME_HOTELS', helpText: 'Your organization\'s short name in Simphony EMC → Enterprise level → Organization.' },
+      { key: 'location_ref', label: 'Location Ref (Revenue Center)', type: 'text', placeholder: 'LOC001', helpText: 'The Revenue Center ID for your restaurant outlet. Found in Simphony EMC → Property → Revenue Centers.' }
+    ]
+  },
+  {
+    key: 'oracle_opera',
+    name: 'Oracle OPERA PMS',
+    category: 'pms',
+    description: 'Hotel property management — guest lookup, room charge posting, folio sync',
+    icon: Hotel,
+    color: '#C74634',
+    requiredFields: [
+      { key: 'ohip_host', label: 'OHIP Gateway URL', type: 'text', placeholder: 'https://tenant.hospitality.oracleindustry.com', helpText: 'Oracle Hospitality Integration Platform gateway URL. Your hotel IT team provides this from the OHIP admin console.' },
+      { key: 'client_id', label: 'OAuth Client ID', type: 'text', placeholder: 'opera-client-id', helpText: 'OHIP App Registration Client ID. Created in OHIP Portal → App Registrations → Create New Application.' },
+      { key: 'client_secret', label: 'OAuth Client Secret', type: 'password', placeholder: '...', helpText: 'Generated once during OHIP App Registration. Store securely — it cannot be shown again.' },
+      { key: 'enterprise_id', label: 'Enterprise ID', type: 'text', placeholder: 'ENT001', helpText: 'Your hotel chain\'s Enterprise ID. Found in OPERA Cloud → Administration → Enterprise.' },
+      { key: 'hotel_id', label: 'Hotel ID / Property Code', type: 'text', placeholder: 'PROP001', helpText: 'The specific property code for this hotel. Found in OPERA Cloud → Administration → Properties.' },
+      { key: 'cashier_id', label: 'Cashier ID (for postings)', type: 'text', placeholder: '1001', helpText: 'The Cashier ID used for room charge postings. Your hotel\'s front desk manager sets this in OPERA → Cashiering → Cashier Setup.' }
+    ]
   }
 ];
 
@@ -230,6 +261,7 @@ export default function IntegrationsHub() {
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
           <TabsTrigger value="ai">AI & ML</TabsTrigger>
           <TabsTrigger value="channels">Channels</TabsTrigger>
+          <TabsTrigger value="pms">Hotel / PMS</TabsTrigger>
         </TabsList>
 
         {['all', ...categories].map((category) => (
@@ -387,6 +419,9 @@ export default function IntegrationsHub() {
                       )}
                     </div>
                   </div>
+                  {field.helpText && (
+                    <p className="text-xs text-muted-foreground">{field.helpText}</p>
+                  )}
                 </div>
               ))}
 

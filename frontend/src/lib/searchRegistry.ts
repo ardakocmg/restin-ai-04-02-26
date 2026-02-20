@@ -22,6 +22,9 @@ import {
     Building2, LayoutGrid, ShieldAlert, Shield, Layers,
     RefreshCw, Home, Timer, Type, Palette, Server, Globe, Mic, Wand2, Radar, MessageSquare,
     Wrench, Cog, Database, Brain, Smartphone, Combine, Banknote, Gauge,
+    ChefHat, Tag, UtensilsCrossed, CreditCard, Percent, XCircle, Printer,
+    Grid3X3, ClipboardList, Utensils, AlertCircle, Star, Tablet, Map,
+    BarChart2, CalendarDays, Bell, Cpu,
     type LucideIcon
 } from 'lucide-react';
 
@@ -141,6 +144,43 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Tableside Ordering', icon: Smartphone, href: '/manager/tableside', group: 'pos', requiredRole: 'MANAGER' },
     { title: 'POS Setup', icon: Settings, href: '/pos/setup', group: 'pos', requiredRole: 'OWNER' },
     { title: 'KDS Stations', icon: Monitor, href: '/manager/kds/stations', group: 'pos', requiredRole: 'MANAGER' },
+    {
+        title: 'K-Series Config', icon: Settings, href: '/manager/menu-builder', group: 'pos', requiredRole: 'MANAGER',
+        children: [
+            // Menu & Items
+            { title: 'Menu Builder', icon: LayoutGrid, href: '/manager/menu-builder', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Item Library', icon: ShoppingCart, href: '/manager/item-library', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Accounting Groups', icon: FileText, href: '/manager/accounting-groups', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Combo Meals', icon: Combine, href: '/manager/combo-meals', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Courses', icon: Utensils, href: '/manager/courses', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Item Tags', icon: Tag, href: '/manager/item-tags', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Allergen Manager', icon: AlertCircle, href: '/manager/allergens', group: 'pos', requiredRole: 'MANAGER' },
+            // Payments & Charges
+            { title: 'Payment Methods', icon: CreditCard, href: '/manager/payment-methods', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Tax Settings', icon: DollarSign, href: '/manager/taxes', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Discounts', icon: Percent, href: '/manager/discounts', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Service Charge', icon: Banknote, href: '/manager/service-charge', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Loyalty Program', icon: Star, href: '/manager/loyalty-config', group: 'pos', requiredRole: 'MANAGER' },
+            // Operations
+            { title: 'POS Users & Groups', icon: Users, href: '/manager/pos-users', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Void Reasons', icon: XCircle, href: '/manager/void-reasons', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Order Profiles', icon: ClipboardList, href: '/manager/order-profiles', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Floor Plans (BO)', icon: Grid3X3, href: '/manager/floor-plans', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Production Centers', icon: ChefHat, href: '/manager/production-centers', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Production Instructions', icon: UtensilsCrossed, href: '/manager/production-instructions', group: 'pos', requiredRole: 'MANAGER' },
+            // Printing & Display
+            { title: 'Printing Profiles', icon: Printer, href: '/manager/printing-profiles', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Receipt Templates', icon: Receipt, href: '/manager/receipt-templates', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Customer Display', icon: Monitor, href: '/manager/customer-display-config', group: 'pos', requiredRole: 'MANAGER' },
+            // Hardware & Live
+            { title: 'Kiosk Mode', icon: Tablet, href: '/manager/kiosk-mode', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'POS Devices', icon: Cpu, href: '/manager/pos-devices', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Table Tracker', icon: Map, href: '/manager/table-tracker', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Kitchen Analytics', icon: BarChart2, href: '/manager/kitchen-analytics', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Staff Scheduler', icon: CalendarDays, href: '/manager/staff-scheduler', group: 'pos', requiredRole: 'MANAGER' },
+            { title: 'Inventory Alerts', icon: Bell, href: '/manager/inventory-alerts', group: 'pos', requiredRole: 'MANAGER' },
+        ],
+    },
 
     // ═══════════════════════════════════════════════════════════════════
     // HUMAN RESOURCES

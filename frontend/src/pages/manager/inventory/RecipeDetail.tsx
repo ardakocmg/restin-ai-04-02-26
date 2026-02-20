@@ -189,7 +189,7 @@ export default function RecipeDetail() {
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <div className="h-16 w-16 rounded-lg bg-muted flex items-center justify-center shrink-0">
-                    {recipe.image_url ? <img src={recipe.image_url} alt="" className="h-full w-full object-cover rounded-lg" /> : <ChefHat className="h-8 w-8 text-muted-foreground" />}
+                    {recipe.image_url ? <img src={recipe.image_url} alt={recipe.recipe_name || 'Recipe photo'} className="h-full w-full object-cover rounded-lg" /> : <ChefHat className="h-8 w-8 text-muted-foreground" />}
                 </div>
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-1">

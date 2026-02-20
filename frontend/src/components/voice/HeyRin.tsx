@@ -412,6 +412,7 @@ export default function HeyRin() {
         if (!SR) return;
         recognitionRef.current?.stop();
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const recognition = new (SR as { new(): any })();
         recognition.lang = lang;
         recognition.interimResults = true;

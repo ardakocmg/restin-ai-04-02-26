@@ -113,6 +113,7 @@ export default function POSRuntimeEnhanced() {
   const [showReports, setShowReports] = useState(false);
   const [showTableMerge, setShowTableMerge] = useState(false);
   const [showCustomerDisplay, setShowCustomerDisplay] = useState(false);
+  const [roomChargeEnabled, setRoomChargeEnabled] = useState(false);
   const longPressTimer = useRef(null);
 
   // Course colors for visual coding
@@ -144,6 +145,23 @@ export default function POSRuntimeEnhanced() {
       window.location.href = '/pos/setup';
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [venueId]);
+
+  /* ─── Check Room Charge integration on mount ───────────────── */
+  useEffect(() => {
+    if (!venueId) return;
+    (async () => {
+      try {
+        const res = await api.get(`integrations/configs?venue_id=${venueId}`);
+        const configs = res.data || res;
+        const operaCfg = (Array.isArray(configs) ? configs : []).find(
+          c => c.provider === 'oracle_opera' && c.isEnabled
+        );
+        setRoomChargeEnabled(!!operaCfg);
+      } catch {
+        setRoomChargeEnabled(false);
+      }
+    })();
   }, [venueId]);
 
   /* ─── Keyboard Shortcuts (F1-F8, Escape) ─────────────────── */
@@ -589,15 +607,24 @@ export default function POSRuntimeEnhanced() {
   const processPayment = async (paymentData) => {
     broadcastToCustomerDisplay('PAYMENT_START', { total: orderTotal });
     try {
-      await api.post(`pos/orders/${order.id}/payments`, {
+      const payload = {
         order_id: order.id, venue_id: venueId,
         tender_type: paymentData.tender_type || paymentData,
         amount: paymentData.amount || orderTotal,
         tip: paymentData.tip || 0,
         discount: paymentData.discount || 0,
-      });
+      };
+      // Room Charge metadata — embed hotel folio reference in payment record
+      if (paymentData.tender_type === 'ROOM_CHARGE') {
+        payload.room_number = paymentData.room_number;
+        payload.guest_name = paymentData.guest_name;
+        payload.reservation_id = paymentData.reservation_id;
+      }
+      await api.post(`pos/orders/${order.id}/payments`, payload);
       await api.post(`pos/orders/${order.id}/close?venue_id=${venueId}`, {});
-      toast.success('Payment successful!');
+      toast.success(paymentData.tender_type === 'ROOM_CHARGE'
+        ? `Charged to Room ${paymentData.room_number} ✓`
+        : 'Payment successful!');
       broadcastToCustomerDisplay('ORDER_COMPLETE', {});
       setOrder(null);
       setItems([]);
@@ -1054,6 +1081,8 @@ export default function POSRuntimeEnhanced() {
           order={order}
           items={items}
           orderTotal={orderTotal}
+          venueId={venueId}
+          roomChargeEnabled={roomChargeEnabled}
           onPay={(paymentData) => {
             processPayment(paymentData);
           }}
