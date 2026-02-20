@@ -1,12 +1,17 @@
 /**
- * ReceiptTemplates.tsx — Premium Receipt Template Management
- * Full-featured template editor with live thermal preview, type filtering,
- * and venue auto-population. Covers all POS print scenarios.
+ * ReceiptTemplates.tsx — Industry-Leading Receipt Template Management
+ *
+ * Integrates 4 major features:
+ * 1. AI Receipt Scanner — Upload photo, AI creates template
+ * 2. Visual Block Editor — Drag & drop receipt blocks
+ * 3. Smart Conditional Logic — Rules-based dynamic content
+ * 4. Template Gallery — 22 curated industry presets
  */
 import React, { useState, useEffect, useMemo } from 'react';
 import {
     FileText, Plus, Save, Trash2, Eye, Printer, ChefHat, BarChart3,
-    Receipt, Hotel, Truck, Gift, Copy, Wifi, SlidersHorizontal, LayoutGrid
+    Receipt, Hotel, Truck, Gift, Copy, Wifi, SlidersHorizontal, LayoutGrid,
+    Sparkles, Star, Layers
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Card, CardContent } from '../../components/ui/card';
@@ -22,64 +27,20 @@ import { cn } from '../../lib/utils';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';
 import api from '../../lib/api';
 
-/* ─── Types ─── */
-type TemplateType = 'customer' | 'kitchen' | 'report' | 'invoice' | 'room_charge' | 'delivery' | 'gift';
+/* ─── Sub-Components ─── */
+import { AIReceiptScanner } from '../../components/receipt/AIReceiptScanner';
+import { BlockEditor } from '../../components/receipt/BlockEditor';
+import { TemplateGallery } from '../../components/receipt/TemplateGallery';
+import {
+    type ReceiptTemplate, type TemplateType, type TemplateBlock,
+    TYPE_META, DEFAULT_BLOCKS, makeTemplate
+} from '../../components/receipt/types';
 
-interface ReceiptTemplate {
-    id: string;
-    name: string;
-    type: TemplateType;
-    isDefault: boolean;
-    isActive: boolean;
-    headerLine1: string;
-    headerLine2: string;
-    headerLine3: string;
-    showLogo: boolean;
-    showDateTime: boolean;
-    showServer: boolean;
-    showTable: boolean;
-    showOrderNumber: boolean;
-    showItemPrices: boolean;
-    showModifiers: boolean;
-    showTax: boolean;
-    showPaymentMethod: boolean;
-    showTipLine: boolean;
-    showCourseHeaders: boolean;
-    showBarcode: boolean;
-    footerLine1: string;
-    footerLine2: string;
-    footerLine3: string;
-    qrCodeUrl: string;
-    qrGuestConsole: boolean;
-    invoicePrefix: string;
-    paperWidth: '58mm' | '80mm';
-    fontSize: 'small' | 'medium' | 'large';
-}
-
-/* ─── Type Metadata ─── */
-const TYPE_META: Record<TemplateType, { label: string; icon: React.ElementType; color: string }> = {
-    customer: { label: 'Customer', icon: Receipt, color: '#3B82F6' },
-    kitchen: { label: 'Kitchen', icon: ChefHat, color: '#F59E0B' },
-    report: { label: 'Report', icon: BarChart3, color: '#10B981' },
-    invoice: { label: 'Invoice', icon: FileText, color: '#8B5CF6' },
-    room_charge: { label: 'Room Charge', icon: Hotel, color: '#C74634' },
-    delivery: { label: 'Delivery', icon: Truck, color: '#06B6D4' },
-    gift: { label: 'Gift', icon: Gift, color: '#EC4899' },
+/* ─── Type Metadata with Icons ─── */
+const TYPE_ICONS: Record<TemplateType, React.ElementType> = {
+    customer: Receipt, kitchen: ChefHat, report: BarChart3, invoice: FileText,
+    room_charge: Hotel, delivery: Truck, gift: Gift,
 };
-
-/* ─── Default Template Factory ─── */
-const makeTemplate = (o: Partial<ReceiptTemplate> & { id: string; name: string; type: TemplateType }): ReceiptTemplate => ({
-    isDefault: false, isActive: true,
-    headerLine1: '', headerLine2: '', headerLine3: '',
-    showLogo: true, showDateTime: true, showServer: true, showTable: true,
-    showOrderNumber: true, showItemPrices: true, showModifiers: true,
-    showTax: true, showPaymentMethod: true, showTipLine: true,
-    showCourseHeaders: false, showBarcode: false,
-    footerLine1: '', footerLine2: '', footerLine3: '',
-    qrCodeUrl: '', qrGuestConsole: false, invoicePrefix: '',
-    paperWidth: '80mm', fontSize: 'medium',
-    ...o,
-});
 
 /* ─── 10 Seed Templates ─── */
 const SEED: ReceiptTemplate[] = [
@@ -89,57 +50,48 @@ const SEED: ReceiptTemplate[] = [
         showTipLine: true, footerLine1: 'Thank you for dining with us!', footerLine2: 'WiFi: CaviarGuest / Pass: welcome2024',
         qrCodeUrl: 'https://restin.ai/feedback', qrGuestConsole: true
     }),
-
     makeTemplate({
         id: 'tpl-2', name: 'Takeaway Receipt', type: 'customer',
         headerLine1: 'Caviar & Bull', headerLine2: 'Order for Pickup / Delivery',
         showServer: false, showTable: false, showTipLine: false,
         footerLine1: 'Thank you for your order!', footerLine2: 'Order Again: restin.ai'
     }),
-
     makeTemplate({
         id: 'tpl-3', name: 'Kitchen Ticket', type: 'kitchen', isDefault: true,
         showLogo: false, showItemPrices: false, showTax: false, showPaymentMethod: false,
         showTipLine: false, showCourseHeaders: true, fontSize: 'large'
     }),
-
     makeTemplate({
         id: 'tpl-4', name: 'Bar Ticket', type: 'kitchen',
         headerLine1: '🍸 BAR', showLogo: false, showItemPrices: false, showTax: false,
         showPaymentMethod: false, showTipLine: false, showTable: true, fontSize: 'large'
     }),
-
     makeTemplate({
         id: 'tpl-5', name: 'End of Day Report', type: 'report', isDefault: true,
         headerLine1: 'Daily Summary Report', showServer: false, showTable: false, showTipLine: false, fontSize: 'small'
     }),
-
     makeTemplate({
         id: 'tpl-6', name: 'X-Report (Shift)', type: 'report',
         headerLine1: 'Shift Summary', showTable: false, showTipLine: false, fontSize: 'small'
     }),
-
     makeTemplate({
         id: 'tpl-7', name: 'Invoice / Fiscal', type: 'invoice', isDefault: true,
         headerLine1: 'Caviar & Bull Ltd', headerLine2: 'VAT: MT12345678', headerLine3: '131 Old Bakery Street, Valletta',
         invoicePrefix: 'INV-', showTipLine: false,
         footerLine1: 'This is a fiscal document', footerLine2: 'Retain for your records'
     }),
-
     makeTemplate({
         id: 'tpl-8', name: 'Room Charge Slip', type: 'room_charge', isDefault: true,
         headerLine1: 'Caviar & Bull', headerLine2: 'Hotel Room Charge',
         showTipLine: true, showTable: true,
         footerLine1: 'Charged to Room — Signature below', footerLine2: '____________________________'
     }),
-
     makeTemplate({
         id: 'tpl-9', name: 'Delivery Docket', type: 'delivery', isDefault: true,
         headerLine1: 'Caviar & Bull', headerLine2: 'Delivery Order',
         showServer: false, showTable: false, showTipLine: false,
         showBarcode: true, footerLine1: 'Driver Notes:', footerLine2: '____________________________'
     }),
-
     makeTemplate({
         id: 'tpl-10', name: 'Gift Receipt', type: 'gift', isDefault: true,
         headerLine1: 'Caviar & Bull', headerLine2: '🎁 Gift Receipt',
@@ -176,72 +128,61 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
     const total = subtotal + tax;
     let prevCourse = '';
 
-    return (
-        <div className="flex flex-col items-center">
-            <div className="text-xs text-zinc-500 mb-2 flex items-center gap-1.5">
-                <Printer className="w-3 h-3" /> {t.paperWidth} Preview
-            </div>
-            <div className="bg-white text-black rounded-sm shadow-xl relative overflow-hidden"
-                style={{ width: pw, fontFamily: '"Courier New", Courier, monospace', fontSize: fs, lineHeight: 1.4, padding: '16px 12px' }}>
-                {/* Torn edge top */}
-                <div className="absolute top-0 left-0 right-0 h-2"
-                    style={{ background: 'repeating-linear-gradient(90deg, transparent, transparent 4px, #e5e5e5 4px, #e5e5e5 5px)' }} />
+    // If blocks exist, render in block order
+    const sortedBlocks = t.blocks ? [...t.blocks].sort((a, b) => a.order - b.order).filter(b => b.enabled) : null;
 
-                {/* HEADER */}
-                <div className="text-center mb-2 mt-1">
-                    {t.showLogo && <div className="text-lg mb-0.5">🍽️</div>}
-                    {t.headerLine1 && <div className="font-bold" style={{ fontSize: fs + 2 }}>{t.headerLine1}</div>}
-                    {t.headerLine2 && <div className="text-gray-600" style={{ fontSize: fs - 1 }}>{t.headerLine2}</div>}
-                    {t.headerLine3 && <div className="text-gray-600" style={{ fontSize: fs - 1 }}>{t.headerLine3}</div>}
-                </div>
-
-                {t.invoicePrefix && (
-                    <div className="text-center font-bold mb-1" style={{ fontSize: fs + 1 }}>{t.invoicePrefix}2026-00042</div>
-                )}
-
-                <div className="border-t border-dashed border-gray-400 my-1.5" />
-
-                {/* META */}
-                <div className="mb-1.5" style={{ fontSize: fs - 1 }}>
-                    {t.showDateTime && <div>{dateStr} {timeStr}</div>}
-                    {t.showOrderNumber && <div>Order: #1042</div>}
-                    {t.showServer && <div>Server: Sofia C.</div>}
-                    {t.showTable && !isDelivery && <div>Table: T-12</div>}
-                    {isRoomCharge && <div className="font-bold mt-0.5">Room: 304 — John Smith</div>}
-                    {isDelivery && <><div>Platform: UberEats</div><div>Delivery #: UE-889210</div></>}
-                </div>
-
-                <div className="border-t border-dashed border-gray-400 my-1.5" />
-
-                {/* ITEMS */}
-                <div className="mb-1.5">
-                    {items.map((item, idx) => {
-                        const showCourse = t.showCourseHeaders && item.course !== prevCourse;
-                        if (showCourse) prevCourse = item.course;
-                        const isMod = t.showModifiers && item.name.startsWith('  +');
-                        return (
-                            <React.Fragment key={idx}>
-                                {showCourse && (
-                                    <div className="font-bold mt-1 mb-0.5 uppercase tracking-wide"
-                                        style={{ fontSize: fs - 2, color: '#666' }}>— {item.course} —</div>
-                                )}
-                                <div className={cn('flex justify-between', isMod && 'text-gray-500')}
-                                    style={{ fontSize: isMod ? fs - 2 : fs }}>
-                                    <span className={cn(isKitchen && !isMod && 'font-bold')}
-                                        style={{ fontSize: isKitchen && !isMod ? fs + 2 : undefined }}>
-                                        {!isMod && `${item.qty}x `}{item.name}
-                                    </span>
-                                    {t.showItemPrices && !isMod && <span>€{(item.qty * item.price).toFixed(2)}</span>}
-                                </div>
-                            </React.Fragment>
-                        );
-                    })}
-                </div>
-
-                {/* TOTALS */}
-                {!isKitchen && (
-                    <>
-                        <div className="border-t border-dashed border-gray-400 my-1.5" />
+    const renderBlock = (blockType: string) => {
+        switch (blockType) {
+            case 'header':
+                return (
+                    <div key="header" className="text-center mb-2 mt-1">
+                        {t.showLogo && <div className="text-lg mb-0.5">🍽️</div>}
+                        {t.headerLine1 && <div className="font-bold" style={{ fontSize: fs + 2 }}>{t.headerLine1}</div>}
+                        {t.headerLine2 && <div className="text-gray-600" style={{ fontSize: fs - 1 }}>{t.headerLine2}</div>}
+                        {t.headerLine3 && <div className="text-gray-600" style={{ fontSize: fs - 1 }}>{t.headerLine3}</div>}
+                    </div>
+                );
+            case 'order_info':
+                return (
+                    <div key="order_info" className="mb-1.5" style={{ fontSize: fs - 1 }}>
+                        {t.showDateTime && <div>{dateStr} {timeStr}</div>}
+                        {t.showOrderNumber && <div>Order: #1042</div>}
+                        {t.showServer && <div>Server: Sofia C.</div>}
+                        {t.showTable && !isDelivery && <div>Table: T-12</div>}
+                        {isRoomCharge && <div className="font-bold mt-0.5">Room: 304 — John Smith</div>}
+                        {isDelivery && <><div>Platform: UberEats</div><div>Delivery #: UE-889210</div></>}
+                    </div>
+                );
+            case 'items':
+                return (
+                    <div key="items" className="mb-1.5">
+                        {items.map((item, idx) => {
+                            const showCourse = t.showCourseHeaders && item.course !== prevCourse;
+                            if (showCourse) prevCourse = item.course;
+                            const isMod = t.showModifiers && item.name.startsWith('  +');
+                            return (
+                                <React.Fragment key={idx}>
+                                    {showCourse && (
+                                        <div className="font-bold mt-1 mb-0.5 uppercase tracking-wide"
+                                            style={{ fontSize: fs - 2, color: '#666' }}>— {item.course} —</div>
+                                    )}
+                                    <div className={cn('flex justify-between', isMod && 'text-gray-500')}
+                                        style={{ fontSize: isMod ? fs - 2 : fs }}>
+                                        <span className={cn(isKitchen && !isMod && 'font-bold')}
+                                            style={{ fontSize: isKitchen && !isMod ? fs + 2 : undefined }}>
+                                            {!isMod && `${item.qty}x `}{item.name}
+                                        </span>
+                                        {t.showItemPrices && !isMod && <span>€{(item.qty * item.price).toFixed(2)}</span>}
+                                    </div>
+                                </React.Fragment>
+                            );
+                        })}
+                    </div>
+                );
+            case 'totals':
+                if (isKitchen) return null;
+                return (
+                    <div key="totals">
                         {t.showItemPrices && (
                             <div className="flex justify-between" style={{ fontSize: fs - 1 }}>
                                 <span>Subtotal</span><span>€{subtotal.toFixed(2)}</span>
@@ -260,33 +201,34 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
                                 </div>
                             </>
                         )}
-                    </>
-                )}
-
-                {/* PAYMENT */}
-                {t.showPaymentMethod && !isKitchen && (
-                    <div className="mt-1" style={{ fontSize: fs - 1 }}>
+                    </div>
+                );
+            case 'payment':
+                if (isKitchen || !t.showPaymentMethod) return null;
+                return (
+                    <div key="payment" className="mt-1" style={{ fontSize: fs - 1 }}>
                         Paid: {isRoomCharge ? 'Room Charge — Rm 304' : 'Visa ****4242'}
                     </div>
-                )}
-
-                {/* TIP */}
-                {t.showTipLine && (
-                    <div className="mt-2 border-t border-dashed border-gray-400 pt-2" style={{ fontSize: fs - 1 }}>
+                );
+            case 'tip':
+                if (!t.showTipLine) return null;
+                return (
+                    <div key="tip" className="mt-2 border-t border-dashed border-gray-400 pt-2" style={{ fontSize: fs - 1 }}>
                         Tip: __________ Total: __________
                     </div>
-                )}
-
-                {/* FOOTER */}
-                <div className="text-center mt-3" style={{ fontSize: fs - 1 }}>
-                    {t.footerLine1 && <div>{t.footerLine1}</div>}
-                    {t.footerLine2 && <div className="text-gray-500">{t.footerLine2}</div>}
-                    {t.footerLine3 && <div className="text-gray-500">{t.footerLine3}</div>}
-                </div>
-
-                {/* QR */}
-                {t.qrCodeUrl && (
-                    <div className="flex flex-col items-center mt-3">
+                );
+            case 'footer':
+                return (
+                    <div key="footer" className="text-center mt-3" style={{ fontSize: fs - 1 }}>
+                        {t.footerLine1 && <div>{t.footerLine1}</div>}
+                        {t.footerLine2 && <div className="text-gray-500">{t.footerLine2}</div>}
+                        {t.footerLine3 && <div className="text-gray-500">{t.footerLine3}</div>}
+                    </div>
+                );
+            case 'qr':
+                if (!t.qrCodeUrl) return null;
+                return (
+                    <div key="qr" className="flex flex-col items-center mt-3">
                         <div className="w-14 h-14 border-2 border-black rounded-sm flex items-center justify-center">
                             <div className="grid grid-cols-5 grid-rows-5 gap-px w-10 h-10">
                                 {Array.from({ length: 25 }).map((_, i) => (
@@ -296,11 +238,11 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
                         </div>
                         <div className="text-gray-500 mt-0.5" style={{ fontSize: 7 }}>Scan for feedback</div>
                     </div>
-                )}
-
-                {/* BARCODE */}
-                {t.showBarcode && (
-                    <div className="flex flex-col items-center mt-2">
+                );
+            case 'barcode':
+                if (!t.showBarcode) return null;
+                return (
+                    <div key="barcode" className="flex flex-col items-center mt-2">
                         <div className="flex gap-px h-8">
                             {Array.from({ length: 30 }).map((_, i) => (
                                 <div key={i} className="bg-black" style={{ width: i % 3 === 0 ? 2 : 1 }} />
@@ -308,7 +250,62 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
                         </div>
                         <div className="text-gray-500" style={{ fontSize: 7 }}>1042-{dateStr.replace(/\//g, '')}</div>
                     </div>
+                );
+            case 'separator':
+                return <div key={`sep-${Math.random()}`} className="border-t border-dashed border-gray-400 my-1.5" />;
+            case 'promo':
+                return (
+                    <div key="promo" className="text-center mt-2 p-1.5 border border-dashed border-gray-400 rounded" style={{ fontSize: fs - 1 }}>
+                        {t.promoText || '⭐ Happy Hour 4-7pm — 2 for 1 Cocktails! ⭐'}
+                    </div>
+                );
+            case 'allergen':
+                return (
+                    <div key="allergen" className="text-center mt-2 text-gray-500" style={{ fontSize: fs - 2 }}>
+                        {t.allergenNotice || '⚠️ Allergen info available on request'}
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <div className="flex flex-col items-center">
+            <div className="text-xs text-zinc-500 mb-2 flex items-center gap-1.5">
+                <Printer className="w-3 h-3" /> {t.paperWidth} Preview
+                {t.blocks && <Badge className="text-[8px] px-1 py-0 bg-violet-500/10 text-violet-400 border-violet-500/20 ml-1">Block Mode</Badge>}
+            </div>
+            <div className="bg-white text-black rounded-sm shadow-xl relative overflow-hidden"
+                style={{ width: pw, fontFamily: '"Courier New", Courier, monospace', fontSize: fs, lineHeight: 1.4, padding: '16px 12px' }}>
+                {/* Torn edge top */}
+                <div className="absolute top-0 left-0 right-0 h-2"
+                    style={{ background: 'repeating-linear-gradient(90deg, transparent, transparent 4px, #e5e5e5 4px, #e5e5e5 5px)' }} />
+
+                {/* Invoice prefix */}
+                {t.invoicePrefix && (
+                    <div className="text-center font-bold mb-1" style={{ fontSize: fs + 1 }}>{t.invoicePrefix}2026-00042</div>
                 )}
+
+                {/* Render blocks in order if available, otherwise default rendering */}
+                {sortedBlocks
+                    ? sortedBlocks.map(block => renderBlock(block.type))
+                    : (
+                        <>
+                            {renderBlock('header')}
+                            <div className="border-t border-dashed border-gray-400 my-1.5" />
+                            {renderBlock('order_info')}
+                            <div className="border-t border-dashed border-gray-400 my-1.5" />
+                            {renderBlock('items')}
+                            {renderBlock('totals')}
+                            {renderBlock('payment')}
+                            {renderBlock('tip')}
+                            {renderBlock('footer')}
+                            {renderBlock('qr')}
+                            {renderBlock('barcode')}
+                        </>
+                    )
+                }
 
                 {/* Torn edge bottom */}
                 <div className="absolute bottom-0 left-0 right-0 h-3"
@@ -328,6 +325,11 @@ export default function ReceiptTemplates() {
     const [selectedPreview, setSelectedPreview] = useState<ReceiptTemplate | null>(null);
     const [activeType, setActiveType] = useState<string>('all');
     const [isLive, setIsLive] = useState(false);
+    const [editorTab, setEditorTab] = useState<'fields' | 'blocks'>('fields');
+
+    /* ── Modals ── */
+    const [showAIScanner, setShowAIScanner] = useState(false);
+    const [showGallery, setShowGallery] = useState(false);
 
     const venueId = localStorage.getItem('restin_pos_venue') || '';
     const { data: apiData } = useVenueConfig<ReceiptTemplate>({ venueId, configType: 'receipt-templates' });
@@ -350,13 +352,13 @@ export default function ReceiptTemplates() {
         if (!selectedPreview && filtered.length > 0) setSelectedPreview(filtered[0]);
     }, [filtered, selectedPreview]);
 
-    /* Save */
+    /* ── CRUD ── */
     const handleSave = async () => {
         if (!editing) return;
         const exists = templates.find(t => t.id === editing.id);
         setTemplates(exists ? templates.map(t => t.id === editing.id ? editing : t) : [...templates, editing]);
         setSelectedPreview(editing);
-        try { await api.put(`/print/templates/${editing.id}`, editing); } catch { /* save locally even if API fails */ }
+        try { await api.put(`/print/templates/${editing.id}`, editing); } catch { /* local save */ }
         setEditing(null);
         toast.success(`Template "${editing.name}" saved`);
     };
@@ -382,11 +384,30 @@ export default function ReceiptTemplates() {
         setEditing(makeTemplate({ id: crypto.randomUUID(), name: `New ${TYPE_META[typeKey].label} Template`, type: typeKey }));
     };
 
+    /* ── AI Scanner Callback ── */
+    const handleAITemplateCreated = (template: ReceiptTemplate) => {
+        setTemplates(prev => [...prev, template]);
+        setSelectedPreview(template);
+        setEditing(template);
+        toast.success('AI template created! Fine-tune in the editor.');
+    };
+
+    /* ── Gallery Install Callback ── */
+    const handleGalleryInstall = (template: ReceiptTemplate) => {
+        setTemplates(prev => [...prev, template]);
+        setSelectedPreview(template);
+        toast.success(`"${template.name}" installed from gallery`);
+    };
+
+    /* ── Editor Helpers ── */
     const toggleField = (key: keyof ReceiptTemplate) => {
         setEditing(p => p ? { ...p, [key]: !p[key as keyof ReceiptTemplate] } as ReceiptTemplate : null);
     };
     const updateField = (key: keyof ReceiptTemplate, value: string) => {
         setEditing(p => p ? { ...p, [key]: value } as ReceiptTemplate : null);
+    };
+    const updateBlocks = (blocks: TemplateBlock[]) => {
+        setEditing(p => p ? { ...p, blocks } : null);
     };
 
     const typeCounts = useMemo(() => {
@@ -411,11 +432,24 @@ export default function ReceiptTemplates() {
                                 </Badge>
                             )}
                         </h1>
-                        <p className="text-sm text-zinc-500 mt-1">Manage and preview all receipt, ticket, and document templates for printing</p>
+                        <p className="text-sm text-zinc-500 mt-1">Build, scan, and manage all receipt templates with AI assistance</p>
                     </div>
-                    <Button onClick={handleNew} className="bg-blue-600 hover:bg-blue-700">
-                        <Plus className="w-4 h-4 mr-2" /> New Template
-                    </Button>
+                    <div className="flex items-center gap-2">
+                        {/* AI Scanner */}
+                        <Button onClick={() => setShowAIScanner(true)}
+                            className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700">
+                            <Sparkles className="w-4 h-4 mr-2" /> Import from Photo
+                        </Button>
+                        {/* Gallery */}
+                        <Button onClick={() => setShowGallery(true)} variant="outline"
+                            className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
+                            <Star className="w-4 h-4 mr-2" /> Gallery
+                        </Button>
+                        {/* New */}
+                        <Button onClick={handleNew} className="bg-blue-600 hover:bg-blue-700">
+                            <Plus className="w-4 h-4 mr-2" /> New
+                        </Button>
+                    </div>
                 </div>
 
                 {/* ── Type Filter Tabs ── */}
@@ -427,7 +461,7 @@ export default function ReceiptTemplates() {
                                 All <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">{typeCounts.all}</Badge>
                             </TabsTrigger>
                             {Object.entries(TYPE_META).map(([key, meta]) => {
-                                const Icon = meta.icon;
+                                const Icon = TYPE_ICONS[key as TemplateType];
                                 return (
                                     <TabsTrigger key={key} value={key}
                                         className="data-[state=active]:bg-zinc-700 data-[state=active]:text-white gap-1.5">
@@ -450,8 +484,9 @@ export default function ReceiptTemplates() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                             {filtered.map(t => {
                                 const meta = TYPE_META[t.type];
-                                const Icon = meta.icon;
+                                const Icon = TYPE_ICONS[t.type];
                                 const isSelected = selectedPreview?.id === t.id;
+                                const hasBlocks = t.blocks && t.blocks.some(b => b.conditions.length > 0);
                                 return (
                                     <Card key={t.id}
                                         className={cn(
@@ -481,7 +516,6 @@ export default function ReceiptTemplates() {
                                                 </div>
                                             </div>
 
-                                            {/* Feature pills */}
                                             <div className="flex flex-wrap gap-1.5 mb-3">
                                                 {t.showLogo && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">Logo</span>}
                                                 {t.showTax && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">Tax</span>}
@@ -489,9 +523,9 @@ export default function ReceiptTemplates() {
                                                 {t.qrCodeUrl && <span className="text-[10px] text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded">QR</span>}
                                                 {t.showBarcode && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">Barcode</span>}
                                                 {t.invoicePrefix && <span className="text-[10px] text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded">{t.invoicePrefix}</span>}
+                                                {hasBlocks && <span className="text-[10px] text-violet-400 bg-violet-500/10 px-1.5 py-0.5 rounded">⚡ Smart</span>}
                                             </div>
 
-                                            {/* Actions */}
                                             <div className="flex gap-2 mt-1">
                                                 <Button variant="ghost" size="sm" className="h-7 text-xs flex-1 text-zinc-400 hover:text-white"
                                                     onClick={(e) => { e.stopPropagation(); setEditing({ ...t }); }}>
@@ -584,70 +618,113 @@ export default function ReceiptTemplates() {
                                     </label>
                                 </div>
 
-                                {/* Header */}
-                                <div>
-                                    <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Header</div>
-                                    <div className="space-y-2">
-                                        {(['headerLine1', 'headerLine2', 'headerLine3'] as const).map((key, i) => (
-                                            <Input key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
-                                                placeholder={`Header line ${i + 1}`} className="bg-zinc-900 border-white/10 text-white text-sm" />
-                                        ))}
-                                    </div>
+                                {/* ── Editor Mode Toggle ── */}
+                                <div className="flex bg-zinc-900 rounded-lg border border-white/5 p-0.5">
+                                    <button
+                                        className={cn('flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md text-xs font-medium transition-all',
+                                            editorTab === 'fields' ? 'bg-zinc-700 text-white' : 'text-zinc-500 hover:text-zinc-300')}
+                                        onClick={() => setEditorTab('fields')}>
+                                        <SlidersHorizontal className="w-3.5 h-3.5" /> Classic Editor
+                                    </button>
+                                    <button
+                                        className={cn('flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md text-xs font-medium transition-all',
+                                            editorTab === 'blocks' ? 'bg-violet-600 text-white' : 'text-zinc-500 hover:text-zinc-300')}
+                                        onClick={() => setEditorTab('blocks')}>
+                                        <Layers className="w-3.5 h-3.5" /> Block Editor
+                                    </button>
                                 </div>
 
-                                {/* Fields */}
-                                <div>
-                                    <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Fields</div>
-                                    <div className="bg-zinc-900/50 rounded-lg border border-white/5 divide-y divide-white/5">
-                                        {([
-                                            ['showLogo', 'Show Logo'], ['showDateTime', 'Date & Time'], ['showServer', 'Server Name'],
-                                            ['showTable', 'Table Number'], ['showOrderNumber', 'Order Number'], ['showItemPrices', 'Item Prices'],
-                                            ['showModifiers', 'Modifiers / Add-ons'], ['showCourseHeaders', 'Course Headers'],
-                                            ['showTax', 'Tax Breakdown'], ['showPaymentMethod', 'Payment Method'],
-                                            ['showTipLine', 'Tip Line'], ['showBarcode', 'Barcode'],
-                                        ] as const).map(([key, label]) => (
-                                            <div key={key} className="flex items-center justify-between px-4 py-3">
-                                                <span className="text-sm text-zinc-300">{label}</span>
-                                                <Switch checked={editing[key] as boolean} onCheckedChange={() => toggleField(key)} />
+                                {/* ── CLASSIC EDITOR ── */}
+                                {editorTab === 'fields' && (
+                                    <>
+                                        {/* Header */}
+                                        <div>
+                                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Header</div>
+                                            <div className="space-y-2">
+                                                {(['headerLine1', 'headerLine2', 'headerLine3'] as const).map((key, i) => (
+                                                    <Input key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
+                                                        placeholder={`Header line ${i + 1}`} className="bg-zinc-900 border-white/10 text-white text-sm" />
+                                                ))}
                                             </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Footer */}
-                                <div>
-                                    <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Footer</div>
-                                    <div className="space-y-2">
-                                        {(['footerLine1', 'footerLine2', 'footerLine3'] as const).map((key, i) => (
-                                            <Input key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
-                                                placeholder={`Footer line ${i + 1}`} className="bg-zinc-900 border-white/10 text-white text-sm" />
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* QR & Invoice */}
-                                <div>
-                                    <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">QR Code & Invoice</div>
-                                    <div className="space-y-3">
-                                        <div className="space-y-1.5">
-                                            <Label className="text-zinc-400 text-xs">QR Code URL</Label>
-                                            <Input value={editing.qrCodeUrl} onChange={e => updateField('qrCodeUrl', e.target.value)}
-                                                placeholder="https://restin.ai/feedback" className="bg-zinc-900 border-white/10 text-white text-sm" />
                                         </div>
-                                        <label className="flex items-center gap-2 text-sm">
-                                            <Switch checked={editing.qrGuestConsole} onCheckedChange={() => toggleField('qrGuestConsole')} />
-                                            <span className="text-zinc-300">QR links to Guest Console</span>
-                                        </label>
-                                        <div className="space-y-1.5">
-                                            <Label className="text-zinc-400 text-xs">Invoice Prefix</Label>
-                                            <Input value={editing.invoicePrefix} onChange={e => updateField('invoicePrefix', e.target.value)}
-                                                placeholder="e.g. INV-" maxLength={10}
-                                                className="bg-zinc-900 border-white/10 text-white text-sm" />
-                                        </div>
-                                    </div>
-                                </div>
 
-                                {/* Paper Settings */}
+                                        {/* Fields */}
+                                        <div>
+                                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Fields</div>
+                                            <div className="bg-zinc-900/50 rounded-lg border border-white/5 divide-y divide-white/5">
+                                                {([
+                                                    ['showLogo', 'Show Logo'], ['showDateTime', 'Date & Time'], ['showServer', 'Server Name'],
+                                                    ['showTable', 'Table Number'], ['showOrderNumber', 'Order Number'], ['showItemPrices', 'Item Prices'],
+                                                    ['showModifiers', 'Modifiers / Add-ons'], ['showCourseHeaders', 'Course Headers'],
+                                                    ['showTax', 'Tax Breakdown'], ['showPaymentMethod', 'Payment Method'],
+                                                    ['showTipLine', 'Tip Line'], ['showBarcode', 'Barcode'],
+                                                ] as const).map(([key, label]) => (
+                                                    <div key={key} className="flex items-center justify-between px-4 py-3">
+                                                        <span className="text-sm text-zinc-300">{label}</span>
+                                                        <Switch checked={editing[key] as boolean} onCheckedChange={() => toggleField(key)} />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Footer */}
+                                        <div>
+                                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Footer</div>
+                                            <div className="space-y-2">
+                                                {(['footerLine1', 'footerLine2', 'footerLine3'] as const).map((key, i) => (
+                                                    <Input key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
+                                                        placeholder={`Footer line ${i + 1}`} className="bg-zinc-900 border-white/10 text-white text-sm" />
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* QR & Invoice */}
+                                        <div>
+                                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">QR Code & Invoice</div>
+                                            <div className="space-y-3">
+                                                <div className="space-y-1.5">
+                                                    <Label className="text-zinc-400 text-xs">QR Code URL</Label>
+                                                    <Input value={editing.qrCodeUrl} onChange={e => updateField('qrCodeUrl', e.target.value)}
+                                                        placeholder="https://restin.ai/feedback" className="bg-zinc-900 border-white/10 text-white text-sm" />
+                                                </div>
+                                                <label className="flex items-center gap-2 text-sm">
+                                                    <Switch checked={editing.qrGuestConsole} onCheckedChange={() => toggleField('qrGuestConsole')} />
+                                                    <span className="text-zinc-300">QR links to Guest Console</span>
+                                                </label>
+                                                <div className="space-y-1.5">
+                                                    <Label className="text-zinc-400 text-xs">Invoice Prefix</Label>
+                                                    <Input value={editing.invoicePrefix} onChange={e => updateField('invoicePrefix', e.target.value)}
+                                                        placeholder="e.g. INV-" maxLength={10}
+                                                        className="bg-zinc-900 border-white/10 text-white text-sm" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Promo & Allergen */}
+                                        <div>
+                                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Promo & Notices</div>
+                                            <div className="space-y-2">
+                                                <div className="space-y-1.5">
+                                                    <Label className="text-zinc-400 text-xs">Promo Banner Text</Label>
+                                                    <Input value={editing.promoText || ''} onChange={e => updateField('promoText' as keyof ReceiptTemplate, e.target.value)}
+                                                        placeholder="e.g. Happy Hour 4-7pm — 2 for 1!" className="bg-zinc-900 border-white/10 text-white text-sm" />
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <Label className="text-zinc-400 text-xs">Allergen Notice</Label>
+                                                    <Input value={editing.allergenNotice || ''} onChange={e => updateField('allergenNotice' as keyof ReceiptTemplate, e.target.value)}
+                                                        placeholder="⚠️ Allergen info available on request" className="bg-zinc-900 border-white/10 text-white text-sm" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+
+                                {/* ── BLOCK EDITOR ── */}
+                                {editorTab === 'blocks' && editing.blocks && (
+                                    <BlockEditor blocks={editing.blocks} onChange={updateBlocks} />
+                                )}
+
+                                {/* Paper Settings (always visible) */}
                                 <div>
                                     <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Paper Settings</div>
                                     <div className="grid grid-cols-2 gap-4">
@@ -693,6 +770,21 @@ export default function ReceiptTemplates() {
                         )}
                     </SheetContent>
                 </Sheet>
+
+                {/* ── AI Scanner Modal ── */}
+                <AIReceiptScanner
+                    open={showAIScanner}
+                    onClose={() => setShowAIScanner(false)}
+                    onTemplateCreated={handleAITemplateCreated}
+                />
+
+                {/* ── Template Gallery Modal ── */}
+                <TemplateGallery
+                    open={showGallery}
+                    onClose={() => setShowGallery(false)}
+                    onInstall={handleGalleryInstall}
+                    onPreview={(t) => { setSelectedPreview(t); setShowGallery(false); }}
+                />
 
             </div>
         </div>
