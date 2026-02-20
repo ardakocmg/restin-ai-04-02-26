@@ -100,7 +100,18 @@ export default function InventoryReport() {
           <CardContent>
             <div className="space-y-3">
               {stockLevels.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">No stock level alerts</p>
+                Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div className="flex-1">
+                      <h4 className="font-medium" style={{ color: '#F5F5F7' }}>—</h4>
+                      <p className="text-sm" style={{ color: '#A1A1AA' }}>Current: 0 | Min: 0</p>
+                    </div>
+                    <div className="text-right mr-4">
+                      <div className="text-sm font-medium" style={{ color: '#D4D4D8' }}>€0</div>
+                    </div>
+                    <Badge variant="secondary">OK</Badge>
+                  </div>
+                ))
               ) : stockLevels.map((item) => (
                 <div key={item.item} className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <div className="flex-1">
@@ -125,20 +136,16 @@ export default function InventoryReport() {
             <CardTitle>Waste Trend (Last 7 Days)</CardTitle>
           </CardHeader>
           <CardContent>
-            {wasteData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={wasteData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="date" stroke="#A1A1AA" />
-                  <YAxis stroke="#A1A1AA" />
-                  <Tooltip contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', color: '#F5F5F7' }} />
-                  <Legend wrapperStyle={{ color: '#D4D4D8' }} />
-                  <Bar dataKey="cost" fill="#EF4444" name="Waste Cost (€)" />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <p className="text-muted-foreground text-center py-12">No waste data recorded yet</p>
-            )}
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={wasteData.length > 0 ? wasteData : [{ date: 'Mon', cost: 0 }, { date: 'Tue', cost: 0 }, { date: 'Wed', cost: 0 }, { date: 'Thu', cost: 0 }, { date: 'Fri', cost: 0 }, { date: 'Sat', cost: 0 }, { date: 'Sun', cost: 0 }]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="date" stroke="#A1A1AA" />
+                <YAxis stroke="#A1A1AA" />
+                <Tooltip contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', color: '#F5F5F7' }} />
+                <Legend wrapperStyle={{ color: '#D4D4D8' }} />
+                <Bar dataKey="cost" fill="#EF4444" name="Waste Cost (€)" />
+              </BarChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>

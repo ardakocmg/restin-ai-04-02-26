@@ -113,29 +113,27 @@ export default function ReportsTab() {
             )}
 
             {/* Heatmap */}
-            {heatmap.length > 0 && (
-                <Card className="bg-background border-border">
-                    <CardHeader><CardTitle className="text-foreground flex items-center gap-2 text-sm"><BarChart3 className="h-4 w-4 text-orange-400" />Access Heatmap (14 days)</CardTitle></CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-24 gap-0.5">
-                            {Array.from({ length: 24 }, (_, hour) => {
-                                const hourEntries = heatmap.filter(h => h.hour === hour);
-                                const totalCount = hourEntries.reduce((s, e) => s + e.count, 0);
-                                const maxCount = Math.max(...heatmap.map(h => h.count), 1);
-                                const intensity = totalCount / (maxCount * Math.max(hourEntries.length, 1));
-                                const bgOpacity = Math.min(0.1 + intensity * 0.9, 1);
-                                return (
-                                    <div key={hour} className="flex flex-col items-center" title={`${hour}:00 — ${totalCount} total actions`}>
-                                        <div className="w-full h-8 rounded-sm" style={{ backgroundColor: `rgba(52, 211, 153, ${bgOpacity})` }} />
-                                        <span className="text-[9px] text-muted-foreground mt-1">{hour}</span>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <p className="text-[10px] text-muted-foreground mt-2 text-right">Hour of day (UTC)</p>
-                    </CardContent>
-                </Card>
-            )}
+            <Card className="bg-background border-border">
+                <CardHeader><CardTitle className="text-foreground flex items-center gap-2 text-sm"><BarChart3 className="h-4 w-4 text-orange-400" />Access Heatmap (14 days)</CardTitle></CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-24 gap-0.5">
+                        {Array.from({ length: 24 }, (_, hour) => {
+                            const hourEntries = heatmap.filter(h => h.hour === hour);
+                            const totalCount = hourEntries.reduce((s, e) => s + e.count, 0);
+                            const maxCount = Math.max(...heatmap.map(h => h.count), 1);
+                            const intensity = heatmap.length > 0 ? totalCount / (maxCount * Math.max(hourEntries.length, 1)) : 0;
+                            const bgOpacity = heatmap.length > 0 ? Math.min(0.1 + intensity * 0.9, 1) : 0.05;
+                            return (
+                                <div key={hour} className="flex flex-col items-center" title={`${hour}:00 — ${totalCount} total actions`}>
+                                    <div className="w-full h-8 rounded-sm" style={{ backgroundColor: `rgba(52, 211, 153, ${bgOpacity})` }} />
+                                    <span className="text-[9px] text-muted-foreground mt-1">{hour}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground mt-2 text-right">Hour of day (UTC)</p>
+                </CardContent>
+            </Card>
 
             {/* Activity Timeline */}
             <Card className="bg-background border-border">
@@ -158,7 +156,15 @@ export default function ReportsTab() {
                             ))}
                         </AnimatePresence>
                         {timeline.length === 0 && (
-                            <div className="text-center py-8 text-muted-foreground"><BarChart3 className="h-8 w-8 mx-auto mb-2 text-muted-foreground" /><p>No activity data yet.</p></div>
+                            Array.from({ length: 3 }).map((_, i) => (
+                                <div key={`placeholder-${i}`} className="border-l-2 border-l-zinc-700 bg-zinc-800/20 px-3 py-2 rounded-r">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2"><Activity className="h-4 w-4 text-muted-foreground" /><span className="text-sm text-muted-foreground">—</span></div>
+                                        <Badge variant="outline" className="text-[9px] border-border text-muted-foreground">—</Badge>
+                                    </div>
+                                    <p className="text-[10px] text-muted-foreground mt-1">No entries</p>
+                                </div>
+                            ))
                         )}
                     </div>
                 </CardContent>

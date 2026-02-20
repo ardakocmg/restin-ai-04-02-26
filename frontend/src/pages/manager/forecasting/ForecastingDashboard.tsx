@@ -168,37 +168,29 @@ export default function ForecastingDashboard() {
                                 </div>
                             </CardHeader>
                             <CardContent className="h-[400px]">
-                                {chartData.every(d => d.actual === 0 && d.forecast === 0) ? (
-                                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-                                        <BarChart3 className="w-16 h-16 opacity-20 mb-4" />
-                                        <p className="text-sm font-bold">No Order Data Yet</p>
-                                        <p className="text-xs mt-1">Seed orders or process real transactions to generate forecasts</p>
-                                    </div>
-                                ) : (
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={chartData}>
-                                            <defs>
-                                                <linearGradient id="colorForecast" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8} />
-                                                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
-                                                </linearGradient>
-                                                <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
-                                                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                                                </linearGradient>
-                                            </defs>
-                                            <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                                            <XAxis dataKey="date" stroke="#666" />
-                                            <YAxis stroke="#666" tickFormatter={(v) => `€${v}`} />
-                                            <Tooltip
-                                                contentStyle={{ backgroundColor: '#09090b', borderColor: '#333', color: '#fff' }}
-                                                formatter={(value) => [`€${value}`, undefined]}
-                                            />
-                                            <Area type="monotone" dataKey="forecast" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorForecast)" name="AI Forecast" />
-                                            <Area type="monotone" dataKey="actual" stroke="#10b981" fillOpacity={1} fill="url(#colorActual)" name="Actual Sales" />
-                                        </AreaChart>
-                                    </ResponsiveContainer>
-                                )}
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <AreaChart data={chartData.length > 0 && !chartData.every(d => d.actual === 0 && d.forecast === 0) ? chartData : [{ date: 'Mon', actual: 0, forecast: 0 }, { date: 'Tue', actual: 0, forecast: 0 }, { date: 'Wed', actual: 0, forecast: 0 }, { date: 'Thu', actual: 0, forecast: 0 }, { date: 'Fri', actual: 0, forecast: 0 }, { date: 'Sat', actual: 0, forecast: 0 }, { date: 'Sun', actual: 0, forecast: 0 }]}>
+                                        <defs>
+                                            <linearGradient id="colorForecast" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8} />
+                                                <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+                                            </linearGradient>
+                                            <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
+                                                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                                            </linearGradient>
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                                        <XAxis dataKey="date" stroke="#666" />
+                                        <YAxis stroke="#666" tickFormatter={(v) => `€${v}`} />
+                                        <Tooltip
+                                            contentStyle={{ backgroundColor: '#09090b', borderColor: '#333', color: '#fff' }}
+                                            formatter={(value) => [`€${value}`, undefined]}
+                                        />
+                                        <Area type="monotone" dataKey="forecast" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorForecast)" name="AI Forecast" />
+                                        <Area type="monotone" dataKey="actual" stroke="#10b981" fillOpacity={1} fill="url(#colorActual)" name="Actual Sales" />
+                                    </AreaChart>
+                                </ResponsiveContainer>
                             </CardContent>
                         </Card>
                     </>

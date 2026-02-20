@@ -169,15 +169,17 @@ export default function PulseAnalytics() {
     );
 
     const revenueBreakdown = useMemo(() => {
-        if (!overview) return [];
-        const online = overview.online_revenue_cents || 0;
-        const inStore = (overview.revenue_cents || 0) - online;
-        const tips = overview.tips_cents || 0;
-        return [
-            { name: 'In-Store', value: Math.max(0, inStore / 100), color: '#10b981' },
+        const online = overview?.online_revenue_cents || 0;
+        const inStore = Math.max(0, (overview?.revenue_cents || 0) - online);
+        const tips = overview?.tips_cents || 0;
+        const items = [
+            { name: 'In-Store', value: inStore / 100, color: '#10b981' },
             { name: 'Online', value: online / 100, color: '#3b82f6' },
             { name: 'Tips', value: tips / 100, color: '#f59e0b' },
-        ].filter(d => d.value > 0);
+        ];
+        // If all zero, still return segments so donut renders (with tiny placeholder values for shape)
+        const hasData = items.some(d => d.value > 0);
+        return hasData ? items.filter(d => d.value > 0) : items.map(d => ({ ...d, value: 0.01 }));
     }, [overview]);
 
     // ── Layout ─────────────────────────────────────────────────
@@ -295,73 +297,64 @@ export default function PulseAnalytics() {
                         </div>
                     </div>
 
-                    {hourlyChart.every(h => h.revenue === 0 && h.orders === 0) ? (
-                        <div className="flex items-center justify-center py-16">
-                            <div className="text-center">
-                                <BarChart3 className="w-8 h-8 text-zinc-700 mx-auto mb-2" />
-                                <p className="text-xs text-muted-foreground">No data for this period</p>
-                            </div>
-                        </div>
-                    ) : (
-                        <ResponsiveContainer width="100%" height={220}>
-                            <AreaChart data={hourlyChart} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
-                                <defs>
-                                    <linearGradient id="gradRevenue" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
-                                        <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
-                                    </linearGradient>
-                                    <linearGradient id="gradOrders" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.3} />
-                                        <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
-                                <XAxis
-                                    dataKey="hour"
-                                    tickFormatter={(v: string) => v.replace(':00', 'h')}
-                                    tick={{ fontSize: 9, fill: '#52525b' }}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    interval={2}
-                                />
-                                <YAxis
-                                    tick={{ fontSize: 9, fill: '#52525b' }}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tickFormatter={(v: number) => chartView === 'revenue' ? `€${v}` : String(v)}
-                                />
-                                <Tooltip
-                                    content={
-                                        <CustomTooltip
-                                            formatter={chartView === 'revenue'
-                                                ? (v: number) => `€${v.toFixed(2)}`
-                                                : (v: number) => `${v} orders`
-                                            }
-                                        />
-                                    }
-                                />
-                                {chartView === 'revenue' ? (
-                                    <Area
-                                        type="monotone"
-                                        dataKey="revenue"
-                                        stroke="#10b981"
-                                        strokeWidth={2}
-                                        fill="url(#gradRevenue)"
-                                        name="Revenue"
+                    <ResponsiveContainer width="100%" height={220}>
+                        <AreaChart data={hourlyChart} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
+                            <defs>
+                                <linearGradient id="gradRevenue" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
+                                    <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+                                </linearGradient>
+                                <linearGradient id="gradOrders" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                            <XAxis
+                                dataKey="hour"
+                                tickFormatter={(v: string) => v.replace(':00', 'h')}
+                                tick={{ fontSize: 9, fill: '#52525b' }}
+                                axisLine={false}
+                                tickLine={false}
+                                interval={2}
+                            />
+                            <YAxis
+                                tick={{ fontSize: 9, fill: '#52525b' }}
+                                axisLine={false}
+                                tickLine={false}
+                                tickFormatter={(v: number) => chartView === 'revenue' ? `€${v}` : String(v)}
+                            />
+                            <Tooltip
+                                content={
+                                    <CustomTooltip
+                                        formatter={chartView === 'revenue'
+                                            ? (v: number) => `€${v.toFixed(2)}`
+                                            : (v: number) => `${v} orders`
+                                        }
                                     />
-                                ) : (
-                                    <Area
-                                        type="monotone"
-                                        dataKey="orders"
-                                        stroke="#3b82f6"
-                                        strokeWidth={2}
-                                        fill="url(#gradOrders)"
-                                        name="Orders"
-                                    />
-                                )}
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    )}
+                                }
+                            />
+                            {chartView === 'revenue' ? (
+                                <Area
+                                    type="monotone"
+                                    dataKey="revenue"
+                                    stroke="#10b981"
+                                    strokeWidth={2}
+                                    fill="url(#gradRevenue)"
+                                    name="Revenue"
+                                />
+                            ) : (
+                                <Area
+                                    type="monotone"
+                                    dataKey="orders"
+                                    stroke="#3b82f6"
+                                    strokeWidth={2}
+                                    fill="url(#gradOrders)"
+                                    name="Orders"
+                                />
+                            )}
+                        </AreaChart>
+                    </ResponsiveContainer>
                 </div>
 
                 {/* Revenue Breakdown Donut */}
@@ -371,52 +364,46 @@ export default function PulseAnalytics() {
                         Revenue Split
                     </h3>
 
-                    {revenueBreakdown.length === 0 ? (
-                        <div className="flex items-center justify-center py-12">
-                            <p className="text-xs text-muted-foreground">No revenue data</p>
-                        </div>
-                    ) : (
-                        <div className="pulse-chart-container flex flex-col items-center">
-                            <div className="relative">
-                                <ResponsiveContainer width={180} height={180}>
-                                    <PieChart>
-                                        <Pie
-                                            data={revenueBreakdown}
-                                            cx="50%"
-                                            cy="50%"
-                                            innerRadius={55}
-                                            outerRadius={80}
-                                            paddingAngle={3}
-                                            dataKey="value"
-                                            stroke="none"
-                                        >
-                                            {revenueBreakdown.map((entry, i) => (
-                                                <Cell key={i} fill={entry.color} />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip
-                                            content={<CustomTooltip formatter={(v: number) => `€${v.toFixed(2)}`} />}
-                                        />
-                                    </PieChart>
-                                </ResponsiveContainer>
-                                <div className="pulse-donut-center">
-                                    <p className="text-lg font-black text-foreground">{fmtK(overview?.revenue_cents || 0)}</p>
-                                    <p className="text-[9px] text-muted-foreground font-bold uppercase">Total</p>
-                                </div>
+                    <div className="pulse-chart-container flex flex-col items-center">
+                        <div className="relative">
+                            <ResponsiveContainer width={180} height={180}>
+                                <PieChart>
+                                    <Pie
+                                        data={revenueBreakdown}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={55}
+                                        outerRadius={80}
+                                        paddingAngle={3}
+                                        dataKey="value"
+                                        stroke="none"
+                                    >
+                                        {revenueBreakdown.map((entry, i) => (
+                                            <Cell key={i} fill={entry.color} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip
+                                        content={<CustomTooltip formatter={(v: number) => `€${v.toFixed(2)}`} />}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                            <div className="pulse-donut-center">
+                                <p className="text-lg font-black text-foreground">{fmtK(overview?.revenue_cents || 0)}</p>
+                                <p className="text-[9px] text-muted-foreground font-bold uppercase">Total</p>
                             </div>
+                        </div>
 
-                            {/* Legend */}
-                            <div className="flex flex-wrap gap-3 mt-3 justify-center">
-                                {revenueBreakdown.map((d, i) => (
-                                    <div key={i} className="flex items-center gap-1.5">
-                                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }} />
-                                        <span className="text-[10px] text-muted-foreground font-bold">{d.name}</span>
-                                        <span className="text-[10px] text-muted-foreground font-bold">€{d.value.toFixed(0)}</span>
-                                    </div>
-                                ))}
-                            </div>
+                        {/* Legend */}
+                        <div className="flex flex-wrap gap-3 mt-3 justify-center">
+                            {revenueBreakdown.map((d, i) => (
+                                <div key={i} className="flex items-center gap-1.5">
+                                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }} />
+                                    <span className="text-[10px] text-muted-foreground font-bold">{d.name}</span>
+                                    <span className="text-[10px] text-muted-foreground font-bold">€{Math.max(0, Math.round(d.value))}</span>
+                                </div>
+                            ))}
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
 
@@ -429,42 +416,36 @@ export default function PulseAnalytics() {
                         <Flame className="w-3 h-3" />
                         Top Sellers
                     </h3>
-                    {topItemsChart.length === 0 ? (
-                        <div className="flex items-center justify-center py-12">
-                            <p className="text-xs text-muted-foreground">No sales data yet</p>
-                        </div>
-                    ) : (
-                        <ResponsiveContainer width="100%" height={240}>
-                            <BarChart data={topItemsChart} layout="vertical" margin={{ top: 0, right: 10, bottom: 0, left: 0 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" horizontal={false} />
-                                <XAxis
-                                    type="number"
-                                    tick={{ fontSize: 9, fill: '#52525b' }}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tickFormatter={(v: number) => String(v)}
-                                />
-                                <YAxis
-                                    type="category"
-                                    dataKey="name"
-                                    width={100}
-                                    tick={{ fontSize: 10, fill: '#a1a1aa', fontWeight: 600 }}
-                                    axisLine={false}
-                                    tickLine={false}
-                                />
-                                <Tooltip
-                                    content={<CustomTooltip formatter={(v: number) => `${v} qty`} />}
-                                />
-                                <Bar
-                                    dataKey="quantity"
-                                    fill="#10b981"
-                                    radius={[0, 6, 6, 0]}
-                                    name="Quantity"
-                                    barSize={18}
-                                />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    )}
+                    <ResponsiveContainer width="100%" height={240}>
+                        <BarChart data={topItemsChart.length > 0 ? topItemsChart : [{ name: '—', quantity: 0, revenue: 0 }]} layout="vertical" margin={{ top: 0, right: 10, bottom: 0, left: 0 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#27272a" horizontal={false} />
+                            <XAxis
+                                type="number"
+                                tick={{ fontSize: 9, fill: '#52525b' }}
+                                axisLine={false}
+                                tickLine={false}
+                                tickFormatter={(v: number) => String(v)}
+                            />
+                            <YAxis
+                                type="category"
+                                dataKey="name"
+                                width={100}
+                                tick={{ fontSize: 10, fill: '#a1a1aa', fontWeight: 600 }}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <Tooltip
+                                content={<CustomTooltip formatter={(v: number) => `${v} qty`} />}
+                            />
+                            <Bar
+                                dataKey="quantity"
+                                fill="#10b981"
+                                radius={[0, 6, 6, 0]}
+                                name="Quantity"
+                                barSize={18}
+                            />
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
 
                 {/* Labor Dashboard */}

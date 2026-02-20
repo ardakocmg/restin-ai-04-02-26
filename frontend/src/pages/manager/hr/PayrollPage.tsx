@@ -592,11 +592,18 @@ export default function PayrollPage() {
                                                 </div>
                                             );
                                         }) : (
-                                            <div className="text-center py-12 text-muted-foreground">
-                                                <BarChart3 className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                                                <p className="text-sm font-bold">No department data yet</p>
-                                                <p className="text-xs">Run a payroll cycle to generate cost analytics</p>
-                                            </div>
+                                            ['Kitchen', 'FOH', 'Management'].map((name, idx) => {
+                                                const colors = ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500'];
+                                                return (
+                                                    <div key={idx} className="flex items-center gap-4">
+                                                        <div className="w-32 text-xs font-bold text-muted-foreground uppercase tracking-wider truncate">{name}</div>
+                                                        <div className="flex-1 h-6 bg-white/5 rounded-lg overflow-hidden">
+                                                            <div className={`h-full ${colors[idx]} rounded-lg`} style={{ width: '0%' }} />
+                                                        </div>
+                                                        <div className="w-24 text-right text-xs font-black text-muted-foreground font-mono">€0</div>
+                                                    </div>
+                                                );
+                                            })
                                         )}
                                     </div>
                                 </CardContent>
@@ -637,9 +644,30 @@ export default function PayrollPage() {
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="text-center py-12 text-muted-foreground">
-                                            <TrendingUp className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                                            <p className="text-sm font-bold">No trend data available</p>
+                                        <div className="space-y-3">
+                                            {['Jan', 'Feb', 'Mar'].map((month, idx) => (
+                                                <div key={idx} className="flex items-center gap-4 p-3 bg-white/5 rounded-xl border border-border">
+                                                    <div className="w-20 text-xs font-black text-muted-foreground uppercase">{month}</div>
+                                                    <div className="flex-1">
+                                                        <div className="flex gap-2 items-center">
+                                                            <div className="flex-1 h-4 bg-white/5 rounded overflow-hidden">
+                                                                <div className="h-full bg-blue-500 rounded" style={{ width: '0%' }} />
+                                                            </div>
+                                                            <span className="text-[10px] font-black text-blue-400 w-24 text-right font-mono">€0</span>
+                                                        </div>
+                                                        <div className="flex gap-2 items-center mt-1">
+                                                            <div className="flex-1 h-4 bg-white/5 rounded overflow-hidden">
+                                                                <div className="h-full bg-emerald-500 rounded" style={{ width: '0%' }} />
+                                                            </div>
+                                                            <span className="text-[10px] font-black text-emerald-400 w-24 text-right font-mono">€0</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            <div className="flex gap-6 mt-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                                                <span className="flex items-center gap-1"><div className="h-2 w-6 bg-blue-500 rounded" /> Gross</span>
+                                                <span className="flex items-center gap-1"><div className="h-2 w-6 bg-emerald-500 rounded" /> Net</span>
+                                            </div>
                                         </div>
                                     )}
                                 </CardContent>

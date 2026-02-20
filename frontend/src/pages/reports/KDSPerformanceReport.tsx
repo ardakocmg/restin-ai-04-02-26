@@ -128,9 +128,11 @@ export default function KDSPerformanceReport() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {stationData.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">No station data available</p>
-              ) : stationData.map((station) => (
+              {(stationData.length === 0 ? [
+                { station: 'Grill', tickets: 0, avgTime: 0, status: 'good' },
+                { station: 'Salad', tickets: 0, avgTime: 0, status: 'good' },
+                { station: 'Dessert', tickets: 0, avgTime: 0, status: 'good' },
+              ] : stationData).map((station) => (
                 <div key={station.station} className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <div className="flex-1">
                     <h4 className="font-medium" style={{ color: '#F5F5F7' }}>{station.station}</h4>

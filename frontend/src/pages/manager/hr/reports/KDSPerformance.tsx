@@ -110,38 +110,30 @@ export default function KDSPerformance() {
         <Card className="bg-card border-border">
           <CardHeader><CardTitle className="text-foreground">Station Performance (Avg Mins)</CardTitle></CardHeader>
           <CardContent className="h-[300px]">
-            {stats.stationLoad.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.stationLoad} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                  <XAxis type="number" stroke="#666" />
-                  <YAxis dataKey="name" type="category" stroke="#fff" width={60} />
-                  <Tooltip contentStyle={{ backgroundColor: '#111', borderColor: '#333' }} />
-                  <Bar dataKey="avgTime" fill="#ef4444" radius={[0, 4, 4, 0]} barSize={20} />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="h-full flex items-center justify-center text-muted-foreground">No station data yet</div>
-            )}
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={stats.stationLoad.length > 0 ? stats.stationLoad : [{ name: 'Grill', avgTime: 0 }, { name: 'Fryer', avgTime: 0 }, { name: 'Prep', avgTime: 0 }]} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                <XAxis type="number" stroke="#666" />
+                <YAxis dataKey="name" type="category" stroke="#fff" width={60} />
+                <Tooltip contentStyle={{ backgroundColor: '#111', borderColor: '#333' }} />
+                <Bar dataKey="avgTime" fill="#ef4444" radius={[0, 4, 4, 0]} barSize={20} />
+              </BarChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
 
         <Card className="bg-card border-border">
           <CardHeader><CardTitle className="text-foreground">Hourly Volume</CardTitle></CardHeader>
           <CardContent className="h-[300px]">
-            {stats.hourlyVolume.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={stats.hourlyVolume}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                  <XAxis dataKey="hour" stroke="#666" />
-                  <YAxis stroke="#666" />
-                  <Tooltip contentStyle={{ backgroundColor: '#111', borderColor: '#333' }} />
-                  <Line type="monotone" dataKey="orders" stroke="#3b82f6" strokeWidth={2} dot={{ fill: '#3b82f6' }} />
-                </LineChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="h-full flex items-center justify-center text-muted-foreground">No hourly data yet</div>
-            )}
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={stats.hourlyVolume.length > 0 ? stats.hourlyVolume : [{ hour: '10:00', orders: 0 }, { hour: '12:00', orders: 0 }, { hour: '14:00', orders: 0 }, { hour: '18:00', orders: 0 }, { hour: '20:00', orders: 0 }]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                <XAxis dataKey="hour" stroke="#666" />
+                <YAxis stroke="#666" />
+                <Tooltip contentStyle={{ backgroundColor: '#111', borderColor: '#333' }} />
+                <Line type="monotone" dataKey="orders" stroke="#3b82f6" strokeWidth={2} dot={{ fill: '#3b82f6' }} />
+              </LineChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>

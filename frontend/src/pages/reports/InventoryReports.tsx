@@ -116,44 +116,36 @@ export default function InventoryReports() {
         {/* Waste Trend */}
         <div className="chart-container-dark">
           <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Waste Trend</h3>
-          {wasteTrend.length > 0 ? (
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={wasteTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
-                <XAxis dataKey="month" stroke={chartTheme.text} />
-                <YAxis stroke={chartTheme.text} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-                  labelStyle={{ color: '#F5F5F7' }}
-                />
-                <Legend wrapperStyle={{ color: chartTheme.text }} />
-                <Line type="monotone" dataKey="cost" stroke={chartTheme.primary} strokeWidth={2} name="Waste Cost (€)" />
-              </LineChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-[300px] flex items-center justify-center text-muted-foreground">No waste trend data yet</div>
-          )}
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={wasteTrend.length > 0 ? wasteTrend : [{ month: 'Jan', cost: 0 }, { month: 'Feb', cost: 0 }, { month: 'Mar', cost: 0 }, { month: 'Apr', cost: 0 }]}>
+              <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
+              <XAxis dataKey="month" stroke={chartTheme.text} />
+              <YAxis stroke={chartTheme.text} />
+              <Tooltip
+                contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                labelStyle={{ color: '#F5F5F7' }}
+              />
+              <Legend wrapperStyle={{ color: chartTheme.text }} />
+              <Line type="monotone" dataKey="cost" stroke={chartTheme.primary} strokeWidth={2} name="Waste Cost (€)" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
 
         {/* Cost Variance */}
         <div className="chart-container-dark">
           <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Cost Variance</h3>
-          {costVariance.length > 0 ? (
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={costVariance}>
-                <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
-                <XAxis dataKey="item" stroke={chartTheme.text} />
-                <YAxis stroke={chartTheme.text} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-                  labelStyle={{ color: '#F5F5F7' }}
-                />
-                <Bar dataKey="variance" fill={chartTheme.primary} name="Variance (%)" />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-[300px] flex items-center justify-center text-muted-foreground">No cost variance data yet</div>
-          )}
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={costVariance.length > 0 ? costVariance : [{ item: 'Category A', variance: 0 }, { item: 'Category B', variance: 0 }, { item: 'Category C', variance: 0 }]}>
+              <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
+              <XAxis dataKey="item" stroke={chartTheme.text} />
+              <YAxis stroke={chartTheme.text} />
+              <Tooltip
+                contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                labelStyle={{ color: '#F5F5F7' }}
+              />
+              <Bar dataKey="variance" fill={chartTheme.primary} name="Variance (%)" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
@@ -172,11 +164,18 @@ export default function InventoryReports() {
             </thead>
             <tbody>
               {lowStockItems.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="text-center py-8" style={{ color: '#71717A' }}>
-                    No low stock items
-                  </td>
-                </tr>
+                Array.from({ length: 3 }).map((_, i) => (
+                  <tr key={i} className="border-b border-border">
+                    <td className="py-3 px-4" style={{ color: '#F5F5F7' }}>—</td>
+                    <td className="py-3 px-4 text-muted-foreground">0</td>
+                    <td className="py-3 px-4" style={{ color: '#A1A1AA' }}>0</td>
+                    <td className="py-3 px-4">
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-zinc-800/30 text-muted-foreground border border-border">
+                        OK
+                      </span>
+                    </td>
+                  </tr>
+                ))
               ) : (
                 lowStockItems.map((item, idx) => (
                   <tr key={idx} className="border-b border-border hover:bg-secondary/50 transition-colors">

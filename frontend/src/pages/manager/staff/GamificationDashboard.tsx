@@ -206,11 +206,35 @@ export default function GamificationDashboard() {
                                     Loading leaderboard…
                                 </div>
                             ) : leaderboard.length === 0 ? (
-                                <div className="text-center py-12 text-muted-foreground">
-                                    <Trophy className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                                    <p className="text-sm">No XP data yet for this period.</p>
-                                    <p className="text-xs mt-1">Staff earn XP through tasks, shifts, and sales.</p>
-                                </div>
+                                Array.from({ length: 3 }).map((_, idx) => (
+                                    <div
+                                        key={`placeholder-${idx}`}
+                                        className="flex items-center gap-3 p-3 rounded-lg border bg-card/30 border-border/50"
+                                    >
+                                        <div className="w-8 flex justify-center">
+                                            <RankBadge rank={idx + 1} />
+                                        </div>
+                                        <div className="h-10 w-10 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                                            <span className="text-muted-foreground text-sm font-bold">—</span>
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-semibold text-sm text-muted-foreground">—</span>
+                                                <Badge variant="outline" className="text-[10px] border-border text-muted-foreground">Staff</Badge>
+                                            </div>
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
+                                                    <div className="h-full bg-amber-500 rounded-full" style={{ width: '0%' }} />
+                                                </div>
+                                                <span className="text-[10px] text-muted-foreground whitespace-nowrap">0 XP</span>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-sm font-bold text-muted-foreground tabular-nums">0</p>
+                                            <p className="text-[10px] text-muted-foreground">XP</p>
+                                        </div>
+                                    </div>
+                                ))
                             ) : (
                                 leaderboard.map((entry, idx) => {
                                     const rank = idx + 1;
@@ -303,11 +327,36 @@ export default function GamificationDashboard() {
                                     Loading quests…
                                 </div>
                             ) : quests.length === 0 ? (
-                                <div className="text-center py-8 text-muted-foreground">
-                                    <Target className="h-10 w-10 mx-auto mb-3 opacity-30" />
-                                    <p className="text-sm">No active quests</p>
-                                    <p className="text-xs mt-1">Quests are generated from tasks and daily goals.</p>
-                                </div>
+                                Array.from({ length: 2 }).map((_, idx) => (
+                                    <div
+                                        key={`quest-placeholder-${idx}`}
+                                        className="p-3 rounded-lg bg-card border border-border space-y-2"
+                                    >
+                                        <div className="flex items-start gap-2">
+                                            <div className="h-8 w-8 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
+                                                <Target className="h-4 w-4 text-muted-foreground" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-medium text-muted-foreground">—</p>
+                                                <p className="text-xs text-muted-foreground mt-0.5">No active quests</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
+                                                <div className="h-full bg-emerald-500 rounded-full" style={{ width: '0%' }} />
+                                            </div>
+                                            <span className="text-[10px] text-muted-foreground">0/0</span>
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                                                <Clock className="h-3 w-3" /> —
+                                            </span>
+                                            <span className="text-[10px] text-muted-foreground font-bold flex items-center gap-0.5">
+                                                <Zap className="h-3 w-3" /> 0 XP
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))
                             ) : (
                                 quests.map(quest => {
                                     const pct = Math.round((quest.progress / quest.goal) * 100);

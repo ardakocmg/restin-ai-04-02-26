@@ -105,33 +105,29 @@ export default function InventoryStatus() {
                 <div className="card-dark p-6 rounded-2xl border border-border">
                     <h3 className="text-xl font-heading text-foreground mb-6">Waste Distribution</h3>
                     <div className="h-80 flex items-center justify-center">
-                        {data.waste_distribution.length > 0 ? (
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={data.waste_distribution}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={100}
-                                        fill="#8884d8"
-                                        paddingAngle={5}
-                                        dataKey="value"
-                                    >
-                                        {data.waste_distribution.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip
-                                        contentStyle={{ backgroundColor: '#18181B', border: '1px solid #3F3F46', borderRadius: '8px' }}
-                                        itemStyle={{ color: '#E4E4E7' }}
-                                    />
-                                    <Legend />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        ) : (
-                            <p className="text-muted-foreground">No waste data recorded</p>
-                        )}
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={data.waste_distribution.length > 0 ? data.waste_distribution : [{ name: 'Expired', value: 0.01 }, { name: 'Damaged', value: 0.01 }, { name: 'Over-production', value: 0.01 }, { name: 'Other', value: 0.01 }]}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={60}
+                                    outerRadius={100}
+                                    fill="#8884d8"
+                                    paddingAngle={5}
+                                    dataKey="value"
+                                >
+                                    {(data.waste_distribution.length > 0 ? data.waste_distribution : [{ name: 'Expired', value: 0.01 }, { name: 'Damaged', value: 0.01 }, { name: 'Over-production', value: 0.01 }, { name: 'Other', value: 0.01 }]).map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip
+                                    contentStyle={{ backgroundColor: '#18181B', border: '1px solid #3F3F46', borderRadius: '8px' }}
+                                    itemStyle={{ color: '#E4E4E7' }}
+                                />
+                                <Legend />
+                            </PieChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
 
@@ -152,7 +148,14 @@ export default function InventoryStatus() {
                             </thead>
                             <tbody className="divide-y divide-white/5">
                                 {(data.low_stock_items || []).length === 0 ? (
-                                    <tr><td colSpan={4} className="text-center py-8 text-muted-foreground">No low stock items</td></tr>
+                                    Array.from({ length: 3 }).map((_, i) => (
+                                        <tr key={i} className="text-sm">
+                                            <td className="py-4 text-foreground font-medium">—</td>
+                                            <td className="py-4 text-muted-foreground">0</td>
+                                            <td className="py-4 text-muted-foreground">0</td>
+                                            <td className="py-4"><button className="px-3 py-1 bg-zinc-700 text-muted-foreground text-xs rounded-lg" disabled>Order</button></td>
+                                        </tr>
+                                    ))
                                 ) : data.low_stock_items.map((item, index) => (
                                     <tr key={index} className="text-sm">
                                         <td className="py-4 text-foreground font-medium">{item.name}</td>
