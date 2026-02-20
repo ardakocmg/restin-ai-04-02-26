@@ -38,6 +38,9 @@ const UnitConversionMatrix = React.lazy(() => import('../pages/manager/inventory
 const MobileStockCount = React.lazy(() => import('../pages/manager/inventory/MobileStockCount'));
 const NutritionalCalculator = React.lazy(() => import('../pages/manager/inventory/NutritionalCalculator'));
 const LabelDesigner = React.lazy(() => import('../pages/manager/inventory/LabelDesigner'));
+const PrepLists = React.lazy(() => import('../pages/manager/inventory/PrepLists'));
+const ManualSalesEntry = React.lazy(() => import('../pages/manager/inventory/ManualSalesEntry'));
+const InsightsHub = React.lazy(() => import('../pages/manager/inventory/InsightsHub'));
 
 export const inventoryRoutes = (
     <>
@@ -75,5 +78,8 @@ export const inventoryRoutes = (
         <Route path="mobile-stock-count" element={<RoleRoute requiredRole="MANAGER"><MobileStockCount /></RoleRoute>} />
         <Route path="nutritional-calculator" element={<RoleRoute requiredRole="MANAGER"><NutritionalCalculator /></RoleRoute>} />
         <Route path="label-designer" element={<RoleRoute requiredRole="MANAGER"><LabelDesigner /></RoleRoute>} />
+        <Route path="prep-lists" element={<RoleRoute requiredRole="MANAGER"><PrepLists /></RoleRoute>} />
+        <Route path="manual-sales" element={<RoleRoute requiredRole="MANAGER"><ManualSalesEntry /></RoleRoute>} />
+        <Route path="insights-hub" element={<RoleRoute requiredRole="MANAGER"><InsightsHub /></RoleRoute>} />
     </>
 );
