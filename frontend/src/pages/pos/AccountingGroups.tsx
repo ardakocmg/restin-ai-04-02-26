@@ -6,22 +6,23 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-    ArrowLeft, Plus, Save, Edit3, Trash2, Search, X, BookOpen, Wifi,
-    Layers, ChevronRight, MoreVertical, GripVertical
+    ArrowLeft, Plus, Save, Edit3, Trash2, Search, X, Wifi,
+    Layers, GripVertical
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';
+import './AccountingGroups.css';
 
 /* ===== Types ===== */
 
 interface AccountingGroup {
     id: string;
     name: string;
-    code: string; // New field
-    category: string; // New field
-    description: string; // New field
-    parentGroup: string; // New field
+    code: string;
+    category: string;
+    description: string;
+    parentGroup: string;
     color: string;
     taxProfile: string;
     productionCenter: string;
@@ -30,18 +31,8 @@ interface AccountingGroup {
     revenue: number;
     isActive: boolean;
     sortOrder: number;
-    externalRef: string; // New field
+    externalRef: string;
 }
-
-/* ===== Styles ===== */
-
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary, #0a0a0a)', color: 'var(--text-primary, #fafafa)', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1100, margin: '0 auto', padding: '24px 20px' };
-const cd: React.CSSProperties = { background: 'var(--bg-card, #18181b)', border: '1px solid var(--border-primary, #27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const bp: React.CSSProperties = { padding: '10px 24px', background: '#3B82F6', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, color: 'var(--text-primary, #fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const ip: React.CSSProperties = { width: '100%', padding: '10px 14px', background: 'var(--bg-secondary, #09090b)', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, color: 'var(--text-primary, #fafafa)', fontSize: 14 };
-const sl: React.CSSProperties = { ...ip, cursor: 'pointer' };
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316', '#6366F1', '#14B8A6', '#D946EF', '#84CC16'];
 const TAX_PROFILES = ['Standard 18%', 'Reduced 5%', 'Reduced 7%', 'Zero Rate', 'Eco Tax 7%'];
@@ -68,8 +59,7 @@ const AccountingGroups: React.FC = () => {
     const [groups, setGroups] = useState<AccountingGroup[]>(SEED);
     const [search, setSearch] = useState('');
     const [editing, setEditing] = useState<AccountingGroup | null>(null);
-    const [filterCategory, setFilterCategory] = useState('all'); // New state
-    const [isLive, setIsLive] = useState(false); // New state
+    const [isLive, setIsLive] = useState(false);
     const [showInactive, setShowInactive] = useState(false);
 
     const venueId = localStorage.getItem('restin_pos_venue') || '';
@@ -85,7 +75,7 @@ const AccountingGroups: React.FC = () => {
                     category: g.category || 'revenue',
                     description: g.description || '',
                     parentGroup: g.parentGroup ?? g.parent_group ?? '',
-                    color: g.color || '#3B82F6', // Default color if not provided by API
+                    color: g.color || '#3B82F6',
                     taxProfile: g.taxProfile ?? g.tax_profile ?? 'Standard 18%',
                     productionCenter: g.productionCenter ?? g.production_center ?? 'Kitchen',
                     course: g.course ?? 0,
@@ -116,79 +106,84 @@ const AccountingGroups: React.FC = () => {
         toast.success('Accounting group saved');
     };
 
+    const newGroup = (): AccountingGroup => ({
+        id: crypto.randomUUID(), name: '', code: '', category: 'revenue', description: '',
+        parentGroup: '', color: '#3B82F6', taxProfile: 'Standard 18%', productionCenter: 'Kitchen',
+        course: 0, itemCount: 0, revenue: 0, isActive: true, sortOrder: groups.length + 1, externalRef: ''
+    });
+
     return (
-        <div style={pg}>
-            <div style={ct}>
+        <div className="ag-page">
+            <div className="ag-container">
                 {/* Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                <div className="ag-header">
                     <div>
-                        <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
-                        <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Accounting Groups {isLive && <Wifi size={14} style={{ color: '#10B981', verticalAlign: 'middle', marginLeft: 6 }} />}</h1>
-                        <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', margin: '4px 0 0' }}>Organize items into groups for reporting, tax profiles, and production routing</p>
+                        <button onClick={() => navigate(-1)} className="ag-btn-outline ag-btn-back"><ArrowLeft size={14} /> Back</button>
+                        <h1 className="ag-title">Accounting Groups {isLive && <Wifi size={14} className="ag-live-icon" />}</h1>
+                        <p className="ag-subtitle">Organize items into groups for reporting, tax profiles, and production routing</p>
                     </div>
-                    <button style={bp} onClick={() => setEditing({ id: crypto.randomUUID(), name: '', code: '', category: 'revenue', description: '', parentGroup: '', color: '#3B82F6', taxProfile: 'Standard 18%', productionCenter: 'Kitchen', course: 0, itemCount: 0, revenue: 0, isActive: true, sortOrder: groups.length + 1, externalRef: '' })}>
+                    <button className="ag-btn-primary" onClick={() => setEditing(newGroup())}>
                         <Plus size={16} /> Add Group
                     </button>
                 </div>
 
                 {/* Stats */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
-                    <div style={{ ...cd, padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(59,130,246,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#3B82F6' }}><Layers size={16} /></div>
-                        <div><div style={{ fontSize: 20, fontWeight: 700 }}>{groups.filter(g => g.isActive).length}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Active Groups</div></div>
+                <div className="ag-stats-grid">
+                    <div className="ag-card ag-stat-card">
+                        <div className="ag-stat-icon ag-stat-icon--blue"><Layers size={16} /></div>
+                        <div><div className="ag-stat-value">{groups.filter(g => g.isActive).length}</div><div className="ag-stat-label">Active Groups</div></div>
                     </div>
-                    <div style={{ ...cd, padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(16,185,129,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10B981' }}><Layers size={16} /></div>
-                        <div><div style={{ fontSize: 20, fontWeight: 700 }}>{totalItems}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Total Items</div></div>
+                    <div className="ag-card ag-stat-card">
+                        <div className="ag-stat-icon ag-stat-icon--green"><Layers size={16} /></div>
+                        <div><div className="ag-stat-value">{totalItems}</div><div className="ag-stat-label">Total Items</div></div>
                     </div>
-                    <div style={{ ...cd, padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(245,158,11,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#F59E0B' }}><Layers size={16} /></div>
-                        <div><div style={{ fontSize: 20, fontWeight: 700 }}>€{totalRevenue.toLocaleString()}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Total Revenue</div></div>
+                    <div className="ag-card ag-stat-card">
+                        <div className="ag-stat-icon ag-stat-icon--amber"><Layers size={16} /></div>
+                        <div><div className="ag-stat-value">€{totalRevenue.toLocaleString()}</div><div className="ag-stat-label">Total Revenue</div></div>
                     </div>
                 </div>
 
                 {/* Toolbar */}
-                <div style={{ ...cd, padding: 12, display: 'flex', gap: 10, alignItems: 'center' }}>
-                    <div style={{ position: 'relative', flex: 1 }}>
-                        <Search size={14} style={{ position: 'absolute', left: 12, top: 10, color: 'var(--text-secondary)' }} />
-                        <input style={{ ...ip, paddingLeft: 34, padding: '8px 12px 8px 34px', fontSize: 13 }} placeholder="Search groups..." value={search} onChange={e => setSearch(e.target.value)} />
+                <div className="ag-card ag-toolbar">
+                    <div className="ag-search-wrapper">
+                        <Search size={14} className="ag-search-icon" />
+                        <input className="ag-input ag-search-input" placeholder="Search groups..." value={search} onChange={e => setSearch(e.target.value)} />
                     </div>
-                    <div style={{ display: 'flex', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, overflow: 'hidden' }}>
-                        <button onClick={() => setShowInactive(false)} style={{ padding: '7px 14px', fontSize: 12, background: !showInactive ? 'rgba(59,130,246,0.1)' : 'transparent', border: 'none', color: !showInactive ? '#3B82F6' : 'var(--text-secondary)', cursor: 'pointer' }}>Active ({groups.filter(g => g.isActive).length})</button>
-                        <button onClick={() => setShowInactive(true)} style={{ padding: '7px 14px', fontSize: 12, background: showInactive ? 'rgba(59,130,246,0.1)' : 'transparent', border: 'none', color: showInactive ? '#3B82F6' : 'var(--text-secondary)', cursor: 'pointer' }}>Inactive ({groups.filter(g => !g.isActive).length})</button>
+                    <div className="ag-toggle-group">
+                        <button onClick={() => setShowInactive(false)} className={`ag-toggle-btn ${!showInactive ? 'ag-toggle-btn--active' : 'ag-toggle-btn--inactive'}`}>Active ({groups.filter(g => g.isActive).length})</button>
+                        <button onClick={() => setShowInactive(true)} className={`ag-toggle-btn ${showInactive ? 'ag-toggle-btn--active' : 'ag-toggle-btn--inactive'}`}>Inactive ({groups.filter(g => !g.isActive).length})</button>
                     </div>
                 </div>
 
                 {/* Groups Table */}
-                <div style={cd}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '28px 1fr 140px 130px 80px 100px 80px 70px', gap: 12, padding: '8px 12px', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary, #a1a1aa)', letterSpacing: 0.5, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="ag-card">
+                    <div className="ag-table-header">
                         <div></div><div>Group Name</div><div>Tax Profile</div><div>Production Center</div><div>Course</div><div>Items</div><div>Revenue</div><div>Actions</div>
                     </div>
 
                     {filtered.map(group => (
-                        <div key={group.id} style={{ display: 'grid', gridTemplateColumns: '28px 1fr 140px 130px 80px 100px 80px 70px', gap: 12, padding: '14px 12px', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer' }}
-                            onClick={() => setEditing({ ...group })}>
-                            <GripVertical size={14} style={{ color: 'var(--text-secondary)', opacity: 0.3, cursor: 'grab' }} />
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                <div style={{ width: 14, height: 14, borderRadius: 4, background: group.color, flexShrink: 0 }} />
-                                <span style={{ fontSize: 14, fontWeight: 500 }}>{group.name}</span>
+                        <div key={group.id} className="ag-table-row" onClick={() => setEditing({ ...group })}>
+                            <GripVertical size={14} className="ag-grip-icon" />
+                            <div className="ag-name-cell">
+                                <div className="ag-color-dot" style={{ background: group.color }} />
+                                <span className="ag-name-text">{group.name}</span>
                             </div>
-                            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{group.taxProfile}</span>
-                            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{group.productionCenter}</span>
-                            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{group.course === 0 ? '—' : `Course ${group.course}`}</span>
-                            <span style={{ fontSize: 13, fontWeight: 500 }}>{group.itemCount}</span>
-                            <span style={{ fontSize: 13, fontWeight: 500, color: '#10B981' }}>€{group.revenue.toLocaleString()}</span>
-                            <div style={{ display: 'flex', gap: 4 }}>
-                                <button title="Edit group" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: 4 }} onClick={e => { e.stopPropagation(); setEditing({ ...group }); }}><Edit3 size={13} /></button>
-                                <button title="Delete group" style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', padding: 4, opacity: 0.6 }} onClick={e => { e.stopPropagation(); setGroups(prev => prev.filter(g => g.id !== group.id)); toast.success('Group deleted'); }}><Trash2 size={13} /></button>
+                            <span className="ag-cell-secondary">{group.taxProfile}</span>
+                            <span className="ag-cell-secondary">{group.productionCenter}</span>
+                            <span className="ag-cell-secondary">{group.course === 0 ? '—' : `Course ${group.course}`}</span>
+                            <span className="ag-cell-value">{group.itemCount}</span>
+                            <span className="ag-cell-revenue">€{group.revenue.toLocaleString()}</span>
+                            <div className="ag-actions">
+                                <button title="Edit group" className="ag-btn-icon ag-btn-icon--secondary" onClick={e => { e.stopPropagation(); setEditing({ ...group }); }}><Edit3 size={13} /></button>
+                                <button title="Delete group" className="ag-btn-icon ag-btn-icon--danger" onClick={e => { e.stopPropagation(); setGroups(prev => prev.filter(g => g.id !== group.id)); toast.success('Group deleted'); }}><Trash2 size={13} /></button>
                             </div>
                         </div>
                     ))}
 
                     {filtered.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-secondary)' }}>
-                            <Layers size={36} style={{ opacity: 0.3, marginBottom: 8 }} />
-                            <p style={{ fontSize: 14, fontWeight: 500 }}>No groups found</p>
+                        <div className="ag-empty">
+                            <Layers size={36} className="ag-empty-icon" />
+                            <p className="ag-empty-text">No groups found</p>
                         </div>
                     )}
                 </div>
@@ -196,26 +191,26 @@ const AccountingGroups: React.FC = () => {
 
             {/* Edit Modal */}
             {editing && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setEditing(null)}>
-                    <div style={{ ...cd, width: 560 }} onClick={e => e.stopPropagation()}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                            <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{groups.find(g => g.id === editing.id) ? 'Edit' : 'New'} Accounting Group</h3>
-                            <button title="Close" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditing(null)}><X size={20} /></button>
+                <div className="ag-modal-overlay" onClick={() => setEditing(null)}>
+                    <div className="ag-card ag-modal" onClick={e => e.stopPropagation()}>
+                        <div className="ag-modal-header">
+                            <h3 className="ag-modal-title">{groups.find(g => g.id === editing.id) ? 'Edit' : 'New'} Accounting Group</h3>
+                            <button title="Close" className="ag-btn-icon ag-btn-icon--secondary" onClick={() => setEditing(null)}><X size={20} /></button>
                         </div>
 
-                        <div style={{ marginBottom: 14 }}>
-                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Group Name *</label>
-                            <input style={ip} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Food - Starters" />
+                        <div className="ag-form-group">
+                            <label className="ag-form-label">Group Name *</label>
+                            <input className="ag-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Food - Starters" />
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+                        <div className="ag-form-grid">
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Code</label>
-                                <input style={ip} value={editing.code} onChange={e => setEditing(p => p ? { ...p, code: e.target.value } : null)} placeholder="e.g. FST" maxLength={10} />
+                                <label className="ag-form-label">Code</label>
+                                <input className="ag-input" value={editing.code} onChange={e => setEditing(p => p ? { ...p, code: e.target.value } : null)} placeholder="e.g. FST" maxLength={10} />
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Category</label>
-                                <select style={sl} value={editing.category} onChange={e => setEditing(p => p ? { ...p, category: e.target.value } : null)} aria-label="Category">
+                                <label className="ag-form-label">Category</label>
+                                <select className="ag-select" value={editing.category} onChange={e => setEditing(p => p ? { ...p, category: e.target.value } : null)} aria-label="Category">
                                     <option value="revenue">Revenue</option>
                                     <option value="cost">Cost</option>
                                     <option value="discount">Discount</option>
@@ -224,49 +219,50 @@ const AccountingGroups: React.FC = () => {
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: 14 }}>
-                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Description</label>
-                            <textarea style={{ ...ip, resize: 'vertical', minHeight: 50 }} value={editing.description} onChange={e => setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Brief description of this group" />
+                        <div className="ag-form-group">
+                            <label className="ag-form-label">Description</label>
+                            <textarea className="ag-input ag-textarea" value={editing.description} onChange={e => setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Brief description of this group" />
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+                        <div className="ag-form-grid">
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Parent Group</label>
-                                <select style={sl} value={editing.parentGroup} onChange={e => setEditing(p => p ? { ...p, parentGroup: e.target.value } : null)} aria-label="Parent group">
+                                <label className="ag-form-label">Parent Group</label>
+                                <select className="ag-select" value={editing.parentGroup} onChange={e => setEditing(p => p ? { ...p, parentGroup: e.target.value } : null)} aria-label="Parent group">
                                     <option value="">— None (Top Level) —</option>
                                     {groups.filter(g => g.id !== editing.id).map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
                                 </select>
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>External Ref</label>
-                                <input style={ip} value={editing.externalRef} onChange={e => setEditing(p => p ? { ...p, externalRef: e.target.value } : null)} placeholder="e.g. ERP code" />
+                                <label className="ag-form-label">External Ref</label>
+                                <input className="ag-input" value={editing.externalRef} onChange={e => setEditing(p => p ? { ...p, externalRef: e.target.value } : null)} placeholder="e.g. ERP code" />
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: 14 }}>
-                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>Color</label>
-                            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        <div className="ag-form-group">
+                            <label className="ag-form-label ag-form-label--color">Color</label>
+                            <div className="ag-color-picker">
                                 {COLORS.map(c => (
                                     <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)}
-                                        style={{ width: 28, height: 28, borderRadius: 6, background: c, cursor: 'pointer', border: editing.color === c ? '3px solid #fff' : '3px solid transparent' }} />
+                                        className={`ag-color-swatch ${editing.color === c ? 'ag-color-swatch--selected' : ''}`}
+                                        style={{ background: c }} />
                                 ))}
                             </div>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+                        <div className="ag-form-grid">
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Tax Profile</label>
-                                <select style={sl} value={editing.taxProfile} onChange={e => setEditing(p => p ? { ...p, taxProfile: e.target.value } : null)} aria-label="Tax profile">{TAX_PROFILES.map(t => <option key={t}>{t}</option>)}</select>
+                                <label className="ag-form-label">Tax Profile</label>
+                                <select className="ag-select" value={editing.taxProfile} onChange={e => setEditing(p => p ? { ...p, taxProfile: e.target.value } : null)} aria-label="Tax profile">{TAX_PROFILES.map(t => <option key={t}>{t}</option>)}</select>
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Production Center</label>
-                                <select style={sl} value={editing.productionCenter} onChange={e => setEditing(p => p ? { ...p, productionCenter: e.target.value } : null)} aria-label="Production center">{PROD_CENTERS.map(c => <option key={c}>{c}</option>)}</select>
+                                <label className="ag-form-label">Production Center</label>
+                                <select className="ag-select" value={editing.productionCenter} onChange={e => setEditing(p => p ? { ...p, productionCenter: e.target.value } : null)} aria-label="Production center">{PROD_CENTERS.map(c => <option key={c}>{c}</option>)}</select>
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: 14 }}>
-                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Default Course</label>
-                            <select style={sl} value={editing.course} onChange={e => setEditing(p => p ? { ...p, course: parseInt(e.target.value) } : null)} aria-label="Course">
+                        <div className="ag-form-group">
+                            <label className="ag-form-label">Default Course</label>
+                            <select className="ag-select" value={editing.course} onChange={e => setEditing(p => p ? { ...p, course: parseInt(e.target.value) } : null)} aria-label="Course">
                                 <option value={0}>No Default Course</option>
                                 <option value={1}>Course 1 - Starters</option>
                                 <option value={2}>Course 2 - Mains</option>
@@ -275,19 +271,19 @@ const AccountingGroups: React.FC = () => {
                             </select>
                         </div>
 
-                        <div style={{ marginBottom: 16 }}>
-                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                        <div className="ag-toggle-wrapper">
+                            <label className="ag-toggle-label">
                                 <div onClick={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)}
-                                    style={{ width: 44, height: 24, borderRadius: 12, background: editing.isActive ? '#3B82F6' : '#3f3f46', cursor: 'pointer', position: 'relative' }}>
-                                    <div style={{ position: 'absolute', top: 2, left: editing.isActive ? 22 : 2, width: 20, height: 20, borderRadius: '50%', background: '#fff', transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+                                    className={`ag-toggle-track ${editing.isActive ? 'ag-toggle-track--on' : 'ag-toggle-track--off'}`}>
+                                    <div className={`ag-toggle-thumb ${editing.isActive ? 'ag-toggle-thumb--on' : 'ag-toggle-thumb--off'}`} />
                                 </div>
                                 Active
                             </label>
                         </div>
 
-                        <div style={{ display: 'flex', gap: 8 }}>
-                            <button style={{ ...bp, flex: 1, justifyContent: 'center' }} onClick={saveGroup}><Save size={14} /> Save</button>
-                            <button style={bo} onClick={() => setEditing(null)}>Cancel</button>
+                        <div className="ag-modal-footer">
+                            <button className="ag-btn-primary ag-btn-save" onClick={saveGroup}><Save size={14} /> Save</button>
+                            <button className="ag-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                         </div>
                     </div>
                 </div>

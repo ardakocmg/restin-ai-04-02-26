@@ -17,10 +17,33 @@ import {
   CheckCircle2,
   AlertTriangle,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
+interface InventoryItem {
+  id: string;
+  name: string;
+  category?: string;
+  quantity: number;
+  unit?: string;
+  [key: string]: unknown;
+}
+
+interface AdjustmentEntry {
+  qty?: string;
+  reason?: string;
+}
+
+interface StatCardProps {
+  icon: LucideIcon;
+  label: string;
+  value: string | number;
+  subtext?: string;
+  color?: string;
+}
+
 // ── KPI Stat Card ──────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: StatCardProps) {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 flex items-center gap-4">
@@ -39,10 +62,10 @@ function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground'
 
 export default function StockAdjustments() {
   const { activeVenue } = useVenue();
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [adjustments, setAdjustments] = useState({});
+  const [adjustments, setAdjustments] = useState<Record<string, AdjustmentEntry>>({});
 
   useEffect(() => {
     if (activeVenue?.id) {
@@ -53,20 +76,20 @@ export default function StockAdjustments() {
   const loadInventory = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get(`/inventory/items?venue_id=${activeVenue.id}`);
+      const res = await api.get(`/inventory/items?venue_id=${activeVenue!.id}`);
       const data = res.data;
       setItems(Array.isArray(data) ? data : (data?.items || []));
       setAdjustments({});
-    } catch (error: any) {
-      logger.error('Failed to load inventory:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to load inventory:', { error: String(error) });
       toast.error('Failed to load inventory');
     } finally {
       setLoading(false);
     }
   }, [activeVenue?.id]);
 
-  const handleAdjustmentChange = (id, field, value) => {
-    setAdjustments(prev => ({
+  const handleAdjustmentChange = (id: string, field: string, value: string) => {
+    setAdjustments((prev: Record<string, AdjustmentEntry>) => ({
       ...prev,
       [id]: { ...prev[id], [field]: value },
     }));
@@ -74,7 +97,7 @@ export default function StockAdjustments() {
 
   const submitAdjustments = async () => {
     const updates = Object.entries(adjustments)
-      .map(([itemId, adj]) => ({
+      .map(([itemId, adj]: [string, AdjustmentEntry]) => ({
         item_id: itemId,
         quantity_change: parseFloat(adj.qty || '0'),
         reason: adj.reason || 'Manual Adjustment',
@@ -89,15 +112,15 @@ export default function StockAdjustments() {
     try {
       await Promise.all(updates.map(u =>
         api.post('/inventory/ledger', {
-          venue_id: activeVenue.id,
+          venue_id: activeVenue!.id,
           ...u,
         })
       ));
       toast.success('Adjustments saved successfully');
       setAdjustments({});
       loadInventory();
-    } catch (error: any) {
-      logger.error('Failed to save adjustments:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to save adjustments:', { error: String(error) });
       toast.error('Failed to save adjustments');
     } finally {
       setSaving(false);
@@ -111,7 +134,7 @@ export default function StockAdjustments() {
     let positiveAdj = 0;
     let negativeAdj = 0;
 
-    for (const [id, adj] of Object.entries(adjustments)) {
+    for (const [id, adj] of Object.entries(adjustments) as [string, AdjustmentEntry][]) {
       const qty = parseFloat(adj.qty || '0');
       if (qty !== 0 && !isNaN(qty)) {
         adjustedCount++;
@@ -130,7 +153,7 @@ export default function StockAdjustments() {
       label: 'Item Name',
       enableSorting: true,
       size: 220,
-      render: (row) => (
+      render: (row: InventoryItem) => (
         <div className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-md bg-muted flex items-center justify-center shrink-0">
             <Package className="h-4 w-4 text-muted-foreground" />
@@ -147,7 +170,7 @@ export default function StockAdjustments() {
       label: 'Current Stock',
       enableSorting: true,
       size: 130,
-      render: (row) => (
+      render: (row: InventoryItem) => (
         <span className="font-medium tabular-nums">
           {(row.quantity ?? 0).toFixed(2)} <span className="text-xs text-muted-foreground">{row.unit || 'EA'}</span>
         </span>
@@ -157,7 +180,7 @@ export default function StockAdjustments() {
       key: 'adjustment',
       label: 'Adjustment (+/-)',
       size: 150,
-      render: (row) => {
+      render: (row: InventoryItem) => {
         const val = adjustments[row.id]?.qty || '';
         const numVal = parseFloat(val);
         const hasValue = val !== '' && !isNaN(numVal) && numVal !== 0;
@@ -177,7 +200,7 @@ export default function StockAdjustments() {
       key: 'new_stock',
       label: 'New Stock',
       size: 120,
-      render: (row) => {
+      render: (row: InventoryItem) => {
         const adj = parseFloat(adjustments[row.id]?.qty || '0');
         if (isNaN(adj) || adj === 0) return <span className="text-muted-foreground">—</span>;
         const newQty = (row.quantity ?? 0) + adj;
@@ -192,7 +215,7 @@ export default function StockAdjustments() {
       key: 'reason',
       label: 'Reason',
       size: 200,
-      render: (row) => (
+      render: (row: InventoryItem) => (
         <Input
           placeholder="e.g. Spillage, Received delivery..."
           className="h-8 text-sm"
@@ -205,7 +228,7 @@ export default function StockAdjustments() {
       key: 'status',
       label: 'Status',
       size: 90,
-      render: (row) => {
+      render: (row: InventoryItem) => {
         const adj = parseFloat(adjustments[row.id]?.qty || '0');
         if (isNaN(adj) || adj === 0) return <span className="text-muted-foreground text-xs">—</span>;
         return adj > 0 ? (

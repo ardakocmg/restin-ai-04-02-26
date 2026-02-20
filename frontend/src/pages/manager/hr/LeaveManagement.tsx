@@ -37,19 +37,60 @@ import api from '@/lib/api';
 import { toast } from 'sonner';
 import { useVenue } from '@/context/VenueContext';
 
+interface LeaveRequest {
+  id: string;
+  employee_id?: string;
+  employee_code?: string;
+  employee_name?: string;
+  leave_type?: string;
+  start_date?: string;
+  end_date?: string;
+  days?: number;
+  status?: string;
+  notes?: string;
+}
+
+interface LeaveBalance {
+  id?: string;
+  type?: string;
+  leave_type?: string;
+  balance: number;
+  total: number;
+  used: number;
+  accrued?: number;
+  pending?: number;
+}
+
+interface BlackoutDate {
+  id: string;
+  name?: string;
+  start_date?: string;
+  end_date?: string;
+  reason?: string;
+}
+
+interface AccrualRule {
+  id: string;
+  leave_type?: string;
+  accrual_method?: string;
+  accrual_rate?: number;
+  max_balance?: number;
+}
+
 export default function LeaveManagement() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('requests');
-  const [balances, setBalances] = useState([]);
-  const [blackouts, setBlackouts] = useState([]);
-  const [rules, setRules] = useState([]);
-  const [requests, setRequests] = useState([]);
-  const [myBalances, setMyBalances] = useState([]);
-  const [myRequests, setMyRequests] = useState([]);
+  const [balances, setBalances] = useState<LeaveBalance[]>([]);
+  const [blackouts, setBlackouts] = useState<BlackoutDate[]>([]);
+  const [rules, setRules] = useState<AccrualRule[]>([]);
+  const [requests, setRequests] = useState<LeaveRequest[]>([]);
+  const [myBalances, setMyBalances] = useState<LeaveBalance[]>([]);
+  const [myRequests, setMyRequests] = useState<LeaveRequest[]>([]);
   const [showNewRequest, setShowNewRequest] = useState(false);
   const [newRequest, setNewRequest] = useState({ type: 'vacation', start: '', end: '', notes: '' });
   const { activeVenue } = useVenue();
-  useAuditLog('LEAVE_MANAGEMENT_VIEWED', { resource: 'leave-management' });
+  const { logAction } = useAuditLog();
+  useEffect(() => { logAction('LEAVE_MANAGEMENT_VIEWED', 'leave-management'); }, []);
 
   const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
 
@@ -84,7 +125,7 @@ export default function LeaveManagement() {
     }
   };
 
-  const handleAction = async (id, action) => {
+  const handleAction = async (id: string, action: string) => {
     try {
       if (action === 'approve') {
         await api.post(`/venues/${venueId}/hr/leave/requests/${id}/approve`);
@@ -130,7 +171,7 @@ export default function LeaveManagement() {
 
   return (
     <PermissionGate requiredRole="MANAGER">
-      <PageContainer title="Leave Management" description="Unified leave hub — requests, balances, blackouts & accrual rules">
+      <PageContainer title="Leave Management" description="Unified leave hub — requests, balances, blackouts & accrual rules" actions={null}>
         <div className="p-6 space-y-6 max-w-[1400px] mx-auto">
 
           {/* ─── Tab Bar ──────────────────────────────── */}

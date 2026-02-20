@@ -25,7 +25,15 @@ import {
 import { toast } from 'sonner';
 
 // ── KPI Stat Card ──────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+interface StatCardProps {
+  icon: React.ElementType;
+  label: string;
+  value: string | number;
+  subtext?: string;
+  color?: string;
+}
+
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: StatCardProps) {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 flex items-center gap-4">
@@ -56,16 +64,53 @@ const WASTE_REASONS = [
   { value: 'Other', label: 'Other' },
 ];
 
+interface WasteItem {
+  id: string;
+  name?: string;
+  category?: string;
+  unit?: string;
+  quantity?: number;
+  cost?: number;
+  unit_cost?: number;
+  [key: string]: unknown;
+}
+
+interface WasteRecipe {
+  id: string;
+  _id?: string;
+  name?: string;
+  recipe_name?: string;
+  [key: string]: unknown;
+}
+
+interface WasteLogEntry {
+  item_id?: string;
+  quantity?: number;
+  reason?: string;
+  action?: string;
+  created_at?: string;
+  [key: string]: unknown;
+}
+
+interface WasteFormData {
+  item_id: string;
+  recipe_id: string;
+  quantity: string;
+  reason: string;
+  portions: string;
+  notes?: string;
+}
+
 export default function WasteLog() {
   const { activeVenue } = useVenue();
-  const [items, setItems] = useState([]);
-  const [recipes, setRecipes] = useState([]);
-  const [logs, setLogs] = useState([]);
+  const [items, setItems] = useState<WasteItem[]>([]);
+  const [recipes, setRecipes] = useState<WasteRecipe[]>([]);
+  const [logs, setLogs] = useState<WasteLogEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [wasteType, setWasteType] = useState('ingredient'); // 'ingredient' | 'recipe'
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<WasteFormData>({
     item_id: '',
     recipe_id: '',
     quantity: '',
@@ -83,8 +128,8 @@ export default function WasteLog() {
     setLoading(true);
     try {
       const [itemsRes, recipesRes] = await Promise.all([
-        api.get(`/inventory/items?venue_id=${activeVenue.id}`),
-        api.get(`/inventory/recipes?venue_id=${activeVenue.id}&page_size=500`).catch(() => ({ data: { items: [] } })),
+        api.get(`/inventory/items?venue_id=${activeVenue?.id}`),
+        api.get(`/inventory/recipes?venue_id=${activeVenue?.id}&page_size=500`).catch(() => ({ data: { items: [] } })),
       ]);
       const itemsData = itemsRes.data;
       setItems(Array.isArray(itemsData) ? itemsData : (itemsData?.items || []));
@@ -92,20 +137,20 @@ export default function WasteLog() {
 
       // Try dedicated waste logs endpoint first
       try {
-        const wasteRes = await api.get(`/inventory/waste?venue_id=${activeVenue.id}`);
+        const wasteRes = await api.get(`/inventory/waste?venue_id=${activeVenue?.id}`);
         setLogs(wasteRes.data?.logs || []);
       } catch {
         // Fallback: filter waste entries from stock ledger
-        const logsRes = await api.get(`/venues/${activeVenue.id}/inventory/ledger`).catch(() => ({ data: [] }));
-        const allLogs = logsRes.data || [];
-        const wasteLogs = allLogs.filter(l =>
+        const logsRes = await api.get(`/venues/${activeVenue?.id}/inventory/ledger`).catch(() => ({ data: [] }));
+        const allLogs: WasteLogEntry[] = logsRes.data || [];
+        const wasteLogs = allLogs.filter((l: WasteLogEntry) =>
           l.action === 'OUT' &&
-          ['Expired', 'Damaged', 'Spillage', 'Mistake', 'Overproduction', 'Quality', 'WASTE', 'RecipeWaste', 'CustomerReturn', 'StaffMeal'].some(r => (l.reason || '').includes(r))
+          ['Expired', 'Damaged', 'Spillage', 'Mistake', 'Overproduction', 'Quality', 'WASTE', 'RecipeWaste', 'CustomerReturn', 'StaffMeal'].some((r: string) => (l.reason || '').includes(r))
         );
         setLogs(wasteLogs);
       }
-    } catch (e: any) {
-      logger.error('Failed to load waste data:', e);
+    } catch (e: unknown) {
+      logger.error('Failed to load waste data:', { error: e instanceof Error ? e.message : String(e) });
       toast.error('Failed to load waste data');
     } finally {
       setLoading(false);
@@ -121,23 +166,23 @@ export default function WasteLog() {
       if (wasteType === 'ingredient') {
         const qty = parseFloat(formData.quantity);
         if (isNaN(qty) || qty <= 0) return toast.error('Invalid quantity');
-        const selectedItem = items.find(i => i.id === formData.item_id);
+        const selectedItemForSubmit = items.find((i: WasteItem) => i.id === formData.item_id);
         await api.post('/inventory/waste', {
-          venue_id: activeVenue.id,
+          venue_id: activeVenue?.id,
           item_id: formData.item_id,
-          item_name: selectedItem?.name || 'Unknown',
+          item_name: selectedItemForSubmit?.name || 'Unknown',
           item_type: 'INGREDIENT',
           quantity: qty,
-          unit: selectedItem?.unit || 'units',
+          unit: selectedItemForSubmit?.unit || 'units',
           reason: formData.reason,
           notes: formData.notes || null,
         });
       } else {
         // Recipe waste
         const portions = parseInt(formData.portions) || 1;
-        const recipe = recipes.find(r => r.id === formData.recipe_id || r._id === formData.recipe_id);
+        const recipe = recipes.find((r: WasteRecipe) => r.id === formData.recipe_id || r._id === formData.recipe_id);
         await api.post('/inventory/waste', {
-          venue_id: activeVenue.id,
+          venue_id: activeVenue?.id,
           item_id: formData.recipe_id,
           item_name: recipe?.name || recipe?.recipe_name || 'Recipe',
           item_type: 'RECIPE',
@@ -150,8 +195,8 @@ export default function WasteLog() {
       toast.success('Waste recorded successfully');
       setFormData({ item_id: '', recipe_id: '', quantity: '', reason: 'Expired', portions: '1' });
       loadData();
-    } catch (e: any) {
-      logger.error('Failed to record waste:', e);
+    } catch (e: unknown) {
+      logger.error('Failed to record waste:', { error: e instanceof Error ? e.message : String(e) });
       toast.error('Failed to record waste');
     } finally {
       setSubmitting(false);
@@ -163,7 +208,7 @@ export default function WasteLog() {
     const totalEntries = logs.length;
     let totalUnits = 0;
     let totalValue = 0;
-    const reasonCounts = {};
+    const reasonCounts: Record<string, number> = {};
 
     for (const log of logs) {
       totalUnits += log.quantity || 0;
@@ -174,30 +219,31 @@ export default function WasteLog() {
       reasonCounts[reason] = (reasonCounts[reason] || 0) + 1;
     }
 
-    const topReason = Object.entries(reasonCounts).sort((a, b) => b[1] - a[1])[0];
+    const topReason = Object.entries(reasonCounts).sort((a: [string, number], b: [string, number]) => b[1] - a[1])[0];
 
     return { totalEntries, totalUnits, totalValue, topReason: topReason?.[0] || '—', reasonCounts };
   }, [logs, items]);
 
   // ── Waste Analytics: by-reason breakdown ──
   const reasonBreakdown = useMemo(() => {
-    const entries = Object.entries(stats.reasonCounts || {}).sort((a, b) => b[1] - a[1]);
+    const entries = Object.entries(stats.reasonCounts || {}).sort((a: [string, number], b: [string, number]) => b[1] - a[1]);
     const max = entries.length > 0 ? entries[0][1] : 1;
-    return entries.map(([reason, count]) => ({ reason, count, pct: Math.round((count / max) * 100) }));
+    return entries.map(([reason, count]: [string, number]) => ({ reason, count, pct: Math.round((count / max) * 100) }));
   }, [stats.reasonCounts]);
 
   // ── Top wasted items ──
   const topWastedItems = useMemo(() => {
-    const itemWaste = {};
+    const itemWaste: Record<string, { qty: number; value: number; name: string }> = {};
     for (const log of logs) {
       const key = log.item_id;
-      if (!itemWaste[key]) itemWaste[key] = { qty: 0, value: 0 };
+      if (!key) continue;
+      if (!itemWaste[key]) itemWaste[key] = { qty: 0, value: 0, name: '' };
       itemWaste[key].qty += log.quantity || 0;
       const item = items.find(i => i.id === key);
       itemWaste[key].value += (log.quantity || 0) * (item?.cost ?? item?.unit_cost ?? 0);
-      itemWaste[key].name = item?.name || key?.substring(0, 12);
+      itemWaste[key].name = item?.name || key.substring(0, 12);
     }
-    return Object.values(itemWaste).sort((a, b) => b.value - a.value).slice(0, 5);
+    return Object.values(itemWaste).sort((a: { qty: number; value: number; name: string }, b: { qty: number; value: number; name: string }) => b.value - a.value).slice(0, 5);
   }, [logs, items]);
 
   const selectedItem = items.find(i => i.id === formData.item_id);
@@ -209,9 +255,9 @@ export default function WasteLog() {
       label: 'Time',
       enableSorting: true,
       size: 160,
-      render: (row) => (
+      render: (row: WasteLogEntry) => (
         <span className="text-sm tabular-nums">
-          {new Date(row.created_at).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+          {new Date(row.created_at || '').toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
         </span>
       ),
     },
@@ -219,7 +265,7 @@ export default function WasteLog() {
       key: 'item_id',
       label: 'Item',
       size: 200,
-      render: (row) => {
+      render: (row: WasteLogEntry) => {
         const item = items.find(i => i.id === row.item_id);
         return (
           <div className="min-w-0">
@@ -233,7 +279,7 @@ export default function WasteLog() {
       key: 'quantity',
       label: 'Loss',
       size: 100,
-      render: (row) => (
+      render: (row: WasteLogEntry) => (
         <span className="text-red-500 dark:text-red-400 font-bold tabular-nums">
           -{(row.quantity || 0).toFixed(2)}
         </span>
@@ -243,7 +289,7 @@ export default function WasteLog() {
       key: 'reason',
       label: 'Reason',
       size: 160,
-      render: (row) => {
+      render: (row: WasteLogEntry) => {
         const reason = (row.reason || '').replace('[WASTE] ', '');
         const reasonColors = {
           Expired: 'text-orange-500 border-orange-500',
@@ -372,7 +418,7 @@ export default function WasteLog() {
                     </SelectTrigger>
                     <SelectContent className="max-h-60">
                       {recipes.map(r => (
-                        <SelectItem key={r.id || r._id} value={r.id || r._id}>{r.name}</SelectItem>
+                        <SelectItem key={r.id || r._id || ''} value={r.id || r._id || ''}>{r.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

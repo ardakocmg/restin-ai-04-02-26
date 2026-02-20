@@ -11,18 +11,41 @@
  */
 import React, { useState, useEffect } from 'react';
 
+/* ===== Types ===== */
+
+interface DisplayItem {
+    id?: string;
+    menu_item_name?: string;
+    name?: string;
+    qty?: number;
+    unit_price?: number;
+    price?: number;
+    modifiers?: Array<{ name: string } | string>;
+}
+
+type DisplayStatus = 'welcome' | 'ordering' | 'payment' | 'thankyou';
+
+interface BroadcastMessage {
+    type: 'ORDER_UPDATE' | 'PAYMENT_START' | 'ORDER_COMPLETE' | 'CLEAR';
+    items?: DisplayItem[];
+    total?: number;
+    venueName?: string;
+}
+
+/* ===== Constants ===== */
+
 const BROADCAST_CHANNEL = 'pos-customer-display';
 
 export default function CustomerFacingDisplay() {
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState<DisplayItem[]>([]);
     const [total, setTotal] = useState(0);
     const [venueName, setVenueName] = useState('');
-    const [status, setStatus] = useState('welcome'); // 'welcome' | 'ordering' | 'payment' | 'thankyou'
+    const [status, setStatus] = useState<DisplayStatus>('welcome');
     const [lastUpdate, setLastUpdate] = useState(Date.now());
 
     useEffect(() => {
         const channel = new BroadcastChannel(BROADCAST_CHANNEL);
-        channel.onmessage = (event) => {
+        channel.onmessage = (event: MessageEvent<BroadcastMessage>) => {
             const data = event.data;
             if (data.type === 'ORDER_UPDATE') {
                 setItems(data.items || []);
@@ -78,9 +101,9 @@ export default function CustomerFacingDisplay() {
                                     <div style={styles.itemQty}>{item.qty || 1}x</div>
                                     <div style={styles.itemName}>
                                         {item.menu_item_name || item.name}
-                                        {item.modifiers?.length > 0 && (
+                                        {item.modifiers && item.modifiers.length > 0 && (
                                             <div style={styles.itemMod}>
-                                                {item.modifiers.map(m => m.name || m).join(', ')}
+                                                {item.modifiers.map((m: { name: string } | string) => typeof m === 'string' ? m : m.name).join(', ')}
                                             </div>
                                         )}
                                     </div>
@@ -136,7 +159,7 @@ export default function CustomerFacingDisplay() {
 }
 
 /* ═══ Broadcast Helper — call from POS Runtime ════════════════ */
-export function broadcastToCustomerDisplay(type, data = {}) {
+export function broadcastToCustomerDisplay(type: string, data: Record<string, unknown> = {}) {
     try {
         const channel = new BroadcastChannel(BROADCAST_CHANNEL);
         channel.postMessage({ type, ...data });
@@ -146,7 +169,7 @@ export function broadcastToCustomerDisplay(type, data = {}) {
     }
 }
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
     root: {
         display: 'flex', flexDirection: 'column',
         height: '100vh', width: '100vw',

@@ -28,8 +28,37 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
+interface SuggestionItem {
+    id: string;
+    name: string;
+    category: string;
+    current_stock: number;
+    min_stock: number;
+    max_stock: number;
+    suggested_qty: number;
+    unit: string;
+    unit_cost: number;
+    est_cost: number;
+    supplier: string;
+    urgency: string;
+    forecast_usage: number;
+    forecast_days: number;
+    forecast_trend: string;
+    forecast_pct: number;
+    seasonality: string;
+    ai_suggested_qty: number;
+}
+
+interface StatCardProps {
+    icon: React.ComponentType<{ className?: string }>;
+    label: string;
+    value: string | number;
+    subtext?: string;
+    color?: string;
+}
+
 // ── KPI Stat Card ──────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: StatCardProps) {
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardContent className="p-4 flex items-center gap-4">
@@ -47,8 +76,8 @@ function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground'
 }
 
 // ── Urgency Badge ──────────────────────────────────────────────────
-function UrgencyBadge({ level }) {
-    const config = {
+function UrgencyBadge({ level }: { level: string }) {
+    const config: Record<string, { label: string; className: string }> = {
         critical: { label: 'Critical', className: 'text-red-600 dark:text-red-400 border-red-400 bg-red-500/10' },
         low: { label: 'Low Stock', className: 'text-amber-600 dark:text-amber-400 border-amber-400 bg-amber-500/10' },
         reorder: { label: 'Reorder', className: 'text-blue-600 dark:text-blue-400 border-blue-400 bg-blue-500/10' },
@@ -59,9 +88,9 @@ function UrgencyBadge({ level }) {
 }
 
 // ── Gap 15: Seasonality Icon ───────────────────────────────────────
-function SeasonalityIcon({ factor }) {
+function SeasonalityIcon({ factor }: { factor: string }) {
     if (!factor || factor === 'none') return null;
-    const icons = {
+    const icons: Record<string, { icon: React.ComponentType<{ className?: string }>; label: string; className: string }> = {
         summer_peak: { icon: Sun, label: 'Summer Peak', className: 'text-amber-500' },
         winter_high: { icon: Snowflake, label: 'Winter High', className: 'text-blue-400' },
         rainy_dip: { icon: CloudRain, label: 'Rainy Dip', className: 'text-muted-foreground' },
@@ -78,7 +107,7 @@ function SeasonalityIcon({ factor }) {
 }
 
 // ── Gap 15: Forecast Trend Badge ───────────────────────────────────
-function ForecastTrend({ trend, pct }) {
+function ForecastTrend({ trend, pct }: { trend: string; pct: number }) {
     if (!trend) return <span className="text-xs text-muted-foreground">—</span>;
     if (trend === 'up') return <span className="flex items-center gap-0.5 text-xs text-green-500"><TrendingUp className="h-3 w-3" /> +{pct}%</span>;
     if (trend === 'down') return <span className="flex items-center gap-0.5 text-xs text-red-500"><TrendingDown className="h-3 w-3" /> -{pct}%</span>;
@@ -87,9 +116,9 @@ function ForecastTrend({ trend, pct }) {
 
 export default function OrderingSuggestions() {
     const { activeVenue } = useVenue();
-    const [suggestions, setSuggestions] = useState([]);
+    const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selected, setSelected] = useState(new Set());
+    const [selected, setSelected] = useState(new Set<string>());
     const [generating, setGenerating] = useState(false);
 
     useEffect(() => {
@@ -102,19 +131,19 @@ export default function OrderingSuggestions() {
         setLoading(true);
         try {
             // Try server-side ordering suggestions first
-            const res = await api.get(`/inventory/ordering-suggestions?venue_id=${activeVenue.id}`);
+            const res = await api.get(`/inventory/ordering-suggestions?venue_id=${activeVenue!.id}`);
             const serverSuggestions = res.data?.suggestions || [];
 
             if (serverSuggestions.length > 0) {
                 // Add AI forecast placeholder fields (until ML endpoint is live)
-                const enriched = serverSuggestions.map(item => ({
+                const enriched = serverSuggestions.map((item: Record<string, unknown>) => ({
                     ...item,
-                    forecast_usage: item.forecast_usage || Math.round((item.suggested_qty || 0) * 0.8),
-                    forecast_days: item.forecast_days || 7,
-                    forecast_trend: item.forecast_trend || 'stable',
-                    forecast_pct: item.forecast_pct || 0,
-                    seasonality: item.seasonality || 'none',
-                    ai_suggested_qty: item.ai_suggested_qty || Math.ceil((item.suggested_qty || 0) * 1.2),
+                    forecast_usage: (item.forecast_usage as number) || Math.round(((item.suggested_qty as number) || 0) * 0.8),
+                    forecast_days: (item.forecast_days as number) || 7,
+                    forecast_trend: (item.forecast_trend as string) || 'stable',
+                    forecast_pct: (item.forecast_pct as number) || 0,
+                    seasonality: (item.seasonality as string) || 'none',
+                    ai_suggested_qty: (item.ai_suggested_qty as number) || Math.ceil(((item.suggested_qty as number) || 0) * 1.2),
                 }));
                 setSuggestions(enriched);
             } else {
@@ -123,35 +152,35 @@ export default function OrderingSuggestions() {
         } catch {
             // Fallback: try client-side computation from inventory items
             try {
-                const res = await api.get(`/inventory/items?venue_id=${activeVenue.id}&page_size=500`);
+                const res = await api.get(`/inventory/items?venue_id=${activeVenue!.id}&page_size=500`);
                 const items = res.data?.items || res.data || [];
 
-                const sugg = items
-                    .filter(item => {
-                        const stock = parseFloat(item.quantity || item.current_stock) || 0;
-                        const minStock = parseFloat(item.min_quantity || item.min_stock) || 0;
+                const sugg: SuggestionItem[] = items
+                    .filter((item: Record<string, unknown>) => {
+                        const stock = parseFloat(String(item.quantity || item.current_stock)) || 0;
+                        const minStock = parseFloat(String(item.min_quantity || item.min_stock)) || 0;
                         return minStock > 0 && stock <= minStock * 1.5;
                     })
-                    .map(item => {
-                        const stock = parseFloat(item.quantity || item.current_stock) || 0;
-                        const minStock = parseFloat(item.min_quantity || item.min_stock) || 0;
-                        const maxStock = parseFloat(item.max_quantity || item.max_stock) || minStock * 3;
+                    .map((item: Record<string, unknown>) => {
+                        const stock = parseFloat(String(item.quantity || item.current_stock)) || 0;
+                        const minStock = parseFloat(String(item.min_quantity || item.min_stock)) || 0;
+                        const maxStock = parseFloat(String(item.max_quantity || item.max_stock)) || minStock * 3;
                         const orderQty = Math.max(0, maxStock - stock);
-                        const unitCost = parseFloat(item.unit_cost) || 0;
+                        const unitCost = parseFloat(String(item.unit_cost)) || 0;
                         const urgency = stock <= 0 ? 'critical' : stock <= minStock * 0.5 ? 'low' : stock <= minStock ? 'reorder' : 'optimal';
 
                         return {
-                            id: item.id,
-                            name: item.name,
-                            category: item.category || '—',
+                            id: String(item.id),
+                            name: String(item.name),
+                            category: String(item.category || '—'),
                             current_stock: stock,
                             min_stock: minStock,
                             max_stock: maxStock,
                             suggested_qty: Math.ceil(orderQty),
-                            unit: item.unit || 'units',
+                            unit: String(item.unit || 'units'),
                             unit_cost: unitCost,
                             est_cost: orderQty * unitCost,
-                            supplier: item.supplier_name || item.preferred_supplier || '—',
+                            supplier: String(item.supplier_name || item.preferred_supplier || '—'),
                             urgency,
                             forecast_usage: Math.round(orderQty * 0.8),
                             forecast_days: 7,
@@ -161,8 +190,8 @@ export default function OrderingSuggestions() {
                             ai_suggested_qty: Math.ceil(orderQty * 1.2),
                         };
                     })
-                    .sort((a, b) => {
-                        const order = { critical: 0, low: 1, reorder: 2, optimal: 3 };
+                    .sort((a: SuggestionItem, b: SuggestionItem) => {
+                        const order: Record<string, number> = { critical: 0, low: 1, reorder: 2, optimal: 3 };
                         return (order[a.urgency] ?? 3) - (order[b.urgency] ?? 3);
                     });
 
@@ -175,7 +204,7 @@ export default function OrderingSuggestions() {
         }
     }, [activeVenue?.id]);
 
-    function getDemoSuggestions() {
+    function getDemoSuggestions(): SuggestionItem[] {
         return [
             { id: 'inv-001', name: 'Atlantic Salmon Fillet', category: 'Seafood', current_stock: 2, min_stock: 10, max_stock: 30, suggested_qty: 28, unit: 'kg', unit_cost: 24.50, est_cost: 686.00, supplier: 'Fresh Catch Fisheries', urgency: 'critical', forecast_usage: 32, forecast_days: 7, forecast_trend: 'up', forecast_pct: 15, seasonality: 'summer_peak', ai_suggested_qty: 38 },
             { id: 'inv-002', name: 'Wagyu Beef A5', category: 'Meat', current_stock: 1.5, min_stock: 5, max_stock: 15, suggested_qty: 14, unit: 'kg', unit_cost: 180.00, est_cost: 2520.00, supplier: 'Premium Meats & Delicatessen', urgency: 'critical', forecast_usage: 8, forecast_days: 7, forecast_trend: 'stable', forecast_pct: 3, seasonality: 'none', ai_suggested_qty: 10 },
@@ -200,7 +229,7 @@ export default function OrderingSuggestions() {
         return { total, critical, lowStock, estTotal, aiSavings };
     }, [suggestions]);
 
-    const toggleSelect = (id) => {
+    const toggleSelect = (id: string) => {
         setSelected(prev => {
             const next = new Set(prev);
             next.has(id) ? next.delete(id) : next.add(id);
@@ -221,7 +250,7 @@ export default function OrderingSuggestions() {
 
         setGenerating(true);
         try {
-            const bySupplier = {};
+            const bySupplier: Record<string, SuggestionItem[]> = {};
             suggestions.filter(s => selected.has(s.id)).forEach(s => {
                 if (!bySupplier[s.supplier]) bySupplier[s.supplier] = [];
                 bySupplier[s.supplier].push(s);
@@ -230,7 +259,7 @@ export default function OrderingSuggestions() {
             const poCount = Object.keys(bySupplier).length;
             toast.success(`${poCount} purchase order(s) generated for ${selected.size} items`);
             setSelected(new Set());
-        } catch (err: any) {
+        } catch (err: unknown) {
             logger.error('Failed to generate POs', err);
             toast.error('Failed to generate purchase orders');
         } finally {
@@ -242,11 +271,11 @@ export default function OrderingSuggestions() {
     const COLUMNS = useMemo(() => [
         {
             key: 'select', label: '', size: 40,
-            render: (row) => <Checkbox checked={selected.has(row.id)} onCheckedChange={() => toggleSelect(row.id)} />,
+            render: (row: SuggestionItem) => <Checkbox checked={selected.has(row.id)} onCheckedChange={() => toggleSelect(row.id)} />,
         },
         {
             key: 'name', label: 'Item', enableSorting: true, size: 180,
-            render: (row) => (
+            render: (row: SuggestionItem) => (
                 <div>
                     <div className="font-medium">{row.name}</div>
                     <div className="text-xs text-muted-foreground">{row.category}</div>
@@ -255,7 +284,7 @@ export default function OrderingSuggestions() {
         },
         {
             key: 'current_stock', label: 'Current Stock', enableSorting: true, size: 100,
-            render: (row) => (
+            render: (row: SuggestionItem) => (
                 <div>
                     <span className={`font-medium tabular-nums ${row.current_stock <= row.min_stock * 0.5 ? 'text-red-500' : row.current_stock <= row.min_stock ? 'text-amber-500' : ''}`}>
                         {row.current_stock} {row.unit}
@@ -266,12 +295,12 @@ export default function OrderingSuggestions() {
         },
         {
             key: 'suggested_qty', label: 'Order Qty', enableSorting: true, size: 90,
-            render: (row) => <span className="font-bold tabular-nums text-blue-600 dark:text-blue-400">{row.suggested_qty} {row.unit}</span>,
+            render: (row: SuggestionItem) => <span className="font-bold tabular-nums text-blue-600 dark:text-blue-400">{row.suggested_qty} {row.unit}</span>,
         },
         // Gap 15: AI Suggested Qty column
         {
             key: 'ai_suggested_qty', label: '🤖 AI Qty', size: 90,
-            render: (row) => {
+            render: (row: SuggestionItem) => {
                 const diff = (row.ai_suggested_qty || 0) - row.suggested_qty;
                 return (
                     <div>
@@ -288,12 +317,12 @@ export default function OrderingSuggestions() {
         // Gap 15: Forecast trend column
         {
             key: 'forecast_trend', label: '📈 Trend', size: 80,
-            render: (row) => <ForecastTrend trend={row.forecast_trend} pct={row.forecast_pct} />,
+            render: (row: SuggestionItem) => <ForecastTrend trend={row.forecast_trend} pct={row.forecast_pct} />,
         },
         // Gap 15: Forecast usage
         {
             key: 'forecast_usage', label: '7d Forecast', size: 90,
-            render: (row) => (
+            render: (row: SuggestionItem) => (
                 <div>
                     <span className="tabular-nums text-sm">{row.forecast_usage || '—'} {row.unit}</span>
                     <SeasonalityIcon factor={row.seasonality} />
@@ -302,11 +331,11 @@ export default function OrderingSuggestions() {
         },
         {
             key: 'est_cost', label: 'Est. Total', enableSorting: true, size: 90,
-            render: (row) => <span className="font-medium tabular-nums text-green-600 dark:text-green-400">€{row.est_cost.toFixed(2)}</span>,
+            render: (row: SuggestionItem) => <span className="font-medium tabular-nums text-green-600 dark:text-green-400">€{row.est_cost.toFixed(2)}</span>,
         },
         {
             key: 'supplier', label: 'Supplier', enableSorting: true, size: 140,
-            render: (row) => <span className="text-sm">{row.supplier}</span>,
+            render: (row: SuggestionItem) => <span className="text-sm">{row.supplier}</span>,
         },
         {
             key: 'urgency', label: 'Urgency', size: 90,
@@ -314,7 +343,7 @@ export default function OrderingSuggestions() {
             filterOptions: [
                 { value: 'critical', label: 'Critical' }, { value: 'low', label: 'Low Stock' }, { value: 'reorder', label: 'Reorder' },
             ],
-            render: (row) => <UrgencyBadge level={row.urgency} />,
+            render: (row: SuggestionItem) => <UrgencyBadge level={row.urgency} />,
         },
     ], [selected]);
 

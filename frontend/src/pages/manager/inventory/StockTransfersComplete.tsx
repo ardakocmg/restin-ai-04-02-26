@@ -31,8 +31,48 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
+interface TransferData {
+  id: string;
+  display_id?: string;
+  destination_venue_name?: string;
+  destination_venue_id?: string;
+  items: Record<string, unknown>[];
+  created_at?: string;
+  status: string;
+  notes?: string;
+  order_type?: string;
+  priority?: string;
+  needed_by?: string;
+  [key: string]: unknown;
+}
+
+interface TransferFormItem {
+  item_id: string;
+  quantity: string;
+}
+
+interface VenueItem {
+  id: string;
+  name: string;
+  [key: string]: unknown;
+}
+
+interface InventoryItem {
+  id: string;
+  name: string;
+  [key: string]: unknown;
+}
+
+interface StatCardProps {
+  icon: React.ElementType;
+  label: string;
+  value: string | number;
+  subtext?: string;
+  color?: string;
+}
+
 // ── KPI Stat Card ──────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: StatCardProps) {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 flex items-center gap-4">
@@ -50,13 +90,12 @@ function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground'
 }
 
 // ── Status Badge ───────────────────────────────────────────────────
-function StatusBadge({ status }) {
-  const config = {
+function StatusBadge({ status }: { status: string }) {
+  const config: Record<string, { label: string; icon: React.ElementType; className: string }> = {
     pending: { label: 'Pending', icon: Clock, className: 'text-yellow-600 dark:text-yellow-400 border-yellow-400' },
     in_transit: { label: 'In Transit', icon: Truck, className: 'text-blue-600 dark:text-blue-400 border-blue-400' },
     completed: { label: 'Completed', icon: CheckCircle2, className: 'text-green-600 dark:text-green-400 border-green-400' },
     cancelled: { label: 'Cancelled', icon: XCircle, className: 'text-red-600 dark:text-red-400 border-red-400' },
-    // Gap 13: Internal order statuses
     requested: { label: 'Requested', icon: Send, className: 'text-purple-600 dark:text-purple-400 border-purple-400' },
     in_production: { label: 'In Production', icon: ChefHat, className: 'text-orange-600 dark:text-orange-400 border-orange-400' },
     ready: { label: 'Ready', icon: CheckCircle2, className: 'text-green-600 dark:text-green-400 border-green-400' },
@@ -71,7 +110,7 @@ function StatusBadge({ status }) {
 }
 
 // ── Order Type Badge (Gap 13) ──────────────────────────────────────
-function OrderTypeBadge({ type }) {
+function OrderTypeBadge({ type }: { type: string }) {
   if (type === 'internal') {
     return <Badge variant="outline" className="text-xs text-purple-500 border-purple-400 gap-1"><ChefHat className="h-3 w-3" /> Internal</Badge>;
   }
@@ -80,9 +119,9 @@ function OrderTypeBadge({ type }) {
 
 export default function StockTransfersComplete() {
   const { activeVenue } = useVenue();
-  const [transfers, setTransfers] = useState([]);
-  const [items, setItems] = useState([]);
-  const [venues, setVenues] = useState([]);
+  const [transfers, setTransfers] = useState<TransferData[]>([]);
+  const [items, setItems] = useState<InventoryItem[]>([]);
+  const [venues, setVenues] = useState<VenueItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -90,12 +129,19 @@ export default function StockTransfersComplete() {
   // Gap 13: Tab state for transfers vs internal orders
   const [activeTab, setActiveTab] = useState('all');
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    destination_venue_id: string;
+    items: TransferFormItem[];
+    notes: string;
+    order_type: string;
+    priority: string;
+    needed_by: string;
+  }>({
     destination_venue_id: '',
     items: [{ item_id: '', quantity: '' }],
     notes: '',
-    order_type: 'transfer', // 'transfer' | 'internal'
-    priority: 'normal', // 'normal' | 'urgent'
+    order_type: 'transfer',
+    priority: 'normal',
     needed_by: '',
   });
 
@@ -109,22 +155,22 @@ export default function StockTransfersComplete() {
   const loadCreateData = useCallback(async () => {
     try {
       const [itemsRes, venuesRes] = await Promise.all([
-        api.get(`/inventory/items?venue_id=${activeVenue.id}`),
+        api.get(`/inventory/items?venue_id=${activeVenue!.id}`),
         api.get('/venues').catch(() => ({ data: [] })),
       ]);
       const itemsData = itemsRes.data;
       setItems(Array.isArray(itemsData) ? itemsData : (itemsData?.items || []));
       const venuesList = Array.isArray(venuesRes.data) ? venuesRes.data : (venuesRes.data?.venues || []);
-      setVenues(venuesList.filter(v => v.id !== activeVenue.id));
-    } catch (e: any) {
-      logger.error('Failed to load create data:', e);
+      setVenues(venuesList.filter((v: VenueItem) => v.id !== activeVenue!.id));
+    } catch (e: unknown) {
+      logger.error('Failed to load create data:', { error: String(e) });
     }
   }, [activeVenue?.id]);
 
   const loadTransfers = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get(`/inventory/transfers?venue_id=${activeVenue.id}`);
+      const res = await api.get(`/inventory/transfers?venue_id=${activeVenue!.id}`);
       const data = res.data;
       setTransfers(Array.isArray(data) ? data : (data?.transfers || getDemoTransfers()));
     } catch {
@@ -147,14 +193,14 @@ export default function StockTransfersComplete() {
   }
 
   const handleCreateTransfer = async () => {
-    const validItems = formData.items.filter(i => i.item_id && i.quantity && parseFloat(i.quantity) > 0);
+    const validItems = formData.items.filter((i: TransferFormItem) => i.item_id && i.quantity && parseFloat(i.quantity) > 0);
     if (!formData.destination_venue_id) return toast.error('Select a destination');
     if (validItems.length === 0) return toast.error('Add at least one item');
 
     setSubmitting(true);
     try {
       await api.post('/inventory/transfers', {
-        source_venue_id: activeVenue.id,
+        source_venue_id: activeVenue!.id,
         destination_venue_id: formData.destination_venue_id,
         items: validItems.map(i => ({
           item_id: i.item_id,
@@ -169,8 +215,8 @@ export default function StockTransfersComplete() {
       setShowCreate(false);
       setFormData({ destination_venue_id: '', items: [{ item_id: '', quantity: '' }], notes: '', order_type: 'transfer', priority: 'normal', needed_by: '' });
       loadTransfers();
-    } catch (e: any) {
-      logger.error('Failed to create transfer:', e);
+    } catch (e: unknown) {
+      logger.error('Failed to create transfer:', { error: String(e) });
       toast.error('Failed to create transfer');
     } finally {
       setSubmitting(false);
@@ -184,7 +230,7 @@ export default function StockTransfersComplete() {
     }));
   };
 
-  const updateTransferItem = (index, field, value) => {
+  const updateTransferItem = (index: number, field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       items: prev.items.map((item, i) => i === index ? { ...item, [field]: value } : item),
@@ -220,31 +266,31 @@ export default function StockTransfersComplete() {
   const COLUMNS = useMemo(() => [
     {
       key: 'id', label: 'ID', enableSorting: true, size: 100,
-      render: (row) => <span className="font-mono text-sm">{(row.display_id || row.id || '').substring(0, 12)}</span>,
+      render: (row: TransferData) => <span className="font-mono text-sm">{(row.display_id || row.id || '').substring(0, 12)}</span>,
     },
     // Gap 13: Order type column
     {
       key: 'order_type', label: 'Type', size: 90,
-      render: (row) => <OrderTypeBadge type={row.order_type || 'transfer'} />,
+      render: (row: TransferData) => <OrderTypeBadge type={row.order_type || 'transfer'} />,
     },
     {
       key: 'destination', label: 'Destination', size: 160,
-      render: (row) => (
+      render: (row: TransferData) => (
         <div className="flex items-center gap-2">
           <Building2 className="h-4 w-4 text-muted-foreground" />
           <span className="truncate">{row.destination_venue_name || row.destination_venue_id || '—'}</span>
         </div>
       ),
     },
-    { key: 'item_count', label: 'Items', size: 60, render: (row) => <Badge variant="outline" className="text-xs">{row.items?.length || 0}</Badge> },
+    { key: 'item_count', label: 'Items', size: 60, render: (row: TransferData) => <Badge variant="outline" className="text-xs">{row.items?.length || 0}</Badge> },
     {
       key: 'created_at', label: 'Created', enableSorting: true, size: 110,
-      render: (row) => <span className="text-sm tabular-nums text-muted-foreground">{row.created_at ? new Date(row.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '—'}</span>,
+      render: (row: TransferData) => <span className="text-sm tabular-nums text-muted-foreground">{row.created_at ? new Date(row.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '—'}</span>,
     },
     // Gap 13: Needed by column for internal orders
     {
       key: 'needed_by', label: 'Needed By', size: 100,
-      render: (row) => {
+      render: (row: TransferData) => {
         if (!row.needed_by) return <span className="text-xs text-muted-foreground">—</span>;
         const date = new Date(row.needed_by);
         const isOverdue = date < new Date();
@@ -254,7 +300,7 @@ export default function StockTransfersComplete() {
     // Gap 13: Priority for internal orders
     {
       key: 'priority', label: 'Priority', size: 80,
-      render: (row) => {
+      render: (row: TransferData) => {
         if (row.priority === 'urgent') return <Badge variant="outline" className="text-xs text-red-500 border-red-400"><AlertTriangle className="h-3 w-3 mr-1" /> Urgent</Badge>;
         return <span className="text-xs text-muted-foreground">Normal</span>;
       },
@@ -268,11 +314,11 @@ export default function StockTransfersComplete() {
         { value: 'requested', label: 'Requested' }, { value: 'in_production', label: 'In Production' },
         { value: 'ready', label: 'Ready' },
       ],
-      render: (row) => <StatusBadge status={row.status || 'pending'} />,
+      render: (row: TransferData) => <StatusBadge status={row.status || 'pending'} />,
     },
     {
       key: 'notes', label: 'Notes', size: 140,
-      render: (row) => <span className="text-sm text-muted-foreground truncate block max-w-[130px]">{row.notes || '—'}</span>,
+      render: (row: TransferData) => <span className="text-sm text-muted-foreground truncate block max-w-[130px]">{row.notes || '—'}</span>,
     },
   ], []);
 
@@ -354,7 +400,7 @@ export default function StockTransfersComplete() {
               <Select value={formData.destination_venue_id} onValueChange={v => setFormData({ ...formData, destination_venue_id: v })}>
                 <SelectTrigger><SelectValue placeholder={formData.order_type === 'internal' ? 'Select central kitchen...' : 'Select destination venue...'} /></SelectTrigger>
                 <SelectContent>
-                  {venues.map(v => <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>)}
+                  {venues.map((v: VenueItem) => <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>)}
                   {venues.length === 0 && <SelectItem value="none" disabled>No other venues available</SelectItem>}
                 </SelectContent>
               </Select>
@@ -388,7 +434,7 @@ export default function StockTransfersComplete() {
                     <Select value={item.item_id} onValueChange={v => updateTransferItem(idx, 'item_id', v)}>
                       <SelectTrigger><SelectValue placeholder="Select item..." /></SelectTrigger>
                       <SelectContent className="max-h-60">
-                        {items.map(i => <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>)}
+                        {items.map((i: InventoryItem) => <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>)}
                       </SelectContent>
                     </Select>
                   </div>

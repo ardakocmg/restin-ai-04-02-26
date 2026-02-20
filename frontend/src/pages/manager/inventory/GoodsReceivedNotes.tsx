@@ -34,8 +34,54 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
+// ── Interfaces ─────────────────────────────────────────────────────
+interface GRNLineItem {
+    name: string;
+    ordered: number;
+    received: number;
+    unit: string;
+    po_price: number;
+    invoice_price: number;
+    lot?: string;
+    expiry?: string;
+}
+
+interface GRNData {
+    id: string;
+    supplier_name: string;
+    po_number?: string;
+    delivery_note?: string;
+    received_date: string;
+    items_count: number;
+    total_value: number;
+    status: string;
+    variance_count: number;
+    qty_discrepancy: number;
+    price_discrepancy: number;
+    lots_tracked: number;
+    line_items: GRNLineItem[];
+}
+
+interface SupplierItem {
+    id: string;
+    name: string;
+}
+
+interface InventoryItemData {
+    id: string;
+    name: string;
+}
+
+interface StatCardProps {
+    icon: React.ComponentType<{ className?: string }>;
+    label: string;
+    value: string | number;
+    subtext?: string;
+    color?: string;
+}
+
 // ── KPI Stat Card ──────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: StatCardProps) {
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardContent className="p-4 flex items-center gap-4">
@@ -53,8 +99,8 @@ function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground'
 }
 
 // ── Status Badge ───────────────────────────────────────────────────
-function GRNStatusBadge({ status }) {
-    const config = {
+function GRNStatusBadge({ status }: { status: string }) {
+    const config: Record<string, { label: string; className: string }> = {
         draft: { label: 'Draft', className: 'text-muted-foreground border-zinc-400' },
         posted: { label: 'Posted', className: 'text-green-600 dark:text-green-400 border-green-400' },
         with_variance: { label: 'Variance', className: 'text-amber-600 dark:text-amber-400 border-amber-400' },
@@ -64,7 +110,7 @@ function GRNStatusBadge({ status }) {
 }
 
 // ── Reconciliation Badge (Gap 11) ──────────────────────────────────
-function ReconciliationBadge({ row }) {
+function ReconciliationBadge({ row }: { row: GRNData }) {
     const discrepancies = row.qty_discrepancy || 0;
     const priceDisc = row.price_discrepancy || 0;
     const total = discrepancies + priceDisc;
@@ -79,16 +125,16 @@ function ReconciliationBadge({ row }) {
 
 export default function GoodsReceivedNotes() {
     const { activeVenue } = useVenue();
-    const [grns, setGrns] = useState([]);
+    const [grns, setGrns] = useState<GRNData[]>([]);
     const [loading, setLoading] = useState(true);
-    const [suppliers, setSuppliers] = useState([]);
-    const [inventoryItems, setInventoryItems] = useState([]);
+    const [suppliers, setSuppliers] = useState<SupplierItem[]>([]);
+    const [inventoryItems, setInventoryItems] = useState<InventoryItemData[]>([]);
     const [createOpen, setCreateOpen] = useState(false);
     const [saving, setSaving] = useState(false);
 
     // Gap 11: Reconciliation detail view
     const [reconcileOpen, setReconcileOpen] = useState(false);
-    const [selectedGRN, setSelectedGRN] = useState(null);
+    const [selectedGRN, setSelectedGRN] = useState<GRNData | null>(null);
 
     // Create form state — enhanced with lot/traceability fields (Gap 14)
     const [form, setForm] = useState({
@@ -111,9 +157,9 @@ export default function GoodsReceivedNotes() {
         setLoading(true);
         try {
             const [grnsRes, suppRes, itemsRes] = await Promise.allSettled([
-                api.get(`/inventory/receiving/grns?venue_id=${activeVenue.id}`),
-                api.get(`/inventory/suppliers?venue_id=${activeVenue.id}`),
-                api.get(`/inventory/items?venue_id=${activeVenue.id}&page_size=500`),
+                api.get(`/inventory/receiving/grns?venue_id=${activeVenue!.id}`),
+                api.get(`/inventory/suppliers?venue_id=${activeVenue!.id}`),
+                api.get(`/inventory/items?venue_id=${activeVenue!.id}&page_size=500`),
             ]);
 
             setGrns(grnsRes.status === 'fulfilled' ? (grnsRes.value.data || []) : getDemoGRNs());
@@ -196,11 +242,11 @@ export default function GoodsReceivedNotes() {
         }));
     };
 
-    const removeItem = (idx) => {
+    const removeItem = (idx: number) => {
         setForm(prev => ({ ...prev, items: prev.items.filter((_, i) => i !== idx) }));
     };
 
-    const updateItem = (idx, field, value) => {
+    const updateItem = (idx: number, field: string, value: string) => {
         setForm(prev => ({
             ...prev,
             items: prev.items.map((it, i) => i === idx ? { ...it, [field]: value } : it),
@@ -214,7 +260,7 @@ export default function GoodsReceivedNotes() {
         setSaving(true);
         try {
             await api.post('/inventory/receiving/grn', {
-                venue_id: activeVenue.id,
+                venue_id: activeVenue!.id,
                 supplier_id: form.supplier_id,
                 po_number: form.po_number,
                 delivery_note: form.delivery_note,
@@ -237,7 +283,7 @@ export default function GoodsReceivedNotes() {
                 items: [{ item_id: '', item_name: '', ordered_qty: '', received_qty: '', unit: 'kg', unit_price: '', po_price: '', lot_number: '', expiry_date: '', temperature: '' }],
             });
             loadAll();
-        } catch (err: any) {
+        } catch (err: unknown) {
             logger.error('Failed to create GRN', err);
             toast.error('Failed to create GRN');
         } finally {
@@ -245,18 +291,18 @@ export default function GoodsReceivedNotes() {
         }
     };
 
-    const handlePost = async (grnId) => {
+    const handlePost = async (grnId: string) => {
         try {
             await api.post(`/inventory/receiving/grn/${grnId}/post`);
             toast.success('GRN posted to ledger');
             loadAll();
-        } catch (err: any) {
+        } catch (err: unknown) {
             logger.error('Failed to post GRN', err);
             toast.error('Failed to post GRN');
         }
     };
 
-    const openReconciliation = (grn) => {
+    const openReconciliation = (grn: GRNData) => {
         setSelectedGRN(grn);
         setReconcileOpen(true);
     };
@@ -265,11 +311,11 @@ export default function GoodsReceivedNotes() {
     const COLUMNS = useMemo(() => [
         {
             key: 'id', label: 'GRN #', enableSorting: true, size: 100,
-            render: (row) => <span className="font-mono text-sm font-medium">{row.id}</span>,
+            render: (row: GRNData) => <span className="font-mono text-sm font-medium">{row.id}</span>,
         },
         {
             key: 'supplier_name', label: 'Supplier', enableSorting: true, size: 180,
-            render: (row) => (
+            render: (row: GRNData) => (
                 <div className="flex items-center gap-2.5">
                     <div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center shrink-0">
                         <Truck className="h-4 w-4 text-muted-foreground" />
@@ -283,27 +329,27 @@ export default function GoodsReceivedNotes() {
         },
         {
             key: 'received_date', label: 'Received', enableSorting: true, size: 110,
-            render: (row) => (
+            render: (row: GRNData) => (
                 <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                     <Calendar className="h-3.5 w-3.5" />
                     <span className="tabular-nums">{new Date(row.received_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</span>
                 </div>
             ),
         },
-        { key: 'items_count', label: 'Items', size: 60, render: (row) => <span className="tabular-nums">{row.items_count}</span> },
+        { key: 'items_count', label: 'Items', size: 60, render: (row: GRNData) => <span className="tabular-nums">{row.items_count}</span> },
         {
             key: 'total_value', label: 'Total', enableSorting: true, size: 100,
-            render: (row) => <span className="font-medium tabular-nums text-green-600 dark:text-green-400">€{(row.total_value || 0).toFixed(2)}</span>,
+            render: (row: GRNData) => <span className="font-medium tabular-nums text-green-600 dark:text-green-400">€{(row.total_value || 0).toFixed(2)}</span>,
         },
         // Gap 11: Reconciliation column
         {
             key: 'reconciliation', label: 'Reconciliation', size: 130,
-            render: (row) => <ReconciliationBadge row={row} />,
+            render: (row: GRNData) => <ReconciliationBadge row={row} />,
         },
         // Gap 14: Lots tracked column
         {
             key: 'lots_tracked', label: 'Lots', size: 70,
-            render: (row) => row.lots_tracked > 0
+            render: (row: GRNData) => row.lots_tracked > 0
                 ? <Badge variant="outline" className="text-xs text-blue-500 border-blue-400 gap-1"><QrCode className="h-3 w-3" /> {row.lots_tracked}</Badge>
                 : <span className="text-xs text-muted-foreground">—</span>,
         },
@@ -313,11 +359,11 @@ export default function GoodsReceivedNotes() {
             filterOptions: [
                 { value: 'draft', label: 'Draft' }, { value: 'posted', label: 'Posted' }, { value: 'with_variance', label: 'Variance' },
             ],
-            render: (row) => <GRNStatusBadge status={row.status} />,
+            render: (row: GRNData) => <GRNStatusBadge status={row.status} />,
         },
         {
             key: 'actions', label: 'Actions', size: 130,
-            render: (row) => (
+            render: (row: GRNData) => (
                 <div className="flex gap-1">
                     {row.status === 'draft' && (
                         <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => handlePost(row.id)}>Post</Button>
@@ -357,7 +403,7 @@ export default function GoodsReceivedNotes() {
                                         <Select value={form.supplier_id} onValueChange={v => setForm(p => ({ ...p, supplier_id: v }))}>
                                             <SelectTrigger><SelectValue placeholder="Select supplier" /></SelectTrigger>
                                             <SelectContent>
-                                                {suppliers.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
+                                                {suppliers.map((s: SupplierItem) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -383,14 +429,14 @@ export default function GoodsReceivedNotes() {
                                             <div className="flex items-end gap-2">
                                                 <div className="flex-1 space-y-1">
                                                     <Label className="text-xs">Item</Label>
-                                                    <Select value={item.item_id} onValueChange={v => {
-                                                        const found = inventoryItems.find(i => i.id === v);
+                                                    <Select value={item.item_id} onValueChange={(v: string) => {
+                                                        const found = inventoryItems.find((i: InventoryItemData) => i.id === v);
                                                         updateItem(idx, 'item_id', v);
                                                         if (found) updateItem(idx, 'item_name', found.name);
                                                     }}>
                                                         <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Select item" /></SelectTrigger>
                                                         <SelectContent>
-                                                            {inventoryItems.slice(0, 50).map(i => <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>)}
+                                                            {inventoryItems.slice(0, 50).map((i: InventoryItemData) => <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>)}
                                                         </SelectContent>
                                                     </Select>
                                                 </div>
@@ -503,7 +549,7 @@ export default function GoodsReceivedNotes() {
                         </DialogDescription>
                     </DialogHeader>
 
-                    {selectedGRN?.line_items?.length > 0 ? (
+                    {selectedGRN && selectedGRN.line_items && selectedGRN.line_items.length > 0 ? (
                         <div className="space-y-4">
                             {/* Summary */}
                             <div className="grid grid-cols-3 gap-3">
@@ -538,7 +584,7 @@ export default function GoodsReceivedNotes() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {selectedGRN.line_items.map((line, idx) => {
+                                        {selectedGRN.line_items.map((line: GRNLineItem, idx: number) => {
                                             const qtyDiff = line.received - line.ordered;
                                             const priceDiff = (line.invoice_price || 0) - (line.po_price || 0);
                                             const hasQtyIssue = qtyDiff !== 0;

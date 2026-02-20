@@ -22,6 +22,48 @@ import {
   Settings, Palette, Tag, Gift, Utensils, AlertTriangle
 } from 'lucide-react';
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+interface VenueFormData {
+  name?: string;
+  type?: string;
+  currency?: string;
+  timezone?: string;
+  pacing_enabled?: boolean;
+  auto_send_kitchen?: boolean;
+  course_mode?: boolean;
+  [key: string]: unknown;
+}
+
+interface ZoneData {
+  id?: string;
+  name?: string;
+  type?: string;
+  [key: string]: unknown;
+}
+
+interface TableData {
+  id?: string;
+  name?: string;
+  zone_id?: string;
+  seats?: number;
+  status?: string;
+  [key: string]: unknown;
+}
+
+interface InlineEditProps {
+  value: string | number;
+  onChange: (value: string) => void;
+  type?: string;
+  className?: string;
+}
+
+interface ToggleRowProps {
+  label: string;
+  description?: string;
+  checked: boolean;
+  onChange: (value: boolean) => void;
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    POSSettings — Lightspeed Restaurant Manager Parity
    22 Tabs: General, Zones, Tables, Devices, Modifiers, Printers,
@@ -36,9 +78,9 @@ export default function POSSettings() {
   const { logAction } = useAuditLog();
 
   // General
-  const [venueForm, setVenueForm] = useState({});
-  const [zones, setZones] = useState([]);
-  const [tables, setTables] = useState([]);
+  const [venueForm, setVenueForm] = useState<VenueFormData>({});
+  const [zones, setZones] = useState<ZoneData[]>([]);
+  const [tables, setTables] = useState<TableData[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Device Profiles
@@ -259,13 +301,13 @@ export default function POSSettings() {
   const loadData = async () => {
     try {
       const [zonesRes, tablesRes] = await Promise.all([
-        venueAPI.getZones(activeVenue.id),
-        venueAPI.getTables(activeVenue.id)
+        venueAPI.getZones(activeVenue?.id),
+        venueAPI.getTables(activeVenue?.id)
       ]);
       setZones(zonesRes.data);
       setTables(tablesRes.data);
-    } catch (error: any) {
-      logger.error('Failed to load data:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to load data:', { error: error instanceof Error ? error.message : String(error) });
     } finally {
       setLoading(false);
     }
@@ -273,17 +315,17 @@ export default function POSSettings() {
 
   const handleUpdateVenue = async () => {
     try {
-      await venueAPI.update(activeVenue.id, venueForm);
+      await venueAPI.update(activeVenue?.id, venueForm);
       toast.success('Settings saved successfully');
       refreshVenues();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error('Failed to update settings');
     }
   };
 
   const handleSaveAll = async () => {
     try {
-      await api.put(`venues/${activeVenue.id}/pos-config`, {
+      await api.put(`venues/${activeVenue?.id}/pos-config`, {
         devices, modifierGroups, printers, voidReasons, discounts,
         serviceCharges, taxRates, timedMenus, happyHours, combos,
         receiptConfig, staffPermissions, languageConfig,
@@ -291,8 +333,8 @@ export default function POSSettings() {
         emailConfig, invoiceConfig,
       });
       toast.success('All POS settings saved!');
-    } catch (err: any) {
-      logger.error('Failed to save POS config', { error: err });
+    } catch (err: unknown) {
+      logger.error('Failed to save POS config', { error: err instanceof Error ? err.message : String(err) });
       toast.success('Settings saved locally'); // Optimistic save
     }
   };
@@ -304,11 +346,11 @@ export default function POSSettings() {
   const inputClass = "bg-background border-border";
 
   /* ─── Inline Edit Helper ─────────────────────────────────────────── */
-  const InlineEdit = ({ value, onChange, type = 'text', className = '' }) => (
-    <Input className={cn(inputClass, className)} value={value || ''} onChange={e => onChange(e.target.value)} type={type} />
+  const InlineEdit = ({ value, onChange, type = 'text', className = '' }: InlineEditProps) => (
+    <Input className={cn(inputClass, className)} value={value || ''} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)} type={type} />
   );
 
-  const ToggleRow = ({ label, description, checked, onChange }) => (
+  const ToggleRow = ({ label, description, checked, onChange }: ToggleRowProps) => (
     <div className="flex items-center justify-between p-3 bg-background rounded-lg border border-border">
       <div>
         <Label className="text-sm font-medium text-foreground">{label}</Label>
@@ -372,28 +414,28 @@ export default function POSSettings() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className={labelClass}>Venue Name</Label>
-                    <InlineEdit value={venueForm.name} onChange={v => setVenueForm({ ...venueForm, name: v })} />
+                    <InlineEdit value={venueForm.name || ''} onChange={(v: string) => setVenueForm({ ...venueForm, name: v })} />
                   </div>
                   <div className="space-y-2">
                     <Label className={labelClass}>Concept / Type</Label>
-                    <InlineEdit value={venueForm.type} onChange={v => setVenueForm({ ...venueForm, type: v })} />
+                    <InlineEdit value={venueForm.type || ''} onChange={(v: string) => setVenueForm({ ...venueForm, type: v })} />
                   </div>
                   <div className="space-y-2">
                     <Label className={labelClass}>Currency</Label>
-                    <InlineEdit value={venueForm.currency || 'EUR'} onChange={v => setVenueForm({ ...venueForm, currency: v })} />
+                    <InlineEdit value={venueForm.currency || 'EUR'} onChange={(v: string) => setVenueForm({ ...venueForm, currency: v })} />
                   </div>
                   <div className="space-y-2">
                     <Label className={labelClass}>Timezone</Label>
-                    <InlineEdit value={venueForm.timezone || 'Europe/Malta'} onChange={v => setVenueForm({ ...venueForm, timezone: v })} />
+                    <InlineEdit value={venueForm.timezone || 'Europe/Malta'} onChange={(v: string) => setVenueForm({ ...venueForm, timezone: v })} />
                   </div>
                   <div className="col-span-2">
-                    <ToggleRow label="Enable Table Pacing" description="Automatically manage reservation flow" checked={venueForm.pacing_enabled || false} onChange={v => setVenueForm({ ...venueForm, pacing_enabled: v })} />
+                    <ToggleRow label="Enable Table Pacing" description="Automatically manage reservation flow" checked={venueForm.pacing_enabled || false} onChange={(v: boolean) => setVenueForm({ ...venueForm, pacing_enabled: v })} />
                   </div>
                   <div className="col-span-2">
-                    <ToggleRow label="Auto-Send to Kitchen" description="Automatically send items when added to order" checked={venueForm.auto_send_kitchen || false} onChange={v => setVenueForm({ ...venueForm, auto_send_kitchen: v })} />
+                    <ToggleRow label="Auto-Send to Kitchen" description="Automatically send items when added to order" checked={venueForm.auto_send_kitchen || false} onChange={(v: boolean) => setVenueForm({ ...venueForm, auto_send_kitchen: v })} />
                   </div>
                   <div className="col-span-2">
-                    <ToggleRow label="Course Mode" description="Enable multi-course ordering (Hold/Fire)" checked={venueForm.course_mode !== false} onChange={v => setVenueForm({ ...venueForm, course_mode: v })} />
+                    <ToggleRow label="Course Mode" description="Enable multi-course ordering (Hold/Fire)" checked={venueForm.course_mode !== false} onChange={(v: boolean) => setVenueForm({ ...venueForm, course_mode: v })} />
                   </div>
                 </div>
               </CardContent>
@@ -789,7 +831,7 @@ export default function POSSettings() {
                     {
                       key: 'items', label: 'Includes', render: row => (
                         <div className="flex gap-1 flex-wrap">
-                          {row.items.map((item, idx) => <Badge key={idx} variant="outline" className="border-border text-[10px]">{item}</Badge>)}
+                          {row.items.map((item: string, idx: number) => <Badge key={idx} variant="outline" className="border-border text-[10px]">{item}</Badge>)}
                         </div>
                       )
                     },

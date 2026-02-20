@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';
 import authStore from '../../lib/AuthStore';
+import './pos-shared.css';
 
 interface ProductionCenter {
     id: string; name: string; color: string; type: 'kitchen' | 'bar' | 'pastry' | 'prep' | 'other';
@@ -16,13 +17,11 @@ interface ProductionCenter {
     isActive: boolean; staffCount: number; sortOrder: number;
 }
 
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary,#0a0a0a)', color: 'var(--text-primary,#fafafa)', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1100, margin: '0 auto', padding: '24px 20px' };
-const cd: React.CSSProperties = { background: 'var(--bg-card,#18181b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const bp: React.CSSProperties = { padding: '10px 24px', background: '#3B82F6', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const ip: React.CSSProperties = { width: '100%', padding: '10px 14px', background: 'var(--bg-secondary,#09090b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14 };
-const sl: React.CSSProperties = { ...ip, cursor: 'pointer' };
+const Toggle: React.FC<{ value: boolean; onChange: () => void }> = ({ value, onChange }) => (
+    <div className={`pos-toggle-track ${value ? 'pos-toggle-track--on' : 'pos-toggle-track--off'}`} onClick={onChange}>
+        <div className={`pos-toggle-thumb ${value ? 'pos-toggle-thumb--on' : 'pos-toggle-thumb--off'}`} />
+    </div>
+);
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316', '#6366F1', '#14B8A6', '#D946EF', '#84CC16'];
 const PRINTERS = ['Front Counter (Epson TM-T88)', 'Kitchen Printer (Star TSP143)', 'Bar Printer (Star TSP143)', 'Pastry Printer (Epson TM-U220)', 'Label Printer (Brother QL-820)', 'None'];
@@ -48,20 +47,13 @@ const ProductionCenters: React.FC = () => {
         if (apiCenters.length > 0) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const mapped: ProductionCenter[] = apiCenters.map((ac: any, idx: number) => ({
-                id: String(ac.id || ac._id || ''),
-                name: String(ac.name || ''),
-                color: String(ac.color || COLORS[idx % COLORS.length]),
-                type: (ac.type || 'kitchen') as ProductionCenter['type'],
-                printer: String(ac.printer || 'None'),
-                backupPrinter: String(ac.backup_printer || ac.backupPrinter || 'None'),
-                itemCount: Number(ac.item_count || ac.itemCount || 0),
-                avgPrepTime: Number(ac.avg_prep_time || ac.avgPrepTime || 0),
-                isActive: ac.is_active !== false,
-                staffCount: Number(ac.staff_count || ac.staffCount || 0),
-                sortOrder: Number(ac.sort_order || ac.sortOrder || idx + 1),
+                id: String(ac.id || ac._id || ''), name: String(ac.name || ''), color: String(ac.color || COLORS[idx % COLORS.length]),
+                type: (ac.type || 'kitchen') as ProductionCenter['type'], printer: String(ac.printer || 'None'),
+                backupPrinter: String(ac.backup_printer || ac.backupPrinter || 'None'), itemCount: Number(ac.item_count || ac.itemCount || 0),
+                avgPrepTime: Number(ac.avg_prep_time || ac.avgPrepTime || 0), isActive: ac.is_active !== false,
+                staffCount: Number(ac.staff_count || ac.staffCount || 0), sortOrder: Number(ac.sort_order || ac.sortOrder || idx + 1),
             }));
-            setCenters(mapped);
-            setApiWired(true);
+            setCenters(mapped); setApiWired(true);
         }
     }, [apiCenters]);
 
@@ -70,7 +62,6 @@ const ProductionCenters: React.FC = () => {
     const filtered = centers.filter(c => !search || c.name.toLowerCase().includes(search.toLowerCase())).sort((a, b) => a.sortOrder - b.sortOrder);
     const active = filtered.filter(c => c.isActive);
     const inactive = filtered.filter(c => !c.isActive);
-    const totalItems = centers.filter(c => c.isActive).reduce((a, c) => a + c.itemCount, 0);
     const totalStaff = centers.filter(c => c.isActive).reduce((a, c) => a + c.staffCount, 0);
 
     const save = () => {
@@ -82,69 +73,59 @@ const ProductionCenters: React.FC = () => {
     };
 
     return (
-        <div style={pg}><div style={ct}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+        <div className="pos-page"><div className="pos-container">
+            <div className="pos-header">
                 <div>
-                    <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
-                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Production Centers</h1>
-                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>Configure kitchen stations, bars, and prep areas with printer assignments{apiWired && <span style={{ marginLeft: 8, fontSize: 11, color: '#10B981' }}>● Live</span>}</p>
+                    <button onClick={() => navigate(-1)} className="pos-btn-outline pos-btn-back"><ArrowLeft size={14} /> Back</button>
+                    <h1 className="pos-title">Production Centers</h1>
+                    <p className="pos-subtitle">Configure kitchen stations, bars, and prep areas with printer assignments{apiWired && <span className="pos-live-dot">● Live</span>}</p>
                 </div>
-                <button style={bp} onClick={() => setEditing({ id: crypto.randomUUID(), name: '', color: '#3B82F6', type: 'kitchen', printer: 'None', backupPrinter: 'None', itemCount: 0, avgPrepTime: 0, isActive: true, staffCount: 0, sortOrder: centers.length + 1 })}><Plus size={16} /> Add Center</button>
+                <button className="pos-btn-primary" onClick={() => setEditing({ id: crypto.randomUUID(), name: '', color: '#3B82F6', type: 'kitchen', printer: 'None', backupPrinter: 'None', itemCount: 0, avgPrepTime: 0, isActive: true, staffCount: 0, sortOrder: centers.length + 1 })}><Plus size={16} /> Add Center</button>
             </div>
 
-            {/* Loading / Error */}
-            {apiLoading && <div style={{ ...cd, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span style={{ color: 'var(--text-secondary)' }}>Loading production centers...</span></div>}
-            {apiError && <div style={{ ...cd, borderColor: '#EF4444', padding: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button style={{ ...bo, padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>}
+            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">Loading production centers...</span></div>}
+            {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center" style={{ borderColor: '#EF4444', padding: 14 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button className="pos-btn-outline" style={{ padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>}
 
             {/* Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, marginBottom: 20 }}>
+            <div className="pos-stats-grid pos-mb-20">
                 {[
                     { icon: <Factory size={16} />, val: active.length, label: 'Active Centers', color: '#3B82F6' },
                     { icon: <Printer size={16} />, val: centers.filter(c => c.printer !== 'None').length, label: 'With Printers', color: '#10B981' },
                     { icon: <Clock size={16} />, val: `${Math.round(active.reduce((a, c) => a + c.avgPrepTime, 0) / Math.max(active.length, 1))}m`, label: 'Avg Prep Time', color: '#F59E0B' },
                     { icon: <Users size={16} />, val: totalStaff, label: 'Total Staff', color: '#8B5CF6' },
                 ].map((s, i) => (
-                    <div key={i} style={{ ...cd, padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 8, background: `${s.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>{s.icon}</div>
-                        <div><div style={{ fontSize: 20, fontWeight: 700 }}>{s.val}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{s.label}</div></div>
+                    <div key={i} className="pos-stat-card">
+                        <div className="pos-stat-icon" style={{ background: `${s.color}15`, color: s.color }}>{s.icon}</div>
+                        <div><div className="pos-stat-value">{s.val}</div><div className="pos-stat-label">{s.label}</div></div>
                     </div>
                 ))}
             </div>
 
-            <div style={{ position: 'relative', marginBottom: 16 }}>
-                <Search size={14} style={{ position: 'absolute', left: 14, top: 12, color: 'var(--text-secondary)' }} />
-                <input style={{ ...ip, paddingLeft: 36 }} placeholder="Search centers..." value={search} onChange={e => setSearch(e.target.value)} />
-            </div>
+            <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input className="pos-input pos-search-input" placeholder="Search centers..." value={search} onChange={e => setSearch(e.target.value)} /></div>
 
             {/* Active Centers */}
-            <div style={{ fontSize: 13, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: 10, letterSpacing: 0.5 }}>Active Centers ({active.length})</div>
+            <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Active Centers ({active.length})</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 16, marginBottom: 24 }}>
                 {active.map(center => (
-                    <div key={center.id} style={{ ...cd, cursor: 'pointer', borderLeft: `4px solid ${center.color}` }} onClick={() => setEditing({ ...center })}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                <div style={{ width: 36, height: 36, borderRadius: 8, background: `${center.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: center.color }}><Factory size={16} /></div>
+                    <div key={center.id} className="pos-card" style={{ cursor: 'pointer', borderLeft: `4px solid ${center.color}` }} onClick={() => setEditing({ ...center })}>
+                        <div className="pos-flex pos-flex--between" style={{ alignItems: 'flex-start', marginBottom: 10 }}>
+                            <div className="pos-flex pos-flex--center pos-gap-10">
+                                <div className="pos-stat-icon" style={{ background: `${center.color}15`, color: center.color }}><Factory size={16} /></div>
                                 <div><h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>{center.name}</h3>
-                                    <span style={{ fontSize: 11, color: 'var(--text-secondary)', textTransform: 'capitalize' }}>{center.type}</span></div>
+                                    <span className="pos-cell-secondary" style={{ textTransform: 'capitalize' }}>{center.type}</span></div>
                             </div>
-                            <div style={{ display: 'flex', gap: 4 }}>
-                                <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: 4 }} onClick={e => { e.stopPropagation(); setEditing({ ...center }); }}><Edit3 size={13} /></button>
-                            </div>
+                            <button title="Edit center" className="pos-btn-icon" onClick={e => { e.stopPropagation(); setEditing({ ...center }); }}><Edit3 size={13} /></button>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
                             <div style={{ padding: '8px 12px', background: 'var(--bg-secondary,#09090b)', borderRadius: 6 }}>
-                                <div style={{ fontSize: 18, fontWeight: 700 }}>{center.itemCount}</div>
-                                <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Items</div>
-                            </div>
+                                <div style={{ fontSize: 18, fontWeight: 700 }}>{center.itemCount}</div><div className="pos-cell-secondary">Items</div></div>
                             <div style={{ padding: '8px 12px', background: 'var(--bg-secondary,#09090b)', borderRadius: 6 }}>
-                                <div style={{ fontSize: 18, fontWeight: 700 }}>{center.avgPrepTime}m</div>
-                                <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Avg Prep</div>
-                            </div>
+                                <div style={{ fontSize: 18, fontWeight: 700 }}>{center.avgPrepTime}m</div><div className="pos-cell-secondary">Avg Prep</div></div>
                         </div>
-                        <div style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Printer size={11} /> {center.printer}</div>
-                            {center.backupPrinter !== 'None' && <div style={{ display: 'flex', alignItems: 'center', gap: 6, opacity: 0.6 }}><Printer size={11} /> Backup: {center.backupPrinter}</div>}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Users size={11} /> {center.staffCount} staff</div>
+                        <div className="pos-cell-secondary pos-flex pos-flex--col pos-gap-4">
+                            <div className="pos-flex pos-flex--center pos-gap-6"><Printer size={11} /> {center.printer}</div>
+                            {center.backupPrinter !== 'None' && <div className="pos-flex pos-flex--center pos-gap-6" style={{ opacity: 0.6 }}><Printer size={11} /> Backup: {center.backupPrinter}</div>}
+                            <div className="pos-flex pos-flex--center pos-gap-6"><Users size={11} /> {center.staffCount} staff</div>
                         </div>
                     </div>
                 ))}
@@ -152,60 +133,38 @@ const ProductionCenters: React.FC = () => {
 
             {/* Inactive */}
             {inactive.length > 0 && <>
-                <div style={{ fontSize: 13, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: 10, letterSpacing: 0.5 }}>Inactive ({inactive.length})</div>
-                <div style={{ ...cd, opacity: 0.5 }}>
-                    {inactive.map(c => <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer' }} onClick={() => setEditing({ ...c })}>
+                <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Inactive ({inactive.length})</div>
+                <div className="pos-card" style={{ opacity: 0.5 }}>
+                    {inactive.map(c => <div key={c.id} className="pos-flex pos-flex--center pos-gap-12" style={{ padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer' }} onClick={() => setEditing({ ...c })}>
                         <div style={{ width: 12, height: 12, borderRadius: 3, background: c.color }} /> <span style={{ fontSize: 14, flex: 1 }}>{c.name}</span>
-                        <button style={{ ...bo, padding: '4px 10px', fontSize: 11 }} onClick={e => { e.stopPropagation(); setCenters(prev => prev.map(x => x.id === c.id ? { ...x, isActive: true } : x)); toast.success('Activated'); }}>Activate</button>
+                        <button className="pos-btn-outline" style={{ padding: '4px 10px', fontSize: 11 }} onClick={e => { e.stopPropagation(); setCenters(prev => prev.map(x => x.id === c.id ? { ...x, isActive: true } : x)); toast.success('Activated'); }}>Activate</button>
                     </div>)}
                 </div>
             </>}
         </div>
 
             {/* Edit Modal */}
-            {editing && <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setEditing(null)}>
-                <div style={{ ...cd, width: 480 }} onClick={e => e.stopPropagation()}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                        <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{centers.find(c => c.id === editing.id) ? 'Edit' : 'New'} Production Center</h3>
-                        <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditing(null)}><X size={20} /></button>
+            {editing && <div className="pos-modal-overlay" onClick={() => setEditing(null)}>
+                <div className="pos-card pos-modal pos-modal--sm" onClick={e => e.stopPropagation()}>
+                    <div className="pos-modal-header"><h3 className="pos-modal-title">{centers.find(c => c.id === editing.id) ? 'Edit' : 'New'} Production Center</h3><button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button></div>
+                    <div className="pos-form-group"><label className="pos-form-label">Name *</label><input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Main Kitchen" /></div>
+                    <div className="pos-form-group"><label className="pos-form-label pos-mb-4">Color</label>
+                        <div className="pos-flex pos-flex--wrap pos-gap-6">{COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} style={{ width: 28, height: 28, borderRadius: 6, background: c, cursor: 'pointer', border: editing.color === c ? '3px solid #fff' : '3px solid transparent' }} />)}</div></div>
+                    <div className="pos-form-grid">
+                        <div><label className="pos-form-label">Type</label><select className="pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as ProductionCenter['type'] } : null)} aria-label="Type">{TYPES.map(t => <option key={t.v} value={t.v}>{t.l}</option>)}</select></div>
+                        <div><label className="pos-form-label">Avg Prep Time (min)</label><input type="number" min={0} className="pos-input" value={editing.avgPrepTime} onChange={e => setEditing(p => p ? { ...p, avgPrepTime: parseInt(e.target.value) || 0 } : null)} aria-label="Average prep time" /></div>
                     </div>
-                    <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name *</label>
-                        <input style={ip} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Main Kitchen" /></div>
-
-                    <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>Color</label>
-                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                            {COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} style={{ width: 28, height: 28, borderRadius: 6, background: c, cursor: 'pointer', border: editing.color === c ? '3px solid #fff' : '3px solid transparent' }} />)}
-                        </div></div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label>
-                            <select style={sl} value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as ProductionCenter['type'] } : null)} aria-label="Type">{TYPES.map(t => <option key={t.v} value={t.v}>{t.l}</option>)}</select></div>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Avg Prep Time (min)</label>
-                            <input type="number" min={0} style={ip} value={editing.avgPrepTime} onChange={e => setEditing(p => p ? { ...p, avgPrepTime: parseInt(e.target.value) || 0 } : null)} /></div>
+                    <div className="pos-form-grid">
+                        <div><label className="pos-form-label">Primary Printer</label><select className="pos-select" value={editing.printer} onChange={e => setEditing(p => p ? { ...p, printer: e.target.value } : null)} aria-label="Printer">{PRINTERS.map(p => <option key={p}>{p}</option>)}</select></div>
+                        <div><label className="pos-form-label">Backup Printer</label><select className="pos-select" value={editing.backupPrinter} onChange={e => setEditing(p => p ? { ...p, backupPrinter: e.target.value } : null)} aria-label="Backup printer">{PRINTERS.map(p => <option key={p}>{p}</option>)}</select></div>
                     </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Primary Printer</label>
-                            <select style={sl} value={editing.printer} onChange={e => setEditing(p => p ? { ...p, printer: e.target.value } : null)} aria-label="Printer">{PRINTERS.map(p => <option key={p}>{p}</option>)}</select></div>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Backup Printer</label>
-                            <select style={sl} value={editing.backupPrinter} onChange={e => setEditing(p => p ? { ...p, backupPrinter: e.target.value } : null)} aria-label="Backup printer">{PRINTERS.map(p => <option key={p}>{p}</option>)}</select></div>
-                    </div>
-
-                    <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Staff Count</label>
-                        <input type="number" min={0} style={ip} value={editing.staffCount} onChange={e => setEditing(p => p ? { ...p, staffCount: parseInt(e.target.value) || 0 } : null)} /></div>
-
-                    <div style={{ marginBottom: 16 }}>
-                        <label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                            <div onClick={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} style={{ width: 44, height: 24, borderRadius: 12, background: editing.isActive ? '#3B82F6' : '#3f3f46', cursor: 'pointer', position: 'relative' }}>
-                                <div style={{ position: 'absolute', top: 2, left: editing.isActive ? 22 : 2, width: 20, height: 20, borderRadius: '50%', background: '#fff', transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
-                            </div> Active
-                        </label>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: 8 }}>
-                        <button style={{ ...bp, flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
-                        <button style={{ ...bo, color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => { setCenters(prev => prev.filter(c => c.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
-                        <button style={bo} onClick={() => setEditing(null)}>Cancel</button>
+                    <div className="pos-form-group"><label className="pos-form-label">Staff Count</label><input type="number" min={0} className="pos-input" value={editing.staffCount} onChange={e => setEditing(p => p ? { ...p, staffCount: parseInt(e.target.value) || 0 } : null)} aria-label="Staff count" /></div>
+                    <div className="pos-flex pos-flex--center pos-flex--between pos-mb-16" style={{ padding: '12px 0' }}><span className="pos-cell-value">Active</span>
+                        <Toggle value={editing.isActive} onChange={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /></div>
+                    <div className="pos-modal-footer">
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
+                        <button title="Delete center" className="pos-btn-outline" style={{ color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => { setCenters(prev => prev.filter(c => c.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
+                        <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>
             </div>}

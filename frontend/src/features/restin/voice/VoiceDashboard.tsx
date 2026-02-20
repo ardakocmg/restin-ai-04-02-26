@@ -1,12 +1,14 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     Mic, Settings, PhoneIncoming, Clock, Shield,
-    BookOpen, UserPlus, Play, BarChart3, Send,
+    BookOpen, Play, BarChart3, Send,
     Calendar, MessageSquare, Volume2, ChevronRight,
-    Phone, Loader2, CheckCircle, AlertTriangle
+    Phone, Loader2, CheckCircle, AlertTriangle,
+    FileText, TrendingUp, Upload, X
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { voiceService } from './voice-service';
 import { useVenue } from '../../../context/VenueContext';
 import { useAuth } from '../../../context/AuthContext';
@@ -15,6 +17,17 @@ import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { cn } from '../../../lib/utils';
 import { toast } from 'sonner';
+import {
+    AreaChart, Area, PieChart, Pie, Cell,
+    ResponsiveContainer, Tooltip, XAxis, YAxis
+} from 'recharts';
+
+/* ========== Tab Nav ========== */
+const TABS = [
+    { id: 'dashboard', label: 'Dashboard', path: '/admin/restin/voice' },
+    { id: 'settings', label: 'Settings', path: '/admin/restin/voice/settings' },
+    { id: 'logs', label: 'Call Logs', path: '/admin/restin/voice/logs' },
+];
 
 /**
  * 📞 VOICE AI DASHBOARD (Pillar 4)
@@ -25,8 +38,11 @@ export default function VoiceDashboard() {
     const { activeVenueId } = useVenue();
     const { user, isManager, isOwner } = useAuth();
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [simulateText, setSimulateText] = useState('');
     const [aiResponse, setAiResponse] = useState(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { data: config } = useQuery({
         queryKey: ['voice-config', activeVenueId],
@@ -53,7 +69,7 @@ export default function VoiceDashboard() {
     });
 
     const simulateMutation = useMutation({
-        mutationFn: (transcript) => voiceService.simulateCall(activeVenueId || 'default', transcript),
+        mutationFn: (transcript: string) => voiceService.simulateCall(activeVenueId || 'default', transcript),
         onSuccess: (data) => {
             setAiResponse(data);
             queryClient.invalidateQueries({ queryKey: ['voice-logs'] });
@@ -74,24 +90,75 @@ export default function VoiceDashboard() {
         }
     });
 
+    const uploadMutation = useMutation({
+        mutationFn: (file: File) => voiceService.uploadKnowledge(activeVenueId || 'default', file),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['voice-knowledge'] });
+            toast.success('Document uploaded and indexed!');
+        },
+        onError: () => toast.error('Upload failed'),
+    });
+
     const handleSimulate = () => {
         if (!simulateText.trim()) return;
         simulateMutation.mutate(simulateText);
     };
 
-    // Use real logs or show placeholder
-    const activities = logs.length > 0 ? logs.slice(0, 8).map(log => ({
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) uploadMutation.mutate(file);
+    };
+
+    // Derived data
+    const activities = logs.slice(0, 8).map((log: any) => ({
         time: _timeAgo(log.created_at),
         guest: log.caller || 'Unknown',
         action: log.transcript_in || log.action || '',
         response: log.transcript_out || '',
         status: log.status === 'BOOKED' ? 'success' : log.status === 'Escalated' ? 'error' : 'info',
         sentiment: log.sentiment,
-    })) : [];
+    }));
+
+    const dailyVolume = stats?.daily_volume || [
+        { date: 'Mon', calls: 0 }, { date: 'Tue', calls: 0 }, { date: 'Wed', calls: 0 },
+        { date: 'Thu', calls: 0 }, { date: 'Fri', calls: 0 }, { date: 'Sat', calls: 0 }, { date: 'Sun', calls: 0 },
+    ];
+
+    const sentimentData = stats?.sentiment_breakdown || [
+        { name: 'Positive', value: 0, color: '#22c55e' },
+        { name: 'Neutral', value: 0, color: '#3b82f6' },
+        { name: 'Negative', value: 0, color: '#ef4444' },
+    ];
+    const sentimentTotal = sentimentData.reduce((s: number, d: any) => s + d.value, 0);
+
+    const topTopics = stats?.top_topics || [];
+
+    // Active tab detection
+    const activeTab = location.pathname.includes('/settings') ? 'settings'
+        : location.pathname.includes('/logs') ? 'logs' : 'dashboard';
 
     return (
-        <div className="flex flex-col gap-8 animate-in zoom-in duration-500">
-            {/* Top Banner: Status & Controls */}
+        <div className="flex flex-col gap-6 animate-in zoom-in duration-500">
+
+            {/* ── Tab Navigation ── */}
+            <div className="flex items-center gap-1 bg-card/30 p-1 rounded-xl border border-border w-fit">
+                {TABS.map(tab => (
+                    <button
+                        key={tab.id}
+                        onClick={() => navigate(tab.path)}
+                        className={cn(
+                            'px-5 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all',
+                            activeTab === tab.id
+                                ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
+                        )}
+                    >
+                        {tab.label}
+                    </button>
+                ))}
+            </div>
+
+            {/* ── Top Banner: Status & Controls ── */}
             <Card className="bg-gradient-to-br from-zinc-900 to-black border-border p-8 overflow-hidden relative group">
                 <div className="absolute top-0 right-0 p-12 opacity-10 blur-2xl text-red-600">
                     <Mic size={200} />
@@ -138,7 +205,7 @@ export default function VoiceDashboard() {
                 </div>
             </Card>
 
-            {/* Stats Row */}
+            {/* ── Stats Row ── */}
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
                 {[
                     { label: 'Total Calls', value: stats?.total_calls || 0, icon: Phone, color: 'text-blue-500' },
@@ -161,7 +228,101 @@ export default function VoiceDashboard() {
                 ))}
             </div>
 
-            {/* Call Simulator */}
+            {/* ── Analytics Charts Row ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Call Volume Sparkline */}
+                <Card className="bg-card/30 border-border p-6 backdrop-blur-lg">
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-xs font-black text-muted-foreground uppercase tracking-widest">Call Volume (7 Days)</h3>
+                        <TrendingUp size={14} className="text-blue-500" />
+                    </div>
+                    <ResponsiveContainer width="100%" height={100}>
+                        <AreaChart data={dailyVolume}>
+                            <defs>
+                                <linearGradient id="volGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 10 }} axisLine={false} tickLine={false} />
+                            <YAxis hide allowDecimals={false} />
+                            <Tooltip
+                                contentStyle={{ background: '#18181b', border: '1px solid #27272a', borderRadius: '8px', fontSize: '12px', color: '#f5f5f7' }}
+                                labelStyle={{ color: '#a1a1aa' }}
+                            />
+                            <Area type="monotone" dataKey="calls" stroke="#3b82f6" fill="url(#volGrad)" strokeWidth={2} />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </Card>
+
+                {/* Sentiment Donut */}
+                <Card className="bg-card/30 border-border p-6 backdrop-blur-lg">
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-xs font-black text-muted-foreground uppercase tracking-widest">Sentiment</h3>
+                        <MessageSquare size={14} className="text-green-500" />
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <ResponsiveContainer width={100} height={100}>
+                            <PieChart>
+                                <Pie
+                                    data={sentimentTotal > 0 ? sentimentData : [{ name: 'Empty', value: 1, color: '#27272a' }]}
+                                    dataKey="value"
+                                    innerRadius={30}
+                                    outerRadius={45}
+                                    paddingAngle={sentimentTotal > 0 ? 3 : 0}
+                                    strokeWidth={0}
+                                >
+                                    {(sentimentTotal > 0 ? sentimentData : [{ name: 'Empty', value: 1, color: '#27272a' }]).map((entry: any, i: number) => (
+                                        <Cell key={i} fill={entry.color} />
+                                    ))}
+                                </Pie>
+                            </PieChart>
+                        </ResponsiveContainer>
+                        <div className="flex-1 space-y-2">
+                            {sentimentData.map((s: any) => (
+                                <div key={s.name} className="flex items-center justify-between text-xs">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: s.color }}></div>
+                                        <span className="text-muted-foreground font-medium">{s.name}</span>
+                                    </div>
+                                    <span className="font-black text-foreground">{s.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </Card>
+
+                {/* Top Topics */}
+                <Card className="bg-card/30 border-border p-6 backdrop-blur-lg">
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-xs font-black text-muted-foreground uppercase tracking-widest">Top Topics</h3>
+                        <FileText size={14} className="text-amber-500" />
+                    </div>
+                    <div className="space-y-3">
+                        {(topTopics.length > 0 ? topTopics : [
+                            { topic: 'No topics yet', count: 0 },
+                        ]).map((t: any, i: number) => {
+                            const maxCount = topTopics[0]?.count || 1;
+                            return (
+                                <div key={i} className="space-y-1">
+                                    <div className="flex justify-between text-xs">
+                                        <span className="text-muted-foreground font-medium">{t.topic}</span>
+                                        <span className="font-bold text-foreground">{t.count}</span>
+                                    </div>
+                                    <div className="h-1.5 bg-background rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-amber-500/60 rounded-full transition-all duration-500"
+                                            style={{ width: `${maxCount > 0 ? (t.count / maxCount) * 100 : 0}%` }}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </Card>
+            </div>
+
+            {/* ── Call Simulator ── */}
             <Card className="bg-gradient-to-br from-purple-600/5 to-transparent border-purple-500/10 p-6">
                 <h3 className="text-lg font-black text-foreground italic mb-4 flex items-center gap-2">
                     <Phone size={20} className="text-purple-500" />
@@ -217,10 +378,18 @@ export default function VoiceDashboard() {
                             <BookOpen size={20} className="text-red-500" />
                             KNOWLEDGE BASE (RAG)
                         </h3>
+                        {/* Hidden file input */}
+                        <input aria-label="Upload knowledge base document"
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileUpload}
+                            accept=".pdf,.txt,.doc,.docx"
+                            className="hidden"
+                        />
                         <div className="space-y-3">
                             {(knowledge.length > 0 ? knowledge : [
                                 { filename: 'No documents yet', uploaded_at: '', size_bytes: 0 }
-                            ]).map((doc, i) => (
+                            ]).map((doc: any, i: number) => (
                                 <div key={i} className="flex items-center justify-between p-3 bg-background/50 rounded-xl border border-border/50 group hover:border-border transition-all">
                                     <div className="flex items-center gap-3 truncate">
                                         <Shield size={16} className="text-muted-foreground group-hover:text-red-500" />
@@ -231,8 +400,14 @@ export default function VoiceDashboard() {
                                     )}
                                 </div>
                             ))}
-                            <Button variant="ghost" className="w-full mt-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] hover:text-foreground">
-                                Upload New Policy +
+                            <Button
+                                variant="ghost"
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={uploadMutation.isPending}
+                                className="w-full mt-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] hover:text-foreground gap-2"
+                            >
+                                {uploadMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                                {uploadMutation.isPending ? 'Uploading...' : 'Upload New Policy +'}
                             </Button>
                         </div>
                     </Card>
@@ -265,46 +440,39 @@ export default function VoiceDashboard() {
                                 RECENT INTERACTIONS ({activities.length})
                             </h3>
                             <div className="flex gap-2">
-                                <Button variant="ghost" size="sm" className="text-xs font-bold text-muted-foreground">Filter</Button>
-                                <Button variant="ghost" size="sm" className="text-xs font-bold text-muted-foreground">Export CSV</Button>
+                                <Button variant="ghost" size="sm" className="text-xs font-bold text-muted-foreground" onClick={() => navigate('/admin/restin/voice/logs')}>View All</Button>
                             </div>
                         </div>
 
                         <div className="flex-1 p-6">
-                            {activities.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-                                    <Phone size={48} className="mb-4 opacity-30" />
-                                    <p className="text-sm font-bold">No call logs yet</p>
-                                    <p className="text-xs mt-1">Click "Seed Demo" or use the simulator above</p>
-                                </div>
-                            ) : (
-                                <div className="space-y-4">
-                                    {activities.map((log, i) => (
-                                        <div key={i} className="flex items-center gap-6 p-4 bg-card/40 rounded-2xl border border-border/50 hover:bg-card/60 transition-all cursor-pointer group">
-                                            <div className="p-3 bg-background rounded-xl group-hover:scale-110 transition-transform">
-                                                <MessageSquare size={18} className={cn(
-                                                    log.status === 'success' ? "text-emerald-500" :
-                                                        log.status === 'error' ? "text-red-500" :
-                                                            "text-blue-500"
-                                                )} />
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex justify-between items-start">
-                                                    <p className="font-black text-foreground">{log.guest}</p>
-                                                    <span className="text-[10px] font-bold text-muted-foreground whitespace-nowrap ml-2">{log.time}</span>
-                                                </div>
-                                                <p className="text-sm text-muted-foreground font-medium mt-1 truncate">📞 {log.action}</p>
-                                                {log.response && (
-                                                    <p className="text-xs text-muted-foreground mt-1 truncate">🤖 {log.response}</p>
-                                                )}
-                                            </div>
-                                            <ChevronRight size={18} className="text-zinc-800" />
+                            <div className="space-y-4">
+                                {(activities.length > 0 ? activities : [
+                                    { time: '—', guest: 'No calls yet', action: 'Use Call Simulator or Seed Demo above', response: '', status: 'info', sentiment: 'neutral' },
+                                ]).map((log: any, i: number) => (
+                                    <div key={i} className="flex items-center gap-6 p-4 bg-card/40 rounded-2xl border border-border/50 hover:bg-card/60 transition-all cursor-pointer group">
+                                        <div className="p-3 bg-background rounded-xl group-hover:scale-110 transition-transform">
+                                            <MessageSquare size={18} className={cn(
+                                                log.status === 'success' ? "text-emerald-500" :
+                                                    log.status === 'error' ? "text-red-500" :
+                                                        "text-blue-500"
+                                            )} />
                                         </div>
-                                    ))}
-                                </div>
-                            )}
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex justify-between items-start">
+                                                <p className="font-black text-foreground">{log.guest}</p>
+                                                <span className="text-[10px] font-bold text-muted-foreground whitespace-nowrap ml-2">{log.time}</span>
+                                            </div>
+                                            <p className="text-sm text-muted-foreground font-medium mt-1 truncate">📞 {log.action}</p>
+                                            {log.response && (
+                                                <p className="text-xs text-muted-foreground mt-1 truncate">🤖 {log.response}</p>
+                                            )}
+                                        </div>
+                                        <ChevronRight size={18} className="text-zinc-800" />
+                                    </div>
+                                ))}
+                            </div>
 
-                            <div className="mt-8 grid grid-cols-2 gap-4">
+                            <div className="mt-8 grid grid-cols-3 gap-4">
                                 <div className="p-4 bg-background/50 rounded-2xl border border-border">
                                     <BarChart3 className="text-muted-foreground mb-2" size={16} />
                                     <p className="text-2xl font-black text-foreground">{stats?.resolution_rate || 0}%</p>
@@ -315,6 +483,11 @@ export default function VoiceDashboard() {
                                     <p className="text-2xl font-black text-foreground">{stats?.avg_duration_seconds || 0}s</p>
                                     <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Avg Response</p>
                                 </div>
+                                <div className="p-4 bg-background/50 rounded-2xl border border-border">
+                                    <AlertTriangle className="text-muted-foreground mb-2" size={16} />
+                                    <p className="text-2xl font-black text-foreground">{stats?.escalation_rate || 0}%</p>
+                                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Escalation</p>
+                                </div>
                             </div>
                         </div>
                     </Card>
@@ -324,11 +497,11 @@ export default function VoiceDashboard() {
     );
 }
 
-function _timeAgo(dateStr) {
+function _timeAgo(dateStr: string) {
     if (!dateStr) return '';
     const now = new Date();
     const date = new Date(dateStr);
-    const diff = Math.floor((now - date) / 1000);
+    const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
     if (diff < 60) return `${diff}s ago`;
     if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
     if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;

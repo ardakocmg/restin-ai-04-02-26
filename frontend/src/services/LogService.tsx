@@ -8,17 +8,26 @@ export interface ErrorCode {
     code: string;
     description: string;
     level: 'error' | 'warn' | 'info';
+    title?: string;
+    likely_causes?: string[];
+    operator_action?: string[];
+    dev_action?: string[];
 }
 
 export interface LogEntry {
     id: string;
-    level: 'error' | 'warn' | 'info' | 'debug';
+    level: string;
     code?: string;
     message: string;
     timestamp: string;
+    ts?: string;
     venue_id?: string;
     acknowledged?: boolean;
     metadata?: Record<string, unknown>;
+    endpoint?: string;
+    request_id?: string;
+    fingerprint?: string;
+    details?: Record<string, unknown>;
 }
 
 export interface LogListParams {

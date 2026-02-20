@@ -18,8 +18,10 @@ export const voiceService = {
     },
 
     // === CALL LOGS ===
-    getLogs: async (venueId: string, limit = 50) => {
-        const { data } = await api.get(`/voice/logs?venue_id=${venueId}&limit=${limit}`);
+    getLogs: async (venueId: string, limit = 50, status?: string) => {
+        let url = `/voice/logs?venue_id=${venueId}&limit=${limit}`;
+        if (status) url += `&status=${status}`;
+        const { data } = await api.get(url);
         return data;
     },
 
@@ -58,6 +60,60 @@ export const voiceService = {
     // === SEED DATA ===
     seedData: async (venueId: string) => {
         const { data } = await api.post(`/voice/seed?venue_id=${venueId}`);
+        return data;
+    },
+
+    // === EXPORT ===
+    exportLogsCSV: (logs: Record<string, unknown>[]) => {
+        const headers = ['Caller', 'Time', 'Duration (s)', 'Status', 'Guest Said', 'AI Response', 'Provider', 'Tokens'];
+        const rows = logs.map((l: Record<string, unknown>) => [
+            l.caller || '',
+            l.created_at || '',
+            l.duration_seconds || 0,
+            l.status || '',
+            `"${String(l.transcript_in || '').replace(/"/g, '""')}"`,
+            `"${String(l.transcript_out || '').replace(/"/g, '""')}"`,
+            l.ai_provider || '',
+            l.tokens_used || 0,
+        ]);
+        const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `voice_call_logs_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    },
+
+    // === VAPI INTEGRATION ===
+    saveVapiKey: async (venueId: string, apiKey: string) => {
+        const { data } = await api.post(`/voice/vapi/save-key?venue_id=${venueId}`, { api_key: apiKey });
+        return data;
+    },
+
+    getVapiStatus: async (venueId: string) => {
+        const { data } = await api.get(`/voice/vapi/status?venue_id=${venueId}`);
+        return data;
+    },
+
+    syncVapiAssistant: async (venueId: string) => {
+        const { data } = await api.post(`/voice/vapi/sync-assistant?venue_id=${venueId}`);
+        return data;
+    },
+
+    setVapiPhone: async (venueId: string, phoneNumberId: string) => {
+        const { data } = await api.post(`/voice/vapi/set-phone?venue_id=${venueId}`, { phone_number_id: phoneNumberId });
+        return data;
+    },
+
+    testVapiCall: async (venueId: string, phoneNumber: string) => {
+        const { data } = await api.post(`/voice/vapi/test-call?venue_id=${venueId}`, { phone_number: phoneNumber });
+        return data;
+    },
+
+    disconnectVapi: async (venueId: string) => {
+        const { data } = await api.post(`/voice/vapi/disconnect?venue_id=${venueId}`);
         return data;
     },
 };

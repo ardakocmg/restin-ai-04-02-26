@@ -42,13 +42,22 @@ export const printersAPI = {
 };
 
 export const printerTemplatesAPI = {
-    list: async (params) => {
+    list: async (params?: Record<string, unknown>) => {
         const response = await api.get('/printer-templates', { params });
         return response.data;
     },
 
-    create: async (data) => {
+    create: async (data: Record<string, unknown>) => {
         const response = await api.post('/printer-templates', data);
         return response.data;
+    },
+
+    update: async (id: string, data: Record<string, unknown> | null) => {
+        const response = await api.put(`/printer-templates/${id}`, data);
+        return response.data;
+    },
+
+    delete: async (id: string) => {
+        await api.delete(`/printer-templates/${id}`);
     }
 };

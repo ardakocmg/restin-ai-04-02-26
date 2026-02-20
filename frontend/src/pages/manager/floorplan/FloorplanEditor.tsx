@@ -17,6 +17,21 @@ import { useAuth } from '../../../context/AuthContext';
 import PermissionGate from '../../../components/shared/PermissionGate';
 import { useAuditLog } from '../../../hooks/useAuditLog';
 
+interface FloorplanTable {
+    id: string;
+    number: number;
+    name: string;
+    seats: number;
+    shape: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rotation: number;
+    status: string;
+    heatValue: number;
+}
+
 const TABLE_SHAPES = [
     { key: 'square', label: 'Square', icon: Square },
     { key: 'round', label: 'Round', icon: Circle },
@@ -28,31 +43,31 @@ const TABLE_SHAPES = [
  * Interactive table layout with drag, resize, heatmap overlay.
  */
 export default function FloorplanEditor() {
-    const { currentVenue } = useVenue();
+    const { activeVenue } = useVenue();
     const { user } = useAuth();
     const { logAction } = useAuditLog();
-    const venueId = currentVenue?.id || localStorage.getItem('currentVenueId') || 'default';
+    const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
 
     // Audit: log floorplan editor access
     React.useEffect(() => {
         if (user?.id) logAction('FLOORPLAN_VIEWED', 'floorplan_editor');
-    }, [user?.id]);
+    }, [user?.id, logAction]);
 
-    const [tables, setTables] = useState([]);
-    const [selectedTable, setSelectedTable] = useState(null);
+    const [tables, setTables] = useState<FloorplanTable[]>([]);
+    const [selectedTable, setSelectedTable] = useState<string | null>(null);
     const [showHeatmap, setShowHeatmap] = useState(false);
     const [zoom, setZoom] = useState(1);
-    const [dragging, setDragging] = useState(null);
+    const [dragging, setDragging] = useState<string | null>(null);
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-    const canvasRef = useRef(null);
+    const canvasRef = useRef<HTMLDivElement>(null);
 
     const { isLoading } = useQuery({
         queryKey: ['floorplan-tables', venueId],
         queryFn: async () => {
             try {
                 const { data } = await api.get(`/tables?venue_id=${venueId}`);
-                const mapped = (data || []).map((t, i) => ({
+                const mapped = (data || []).map((t: Record<string, unknown>, i: number) => ({
                     ...t,
                     x: t.x || 50 + (i % 6) * 130,
                     y: t.y || 50 + Math.floor(i / 6) * 130,
@@ -76,7 +91,7 @@ export default function FloorplanEditor() {
         onError: () => toast.error('Failed to save layout')
     });
 
-    const addTable = (shape) => {
+    const addTable = (shape: string) => {
         const newTable = {
             id: `table-${Date.now()}`,
             number: tables.length + 1,
@@ -95,16 +110,16 @@ export default function FloorplanEditor() {
         setSelectedTable(newTable.id);
     };
 
-    const updateTable = (id, updates) => {
+    const updateTable = (id: string, updates: Partial<FloorplanTable>) => {
         setTables(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
     };
 
-    const deleteTable = (id) => {
+    const deleteTable = (id: string) => {
         setTables(prev => prev.filter(t => t.id !== id));
         if (selectedTable === id) setSelectedTable(null);
     };
 
-    const handleMouseDown = (e, tableId) => {
+    const handleMouseDown = (e: React.MouseEvent, tableId: string) => {
         e.stopPropagation();
         const rect = canvasRef.current?.getBoundingClientRect();
         const table = tables.find(t => t.id === tableId);
@@ -118,7 +133,7 @@ export default function FloorplanEditor() {
         setSelectedTable(tableId);
     };
 
-    const handleMouseMove = useCallback((e) => {
+    const handleMouseMove = useCallback((e: React.MouseEvent) => {
         if (!dragging || !canvasRef.current) return;
         const rect = canvasRef.current.getBoundingClientRect();
         const x = Math.max(0, (e.clientX - rect.left) / zoom - dragOffset.x);
@@ -132,7 +147,7 @@ export default function FloorplanEditor() {
 
     const selected = tables.find(t => t.id === selectedTable);
 
-    const heatColor = (val) => {
+    const heatColor = (val: number): string => {
         if (val > 0.8) return 'rgba(239, 68, 68, 0.3)';
         if (val > 0.5) return 'rgba(245, 158, 11, 0.25)';
         if (val > 0.2) return 'rgba(34, 197, 94, 0.2)';
@@ -164,10 +179,10 @@ export default function FloorplanEditor() {
                         <Button
                             size="sm"
                             onClick={() => saveMutation.mutate()}
-                            disabled={saveMutation.isLoading}
+                            disabled={saveMutation.isPending}
                             className="bg-pink-600 hover:bg-pink-700 text-foreground"
                         >
-                            {saveMutation.isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Save className="w-4 h-4 mr-1" />}
+                            {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Save className="w-4 h-4 mr-1" />}
                             Save Layout
                         </Button>
                     </div>

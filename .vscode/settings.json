@@ -8,5 +8,7 @@
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
-    "antigravity-plus.autoApprove.enabled": true
+    "antigravity-plus.autoApprove.enabled": true,
+    "tfa.dashboard.includeSecondaryModels": true,
+    "tfa.system.autoAccept": true
 }

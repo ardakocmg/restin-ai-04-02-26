@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import './pos-shared.css';
 
 /* ===== Types ===== */
 
@@ -231,44 +232,23 @@ const TABS: { key: TabKey; label: string; icon: React.ReactNode }[] = [
     { key: 'scheduling', label: 'Scheduling & Reporting', icon: <Calendar size={16} /> },
 ];
 
-/* ===== Styles ===== */
-
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary, #0a0a0a)', color: 'var(--text-primary, #fafafa)', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1100, margin: '0 auto', padding: '24px 20px', display: 'flex', gap: 20 };
-const sb: React.CSSProperties = { width: 220, flexShrink: 0 };
-const mn: React.CSSProperties = { flex: 1 };
-const cd: React.CSSProperties = { background: 'var(--bg-card, #18181b)', border: '1px solid var(--border-primary, #27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const rw: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' };
-const bp: React.CSSProperties = { padding: '10px 24px', background: '#3B82F6', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, color: 'var(--text-primary, #fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const ip: React.CSSProperties = { width: '100%', padding: '10px 14px', background: 'var(--bg-secondary, #09090b)', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, color: 'var(--text-primary, #fafafa)', fontSize: 14 };
-const sl: React.CSSProperties = { ...ip, cursor: 'pointer' };
-
-const ts = (a: boolean): React.CSSProperties => ({ width: 44, height: 24, borderRadius: 12, background: a ? '#3B82F6' : '#3f3f46', cursor: 'pointer', position: 'relative', flexShrink: 0 });
-const td = (a: boolean): React.CSSProperties => ({ position: 'absolute', top: 2, left: a ? 22 : 2, width: 20, height: 20, borderRadius: '50%', background: '#fff', transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' });
-const rdio = (a: boolean): React.CSSProperties => ({ padding: '8px 14px', borderRadius: 8, border: a ? '2px solid #3B82F6' : '1px solid var(--border-primary, #27272a)', background: a ? 'rgba(59,130,246,0.1)' : 'transparent', color: a ? '#3B82F6' : 'var(--text-primary, #fafafa)', fontSize: 13, fontWeight: a ? 600 : 400, cursor: 'pointer' });
-
 /* ===== Toggle Component ===== */
 
 const Toggle: React.FC<{ value: boolean; onChange: () => void }> = ({ value, onChange }) => (
-    <div style={ts(value)} onClick={onChange}><div style={td(value)} /></div>
-);
-
-/* ===== Section Title ===== */
-
-const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <div style={{ fontSize: 13, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary, #a1a1aa)', marginBottom: 10, marginTop: 16, letterSpacing: 0.5 }}>{children}</div>
+    <div onClick={onChange} style={{ width: 44, height: 24, borderRadius: 12, background: value ? '#3B82F6' : '#3f3f46', cursor: 'pointer', position: 'relative', flexShrink: 0 }}>
+        <div style={{ position: 'absolute', top: 2, left: value ? 22 : 2, width: 20, height: 20, borderRadius: '50%', background: '#fff', transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+    </div>
 );
 
 /* ===== Row Component ===== */
 
 const SettingRow: React.FC<{ label: string; desc?: string; children: React.ReactNode }> = ({ label, desc, children }) => (
-    <div style={rw}>
-        <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 500, fontSize: 14 }}>{label}</div>
-            {desc && <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginTop: 2 }}>{desc}</div>}
+    <div className="pos-setting-row">
+        <div className="pos-setting-row__label">
+            <div className="pos-setting-row__title">{label}</div>
+            {desc && <div className="pos-setting-row__desc">{desc}</div>}
         </div>
-        <div style={{ flexShrink: 0, marginLeft: 16 }}>{children}</div>
+        <div className="pos-setting-row__control">{children}</div>
     </div>
 );
 
@@ -290,27 +270,20 @@ const POSConfigSettings: React.FC = () => {
     const saveConfig = () => { toast.success('POS Configuration saved'); };
 
     return (
-        <div style={pg}>
-            <div style={ct}>
+        <div className="pos-page">
+            <div className="pos-container pos-container--sidebar">
                 {/* Sidebar */}
-                <div style={sb}>
-                    <button onClick={() => navigate('/pos/runtime')} style={{ ...bo, width: '100%', marginBottom: 16 }}>
+                <div className="pos-sidebar">
+                    <button onClick={() => navigate('/pos/runtime')} className="pos-btn pos-btn--outline" style={{ width: '100%', marginBottom: 16 }}>
                         <ArrowLeft size={16} /> Back to POS
                     </button>
 
-                    <div style={{ ...cd, padding: 8 }}>
+                    <div className="pos-card" style={{ padding: 8 }}>
                         {TABS.map(tab => (
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key)}
-                                style={{
-                                    width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-                                    padding: '10px 12px', borderRadius: 8, border: 'none',
-                                    background: activeTab === tab.key ? 'rgba(59,130,246,0.1)' : 'transparent',
-                                    color: activeTab === tab.key ? '#3B82F6' : 'var(--text-primary, #fafafa)',
-                                    fontSize: 13, fontWeight: activeTab === tab.key ? 600 : 400,
-                                    cursor: 'pointer', textAlign: 'left',
-                                }}
+                                className={`pos-sidebar-btn${activeTab === tab.key ? ' pos-sidebar-btn--active' : ''}`}
                             >
                                 {tab.icon} {tab.label}
                             </button>
@@ -318,36 +291,36 @@ const POSConfigSettings: React.FC = () => {
                     </div>
 
                     {/* Quick Actions */}
-                    <div style={{ ...cd, padding: 12, marginTop: 12 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 8, textTransform: 'uppercase' }}>Actions</div>
-                        <button style={{ ...bo, width: '100%', fontSize: 12, padding: '8px 12px', marginBottom: 6 }}><Link size={12} /> View Linked Devices</button>
-                        <button style={{ ...bo, width: '100%', fontSize: 12, padding: '8px 12px', marginBottom: 6 }}><Copy size={12} /> Duplicate Config</button>
+                    <div className="pos-card" style={{ padding: 12, marginTop: 12 }}>
+                        <div className="pos-section-title">Actions</div>
+                        <button className="pos-btn pos-btn--outline" style={{ width: '100%', fontSize: 12, padding: '8px 12px', marginBottom: 6 }}><Link size={12} /> View Linked Devices</button>
+                        <button className="pos-btn pos-btn--outline" style={{ width: '100%', fontSize: 12, padding: '8px 12px', marginBottom: 6 }}><Copy size={12} /> Duplicate Config</button>
                     </div>
                 </div>
 
                 {/* Main Content */}
-                <div style={mn}>
+                <div className="pos-main">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                         <h1 style={{ fontSize: 22, fontWeight: 700 }}>{TABS.find(t => t.key === activeTab)?.label}</h1>
                         <div style={{ display: 'flex', gap: 12 }}>
-                            <button style={bo} onClick={() => setConfig(DEFAULT_CONFIG)}>Discard</button>
-                            <button style={bp} onClick={saveConfig}><Save size={16} /> Save</button>
+                            <button className="pos-btn pos-btn--outline" onClick={() => setConfig(DEFAULT_CONFIG)}>Discard</button>
+                            <button className="pos-btn pos-btn--primary" onClick={saveConfig}><Save size={16} /> Save</button>
                         </div>
                     </div>
 
                     {/* ===== TAB 1: Basic Setup ===== */}
                     {activeTab === 'basic' && (
                         <>
-                            <div style={cd}>
-                                <SectionTitle>Configuration</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Configuration</h3>
                                 <SettingRow label="Configuration Name" desc="Name displayed in the Back Office">
-                                    <input style={{ ...ip, width: 250 }} value={config.name} onChange={e => set('name', e.target.value)} />
+                                    <input className="pos-input" style={{ width: 250 }} value={config.name} onChange={e => set('name', e.target.value)} />
                                 </SettingRow>
                             </div>
-                            <div style={cd}>
-                                <SectionTitle>Menu Settings</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Menu Settings</h3>
                                 <SettingRow label="Menu" desc="Select the menu to use for this configuration">
-                                    <select style={{ ...sl, width: 250 }} value={config.menu} onChange={e => set('menu', e.target.value)} aria-label="Menu">
+                                    <select className="pos-input pos-select" style={{ width: 250 }} value={config.menu} onChange={e => set('menu', e.target.value)} aria-label="Menu">
                                         <option>Default Menu</option><option>Lunch Menu</option><option>Dinner Menu</option><option>Bar Menu</option>
                                     </select>
                                 </SettingRow>
@@ -358,13 +331,13 @@ const POSConfigSettings: React.FC = () => {
                     {/* ===== TAB 2: Order Management ===== */}
                     {activeTab === 'orders' && (
                         <>
-                            <div style={cd}>
-                                <SectionTitle>Order Mode</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Order Mode</h3>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
-                                    <button onClick={() => set('orderMode', 'direct-sales')} style={rdio(config.orderMode === 'direct-sales')}>
+                                    <button onClick={() => set('orderMode', 'direct-sales')} className={`pos-radio-option${config.orderMode === 'direct-sales' ? ' pos-radio-option--active' : ''}`}>
                                         Direct Sales Only
                                     </button>
-                                    <button onClick={() => set('orderMode', 'table-service')} style={rdio(config.orderMode === 'table-service')}>
+                                    <button onClick={() => set('orderMode', 'table-service')} className={`pos-radio-option${config.orderMode === 'table-service' ? ' pos-radio-option--active' : ''}`}>
                                         With Table Service
                                     </button>
                                 </div>
@@ -372,7 +345,7 @@ const POSConfigSettings: React.FC = () => {
                                 {config.orderMode === 'table-service' && (
                                     <>
                                         <SettingRow label="Floor Plan" desc="Select from available floor plans">
-                                            <select style={{ ...sl, width: 200 }} value={config.selectedFloorPlan} onChange={e => set('selectedFloorPlan', e.target.value)} aria-label="Floor plan">
+                                            <select className="pos-input pos-select" style={{ width: 200 }} value={config.selectedFloorPlan} onChange={e => set('selectedFloorPlan', e.target.value)} aria-label="Floor plan">
                                                 {config.floorPlans.map(f => <option key={f}>{f}</option>)}
                                             </select>
                                         </SettingRow>
@@ -380,7 +353,7 @@ const POSConfigSettings: React.FC = () => {
                                     </>
                                 )}
 
-                                <SectionTitle>Choose Order Types</SectionTitle>
+                                <h3 className="pos-section-title">Choose Order Types</h3>
                                 <SettingRow label="Direct sales" desc="Orders paid for immediately"><Toggle value={config.orderTypes.directSales} onChange={() => setConfig(p => ({ ...p, orderTypes: { ...p.orderTypes, directSales: !p.orderTypes.directSales } }))} /></SettingRow>
                                 <SettingRow label="Direct orders" desc="Orders assigned to a tab"><Toggle value={config.orderTypes.directOrders} onChange={() => setConfig(p => ({ ...p, orderTypes: { ...p.orderTypes, directOrders: !p.orderTypes.directOrders } }))} /></SettingRow>
                                 {config.orderMode === 'table-service' && (
@@ -388,25 +361,25 @@ const POSConfigSettings: React.FC = () => {
                                 )}
 
                                 <SettingRow label="Default order profile for direct sales">
-                                    <select style={{ ...sl, width: 180 }} value={config.defaultOrderProfile} onChange={e => set('defaultOrderProfile', e.target.value)} aria-label="Default order profile">
+                                    <select className="pos-input pos-select" style={{ width: 180 }} value={config.defaultOrderProfile} onChange={e => set('defaultOrderProfile', e.target.value)} aria-label="Default order profile">
                                         <option>Dine-In</option><option>Takeaway</option><option>Delivery</option>
                                     </select>
                                 </SettingRow>
 
                                 <SettingRow label="Order number reset at" desc="Set the last order number before count resets">
-                                    <input type="number" style={{ ...ip, width: 100 }} value={config.orderNumberReset} onChange={e => set('orderNumberReset', parseInt(e.target.value) || 0)} />
+                                    <input type="number" className="pos-input" style={{ width: 100 }} value={config.orderNumberReset} onChange={e => set('orderNumberReset', parseInt(e.target.value) || 0)} />
                                 </SettingRow>
 
                                 <SettingRow label="First course numbering">
                                     <div style={{ display: 'flex', gap: 8 }}>
-                                        <button style={rdio(config.firstCourse === 'course-0')} onClick={() => set('firstCourse', 'course-0')}>Course 0</button>
-                                        <button style={rdio(config.firstCourse === 'course-1')} onClick={() => set('firstCourse', 'course-1')}>Course 1</button>
+                                        <button className={`pos-radio-option${config.firstCourse === 'course-0' ? ' pos-radio-option--active' : ''}`} onClick={() => set('firstCourse', 'course-0')}>Course 0</button>
+                                        <button className={`pos-radio-option${config.firstCourse === 'course-1' ? ' pos-radio-option--active' : ''}`} onClick={() => set('firstCourse', 'course-1')}>Course 1</button>
                                     </div>
                                 </SettingRow>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Order Toggles</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Order Toggles</h3>
                                 {config.orderMode === 'table-service' && (
                                     <>
                                         <SettingRow label="Allow orders with zero covers"><Toggle value={config.allowZeroCovers} onChange={() => toggle('allowZeroCovers')} /></SettingRow>
@@ -420,20 +393,20 @@ const POSConfigSettings: React.FC = () => {
                                 )}
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Group Ordering</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Group Ordering</h3>
                                 <SettingRow label="Enable group ordering" desc="Groups can order together but pay individually"><Toggle value={config.groupOrdering} onChange={() => toggle('groupOrdering')} /></SettingRow>
                                 {config.groupOrdering && (
                                     <>
                                         <SettingRow label="Max time between orders">
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                <input type="number" style={{ ...ip, width: 80 }} value={config.groupMaxTimeBetween} onChange={e => set('groupMaxTimeBetween', parseInt(e.target.value) || 0)} />
+                                                <input type="number" className="pos-input" style={{ width: 80 }} value={config.groupMaxTimeBetween} onChange={e => set('groupMaxTimeBetween', parseInt(e.target.value) || 0)} />
                                                 <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>min</span>
                                             </div>
                                         </SettingRow>
                                         <SettingRow label="Max time since first order">
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                <input type="number" style={{ ...ip, width: 80 }} value={config.groupMaxTimeSinceFirst} onChange={e => set('groupMaxTimeSinceFirst', parseInt(e.target.value) || 0)} />
+                                                <input type="number" className="pos-input" style={{ width: 80 }} value={config.groupMaxTimeSinceFirst} onChange={e => set('groupMaxTimeSinceFirst', parseInt(e.target.value) || 0)} />
                                                 <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>min</span>
                                             </div>
                                         </SettingRow>
@@ -446,8 +419,8 @@ const POSConfigSettings: React.FC = () => {
                     {/* ===== TAB 3: Order Tickets ===== */}
                     {activeTab === 'tickets' && (
                         <>
-                            <div style={cd}>
-                                <SectionTitle>Ticket Information</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Ticket Information</h3>
                                 <SettingRow label="Floor plan name"><Toggle value={config.ticketFloorPlanName} onChange={() => toggle('ticketFloorPlanName')} /></SettingRow>
                                 <SettingRow label="Seat details"><Toggle value={config.ticketSeatDetails} onChange={() => toggle('ticketSeatDetails')} /></SettingRow>
                                 <SettingRow label="Number of covers"><Toggle value={config.ticketCovers} onChange={() => toggle('ticketCovers')} /></SettingRow>
@@ -457,8 +430,8 @@ const POSConfigSettings: React.FC = () => {
                                 <SettingRow label="Customer address"><Toggle value={config.ticketCustomerAddress} onChange={() => toggle('ticketCustomerAddress')} /></SettingRow>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Ticket Appearance</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Ticket Appearance</h3>
                                 <SettingRow label="Separate items with a divider"><Toggle value={config.ticketDivider} onChange={() => toggle('ticketDivider')} /></SettingRow>
                                 <SettingRow label="Sort items alphabetically by accounting group"><Toggle value={config.ticketAlphabetical} onChange={() => toggle('ticketAlphabetical')} /></SettingRow>
                                 <SettingRow label="Merge identical items into a single line"><Toggle value={config.ticketMergeIdentical} onChange={() => toggle('ticketMergeIdentical')} /></SettingRow>
@@ -467,8 +440,8 @@ const POSConfigSettings: React.FC = () => {
                                 <SettingRow label="Print sub-items in red" desc="Requires compatible printer with red ink ribbon"><Toggle value={config.ticketRedSubItems} onChange={() => toggle('ticketRedSubItems')} /></SettingRow>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Ticket Printing</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Ticket Printing</h3>
                                 <SettingRow label="Print order ticket when transferring table"><Toggle value={config.ticketPrintOnTransfer} onChange={() => toggle('ticketPrintOnTransfer')} /></SettingRow>
                                 <SettingRow label="Cut order ticket into separate courses"><Toggle value={config.ticketCutCourses} onChange={() => toggle('ticketCutCourses')} /></SettingRow>
                                 <SettingRow label="Only print items assigned to a production center"><Toggle value={config.ticketOnlyPrintAssigned} onChange={() => toggle('ticketOnlyPrintAssigned')} /></SettingRow>
@@ -480,8 +453,8 @@ const POSConfigSettings: React.FC = () => {
                     {/* ===== TAB 4: Payments ===== */}
                     {activeTab === 'payments' && (
                         <>
-                            <div style={cd}>
-                                <SectionTitle>Payment Options</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Payment Options</h3>
                                 <SettingRow label="Allow refund processing on POS"><Toggle value={config.payAllowRefund} onChange={() => toggle('payAllowRefund')} /></SettingRow>
                                 <SettingRow label="Auto-fill exact received amount at payment"><Toggle value={config.payAutoFillAmount} onChange={() => toggle('payAutoFillAmount')} /></SettingRow>
                                 <SettingRow label="Activate separate screen for check splitting"><Toggle value={config.payCheckSplitting} onChange={() => toggle('payCheckSplitting')} /></SettingRow>
@@ -490,15 +463,15 @@ const POSConfigSettings: React.FC = () => {
                                 <SettingRow label="Allow only whole amounts on payment keypad"><Toggle value={config.payWholeAmountsOnly} onChange={() => toggle('payWholeAmountsOnly')} /></SettingRow>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Discounts, Loyalty Cards & Vouchers</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Discounts, Loyalty Cards & Vouchers</h3>
                                 <SettingRow label="Link loyalty card to customer"><Toggle value={config.payLinkLoyaltyToCustomer} onChange={() => toggle('payLinkLoyaltyToCustomer')} /></SettingRow>
                                 <SettingRow label="Enable credit for unused meal voucher amount"><Toggle value={config.payEnableMealVoucherCredit} onChange={() => toggle('payEnableMealVoucherCredit')} /></SettingRow>
                                 <SettingRow label="Process third-party QR codes"><Toggle value={config.payProcessThirdPartyQR} onChange={() => toggle('payProcessThirdPartyQR')} /></SettingRow>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Tips</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Tips</h3>
                                 <SettingRow label="Enable tips" desc="Allow tips to be entered by staff or customers"><Toggle value={config.payEnableTips} onChange={() => toggle('payEnableTips')} /></SettingRow>
 
                                 {config.payEnableTips && (
@@ -509,30 +482,30 @@ const POSConfigSettings: React.FC = () => {
                                             <>
                                                 <SettingRow label="Calculate tip on">
                                                     <div style={{ display: 'flex', gap: 8 }}>
-                                                        <button style={rdio(config.payTipCalculation === 'before-tax')} onClick={() => set('payTipCalculation', 'before-tax')}>Before taxes</button>
-                                                        <button style={rdio(config.payTipCalculation === 'after-tax')} onClick={() => set('payTipCalculation', 'after-tax')}>After taxes</button>
+                                                        <button className={`pos-radio-option${config.payTipCalculation === 'before-tax' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipCalculation', 'before-tax')}>Before taxes</button>
+                                                        <button className={`pos-radio-option${config.payTipCalculation === 'after-tax' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipCalculation', 'after-tax')}>After taxes</button>
                                                     </div>
                                                 </SettingRow>
 
                                                 <SettingRow label="Calculate tip on discounts">
                                                     <div style={{ display: 'flex', gap: 8 }}>
-                                                        <button style={rdio(config.payTipDiscount === 'before-discount')} onClick={() => set('payTipDiscount', 'before-discount')}>Before discounts</button>
-                                                        <button style={rdio(config.payTipDiscount === 'after-discount')} onClick={() => set('payTipDiscount', 'after-discount')}>After discounts</button>
+                                                        <button className={`pos-radio-option${config.payTipDiscount === 'before-discount' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipDiscount', 'before-discount')}>Before discounts</button>
+                                                        <button className={`pos-radio-option${config.payTipDiscount === 'after-discount' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipDiscount', 'after-discount')}>After discounts</button>
                                                     </div>
                                                 </SettingRow>
 
                                                 <SettingRow label="Suggestion type">
                                                     <div style={{ display: 'flex', gap: 8 }}>
-                                                        <button style={rdio(config.payTipType === 'percentage')} onClick={() => set('payTipType', 'percentage')}>Percentage</button>
-                                                        <button style={rdio(config.payTipType === 'fixed')} onClick={() => set('payTipType', 'fixed')}>Fixed Amounts</button>
-                                                        <button style={rdio(config.payTipType === 'dynamic')} onClick={() => set('payTipType', 'dynamic')}>Dynamic</button>
+                                                        <button className={`pos-radio-option${config.payTipType === 'percentage' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipType', 'percentage')}>Percentage</button>
+                                                        <button className={`pos-radio-option${config.payTipType === 'fixed' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipType', 'fixed')}>Fixed Amounts</button>
+                                                        <button className={`pos-radio-option${config.payTipType === 'dynamic' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipType', 'dynamic')}>Dynamic</button>
                                                     </div>
                                                 </SettingRow>
 
                                                 <SettingRow label="Suggested values">
                                                     <div style={{ display: 'flex', gap: 8 }}>
                                                         {config.payTipValues.map((v, idx) => (
-                                                            <input key={idx} type="number" style={{ ...ip, width: 70 }}
+                                                            <input key={idx} type="number" className="pos-input" style={{ width: 70 }}
                                                                 value={v}
                                                                 onChange={e => { const vals = [...config.payTipValues] as [number, number, number]; vals[idx] = parseInt(e.target.value) || 0; set('payTipValues', vals); }}
                                                             />
@@ -547,7 +520,7 @@ const POSConfigSettings: React.FC = () => {
                                                     <SettingRow label="Dynamic threshold" desc="Show percentages when total is above this amount">
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                                             <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>€</span>
-                                                            <input type="number" style={{ ...ip, width: 80 }} value={config.payDynamicThreshold} onChange={e => set('payDynamicThreshold', parseInt(e.target.value) || 0)} />
+                                                            <input type="number" className="pos-input" style={{ width: 80 }} value={config.payDynamicThreshold} onChange={e => set('payDynamicThreshold', parseInt(e.target.value) || 0)} />
                                                         </div>
                                                     </SettingRow>
                                                 )}
@@ -562,8 +535,8 @@ const POSConfigSettings: React.FC = () => {
                     {/* ===== TAB 5: Receipts ===== */}
                     {activeTab === 'receipts' && (
                         <>
-                            <div style={cd}>
-                                <SectionTitle>Receipt Information</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Receipt Information</h3>
                                 <SettingRow label="Business name"><Toggle value={config.receiptBusinessName} onChange={() => toggle('receiptBusinessName')} /></SettingRow>
                                 <SettingRow label="Order profile"><Toggle value={config.receiptOrderProfile} onChange={() => toggle('receiptOrderProfile')} /></SettingRow>
                                 <SettingRow label="Cover count"><Toggle value={config.receiptCoverCount} onChange={() => toggle('receiptCoverCount')} /></SettingRow>
@@ -574,23 +547,23 @@ const POSConfigSettings: React.FC = () => {
                                 <SettingRow label="Delivery information from Order Anywhere"><Toggle value={config.receiptDeliveryInfo} onChange={() => toggle('receiptDeliveryInfo')} /></SettingRow>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Item Display</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Item Display</h3>
                                 <SettingRow label="Group items by seat"><Toggle value={config.receiptGroupBySeat} onChange={() => toggle('receiptGroupBySeat')} /></SettingRow>
                                 <SettingRow label="Group sub-items"><Toggle value={config.receiptGroupSubItems} onChange={() => toggle('receiptGroupSubItems')} /></SettingRow>
                                 <SettingRow label='Show 100% discount as "Free"'><Toggle value={config.receiptShowFree} onChange={() => toggle('receiptShowFree')} /></SettingRow>
                                 <SettingRow label="List identical items separately"><Toggle value={config.receiptListIdenticalSeparately} onChange={() => toggle('receiptListIdenticalSeparately')} /></SettingRow>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Draft Receipt</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Draft Receipt</h3>
                                 <SettingRow label="Include tax rate on draft receipts"><Toggle value={config.receiptIncludeTaxRate} onChange={() => toggle('receiptIncludeTaxRate')} /></SettingRow>
                                 <SettingRow label="Split total by covers on draft receipts"><Toggle value={config.receiptSplitByCovers} onChange={() => toggle('receiptSplitByCovers')} /></SettingRow>
                                 <SettingRow label="Print draft receipts only once"><Toggle value={config.receiptPrintOnce} onChange={() => toggle('receiptPrintOnce')} /></SettingRow>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Receipt Font & Printing</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Receipt Font & Printing</h3>
                                 <SettingRow label="Print items in large font"><Toggle value={config.receiptLargeItems} onChange={() => toggle('receiptLargeItems')} /></SettingRow>
                                 <SettingRow label="Print total in large font"><Toggle value={config.receiptLargeTotal} onChange={() => toggle('receiptLargeTotal')} /></SettingRow>
                                 <SettingRow label="Print server name in large font"><Toggle value={config.receiptLargeServer} onChange={() => toggle('receiptLargeServer')} /></SettingRow>
@@ -599,8 +572,8 @@ const POSConfigSettings: React.FC = () => {
                                 <SettingRow label="Print receipt with delivery slip"><Toggle value={config.receiptDeliverySlip} onChange={() => toggle('receiptDeliverySlip')} /></SettingRow>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Automatic Printing</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Automatic Printing</h3>
                                 <SettingRow label="Print receipt when an order is paid"><Toggle value={config.receiptAutoPrintPaid} onChange={() => toggle('receiptAutoPrintPaid')} /></SettingRow>
                                 <SettingRow label="Print receipt for table orders after payment"><Toggle value={config.receiptAutoPrintTable} onChange={() => toggle('receiptAutoPrintTable')} /></SettingRow>
                                 <SettingRow label="Print customer receipt with card transaction"><Toggle value={config.receiptAutoPrintCard} onChange={() => toggle('receiptAutoPrintCard')} /></SettingRow>
@@ -612,35 +585,35 @@ const POSConfigSettings: React.FC = () => {
                     {/* ===== TAB 6: Device Settings ===== */}
                     {activeTab === 'device' && (
                         <>
-                            <div style={cd}>
-                                <SectionTitle>Register Screen Settings</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Register Screen Settings</h3>
                                 <SettingRow label="Merge identical items with different production instructions" desc="Merge identical items must be enabled"><Toggle value={config.mergeIdenticalItems} onChange={() => toggle('mergeIdenticalItems')} /></SettingRow>
 
                                 <SettingRow label="After order is sent or paid">
                                     <div style={{ display: 'flex', gap: 8 }}>
-                                        <button style={rdio(config.afterSendAction === 'stay')} onClick={() => set('afterSendAction', 'stay')}>Stay on current order</button>
-                                        <button style={rdio(config.afterSendAction === 'new-order')} onClick={() => set('afterSendAction', 'new-order')}>Start new order</button>
-                                        <button style={rdio(config.afterSendAction === 'logout')} onClick={() => set('afterSendAction', 'logout')}>Log user out</button>
+                                        <button className={`pos-radio-option${config.afterSendAction === 'stay' ? ' pos-radio-option--active' : ''}`} onClick={() => set('afterSendAction', 'stay')}>Stay on current order</button>
+                                        <button className={`pos-radio-option${config.afterSendAction === 'new-order' ? ' pos-radio-option--active' : ''}`} onClick={() => set('afterSendAction', 'new-order')}>Start new order</button>
+                                        <button className={`pos-radio-option${config.afterSendAction === 'logout' ? ' pos-radio-option--active' : ''}`} onClick={() => set('afterSendAction', 'logout')}>Log user out</button>
                                     </div>
                                 </SettingRow>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Idle Mode & Screen Saver</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Idle Mode & Screen Saver</h3>
                                 <SettingRow label="Enable POS idle mode with screen saver" desc="POS goes idle after 10 minutes of inactivity"><Toggle value={config.enableIdleMode} onChange={() => toggle('enableIdleMode')} /></SettingRow>
 
                                 {config.enableIdleMode && (
                                     <SettingRow label="Screen saver option">
                                         <div style={{ display: 'flex', gap: 8 }}>
-                                            <button style={rdio(config.idleScreenSaver === 'logo')} onClick={() => set('idleScreenSaver', 'logo')}>Display logo</button>
-                                            <button style={rdio(config.idleScreenSaver === 'slideshow')} onClick={() => set('idleScreenSaver', 'slideshow')}>Slideshow</button>
+                                            <button className={`pos-radio-option${config.idleScreenSaver === 'logo' ? ' pos-radio-option--active' : ''}`} onClick={() => set('idleScreenSaver', 'logo')}>Display logo</button>
+                                            <button className={`pos-radio-option${config.idleScreenSaver === 'slideshow' ? ' pos-radio-option--active' : ''}`} onClick={() => set('idleScreenSaver', 'slideshow')}>Slideshow</button>
                                         </div>
                                     </SettingRow>
                                 )}
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Advanced Settings</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Advanced Settings</h3>
                                 <SettingRow label="Use capital letters for main screen buttons"><Toggle value={config.capitalMainButtons} onChange={() => toggle('capitalMainButtons')} /></SettingRow>
                                 <SettingRow label="Use capital letters for item name buttons"><Toggle value={config.capitalItemButtons} onChange={() => toggle('capitalItemButtons')} /></SettingRow>
                             </div>
@@ -650,25 +623,25 @@ const POSConfigSettings: React.FC = () => {
                     {/* ===== TAB 7: Scheduling & Reporting ===== */}
                     {activeTab === 'scheduling' && (
                         <>
-                            <div style={cd}>
-                                <SectionTitle>Timed Events</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Timed Events</h3>
                                 <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}>
                                     Create timed menu events that automatically change the active menu on your POS.
                                 </p>
                                 {config.timedEvents.map((event, idx) => (
-                                    <div key={idx} style={{ ...cd, background: 'var(--bg-secondary, #09090b)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <div key={idx} className="pos-card" style={{ background: 'var(--bg-secondary, #09090b)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                         <div>
                                             <div style={{ fontWeight: 600 }}>{event.title}</div>
                                             <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)' }}>
                                                 {event.menu} • {event.allDay ? 'All day' : `${event.startTime} - ${event.endTime}`} • {event.days.join(', ')}
                                             </div>
                                         </div>
-                                        <button style={{ ...bo, padding: '6px 10px' }} onClick={() => setConfig(p => ({ ...p, timedEvents: p.timedEvents.filter((_, i) => i !== idx) }))}>
+                                        <button className="pos-btn pos-btn--outline" style={{ padding: '6px 10px' }} onClick={() => setConfig(p => ({ ...p, timedEvents: p.timedEvents.filter((_, i) => i !== idx) }))}>
                                             <Trash2 size={14} />
                                         </button>
                                     </div>
                                 ))}
-                                <button style={{ ...bo, fontSize: 13 }} onClick={() => {
+                                <button className="pos-btn pos-btn--outline" style={{ fontSize: 13 }} onClick={() => {
                                     setConfig(p => ({
                                         ...p,
                                         timedEvents: [...p.timedEvents, { title: 'New Event', menu: 'Default Menu', startDate: '2026-01-01', endDate: '', allDay: true, startTime: '', endTime: '', days: ['Every day'] }]
@@ -678,8 +651,8 @@ const POSConfigSettings: React.FC = () => {
                                 </button>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Reporting Tags</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Reporting Tags</h3>
                                 <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}>
                                     Create tags to filter sales reports by this POS configuration.
                                 </p>
@@ -693,7 +666,7 @@ const POSConfigSettings: React.FC = () => {
                                         </span>
                                     ))}
                                 </div>
-                                <button style={{ ...bo, fontSize: 13 }} onClick={() => {
+                                <button className="pos-btn pos-btn--outline" style={{ fontSize: 13 }} onClick={() => {
                                     const name = prompt('Enter tag name:');
                                     if (name) setConfig(p => ({ ...p, reportTags: [...p.reportTags, name] }));
                                 }}>
@@ -701,37 +674,37 @@ const POSConfigSettings: React.FC = () => {
                                 </button>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Shift Reports</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Shift Reports</h3>
                                 <SettingRow label="Shift report detail">
                                     <div style={{ display: 'flex', gap: 8 }}>
-                                        <button style={rdio(config.shiftReportDetail === 'total')} onClick={() => set('shiftReportDetail', 'total')}>Total sales only</button>
-                                        <button style={rdio(config.shiftReportDetail === 'groups')} onClick={() => set('shiftReportDetail', 'groups')}>+ Accounting groups</button>
-                                        <button style={rdio(config.shiftReportDetail === 'groups-items')} onClick={() => set('shiftReportDetail', 'groups-items')}>+ Groups & items</button>
+                                        <button className={`pos-radio-option${config.shiftReportDetail === 'total' ? ' pos-radio-option--active' : ''}`} onClick={() => set('shiftReportDetail', 'total')}>Total sales only</button>
+                                        <button className={`pos-radio-option${config.shiftReportDetail === 'groups' ? ' pos-radio-option--active' : ''}`} onClick={() => set('shiftReportDetail', 'groups')}>+ Accounting groups</button>
+                                        <button className={`pos-radio-option${config.shiftReportDetail === 'groups-items' ? ' pos-radio-option--active' : ''}`} onClick={() => set('shiftReportDetail', 'groups-items')}>+ Groups & items</button>
                                     </div>
                                 </SettingRow>
                             </div>
 
-                            <div style={cd}>
-                                <SectionTitle>Stock Transfer</SectionTitle>
+                            <div className="pos-card">
+                                <h3 className="pos-section-title">Stock Transfer</h3>
                                 <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}>
                                     Add stock transfers for devices to pull stock from specific locations.
                                 </p>
                                 {config.stockTransfers.map((transfer, idx) => (
                                     <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                                        <select style={{ ...sl, flex: 1 }} value={transfer.from} onChange={e => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, from: e.target.value } : t) }))} aria-label="From stock">
+                                        <select className="pos-input pos-select" style={{ flex: 1 }} value={transfer.from} onChange={e => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, from: e.target.value } : t) }))} aria-label="From stock">
                                             <option>Main Stock</option><option>Bar Stock</option><option>Kitchen Stock</option>
                                         </select>
                                         <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>→</span>
-                                        <select style={{ ...sl, flex: 1 }} value={transfer.to} onChange={e => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, to: e.target.value } : t) }))} aria-label="To stock">
+                                        <select className="pos-input pos-select" style={{ flex: 1 }} value={transfer.to} onChange={e => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, to: e.target.value } : t) }))} aria-label="To stock">
                                             <option>Main Stock</option><option>Bar Stock</option><option>Kitchen Stock</option>
                                         </select>
-                                        <button style={{ ...bo, padding: '6px 10px' }} onClick={() => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.filter((_, i) => i !== idx) }))}>
+                                        <button className="pos-btn pos-btn--outline" style={{ padding: '6px 10px' }} onClick={() => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.filter((_, i) => i !== idx) }))}>
                                             <Trash2 size={14} />
                                         </button>
                                     </div>
                                 ))}
-                                <button style={{ ...bo, fontSize: 13 }} onClick={() => setConfig(p => ({ ...p, stockTransfers: [...p.stockTransfers, { from: 'Main Stock', to: 'Bar Stock' }] }))}>
+                                <button className="pos-btn pos-btn--outline" style={{ fontSize: 13 }} onClick={() => setConfig(p => ({ ...p, stockTransfers: [...p.stockTransfers, { from: 'Main Stock', to: 'Bar Stock' }] }))}>
                                     <Plus size={14} /> Add Stock Transfer
                                 </button>
                             </div>

@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { logger } from '@/lib/logger';
 import PermissionGate from '@/components/shared/PermissionGate';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import { useVenue } from '@/context/VenueContext';
 
 import { useLocation } from 'react-router-dom';
 
@@ -43,9 +44,43 @@ import DataTable from '../../components/shared/DataTable';
 
 // Removed MOCK_PRINTERS constant in favor of API fetching
 
+interface PrinterData {
+    id: string;
+    name?: string;
+    type?: string;
+    location?: string;
+    ip?: string;
+    port?: number;
+    template?: string;
+    status?: string;
+    [key: string]: unknown;
+}
+
+interface TemplateData {
+    id: string;
+    name?: string;
+    type?: string;
+    printer?: string;
+    backupPrinter?: string;
+    logoUrl?: string;
+    bottomLogoUrl?: string;
+    titleText?: string;
+    greetingText?: string;
+    promotionText?: string;
+    [key: string]: unknown;
+}
+
+interface CashDrawer {
+    id: string;
+    name: string;
+    [key: string]: unknown;
+}
+
 export default function Printers() {
     const { user } = useAuth();
-    useAuditLog('PRINTERS_VIEWED', { resource: 'printers' });
+    const { activeVenue } = useVenue();
+    const { logAction } = useAuditLog();
+    useEffect(() => { logAction('PRINTERS_VIEWED', 'printers'); }, []);
     const location = useLocation();
     const [activeTab, setActiveTab] = useState('printers');
 
@@ -55,45 +90,45 @@ export default function Printers() {
         if (tab) setActiveTab(tab);
     }, [location.search]);
 
-    const [printers, setPrinters] = useState([]);
-    const [templates, setTemplates] = useState([]); // Will load from API
-    const [cashDrawers, setCashDrawers] = useState([]);
+    const [printers, setPrinters] = useState<PrinterData[]>([]);
+    const [templates, setTemplates] = useState<TemplateData[]>([]); // Will load from API
+    const [cashDrawers, setCashDrawers] = useState<CashDrawer[]>([]);
     const [loading, setLoading] = useState(false);
 
     const [editPrinterModal, setEditPrinterModal] = useState(false);
     const [editTemplateModal, setEditTemplateModal] = useState(false);
     const [addDrawerModal, setAddDrawerModal] = useState(false);
 
-    const [selectedPrinter, setSelectedPrinter] = useState(null);
-    const [selectedTemplate, setSelectedTemplate] = useState(null);
+    const [selectedPrinter, setSelectedPrinter] = useState<PrinterData | null>(null);
+    const [selectedTemplate, setSelectedTemplate] = useState<TemplateData | null>(null);
     const [newDrawerName, setNewDrawerName] = useState('');
 
     const loadData = useCallback(async () => {
         setLoading(true);
         try {
             const [printersData, templatesData, drawersRes] = await Promise.all([
-                printersAPI.list({ venue_id: user?.defaultVenueId }),
-                printerTemplatesAPI.list(),
-                api.get('/hr/cash-drawers', { params: { venue_id: user?.defaultVenueId } })
+                printersAPI.list({ venue_id: activeVenue?.id }),
+                printerTemplatesAPI.list({}),
+                api.get('/hr/cash-drawers', { params: { venue_id: activeVenue?.id } })
             ]);
             setPrinters(printersData);
             setTemplates(templatesData);
             setCashDrawers(drawersRes.data || []);
-        } catch (error: any) {
-            logger.error("Failed to load printers:", error);
+        } catch (error: unknown) {
+            logger.error("Failed to load printers:", { error: error instanceof Error ? error.message : String(error) });
             // FAIL LOUDLY - No Mock Data
             toast.error("Failed to load printer configuration from server.");
             setTemplates([]);
         } finally {
             setLoading(false);
         }
-    }, [user?.defaultVenueId]);
+    }, [activeVenue?.id]);
 
     useEffect(() => {
         loadData();
     }, [loadData]);
 
-    const openEditTemplate = (template) => {
+    const openEditTemplate = (template: TemplateData) => {
         setSelectedTemplate(template);
         setEditTemplateModal(true);
     };
@@ -113,11 +148,14 @@ export default function Printers() {
         toast.success('Cash drawer added successfully');
     };
 
-    const handleUpdateTemplateField = (field, value) => {
-        setSelectedTemplate(prev => ({
-            ...prev,
-            [field]: value
-        }));
+    const handleUpdateTemplateField = (field: string, value: string) => {
+        setSelectedTemplate((prev: TemplateData | null) => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                [field]: value
+            };
+        });
     };
 
     const handleSaveTemplate = async () => {
@@ -125,9 +163,9 @@ export default function Printers() {
         try {
             // Check if it's a new template (no ID) or update
             let updatedTemplates;
-            if (templates.some(t => t.id === selectedTemplate.id)) {
-                updatedTemplates = templates.map(t => t.id === selectedTemplate.id ? selectedTemplate : t);
-                await printerTemplatesAPI.update(selectedTemplate.id, selectedTemplate);
+            if (templates.some(t => t.id === selectedTemplate?.id)) {
+                updatedTemplates = templates.map(t => t.id === selectedTemplate?.id ? selectedTemplate! : t);
+                await printerTemplatesAPI.update(selectedTemplate!.id, selectedTemplate);
             } else {
                 const newId = (Math.max(...templates.map(t => parseInt(t.id) || 0)) + 1).toString();
                 const newTemplate = { ...selectedTemplate, id: newId };
@@ -138,12 +176,12 @@ export default function Printers() {
             setTemplates(updatedTemplates);
             setEditTemplateModal(false);
             toast.success('Template saved successfully');
-        } catch (error: any) {
-            logger.error('Failed to save template:', error);
+        } catch (error: unknown) {
+            logger.error('Failed to save template:', { error: error instanceof Error ? error.message : String(error) });
             // Fallback for mock if API fails
             let updatedTemplates;
-            if (templates.some(t => t.id === selectedTemplate.id)) {
-                updatedTemplates = templates.map(t => t.id === selectedTemplate.id ? selectedTemplate : t);
+            if (templates.some(t => t.id === selectedTemplate?.id)) {
+                updatedTemplates = templates.map(t => t.id === selectedTemplate?.id ? selectedTemplate! : t);
             } else {
                 const newId = (Math.max(...templates.map(t => parseInt(t.id) || 0)) + 1).toString();
                 updatedTemplates = [...templates, { ...selectedTemplate, id: newId }];
@@ -157,10 +195,10 @@ export default function Printers() {
     };
 
     const handleCopyTemplate = () => {
-        const copy = {
-            ...selectedTemplate,
+        const copy: TemplateData = {
+            ...selectedTemplate!,
             id: (Math.max(...templates.map(t => parseInt(t.id) || 0)) + 1).toString(),
-            name: `Copy of ${selectedTemplate.name}`
+            name: `Copy of ${selectedTemplate?.name}`
         };
         setTemplates([...templates, copy]);
         setSelectedTemplate(copy);
@@ -171,11 +209,11 @@ export default function Printers() {
         if (!window.confirm('Are you sure you want to delete this template?')) return;
 
         try {
-            await printerTemplatesAPI.delete(selectedTemplate.id);
-            setTemplates(templates.filter(t => t.id !== selectedTemplate.id));
+            await printerTemplatesAPI.delete(selectedTemplate!.id);
+            setTemplates(templates.filter(t => t.id !== selectedTemplate?.id));
             setEditTemplateModal(false);
             toast.success('Template deleted');
-        } catch (error: any) {
+        } catch (_error: unknown) {
             toast.error('Failed to delete template: Backend Error');
         }
     };
@@ -185,10 +223,7 @@ export default function Printers() {
             <PageContainer
                 title="Printers"
                 description="Manage printers, templates, and cash drawers for Caviar & Bull."
-                breadcrumb={[
-                    { label: 'Management', href: '#' },
-                    { label: 'Printers', href: '/manager/printers' }
-                ]}
+                actions={null}
             >
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="bg-card border border-border p-1 mb-6">
@@ -214,29 +249,30 @@ export default function Printers() {
                                 <DataTable
                                     data={printers}
                                     columns={[
-                                        { header: 'Name', accessorKey: 'name' },
-                                        { header: 'Type', accessorKey: 'type' },
-                                        { header: 'Location', accessorKey: 'location' },
-                                        { header: 'IP Address', accessorKey: 'ip' },
-                                        { header: 'Port', accessorKey: 'port' },
-                                        { header: 'Template', accessorKey: 'template' },
+                                        { key: 'name', header: 'Name' },
+                                        { key: 'type', header: 'Type' },
+                                        { key: 'location', header: 'Location' },
+                                        { key: 'ip', header: 'IP Address' },
+                                        { key: 'port', header: 'Port' },
+                                        { key: 'template', header: 'Template' },
                                         {
+                                            key: 'status',
                                             header: 'Status',
-                                            accessorKey: 'status',
-                                            cell: ({ row }) => (
-                                                <Badge className={row.original.status === 'Online' ? 'bg-emerald-600' : 'bg-red-600'}>
-                                                    {row.original.status}
+                                            render: (row: PrinterData) => (
+                                                <Badge className={row.status === 'Online' ? 'bg-emerald-600' : 'bg-red-600'}>
+                                                    {row.status}
                                                 </Badge>
                                             )
                                         },
                                         {
+                                            key: 'actions',
                                             header: 'Actions',
-                                            cell: ({ row }) => (
+                                            render: (row: PrinterData) => (
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
                                                     onClick={() => {
-                                                        setSelectedPrinter(row.original);
+                                                        setSelectedPrinter(row);
                                                         setEditPrinterModal(true);
                                                     }}
                                                 >
@@ -349,7 +385,7 @@ export default function Printers() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             {templates.map(t => (
-                                                <SelectItem key={t.id} value={t.name}>{t.name}</SelectItem>
+                                                <SelectItem key={t.id} value={t.name || t.id}>{t.name}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>

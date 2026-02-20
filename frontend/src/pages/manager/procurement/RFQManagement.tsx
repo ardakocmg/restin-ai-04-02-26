@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '../../../lib/logger';
 import PageContainer from '../../../layouts/PageContainer';
 import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
@@ -6,12 +7,47 @@ import { Plus, Send, Award, X, Eye, Edit } from 'lucide-react';
 import api from '../../../lib/api';
 import { toast } from 'sonner';
 
+interface RFQItem {
+  item_id: string;
+  item_name: string;
+  quantity: number;
+  unit: string;
+  specifications: string;
+  [key: string]: string | number;
+}
+
+interface RFQQuote {
+  supplier_name: string;
+  total_amount: number;
+  valid_until: string;
+}
+
+interface RFQData {
+  id: string;
+  rfq_number: string;
+  title: string;
+  description: string;
+  status: string;
+  items?: RFQItem[];
+  suppliers?: string[];
+  quotes?: RFQQuote[];
+  deadline?: string;
+}
+
+interface RFQFormData {
+  title: string;
+  description: string;
+  items: RFQItem[];
+  suppliers: string[];
+  deadline: string;
+}
+
 export default function RFQManagement() {
-  const [rfqs, setRfqs] = useState([]);
+  const [rfqs, setRfqs] = useState<RFQData[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [selectedRFQ, setSelectedRFQ] = useState(null);
-  const [formData, setFormData] = useState({
+  const [selectedRFQ, setSelectedRFQ] = useState<RFQData | null>(null);
+  const [formData, setFormData] = useState<RFQFormData>({
     title: '',
     description: '',
     items: [{ item_id: '', item_name: '', quantity: 1, unit: 'kg', specifications: '' }],
@@ -28,8 +64,8 @@ export default function RFQManagement() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/rfq`);
       setRfqs(response.data || []);
-    } catch (error: any) {
-      console.error('Failed to fetch RFQs:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to fetch RFQs:', { error: String(error) });
       setRfqs([]);
     } finally {
       setLoading(false);
@@ -43,19 +79,19 @@ export default function RFQManagement() {
       setShowModal(false);
       resetForm();
       fetchRFQs();
-    } catch (error: any) {
-      console.error('Failed to create RFQ:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to create RFQ:', { error: String(error) });
       toast.error('Failed to create RFQ');
     }
   };
 
-  const handleSend = async (rfqId) => {
+  const handleSend = async (rfqId: string) => {
     try {
       const venueId = localStorage.getItem('currentVenueId');
       await api.post(`/venues/${venueId}/rfq/${rfqId}/send`);
       fetchRFQs();
-    } catch (error: any) {
-      console.error('Failed to send RFQ:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to send RFQ:', { error: String(error) });
     }
   };
 
@@ -76,21 +112,21 @@ export default function RFQManagement() {
     });
   };
 
-  const removeItem = (index) => {
+  const removeItem = (index: number) => {
     setFormData({
       ...formData,
       items: formData.items.filter((_, i) => i !== index)
     });
   };
 
-  const updateItem = (index, field, value) => {
+  const updateItem = (index: number, field: keyof RFQItem, value: string | number) => {
     const newItems = [...formData.items];
-    newItems[index][field] = value;
-    setFormData({ ...formData, items: newItems });
+    (newItems[index] as Record<string, string | number>)[field] = value;
+    setFormData({ ...formData, items: newItems as RFQItem[] });
   };
 
-  const getStatusColor = (status) => {
-    const colors = {
+  const getStatusColor = (status: string): string => {
+    const colors: Record<string, string> = {
       draft: 'bg-gray-600/20 text-gray-100',
       sent: 'bg-blue-600/20 text-blue-100',
       quoted: 'bg-yellow-600/20 text-yellow-100',
@@ -120,7 +156,7 @@ export default function RFQManagement() {
         ) : rfqs.length === 0 ? (
           <Card><CardContent className="p-8 text-center text-slate-400">No RFQs found. Create your first RFQ!</CardContent></Card>
         ) : (
-          rfqs.map((rfq) => (
+          rfqs.map((rfq: RFQData) => (
             <Card key={rfq.id} className="border-slate-700 hover:border-slate-600 transition">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
@@ -189,7 +225,7 @@ export default function RFQManagement() {
                   <div>
                     <h4 className="font-semibold mb-2">Items</h4>
                     <div className="space-y-2">
-                      {selectedRFQ.items?.map((item, idx) => (
+                      {selectedRFQ.items?.map((item: RFQItem, idx: number) => (
                         <div key={idx} className="p-3 bg-slate-800 rounded">
                           <p className="font-medium">{item.item_name}</p>
                           <p className="text-sm text-slate-400">Quantity: {item.quantity} {item.unit}</p>
@@ -200,9 +236,9 @@ export default function RFQManagement() {
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">Quotes Received ({selectedRFQ.quotes?.length || 0})</h4>
-                    {selectedRFQ.quotes?.length > 0 ? (
+                    {(selectedRFQ.quotes?.length ?? 0) > 0 ? (
                       <div className="space-y-2">
-                        {selectedRFQ.quotes.map((quote, idx) => (
+                        {(selectedRFQ.quotes ?? []).map((quote: RFQQuote, idx: number) => (
                           <div key={idx} className="p-3 bg-slate-800 rounded">
                             <div className="flex justify-between items-start">
                               <div>

@@ -6,14 +6,10 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Clock, Users, DollarSign, RefreshCw, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import './pos-shared.css';
 
 type TableStatus = 'available' | 'occupied' | 'reserved' | 'cleaning' | 'blocked';
 interface TrackedTable { id: string; name: string; floor: string; status: TableStatus; guests: number; server: string; orderTotal: number; occupiedSince: string; course: string; }
-
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary,#0a0a0a)', color: 'var(--text-primary,#fafafa)', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1200, margin: '0 auto', padding: '24px 20px' };
-const cd: React.CSSProperties = { background: 'var(--bg-card,#18181b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
 
 const STATUS_COLORS: Record<TableStatus, string> = { available: '#10B981', occupied: '#3B82F6', reserved: '#F59E0B', cleaning: '#8B5CF6', blocked: '#EF4444' };
 const STATUS_BG: Record<TableStatus, string> = { available: 'rgba(16,185,129,0.12)', occupied: 'rgba(59,130,246,0.12)', reserved: 'rgba(245,158,11,0.12)', cleaning: 'rgba(139,92,246,0.12)', blocked: 'rgba(239,68,68,0.12)' };
@@ -50,20 +46,20 @@ const TableTracker: React.FC = () => {
     const available = tables.filter(t => t.status === 'available').length;
 
     return (
-        <div style={pg}><div style={ct}>
+        <div className="pos-page"><div className="pos-container pos-container--1200">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                 <div>
-                    <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
+                    <button onClick={() => navigate(-1)} className="pos-btn pos-btn--outline" style={{ marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
                     <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Table Tracker</h1>
                     <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>Real-time table status and occupancy overview</p>
                 </div>
-                <button style={bo} onClick={() => { }}><RefreshCw size={14} /> Refresh</button>
+                <button className="pos-btn pos-btn--outline" onClick={() => { }}><RefreshCw size={14} /> Refresh</button>
             </div>
 
             {/* Stats */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, marginBottom: 20 }}>
                 {[{ l: 'Occupied', v: `${occupied.length}/${tables.length}`, c: '#3B82F6', i: <Users size={16} /> }, { l: 'Available', v: available.toString(), c: '#10B981', i: <Eye size={16} /> }, { l: 'Guests', v: totalGuests.toString(), c: '#F59E0B', i: <Users size={16} /> }, { l: 'Revenue', v: `€${totalRevenue.toFixed(0)}`, c: '#8B5CF6', i: <DollarSign size={16} /> }].map((s, i) => (
-                    <div key={i} style={{ ...cd, padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div key={i} className="pos-card" style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
                         <div style={{ width: 36, height: 36, borderRadius: 8, background: `${s.c}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.c }}>{s.i}</div>
                         <div><div style={{ fontSize: 22, fontWeight: 700 }}>{s.v}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{s.l}</div></div>
                     </div>
@@ -72,12 +68,12 @@ const TableTracker: React.FC = () => {
 
             {/* Filters */}
             <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-                <div style={{ display: 'flex', gap: 4, background: 'var(--bg-card)', borderRadius: 8, padding: 3, border: '1px solid var(--border-primary,#27272a)' }}>
-                    <button onClick={() => setFilterFloor('all')} style={{ padding: '6px 12px', borderRadius: 6, border: 'none', fontSize: 12, cursor: 'pointer', background: filterFloor === 'all' ? 'rgba(59,130,246,0.1)' : 'transparent', color: filterFloor === 'all' ? '#3B82F6' : 'var(--text-secondary)' }}>All Floors</button>
-                    {floors.map(f => <button key={f} onClick={() => setFilterFloor(f)} style={{ padding: '6px 12px', borderRadius: 6, border: 'none', fontSize: 12, cursor: 'pointer', background: filterFloor === f ? 'rgba(59,130,246,0.1)' : 'transparent', color: filterFloor === f ? '#3B82F6' : 'var(--text-secondary)' }}>{f}</button>)}
+                <div className="pos-tab-group">
+                    <button onClick={() => setFilterFloor('all')} className={`pos-filter-btn${filterFloor === 'all' ? ' pos-filter-btn--active' : ''}`}>All Floors</button>
+                    {floors.map(f => <button key={f} onClick={() => setFilterFloor(f)} className={`pos-filter-btn${filterFloor === f ? ' pos-filter-btn--active' : ''}`}>{f}</button>)}
                 </div>
-                <div style={{ display: 'flex', gap: 4, background: 'var(--bg-card)', borderRadius: 8, padding: 3, border: '1px solid var(--border-primary,#27272a)' }}>
-                    <button onClick={() => setFilterStatus('all')} style={{ padding: '6px 12px', borderRadius: 6, border: 'none', fontSize: 12, cursor: 'pointer', background: filterStatus === 'all' ? 'rgba(59,130,246,0.1)' : 'transparent', color: filterStatus === 'all' ? '#3B82F6' : 'var(--text-secondary)' }}>All</button>
+                <div className="pos-tab-group">
+                    <button onClick={() => setFilterStatus('all')} className={`pos-filter-btn${filterStatus === 'all' ? ' pos-filter-btn--active' : ''}`}>All</button>
                     {(Object.keys(STATUS_COLORS) as TableStatus[]).map(s => <button key={s} onClick={() => setFilterStatus(s)} style={{ padding: '6px 12px', borderRadius: 6, border: 'none', fontSize: 12, cursor: 'pointer', textTransform: 'capitalize', background: filterStatus === s ? STATUS_BG[s] : 'transparent', color: filterStatus === s ? STATUS_COLORS[s] : 'var(--text-secondary)' }}>{s}</button>)}
                 </div>
             </div>
@@ -85,7 +81,7 @@ const TableTracker: React.FC = () => {
             {/* Table Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: 12 }}>
                 {filtered.map(table => (
-                    <div key={table.id} style={{ ...cd, padding: 14, borderLeft: `3px solid ${STATUS_COLORS[table.status]}`, cursor: 'pointer' }}>
+                    <div key={table.id} className="pos-card" style={{ padding: 14, borderLeft: `3px solid ${STATUS_COLORS[table.status]}`, cursor: 'pointer' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                             <span style={{ fontSize: 16, fontWeight: 700 }}>{table.name}</span>
                             <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 3, background: STATUS_BG[table.status], color: STATUS_COLORS[table.status], textTransform: 'capitalize' }}>{table.status}</span>

@@ -238,3 +238,97 @@ The following elements in `Login.tsx` are **FINAL** and must **NEVER** be modifi
 4. **150ms delay** between green pulse and navigation (`await new Promise(r => setTimeout(r, 150))`)
 
 **These are approved by the product owner and are part of the brand identity.** Do not remove, replace, or "optimize" them.
+
+---
+
+## Rule 14: STRICT TYPESCRIPT — ZERO TOLERANCE 🔒
+
+`tsconfig.json` has `"strict": true`. **ALL code MUST compile with zero errors.**
+
+### 14a. Component Props Interface
+
+Every component MUST have a typed props interface:
+
+```tsx
+// ❌ FORBIDDEN — implicit any on props
+function OrderCard({ order, onSave }) { ... }
+
+// ✅ REQUIRED — explicit interface
+interface OrderCardProps {
+    order: Order;
+    onSave: (order: Order) => void;
+}
+function OrderCard({ order, onSave }: OrderCardProps) { ... }
+```
+
+### 14b. useState Must Be Typed
+
+When initial value doesn't convey the full type, add a generic:
+
+```tsx
+// ❌ FORBIDDEN — infers never[]
+const [items, setItems] = useState([]);
+
+// ✅ REQUIRED — explicit generic
+const [items, setItems] = useState<OrderItem[]>([]);
+```
+
+### 14c. No Implicit `any`
+
+All callback parameters must be typed:
+
+```tsx
+// ❌ FORBIDDEN
+items.map(item => item.name)
+onClick={(e) => handleClick(e)}
+
+// ✅ REQUIRED
+items.map((item: OrderItem) => item.name)
+onClick={(e: React.MouseEvent) => handleClick(e)}
+```
+
+### 14d. Style Objects Must Be Typed
+
+```tsx
+// ❌ FORBIDDEN — untyped object
+const s = { root: { display: 'flex', flexDirection: 'column' } };
+
+// ✅ REQUIRED — typed as CSSProperties
+const s: Record<string, React.CSSProperties> = {
+    root: { display: 'flex', flexDirection: 'column' },
+};
+```
+
+### 14e. Pre-Commit Enforcement
+
+`npx tsc --noEmit` must exit with code 0. **Any TS error blocks commit.**
+
+---
+
+## Rule 15: NO HARDCODED COLORS IN TSX 🎨
+
+All colors in `.tsx` component files MUST use CSS variables from the design system. No raw hex, rgb, or hsl values.
+
+```tsx
+// ❌ FORBIDDEN in TSX files
+style={{ backgroundColor: '#1a1a1a', color: '#fff', border: '1px solid #333' }}
+
+// ✅ REQUIRED — use CSS variables
+style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
+
+// ✅ BEST — use CSS classes
+className="pos-card"
+```
+
+**Exceptions:**
+
+- CSS files (`.css`) that define the variables themselves
+- Keyframe animations
+- SVG fills that reference design tokens
+
+**Available CSS variable families:**
+
+- `--bg-*` (primary, secondary, card, hover)
+- `--text-*` (primary, secondary, muted)
+- `--border-*` (primary, secondary)
+- `--accent-*` (primary, success, warning, danger)

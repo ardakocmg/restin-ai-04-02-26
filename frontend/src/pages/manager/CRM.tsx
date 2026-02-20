@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useVenue } from '../../context/VenueContext';
 import api from '../../lib/api';
+import { logger } from '../../lib/logger';
 import PageContainer from '../../layouts/PageContainer';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -14,14 +15,37 @@ import {
 import { toast } from 'sonner';
 import GuestDrawer from './GuestDrawer';
 
+interface Guest {
+  id: string;
+  name: string;
+  tags?: string[];
+  visit_count?: number;
+  visit_summary?: {
+    total_visits?: number;
+    total_spend?: number;
+    last_visit?: string;
+  };
+  churn_risk?: string;
+  risk?: string;
+  total_spend?: number;
+  last_visit?: string;
+}
+
+interface CRMSummary {
+  total_unique_guests: number;
+  vip_count: number;
+  loyalty_participation: string;
+  new_this_month: number;
+}
+
 export default function CRMPage() {
   const { activeVenue } = useVenue();
-  const [guests, setGuests] = useState([]);
-  const [summary, setSummary] = useState(null);
+  const [guests, setGuests] = useState<Guest[]>([]);
+  const [summary, setSummary] = useState<CRMSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [activeSegment, setActiveSegment] = useState('all');
-  const [selectedGuestId, setSelectedGuestId] = useState(null);
+  const [selectedGuestId, setSelectedGuestId] = useState<string | null>(null);
 
   useEffect(() => {
     if (activeVenue?.id) {
@@ -32,22 +56,22 @@ export default function CRMPage() {
 
   const loadSummary = async () => {
     try {
-      const res = await api.get(`/crm/summary?venue_id=${activeVenue.id}`);
+      const res = await api.get(`/crm/summary?venue_id=${activeVenue!.id}`);
       setSummary(res.data);
-    } catch (e: any) { console.error(e); }
+    } catch (e: unknown) { logger.error('Failed to load CRM summary', { error: String(e) }); }
   };
 
   const loadGuests = async () => {
     setLoading(true);
     try {
-      let url = `/crm/guests?venue_id=${activeVenue.id}`;
+      let url = `/crm/guests?venue_id=${activeVenue!.id}`;
       if (search) url += `&q=${search}`;
       if (activeSegment !== 'all') url += `&segment=${activeSegment}`;
 
       const res = await api.get(url);
       setGuests(res.data || []);
-    } catch (e: any) {
-      console.error(e);
+    } catch (e: unknown) {
+      logger.error('Failed to load guests', { error: String(e) });
       toast.error("Failed to load guest profiles");
     } finally {
       setLoading(false);
@@ -125,7 +149,7 @@ export default function CRMPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {guests.map(guest => (
+            {guests.map((guest: Guest) => (
               <Card
                 key={guest.id}
                 onClick={() => setSelectedGuestId(guest.id)}
@@ -135,14 +159,14 @@ export default function CRMPage() {
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
                       <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 border border-border flex items-center justify-center text-xl font-black text-muted-foreground">
-                        {(guest.name || 'G').split(' ').map(n => n[0] || '').join('')}
+                        {(guest.name || 'G').split(' ').map((n: string) => n[0] || '').join('')}
                       </div>
                       <div>
                         <h3 className="font-black text-foreground uppercase tracking-tight text-sm group-hover:text-red-500 transition-colors">
                           {guest.name || 'Unknown Guest'}
                         </h3>
                         <div className="flex items-center gap-2 mt-1">
-                          {(guest.tags || []).map(tag => (
+                          {(guest.tags || []).map((tag: string) => (
                             <Badge key={tag} className="bg-card text-muted-foreground border-border text-[8px] font-black uppercase tracking-widest px-1.5 py-0">
                               {tag}
                             </Badge>
@@ -173,7 +197,7 @@ export default function CRMPage() {
                   <div className="flex items-center justify-between pt-4 border-t border-border">
                     <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase">
                       <Clock className="w-3 h-3" />
-                      {guest.last_visit || guest.visit_summary?.last_visit ? `Last seen ${new Date(guest.last_visit || guest.visit_summary?.last_visit).toLocaleDateString()}` : 'New Guest'}
+                      {guest.last_visit || guest.visit_summary?.last_visit ? `Last seen ${new Date(guest.last_visit || guest.visit_summary?.last_visit || '').toLocaleDateString()}` : 'New Guest'}
                     </div>
                     <ChevronRight className="w-4 h-4 text-zinc-700 group-hover:text-foreground transition-all group-hover:translate-x-1" />
                   </div>

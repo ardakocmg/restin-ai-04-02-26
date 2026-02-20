@@ -1,0 +1,879 @@
+/*
+ * pos-shared.css — Shared styles for all POS Back Office pages
+ * 
+ * These classes replace the common inline CSSProperties objects (pg, ct, cd, bp, bo, ip, sl)
+ * that were duplicated across ~27 POS page components.
+ */
+
+/* ===== Page Layout ===== */
+
+.pos-page {
+    min-height: 100vh;
+    background: var(--bg-primary, #0a0a0a);
+    color: var(--text-primary, #fafafa);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.pos-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 20px;
+}
+
+.pos-container--wide {
+    max-width: 1400px;
+}
+
+/* ===== Card ===== */
+
+.pos-card {
+    background: var(--bg-card, #18181b);
+    border: 1px solid var(--border-primary, #27272a);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.pos-card--compact {
+    padding: 12px;
+}
+
+.pos-card--flush {
+    padding: 0;
+}
+
+/* ===== Primary Button ===== */
+
+.pos-btn-primary {
+    padding: 10px 24px;
+    background: #3B82F6;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pos-btn-primary:hover {
+    background: #2563EB;
+}
+
+.pos-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== Outline Button ===== */
+
+.pos-btn-outline {
+    padding: 10px 24px;
+    background: transparent;
+    border: 1px solid var(--border-primary, #27272a);
+    border-radius: 8px;
+    color: var(--text-primary, #fafafa);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pos-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* ===== Back Button ===== */
+
+.pos-btn-back {
+    margin-bottom: 8px;
+    padding: 6px 14px;
+    font-size: 12px;
+}
+
+/* ===== Icon-only Button ===== */
+
+.pos-btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: var(--text-secondary, #a1a1aa);
+}
+
+.pos-btn-icon:hover {
+    color: var(--text-primary, #fafafa);
+}
+
+.pos-btn-icon--danger {
+    color: #EF4444;
+    opacity: 0.6;
+}
+
+.pos-btn-icon--danger:hover {
+    opacity: 1;
+}
+
+/* ===== Danger Button ===== */
+
+.pos-btn-danger {
+    padding: 10px 24px;
+    background: #DC2626;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pos-btn-danger:hover {
+    background: #B91C1C;
+}
+
+/* ===== Text Input ===== */
+
+.pos-input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-secondary, #09090b);
+    border: 1px solid var(--border-primary, #27272a);
+    border-radius: 8px;
+    color: var(--text-primary, #fafafa);
+    font-size: 14px;
+}
+
+.pos-input:focus {
+    outline: none;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* ===== Select ===== */
+
+.pos-select {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-secondary, #09090b);
+    border: 1px solid var(--border-primary, #27272a);
+    border-radius: 8px;
+    color: var(--text-primary, #fafafa);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.pos-select:focus {
+    outline: none;
+    border-color: #3B82F6;
+}
+
+/* ===== Textarea ===== */
+
+.pos-textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+/* ===== Header ===== */
+
+.pos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.pos-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.pos-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary, #a1a1aa);
+    margin: 4px 0 0;
+}
+
+/* ===== Stats ===== */
+
+.pos-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.pos-stat-card {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pos-stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pos-stat-icon--blue {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3B82F6;
+}
+
+.pos-stat-icon--green {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10B981;
+}
+
+.pos-stat-icon--amber {
+    background: rgba(245, 158, 11, 0.15);
+    color: #F59E0B;
+}
+
+.pos-stat-icon--red {
+    background: rgba(239, 68, 68, 0.15);
+    color: #EF4444;
+}
+
+.pos-stat-icon--purple {
+    background: rgba(139, 92, 246, 0.15);
+    color: #8B5CF6;
+}
+
+.pos-stat-icon--cyan {
+    background: rgba(6, 182, 212, 0.15);
+    color: #06B6D4;
+}
+
+.pos-stat-value {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.pos-stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* ===== Toolbar ===== */
+
+.pos-toolbar {
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.pos-search-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.pos-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.pos-search-input {
+    padding: 8px 12px 8px 34px;
+    font-size: 13px;
+}
+
+/* ===== Toggle Group / Tab Buttons ===== */
+
+.pos-toggle-group {
+    display: flex;
+    border: 1px solid var(--border-primary, #27272a);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.pos-toggle-btn {
+    padding: 7px 14px;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.pos-toggle-btn--active {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+}
+
+/* ===== Table ===== */
+
+.pos-table-header {
+    display: grid;
+    gap: 12px;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-secondary, #a1a1aa);
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pos-table-row {
+    display: grid;
+    gap: 12px;
+    padding: 14px 12px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+}
+
+.pos-table-row:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.pos-cell-secondary {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.pos-cell-value {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.pos-cell-green {
+    color: #10B981;
+}
+
+.pos-cell-red {
+    color: #EF4444;
+}
+
+.pos-cell-amber {
+    color: #F59E0B;
+}
+
+/* ===== Actions Column ===== */
+
+.pos-actions {
+    display: flex;
+    gap: 4px;
+}
+
+/* ===== Empty State ===== */
+
+.pos-empty {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+}
+
+.pos-empty-icon {
+    opacity: 0.3;
+    margin-bottom: 8px;
+}
+
+.pos-empty-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ===== Modal ===== */
+
+.pos-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.pos-modal {
+    width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.pos-modal--sm {
+    width: 420px;
+}
+
+.pos-modal--lg {
+    width: 720px;
+}
+
+.pos-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.pos-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.pos-modal-footer {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+/* ===== Form ===== */
+
+.pos-form-group {
+    margin-bottom: 14px;
+}
+
+.pos-form-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    display: block;
+}
+
+.pos-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.pos-form-grid--3 {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* ===== Toggle Switch ===== */
+
+.pos-toggle-wrapper {
+    margin-bottom: 16px;
+}
+
+.pos-toggle-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.pos-toggle-track {
+    width: 44px;
+    height: 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.pos-toggle-track--on {
+    background: #3B82F6;
+}
+
+.pos-toggle-track--off {
+    background: #3f3f46;
+}
+
+.pos-toggle-thumb {
+    position: absolute;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    transition: left 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.pos-toggle-thumb--on {
+    left: 22px;
+}
+
+.pos-toggle-thumb--off {
+    left: 2px;
+}
+
+/* ===== Color Picker ===== */
+
+.pos-color-picker {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.pos-color-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 3px solid transparent;
+}
+
+.pos-color-swatch--selected {
+    border-color: #fff;
+}
+
+/* ===== Badges ===== */
+
+.pos-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.pos-badge--green {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10B981;
+}
+
+.pos-badge--red {
+    background: rgba(239, 68, 68, 0.15);
+    color: #EF4444;
+}
+
+.pos-badge--amber {
+    background: rgba(245, 158, 11, 0.15);
+    color: #F59E0B;
+}
+
+.pos-badge--blue {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3B82F6;
+}
+
+.pos-badge--purple {
+    background: rgba(139, 92, 246, 0.15);
+    color: #8B5CF6;
+}
+
+.pos-badge--gray {
+    background: rgba(161, 161, 170, 0.15);
+    color: #a1a1aa;
+}
+
+/* ===== Flex Utilities ===== */
+
+.pos-flex {
+    display: flex;
+}
+
+.pos-flex--center {
+    align-items: center;
+}
+
+.pos-flex--between {
+    justify-content: space-between;
+}
+
+.pos-flex--col {
+    flex-direction: column;
+}
+
+.pos-flex--wrap {
+    flex-wrap: wrap;
+}
+
+.pos-gap-4 {
+    gap: 4px;
+}
+
+.pos-gap-6 {
+    gap: 6px;
+}
+
+.pos-gap-8 {
+    gap: 8px;
+}
+
+.pos-gap-10 {
+    gap: 10px;
+}
+
+.pos-gap-12 {
+    gap: 12px;
+}
+
+.pos-gap-14 {
+    gap: 14px;
+}
+
+.pos-gap-16 {
+    gap: 16px;
+}
+
+/* ===== Icon inline helpers ===== */
+
+.pos-icon-secondary {
+    color: var(--text-secondary);
+}
+
+.pos-icon-grab {
+    color: var(--text-secondary);
+    opacity: 0.3;
+    cursor: grab;
+}
+
+.pos-live-icon {
+    color: #10B981;
+    vertical-align: middle;
+    margin-left: 6px;
+}
+
+/* ===== Typography helpers ===== */
+
+.pos-text-secondary {
+    color: var(--text-secondary, #a1a1aa);
+}
+
+.pos-text-xs {
+    font-size: 12px;
+}
+
+.pos-text-sm {
+    font-size: 13px;
+}
+
+.pos-text-md {
+    font-size: 14px;
+}
+
+.pos-text-bold {
+    font-weight: 600;
+}
+
+/* ===== Spacing ===== */
+
+.pos-mb-0 {
+    margin-bottom: 0;
+}
+
+.pos-mb-4 {
+    margin-bottom: 4px;
+}
+
+.pos-mb-8 {
+    margin-bottom: 8px;
+}
+
+.pos-mb-12 {
+    margin-bottom: 12px;
+}
+
+.pos-mb-16 {
+    margin-bottom: 16px;
+}
+
+.pos-mb-20 {
+    margin-bottom: 20px;
+}
+
+/* ===== Setting Row (toggle row) ===== */
+
+.pos-setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ===== Card Title ===== */
+
+.pos-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 16px;
+}
+
+/* ===== Empty State (in-table) ===== */
+
+.pos-empty-state {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-secondary, #a1a1aa);
+    font-size: 13px;
+}
+
+/* ===== Live Status Dot ===== */
+
+.pos-live-dot {
+    margin-left: 8px;
+    font-size: 11px;
+    color: #10B981;
+}
+
+/* ===== Badge: Cyan ===== */
+
+.pos-badge--cyan {
+    background: rgba(6, 182, 212, 0.15);
+    color: #06B6D4;
+}
+
+/* ===== Container: 1200px variant ===== */
+
+.pos-container--1200 {
+    max-width: 1200px;
+}
+
+/* ===== Sidebar Layout ===== */
+
+.pos-container--sidebar {
+    display: flex;
+    gap: 20px;
+}
+
+.pos-sidebar {
+    width: 220px;
+    flex-shrink: 0;
+}
+
+.pos-main {
+    flex: 1;
+}
+
+/* ===== Section Title ===== */
+
+.pos-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-secondary, #a1a1aa);
+    margin-bottom: 10px;
+    margin-top: 16px;
+    letter-spacing: 0.5px;
+}
+
+/* ===== Radio Option Button ===== */
+
+.pos-radio-option {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-primary, #27272a);
+    background: transparent;
+    color: var(--text-primary, #fafafa);
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.pos-radio-option--active {
+    border: 2px solid #3B82F6;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+    font-weight: 600;
+}
+
+/* ===== Setting Row Description ===== */
+
+.pos-setting-row__label {
+    flex: 1;
+}
+
+.pos-setting-row__title {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.pos-setting-row__desc {
+    font-size: 12px;
+    color: var(--text-secondary, #a1a1aa);
+    margin-top: 2px;
+}
+
+.pos-setting-row__control {
+    flex-shrink: 0;
+    margin-left: 16px;
+}
+
+/* ===== Tab Button (pillow tabs) ===== */
+
+.pos-tab-group {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-card, #18181b);
+    border-radius: 10px;
+    padding: 4px;
+    border: 1px solid var(--border-primary, #27272a);
+    width: fit-content;
+}
+
+.pos-tab-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.pos-tab-btn--active {
+    font-weight: 600;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+}
+
+/* ===== Filter Button (small tab) ===== */
+
+.pos-filter-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.pos-filter-btn--active {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+}
+
+/* ===== Sidebar Nav Button ===== */
+
+.pos-sidebar-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+    text-align: left;
+    background: transparent;
+    color: var(--text-primary, #fafafa);
+}
+
+.pos-sidebar-btn--active {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+    font-weight: 600;
+}

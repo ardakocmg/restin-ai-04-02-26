@@ -60,9 +60,71 @@ import {
     DialogDescription,
 } from "@/components/ui/dialog";
 
+interface Payslip {
+    employee_name?: string;
+    name?: string;
+    employee_number?: string;
+    department?: string;
+    gross_pay?: number;
+    tax_amount?: number;
+    social_security?: number;
+    net_pay?: number;
+    [key: string]: unknown;
+}
+
+interface PayrollRun {
+    id: string;
+    run_name?: string;
+    run_number?: string;
+    period_start?: string;
+    period_end?: string;
+    total_gross?: number;
+    total_net?: number;
+    total_tax?: number;
+    employee_count?: number;
+    state?: string;
+    payslips?: Payslip[];
+    [key: string]: unknown;
+}
+
+interface PayrollEmployee {
+    id: string;
+    full_name?: string;
+    name?: string;
+    occupation?: string;
+    department?: string;
+    display_id?: string;
+    employee_name?: string;
+    employee_code?: string;
+    username?: string;
+    employee_number?: string;
+    gross_pay?: number;
+    tax_amount?: number;
+    social_security?: number;
+    net_pay?: number;
+    [key: string]: unknown;
+}
+
+interface DeptEntry {
+    name: string;
+    amount: number;
+}
+
+interface MonthlyTrend {
+    month: string;
+    gross: number;
+    net: number;
+}
+
+interface CostMetrics {
+    ytd_total: number;
+    departments: DeptEntry[];
+    monthly_trend: MonthlyTrend[];
+}
+
 export default function PayrollPage() {
-    const [runs, setRuns] = useState([]);
-    const [employees, setEmployees] = useState([]);
+    const [runs, setRuns] = useState<PayrollRun[]>([]);
+    const [employees, setEmployees] = useState<PayrollEmployee[]>([]);
     const [loading, setLoading] = useState(true);
     const [calculating, setCalculating] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
@@ -74,11 +136,12 @@ export default function PayrollPage() {
     const [nextRunSearch, setNextRunSearch] = useState('');
     const [grossSearch, setGrossSearch] = useState('');
     const [activeTab, setActiveTab] = useState('OVERVIEW');
-    const [costMetrics, setCostMetrics] = useState({ ytd_total: 0, departments: [], monthly_trend: [] });
+    const [costMetrics, setCostMetrics] = useState<CostMetrics>({ ytd_total: 0, departments: [], monthly_trend: [] });
     const { activeVenue } = useVenue();
     const navigate = useNavigate();
 
-    useAuditLog('PAYROLL_VIEWED', { resource: 'payroll-page' });
+    const { logAction } = useAuditLog();
+    useEffect(() => { logAction('PAYROLL_VIEWED', 'payroll-page'); }, []);
 
     useEffect(() => {
         logger.info('Ultimate Payroll Hub v1.0.1', { venueId: activeVenue?.id });
@@ -100,41 +163,41 @@ export default function PayrollPage() {
             setRuns(runsRes.data || []);
             setEmployees(empsRes.data || []);
             // Build cost metrics from runs data
-            const deptMap = {};
-            (runsRes.data || []).forEach(run => {
-                (run.payslips || []).forEach(ps => {
+            const deptMap: Record<string, number> = {};
+            (runsRes.data || []).forEach((run: PayrollRun) => {
+                (run.payslips || []).forEach((ps: Payslip) => {
                     const dept = ps.department || 'Unassigned';
                     deptMap[dept] = (deptMap[dept] || 0) + (ps.gross_pay || 0);
                 });
             });
             setCostMetrics({
-                ytd_total: (runsRes.data || []).reduce((a, r) => a + (r.total_gross || 0), 0),
-                departments: Object.entries(deptMap).map(([name, amount]) => ({ name, amount })),
-                monthly_trend: (runsRes.data || []).map(r => ({
+                ytd_total: (runsRes.data || []).reduce((a: number, r: PayrollRun) => a + (r.total_gross || 0), 0),
+                departments: Object.entries(deptMap).map(([name, amount]) => ({ name, amount: amount as number })),
+                monthly_trend: (runsRes.data || []).map((r: PayrollRun) => ({
                     month: r.period_start?.substring(0, 7) || 'N/A',
                     gross: r.total_gross || 0,
-                    net: r.total_net || r.total_gross * 0.72 || 0
+                    net: r.total_net || (r.total_gross || 0) * 0.72 || 0
                 }))
             });
-        } catch (error: any) {
-            logger.error('Failed to fetch data', { error });
+        } catch (error: unknown) {
+            logger.error('Failed to fetch data', { error: error instanceof Error ? error.message : String(error) });
             toast.error("Failed to load payroll intelligence");
         } finally {
             setLoading(false);
         }
     };
 
-    const handleDeleteRun = async (e, runId) => {
+    const handleDeleteRun = async (e: React.MouseEvent, runId: string) => {
         e.stopPropagation();
         if (!window.confirm("Confirm deletion of this payroll record?")) return;
 
         try {
-            await api.delete(`venues/${activeVenue.id}/hr/payroll/runs/${runId}`);
+            await api.delete(`venues/${activeVenue?.id}/hr/payroll/runs/${runId}`);
             toast.success("Record permanently removed");
             fetchData();
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast.error("Deletion failed (Backend override required)");
-            logger.error('Deletion failed', { error });
+            logger.error('Deletion failed', { error: error instanceof Error ? error.message : String(error) });
         }
     };
 
@@ -148,14 +211,14 @@ export default function PayrollPage() {
                 pay_date: "2026-02-28",
                 employees: [] // Send empty to auto-select all active
             };
-            const res = await api.post(`venues/${activeVenue.id}/hr/payruns`, { ...payload, venue_id: activeVenue.id });
+            const res = await api.post(`venues/${activeVenue?.id}/hr/payruns`, { ...payload, venue_id: activeVenue?.id });
             // Then calculate
-            await api.post(`venues/${activeVenue.id}/hr/payruns/${res.data.id}/calculate`);
+            await api.post(`venues/${activeVenue?.id}/hr/payruns/${res.data.id}/calculate`);
 
             toast.success("Payroll cycle calculated");
             fetchData();
-        } catch (error: any) {
-            logger.error('Calculation failed', { error });
+        } catch (error: unknown) {
+            logger.error('Calculation failed', { error: error instanceof Error ? error.message : String(error) });
             toast.error("Calculation failed");
         } finally {
             setCalculating(false);
@@ -163,7 +226,7 @@ export default function PayrollPage() {
     };
 
     // Generic File Download Handler
-    const handleDownload = async (url, filename) => {
+    const handleDownload = async (url: string, filename: string) => {
         try {
             const response = await api.get(url, { responseType: 'blob' });
             const blob = new Blob([response.data], { type: response.headers['content-type'] });
@@ -175,29 +238,29 @@ export default function PayrollPage() {
             document.body.removeChild(link);
             window.URL.revokeObjectURL(link.href);
             toast.success("Download started");
-        } catch (error: any) {
-            logger.error('Download failed', { error });
+        } catch (error: unknown) {
+            logger.error('Download failed', { error: error instanceof Error ? error.message : String(error) });
             toast.error("Download failed. Please try again.");
         }
     };
 
     // Compliance Actions
-    const downloadSEPA = (run) => handleDownload(`venues/${activeVenue.id}/hr/payroll/runs/${run.id}/sepa-xml`, `SEPA_PAYROLL_${run.id}.xml`);
-    const downloadFS5 = (run) => handleDownload(`venues/${activeVenue.id}/hr/payroll/reports/fs5/${run.id}/pdf`, `FS5_Report_${run.period_end.replace(/\//g, '-')}.pdf`);
-    const downloadFS3Pack = (year) => handleDownload(`venues/${activeVenue.id}/hr/payroll/reports/fs3/${year}/pdf`, `FS3_Pack_${year}.zip`);
-    const downloadPayslipPack = (run) => handleDownload(`venues/${activeVenue.id}/hr/payroll/runs/${run.id}/dispatch-zip`, `Payroll_${run.run_number}.zip`);
+    const downloadSEPA = (run: PayrollRun) => handleDownload(`venues/${activeVenue?.id}/hr/payroll/runs/${run.id}/sepa-xml`, `SEPA_PAYROLL_${run.id}.xml`);
+    const downloadFS5 = (run: PayrollRun) => handleDownload(`venues/${activeVenue?.id}/hr/payroll/reports/fs5/${run.id}/pdf`, `FS5_Report_${(run.period_end || '').replace(/\//g, '-')}.pdf`);
+    const downloadFS3Pack = (year: string) => handleDownload(`venues/${activeVenue?.id}/hr/payroll/reports/fs3/${year}/pdf`, `FS3_Pack_${year}.zip`);
+    const downloadPayslipPack = (run: PayrollRun) => handleDownload(`venues/${activeVenue?.id}/hr/payroll/runs/${run.id}/dispatch-zip`, `Payroll_${run.run_number}.zip`);
 
     // Derived stats based on filtered data
-    const totalGrossAccumulated = runs.reduce((acc, r) => acc + (r.total_gross || 0), 0);
-    const totalTaxAccumulated = runs.reduce((acc, r) => acc + (r.total_tax || 0), 0);
+    const totalGrossAccumulated = runs.reduce((acc: number, r: PayrollRun) => acc + (r.total_gross || 0), 0);
+    const totalTaxAccumulated = runs.reduce((acc: number, r: PayrollRun) => acc + (r.total_tax || 0), 0);
     const totalNIAccumulated = totalGrossAccumulated * 0.1; // 10% estimation for display
 
     // Determine Featured Employee (First available or placeholder)
-    const featuredEmp = employees.length > 0 ? employees[0] : { full_name: "Staff Member", occupation: "Pending Loading", display_id: "---" };
+    const featuredEmp: PayrollEmployee = employees.length > 0 ? employees[0] : { id: '---', full_name: "Staff Member", occupation: "Pending Loading", display_id: "---", department: 'N/A' };
 
     return (
         <PermissionGate requiredRole="OWNER">
-            <PageContainer title="Ultimate Payroll Engine" description="Centralized Compliance & Processing Hub">
+            <PageContainer title="Ultimate Payroll Engine" description="Centralized Compliance & Processing Hub" actions={null}>
                 <div className="p-6 space-y-8 max-w-[1600px] mx-auto">
 
                     {/* Advanced Filtering Suite */}
@@ -474,7 +537,7 @@ export default function PayrollPage() {
                                                         <div className="grid grid-cols-2 gap-8 py-4 border-y border-border">
                                                             <div className="space-y-1">
                                                                 <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Total Valuation</div>
-                                                                <div className="text-lg font-black text-foreground font-mono">€{run.total_gross.toLocaleString()}</div>
+                                                                <div className="text-lg font-black text-foreground font-mono">€{(run.total_gross || 0).toLocaleString()}</div>
                                                             </div>
                                                             <div className="space-y-1">
                                                                 <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Employees</div>
@@ -579,7 +642,7 @@ export default function PayrollPage() {
                                 <CardContent>
                                     <div className="space-y-3">
                                         {costMetrics.departments.length > 0 ? costMetrics.departments.map((dept, idx) => {
-                                            const maxAmount = Math.max(...costMetrics.departments.map(d => d.amount), 1);
+                                            const maxAmount = Math.max(...costMetrics.departments.map((d: DeptEntry) => d.amount), 1);
                                             const pct = Math.round((dept.amount / maxAmount) * 100);
                                             const colors = ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-purple-500', 'bg-cyan-500'];
                                             return (
@@ -708,7 +771,7 @@ export default function PayrollPage() {
                                                 <td className="px-4 py-3 text-xs text-muted-foreground">{run.period_start} — {run.period_end}</td>
                                                 <td className="px-4 py-3 text-xs font-mono text-foreground">{run.employee_count}</td>
                                                 <td className="px-4 py-3 text-xs font-mono text-foreground">€{(run.total_gross || 0).toLocaleString()}</td>
-                                                <td className="px-4 py-3 text-xs font-mono text-emerald-400">€{(run.total_net || run.total_gross * 0.72 || 0).toLocaleString()}</td>
+                                                <td className="px-4 py-3 text-xs font-mono text-emerald-400">€{(run.total_net || (run.total_gross || 0) * 0.72 || 0).toLocaleString()}</td>
                                                 <td className="px-4 py-3">
                                                     <Badge className={cn(
                                                         'uppercase text-[9px] font-black tracking-widest',
@@ -776,8 +839,8 @@ export default function PayrollPage() {
                             </div>
 
                             <div className="mt-4 space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                                {employees.filter(emp => emp.name?.toLowerCase().includes(searchTerm.toLowerCase())).length > 0 ?
-                                    employees.filter(emp => emp.name?.toLowerCase().includes(searchTerm.toLowerCase())).map((emp, idx) => (
+                                {employees.filter((emp: PayrollEmployee) => emp.name?.toLowerCase().includes(searchTerm.toLowerCase())).length > 0 ?
+                                    employees.filter((emp: PayrollEmployee) => emp.name?.toLowerCase().includes(searchTerm.toLowerCase())).map((emp: PayrollEmployee, idx: number) => (
                                         <div
                                             key={emp.id}
                                             className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-border hover:bg-white/10 transition-all group"
@@ -862,7 +925,7 @@ export default function PayrollPage() {
                             </div>
 
                             <div className="mt-4 space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                                {employees.filter(emp => emp.name?.toLowerCase().includes(nextRunSearch.toLowerCase())).slice(0, 10).map((emp, idx) => (
+                                {employees.filter((emp: PayrollEmployee) => emp.name?.toLowerCase().includes(nextRunSearch.toLowerCase())).slice(0, 10).map((emp: PayrollEmployee, idx: number) => (
                                     <div key={idx} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-border">
                                         <div className="flex items-center gap-3">
                                             <div className="h-8 w-8 rounded-lg bg-card border border-border flex items-center justify-center text-[10px] font-black">{emp.name?.substring(0, 2).toUpperCase()}</div>
@@ -919,7 +982,7 @@ export default function PayrollPage() {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
-                                        {(runs[0]?.payslips || employees.slice(0, 10)).filter(p => (p.employee_name || p.name)?.toLowerCase().includes(grossSearch.toLowerCase())).map((p, idx) => (
+                                        {(runs[0]?.payslips || employees.slice(0, 10)).filter((p: Payslip | PayrollEmployee) => ((p as Payslip).employee_name || (p as PayrollEmployee).name)?.toLowerCase().includes(grossSearch.toLowerCase())).map((p: Payslip | PayrollEmployee, idx: number) => (
                                             <tr key={idx} className="hover:bg-white/5 grayscale hover:grayscale-0 transition-all">
                                                 <td className="px-4 py-3">
                                                     <div className="text-xs font-black">{p.employee_name || p.name}</div>
@@ -937,7 +1000,7 @@ export default function PayrollPage() {
 
                             <div className="mt-6 flex justify-between items-center">
                                 <div className="text-[10px] text-muted-foreground font-bold uppercase">
-                                    Showing {employees.filter(p => (p.employee_name || p.name)?.toLowerCase().includes(grossSearch.toLowerCase())).length} historical records
+                                    Showing {employees.filter((p: PayrollEmployee) => (p.employee_name || p.name)?.toLowerCase().includes(grossSearch.toLowerCase())).length} historical records
                                 </div>
                                 <Button
                                     onClick={() => setIsGrossSummaryOpen(false)}

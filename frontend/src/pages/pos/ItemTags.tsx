@@ -8,15 +8,10 @@ import { ArrowLeft, Plus, Save, Edit3, Trash2, Search, X, Tag, Wifi } from 'luci
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';
+import './pos-shared.css';
 
 interface ItemTag { id: string; name: string; description: string; icon: string; color: string; showOnPOS: boolean; showOnReceipt: boolean; showOnKDS: boolean; showOnWeb: boolean; itemCount: number; }
 
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary,#0a0a0a)', color: 'var(--text-primary,#fafafa)', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1100, margin: '0 auto', padding: '24px 20px' };
-const cd: React.CSSProperties = { background: 'var(--bg-card,#18181b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const bp: React.CSSProperties = { padding: '10px 24px', background: '#3B82F6', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const ip: React.CSSProperties = { width: '100%', padding: '10px 14px', background: 'var(--bg-secondary,#09090b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14 };
 const COLORS = ['#10B981', '#3B82F6', '#EF4444', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316', '#14B8A6', '#6366F1', '#D946EF', '#84CC16'];
 const ICONS = ['🌿', '🥬', '🌶️', '🔥', '⭐', '💎', '🆕', '❄️', '🐄', '🐷', '🍷', '🧀', '🥩', '🐟', '🍕', '🥗', '☕', '🍨'];
 
@@ -51,69 +46,69 @@ const ItemTags: React.FC = () => {
     const save = () => { if (!editing) return; const e = tags.find(t => t.id === editing.id); if (e) setTags(p => p.map(t => t.id === editing.id ? editing : t)); else setTags(p => [...p, editing]); setEditing(null); toast.success('Saved'); };
 
     return (
-        <div style={pg}><div style={ct}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+        <div className="pos-page"><div className="pos-container">
+            <div className="pos-header">
                 <div>
-                    <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
-                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Item Tags {isLive && <Wifi size={14} style={{ color: '#10B981', verticalAlign: 'middle', marginLeft: 6 }} />}</h1>
-                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>Visual labels for dietary info, promotions, and categorization</p>
+                    <button onClick={() => navigate(-1)} className="pos-btn-outline pos-btn-back"><ArrowLeft size={14} /> Back</button>
+                    <h1 className="pos-title">Item Tags {isLive && <Wifi size={14} className="pos-live-icon" />}</h1>
+                    <p className="pos-subtitle">Visual labels for dietary info, promotions, and categorization</p>
                 </div>
-                <button style={bp} onClick={() => setEditing({ id: crypto.randomUUID(), name: '', description: '', icon: '🏷️', color: '#3B82F6', showOnPOS: true, showOnReceipt: false, showOnKDS: false, showOnWeb: true, itemCount: 0 })}><Plus size={16} /> Add Tag</button>
+                <button className="pos-btn-primary" onClick={() => setEditing({ id: crypto.randomUUID(), name: '', description: '', icon: '🏷️', color: '#3B82F6', showOnPOS: true, showOnReceipt: false, showOnKDS: false, showOnWeb: true, itemCount: 0 })}><Plus size={16} /> Add Tag</button>
             </div>
 
-            <div style={{ position: 'relative', marginBottom: 16 }}>
-                <Search size={14} style={{ position: 'absolute', left: 14, top: 12, color: 'var(--text-secondary)' }} />
-                <input style={{ ...ip, paddingLeft: 36 }} placeholder="Search tags..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Search tags" />
+            <div className="pos-search-wrapper pos-mb-16">
+                <Search size={14} className="pos-search-icon" />
+                <input className="pos-input pos-search-input" placeholder="Search tags..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Search tags" />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 12 }}>
                 {filtered.map(tag => (
-                    <div key={tag.id} style={{ ...cd, cursor: 'pointer', padding: 14 }} onClick={() => setEditing({ ...tag })}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                    <div key={tag.id} className="pos-card" style={{ cursor: 'pointer', padding: 14 }} onClick={() => setEditing({ ...tag })}>
+                        <div className="pos-flex pos-flex--center pos-gap-10 pos-mb-8">
                             <span style={{ fontSize: 24 }}>{tag.icon}</span>
                             <div style={{ flex: 1, minWidth: 0 }}>
-                                <h3 style={{ fontSize: 15, fontWeight: 600, margin: 0 }}>{tag.name}</h3>
-                                {tag.description && <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tag.description}</div>}
-                                <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{tag.itemCount} items</span>
+                                <h3 className="pos-modal-title" style={{ fontSize: 15, margin: 0 }}>{tag.name}</h3>
+                                {tag.description && <div className="pos-cell-secondary" style={{ marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tag.description}</div>}
+                                <span className="pos-cell-secondary">{tag.itemCount} items</span>
                             </div>
                             <div style={{ width: 12, height: 12, borderRadius: 3, background: tag.color }} />
                         </div>
-                        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                            {tag.showOnPOS && <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 3, background: 'rgba(59,130,246,0.1)', color: '#3B82F6' }}>POS</span>}
-                            {tag.showOnReceipt && <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 3, background: 'rgba(16,185,129,0.1)', color: '#10B981' }}>Receipt</span>}
-                            {tag.showOnKDS && <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 3, background: 'rgba(245,158,11,0.1)', color: '#F59E0B' }}>KDS</span>}
-                            {tag.showOnWeb && <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 3, background: 'rgba(139,92,246,0.1)', color: '#8B5CF6' }}>Web</span>}
+                        <div className="pos-flex pos-gap-4 pos-flex--wrap">
+                            {tag.showOnPOS && <span className="pos-badge pos-badge--blue" style={{ fontSize: 9 }}>POS</span>}
+                            {tag.showOnReceipt && <span className="pos-badge pos-badge--green" style={{ fontSize: 9 }}>Receipt</span>}
+                            {tag.showOnKDS && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9 }}>KDS</span>}
+                            {tag.showOnWeb && <span className="pos-badge pos-badge--purple" style={{ fontSize: 9 }}>Web</span>}
                         </div>
                     </div>
                 ))}
             </div>
         </div>
 
-            {editing && <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setEditing(null)}>
-                <div style={{ ...cd, width: 480 }} onClick={e => e.stopPropagation()}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                        <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{tags.find(t => t.id === editing.id) ? 'Edit' : 'New'} Tag</h3>
-                        <button title="Close" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditing(null)}><X size={20} /></button>
+            {editing && <div className="pos-modal-overlay" onClick={() => setEditing(null)}>
+                <div className="pos-card pos-modal pos-modal--sm" onClick={e => e.stopPropagation()}>
+                    <div className="pos-modal-header">
+                        <h3 className="pos-modal-title">{tags.find(t => t.id === editing.id) ? 'Edit' : 'New'} Tag</h3>
+                        <button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
-                    <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name *</label>
-                        <input style={ip} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Vegan" /></div>
-                    <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Description</label>
-                        <textarea style={{ ...ip, resize: 'vertical', minHeight: 60 }} value={editing.description} onChange={e => setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Brief description of this tag" /></div>
-                    <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>Icon</label>
-                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>{ICONS.map(i => <button key={i} title={`Select icon ${i}`} onClick={() => setEditing(p => p ? { ...p, icon: i } : null)} style={{ width: 36, height: 36, borderRadius: 8, border: editing.icon === i ? '2px solid #3B82F6' : '1px solid rgba(255,255,255,0.06)', background: 'var(--bg-secondary)', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{i}</button>)}</div></div>
-                    <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>Color</label>
-                        <div style={{ display: 'flex', gap: 6 }}>{COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} style={{ width: 28, height: 28, borderRadius: 6, background: c, cursor: 'pointer', border: editing.color === c ? '3px solid #fff' : '3px solid transparent' }} />)}</div></div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>Visibility</div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 14 }}>
+                    <div className="pos-form-group"><label className="pos-form-label">Name *</label>
+                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Vegan" /></div>
+                    <div className="pos-form-group"><label className="pos-form-label">Description</label>
+                        <textarea className="pos-input pos-textarea" value={editing.description} onChange={e => setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Brief description of this tag" /></div>
+                    <div className="pos-form-group"><label className="pos-form-label">Icon</label>
+                        <div className="pos-flex pos-gap-6 pos-flex--wrap">{ICONS.map(i => <button key={i} title={`Select icon ${i}`} onClick={() => setEditing(p => p ? { ...p, icon: i } : null)} className="pos-btn-icon" style={{ width: 36, height: 36, borderRadius: 8, border: editing.icon === i ? '2px solid #3B82F6' : '1px solid rgba(255,255,255,0.06)', background: 'var(--bg-secondary)', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{i}</button>)}</div></div>
+                    <div className="pos-form-group"><label className="pos-form-label">Color</label>
+                        <div className="pos-color-picker">{COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} className={`pos-color-swatch ${editing.color === c ? 'pos-color-swatch--selected' : ''}`} style={{ background: c }} />)}</div></div>
+                    <div className="pos-form-label pos-text-bold pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Visibility</div>
+                    <div className="pos-form-grid pos-mb-16">
                         {([['showOnPOS', 'Show on POS'], ['showOnReceipt', 'Show on Receipt'], ['showOnKDS', 'Show on KDS'], ['showOnWeb', 'Show on Website']] as const).map(([key, label]) =>
-                            <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)', cursor: 'pointer', padding: '6px 10px', background: 'var(--bg-secondary)', borderRadius: 6 }}>
+                            <label key={key} className="pos-toggle-label" style={{ padding: '6px 10px', background: 'var(--bg-secondary)', borderRadius: 6 }}>
                                 <input type="checkbox" checked={editing[key]} onChange={() => setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
                         )}
                     </div>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                        <button style={{ ...bp, flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
-                        <button title="Delete tag" style={{ ...bo, color: '#EF4444' }} onClick={() => { setTags(p => p.filter(t => t.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
-                        <button style={bo} onClick={() => setEditing(null)}>Cancel</button>
+                    <div className="pos-modal-footer">
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
+                        <button title="Delete tag" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setTags(p => p.filter(t => t.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
+                        <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>
             </div>}

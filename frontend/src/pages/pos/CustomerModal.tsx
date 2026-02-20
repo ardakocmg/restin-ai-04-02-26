@@ -5,7 +5,25 @@
 import React, { useState } from 'react';
 import { X, UserPlus, Search } from 'lucide-react';
 
-const s = {
+/* ===== Types ===== */
+
+interface Customer {
+    id?: string;
+    name?: string;
+    email?: string;
+    phone?: string;
+}
+
+interface CustomerModalProps {
+    customers: Customer[];
+    onSelect: (customer: Customer) => void;
+    onCreate: (customer: { name: string; email: string; phone: string }) => void;
+    onClose: () => void;
+}
+
+/* ===== Styles ===== */
+
+const s: Record<string, React.CSSProperties> = {
     overlay: {
         position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100,
@@ -32,7 +50,7 @@ const s = {
     customerRow: {
         display: 'flex', alignItems: 'center', gap: 12, width: '100%',
         padding: '12px 16px', borderRadius: 6, border: 'none', cursor: 'pointer',
-        backgroundColor: 'transparent', color: '#fff', textAlign: 'left',
+        backgroundColor: 'transparent', color: '#fff', textAlign: 'left' as const,
     },
     avatar: {
         width: 36, height: 36, borderRadius: '50%', backgroundColor: '#333',
@@ -52,11 +70,11 @@ const s = {
     label: { fontSize: 11, color: '#888', fontWeight: 600, marginBottom: 4, display: 'block' },
     formInput: {
         width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8,
-        padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', boxSizing: 'border-box',
+        padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const,
     },
 };
 
-export default function CustomerModal({ customers, onSelect, onCreate, onClose }) {
+export default function CustomerModal({ customers, onSelect, onCreate, onClose }: CustomerModalProps) {
     const [query, setQuery] = useState('');
     const [showCreate, setShowCreate] = useState(false);
     const [newName, setNewName] = useState('');
@@ -64,7 +82,7 @@ export default function CustomerModal({ customers, onSelect, onCreate, onClose }
     const [newPhone, setNewPhone] = useState('');
 
     const filtered = query
-        ? (customers || []).filter(c =>
+        ? (customers || []).filter((c: Customer) =>
             c.name?.toLowerCase().includes(query.toLowerCase()) ||
             c.email?.toLowerCase().includes(query.toLowerCase()) ||
             c.phone?.includes(query)
@@ -82,7 +100,7 @@ export default function CustomerModal({ customers, onSelect, onCreate, onClose }
             <div style={s.modal} onClick={e => e.stopPropagation()}>
                 <div style={s.header}>
                     <span style={s.title}>{showCreate ? 'New Customer' : 'Assign Customer'}</span>
-                    <button style={s.closeBtn} onClick={onClose}>
+                    <button style={s.closeBtn} onClick={onClose} title="Close customer modal">
                         <X size={18} color="#888" />
                     </button>
                 </div>
@@ -114,13 +132,14 @@ export default function CustomerModal({ customers, onSelect, onCreate, onClose }
                                 placeholder="Search customers..."
                                 value={query}
                                 onChange={e => setQuery(e.target.value)}
+                                aria-label="Search customers"
                             />
                         </div>
                         <div style={s.body}>
                             {filtered.length === 0 ? (
                                 <div style={s.empty}>No customers found</div>
                             ) : (
-                                filtered.slice(0, 20).map((c, idx) => (
+                                filtered.slice(0, 20).map((c: Customer, idx: number) => (
                                     <button
                                         key={c.id || idx}
                                         style={s.customerRow}

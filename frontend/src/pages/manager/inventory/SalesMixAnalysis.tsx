@@ -15,8 +15,34 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
+interface SalesMixItem {
+    id: string;
+    name: string;
+    category: string;
+    sold: number;
+    revenue: number;
+    food_cost: number;
+    theo_cost: number;
+    margin: number;
+    margin_pct: number;
+    food_cost_pct: number;
+    theo_cost_pct: number;
+    variance: number;
+    variance_pct: number;
+    avg_price: number;
+    [key: string]: unknown;
+}
+
+interface StatCardProps {
+    icon: React.ElementType;
+    label: string;
+    value: string | number;
+    subtext?: string;
+    color?: string;
+}
+
 // ── KPI Card ─────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: StatCardProps) {
     return (
         <Card className="bg-card/50 border-border/50 hover:border-primary/20 transition-all">
             <CardContent className="p-4">
@@ -36,7 +62,7 @@ function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground'
 }
 
 // ── Date range to days mapping ───────────────────────────────
-const PERIOD_DAYS = {
+const PERIOD_DAYS: Record<string, number> = {
     today: 1,
     this_week: 7,
     this_month: 30,
@@ -51,7 +77,7 @@ export default function SalesMixAnalysis() {
     const [dateRange, setDateRange] = useState('this_month');
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [sortBy, setSortBy] = useState('revenue');
-    const [salesData, setSalesData] = useState([]);
+    const [salesData, setSalesData] = useState<SalesMixItem[]>([]);
     const [loading, setLoading] = useState(true);
 
     // ── Fetch real data from profitability endpoint ──────────
@@ -69,12 +95,12 @@ export default function SalesMixAnalysis() {
             const recipes = res.data?.recipes || [];
 
             // Enrich with derived fields needed by the Sales Mix UI
-            const enriched = recipes.map((item, i) => {
-                const revenue = item.revenue || 0;
-                const foodCost = item.food_cost || 0;
-                const cost = item.cost || 0;
-                const sellPrice = item.sell_price || 0;
-                const timesSold = item.times_sold || 0;
+            const enriched = recipes.map((item: Record<string, unknown>, i: number) => {
+                const revenue = (item.revenue as number) || 0;
+                const foodCost = (item.food_cost as number) || 0;
+                const cost = (item.cost as number) || 0;
+                const sellPrice = (item.sell_price as number) || 0;
+                const timesSold = (item.times_sold as number) || 0;
 
                 // Theoretical cost = cost_per_serving × quantity sold
                 const theoCost = Math.round(cost * timesSold * 100) / 100;
@@ -87,8 +113,8 @@ export default function SalesMixAnalysis() {
                 const avgPrice = timesSold > 0 ? revenue / timesSold : sellPrice;
 
                 return {
-                    id: item.id || `sm-${i}`,
-                    name: item.name || 'Unknown',
+                    id: (item.id as string) || `sm-${i}`,
+                    name: (item.name as string) || 'Unknown',
                     category: item.category || 'Uncategorized',
                     sold: timesSold,
                     revenue,
@@ -105,8 +131,8 @@ export default function SalesMixAnalysis() {
             });
 
             setSalesData(enriched);
-        } catch (error: any) {
-            logger.error('Failed to load sales mix data', { error });
+        } catch (error: unknown) {
+            logger.error('Failed to load sales mix data', { error: String(error) });
             setSalesData([]);
         } finally {
             setLoading(false);
@@ -123,11 +149,11 @@ export default function SalesMixAnalysis() {
         if (categoryFilter !== 'all') {
             data = data.filter(d => d.category === categoryFilter);
         }
-        data = [...data].sort((a, b) => (b[sortBy] || 0) - (a[sortBy] || 0));
+        data = [...data].sort((a, b) => (Number(b[sortBy]) || 0) - (Number(a[sortBy]) || 0));
         return data;
     }, [salesData, categoryFilter, sortBy]);
 
-    const categories = useMemo(() => [...new Set(salesData.map(d => d.category))], [salesData]);
+    const categories = useMemo(() => Array.from(new Set(salesData.map(d => d.category))), [salesData]);
 
     const totals = useMemo(() => {
         const t = filtered.reduce((acc, d) => ({
@@ -150,27 +176,27 @@ export default function SalesMixAnalysis() {
     const COLUMNS = useMemo(() => [
         {
             key: 'name', label: 'Item', enableSorting: true, size: 180,
-            render: (row) => <span className="font-medium">{row.name}</span>,
+            render: (row: SalesMixItem) => <span className="font-medium">{row.name}</span>,
         },
         {
             key: 'category', label: 'Category', size: 90,
-            render: (row) => <Badge variant="outline" className="text-xs">{row.category}</Badge>,
+            render: (row: SalesMixItem) => <Badge variant="outline" className="text-xs">{row.category}</Badge>,
         },
         {
             key: 'sold', label: 'Qty Sold', enableSorting: true, size: 80,
-            render: (row) => <span className="font-bold tabular-nums">{row.sold.toLocaleString()}</span>,
+            render: (row: SalesMixItem) => <span className="font-bold tabular-nums">{row.sold.toLocaleString()}</span>,
         },
         {
             key: 'revenue', label: 'Revenue', enableSorting: true, size: 90,
-            render: (row) => <span className="font-bold tabular-nums text-green-500">€{row.revenue.toLocaleString()}</span>,
+            render: (row: SalesMixItem) => <span className="font-bold tabular-nums text-green-500">€{row.revenue.toLocaleString()}</span>,
         },
         {
             key: 'food_cost', label: 'Actual Cost', enableSorting: true, size: 90,
-            render: (row) => <span className="tabular-nums">€{row.food_cost.toLocaleString()}</span>,
+            render: (row: SalesMixItem) => <span className="tabular-nums">€{row.food_cost.toLocaleString()}</span>,
         },
         {
             key: 'food_cost_pct', label: 'Cost %', enableSorting: true, size: 70,
-            render: (row) => {
+            render: (row: SalesMixItem) => {
                 const pct = row.food_cost_pct;
                 const color = pct > 35 ? 'text-red-500' : pct > 28 ? 'text-amber-500' : 'text-green-500';
                 return <span className={`font-bold tabular-nums ${color}`}>{pct.toFixed(1)}%</span>;
@@ -178,11 +204,11 @@ export default function SalesMixAnalysis() {
         },
         {
             key: 'theo_cost', label: 'Theo Cost', size: 85,
-            render: (row) => <span className="tabular-nums text-muted-foreground">€{row.theo_cost.toLocaleString()}</span>,
+            render: (row: SalesMixItem) => <span className="tabular-nums text-muted-foreground">€{row.theo_cost.toLocaleString()}</span>,
         },
         {
             key: 'variance', label: 'Δ Variance', enableSorting: true, size: 90,
-            render: (row) => {
+            render: (row: SalesMixItem) => {
                 const v = row.variance;
                 if (v > 0) return (
                     <span className="text-red-500 font-bold tabular-nums flex items-center gap-0.5 text-xs">
@@ -194,11 +220,11 @@ export default function SalesMixAnalysis() {
         },
         {
             key: 'margin', label: 'Margin', enableSorting: true, size: 80,
-            render: (row) => <span className="font-bold tabular-nums text-emerald-500">€{row.margin.toLocaleString()}</span>,
+            render: (row: SalesMixItem) => <span className="font-bold tabular-nums text-emerald-500">€{row.margin.toLocaleString()}</span>,
         },
         {
             key: 'margin_pct', label: 'Margin %', enableSorting: true, size: 75,
-            render: (row) => {
+            render: (row: SalesMixItem) => {
                 const mp = row.margin_pct;
                 const color = mp >= 70 ? 'text-emerald-500' : mp >= 60 ? 'text-green-500' : mp >= 50 ? 'text-amber-500' : 'text-red-500';
                 return (
@@ -211,7 +237,7 @@ export default function SalesMixAnalysis() {
         },
         {
             key: 'avg_price', label: 'Avg Price', size: 80,
-            render: (row) => <span className="tabular-nums text-muted-foreground">€{row.avg_price.toFixed(2)}</span>,
+            render: (row: SalesMixItem) => <span className="tabular-nums text-muted-foreground">€{row.avg_price.toFixed(2)}</span>,
         },
     ], []);
 

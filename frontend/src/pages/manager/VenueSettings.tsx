@@ -16,26 +16,65 @@ import { MapPin, Table2, Plus, Settings, Package, ChevronDown, ChevronUp, Upload
 import { documentAPI } from "../../lib/api";
 import { cn } from "../../lib/utils";
 import { useNavigate } from "react-router-dom";
+import { logger } from '@/lib/logger';
+
+// ── Interfaces ─────────────────────────────────────────────────────
+interface VenueBranding {
+  logo_url?: string;
+  primary_color?: string;
+}
+
+interface VenueFormData {
+  name?: string;
+  type?: string;
+  pacing_enabled?: boolean;
+  pacing_interval_minutes?: number;
+  review_policy_low_threshold?: number;
+  review_policy_medium_threshold?: number;
+  legal_entity_id?: string;
+  branding?: VenueBranding;
+  [key: string]: unknown;
+}
+
+interface ZoneData {
+  id: string;
+  name: string;
+  type: string;
+}
+
+interface TableData {
+  id: string;
+  name: string;
+  zone_id: string;
+  seats: number;
+  status?: string;
+}
+
+interface LegalEntity {
+  _id: string;
+  registered_name: string;
+  vat_number?: string;
+}
 
 export default function VenueSettings() {
   const { activeVenue, refreshVenues } = useVenue();
   const { isManager } = useAuth();
-  const [zones, setZones] = useState([]);
-  const [tables, setTables] = useState([]);
+  const [zones, setZones] = useState<ZoneData[]>([]);
+  const [tables, setTables] = useState<TableData[]>([]);
   const [loading, setLoading] = useState(true);
   const [showZoneDialog, setShowZoneDialog] = useState(false);
   const [showTableDialog, setShowTableDialog] = useState(false);
 
   // Form state
-  const [venueForm, setVenueForm] = useState({});
+  const [venueForm, setVenueForm] = useState<VenueFormData>({});
   const [newZone, setNewZone] = useState({ name: "", type: "dining" });
   const [newTable, setNewTable] = useState({ zone_id: "", name: "", seats: 4 });
   const [uploading, setUploading] = useState(false);
-  const [legalEntities, setLegalEntities] = useState([]);
+  const [legalEntities, setLegalEntities] = useState<LegalEntity[]>([]);
   const navigate = useNavigate();
 
-  const [venueModules, setVenueModules] = useState([]);
-  const [expandedModule, setExpandedModule] = useState(null);
+  const [venueModules, setVenueModules] = useState<string[]>([]);
+  const [expandedModule, setExpandedModule] = useState<string | null>(null);
 
   const MODULES_LIST = [
     { id: 'ops', title: 'OPERATIONS', desc: 'Complimentary items, specials, low stock push', status: 'active' },
@@ -75,13 +114,13 @@ export default function VenueSettings() {
   const loadData = async () => {
     try {
       const [zonesRes, tablesRes] = await Promise.all([
-        venueAPI.getZones(activeVenue.id),
-        venueAPI.getTables(activeVenue.id)
+        venueAPI.getZones(activeVenue!.id),
+        venueAPI.getTables(activeVenue!.id)
       ]);
       setZones(zonesRes.data);
       setTables(tablesRes.data);
-    } catch (error: any) {
-      console.error("Failed to load data:", error);
+    } catch (error: unknown) {
+      logger.error('Failed to load data:', { error: String(error) });
     } finally {
       setLoading(false);
     }
@@ -89,44 +128,44 @@ export default function VenueSettings() {
 
   const handleUpdateVenue = async () => {
     try {
-      await venueAPI.update(activeVenue.id, venueForm);
+      await venueAPI.update(activeVenue!.id, venueForm);
       toast.success("Venue updated");
       refreshVenues();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Failed to update venue");
     }
   };
 
   const handleCreateZone = async () => {
     try {
-      await venueAPI.createZone({ venue_id: activeVenue.id, ...newZone });
+      await venueAPI.createZone({ venue_id: activeVenue!.id, ...newZone });
       toast.success("Zone created");
       setShowZoneDialog(false);
       setNewZone({ name: "", type: "dining" });
       loadData();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Failed to create zone");
     }
   };
 
   const handleCreateTable = async () => {
     try {
-      await venueAPI.createTable({ venue_id: activeVenue.id, ...newTable });
+      await venueAPI.createTable({ venue_id: activeVenue!.id, ...newTable });
       toast.success("Table created");
       setShowTableDialog(false);
       setNewTable({ zone_id: "", name: "", seats: 4 });
       loadData();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Failed to create table");
     }
   };
-  const handleLogoUpload = async (e) => {
-    const file = e.target.files[0];
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
     try {
-      const response = await documentAPI.upload(activeVenue.id, file);
+      const response = await documentAPI.upload(activeVenue!.id, file);
       // Construct the URL based on the document ID or returned path
       // Assuming documentAPI.upload returns { id, url, ... }
       const logoUrl = response.data.url;
@@ -135,8 +174,8 @@ export default function VenueSettings() {
         branding: { ...(venueForm.branding || {}), logo_url: logoUrl }
       });
       toast.success("Logo uploaded successfully");
-    } catch (error: any) {
-      console.error("Upload failed:", error);
+    } catch (error: unknown) {
+      logger.error('Upload failed:', { error: String(error) });
       toast.error("Failed to upload logo");
     } finally {
       setUploading(false);
@@ -291,7 +330,7 @@ export default function VenueSettings() {
                     </SelectTrigger>
                     <SelectContent className="bg-card border-border">
                       <SelectItem value="none" className="text-muted-foreground">No legal entity</SelectItem>
-                      {legalEntities.map(le => (
+                      {legalEntities.map((le: LegalEntity) => (
                         <SelectItem key={le._id} value={le._id} className="text-foreground">
                           {le.registered_name}{le.vat_number ? ` (${le.vat_number})` : ''}
                         </SelectItem>
@@ -465,7 +504,7 @@ export default function VenueSettings() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {zones.map(zone => (
+                {zones.map((zone: ZoneData) => (
                   <div
                     key={zone.id}
                     data-testid={`zone-${zone.id}`}
@@ -474,7 +513,7 @@ export default function VenueSettings() {
                     <h4 className="text-zinc-900 dark:text-foreground font-medium">{zone.name}</h4>
                     <p className="text-muted-foreground text-sm capitalize">{zone.type}</p>
                     <p className="text-muted-foreground text-xs mt-2">
-                      {tables.filter(t => t.zone_id === zone.id).length} tables
+                      {tables.filter((t: TableData) => t.zone_id === zone.id).length} tables
                     </p>
                   </div>
                 ))}
@@ -550,15 +589,15 @@ export default function VenueSettings() {
               )}
             </CardHeader>
             <CardContent>
-              {zones.map(zone => {
-                const zoneTables = tables.filter(t => t.zone_id === zone.id);
+              {zones.map((zone: ZoneData) => {
+                const zoneTables = tables.filter((t: TableData) => t.zone_id === zone.id);
                 if (zoneTables.length === 0) return null;
 
                 return (
                   <div key={zone.id} className="mb-6">
                     <h4 className="text-muted-foreground text-sm uppercase tracking-wide mb-3">{zone.name}</h4>
                     <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-                      {zoneTables.map(table => (
+                      {zoneTables.map((table: TableData) => (
                         <div
                           key={table.id}
                           data-testid={`table-${table.id}`}

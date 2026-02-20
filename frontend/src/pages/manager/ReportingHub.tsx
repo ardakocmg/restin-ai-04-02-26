@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { logger } from '../../lib/logger';
 import ReportingService from '../../services/ReportingService';
+import type { ReportDefinition, ReportRun } from '../../services/ReportingService';
 import { toast } from 'sonner';
 import PageContainer from '../../layouts/PageContainer';
 import { Button } from '../../components/ui/button';
@@ -9,7 +11,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/ta
 import { Badge } from '../../components/ui/badge';
 import { Play, FileDown, Users, ShoppingCart, RefreshCw } from 'lucide-react';
 
-const CATEGORY_COLORS = {
+interface ReportResult {
+  rows?: unknown[];
+  [key: string]: unknown;
+}
+
+const CATEGORY_COLORS: Record<string, string> = {
   CRM: 'bg-purple-100 text-purple-700 border-purple-200',
   OPS: 'bg-orange-100 text-orange-700 border-orange-200',
   FINANCE: 'bg-green-100 text-green-700 border-green-200',
@@ -19,10 +26,10 @@ const CATEGORY_COLORS = {
 export default function ReportingHub() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [reportDefs, setReportDefs] = useState([]);
-  const [selectedReport, setSelectedReport] = useState(null);
+  const [reportDefs, setReportDefs] = useState<ReportDefinition[]>([]);
+  const [selectedReport, setSelectedReport] = useState<ReportDefinition | null>(null);
   const [running, setRunning] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<ReportResult | null>(null);
 
   const venueId = user?.venueId || user?.venue_id;
 
@@ -35,9 +42,9 @@ export default function ReportingHub() {
     try {
       const defs = await ReportingService.listDefs(venueId);
       setReportDefs(defs);
-    } catch (error: any) {
-      console.error('Failed to load report defs:', error);
-      if (error.response?.status !== 403) {
+    } catch (error: unknown) {
+      logger.error('Failed to load report defs:', { error: String(error) });
+      if ((error as Record<string, unknown>)?.response) {
         toast.error('Failed to load reports');
       }
     } finally {
@@ -57,22 +64,22 @@ export default function ReportingHub() {
         'json'
       );
 
-      if (runResult.status === 'done') {
-        setResult(runResult.result_data);
+      if (runResult.status === 'completed') {
+        setResult(runResult.result as ReportResult);
         toast.success('Report generated successfully');
       } else {
-        toast.error(runResult.error?.message || 'Report failed');
+        toast.error('Report failed');
       }
-    } catch (error: any) {
-      console.error('Failed to run report:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to run report:', { error: String(error) });
       toast.error('Failed to run report');
     } finally {
       setRunning(false);
     }
   };
 
-  const crmReports = reportDefs.filter(r => r.category === 'CRM');
-  const opsReports = reportDefs.filter(r => r.category === 'OPS');
+  const crmReports = reportDefs.filter((r: ReportDefinition) => r.category === 'CRM');
+  const opsReports = reportDefs.filter((r: ReportDefinition) => r.category === 'OPS');
 
   return (
     <PageContainer
@@ -104,7 +111,7 @@ export default function ReportingHub() {
 
             <CardContent>
               <TabsContent value="crm" className="space-y-2 mt-0">
-                {crmReports.map(report => (
+                {crmReports.map((report: ReportDefinition) => (
                   <div
                     key={report.key}
                     onClick={() => setSelectedReport(report)}
@@ -115,7 +122,7 @@ export default function ReportingHub() {
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm text-zinc-900 dark:text-foreground">{report.title}</h4>
+                        <h4 className="font-medium text-sm text-zinc-900 dark:text-foreground">{report.name}</h4>
                         <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1">{report.description}</p>
                       </div>
                       <Badge className={`${CATEGORY_COLORS[report.category]} dark:bg-opacity-20`}>
@@ -127,7 +134,7 @@ export default function ReportingHub() {
               </TabsContent>
 
               <TabsContent value="ops" className="space-y-2 mt-0">
-                {opsReports.map(report => (
+                {opsReports.map((report: ReportDefinition) => (
                   <div
                     key={report.key}
                     onClick={() => setSelectedReport(report)}
@@ -138,7 +145,7 @@ export default function ReportingHub() {
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm text-zinc-900 dark:text-foreground">{report.title}</h4>
+                        <h4 className="font-medium text-sm text-zinc-900 dark:text-foreground">{report.name}</h4>
                         <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1">{report.description}</p>
                       </div>
                       <Badge className={`${CATEGORY_COLORS[report.category]} dark:bg-opacity-20`}>
@@ -157,7 +164,7 @@ export default function ReportingHub() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>
-                {selectedReport ? selectedReport.title : 'Select a Report'}
+                {selectedReport ? selectedReport.name : 'Select a Report'}
               </CardTitle>
               {selectedReport && (
                 <Button onClick={runReport} disabled={running} size="sm">

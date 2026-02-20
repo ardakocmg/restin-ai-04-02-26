@@ -8,15 +8,11 @@ import { ArrowLeft, Plus, Save, Edit3, Trash2, Search, X, AlertTriangle, GripVer
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';
+import './pos-shared.css';
 
 interface VoidReason { id: string; name: string; requiresManager: boolean; requiresNote: boolean; isActive: boolean; usageCount: number; sortOrder: number; category: 'item' | 'order' | 'both'; }
 
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary,#0a0a0a)', color: 'var(--text-primary,#fafafa)', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1100, margin: '0 auto', padding: '24px 20px' };
-const cd: React.CSSProperties = { background: 'var(--bg-card,#18181b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const bp: React.CSSProperties = { padding: '10px 24px', background: '#3B82F6', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const ip: React.CSSProperties = { width: '100%', padding: '10px 14px', background: 'var(--bg-secondary,#09090b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14 };
+const voidTableCols = '28px 1fr 100px 100px 100px 80px 50px';
 
 const SEED: VoidReason[] = [
     { id: '1', name: 'Customer Changed Mind', requiresManager: false, requiresNote: false, isActive: true, usageCount: 45, sortOrder: 1, category: 'item' },
@@ -39,7 +35,7 @@ const VoidReasons: React.FC = () => {
     const filtered = reasons.filter(r => !search || r.name.toLowerCase().includes(search.toLowerCase())).sort((a, b) => a.sortOrder - b.sortOrder);
 
     const venueId = localStorage.getItem('restin_pos_venue') || '';
-    const { data: apiData, loading: apiLoading, error: apiError, refetch } = useVenueConfig<VoidReason>({ venueId, configType: 'void-reasons' });
+    const { data: apiData } = useVenueConfig<VoidReason>({ venueId, configType: 'void-reasons' });
     useEffect(() => {
         if (apiData && apiData.length > 0) {
             setReasons(apiData.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,69 +45,74 @@ const VoidReasons: React.FC = () => {
 
     const save = () => { if (!editing) return; const e = reasons.find(r => r.id === editing.id); if (e) setReasons(p => p.map(r => r.id === editing.id ? editing : r)); else setReasons(p => [...p, editing]); setEditing(null); toast.success('Saved'); };
 
+    const categoryBadge = (cat: string) => {
+        const cls = cat === 'item' ? 'pos-badge--blue' : cat === 'order' ? 'pos-badge--red' : 'pos-badge--purple';
+        return <span className={`pos-badge ${cls}`} style={{ textTransform: 'capitalize' }}>{cat}</span>;
+    };
+
     return (
-        <div style={pg}><div style={ct}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+        <div className="pos-page"><div className="pos-container">
+            <div className="pos-header">
                 <div>
-                    <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
-                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Void Reasons {isLive && <Wifi size={14} style={{ color: '#10B981', verticalAlign: 'middle', marginLeft: 6 }} />}</h1>
-                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>Configure reasons required when voiding items or orders from the POS</p>
+                    <button onClick={() => navigate(-1)} className="pos-btn-outline pos-btn-back"><ArrowLeft size={14} /> Back</button>
+                    <h1 className="pos-title">Void Reasons {isLive && <Wifi size={14} className="pos-live-icon" />}</h1>
+                    <p className="pos-subtitle">Configure reasons required when voiding items or orders from the POS</p>
                 </div>
-                <button style={bp} onClick={() => setEditing({ id: crypto.randomUUID(), name: '', requiresManager: false, requiresNote: false, isActive: true, usageCount: 0, sortOrder: reasons.length + 1, category: 'both' })}><Plus size={16} /> Add Reason</button>
+                <button className="pos-btn-primary" onClick={() => setEditing({ id: crypto.randomUUID(), name: '', requiresManager: false, requiresNote: false, isActive: true, usageCount: 0, sortOrder: reasons.length + 1, category: 'both' })}><Plus size={16} /> Add Reason</button>
             </div>
 
-            <div style={{ position: 'relative', marginBottom: 16 }}>
-                <Search size={14} style={{ position: 'absolute', left: 14, top: 12, color: 'var(--text-secondary)' }} />
-                <input style={{ ...ip, paddingLeft: 36 }} placeholder="Search reasons..." value={search} onChange={e => setSearch(e.target.value)} />
+            <div className="pos-search-wrapper pos-mb-16">
+                <Search size={14} className="pos-search-icon" />
+                <input className="pos-input pos-search-input" placeholder="Search reasons..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
 
-            <div style={cd}>
-                <div style={{ display: 'grid', gridTemplateColumns: '28px 1fr 100px 100px 100px 80px 50px', gap: 12, padding: '8px 12px', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary)', letterSpacing: 0.5, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className="pos-card">
+                <div className="pos-table-header" style={{ gridTemplateColumns: voidTableCols }}>
                     <div></div><div>Reason</div><div>Category</div><div>Controls</div><div>Status</div><div>Uses</div><div></div>
                 </div>
                 {filtered.map(r => (
-                    <div key={r.id} style={{ display: 'grid', gridTemplateColumns: '28px 1fr 100px 100px 100px 80px 50px', gap: 12, padding: '14px 12px', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer', opacity: r.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...r })}>
-                        <GripVertical size={14} style={{ color: 'var(--text-secondary)', opacity: 0.3, cursor: 'grab' }} />
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <AlertTriangle size={14} style={{ color: '#F59E0B' }} />
-                            <span style={{ fontSize: 14, fontWeight: 500 }}>{r.name}</span>
+                    <div key={r.id} className="pos-table-row" style={{ gridTemplateColumns: voidTableCols, opacity: r.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...r })}>
+                        <GripVertical size={14} className="pos-icon-grab" />
+                        <div className="pos-flex pos-flex--center pos-gap-8">
+                            <AlertTriangle size={14} className="pos-cell-amber" />
+                            <span className="pos-cell-value">{r.name}</span>
                         </div>
-                        <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 4, background: r.category === 'item' ? 'rgba(59,130,246,0.1)' : r.category === 'order' ? 'rgba(239,68,68,0.1)' : 'rgba(139,92,246,0.1)', color: r.category === 'item' ? '#3B82F6' : r.category === 'order' ? '#EF4444' : '#8B5CF6', textTransform: 'capitalize' }}>{r.category}</span>
-                        <div style={{ display: 'flex', gap: 4 }}>
-                            {r.requiresManager && <span style={{ fontSize: 9, padding: '1px 5px', borderRadius: 3, background: 'rgba(239,68,68,0.1)', color: '#EF4444' }}>Mgr</span>}
-                            {r.requiresNote && <span style={{ fontSize: 9, padding: '1px 5px', borderRadius: 3, background: 'rgba(245,158,11,0.1)', color: '#F59E0B' }}>Note</span>}
-                            {!r.requiresManager && !r.requiresNote && <span style={{ fontSize: 9, color: 'var(--text-secondary)' }}>None</span>}
+                        {categoryBadge(r.category)}
+                        <div className="pos-flex pos-gap-4">
+                            {r.requiresManager && <span className="pos-badge pos-badge--red" style={{ fontSize: 9 }}>Mgr</span>}
+                            {r.requiresNote && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9 }}>Note</span>}
+                            {!r.requiresManager && !r.requiresNote && <span className="pos-text-secondary pos-text-xs">None</span>}
                         </div>
-                        <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 4, background: r.isActive ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', color: r.isActive ? '#10B981' : '#EF4444' }}>{r.isActive ? 'Active' : 'Inactive'}</span>
-                        <span style={{ fontSize: 13, fontWeight: 500 }}>{r.usageCount}</span>
-                        <button title="Edit reason" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={e => { e.stopPropagation(); setEditing({ ...r }); }}><Edit3 size={13} /></button>
+                        <span className={`pos-badge ${r.isActive ? 'pos-badge--green' : 'pos-badge--red'}`}>{r.isActive ? 'Active' : 'Inactive'}</span>
+                        <span className="pos-cell-value">{r.usageCount}</span>
+                        <button title="Edit reason" className="pos-btn-icon" onClick={e => { e.stopPropagation(); setEditing({ ...r }); }}><Edit3 size={13} /></button>
                     </div>
                 ))}
             </div>
         </div>
 
-            {editing && <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setEditing(null)}>
-                <div style={{ ...cd, width: 480 }} onClick={e => e.stopPropagation()}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                        <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{reasons.find(r => r.id === editing.id) ? 'Edit' : 'New'} Void Reason</h3>
-                        <button title="Close" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditing(null)}><X size={20} /></button>
+            {editing && <div className="pos-modal-overlay" onClick={() => setEditing(null)}>
+                <div className="pos-card pos-modal pos-modal--sm" onClick={e => e.stopPropagation()}>
+                    <div className="pos-modal-header">
+                        <h3 className="pos-modal-title">{reasons.find(r => r.id === editing.id) ? 'Edit' : 'New'} Void Reason</h3>
+                        <button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
-                    <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Reason *</label>
-                        <input style={ip} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Customer Changed Mind" /></div>
-                    <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Category</label>
-                        <select style={{ ...ip, cursor: 'pointer' }} value={editing.category} onChange={e => setEditing(p => p ? { ...p, category: e.target.value as VoidReason['category'] } : null)} aria-label="Category">
+                    <div className="pos-form-group"><label className="pos-form-label">Reason *</label>
+                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Customer Changed Mind" /></div>
+                    <div className="pos-form-group"><label className="pos-form-label">Category</label>
+                        <select className="pos-select" value={editing.category} onChange={e => setEditing(p => p ? { ...p, category: e.target.value as VoidReason['category'] } : null)} aria-label="Category">
                             <option value="item">Item Level</option><option value="order">Order Level</option><option value="both">Both</option>
                         </select></div>
-                    <div style={{ display: 'flex', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
+                    <div className="pos-flex pos-gap-16 pos-mb-16 pos-flex--wrap">
                         {([['requiresManager', 'Requires manager approval'], ['requiresNote', 'Requires note'], ['isActive', 'Active']] as const).map(([key, label]) =>
-                            <label key={key} style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+                            <label key={key} className="pos-toggle-label">
                                 <input type="checkbox" checked={editing[key]} onChange={() => setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
                         )}
                     </div>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                        <button style={{ ...bp, flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
-                        <button title="Delete reason" style={{ ...bo, color: '#EF4444' }} onClick={() => { setReasons(p => p.filter(r => r.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
-                        <button style={bo} onClick={() => setEditing(null)}>Cancel</button>
+                    <div className="pos-modal-footer">
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
+                        <button title="Delete reason" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setReasons(p => p.filter(r => r.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
+                        <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>
             </div>}

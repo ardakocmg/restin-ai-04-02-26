@@ -18,14 +18,38 @@ import { useAuth } from '@/context/AuthContext';
 
 const COLORS = ['#10B981', '#F59E0B', '#94A3B8', '#EF4444'];
 
+interface Review {
+  id: string;
+  employee_name: string;
+  employee_code: string;
+  manager_name: string;
+  manager_code: string;
+  company_name: string;
+  review_name: string;
+  due_date: string;
+  published_on: string;
+  finalised_date?: string;
+  review_status: string;
+  respondent_status: {
+    employee_done: boolean;
+    manager_done: boolean;
+  };
+}
+
+interface StatusDataEntry {
+  name: string;
+  value: number;
+  color: string;
+}
+
 export default function PerformanceReviews() {
   const { user, isManager, isOwner } = useAuth();
   useAuditLog('PERFORMANCE_REVIEWS_VIEWED', { resource: 'performance-reviews' });
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusData, setStatusData] = useState([]);
+  const [statusData, setStatusData] = useState<StatusDataEntry[]>([]);
 
   useEffect(() => {
     fetchReviews();
@@ -33,17 +57,17 @@ export default function PerformanceReviews() {
 
   const fetchReviews = async () => {
     try {
-      const params = {};
+      const params: Record<string, string> = {};
       if (activeTab !== 'all') params.status = activeTab;
       const response = await api.get('/hr/reviews', { params });
       const data = response.data;
       setReviews(data.reviews || []);
-      setStatusData((data.statusData || []).map((s, i) => ({
+      setStatusData((data.statusData || []).map((s: { name: string; value: number }, i: number) => ({
         ...s,
         color: COLORS[i % COLORS.length]
       })));
-    } catch (error: any) {
-      logger.error('Failed to fetch reviews:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to fetch reviews:', { error: String(error) });
       setReviews([]);
       setStatusData([]);
     } finally {
@@ -75,14 +99,14 @@ export default function PerformanceReviews() {
                     paddingAngle={2}
                     dataKey="value"
                   >
-                    {statusData.map((entry, index) => (
+                    {statusData.map((entry: StatusDataEntry, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
               <div className="mt-4 space-y-2">
-                {statusData.map((item, idx) => (
+                {statusData.map((item: StatusDataEntry, idx: number) => (
                   <div key={idx} className="flex items-center gap-2 text-sm">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
                     <span className="text-slate-700 dark:text-slate-300">{item.name}</span>
@@ -165,7 +189,7 @@ export default function PerformanceReviews() {
                   </tr>
                 </thead>
                 <tbody>
-                  {reviews.map((review) => (
+                  {reviews.map((review: Review) => (
                     <tr key={review.id} className="border-b dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">
                       <td className="p-3">
                         <div className="flex items-center gap-3">

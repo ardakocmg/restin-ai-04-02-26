@@ -17,18 +17,57 @@ const CONTENT_TYPES = [
   { value: 'modules', label: 'Module Catalog' }
 ];
 
+interface ContentVersion {
+  id: string;
+  version?: string;
+  status?: string;
+  content?: Record<string, unknown>;
+  created_at?: string;
+  created_by_role?: string;
+  approved_by_role?: string;
+  scheduled_publish_at?: string;
+  changelog?: string;
+  [key: string]: unknown;
+}
+
+interface PricingPlan {
+  key?: string;
+  name?: string;
+  price?: string;
+  period?: string;
+  tagline?: string;
+  highlights?: string[];
+  future?: string[];
+  [key: string]: unknown;
+}
+
+interface ModuleEntry {
+  key?: string;
+  title?: string;
+  description?: string;
+  capabilities?: string[];
+  [key: string]: unknown;
+}
+
+interface VisualContent {
+  modules?: ModuleEntry[];
+  pricing?: PricingPlan[];
+  auto_sync_registry?: boolean;
+  [key: string]: unknown;
+}
+
 export default function ContentStudio() {
   const { user } = useAuth();
   const [contentType, setContentType] = useState('marketing');
-  const [versions, setVersions] = useState([]);
-  const [selectedVersion, setSelectedVersion] = useState(null);
+  const [versions, setVersions] = useState<ContentVersion[]>([]);
+  const [selectedVersion, setSelectedVersion] = useState<ContentVersion | null>(null);
   const [editorValue, setEditorValue] = useState('');
   const [editorMode, setEditorMode] = useState('JSON');
-  const [visualContent, setVisualContent] = useState(null);
+  const [visualContent, setVisualContent] = useState<VisualContent | null>(null);
   const [changelog, setChangelog] = useState('');
   const [scheduledAt, setScheduledAt] = useState('');
   const [loading, setLoading] = useState(false);
-  const canApprove = ['owner', 'product_owner'].includes(user?.role);
+  const canApprove = ['owner', 'product_owner'].includes(user?.role || '');
 
   const loadVersions = async (type = contentType) => {
     try {
@@ -46,7 +85,7 @@ export default function ContentStudio() {
         setVisualContent(null);
         setScheduledAt('');
       }
-    } catch (error: any) {
+    } catch (_error: unknown) {
       toast.error('Failed to load content versions');
     } finally {
       setLoading(false);
@@ -61,17 +100,17 @@ export default function ContentStudio() {
     if (editorMode === 'VISUAL') {
       try {
         setVisualContent(JSON.parse(editorValue || '{}'));
-      } catch (error: any) {
+      } catch (_error: unknown) {
         toast.error('Invalid JSON for visual editor');
       }
     }
   }, [editorMode]);
 
-  const handleSelectVersion = (versionId) => {
-    const version = versions.find((item) => item.id === versionId);
-    setSelectedVersion(version);
+  const handleSelectVersion = (versionId: string) => {
+    const version = versions.find((item: ContentVersion) => item.id === versionId);
+    setSelectedVersion(version ?? null);
     setEditorValue(JSON.stringify(version?.content || {}, null, 2));
-    setVisualContent(version?.content || {});
+    setVisualContent((version?.content as VisualContent) || {});
     setScheduledAt(version?.scheduled_publish_at ? new Date(version.scheduled_publish_at).toISOString().slice(0, 16) : '');
   };
 
@@ -91,7 +130,7 @@ export default function ContentStudio() {
       loadVersions(contentType);
       setSelectedVersion(response.data.version);
       setEditorValue(JSON.stringify(response.data.version.content, null, 2));
-    } catch (error: any) {
+    } catch (_error: unknown) {
       toast.error('Failed to create draft');
     } finally {
       setLoading(false);
@@ -108,7 +147,7 @@ export default function ContentStudio() {
       toast.success('Draft saved');
       setChangelog('');
       loadVersions(contentType);
-    } catch (error: any) {
+    } catch (_error: unknown) {
       toast.error('Invalid JSON or save failed');
     } finally {
       setLoading(false);
@@ -122,7 +161,7 @@ export default function ContentStudio() {
       await publicContentAPI.approveVersion(selectedVersion.id);
       toast.success('Version approved');
       loadVersions(contentType);
-    } catch (error: any) {
+    } catch (_error: unknown) {
       toast.error('Failed to approve version');
     } finally {
       setLoading(false);
@@ -141,23 +180,23 @@ export default function ContentStudio() {
       await publicContentAPI.syncModules();
       toast.success('Synced modules from registry');
       loadVersions('modules');
-    } catch (error: any) {
+    } catch (_error: unknown) {
       toast.error('Failed to sync modules');
     } finally {
       setLoading(false);
     }
   };
 
-  const updateVisualModule = (index, field, value) => {
-    setVisualContent((prev) => {
+  const updateVisualModule = (index: number, field: string, value: string | string[]) => {
+    setVisualContent((prev: VisualContent | null) => {
       const modules = [...(prev?.modules || [])];
       modules[index] = { ...modules[index], [field]: value };
       return { ...prev, modules };
     });
   };
 
-  const updateVisualPricing = (index, field, value) => {
-    setVisualContent((prev) => {
+  const updateVisualPricing = (index: number, field: string, value: string | string[]) => {
+    setVisualContent((prev: VisualContent | null) => {
       const pricing = [...(prev?.pricing || [])];
       pricing[index] = { ...pricing[index], [field]: value };
       return { ...prev, pricing };
@@ -170,15 +209,15 @@ export default function ContentStudio() {
     toast.success('Visual changes synced to JSON');
   };
 
-  const toggleAutoSync = (checked) => {
-    setVisualContent((prev) => ({ ...prev, auto_sync_registry: checked }));
+  const toggleAutoSync = (checked: boolean) => {
+    setVisualContent((prev: VisualContent | null) => ({ ...prev, auto_sync_registry: checked }));
   };
 
-  const approvedVersion = versions.find((item) => item.status === 'APPROVED');
+  const approvedVersion = versions.find((item: ContentVersion) => item.status === 'APPROVED');
   const approvedJson = JSON.stringify(approvedVersion?.content || {}, null, 2);
   const selectedJson = editorValue || '';
 
-  const diffLines = selectedJson.split('\n').map((line, index) => {
+  const diffLines = selectedJson.split('\n').map((line: string, index: number) => {
     const baseLine = approvedJson.split('\n')[index] || '';
     return { line, changed: line !== baseLine };
   });
@@ -233,7 +272,7 @@ export default function ContentStudio() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-secondary-foreground font-semibold">{version.version}</p>
-                      <p className="text-xs text-muted-foreground">{new Date(version.created_at).toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">{new Date(version.created_at || '').toLocaleString()}</p>
                       {version.created_by_role && (
                         <p className="text-xs text-muted-foreground">Drafted by: {version.created_by_role}</p>
                       )}
@@ -358,13 +397,13 @@ export default function ContentStudio() {
                         />
                         <Textarea
                           value={(plan.highlights || []).join('\n')}
-                          onChange={(e) => updateVisualPricing(index, 'highlights', e.target.value.split('\n').filter(Boolean))}
+                          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateVisualPricing(index, 'highlights', e.target.value.split('\n').filter(Boolean))}
                           placeholder="Highlights (one per line)"
                           data-testid={`content-studio-pricing-highlights-${index}`}
                         />
                         <Textarea
                           value={(plan.future || []).join('\n')}
-                          onChange={(e) => updateVisualPricing(index, 'future', e.target.value.split('\n').filter(Boolean))}
+                          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateVisualPricing(index, 'future', e.target.value.split('\n').filter(Boolean))}
                           placeholder="Future items (one per line)"
                           data-testid={`content-studio-pricing-future-${index}`}
                         />
@@ -379,19 +418,19 @@ export default function ContentStudio() {
                     <div key={module.key || index} className="p-3 rounded-lg border border-border space-y-2" data-testid={`content-studio-module-${index}`}>
                       <Input
                         value={module.title || ''}
-                        onChange={(e) => updateVisualModule(index, 'title', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateVisualModule(index, 'title', e.target.value)}
                         placeholder="Module title"
                         data-testid={`content-studio-module-title-${index}`}
                       />
                       <Textarea
                         value={module.description || ''}
-                        onChange={(e) => updateVisualModule(index, 'description', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateVisualModule(index, 'description', e.target.value)}
                         placeholder="Module description"
                         data-testid={`content-studio-module-description-${index}`}
                       />
                       <Textarea
                         value={(module.capabilities || []).join('\n')}
-                        onChange={(e) => updateVisualModule(index, 'capabilities', e.target.value.split('\n').filter(Boolean))}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateVisualModule(index, 'capabilities', e.target.value.split('\n').filter(Boolean))}
                         placeholder="Capabilities (one per line)"
                         data-testid={`content-studio-module-capabilities-${index}`}
                       />
@@ -408,7 +447,7 @@ export default function ContentStudio() {
             {(editorMode === 'JSON' || contentType === 'technical') && (
               <Textarea
                 value={editorValue}
-                onChange={(e) => setEditorValue(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditorValue(e.target.value)}
                 className="min-h-[420px] font-mono text-xs"
                 data-testid="content-studio-json-editor"
               />

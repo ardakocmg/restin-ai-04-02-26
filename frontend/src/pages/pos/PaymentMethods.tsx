@@ -13,6 +13,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';
+import './pos-shared.css';
 
 /* ===== Types ===== */
 
@@ -34,22 +35,12 @@ interface PaymentMethod {
     sortOrder: number;
 }
 
-/* ===== Styles ===== */
-
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary, #0a0a0a)', color: 'var(--text-primary, #fafafa)', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1100, margin: '0 auto', padding: '24px 20px' };
-const cd: React.CSSProperties = { background: 'var(--bg-card, #18181b)', border: '1px solid var(--border-primary, #27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const bp: React.CSSProperties = { padding: '10px 24px', background: '#3B82F6', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, color: 'var(--text-primary, #fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const ip: React.CSSProperties = { width: '100%', padding: '10px 14px', background: 'var(--bg-secondary, #09090b)', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, color: 'var(--text-primary, #fafafa)', fontSize: 14 };
-const sl: React.CSSProperties = { ...ip, cursor: 'pointer' };
-const rw: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' };
-
-const ts = (a: boolean): React.CSSProperties => ({ width: 44, height: 24, borderRadius: 12, background: a ? '#3B82F6' : '#3f3f46', cursor: 'pointer', position: 'relative', flexShrink: 0 });
-const td = (a: boolean): React.CSSProperties => ({ position: 'absolute', top: 2, left: a ? 22 : 2, width: 20, height: 20, borderRadius: '50%', background: '#fff', transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' });
+/* ===== Toggle ===== */
 
 const Toggle: React.FC<{ value: boolean; onChange: () => void }> = ({ value, onChange }) => (
-    <div style={ts(value)} onClick={onChange}><div style={td(value)} /></div>
+    <div className={`pos-toggle-track ${value ? 'pos-toggle-track--on' : 'pos-toggle-track--off'}`} onClick={onChange}>
+        <div className={`pos-toggle-thumb ${value ? 'pos-toggle-thumb--on' : 'pos-toggle-thumb--off'}`} />
+    </div>
 );
 
 /* ===== Seed Data ===== */
@@ -114,18 +105,16 @@ const PaymentMethods: React.FC = () => {
     };
 
     return (
-        <div style={pg}>
-            <div style={ct}>
+        <div className="pos-page">
+            <div className="pos-container">
                 {/* Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                <div className="pos-header">
                     <div>
-                        <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
-                        <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Payment Methods {isLive && <Wifi size={14} style={{ color: '#10B981', verticalAlign: 'middle', marginLeft: 6 }} />}</h1>
-                        <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', margin: '4px 0 0' }}>
-                            Configure payment methods available on POS devices
-                        </p>
+                        <button onClick={() => navigate(-1)} className="pos-btn-outline pos-btn-back"><ArrowLeft size={14} /> Back</button>
+                        <h1 className="pos-title">Payment Methods {isLive && <Wifi size={14} className="pos-live-icon" />}</h1>
+                        <p className="pos-subtitle">Configure payment methods available on POS devices</p>
                     </div>
-                    <button style={bp} onClick={() => setEditing({
+                    <button className="pos-btn-primary" onClick={() => setEditing({
                         id: crypto.randomUUID(), name: '', type: 'other', isActive: true, isDefault: false, accountingRef: '', opensCashDrawer: false, requiresAmount: false, allowsChange: false, allowsTips: false, printReceipt: true, autoCloseOrder: true, icon: 'credit-card', color: '#3B82F6', sortOrder: methods.length + 1,
                     })}>
                         <Plus size={16} /> Add Payment Method
@@ -133,41 +122,41 @@ const PaymentMethods: React.FC = () => {
                 </div>
 
                 {/* Search */}
-                <div style={{ position: 'relative', marginBottom: 20 }}>
-                    <Search size={14} style={{ position: 'absolute', left: 14, top: 12, color: 'var(--text-secondary)' }} />
-                    <input style={{ ...ip, paddingLeft: 36 }} placeholder="Search payment methods..." value={search} onChange={e => setSearch(e.target.value)} />
+                <div className="pos-search-wrapper pos-mb-20">
+                    <Search size={14} className="pos-search-icon" />
+                    <input className="pos-input pos-search-input" placeholder="Search payment methods..." value={search} onChange={e => setSearch(e.target.value)} />
                 </div>
 
                 {/* Active Methods */}
-                <div style={{ fontSize: 13, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary, #a1a1aa)', marginBottom: 10, letterSpacing: 0.5 }}>
+                <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
                     Active Methods ({active.length})
                 </div>
-                <div style={cd}>
+                <div className="pos-card">
                     {active.map(method => (
-                        <div key={method.id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer' }}
+                        <div key={method.id} className="pos-flex pos-flex--center pos-gap-14" style={{ padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer' }}
                             onClick={() => setEditing({ ...method })}>
                             <div style={{ width: 44, height: 44, borderRadius: 10, background: `${method.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: method.color, flexShrink: 0 }}>
                                 {ICONS[method.icon] || <CreditCard size={20} />}
                             </div>
                             <div style={{ flex: 1 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <div className="pos-flex pos-flex--center pos-gap-8">
                                     <span style={{ fontSize: 15, fontWeight: 600 }}>{method.name}</span>
-                                    {method.isDefault && <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: 'rgba(59,130,246,0.1)', color: '#3B82F6', fontWeight: 600 }}>DEFAULT</span>}
+                                    {method.isDefault && <span className="pos-badge pos-badge--blue" style={{ fontSize: 10, fontWeight: 600 }}>DEFAULT</span>}
                                 </div>
-                                <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2, display: 'flex', gap: 12 }}>
+                                <div className="pos-cell-secondary pos-flex pos-gap-12" style={{ marginTop: 2 }}>
                                     <span>{method.type.charAt(0).toUpperCase() + method.type.slice(1)}</span>
                                     {method.accountingRef && <span>Ref: {method.accountingRef}</span>}
                                     {method.opensCashDrawer && <span>Opens Drawer</span>}
                                     {method.allowsTips && <span>Tips ✓</span>}
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                            <div className="pos-flex pos-gap-6" style={{ flexShrink: 0 }}>
                                 {!method.isDefault && (
-                                    <button style={{ ...bo, padding: '4px 10px', fontSize: 11 }} onClick={e => { e.stopPropagation(); setDefault(method.id); }}>
+                                    <button className="pos-btn-outline" style={{ padding: '4px 10px', fontSize: 11 }} onClick={e => { e.stopPropagation(); setDefault(method.id); }}>
                                         Set Default
                                     </button>
                                 )}
-                                <button title="Edit method" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: 4 }} onClick={e => { e.stopPropagation(); setEditing({ ...method }); }}>
+                                <button title="Edit method" className="pos-btn-icon" onClick={e => { e.stopPropagation(); setEditing({ ...method }); }}>
                                     <Edit3 size={14} />
                                 </button>
                             </div>
@@ -178,21 +167,21 @@ const PaymentMethods: React.FC = () => {
                 {/* Inactive Methods */}
                 {inactive.length > 0 && (
                     <>
-                        <div style={{ fontSize: 13, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary, #a1a1aa)', marginBottom: 10, marginTop: 24, letterSpacing: 0.5 }}>
+                        <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 24 }}>
                             Inactive Methods ({inactive.length})
                         </div>
-                        <div style={cd}>
+                        <div className="pos-card">
                             {inactive.map(method => (
-                                <div key={method.id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer', opacity: 0.6 }}
+                                <div key={method.id} className="pos-flex pos-flex--center pos-gap-14" style={{ padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer', opacity: 0.6 }}
                                     onClick={() => setEditing({ ...method })}>
                                     <div style={{ width: 40, height: 40, borderRadius: 8, background: `${method.color}10`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: method.color }}>
                                         {ICONS[method.icon] || <CreditCard size={18} />}
                                     </div>
                                     <div style={{ flex: 1 }}>
-                                        <span style={{ fontSize: 14, fontWeight: 500 }}>{method.name}</span>
-                                        <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{method.type}</div>
+                                        <span className="pos-cell-value">{method.name}</span>
+                                        <div className="pos-cell-secondary">{method.type}</div>
                                     </div>
-                                    <button style={{ ...bo, padding: '4px 10px', fontSize: 11 }} onClick={e => {
+                                    <button className="pos-btn-outline" style={{ padding: '4px 10px', fontSize: 11 }} onClick={e => {
                                         e.stopPropagation();
                                         setMethods(prev => prev.map(m => m.id === method.id ? { ...m, isActive: true } : m));
                                         toast.success(`${method.name} activated`);
@@ -208,36 +197,36 @@ const PaymentMethods: React.FC = () => {
 
             {/* Edit Modal */}
             {editing && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setEditing(null)}>
-                    <div style={{ ...cd, width: 560, maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                            <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>
+                <div className="pos-modal-overlay" onClick={() => setEditing(null)}>
+                    <div className="pos-card pos-modal" style={{ maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
+                        <div className="pos-modal-header">
+                            <h3 className="pos-modal-title">
                                 {methods.find(m => m.id === editing.id) ? 'Edit' : 'New'} Payment Method
                             </h3>
-                            <button title="Close" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditing(null)}><X size={20} /></button>
+                            <button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+                        <div className="pos-form-grid">
                             <div style={{ gridColumn: '1 / -1' }}>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name *</label>
-                                <input style={ip} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Visa" />
+                                <label className="pos-form-label">Name *</label>
+                                <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Visa" />
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label>
-                                <select style={sl} value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as PaymentMethod['type'] } : null)} aria-label="Payment type">
+                                <label className="pos-form-label">Type</label>
+                                <select className="pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as PaymentMethod['type'] } : null)} aria-label="Payment type">
                                     <option value="cash">Cash</option><option value="card">Card</option><option value="voucher">Voucher</option>
                                     <option value="mobile">Mobile Payment</option><option value="account">Account Charge</option><option value="other">Other</option>
                                 </select>
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Accounting Reference</label>
-                                <input style={ip} value={editing.accountingRef} onChange={e => setEditing(p => p ? { ...p, accountingRef: e.target.value } : null)} placeholder="e.g. 1010" />
+                                <label className="pos-form-label">Accounting Reference</label>
+                                <input className="pos-input" value={editing.accountingRef} onChange={e => setEditing(p => p ? { ...p, accountingRef: e.target.value } : null)} placeholder="e.g. 1010" />
                             </div>
                         </div>
 
                         {/* Toggles */}
-                        <div style={{ ...cd, background: 'var(--bg-secondary, #09090b)', padding: 16, marginBottom: 16 }}>
-                            <div style={{ fontSize: 12, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: 10, letterSpacing: 0.5 }}>Behavior</div>
+                        <div className="pos-card pos-mb-16" style={{ background: 'var(--bg-secondary, #09090b)', padding: 16 }}>
+                            <div className="pos-text-xs pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Behavior</div>
                             {[
                                 { key: 'opensCashDrawer', label: 'Opens cash drawer', desc: 'Trigger cash drawer to open on payment' },
                                 { key: 'requiresAmount', label: 'Requires entered amount', desc: 'Staff must enter the received amount' },
@@ -247,21 +236,21 @@ const PaymentMethods: React.FC = () => {
                                 { key: 'autoCloseOrder', label: 'Auto-close order', desc: 'Automatically close order after payment' },
                                 { key: 'isActive', label: 'Active', desc: 'Show this method on POS' },
                             ].map(({ key, label, desc }) => (
-                                <div key={key} style={rw}>
-                                    <div><div style={{ fontWeight: 500, fontSize: 13 }}>{label}</div>{desc && <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 1 }}>{desc}</div>}</div>
+                                <div key={key} className="pos-flex pos-flex--center pos-flex--between" style={{ padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                                    <div><div className="pos-cell-value">{label}</div>{desc && <div className="pos-cell-secondary" style={{ marginTop: 1 }}>{desc}</div>}</div>
                                     <Toggle value={editing[key as keyof PaymentMethod] as boolean} onChange={() => setEditing(p => p ? { ...p, [key]: !(p[key as keyof PaymentMethod] as boolean) } : null)} />
                                 </div>
                             ))}
                         </div>
 
-                        <div style={{ display: 'flex', gap: 8 }}>
-                            <button style={{ ...bp, flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
-                            <button title="Delete method" style={{ ...bo, color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => {
+                        <div className="pos-modal-footer">
+                            <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
+                            <button title="Delete method" className="pos-btn-outline" style={{ color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => {
                                 setMethods(prev => prev.filter(m => m.id !== editing.id));
                                 setEditing(null);
                                 toast.success('Payment method deleted');
                             }}><Trash2 size={14} /></button>
-                            <button style={bo} onClick={() => setEditing(null)}>Cancel</button>
+                            <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                         </div>
                     </div>
                 </div>

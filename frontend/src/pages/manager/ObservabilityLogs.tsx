@@ -2,8 +2,9 @@
  * Observability Logs - Live Logs + Error Code Registry
  */
 import { useState, useEffect } from 'react';
+import { logger } from '../../lib/logger';
 import { useAuth } from '../../context/AuthContext';
-import LogService from '../../services/LogService';
+import LogService, { type LogEntry, type ErrorCode } from '../../services/LogService';
 import { toast } from 'sonner';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -15,7 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../componen
 import { Loader2, Search, AlertTriangle, Info, Shield, CheckCircle, Copy, FileText } from 'lucide-react';
 import { safeArray, safeString } from '../../lib/safe';
 
-const LEVEL_COLORS = {
+const LEVEL_COLORS: Record<string, string> = {
   ERROR: 'bg-red-100 text-red-700 border-red-200',
   WARN: 'bg-yellow-100 text-yellow-700 border-yellow-200',
   INFO: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -23,7 +24,7 @@ const LEVEL_COLORS = {
   SECURITY: 'bg-purple-100 text-purple-700 border-purple-200'
 };
 
-const LEVEL_ICONS = {
+const LEVEL_ICONS: Record<string, React.ElementType> = {
   ERROR: AlertTriangle,
   WARN: AlertTriangle,
   INFO: Info,
@@ -34,9 +35,9 @@ const LEVEL_ICONS = {
 export default function ObservabilityLogs() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [logs, setLogs] = useState([]);
-  const [errorCodes, setErrorCodes] = useState([]);
-  const [selectedLog, setSelectedLog] = useState(null);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [errorCodes, setErrorCodes] = useState<ErrorCode[]>([]);
+  const [selectedLog, setSelectedLog] = useState<LogEntry | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
   const [filters, setFilters] = useState({
     level: '',
@@ -45,7 +46,7 @@ export default function ObservabilityLogs() {
     timeRange: '24h'
   });
   const [searchCodeQuery, setSearchCodeQuery] = useState('');
-  
+
   const venueId = user?.venueId || user?.venue_id;
 
   useEffect(() => {
@@ -57,20 +58,20 @@ export default function ObservabilityLogs() {
     try {
       const [logsData, codesData] = await Promise.all([
         LogService.listLogs({
-          venue_id: filters.level !== 'ALL' ? venueId : null,
-          level: filters.level || null,
-          code: filters.code || null,
-          q: filters.q || null,
+          venue_id: filters.level !== 'ALL' ? venueId : undefined,
+          level: filters.level || undefined,
+          code: filters.code || undefined,
+          q: filters.q || undefined,
           limit: 200
         }),
         LogService.getErrorCodes()
       ]);
-      
-      setLogs(logsData.items || []);
+
+      setLogs(logsData.logs || []);
       setErrorCodes(codesData || []);
-    } catch (error: any) {
-      console.error('Failed to load data:', error);
-      if (error.response?.status !== 403) {
+    } catch (error: unknown) {
+      logger.error('Failed to load data:', { error: String(error) });
+      if (error instanceof Error) {
         toast.error('Failed to load logs');
       }
     } finally {
@@ -87,30 +88,30 @@ export default function ObservabilityLogs() {
     setTimeout(loadData, 100);
   };
 
-  const showDetails = (log) => {
+  const showDetails = (log: LogEntry) => {
     setSelectedLog(log);
     setShowDetailDialog(true);
   };
 
-  const ackLog = async (logId) => {
+  const ackLog = async (logId: string) => {
     try {
       await LogService.ackLog(logId);
       toast.success('Log acknowledged');
       await loadData();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error('Failed to acknowledge log');
     }
   };
 
-  const copyToClipboard = (text) => {
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast.success('Copied to clipboard');
   };
 
-  const filteredErrorCodes = errorCodes.filter(code =>
-    !searchCodeQuery || 
+  const filteredErrorCodes = errorCodes.filter((code: ErrorCode) =>
+    !searchCodeQuery ||
     code.code.toLowerCase().includes(searchCodeQuery.toLowerCase()) ||
-    code.title.toLowerCase().includes(searchCodeQuery.toLowerCase())
+    (code.title || code.description).toLowerCase().includes(searchCodeQuery.toLowerCase())
   );
 
   return (
@@ -134,7 +135,7 @@ export default function ObservabilityLogs() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div>
                   <Label className="text-foreground text-sm">Level</Label>
-                  <Select value={filters.level} onValueChange={(value) => setFilters({...filters, level: value})}>
+                  <Select value={filters.level} onValueChange={(value) => setFilters({ ...filters, level: value })}>
                     <SelectTrigger className="bg-secondary border-border text-foreground">
                       <SelectValue placeholder="All Levels" />
                     </SelectTrigger>
@@ -153,7 +154,7 @@ export default function ObservabilityLogs() {
                   <Label className="text-foreground text-sm">Code</Label>
                   <Input
                     value={filters.code}
-                    onChange={(e) => setFilters({...filters, code: e.target.value})}
+                    onChange={(e) => setFilters({ ...filters, code: e.target.value })}
                     placeholder="e.g., ORDER_SENT"
                     className="bg-secondary border-border text-foreground"
                   />
@@ -163,7 +164,7 @@ export default function ObservabilityLogs() {
                   <Label className="text-foreground text-sm">Search</Label>
                   <Input
                     value={filters.q}
-                    onChange={(e) => setFilters({...filters, q: e.target.value})}
+                    onChange={(e) => setFilters({ ...filters, q: e.target.value })}
                     placeholder="Search message or code..."
                     className="bg-secondary border-border text-foreground"
                   />
@@ -202,7 +203,7 @@ export default function ObservabilityLogs() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
-                      {safeArray(logs).map((log, idx) => {
+                      {safeArray(logs).map((log: LogEntry, idx: number) => {
                         const LevelIcon = LEVEL_ICONS[log.level] || Info;
                         return (
                           <tr
@@ -211,7 +212,7 @@ export default function ObservabilityLogs() {
                             className="hover:bg-secondary/50 cursor-pointer transition-colors"
                           >
                             <td className="px-4 py-3 text-sm text-muted-foreground whitespace-nowrap">
-                              {new Date(log.ts).toLocaleTimeString()}
+                              {new Date(log.ts || log.timestamp || '').toLocaleTimeString()}
                             </td>
                             <td className="px-4 py-3">
                               <Badge className={`${LEVEL_COLORS[log.level]} border flex items-center gap-1 w-fit`}>
@@ -278,7 +279,7 @@ export default function ObservabilityLogs() {
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="text-lg font-bold text-foreground font-mono">{errorCode.code}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{errorCode.title}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{errorCode.title || errorCode.description}</p>
                     </div>
                     <Button
                       size="sm"
@@ -295,7 +296,7 @@ export default function ObservabilityLogs() {
                     <div>
                       <p className="text-muted-foreground font-medium mb-2">Likely Causes:</p>
                       <ul className="space-y-1">
-                        {(errorCode.likely_causes || []).map((cause, idx) => (
+                        {(errorCode.likely_causes || []).map((cause: string, idx: number) => (
                           <li key={idx} className="text-muted-foreground">• {cause}</li>
                         ))}
                       </ul>
@@ -304,7 +305,7 @@ export default function ObservabilityLogs() {
                     <div>
                       <p className="text-muted-foreground font-medium mb-2">Operator Action:</p>
                       <ul className="space-y-1">
-                        {(errorCode.operator_action || []).map((action, idx) => (
+                        {(errorCode.operator_action || []).map((action: string, idx: number) => (
                           <li key={idx} className="text-green-400">✓ {action}</li>
                         ))}
                       </ul>
@@ -313,7 +314,7 @@ export default function ObservabilityLogs() {
                     <div>
                       <p className="text-muted-foreground font-medium mb-2">Developer Action:</p>
                       <ul className="space-y-1">
-                        {(errorCode.dev_action || []).map((action, idx) => (
+                        {(errorCode.dev_action || []).map((action: string, idx: number) => (
                           <li key={idx} className="text-blue-400">➤ {action}</li>
                         ))}
                       </ul>
@@ -331,13 +332,13 @@ export default function ObservabilityLogs() {
             <DialogHeader>
               <DialogTitle className="text-foreground">Log Event Details</DialogTitle>
             </DialogHeader>
-            
+
             {selectedLog && (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label className="text-muted-foreground text-xs">Timestamp</Label>
-                    <p className="text-foreground">{new Date(selectedLog.ts).toLocaleString()}</p>
+                    <p className="text-foreground">{new Date(selectedLog.ts || selectedLog.timestamp || '').toLocaleString()}</p>
                   </div>
                   <div>
                     <Label className="text-muted-foreground text-xs">Level</Label>
@@ -366,7 +367,7 @@ export default function ObservabilityLogs() {
                     <div className="flex items-center gap-2 mt-1">
                       <p className="text-foreground font-mono text-sm">{selectedLog.request_id || '-'}</p>
                       {selectedLog.request_id && (
-                        <Button size="sm" variant="ghost" onClick={() => copyToClipboard(selectedLog.request_id)}>
+                        <Button size="sm" variant="ghost" onClick={() => copyToClipboard(selectedLog.request_id || '')}>
                           <Copy className="w-3 h-3" />
                         </Button>
                       )}

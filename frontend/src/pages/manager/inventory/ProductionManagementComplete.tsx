@@ -18,10 +18,31 @@ import {
   Loader2,
   Calendar,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
+interface ProductionBatch {
+  id: string;
+  recipe: string;
+  quantity: number;
+  unit: string;
+  started: string;
+  status: string;
+  yield_expected: number;
+  yield_actual: number | null;
+  notes: string;
+}
+
+interface StatCardProps {
+  icon: LucideIcon;
+  label: string;
+  value: string | number;
+  subtext?: string;
+  color?: string;
+}
+
 // ── KPI Stat Card ──────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: StatCardProps) {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 flex items-center gap-4">
@@ -39,8 +60,8 @@ function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground'
 }
 
 // ── Status Badge ───────────────────────────────────────────────────
-function BatchStatusBadge({ status }) {
-  const config = {
+function BatchStatusBadge({ status }: { status: string }) {
+  const config: Record<string, { label: string; className: string }> = {
     completed: { label: 'Completed', className: 'text-green-600 dark:text-green-400 border-green-400' },
     in_progress: { label: 'In Progress', className: 'text-blue-600 dark:text-blue-400 border-blue-400' },
     pending: { label: 'Pending', className: 'text-amber-600 dark:text-amber-400 border-amber-400' },
@@ -55,7 +76,7 @@ function BatchStatusBadge({ status }) {
 
 export default function ProductionManagementComplete() {
   const { activeVenue } = useVenue();
-  const [batches, setBatches] = useState([]);
+  const [batches, setBatches] = useState<ProductionBatch[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -67,7 +88,7 @@ export default function ProductionManagementComplete() {
   const loadBatches = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get(`/inventory/production?venue_id=${activeVenue.id}`);
+      const res = await api.get(`/inventory/production?venue_id=${activeVenue!.id}`);
       setBatches(res.data || []);
     } catch {
       // Fallback demo data when endpoint not ready
@@ -87,11 +108,11 @@ export default function ProductionManagementComplete() {
   // ── KPI Calculations ──
   const stats = useMemo(() => {
     const total = batches.length;
-    const completed = batches.filter(b => b.status === 'completed').length;
-    const inProgress = batches.filter(b => b.status === 'in_progress').length;
-    const withYield = batches.filter(b => b.yield_actual !== null);
+    const completed = batches.filter((b: ProductionBatch) => b.status === 'completed').length;
+    const inProgress = batches.filter((b: ProductionBatch) => b.status === 'in_progress').length;
+    const withYield = batches.filter((b: ProductionBatch) => b.yield_actual !== null);
     const avgVariance = withYield.length
-      ? (withYield.reduce((sum, b) => sum + ((b.yield_actual / b.yield_expected) * 100 - 100), 0) / withYield.length).toFixed(1)
+      ? (withYield.reduce((sum: number, b: ProductionBatch) => sum + (((b.yield_actual ?? 0) / b.yield_expected) * 100 - 100), 0) / withYield.length).toFixed(1)
       : '0.0';
 
     return { total, completed, inProgress, avgVariance };
@@ -104,14 +125,14 @@ export default function ProductionManagementComplete() {
       label: 'Batch #',
       enableSorting: true,
       size: 100,
-      render: (row) => <span className="font-mono text-sm font-medium">{row.id}</span>,
+      render: (row: ProductionBatch) => <span className="font-mono text-sm font-medium">{row.id}</span>,
     },
     {
       key: 'recipe',
       label: 'Recipe',
       enableSorting: true,
       size: 200,
-      render: (row) => (
+      render: (row: ProductionBatch) => (
         <div className="flex items-center gap-2.5">
           <div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center shrink-0">
             <Factory className="h-4 w-4 text-muted-foreground" />
@@ -128,7 +149,7 @@ export default function ProductionManagementComplete() {
       label: 'Quantity',
       enableSorting: true,
       size: 100,
-      render: (row) => (
+      render: (row: ProductionBatch) => (
         <span className="font-medium tabular-nums">{row.quantity} {row.unit}</span>
       ),
     },
@@ -136,7 +157,7 @@ export default function ProductionManagementComplete() {
       key: 'yield',
       label: 'Yield',
       size: 120,
-      render: (row) => {
+      render: (row: ProductionBatch) => {
         if (row.yield_actual === null) return <span className="text-muted-foreground text-xs">—</span>;
         const pct = ((row.yield_actual / row.yield_expected) * 100).toFixed(1);
         const isGood = parseFloat(pct) >= 98;
@@ -155,7 +176,7 @@ export default function ProductionManagementComplete() {
       label: 'Started',
       enableSorting: true,
       size: 120,
-      render: (row) => (
+      render: (row: ProductionBatch) => (
         <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <Calendar className="h-3.5 w-3.5" />
           <span className="tabular-nums">
@@ -175,7 +196,7 @@ export default function ProductionManagementComplete() {
         { value: 'in_progress', label: 'In Progress' },
         { value: 'completed', label: 'Completed' },
       ],
-      render: (row) => <BatchStatusBadge status={row.status} />,
+      render: (row: ProductionBatch) => <BatchStatusBadge status={row.status} />,
     },
   ], []);
 

@@ -334,13 +334,16 @@ async def get_voice_stats(venue_id: str = Query(...)):
     total_calls = await db.voice_logs.count_documents({"venue_id": venue_id})
     successful = await db.voice_logs.count_documents({"venue_id": venue_id, "status": "BOOKED"})
     escalated = await db.voice_logs.count_documents({"venue_id": venue_id, "status": "Escalated"})
+    inquiries = await db.voice_logs.count_documents({"venue_id": venue_id, "status": "Inquiry"})
     
-    # Get recent logs for avg duration
-    recent = await db.voice_logs.find({"venue_id": venue_id}).sort("created_at", -1).to_list(length=100)
+    # Get all logs for detailed analysis
+    all_logs = await db.voice_logs.find({"venue_id": venue_id}).sort("created_at", -1).to_list(length=500)
+    
+    # Average duration
     avg_duration = 0
-    if recent:
-        total_duration = sum(log.get("duration_seconds", 0) for log in recent)
-        avg_duration = total_duration // len(recent) if recent else 0
+    if all_logs:
+        total_duration = sum(log.get("duration_seconds", 0) for log in all_logs)
+        avg_duration = total_duration // len(all_logs)
 
     # Token usage for billing
     total_tokens = 0
@@ -349,6 +352,56 @@ async def get_voice_stats(venue_id: str = Query(...)):
     ).to_list(length=1000)
     total_tokens = sum(u.get("tokens_used", 0) for u in usage_records)
     total_cost_cents = sum(u.get("cost_cents", 0) for u in usage_records)
+
+    # Daily volume (last 7 days) for sparkline chart
+    daily_volume = []
+    for i in range(6, -1, -1):
+        day = datetime.now(timezone.utc) - timedelta(days=i)
+        day_start = day.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+        day_end = (day.replace(hour=23, minute=59, second=59, microsecond=999999)).isoformat()
+        count = 0
+        for log in all_logs:
+            created = log.get("created_at", "")
+            if day_start <= created <= day_end:
+                count += 1
+        daily_volume.append({
+            "date": day.strftime("%a"),
+            "calls": count,
+        })
+
+    # Sentiment breakdown for donut chart
+    sentiment_counts = {"positive": 0, "neutral": 0, "negative": 0}
+    for log in all_logs:
+        s = log.get("sentiment", "neutral")
+        if s in sentiment_counts:
+            sentiment_counts[s] += 1
+    sentiment_breakdown = [
+        {"name": "Positive", "value": sentiment_counts["positive"], "color": "#22c55e"},
+        {"name": "Neutral", "value": sentiment_counts["neutral"], "color": "#3b82f6"},
+        {"name": "Negative", "value": sentiment_counts["negative"], "color": "#ef4444"},
+    ]
+
+    # Top topics extraction from transcripts
+    topic_keywords = {
+        "Reservations": ["book", "reserve", "table", "reservation", "tonight", "tomorrow"],
+        "Menu & Food": ["menu", "food", "dish", "eat", "special", "vegetarian", "vegan"],
+        "Allergens": ["allergy", "allergen", "gluten", "dairy", "nut", "celiac"],
+        "Hours & Location": ["open", "close", "hour", "time", "where", "location", "address"],
+        "Pricing": ["price", "cost", "expensive", "cheap", "budget"],
+        "Complaints": ["complaint", "manager", "terrible", "worst", "angry", "unhappy"],
+        "Cancellations": ["cancel", "change", "modify", "reschedule"],
+    }
+    topic_counts: dict[str, int] = {}
+    for log in all_logs:
+        transcript = (log.get("transcript_in", "") or "").lower()
+        for topic, keywords in topic_keywords.items():
+            if any(kw in transcript for kw in keywords):
+                topic_counts[topic] = topic_counts.get(topic, 0) + 1
+    top_topics = sorted(
+        [{"topic": k, "count": v} for k, v in topic_counts.items()],
+        key=lambda x: x["count"],
+        reverse=True,
+    )[:5]
 
     return {
         "venue_id": venue_id,
@@ -362,6 +415,12 @@ async def get_voice_stats(venue_id: str = Query(...)):
             "venue_id": venue_id,
             "created_at": {"$gte": datetime.now(timezone.utc).replace(hour=0, minute=0, second=0).isoformat()}
         }),
+        "booked_count": successful,
+        "inquiry_count": inquiries,
+        "escalated_count": escalated,
+        "daily_volume": daily_volume,
+        "sentiment_breakdown": sentiment_breakdown,
+        "top_topics": top_topics,
     }
 
 
@@ -541,3 +600,319 @@ def _classify_sentiment(transcript: str) -> str:
     if any(w in transcript_lower for w in ["love", "great", "wonderful", "amazing", "thank"]):
         return "positive"
     return "neutral"
+
+
+# ==================== VAPI INTEGRATION ====================
+
+VAPI_BASE_URL = "https://api.vapi.ai"
+
+
+async def _get_vapi_key(venue_id: str) -> str:
+    """Get Vapi API key for venue, falling back to global env."""
+    db = get_database()
+    config = await db.voice_configs.find_one({"venue_id": venue_id})
+    venue_key = config.get("vapi_api_key", "") if config else ""
+    return venue_key or os.environ.get("VAPI_API_KEY", "")
+
+
+async def _vapi_request(method: str, path: str, vapi_key: str, json_data: dict = None) -> dict:
+    """Make an authenticated request to Vapi REST API."""
+    import httpx
+    headers = {
+        "Authorization": f"Bearer {vapi_key}",
+        "Content-Type": "application/json",
+    }
+    async with httpx.AsyncClient(timeout=30) as client:
+        if method == "GET":
+            resp = await client.get(f"{VAPI_BASE_URL}{path}", headers=headers)
+        elif method == "POST":
+            resp = await client.post(f"{VAPI_BASE_URL}{path}", headers=headers, json=json_data or {})
+        elif method == "PATCH":
+            resp = await client.patch(f"{VAPI_BASE_URL}{path}", headers=headers, json=json_data or {})
+        elif method == "DELETE":
+            resp = await client.delete(f"{VAPI_BASE_URL}{path}", headers=headers)
+        else:
+            raise ValueError(f"Unsupported method: {method}")
+        
+        if resp.status_code >= 400:
+            logger.error(f"Vapi API error: {resp.status_code} {resp.text}")
+            raise HTTPException(status_code=resp.status_code, detail=f"Vapi API error: {resp.text}")
+        
+        return resp.json() if resp.text else {}
+
+
+@router.post("/vapi/save-key")
+async def save_vapi_key(venue_id: str = Query(...), body: dict = {}):
+    """Save and validate Vapi API key for a venue."""
+    db = get_database()
+    vapi_key = body.get("api_key", "").strip()
+    
+    if not vapi_key:
+        raise HTTPException(status_code=400, detail="API key is required")
+    
+    # Test the key by calling GET /assistant
+    try:
+        result = await _vapi_request("GET", "/assistant", vapi_key)
+        assistant_count = len(result) if isinstance(result, list) else 0
+    except HTTPException:
+        raise HTTPException(status_code=401, detail="Invalid Vapi API key — authentication failed")
+    except Exception as e:
+        logger.error(f"Vapi key validation error: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to validate key: {str(e)}")
+    
+    # Save the key to voice config
+    await db.voice_configs.update_one(
+        {"venue_id": venue_id},
+        {"$set": {
+            "vapi_api_key": vapi_key,
+            "vapi_connected": True,
+            "vapi_assistant_count": assistant_count,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+        }},
+        upsert=True,
+    )
+    
+    return {
+        "status": "connected",
+        "message": f"Vapi connected! Found {assistant_count} existing assistant(s).",
+        "assistant_count": assistant_count,
+    }
+
+
+@router.get("/vapi/status")
+async def get_vapi_status(venue_id: str = Query(...)):
+    """Check Vapi connection status and retrieve assistants + phone numbers."""
+    db = get_database()
+    config = await db.voice_configs.find_one({"venue_id": venue_id})
+    
+    if not config or not config.get("vapi_api_key"):
+        return {
+            "connected": False,
+            "assistants": [],
+            "phone_numbers": [],
+            "active_assistant_id": None,
+            "active_phone_number_id": None,
+        }
+    
+    vapi_key = config["vapi_api_key"]
+    
+    try:
+        assistants = await _vapi_request("GET", "/assistant", vapi_key)
+        phone_numbers = await _vapi_request("GET", "/phone-number", vapi_key)
+    except Exception as e:
+        logger.error(f"Vapi status check failed: {e}")
+        return {
+            "connected": False,
+            "error": str(e),
+            "assistants": [],
+            "phone_numbers": [],
+        }
+    
+    return {
+        "connected": True,
+        "assistants": [
+            {"id": a.get("id"), "name": a.get("name", "Unnamed"), "created_at": a.get("createdAt")}
+            for a in (assistants if isinstance(assistants, list) else [])
+        ],
+        "phone_numbers": [
+            {
+                "id": p.get("id"),
+                "number": p.get("number", p.get("sipUri", "Unknown")),
+                "provider": p.get("provider", "vapi"),
+                "name": p.get("name", ""),
+            }
+            for p in (phone_numbers if isinstance(phone_numbers, list) else [])
+        ],
+        "active_assistant_id": config.get("vapi_assistant_id"),
+        "active_phone_number_id": config.get("vapi_phone_number_id"),
+    }
+
+
+@router.post("/vapi/sync-assistant")
+async def sync_vapi_assistant(venue_id: str = Query(...)):
+    """Create or update a Vapi AI assistant from the venue's Voice AI config."""
+    db = get_database()
+    config = await db.voice_configs.find_one({"venue_id": venue_id})
+    
+    if not config or not config.get("vapi_api_key"):
+        raise HTTPException(status_code=400, detail="Vapi API key not configured")
+    
+    vapi_key = config["vapi_api_key"]
+    
+    # Build Knowledge Base context from uploaded docs
+    kb_docs = await db.voice_knowledge.find({"venue_id": venue_id}).to_list(length=50)
+    knowledge_context = "\n\n".join([
+        f"=== {doc.get('filename', 'Unknown')} ===\n{doc.get('content', '')}"
+        for doc in kb_docs
+    ])
+    
+    # Build the system prompt from venue config
+    persona = config.get("persona", "Professional")
+    greeting = config.get("greeting", "Good evening, welcome to Restin. How may I assist you today?")
+    language = config.get("language", "en")
+    
+    system_prompt = f"""You are an AI receptionist for a restaurant. Your persona is: {persona}.
+
+RULES:
+- Language: {language.upper()}
+- You can help with: reservations, menu inquiries, hours, allergen info, directions
+- If you cannot help, politely offer to transfer the call to a human manager
+- Always be warm, professional, and courteous
+- If asked about pricing, reference the menu below
+- For reservations, collect: name, date, time, party size, special requests
+
+KNOWLEDGE BASE:
+{knowledge_context if knowledge_context else "No documents uploaded yet. Use general restaurant hospitality knowledge."}
+"""
+    
+    assistant_payload = {
+        "name": f"Restin AI — {venue_id}",
+        "firstMessage": greeting,
+        "model": {
+            "provider": "google",
+            "model": "gemini-2.0-flash",
+            "messages": [{"role": "system", "content": system_prompt}],
+        },
+        "voice": {
+            "provider": "11labs",
+            "voiceId": "EXAVITQu4vr4xnSDxMaL",  # Sarah — default professional voice
+        },
+        "maxDurationSeconds": 600,
+        "silenceTimeoutSeconds": 30,
+        "endCallMessage": "Thank you for calling. Goodbye!",
+    }
+    
+    # Only include serverUrl if a valid webhook is configured
+    webhook_url = config.get("vapi_webhook_url", "")
+    if webhook_url and webhook_url.startswith("https://"):
+        assistant_payload["serverUrl"] = webhook_url
+    
+    existing_id = config.get("vapi_assistant_id")
+    
+    try:
+        if existing_id:
+            # Update existing assistant
+            result = await _vapi_request("PATCH", f"/assistant/{existing_id}", vapi_key, assistant_payload)
+            logger.info(f"Updated Vapi assistant: {existing_id}")
+        else:
+            # Create new assistant
+            result = await _vapi_request("POST", "/assistant", vapi_key, assistant_payload)
+            existing_id = result.get("id")
+            logger.info(f"Created Vapi assistant: {existing_id}")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Vapi assistant sync failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to sync assistant: {str(e)}")
+    
+    # Save the assistant ID back
+    await db.voice_configs.update_one(
+        {"venue_id": venue_id},
+        {"$set": {
+            "vapi_assistant_id": existing_id,
+            "vapi_synced_at": datetime.now(timezone.utc).isoformat(),
+        }}
+    )
+    
+    return {
+        "status": "synced",
+        "assistant_id": existing_id,
+        "assistant_name": result.get("name", ""),
+    }
+
+
+@router.post("/vapi/set-phone")
+async def set_vapi_phone(venue_id: str = Query(...), body: dict = {}):
+    """Set the active Vapi phone number for a venue and assign the assistant."""
+    db = get_database()
+    config = await db.voice_configs.find_one({"venue_id": venue_id})
+    
+    if not config or not config.get("vapi_api_key"):
+        raise HTTPException(status_code=400, detail="Vapi API key not configured")
+    
+    phone_number_id = body.get("phone_number_id")
+    assistant_id = config.get("vapi_assistant_id")
+    
+    if not phone_number_id:
+        raise HTTPException(status_code=400, detail="phone_number_id required")
+    
+    vapi_key = config["vapi_api_key"]
+    
+    # Assign the assistant to the phone number
+    if assistant_id:
+        try:
+            await _vapi_request("PATCH", f"/phone-number/{phone_number_id}", vapi_key, {
+                "assistantId": assistant_id,
+            })
+        except Exception as e:
+            logger.error(f"Failed to assign assistant to phone: {e}")
+            raise HTTPException(status_code=500, detail=f"Failed to assign assistant: {str(e)}")
+    
+    # Save the phone number ID
+    await db.voice_configs.update_one(
+        {"venue_id": venue_id},
+        {"$set": {
+            "vapi_phone_number_id": phone_number_id,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+        }}
+    )
+    
+    return {"status": "assigned", "phone_number_id": phone_number_id, "assistant_id": assistant_id}
+
+
+@router.post("/vapi/test-call")
+async def vapi_test_call(venue_id: str = Query(...), body: dict = {}):
+    """Trigger a test outbound call via Vapi to verify the setup."""
+    db = get_database()
+    config = await db.voice_configs.find_one({"venue_id": venue_id})
+    
+    if not config or not config.get("vapi_api_key"):
+        raise HTTPException(status_code=400, detail="Vapi API key not configured")
+    
+    vapi_key = config["vapi_api_key"]
+    assistant_id = config.get("vapi_assistant_id")
+    phone_number_id = config.get("vapi_phone_number_id")
+    test_number = body.get("phone_number", "")
+    
+    if not assistant_id:
+        raise HTTPException(status_code=400, detail="Sync assistant first")
+    if not test_number:
+        raise HTTPException(status_code=400, detail="Provide a phone_number to call")
+    
+    call_payload = {
+        "assistantId": assistant_id,
+        "customer": {"number": test_number},
+    }
+    if phone_number_id:
+        call_payload["phoneNumberId"] = phone_number_id
+    
+    try:
+        result = await _vapi_request("POST", "/call", vapi_key, call_payload)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Vapi test call failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Test call failed: {str(e)}")
+    
+    return {
+        "status": "calling",
+        "call_id": result.get("id"),
+        "message": f"Test call initiated to {test_number}",
+    }
+
+
+@router.post("/vapi/disconnect")
+async def disconnect_vapi(venue_id: str = Query(...)):
+    """Remove Vapi API key and disconnect from venue."""
+    db = get_database()
+    await db.voice_configs.update_one(
+        {"venue_id": venue_id},
+        {"$set": {
+            "vapi_api_key": "",
+            "vapi_connected": False,
+            "vapi_assistant_id": None,
+            "vapi_phone_number_id": None,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+        }}
+    )
+    return {"status": "disconnected"}

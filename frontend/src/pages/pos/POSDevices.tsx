@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, Plus, Save, Edit3, Trash2, X, Monitor, Printer, Smartphone, Wifi, WifiOff, RefreshCw, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import './pos-shared.css';
 
 type DeviceType = 'terminal' | 'printer' | 'scanner' | 'drawer' | 'display' | 'payment';
 type DeviceStatus = 'online' | 'offline' | 'error';
@@ -14,14 +15,6 @@ interface Device {
     id: string; name: string; type: DeviceType; model: string; ipAddress: string; serialNumber: string;
     status: DeviceStatus; lastSeen: string; location: string; firmware: string; isActive: boolean;
 }
-
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary,#0a0a0a)', color: 'var(--text-primary,#fafafa)', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1100, margin: '0 auto', padding: '24px 20px' };
-const cd: React.CSSProperties = { background: 'var(--bg-card,#18181b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const bp: React.CSSProperties = { padding: '10px 24px', background: '#3B82F6', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const ip: React.CSSProperties = { width: '100%', padding: '10px 14px', background: 'var(--bg-secondary,#09090b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14 };
-const sl: React.CSSProperties = { ...ip, cursor: 'pointer' };
 
 const TYPE_ICONS: Record<DeviceType, React.ReactNode> = { terminal: <Monitor size={18} />, printer: <Printer size={18} />, scanner: <span style={{ fontSize: 16 }}>📷</span>, drawer: <span style={{ fontSize: 16 }}>💰</span>, display: <Smartphone size={18} />, payment: <span style={{ fontSize: 16 }}>💳</span> };
 const TYPE_COLORS: Record<DeviceType, string> = { terminal: '#3B82F6', printer: '#10B981', scanner: '#F59E0B', drawer: '#8B5CF6', display: '#EC4899', payment: '#06B6D4' };
@@ -53,28 +46,28 @@ const POSDevices: React.FC = () => {
     const save = () => { if (!editing) return; const e = devices.find(d => d.id === editing.id); if (e) setDevices(p => p.map(d => d.id === editing.id ? editing : d)); else setDevices(p => [...p, editing]); setEditing(null); toast.success('Saved'); };
 
     return (
-        <div style={pg}><div style={ct}>
+        <div className="pos-page"><div className="pos-container pos-container--1200">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                 <div>
-                    <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
+                    <button onClick={() => navigate(-1)} className="pos-btn pos-btn--outline" style={{ marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
                     <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>POS Devices</h1>
                     <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>{online} online · {offline} offline · {devices.length} total</p>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
-                    <button style={bo} onClick={() => toast.info('Scanning network...')}><RefreshCw size={14} /> Scan</button>
-                    <button style={bp} onClick={() => setEditing({ id: crypto.randomUUID(), name: '', type: 'terminal', model: '', ipAddress: '', serialNumber: '', status: 'offline', lastSeen: 'Never', location: '', firmware: '', isActive: true })}><Plus size={16} /> Add Device</button>
+                    <button className="pos-btn pos-btn--outline" onClick={() => toast.info('Scanning network...')}><RefreshCw size={14} /> Scan</button>
+                    <button className="pos-btn pos-btn--primary" onClick={() => setEditing({ id: crypto.randomUUID(), name: '', type: 'terminal', model: '', ipAddress: '', serialNumber: '', status: 'offline', lastSeen: 'Never', location: '', firmware: '', isActive: true })}><Plus size={16} /> Add Device</button>
                 </div>
             </div>
 
             {/* Filter Bar */}
-            <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: 'var(--bg-card)', borderRadius: 8, padding: 3, border: '1px solid var(--border-primary,#27272a)', width: 'fit-content', flexWrap: 'wrap' }}>
-                <button onClick={() => setFilterType('all')} style={{ padding: '6px 14px', borderRadius: 6, border: 'none', fontSize: 12, cursor: 'pointer', background: filterType === 'all' ? 'rgba(59,130,246,0.1)' : 'transparent', color: filterType === 'all' ? '#3B82F6' : 'var(--text-secondary)' }}>All ({devices.length})</button>
+            <div className="pos-tab-group" style={{ marginBottom: 16, flexWrap: 'wrap' }}>
+                <button onClick={() => setFilterType('all')} className={`pos-filter-btn${filterType === 'all' ? ' pos-filter-btn--active' : ''}`}>All ({devices.length})</button>
                 {(['terminal', 'printer', 'scanner', 'drawer', 'display', 'payment'] as DeviceType[]).map(t => { const count = devices.filter(d => d.type === t).length; return count > 0 ? <button key={t} onClick={() => setFilterType(t)} style={{ padding: '6px 14px', borderRadius: 6, border: 'none', fontSize: 12, cursor: 'pointer', textTransform: 'capitalize', background: filterType === t ? `${TYPE_COLORS[t]}15` : 'transparent', color: filterType === t ? TYPE_COLORS[t] : 'var(--text-secondary)' }}>{t} ({count})</button> : null; })}
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: 12 }}>
                 {filtered.map(device => (
-                    <div key={device.id} style={{ ...cd, cursor: 'pointer', padding: 16, opacity: device.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...device })}>
+                    <div key={device.id} className="pos-card" style={{ cursor: 'pointer', padding: 16, opacity: device.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...device })}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                 <div style={{ width: 40, height: 40, borderRadius: 10, background: `${TYPE_COLORS[device.type]}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: TYPE_COLORS[device.type] }}>
@@ -100,39 +93,39 @@ const POSDevices: React.FC = () => {
         </div>
 
             {editing && <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setEditing(null)}>
-                <div style={{ ...cd, width: 480, maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
+                <div className="pos-card" style={{ width: 480, maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                         <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{devices.find(d => d.id === editing.id) ? 'Edit' : 'New'} Device</h3>
                         <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
                     <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name *</label>
-                        <input style={ip} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} /></div>
+                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} /></div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label>
-                            <select style={sl} value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as DeviceType } : null)} aria-label="Device type">
+                            <select className="pos-input pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as DeviceType } : null)} aria-label="Device type">
                                 {(['terminal', 'printer', 'scanner', 'drawer', 'display', 'payment'] as DeviceType[]).map(t => <option key={t} value={t} style={{ textTransform: 'capitalize' }}>{t}</option>)}
                             </select></div>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Model</label>
-                            <input style={ip} value={editing.model} onChange={e => setEditing(p => p ? { ...p, model: e.target.value } : null)} /></div>
+                            <input className="pos-input" value={editing.model} onChange={e => setEditing(p => p ? { ...p, model: e.target.value } : null)} /></div>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>IP / Connection</label>
-                            <input style={ip} value={editing.ipAddress} onChange={e => setEditing(p => p ? { ...p, ipAddress: e.target.value } : null)} placeholder="192.168.1.x or USB" /></div>
+                            <input className="pos-input" value={editing.ipAddress} onChange={e => setEditing(p => p ? { ...p, ipAddress: e.target.value } : null)} placeholder="192.168.1.x or USB" /></div>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Location</label>
-                            <input style={ip} value={editing.location} onChange={e => setEditing(p => p ? { ...p, location: e.target.value } : null)} /></div>
+                            <input className="pos-input" value={editing.location} onChange={e => setEditing(p => p ? { ...p, location: e.target.value } : null)} /></div>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Serial Number</label>
-                            <input style={ip} value={editing.serialNumber} onChange={e => setEditing(p => p ? { ...p, serialNumber: e.target.value } : null)} /></div>
+                            <input className="pos-input" value={editing.serialNumber} onChange={e => setEditing(p => p ? { ...p, serialNumber: e.target.value } : null)} /></div>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Firmware</label>
-                            <input style={ip} value={editing.firmware} onChange={e => setEditing(p => p ? { ...p, firmware: e.target.value } : null)} /></div>
+                            <input className="pos-input" value={editing.firmware} onChange={e => setEditing(p => p ? { ...p, firmware: e.target.value } : null)} /></div>
                     </div>
                     <div style={{ marginBottom: 16 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
                         <input type="checkbox" checked={editing.isActive} onChange={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label></div>
                     <div style={{ display: 'flex', gap: 8 }}>
-                        <button style={{ ...bp, flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
-                        <button style={{ ...bo, color: '#EF4444' }} onClick={() => { setDevices(p => p.filter(d => d.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
-                        <button style={bo} onClick={() => setEditing(null)}>Cancel</button>
+                        <button className="pos-btn pos-btn--primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
+                        <button className="pos-btn pos-btn--outline" style={{ color: '#EF4444' }} onClick={() => { setDevices(p => p.filter(d => d.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
+                        <button className="pos-btn pos-btn--outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>
             </div>}

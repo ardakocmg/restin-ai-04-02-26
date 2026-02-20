@@ -5,7 +5,29 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 
-const s = {
+/* ===== Types ===== */
+
+interface Table {
+    id: string;
+    name?: string;
+    number?: number;
+}
+
+interface Order {
+    id: string;
+    tableId?: string;
+}
+
+interface ActionsPanelProps {
+    order: Order | null;
+    tables: Table[];
+    onAction: (key: string, data?: Record<string, unknown>) => void;
+    onClose: () => void;
+}
+
+/* ===== Styles ===== */
+
+const s: Record<string, React.CSSProperties> = {
     overlay: {
         position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)',
         display: 'flex', justifyContent: 'flex-end', zIndex: 1100,
@@ -22,28 +44,28 @@ const s = {
     closeBtn: {
         background: 'none', border: 'none', cursor: 'pointer', padding: 4,
     },
-    body: { flex: 1, overflowY: 'auto', padding: 8 },
+    body: { flex: 1, overflowY: 'auto' as const, padding: 8 },
     section: { marginBottom: 16 },
     sectionTitle: {
-        fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase',
+        fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase' as const,
         padding: '8px 12px', letterSpacing: 0.5,
     },
     actionBtn: {
         display: 'flex', alignItems: 'center', gap: 12, width: '100%',
         padding: '14px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
-        backgroundColor: 'transparent', color: '#fff', fontSize: 14, textAlign: 'left',
+        backgroundColor: 'transparent', color: '#fff', fontSize: 14, textAlign: 'left' as const,
     },
-    actionIcon: { fontSize: 20, minWidth: 28, textAlign: 'center' },
+    actionIcon: { fontSize: 20, minWidth: 28, textAlign: 'center' as const },
     actionLabel: { flex: 1 },
     actionDesc: { fontSize: 11, color: '#666' },
     tableGrid: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6, padding: '8px 12px' },
     tableBtn: {
         padding: '12px 0', borderRadius: 8, border: '1px solid #333', backgroundColor: '#222',
-        color: '#fff', fontSize: 13, fontWeight: 600, textAlign: 'center', cursor: 'pointer',
+        color: '#fff', fontSize: 13, fontWeight: 600, textAlign: 'center' as const, cursor: 'pointer',
     },
     tableBtnActive: {
         padding: '12px 0', borderRadius: 8, border: 'none', backgroundColor: '#2A9D8F',
-        color: '#fff', fontSize: 13, fontWeight: 600, textAlign: 'center', cursor: 'pointer',
+        color: '#fff', fontSize: 13, fontWeight: 600, textAlign: 'center' as const, cursor: 'pointer',
     },
 };
 
@@ -76,11 +98,11 @@ const ACTIONS = [
     },
 ];
 
-export default function ActionsPanel({ order, tables, onAction, onClose }) {
-    const [showTablePicker, setShowTablePicker] = useState(false);
-    const [transferTarget, setTransferTarget] = useState(null);
+export default function ActionsPanel({ order, tables, onAction, onClose }: ActionsPanelProps) {
+    const [showTablePicker, setShowTablePicker] = useState<string | false>(false);
+    const [transferTarget, setTransferTarget] = useState<Table | null>(null);
 
-    const handleAction = (key) => {
+    const handleAction = (key: string) => {
         if (key === 'transferReceipt' || key === 'mergeTable') {
             setShowTablePicker(key);
             return;
@@ -88,9 +110,11 @@ export default function ActionsPanel({ order, tables, onAction, onClose }) {
         onAction(key);
     };
 
-    const handleTableSelect = (table) => {
+    const handleTableSelect = (table: Table) => {
         setTransferTarget(table);
-        onAction(showTablePicker, { targetTable: table });
+        if (showTablePicker) {
+            onAction(showTablePicker, { targetTable: table });
+        }
         setShowTablePicker(false);
     };
 
@@ -99,7 +123,7 @@ export default function ActionsPanel({ order, tables, onAction, onClose }) {
             <div style={s.panel} onClick={e => e.stopPropagation()}>
                 <div style={s.header}>
                     <span style={s.title}>Actions</span>
-                    <button style={s.closeBtn} onClick={onClose}>
+                    <button style={s.closeBtn} onClick={onClose} title="Close actions panel">
                         <X size={20} color="#888" />
                     </button>
                 </div>

@@ -15,8 +15,27 @@ import api from '@/lib/api';
 import { useVenue } from '@/context/VenueContext';
 import { useAuth } from '@/context/AuthContext';
 
+interface ClockingRecord {
+  id?: string;
+  status?: string;
+  day_of_week?: string;
+  date?: string;
+  clocking_in?: string;
+  clocking_out?: string;
+  hours_worked?: number;
+  employee_name?: string;
+  employee_code?: string;
+  employee_id?: string;
+  employee_designation?: string;
+  work_area?: string;
+  cost_centre?: string;
+  source_device?: string;
+  device_name?: string;
+  [key: string]: unknown;
+}
+
 /* ── Device badge config ────────────────────────────── */
-const DEVICE_BADGE = {
+const DEVICE_BADGE: Record<string, { label: string; icon: React.ElementType; bg: string; text: string; border: string }> = {
   terminal: { label: 'Terminal', icon: Monitor, bg: 'bg-blue-500/15', text: 'text-blue-400', border: 'border-blue-500/20' },
   web_manual: { label: 'Web', icon: Globe, bg: 'bg-purple-500/15', text: 'text-purple-400', border: 'border-purple-500/20' },
   mobile_app: { label: 'Mobile', icon: Smartphone, bg: 'bg-emerald-500/15', text: 'text-emerald-400', border: 'border-emerald-500/20' },
@@ -25,11 +44,13 @@ const DEVICE_BADGE = {
 };
 
 export default function ClockingData() {
-  const { activeVenueId: venueId } = useVenue();
-  const { user, isManager, isOwner } = useAuth();
-  useAuditLog('CLOCKING_DATA_VIEWED', { resource: 'clocking-data' });
+  const { activeVenue } = useVenue();
+  const venueId = activeVenue?.id;
+  const { user } = useAuth();
+  const { logAction } = useAuditLog();
+  React.useEffect(() => { logAction('CLOCKING_DATA_VIEWED', 'clocking-data'); }, [logAction]);
   const navigate = useNavigate();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<ClockingRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCount, setActiveCount] = useState(0);
@@ -47,7 +68,7 @@ export default function ClockingData() {
   useEffect(() => { fetchData(); }, [dateRange, venueId]);
   useEffect(() => { fetchActiveCount(); }, [venueId]);
 
-  const formatDateForApi = (isoDate) => {
+  const formatDateForApi = (isoDate: string) => {
     if (!isoDate) return '';
     const [y, m, d] = isoDate.split('-');
     return `${d}.${m}.${y}`;
@@ -63,8 +84,8 @@ export default function ClockingData() {
       };
       const response = await api.post('clocking/data', payload);
       setData(Array.isArray(response.data) ? response.data : []);
-    } catch (error: any) {
-      logger.error('Failed to fetch clocking data:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to fetch clocking data:', { error: String(error) });
       setData([]);
     } finally {
       setLoading(false);
@@ -78,7 +99,7 @@ export default function ClockingData() {
     } catch { setActiveCount(0); }
   };
 
-  const handleSort = (key) => {
+  const handleSort = (key: string) => {
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') direction = 'desc';
     setSortConfig({ key, direction });
@@ -90,13 +111,13 @@ export default function ClockingData() {
     if (sortConfig.key !== null) {
       items.sort((a, b) => {
         if (sortConfig.key === 'date') {
-          const parse = (d) => {
+          const parse = (d: string) => {
             if (!d) return 0;
             const [day, month, year] = d.split('/');
             return new Date(`${year}-${month}-${day}`).getTime();
           };
-          const va = parse(a[sortConfig.key]);
-          const vb = parse(b[sortConfig.key]);
+          const va = parse(String(a[sortConfig.key] || ''));
+          const vb = parse(String(b[sortConfig.key] || ''));
           return sortConfig.direction === 'asc' ? va - vb : vb - va;
         }
         if (sortConfig.key === 'hours_worked') {
@@ -116,19 +137,19 @@ export default function ClockingData() {
 
   const handleSearch = () => { fetchData(); };
 
-  const SortIcon = ({ column }) => {
+  const SortIcon = ({ column }: { column: string }) => {
     if (sortConfig.key !== column) return <ArrowUpDown className="h-3 w-3 opacity-30 ml-1.5" />;
     return <ArrowUpDown className={`h-3 w-3 ml-1.5 ${sortConfig.direction === 'asc' ? 'text-blue-400' : 'text-red-400'}`} />;
   };
 
-  const formatHours = (h) => {
+  const formatHours = (h: number | undefined) => {
     if (!h || h === 0) return '—';
     const hrs = Math.floor(h);
     const mins = Math.round((h - hrs) * 60);
     return `${hrs}h ${mins}m`;
   };
 
-  const DeviceBadge = ({ source, deviceName }) => {
+  const DeviceBadge = ({ source, deviceName }: { source: string; deviceName?: string }) => {
     const conf = DEVICE_BADGE[source] || DEVICE_BADGE.terminal;
     const Icon = conf.icon;
     return (
@@ -140,7 +161,7 @@ export default function ClockingData() {
     );
   };
 
-  const StatusDot = ({ status }) => {
+  const StatusDot = ({ status }: { status: string }) => {
     const isActive = status === 'active';
     return (
       <div className="flex items-center gap-1.5">

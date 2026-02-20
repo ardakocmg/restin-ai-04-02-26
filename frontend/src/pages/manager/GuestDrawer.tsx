@@ -17,9 +17,57 @@ import {
 
 import api from '@/lib/api';
 
-export default function GuestDrawer({ open, onOpenChange, guestId }) {
+interface GuestProfile {
+    id: string;
+    first_name: string;
+    last_name: string;
+    tags: string[];
+    loyalty?: {
+        tier?: string;
+        points_balance?: number;
+    };
+    visit_summary?: {
+        total_visits?: number;
+        total_spend?: number;
+    };
+    internal_notes?: string;
+    contact_info: {
+        phone: string;
+        email?: string;
+    };
+}
+
+interface Reservation {
+    datetime_start: string;
+    guest_count: number;
+    status: string;
+    channel: string;
+}
+
+interface FavoriteItem {
+    name: string;
+    count: number;
+}
+
+interface GuestHistory {
+    reservations?: Reservation[];
+    favorite_items?: FavoriteItem[];
+}
+
+interface GuestData {
+    profile: GuestProfile;
+    history: GuestHistory;
+}
+
+interface GuestDrawerProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    guestId: string | null;
+}
+
+export default function GuestDrawer({ open, onOpenChange, guestId }: GuestDrawerProps) {
     const [loading, setLoading] = useState(true);
-    const [data, setData] = useState(null);
+    const [data, setData] = useState<GuestData | null>(null);
     useAuditLog('GUEST_DRAWER_VIEWED', { resource: 'guest-drawer', guestId });
 
     useEffect(() => {
@@ -33,8 +81,8 @@ export default function GuestDrawer({ open, onOpenChange, guestId }) {
         try {
             const res = await api.get(`/crm/guests/${guestId}/360`);
             setData(res.data);
-        } catch (e: any) {
-            logger.error(e);
+        } catch (e: unknown) {
+            logger.error('Failed to load guest data', { error: String(e) });
         } finally {
             setLoading(false);
         }
@@ -108,7 +156,7 @@ export default function GuestDrawer({ open, onOpenChange, guestId }) {
                                     <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                                         <Calendar className="w-3 h-3" /> Recent Reservations
                                     </h4>
-                                    {data.history.reservations?.map((res, i) => (
+                                    {data.history.reservations?.map((res: Reservation, i: number) => (
                                         <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-border">
                                             <div>
                                                 <p className="text-xs font-black text-foreground uppercase">{new Date(res.datetime_start).toLocaleDateString()}</p>
@@ -124,7 +172,7 @@ export default function GuestDrawer({ open, onOpenChange, guestId }) {
                                         <ShoppingBag className="w-3 h-3" /> Favorite Items
                                     </h4>
                                     <div className="flex flex-wrap gap-2">
-                                        {data.history.favorite_items?.map((item, i) => (
+                                        {data.history.favorite_items?.map((item: FavoriteItem, i: number) => (
                                             <Badge key={i} className="bg-card border-border text-secondary-foreground py-1.5 px-3">
                                                 {item.name} <span className="ml-2 text-red-500 font-black">x{item.count}</span>
                                             </Badge>
@@ -137,7 +185,7 @@ export default function GuestDrawer({ open, onOpenChange, guestId }) {
                                 <div className="space-y-4">
                                     <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Manual Tags</h4>
                                     <div className="flex flex-wrap gap-2 p-4 rounded-xl bg-card border border-border">
-                                        {data.profile.tags.map(tag => (
+                                        {data.profile.tags.map((tag: string) => (
                                             <Badge key={tag} className="bg-red-600/20 text-red-500 border-red-500/30 uppercase text-[9px] font-black">
                                                 {tag}
                                             </Badge>

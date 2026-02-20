@@ -2,13 +2,40 @@
  * Orders List — View all orders (open, finalized, voided) with filters
  * Phase 9: Orders List & History + Z-Report
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, CSSProperties } from 'react';
 import { X, Filter, FileText, RotateCcw, Trash2, Printer, Search, ArrowDownLeft } from 'lucide-react';
 import api from '../../lib/api';
 import { logger } from '../../lib/logger';
 import { toast } from 'sonner';
 
-const s = {
+interface OrderEntry {
+    id: string;
+    order_number?: string;
+    table_name?: string;
+    table_id?: string;
+    server_name?: string;
+    item_count?: number;
+    items?: unknown[];
+    total?: number;
+    status?: string;
+    tender_type?: string;
+    created_at?: string;
+    createdAt?: string;
+    [key: string]: unknown;
+}
+
+interface StatusColor {
+    bg: string;
+    color: string;
+}
+
+interface OrdersListProps {
+    venueId: string;
+    onReopen?: (order: OrderEntry) => void;
+    onClose: () => void;
+}
+
+const s: Record<string, CSSProperties> = {
     overlay: {
         position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.9)',
         display: 'flex', flexDirection: 'column', zIndex: 1200,
@@ -55,7 +82,6 @@ const s = {
         fontSize: 11, marginRight: 4,
     },
     empty: { textAlign: 'center', color: '#666', padding: 60, fontSize: 14 },
-    /* Z-Report */
     zReport: {
         position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.9)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1300,
@@ -81,7 +107,7 @@ const s = {
     },
 };
 
-const STATUS_COLORS = {
+const STATUS_COLORS: Record<string, StatusColor> = {
     open: { bg: '#2A9D8F33', color: '#2A9D8F' },
     sent: { bg: '#5B8DEF33', color: '#5B8DEF' },
     finalized: { bg: '#4ade8033', color: '#4ade80' },
@@ -89,8 +115,8 @@ const STATUS_COLORS = {
     closed: { bg: '#88888833', color: '#888' },
 };
 
-export default function OrdersList({ venueId, onReopen, onClose }) {
-    const [orders, setOrders] = useState([]);
+export default function OrdersList({ venueId, onReopen, onClose }: OrdersListProps) {
+    const [orders, setOrders] = useState<OrderEntry[]>([]);
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
     const [showZReport, setShowZReport] = useState(false);
@@ -104,19 +130,19 @@ export default function OrdersList({ venueId, onReopen, onClose }) {
         try {
             const res = await api.get(`pos/orders?venue_id=${venueId}&limit=100`);
             setOrders(res.data?.orders || res.data || []);
-        } catch (err: any) {
-            logger.error('Failed to load orders', { error: err });
+        } catch (err: unknown) {
+            logger.error('Failed to load orders', { error: String(err) });
         } finally {
             setLoading(false);
         }
     };
 
-    const filteredByStatus = filter === 'all'
+    const filteredByStatus: OrderEntry[] = filter === 'all'
         ? orders
-        : orders.filter(o => o.status?.toLowerCase() === filter);
+        : orders.filter((o: OrderEntry) => o.status?.toLowerCase() === filter);
 
-    const filtered = searchQuery.trim()
-        ? filteredByStatus.filter(o => {
+    const filtered: OrderEntry[] = searchQuery.trim()
+        ? filteredByStatus.filter((o: OrderEntry) => {
             const q = searchQuery.toLowerCase();
             const orderNum = (o.order_number || o.id || '').toString().toLowerCase();
             const table = (o.table_name || o.table_id || '').toString().toLowerCase();
@@ -125,32 +151,32 @@ export default function OrdersList({ venueId, onReopen, onClose }) {
         })
         : filteredByStatus;
 
-    const handleVoid = async (orderId) => {
+    const handleVoid = async (orderId: string) => {
         try {
             await api.post(`pos/orders/${orderId}/void?venue_id=${venueId}`, { reason: 'Manager void' });
             toast.success('Order voided');
             loadOrders();
-        } catch (err: any) {
-            logger.error('Failed to void order', { error: err });
+        } catch (err: unknown) {
+            logger.error('Failed to void order', { error: String(err) });
             toast.error('Failed to void');
         }
     };
 
-    const handleReopen = (order) => {
+    const handleReopen = (order: OrderEntry) => {
         if (onReopen) onReopen(order);
         onClose();
     };
 
     // Z-Report calculations
-    const todayOrders = orders.filter(o => {
-        const d = new Date(o.created_at || o.createdAt);
+    const todayOrders = orders.filter((o: OrderEntry) => {
+        const d = new Date(o.created_at || o.createdAt || '');
         const today = new Date();
         return d.toDateString() === today.toDateString();
     });
-    const totalSales = todayOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-    const cashSales = todayOrders.filter(o => o.tender_type === 'CASH').reduce((sum, o) => sum + (o.total || 0), 0);
-    const cardSales = todayOrders.filter(o => o.tender_type === 'CARD').reduce((sum, o) => sum + (o.total || 0), 0);
-    const voidedCount = todayOrders.filter(o => o.status === 'voided').length;
+    const totalSales = todayOrders.reduce((sum: number, o: OrderEntry) => sum + (o.total || 0), 0);
+    const cashSales = todayOrders.filter((o: OrderEntry) => o.tender_type === 'CASH').reduce((sum: number, o: OrderEntry) => sum + (o.total || 0), 0);
+    const cardSales = todayOrders.filter((o: OrderEntry) => o.tender_type === 'CARD').reduce((sum: number, o: OrderEntry) => sum + (o.total || 0), 0);
+    const voidedCount = todayOrders.filter((o: OrderEntry) => o.status === 'voided').length;
     const avgTicket = todayOrders.length > 0 ? totalSales / todayOrders.length : 0;
 
     return (
@@ -180,7 +206,7 @@ export default function OrdersList({ venueId, onReopen, onClose }) {
                             style={filter === f ? s.filterBtnActive : s.filterBtn}
                             onClick={() => setFilter(f)}
                         >
-                            {f.charAt(0).toUpperCase() + f.slice(1)} ({f === 'all' ? orders.length : orders.filter(o => o.status?.toLowerCase() === f).length})
+                            {f.charAt(0).toUpperCase() + f.slice(1)} ({f === 'all' ? orders.length : orders.filter((o: OrderEntry) => o.status?.toLowerCase() === f).length})
                         </button>
                     ))}
                     <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6, backgroundColor: '#1a1a1a', borderRadius: 8, padding: '4px 10px', border: '1px solid #333' }}>
@@ -214,8 +240,8 @@ export default function OrdersList({ venueId, onReopen, onClose }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filtered.map((o, idx) => {
-                                    const statusColor = STATUS_COLORS[o.status?.toLowerCase()] || STATUS_COLORS.open;
+                                {filtered.map((o: OrderEntry, idx: number) => {
+                                    const statusColor = STATUS_COLORS[o.status?.toLowerCase() || 'open'] || STATUS_COLORS.open;
                                     return (
                                         <tr key={o.id || idx} style={s.row}
                                             onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#1a1a1a'; }}

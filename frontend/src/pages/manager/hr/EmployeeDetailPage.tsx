@@ -43,9 +43,129 @@ import {
   DollarSign, Building2, Lock, Unlock, RotateCcw, Plus,
   PanelLeft, KeyRound
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+interface EmployeeData {
+  first_name?: string;
+  last_name?: string;
+  full_name?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  role?: string;
+  department?: string;
+  occupation?: string;
+  start_date?: string;
+  id_card_number?: string;
+  ss_number?: string;
+  fss_tax_status?: string;
+  cola_eligible?: boolean;
+  gross_salary_cents?: number;
+  hourly_rate_cents?: number;
+  bank_iban?: string;
+  status?: string;
+  employment_status?: string;
+  leave_balance_hours?: number;
+  venueId?: string;
+  user_id?: string;
+  [key: string]: unknown;
+}
+
+interface EditFormData {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  role: string;
+  department: string;
+  occupation: string;
+  start_date: string;
+  id_card_number: string;
+  ss_number: string;
+  fss_tax_status: string;
+  cola_eligible: boolean;
+  gross_salary_cents: number;
+  hourly_rate_cents: number;
+  bank_iban: string;
+  status: string;
+  [key: string]: string | number | boolean;
+}
+
+interface EmployeeDocument {
+  name?: string;
+  filename?: string;
+  category?: string;
+  uploaded_at?: string;
+}
+
+interface LeaveRequest {
+  id?: string;
+  _id?: string;
+  leave_type?: string;
+  start_date?: string;
+  end_date?: string;
+  status?: string;
+}
+
+interface LeaveBalance {
+  leave_type: string;
+  remaining?: number;
+  total?: number;
+}
+
+interface PayrollRun {
+  period?: string;
+  name?: string;
+  created_at?: string;
+  status?: string;
+}
+
+interface EmployeeNote {
+  content: string;
+  author?: string;
+  created_at?: string;
+}
+
+interface EditableFieldProps {
+  label: string;
+  value: string | number;
+  field: string;
+  onChange: (field: string, value: string) => void;
+  type?: string;
+  disabled?: boolean;
+}
+
+interface InfoFieldProps {
+  label: string;
+  value: string | number | boolean | undefined;
+  highlight?: boolean;
+}
+
+interface SectionProps {
+  title: string;
+  icon: LucideIcon;
+  children: React.ReactNode;
+  actions?: React.ReactNode;
+}
+
+interface TabDef {
+  id: string;
+  icon: LucideIcon;
+  label: string;
+}
+
+interface QuickAction {
+  icon: LucideIcon;
+  label: string;
+  desc: string;
+  path: string;
+}
+
+type EmployeeStatus = 'active' | 'on_leave' | 'suspended' | 'terminated';
 
 // ─── Status Config ────────────────────────────────────────────────────────────
-const STATUS_CONFIG = {
+const STATUS_CONFIG: Record<EmployeeStatus, { color: string; label: string }> = {
   active: { color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', label: 'Active' },
   on_leave: { color: 'bg-amber-500/20 text-amber-400 border-amber-500/30', label: 'On Leave' },
   suspended: { color: 'bg-rose-500/20 text-rose-400 border-rose-500/30', label: 'Suspended' },
@@ -59,7 +179,7 @@ const ROLES = [
 ];
 
 // ─── Helper: Editable Info Field ──────────────────────────────────────────────
-function EditableField({ label, value, field, onChange, type = 'text', disabled = false }) {
+function EditableField({ label, value, field, onChange, type = 'text', disabled = false }: EditableFieldProps) {
   return (
     <div className="space-y-1.5">
       <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{label}</Label>
@@ -75,7 +195,7 @@ function EditableField({ label, value, field, onChange, type = 'text', disabled 
 }
 
 // ─── Helper: Read-only Info Field ─────────────────────────────────────────────
-function InfoField({ label, value, highlight = false }) {
+function InfoField({ label, value, highlight = false }: InfoFieldProps) {
   return (
     <div className="bg-card/40 p-3 rounded-xl border border-border hover:border-border transition-all group">
       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1 group-hover:text-muted-foreground transition-colors">{label}</p>
@@ -87,7 +207,7 @@ function InfoField({ label, value, highlight = false }) {
 }
 
 // ─── Helper: Section ──────────────────────────────────────────────────────────
-function Section({ title, icon: Icon, children, actions }) {
+function Section({ title, icon: Icon, children, actions }: SectionProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -112,21 +232,24 @@ export default function EmployeeDetailPage() {
   const navigate = useNavigate();
   const { activeVenue } = useVenue();
   const venueId = activeVenue?.id;
-  useAuditLog('EMPLOYEE_DETAIL_VIEWED', { resource: 'employee-detail', employeeCode });
+  const { logAction } = useAuditLog();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { logAction('EMPLOYEE_DETAIL_VIEWED', 'employee-detail', employeeCode); }, []);
 
   // Core state
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<EmployeeData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [editForm, setEditForm] = useState({});
+  const [editForm, setEditForm] = useState<EditFormData>({} as EditFormData);
   const [activeTab, setActiveTab] = useState('overview');
 
   // Sub-data states
-  const [documents, setDocuments] = useState([]);
-  const [leaveRequests, setLeaveRequests] = useState([]);
-  const [leaveBalances, setLeaveBalances] = useState([]);
-  const [payrollRuns, setPayrollRuns] = useState([]);
-  const [notes, setNotes] = useState([]);
+  const [documents, setDocuments] = useState<EmployeeDocument[]>([]);
+  const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>([]);
+  const [leaveBalances, setLeaveBalances] = useState<LeaveBalance[]>([]);
+  const [payrollRuns, setPayrollRuns] = useState<PayrollRun[]>([]);
+  const [notes, setNotes] = useState<EmployeeNote[]>([]);
   const [newNote, setNewNote] = useState('');
   const [addingNote, setAddingNote] = useState(false);
 
@@ -165,8 +288,8 @@ export default function EmployeeDetailPage() {
         bank_iban: emp.bank_iban || '',
         status: emp.status || emp.employment_status || 'active',
       });
-    } catch (error: any) {
-      logger.error('Failed to fetch employee:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to fetch employee:', { error: error instanceof Error ? error.message : String(error) });
       toast.error('Failed to load employee details');
     } finally {
       setLoading(false);
@@ -238,15 +361,15 @@ export default function EmployeeDetailPage() {
       await api.patch(`/venues/${venueId}/hr/employees/${employeeCode}`, editForm);
       toast.success('Employee record updated');
       fetchEmployee();
-    } catch (error: any) {
-      logger.error('Failed to save employee:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to save employee:', { error: error instanceof Error ? error.message : String(error) });
       toast.error('Failed to update employee');
     } finally {
       setSaving(false);
     }
   };
 
-  const updateField = (field, value) => {
+  const updateField = (field: string, value: string | number | boolean) => {
     setEditForm(prev => ({ ...prev, [field]: value }));
   };
 
@@ -270,7 +393,7 @@ export default function EmployeeDetailPage() {
   };
 
   // ─── Handle Leave Action ────────────────────────────────────────────────────
-  const handleLeaveAction = async (requestId, action) => {
+  const handleLeaveAction = async (requestId: string, action: string) => {
     try {
       await api.patch(`/venues/${venueId}/hr/leave-requests/${requestId}`, { status: action });
       toast.success(`Leave request ${action}`);
@@ -307,7 +430,7 @@ export default function EmployeeDetailPage() {
     setPwSaving(true);
     try {
       // If admin is setting password for another user via their employee record
-      if (data.user_id) {
+      if (data?.user_id) {
         await api.post('/auth/admin/set-password', {
           user_id: data.user_id,
           new_password: pwNew,
@@ -324,8 +447,9 @@ export default function EmployeeDetailPage() {
       setPwNew('');
       setPwConfirm('');
       setHasPassword(true);
-    } catch (error: any) {
-      const msg = error?.response?.data?.detail || 'Failed to set password';
+    } catch (error: unknown) {
+      const axiosErr = error as { response?: { data?: { detail?: string } } };
+      const msg = axiosErr?.response?.data?.detail || 'Failed to set password';
       toast.error(msg);
     } finally {
       setPwSaving(false);
@@ -350,7 +474,7 @@ export default function EmployeeDetailPage() {
     </div>
   );
 
-  const statusCfg = STATUS_CONFIG[editForm.status] || STATUS_CONFIG.active;
+  const statusCfg = STATUS_CONFIG[editForm.status as EmployeeStatus] || STATUS_CONFIG.active;
 
   return (
     <PermissionGate requiredRole="MANAGER">
@@ -407,7 +531,7 @@ export default function EmployeeDetailPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border">
-                  {Object.entries(STATUS_CONFIG).map(([key, cfg]) => (
+                  {(Object.entries(STATUS_CONFIG) as [EmployeeStatus, { color: string; label: string }][]).map(([key, cfg]) => (
                     <SelectItem key={key} value={key} className="text-xs uppercase font-bold">
                       {cfg.label}
                     </SelectItem>
@@ -452,7 +576,7 @@ export default function EmployeeDetailPage() {
                 { id: 'payroll', icon: CreditCard, label: 'Payroll' },
                 { id: 'security', icon: Shield, label: 'Security' },
                 { id: 'notes', icon: StickyNote, label: 'Notes' },
-              ].map(tab => (
+              ].map((tab: TabDef) => (
                 <TabsTrigger
                   key={tab.id}
                   value={tab.id}
@@ -486,7 +610,7 @@ export default function EmployeeDetailPage() {
                     { icon: Briefcase, label: 'Schedule', desc: 'Shift assignments', path: '/manager/hr/scheduler' },
                     { icon: FileText, label: 'Documents', desc: 'Contracts & files', path: '/manager/hr/documents' },
                     { icon: Shield, label: 'User Account', desc: 'Login & permissions', path: `/manager/users` },
-                  ].map((action, i) => (
+                  ].map((action: QuickAction, i: number) => (
                     <button
                       key={i}
                       type="button"
@@ -579,7 +703,7 @@ export default function EmployeeDetailPage() {
                       type="number"
                       step="0.01"
                       value={(editForm.gross_salary_cents / 100).toFixed(2)}
-                      onChange={e => updateField('gross_salary_cents', Math.round(parseFloat(e.target.value || 0) * 100))}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('gross_salary_cents', Math.round(parseFloat(e.target.value || '0') * 100))}
                       className="bg-background border-border text-secondary-foreground h-10"
                     />
                   </div>
@@ -589,7 +713,7 @@ export default function EmployeeDetailPage() {
                       type="number"
                       step="0.01"
                       value={(editForm.hourly_rate_cents / 100).toFixed(2)}
-                      onChange={e => updateField('hourly_rate_cents', Math.round(parseFloat(e.target.value || 0) * 100))}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('hourly_rate_cents', Math.round(parseFloat(e.target.value || '0') * 100))}
                       className="bg-background border-border text-secondary-foreground h-10"
                     />
                   </div>
@@ -617,7 +741,7 @@ export default function EmployeeDetailPage() {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    {documents.map((doc, i) => (
+                    {documents.map((doc: EmployeeDocument, i: number) => (
                       <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-card/40 border border-border hover:border-border transition-all group">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded-lg bg-blue-500/10 flex items-center justify-center">
@@ -660,7 +784,7 @@ export default function EmployeeDetailPage() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {leaveBalances.map((bal, i) => (
+                    {leaveBalances.map((bal: LeaveBalance, i: number) => (
                       <InfoField key={i} label={bal.leave_type} value={`${bal.remaining || 0} / ${bal.total || 0} days`} highlight />
                     ))}
                   </div>
@@ -675,7 +799,7 @@ export default function EmployeeDetailPage() {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    {leaveRequests.map((req, i) => (
+                    {leaveRequests.map((req: LeaveRequest, i: number) => (
                       <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-card/40 border border-border">
                         <div className="flex items-center gap-3">
                           <Badge variant="outline" className="text-[10px] uppercase">
@@ -696,11 +820,11 @@ export default function EmployeeDetailPage() {
                           {req.status === 'pending' && (
                             <div className="flex gap-1">
                               <Button size="sm" variant="ghost" className="h-7 text-emerald-400 hover:bg-emerald-500/10 text-[10px]"
-                                onClick={() => handleLeaveAction(req.id || req._id, 'approved')}>
+                                onClick={() => handleLeaveAction(req.id || req._id || '', 'approved')}>
                                 Approve
                               </Button>
                               <Button size="sm" variant="ghost" className="h-7 text-rose-400 hover:bg-rose-500/10 text-[10px]"
-                                onClick={() => handleLeaveAction(req.id || req._id, 'rejected')}>
+                                onClick={() => handleLeaveAction(req.id || req._id || '', 'rejected')}>
                                 Reject
                               </Button>
                             </div>
@@ -732,7 +856,7 @@ export default function EmployeeDetailPage() {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    {payrollRuns.slice(0, 12).map((run, i) => (
+                    {payrollRuns.slice(0, 12).map((run: PayrollRun, i: number) => (
                       <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-card/40 border border-border hover:border-border transition-all">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded-lg bg-emerald-500/10 flex items-center justify-center">
@@ -987,7 +1111,7 @@ export default function EmployeeDetailPage() {
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      {notes.map((note, i) => (
+                      {notes.map((note: EmployeeNote, i: number) => (
                         <div key={i} className="p-4 rounded-xl bg-card/40 border border-border">
                           <p className="text-sm text-secondary-foreground whitespace-pre-wrap">{note.content}</p>
                           <div className="flex items-center gap-3 mt-3 text-[10px] text-muted-foreground uppercase tracking-wider">

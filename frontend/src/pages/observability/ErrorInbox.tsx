@@ -1,39 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
-
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-
 import { Button } from '../../components/ui/button';
-
 import { Badge } from '../../components/ui/badge';
-
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';
-
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-
 import { Input } from '../../components/ui/input';
-
 import { CheckCircle, XCircle, AlertTriangle, RefreshCcw, Check } from 'lucide-react';
-
 import PageContainer from '../../layouts/PageContainer';
-
 import DataTable from '../../components/shared/DataTable';
-
 import api from '../../lib/api';
-
 import { toast } from 'sonner';
-
 import { downloadCsv } from '../../lib/csv';
 
+interface RetryField {
+  path: string;
+  label?: string;
+  type?: string;
+  location?: string;
+}
+
+interface RetryPlan {
+  mode?: string;
+  allowed?: boolean;
+  editable_fields?: RetryField[];
+  base_body_redacted?: Record<string, unknown>;
+  base_query?: Record<string, string>;
+  target?: { method?: string; path?: string };
+}
+
+interface ErrorStep {
+  step_id: string;
+  title: string;
+  domain: string;
+  status: string;
+}
+
+interface ErrorEntry {
+  id: string;
+  display_id: string;
+  domain: string;
+  severity: string;
+  status: string;
+  occurrence_count: number;
+  last_seen_at: string;
+  created_at?: string;
+  error?: { message?: string };
+  source?: unknown;
+  steps?: ErrorStep[];
+  retry_plan?: RetryPlan;
+  entity_refs?: Record<string, string>;
+  [key: string]: unknown;
+}
+
+interface TableQuery {
+  pageIndex: number;
+  pageSize: number;
+  sorting: Array<{ id: string; desc: boolean }>;
+  globalSearch: string;
+  filters: Record<string, unknown>;
+}
+
+interface RetryPatch {
+  body: Record<string, unknown>;
+  query: Record<string, unknown>;
+}
+
 export default function ErrorInbox() {
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState<ErrorEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
-  const [selectedError, setSelectedError] = useState(null);
+  const [selectedError, setSelectedError] = useState<ErrorEntry | null>(null);
   const [retryableOnly, setRetryableOnly] = useState(false);
   const [blockingOnly, setBlockingOnly] = useState(false);
-  const [retryFormValues, setRetryFormValues] = useState({});
-  const [tableQuery, setTableQuery] = useState({
+  const [retryFormValues, setRetryFormValues] = useState<Record<string, unknown>>({});
+  const [tableQuery, setTableQuery] = useState<TableQuery>({
     pageIndex: 0,
     pageSize: 20,
     sorting: [{ id: 'last_seen_at', desc: true }],
@@ -48,10 +89,10 @@ export default function ErrorInbox() {
 
   useEffect(() => {
     if (selectedError?.retry_plan?.editable_fields) {
-      const initialValues = {};
+      const initialValues: Record<string, unknown> = {};
       const baseBody = selectedError.retry_plan?.base_body_redacted || {};
       const baseQuery = selectedError.retry_plan?.base_query || {};
-      selectedError.retry_plan.editable_fields.forEach((field) => {
+      selectedError.retry_plan.editable_fields.forEach((field: RetryField) => {
         const location = field.location || 'body';
         if (location === 'query') {
           initialValues[field.path] = baseQuery[field.path] ?? '';
@@ -65,10 +106,10 @@ export default function ErrorInbox() {
     }
   }, [selectedError]);
 
-  const loadErrors = async (query = tableQuery) => {
+  const loadErrors = async (query: TableQuery = tableQuery) => {
     try {
       setLoading(true);
-      const params = {
+      const params: Record<string, unknown> = {
         venue_id: venueId,
         page: query.pageIndex + 1,
         page_size: query.pageSize,
@@ -77,18 +118,23 @@ export default function ErrorInbox() {
         blocking_only: blockingOnly || undefined
       };
 
-      const filters = query.filters || {};
-      if (filters.domain?.length) params.domains = filters.domain.join(',');
-      if (filters.status?.length) params.statuses = filters.status.join(',');
-      if (filters.severity?.length) params.severities = filters.severity.join(',');
-      if (filters.occurrence_count?.min) params.occurrence_min = filters.occurrence_count.min;
-      if (filters.occurrence_count?.max) params.occurrence_max = filters.occurrence_count.max;
-      if (filters.last_seen_at?.start) params.last_seen_start = filters.last_seen_at.start;
-      if (filters.last_seen_at?.end) params.last_seen_end = filters.last_seen_at.end;
+      const filters = query.filters || {} as Record<string, unknown>;
+      const fDomain = filters.domain as string[] | undefined;
+      const fStatus = filters.status as string[] | undefined;
+      const fSeverity = filters.severity as string[] | undefined;
+      const fOccurrence = filters.occurrence_count as { min?: number; max?: number } | undefined;
+      const fLastSeen = filters.last_seen_at as { start?: string; end?: string } | undefined;
+      if (fDomain?.length) params.domains = fDomain.join(',');
+      if (fStatus?.length) params.statuses = fStatus.join(',');
+      if (fSeverity?.length) params.severities = fSeverity.join(',');
+      if (fOccurrence?.min) params.occurrence_min = fOccurrence.min;
+      if (fOccurrence?.max) params.occurrence_max = fOccurrence.max;
+      if (fLastSeen?.start) params.last_seen_start = fLastSeen.start;
+      if (fLastSeen?.end) params.last_seen_end = fLastSeen.end;
 
       if (query.sorting?.length) {
         const sort = query.sorting[0];
-        const sortMap = {
+        const sortMap: Record<string, string> = {
           last_seen_at: 'last_seen_at',
           occurrence_count: 'occurrence_count',
           severity: 'severity',
@@ -102,31 +148,31 @@ export default function ErrorInbox() {
       const response = await api.get('/observability/error-inbox', { params });
       setErrors(response.data.items || []);
       setTotalCount(response.data.total || 0);
-    } catch (error: any) {
-      logger.error('Failed to load errors:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to load errors:', { error: String(error) });
       toast.error('Failed to load error inbox');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAcknowledge = async (errorId) => {
+  const handleAcknowledge = async (errorId: string) => {
     try {
       await api.post(`/observability/error-inbox/${errorId}/acknowledge`);
       toast.success('Error acknowledged');
       loadErrors();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error('Failed to acknowledge');
     }
   };
 
-  const handleRetry = async (errorId) => {
+  const handleRetry = async (errorId: string) => {
     try {
       const retryPlan = selectedError?.retry_plan;
       const editableFields = retryPlan?.editable_fields || [];
-      const patch = { body: {}, query: {} };
+      const patch: RetryPatch = { body: {}, query: {} };
 
-      editableFields.forEach((field) => {
+      editableFields.forEach((field: RetryField) => {
         const location = field.location || 'body';
         const value = retryFormValues[field.path];
         if (location === 'query') {
@@ -144,14 +190,14 @@ export default function ErrorInbox() {
       });
       toast.success('Retry executed');
       loadErrors();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error('Retry failed');
     }
   };
 
-  const handleExport = async (query = tableQuery) => {
+  const handleExport = async (query: TableQuery = tableQuery) => {
     try {
-      const params = {
+      const params: Record<string, unknown> = {
         venue_id: venueId,
         page: 1,
         page_size: 1000,
@@ -161,7 +207,7 @@ export default function ErrorInbox() {
       };
 
       const response = await api.get('/observability/error-inbox', { params });
-      const rows = (response.data.items || []).map(item => ({
+      const rows = (response.data.items || []).map((item: ErrorEntry) => ({
         display_id: item.display_id,
         domain: item.domain,
         severity: item.severity,
@@ -181,14 +227,14 @@ export default function ErrorInbox() {
         { key: 'last_seen_at', label: 'Last Seen' }
       ]);
       toast.success('Export completed');
-    } catch (error: any) {
-      logger.error('Failed to export errors:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to export errors:', { error: String(error) });
       toast.error('Export failed');
     }
   };
 
-  const getSeverityColor = (severity) => {
-    const colors = {
+  const getSeverityColor = (severity: string): string => {
+    const colors: Record<string, string> = {
       INFO: '#3B82F6',
       WARNING: '#FB8C00',
       ERROR: '#EF4444',
@@ -201,7 +247,7 @@ export default function ErrorInbox() {
     {
       key: 'display_id',
       label: 'Error ID',
-      render: (row) => <span className="font-bold font-heading tracking-tight" style={{ color: '#EF4444' }}>{row.display_id}</span>
+      render: (row: ErrorEntry) => <span className="font-bold font-heading tracking-tight" style={{ color: '#EF4444' }}>{row.display_id}</span>
     },
     {
       key: 'domain',
@@ -214,7 +260,7 @@ export default function ErrorInbox() {
         { label: 'KDS', value: 'KDS' },
         { label: 'System', value: 'SYSTEM' }
       ],
-      render: (row) => <Badge variant="outline">{row.domain}</Badge>
+      render: (row: ErrorEntry) => <Badge variant="outline">{row.domain}</Badge>
     },
     {
       key: 'severity',
@@ -225,7 +271,7 @@ export default function ErrorInbox() {
         { label: 'Warning', value: 'WARNING' },
         { label: 'Critical', value: 'CRITICAL' }
       ],
-      render: (row) => (
+      render: (row: ErrorEntry) => (
         <Badge style={{
           backgroundColor: `${getSeverityColor(row.severity)
             }20`, color: getSeverityColor(row.severity), border: `1px solid ${getSeverityColor(row.severity)} 40`
@@ -234,7 +280,7 @@ export default function ErrorInbox() {
         </Badge>
       )
     },
-    { key: 'message', label: 'Message', enableSorting: false, render: (row) => row.error?.message || '-' },
+    { key: 'message', label: 'Message', enableSorting: false, render: (row: ErrorEntry) => row.error?.message || '-' },
     {
       key: 'status',
       label: 'Status',
@@ -245,18 +291,18 @@ export default function ErrorInbox() {
         { label: 'Resolved', value: 'RESOLVED' },
         { label: 'Muted', value: 'MUTED' }
       ],
-      render: (row) => {
-        const colors = { OPEN: '#FB8C00', ACKED: '#3B82F6', RESOLVED: '#4ADE80', MUTED: '#71717A' };
-        return <Badge style={{ backgroundColor: `${colors[row.status]} 20`, color: colors[row.status] }}>{row.status}</Badge>;
+      render: (row: ErrorEntry) => {
+        const colors: Record<string, string> = { OPEN: '#FB8C00', ACKED: '#3B82F6', RESOLVED: '#4ADE80', MUTED: '#71717A' };
+        return <Badge style={{ backgroundColor: `${colors[row.status]}20`, color: colors[row.status] }}>{row.status}</Badge>;
       }
     },
     { key: 'occurrence_count', label: 'Count', filterType: 'numberRange' },
-    { key: 'last_seen_at', label: 'Last Seen', filterType: 'dateRange', render: (row) => new Date(row.last_seen_at).toLocaleString() },
+    { key: 'last_seen_at', label: 'Last Seen', filterType: 'dateRange', render: (row: ErrorEntry) => new Date(row.last_seen_at).toLocaleString() },
   ];
 
-  const renderRetryField = (field) => {
+  const renderRetryField = (field: RetryField) => {
     const value = retryFormValues[field.path] ?? '';
-    const onChange = (val) => setRetryFormValues((prev) => ({ ...prev, [field.path]: val }));
+    const onChange = (val: unknown) => setRetryFormValues((prev) => ({ ...prev, [field.path]: val }));
 
     if (field.type === 'boolean') {
       const normalizedValue = value === '' ? 'false' : String(value);
@@ -341,7 +387,7 @@ export default function ErrorInbox() {
         columns={columns}
         data={errors}
         loading={loading}
-        onRowClick={(row) => setSelectedError(row)}
+        onRowClick={(row: ErrorEntry) => setSelectedError(row)}
         onQueryChange={setTableQuery}
         totalCount={totalCount}
         tableId="observability-error-inbox"
@@ -395,7 +441,7 @@ export default function ErrorInbox() {
               <div>
                 <h3 className="font-semibold mb-3" style={{ color: '#F5F5F7' }}>Steps Timeline</h3>
                 <div className="space-y-2">
-                  {selectedError.steps?.map((step) => (
+                  {selectedError.steps?.map((step: ErrorStep) => (
                     <div
                       key={step.step_id}
                       className="flex items-center gap-3 p-3 rounded-lg"
@@ -426,9 +472,9 @@ export default function ErrorInbox() {
                       <Badge variant="outline">Allowed: {selectedError.retry_plan.allowed ? 'Yes' : 'No'}</Badge>
                       <Badge variant="outline">Target: {selectedError.retry_plan.target?.method} {selectedError.retry_plan.target?.path}</Badge>
                     </div>
-                    {selectedError.retry_plan.editable_fields?.length > 0 && (
+                    {(selectedError.retry_plan.editable_fields?.length ?? 0) > 0 && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {selectedError.retry_plan.editable_fields.map((field) => (
+                        {(selectedError.retry_plan.editable_fields ?? []).map((field: RetryField) => (
                           <div key={field.path} className="space-y-1">
                             <label className="text-xs text-muted-foreground">{field.label || field.path}</label>
                             {renderRetryField(field)}

@@ -7,16 +7,10 @@ import React, { useState } from 'react';
 import { ArrowLeft, Plus, Save, Edit3, Trash2, X, Square, Circle, Armchair, LayoutGrid } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import './pos-shared.css';
 
 interface FloorTable { id: string; name: string; x: number; y: number; width: number; height: number; seats: number; shape: 'rect' | 'circle'; rotation: number; }
 interface Floor { id: string; name: string; tables: FloorTable[]; isActive: boolean; }
-
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary,#0a0a0a)', color: 'var(--text-primary,#fafafa)', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1200, margin: '0 auto', padding: '24px 20px' };
-const cd: React.CSSProperties = { background: 'var(--bg-card,#18181b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const bp: React.CSSProperties = { padding: '10px 24px', background: '#3B82F6', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const ip: React.CSSProperties = { width: '100%', padding: '10px 14px', background: 'var(--bg-secondary,#09090b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14 };
 
 const SEED_FLOORS: Floor[] = [
     {
@@ -85,30 +79,30 @@ const FloorPlanBO: React.FC = () => {
     };
 
     return (
-        <div style={pg}><div style={ct}>
+        <div className="pos-page"><div className="pos-container pos-container--1200">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                 <div>
-                    <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
+                    <button onClick={() => navigate(-1)} className="pos-btn pos-btn--outline" style={{ marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
                     <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Floor Plans</h1>
                     <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>{floors.length} floors · {totalTables} tables · {totalSeats} seats</p>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
-                    <button style={bo} onClick={addFloor}><Plus size={14} /> Add Floor</button>
-                    <button style={bp} onClick={addTable}><Plus size={16} /> Add Table</button>
+                    <button className="pos-btn pos-btn--outline" onClick={addFloor}><Plus size={14} /> Add Floor</button>
+                    <button className="pos-btn pos-btn--primary" onClick={addTable}><Plus size={16} /> Add Table</button>
                 </div>
             </div>
 
             {/* Floor Tabs */}
-            <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: 'var(--bg-card,#18181b)', borderRadius: 10, padding: 4, border: '1px solid var(--border-primary,#27272a)', width: 'fit-content' }}>
+            <div className="pos-tab-group" style={{ marginBottom: 16 }}>
                 {floors.map(f => (
-                    <button key={f.id} onClick={() => setActiveFloor(f.id)} style={{ padding: '10px 20px', borderRadius: 8, border: 'none', fontSize: 13, fontWeight: activeFloor === f.id ? 600 : 400, cursor: 'pointer', background: activeFloor === f.id ? 'rgba(59,130,246,0.1)' : 'transparent', color: activeFloor === f.id ? '#3B82F6' : 'var(--text-secondary)' }}>
+                    <button key={f.id} onClick={() => setActiveFloor(f.id)} className={`pos-tab-btn${activeFloor === f.id ? ' pos-tab-btn--active' : ''}`}>
                         {f.name} ({f.tables.length})
                     </button>
                 ))}
             </div>
 
             {/* Canvas Area */}
-            {floor && <div style={{ ...cd, padding: 0, overflow: 'hidden' }}>
+            {floor && <div className="pos-card" style={{ padding: 0, overflow: 'hidden' }}>
                 <div style={{ position: 'relative', width: '100%', height: 400, background: 'var(--bg-secondary,#09090b)', backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
                     {floor.tables.map(table => (
                         <div key={table.id} onClick={() => { setSelectedTable(table.id); setEditingTable({ ...table }); }}
@@ -129,28 +123,28 @@ const FloorPlanBO: React.FC = () => {
             </div>}
 
             {/* Selected Table Panel */}
-            {editingTable && <div style={cd}>
+            {editingTable && <div className="pos-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
                     <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Table: {editingTable.name}</h3>
                     <div style={{ display: 'flex', gap: 6 }}>
-                        <button style={{ ...bp, padding: '6px 14px', fontSize: 12 }} onClick={saveTable}><Save size={12} /> Save</button>
-                        <button style={{ ...bo, padding: '6px 14px', fontSize: 12, color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => deleteTable(editingTable.id)}><Trash2 size={12} /> Delete</button>
+                        <button className="pos-btn pos-btn--primary" style={{ padding: '6px 14px', fontSize: 12 }} onClick={saveTable}><Save size={12} /> Save</button>
+                        <button className="pos-btn pos-btn--outline" style={{ padding: '6px 14px', fontSize: 12, color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => deleteTable(editingTable.id)}><Trash2 size={12} /> Delete</button>
                     </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
                     <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name</label>
-                        <input style={ip} value={editingTable.name} onChange={e => setEditingTable(p => p ? { ...p, name: e.target.value } : null)} /></div>
+                        <input className="pos-input" value={editingTable.name} onChange={e => setEditingTable(p => p ? { ...p, name: e.target.value } : null)} /></div>
                     <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Seats</label>
-                        <input type="number" min={1} style={ip} value={editingTable.seats} onChange={e => setEditingTable(p => p ? { ...p, seats: parseInt(e.target.value) || 1 } : null)} /></div>
+                        <input type="number" min={1} className="pos-input" value={editingTable.seats} onChange={e => setEditingTable(p => p ? { ...p, seats: parseInt(e.target.value) || 1 } : null)} /></div>
                     <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Shape</label>
                         <div style={{ display: 'flex', gap: 6 }}>
-                            <button onClick={() => setEditingTable(p => p ? { ...p, shape: 'rect' } : null)} style={{ ...bo, padding: '8px 14px', fontSize: 12, background: editingTable.shape === 'rect' ? 'rgba(59,130,246,0.1)' : 'transparent', color: editingTable.shape === 'rect' ? '#3B82F6' : 'var(--text-secondary)' }}><Square size={14} /></button>
-                            <button onClick={() => setEditingTable(p => p ? { ...p, shape: 'circle' } : null)} style={{ ...bo, padding: '8px 14px', fontSize: 12, background: editingTable.shape === 'circle' ? 'rgba(59,130,246,0.1)' : 'transparent', color: editingTable.shape === 'circle' ? '#3B82F6' : 'var(--text-secondary)' }}><Circle size={14} /></button>
+                            <button onClick={() => setEditingTable(p => p ? { ...p, shape: 'rect' } : null)} className={`pos-btn pos-btn--outline${editingTable.shape === 'rect' ? ' pos-radio-option--active' : ''}`} style={{ padding: '8px 14px', fontSize: 12 }}><Square size={14} /></button>
+                            <button onClick={() => setEditingTable(p => p ? { ...p, shape: 'circle' } : null)} className={`pos-btn pos-btn--outline${editingTable.shape === 'circle' ? ' pos-radio-option--active' : ''}`} style={{ padding: '8px 14px', fontSize: 12 }}><Circle size={14} /></button>
                         </div></div>
                     <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Size (W×H)</label>
                         <div style={{ display: 'flex', gap: 4 }}>
-                            <input type="number" min={40} style={{ ...ip, width: '50%' }} value={editingTable.width} onChange={e => setEditingTable(p => p ? { ...p, width: parseInt(e.target.value) || 40 } : null)} />
-                            <input type="number" min={40} style={{ ...ip, width: '50%' }} value={editingTable.height} onChange={e => setEditingTable(p => p ? { ...p, height: parseInt(e.target.value) || 40 } : null)} />
+                            <input type="number" min={40} className="pos-input" style={{ width: '50%' }} value={editingTable.width} onChange={e => setEditingTable(p => p ? { ...p, width: parseInt(e.target.value) || 40 } : null)} />
+                            <input type="number" min={40} className="pos-input" style={{ width: '50%' }} value={editingTable.height} onChange={e => setEditingTable(p => p ? { ...p, height: parseInt(e.target.value) || 40 } : null)} />
                         </div></div>
                 </div>
             </div>}

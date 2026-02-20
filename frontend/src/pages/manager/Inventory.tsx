@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useVenue } from '../../context/VenueContext';
 import api from '../../lib/api';
 import { downloadCsv } from '../../lib/csv';
+import { logger } from '../../lib/logger';
 import { toast } from 'sonner';
 import PageContainer from '../../layouts/PageContainer';
 import DataTable from '../../components/shared/DataTable';
@@ -10,12 +11,30 @@ import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Plus, Package, AlertTriangle } from 'lucide-react';
 
+interface InventoryItem {
+  id: string;
+  name: string;
+  sku: string;
+  current_stock: number;
+  unit: string;
+  min_stock: number;
+  [key: string]: unknown;
+}
+
+interface TableQuery {
+  pageIndex: number;
+  pageSize: number;
+  sorting: Array<{ id: string; desc: boolean }>;
+  globalSearch: string;
+  filters: Record<string, unknown>;
+}
+
 export default function Inventory() {
   const { activeVenue } = useVenue();
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
-  const [tableQuery, setTableQuery] = useState({
+  const [tableQuery, setTableQuery] = useState<TableQuery>({
     pageIndex: 0,
     pageSize: 20,
     sorting: [],
@@ -56,24 +75,24 @@ export default function Inventory() {
     }
   }, [activeVenue?.id, tableQuery]);
 
-  const loadInventory = async (query = tableQuery) => {
+  const loadInventory = async (query: TableQuery = tableQuery) => {
     try {
-      const params = {
+      const params: Record<string, unknown> = {
         page: query.pageIndex + 1,
         page_size: query.pageSize,
         search: query.globalSearch || undefined
       };
 
-      const filters = query.filters || {};
-      if (filters.unit?.length) params.unit = filters.unit.join(',');
-      if (filters.current_stock?.min) params.current_stock_min = filters.current_stock.min;
-      if (filters.current_stock?.max) params.current_stock_max = filters.current_stock.max;
-      if (filters.min_stock?.min) params.min_stock_min = filters.min_stock.min;
-      if (filters.min_stock?.max) params.min_stock_max = filters.min_stock.max;
+      const filters = query.filters || {} as Record<string, { length?: number; join?: (s: string) => string; min?: number; max?: number }>;
+      if ((filters.unit as string[] | undefined)?.length) params.unit = (filters.unit as string[]).join(',');
+      if ((filters.current_stock as Record<string, number> | undefined)?.min) params.current_stock_min = (filters.current_stock as Record<string, number>).min;
+      if ((filters.current_stock as Record<string, number> | undefined)?.max) params.current_stock_max = (filters.current_stock as Record<string, number>).max;
+      if ((filters.min_stock as Record<string, number> | undefined)?.min) params.min_stock_min = (filters.min_stock as Record<string, number>).min;
+      if ((filters.min_stock as Record<string, number> | undefined)?.max) params.min_stock_max = (filters.min_stock as Record<string, number>).max;
 
       if (query.sorting?.length) {
         const sort = query.sorting[0];
-        const sortMap = {
+        const sortMap: Record<string, string> = {
           name: 'name',
           sku: 'sku',
           unit: 'unit',
@@ -84,31 +103,31 @@ export default function Inventory() {
         params.sort_dir = sort.desc ? 'desc' : 'asc';
       }
 
-      const response = await api.get(`/venues/${activeVenue.id}/inventory`, { params });
+      const response = await api.get(`/venues/${activeVenue!.id}/inventory`, { params });
       setItems(response.data.items || []);
       setTotalCount(response.data.total || 0);
-    } catch (error: any) {
-      console.error('Failed to load inventory:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to load inventory:', { error: String(error) });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleExport = async (query) => {
+  const handleExport = async (query: TableQuery) => {
     try {
-      const params = {
+      const params: Record<string, unknown> = {
         page: 1,
         page_size: 1000,
         search: query.globalSearch || undefined
       };
-      const filters = query.filters || {};
-      if (filters.unit?.length) params.unit = filters.unit.join(',');
-      if (filters.current_stock?.min) params.current_stock_min = filters.current_stock.min;
-      if (filters.current_stock?.max) params.current_stock_max = filters.current_stock.max;
-      if (filters.min_stock?.min) params.min_stock_min = filters.min_stock.min;
-      if (filters.min_stock?.max) params.min_stock_max = filters.min_stock.max;
-      const response = await api.get(`/venues/${activeVenue.id}/inventory`, { params });
-      const rows = (response.data.items || []).map((item) => ({
+      const filters = query.filters || {} as Record<string, unknown>;
+      if ((filters.unit as string[] | undefined)?.length) params.unit = (filters.unit as string[]).join(',');
+      if ((filters.current_stock as Record<string, number> | undefined)?.min) params.current_stock_min = (filters.current_stock as Record<string, number>).min;
+      if ((filters.current_stock as Record<string, number> | undefined)?.max) params.current_stock_max = (filters.current_stock as Record<string, number>).max;
+      if ((filters.min_stock as Record<string, number> | undefined)?.min) params.min_stock_min = (filters.min_stock as Record<string, number>).min;
+      if ((filters.min_stock as Record<string, number> | undefined)?.max) params.min_stock_max = (filters.min_stock as Record<string, number>).max;
+      const response = await api.get(`/venues/${activeVenue!.id}/inventory`, { params });
+      const rows = (response.data.items || []).map((item: InventoryItem) => ({
         name: item.name,
         sku: item.sku,
         current_stock: item.current_stock,
@@ -122,8 +141,8 @@ export default function Inventory() {
         { key: 'unit', label: 'Unit' },
         { key: 'min_stock', label: 'Min Stock' }
       ]);
-    } catch (error: any) {
-      console.error('Failed to export inventory:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to export inventory:', { error: String(error) });
     }
   };
 
@@ -169,19 +188,19 @@ export default function Inventory() {
                   key: 'name',
                   label: 'Item',
                   filterType: 'text',
-                  render: (row) => <span className="text-sm font-black text-foreground uppercase tracking-tight">{row.name}</span>
+                  render: (row: InventoryItem) => <span className="text-sm font-black text-foreground uppercase tracking-tight">{row.name}</span>
                 },
                 {
                   key: 'sku',
                   label: 'SKU',
                   filterType: 'text',
-                  render: (row) => <span className="text-[10px] font-mono text-muted-foreground font-bold">{row.sku}</span>
+                  render: (row: InventoryItem) => <span className="text-[10px] font-mono text-muted-foreground font-bold">{row.sku}</span>
                 },
                 {
                   key: 'current_stock',
                   label: 'Stock',
                   filterType: 'numberRange',
-                  render: (row) => {
+                  render: (row: InventoryItem) => {
                     const isLow = row.current_stock <= row.min_stock;
                     return (
                       <div className="flex items-center gap-2">
@@ -198,7 +217,7 @@ export default function Inventory() {
                   key: 'min_stock',
                   label: 'Min Stock',
                   filterType: 'numberRange',
-                  render: (row) => (
+                  render: (row: InventoryItem) => (
                     <Badge variant="outline">{row.min_stock}</Badge>
                   )
                 }

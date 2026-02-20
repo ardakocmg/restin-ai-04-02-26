@@ -10,7 +10,7 @@ Run ALL checks below before committing. Fix any failures before proceeding.
 
 ## 🔴 CRITICAL CHECKS (Must Pass)
 
-### 1. TypeScript Compilation
+### 1. TypeScript Compilation (ZERO TOLERANCE)
 
 // turbo
 
@@ -18,7 +18,15 @@ Run ALL checks below before committing. Fix any failures before proceeding.
 cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && npx tsc --noEmit 2>&1 | Select-String "error TS" | Select-Object -First 30
 ```
 
-**Rule:** NEVER commit if TypeScript compilation fails.
+Also run the error count:
+
+// turbo
+
+```
+cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && npx tsc --noEmit 2>&1 | Select-String "error TS" | Measure-Object | Select-Object -Property Count
+```
+
+**Rule:** ZERO TypeScript errors allowed. `Count` must be `0`. All props must have interfaces, all `useState` must have generics, all callbacks must be typed. See Architecture Rule 14.
 
 ### 2. Chunk Load Error Check (Missing Lazy Pages)
 
@@ -94,6 +102,17 @@ cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-St
 ```
 
 **Rule:** Use zinc palette (`bg-zinc-900`, `text-zinc-100`) for dark mode compliance.
+
+### 8.5. Hardcoded Colors (No Raw Hex/RGB)
+
+// turbo
+Detect hardcoded color values that should use CSS variables from the design system:
+
+```
+cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-String -Path "src\pages\**\*.tsx","src\components\**\*.tsx" -Pattern "#[0-9a-fA-F]{3,8}[^-_a-zA-Z]|rgb\(|rgba\(|hsl\(|hsla\(" -Recurse | Where-Object { $_.Line -notmatch "// keep|eslint-disable|\.css|keyframes|@|gradient" } | Select-Object -First 25 | Format-Table LineNumber, Path -AutoSize
+```
+
+**Rule:** NEVER use hardcoded color values (`#1a1a1a`, `rgb(0,0,0)`, etc.) in TSX/TS component files. All colors MUST reference CSS variables from the design system (`var(--bg-primary)`, `var(--text-secondary)`, `var(--border-primary)`, etc.) or use classes from shared CSS files (`pos-shared.css`, `index.css`). Exceptions: CSS files defining the variables themselves, keyframe animations, and gradients using existing vars.
 
 ---
 
@@ -193,6 +212,7 @@ cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-St
 | 🔴 | Missing Route Mount | **Block commit** |
 | 🔴 | Hardcoded Strings | Flag for review |
 | 🔴 | Dark Mode Violations | Flag for review |
+| 🔴 | Hardcoded Colors | Flag for review |
 | 🟡 | Empty Catch | Fix if new code |
 | 🟡 | Unused Imports | Clean up |
 | 🟡 | Duplicate Routes | Fix immediately |

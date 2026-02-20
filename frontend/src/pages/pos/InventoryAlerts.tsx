@@ -9,18 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useItemService } from '../../hooks/shared/useItemService';
 import authStore from '../../lib/AuthStore';
-
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary,#0a0a0a)', color: 'var(--text-primary,#fafafa)', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1100, margin: '0 auto', padding: '24px 20px' };
-const cd: React.CSSProperties = { background: 'var(--bg-card,#18181b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const bp: React.CSSProperties = { padding: '10px 24px', background: '#3B82F6', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const ip: React.CSSProperties = { width: '100%', padding: '10px 14px', background: 'var(--bg-secondary,#09090b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14 };
-const rw: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' };
+import './pos-shared.css';
 
 const Toggle: React.FC<{ value: boolean; onChange: () => void }> = ({ value, onChange }) => (
-    <div style={{ width: 44, height: 24, borderRadius: 12, background: value ? '#3B82F6' : '#3f3f46', cursor: 'pointer', position: 'relative' }} onClick={onChange}>
-        <div style={{ position: 'absolute', top: 2, left: value ? 22 : 2, width: 20, height: 20, borderRadius: '50%', background: '#fff', transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+    <div className={`pos-toggle-track ${value ? 'pos-toggle-track--on' : 'pos-toggle-track--off'}`} onClick={onChange}>
+        <div className={`pos-toggle-thumb ${value ? 'pos-toggle-thumb--on' : 'pos-toggle-thumb--off'}`} />
     </div>
 );
 
@@ -88,26 +81,26 @@ const InventoryAlerts: React.FC = () => {
     const lowCount = items.filter(i => i.status === 'low').length;
 
     return (
-        <div style={pg}><div style={ct}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+        <div className="pos-page"><div className="pos-container">
+            <div className="pos-header">
                 <div>
-                    <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
-                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Inventory Alerts</h1>
-                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>Stock levels, par targets, and reorder notifications{apiWired && <span style={{ marginLeft: 8, fontSize: 11, color: '#10B981' }}>● Live</span>}</p>
+                    <button onClick={() => navigate(-1)} className="pos-btn-outline pos-btn-back"><ArrowLeft size={14} /> Back</button>
+                    <h1 className="pos-title">Inventory Alerts</h1>
+                    <p className="pos-subtitle">Stock levels, par targets, and reorder notifications{apiWired && <span className="pos-live-dot">● Live</span>}</p>
                 </div>
-                <button style={bp} onClick={() => toast.success('Alert settings saved')}><Save size={16} /> Save</button>
+                <button className="pos-btn-primary" onClick={() => toast.success('Alert settings saved')}><Save size={16} /> Save</button>
             </div>
 
             {/* Loading / Error */}
-            {apiLoading && <div style={{ ...cd, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span style={{ color: 'var(--text-secondary)' }}>Loading stock data...</span></div>}
-            {apiError && <div style={{ ...cd, borderColor: '#EF4444', padding: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button style={{ ...bo, padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>}
+            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">Loading stock data...</span></div>}
+            {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center pos-mb-16" style={{ borderColor: '#EF4444', padding: 14 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button className="pos-btn-outline" style={{ padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>}
 
             {/* Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, marginBottom: 16 }}>
+            <div className="pos-stats-grid pos-mb-16">
                 {[{ l: 'Out of Stock', v: outCount, c: '#EF4444', i: <Package size={16} /> }, { l: 'Critical', v: critCount, c: '#F97316', i: <AlertTriangle size={16} /> }, { l: 'Low Stock', v: lowCount, c: '#F59E0B', i: <TrendingDown size={16} /> }, { l: 'OK', v: items.filter(i => i.status === 'ok').length, c: '#10B981', i: <Bell size={16} /> }].map((s, i) => (
-                    <div key={i} style={{ ...cd, padding: 14, display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 8, background: `${s.c}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.c }}>{s.i}</div>
-                        <div><div style={{ fontSize: 22, fontWeight: 700 }}>{s.v}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{s.l}</div></div>
+                    <div key={i} className="pos-stat-card">
+                        <div className="pos-stat-icon" style={{ background: `${s.c}15`, color: s.c }}>{s.i}</div>
+                        <div><div className="pos-stat-value">{s.v}</div><div className="pos-stat-label">{s.l}</div></div>
                     </div>
                 ))}
             </div>
@@ -115,28 +108,25 @@ const InventoryAlerts: React.FC = () => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 16 }}>
                 <div>
                     {/* Filters */}
-                    <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-                        <div style={{ position: 'relative', flex: 1 }}>
-                            <Search size={14} style={{ position: 'absolute', left: 14, top: 12, color: 'var(--text-secondary)' }} />
-                            <input style={{ ...ip, paddingLeft: 36 }} placeholder="Search items..." value={search} onChange={e => setSearch(e.target.value)} />
-                        </div>
-                        <div style={{ display: 'flex', gap: 4, background: 'var(--bg-card)', borderRadius: 8, padding: 3, border: '1px solid var(--border-primary,#27272a)' }}>
-                            {['all', 'out', 'critical', 'low', 'ok'].map(s => <button key={s} onClick={() => setFilterStatus(s)} style={{ padding: '6px 12px', borderRadius: 6, border: 'none', fontSize: 11, cursor: 'pointer', textTransform: 'capitalize', background: filterStatus === s ? (STATUS_COLORS[s] || 'rgba(59,130,246,0.1)') + '15' : 'transparent', color: filterStatus === s ? (STATUS_COLORS[s] || '#3B82F6') : 'var(--text-secondary)' }}>{s}</button>)}
+                    <div className="pos-flex pos-gap-8 pos-mb-12">
+                        <div className="pos-search-wrapper" style={{ flex: 1 }}><Search size={14} className="pos-search-icon" /><input className="pos-input pos-search-input" placeholder="Search items..." value={search} onChange={e => setSearch(e.target.value)} /></div>
+                        <div className="pos-toggle-group">
+                            {['all', 'out', 'critical', 'low', 'ok'].map(s => <button key={s} onClick={() => setFilterStatus(s)} className={`pos-toggle-btn ${filterStatus === s ? 'pos-toggle-btn--active' : ''}`} style={{ textTransform: 'capitalize', color: filterStatus === s ? (STATUS_COLORS[s] || '#3B82F6') : undefined }}>{s}</button>)}
                         </div>
                     </div>
 
                     {/* Items Table */}
-                    <div style={cd}>
+                    <div className="pos-card">
                         {filtered.map(item => (
-                            <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                            <div key={item.id} className="pos-flex pos-flex--center pos-gap-12" style={{ padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: STATUS_COLORS[item.status], flexShrink: 0 }} />
                                 <div style={{ flex: 1 }}>
-                                    <div style={{ fontSize: 14, fontWeight: 500 }}>{item.name}</div>
-                                    <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{item.category}</div>
+                                    <div className="pos-cell-value">{item.name}</div>
+                                    <div className="pos-cell-secondary">{item.category}</div>
                                 </div>
                                 <div style={{ textAlign: 'center', minWidth: 80 }}>
                                     <div style={{ fontSize: 15, fontWeight: 700, color: STATUS_COLORS[item.status] }}>{item.currentStock} {item.unit}</div>
-                                    <div style={{ fontSize: 10, color: 'var(--text-secondary)' }}>of {item.parLevel} par</div>
+                                    <div className="pos-cell-secondary" style={{ fontSize: 10 }}>of {item.parLevel} par</div>
                                 </div>
                                 <div style={{ width: 100, height: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 3, overflow: 'hidden' }}>
                                     <div style={{ width: `${Math.min(100, (item.currentStock / item.parLevel) * 100)}%`, height: '100%', background: STATUS_COLORS[item.status], borderRadius: 3, transition: 'width 0.3s ease' }} />
@@ -148,15 +138,15 @@ const InventoryAlerts: React.FC = () => {
 
                 {/* Notification Settings */}
                 <div>
-                    <div style={cd}>
-                        <h3 style={{ fontSize: 14, fontWeight: 600, margin: '0 0 12px', display: 'flex', alignItems: 'center', gap: 6 }}><Bell size={14} style={{ color: '#3B82F6' }} /> Notifications</h3>
-                        <div style={rw}><div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Mail size={14} style={{ color: 'var(--text-secondary)' }} /><span style={{ fontSize: 13 }}>Email Alerts</span></div><Toggle value={emailAlerts} onChange={() => setEmailAlerts(!emailAlerts)} /></div>
-                        <div style={rw}><div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><MessageSquare size={14} style={{ color: 'var(--text-secondary)' }} /><span style={{ fontSize: 13 }}>Push Notifications</span></div><Toggle value={pushAlerts} onChange={() => setPushAlerts(!pushAlerts)} /></div>
-                        <div style={rw}><div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Package size={14} style={{ color: 'var(--text-secondary)' }} /><span style={{ fontSize: 13 }}>Auto Reorder</span></div><Toggle value={autoOrder} onChange={() => setAutoOrder(!autoOrder)} /></div>
+                    <div className="pos-card">
+                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><Bell size={14} style={{ color: '#3B82F6' }} /> Notifications</h3>
+                        <div className="pos-setting-row"><div className="pos-flex pos-flex--center pos-gap-6"><Mail size={14} className="pos-text-secondary" /><span className="pos-cell-value">Email Alerts</span></div><Toggle value={emailAlerts} onChange={() => setEmailAlerts(!emailAlerts)} /></div>
+                        <div className="pos-setting-row"><div className="pos-flex pos-flex--center pos-gap-6"><MessageSquare size={14} className="pos-text-secondary" /><span className="pos-cell-value">Push Notifications</span></div><Toggle value={pushAlerts} onChange={() => setPushAlerts(!pushAlerts)} /></div>
+                        <div className="pos-setting-row"><div className="pos-flex pos-flex--center pos-gap-6"><Package size={14} className="pos-text-secondary" /><span className="pos-cell-value">Auto Reorder</span></div><Toggle value={autoOrder} onChange={() => setAutoOrder(!autoOrder)} /></div>
                     </div>
-                    {(outCount + critCount) > 0 && <div style={{ ...cd, background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.2)' }}>
+                    {(outCount + critCount) > 0 && <div className="pos-card" style={{ background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.2)' }}>
                         <div style={{ fontSize: 13, fontWeight: 600, color: '#EF4444', marginBottom: 6 }}>⚠️ Action Required</div>
-                        <p style={{ fontSize: 12, color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+                        <p className="pos-cell-secondary" style={{ margin: 0, lineHeight: 1.5 }}>
                             {outCount} items out of stock, {critCount} at critical level. Review and place orders to avoid service disruption.
                         </p>
                     </div>}

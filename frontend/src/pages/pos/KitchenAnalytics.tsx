@@ -6,11 +6,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Clock, ChefHat, TrendingUp, TrendingDown, AlertTriangle, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary,#0a0a0a)', color: 'var(--text-primary,#fafafa)', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1200, margin: '0 auto', padding: '24px 20px' };
-const cd: React.CSSProperties = { background: 'var(--bg-card,#18181b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
+import './pos-shared.css';
 
 interface StationMetric { name: string; avgTime: number; ticketsToday: number; trend: number; bumped: number; recalled: number; }
 interface HourlyData { hour: string; avgTime: number; tickets: number; }
@@ -43,41 +39,43 @@ const KitchenAnalytics: React.FC = () => {
     const maxTime = Math.max(...HOURLY.map(h => h.avgTime));
 
     return (
-        <div style={pg}><div style={ct}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+        <div className="pos-page"><div className="pos-container" style={{ maxWidth: 1200 }}>
+            <div className="pos-header">
                 <div>
-                    <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
-                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Kitchen Analytics</h1>
-                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>Production speed and efficiency metrics</p>
+                    <button onClick={() => navigate(-1)} className="pos-btn-outline pos-btn-back"><ArrowLeft size={14} /> Back</button>
+                    <h1 className="pos-title">Kitchen Analytics</h1>
+                    <p className="pos-subtitle">Production speed and efficiency metrics</p>
                 </div>
-                <div style={{ display: 'flex', gap: 4, background: 'var(--bg-card)', borderRadius: 8, padding: 3, border: '1px solid var(--border-primary,#27272a)' }}>
-                    {(['today', 'week', 'month'] as const).map(p => (<button key={p} onClick={() => setPeriod(p)} style={{ padding: '8px 16px', borderRadius: 6, border: 'none', fontSize: 12, cursor: 'pointer', textTransform: 'capitalize', background: period === p ? 'rgba(59,130,246,0.1)' : 'transparent', color: period === p ? '#3B82F6' : 'var(--text-secondary)' }}>{p}</button>))}
+                <div className="pos-toggle-group">
+                    {(['today', 'week', 'month'] as const).map(p => (
+                        <button key={p} onClick={() => setPeriod(p)} className={`pos-toggle-btn ${period === p ? 'pos-toggle-btn--active' : ''}`} style={{ textTransform: 'capitalize' }}>{p}</button>
+                    ))}
                 </div>
             </div>
 
             {/* Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, marginBottom: 20 }}>
+            <div className="pos-stats-grid pos-mb-20">
                 {[{ l: 'Avg Ticket Time', v: `${avgOverall}m`, c: '#3B82F6', i: <Clock size={16} /> }, { l: 'Tickets Today', v: totalTickets.toString(), c: '#10B981', i: <ChefHat size={16} /> }, { l: 'On-Time Rate', v: '87%', c: '#F59E0B', i: <Zap size={16} /> }, { l: 'Recalls', v: STATIONS.reduce((s, st) => s + st.recalled, 0).toString(), c: '#EF4444', i: <AlertTriangle size={16} /> }].map((s, i) => (
-                    <div key={i} style={{ ...cd, padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 8, background: `${s.c}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.c }}>{s.i}</div>
-                        <div><div style={{ fontSize: 22, fontWeight: 700 }}>{s.v}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{s.l}</div></div>
+                    <div key={i} className="pos-stat-card">
+                        <div className="pos-stat-icon" style={{ background: `${s.c}15`, color: s.c }}>{s.i}</div>
+                        <div><div className="pos-stat-value">{s.v}</div><div className="pos-stat-label">{s.l}</div></div>
                     </div>
                 ))}
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 {/* Station Performance */}
-                <div style={cd}>
-                    <h3 style={{ fontSize: 14, fontWeight: 600, margin: '0 0 16px' }}>Station Performance</h3>
+                <div className="pos-card">
+                    <h3 className="pos-card-title">Station Performance</h3>
                     {STATIONS.map(station => (
-                        <div key={station.name} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                        <div key={station.name} className="pos-flex pos-flex--center pos-gap-12" style={{ padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                             <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: 14, fontWeight: 500 }}>{station.name}</div>
-                                <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{station.ticketsToday} tickets · {station.bumped} bumped</div>
+                                <div className="pos-cell-value">{station.name}</div>
+                                <div className="pos-cell-secondary">{station.ticketsToday} tickets · {station.bumped} bumped</div>
                             </div>
                             <div style={{ textAlign: 'right' }}>
                                 <div style={{ fontSize: 16, fontWeight: 700 }}>{station.avgTime}m</div>
-                                <div style={{ fontSize: 11, display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'flex-end', color: station.trend < 0 ? '#10B981' : '#EF4444' }}>
+                                <div className="pos-flex pos-flex--center pos-gap-4" style={{ fontSize: 11, justifyContent: 'flex-end', color: station.trend < 0 ? '#10B981' : '#EF4444' }}>
                                     {station.trend < 0 ? <TrendingDown size={10} /> : <TrendingUp size={10} />} {Math.abs(station.trend)}%
                                 </div>
                             </div>
@@ -86,8 +84,8 @@ const KitchenAnalytics: React.FC = () => {
                 </div>
 
                 {/* Hourly Chart */}
-                <div style={cd}>
-                    <h3 style={{ fontSize: 14, fontWeight: 600, margin: '0 0 16px' }}>Hourly Avg Ticket Time</h3>
+                <div className="pos-card">
+                    <h3 className="pos-card-title">Hourly Avg Ticket Time</h3>
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 180, paddingBottom: 20, position: 'relative' }}>
                         {HOURLY.map(h => {
                             const pct = (h.avgTime / maxTime) * 100; return (
@@ -102,14 +100,14 @@ const KitchenAnalytics: React.FC = () => {
                 </div>
 
                 {/* Slowest Items */}
-                <div style={cd}>
-                    <h3 style={{ fontSize: 14, fontWeight: 600, margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} style={{ color: '#F59E0B' }} /> Slowest Items</h3>
+                <div className="pos-card">
+                    <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><AlertTriangle size={14} style={{ color: '#F59E0B' }} /> Slowest Items</h3>
                     {TOP_SLOW.map((item, i) => (
-                        <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                        <div key={item.name} className="pos-flex pos-flex--center pos-gap-10" style={{ padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                             <span style={{ width: 20, height: 20, borderRadius: 4, background: 'rgba(239,68,68,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: '#EF4444' }}>{i + 1}</span>
                             <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: 13, fontWeight: 500 }}>{item.name}</div>
-                                <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{item.orders} orders today</div>
+                                <div className="pos-cell-value">{item.name}</div>
+                                <div className="pos-cell-secondary">{item.orders} orders today</div>
                             </div>
                             <span style={{ fontSize: 15, fontWeight: 700, color: '#EF4444' }}>{item.avg}m</span>
                         </div>
@@ -117,15 +115,15 @@ const KitchenAnalytics: React.FC = () => {
                 </div>
 
                 {/* Speed Tips */}
-                <div style={{ ...cd, background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.2)' }}>
-                    <h3 style={{ fontSize: 14, fontWeight: 600, margin: '0 0 12px', color: '#10B981' }}>💡 Speed Insights</h3>
+                <div className="pos-card" style={{ background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.2)' }}>
+                    <h3 className="pos-card-title" style={{ color: '#10B981' }}>💡 Speed Insights</h3>
                     {[
                         '🔥 Peak slow: 20:00–20:59 avg 18.2min — consider an extra cook',
                         '✅ Bar performance improved 12% vs last week',
                         '⚠️ Wagyu Ribeye consistently slowest — review prep workflow',
                         '📊 4 recalls today (avg 2.8/day) — quality holding steady',
                     ].map((tip, i) => (
-                        <div key={i} style={{ fontSize: 12, color: 'var(--text-secondary)', padding: '6px 0', borderBottom: i < 3 ? '1px solid rgba(255,255,255,0.04)' : 'none', lineHeight: 1.5 }}>{tip}</div>
+                        <div key={i} className="pos-cell-secondary" style={{ padding: '6px 0', borderBottom: i < 3 ? '1px solid rgba(255,255,255,0.04)' : 'none', lineHeight: 1.5 }}>{tip}</div>
                     ))}
                 </div>
             </div>
