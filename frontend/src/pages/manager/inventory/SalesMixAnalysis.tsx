@@ -249,14 +249,6 @@ export default function SalesMixAnalysis() {
                 <div className="flex items-center justify-center h-64">
                     <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
-            ) : salesData.length === 0 ? (
-                <div className="text-center py-16">
-                    <BarChart3 className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-30" />
-                    <p className="text-muted-foreground">No sales data available for this period.</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                        Sales data is aggregated from completed orders matched against your recipes.
-                    </p>
-                </div>
             ) : (
                 <>
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
@@ -340,7 +332,7 @@ export default function SalesMixAnalysis() {
                         pageSize={20}
                         searchable
                         searchPlaceholder="Search items..."
-                        emptyMessage="No sales data available"
+                        emptyMessage="0 items"
                     />
                 </>
             )}

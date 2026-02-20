@@ -447,21 +447,17 @@ export default function WasteLog() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            {reasonBreakdown.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-4">No waste data yet</p>
-            ) : (
-              reasonBreakdown.map((r, i) => (
-                <div key={i} className="space-y-1">
-                  <div className="flex justify-between text-sm">
-                    <span>{r.reason}</span>
-                    <span className="tabular-nums font-medium">{r.count}</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-muted overflow-hidden">
-                    <div className="h-full rounded-full bg-red-500/70 transition-all" style={{ width: `${r.pct}%` }} />
-                  </div>
+            {(reasonBreakdown.length === 0 ? WASTE_REASONS.map(r => ({ reason: r.label, count: 0, pct: 0 })) : reasonBreakdown).map((r, i) => (
+              <div key={i} className="space-y-1">
+                <div className="flex justify-between text-sm">
+                  <span>{r.reason}</span>
+                  <span className="tabular-nums font-medium">{r.count}</span>
                 </div>
-              ))
-            )}
+                <div className="h-2 rounded-full bg-muted overflow-hidden">
+                  <div className="h-full rounded-full bg-red-500/70 transition-all" style={{ width: `${r.pct}%` }} />
+                </div>
+              </div>
+            ))}
           </CardContent>
         </Card>
 
@@ -474,24 +470,20 @@ export default function WasteLog() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {topWastedItems.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-4">No waste data yet</p>
-            ) : (
-              <div className="space-y-3">
-                {topWastedItems.map((item, i) => (
-                  <div key={i} className="flex justify-between items-center text-sm">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="w-6 h-6 rounded-full p-0 flex items-center justify-center text-[10px]">{i + 1}</Badge>
-                      <span className="truncate max-w-[150px]">{item.name}</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-red-500 font-bold tabular-nums">€{item.value.toFixed(2)}</span>
-                      <span className="text-xs text-muted-foreground ml-1">({item.qty.toFixed(1)} units)</span>
-                    </div>
+            <div className="space-y-3">
+              {(topWastedItems.length === 0 ? Array.from({ length: 5 }, (_, i) => ({ name: '—', qty: 0, value: 0 })) : topWastedItems).map((item, i) => (
+                <div key={i} className="flex justify-between items-center text-sm">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="w-6 h-6 rounded-full p-0 flex items-center justify-center text-[10px]">{i + 1}</Badge>
+                    <span className="truncate max-w-[150px]">{item.name}</span>
                   </div>
-                ))}
-              </div>
-            )}
+                  <div className="text-right">
+                    <span className="text-red-500 font-bold tabular-nums">€{item.value.toFixed(2)}</span>
+                    <span className="text-xs text-muted-foreground ml-1">({item.qty.toFixed(1)} units)</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
