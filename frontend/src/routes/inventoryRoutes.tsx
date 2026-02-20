@@ -29,6 +29,14 @@ const MealPlanning = React.lazy(() => import('../pages/manager/inventory/MealPla
 const SuppliersAdmin = React.lazy(() => import('../pages/manager/Suppliers'));
 const ProductManagement = React.lazy(() => import('../pages/manager/ProductManagement'));
 
+// ─── Apicbase Parity ────────────────────────────────────────────────────────────
+const SupplierManagement = React.lazy(() => import('../pages/manager/inventory/SupplierManagement'));
+const InventoryValuation = React.lazy(() => import('../pages/manager/inventory/InventoryValuation'));
+const TheoreticalVsActual = React.lazy(() => import('../pages/manager/inventory/TheoreticalVsActual'));
+const TraceabilityView = React.lazy(() => import('../pages/manager/inventory/TraceabilityView'));
+const UnitConversionMatrix = React.lazy(() => import('../pages/manager/inventory/UnitConversionMatrix'));
+const MobileStockCount = React.lazy(() => import('../pages/manager/inventory/MobileStockCount'));
+
 export const inventoryRoutes = (
     <>
         <Route path="inventory" element={<RoleRoute requiredRole="MANAGER"><InventoryDashboard /></RoleRoute>} />
@@ -55,5 +63,13 @@ export const inventoryRoutes = (
         <Route path="meal-planning" element={<RoleRoute requiredRole="MANAGER"><MealPlanning /></RoleRoute>} />
         <Route path="suppliers" element={<RoleRoute requiredRole="OWNER"><SuppliersAdmin /></RoleRoute>} />
         <Route path="products" element={<RoleRoute requiredRole="MANAGER"><ProductManagement /></RoleRoute>} />
+
+        {/* Apicbase Parity Features */}
+        <Route path="supplier-management" element={<RoleRoute requiredRole="MANAGER"><SupplierManagement /></RoleRoute>} />
+        <Route path="inventory-valuation" element={<RoleRoute requiredRole="MANAGER"><InventoryValuation /></RoleRoute>} />
+        <Route path="theoretical-vs-actual" element={<RoleRoute requiredRole="MANAGER"><TheoreticalVsActual /></RoleRoute>} />
+        <Route path="inventory-traceability" element={<RoleRoute requiredRole="MANAGER"><TraceabilityView /></RoleRoute>} />
+        <Route path="unit-conversion" element={<RoleRoute requiredRole="MANAGER"><UnitConversionMatrix /></RoleRoute>} />
+        <Route path="mobile-stock-count" element={<RoleRoute requiredRole="MANAGER"><MobileStockCount /></RoleRoute>} />
     </>
 );

@@ -36,6 +36,7 @@ const CostAnalysis = React.lazy(() => import('../pages/manager/recipe-engineerin
 // ─── Quality ────────────────────────────────────────────────────────────────────
 const QualityHub = React.lazy(() => import('../pages/manager/quality/QualityHub'));
 const QualityAudits = React.lazy(() => import('../pages/manager/quality/QualityAudits'));
+const HACCPScheduler = React.lazy(() => import('../pages/manager/quality/HACCPScheduler'));
 
 export const procurementRoutes = (
     <>
@@ -69,5 +70,6 @@ export const procurementRoutes = (
         {/* Quality */}
         <Route path="quality" element={<RoleRoute requiredRole="OWNER"><QualityHub /></RoleRoute>} />
         <Route path="quality/audits" element={<RoleRoute requiredRole="OWNER"><QualityAudits /></RoleRoute>} />
+        <Route path="quality/haccp-scheduler" element={<RoleRoute requiredRole="MANAGER"><HACCPScheduler /></RoleRoute>} />
     </>
 );
