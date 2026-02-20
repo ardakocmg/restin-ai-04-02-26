@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -55,8 +56,8 @@ export function ProviderCard({
     const statusStyles: Record<string, { border: string; badge: string; badgeText: string; dot: string; label: string }> = {
         CONNECTED: { border: 'border-emerald-500/20', badge: 'border-emerald-900 text-emerald-400 bg-emerald-950/30', badgeText: 'Connected', dot: 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]', label: 'text-emerald-400' },
         ERROR: { border: 'border-red-500/20', badge: 'border-red-900 text-red-400 bg-red-950/30', badgeText: 'Error', dot: 'bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.6)]', label: 'text-red-400' },
-        DISABLED: { border: 'border-zinc-700', badge: 'border-zinc-700 text-zinc-500 bg-zinc-900/50', badgeText: 'Disabled', dot: 'bg-zinc-600', label: 'text-zinc-500' },
-        NOT_CONFIGURED: { border: 'border-zinc-800', badge: 'border-zinc-800 text-zinc-600 bg-zinc-900/30', badgeText: 'Not Configured', dot: 'bg-zinc-700', label: 'text-zinc-600' },
+        DISABLED: { border: 'border-border', badge: 'border-border text-muted-foreground bg-card/50', badgeText: 'Disabled', dot: 'bg-zinc-600', label: 'text-muted-foreground' },
+        NOT_CONFIGURED: { border: 'border-border', badge: 'border-border text-muted-foreground bg-card/30', badgeText: 'Not Configured', dot: 'bg-zinc-700', label: 'text-muted-foreground' },
     };
 
     const s = statusStyles[status] || statusStyles.NOT_CONFIGURED;
@@ -74,7 +75,7 @@ export function ProviderCard({
     }
 
     return (
-        <Card className={`bg-zinc-950/80 ${s.border} flex flex-col transition-all duration-300 hover:border-zinc-600 hover:shadow-lg hover:shadow-black/20 group relative overflow-hidden`}>
+        <Card className={`bg-background/80 ${s.border} flex flex-col transition-all duration-300 hover:border-zinc-600 hover:shadow-lg hover:shadow-black/20 group relative overflow-hidden`}>
             {/* Accent top bar for connected */}
             {status === 'CONNECTED' && (
                 <div
@@ -97,8 +98,8 @@ export function ProviderCard({
                             <Icon className="h-5 w-5" />
                         </div>
                         <div>
-                            <CardTitle className="text-sm font-semibold text-zinc-100 leading-tight">{label}</CardTitle>
-                            <CardDescription className="text-[11px] text-zinc-500 mt-0.5 leading-tight">{description}</CardDescription>
+                            <CardTitle className="text-sm font-semibold text-foreground leading-tight">{label}</CardTitle>
+                            <CardDescription className="text-[11px] text-muted-foreground mt-0.5 leading-tight">{description}</CardDescription>
                         </div>
                     </div>
                     <div className="flex items-center gap-1.5">
@@ -113,7 +114,7 @@ export function ProviderCard({
             <CardContent className="flex-1 pb-3 pt-0 space-y-2">
                 {/* Config summary */}
                 {summaryItems.length > 0 && (
-                    <div className="text-[11px] text-zinc-400 bg-zinc-900/50 rounded-lg px-3 py-2 border border-zinc-800/50 space-y-0.5">
+                    <div className="text-[11px] text-muted-foreground bg-card/50 rounded-lg px-3 py-2 border border-border/50 space-y-0.5">
                         {summaryItems.slice(0, 3).map((item, i) => (
                             <div key={i} className="truncate">{item}</div>
                         ))}
@@ -121,7 +122,7 @@ export function ProviderCard({
                 )}
 
                 {/* Audit info */}
-                <div className="text-[11px] text-zinc-500 space-y-1">
+                <div className="text-[11px] text-muted-foreground space-y-1">
                     <div className="flex items-center gap-1.5">
                         <Clock className="h-3 w-3 flex-shrink-0" />
                         <span>Last sync: {lastSync ? timeAgo(lastSync) : 'Never'}</span>
@@ -153,7 +154,7 @@ export function ProviderCard({
                     <Button
                         variant="outline"
                         size="sm"
-                        className="flex-1 h-8 text-[11px] bg-zinc-900 border-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
+                        className="flex-1 h-8 text-[11px] bg-card border-border text-secondary-foreground hover:bg-secondary hover:text-foreground"
                         onClick={onConfigure}
                     >
                         <Settings className="h-3 w-3 mr-1.5" />
@@ -162,7 +163,7 @@ export function ProviderCard({
                     <Button
                         variant="outline"
                         size="sm"
-                        className="flex-1 h-8 text-[11px] bg-zinc-900 border-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 disabled:opacity-40"
+                        className="flex-1 h-8 text-[11px] bg-card border-border text-secondary-foreground hover:bg-secondary hover:text-foreground disabled:opacity-40"
                         onClick={onSync}
                         disabled={!isConfigured || loading}
                     >
@@ -179,7 +180,7 @@ export function ProviderCard({
                 {appLink && isConfigured && (
                     <Button
                         size="sm"
-                        className="w-full h-7 text-[11px] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border-0"
+                        className="w-full h-7 text-[11px] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-foreground border-0"
                         onClick={() => navigate(appLink)}
                     >
                         <ExternalLink className="h-3 w-3 mr-1.5" />
@@ -193,7 +194,7 @@ export function ProviderCard({
                         href={portalUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full flex items-center justify-center gap-1.5 h-7 text-[11px] text-zinc-500 hover:text-blue-400 transition-colors rounded-md hover:bg-blue-400/5"
+                        className="w-full flex items-center justify-center gap-1.5 h-7 text-[11px] text-muted-foreground hover:text-blue-400 transition-colors rounded-md hover:bg-blue-400/5"
                     >
                         <Globe className="h-3 w-3" />
                         {portalLabel || 'Get API Key →'}

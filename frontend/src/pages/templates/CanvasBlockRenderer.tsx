@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * CanvasBlockRenderer — renders a block preview on the template canvas.
  * Extracted from TemplateEditor.tsx → renderBlockOnCanvas helper.

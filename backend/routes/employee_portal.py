@@ -1,5 +1,7 @@
 """Employee Portal Routes"""
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+from typing import Optional
 from models.employee_portal import (
     EmployeePortalData, MyProfile, LeaveBalance, CalendarEvent,
     PayslipItem, OutOfOfficeStaff, LeaveMetrics
@@ -83,3 +85,76 @@ async def get_employee_portal_data(
         out_of_office=out_of_office,
         leave_metrics=leave_metrics
     )
+
+
+class ProfileUpdateRequest(BaseModel):
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    emergency_contact_name: Optional[str] = None
+    emergency_contact_phone: Optional[str] = None
+    bank_name: Optional[str] = None
+    iban: Optional[str] = None
+    preferred_language: Optional[str] = None
+
+
+@router.get("/my-profile")
+async def get_my_real_profile(
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_database)
+):
+    """Get the current user's real profile from employees collection."""
+    user_id = current_user.get("userId") or current_user.get("id")
+    venue_id = current_user.get("venueId") or current_user.get("venue_id")
+
+    employee = await db.employees.find_one(
+        {"id": user_id, "venue_id": venue_id},
+        {"_id": 0}
+    )
+
+    if not employee:
+        # Fallback to user data
+        return {
+            "name": current_user.get("fullName") or current_user.get("name", "Unknown"),
+            "email": current_user.get("email", ""),
+            "role": current_user.get("role", "staff"),
+            "editable_fields": ["phone", "address", "emergency_contact_name", "emergency_contact_phone"]
+        }
+
+    return {
+        **employee,
+        "editable_fields": ["phone", "address", "emergency_contact_name", "emergency_contact_phone", "bank_name", "iban", "preferred_language"]
+    }
+
+
+@router.put("/my-profile")
+async def update_my_profile(
+    updates: ProfileUpdateRequest,
+    current_user: dict = Depends(get_current_user),
+    db = Depends(get_database)
+):
+    """Allow employee to update their own profile (limited fields only)."""
+    user_id = current_user.get("userId") or current_user.get("id")
+    venue_id = current_user.get("venueId") or current_user.get("venue_id")
+
+    # Only allow specific fields to be self-edited
+    allowed_updates = {}
+    update_dict = updates.model_dump(exclude_none=True)
+
+    for field in ["phone", "address", "emergency_contact_name", "emergency_contact_phone", "bank_name", "iban", "preferred_language"]:
+        if field in update_dict:
+            allowed_updates[field] = update_dict[field]
+
+    if not allowed_updates:
+        raise HTTPException(400, "No valid fields to update")
+
+    from datetime import datetime, timezone
+    allowed_updates["profile_updated_at"] = datetime.now(timezone.utc).isoformat()
+    allowed_updates["profile_updated_by"] = "self"
+
+    result = await db.employees.update_one(
+        {"id": user_id, "venue_id": venue_id},
+        {"$set": allowed_updates}
+    )
+
+    return {"message": "Profile updated", "updated_fields": list(allowed_updates.keys())}
+

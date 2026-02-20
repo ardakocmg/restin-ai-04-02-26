@@ -85,6 +85,12 @@ const TrainingOngoingReport = React.lazy(() => import('../pages/manager/hr/repor
 // ─── Payroll Feature ────────────────────────────────────────────────────────────
 const PayrollDashboard = React.lazy(() => import('../features/hr/PayrollDashboard'));
 
+// ─── Shireburn Gap Closure Pages ────────────────────────────────────────────────
+const HiringATS = React.lazy(() => import('../pages/manager/hr/HiringATS'));
+const HRCalendarPage = React.lazy(() => import('../pages/manager/hr/HRCalendarPage'));
+const OnboardingChecklists = React.lazy(() => import('../pages/manager/hr/OnboardingChecklists'));
+const SalaryBenchmarks = React.lazy(() => import('../pages/manager/hr/SalaryBenchmarks'));
+
 export const hrRoutes = (
     <>
         {/* HR Main */}
@@ -128,6 +134,12 @@ export const hrRoutes = (
             <Route path="my-documents" element={<EmployeePayrollHistory />} />
             <Route path="shifts" element={<RoleRoute requiredRole="MANAGER"><Shifts /></RoleRoute>} />
             <Route path="payroll-malta" element={<RoleRoute requiredRole="OWNER"><PayrollMalta /></RoleRoute>} />
+
+            {/* Shireburn Gap Closure Routes */}
+            <Route path="hiring" element={<RoleRoute requiredRole="MANAGER"><HiringATS /></RoleRoute>} />
+            <Route path="calendar" element={<RoleRoute requiredRole="MANAGER"><HRCalendarPage /></RoleRoute>} />
+            <Route path="onboarding" element={<RoleRoute requiredRole="MANAGER"><OnboardingChecklists /></RoleRoute>} />
+            <Route path="salary-benchmarks" element={<RoleRoute requiredRole="OWNER"><SalaryBenchmarks /></RoleRoute>} />
         </Route>
 
         {/* HR Advanced */}

@@ -36,7 +36,7 @@ export default function PayrollDashboard() {
             const empData = await HRService.getEmployees();
             setEmployees(empData);
             setOfflineMode(false);
-        } catch (e) {
+        } catch (e: any) {
             logger.warn("API Offline, check for local data?");
             toast.error("Network Error: Could not fetch employees.");
             setOfflineMode(true);
@@ -69,7 +69,7 @@ export default function PayrollDashboard() {
             // Auto-save to local draft
             results.forEach(p => HRService.saveDraftLocally(p));
 
-        } catch (error) {
+        } catch (error: any) {
             logger.error("Payroll Run Failed", { error: String(error) });
             toast.error("Failed to run payroll. Check connection.");
             setOfflineMode(true);
@@ -127,9 +127,9 @@ export default function PayrollDashboard() {
             }
         >
             <div className="space-y-6">
-                <Card className="p-6 bg-zinc-950 border-zinc-800">
+                <Card className="p-6 bg-background border-border">
                     <div className="flex justify-between mb-4">
-                        <h2 className="text-xl font-bold text-zinc-100">Employee Directory</h2>
+                        <h2 className="text-xl font-bold text-foreground">Employee Directory</h2>
                         <Button variant="ghost" size="sm" onClick={loadData}>Refresh</Button>
                     </div>
                     <DataTable
@@ -141,10 +141,10 @@ export default function PayrollDashboard() {
                 </Card>
 
                 {payslips.length > 0 && (
-                    <Card className="p-6 bg-zinc-950 border-zinc-800 animate-in slide-in-from-bottom-5 fade-in duration-500">
+                    <Card className="p-6 bg-background border-border animate-in slide-in-from-bottom-5 fade-in duration-500">
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-bold text-zinc-100">Payroll Draft (Current Period)</h2>
-                            <div className="text-sm text-zinc-400">
+                            <h2 className="text-xl font-bold text-foreground">Payroll Draft (Current Period)</h2>
+                            <div className="text-sm text-muted-foreground">
                                 Total Net: €{(payslips.reduce((sum, p) => sum + p.net_pay_cents, 0) / 100).toLocaleString()}
                             </div>
                         </div>

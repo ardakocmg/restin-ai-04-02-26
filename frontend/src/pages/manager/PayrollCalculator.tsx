@@ -100,8 +100,8 @@ export default function PayrollCalculator() {
                     <p className="text-sm font-medium text-blue-200 mb-3">Annual</p>
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span className="text-sm text-zinc-400">Gross:</span>
-                        <span className="font-bold text-zinc-100">€{result.annual_gross.toFixed(2)}</span>
+                        <span className="text-sm text-muted-foreground">Gross:</span>
+                        <span className="font-bold text-foreground">€{result.annual_gross.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between text-red-400">
                         <span className="text-sm">Tax:</span>
@@ -123,8 +123,8 @@ export default function PayrollCalculator() {
                     <p className="text-sm font-medium text-green-200 mb-3">Monthly</p>
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span className="text-sm text-zinc-400">Gross:</span>
-                        <span className="font-bold text-zinc-100">€{result.monthly_gross.toFixed(2)}</span>
+                        <span className="text-sm text-muted-foreground">Gross:</span>
+                        <span className="font-bold text-foreground">€{result.monthly_gross.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between text-red-400">
                         <span className="text-sm">Tax:</span>
@@ -142,9 +142,9 @@ export default function PayrollCalculator() {
                   </div>
 
                   {/* Effective Rate */}
-                  <div className="p-3 bg-zinc-900 rounded text-center border border-zinc-800">
-                    <p className="text-sm text-zinc-400">Effective Tax Rate</p>
-                    <p className="text-2xl font-bold text-zinc-100">
+                  <div className="p-3 bg-card rounded text-center border border-border">
+                    <p className="text-sm text-muted-foreground">Effective Tax Rate</p>
+                    <p className="text-2xl font-bold text-foreground">
                       {result.effective_rate.toFixed(1)}%
                     </p>
                   </div>

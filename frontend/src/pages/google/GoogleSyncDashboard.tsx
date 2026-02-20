@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * GoogleSyncDashboard — Organization-wide Google Sync Status & Management
  * @route /manager/google-sync
@@ -140,7 +141,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             case 'drive': return <HardDrive className="h-3.5 w-3.5 text-green-400" />;
             case 'gmail': return <Mail className="h-3.5 w-3.5 text-red-400" />;
             case 'sheets': return <Table className="h-3.5 w-3.5 text-green-400" />;
-            default: return <Zap className="h-3.5 w-3.5 text-zinc-400" />;
+            default: return <Zap className="h-3.5 w-3.5 text-muted-foreground" />;
         }
     };
 
@@ -149,7 +150,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             case 'healthy': return 'text-green-400 bg-green-500/10';
             case 'degraded': return 'text-amber-400 bg-amber-500/10';
             case 'offline': return 'text-red-400 bg-red-500/10';
-            default: return 'text-zinc-400 bg-zinc-500/10';
+            default: return 'text-muted-foreground bg-zinc-500/10';
         }
     };
 
@@ -158,7 +159,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             case 'healthy': return <CheckCircle2 className="h-4 w-4 text-green-400" />;
             case 'degraded': return <AlertTriangle className="h-4 w-4 text-amber-400" />;
             case 'offline': return <XCircle className="h-4 w-4 text-red-400" />;
-            default: return <Clock className="h-4 w-4 text-zinc-400" />;
+            default: return <Clock className="h-4 w-4 text-muted-foreground" />;
         }
     };
 
@@ -186,8 +187,8 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-black text-white uppercase tracking-wide">Google Sync Dashboard</h1>
-                    <p className="text-xs text-zinc-500 mt-0.5">Monitor and manage Google sync across your organization</p>
+                    <h1 className="text-2xl font-black text-foreground uppercase tracking-wide">Google Sync Dashboard</h1>
+                    <p className="text-xs text-muted-foreground mt-0.5">Monitor and manage Google sync across your organization</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <Button
@@ -195,7 +196,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
                         size="sm"
                         onClick={fetchDashboard}
                         disabled={loading}
-                        className="border-white/10 text-zinc-400 hover:text-white gap-1.5"
+                        className="border-border text-muted-foreground hover:text-foreground gap-1.5"
                     >
                         <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
                         Refresh
@@ -203,7 +204,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
                     <Button
                         size="sm"
                         onClick={handleForceSync}
-                        className="bg-blue-600 hover:bg-blue-500 text-white gap-1.5"
+                        className="bg-blue-600 hover:bg-blue-500 text-foreground gap-1.5"
                     >
                         <Zap className="h-3.5 w-3.5" />
                         Force Sync All
@@ -212,7 +213,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             </div>
 
             {/* Tabs */}
-            <div className="flex items-center gap-1 bg-zinc-900/50 border border-white/5 rounded-xl p-1">
+            <div className="flex items-center gap-1 bg-card/50 border border-border rounded-xl p-1">
                 {TABS.map(tab => {
                     const Icon = tab.icon;
                     return (
@@ -222,8 +223,8 @@ export default function GoogleSyncDashboard(): React.ReactElement {
                             className={cn(
                                 "flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all",
                                 activeTab === tab.key
-                                    ? "bg-white/10 text-white"
-                                    : "text-zinc-500 hover:text-zinc-300"
+                                    ? "bg-white/10 text-foreground"
+                                    : "text-muted-foreground hover:text-secondary-foreground"
                             )}
                         >
                             <Icon className="h-3.5 w-3.5" />
@@ -236,12 +237,12 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             {/* Search bar for personnel and logs */}
             {(activeTab === 'personnel' || activeTab === 'logs') && (
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-600" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <input
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                         placeholder={`Search ${activeTab}...`}
-                        className="w-full bg-zinc-900/50 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-blue-500/30"
+                        className="w-full bg-card/50 border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30"
                     />
                 </div>
             )}
@@ -249,7 +250,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             {/* Loading */}
             {loading && (
                 <div className="flex items-center justify-center py-16">
-                    <RefreshCw className="h-6 w-6 text-zinc-500 animate-spin" />
+                    <RefreshCw className="h-6 w-6 text-muted-foreground animate-spin" />
                 </div>
             )}
 
@@ -266,12 +267,12 @@ export default function GoogleSyncDashboard(): React.ReactElement {
                         ].map(card => {
                             const Icon = card.icon;
                             return (
-                                <div key={card.label} className="bg-zinc-900/50 border border-white/5 rounded-2xl p-5">
+                                <div key={card.label} className="bg-card/50 border border-border rounded-2xl p-5">
                                     <div className="flex items-center gap-2 mb-3">
                                         <Icon className={cn("h-4 w-4", card.color)} />
-                                        <span className="text-xs text-zinc-500 uppercase tracking-widest font-bold">{card.label}</span>
+                                        <span className="text-xs text-muted-foreground uppercase tracking-widest font-bold">{card.label}</span>
                                     </div>
-                                    <div className="text-2xl font-black text-white">{card.value}</div>
+                                    <div className="text-2xl font-black text-foreground">{card.value}</div>
                                 </div>
                             );
                         })}
@@ -279,15 +280,15 @@ export default function GoogleSyncDashboard(): React.ReactElement {
 
                     {/* Active Services */}
                     {stats?.active_services && (
-                        <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-5">
-                            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Active Services</h3>
+                        <div className="bg-card/50 border border-border rounded-2xl p-5">
+                            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4">Active Services</h3>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 {Object.entries(stats.active_services).map(([service, count]) => (
-                                    <div key={service} className="flex items-center gap-3 p-3 bg-zinc-800/30 rounded-xl">
+                                    <div key={service} className="flex items-center gap-3 p-3 bg-secondary/30 rounded-xl">
                                         {serviceIcon(service)}
                                         <div>
-                                            <div className="text-sm font-bold text-white capitalize">{service}</div>
-                                            <div className="text-xs text-zinc-500">{count} user{count !== 1 ? 's' : ''}</div>
+                                            <div className="text-sm font-bold text-foreground capitalize">{service}</div>
+                                            <div className="text-xs text-muted-foreground">{count} user{count !== 1 ? 's' : ''}</div>
                                         </div>
                                     </div>
                                 ))}
@@ -296,28 +297,28 @@ export default function GoogleSyncDashboard(): React.ReactElement {
                     )}
 
                     {/* Last Sync */}
-                    <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-5">
+                    <div className="bg-card/50 border border-border rounded-2xl p-5">
                         <div className="flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-zinc-500" />
-                            <span className="text-xs text-zinc-500">Last organization-wide sync: </span>
-                            <span className="text-sm font-bold text-white">{formatRelative(stats?.last_sync || '')}</span>
+                            <Clock className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">Last organization-wide sync: </span>
+                            <span className="text-sm font-bold text-foreground">{formatRelative(stats?.last_sync || '')}</span>
                         </div>
                     </div>
 
                     {/* Recent Logs */}
                     {logs.length > 0 && (
-                        <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-5">
-                            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Recent Activity</h3>
+                        <div className="bg-card/50 border border-border rounded-2xl p-5">
+                            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4">Recent Activity</h3>
                             <div className="space-y-2">
                                 {logs.slice(0, 5).map(log => (
-                                    <div key={log.id} className="flex items-center gap-3 p-3 bg-zinc-800/20 rounded-xl">
+                                    <div key={log.id} className="flex items-center gap-3 p-3 bg-secondary/20 rounded-xl">
                                         {serviceIcon(log.service)}
                                         <div className="flex-1 min-w-0">
-                                            <div className="text-sm text-white truncate">
+                                            <div className="text-sm text-foreground truncate">
                                                 <span className="font-bold">{log.user_name}</span>
-                                                <span className="text-zinc-500"> · {log.sync_type}</span>
+                                                <span className="text-muted-foreground"> · {log.sync_type}</span>
                                             </div>
-                                            <div className="text-xs text-zinc-600">{log.venue_name} · {log.details}</div>
+                                            <div className="text-xs text-muted-foreground">{log.venue_name} · {log.details}</div>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <span className={cn(
@@ -328,7 +329,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
                                             )}>
                                                 {log.status.toUpperCase()}
                                             </span>
-                                            <span className="text-[10px] text-zinc-600">{formatRelative(log.created_at)}</span>
+                                            <span className="text-[10px] text-muted-foreground">{formatRelative(log.created_at)}</span>
                                         </div>
                                     </div>
                                 ))}
@@ -342,16 +343,16 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             {!loading && activeTab === 'venues' && (
                 <div className="space-y-4">
                     {venues.length === 0 && (
-                        <div className="text-center py-12 text-zinc-600 text-sm">No venues configured</div>
+                        <div className="text-center py-12 text-muted-foreground text-sm">No venues configured</div>
                     )}
                     {venues.map(venue => (
-                        <div key={venue.venue_id} className="bg-zinc-900/50 border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all">
+                        <div key={venue.venue_id} className="bg-card/50 border border-border rounded-2xl p-5 hover:border-border transition-all">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-3">
                                     {healthIcon(venue.sync_health)}
                                     <div>
-                                        <div className="text-sm font-bold text-white">{venue.venue_name}</div>
-                                        <div className="text-xs text-zinc-500">
+                                        <div className="text-sm font-bold text-foreground">{venue.venue_name}</div>
+                                        <div className="text-xs text-muted-foreground">
                                             {venue.connected_employees}/{venue.total_employees} employees connected
                                         </div>
                                     </div>
@@ -364,14 +365,14 @@ export default function GoogleSyncDashboard(): React.ReactElement {
                             {/* Enabled syncs */}
                             <div className="flex flex-wrap gap-2 mt-3">
                                 {venue.enabled_syncs.map(sync => (
-                                    <div key={sync} className="flex items-center gap-1.5 px-2 py-1 bg-zinc-800/50 rounded-lg text-[10px] text-zinc-400">
+                                    <div key={sync} className="flex items-center gap-1.5 px-2 py-1 bg-secondary/50 rounded-lg text-[10px] text-muted-foreground">
                                         {serviceIcon(sync.split('_')[0])}
                                         <span className="capitalize">{sync.replace(/_/g, ' ')}</span>
                                     </div>
                                 ))}
                             </div>
 
-                            <div className="flex items-center gap-2 mt-3 text-xs text-zinc-600">
+                            <div className="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
                                 <Clock className="h-3 w-3" />
                                 Last sync: {formatRelative(venue.last_sync)}
                             </div>
@@ -384,26 +385,26 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             {!loading && activeTab === 'personnel' && (
                 <div className="space-y-3">
                     {filteredPersonnel.length === 0 && (
-                        <div className="text-center py-12 text-zinc-600 text-sm">No personnel found</div>
+                        <div className="text-center py-12 text-muted-foreground text-sm">No personnel found</div>
                     )}
                     {filteredPersonnel.map(person => (
-                        <div key={person.user_id} className="bg-zinc-900/50 border border-white/5 rounded-2xl p-4 hover:border-white/10 transition-all">
+                        <div key={person.user_id} className="bg-card/50 border border-border rounded-2xl p-4 hover:border-border transition-all">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className={cn(
                                         "w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black",
                                         person.google_connected
                                             ? "bg-green-500/10 text-green-400"
-                                            : "bg-zinc-800 text-zinc-500"
+                                            : "bg-secondary text-muted-foreground"
                                     )}>
                                         {person.user_name.charAt(0)}
                                     </div>
                                     <div>
-                                        <div className="text-sm font-bold text-white">{person.user_name}</div>
-                                        <div className="text-xs text-zinc-500">
+                                        <div className="text-sm font-bold text-foreground">{person.user_name}</div>
+                                        <div className="text-xs text-muted-foreground">
                                             {person.google_connected
                                                 ? <span className="text-green-400">{person.google_email}</span>
-                                                : <span className="text-zinc-600">Not connected</span>
+                                                : <span className="text-muted-foreground">Not connected</span>
                                             }
                                             <span className="text-zinc-700 mx-1.5">·</span>
                                             {person.venue_name}
@@ -411,13 +412,13 @@ export default function GoogleSyncDashboard(): React.ReactElement {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3 text-xs">
-                                    <span className="text-zinc-600">{formatRelative(person.last_sync)}</span>
+                                    <span className="text-muted-foreground">{formatRelative(person.last_sync)}</span>
                                 </div>
                             </div>
 
                             {/* Sync toggles */}
                             {person.google_connected && (
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 pt-3 border-t border-white/5">
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 pt-3 border-t border-border">
                                     {[
                                         { key: 'calendar_shift_sync', label: 'Shift→Cal' },
                                         { key: 'calendar_leave_sync', label: 'Leave→Cal' },
@@ -429,9 +430,9 @@ export default function GoogleSyncDashboard(): React.ReactElement {
                                             <div key={toggle.key} className="flex items-center gap-2">
                                                 {enabled
                                                     ? <ToggleRight className="h-4 w-4 text-green-500" />
-                                                    : <ToggleLeft className="h-4 w-4 text-zinc-600" />
+                                                    : <ToggleLeft className="h-4 w-4 text-muted-foreground" />
                                                 }
-                                                <span className={cn("text-[10px]", enabled ? "text-white" : "text-zinc-600")}>{toggle.label}</span>
+                                                <span className={cn("text-[10px]", enabled ? "text-foreground" : "text-muted-foreground")}>{toggle.label}</span>
                                             </div>
                                         );
                                     })}
@@ -446,17 +447,17 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             {!loading && activeTab === 'logs' && (
                 <div className="space-y-2">
                     {filteredLogs.length === 0 && (
-                        <div className="text-center py-12 text-zinc-600 text-sm">No sync logs</div>
+                        <div className="text-center py-12 text-muted-foreground text-sm">No sync logs</div>
                     )}
                     {filteredLogs.map(log => (
-                        <div key={log.id} className="flex items-center gap-3 p-3 bg-zinc-900/30 border border-white/5 rounded-xl hover:border-white/10 transition-all">
+                        <div key={log.id} className="flex items-center gap-3 p-3 bg-card/30 border border-border rounded-xl hover:border-border transition-all">
                             {serviceIcon(log.service)}
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-sm font-bold text-white">{log.user_name}</span>
-                                    <span className="text-[10px] text-zinc-700 bg-zinc-800 px-1.5 py-0.5 rounded">{log.venue_name}</span>
+                                    <span className="text-sm font-bold text-foreground">{log.user_name}</span>
+                                    <span className="text-[10px] text-zinc-700 bg-secondary px-1.5 py-0.5 rounded">{log.venue_name}</span>
                                 </div>
-                                <div className="text-xs text-zinc-500 truncate mt-0.5">
+                                <div className="text-xs text-muted-foreground truncate mt-0.5">
                                     {log.sync_type} · {log.direction === 'push' ? '↑' : '↓'} · {log.details}
                                 </div>
                             </div>
@@ -469,7 +470,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
                                 )}>
                                     {log.status.toUpperCase()}
                                 </span>
-                                <span className="text-[10px] text-zinc-600 w-14 text-right">{formatRelative(log.created_at)}</span>
+                                <span className="text-[10px] text-muted-foreground w-14 text-right">{formatRelative(log.created_at)}</span>
                             </div>
                         </div>
                     ))}

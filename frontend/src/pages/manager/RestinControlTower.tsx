@@ -184,23 +184,23 @@ export default function RestinControlTower() {
                 {/* Header Section */}
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-4xl font-black text-white italic tracking-tighter flex items-center gap-3">
+                        <h1 className="text-4xl font-black text-foreground italic tracking-tighter flex items-center gap-3">
                             <span className="bg-red-600 px-3 py-1 rounded-lg shadow-[0_0_30px_rgba(220,38,38,0.3)]">AI</span>
                             CONTROL TOWER
                         </h1>
-                        <p className="text-zinc-500 mt-2 font-medium tracking-wide">
+                        <p className="text-muted-foreground mt-2 font-medium tracking-wide">
                             v18.0 RESTIN CORE • LIVE OPERATING SYSTEM
                         </p>
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900/50 rounded-full border border-zinc-800">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-card/50 rounded-full border border-border">
                             {isLoading ? (
-                                <Loader2 className="w-3 h-3 animate-spin text-zinc-400" />
+                                <Loader2 className="w-3 h-3 animate-spin text-muted-foreground" />
                             ) : (
                                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
                             )}
-                            <span className="text-xs font-bold text-zinc-300 uppercase tracking-widest">
+                            <span className="text-xs font-bold text-secondary-foreground uppercase tracking-widest">
                                 {isLoading ? 'Connecting...' : 'System Optimal'}
                             </span>
                         </div>
@@ -215,18 +215,18 @@ export default function RestinControlTower() {
                         { label: 'Voice Calls', value: stats?.totalCalls || '0', trend: 'Pillar 4', icon: Mic },
                         { label: 'KDS Active', value: stats?.kdsActive || '0', trend: 'Kitchen', icon: Activity },
                     ].map((stat, i) => (
-                        <Card key={i} className="bg-zinc-900/30 border-zinc-800/50 p-6 backdrop-blur-md group hover:border-red-500/30 transition-all duration-300">
+                        <Card key={i} className="bg-card/30 border-border/50 p-6 backdrop-blur-md group hover:border-red-500/30 transition-all duration-300">
                             <div className="flex justify-between items-start">
-                                <div className="p-2 rounded-lg bg-zinc-800/50 text-zinc-400 group-hover:text-red-500 transition-colors">
+                                <div className="p-2 rounded-lg bg-secondary/50 text-muted-foreground group-hover:text-red-500 transition-colors">
                                     <stat.icon size={20} />
                                 </div>
-                                <span className="text-[10px] font-black px-2 py-1 rounded-full bg-zinc-800 text-zinc-400">
+                                <span className="text-[10px] font-black px-2 py-1 rounded-full bg-secondary text-muted-foreground">
                                     {stat.trend}
                                 </span>
                             </div>
                             <div className="mt-4">
-                                <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{stat.label}</p>
-                                <p className="text-2xl font-black text-white mt-1">{stat.value}</p>
+                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{stat.label}</p>
+                                <p className="text-2xl font-black text-foreground mt-1">{stat.value}</p>
                             </div>
                         </Card>
                     ))}
@@ -240,7 +240,7 @@ export default function RestinControlTower() {
                         return (
                             <Card
                                 key={pillar.id}
-                                className="relative overflow-hidden group bg-zinc-900/20 border-zinc-800/50 p-8 backdrop-blur-xl hover:bg-zinc-900/40 transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] cursor-pointer"
+                                className="relative overflow-hidden group bg-card/20 border-border/50 p-8 backdrop-blur-xl hover:bg-card/40 transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] cursor-pointer"
                                 onClick={() => navigate(pillar.route)}
                             >
                                 {/* Background Glow */}
@@ -255,31 +255,31 @@ export default function RestinControlTower() {
                                             <pillar.icon size={28} />
                                         </div>
                                         <div className="flex flex-col items-end">
-                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Status</span>
-                                            <span className="text-xs font-bold text-white mt-1">
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Status</span>
+                                            <span className="text-xs font-bold text-foreground mt-1">
                                                 {isLoading ? <Loader2 size={12} className="animate-spin" /> : (live?.status || '—')}
                                             </span>
                                         </div>
                                     </div>
 
-                                    <h3 className="text-2xl font-black text-white tracking-tight leading-none group-hover:text-red-500 transition-colors">
+                                    <h3 className="text-2xl font-black text-foreground tracking-tight leading-none group-hover:text-red-500 transition-colors">
                                         {pillar.title}
                                     </h3>
-                                    <p className="text-sm text-zinc-500 mt-4 leading-relaxed font-medium">
+                                    <p className="text-sm text-muted-foreground mt-4 leading-relaxed font-medium">
                                         {pillar.description}
                                     </p>
 
-                                    <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+                                    <div className="mt-8 pt-6 border-t border-border flex items-center justify-between">
                                         <div className="flex flex-col">
-                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">Metric</span>
-                                            <span className="text-sm font-bold text-zinc-300">
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Metric</span>
+                                            <span className="text-sm font-bold text-secondary-foreground">
                                                 {isLoading ? '...' : (live?.metrics || '—')}
                                             </span>
                                         </div>
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="rounded-full bg-zinc-800/10 hover:bg-zinc-800 hover:text-white"
+                                            className="rounded-full bg-secondary/10 hover:bg-secondary hover:text-foreground"
                                         >
                                             <ArrowUpRight size={20} />
                                         </Button>
@@ -290,27 +290,27 @@ export default function RestinControlTower() {
                     })}
 
                     {/* Intelligence Radar Section (Large) */}
-                    <Card className="lg:col-span-3 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black border-zinc-800/50 p-1 bg-white/5 backdrop-blur-3xl overflow-hidden group">
-                        <div className="h-full p-8 flex flex-col lg:flex-row gap-8 items-center bg-zinc-950/90 rounded-[inherit]">
+                    <Card className="lg:col-span-3 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black border-border/50 p-1 bg-white/5 backdrop-blur-3xl overflow-hidden group">
+                        <div className="h-full p-8 flex flex-col lg:flex-row gap-8 items-center bg-background/90 rounded-[inherit]">
                             <div className="flex-1 space-y-6">
                                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full">
                                     <Target className="h-4 w-4 text-red-500" />
                                     <span className="text-[10px] font-black text-red-500 uppercase tracking-[0.2em]">Deep Intelligence Activated</span>
                                 </div>
-                                <h2 className="text-5xl font-black text-white italic tracking-tighter leading-none">
+                                <h2 className="text-5xl font-black text-foreground italic tracking-tighter leading-none">
                                     MARKET <br /> <span className="text-red-600">GROUNDING</span>
                                 </h2>
-                                <p className="text-lg text-zinc-400 font-medium leading-relaxed max-w-xl">
+                                <p className="text-lg text-muted-foreground font-medium leading-relaxed max-w-xl">
                                     Gemini 1.5 Pro monitors regional competitors and syncs pricing intelligence into your yield management engine.
                                 </p>
                                 <div className="flex gap-4 pt-4">
                                     <Button
-                                        className="h-14 px-8 bg-red-600 text-white font-black rounded-2xl hover:bg-red-700 shadow-[0_10px_40px_rgba(220,38,38,0.3)] border-none"
+                                        className="h-14 px-8 bg-red-600 text-foreground font-black rounded-2xl hover:bg-red-700 shadow-[0_10px_40px_rgba(220,38,38,0.3)] border-none"
                                         onClick={() => navigate('/manager/restin/radar')}
                                     >
                                         View Market Map
                                     </Button>
-                                    <Button variant="outline" className="h-14 px-8 border-zinc-800 text-white font-bold rounded-2xl hover:bg-white/5">
+                                    <Button variant="outline" className="h-14 px-8 border-border text-foreground font-bold rounded-2xl hover:bg-white/5">
                                         Calibration Settings
                                     </Button>
                                 </div>
@@ -319,11 +319,11 @@ export default function RestinControlTower() {
                             <div className="w-full lg:w-[400px] h-[300px] relative">
                                 {/* Simulated Radar Visual */}
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-64 h-64 rounded-full border border-zinc-800 animate-[spin_10s_linear_infinite] relative">
+                                    <div className="w-64 h-64 rounded-full border border-border animate-[spin_10s_linear_infinite] relative">
                                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-red-500 rounded-full shadow-[0_0_20px_white]"></div>
                                         <div className="absolute top-1/4 right-0 w-2 h-2 bg-zinc-700 rounded-full"></div>
                                     </div>
-                                    <div className="absolute w-40 h-40 rounded-full border border-zinc-800 shadow-[inset_0_0_50px_rgba(220,38,38,0.05)]"></div>
+                                    <div className="absolute w-40 h-40 rounded-full border border-border shadow-[inset_0_0_50px_rgba(220,38,38,0.05)]"></div>
                                     <div className="absolute w-20 h-20 bg-red-600/5 rounded-full flex items-center justify-center backdrop-blur-2xl">
                                         <Radar className="text-red-500 animate-pulse" size={32} />
                                     </div>
@@ -333,7 +333,7 @@ export default function RestinControlTower() {
                     </Card>
                 </div>
 
-                <div className="pb-12 text-center text-zinc-600 font-bold text-xs tracking-widest uppercase">
+                <div className="pb-12 text-center text-muted-foreground font-bold text-xs tracking-widest uppercase">
                     Autonomous Restaurant Operating System • Powered by Restin & Google Vertex AI
                 </div>
             </div>

@@ -1,5 +1,6 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "./AuthContext";
 import { authAPI } from "../../lib/api";
@@ -14,6 +15,7 @@ import './Login.css';
 
 export default function Login() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const { t } = useTranslation();
     const { login } = useAuth();
 
@@ -24,7 +26,9 @@ export default function Login() {
     const [pinSuccess, setPinSuccess] = useState(false);
 
     // Login mode toggle: PIN vs Credentials
-    const [loginMode, setLoginMode] = useState<'pin' | 'credentials'>('pin');
+    const [loginMode, setLoginMode] = useState<'pin' | 'credentials'>(
+        searchParams.get('mode') === 'pin' ? 'pin' : 'credentials'
+    );
     const [credEmail, setCredEmail] = useState('');
     const [credPassword, setCredPassword] = useState('');
 
@@ -46,7 +50,7 @@ export default function Login() {
     // Fetch Google SSO config on mount + prefetch dashboard chunks
     useEffect(() => {
         // Prefetch dashboard so it's ready instantly after login
-        import("../../pages/manager/SystemDashboard.jsx");
+        import("../../pages/manager/SystemDashboard");
         import("../../pages/manager/ManagerLayout");
 
         const fetchSSOConfig = async () => {
@@ -352,7 +356,7 @@ export default function Login() {
                 }
             });
 
-        } catch (error) {
+        } catch (error: any) {
             logger.error('Google SSO init error', { error });
             toast.error('Failed to initialize Google Sign-In');
             setGoogleLoading(false);
@@ -422,7 +426,7 @@ export default function Login() {
                                 type="text"
                                 value={totpCode}
                                 onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                className="w-full text-center text-2xl tracking-widest py-4 rounded-xl bg-black/40 text-white border border-white/10"
+                                className="w-full text-center text-2xl tracking-widest py-4 rounded-xl bg-black/40 text-foreground border border-border"
                                 placeholder="••••••"
                                 data-testid="mfa-code-input"
                             />

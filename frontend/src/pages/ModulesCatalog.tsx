@@ -422,7 +422,7 @@ export default function ModulesCatalog() {
             <div className="fixed inset-0 mc-scan-line pointer-events-none opacity-30" />
 
             {/* Header */}
-            <header className="sticky top-0 z-40 px-6 lg:px-12 py-5 bg-black/40 backdrop-blur-xl border-b border-white/5" data-testid="modules-nav">
+            <header className="sticky top-0 z-40 px-6 lg:px-12 py-5 bg-black/40 backdrop-blur-xl border-b border-border" data-testid="modules-nav">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-red-600 to-red-900 p-[1px]">
@@ -432,15 +432,15 @@ export default function ModulesCatalog() {
                         </div>
                         <div>
                             <div className="text-lg font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Module Catalog</div>
-                            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">
+                            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
                                 {activeCount} active · {comingSoonCount} coming soon
                             </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <a href="/" className="px-4 py-2 rounded-full text-xs font-semibold text-zinc-400 hover:text-white hover:bg-white/5 transition-all">Home</a>
-                        <a href="/technic" className="px-4 py-2 rounded-full text-xs font-semibold text-zinc-400 hover:text-white hover:bg-white/5 transition-all">Technical Hub</a>
-                        <a href="/login" className="px-4 py-2 rounded-full text-xs font-semibold text-zinc-400 hover:text-white hover:bg-white/5 transition-all border border-white/10">Operator Login</a>
+                        <a href="/" className="px-4 py-2 rounded-full text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all">Home</a>
+                        <a href="/technic" className="px-4 py-2 rounded-full text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all">Technical Hub</a>
+                        <a href="/login" className="px-4 py-2 rounded-full text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all border border-border">Operator Login</a>
                     </div>
                 </div>
             </header>
@@ -453,10 +453,10 @@ export default function ModulesCatalog() {
                         <section key={pillar}>
                             <div className="flex items-center gap-3 mb-6">
                                 <span className="h-px w-8 bg-gradient-to-r from-red-600/60 to-transparent" />
-                                <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400">
+                                <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">
                                     {pillar}
                                 </h2>
-                                <span className="text-[10px] font-bold text-zinc-600">({modules.length})</span>
+                                <span className="text-[10px] font-bold text-muted-foreground">({modules.length})</span>
                             </div>
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                                 {modules.map((mod, i) => (
@@ -478,7 +478,7 @@ export default function ModulesCatalog() {
                                         {/* Icon + Status */}
                                         <div className="flex items-start justify-between mb-3">
                                             <div className={`h-10 w-10 rounded-xl bg-gradient-to-br ${mod.gradient} flex items-center justify-center shadow-lg`}>
-                                                <mod.icon className="h-5 w-5 text-white" />
+                                                <mod.icon className="h-5 w-5 text-foreground" />
                                             </div>
                                             {mod.status === 'coming_soon' ? (
                                                 <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">
@@ -492,10 +492,10 @@ export default function ModulesCatalog() {
                                         </div>
 
                                         {/* Title & Description */}
-                                        <h3 className="text-sm font-bold text-white mb-1.5" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+                                        <h3 className="text-sm font-bold text-foreground mb-1.5" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
                                             {mod.title}
                                         </h3>
-                                        <p className="text-xs text-zinc-500 leading-relaxed mb-3">
+                                        <p className="text-xs text-muted-foreground leading-relaxed mb-3">
                                             {mod.description}
                                         </p>
 
@@ -516,7 +516,7 @@ export default function ModulesCatalog() {
 
                                         {/* Hover arrow for active */}
                                         {mod.status === 'active' && (
-                                            <div className="absolute top-5 right-5 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-400 text-lg">
+                                            <div className="absolute top-5 right-5 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground text-lg">
                                                 →
                                             </div>
                                         )}
@@ -529,13 +529,13 @@ export default function ModulesCatalog() {
             </main>
 
             {/* Footer */}
-            <footer className="border-t border-white/5 px-6 lg:px-12 py-8" data-testid="modules-footer">
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-4 text-sm text-zinc-500">
+            <footer className="border-t border-border px-6 lg:px-12 py-8" data-testid="modules-footer">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-4 text-sm text-muted-foreground">
                     <div className="font-medium">Restin.AI — The Complete Restaurant Operating System</div>
                     <div className="flex gap-6">
-                        <a href="/" className="hover:text-white transition-colors">Home</a>
-                        <a href="/technic" className="hover:text-white transition-colors">Technical Hub</a>
-                        <a href="mailto:hello@restin.ai" className="hover:text-white transition-colors">hello@restin.ai</a>
+                        <a href="/" className="hover:text-foreground transition-colors">Home</a>
+                        <a href="/technic" className="hover:text-foreground transition-colors">Technical Hub</a>
+                        <a href="mailto:hello@restin.ai" className="hover:text-foreground transition-colors">hello@restin.ai</a>
                     </div>
                 </div>
             </footer>

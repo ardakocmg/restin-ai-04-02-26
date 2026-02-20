@@ -83,4 +83,51 @@ def create_analytics_router():
             "trend": [{"date": r["_id"], "revenueCents": r["revenue"], "orders": r["orders"]} for r in results]
         }
 
+    @router.get("/admin/ai-os-stats")
+    @router.get("/manager/ai-os-stats")
+    async def get_ai_os_dashboard_stats(
+        venue_id: str = None,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Get realistic seeded stats for the AI-OS Tech Dashboard."""
+        import random
+
+        system_health = random.randint(88, 98)
+        delivery_window = round(random.uniform(92.5, 99.5), 1)
+
+        ordered = random.randint(40, 60)
+        prep = random.randint(10, 25)
+        cooking = random.randint(20, 45)
+        plating = random.randint(10, 30)
+        ready = random.randint(5, 20)
+
+        premium_steak = random.randint(12, 18)
+        greens = random.randint(55, 75)
+        truffle = random.randint(20, 35)
+
+        return {
+            "efficiency": {
+                "prepTimeAvg": "00:04:32",
+                "cookTimeAvg": "00:08:15",
+                "deliveryWindow": f"{delivery_window}%",
+                "bottleneck": "GRILL STATION" if random.random() > 0.5 else "FRYER",
+                "systemHealth": system_health,
+                "counts": {"ordered": ordered, "prep": prep, "cooking": cooking, "plating": plating, "ready": ready}
+            },
+            "forecast": {
+                "peakExpected": "19:30 - 21:00",
+                "covers": random.randint(240, 280)
+            },
+            "inventory": [
+                {"name": "PREMIUM STEAK", "left": premium_steak, "status": "critical"},
+                {"name": "ORGANIC GREENS", "left": greens, "status": "ok"},
+                {"name": "TRUFFLE OIL", "left": truffle, "status": "warning"}
+            ],
+            "sentiment": {
+                "positive": random.randint(80, 90),
+                "neutral": random.randint(8, 15),
+                "negative": random.randint(2, 8)
+            }
+        }
+
     return router

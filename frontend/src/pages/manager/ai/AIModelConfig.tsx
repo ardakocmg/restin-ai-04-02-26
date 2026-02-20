@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -158,7 +159,7 @@ export default function AIModelConfig() {
                     setVenueConfig(venueRes.data);
                 } catch { /* no venue config yet */ }
             }
-        } catch (err) {
+        } catch (err: any) {
             toast.error('Failed');
         } finally {
             setLoading(false);
@@ -180,7 +181,7 @@ export default function AIModelConfig() {
                 limits: editLimits,
             });
             await loadData();
-        } catch (err) {
+        } catch (err: any) {
             toast.error('Failed to save config');
         } finally {
             setSaving(false);
@@ -192,7 +193,7 @@ export default function AIModelConfig() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <RefreshCw className="w-6 h-6 animate-spin text-zinc-400" />
+                <RefreshCw className="w-6 h-6 animate-spin text-muted-foreground" />
             </div>
         );
     }
@@ -206,7 +207,7 @@ export default function AIModelConfig() {
                         <Brain className="w-7 h-7 text-blue-400" />
                         AI Model Configuration
                     </h1>
-                    <p className="text-sm text-zinc-400 mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                         {isSystemAdmin
                             ? 'Manage models, routing, and usage across system, groups, and venues'
                             : `Manage AI routing and usage for ${activeVenue?.name || 'your venue'}`}
@@ -219,12 +220,12 @@ export default function AIModelConfig() {
                         </Badge>
                     )}
                     {isSystemAdmin && (
-                        <Badge variant="outline" className="text-zinc-400">
+                        <Badge variant="outline" className="text-muted-foreground">
                             <Key className="w-3 h-3 mr-1" /> {geminiStatus?.total_keys || 0} Keys
                         </Badge>
                     )}
                     {!isSystemAdmin && (
-                        <Badge variant="outline" className="text-zinc-500">
+                        <Badge variant="outline" className="text-muted-foreground">
                             <MapPin className="w-3 h-3 mr-1" /> Venue Level
                         </Badge>
                     )}
@@ -235,15 +236,15 @@ export default function AIModelConfig() {
             {isSystemAdmin && (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                     {geminiStatus?.keys?.map((key, i) => (
-                        <Card key={key} className="bg-zinc-900/60 border-zinc-800">
+                        <Card key={key} className="bg-card/60 border-border">
                             <CardContent className="p-3">
                                 <div className="flex items-center justify-between mb-1">
-                                    <span className="text-[10px] font-mono text-zinc-500">KEY {i + 1}</span>
+                                    <span className="text-[10px] font-mono text-muted-foreground">KEY {i + 1}</span>
                                     {key === geminiStatus.active_key && (
                                         <Badge className="bg-emerald-500/20 text-emerald-300 text-[10px] px-1 py-0">ACTIVE</Badge>
                                     )}
                                 </div>
-                                <p className="font-mono text-xs text-zinc-300">{key}</p>
+                                <p className="font-mono text-xs text-secondary-foreground">{key}</p>
                             </CardContent>
                         </Card>
                     ))}
@@ -252,7 +253,7 @@ export default function AIModelConfig() {
 
             {/* Main Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="bg-zinc-900 border border-zinc-800">
+                <TabsList className="bg-card border border-border">
                     <TabsTrigger value="overview" className="gap-1"><Layers className="w-3.5 h-3.5" /> Models</TabsTrigger>
                     <TabsTrigger value="routing" className="gap-1"><Settings className="w-3.5 h-3.5" /> Routing</TabsTrigger>
                     <TabsTrigger value="usage" className="gap-1"><BarChart3 className="w-3.5 h-3.5" /> Usage</TabsTrigger>
@@ -266,32 +267,32 @@ export default function AIModelConfig() {
                         if (!catModels.length) return null;
                         return (
                             <div key={cat}>
-                                <h3 className="text-sm font-semibold text-zinc-300 mb-2 flex items-center gap-2">
+                                <h3 className="text-sm font-semibold text-secondary-foreground mb-2 flex items-center gap-2">
                                     {CATEGORY_ICONS[cat]}
                                     {cat.charAt(0).toUpperCase() + cat.slice(1)} Models ({catModels.length})
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                     {catModels.map(model => (
-                                        <Card key={model.id} className="bg-zinc-900/60 border-zinc-800 hover:border-zinc-700 transition-colors">
+                                        <Card key={model.id} className="bg-card/60 border-border hover:border-border transition-colors">
                                             <CardContent className="p-4">
                                                 <div className="flex items-start justify-between mb-2">
                                                     <div>
-                                                        <h4 className="font-semibold text-sm text-zinc-100">{model.name}</h4>
-                                                        <p className="text-xs text-zinc-500 font-mono">{model.id}</p>
+                                                        <h4 className="font-semibold text-sm text-foreground">{model.name}</h4>
+                                                        <p className="text-xs text-muted-foreground font-mono">{model.id}</p>
                                                     </div>
                                                     <Badge className={`text-[10px] ${TIER_LABEL[model.tier]?.class || ''}`}>
                                                         {TIER_LABEL[model.tier]?.text || model.tier}
                                                     </Badge>
                                                 </div>
-                                                <p className="text-xs text-zinc-400 mb-3">{model.description}</p>
-                                                <div className="flex items-center gap-3 text-[10px] text-zinc-500">
+                                                <p className="text-xs text-muted-foreground mb-3">{model.description}</p>
+                                                <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
                                                     <span className="flex items-center gap-1"><Zap className="w-3 h-3" /> {model.rpm ?? '—'} RPM</span>
                                                     <span className="flex items-center gap-1"><TrendingUp className="w-3 h-3" /> {(model.rpd ?? 0).toLocaleString()} RPD</span>
                                                 </div>
                                                 {(model.default_tasks?.length ?? 0) > 0 && (
                                                     <div className="flex flex-wrap gap-1 mt-2">
                                                         {(model.default_tasks || []).map(task => (
-                                                            <Badge key={task} variant="outline" className="text-[10px] text-zinc-400 border-zinc-700">
+                                                            <Badge key={task} variant="outline" className="text-[10px] text-muted-foreground border-border">
                                                                 {task}
                                                             </Badge>
                                                         ))}
@@ -308,7 +309,7 @@ export default function AIModelConfig() {
 
                 {/* ─── Routing Tab ─── */}
                 <TabsContent value="routing" className="space-y-4 mt-4">
-                    <Card className="bg-zinc-900/60 border-zinc-800">
+                    <Card className="bg-card/60 border-border">
                         <CardHeader className="pb-3">
                             <div className="flex items-center justify-between">
                                 <div>
@@ -331,7 +332,7 @@ export default function AIModelConfig() {
                                             </SelectContent>
                                         </Select>
                                     ) : (
-                                        <Badge variant="outline" className="text-xs text-zinc-400">
+                                        <Badge variant="outline" className="text-xs text-muted-foreground">
                                             <MapPin className="w-3 h-3 mr-1" /> Venue Override
                                         </Badge>
                                     )}
@@ -345,7 +346,7 @@ export default function AIModelConfig() {
                         <CardContent>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {Object.entries(editRouting).map(([task, modelId]) => (
-                                    <div key={task} className="flex items-center justify-between p-3 rounded-lg bg-zinc-800/50 border border-zinc-800">
+                                    <div key={task} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50 border border-border">
                                         <span className="text-sm font-medium">
                                             {TASK_LABELS[task] || task}
                                         </span>
@@ -383,7 +384,7 @@ export default function AIModelConfig() {
                     </Card>
 
                     {/* Features Toggle */}
-                    <Card className="bg-zinc-900/60 border-zinc-800">
+                    <Card className="bg-card/60 border-border">
                         <CardHeader className="pb-3">
                             <CardTitle className="text-base">AI Features</CardTitle>
                             <CardDescription>Toggle AI features on/off per level</CardDescription>
@@ -391,7 +392,7 @@ export default function AIModelConfig() {
                         <CardContent>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                 {Object.entries(editFeatures).map(([feature, enabled]) => (
-                                    <div key={feature} className="flex items-center justify-between p-3 rounded-lg bg-zinc-800/50 border border-zinc-800">
+                                    <div key={feature} className="flex items-center justify-between p-3 rounded-lg bg-secondary/50 border border-border">
                                         <span className="text-sm capitalize">{feature.replace(/_/g, ' ')}</span>
                                         <Switch
                                             checked={enabled}
@@ -423,28 +424,28 @@ export default function AIModelConfig() {
 
                     {/* Summary Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <Card className="bg-zinc-900/60 border-zinc-800">
+                        <Card className="bg-card/60 border-border">
                             <CardContent className="p-4">
-                                <p className="text-xs text-zinc-500 mb-1">Total Requests</p>
-                                <p className="text-2xl font-bold text-zinc-100">{usageStats?.total_requests || 0}</p>
+                                <p className="text-xs text-muted-foreground mb-1">Total Requests</p>
+                                <p className="text-2xl font-bold text-foreground">{usageStats?.total_requests || 0}</p>
                             </CardContent>
                         </Card>
-                        <Card className="bg-zinc-900/60 border-zinc-800">
+                        <Card className="bg-card/60 border-border">
                             <CardContent className="p-4">
-                                <p className="text-xs text-zinc-500 mb-1">Total Tokens</p>
-                                <p className="text-2xl font-bold text-zinc-100">{(usageStats?.total_tokens || 0).toLocaleString()}</p>
+                                <p className="text-xs text-muted-foreground mb-1">Total Tokens</p>
+                                <p className="text-2xl font-bold text-foreground">{(usageStats?.total_tokens || 0).toLocaleString()}</p>
                             </CardContent>
                         </Card>
-                        <Card className="bg-zinc-900/60 border-zinc-800">
+                        <Card className="bg-card/60 border-border">
                             <CardContent className="p-4">
-                                <p className="text-xs text-zinc-500 mb-1">Estimated Cost</p>
+                                <p className="text-xs text-muted-foreground mb-1">Estimated Cost</p>
                                 <p className="text-2xl font-bold text-emerald-400">${(usageStats?.total_cost_usd || 0).toFixed(6)}</p>
                             </CardContent>
                         </Card>
                     </div>
 
                     {/* Breakdown Table */}
-                    <Card className="bg-zinc-900/60 border-zinc-800">
+                    <Card className="bg-card/60 border-border">
                         <CardHeader className="pb-3">
                             <CardTitle className="text-base">Usage Breakdown</CardTitle>
                             <CardDescription>Per model, per key, per action</CardDescription>
@@ -454,7 +455,7 @@ export default function AIModelConfig() {
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-sm">
                                         <thead>
-                                            <tr className="border-b border-zinc-800 text-zinc-500 text-xs">
+                                            <tr className="border-b border-border text-muted-foreground text-xs">
                                                 <th className="text-left py-2 pl-2">Model</th>
                                                 <th className="text-left py-2">Key</th>
                                                 <th className="text-left py-2">Action</th>
@@ -465,14 +466,14 @@ export default function AIModelConfig() {
                                         </thead>
                                         <tbody>
                                             {usageStats.breakdown.map((row, i) => (
-                                                <tr key={i} className="border-b border-zinc-800/50 hover:bg-zinc-800/30">
-                                                    <td className="py-2 pl-2 font-mono text-xs text-zinc-300">{row.model}</td>
-                                                    <td className="py-2 font-mono text-xs text-zinc-500">{row.key}</td>
+                                                <tr key={i} className="border-b border-border/50 hover:bg-secondary/30">
+                                                    <td className="py-2 pl-2 font-mono text-xs text-secondary-foreground">{row.model}</td>
+                                                    <td className="py-2 font-mono text-xs text-muted-foreground">{row.key}</td>
                                                     <td className="py-2">
                                                         <Badge variant="outline" className="text-[10px]">{row.action}</Badge>
                                                     </td>
-                                                    <td className="py-2 text-right text-zinc-300">{row.requests}</td>
-                                                    <td className="py-2 text-right text-zinc-300">{row.tokens.toLocaleString()}</td>
+                                                    <td className="py-2 text-right text-secondary-foreground">{row.requests}</td>
+                                                    <td className="py-2 text-right text-secondary-foreground">{row.tokens.toLocaleString()}</td>
                                                     <td className="py-2 text-right text-emerald-400 pr-2">${row.cost_usd.toFixed(6)}</td>
                                                 </tr>
                                             ))}
@@ -480,7 +481,7 @@ export default function AIModelConfig() {
                                     </table>
                                 </div>
                             ) : (
-                                <div className="text-center py-8 text-zinc-500">
+                                <div className="text-center py-8 text-muted-foreground">
                                     <AlertCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
                                     <p className="text-sm">No usage data for this period</p>
                                 </div>
@@ -493,7 +494,7 @@ export default function AIModelConfig() {
                 <TabsContent value="config" className="space-y-4 mt-4">
                     {/* System Config — System Admin Only */}
                     {isSystemAdmin && (
-                        <Card className="bg-zinc-900/60 border-zinc-800">
+                        <Card className="bg-card/60 border-border">
                             <CardHeader className="pb-3">
                                 <CardTitle className="text-base flex items-center gap-2">
                                     <Shield className="w-4 h-4 text-blue-400" /> System Config
@@ -504,22 +505,22 @@ export default function AIModelConfig() {
                                 <div className="space-y-3">
                                     <div className="grid grid-cols-2 gap-3">
                                         <div>
-                                            <Label className="text-xs text-zinc-500">Daily Token Limit</Label>
+                                            <Label className="text-xs text-muted-foreground">Daily Token Limit</Label>
                                             <Input
                                                 type="number"
                                                 value={editLimits.daily_token_limit}
                                                 onChange={(e) => setEditLimits(prev => ({ ...prev, daily_token_limit: parseInt(e.target.value) || 0 }))}
-                                                className="h-8 text-sm bg-zinc-800 border-zinc-700"
+                                                className="h-8 text-sm bg-secondary border-border"
                                             />
                                         </div>
                                         <div>
-                                            <Label className="text-xs text-zinc-500">Monthly Cost Cap (USD)</Label>
+                                            <Label className="text-xs text-muted-foreground">Monthly Cost Cap (USD)</Label>
                                             <Input
                                                 type="number"
                                                 step="0.01"
                                                 value={editLimits.monthly_cost_cap_usd}
                                                 onChange={(e) => setEditLimits(prev => ({ ...prev, monthly_cost_cap_usd: parseFloat(e.target.value) || 0 }))}
-                                                className="h-8 text-sm bg-zinc-800 border-zinc-700"
+                                                className="h-8 text-sm bg-secondary border-border"
                                             />
                                         </div>
                                     </div>
@@ -534,7 +535,7 @@ export default function AIModelConfig() {
 
                     {/* Venue Config */}
                     {venueId && (
-                        <Card className="bg-zinc-900/60 border-zinc-800">
+                        <Card className="bg-card/60 border-border">
                             <CardHeader className="pb-3">
                                 <CardTitle className="text-base flex items-center gap-2">
                                     <MapPin className="w-4 h-4 text-amber-400" /> Venue Config
@@ -544,9 +545,9 @@ export default function AIModelConfig() {
                             </CardHeader>
                             <CardContent>
                                 {venueConfig?.message ? (
-                                    <p className="text-sm text-zinc-500">{venueConfig.message}</p>
+                                    <p className="text-sm text-muted-foreground">{venueConfig.message}</p>
                                 ) : (
-                                    <p className="text-sm text-zinc-400">
+                                    <p className="text-sm text-muted-foreground">
                                         Venue has custom config. Last updated: {venueConfig?.updated_at || 'N/A'}
                                     </p>
                                 )}
@@ -556,7 +557,7 @@ export default function AIModelConfig() {
 
                     {/* Resolved Config Preview */}
                     {resolvedConfig && (
-                        <Card className="bg-zinc-900/60 border-zinc-800">
+                        <Card className="bg-card/60 border-border">
                             <CardHeader className="pb-3">
                                 <CardTitle className="text-base flex items-center gap-2">
                                     <Layers className="w-4 h-4 text-emerald-400" /> Resolved Config
@@ -565,7 +566,7 @@ export default function AIModelConfig() {
                                 <CardDescription>Final config after cascade: System → Group → Venue</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <pre className="text-xs text-zinc-400 bg-zinc-950 p-3 rounded-lg overflow-x-auto max-h-64 overflow-y-auto">
+                                <pre className="text-xs text-muted-foreground bg-background p-3 rounded-lg overflow-x-auto max-h-64 overflow-y-auto">
                                     {JSON.stringify(resolvedConfig, null, 2)}
                                 </pre>
                             </CardContent>

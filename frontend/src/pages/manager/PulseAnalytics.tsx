@@ -195,7 +195,7 @@ export default function PulseAnalytics() {
                     )}
                     <button
                         onClick={loadAll}
-                        className="p-2 bg-zinc-800 border border-white/10 rounded-xl text-zinc-400 hover:text-white transition-colors"
+                        className="p-2 bg-secondary border border-border rounded-xl text-muted-foreground hover:text-foreground transition-colors"
                         title="Refresh data"
                     >
                         <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
@@ -204,14 +204,14 @@ export default function PulseAnalytics() {
             }
         >
             {/* Period Selector */}
-            <div className="flex items-center gap-1 mb-6 bg-zinc-900 p-1 rounded-xl border border-white/5 w-fit">
+            <div className="flex items-center gap-1 mb-6 bg-card p-1 rounded-xl border border-border w-fit">
                 {periods.map(p => (
                     <button
                         key={p.id}
                         onClick={() => setPeriod(p.id)}
                         className={cn(
                             "px-4 py-2 rounded-lg text-sm font-bold transition-all",
-                            period === p.id ? "bg-emerald-600 text-white" : "text-zinc-500 hover:text-white"
+                            period === p.id ? "bg-emerald-600 text-foreground" : "text-muted-foreground hover:text-foreground"
                         )}
                     >
                         {p.label}
@@ -227,7 +227,7 @@ export default function PulseAnalytics() {
                     { label: 'Avg Order', value: fmt(overview?.avg_order_cents || 0), icon: TrendingUp, color: 'text-purple-400', bgColor: 'bg-purple-600/10', trend: null },
                     { label: 'Tips', value: fmt(overview?.tips_cents || 0), icon: Star, color: 'text-amber-400', bgColor: 'bg-amber-600/10', trend: null },
                 ].map((card, i) => (
-                    <div key={i} className="p-5 bg-zinc-900/50 border border-white/5 rounded-2xl pulse-stat-card cursor-default">
+                    <div key={i} className="p-5 bg-card/50 border border-border rounded-2xl pulse-stat-card cursor-default">
                         <div className="flex items-center justify-between mb-3">
                             <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center", card.bgColor)}>
                                 <card.icon className={cn("w-4.5 h-4.5", card.color)} />
@@ -238,8 +238,8 @@ export default function PulseAnalytics() {
                                 </span>
                             )}
                         </div>
-                        <p className="text-2xl font-black text-white">{card.value}</p>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 mt-1">{card.label}</p>
+                        <p className="text-2xl font-black text-foreground">{card.value}</p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mt-1">{card.label}</p>
                     </div>
                 ))}
             </div>
@@ -250,15 +250,15 @@ export default function PulseAnalytics() {
                     { label: 'Online Orders', value: overview?.online_orders || 0, sub: fmt(overview?.online_revenue_cents || 0), icon: Zap, color: 'text-cyan-400' },
                     { label: 'Refunds', value: overview?.refunds || 0, sub: fmt(overview?.refund_total_cents || 0), icon: TrendingDown, color: 'text-red-400' },
                     { label: 'Tax Collected', value: fmt(overview?.tax_cents || 0), sub: `${overview?.total_orders || 0} transactions`, icon: Percent, color: 'text-orange-400' },
-                    { label: 'Staff On Clock', value: labor?.staff_on_clock || 0, sub: `${labor?.clocked_hours || 0}h clocked`, icon: Users, color: 'text-zinc-400' },
+                    { label: 'Staff On Clock', value: labor?.staff_on_clock || 0, sub: `${labor?.clocked_hours || 0}h clocked`, icon: Users, color: 'text-muted-foreground' },
                 ].map((card, i) => (
-                    <div key={i} className="p-4 bg-zinc-900/30 border border-white/5 rounded-xl pulse-stat-card cursor-default">
+                    <div key={i} className="p-4 bg-card/30 border border-border rounded-xl pulse-stat-card cursor-default">
                         <div className="flex items-center gap-2 mb-2">
                             <card.icon className={cn("w-4 h-4", card.color)} />
-                            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-zinc-600">{card.label}</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground">{card.label}</span>
                         </div>
-                        <p className="text-xl font-bold text-white">{card.value}</p>
-                        {card.sub && <p className="text-[10px] text-zinc-600 mt-0.5">{card.sub}</p>}
+                        <p className="text-xl font-bold text-foreground">{card.value}</p>
+                        {card.sub && <p className="text-[10px] text-muted-foreground mt-0.5">{card.sub}</p>}
                     </div>
                 ))}
             </div>
@@ -267,18 +267,18 @@ export default function PulseAnalytics() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 
                 {/* Hourly Revenue / Orders Area Chart */}
-                <div className="lg:col-span-2 p-5 bg-zinc-900/50 border border-white/5 rounded-2xl">
+                <div className="lg:col-span-2 p-5 bg-card/50 border border-border rounded-2xl">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 flex items-center gap-1.5">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-1.5">
                             <Activity className="w-3 h-3" />
                             Hourly Performance
                         </h3>
-                        <div className="flex items-center gap-1 bg-zinc-800 p-0.5 rounded-lg">
+                        <div className="flex items-center gap-1 bg-secondary p-0.5 rounded-lg">
                             <button
                                 onClick={() => setChartView('revenue')}
                                 className={cn(
                                     "px-3 py-1 rounded-md text-[10px] font-bold transition-all",
-                                    chartView === 'revenue' ? "bg-emerald-600 text-white" : "text-zinc-500 hover:text-white"
+                                    chartView === 'revenue' ? "bg-emerald-600 text-foreground" : "text-muted-foreground hover:text-foreground"
                                 )}
                             >
                                 Revenue
@@ -287,7 +287,7 @@ export default function PulseAnalytics() {
                                 onClick={() => setChartView('orders')}
                                 className={cn(
                                     "px-3 py-1 rounded-md text-[10px] font-bold transition-all",
-                                    chartView === 'orders' ? "bg-blue-600 text-white" : "text-zinc-500 hover:text-white"
+                                    chartView === 'orders' ? "bg-blue-600 text-foreground" : "text-muted-foreground hover:text-foreground"
                                 )}
                             >
                                 Orders
@@ -299,7 +299,7 @@ export default function PulseAnalytics() {
                         <div className="flex items-center justify-center py-16">
                             <div className="text-center">
                                 <BarChart3 className="w-8 h-8 text-zinc-700 mx-auto mb-2" />
-                                <p className="text-xs text-zinc-600">No data for this period</p>
+                                <p className="text-xs text-muted-foreground">No data for this period</p>
                             </div>
                         </div>
                     ) : (
@@ -365,15 +365,15 @@ export default function PulseAnalytics() {
                 </div>
 
                 {/* Revenue Breakdown Donut */}
-                <div className="p-5 bg-zinc-900/50 border border-white/5 rounded-2xl">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 flex items-center gap-1.5">
+                <div className="p-5 bg-card/50 border border-border rounded-2xl">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4 flex items-center gap-1.5">
                         <DollarSign className="w-3 h-3" />
                         Revenue Split
                     </h3>
 
                     {revenueBreakdown.length === 0 ? (
                         <div className="flex items-center justify-center py-12">
-                            <p className="text-xs text-zinc-600">No revenue data</p>
+                            <p className="text-xs text-muted-foreground">No revenue data</p>
                         </div>
                     ) : (
                         <div className="pulse-chart-container flex flex-col items-center">
@@ -400,8 +400,8 @@ export default function PulseAnalytics() {
                                     </PieChart>
                                 </ResponsiveContainer>
                                 <div className="pulse-donut-center">
-                                    <p className="text-lg font-black text-white">{fmtK(overview?.revenue_cents || 0)}</p>
-                                    <p className="text-[9px] text-zinc-600 font-bold uppercase">Total</p>
+                                    <p className="text-lg font-black text-foreground">{fmtK(overview?.revenue_cents || 0)}</p>
+                                    <p className="text-[9px] text-muted-foreground font-bold uppercase">Total</p>
                                 </div>
                             </div>
 
@@ -410,8 +410,8 @@ export default function PulseAnalytics() {
                                 {revenueBreakdown.map((d, i) => (
                                     <div key={i} className="flex items-center gap-1.5">
                                         <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }} />
-                                        <span className="text-[10px] text-zinc-500 font-bold">{d.name}</span>
-                                        <span className="text-[10px] text-zinc-400 font-bold">€{d.value.toFixed(0)}</span>
+                                        <span className="text-[10px] text-muted-foreground font-bold">{d.name}</span>
+                                        <span className="text-[10px] text-muted-foreground font-bold">€{d.value.toFixed(0)}</span>
                                     </div>
                                 ))}
                             </div>
@@ -424,14 +424,14 @@ export default function PulseAnalytics() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 
                 {/* Top Sellers */}
-                <div className="p-5 bg-zinc-900/50 border border-white/5 rounded-2xl">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 flex items-center gap-1.5">
+                <div className="p-5 bg-card/50 border border-border rounded-2xl">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4 flex items-center gap-1.5">
                         <Flame className="w-3 h-3" />
                         Top Sellers
                     </h3>
                     {topItemsChart.length === 0 ? (
                         <div className="flex items-center justify-center py-12">
-                            <p className="text-xs text-zinc-600">No sales data yet</p>
+                            <p className="text-xs text-muted-foreground">No sales data yet</p>
                         </div>
                     ) : (
                         <ResponsiveContainer width="100%" height={240}>
@@ -468,8 +468,8 @@ export default function PulseAnalytics() {
                 </div>
 
                 {/* Labor Dashboard */}
-                <div className="p-5 bg-zinc-900/50 border border-white/5 rounded-2xl">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 flex items-center gap-1.5">
+                <div className="p-5 bg-card/50 border border-border rounded-2xl">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4 flex items-center gap-1.5">
                         <Users className="w-3 h-3" />
                         Labor Overview
                     </h3>
@@ -478,7 +478,7 @@ export default function PulseAnalytics() {
                         {/* Labor % Gauge */}
                         <div>
                             <div className="flex items-center justify-between mb-2">
-                                <span className="text-sm font-bold text-white">Labor Cost %</span>
+                                <span className="text-sm font-bold text-foreground">Labor Cost %</span>
                                 <span className={cn(
                                     "text-xl font-black",
                                     (labor?.labor_percent || 0) > 30 ? "text-red-400" :
@@ -498,29 +498,29 @@ export default function PulseAnalytics() {
                                 />
                             </div>
                             <div className="flex justify-between mt-1.5">
-                                <span className="text-[9px] text-zinc-600 font-bold">0%</span>
-                                <span className="text-[9px] text-zinc-600 font-bold">Target: 25%</span>
-                                <span className="text-[9px] text-zinc-600 font-bold">50%</span>
+                                <span className="text-[9px] text-muted-foreground font-bold">0%</span>
+                                <span className="text-[9px] text-muted-foreground font-bold">Target: 25%</span>
+                                <span className="text-[9px] text-muted-foreground font-bold">50%</span>
                             </div>
                         </div>
 
                         {/* Labor detail cards */}
                         <div className="grid grid-cols-2 gap-3">
-                            <div className="p-3 bg-zinc-800/50 rounded-xl">
-                                <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-wider">Revenue</p>
-                                <p className="text-lg font-bold text-white mt-1">{fmt(labor?.revenue_cents || 0)}</p>
+                            <div className="p-3 bg-secondary/50 rounded-xl">
+                                <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">Revenue</p>
+                                <p className="text-lg font-bold text-foreground mt-1">{fmt(labor?.revenue_cents || 0)}</p>
                             </div>
-                            <div className="p-3 bg-zinc-800/50 rounded-xl">
-                                <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-wider">Labor Cost</p>
-                                <p className="text-lg font-bold text-white mt-1">{fmt(labor?.labor_cost_cents || 0)}</p>
+                            <div className="p-3 bg-secondary/50 rounded-xl">
+                                <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">Labor Cost</p>
+                                <p className="text-lg font-bold text-foreground mt-1">{fmt(labor?.labor_cost_cents || 0)}</p>
                             </div>
-                            <div className="p-3 bg-zinc-800/50 rounded-xl">
-                                <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-wider">Hours Clocked</p>
-                                <p className="text-lg font-bold text-white mt-1">{labor?.clocked_hours || 0}h</p>
+                            <div className="p-3 bg-secondary/50 rounded-xl">
+                                <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">Hours Clocked</p>
+                                <p className="text-lg font-bold text-foreground mt-1">{labor?.clocked_hours || 0}h</p>
                             </div>
-                            <div className="p-3 bg-zinc-800/50 rounded-xl">
-                                <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-wider">Staff On Clock</p>
-                                <p className="text-lg font-bold text-white mt-1 flex items-center gap-1.5">
+                            <div className="p-3 bg-secondary/50 rounded-xl">
+                                <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">Staff On Clock</p>
+                                <p className="text-lg font-bold text-foreground mt-1 flex items-center gap-1.5">
                                     {labor?.staff_on_clock || 0}
                                     {(labor?.staff_on_clock || 0) > 0 && (
                                         <span className="w-2 h-2 rounded-full bg-emerald-400 pulse-live-dot" />
@@ -534,8 +534,8 @@ export default function PulseAnalytics() {
 
             {/* ── Multi-Location Comparison ──────────────────── */}
             {locations.length > 1 && (
-                <div className="p-5 bg-zinc-900/50 border border-white/5 rounded-2xl">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 flex items-center gap-1.5">
+                <div className="p-5 bg-card/50 border border-border rounded-2xl">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4 flex items-center gap-1.5">
                         <Building2 className="w-3 h-3" />
                         Multi-Location Comparison (Today)
                     </h3>
@@ -546,28 +546,28 @@ export default function PulseAnalytics() {
                             return (
                                 <div key={loc.venue_id} className={cn(
                                     "flex items-center gap-3 p-3 rounded-xl border transition-colors",
-                                    loc.venue_id === venueId ? "bg-emerald-600/10 border-emerald-500/30" : "bg-zinc-900/30 border-white/5"
+                                    loc.venue_id === venueId ? "bg-emerald-600/10 border-emerald-500/30" : "bg-card/30 border-border"
                                 )}>
                                     <span className={cn(
                                         "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold",
                                         i === 0 ? "bg-amber-500/20 text-amber-400" :
-                                            i === 1 ? "bg-zinc-500/20 text-zinc-400" : "bg-zinc-800 text-zinc-600"
+                                            i === 1 ? "bg-zinc-500/20 text-muted-foreground" : "bg-secondary text-muted-foreground"
                                     )}>
                                         {i + 1}
                                     </span>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center justify-between">
-                                            <p className="text-sm font-bold text-white truncate">{loc.venue_name}</p>
+                                            <p className="text-sm font-bold text-foreground truncate">{loc.venue_name}</p>
                                             <span className="text-sm font-bold text-emerald-400 ml-2">{fmt(loc.revenue_today_cents)}</span>
                                         </div>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <div className="flex-1 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                            <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
                                                 <div
                                                     className="h-full bg-emerald-500 rounded-full transition-all duration-700 pulse-hourly-bar"
                                                     style={{ '--bar-width': `${widthPct}%` } as React.CSSProperties}
                                                 />
                                             </div>
-                                            <span className="text-[9px] text-zinc-600 font-bold">{loc.orders_today} orders</span>
+                                            <span className="text-[9px] text-muted-foreground font-bold">{loc.orders_today} orders</span>
                                         </div>
                                     </div>
                                     {loc.venue_id === venueId && (

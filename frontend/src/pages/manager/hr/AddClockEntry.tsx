@@ -85,7 +85,7 @@ export default function AddClockEntry() {
                 if (res.data?.length > 0 && !workArea) {
                     setWorkArea(res.data[0].code);
                 }
-            } catch (err) {
+            } catch (err: any) {
                 logger.error('Failed to fetch work areas', err as Record<string, unknown>);
                 // Use defaults
                 setWorkAreas([
@@ -108,7 +108,7 @@ export default function AddClockEntry() {
             try {
                 const res = await api.get(`/venues/${activeVenue.id}/hr/employees`);
                 setEmployees(res.data || []);
-            } catch (err) {
+            } catch (err: any) {
                 logger.error('Failed to fetch employees', err as Record<string, unknown>);
             }
         };
@@ -166,9 +166,9 @@ export default function AddClockEntry() {
     // Success state
     if (submitted && submitResult) {
         return (
-            <div className="p-6 bg-[#09090b] min-h-screen text-zinc-100 font-sans">
+            <div className="p-6 bg-[#09090b] min-h-screen text-foreground font-sans">
                 <div className="max-w-lg mx-auto mt-16">
-                    <Card className="bg-zinc-900 border-zinc-800 overflow-hidden">
+                    <Card className="bg-card border-border overflow-hidden">
                         <CardContent className="p-8 text-center">
                             <div className={cn(
                                 "w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center",
@@ -183,10 +183,10 @@ export default function AddClockEntry() {
                                 )}
                             </div>
 
-                            <h2 className="text-xl font-bold text-white mb-2">
+                            <h2 className="text-xl font-bold text-foreground mb-2">
                                 {submitResult.requires_approval ? 'Sent for Approval' : 'Entry Added'}
                             </h2>
-                            <p className="text-sm text-zinc-400 mb-8">
+                            <p className="text-sm text-muted-foreground mb-8">
                                 {submitResult.message}
                             </p>
 
@@ -197,14 +197,14 @@ export default function AddClockEntry() {
                                         setSubmitResult(null);
                                         setReason('');
                                     }}
-                                    className="bg-blue-600 hover:bg-blue-500 text-white"
+                                    className="bg-blue-600 hover:bg-blue-500 text-foreground"
                                 >
                                     Add Another Entry
                                 </Button>
                                 <Button
                                     onClick={() => navigate('/manager/hr/clocking')}
                                     variant="outline"
-                                    className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                                    className="border-border text-secondary-foreground hover:bg-secondary"
                                 >
                                     Back to Clocking
                                 </Button>
@@ -226,32 +226,32 @@ export default function AddClockEntry() {
     }
 
     return (
-        <div className="p-6 bg-[#09090b] min-h-screen text-zinc-100 font-sans">
+        <div className="p-6 bg-[#09090b] min-h-screen text-foreground font-sans">
             {/* Header */}
             <div className="flex items-center gap-4 mb-8">
                 <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => navigate('/manager/hr/clocking')}
-                    className="text-zinc-400 hover:text-white hover:bg-white/5"
+                    className="text-muted-foreground hover:text-foreground hover:bg-white/5"
                     title="Back to Clocking Data"
                 >
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <div>
-                    <h1 className="text-2xl font-black text-white uppercase tracking-tighter">
+                    <h1 className="text-2xl font-black text-foreground uppercase tracking-tighter">
                         Add Clock Entry
                     </h1>
-                    <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                         Manual time entry • {isManager ? 'HR Mode' : 'Self-Service'}
                     </p>
                 </div>
             </div>
 
             <div className="max-w-2xl">
-                <Card className="bg-zinc-900 border-zinc-800">
-                    <CardHeader className="border-b border-zinc-800/50">
-                        <CardTitle className="text-base font-bold text-zinc-200 flex items-center gap-2">
+                <Card className="bg-card border-border">
+                    <CardHeader className="border-b border-border/50">
+                        <CardTitle className="text-base font-bold text-secondary-foreground flex items-center gap-2">
                             <Clock className="h-4 w-4 text-blue-400" />
                             Clock Entry Details
                         </CardTitle>
@@ -261,7 +261,7 @@ export default function AddClockEntry() {
                         {/* Employee Selector (HR/Manager only) */}
                         {isManager && employees.length > 0 && (
                             <div className="space-y-2">
-                                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                     <User className="inline h-3 w-3 mr-1 mb-0.5" />
                                     Employee
                                 </label>
@@ -270,7 +270,7 @@ export default function AddClockEntry() {
                                         value={selectedEmployeeId}
                                         onChange={(e) => setSelectedEmployeeId(e.target.value)}
                                         title="Select Employee"
-                                        className="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-sm text-zinc-200 appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 outline-none transition-all"
+                                        className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-sm text-secondary-foreground appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 outline-none transition-all"
                                     >
                                         <option value="">Myself ({user?.name || 'Current User'})</option>
                                         {employees.map((emp) => (
@@ -280,14 +280,14 @@ export default function AddClockEntry() {
                                             </option>
                                         ))}
                                     </select>
-                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
+                                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                                 </div>
                             </div>
                         )}
 
                         {/* Date Picker */}
                         <div className="space-y-2">
-                            <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                 <Calendar className="inline h-3 w-3 mr-1 mb-0.5" />
                                 Work Date
                             </label>
@@ -296,45 +296,45 @@ export default function AddClockEntry() {
                                 value={date}
                                 max={new Date().toISOString().split('T')[0]}
                                 onChange={(e) => setDate(e.target.value)}
-                                className="bg-zinc-800/50 border-zinc-700 text-zinc-200 h-12 text-sm [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert-[0.5]"
+                                className="bg-secondary/50 border-border text-secondary-foreground h-12 text-sm [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert-[0.5]"
                             />
                         </div>
 
                         {/* Time Pickers Row */}
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                     Clock In
                                 </label>
                                 <Input
                                     type="time"
                                     value={clockIn}
                                     onChange={(e) => setClockIn(e.target.value)}
-                                    className="bg-zinc-800/50 border-zinc-700 text-zinc-200 h-12 text-sm [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert-[0.5]"
+                                    className="bg-secondary/50 border-border text-secondary-foreground h-12 text-sm [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert-[0.5]"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                     Clock Out
                                 </label>
                                 <Input
                                     type="time"
                                     value={clockOut}
                                     onChange={(e) => setClockOut(e.target.value)}
-                                    className="bg-zinc-800/50 border-zinc-700 text-zinc-200 h-12 text-sm [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert-[0.5]"
+                                    className="bg-secondary/50 border-border text-secondary-foreground h-12 text-sm [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert-[0.5]"
                                 />
                             </div>
                         </div>
 
                         {/* Duration preview */}
-                        <div className="bg-zinc-800/30 rounded-lg border border-zinc-800 px-4 py-3 flex items-center justify-between">
-                            <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Total Duration</span>
-                            <span className="text-lg font-black text-white tabular-nums">{calcHours()}h</span>
+                        <div className="bg-secondary/30 rounded-lg border border-border px-4 py-3 flex items-center justify-between">
+                            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Total Duration</span>
+                            <span className="text-lg font-black text-foreground tabular-nums">{calcHours()}h</span>
                         </div>
 
                         {/* Work Area */}
                         <div className="space-y-2">
-                            <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                 <MapPin className="inline h-3 w-3 mr-1 mb-0.5" />
                                 Work Area
                             </label>
@@ -351,7 +351,7 @@ export default function AddClockEntry() {
                                             "px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider border transition-all text-center",
                                             workArea === area.code
                                                 ? "bg-blue-500/15 border-blue-500/30 text-blue-400"
-                                                : "bg-zinc-800/50 border-zinc-700 text-zinc-400 hover:border-zinc-600 hover:text-zinc-300"
+                                                : "bg-secondary/50 border-border text-muted-foreground hover:border-zinc-600 hover:text-secondary-foreground"
                                         )}
                                     >
                                         {area.code}
@@ -362,18 +362,18 @@ export default function AddClockEntry() {
 
                         {/* Venue Display */}
                         {activeVenue && (
-                            <div className="flex items-center gap-3 bg-zinc-800/30 rounded-lg border border-zinc-800 px-4 py-3">
-                                <Building2 className="h-4 w-4 text-zinc-500" />
+                            <div className="flex items-center gap-3 bg-secondary/30 rounded-lg border border-border px-4 py-3">
+                                <Building2 className="h-4 w-4 text-muted-foreground" />
                                 <div>
-                                    <div className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Venue</div>
-                                    <div className="text-sm font-bold text-zinc-200">{activeVenue.name}</div>
+                                    <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Venue</div>
+                                    <div className="text-sm font-bold text-secondary-foreground">{activeVenue.name}</div>
                                 </div>
                             </div>
                         )}
 
                         {/* Reason */}
                         <div className="space-y-2">
-                            <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                 Reason for Manual Entry
                             </label>
                             <textarea
@@ -381,7 +381,7 @@ export default function AddClockEntry() {
                                 onChange={(e) => setReason(e.target.value)}
                                 placeholder="e.g. Forgot to clock in, system was down, working remotely..."
                                 rows={3}
-                                className="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-sm text-zinc-200 placeholder:text-zinc-600 resize-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 outline-none transition-all"
+                                className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-sm text-secondary-foreground placeholder:text-muted-foreground resize-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 outline-none transition-all"
                             />
                         </div>
 
@@ -400,7 +400,7 @@ export default function AddClockEntry() {
                         <Button
                             onClick={handleSubmit}
                             disabled={submitting || !date || !clockIn || !clockOut}
-                            className="w-full h-12 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm uppercase tracking-widest disabled:opacity-50"
+                            className="w-full h-12 bg-emerald-600 hover:bg-emerald-500 text-foreground font-bold text-sm uppercase tracking-widest disabled:opacity-50"
                         >
                             {submitting ? (
                                 <>

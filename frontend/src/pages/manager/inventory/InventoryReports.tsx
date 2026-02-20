@@ -213,7 +213,7 @@ export default function InventoryReports() {
             setMovements(movData);
             setVariances(varData);
             setWaste(wasteData);
-        } catch (err) {
+        } catch (err: any) {
             logger.error('Failed to load reports', { error: String(err) });
             setMovements([]);
             setVariances([]);

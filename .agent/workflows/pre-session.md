@@ -12,9 +12,14 @@ description: Mandatory 4-stage checklist before starting any work session
 Read these files to understand the project standards:
 
 ```
-.agent/RULES.md
-memory/MASTER_RULES.md
+C:\Users\arda\Documents\restin-setup\RULES.md   ← MASTER RULES (external, both PCs)
+.agent/RULES.md                                  ← In-repo copy
+memory/MASTER_RULES.md                           ← Legacy reference
 ```
+
+> ⚠️ **CRITICAL:** `C:\Users\arda\Documents\restin-setup\RULES.md` is the SINGLE SOURCE OF TRUTH.
+> Rule I.1: **Frontend = TypeScript (.tsx) ONLY. .jsx/.js is FORBIDDEN. `any` is FORBIDDEN.**
+> FAILURE TO READ THIS FILE BEFORE WRITING ANY CODE IS UNACCEPTABLE.
 
 ## Stage 2: 📡 CHECK CHANNEL
 

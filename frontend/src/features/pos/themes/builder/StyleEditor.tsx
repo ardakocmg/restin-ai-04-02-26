@@ -61,21 +61,21 @@ function ColorInput({
 }) {
     return (
         <div className="flex items-center justify-between gap-2">
-            <label className="text-xs text-zinc-400 truncate flex-1">{label}</label>
+            <label className="text-xs text-muted-foreground truncate flex-1">{label}</label>
             <div className="flex items-center gap-2 flex-shrink-0">
                 <div className="relative">
                     <input
                         type="color"
                         value={value}
                         onChange={(e) => onChange(e.target.value)}
-                        className="w-7 h-7 rounded-md border border-zinc-700 cursor-pointer bg-transparent"
+                        className="w-7 h-7 rounded-md border border-border cursor-pointer bg-transparent"
                     />
                 </div>
                 <input
                     type="text"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className="w-20 text-xs px-2 py-1 rounded bg-zinc-900 border border-zinc-700 text-zinc-300 font-mono"
+                    className="w-20 text-xs px-2 py-1 rounded bg-card border border-border text-secondary-foreground font-mono"
                 />
             </div>
         </div>
@@ -97,7 +97,7 @@ function ConfigFieldInput({
         case 'boolean':
             return (
                 <label className="flex items-center justify-between gap-2 cursor-pointer">
-                    <span className="text-xs text-zinc-400">{field.label}</span>
+                    <span className="text-xs text-muted-foreground">{field.label}</span>
                     <button
                         onClick={() => onChange(field.key, !value)}
                         className={cn(
@@ -118,11 +118,11 @@ function ConfigFieldInput({
         case 'select':
             return (
                 <div className="flex items-center justify-between gap-2">
-                    <label className="text-xs text-zinc-400 truncate flex-1">{field.label}</label>
+                    <label className="text-xs text-muted-foreground truncate flex-1">{field.label}</label>
                     <select
                         value={String(value ?? field.defaultValue)}
                         onChange={(e) => onChange(field.key, e.target.value)}
-                        className="text-xs px-2 py-1 rounded bg-zinc-900 border border-zinc-700 text-zinc-300 flex-shrink-0"
+                        className="text-xs px-2 py-1 rounded bg-card border border-border text-secondary-foreground flex-shrink-0"
                     >
                         {field.options?.map((opt) => (
                             <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -141,24 +141,24 @@ function ConfigFieldInput({
         case 'number':
             return (
                 <div className="flex items-center justify-between gap-2">
-                    <label className="text-xs text-zinc-400">{field.label}</label>
+                    <label className="text-xs text-muted-foreground">{field.label}</label>
                     <input
                         type="number"
                         value={Number(value ?? field.defaultValue)}
                         onChange={(e) => onChange(field.key, Number(e.target.value))}
-                        className="w-16 text-xs px-2 py-1 rounded bg-zinc-900 border border-zinc-700 text-zinc-300 text-center"
+                        className="w-16 text-xs px-2 py-1 rounded bg-card border border-border text-secondary-foreground text-center"
                     />
                 </div>
             );
         default:
             return (
                 <div className="flex items-center justify-between gap-2">
-                    <label className="text-xs text-zinc-400">{field.label}</label>
+                    <label className="text-xs text-muted-foreground">{field.label}</label>
                     <input
                         type="text"
                         value={String(value ?? field.defaultValue ?? '')}
                         onChange={(e) => onChange(field.key, e.target.value)}
-                        className="flex-1 max-w-[140px] text-xs px-2 py-1 rounded bg-zinc-900 border border-zinc-700 text-zinc-300"
+                        className="flex-1 max-w-[140px] text-xs px-2 py-1 rounded bg-card border border-border text-secondary-foreground"
                     />
                 </div>
             );
@@ -205,9 +205,9 @@ export default function StyleEditor({
                     onClick={() => toggleSection('colors')}
                     className="flex items-center gap-2 w-full text-left mb-2"
                 >
-                    {openSections.colors ? <ChevronDown className="h-3.5 w-3.5 text-zinc-500" /> : <ChevronRight className="h-3.5 w-3.5 text-zinc-500" />}
+                    {openSections.colors ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />}
                     <Paintbrush className="h-3.5 w-3.5 text-teal-400" />
-                    <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Colors</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Colors</span>
                 </button>
                 {openSections.colors && (
                     <div className="space-y-2.5 pl-6">
@@ -230,18 +230,18 @@ export default function StyleEditor({
                     onClick={() => toggleSection('typography')}
                     className="flex items-center gap-2 w-full text-left mb-2"
                 >
-                    {openSections.typography ? <ChevronDown className="h-3.5 w-3.5 text-zinc-500" /> : <ChevronRight className="h-3.5 w-3.5 text-zinc-500" />}
+                    {openSections.typography ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />}
                     <TypeIcon className="h-3.5 w-3.5 text-teal-400" />
-                    <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Typography</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Typography</span>
                 </button>
                 {openSections.typography && (
                     <div className="space-y-2.5 pl-6">
                         <div className="flex items-center justify-between gap-2">
-                            <label className="text-xs text-zinc-400">Font Family</label>
+                            <label className="text-xs text-muted-foreground">Font Family</label>
                             <select
                                 value={styles.fontFamily}
                                 onChange={(e) => updateStyle('fontFamily', e.target.value)}
-                                className="text-xs px-2 py-1 rounded bg-zinc-900 border border-zinc-700 text-zinc-300 max-w-[160px]"
+                                className="text-xs px-2 py-1 rounded bg-card border border-border text-secondary-foreground max-w-40"
                             >
                                 {FONT_OPTIONS.map((f) => (
                                     <option key={f.value} value={f.value}>{f.label}</option>
@@ -258,14 +258,14 @@ export default function StyleEditor({
                     onClick={() => toggleSection('spacing')}
                     className="flex items-center gap-2 w-full text-left mb-2"
                 >
-                    {openSections.spacing ? <ChevronDown className="h-3.5 w-3.5 text-zinc-500" /> : <ChevronRight className="h-3.5 w-3.5 text-zinc-500" />}
+                    {openSections.spacing ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />}
                     <Box className="h-3.5 w-3.5 text-teal-400" />
-                    <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Shape</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Shape</span>
                 </button>
                 {openSections.spacing && (
                     <div className="space-y-2.5 pl-6">
                         <div className="flex items-center justify-between gap-2">
-                            <label className="text-xs text-zinc-400">Tile Radius</label>
+                            <label className="text-xs text-muted-foreground">Tile Radius</label>
                             <div className="flex items-center gap-2">
                                 <input
                                     type="range"
@@ -275,7 +275,7 @@ export default function StyleEditor({
                                     onChange={(e) => updateStyle('tileRadius', Number(e.target.value))}
                                     className="w-20 accent-teal-500"
                                 />
-                                <span className="text-xs text-zinc-500 w-8 text-right">{styles.tileRadius}px</span>
+                                <span className="text-xs text-muted-foreground w-8 text-right">{styles.tileRadius}px</span>
                             </div>
                         </div>
                     </div>
@@ -289,9 +289,9 @@ export default function StyleEditor({
                         onClick={() => toggleSection('zone')}
                         className="flex items-center gap-2 w-full text-left mb-2"
                     >
-                        {openSections.zone ? <ChevronDown className="h-3.5 w-3.5 text-zinc-500" /> : <ChevronRight className="h-3.5 w-3.5 text-zinc-500" />}
+                        {openSections.zone ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />}
                         <Settings className="h-3.5 w-3.5 text-teal-400" />
-                        <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                             {zoneDef.name} Settings
                         </span>
                     </button>

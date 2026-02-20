@@ -54,36 +54,36 @@ export default function DoorAccessControl() {
                 {/* Header */}
                 <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-emerald-600 to-cyan-600 flex items-center justify-center">
-                        <Lock className="h-5 w-5 text-white" />
+                        <Lock className="h-5 w-5 text-foreground" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-zinc-100">Door Access Control</h1>
-                        <p className="text-sm text-zinc-400">Nuki Smart Lock integration — server-authoritative access management</p>
+                        <h1 className="text-2xl font-bold text-foreground">Door Access Control</h1>
+                        <p className="text-sm text-muted-foreground">Nuki Smart Lock integration — server-authoritative access management</p>
                     </div>
                 </div>
 
                 {/* Tabs */}
                 <Tabs defaultValue="doors" className="space-y-6">
-                    <TabsList className="bg-zinc-900 border border-zinc-800 p-1 flex-wrap">
-                        <TabsTrigger value="connection" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                    <TabsList className="bg-card border border-border p-1 flex-wrap">
+                        <TabsTrigger value="connection" className="data-[state=active]:bg-secondary text-muted-foreground data-[state=active]:text-foreground">
                             <Wifi className="h-4 w-4 mr-1.5" /> Connection
                         </TabsTrigger>
-                        <TabsTrigger value="doors" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                        <TabsTrigger value="doors" className="data-[state=active]:bg-secondary text-muted-foreground data-[state=active]:text-foreground">
                             <DoorOpen className="h-4 w-4 mr-1.5" /> Doors
                         </TabsTrigger>
-                        <TabsTrigger value="permissions" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                        <TabsTrigger value="permissions" className="data-[state=active]:bg-secondary text-muted-foreground data-[state=active]:text-foreground">
                             <Shield className="h-4 w-4 mr-1.5" /> Permissions
                         </TabsTrigger>
-                        <TabsTrigger value="audit" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                        <TabsTrigger value="audit" className="data-[state=active]:bg-secondary text-muted-foreground data-[state=active]:text-foreground">
                             <Eye className="h-4 w-4 mr-1.5" /> Audit Trail
                         </TabsTrigger>
-                        <TabsTrigger value="reports" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                        <TabsTrigger value="reports" className="data-[state=active]:bg-secondary text-muted-foreground data-[state=active]:text-foreground">
                             <BarChart3 className="h-4 w-4 mr-1.5" /> Reports
                         </TabsTrigger>
-                        <TabsTrigger value="keypad" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                        <TabsTrigger value="keypad" className="data-[state=active]:bg-secondary text-muted-foreground data-[state=active]:text-foreground">
                             <Keyboard className="h-4 w-4 mr-1.5" /> Keypad
                         </TabsTrigger>
-                        <TabsTrigger value="bridge" className="data-[state=active]:bg-zinc-800 text-zinc-400 data-[state=active]:text-zinc-100">
+                        <TabsTrigger value="bridge" className="data-[state=active]:bg-secondary text-muted-foreground data-[state=active]:text-foreground">
                             <Router className="h-4 w-4 mr-1.5" /> Bridge
                         </TabsTrigger>
                     </TabsList>

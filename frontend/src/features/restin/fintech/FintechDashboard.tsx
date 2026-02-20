@@ -145,33 +145,33 @@ const FintechDashboard: React.FC = () => {
     };
 
     return (
-        <div className="p-6 space-y-6 bg-zinc-950 min-h-screen text-white">
+        <div className="p-6 space-y-6 bg-background min-h-screen text-foreground">
             {/* Header */}
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight mb-2 text-white">{t('restin.fintech.title')}</h1>
-                    <p className="text-zinc-400">{t('restin.fintech.subtitle')}</p>
+                    <h1 className="text-3xl font-bold tracking-tight mb-2 text-foreground">{t('restin.fintech.title')}</h1>
+                    <p className="text-muted-foreground">{t('restin.fintech.subtitle')}</p>
                 </div>
                 <div className="flex gap-3">
                     <Button
                         variant="outline"
                         onClick={() => seedMutation.mutate()}
                         disabled={seedMutation.isPending}
-                        className="border-zinc-800 text-zinc-300 hover:bg-zinc-900 gap-2"
+                        className="border-border text-secondary-foreground hover:bg-card gap-2"
                     >
                         {seedMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Settings className="w-4 h-4" />}
                         Seed Demo
                     </Button>
                     <Button
                         variant={kioskMode ? "destructive" : "outline"}
-                        className={kioskMode ? "text-white font-bold" : "border-zinc-800 text-zinc-300 hover:bg-zinc-900 transition-colors"}
+                        className={kioskMode ? "text-foreground font-bold" : "border-border text-secondary-foreground hover:bg-card transition-colors"}
                         onClick={() => kioskMutation.mutate()}
                         disabled={kioskMutation.isPending}
                     >
                         <Monitor className="w-4 h-4 mr-2" />
                         {kioskMode ? t('restin.fintech.kioskExit') : t('restin.fintech.kioskInit')}
                     </Button>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white font-black border-none h-10 tracking-widest uppercase text-xs">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-foreground font-black border-none h-10 tracking-widest uppercase text-xs">
                         <CreditCard className="w-4 h-4 mr-2" />
                         {t('restin.fintech.terminalHub')}
                     </Button>
@@ -183,7 +183,7 @@ const FintechDashboard: React.FC = () => {
                 {metrics.map((m, i) => (
                     <Card
                         key={i}
-                        className="bg-zinc-900 border-zinc-800 overflow-hidden group cursor-pointer hover:border-blue-500/50 transition-all"
+                        className="bg-card border-border overflow-hidden group cursor-pointer hover:border-blue-500/50 transition-all"
                         onClick={() => navigate(`/manager/restin/fintech/metrics/${m.label.toLowerCase().replace(' ', '-')}`)}
                     >
                         <CardContent className="pt-6">
@@ -193,8 +193,8 @@ const FintechDashboard: React.FC = () => {
                                 </div>
                                 <span className="text-green-500 text-[10px] font-black">{m.change}</span>
                             </div>
-                            <div className="text-3xl font-black text-white">{m.value}</div>
-                            <div className="text-[10px] text-zinc-500 uppercase font-black tracking-[0.2em] mt-1">{m.label}</div>
+                            <div className="text-3xl font-black text-foreground">{m.value}</div>
+                            <div className="text-[10px] text-muted-foreground uppercase font-black tracking-[0.2em] mt-1">{m.label}</div>
                         </CardContent>
                     </Card>
                 ))}
@@ -202,13 +202,13 @@ const FintechDashboard: React.FC = () => {
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 {/* Transaction List */}
-                <Card className="xl:col-span-2 bg-zinc-900 border-zinc-800">
+                <Card className="xl:col-span-2 bg-card border-border">
                     <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle className="flex items-center gap-2 text-white text-lg font-bold">
+                        <CardTitle className="flex items-center gap-2 text-foreground text-lg font-bold">
                             <History className="w-5 h-5 text-blue-500" />
                             {t('restin.fintech.liveTransactions')} ({transactions.length})
                         </CardTitle>
-                        <Button variant="ghost" className="text-[10px] text-zinc-500 font-black tracking-widest uppercase hover:text-white">
+                        <Button variant="ghost" className="text-[10px] text-muted-foreground font-black tracking-widest uppercase hover:text-foreground">
                             View All
                             <ArrowUpRight className="w-3 h-3 ml-2" />
                         </Button>
@@ -217,36 +217,36 @@ const FintechDashboard: React.FC = () => {
                         <div className="space-y-3">
                             {isLoading ? (
                                 <div className="p-8 text-center">
-                                    <Loader2 className="w-6 h-6 text-zinc-400 animate-spin mx-auto mb-2" />
-                                    <span className="text-zinc-500 text-sm">Loading transactions...</span>
+                                    <Loader2 className="w-6 h-6 text-muted-foreground animate-spin mx-auto mb-2" />
+                                    <span className="text-muted-foreground text-sm">Loading transactions...</span>
                                 </div>
                             ) : transactions.length === 0 ? (
-                                <div className="p-8 text-center text-zinc-500">
+                                <div className="p-8 text-center text-muted-foreground">
                                     <CreditCard className="w-12 h-12 mx-auto mb-3 opacity-20" />
                                     <p className="font-bold text-sm">No transactions</p>
                                     <p className="text-xs mt-1">Click "Seed Demo" to populate data</p>
                                 </div>
                             ) : transactions.slice(0, 8).map((tr, i) => (
-                                <div key={tr.id || i} className="flex items-center justify-between p-4 bg-zinc-950 border border-zinc-800 rounded-xl group hover:border-blue-500/30 transition-all">
+                                <div key={tr.id || i} className="flex items-center justify-between p-4 bg-background border border-border rounded-xl group hover:border-blue-500/30 transition-all">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center border border-zinc-800">
-                                            {tr.method === 'CARD' && <CreditCard className="w-4 h-4 text-zinc-400" />}
-                                            {tr.method === 'CASH' && <Monitor className="w-4 h-4 text-zinc-400" />}
-                                            {tr.method === 'QR' && <Smartphone className="w-4 h-4 text-zinc-400" />}
+                                        <div className="w-10 h-10 rounded-lg bg-card flex items-center justify-center border border-border">
+                                            {tr.method === 'CARD' && <CreditCard className="w-4 h-4 text-muted-foreground" />}
+                                            {tr.method === 'CASH' && <Monitor className="w-4 h-4 text-muted-foreground" />}
+                                            {tr.method === 'QR' && <Smartphone className="w-4 h-4 text-muted-foreground" />}
                                         </div>
                                         <div>
-                                            <div className="font-bold font-mono tracking-tight text-zinc-200">{tr.id}</div>
-                                            <div className="text-[10px] text-zinc-600 uppercase font-black tracking-widest">{timeAgo(tr.created_at)} via {tr.method}</div>
+                                            <div className="font-bold font-mono tracking-tight text-secondary-foreground">{tr.id}</div>
+                                            <div className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">{timeAgo(tr.created_at)} via {tr.method}</div>
                                         </div>
                                     </div>
                                     <div className="text-right flex items-center gap-6">
                                         <div>
-                                            <div className="text-lg font-black text-white">{formatCents(tr.total_cents)}</div>
+                                            <div className="text-lg font-black text-foreground">{formatCents(tr.total_cents)}</div>
                                             <Badge className={tr.status === 'completed' ? 'bg-green-500/10 text-green-500 border-none px-2 py-0 h-4 text-[9px] font-black' : 'bg-amber-500/10 text-amber-500 border-none px-2 py-0 h-4 text-[9px] font-black'}>
                                                 {tr.status?.toUpperCase()}
                                             </Badge>
                                         </div>
-                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-zinc-500 group-hover:text-blue-500">
+                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground group-hover:text-blue-500">
                                             <ArrowUpRight className="w-4 h-4" />
                                         </Button>
                                     </div>
@@ -258,18 +258,18 @@ const FintechDashboard: React.FC = () => {
 
                 {/* Omni-Channel Overview */}
                 <div className="space-y-6">
-                    <Card className="bg-zinc-900 border-zinc-800">
+                    <Card className="bg-card border-border">
                         <CardHeader>
-                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 italic">{t('restin.fintech.omniChannelMix')}</CardTitle>
+                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">{t('restin.fintech.omniChannelMix')}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             {channelMix.map((item, i) => (
                                 <div key={i}>
                                     <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mb-2">
-                                        <span className="text-zinc-500">{item.label}</span>
-                                        <span className="text-zinc-300">{item.val}%</span>
+                                        <span className="text-muted-foreground">{item.label}</span>
+                                        <span className="text-secondary-foreground">{item.val}%</span>
                                     </div>
-                                    <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
+                                    <div className="h-1 bg-secondary rounded-full overflow-hidden">
                                         <div className={`h-full ${item.color} shadow-sm shadow-current`} style={{ width: `${item.val}%` }} />
                                     </div>
                                 </div>
@@ -277,12 +277,12 @@ const FintechDashboard: React.FC = () => {
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-gradient-to-br from-zinc-900 to-black border-zinc-800 relative overflow-hidden group">
+                    <Card className="bg-gradient-to-br from-zinc-900 to-black border-border relative overflow-hidden group">
                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                             <ShieldCheck className="w-24 h-24" />
                         </div>
                         <CardHeader>
-                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">{t('restin.fintech.securityCompliance')}</CardTitle>
+                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">{t('restin.fintech.securityCompliance')}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="flex items-center gap-3">
@@ -290,8 +290,8 @@ const FintechDashboard: React.FC = () => {
                                     <ShieldCheck className="w-4 h-4 text-green-500" />
                                 </div>
                                 <div>
-                                    <div className="text-sm font-bold text-zinc-200 uppercase tracking-tight">PCI-DSS Level 1</div>
-                                    <div className="text-[9px] text-zinc-500 uppercase font-black tracking-widest">Audit Passed 04 Feb 2026</div>
+                                    <div className="text-sm font-bold text-secondary-foreground uppercase tracking-tight">PCI-DSS Level 1</div>
+                                    <div className="text-[9px] text-muted-foreground uppercase font-black tracking-widest">Audit Passed 04 Feb 2026</div>
                                 </div>
                             </div>
                         </CardContent>

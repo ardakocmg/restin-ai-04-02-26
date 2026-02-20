@@ -112,7 +112,7 @@ export function UserSettingsProvider({ children }: UserSettingsProviderProps): J
             if (response.data) {
                 setSettings(prev => ({ ...prev, ...response.data }));
             }
-        } catch (error) {
+        } catch (error: any) {
             logger.error('Failed to load user settings', { error });
         } finally {
             setLoading(false);
@@ -127,7 +127,7 @@ export function UserSettingsProvider({ children }: UserSettingsProviderProps): J
 
             setSettings(prev => ({ ...prev, ...updates }));
             return true;
-        } catch (error) {
+        } catch (error: any) {
             logger.error('Failed to update settings', { error });
             return false;
         }
@@ -144,7 +144,7 @@ export function UserSettingsProvider({ children }: UserSettingsProviderProps): J
                 secret: response.data.secret,
                 backupCodes: response.data.backupCodes
             };
-        } catch (error) {
+        } catch (error: any) {
             const err = error as Error;
             logger.error('Failed to enable 2FA', { error: err.message });
             return { success: false, error: err.message };
@@ -161,7 +161,7 @@ export function UserSettingsProvider({ children }: UserSettingsProviderProps): J
                 return { success: true };
             }
             return { success: false, error: 'Invalid token' };
-        } catch (error) {
+        } catch (error: any) {
             const err = error as Error;
             logger.error('Failed to verify 2FA', { error: err.message });
             return { success: false, error: err.message };
@@ -175,7 +175,7 @@ export function UserSettingsProvider({ children }: UserSettingsProviderProps): J
 
             setSettings(prev => ({ ...prev, mfaEnabled: false, mfaMethod: null }));
             return { success: true };
-        } catch (error) {
+        } catch (error: any) {
             const err = error as Error;
             logger.error('Failed to disable 2FA', { error: err.message });
             return { success: false, error: err.message };

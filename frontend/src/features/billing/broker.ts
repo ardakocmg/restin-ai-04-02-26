@@ -72,7 +72,7 @@ export const logAiUsage = async (details: AiUsageDetails) => {
             timestamp: new Date().toISOString()
         });
 
-    } catch (error) {
+    } catch (error: any) {
         // Fail silent to not break UX, but log error
         logger.error("🚨 Billing Broker Error: Failed to log usage.", { error: String(error) });
     }

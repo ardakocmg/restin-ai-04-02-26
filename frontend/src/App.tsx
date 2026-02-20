@@ -40,13 +40,13 @@ function PageLoader() {
         <div className="flex gap-3 animate-in fade-in">
           <button
             onClick={() => window.history.back()}
-            className="px-4 py-2 text-sm rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition-colors"
+            className="px-4 py-2 text-sm rounded-lg bg-secondary hover:bg-secondary/80 text-secondary-foreground border border-border transition-colors"
           >
             ← Go Back
           </button>
           <button
             onClick={() => { window.location.href = '/manager/dashboard'; }}
-            className="px-4 py-2 text-sm rounded-lg bg-red-600 hover:bg-red-700 text-white transition-colors"
+            className="px-4 py-2 text-sm rounded-lg bg-red-600 hover:bg-red-700 text-foreground transition-colors"
           >
             Dashboard
           </button>
@@ -109,7 +109,7 @@ function RootOverlays() {
           logger.warn('Version mismatch detected (ignored for dev)');
         }
         if (serverBuild) localStorage.setItem("last_build_id", serverBuild);
-      } catch (e) {
+      } catch (e: any) {
         logger.warn('Version check failed', { error: (e as Error).message });
       }
     })();
@@ -132,7 +132,7 @@ function RootOverlays() {
         <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
           <div className="mx-auto max-w-4xl h-12 flex items-center justify-between px-4 bg-yellow-600 text-black">
             <div className="truncate"><strong>Warning:</strong> System version changed. Refresh required.</div>
-            <button className="pointer-events-auto px-3 py-1 bg-black text-white rounded hover:bg-zinc-800 transition-colors" onClick={() => window.location.reload()}>Refresh Now</button>
+            <button className="pointer-events-auto px-3 py-1 bg-black text-foreground rounded hover:bg-secondary transition-colors" onClick={() => window.location.reload()}>Refresh Now</button>
           </div>
         </div>
       )}

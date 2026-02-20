@@ -95,13 +95,13 @@ export default function ZoneContextMenu({
     return (
         <div
             ref={menuRef}
-            className="fixed z-[9999] animate-in fade-in zoom-in-95 duration-100"
+            className="fixed z-50 animate-in fade-in zoom-in-95 duration-100"
             style={{ left: clampedX, top: clampedY }}
         >
-            <div className="w-52 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl">
+            <div className="w-52 bg-card border border-border rounded-xl shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl">
                 {/* Header */}
-                <div className="px-3 py-2 border-b border-zinc-800">
-                    <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest">{zoneName}</p>
+                <div className="px-3 py-2 border-b border-border">
+                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">{zoneName}</p>
                 </div>
 
                 {/* Actions */}
@@ -123,7 +123,7 @@ export default function ZoneContextMenu({
                         onClick={() => { onDuplicate(); onClose(); }}
                     />
 
-                    <div className="h-px bg-zinc-800 my-1" />
+                    <div className="h-px bg-secondary my-1" />
 
                     {/* Move Up / Down */}
                     <MenuItem
@@ -148,15 +148,15 @@ export default function ZoneContextMenu({
                         onMouseLeave={() => setShowMoveSubmenu(false)}
                     >
                         <button
-                            className="w-full flex items-center gap-2.5 px-3 py-1.5 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
+                            className="w-full flex items-center gap-2.5 px-3 py-1.5 text-xs text-secondary-foreground hover:bg-secondary transition-colors"
                         >
-                            <MoveRight className="h-3.5 w-3.5 text-zinc-500" />
+                            <MoveRight className="h-3.5 w-3.5 text-muted-foreground" />
                             <span className="flex-1 text-left">Move To</span>
-                            <ChevronRight className="h-3 w-3 text-zinc-600" />
+                            <ChevronRight className="h-3 w-3 text-muted-foreground" />
                         </button>
 
                         {showMoveSubmenu && (
-                            <div className="absolute left-full top-0 ml-1 w-40 bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl overflow-hidden animate-in fade-in slide-in-from-left-1 duration-100">
+                            <div className="absolute left-full top-0 ml-1 w-40 bg-card border border-border rounded-lg shadow-xl overflow-hidden animate-in fade-in slide-in-from-left-1 duration-100">
                                 {POSITIONS.map((pos) => (
                                     <button
                                         key={pos.value}
@@ -165,8 +165,8 @@ export default function ZoneContextMenu({
                                         className={cn(
                                             "w-full text-left px-3 py-1.5 text-xs transition-colors",
                                             pos.value === currentPosition
-                                                ? "text-zinc-600 cursor-not-allowed bg-zinc-800/50"
-                                                : "text-zinc-300 hover:bg-zinc-800"
+                                                ? "text-muted-foreground cursor-not-allowed bg-secondary/50"
+                                                : "text-secondary-foreground hover:bg-secondary"
                                         )}
                                     >
                                         {pos.label}
@@ -179,7 +179,7 @@ export default function ZoneContextMenu({
                         )}
                     </div>
 
-                    <div className="h-px bg-zinc-800 my-1" />
+                    <div className="h-px bg-secondary my-1" />
 
                     {/* Visibility */}
                     <MenuItem
@@ -189,7 +189,7 @@ export default function ZoneContextMenu({
                         onClick={() => { onToggleVisibility(); onClose(); }}
                     />
 
-                    <div className="h-px bg-zinc-800 my-1" />
+                    <div className="h-px bg-secondary my-1" />
 
                     {/* Delete */}
                     <MenuItem
@@ -227,16 +227,16 @@ function MenuItem({
             className={cn(
                 "w-full flex items-center gap-2.5 px-3 py-1.5 text-xs transition-colors",
                 disabled
-                    ? "text-zinc-600 cursor-not-allowed"
+                    ? "text-muted-foreground cursor-not-allowed"
                     : danger
                         ? "text-red-400 hover:bg-red-500/10"
-                        : "text-zinc-300 hover:bg-zinc-800"
+                        : "text-secondary-foreground hover:bg-secondary"
             )}
         >
-            <Icon className={cn("h-3.5 w-3.5", disabled ? "text-zinc-700" : danger ? "text-red-500" : "text-zinc-500")} />
+            <Icon className={cn("h-3.5 w-3.5", disabled ? "text-zinc-700" : danger ? "text-red-500" : "text-muted-foreground")} />
             <span className="flex-1 text-left">{label}</span>
             {shortcut && (
-                <span className="text-[10px] text-zinc-600 font-mono">{shortcut}</span>
+                <span className="text-[10px] text-muted-foreground font-mono">{shortcut}</span>
             )}
         </button>
     );

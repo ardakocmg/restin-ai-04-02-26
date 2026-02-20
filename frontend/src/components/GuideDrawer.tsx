@@ -64,7 +64,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
     try {
       const data = await GuideService.getGuideByEntity(entityType, entityId, guideKind);
       setGuide(data);
-    } catch (error) {
+    } catch (error: any) {
       logger.error('Failed to load guide', { error, entityType, entityId });
       setGuide(null);
     } finally {
@@ -75,7 +75,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
   const renderPhotos = () => {
     if (!guide?.photos || guide.photos.length === 0) {
       return (
-        <div className="text-center py-8 text-zinc-500">
+        <div className="text-center py-8 text-muted-foreground">
           <ImageIcon className="mx-auto h-12 w-12 mb-2 opacity-30" />
           <p>No photos available</p>
         </div>
@@ -85,7 +85,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
     return (
       <div className="grid grid-cols-2 gap-4 p-2">
         {guide.photos.map((photo, index) => (
-          <Card key={index} className="overflow-hidden bg-zinc-900 border-zinc-800">
+          <Card key={index} className="overflow-hidden bg-card border-border">
             <div className="relative aspect-video">
               <img
                 src={photo.url}
@@ -107,7 +107,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
   const renderSteps = () => {
     if (!guide?.steps || guide.steps.length === 0) {
       return (
-        <div className="text-center py-8 text-zinc-500">
+        <div className="text-center py-8 text-muted-foreground">
           <StepsIcon className="mx-auto h-12 w-12 mb-2 opacity-30" />
           <p>No steps available</p>
         </div>
@@ -121,32 +121,32 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
             key={index}
             className={`rounded-lg border p-4 ${step.critical
               ? 'bg-red-950/20 border-red-900/50'
-              : 'bg-zinc-900/50 border-zinc-800'
+              : 'bg-card/50 border-border'
               }`}
           >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${step.critical
                   ? 'bg-red-400/10 text-red-400 ring-red-400/20'
-                  : 'bg-zinc-400/10 text-zinc-400 ring-zinc-400/20'
+                  : 'bg-zinc-400/10 text-muted-foreground ring-zinc-400/20'
                   }`}>
                   Step {step.step_no}
                 </span>
-                <h4 className="font-medium text-zinc-100">{step.title}</h4>
+                <h4 className="font-medium text-foreground">{step.title}</h4>
               </div>
               {step.duration_seconds && (
-                <span className="text-xs text-zinc-500">
+                <span className="text-xs text-muted-foreground">
                   {Math.floor(step.duration_seconds / 60)}m
                 </span>
               )}
             </div>
 
-            <p className="text-sm text-zinc-400 mb-3">{step.description}</p>
+            <p className="text-sm text-muted-foreground mb-3">{step.description}</p>
 
             {step.required_tools.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {step.required_tools.map((tool, i) => (
-                  <span key={i} className="inline-flex items-center rounded-md bg-zinc-800 px-2 py-1 text-xs font-medium text-zinc-400 border border-zinc-700">
+                  <span key={i} className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs font-medium text-muted-foreground border border-border">
                     {tool}
                   </span>
                 ))}
@@ -169,7 +169,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
   const renderMeasures = () => {
     if (!guide?.measures || guide.measures.length === 0) {
       return (
-        <div className="text-center py-8 text-zinc-500">
+        <div className="text-center py-8 text-muted-foreground">
           <MeasuresIcon className="mx-auto h-12 w-12 mb-2 opacity-30" />
           <p>No measures available</p>
         </div>
@@ -179,20 +179,20 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
     return (
       <div className="space-y-4 p-2">
         {guide.measures.map((measure, index) => (
-          <div key={index} className="rounded-lg bg-zinc-900/50 border border-zinc-800 p-4">
+          <div key={index} className="rounded-lg bg-card/50 border border-border p-4">
             <div className="flex items-center mb-2">
               <span className="inline-flex items-center rounded-md bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-inset ring-blue-500/20 mr-2">
                 {measure.line_type}
               </span>
-              <h4 className="font-medium text-zinc-100">{measure.name}</h4>
+              <h4 className="font-medium text-foreground">{measure.name}</h4>
             </div>
 
             <div className="grid grid-cols-2 gap-4 my-2 text-sm">
-              <div className="text-zinc-400">
-                <strong className="text-zinc-300">Qty:</strong> {measure.qty_value} {measure.qty_unit_input}
+              <div className="text-muted-foreground">
+                <strong className="text-secondary-foreground">Qty:</strong> {measure.qty_value} {measure.qty_unit_input}
               </div>
-              <div className="text-zinc-400">
-                <strong className="text-zinc-300">Canonical:</strong> {measure.qty_value_canonical} {measure.qty_unit_canonical}
+              <div className="text-muted-foreground">
+                <strong className="text-secondary-foreground">Canonical:</strong> {measure.qty_value_canonical} {measure.qty_unit_canonical}
               </div>
             </div>
 
@@ -206,7 +206,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
             </div>
 
             {measure.notes && (
-              <p className="mt-2 text-sm text-zinc-500 italic border-l-2 border-zinc-700 pl-2">
+              <p className="mt-2 text-sm text-muted-foreground italic border-l-2 border-border pl-2">
                 {measure.notes}
               </p>
             )}
@@ -218,8 +218,8 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
 
   const renderNoGuide = () => (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-      <h3 className="text-lg font-medium text-zinc-100 mb-2">No Guide Available</h3>
-      <p className="text-sm text-zinc-400 mb-6">
+      <h3 className="text-lg font-medium text-foreground mb-2">No Guide Available</h3>
+      <p className="text-sm text-muted-foreground mb-6">
         This {entityType.replace('_', ' ')} doesn't have a guide yet.
       </p>
       {!readOnly && onEdit && (
@@ -233,12 +233,12 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent side="right" className="w-full sm:max-w-xl p-0 flex flex-col bg-zinc-950 border-l-zinc-800">
+      <SheetContent side="right" className="w-full sm:max-w-xl p-0 flex flex-col bg-background border-l-zinc-800">
         {/* Header */}
-        <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+        <div className="p-4 border-b border-border flex items-center justify-between">
           <div>
-            <SheetTitle className="text-zinc-100">{entityName}</SheetTitle>
-            <SheetDescription className="text-zinc-400">
+            <SheetTitle className="text-foreground">{entityName}</SheetTitle>
+            <SheetDescription className="text-muted-foreground">
               {guideKind.toUpperCase()} Guide
             </SheetDescription>
           </div>
@@ -256,7 +256,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
         <div className="flex-1 overflow-hidden flex flex-col">
           {loading ? (
             <div className="flex-1 flex items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : !guide ? (
             renderNoGuide()
@@ -284,13 +284,13 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
 
               {/* Footer Tags */}
               {guide.tags && guide.tags.length > 0 && (
-                <div className="p-4 border-t border-zinc-800 bg-zinc-900/30">
-                  <span className="text-xs text-zinc-500 block mb-2">Tags:</span>
+                <div className="p-4 border-t border-border bg-card/30">
+                  <span className="text-xs text-muted-foreground block mb-2">Tags:</span>
                   <div className="flex flex-wrap gap-2">
                     {guide.tags.map((tag, i) => (
                       <span
                         key={i}
-                        className="inline-flex items-center rounded-full bg-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-400"
+                        className="inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
                       >
                         {tag}
                       </span>

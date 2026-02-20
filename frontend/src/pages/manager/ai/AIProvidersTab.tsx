@@ -134,7 +134,7 @@ export default function AIProvidersTab() {
         try {
             const res = await api.get(`/ai/dashboard?days=${days}`);
             setData(res.data);
-        } catch (err) {
+        } catch (err: any) {
             // Silent fail — show empty state
         } finally {
             setLoading(false);
@@ -165,50 +165,50 @@ export default function AIProvidersTab() {
         <div className="space-y-6 mt-4">
             {/* ── Summary KPI Strip ── */}
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                <Card className="bg-zinc-900/60 border-zinc-800">
+                <Card className="bg-card/60 border-border">
                     <CardContent className="p-3">
                         <div className="flex items-center gap-2 mb-1">
                             <Wifi className="w-3.5 h-3.5 text-emerald-400" />
-                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Providers</span>
+                            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Providers</span>
                         </div>
-                        <p className="text-xl font-bold text-emerald-400">{summary.providers_connected}<span className="text-zinc-500">/{summary.providers_total}</span></p>
+                        <p className="text-xl font-bold text-emerald-400">{summary.providers_connected}<span className="text-muted-foreground">/{summary.providers_total}</span></p>
                     </CardContent>
                 </Card>
-                <Card className="bg-zinc-900/60 border-zinc-800">
+                <Card className="bg-card/60 border-border">
                     <CardContent className="p-3">
                         <div className="flex items-center gap-2 mb-1">
                             <Cpu className="w-3.5 h-3.5 text-blue-400" />
-                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Models</span>
+                            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Models</span>
                         </div>
-                        <p className="text-xl font-bold text-zinc-100">{summary.models_total} <span className="text-xs text-emerald-400">({summary.models_free} free)</span></p>
+                        <p className="text-xl font-bold text-foreground">{summary.models_total} <span className="text-xs text-emerald-400">({summary.models_free} free)</span></p>
                     </CardContent>
                 </Card>
-                <Card className="bg-zinc-900/60 border-zinc-800">
+                <Card className="bg-card/60 border-border">
                     <CardContent className="p-3">
                         <div className="flex items-center gap-2 mb-1">
                             <Zap className="w-3.5 h-3.5 text-purple-400" />
-                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Requests</span>
+                            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Requests</span>
                         </div>
-                        <p className="text-xl font-bold text-zinc-100">{formatNumber(usage.total_requests)}</p>
-                        <p className="text-[10px] text-zinc-500">last {usage.period_days}d</p>
+                        <p className="text-xl font-bold text-foreground">{formatNumber(usage.total_requests)}</p>
+                        <p className="text-[10px] text-muted-foreground">last {usage.period_days}d</p>
                     </CardContent>
                 </Card>
-                <Card className="bg-zinc-900/60 border-zinc-800">
+                <Card className="bg-card/60 border-border">
                     <CardContent className="p-3">
                         <div className="flex items-center gap-2 mb-1">
                             <Database className="w-3.5 h-3.5 text-amber-400" />
-                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Tokens</span>
+                            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Tokens</span>
                         </div>
-                        <p className="text-xl font-bold text-zinc-100">{formatNumber(usage.total_tokens)}</p>
+                        <p className="text-xl font-bold text-foreground">{formatNumber(usage.total_tokens)}</p>
                     </CardContent>
                 </Card>
-                <Card className="bg-zinc-900/60 border-zinc-800">
+                <Card className="bg-card/60 border-border">
                     <CardContent className="p-3">
                         <div className="flex items-center gap-2 mb-1">
                             <Sparkles className="w-3.5 h-3.5 text-rose-400" />
-                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Shadow Logs</span>
+                            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Shadow Logs</span>
                         </div>
-                        <p className="text-xl font-bold text-zinc-100">{shadow_learning.total_logs}</p>
+                        <p className="text-xl font-bold text-foreground">{shadow_learning.total_logs}</p>
                     </CardContent>
                 </Card>
             </div>
@@ -223,7 +223,7 @@ export default function AIProvidersTab() {
                     </h2>
                     <div className="flex items-center gap-2">
                         <Select value={days} onValueChange={setDays}>
-                            <SelectTrigger className="w-[100px] h-8 bg-zinc-900 border-zinc-700">
+                            <SelectTrigger className="w-[100px] h-8 bg-card border-border">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -249,8 +249,8 @@ export default function AIProvidersTab() {
                             <Card
                                 key={provider.id}
                                 className={`border transition-all duration-300 cursor-pointer ${provider.connected
-                                        ? `bg-zinc-900/80 border-zinc-700 hover:border-zinc-600 shadow-lg ${colors.glow}`
-                                        : 'bg-zinc-950/50 border-zinc-800/50 opacity-60 hover:opacity-80'
+                                    ? `bg-card/80 border-border hover:border-zinc-600 shadow-lg ${colors.glow}`
+                                    : 'bg-background/50 border-border/50 opacity-60 hover:opacity-80'
                                     }`}
                                 onClick={() => setExpandedProvider(isExpanded ? null : provider.id)}
                             >
@@ -262,31 +262,31 @@ export default function AIProvidersTab() {
                                             </div>
                                             <div>
                                                 <div className="flex items-center gap-2">
-                                                    <h3 className="font-semibold text-sm text-zinc-100">{provider.display_name}</h3>
+                                                    <h3 className="font-semibold text-sm text-foreground">{provider.display_name}</h3>
                                                     {provider.connected ? (
                                                         <Wifi className="w-3.5 h-3.5 text-emerald-400" />
                                                     ) : (
-                                                        <WifiOff className="w-3.5 h-3.5 text-zinc-600" />
+                                                        <WifiOff className="w-3.5 h-3.5 text-muted-foreground" />
                                                     )}
                                                 </div>
-                                                <p className="text-xs text-zinc-500">{provider.free_tier}</p>
+                                                <p className="text-xs text-muted-foreground">{provider.free_tier}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3 text-right">
                                             <div>
-                                                <p className="text-sm font-mono text-zinc-300">{provider.models_total} <span className="text-zinc-600 text-xs">models</span></p>
+                                                <p className="text-sm font-mono text-secondary-foreground">{provider.models_total} <span className="text-muted-foreground text-xs">models</span></p>
                                                 {provider.models_free > 0 && (
                                                     <p className="text-[10px] text-emerald-400">{provider.models_free} free</p>
                                                 )}
                                             </div>
-                                            {isExpanded ? <ChevronDown className="w-4 h-4 text-zinc-500" /> : <ChevronRight className="w-4 h-4 text-zinc-500" />}
+                                            {isExpanded ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
                                         </div>
                                     </div>
 
                                     {/* Capability Tags */}
                                     <div className="flex gap-1.5 mt-2">
                                         {provider.capabilities.map(cap => (
-                                            <Badge key={cap} variant="outline" className="text-[10px] px-1.5 py-0 border-zinc-700 text-zinc-400">
+                                            <Badge key={cap} variant="outline" className="text-[10px] px-1.5 py-0 border-border text-muted-foreground">
                                                 {CAPABILITY_LABELS[cap] || cap}
                                             </Badge>
                                         ))}
@@ -300,11 +300,11 @@ export default function AIProvidersTab() {
                                     {/* Usage bar */}
                                     {provider.connected && providerUsage > 0 && (
                                         <div className="mt-2">
-                                            <div className="flex items-center justify-between text-[10px] text-zinc-500 mb-0.5">
+                                            <div className="flex items-center justify-between text-[10px] text-muted-foreground mb-0.5">
                                                 <span>Usage ({usage.period_days}d)</span>
                                                 <span>{providerUsage} requests</span>
                                             </div>
-                                            <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
+                                            <div className="h-1 bg-secondary rounded-full overflow-hidden">
                                                 <div
                                                     className={`h-full rounded-full ${colors.bg.replace('/15', '/60')}`}
                                                     style={{ width: `${Math.max((providerUsage / maxUsage) * 100, 3)}%` }}
@@ -315,17 +315,17 @@ export default function AIProvidersTab() {
 
                                     {/* Expanded Details */}
                                     {isExpanded && (
-                                        <div className="mt-3 pt-3 border-t border-zinc-800 space-y-3 animate-in fade-in duration-200">
+                                        <div className="mt-3 pt-3 border-t border-border space-y-3 animate-in fade-in duration-200">
                                             {/* Chains */}
                                             {provider.used_in_chains.length > 0 && (
                                                 <div>
-                                                    <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">Used In Fallback Chains</p>
+                                                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Used In Fallback Chains</p>
                                                     <div className="flex flex-wrap gap-1.5">
                                                         {provider.used_in_chains.map(chain => (
-                                                            <Badge key={chain} className="text-[10px] px-2 py-0.5 bg-zinc-800 text-zinc-300 border-0">
+                                                            <Badge key={chain} className="text-[10px] px-2 py-0.5 bg-secondary text-secondary-foreground border-0">
                                                                 {CHAIN_LABELS[chain] || chain}
                                                                 {provider.chain_positions[chain] && (
-                                                                    <span className="ml-1 text-zinc-500">#{provider.chain_positions[chain]}</span>
+                                                                    <span className="ml-1 text-muted-foreground">#{provider.chain_positions[chain]}</span>
                                                                 )}
                                                             </Badge>
                                                         ))}
@@ -335,18 +335,18 @@ export default function AIProvidersTab() {
 
                                             {/* Models */}
                                             <div>
-                                                <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">Models</p>
+                                                <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Models</p>
                                                 <div className="grid grid-cols-1 gap-1">
                                                     {provider.model_names.map(m => (
-                                                        <div key={m.id} className="flex items-center justify-between text-xs px-2 py-1 rounded bg-zinc-800/50">
-                                                            <span className="text-zinc-300 truncate">{m.name}</span>
+                                                        <div key={m.id} className="flex items-center justify-between text-xs px-2 py-1 rounded bg-secondary/50">
+                                                            <span className="text-secondary-foreground truncate">{m.name}</span>
                                                             <div className="flex gap-1">
-                                                                <Badge variant="outline" className="text-[9px] px-1 py-0 border-zinc-700 text-zinc-500">
+                                                                <Badge variant="outline" className="text-[9px] px-1 py-0 border-border text-muted-foreground">
                                                                     {m.category}
                                                                 </Badge>
                                                                 <Badge className={`text-[9px] px-1 py-0 border-0 ${m.tier === 'free' || m.tier === 'lite' ? 'bg-emerald-500/20 text-emerald-400' :
-                                                                        m.tier === 'premium' ? 'bg-amber-500/20 text-amber-400' :
-                                                                            'bg-zinc-700 text-zinc-400'
+                                                                    m.tier === 'premium' ? 'bg-amber-500/20 text-amber-400' :
+                                                                        'bg-zinc-700 text-secondary-foreground'
                                                                     }`}>
                                                                     {m.tier}
                                                                 </Badge>
@@ -381,7 +381,7 @@ export default function AIProvidersTab() {
             {Object.keys(usage.by_provider).length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* By Provider */}
-                    <Card className="bg-zinc-900/60 border-zinc-800">
+                    <Card className="bg-card/60 border-border">
                         <CardHeader className="pb-2">
                             <CardTitle className="text-sm flex items-center gap-2">
                                 <BarChart3 className="w-4 h-4 text-blue-400" />
@@ -395,9 +395,9 @@ export default function AIProvidersTab() {
                                     <div key={prov}>
                                         <div className="flex items-center justify-between text-xs mb-0.5">
                                             <span className={`font-medium ${colors.text}`}>{prov}</span>
-                                            <span className="text-zinc-400">{count}</span>
+                                            <span className="text-muted-foreground">{count}</span>
                                         </div>
-                                        <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
                                             <div
                                                 className={`h-full rounded-full transition-all duration-500 ${colors.bg.replace('/15', '/70')}`}
                                                 style={{ width: `${(count / maxUsage) * 100}%` }}
@@ -410,7 +410,7 @@ export default function AIProvidersTab() {
                     </Card>
 
                     {/* By Task */}
-                    <Card className="bg-zinc-900/60 border-zinc-800">
+                    <Card className="bg-card/60 border-border">
                         <CardHeader className="pb-2">
                             <CardTitle className="text-sm flex items-center gap-2">
                                 <Layers className="w-4 h-4 text-purple-400" />
@@ -421,10 +421,10 @@ export default function AIProvidersTab() {
                             {Object.entries(usage.by_task).map(([task, count]) => (
                                 <div key={task}>
                                     <div className="flex items-center justify-between text-xs mb-0.5">
-                                        <span className="font-medium text-zinc-300 capitalize">{task}</span>
-                                        <span className="text-zinc-400">{count}</span>
+                                        <span className="font-medium text-secondary-foreground capitalize">{task}</span>
+                                        <span className="text-muted-foreground">{count}</span>
                                     </div>
-                                    <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                    <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
                                         <div
                                             className="h-full rounded-full bg-purple-500/60 transition-all duration-500"
                                             style={{ width: `${(count / maxTaskUsage) * 100}%` }}
@@ -439,7 +439,7 @@ export default function AIProvidersTab() {
 
             {/* ── Shadow Learning Insights ── */}
             {shadow_learning.model_insights.length > 0 && (
-                <Card className="bg-zinc-900/60 border-zinc-800">
+                <Card className="bg-card/60 border-border">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm flex items-center gap-2">
                             <Brain className="w-4 h-4 text-rose-400" />
@@ -453,7 +453,7 @@ export default function AIProvidersTab() {
                         <div className="overflow-x-auto">
                             <table className="w-full text-xs">
                                 <thead>
-                                    <tr className="text-zinc-500 border-b border-zinc-800">
+                                    <tr className="text-muted-foreground border-b border-border">
                                         <th className="text-left py-2 px-2 font-medium">Model</th>
                                         <th className="text-left py-2 px-2 font-medium">Provider</th>
                                         <th className="text-right py-2 px-2 font-medium">Samples</th>
@@ -468,11 +468,11 @@ export default function AIProvidersTab() {
                                         const colors = PROVIDER_COLORS[insight.provider] || PROVIDER_COLORS.google;
                                         const isBest = idx === 0 && insight.avg_overlap > 0;
                                         return (
-                                            <tr key={insight.model} className="border-b border-zinc-800/50 hover:bg-zinc-800/30">
+                                            <tr key={insight.model} className="border-b border-border/50 hover:bg-secondary/30">
                                                 <td className="py-2 px-2">
                                                     <div className="flex items-center gap-1.5">
                                                         {isBest && <Award className="w-3.5 h-3.5 text-amber-400" />}
-                                                        <span className="text-zinc-200 font-medium truncate max-w-[200px]">{insight.model}</span>
+                                                        <span className="text-secondary-foreground font-medium truncate max-w-[200px]">{insight.model}</span>
                                                     </div>
                                                 </td>
                                                 <td className="py-2 px-2">
@@ -480,7 +480,7 @@ export default function AIProvidersTab() {
                                                         {insight.provider}
                                                     </Badge>
                                                 </td>
-                                                <td className="py-2 px-2 text-right text-zinc-300">{insight.samples}</td>
+                                                <td className="py-2 px-2 text-right text-secondary-foreground">{insight.samples}</td>
                                                 <td className="py-2 px-2 text-right">
                                                     <span className={insight.success_rate >= 90 ? 'text-emerald-400' : insight.success_rate >= 50 ? 'text-amber-400' : 'text-red-400'}>
                                                         {insight.success_rate}%
@@ -488,17 +488,17 @@ export default function AIProvidersTab() {
                                                 </td>
                                                 <td className="py-2 px-2 text-right">
                                                     <div className="flex items-center justify-end gap-1">
-                                                        <div className="w-12 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                                        <div className="w-12 h-1.5 bg-secondary rounded-full overflow-hidden">
                                                             <div
                                                                 className={`h-full rounded-full ${insight.avg_overlap >= 0.7 ? 'bg-emerald-500' : insight.avg_overlap >= 0.4 ? 'bg-amber-500' : 'bg-red-500'}`}
                                                                 style={{ width: `${insight.avg_overlap * 100}%` }}
                                                             />
                                                         </div>
-                                                        <span className="text-zinc-300 font-mono w-10 text-right">{(insight.avg_overlap * 100).toFixed(0)}%</span>
+                                                        <span className="text-secondary-foreground font-mono w-10 text-right">{(insight.avg_overlap * 100).toFixed(0)}%</span>
                                                     </div>
                                                 </td>
-                                                <td className="py-2 px-2 text-right text-zinc-400">{insight.avg_latency_ms.toFixed(0)}ms</td>
-                                                <td className="py-2 px-2 text-right text-zinc-400">{formatNumber(insight.total_tokens)}</td>
+                                                <td className="py-2 px-2 text-right text-muted-foreground">{insight.avg_latency_ms.toFixed(0)}ms</td>
+                                                <td className="py-2 px-2 text-right text-muted-foreground">{formatNumber(insight.total_tokens)}</td>
                                             </tr>
                                         );
                                     })}
@@ -510,7 +510,7 @@ export default function AIProvidersTab() {
             )}
 
             {/* ── Task → Provider Mapping ── */}
-            <Card className="bg-zinc-900/60 border-zinc-800">
+            <Card className="bg-card/60 border-border">
                 <CardHeader className="pb-2">
                     <CardTitle className="text-sm flex items-center gap-2">
                         <TrendingUp className="w-4 h-4 text-emerald-400" />
@@ -520,10 +520,10 @@ export default function AIProvidersTab() {
                 <CardContent>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                         {Object.entries(task_mapping).map(([task, mapping]) => (
-                            <div key={task} className="p-2.5 bg-zinc-800/40 rounded-lg border border-zinc-800">
+                            <div key={task} className="p-2.5 bg-secondary/40 rounded-lg border border-border">
                                 <div className="flex items-center justify-between mb-1.5">
-                                    <span className="text-xs font-semibold text-zinc-200 capitalize">{task}</span>
-                                    <Badge variant="outline" className="text-[9px] px-1 py-0 border-zinc-700 text-zinc-500">{mapping.chain}</Badge>
+                                    <span className="text-xs font-semibold text-secondary-foreground capitalize">{task}</span>
+                                    <Badge variant="outline" className="text-[9px] px-1 py-0 border-border text-muted-foreground">{mapping.chain}</Badge>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     {mapping.providers.map((prov, i) => {
@@ -531,8 +531,8 @@ export default function AIProvidersTab() {
                                         const isConnected = connectedProviders.some(p => p.id === prov);
                                         return (
                                             <React.Fragment key={prov}>
-                                                {i > 0 && <span className="text-zinc-700 text-[10px]">→</span>}
-                                                <Badge className={`text-[10px] px-1.5 py-0 border-0 ${isConnected ? `${colors.bg} ${colors.text}` : 'bg-zinc-800 text-zinc-600'
+                                                {i > 0 && <span className="text-muted-foreground text-[10px]">→</span>}
+                                                <Badge className={`text-[10px] px-1.5 py-0 border-0 ${isConnected ? `${colors.bg} ${colors.text}` : 'bg-secondary text-muted-foreground'
                                                     }`}>
                                                     {prov}
                                                 </Badge>
@@ -548,11 +548,11 @@ export default function AIProvidersTab() {
 
             {/* Empty state for usage */}
             {Object.keys(usage.by_provider).length === 0 && shadow_learning.total_logs === 0 && (
-                <Card className="bg-zinc-900/60 border-zinc-800 border-dashed">
+                <Card className="bg-card/60 border-border border-dashed">
                     <CardContent className="p-8 text-center">
                         <BarChart3 className="w-10 h-10 mx-auto text-zinc-700 mb-3" />
-                        <h3 className="text-sm font-medium text-zinc-400">No Usage Data Yet</h3>
-                        <p className="text-xs text-zinc-600 mt-1">
+                        <h3 className="text-sm font-medium text-muted-foreground">No Usage Data Yet</h3>
+                        <p className="text-xs text-muted-foreground mt-1">
                             Start using AI features to see analytics and shadow learning insights
                         </p>
                     </CardContent>
