@@ -58,7 +58,7 @@ export default function ManagerLayout(): React.ReactElement {
                         onClick={handleMobileToggle}
                         className="h-10 w-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center shadow-[0_0_25px_rgba(220,38,38,0.4)] border border-red-500/20 active:scale-95 transition-transform"
                     >
-                        <span className="text-2xl font-black text-white italic transform -skew-x-6">R</span>
+                        <span className="text-2xl font-black text-foreground italic transform -skew-x-6">R</span>
                     </button>
                 </div>
 

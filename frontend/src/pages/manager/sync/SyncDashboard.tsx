@@ -199,36 +199,36 @@ export default function SyncDashboard() {
             {/* Hero */}
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl lg:text-3xl font-bold text-zinc-100 flex items-center gap-3">
+                    <h1 className="text-2xl lg:text-3xl font-bold text-foreground flex items-center gap-3">
                         <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                            <RefreshCw className="h-5 w-5 text-white" />
+                            <RefreshCw className="h-5 w-5 text-foreground" />
                         </div>
                         Integration Control
                     </h1>
-                    <p className="text-zinc-400 mt-2 text-sm">
+                    <p className="text-muted-foreground mt-2 text-sm">
                         Manage all venue connections, APIs, Google services, and IoT — with full audit trail.
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="relative w-full lg:w-72">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             placeholder="Search integrations..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-9 bg-zinc-900 border-zinc-800 text-zinc-200 placeholder:text-zinc-600"
+                            className="pl-9 bg-card border-border text-secondary-foreground placeholder:text-muted-foreground"
                         />
                     </div>
                     {/* Sort Dropdown */}
-                    <div className="flex items-center gap-1 bg-zinc-900 rounded-lg p-1 border border-zinc-800">
-                        <ArrowUpDown className="h-3.5 w-3.5 text-zinc-500 ml-2" />
+                    <div className="flex items-center gap-1 bg-card rounded-lg p-1 border border-border">
+                        <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground ml-2" />
                         {SORT_OPTIONS.map(opt => (
                             <button
                                 key={opt.id}
                                 onClick={() => setSortBy(opt.id)}
                                 className={`px-2.5 py-1.5 rounded-md text-[11px] font-semibold transition-all ${sortBy === opt.id
                                     ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                                    : 'text-zinc-500 hover:text-zinc-300'
+                                    : 'text-muted-foreground hover:text-secondary-foreground'
                                     }`}
                             >
                                 {opt.label}
@@ -240,47 +240,47 @@ export default function SyncDashboard() {
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <Card className="bg-zinc-950/80 border-zinc-800 border-l-2 border-l-emerald-500/50">
+                <Card className="bg-background/80 border-border border-l-2 border-l-emerald-500/50">
                     <CardContent className="p-4 flex items-center gap-3">
                         <div className="h-9 w-9 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-xl font-bold text-zinc-100 tabular-nums">{connectedCount}</p>
-                            <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Connected</p>
+                            <p className="text-xl font-bold text-foreground tabular-nums">{connectedCount}</p>
+                            <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Connected</p>
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="bg-zinc-950/80 border-zinc-800 border-l-2 border-l-red-500/50">
+                <Card className="bg-background/80 border-border border-l-2 border-l-red-500/50">
                     <CardContent className="p-4 flex items-center gap-3">
                         <div className="h-9 w-9 rounded-lg bg-red-500/10 flex items-center justify-center">
                             <AlertTriangle className="h-4 w-4 text-red-400" />
                         </div>
                         <div>
-                            <p className="text-xl font-bold text-zinc-100 tabular-nums">{errorCount}</p>
-                            <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Errors</p>
+                            <p className="text-xl font-bold text-foreground tabular-nums">{errorCount}</p>
+                            <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Errors</p>
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="bg-zinc-950/80 border-zinc-800 border-l-2 border-l-blue-500/50">
+                <Card className="bg-background/80 border-border border-l-2 border-l-blue-500/50">
                     <CardContent className="p-4 flex items-center gap-3">
                         <div className="h-9 w-9 rounded-lg bg-blue-500/10 flex items-center justify-center">
                             <Activity className="h-4 w-4 text-blue-400" />
                         </div>
                         <div>
-                            <p className="text-xl font-bold text-zinc-100 tabular-nums">{totalProviders}</p>
-                            <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Total</p>
+                            <p className="text-xl font-bold text-foreground tabular-nums">{totalProviders}</p>
+                            <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Total</p>
                         </div>
                     </CardContent>
                 </Card>
-                <Card className="bg-zinc-950/80 border-zinc-800 border-l-2 border-l-amber-500/50">
+                <Card className="bg-background/80 border-border border-l-2 border-l-amber-500/50">
                     <CardContent className="p-4 flex items-center gap-3">
                         <div className="h-9 w-9 rounded-lg bg-amber-500/10 flex items-center justify-center">
                             <Clock className="h-4 w-4 text-amber-400" />
                         </div>
                         <div>
-                            <p className="text-xl font-bold text-zinc-100 tabular-nums">{syncHistory.length}</p>
-                            <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Sync Runs</p>
+                            <p className="text-xl font-bold text-foreground tabular-nums">{syncHistory.length}</p>
+                            <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Sync Runs</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -288,7 +288,7 @@ export default function SyncDashboard() {
 
             {/* Main Tabs */}
             <Tabs defaultValue="overview" className="space-y-5">
-                <TabsList className="bg-zinc-900 border border-zinc-800">
+                <TabsList className="bg-card border border-border">
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     {isGroupViewer && (
                         <TabsTrigger value="group" className="flex items-center gap-1.5">
@@ -318,13 +318,13 @@ export default function SyncDashboard() {
                                     onClick={() => setActiveCategory(cat)}
                                     className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200
                                         ${isActive
-                                            ? `bg-gradient-to-r ${meta.gradient} text-white shadow-lg`
-                                            : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800'
+                                            ? `bg-gradient-to-r ${meta.gradient} text-foreground shadow-lg`
+                                            : 'bg-card border border-border text-muted-foreground hover:text-secondary-foreground hover:bg-secondary'
                                         }`}
                                 >
                                     <CategoryIcon className="h-3.5 w-3.5" />
                                     {meta.label}
-                                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isActive ? 'bg-white/20' : 'bg-zinc-800 text-zinc-500'}`}>
+                                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isActive ? 'bg-white/20' : 'bg-secondary text-muted-foreground'}`}>
                                         {connectedInCat}/{count}
                                     </span>
                                 </button>
@@ -334,7 +334,7 @@ export default function SyncDashboard() {
 
                     {/* Loading */}
                     {loading && (
-                        <div className="flex items-center justify-center py-20 text-zinc-500">
+                        <div className="flex items-center justify-center py-20 text-muted-foreground">
                             <Loader2 className="h-6 w-6 animate-spin mr-3" />
                             Loading integrations...
                         </div>
@@ -373,7 +373,7 @@ export default function SyncDashboard() {
                     )}
 
                     {!loading && filteredProviders.length === 0 && (
-                        <div className="text-center py-16 text-zinc-500">
+                        <div className="text-center py-16 text-muted-foreground">
                             <Search className="h-10 w-10 mx-auto mb-3 opacity-50" />
                             <p className="text-sm">No integrations match your search.</p>
                         </div>
@@ -384,7 +384,7 @@ export default function SyncDashboard() {
                 {isGroupViewer && (
                     <TabsContent value="group" className="space-y-5">
                         {groupLoading ? (
-                            <div className="flex items-center justify-center py-20 text-zinc-500">
+                            <div className="flex items-center justify-center py-20 text-muted-foreground">
                                 <Loader2 className="h-6 w-6 animate-spin mr-3" />
                                 Loading group integrations...
                             </div>
@@ -392,59 +392,59 @@ export default function SyncDashboard() {
                             <>
                                 {/* Group Summary Cards */}
                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                    <Card className="bg-zinc-950/80 border-zinc-800 border-l-2 border-l-violet-500/50">
+                                    <Card className="bg-background/80 border-border border-l-2 border-l-violet-500/50">
                                         <CardContent className="p-4 flex items-center gap-3">
                                             <div className="h-9 w-9 rounded-lg bg-violet-500/10 flex items-center justify-center">
                                                 <Store className="h-4 w-4 text-violet-400" />
                                             </div>
                                             <div>
-                                                <p className="text-xl font-bold text-zinc-100 tabular-nums">{groupData.summary.total_venues}</p>
-                                                <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Venues</p>
+                                                <p className="text-xl font-bold text-foreground tabular-nums">{groupData.summary.total_venues}</p>
+                                                <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Venues</p>
                                             </div>
                                         </CardContent>
                                     </Card>
-                                    <Card className="bg-zinc-950/80 border-zinc-800 border-l-2 border-l-emerald-500/50">
+                                    <Card className="bg-background/80 border-border border-l-2 border-l-emerald-500/50">
                                         <CardContent className="p-4 flex items-center gap-3">
                                             <div className="h-9 w-9 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                                                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                                             </div>
                                             <div>
-                                                <p className="text-xl font-bold text-zinc-100 tabular-nums">{groupData.summary.total_connected}</p>
-                                                <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Active Links</p>
+                                                <p className="text-xl font-bold text-foreground tabular-nums">{groupData.summary.total_connected}</p>
+                                                <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Active Links</p>
                                             </div>
                                         </CardContent>
                                     </Card>
-                                    <Card className="bg-zinc-950/80 border-zinc-800 border-l-2 border-l-blue-500/50">
+                                    <Card className="bg-background/80 border-border border-l-2 border-l-blue-500/50">
                                         <CardContent className="p-4 flex items-center gap-3">
                                             <div className="h-9 w-9 rounded-lg bg-blue-500/10 flex items-center justify-center">
                                                 <Zap className="h-4 w-4 text-blue-400" />
                                             </div>
                                             <div>
-                                                <p className="text-xl font-bold text-zinc-100 tabular-nums">{groupData.summary.providers_used.length}</p>
-                                                <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Providers Used</p>
+                                                <p className="text-xl font-bold text-foreground tabular-nums">{groupData.summary.providers_used.length}</p>
+                                                <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Providers Used</p>
                                             </div>
                                         </CardContent>
                                     </Card>
                                 </div>
 
                                 {/* Venue × Provider Matrix */}
-                                <Card className="bg-zinc-950 border-zinc-800">
+                                <Card className="bg-background border-border">
                                     <CardHeader className="pb-3">
-                                        <CardTitle className="text-zinc-100 text-base flex items-center gap-2">
+                                        <CardTitle className="text-foreground text-base flex items-center gap-2">
                                             <LayoutGrid className="h-4 w-4 text-blue-400" />
                                             Venue × Provider Matrix
                                         </CardTitle>
-                                        <p className="text-xs text-zinc-500">Integration status per venue. Click any cell to manage.</p>
+                                        <p className="text-xs text-muted-foreground">Integration status per venue. Click any cell to manage.</p>
                                     </CardHeader>
                                     <CardContent className="overflow-x-auto">
                                         <table className="w-full text-xs">
                                             <thead>
-                                                <tr className="border-b border-zinc-800">
-                                                    <th className="text-left py-3 px-3 text-zinc-500 font-semibold uppercase tracking-wider sticky left-0 bg-zinc-950 z-10 min-w-[180px]">
+                                                <tr className="border-b border-border">
+                                                    <th className="text-left py-3 px-3 text-muted-foreground font-semibold uppercase tracking-wider sticky left-0 bg-background z-10 min-w-[180px]">
                                                         Venue
                                                     </th>
                                                     {PROVIDERS.map(p => (
-                                                        <th key={p.key} className="text-center py-3 px-2 text-zinc-500 font-semibold uppercase tracking-wider min-w-[80px]">
+                                                        <th key={p.key} className="text-center py-3 px-2 text-muted-foreground font-semibold uppercase tracking-wider min-w-20">
                                                             <div className="flex flex-col items-center gap-1">
                                                                 <p.icon className="h-3.5 w-3.5" />
                                                                 <span className="text-[9px] leading-tight">{p.label.split(' ')[0]}</span>
@@ -457,14 +457,14 @@ export default function SyncDashboard() {
                                                 {groupData.venues.map(venue => {
                                                     const venueMatrix = groupData.matrix[venue.id] || {};
                                                     return (
-                                                        <tr key={venue.id} className="border-b border-zinc-800/50 hover:bg-zinc-900/50 transition-colors">
-                                                            <td className="py-3 px-3 sticky left-0 bg-zinc-950 z-10">
+                                                        <tr key={venue.id} className="border-b border-border/50 hover:bg-card/50 transition-colors">
+                                                            <td className="py-3 px-3 sticky left-0 bg-background z-10">
                                                                 <div className="flex items-center gap-2">
-                                                                    <Store className="h-3.5 w-3.5 text-zinc-500 flex-shrink-0" />
+                                                                    <Store className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
                                                                     <div>
-                                                                        <p className="text-zinc-200 font-medium text-xs">{venue.name}</p>
+                                                                        <p className="text-secondary-foreground font-medium text-xs">{venue.name}</p>
                                                                         {venue.brand && (
-                                                                            <p className="text-[10px] text-zinc-600">{venue.brand}</p>
+                                                                            <p className="text-[10px] text-muted-foreground">{venue.brand}</p>
                                                                         )}
                                                                     </div>
                                                                 </div>
@@ -490,11 +490,11 @@ export default function SyncDashboard() {
                                                                                 <AlertTriangle className="h-3 w-3 text-red-400" />
                                                                             </div>
                                                                         ) : isDisabled ? (
-                                                                            <div className="h-6 w-6 rounded-full bg-zinc-800 flex items-center justify-center mx-auto">
-                                                                                <Power className="h-3 w-3 text-zinc-600" />
+                                                                            <div className="h-6 w-6 rounded-full bg-secondary flex items-center justify-center mx-auto">
+                                                                                <Power className="h-3 w-3 text-muted-foreground" />
                                                                             </div>
                                                                         ) : (
-                                                                            <div className="h-6 w-6 rounded-full bg-zinc-900 flex items-center justify-center mx-auto">
+                                                                            <div className="h-6 w-6 rounded-full bg-card flex items-center justify-center mx-auto">
                                                                                 <span className="text-zinc-700 text-[10px]">—</span>
                                                                             </div>
                                                                         )}
@@ -510,13 +510,13 @@ export default function SyncDashboard() {
                                 </Card>
 
                                 {/* Provider Usage List */}
-                                <Card className="bg-zinc-950 border-zinc-800">
+                                <Card className="bg-background border-border">
                                     <CardHeader className="pb-3">
-                                        <CardTitle className="text-zinc-100 text-sm">Active Providers Across Group</CardTitle>
+                                        <CardTitle className="text-foreground text-sm">Active Providers Across Group</CardTitle>
                                     </CardHeader>
                                     <CardContent className="space-y-2">
                                         {groupData.summary.providers_used.length === 0 ? (
-                                            <p className="text-sm text-zinc-500 text-center py-4">No integrations connected yet.</p>
+                                            <p className="text-sm text-muted-foreground text-center py-4">No integrations connected yet.</p>
                                         ) : (
                                             groupData.summary.providers_used.map(provKey => {
                                                 const pDef = PROVIDERS.find(p => p.key === provKey);
@@ -526,14 +526,14 @@ export default function SyncDashboard() {
                                                 });
                                                 const ProvIcon = pDef?.icon || Zap;
                                                 return (
-                                                    <div key={provKey} className="flex items-center justify-between p-3 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                                                    <div key={provKey} className="flex items-center justify-between p-3 rounded-lg bg-card/50 border border-border">
                                                         <div className="flex items-center gap-3">
                                                             <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
                                                                 <ProvIcon className="h-4 w-4 text-blue-400" />
                                                             </div>
                                                             <div>
-                                                                <p className="text-sm font-medium text-zinc-200">{pDef?.label || provKey}</p>
-                                                                <p className="text-[10px] text-zinc-500">{pDef?.desc || ''}</p>
+                                                                <p className="text-sm font-medium text-secondary-foreground">{pDef?.label || provKey}</p>
+                                                                <p className="text-[10px] text-muted-foreground">{pDef?.desc || ''}</p>
                                                             </div>
                                                         </div>
                                                         <div className="flex items-center gap-2">
@@ -544,15 +544,15 @@ export default function SyncDashboard() {
                                                                 {venuesWithIt.slice(0, 3).map(v => (
                                                                     <div
                                                                         key={v.id}
-                                                                        className="h-5 w-5 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center"
+                                                                        className="h-5 w-5 rounded-full bg-secondary border border-border flex items-center justify-center"
                                                                         title={v.name}
                                                                     >
-                                                                        <span className="text-[8px] text-zinc-400 font-bold">{v.name.charAt(0)}</span>
+                                                                        <span className="text-[8px] text-muted-foreground font-bold">{v.name.charAt(0)}</span>
                                                                     </div>
                                                                 ))}
                                                                 {venuesWithIt.length > 3 && (
                                                                     <div className="h-5 w-5 rounded-full bg-zinc-700 border border-zinc-600 flex items-center justify-center">
-                                                                        <span className="text-[8px] text-zinc-300 font-bold">+{venuesWithIt.length - 3}</span>
+                                                                        <span className="text-[8px] text-secondary-foreground font-bold">+{venuesWithIt.length - 3}</span>
                                                                     </div>
                                                                 )}
                                                             </div>
@@ -565,7 +565,7 @@ export default function SyncDashboard() {
                                 </Card>
                             </>
                         ) : (
-                            <div className="text-center py-16 text-zinc-500">
+                            <div className="text-center py-16 text-muted-foreground">
                                 <AlertTriangle className="h-8 w-8 mx-auto mb-3 opacity-50" />
                                 <p className="text-sm">Unable to load group data. Check permissions.</p>
                             </div>
@@ -575,19 +575,19 @@ export default function SyncDashboard() {
 
                 {/* Sync History Tab */}
                 <TabsContent value="runs">
-                    <Card className="bg-zinc-950 border-zinc-800">
+                    <Card className="bg-background border-border">
                         <CardHeader>
-                            <CardTitle className="text-zinc-100 text-base">Sync Execution Logs</CardTitle>
+                            <CardTitle className="text-foreground text-base">Sync Execution Logs</CardTitle>
                         </CardHeader>
                         <CardContent>
                             {syncHistory.length === 0 ? (
-                                <div className="text-sm text-zinc-500 p-8 text-center border border-dashed border-zinc-800 rounded-md">
+                                <div className="text-sm text-muted-foreground p-8 text-center border border-dashed border-border rounded-md">
                                     No sync history yet. Trigger a sync from the Overview tab.
                                 </div>
                             ) : (
                                 <div className="space-y-2">
                                     {syncHistory.map((run, i) => (
-                                        <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                                        <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-card/50 border border-border">
                                             <div className="flex items-center gap-3">
                                                 <Badge
                                                     variant={run.status === 'SUCCESS' ? 'default' : 'destructive'}
@@ -595,10 +595,10 @@ export default function SyncDashboard() {
                                                 >
                                                     {run.status}
                                                 </Badge>
-                                                <span className="text-sm font-medium text-zinc-200">{run.provider}</span>
-                                                <span className="text-xs text-zinc-500">{run.job_type}</span>
+                                                <span className="text-sm font-medium text-secondary-foreground">{run.provider}</span>
+                                                <span className="text-xs text-muted-foreground">{run.job_type}</span>
                                             </div>
-                                            <div className="flex items-center gap-4 text-xs text-zinc-500">
+                                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
                                                 {run.triggered_by && (
                                                     <span className="flex items-center gap-1">
                                                         <Users className="h-3 w-3" />
@@ -621,29 +621,29 @@ export default function SyncDashboard() {
 
                 {/* Policies Tab */}
                 <TabsContent value="settings">
-                    <Card className="bg-zinc-950 border-zinc-800">
+                    <Card className="bg-background border-border">
                         <CardHeader>
-                            <CardTitle className="text-zinc-100 text-base">Sync Policies</CardTitle>
+                            <CardTitle className="text-foreground text-base">Sync Policies</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                            <div className="flex items-center justify-between p-4 rounded-lg bg-card/50 border border-border">
                                 <div>
-                                    <p className="text-sm font-medium text-zinc-200">Auto-Sync on Startup</p>
-                                    <p className="text-xs text-zinc-500 mt-0.5">Sync all enabled providers when the system starts</p>
+                                    <p className="text-sm font-medium text-secondary-foreground">Auto-Sync on Startup</p>
+                                    <p className="text-xs text-muted-foreground mt-0.5">Sync all enabled providers when the system starts</p>
                                 </div>
                                 <Switch />
                             </div>
-                            <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                            <div className="flex items-center justify-between p-4 rounded-lg bg-card/50 border border-border">
                                 <div>
-                                    <p className="text-sm font-medium text-zinc-200">Scheduled Sync (6h interval)</p>
-                                    <p className="text-xs text-zinc-500 mt-0.5">Run sync jobs automatically for all connected providers</p>
+                                    <p className="text-sm font-medium text-secondary-foreground">Scheduled Sync (6h interval)</p>
+                                    <p className="text-xs text-muted-foreground mt-0.5">Run sync jobs automatically for all connected providers</p>
                                 </div>
                                 <Switch />
                             </div>
-                            <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
+                            <div className="flex items-center justify-between p-4 rounded-lg bg-card/50 border border-border">
                                 <div>
-                                    <p className="text-sm font-medium text-zinc-200">Error Notifications</p>
-                                    <p className="text-xs text-zinc-500 mt-0.5">Send email alerts when a sync run fails</p>
+                                    <p className="text-sm font-medium text-secondary-foreground">Error Notifications</p>
+                                    <p className="text-xs text-muted-foreground mt-0.5">Send email alerts when a sync run fails</p>
                                 </div>
                                 <Switch defaultChecked />
                             </div>
@@ -654,13 +654,13 @@ export default function SyncDashboard() {
 
             {/* ─── Configuration Dialog ──────────────────────────────────────── */}
             <Dialog open={configOpen} onOpenChange={setConfigOpen}>
-                <DialogContent className="max-w-lg bg-zinc-950 border-zinc-800">
+                <DialogContent className="max-w-lg bg-background border-border">
                     <DialogHeader>
-                        <DialogTitle className="text-zinc-100 flex items-center gap-2">
+                        <DialogTitle className="text-foreground flex items-center gap-2">
                             <Settings className="h-5 w-5 text-blue-400" />
                             Configure {currentProviderLabel}
                         </DialogTitle>
-                        <DialogDescription className="text-zinc-500">
+                        <DialogDescription className="text-muted-foreground">
                             Enter your API credentials. They are encrypted and stored securely.
                         </DialogDescription>
                     </DialogHeader>
@@ -703,7 +703,7 @@ export default function SyncDashboard() {
                         {isNuki && (
                             <a
                                 href={`/api/integrations/nuki/oauth/start`}
-                                className="flex items-center justify-center gap-2 p-3 rounded-lg bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-semibold text-sm transition-all shadow-lg shadow-blue-500/20"
+                                className="flex items-center justify-center gap-2 p-3 rounded-lg bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-foreground font-semibold text-sm transition-all shadow-lg shadow-blue-500/20"
                             >
                                 <Lock className="h-4 w-4" />
                                 Connect with Nuki (OAuth2)
@@ -717,7 +717,7 @@ export default function SyncDashboard() {
                                 href={currentPortal.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 p-3 rounded-lg bg-zinc-900/60 border border-zinc-800 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all text-sm text-zinc-300 hover:text-blue-400"
+                                className="flex items-center gap-2 p-3 rounded-lg bg-card/60 border border-border hover:border-blue-500/30 hover:bg-blue-500/5 transition-all text-sm text-secondary-foreground hover:text-blue-400"
                             >
                                 <Globe className="h-4 w-4" />
                                 <span className="flex-1">{currentPortal.label}</span>
@@ -726,10 +726,10 @@ export default function SyncDashboard() {
                         )}
 
                         {/* Enable/Disable Toggle */}
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-zinc-900/60 border border-zinc-800">
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-card/60 border border-border">
                             <div className="flex items-center gap-2">
-                                <Power className="h-4 w-4 text-zinc-400" />
-                                <Label className="text-sm text-zinc-300">Enable Integration</Label>
+                                <Power className="h-4 w-4 text-muted-foreground" />
+                                <Label className="text-sm text-secondary-foreground">Enable Integration</Label>
                             </div>
                             <Switch
                                 checked={configEnabled}
@@ -740,7 +740,7 @@ export default function SyncDashboard() {
                         {/* Credential Fields */}
                         {currentFields.map(field => (
                             <div key={field.key} className="space-y-1.5">
-                                <Label htmlFor={`field-${field.key}`} className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
+                                <Label htmlFor={`field-${field.key}`} className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
                                     {field.label}
                                 </Label>
                                 <div className="relative">
@@ -750,12 +750,12 @@ export default function SyncDashboard() {
                                         placeholder={field.placeholder}
                                         value={credentials[field.key] || ''}
                                         onChange={e => setCredentials(prev => ({ ...prev, [field.key]: e.target.value }))}
-                                        className="bg-zinc-900 border-zinc-800 text-zinc-200 placeholder:text-zinc-600 pr-10"
+                                        className="bg-card border-border text-secondary-foreground placeholder:text-muted-foreground pr-10"
                                     />
                                     {field.type === 'password' && (
                                         <button
                                             type="button"
-                                            className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-secondary-foreground transition-colors"
                                             onClick={() => setShowSecrets(prev => ({ ...prev, [field.key]: !prev[field.key] }))}
                                         >
                                             {showSecrets[field.key]
@@ -769,7 +769,7 @@ export default function SyncDashboard() {
                         ))}
 
                         {currentFields.length === 0 && (
-                            <div className="text-sm text-zinc-500 p-4 text-center border border-dashed border-zinc-800 rounded-md">
+                            <div className="text-sm text-muted-foreground p-4 text-center border border-dashed border-border rounded-md">
                                 No credential fields defined for this provider.
                             </div>
                         )}
@@ -779,14 +779,14 @@ export default function SyncDashboard() {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="bg-zinc-900 border-zinc-800 text-zinc-300 hover:bg-zinc-800"
+                                className="bg-card border-border text-secondary-foreground hover:bg-secondary"
                                 onClick={() => setConfigOpen(false)}
                             >
                                 Cancel
                             </Button>
                             <Button
                                 size="sm"
-                                className="bg-gradient-to-r from-blue-600 to-blue-500 text-white border-0 hover:from-blue-500 hover:to-blue-400"
+                                className="bg-gradient-to-r from-blue-600 to-blue-500 text-foreground border-0 hover:from-blue-500 hover:to-blue-400"
                                 onClick={handleSaveConfig}
                                 disabled={saving}
                             >

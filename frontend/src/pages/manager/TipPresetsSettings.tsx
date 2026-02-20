@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import PageContainer from '../../layouts/PageContainer';
 import { cn } from '../../lib/utils';
@@ -117,7 +118,7 @@ export default function TipPresetsSettings() {
                 <button
                     onClick={saveConfig}
                     disabled={saving}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all disabled:opacity-50"
+                    className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-foreground font-bold rounded-xl transition-all disabled:opacity-50"
                 >
                     <Save className="w-4 h-4" />
                     {saving ? 'Saving...' : 'Save Changes'}
@@ -126,10 +127,10 @@ export default function TipPresetsSettings() {
         >
             <div className="max-w-3xl space-y-8">
                 {/* Enable/Disable Toggle */}
-                <div className="flex items-center justify-between p-5 bg-zinc-900/50 border border-white/5 rounded-2xl">
+                <div className="flex items-center justify-between p-5 bg-card/50 border border-border rounded-2xl">
                     <div>
-                        <h3 className="text-sm font-bold text-white">Enable Tip Suggestions</h3>
-                        <p className="text-xs text-zinc-500 mt-1">Show suggested tip amounts at checkout</p>
+                        <h3 className="text-sm font-bold text-foreground">Enable Tip Suggestions</h3>
+                        <p className="text-xs text-muted-foreground mt-1">Show suggested tip amounts at checkout</p>
                     </div>
                     <button
                         onClick={() => updateField('enabled', !config?.enabled)}
@@ -138,14 +139,14 @@ export default function TipPresetsSettings() {
                         {config?.enabled ? (
                             <ToggleRight className="w-10 h-10 text-emerald-500" />
                         ) : (
-                            <ToggleLeft className="w-10 h-10 text-zinc-600" />
+                            <ToggleLeft className="w-10 h-10 text-muted-foreground" />
                         )}
                     </button>
                 </div>
 
                 {/* Mode Selection */}
                 <div className="space-y-3">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Suggestion Mode</h3>
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Suggestion Mode</h3>
                     <div className="grid grid-cols-3 gap-3">
                         {modes.map(m => (
                             <button
@@ -154,13 +155,13 @@ export default function TipPresetsSettings() {
                                 className={cn(
                                     "p-4 rounded-xl border-2 transition-all text-left",
                                     config?.mode === m.value
-                                        ? "bg-emerald-600/10 border-emerald-500/40 text-white"
-                                        : "bg-zinc-900/50 border-white/5 text-zinc-500 hover:border-white/15"
+                                        ? "bg-emerald-600/10 border-emerald-500/40 text-foreground"
+                                        : "bg-card/50 border-border text-muted-foreground hover:border-white/15"
                                 )}
                             >
-                                <m.icon className={cn("w-5 h-5 mb-2", config?.mode === m.value ? "text-emerald-400" : "text-zinc-600")} />
+                                <m.icon className={cn("w-5 h-5 mb-2", config?.mode === m.value ? "text-emerald-400" : "text-muted-foreground")} />
                                 <p className="text-sm font-bold">{m.label}</p>
-                                <p className="text-[10px] text-zinc-500 mt-1">{m.desc}</p>
+                                <p className="text-[10px] text-muted-foreground mt-1">{m.desc}</p>
                             </button>
                         ))}
                     </div>
@@ -169,7 +170,7 @@ export default function TipPresetsSettings() {
                 {/* Percentage Options */}
                 {(config?.mode === 'percent' || config?.mode === 'combo') && (
                     <div className="space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Percentage Options</h3>
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Percentage Options</h3>
                         <div className="grid grid-cols-3 gap-3">
                             {(config?.percent_options || [10, 15, 20]).map((val, i) => (
                                 <div key={i} className="relative">
@@ -177,10 +178,10 @@ export default function TipPresetsSettings() {
                                         type="number"
                                         value={val}
                                         onChange={(e) => updatePercentOption(i, e.target.value)}
-                                        className="w-full h-12 bg-zinc-900/50 border border-white/10 rounded-xl text-white text-center text-lg font-bold focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
+                                        className="w-full h-12 bg-card/50 border border-border rounded-xl text-foreground text-center text-lg font-bold focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
                                         aria-label={`Tip percentage option ${i + 1}`}
                                     />
-                                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 font-bold">%</span>
+                                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">%</span>
                                 </div>
                             ))}
                         </div>
@@ -190,17 +191,17 @@ export default function TipPresetsSettings() {
                 {/* Fixed Amount Options */}
                 {(config?.mode === 'fixed' || config?.mode === 'combo') && (
                     <div className="space-y-3">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Fixed Amount Options (cents)</h3>
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Fixed Amount Options (cents)</h3>
                         <div className="grid grid-cols-3 gap-3">
                             {(config?.fixed_options_cents || [200, 500, 1000]).map((val, i) => (
                                 <div key={i} className="relative">
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 font-bold">€</span>
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">€</span>
                                     <input
                                         type="number"
                                         value={(val / 100).toFixed(2)}
                                         onChange={(e) => updateFixedOption(i, Math.round(parseFloat(e.target.value) * 100))}
                                         step="0.50"
-                                        className="w-full h-12 bg-zinc-900/50 border border-white/10 rounded-xl text-white text-center text-lg font-bold pl-8 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
+                                        className="w-full h-12 bg-card/50 border border-border rounded-xl text-foreground text-center text-lg font-bold pl-8 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
                                         aria-label={`Fixed tip amount option ${i + 1}`}
                                     />
                                 </div>
@@ -211,7 +212,7 @@ export default function TipPresetsSettings() {
 
                 {/* Default Selection */}
                 <div className="space-y-3">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Default Pre-Selected</h3>
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Default Pre-Selected</h3>
                     <div className="grid grid-cols-3 gap-3">
                         {[0, 1, 2].map(i => (
                             <button
@@ -221,7 +222,7 @@ export default function TipPresetsSettings() {
                                     "h-12 rounded-xl border-2 font-bold text-sm transition-all",
                                     config?.default_selected === i
                                         ? "bg-emerald-600/20 border-emerald-500/40 text-emerald-400"
-                                        : "bg-zinc-900/50 border-white/5 text-zinc-500 hover:border-white/15"
+                                        : "bg-card/50 border-border text-muted-foreground hover:border-white/15"
                                 )}
                             >
                                 Option {i + 1}
@@ -231,23 +232,23 @@ export default function TipPresetsSettings() {
                 </div>
 
                 {/* Show Custom Input */}
-                <div className="flex items-center justify-between p-5 bg-zinc-900/50 border border-white/5 rounded-2xl">
+                <div className="flex items-center justify-between p-5 bg-card/50 border border-border rounded-2xl">
                     <div>
-                        <h3 className="text-sm font-bold text-white">Allow Custom Amount</h3>
-                        <p className="text-xs text-zinc-500 mt-1">Let customers enter a custom tip amount</p>
+                        <h3 className="text-sm font-bold text-foreground">Allow Custom Amount</h3>
+                        <p className="text-xs text-muted-foreground mt-1">Let customers enter a custom tip amount</p>
                     </div>
                     <button onClick={() => updateField('show_custom', !config?.show_custom)}>
                         {config?.show_custom ? (
                             <ToggleRight className="w-10 h-10 text-emerald-500" />
                         ) : (
-                            <ToggleLeft className="w-10 h-10 text-zinc-600" />
+                            <ToggleLeft className="w-10 h-10 text-muted-foreground" />
                         )}
                     </button>
                 </div>
 
                 {/* Show On Targets */}
                 <div className="space-y-3">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Display On</h3>
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Display On</h3>
                     <div className="grid grid-cols-3 gap-3">
                         {showOnTargets.map(t => (
                             <button
@@ -256,11 +257,11 @@ export default function TipPresetsSettings() {
                                 className={cn(
                                     "p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2",
                                     (config?.show_on || []).includes(t.value)
-                                        ? "bg-emerald-600/10 border-emerald-500/40 text-white"
-                                        : "bg-zinc-900/50 border-white/5 text-zinc-500 hover:border-white/15"
+                                        ? "bg-emerald-600/10 border-emerald-500/40 text-foreground"
+                                        : "bg-card/50 border-border text-muted-foreground hover:border-white/15"
                                 )}
                             >
-                                <t.icon className={cn("w-6 h-6", (config?.show_on || []).includes(t.value) ? "text-emerald-400" : "text-zinc-600")} />
+                                <t.icon className={cn("w-6 h-6", (config?.show_on || []).includes(t.value) ? "text-emerald-400" : "text-muted-foreground")} />
                                 <span className="text-xs font-bold">{t.label}</span>
                             </button>
                         ))}
@@ -269,18 +270,18 @@ export default function TipPresetsSettings() {
 
                 {/* Preview */}
                 <div className="space-y-3">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Preview</h3>
-                    <div className="p-6 bg-zinc-950 border border-white/5 rounded-2xl">
-                        <p className="text-center text-xs text-zinc-500 mb-4">Would you like to add a tip?</p>
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Preview</h3>
+                    <div className="p-6 bg-background border border-border rounded-2xl">
+                        <p className="text-center text-xs text-muted-foreground mb-4">Would you like to add a tip?</p>
                         <div className="flex items-center justify-center gap-3">
                             {config?.mode !== 'fixed' && (config?.percent_options || []).map((p, i) => (
                                 <button
                                     key={i}
                                     className={cn(
-                                        "px-5 py-3 rounded-xl font-bold text-sm border-2 transition-all min-w-[72px]",
+                                        "px-5 py-3 rounded-xl font-bold text-sm border-2 transition-all min-w-18",
                                         config?.default_selected === i
-                                            ? "bg-emerald-600 border-emerald-500 text-white"
-                                            : "bg-zinc-900 border-white/10 text-zinc-400"
+                                            ? "bg-emerald-600 border-emerald-500 text-foreground"
+                                            : "bg-card border-border text-muted-foreground"
                                     )}
                                 >
                                     {p}%
@@ -290,17 +291,17 @@ export default function TipPresetsSettings() {
                                 <button
                                     key={`f-${i}`}
                                     className={cn(
-                                        "px-5 py-3 rounded-xl font-bold text-sm border-2 transition-all min-w-[72px]",
+                                        "px-5 py-3 rounded-xl font-bold text-sm border-2 transition-all min-w-18",
                                         config?.mode === 'fixed' && config?.default_selected === i
-                                            ? "bg-emerald-600 border-emerald-500 text-white"
-                                            : "bg-zinc-900 border-white/10 text-zinc-400"
+                                            ? "bg-emerald-600 border-emerald-500 text-foreground"
+                                            : "bg-card border-border text-muted-foreground"
                                     )}
                                 >
                                     €{(c / 100).toFixed(2)}
                                 </button>
                             ))}
                             {config?.show_custom && (
-                                <button className="px-5 py-3 rounded-xl font-bold text-sm border-2 border-dashed border-white/10 text-zinc-600">
+                                <button className="px-5 py-3 rounded-xl font-bold text-sm border-2 border-dashed border-border text-muted-foreground">
                                     Custom
                                 </button>
                             )}

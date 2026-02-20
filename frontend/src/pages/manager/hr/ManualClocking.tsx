@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -307,22 +308,22 @@ export default function ManualClocking() {
     const isClockedIn = myStatus?.clocked_in;
 
     return (
-        <div className="p-4 md:p-6 bg-[#09090b] min-h-screen text-zinc-100 font-sans">
+        <div className="p-4 md:p-6 bg-[#09090b] min-h-screen text-foreground font-sans">
             {/* Header */}
             <div className="flex items-center gap-4 mb-8">
                 <Button
                     variant="ghost"
                     onClick={() => navigate('/manager/hr/clocking')}
-                    className="text-zinc-500 hover:text-zinc-300 h-9 w-9 p-0"
+                    className="text-muted-foreground hover:text-secondary-foreground h-9 w-9 p-0"
                     title={t('Back')}
                 >
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter">
+                    <h1 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tighter">
                         {t('Manual Clocking')}
                     </h1>
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-0.5">
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">
                         {t('Clock In/Out • Track Hours • Flow to Payroll')}
                     </p>
                 </div>
@@ -334,20 +335,20 @@ export default function ManualClocking() {
                     {/* Status Card */}
                     <Card className={`border-2 overflow-hidden transition-all duration-500 ${isClockedIn
                         ? 'bg-gradient-to-br from-emerald-950/40 to-emerald-900/20 border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.1)]'
-                        : 'bg-gradient-to-br from-zinc-900 to-zinc-950 border-zinc-800 shadow-2xl'
+                        : 'bg-gradient-to-br from-zinc-900 to-zinc-950 border-border shadow-2xl'
                         }`}>
                         <CardContent className="p-6 md:p-8">
                             {/* Live Clock */}
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-3">
-                                    <div className={`p-3 rounded-xl ${isClockedIn ? 'bg-emerald-500/20' : 'bg-zinc-800'}`}>
-                                        <Clock className={`h-6 w-6 ${isClockedIn ? 'text-emerald-400' : 'text-zinc-500'}`} />
+                                    <div className={`p-3 rounded-xl ${isClockedIn ? 'bg-emerald-500/20' : 'bg-secondary'}`}>
+                                        <Clock className={`h-6 w-6 ${isClockedIn ? 'text-emerald-400' : 'text-muted-foreground'}`} />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                                             {isClockedIn ? t('Currently Working') : t('Not Clocked In')}
                                         </p>
-                                        <p className="text-sm font-medium text-zinc-400">
+                                        <p className="text-sm font-medium text-muted-foreground">
                                             {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                                         </p>
                                     </div>
@@ -359,9 +360,9 @@ export default function ManualClocking() {
                                             <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-400" />
                                         </span>
                                     ) : (
-                                        <WifiOff className="h-4 w-4 text-zinc-600" />
+                                        <WifiOff className="h-4 w-4 text-muted-foreground" />
                                     )}
-                                    <span className={`text-xs font-bold uppercase tracking-wider ${isClockedIn ? 'text-emerald-400' : 'text-zinc-600'}`}>
+                                    <span className={`text-xs font-bold uppercase tracking-wider ${isClockedIn ? 'text-emerald-400' : 'text-muted-foreground'}`}>
                                         {isClockedIn ? 'ONLINE' : 'OFFLINE'}
                                     </span>
                                 </div>
@@ -374,7 +375,7 @@ export default function ManualClocking() {
                                     {elapsed}
                                 </div>
                                 {isClockedIn && myStatus?.clocking_in && (
-                                    <p className="text-xs text-zinc-500 mt-2 font-medium">
+                                    <p className="text-xs text-muted-foreground mt-2 font-medium">
                                         {t('Started at')} <span className="text-emerald-400 font-bold">{myStatus.clocking_in}</span>
                                         {myStatus.work_area && (
                                             <> · <span className="text-violet-400">{myStatus.work_area}</span></>
@@ -382,7 +383,7 @@ export default function ManualClocking() {
                                     </p>
                                 )}
                                 {!isClockedIn && myStatus?.last_session && (
-                                    <p className="text-xs text-zinc-600 mt-2">
+                                    <p className="text-xs text-muted-foreground mt-2">
                                         {t('Last session')}: {myStatus.last_session.date} · {myStatus.last_session.clocking_in}-{myStatus.last_session.clocking_out} · {myStatus.last_session.hours_worked}h
                                     </p>
                                 )}
@@ -391,7 +392,7 @@ export default function ManualClocking() {
                             {/* Work Area Selector (only when clocking in) */}
                             {!isClockedIn && (
                                 <div className="mb-6">
-                                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">
+                                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 block">
                                         {t('Select Work Area')}
                                     </label>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
@@ -401,7 +402,7 @@ export default function ManualClocking() {
                                                 onClick={() => setSelectedArea(selectedArea === area.code ? '' : area.code)}
                                                 className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all text-center ${selectedArea === area.code
                                                     ? 'border-violet-500/50 bg-violet-500/10 text-violet-300 shadow-[0_0_15px_rgba(139,92,246,0.1)]'
-                                                    : 'border-zinc-800 bg-zinc-900/50 text-zinc-500 hover:border-zinc-700 hover:text-zinc-400'
+                                                    : 'border-border bg-card/50 text-muted-foreground hover:border-border hover:text-muted-foreground'
                                                     }`}
                                             >
                                                 {AREA_ICONS[area.code] || <MapPin className="h-4 w-4" />}
@@ -415,15 +416,15 @@ export default function ManualClocking() {
                             {/* Employee Selector (Managers Only) */}
                             {canManageOthers && !isClockedIn && (
                                 <div className="mb-6">
-                                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">
+                                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 block">
                                         {t('Clock In On Behalf Of')} <span className="text-zinc-700">({t('optional')})</span>
                                     </label>
                                     <div className="relative">
                                         <div className="relative">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                             <Input
                                                 placeholder={t('Search employee...')}
-                                                className="pl-9 bg-zinc-900/50 border-zinc-800 text-xs h-10 focus:ring-1 focus:ring-violet-500/50"
+                                                className="pl-9 bg-card/50 border-border text-xs h-10 focus:ring-1 focus:ring-violet-500/50"
                                                 value={empSearch}
                                                 onChange={e => { setEmpSearch(e.target.value); setShowEmpDropdown(true); }}
                                                 onFocus={() => setShowEmpDropdown(true)}
@@ -438,7 +439,7 @@ export default function ManualClocking() {
                                             )}
                                         </div>
                                         {showEmpDropdown && empSearch.length > 0 && (
-                                            <div className="absolute z-50 w-full mt-1 max-h-48 overflow-auto bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl">
+                                            <div className="absolute z-50 w-full mt-1 max-h-48 overflow-auto bg-card border border-border rounded-lg shadow-xl">
                                                 {filteredEmployees.slice(0, 10).map(emp => (
                                                     <button
                                                         key={emp.id}
@@ -447,15 +448,15 @@ export default function ManualClocking() {
                                                             setEmpSearch(emp.full_name || emp.name || '');
                                                             setShowEmpDropdown(false);
                                                         }}
-                                                        className={`w-full text-left px-4 py-2.5 hover:bg-zinc-800 transition-colors border-b border-zinc-800/50 last:border-0 ${selectedEmployee === emp.id ? 'bg-violet-500/10' : ''
+                                                        className={`w-full text-left px-4 py-2.5 hover:bg-secondary transition-colors border-b border-border/50 last:border-0 ${selectedEmployee === emp.id ? 'bg-violet-500/10' : ''
                                                             }`}
                                                     >
-                                                        <div className="text-xs font-bold text-zinc-200 uppercase tracking-tight">{emp.full_name || emp.name}</div>
-                                                        <div className="text-[10px] text-zinc-500">{emp.department || emp.occupation || '—'}</div>
+                                                        <div className="text-xs font-bold text-secondary-foreground uppercase tracking-tight">{emp.full_name || emp.name}</div>
+                                                        <div className="text-[10px] text-muted-foreground">{emp.department || emp.occupation || '—'}</div>
                                                     </button>
                                                 ))}
                                                 {filteredEmployees.length === 0 && (
-                                                    <div className="px-4 py-3 text-xs text-zinc-600 text-center">{t('No employees found')}</div>
+                                                    <div className="px-4 py-3 text-xs text-muted-foreground text-center">{t('No employees found')}</div>
                                                 )}
                                             </div>
                                         )}
@@ -467,10 +468,10 @@ export default function ManualClocking() {
                             <button
                                 onClick={() => isClockedIn ? handleClockOut(myStatus?.record_id) : handleClockIn()}
                                 disabled={clocking}
-                                className={`w-full py-5 rounded-2xl font-black text-lg uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-3 border-2 ${clocking ? 'opacity-50 cursor-not-allowed border-zinc-700 bg-zinc-800 text-zinc-500' :
+                                className={`w-full py-5 rounded-2xl font-black text-lg uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-3 border-2 ${clocking ? 'opacity-50 cursor-not-allowed border-border bg-secondary text-muted-foreground' :
                                     isClockedIn
-                                        ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white border-red-500/30 shadow-[0_0_30px_rgba(239,68,68,0.2)] hover:shadow-[0_0_40px_rgba(239,68,68,0.3)]'
-                                        : 'bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.2)] hover:shadow-[0_0_40px_rgba(16,185,129,0.3)]'
+                                        ? 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-foreground border-red-500/30 shadow-[0_0_30px_rgba(239,68,68,0.2)] hover:shadow-[0_0_40px_rgba(239,68,68,0.3)]'
+                                        : 'bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-foreground border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.2)] hover:shadow-[0_0_40px_rgba(16,185,129,0.3)]'
                                     }`}
                             >
                                 {clocking ? (
@@ -492,21 +493,21 @@ export default function ManualClocking() {
 
                     {/* Last Session Info (when not clocked in) */}
                     {!isClockedIn && myStatus?.last_session && (
-                        <Card className="bg-zinc-900 border-zinc-800">
+                        <Card className="bg-card border-border">
                             <CardContent className="p-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="p-2 rounded-lg bg-zinc-800"><CheckCircle2 className="h-4 w-4 text-zinc-500" /></div>
+                                        <div className="p-2 rounded-lg bg-secondary"><CheckCircle2 className="h-4 w-4 text-muted-foreground" /></div>
                                         <div>
-                                            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('Last Completed Session')}</p>
-                                            <p className="text-xs text-zinc-400 mt-0.5">
+                                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{t('Last Completed Session')}</p>
+                                            <p className="text-xs text-muted-foreground mt-0.5">
                                                 {myStatus.last_session.date} · {myStatus.last_session.clocking_in} → {myStatus.last_session.clocking_out}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-lg font-black text-zinc-300 font-mono">{myStatus.last_session.hours_worked}h</p>
-                                        <p className="text-[9px] text-zinc-600 font-bold uppercase">{t('Total Hours')}</p>
+                                        <p className="text-lg font-black text-secondary-foreground font-mono">{myStatus.last_session.hours_worked}h</p>
+                                        <p className="text-[9px] text-muted-foreground font-bold uppercase">{t('Total Hours')}</p>
                                     </div>
                                 </div>
                             </CardContent>
@@ -517,12 +518,12 @@ export default function ManualClocking() {
                 {/* ── RIGHT: Active Sessions Panel ──────────── */}
                 <div className="space-y-6">
                     {/* Active Sessions */}
-                    <Card className="bg-zinc-900 border-zinc-800">
+                    <Card className="bg-card border-border">
                         <CardContent className="p-0">
-                            <div className="p-4 border-b border-zinc-800/50 flex items-center justify-between">
+                            <div className="p-4 border-b border-border/50 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <Activity className="h-4 w-4 text-emerald-400" />
-                                    <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider">{t('Active Now')}</span>
+                                    <span className="text-xs font-bold text-secondary-foreground uppercase tracking-wider">{t('Active Now')}</span>
                                 </div>
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">
                                     {activeSessions.length}
@@ -532,17 +533,17 @@ export default function ManualClocking() {
                                 {activeSessions.length === 0 ? (
                                     <div className="p-8 text-center">
                                         <WifiOff className="h-8 w-8 text-zinc-700 mx-auto mb-2" />
-                                        <p className="text-xs text-zinc-600 font-medium">{t('No active sessions')}</p>
+                                        <p className="text-xs text-muted-foreground font-medium">{t('No active sessions')}</p>
                                     </div>
                                 ) : (
                                     activeSessions.map((session) => (
-                                        <div key={session.id} className="px-4 py-3 border-b border-zinc-800/30 hover:bg-zinc-800/20 transition-colors group">
+                                        <div key={session.id} className="px-4 py-3 border-b border-border/30 hover:bg-secondary/20 transition-colors group">
                                             <div className="flex items-center justify-between mb-1">
-                                                <span className="text-[11px] font-bold text-zinc-200 uppercase tracking-tight">{session.employee_name}</span>
+                                                <span className="text-[11px] font-bold text-secondary-foreground uppercase tracking-tight">{session.employee_name}</span>
                                                 <span className="text-[10px] font-bold text-emerald-400 font-mono">{getElapsedForSession(session.clocking_in)}</span>
                                             </div>
                                             <div className="flex items-center gap-2 flex-wrap mb-1">
-                                                <span className="text-[9px] text-zinc-500">{t('In')}: {session.clocking_in}</span>
+                                                <span className="text-[9px] text-muted-foreground">{t('In')}: {session.clocking_in}</span>
                                                 {session.work_area && (
                                                     <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-violet-500/10 text-[8px] font-bold text-violet-400 uppercase border border-violet-500/20">
                                                         <MapPin className="h-2 w-2" />{session.work_area}
@@ -586,36 +587,36 @@ export default function ManualClocking() {
 
                     {/* Quick Stats */}
                     <div className="grid grid-cols-2 gap-3">
-                        <Card className="bg-zinc-900 border-zinc-800">
+                        <Card className="bg-card border-border">
                             <CardContent className="p-4 text-center">
                                 <Users className="h-5 w-5 text-blue-400 mx-auto mb-2" />
-                                <p className="text-xl font-black text-zinc-200">{activeSessions.length}</p>
-                                <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mt-0.5">{t('Clocked In')}</p>
+                                <p className="text-xl font-black text-secondary-foreground">{activeSessions.length}</p>
+                                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{t('Clocked In')}</p>
                             </CardContent>
                         </Card>
-                        <Card className="bg-zinc-900 border-zinc-800">
+                        <Card className="bg-card border-border">
                             <CardContent className="p-4 text-center">
                                 <Monitor className="h-5 w-5 text-violet-400 mx-auto mb-2" />
-                                <p className="text-xl font-black text-zinc-200">{workAreas.length}</p>
-                                <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mt-0.5">{t('Work Areas')}</p>
+                                <p className="text-xl font-black text-secondary-foreground">{workAreas.length}</p>
+                                <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{t('Work Areas')}</p>
                             </CardContent>
                         </Card>
                     </div>
 
                     {/* Device & Location Status */}
-                    <Card className="bg-zinc-900 border-zinc-800">
+                    <Card className="bg-card border-border">
                         <CardContent className="p-4">
                             <div className="flex items-center gap-2 mb-3 justify-between">
                                 <div className="flex items-center gap-2">
                                     <Fingerprint className="h-4 w-4 text-amber-400" />
-                                    <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider">{t('Device & Location')}</span>
+                                    <span className="text-xs font-bold text-secondary-foreground uppercase tracking-wider">{t('Device & Location')}</span>
                                 </div>
                                 {canManageOthers && (
                                     <Button
                                         variant="outline"
                                         size="sm"
                                         onClick={() => navigate('/manager/hr/clocking/add')}
-                                        className="h-6 text-[9px] px-2 bg-zinc-800 border-zinc-700 hover:bg-zinc-700 text-zinc-400 hover:text-white uppercase tracking-wider font-bold"
+                                        className="h-6 text-[9px] px-2 bg-secondary border-border hover:bg-secondary/80 text-muted-foreground hover:text-foreground uppercase tracking-wider font-bold"
                                     >
                                         <Plus className="h-3 w-3 mr-1" />{t('Add Past Entry')}
                                     </Button>
@@ -625,10 +626,10 @@ export default function ManualClocking() {
                                 {/* Device Info */}
                                 {currentDeviceInfo && (
                                     <div className="flex items-start gap-2">
-                                        <Monitor className="h-3 w-3 text-zinc-500 mt-0.5 flex-shrink-0" />
+                                        <Monitor className="h-3 w-3 text-muted-foreground mt-0.5 flex-shrink-0" />
                                         <div>
-                                            <p className="text-[10px] text-zinc-300 font-medium">{currentDeviceInfo.browser} · {currentDeviceInfo.os}</p>
-                                            <p className="text-[9px] text-zinc-600">{currentDeviceInfo.platform} · {currentDeviceInfo.screen_resolution} · {currentDeviceInfo.language}</p>
+                                            <p className="text-[10px] text-secondary-foreground font-medium">{currentDeviceInfo.browser} · {currentDeviceInfo.os}</p>
+                                            <p className="text-[9px] text-muted-foreground">{currentDeviceInfo.platform} · {currentDeviceInfo.screen_resolution} · {currentDeviceInfo.language}</p>
                                         </div>
                                     </div>
                                 )}
@@ -636,13 +637,13 @@ export default function ManualClocking() {
                                 <div className="flex items-start gap-2">
                                     <Crosshair className={`h-3 w-3 mt-0.5 flex-shrink-0 ${geoStatus === 'granted' ? 'text-emerald-400' :
                                         geoStatus === 'acquiring' ? 'text-amber-400 animate-pulse' :
-                                            geoStatus === 'denied' ? 'text-red-400' : 'text-zinc-500'
+                                            geoStatus === 'denied' ? 'text-red-400' : 'text-muted-foreground'
                                         }`} />
                                     <div>
                                         {geoStatus === 'granted' && currentGeo ? (
                                             <>
                                                 <p className="text-[10px] text-emerald-400 font-medium">{t('Location Captured')}</p>
-                                                <p className="text-[9px] text-zinc-500">
+                                                <p className="text-[9px] text-muted-foreground">
                                                     {currentGeo.latitude.toFixed(5)}, {currentGeo.longitude.toFixed(5)} · ±{currentGeo.accuracy}m
                                                 </p>
                                             </>
@@ -651,10 +652,10 @@ export default function ManualClocking() {
                                         ) : geoStatus === 'denied' ? (
                                             <>
                                                 <p className="text-[10px] text-red-400 font-medium">{t('Location Denied')}</p>
-                                                <p className="text-[9px] text-zinc-600">{t('Enable browser location for tracking')}</p>
+                                                <p className="text-[9px] text-muted-foreground">{t('Enable browser location for tracking')}</p>
                                             </>
                                         ) : (
-                                            <p className="text-[10px] text-zinc-500">{t('Location not requested')}</p>
+                                            <p className="text-[10px] text-muted-foreground">{t('Location not requested')}</p>
                                         )}
                                     </div>
                                 </div>

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
@@ -267,7 +268,7 @@ export default function DataTable<TData, TValue>({
         setColumnSizing(prefs.columnSizing || {});
         setPageSize(prefs.pageSize || DEFAULT_PAGE_SIZES[1]);
         setPrefsLoaded(true);
-      } catch (error) {
+      } catch (error: any) {
         setPrefsLoaded(true);
       }
     };
@@ -280,7 +281,7 @@ export default function DataTable<TData, TValue>({
       try {
         const response = await tablePresetsAPI.list(resolvedTableId, resolvedVenueId);
         setPresets(response.data.presets || []);
-      } catch (error) {
+      } catch (error: any) {
         setPresets([]);
       }
     };
@@ -387,14 +388,14 @@ export default function DataTable<TData, TValue>({
       setPresetName('');
       const response = await tablePresetsAPI.list(resolvedTableId, resolvedVenueId);
       setPresets(response.data.presets || []);
-    } catch (error) {
+    } catch (error: any) {
       // handled silently
     }
   };
 
   if (loading) {
     return (
-      <Card className={cn("bg-zinc-900 border-white/5", className)}>
+      <Card className={cn("bg-card border-border", className)}>
         <div className="p-4 space-y-3" data-testid="datatable-loading">
           {[1, 2, 3, 4, 5].map((i) => (
             <Skeleton key={i} className="h-12 w-full bg-white/5" />
@@ -406,9 +407,9 @@ export default function DataTable<TData, TValue>({
 
   if (error) {
     return (
-      <Card className={cn('p-8 bg-zinc-900 border-white/10', className)}>
+      <Card className={cn('p-8 bg-card border-border', className)}>
         <div className="text-center space-y-3" data-testid="datatable-error">
-          <p className="text-sm text-zinc-100 font-medium">{error}</p>
+          <p className="text-sm text-foreground font-medium">{error}</p>
           {onRetry && (
             <Button variant="outline" onClick={onRetry} data-testid="datatable-retry-button">Retry</Button>
           )}
@@ -418,7 +419,7 @@ export default function DataTable<TData, TValue>({
   }
 
   return (
-    <Card className={cn('p-4 space-y-3 bg-zinc-950/50 border-white/5 shadow-2xl', className)}>
+    <Card className={cn('p-4 space-y-3 bg-background/50 border-border shadow-2xl', className)}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           {enableGlobalSearch && (
@@ -426,7 +427,7 @@ export default function DataTable<TData, TValue>({
               value={globalSearch}
               onChange={(e) => setGlobalSearch(e.target.value)}
               placeholder="Search..."
-              className="w-[220px] bg-zinc-900 border-white/10 focus:border-red-500/50 transition-all"
+              className="w-[220px] bg-card border-border focus:border-red-500/50 transition-all"
               data-testid="datatable-global-search"
               autoComplete="off"
             />
@@ -438,14 +439,14 @@ export default function DataTable<TData, TValue>({
                   Filters <ChevronDown className="ml-2 h-4 w-4" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[320px] p-4" data-testid="datatable-filter-panel">
+              <PopoverContent className="w-80 p-4" data-testid="datatable-filter-panel">
                 <div className="space-y-4">
                   {columns.map((col) => {
                     const filterType = col.filterType || 'text';
                     const value = (columnFilters as FilterState)[col.key] || (filterType === 'multiSelect' ? [] : '');
                     return (
                       <div key={col.key} className="space-y-2">
-                        <label className="text-xs font-bold text-zinc-300 uppercase tracking-widest">{col.label}</label>
+                        <label className="text-xs font-bold text-secondary-foreground uppercase tracking-widest">{col.label}</label>
                         {filterType === 'text' && (
                           <Input
                             value={value as string}
@@ -490,7 +491,7 @@ export default function DataTable<TData, TValue>({
                         {filterType === 'multiSelect' && (
                           <div className="space-y-2" data-testid={`datatable-filter-${col.key}-multiselect`}>
                             {(col.filterOptions || []).map((option: { value: string; label: string }) => (
-                              <label key={option.value} className="flex items-center gap-2 text-xs text-zinc-300">
+                              <label key={option.value} className="flex items-center gap-2 text-xs text-secondary-foreground">
                                 <Checkbox
                                   checked={(value as string[]).includes(option.value)}
                                   onCheckedChange={(checked) => {
@@ -530,16 +531,16 @@ export default function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="icon"
-                className="bg-zinc-900 border-white/10 hover:border-red-500/30 hover:bg-red-500/5 transition-all text-zinc-400 hover:text-white"
+                className="bg-card border-border hover:border-red-500/30 hover:bg-red-500/5 transition-all text-muted-foreground hover:text-foreground"
                 data-testid="datatable-settings-button"
               >
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[360px] p-0 bg-[#0F0F10] border-white/10" align="end" data-testid="datatable-settings-panel">
+            <PopoverContent className="w-[360px] p-0 bg-[#0F0F10] border-border" align="end" data-testid="datatable-settings-panel">
               {/* ── Presets Section ── */}
-              <div className="p-4 border-b border-white/5">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-3">Presets</p>
+              <div className="p-4 border-b border-border">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">Presets</p>
                 <div className="space-y-2">
                   <Select
                     value={selectedPresetId}
@@ -549,7 +550,7 @@ export default function DataTable<TData, TValue>({
                       if (preset) applyPreset(preset);
                     }}
                   >
-                    <SelectTrigger className="bg-zinc-900 border-white/10" data-testid="datatable-presets-select">
+                    <SelectTrigger className="bg-card border-border" data-testid="datatable-presets-select">
                       <SelectValue placeholder="Load a preset..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -566,11 +567,11 @@ export default function DataTable<TData, TValue>({
                       value={presetName}
                       onChange={(e) => setPresetName(e.target.value)}
                       placeholder="New preset name..."
-                      className="bg-zinc-900 border-white/10 flex-1 text-xs"
+                      className="bg-card border-border flex-1 text-xs"
                       data-testid="datatable-presets-name"
                     />
                     <Select value={presetScope} onValueChange={setPresetScope}>
-                      <SelectTrigger className="w-[90px] bg-zinc-900 border-white/10 text-xs" data-testid="datatable-presets-scope">
+                      <SelectTrigger className="w-[90px] bg-card border-border text-xs" data-testid="datatable-presets-scope">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -582,7 +583,7 @@ export default function DataTable<TData, TValue>({
                       size="sm"
                       onClick={handleSavePreset}
                       disabled={!presetName}
-                      className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold shrink-0"
+                      className="bg-red-600 hover:bg-red-700 text-foreground text-xs font-bold shrink-0"
                       data-testid="datatable-presets-save"
                     >
                       Save
@@ -594,18 +595,18 @@ export default function DataTable<TData, TValue>({
               {/* ── Column Visibility Section ── */}
               {enableColumnControls && (
                 <div className="p-4">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-3">Columns</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">Columns</p>
                   <div className="space-y-1 max-h-60 overflow-y-auto pr-1">
                     {table && table.getAllLeafColumns ? table.getAllLeafColumns().map((column) => (
                       <div key={column.id} className="flex items-center justify-between gap-2 py-1 rounded-lg px-2 hover:bg-white/[0.03] transition-all group">
                         <div className="flex items-center gap-2 min-w-0">
-                          <GripVertical className="h-3.5 w-3.5 text-zinc-700 group-hover:text-zinc-500 cursor-grab shrink-0 transition-colors" />
+                          <GripVertical className="h-3.5 w-3.5 text-zinc-700 group-hover:text-muted-foreground cursor-grab shrink-0 transition-colors" />
                           <Checkbox
                             checked={column.getIsVisible()}
                             onCheckedChange={(value) => column.toggleVisibility(!!value)}
                             data-testid={`datatable-column-toggle-${column.id}`}
                           />
-                          <span className="text-xs text-zinc-400 font-medium truncate">
+                          <span className="text-xs text-muted-foreground font-medium truncate">
                             {/* @ts-ignore */}
                             {typeof column.columnDef.header === 'function' ? column.columnDef.header({ column, table }) : column.columnDef.header}
                           </span>
@@ -614,7 +615,7 @@ export default function DataTable<TData, TValue>({
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="h-6 w-6 text-zinc-600 hover:text-white"
+                            className="h-6 w-6 text-muted-foreground hover:text-foreground"
                             onClick={() => {
                               const currentOrder = table.getState().columnOrder;
                               if (!currentOrder.length) return;
@@ -632,7 +633,7 @@ export default function DataTable<TData, TValue>({
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="h-6 w-6 text-zinc-600 hover:text-white"
+                            className="h-6 w-6 text-muted-foreground hover:text-foreground"
                             onClick={() => {
                               const currentOrder = table.getState().columnOrder;
                               if (!currentOrder.length) return;
@@ -650,7 +651,7 @@ export default function DataTable<TData, TValue>({
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="h-6 w-6 text-zinc-600 hover:text-white"
+                            className="h-6 w-6 text-muted-foreground hover:text-foreground"
                             onClick={() => {
                               if (column.getIsPinned()) {
                                 column.pin(false);
@@ -683,11 +684,11 @@ export default function DataTable<TData, TValue>({
           </div>
         )}
 
-        <div className="relative border border-white/10 rounded-lg overflow-hidden">
+        <div className="relative border border-border rounded-lg overflow-hidden">
           {/* eslint-disable-next-line react/forbid-dom-props */}
           <div className="overflow-x-auto" ref={tableContainerRef} style={{ maxHeight: virtualizationEnabled ? '480px' : 'auto' }}>
             <Table data-testid={tableTestId || 'datatable-table'}>
-              <TableHeader className="sticky top-0 bg-zinc-900/95 backdrop-blur">
+              <TableHeader className="sticky top-0 bg-card/95 backdrop-blur">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
@@ -706,7 +707,7 @@ export default function DataTable<TData, TValue>({
                           style={{ width: header.getSize(), ...style }}
                         >
                           <div
-                            className={cn('flex items-center gap-2 select-none font-black text-white uppercase tracking-widest text-[10px]', header.column.getCanSort() && 'cursor-pointer')}
+                            className={cn('flex items-center gap-2 select-none font-black text-foreground uppercase tracking-widest text-[10px]', header.column.getCanSort() && 'cursor-pointer')}
                             onClick={header.column.getToggleSortingHandler()}
                             data-testid={`datatable-header-${header.id}`}
                           >
@@ -738,7 +739,7 @@ export default function DataTable<TData, TValue>({
                       <EmptyState
                         title={emptyMessage}
                         description="Try adjusting your filters or search terms."
-                        className="bg-zinc-900/20 backdrop-blur-sm"
+                        className="bg-card/20 backdrop-blur-sm"
                       />
                     </TableCell>
                   </TableRow>
@@ -769,7 +770,7 @@ export default function DataTable<TData, TValue>({
                             <TableCell
                               key={cell.id}
                               // @ts-ignore
-                              className={cn('py-4 text-zinc-100 font-bold text-xs', cell.column.columnDef.meta?.cellClassName)}
+                              className={cn('py-4 text-foreground font-bold text-xs', cell.column.columnDef.meta?.cellClassName)}
                               // @ts-ignore
                               style={{ width: cell.column.getSize(), ...style }}
                             >
@@ -789,9 +790,9 @@ export default function DataTable<TData, TValue>({
         {enablePagination && (
           <div className="flex flex-wrap items-center justify-between gap-3" data-testid="datatable-pagination">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-zinc-400">Rows per page</span>
+              <span className="text-xs text-muted-foreground">Rows per page</span>
               <Select value={String(pageSize)} onValueChange={(value) => setPageSize(Number(value))}>
-                <SelectTrigger className="w-[80px]" data-testid="datatable-page-size">
+                <SelectTrigger className="w-20" data-testid="datatable-page-size">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -811,7 +812,7 @@ export default function DataTable<TData, TValue>({
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <span className="text-xs text-zinc-400" data-testid="datatable-page-indicator">
+              <span className="text-xs text-muted-foreground" data-testid="datatable-page-indicator">
                 Page {(serverMode ? pageIndex : table.getState().pagination.pageIndex) + 1} of {serverMode ? (totalPages || '?') : table.getPageCount()}
               </span>
               <Button

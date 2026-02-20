@@ -165,6 +165,7 @@ from routes.pos_report_routes import create_pos_report_router
 from routes.migration_routes import router as migration_router # Quick Sync
 from routes.websocket_routes import create_websocket_router  # Real-time Notifications
 from routes.fcm_routes import create_fcm_router  # Mobile Push Notifications
+from routes.notification_routes import create_notification_badge_router  # Notification Badges
 from routes.orders_routes import create_orders_router  # Frontend /api/orders compatibility
 from routes.google_sso_routes import create_google_sso_router  # Google Workspace SSO
 from google.routes.workspace_routes import create_workspace_routes  # Workspace domain mgmt
@@ -213,7 +214,7 @@ from routes.hr_analytics_advanced import create_hr_analytics_advanced_router
 from routes.hr_employee_analytics import create_hr_employee_analytics_router
 from routes.content_editor import create_content_editor_router
 from routes.analytics_routes import create_analytics_routes as create_dashboard_analytics_router
-
+from app.domains.analytics.routes import create_analytics_router as create_new_analytics_router
 # Print Bridge for Network Printing (Rule #30)
 from devices.print_bridge import router as print_bridge_router
 
@@ -564,6 +565,10 @@ api_main.include_router(websocket_router)
 fcm_router = create_fcm_router()
 api_main.include_router(fcm_router)
 
+# Notification Badges
+notification_router = create_notification_badge_router()
+api_main.include_router(notification_router)
+
 
 
 # Orders API for frontend compatibility (/api/orders)
@@ -604,7 +609,6 @@ from routes.hr_bridge_routes import create_hr_bridge_router
 api_main.include_router(create_hr_bridge_router())
 api_main.include_router(hr_expense_router)
 api_main.include_router(migration_router)
-api_main.include_router(recipe_engineering_router)
 
 api_main.include_router(hr_performance_router)
 api_main.include_router(hr_documents_advanced_router)
@@ -612,8 +616,11 @@ api_main.include_router(hr_sfm_accounting_router)
 api_main.include_router(hr_analytics_advanced_router)
 api_main.include_router(hr_employee_analytics_router)
 api_main.include_router(content_editor_router)
-api_main.include_router(dashboard_analytics_router)
 
+# Note: dashboard_analytics_router is missing initialization if not defined elsewhere.
+# Registering the new analytics router which contains /manager/dashboard-stats
+new_analytics_router = create_new_analytics_router()
+api_main.include_router(new_analytics_router)
 # HR Parity Routers
 api_main.include_router(summary_dashboard_router)
 api_main.include_router(employee_portal_router)
@@ -640,6 +647,31 @@ api_main.include_router(create_summary_report_router())
 # Main HR factory router
 api_main.include_router(hr_router)
 
+# ── Shireburn Indigo Parity Routers (Gap Closure) ──
+from routes.hiring import create_hiring_router
+hiring_router = create_hiring_router()
+api_main.include_router(hiring_router)
+
+from routes.hr_calendar import create_hr_calendar_router
+hr_calendar_router = create_hr_calendar_router()
+api_main.include_router(hr_calendar_router)
+
+from routes.hr_onboarding import create_hr_onboarding_router
+hr_onboarding_router = create_hr_onboarding_router()
+api_main.include_router(hr_onboarding_router)
+
+from routes.salary_benchmarks import create_salary_benchmarks_router
+salary_benchmarks_router = create_salary_benchmarks_router()
+api_main.include_router(salary_benchmarks_router)
+
+from routes.employee_tags import create_employee_tags_router
+employee_tags_router = create_employee_tags_router()
+api_main.include_router(employee_tags_router)
+
+from routes.webhook_audit import create_webhook_audit_router
+webhook_audit_router = create_webhook_audit_router()
+api_main.include_router(webhook_audit_router)
+
 # System specific
 api_main.include_router(devices_router)
 api_main.include_router(pairing_router)
@@ -663,9 +695,6 @@ api_main.include_router(import_template_router)  # Import Template CRUD
 api_main.include_router(ai_copilot_router)  # AI Copilot
 from routes.restin_settings_routes import router as restin_settings_router
 api_main.include_router(restin_settings_router)  # Restin AI Module Settings
-
-rbac_router = create_rbac_router()
-api_main.include_router(rbac_router)
 
 # Group-level integration overview (cross-venue matrix)
 from routes.group_integrations import create_group_integrations_router

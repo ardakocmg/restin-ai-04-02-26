@@ -1,0 +1,115 @@
+// @ts-nocheck
+import React, { useState, useRef, useEffect } from 'react';
+import { Card } from '../ui/card';
+import { cn } from '../../lib/utils';
+import { Users, Timer, Receipt } from 'lucide-react';
+
+export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }) {
+    const containerRef = useRef(null);
+    const [draggingId, setDraggingId] = useState(null);
+    const [localTables, setLocalTables] = useState(tables);
+    const [offset, setOffset] = useState({ x: 0, y: 0 });
+
+    useEffect(() => {
+        setLocalTables(tables);
+    }, [tables]);
+
+    const handleDragStart = (e, table) => {
+        // Only allow editing mode drag if we implement an "Edit Layout" toggle. 
+        // For now, assuming fixed layout unless specific "Design Mode" requested.
+        // But user asked for "Visual Floor Plan", usually implies using it to SELECT tables.
+        // If user implies "Floor Plan Editor", that's admin side. This is POS Runtime.
+        // So usually tables are fixed in POS Runtime.
+        // I will implement "Drag" only if `onTableMove` is provided (Editor Mode).
+        if (!onTableMove) return;
+
+        setDraggingId(table.id);
+        const rect = e.currentTarget.getBoundingClientRect();
+        setOffset({
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        });
+    };
+
+    const handleDragEnd = (e) => {
+        setDraggingId(null);
+    };
+
+    const handleMouseMove = (e) => {
+        if (draggingId && onTableMove && containerRef.current) {
+            const containerRect = containerRef.current.getBoundingClientRect();
+            const x = e.clientX - containerRect.left - offset.x;
+            const y = e.clientY - containerRect.top - offset.y;
+
+            // Snap to grid 10px
+            const snappedX = Math.round(x / 10) * 10;
+            const snappedY = Math.round(y / 10) * 10;
+
+            onTableMove(draggingId, { x: snappedX, y: snappedY });
+        }
+    };
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'OCCUPIED': return 'bg-red-500/20 border-red-500 text-red-500 hover:bg-red-500/30';
+            case 'BILL_PRINTED': return 'bg-yellow-500/20 border-yellow-500 text-yellow-500 hover:bg-yellow-500/30';
+            case 'RESERVED': return 'bg-blue-500/20 border-blue-500 text-blue-500 hover:bg-blue-500/30';
+            default: return 'bg-green-500/20 border-green-500 text-green-500 hover:bg-green-500/30';
+        }
+    };
+
+    return (
+        <div
+            ref={containerRef}
+            className="relative w-full h-full min-h-[600px] bg-background/50 rounded-xl border-2 border-dashed border-border overflow-hidden"
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleDragEnd}
+            onMouseLeave={handleDragEnd}
+        >
+            {/* Grid Background */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none"
+                style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }}
+            />
+
+            {localTables.map(table => {
+                const x = table.position?.x || (parseInt(table.id) * 100) % 800 + 50; // Fallback positions
+                const y = table.position?.y || Math.floor((parseInt(table.id) * 100) / 800) * 100 + 50;
+
+                return (
+                    <div
+                        key={table.id}
+                        className={cn(
+                            "absolute cursor-pointer transition-colors duration-200 backdrop-blur-sm border-2 rounded-xl flex flex-col items-center justify-center shadow-lg select-none",
+                            getStatusColor(table.status),
+                            table.shape === 'CIRCLE' ? 'rounded-full' : 'rounded-lg' // Support shapes
+                        )}
+                        style={{
+                            left: x,
+                            top: y,
+                            width: table.width || 120, // Default width
+                            height: table.height || 120, // Default height
+                            zIndex: draggingId === table.id ? 50 : 1
+                        }}
+                        onMouseDown={(e) => handleDragStart(e, table)}
+                        onClick={() => !onTableMove && onTableSelect(table)}
+                    >
+                        <div className="font-bold text-lg">{table.name}</div>
+
+                        {table.status !== 'FREE' && (
+                            <div className="flex items-center gap-2 text-xs mt-1 font-mono">
+                                {table.status === 'OCCUPIED' && <Timer className="w-3 h-3 animate-pulse" />}
+                                {table.status === 'BILL_PRINTED' && <Receipt className="w-3 h-3" />}
+                                <span>{table.active_orders?.length || 0} Orders</span>
+                            </div>
+                        )}
+
+                        <div className="absolute top-2 right-2 opacity-50">
+                            <Users className="w-3 h-3" />
+                            <span className="text-[10px] ml-1">{table.seats}</span>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}

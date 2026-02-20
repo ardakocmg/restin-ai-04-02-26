@@ -272,7 +272,7 @@ export default function InventoryDashboard() {
                     unit: String(i.unit || 'EA'),
                 }));
             setNegativeStockItems(negItems);
-        } catch (err) {
+        } catch (err: any) {
             logger.error('Dashboard load failed', { error: String(err) });
             // Use demo stats
             setStats({
@@ -318,7 +318,7 @@ export default function InventoryDashboard() {
             actions={
                 <div className="flex items-center gap-2">
                     <Select value={outletFilter} onValueChange={setOutletFilter}>
-                        <SelectTrigger className="w-[160px] h-9 text-sm">
+                        <SelectTrigger className="w-40 h-9 text-sm">
                             <Building2 className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                             <SelectValue placeholder="All Outlets" />
                         </SelectTrigger>
@@ -900,7 +900,7 @@ export default function InventoryDashboard() {
             <Card className="mt-6">
                 <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                        <Settings className="h-4 w-4 text-zinc-500" />
+                        <Settings className="h-4 w-4 text-muted-foreground" />
                         Dashboard Panels
                         <Button variant="ghost" size="sm" className="ml-auto h-6 text-xs"
                             onClick={() => setShowPanelSettings(!showPanelSettings)}>

@@ -1,0 +1,27 @@
+# Restin.ai UI & Styling Guidelines
+
+## CRITICAL: Semantic Theme Engine Rules
+Restin.ai uses an advanced multi-theme engine (Standard Light, Standard Dark, and TeCh_NoLoGiCaL). To ensure all components dynamically adapt to the globally selected theme, **HARDCODED COLORS ARE STRICTLY FORBIDDEN**.
+
+### 🚫 DO NOT USE (Forbidden Hardcoded Tailwind Classes)
+- `bg-zinc-950`, `bg-zinc-900`, `bg-zinc-800`, `bg-black`, `bg-white`
+- `text-zinc-50`, `text-zinc-100`, `text-zinc-400`, `text-zinc-500`
+- `border-zinc-800`, `border-white/5`, `border-white/10`
+- External HEX colors like `bg-[#18181b]`, `bg-[#0A0A0B]`
+
+### ✅ DO USE (Semantic Variable Classes)
+You MUST map colors to the pre-defined semantic CSS variables (`index.css`):
+- **Backgrounds:** `bg-background` (main body), `bg-card` (cards/panels), `bg-secondary` (subtle/hover backgrounds), `bg-popover` (dropdowns/modals)
+- **Text:** `text-foreground` (main text), `text-muted-foreground` (secondary/gray text), `text-primary` (brand color)
+- **Borders:** `border-border` (default borders), `border-input` (input borders)
+- **Interactive:** `hover:bg-secondary/80`, `hover:text-foreground`
+
+**Exceptions:** 
+- Transparency modifiers on semantic colors are allowed (e.g., `bg-background/50`).
+- Highly specific brand/alert states (like `text-red-500` for an error toast) are acceptable, but semantic `text-destructive` is preferred.
+
+By strictly adhering to these semantic classes, the application will flawlessly morph between Light, Dark, and Tech modes without any CSS hacks.
+
+## 🤖 Codemod-first Thinking
+Any time a large, repetitive structural, styling, or syntactic change is requested across multiple files (such as eliminating hardcoded classes, enforcing i18n variables, or standardizing arbitrary UI spacing sizes), **you should propose an automated bulk refactoring script ("Codemod")**.
+Instead of performing manual file-by-file AST/Regex replacements which are prone to limits and errors, create an ad-hoc Node.js string-replacement script under `src/` to modify the files recursively, and get the User's approval before executing it. This project has successfully utilized custom codemods to enforce design system compliance globally.

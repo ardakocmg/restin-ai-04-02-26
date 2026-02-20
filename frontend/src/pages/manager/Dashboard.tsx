@@ -91,7 +91,7 @@ export default function Dashboard() {
 
       setStats(statsRes.data);
       setRecentOrders(ordersRes.data?.slice(0, 5) || []);
-    } catch (error) {
+    } catch (error: any) {
       logger.error('Failed to load dashboard:', { error: String(error) });
     } finally {
       setLoading(false);
@@ -130,7 +130,7 @@ export default function Dashboard() {
                 ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
                 : user.role === 'MANAGER'
                   ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
-                  : 'bg-zinc-700/50 text-zinc-400 border-zinc-600/30'
+                  : 'bg-zinc-700/50 text-muted-foreground border-zinc-600/30'
                 }`}>
                 <Shield className="h-3 w-3" />
                 {user.role}
@@ -144,7 +144,7 @@ export default function Dashboard() {
             onClick={loadDashboardData}
             variant="outline"
             size="sm"
-            className="bg-zinc-900 border-white/10 text-zinc-300 hover:bg-zinc-800 hover:text-white transition-all shadow-lg"
+            className="bg-card border-border text-secondary-foreground hover:bg-secondary hover:text-foreground transition-all shadow-lg"
           >
             <Activity className="h-4 w-4 mr-2 text-red-500" />
             Refresh
@@ -193,55 +193,55 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           <div
             onClick={() => navigate('/manager/pulse')}
-            className="cursor-pointer group relative overflow-hidden rounded-xl border border-white/5 bg-gradient-to-br from-emerald-950/40 to-zinc-900 p-5 transition-all hover:border-emerald-500/20 hover:shadow-[0_0_30px_rgba(16,185,129,0.08)] hover:scale-[1.02]"
+            className="cursor-pointer group relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-emerald-950/40 to-zinc-900 p-5 transition-all hover:border-emerald-500/20 hover:shadow-[0_0_30px_rgba(16,185,129,0.08)] hover:scale-[1.02]"
           >
             <div className="flex items-center justify-between mb-3">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500/80">Today's Revenue</span>
               <DollarSign className="h-4 w-4 text-emerald-500/50 group-hover:text-emerald-400 transition-colors" />
             </div>
-            <p className="text-2xl font-black text-white tracking-tight">
+            <p className="text-2xl font-black text-foreground tracking-tight">
               €{(Math.floor(hour * 180 + 420)).toLocaleString()}
             </p>
             <div className="flex items-center gap-1.5 mt-2">
               <TrendingUp className="h-3 w-3 text-emerald-400" />
               <span className="text-xs font-bold text-emerald-400">+12.4%</span>
-              <span className="text-[10px] text-zinc-600 ml-1">vs yesterday</span>
+              <span className="text-[10px] text-muted-foreground ml-1">vs yesterday</span>
             </div>
           </div>
 
           <div
             onClick={() => navigate('/manager/pulse')}
-            className="cursor-pointer group relative overflow-hidden rounded-xl border border-white/5 bg-gradient-to-br from-blue-950/40 to-zinc-900 p-5 transition-all hover:border-blue-500/20 hover:shadow-[0_0_30px_rgba(59,130,246,0.08)] hover:scale-[1.02]"
+            className="cursor-pointer group relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-blue-950/40 to-zinc-900 p-5 transition-all hover:border-blue-500/20 hover:shadow-[0_0_30px_rgba(59,130,246,0.08)] hover:scale-[1.02]"
           >
             <div className="flex items-center justify-between mb-3">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500/80">Today's Orders</span>
               <ShoppingCart className="h-4 w-4 text-blue-500/50 group-hover:text-blue-400 transition-colors" />
             </div>
-            <p className="text-2xl font-black text-white tracking-tight">
+            <p className="text-2xl font-black text-foreground tracking-tight">
               {Math.floor(hour * 7 + 12)}
             </p>
             <div className="flex items-center gap-1.5 mt-2">
               <TrendingUp className="h-3 w-3 text-blue-400" />
               <span className="text-xs font-bold text-blue-400">+8.2%</span>
-              <span className="text-[10px] text-zinc-600 ml-1">vs yesterday</span>
+              <span className="text-[10px] text-muted-foreground ml-1">vs yesterday</span>
             </div>
           </div>
 
           <div
             onClick={() => navigate('/manager/pulse')}
-            className="cursor-pointer group relative overflow-hidden rounded-xl border border-white/5 bg-gradient-to-br from-amber-950/40 to-zinc-900 p-5 transition-all hover:border-amber-500/20 hover:shadow-[0_0_30px_rgba(245,158,11,0.08)] hover:scale-[1.02]"
+            className="cursor-pointer group relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-amber-950/40 to-zinc-900 p-5 transition-all hover:border-amber-500/20 hover:shadow-[0_0_30px_rgba(245,158,11,0.08)] hover:scale-[1.02]"
           >
             <div className="flex items-center justify-between mb-3">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500/80">Labor Cost %</span>
               <Gauge className="h-4 w-4 text-amber-500/50 group-hover:text-amber-400 transition-colors" />
             </div>
-            <p className="text-2xl font-black text-white tracking-tight">
+            <p className="text-2xl font-black text-foreground tracking-tight">
               28.5%
             </p>
             <div className="flex items-center gap-1.5 mt-2">
               <TrendingUp className="h-3 w-3 text-amber-400 rotate-180" />
               <span className="text-xs font-bold text-amber-400">-2.1%</span>
-              <span className="text-[10px] text-zinc-600 ml-1">vs last week avg</span>
+              <span className="text-[10px] text-muted-foreground ml-1">vs last week avg</span>
             </div>
           </div>
         </div>
@@ -298,18 +298,18 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center bg-zinc-800/50 p-3 rounded-lg border border-white/5">
-                    <span className="text-sm font-bold text-zinc-100 uppercase tracking-tighter">Occupancy Rate</span>
+                  <div className="flex justify-between items-center bg-secondary/50 p-3 rounded-lg border border-border">
+                    <span className="text-sm font-bold text-foreground uppercase tracking-tighter">Occupancy Rate</span>
                     <span className="text-2xl font-black text-red-500">{occupancyRate}%</span>
                   </div>
                   <Progress value={occupancyRate} className="h-3 progress-bar-red" />
-                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border">
                     <div className="text-center">
-                      <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Occupied</p>
+                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Occupied</p>
                       <p className="text-2xl font-black text-green-400">{stats?.occupied_tables || 0}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Available</p>
+                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Available</p>
                       <p className="text-2xl font-black text-blue-400">
                         {(stats?.total_tables || 0) - (stats?.occupied_tables || 0)}
                       </p>
@@ -334,15 +334,15 @@ export default function Dashboard() {
                 {stats?.low_stock_items && stats.low_stock_items > 0 ? (
                   <div className="space-y-3">
                     <div
-                      className="flex items-start gap-3 p-3 rounded-lg bg-zinc-900 border border-red-500/30 cursor-pointer hover:bg-zinc-800 transition-colors"
+                      className="flex items-start gap-3 p-3 rounded-lg bg-card border border-red-500/30 cursor-pointer hover:bg-secondary transition-colors"
                       role="button"
                       tabIndex={0}
                       onClick={handleLowStockClick}
                     >
                       <Package className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-zinc-100">Low Stock Alert</p>
-                        <p className="text-xs mt-1 text-zinc-300">
+                        <p className="text-sm font-medium text-foreground">Low Stock Alert</p>
+                        <p className="text-xs mt-1 text-secondary-foreground">
                           {stats.low_stock_items} items below minimum level
                         </p>
                       </div>
@@ -350,7 +350,7 @@ export default function Dashboard() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-full btn-secondary text-zinc-100 dark:text-zinc-100 hover:text-white"
+                      className="w-full btn-secondary text-foreground dark:text-foreground hover:text-foreground"
                       onClick={() => navigate('/manager/inventory')}
                     >
                       View Inventory
@@ -359,7 +359,7 @@ export default function Dashboard() {
                 ) : (
                   <div className="text-center py-8">
                     <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-3" />
-                    <p className="text-sm text-zinc-400">No active alerts</p>
+                    <p className="text-sm text-muted-foreground">No active alerts</p>
                   </div>
                 )}
               </CardContent>
@@ -373,7 +373,7 @@ export default function Dashboard() {
               <CardContent className="space-y-2">
                 <Button
                   variant="outline"
-                  className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
+                  className="w-full justify-start bg-card border-border text-foreground hover:bg-secondary transition-colors"
                   onClick={() => navigate('/pos/setup')}
                 >
                   <Monitor className="h-4 w-4 mr-2 text-blue-400" />
@@ -381,7 +381,7 @@ export default function Dashboard() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
+                  className="w-full justify-start bg-card border-border text-foreground hover:bg-secondary transition-colors"
                   onClick={() => navigate('/kds/setup')}
                 >
                   <ChefHat className="h-4 w-4 mr-2 text-orange-400" />
@@ -389,7 +389,7 @@ export default function Dashboard() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
+                  className="w-full justify-start bg-card border-border text-foreground hover:bg-secondary transition-colors"
                   onClick={() => navigate('/manager/menu')}
                 >
                   <Utensils className="h-4 w-4 mr-2 text-green-400" />
@@ -399,7 +399,7 @@ export default function Dashboard() {
                 {!isManager() && (
                   <Button
                     variant="outline"
-                    className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
+                    className="w-full justify-start bg-card border-border text-foreground hover:bg-secondary transition-colors"
                     onClick={() => navigate('/manager/hr/clocking')}
                   >
                     <Clock className="h-4 w-4 mr-2 text-emerald-400" />
@@ -411,7 +411,7 @@ export default function Dashboard() {
                   <>
                     <Button
                       variant="outline"
-                      className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
+                      className="w-full justify-start bg-card border-border text-foreground hover:bg-secondary transition-colors"
                       onClick={() => navigate('/manager/finance')}
                     >
                       <DollarSign className="h-4 w-4 mr-2 text-yellow-500" />
@@ -419,7 +419,7 @@ export default function Dashboard() {
                     </Button>
                     <Button
                       variant="outline"
-                      className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
+                      className="w-full justify-start bg-card border-border text-foreground hover:bg-secondary transition-colors"
                       onClick={() => navigate('/manager/hr/analytics')}
                     >
                       <BarChart3 className="h-4 w-4 mr-2 text-purple-400" />
@@ -431,7 +431,7 @@ export default function Dashboard() {
                 {isOwner() && (
                   <Button
                     variant="outline"
-                    className="w-full justify-start bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors"
+                    className="w-full justify-start bg-card border-border text-foreground hover:bg-secondary transition-colors"
                     onClick={() => navigate('/manager/audit-logs')}
                   >
                     <ClipboardList className="h-4 w-4 mr-2 text-red-400" />
@@ -455,31 +455,31 @@ export default function Dashboard() {
                       <span className="text-[10px] uppercase tracking-widest text-blue-400 font-bold">Current Venue</span>
                       <CheckCircle2 className="h-4 w-4 text-blue-500" />
                     </div>
-                    <h3 className="text-lg font-black text-white uppercase tracking-tight mb-1">
+                    <h3 className="text-lg font-black text-foreground uppercase tracking-tight mb-1">
                       {activeVenue.name}
                     </h3>
-                    <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-500">
+                    <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">
                       {activeVenue.type?.replace('_', ' ')}
                     </p>
                   </div>
 
                   {/* Venue Details */}
                   <div className="space-y-2 pt-2">
-                    <div className="flex justify-between items-center border-b border-white/5 pb-2">
-                      <span className="text-zinc-500 uppercase text-[10px] font-bold tracking-widest italic">Service Style</span>
-                      <span className="font-bold text-zinc-100 capitalize text-sm">
+                    <div className="flex justify-between items-center border-b border-border pb-2">
+                      <span className="text-muted-foreground uppercase text-[10px] font-bold tracking-widest italic">Service Style</span>
+                      <span className="font-bold text-foreground capitalize text-sm">
                         {activeVenue.service_style?.replace('_', ' ')}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center border-b border-white/5 pb-2">
-                      <span className="text-zinc-500 uppercase text-[10px] font-bold tracking-widest italic">Currency</span>
-                      <span className="font-bold text-zinc-100 text-sm">
+                    <div className="flex justify-between items-center border-b border-border pb-2">
+                      <span className="text-muted-foreground uppercase text-[10px] font-bold tracking-widest italic">Currency</span>
+                      <span className="font-bold text-foreground text-sm">
                         {activeVenue.currency_symbol} {activeVenue.currency}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-zinc-500 uppercase text-[10px] font-bold tracking-widest italic">Pacing</span>
-                      <span className="font-bold text-zinc-100 text-sm">
+                      <span className="text-muted-foreground uppercase text-[10px] font-bold tracking-widest italic">Pacing</span>
+                      <span className="font-bold text-foreground text-sm">
                         {activeVenue.pacing_enabled ? '✓ Enabled' : '✗ Disabled'}
                       </span>
                     </div>
@@ -488,7 +488,7 @@ export default function Dashboard() {
                   {/* Switch Venue Button */}
                   <Button
                     variant="outline"
-                    className="w-full justify-center bg-zinc-900 border-white/10 text-zinc-100 hover:bg-zinc-800 transition-colors mt-4"
+                    className="w-full justify-center bg-card border-border text-foreground hover:bg-secondary transition-colors mt-4"
                     onClick={() => navigate('/manager/settings/venues')}
                   >
                     <Users className="h-4 w-4 mr-2 text-blue-400" />

@@ -581,3 +581,213 @@ async def add_clock_entry(
             "message": f"Clock entry added for {display_date}: {request.clock_in} - {request.clock_out} ({hours_worked}h)",
             "status": "completed",
         }
+
+
+# ── GET /clocking/exceptions — Attendance exceptions (late, early, missed) ──
+@router.get("/exceptions")
+async def get_attendance_exceptions(
+    date_from: Optional[str] = None,
+    date_to: Optional[str] = None,
+    current_user: dict = Depends(get_current_user),
+    db=Depends(get_database)
+):
+    """Detect attendance exceptions: late arrivals, early departures, missed clockings, overtime."""
+    venue_id = current_user.get("venueId") or "GLOBAL"
+
+    # Get all shifts in range
+    shift_query = {"venue_id": venue_id}
+    if date_from:
+        shift_query["date"] = {"$gte": date_from}
+    if date_to:
+        shift_query.setdefault("date", {})
+        if isinstance(shift_query["date"], dict):
+            shift_query["date"]["$lte"] = date_to
+        else:
+            shift_query["date"] = {"$gte": date_from, "$lte": date_to}
+
+    shifts = await db.shifts.find(shift_query, {"_id": 0}).to_list(5000)
+
+    # Build lookup: employee_id + date → shift
+    shift_map = {}
+    for s in shifts:
+        key = f"{s.get('employee_id')}|{s.get('date')}"
+        shift_map[key] = s
+
+    # Get all clocking records in range
+    clock_query = {"venue_id": venue_id, "status": {"$in": ["completed", "active"]}}
+    clockings = await db["clocking_records"].find(clock_query, {"_id": 0}).to_list(5000)
+
+    # Build lookup: employee_id + date → clocking
+    clock_map = {}
+    for c in clockings:
+        # Convert dd/mm/yyyy to yyyy-mm-dd for matching
+        date_raw = c.get("date", "")
+        if "/" in date_raw:
+            parts = date_raw.split("/")
+            if len(parts) == 3:
+                date_raw = f"{parts[2]}-{parts[1]}-{parts[0]}"
+        key = f"{c.get('employee_id')}|{date_raw}"
+        clock_map[key] = c
+
+    exceptions = []
+    tolerance_minutes = 15
+
+    # Check each shift for exceptions
+    for key, shift in shift_map.items():
+        emp_id, date_str = key.split("|", 1)
+        clocking = clock_map.get(key)
+
+        shift_start = shift.get("start_time", "09:00")
+        if "T" in shift_start:
+            shift_start = shift_start[11:16]
+        shift_end = shift.get("end_time", "17:00")
+        if "T" in shift_end:
+            shift_end = shift_end[11:16]
+
+        emp_name = shift.get("employee_name", "Unknown")
+
+        if not clocking:
+            # Missed clocking — no record at all
+            exceptions.append({
+                "type": "missed_clocking",
+                "severity": "critical",
+                "employee_id": emp_id,
+                "employee_name": emp_name,
+                "date": date_str,
+                "expected_start": shift_start,
+                "expected_end": shift_end,
+                "message": f"No clocking record found for scheduled shift"
+            })
+            continue
+
+        clock_in = clocking.get("clocking_in", "")
+        clock_out = clocking.get("clocking_out", "")
+
+        # Late arrival check
+        if clock_in and shift_start:
+            try:
+                ci_mins = int(clock_in.split(":")[0]) * 60 + int(clock_in.split(":")[1])
+                ss_mins = int(shift_start.split(":")[0]) * 60 + int(shift_start.split(":")[1])
+                if ci_mins > ss_mins + tolerance_minutes:
+                    exceptions.append({
+                        "type": "late_arrival",
+                        "severity": "warning",
+                        "employee_id": emp_id,
+                        "employee_name": emp_name,
+                        "date": date_str,
+                        "expected": shift_start,
+                        "actual": clock_in,
+                        "diff_minutes": ci_mins - ss_mins,
+                        "message": f"Arrived {ci_mins - ss_mins} minutes late"
+                    })
+            except (ValueError, IndexError):
+                pass
+
+        # Early departure check
+        if clock_out and shift_end:
+            try:
+                co_mins = int(clock_out.split(":")[0]) * 60 + int(clock_out.split(":")[1])
+                se_mins = int(shift_end.split(":")[0]) * 60 + int(shift_end.split(":")[1])
+                if co_mins < se_mins - tolerance_minutes:
+                    exceptions.append({
+                        "type": "early_departure",
+                        "severity": "warning",
+                        "employee_id": emp_id,
+                        "employee_name": emp_name,
+                        "date": date_str,
+                        "expected": shift_end,
+                        "actual": clock_out,
+                        "diff_minutes": se_mins - co_mins,
+                        "message": f"Left {se_mins - co_mins} minutes early"
+                    })
+            except (ValueError, IndexError):
+                pass
+
+        # Overtime check
+        hours = clocking.get("hours_worked", 0)
+        if hours > 10:
+            exceptions.append({
+                "type": "overtime",
+                "severity": "info",
+                "employee_id": emp_id,
+                "employee_name": emp_name,
+                "date": date_str,
+                "hours_worked": hours,
+                "message": f"Worked {hours} hours (potential overtime)"
+            })
+
+    return {
+        "total_exceptions": len(exceptions),
+        "exceptions": sorted(exceptions, key=lambda x: (x.get("date", ""), x.get("severity", "")))
+    }
+
+
+# ── POST /clocking/import — Bulk import clocking data from CSV/JSON ──
+class ClockingImportItem(BaseModel):
+    employee_id: str
+    employee_name: str = ""
+    date: str  # YYYY-MM-DD
+    clock_in: str  # HH:MM
+    clock_out: str  # HH:MM
+    work_area: Optional[str] = None
+    cost_centre: Optional[str] = None
+
+class ClockingImportRequest(BaseModel):
+    records: List[ClockingImportItem]
+    source: str = "csv_import"
+
+
+@router.post("/import")
+async def import_clocking_data(
+    request: ClockingImportRequest,
+    current_user: dict = Depends(get_current_user),
+    db=Depends(get_database)
+):
+    """Bulk import clocking data from external sources (CSV/JSON)."""
+    venue_id = current_user.get("venueId") or "GLOBAL"
+    user_name = current_user.get("fullName") or current_user.get("name") or "Unknown"
+
+    imported = 0
+    errors = []
+
+    for item in request.records:
+        try:
+            entry_date = datetime.strptime(item.date, "%Y-%m-%d")
+            ci_h, ci_m = map(int, item.clock_in.split(":"))
+            co_h, co_m = map(int, item.clock_out.split(":"))
+
+            clock_in_mins = ci_h * 60 + ci_m
+            clock_out_mins = co_h * 60 + co_m
+            hours_worked = round((clock_out_mins - clock_in_mins) / 60, 2) if clock_out_mins > clock_in_mins else 0
+
+            record = {
+                "id": str(uuid.uuid4()),
+                "venue_id": venue_id,
+                "employee_id": item.employee_id,
+                "employee_name": item.employee_name,
+                "day_of_week": entry_date.strftime("%A"),
+                "date": entry_date.strftime("%d/%m/%Y"),
+                "clocking_in": item.clock_in,
+                "clocking_out": item.clock_out,
+                "hours_worked": hours_worked,
+                "status": "completed",
+                "cost_centre": item.cost_centre or item.work_area or "N/A",
+                "work_area": item.work_area,
+                "source_device": request.source,
+                "device_name": f"Import ({request.source})",
+                "modified_by": user_name,
+                "created_by": user_name,
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db["clocking_records"].insert_one(record)
+            imported += 1
+        except Exception as e:
+            errors.append({"employee_id": item.employee_id, "date": item.date, "error": str(e)})
+
+    return {
+        "success": True,
+        "imported": imported,
+        "errors": errors,
+        "total_submitted": len(request.records)
+    }
+

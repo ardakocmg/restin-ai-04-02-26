@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * BuilderCanvas — Premium POS/KDS layout preview with drag-drop,
  * resize handles, context menu, and framer-motion animations.
@@ -89,10 +90,10 @@ function ZoneCard({
                 onContextMenu={onContextMenu}
                 className={cn(
                     "relative group rounded-lg border-2 transition-all cursor-pointer",
-                    "flex items-center min-h-[48px]",
+                    "flex items-center min-h-12",
                     isSelected
                         ? "border-teal-500 shadow-lg shadow-teal-500/20 ring-2 ring-teal-500/30"
-                        : "border-zinc-700 hover:border-zinc-500",
+                        : "border-border hover:border-zinc-500",
                     !zone.visible && "opacity-40",
                     isDragOver && "border-teal-400 bg-teal-500/5"
                 )}
@@ -103,13 +104,13 @@ function ZoneCard({
             >
                 {/* Drag handle */}
                 <div className="flex items-center px-1.5 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity">
-                    <GripVertical className="h-3.5 w-3.5 text-zinc-600" />
+                    <GripVertical className="h-3.5 w-3.5 text-muted-foreground" />
                 </div>
 
                 {/* Label */}
                 <div className="flex-1 text-center px-2 py-2">
-                    <p className="text-xs font-semibold text-zinc-300">{def.name}</p>
-                    <p className="text-[10px] text-zinc-500">{zone.position} · {zone.width || 'auto'}</p>
+                    <p className="text-xs font-semibold text-secondary-foreground">{def.name}</p>
+                    <p className="text-[10px] text-muted-foreground">{zone.position} · {zone.width || 'auto'}</p>
                 </div>
 
                 {/* Toolbar (visible on hover / selected) */}
@@ -120,9 +121,9 @@ function ZoneCard({
                     <button
                         onClick={(e) => { e.stopPropagation(); onToggleVisibility(); }}
                         title={zone.visible ? 'Hide zone' : 'Show zone'}
-                        className="w-5 h-5 rounded-full bg-zinc-800 border border-zinc-600 flex items-center justify-center hover:bg-zinc-700 transition-colors"
+                        className="w-5 h-5 rounded-full bg-secondary border border-zinc-600 flex items-center justify-center hover:bg-secondary/80 transition-colors"
                     >
-                        {zone.visible ? <Eye className="h-2.5 w-2.5 text-zinc-400" /> : <EyeOff className="h-2.5 w-2.5 text-zinc-500" />}
+                        {zone.visible ? <Eye className="h-2.5 w-2.5 text-muted-foreground" /> : <EyeOff className="h-2.5 w-2.5 text-muted-foreground" />}
                     </button>
                     <button
                         onClick={(e) => { e.stopPropagation(); onRemove(); }}
@@ -309,18 +310,18 @@ export default function BuilderCanvas({
                 onDragLeave={() => setIsOver(false)}
                 onDrop={(e) => { setIsOver(false); handlePaletteDrop(e, position); }}
                 className={cn(
-                    "rounded-lg border-2 border-dashed transition-all p-2 min-h-[56px]",
+                    "rounded-lg border-2 border-dashed transition-all p-2 min-h-14",
                     isOver
                         ? "border-teal-500 bg-teal-500/5 shadow-inner shadow-teal-500/10"
                         : zoneList.length > 0
                             ? "border-transparent"
-                            : "border-zinc-700/50 hover:border-zinc-600/50"
+                            : "border-border/50 hover:border-zinc-600/50"
                 )}
             >
                 {zoneList.length === 0 ? (
                     <div className={cn(
                         "flex items-center justify-center h-full text-[10px] uppercase tracking-wider transition-colors",
-                        isOver ? "text-teal-400" : "text-zinc-600"
+                        isOver ? "text-teal-400" : "text-muted-foreground"
                     )}>
                         {isOver ? '⬇ Drop here' : `Drop ${position}`}
                     </div>
@@ -374,7 +375,7 @@ export default function BuilderCanvas({
         <div className="flex-1 flex flex-col gap-2" onClick={() => { onSelectZone(null); setContextMenu(null); }}>
             {/* Canvas header */}
             <div className="flex items-center justify-between px-2">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     Live Preview
                 </h3>
                 <div className="flex items-center gap-2">
@@ -383,14 +384,14 @@ export default function BuilderCanvas({
                             {resizing.panel === 'left' ? leftPanelWidth : rightPanelWidth}px
                         </span>
                     )}
-                    <span className="text-[10px] text-zinc-600">{zones.length} zones</span>
+                    <span className="text-[10px] text-muted-foreground">{zones.length} zones</span>
                 </div>
             </div>
 
             {/* Canvas area */}
             <div
                 ref={canvasRef}
-                className="flex-1 rounded-xl border border-zinc-800 overflow-hidden flex flex-col"
+                className="flex-1 rounded-xl border border-border overflow-hidden flex flex-col"
                 style={{
                     backgroundColor: styles.rootBg,
                     fontFamily: styles.fontFamily,

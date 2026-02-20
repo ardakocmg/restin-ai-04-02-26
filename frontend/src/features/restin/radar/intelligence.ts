@@ -21,7 +21,7 @@ export class MarketRadar {
         try {
             const response = await AiServiceFactory.promptWithGrounding(prompt, 'GEMINI_PRO');
             return JSON.parse(response);
-        } catch (error) {
+        } catch (error: any) {
             logger.error('[Pillar 6] Market Radar failed:', { error: String(error) });
             return [];
         }
@@ -40,7 +40,7 @@ export class MarketRadar {
         try {
             const response = await AiServiceFactory.promptWithGrounding(prompt, 'GEMINI_FLASH');
             return JSON.parse(response);
-        } catch (error) {
+        } catch (error: any) {
             return { allergens: [] };
         }
     }

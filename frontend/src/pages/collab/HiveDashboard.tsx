@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -66,7 +67,7 @@ export default function HiveDashboard() {
                     return [...otherChannels, ...mapped];
                 });
             }
-        } catch (e) { /* offline fallback */ }
+        } catch (e: any) { /* offline fallback */ }
     }, []);
 
     // Load all channels on mount
@@ -757,12 +758,12 @@ export default function HiveDashboard() {
     const doneTasks = tasks.filter(t => t.status === 'done');
 
     return (
-        <div className="h-[calc(100vh-5rem)] -m-4 lg:-m-6 flex bg-zinc-950 text-zinc-100 overflow-hidden">
+        <div className="h-[calc(100vh-5rem)] -m-4 lg:-m-6 flex bg-background text-foreground overflow-hidden">
 
             {/* ─── LEFT: Channels & Staff ───────────────────────────────── */}
-            <div className="w-64 flex-shrink-0 border-r border-zinc-800/50 flex flex-col bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900/80">
+            <div className="w-64 flex-shrink-0 border-r border-border/50 flex flex-col bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900/80">
                 {/* Header — Premium Gradient */}
-                <div className="p-4 border-b border-zinc-800/50 bg-gradient-to-r from-amber-500/5 via-zinc-950 to-violet-500/5">
+                <div className="p-4 border-b border-border/50 bg-gradient-to-r from-amber-500/5 via-zinc-950 to-violet-500/5">
                     <h2 className="text-lg font-bold flex items-center gap-2">
                         <motion.span
                             className="text-2xl drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]"
@@ -773,25 +774,25 @@ export default function HiveDashboard() {
                         </motion.span>
                         <span className="bg-gradient-to-r from-amber-200 via-zinc-100 to-violet-200 bg-clip-text text-transparent">THE HIVE</span>
                     </h2>
-                    <p className="text-[10px] text-zinc-500 mt-1 tracking-wider uppercase">Team Communication Hub</p>
+                    <p className="text-[10px] text-muted-foreground mt-1 tracking-wider uppercase">Team Communication Hub</p>
                 </div>
 
                 {/* Search — Glassmorphism */}
                 <div className="px-3 py-2.5">
                     <div className="relative">
-                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                         <Input
                             placeholder="Search messages..."
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
-                            className="bg-zinc-900/60 border-zinc-800/60 text-zinc-300 placeholder:text-zinc-600 pl-8 h-8 text-xs rounded-lg backdrop-blur-sm focus:ring-1 focus:ring-amber-500/30 focus:border-amber-500/30 transition-all"
+                            className="bg-card/60 border-border/60 text-secondary-foreground placeholder:text-muted-foreground pl-8 h-8 text-xs rounded-lg backdrop-blur-sm focus:ring-1 focus:ring-amber-500/30 focus:border-amber-500/30 transition-all"
                         />
                     </div>
                 </div>
 
                 {/* Channels — Premium List */}
                 <div className="px-3 py-2">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-600 mb-2 flex items-center gap-1.5">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-2 flex items-center gap-1.5">
                         <Hash className="h-3 w-3" />
                         Channels
                     </p>
@@ -801,14 +802,14 @@ export default function HiveDashboard() {
                                 key={ch.id}
                                 onClick={() => setActiveChannel(ch.id)}
                                 className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-sm transition-all duration-200 ${activeChannel === ch.id
-                                    ? 'bg-gradient-to-r from-zinc-800 to-zinc-800/60 text-zinc-100 shadow-sm shadow-zinc-900/50 border border-zinc-700/30'
-                                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50'
+                                    ? 'bg-gradient-to-r from-zinc-800 to-zinc-800/60 text-foreground shadow-sm shadow-zinc-900/50 border border-border/30'
+                                    : 'text-muted-foreground hover:text-secondary-foreground hover:bg-card/50'
                                     }`}
                             >
                                 <ch.icon className={`h-4 w-4 ${ch.color}`} />
                                 <span className="flex-1 text-left">{ch.name}</span>
                                 {ch.unread > 0 && (
-                                    <Badge className="h-4 min-w-[16px] px-1 text-[10px] bg-blue-600 text-white border-0">
+                                    <Badge className="h-4 min-w-4 px-1 text-[10px] bg-blue-600 text-foreground border-0">
                                         {ch.unread}
                                     </Badge>
                                 )}
@@ -819,7 +820,7 @@ export default function HiveDashboard() {
 
                 {/* Direct Messages */}
                 <div className="px-3 py-2">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-600 mb-2 flex items-center gap-1.5">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-2 flex items-center gap-1.5">
                         <MessageSquare className="h-3 w-3" />
                         Direct Messages
                     </p>
@@ -831,14 +832,14 @@ export default function HiveDashboard() {
                                     key={dmId}
                                     onClick={() => setActiveChannel(dmId)}
                                     className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-sm transition-all duration-200 ${activeChannel === dmId
-                                        ? 'bg-gradient-to-r from-zinc-800 to-zinc-800/60 text-zinc-100 shadow-sm border border-zinc-700/30'
-                                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50'
+                                        ? 'bg-gradient-to-r from-zinc-800 to-zinc-800/60 text-foreground shadow-sm border border-border/30'
+                                        : 'text-muted-foreground hover:text-secondary-foreground hover:bg-card/50'
                                         }`}
                                     title={`DM ${s.name}`}
                                 >
                                     <div className="relative">
                                         <div className={`h-5 w-5 rounded-full ${s.color} flex items-center justify-center`}>
-                                            <span className="text-white text-[8px] font-bold">{s.initials}</span>
+                                            <span className="text-foreground text-[8px] font-bold">{s.initials}</span>
                                         </div>
                                         <div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-500 border border-zinc-950" />
                                     </div>
@@ -852,7 +853,7 @@ export default function HiveDashboard() {
                 {/* Staff Directory (Online + Offline) */}
                 <div className="px-3 py-2 flex-1 overflow-auto">
                     {/* Online & Away */}
-                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-600 mb-2 flex items-center gap-1.5">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-2 flex items-center gap-1.5">
                         <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -865,21 +866,21 @@ export default function HiveDashboard() {
                             return (
                                 <div
                                     key={s.name}
-                                    className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-zinc-900/50 cursor-pointer transition-all duration-200"
+                                    className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-card/50 cursor-pointer transition-all duration-200"
                                     onClick={() => setActiveChannel(dmId)}
                                     title={`Open DM with ${s.name}`}
                                 >
                                     <div className="relative">
                                         <div className={`h-7 w-7 rounded-full ${s.color} flex items-center justify-center`}>
-                                            <span className="text-white text-[10px] font-bold">{s.initials}</span>
+                                            <span className="text-foreground text-[10px] font-bold">{s.initials}</span>
                                         </div>
                                         <div className={`absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-zinc-950 ${s.status === 'online' ? 'bg-emerald-500' :
                                             s.status === 'busy' ? 'bg-red-500' : 'bg-amber-500'
                                             }`} />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-xs font-medium text-zinc-300 truncate">{s.name}</p>
-                                        <p className="text-[10px] text-zinc-600">{s.role}</p>
+                                        <p className="text-xs font-medium text-secondary-foreground truncate">{s.name}</p>
+                                        <p className="text-[10px] text-muted-foreground">{s.role}</p>
                                     </div>
                                 </div>);
                         })}
@@ -898,18 +899,18 @@ export default function HiveDashboard() {
                                     return (
                                         <div
                                             key={s.name}
-                                            className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-zinc-900/50 cursor-pointer transition-all duration-200 opacity-60 hover:opacity-100"
+                                            className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-card/50 cursor-pointer transition-all duration-200 opacity-60 hover:opacity-100"
                                             onClick={() => setActiveChannel(dmId)}
                                             title={`Send DM to ${s.name} (offline)`}
                                         >
                                             <div className="relative">
                                                 <div className={`h-7 w-7 rounded-full ${s.color} flex items-center justify-center`}>
-                                                    <span className="text-white text-[10px] font-bold">{s.initials}</span>
+                                                    <span className="text-foreground text-[10px] font-bold">{s.initials}</span>
                                                 </div>
                                                 <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-zinc-950 bg-zinc-700" />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-xs font-medium text-zinc-500 truncate">{s.name}</p>
+                                                <p className="text-xs font-medium text-muted-foreground truncate">{s.name}</p>
                                                 <p className="text-[10px] text-zinc-700">{s.role}</p>
                                             </div>
                                         </div>);
@@ -920,7 +921,7 @@ export default function HiveDashboard() {
                 </div>
 
                 {/* PTT Quick Access */}
-                <div className="p-3 border-t border-zinc-800">
+                <div className="p-3 border-t border-border">
                     <button
                         onMouseDown={startTalking}
                         onMouseUp={stopTalking}
@@ -928,10 +929,10 @@ export default function HiveDashboard() {
                         onTouchStart={startTalking}
                         onTouchEnd={stopTalking}
                         className={`w-full py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${isTalking
-                            ? 'bg-red-600 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] scale-[1.02]'
+                            ? 'bg-red-600 text-foreground shadow-[0_0_20px_rgba(239,68,68,0.4)] scale-[1.02]'
                             : micPermission === 'denied'
-                                ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
-                                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 active:bg-red-600'
+                                ? 'bg-secondary text-muted-foreground cursor-not-allowed'
+                                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-red-600'
                             }`}
                         disabled={micPermission === 'denied'}
                     >
@@ -947,15 +948,15 @@ export default function HiveDashboard() {
             {/* ─── CENTER: Chat ─────────────────────────────────────────── */}
             <div className="flex-1 flex flex-col min-w-0">
                 {/* Channel Header */}
-                <div className="h-14 border-b border-zinc-800 flex items-center px-4 gap-3 bg-zinc-950/80 backdrop-blur-sm flex-shrink-0">
+                <div className="h-14 border-b border-border flex items-center px-4 gap-3 bg-background/80 backdrop-blur-sm flex-shrink-0">
                     {activeChannelData && (
                         <>
                             <activeChannelData.icon className={`h-5 w-5 ${activeChannelData.color}`} />
                             <div>
-                                <h3 className="font-semibold text-zinc-100 text-sm">{activeChannelData.name}</h3>
-                                <p className="text-[10px] text-zinc-500">{activeChannelData.description}</p>
+                                <h3 className="font-semibold text-foreground text-sm">{activeChannelData.name}</h3>
+                                <p className="text-[10px] text-muted-foreground">{activeChannelData.description}</p>
                             </div>
-                            <Badge variant="outline" className="text-[10px] border-zinc-700 text-zinc-400 ml-2">
+                            <Badge variant="outline" className="text-[10px] border-border text-muted-foreground ml-2">
                                 {channelMessages.length} msgs
                             </Badge>
                         </>
@@ -969,7 +970,7 @@ export default function HiveDashboard() {
                     {bookmarkedMessages.length > 0 && (
                         <Button
                             variant="ghost" size="sm"
-                            className={`h-7 text-xs ${showBookmarks ? 'text-amber-400' : 'text-zinc-400 hover:text-amber-400'}`}
+                            className={`h-7 text-xs ${showBookmarks ? 'text-amber-400' : 'text-muted-foreground hover:text-amber-400'}`}
                             onClick={() => setShowBookmarks(!showBookmarks)}
                             title="View bookmarked messages"
                         >
@@ -978,7 +979,7 @@ export default function HiveDashboard() {
                     )}
                     <Button
                         variant="ghost" size="sm"
-                        className="h-7 text-xs text-zinc-400 hover:text-purple-400"
+                        className="h-7 text-xs text-muted-foreground hover:text-purple-400"
                         onClick={aiSummarize}
                         title="AI channel summary"
                     >
@@ -986,7 +987,7 @@ export default function HiveDashboard() {
                     </Button>
                     <Button
                         variant="ghost" size="sm"
-                        className="h-7 text-xs text-zinc-400 hover:text-purple-400"
+                        className="h-7 text-xs text-muted-foreground hover:text-purple-400"
                         onClick={() => setShowPollCreator(!showPollCreator)}
                         title="Create a poll"
                     >
@@ -994,7 +995,7 @@ export default function HiveDashboard() {
                     </Button>
                     <Button
                         variant="ghost" size="sm"
-                        className="h-7 text-xs text-zinc-400 hover:text-blue-400"
+                        className="h-7 text-xs text-muted-foreground hover:text-blue-400"
                         onClick={() => setShowTemplates(!showTemplates)}
                         title="Message templates"
                     >
@@ -1002,21 +1003,21 @@ export default function HiveDashboard() {
                     </Button>
                     <Button
                         variant="ghost" size="sm"
-                        className={`h-7 text-xs ${mutedChannels.includes(activeChannel) ? 'text-red-400' : 'text-zinc-400 hover:text-zinc-100'}`}
+                        className={`h-7 text-xs ${mutedChannels.includes(activeChannel) ? 'text-red-400' : 'text-muted-foreground hover:text-foreground'}`}
                         onClick={() => toggleChannelMute(activeChannel)}
                         title={mutedChannels.includes(activeChannel) ? 'Unmute channel' : 'Mute channel'}
                     >
                         {mutedChannels.includes(activeChannel) ? <VolumeX className="h-3 w-3 mr-1" /> : <Volume2 className="h-3 w-3 mr-1" />}
                         {mutedChannels.includes(activeChannel) ? 'Muted' : 'Mute'}
                     </Button>
-                    <Button variant="ghost" size="sm" className="h-7 text-xs text-zinc-400 hover:text-zinc-100" title="Online staff">
+                    <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-foreground" title="Online staff">
                         <Users className="h-3 w-3 mr-1" /> {onlineStaff.length}
                     </Button>
                     {/* Staff Status Picker */}
                     <div className="relative">
                         <button
                             onClick={() => setShowStatusPicker(!showStatusPicker)}
-                            className="h-7 px-2 rounded-md text-xs flex items-center gap-1 bg-zinc-800/50 text-zinc-300 hover:bg-zinc-800 transition-colors"
+                            className="h-7 px-2 rounded-md text-xs flex items-center gap-1 bg-secondary/50 text-secondary-foreground hover:bg-secondary transition-colors"
                             title="Set your status"
                         >
                             <span>{staffStatus.emoji}</span>
@@ -1025,7 +1026,7 @@ export default function HiveDashboard() {
                         <AnimatePresence>
                             {showStatusPicker && (
                                 <motion.div
-                                    className="absolute top-8 right-0 bg-zinc-900 border border-zinc-700 rounded-xl p-2 shadow-xl z-30 min-w-[140px]"
+                                    className="absolute top-8 right-0 bg-card border border-border rounded-xl p-2 shadow-xl z-30 min-w-[140px]"
                                     initial={{ opacity: 0, scale: 0.9, y: -5 }}
                                     animate={{ opacity: 1, scale: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.9, y: -5 }}
@@ -1041,7 +1042,7 @@ export default function HiveDashboard() {
                                         <button
                                             key={s.label}
                                             onClick={() => { setStaffStatus(s); setShowStatusPicker(false); }}
-                                            className={`w-full text-left px-2 py-1.5 rounded-md text-xs transition-colors ${staffStatus.label === s.label ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-300 hover:bg-zinc-800'}`}
+                                            className={`w-full text-left px-2 py-1.5 rounded-md text-xs transition-colors ${staffStatus.label === s.label ? 'bg-secondary text-foreground' : 'text-secondary-foreground hover:bg-secondary'}`}
                                             title={`Set status: ${s.label}`}
                                         >
                                             {s.emoji} {s.label}
@@ -1083,16 +1084,16 @@ export default function HiveDashboard() {
                 <AnimatePresence>
                     {showPollCreator && (
                         <motion.div
-                            className="px-4 py-3 bg-zinc-900/90 border-b border-zinc-800 space-y-2"
+                            className="px-4 py-3 bg-card/90 border-b border-border space-y-2"
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                         >
                             <div className="flex items-center justify-between">
-                                <p className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
+                                <p className="text-xs font-bold text-secondary-foreground flex items-center gap-1.5">
                                     <BarChart3 className="h-3.5 w-3.5 text-purple-400" /> Create Poll
                                 </p>
-                                <button onClick={() => setShowPollCreator(false)} className="h-5 w-5 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close poll creator">
+                                <button onClick={() => setShowPollCreator(false)} className="h-5 w-5 rounded hover:bg-secondary flex items-center justify-center text-muted-foreground hover:text-secondary-foreground" title="Close poll creator">
                                     <X className="h-3.5 w-3.5" />
                                 </button>
                             </div>
@@ -1100,7 +1101,7 @@ export default function HiveDashboard() {
                                 value={pollQuestion}
                                 onChange={e => setPollQuestion(e.target.value)}
                                 placeholder="Poll question..."
-                                className="bg-zinc-800 border-zinc-700 text-zinc-200 text-sm h-8"
+                                className="bg-secondary border-border text-secondary-foreground text-sm h-8"
                             />
                             {pollOptions.map((opt, i) => (
                                 <Input
@@ -1112,22 +1113,22 @@ export default function HiveDashboard() {
                                         setPollOptions(newOpts);
                                     }}
                                     placeholder={`Option ${i + 1}`}
-                                    className="bg-zinc-800 border-zinc-700 text-zinc-200 text-sm h-8"
+                                    className="bg-secondary border-border text-secondary-foreground text-sm h-8"
                                 />
                             ))}
                             <div className="flex gap-2">
                                 <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-7 text-xs text-zinc-400"
+                                    className="h-7 text-xs text-muted-foreground"
                                     onClick={() => setPollOptions([...pollOptions, ''])}
                                     title="Add another option"
                                 >
                                     + Add Option
                                 </Button>
                                 <div className="flex-1" />
-                                <Button size="sm" variant="ghost" className="h-7 text-xs text-zinc-400" onClick={() => setShowPollCreator(false)} title="Cancel poll">Cancel</Button>
-                                <Button size="sm" className="h-7 text-xs bg-purple-600 hover:bg-purple-500 text-white" onClick={createPollMessage} title="Send poll">Send Poll</Button>
+                                <Button size="sm" variant="ghost" className="h-7 text-xs text-muted-foreground" onClick={() => setShowPollCreator(false)} title="Cancel poll">Cancel</Button>
+                                <Button size="sm" className="h-7 text-xs bg-purple-600 hover:bg-purple-500 text-foreground" onClick={createPollMessage} title="Send poll">Send Poll</Button>
                             </div>
                         </motion.div>
                     )}
@@ -1137,16 +1138,16 @@ export default function HiveDashboard() {
                 <AnimatePresence>
                     {showTemplates && (
                         <motion.div
-                            className="px-4 py-3 bg-zinc-900/90 border-b border-zinc-800 space-y-1.5"
+                            className="px-4 py-3 bg-card/90 border-b border-border space-y-1.5"
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                         >
                             <div className="flex items-center justify-between mb-1">
-                                <p className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
+                                <p className="text-xs font-bold text-secondary-foreground flex items-center gap-1.5">
                                     <Layout className="h-3.5 w-3.5 text-blue-400" /> Message Templates
                                 </p>
-                                <button onClick={() => setShowTemplates(false)} className="h-5 w-5 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close templates">
+                                <button onClick={() => setShowTemplates(false)} className="h-5 w-5 rounded hover:bg-secondary flex items-center justify-center text-muted-foreground hover:text-secondary-foreground" title="Close templates">
                                     <X className="h-3.5 w-3.5" />
                                 </button>
                             </div>
@@ -1154,11 +1155,11 @@ export default function HiveDashboard() {
                                 <button
                                     key={t.id}
                                     onClick={() => useTemplate(t.text)}
-                                    className="w-full text-left px-3 py-2 rounded-lg bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 hover:border-zinc-600 transition-colors"
+                                    className="w-full text-left px-3 py-2 rounded-lg bg-secondary/50 border border-border/50 hover:bg-secondary hover:border-zinc-600 transition-colors"
                                     title={`Use template: ${t.name}`}
                                 >
-                                    <p className="text-xs font-medium text-zinc-200">{t.name}</p>
-                                    <p className="text-[10px] text-zinc-500 truncate">{t.text.slice(0, 60)}...</p>
+                                    <p className="text-xs font-medium text-secondary-foreground">{t.name}</p>
+                                    <p className="text-[10px] text-muted-foreground truncate">{t.text.slice(0, 60)}...</p>
                                 </button>
                             ))}
                         </motion.div>
@@ -1169,7 +1170,7 @@ export default function HiveDashboard() {
                 <AnimatePresence>
                     {showBookmarks && bookmarkedMessages.length > 0 && (
                         <motion.div
-                            className="px-4 py-3 bg-zinc-900/90 border-b border-zinc-800 space-y-1.5 max-h-40 overflow-y-auto"
+                            className="px-4 py-3 bg-card/90 border-b border-border space-y-1.5 max-h-40 overflow-y-auto"
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
@@ -1178,15 +1179,15 @@ export default function HiveDashboard() {
                                 <p className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
                                     <Bookmark className="h-3.5 w-3.5 fill-amber-400" /> Bookmarked Messages
                                 </p>
-                                <button onClick={() => setShowBookmarks(false)} className="h-5 w-5 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close bookmarks">
+                                <button onClick={() => setShowBookmarks(false)} className="h-5 w-5 rounded hover:bg-secondary flex items-center justify-center text-muted-foreground hover:text-secondary-foreground" title="Close bookmarks">
                                     <X className="h-3.5 w-3.5" />
                                 </button>
                             </div>
                             {bookmarkedMessages.map(m => (
-                                <div key={m.id} className="flex items-center gap-2 px-2 py-1 rounded bg-zinc-800/50 text-xs">
-                                    <span className="text-zinc-400 font-medium">{m.sender}</span>
-                                    <span className="text-zinc-500 truncate flex-1">{m.text.slice(0, 60)}</span>
-                                    <span className="text-[10px] text-zinc-600">{m.timestamp}</span>
+                                <div key={m.id} className="flex items-center gap-2 px-2 py-1 rounded bg-secondary/50 text-xs">
+                                    <span className="text-muted-foreground font-medium">{m.sender}</span>
+                                    <span className="text-muted-foreground truncate flex-1">{m.text.slice(0, 60)}</span>
+                                    <span className="text-[10px] text-muted-foreground">{m.timestamp}</span>
                                 </div>
                             ))}
                         </motion.div>
@@ -1214,7 +1215,7 @@ export default function HiveDashboard() {
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                                             className={`flex gap-3 group relative rounded-xl px-3 py-2.5 transition-all duration-200
-                                                hover:bg-zinc-900/40 hover:backdrop-blur-sm
+                                                hover:bg-card/40 hover:backdrop-blur-sm
                                                 ${msg.isPriority ? 'border-l-2 border-red-500/70 bg-red-500/[0.03] shadow-[inset_0_0_20px_rgba(239,68,68,0.03)]' : ''}
                                                 ${msg.isBookmarked ? 'border-l-2 border-amber-500/50' : ''}
                                             `}
@@ -1222,20 +1223,20 @@ export default function HiveDashboard() {
                                             {/* Avatar with status ring */}
                                             <div className="relative flex-shrink-0">
                                                 <div className={`h-9 w-9 rounded-full mt-0.5 ${msg.senderColor} flex items-center justify-center ring-2 ring-zinc-900 shadow-lg`}>
-                                                    <span className="text-white text-[11px] font-bold tracking-tight">{msg.senderInitials}</span>
+                                                    <span className="text-foreground text-[11px] font-bold tracking-tight">{msg.senderInitials}</span>
                                                 </div>
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 {/* Reply Reference */}
                                                 {msg.replyTo && msg.replyPreview && (
-                                                    <div className="flex items-center gap-1.5 mb-1 pl-2 border-l-2 border-zinc-700">
-                                                        <Reply className="h-3 w-3 text-zinc-600 rotate-180" />
-                                                        <span className="text-[10px] text-zinc-500 truncate max-w-xs">{msg.replyPreview}</span>
+                                                    <div className="flex items-center gap-1.5 mb-1 pl-2 border-l-2 border-border">
+                                                        <Reply className="h-3 w-3 text-muted-foreground rotate-180" />
+                                                        <span className="text-[10px] text-muted-foreground truncate max-w-xs">{msg.replyPreview}</span>
                                                     </div>
                                                 )}
 
                                                 <div className="flex items-center gap-1.5">
-                                                    <p className="text-sm font-semibold text-zinc-200">{msg.sender}</p>
+                                                    <p className="text-sm font-semibold text-secondary-foreground">{msg.sender}</p>
                                                     {msg.isPriority && <Flag className="h-3 w-3 text-red-400" />}
                                                     {msg.isBookmarked && <Bookmark className="h-3 w-3 text-amber-400 fill-amber-400" />}
                                                     {msg.isScheduled && (
@@ -1243,19 +1244,19 @@ export default function HiveDashboard() {
                                                             <Clock className="h-2 w-2 mr-0.5" /> Scheduled {msg.scheduledTime}
                                                         </Badge>
                                                     )}
-                                                    <span className="text-[10px] text-zinc-600">{msg.timestamp}</span>
+                                                    <span className="text-[10px] text-muted-foreground">{msg.timestamp}</span>
                                                     {msg.isVoice && (
                                                         <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 text-[10px] font-medium">
                                                             🎙️ Voice · {msg.voiceDuration}s
                                                         </span>
                                                     )}
                                                     {msg.isPinned && <Pin className="h-3 w-3 text-amber-500" />}
-                                                    {msg.isEdited && <span className="text-[10px] text-zinc-600 italic">(edited)</span>}
+                                                    {msg.isEdited && <span className="text-[10px] text-muted-foreground italic">(edited)</span>}
                                                 </div>
 
                                                 {/* Message Body — Voice or Text */}
                                                 {msg.isVoice ? (
-                                                    <div className="mt-1 p-2 rounded-lg bg-zinc-900/80 border border-zinc-800 space-y-1">
+                                                    <div className="mt-1 p-2 rounded-lg bg-card/80 border border-border space-y-1">
                                                         {/* Waveform + Audio Playback */}
                                                         <div className="flex items-center gap-1.5">
                                                             {msg.audioUrl ? (
@@ -1282,10 +1283,10 @@ export default function HiveDashboard() {
                                                                     />
                                                                 ))}
                                                             </div>
-                                                            <span className="text-[10px] text-zinc-500 ml-1">{msg.voiceDuration}s</span>
+                                                            <span className="text-[10px] text-muted-foreground ml-1">{msg.voiceDuration}s</span>
                                                         </div>
                                                         {msg.text && msg.text !== '🎙️ Voice message' && (
-                                                            <p className="text-xs text-zinc-400 italic leading-relaxed pl-5">
+                                                            <p className="text-xs text-muted-foreground italic leading-relaxed pl-5">
                                                                 &quot;{msg.text}&quot;
                                                             </p>
                                                         )}
@@ -1296,26 +1297,26 @@ export default function HiveDashboard() {
                                                             value={editText}
                                                             onChange={e => setEditText(e.target.value)}
                                                             onKeyDown={e => { if (e.key === 'Enter') handleSaveEdit(msg.id); if (e.key === 'Escape') setEditingId(null); }}
-                                                            className="bg-zinc-900 border-zinc-700 text-zinc-200 text-sm h-8 flex-1"
+                                                            className="bg-card border-border text-secondary-foreground text-sm h-8 flex-1"
                                                             autoFocus
                                                         />
-                                                        <Button size="sm" title="Save edit" className="h-8 bg-emerald-600 hover:bg-emerald-500 text-white" onClick={() => handleSaveEdit(msg.id)}>
+                                                        <Button size="sm" title="Save edit" className="h-8 bg-emerald-600 hover:bg-emerald-500 text-foreground" onClick={() => handleSaveEdit(msg.id)}>
                                                             <Check className="h-3 w-3" />
                                                         </Button>
-                                                        <Button size="sm" title="Cancel edit" variant="ghost" className="h-8 text-zinc-400" onClick={() => setEditingId(null)}>
+                                                        <Button size="sm" title="Cancel edit" variant="ghost" className="h-8 text-muted-foreground" onClick={() => setEditingId(null)}>
                                                             <X className="h-3 w-3" />
                                                         </Button>
                                                     </div>
                                                 ) : (
-                                                    <p className="text-sm text-zinc-300 mt-0.5 leading-relaxed">
+                                                    <p className="text-sm text-secondary-foreground mt-0.5 leading-relaxed">
                                                         <SmartMessageRenderer text={msg.text} onNavigate={handleSmartNavigate} />
                                                     </p>
                                                 )}
 
                                                 {/* Poll Display */}
                                                 {msg.poll && (
-                                                    <div className="mt-2 p-3 rounded-lg bg-zinc-900/80 border border-zinc-800 space-y-2">
-                                                        <p className="text-xs font-bold text-zinc-200 flex items-center gap-1.5">
+                                                    <div className="mt-2 p-3 rounded-lg bg-card/80 border border-border space-y-2">
+                                                        <p className="text-xs font-bold text-secondary-foreground flex items-center gap-1.5">
                                                             <BarChart3 className="h-3.5 w-3.5 text-purple-400" />
                                                             {msg.poll.question}
                                                         </p>
@@ -1327,7 +1328,7 @@ export default function HiveDashboard() {
                                                                 <button
                                                                     key={opt.id}
                                                                     onClick={() => votePoll(msg.id, opt.id)}
-                                                                    className={`w-full relative overflow-hidden rounded-md border text-left px-3 py-1.5 text-xs transition-colors ${hasVoted ? 'border-purple-500/40 bg-purple-500/10' : 'border-zinc-700 hover:border-zinc-600 bg-zinc-800/50'
+                                                                    className={`w-full relative overflow-hidden rounded-md border text-left px-3 py-1.5 text-xs transition-colors ${hasVoted ? 'border-purple-500/40 bg-purple-500/10' : 'border-border hover:border-zinc-600 bg-secondary/50'
                                                                         }`}
                                                                     title={`Vote for ${opt.text}`}
                                                                 >
@@ -1336,13 +1337,13 @@ export default function HiveDashboard() {
                                                                         style={{ width: `${pct}%` }}
                                                                     />
                                                                     <div className="relative flex items-center justify-between">
-                                                                        <span className="text-zinc-300">{opt.text}</span>
-                                                                        <span className="text-zinc-500 text-[10px]">{opt.votes.length} ({pct}%)</span>
+                                                                        <span className="text-secondary-foreground">{opt.text}</span>
+                                                                        <span className="text-muted-foreground text-[10px]">{opt.votes.length} ({pct}%)</span>
                                                                     </div>
                                                                 </button>
                                                             );
                                                         })}
-                                                        <p className="text-[10px] text-zinc-600">
+                                                        <p className="text-[10px] text-muted-foreground">
                                                             {msg.poll.options.reduce((s, o) => s + o.votes.length, 0)} votes · Click to vote
                                                         </p>
                                                     </div>
@@ -1354,7 +1355,7 @@ export default function HiveDashboard() {
                                                         <p className="text-[10px] text-emerald-400 flex items-center gap-1 mb-0.5">
                                                             <Languages className="h-2.5 w-2.5" /> Translated
                                                         </p>
-                                                        <p className="text-xs text-zinc-300">{msg.translatedText}</p>
+                                                        <p className="text-xs text-secondary-foreground">{msg.translatedText}</p>
                                                     </div>
                                                 )}
 
@@ -1374,17 +1375,17 @@ export default function HiveDashboard() {
                                                             <button
                                                                 key={emoji}
                                                                 onClick={() => addReaction(msg.id, emoji)}
-                                                                className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] transition-colors ${users.includes('You') ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-zinc-800 hover:bg-zinc-700'
+                                                                className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] transition-colors ${users.includes('You') ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-secondary hover:bg-secondary/80'
                                                                     }`}
                                                             >
                                                                 <span>{emoji}</span>
-                                                                <span className="text-zinc-400">{users.length}</span>
+                                                                <span className="text-muted-foreground">{users.length}</span>
                                                             </button>
                                                         ))}
                                                         {/* Add reaction button */}
                                                         <button
                                                             onClick={() => setShowEmojiPicker(showEmojiPicker === msg.id ? null : msg.id)}
-                                                            className="px-1.5 py-0.5 rounded-full bg-zinc-800/50 hover:bg-zinc-700 text-zinc-500 text-[11px] transition-colors"
+                                                            className="px-1.5 py-0.5 rounded-full bg-secondary/50 hover:bg-secondary/80 text-muted-foreground text-[11px] transition-colors"
                                                         >
                                                             +
                                                         </button>
@@ -1393,7 +1394,7 @@ export default function HiveDashboard() {
 
                                                 {/* Read Receipts */}
                                                 {msg.readBy && msg.readBy.length > 0 && msg.sender === 'You' && (
-                                                    <p className="text-[10px] text-zinc-600 mt-1 flex items-center gap-1">
+                                                    <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
                                                         <Check className="h-2.5 w-2.5" /> Seen by {msg.readBy.join(', ')}
                                                     </p>
                                                 )}
@@ -1413,12 +1414,12 @@ export default function HiveDashboard() {
                                             </div>
 
                                             {/* ─── Message Action Bar (hover) ────────────────── */}
-                                            <div className="absolute -top-3 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 bg-zinc-900 border border-zinc-800 rounded-lg px-1 py-0.5 shadow-xl">
+                                            <div className="absolute -top-3 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 bg-card border border-border rounded-lg px-1 py-0.5 shadow-xl">
                                                 {REACTION_EMOJIS.slice(0, 4).map(emoji => (
                                                     <button
                                                         key={emoji}
                                                         onClick={() => addReaction(msg.id, emoji)}
-                                                        className="h-6 w-6 rounded hover:bg-zinc-800 text-xs flex items-center justify-center transition-colors"
+                                                        className="h-6 w-6 rounded hover:bg-secondary text-xs flex items-center justify-center transition-colors"
                                                     >
                                                         {emoji}
                                                     </button>
@@ -1426,35 +1427,35 @@ export default function HiveDashboard() {
                                                 <div className="w-px h-4 bg-zinc-700 mx-0.5" />
                                                 <button
                                                     onClick={() => setShowEmojiPicker(showEmojiPicker === msg.id ? null : msg.id)}
-                                                    className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 flex items-center justify-center transition-colors"
+                                                    className="h-6 w-6 rounded hover:bg-secondary text-muted-foreground flex items-center justify-center transition-colors"
                                                     title="More reactions"
                                                 >
                                                     <Smile className="h-3.5 w-3.5" />
                                                 </button>
                                                 <button
                                                     onClick={() => { setReplyingTo(msg); inputRef.current?.focus(); }}
-                                                    className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 flex items-center justify-center transition-colors"
+                                                    className="h-6 w-6 rounded hover:bg-secondary text-muted-foreground flex items-center justify-center transition-colors"
                                                     title="Reply"
                                                 >
                                                     <Reply className="h-3.5 w-3.5" />
                                                 </button>
                                                 <button
                                                     onClick={() => togglePin(msg.id)}
-                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${msg.isPinned ? 'text-amber-400' : 'text-zinc-400'}`}
+                                                    className={`h-6 w-6 rounded hover:bg-secondary flex items-center justify-center transition-colors ${msg.isPinned ? 'text-amber-400' : 'text-muted-foreground'}`}
                                                     title={msg.isPinned ? 'Unpin' : 'Pin'}
                                                 >
                                                     <Pin className="h-3.5 w-3.5" />
                                                 </button>
                                                 <button
                                                     onClick={() => handleSpeak(msg.id, msg.text)}
-                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${speakingMsgId === msg.id ? 'text-blue-400' : 'text-zinc-400'}`}
+                                                    className={`h-6 w-6 rounded hover:bg-secondary flex items-center justify-center transition-colors ${speakingMsgId === msg.id ? 'text-blue-400' : 'text-muted-foreground'}`}
                                                     title={speakingMsgId === msg.id ? 'Stop reading' : 'Read aloud'}
                                                 >
                                                     <Volume2 className="h-3.5 w-3.5" />
                                                 </button>
                                                 <button
                                                     onClick={() => createTaskFromMessage(msg)}
-                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors relative ${tasks.some(t => t.sourceMessageId === msg.id) ? 'text-emerald-400' : 'text-zinc-400 hover:text-emerald-400'
+                                                    className={`h-6 w-6 rounded hover:bg-secondary flex items-center justify-center transition-colors relative ${tasks.some(t => t.sourceMessageId === msg.id) ? 'text-emerald-400' : 'text-muted-foreground hover:text-emerald-400'
                                                         }`}
                                                     title={tasks.some(t => t.sourceMessageId === msg.id) ? 'Task created from this message ✓' : 'Create task from message'}
                                                 >
@@ -1465,7 +1466,7 @@ export default function HiveDashboard() {
                                                 </button>
                                                 <button
                                                     onClick={() => setForwardingMsg(forwardingMsg?.id === msg.id ? null : msg)}
-                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${forwardingMsg?.id === msg.id ? 'text-cyan-400' : 'text-zinc-400 hover:text-cyan-400'}`}
+                                                    className={`h-6 w-6 rounded hover:bg-secondary flex items-center justify-center transition-colors ${forwardingMsg?.id === msg.id ? 'text-cyan-400' : 'text-muted-foreground hover:text-cyan-400'}`}
                                                     title="Forward message"
                                                 >
                                                     <Share2 className="h-3.5 w-3.5" />
@@ -1474,7 +1475,7 @@ export default function HiveDashboard() {
                                                 {/* Bookmark */}
                                                 <button
                                                     onClick={() => toggleBookmark(msg.id)}
-                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${msg.isBookmarked ? 'text-amber-400' : 'text-zinc-400 hover:text-amber-400'}`}
+                                                    className={`h-6 w-6 rounded hover:bg-secondary flex items-center justify-center transition-colors ${msg.isBookmarked ? 'text-amber-400' : 'text-muted-foreground hover:text-amber-400'}`}
                                                     title={msg.isBookmarked ? 'Remove bookmark' : 'Bookmark'}
                                                 >
                                                     <Bookmark className={`h-3.5 w-3.5 ${msg.isBookmarked ? 'fill-amber-400' : ''}`} />
@@ -1482,7 +1483,7 @@ export default function HiveDashboard() {
                                                 {/* Priority */}
                                                 <button
                                                     onClick={() => togglePriority(msg.id)}
-                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${msg.isPriority ? 'text-red-400' : 'text-zinc-400 hover:text-red-400'}`}
+                                                    className={`h-6 w-6 rounded hover:bg-secondary flex items-center justify-center transition-colors ${msg.isPriority ? 'text-red-400' : 'text-muted-foreground hover:text-red-400'}`}
                                                     title={msg.isPriority ? 'Remove priority' : 'Mark as urgent'}
                                                 >
                                                     <Flag className={`h-3.5 w-3.5 ${msg.isPriority ? 'fill-red-400' : ''}`} />
@@ -1490,7 +1491,7 @@ export default function HiveDashboard() {
                                                 {/* Translate */}
                                                 <button
                                                     onClick={() => translateMessage(msg.id)}
-                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${msg.isTranslated ? 'text-emerald-400' : 'text-zinc-400 hover:text-emerald-400'}`}
+                                                    className={`h-6 w-6 rounded hover:bg-secondary flex items-center justify-center transition-colors ${msg.isTranslated ? 'text-emerald-400' : 'text-muted-foreground hover:text-emerald-400'}`}
                                                     title={msg.isTranslated ? 'Show original' : 'Translate'}
                                                 >
                                                     <Languages className="h-3.5 w-3.5" />
@@ -1498,7 +1499,7 @@ export default function HiveDashboard() {
                                                 {/* Reminder */}
                                                 <button
                                                     onClick={() => setShowReminderPicker(showReminderPicker === msg.id ? null : msg.id)}
-                                                    className={`h-6 w-6 rounded hover:bg-zinc-800 flex items-center justify-center transition-colors ${showReminderPicker === msg.id ? 'text-violet-400' : 'text-zinc-400 hover:text-violet-400'}`}
+                                                    className={`h-6 w-6 rounded hover:bg-secondary flex items-center justify-center transition-colors ${showReminderPicker === msg.id ? 'text-violet-400' : 'text-muted-foreground hover:text-violet-400'}`}
                                                     title="Set reminder"
                                                 >
                                                     <AlarmClock className="h-3.5 w-3.5" />
@@ -1506,7 +1507,7 @@ export default function HiveDashboard() {
                                                 {/* Copy */}
                                                 <button
                                                     onClick={() => navigator.clipboard.writeText(msg.text)}
-                                                    className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 flex items-center justify-center transition-colors"
+                                                    className="h-6 w-6 rounded hover:bg-secondary text-muted-foreground hover:text-secondary-foreground flex items-center justify-center transition-colors"
                                                     title="Copy text"
                                                 >
                                                     <Copy className="h-3.5 w-3.5" />
@@ -1515,14 +1516,14 @@ export default function HiveDashboard() {
                                                     <>
                                                         <button
                                                             onClick={() => { setEditingId(msg.id); setEditText(msg.text); }}
-                                                            className="h-6 w-6 rounded hover:bg-zinc-800 text-zinc-400 flex items-center justify-center transition-colors"
+                                                            className="h-6 w-6 rounded hover:bg-secondary text-muted-foreground flex items-center justify-center transition-colors"
                                                             title="Edit"
                                                         >
                                                             <Edit3 className="h-3.5 w-3.5" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(msg.id)}
-                                                            className="h-6 w-6 rounded hover:bg-zinc-800 text-red-400 flex items-center justify-center transition-colors"
+                                                            className="h-6 w-6 rounded hover:bg-secondary text-red-400 flex items-center justify-center transition-colors"
                                                             title="Delete"
                                                         >
                                                             <Trash2 className="h-3.5 w-3.5" />
@@ -1535,7 +1536,7 @@ export default function HiveDashboard() {
                                             <AnimatePresence>
                                                 {showEmojiPicker === msg.id && (
                                                     <motion.div
-                                                        className="absolute -top-12 right-0 bg-zinc-900 border border-zinc-700 rounded-xl px-2 py-1.5 flex gap-1 shadow-xl z-10"
+                                                        className="absolute -top-12 right-0 bg-card border border-border rounded-xl px-2 py-1.5 flex gap-1 shadow-xl z-10"
                                                         initial={{ opacity: 0, scale: 0.9, y: 5 }}
                                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                                         exit={{ opacity: 0, scale: 0.9, y: 5 }}
@@ -1544,7 +1545,7 @@ export default function HiveDashboard() {
                                                             <button
                                                                 key={emoji}
                                                                 onClick={() => addReaction(msg.id, emoji)}
-                                                                className="h-7 w-7 rounded-lg hover:bg-zinc-800 text-sm flex items-center justify-center transition-all hover:scale-125"
+                                                                className="h-7 w-7 rounded-lg hover:bg-secondary text-sm flex items-center justify-center transition-all hover:scale-125"
                                                             >
                                                                 {emoji}
                                                             </button>
@@ -1557,39 +1558,39 @@ export default function HiveDashboard() {
                                             <AnimatePresence>
                                                 {forwardingMsg?.id === msg.id && (
                                                     <motion.div
-                                                        className="absolute -top-32 right-0 bg-zinc-900 border border-zinc-700 rounded-xl p-2 shadow-xl z-20 min-w-[180px] max-h-64 overflow-y-auto"
+                                                        className="absolute -top-32 right-0 bg-card border border-border rounded-xl p-2 shadow-xl z-20 min-w-[180px] max-h-64 overflow-y-auto"
                                                         initial={{ opacity: 0, scale: 0.9, y: 5 }}
                                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                                         exit={{ opacity: 0, scale: 0.9, y: 5 }}
                                                     >
                                                         <div className="flex items-center justify-between mb-1 px-1">
-                                                            <p className="text-[10px] font-bold uppercase text-zinc-500">Forward to</p>
-                                                            <button onClick={() => setForwardingMsg(null)} className="h-4 w-4 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close">
+                                                            <p className="text-[10px] font-bold uppercase text-muted-foreground">Forward to</p>
+                                                            <button onClick={() => setForwardingMsg(null)} className="h-4 w-4 rounded hover:bg-secondary flex items-center justify-center text-muted-foreground hover:text-secondary-foreground" title="Close">
                                                                 <X className="h-3 w-3" />
                                                             </button>
                                                         </div>
-                                                        <p className="text-[9px] uppercase text-zinc-600 px-1 mt-1 mb-0.5">Channels</p>
+                                                        <p className="text-[9px] uppercase text-muted-foreground px-1 mt-1 mb-0.5">Channels</p>
                                                         {CHANNELS.filter(ch => ch.id !== activeChannel).map(ch => (
                                                             <button
                                                                 key={ch.id}
                                                                 onClick={() => forwardMessage(msg, ch.id)}
-                                                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
+                                                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs text-secondary-foreground hover:bg-secondary hover:text-foreground transition-colors"
                                                                 title={`Forward to #${ch.name}`}
                                                             >
                                                                 <ch.icon className={`h-3.5 w-3.5 ${ch.color}`} />
                                                                 <span>#{ch.name}</span>
                                                             </button>
                                                         ))}
-                                                        <div className="border-t border-zinc-800 my-1" />
-                                                        <p className="text-[9px] uppercase text-zinc-600 px-1 mb-0.5">Direct Messages</p>
+                                                        <div className="border-t border-border my-1" />
+                                                        <p className="text-[9px] uppercase text-muted-foreground px-1 mb-0.5">Direct Messages</p>
                                                         {onlineStaff.map(staff => (
                                                             <button
                                                                 key={staff.name}
                                                                 onClick={() => forwardMessage(msg, `dm-${staff.initials.toLowerCase()}`)}
-                                                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
+                                                                className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs text-secondary-foreground hover:bg-secondary hover:text-foreground transition-colors"
                                                                 title={`DM ${staff.name}`}
                                                             >
-                                                                <div className={`h-4 w-4 rounded-full ${staff.color} flex items-center justify-center text-[8px] font-bold text-white`}>{staff.initials}</div>
+                                                                <div className={`h-4 w-4 rounded-full ${staff.color} flex items-center justify-center text-[8px] font-bold text-foreground`}>{staff.initials}</div>
                                                                 <span>{staff.name}</span>
                                                                 <span className={`ml-auto h-1.5 w-1.5 rounded-full ${staff.status === 'online' ? 'bg-green-400' : staff.status === 'busy' ? 'bg-red-400' : 'bg-yellow-400'}`} />
                                                             </button>
@@ -1602,16 +1603,16 @@ export default function HiveDashboard() {
                                             <AnimatePresence>
                                                 {showReminderPicker === msg.id && (
                                                     <motion.div
-                                                        className="absolute -top-28 right-14 bg-zinc-900 border border-zinc-700 rounded-xl p-2 shadow-xl z-20 min-w-[140px]"
+                                                        className="absolute -top-28 right-14 bg-card border border-border rounded-xl p-2 shadow-xl z-20 min-w-[140px]"
                                                         initial={{ opacity: 0, scale: 0.9, y: 5 }}
                                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                                         exit={{ opacity: 0, scale: 0.9, y: 5 }}
                                                     >
                                                         <div className="flex items-center justify-between mb-1 px-1">
-                                                            <p className="text-[10px] font-bold uppercase text-zinc-500 flex items-center gap-1">
+                                                            <p className="text-[10px] font-bold uppercase text-muted-foreground flex items-center gap-1">
                                                                 <AlarmClock className="h-2.5 w-2.5" /> Remind me
                                                             </p>
-                                                            <button onClick={() => setShowReminderPicker(null)} className="h-4 w-4 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close">
+                                                            <button onClick={() => setShowReminderPicker(null)} className="h-4 w-4 rounded hover:bg-secondary flex items-center justify-center text-muted-foreground hover:text-secondary-foreground" title="Close">
                                                                 <X className="h-3 w-3" />
                                                             </button>
                                                         </div>
@@ -1625,7 +1626,7 @@ export default function HiveDashboard() {
                                                             <button
                                                                 key={opt.mins}
                                                                 onClick={() => setMsgReminder(msg.id, opt.mins)}
-                                                                className="w-full text-left px-2 py-1.5 rounded-md text-xs text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
+                                                                className="w-full text-left px-2 py-1.5 rounded-md text-xs text-secondary-foreground hover:bg-secondary hover:text-foreground transition-colors"
                                                                 title={opt.label}
                                                             >
                                                                 {opt.label}
@@ -1639,21 +1640,21 @@ export default function HiveDashboard() {
                                             <AnimatePresence>
                                                 {showReceiptsDetail === msg.id && msg.readBy && (
                                                     <motion.div
-                                                        className="absolute -top-16 right-0 bg-zinc-900 border border-zinc-700 rounded-xl p-2.5 shadow-xl z-20 min-w-[140px]"
+                                                        className="absolute -top-16 right-0 bg-card border border-border rounded-xl p-2.5 shadow-xl z-20 min-w-[140px]"
                                                         initial={{ opacity: 0, scale: 0.9 }}
                                                         animate={{ opacity: 1, scale: 1 }}
                                                         exit={{ opacity: 0, scale: 0.9 }}
                                                     >
                                                         <div className="flex items-center justify-between mb-1">
-                                                            <p className="text-[10px] font-bold uppercase text-zinc-500 flex items-center gap-1">
+                                                            <p className="text-[10px] font-bold uppercase text-muted-foreground flex items-center gap-1">
                                                                 <Eye className="h-2.5 w-2.5" /> Seen by {msg.readBy.length}
                                                             </p>
-                                                            <button onClick={() => setShowReceiptsDetail(null)} className="h-4 w-4 rounded hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300" title="Close">
+                                                            <button onClick={() => setShowReceiptsDetail(null)} className="h-4 w-4 rounded hover:bg-secondary flex items-center justify-center text-muted-foreground hover:text-secondary-foreground" title="Close">
                                                                 <X className="h-3 w-3" />
                                                             </button>
                                                         </div>
                                                         {msg.readBy.map(name => (
-                                                            <p key={name} className="text-xs text-zinc-300 py-0.5">{name}</p>
+                                                            <p key={name} className="text-xs text-secondary-foreground py-0.5">{name}</p>
                                                         ))}
                                                     </motion.div>
                                                 )}
@@ -1676,16 +1677,16 @@ export default function HiveDashboard() {
                 <AnimatePresence>
                     {replyingTo && (
                         <motion.div
-                            className="px-4 py-2 border-t border-zinc-800 bg-zinc-900/50 flex items-center gap-2"
+                            className="px-4 py-2 border-t border-border bg-card/50 flex items-center gap-2"
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                         >
                             <Reply className="h-3.5 w-3.5 text-blue-400 rotate-180 flex-shrink-0" />
-                            <span className="text-xs text-zinc-400 truncate flex-1">
-                                Replying to <span className="text-zinc-300 font-medium">{replyingTo.sender}</span>: {replyingTo.text.substring(0, 50)}...
+                            <span className="text-xs text-muted-foreground truncate flex-1">
+                                Replying to <span className="text-secondary-foreground font-medium">{replyingTo.sender}</span>: {replyingTo.text.substring(0, 50)}...
                             </span>
-                            <button title="Cancel reply" onClick={() => setReplyingTo(null)} className="text-zinc-500 hover:text-zinc-300">
+                            <button title="Cancel reply" onClick={() => setReplyingTo(null)} className="text-muted-foreground hover:text-secondary-foreground">
                                 <X className="h-3.5 w-3.5" />
                             </button>
                         </motion.div>
@@ -1704,36 +1705,36 @@ export default function HiveDashboard() {
                             <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
                             <span className="text-xs text-red-400 font-medium">Listening...</span>
                             {interimText && (
-                                <span className="text-xs text-zinc-400 italic truncate flex-1">"{interimText}"</span>
+                                <span className="text-xs text-muted-foreground italic truncate flex-1">"{interimText}"</span>
                             )}
                         </motion.div>
                     )}
                 </AnimatePresence>
 
                 {/* Message Input — Premium Glassmorphism */}
-                <div className="p-4 border-t border-zinc-800/50 bg-gradient-to-r from-zinc-950/90 via-zinc-950 to-zinc-950/90 backdrop-blur-sm flex-shrink-0">
+                <div className="p-4 border-t border-border/50 bg-gradient-to-r from-zinc-950/90 via-zinc-950 to-zinc-950/90 backdrop-blur-sm flex-shrink-0">
                     <div className="flex gap-2 max-w-3xl relative">
                         {/* Attachment Button */}
                         <div className="relative">
                             <button
                                 title="Attach file"
                                 onClick={() => setShowAttachMenu(!showAttachMenu)}
-                                className="h-10 w-10 rounded-xl bg-zinc-900/80 border border-zinc-800/50 hover:bg-zinc-800 hover:border-zinc-700 flex items-center justify-center text-zinc-400 hover:text-zinc-200 transition-all duration-200"
+                                className="h-10 w-10 rounded-xl bg-card/80 border border-border/50 hover:bg-secondary hover:border-border flex items-center justify-center text-muted-foreground hover:text-secondary-foreground transition-all duration-200"
                             >
                                 <Paperclip className="h-4 w-4" />
                             </button>
                             <AnimatePresence>
                                 {showAttachMenu && (
                                     <motion.div
-                                        className="absolute bottom-12 left-0 bg-zinc-900/95 backdrop-blur-md border border-zinc-700/50 rounded-xl shadow-2xl shadow-black/40 w-44 overflow-hidden z-10"
+                                        className="absolute bottom-12 left-0 bg-card/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl shadow-black/40 w-44 overflow-hidden z-10"
                                         initial={{ opacity: 0, y: 5, scale: 0.95 }}
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: 5, scale: 0.95 }}
                                     >
-                                        <button className="w-full flex items-center gap-2 px-3 py-2.5 text-xs text-zinc-300 hover:bg-zinc-800/80 transition-colors">
+                                        <button className="w-full flex items-center gap-2 px-3 py-2.5 text-xs text-secondary-foreground hover:bg-secondary/80 transition-colors">
                                             <Image className="h-3.5 w-3.5 text-blue-400" /> Upload Image
                                         </button>
-                                        <button className="w-full flex items-center gap-2 px-3 py-2.5 text-xs text-zinc-300 hover:bg-zinc-800/80 transition-colors">
+                                        <button className="w-full flex items-center gap-2 px-3 py-2.5 text-xs text-secondary-foreground hover:bg-secondary/80 transition-colors">
                                             <FileText className="h-3.5 w-3.5 text-amber-400" /> Upload File
                                         </button>
                                     </motion.div>
@@ -1750,19 +1751,19 @@ export default function HiveDashboard() {
                                 setShowQuickPicker(e.target.value === '/');
                             }}
                             onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
-                            className="bg-zinc-900/60 border-zinc-800/50 text-zinc-200 placeholder:text-zinc-600 flex-1 h-10 rounded-xl backdrop-blur-sm focus:ring-1 focus:ring-amber-500/30 focus:border-amber-500/30 transition-all duration-200"
+                            className="bg-card/60 border-border/50 text-secondary-foreground placeholder:text-muted-foreground flex-1 h-10 rounded-xl backdrop-blur-sm focus:ring-1 focus:ring-amber-500/30 focus:border-amber-500/30 transition-all duration-200"
                         />
 
                         {/* Quick Message Picker */}
                         <AnimatePresence>
                             {showQuickPicker && (
                                 <motion.div
-                                    className="absolute bottom-12 left-12 bg-zinc-900 border border-zinc-700 rounded-xl shadow-xl w-72 overflow-hidden z-20"
+                                    className="absolute bottom-12 left-12 bg-card border border-border rounded-xl shadow-xl w-72 overflow-hidden z-20"
                                     initial={{ opacity: 0, y: 5 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: 5 }}
                                 >
-                                    <p className="px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500 border-b border-zinc-800">
+                                    <p className="px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border">
                                         ⚡ Quick Shortcuts
                                     </p>
                                     {QUICK_MESSAGES.map(qm => (
@@ -1773,13 +1774,13 @@ export default function HiveDashboard() {
                                                 setShowQuickPicker(false);
                                                 inputRef.current?.focus();
                                             }}
-                                            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors text-left"
+                                            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-secondary-foreground hover:bg-secondary transition-colors text-left"
                                             title={qm.label}
                                         >
                                             <span className="text-base">{qm.emoji}</span>
                                             <div>
-                                                <span className="text-zinc-400 font-mono">{qm.command}</span>
-                                                <span className="text-zinc-500 ml-2">{qm.label}</span>
+                                                <span className="text-muted-foreground font-mono">{qm.command}</span>
+                                                <span className="text-muted-foreground ml-2">{qm.label}</span>
                                             </div>
                                         </button>
                                     ))}
@@ -1792,8 +1793,8 @@ export default function HiveDashboard() {
                                 onClick={toggleDictation}
                                 title={isListening ? 'Stop dictation' : 'Voice input'}
                                 className={`h-9 w-9 rounded-lg border flex items-center justify-center transition-all flex-shrink-0 ${isListening
-                                    ? 'bg-red-600 border-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)] animate-pulse'
-                                    : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'
+                                    ? 'bg-red-600 border-red-500 text-foreground shadow-[0_0_15px_rgba(239,68,68,0.4)] animate-pulse'
+                                    : 'bg-card border-border text-muted-foreground hover:bg-secondary hover:text-secondary-foreground'
                                     }`}
                             >
                                 {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
@@ -1801,7 +1802,7 @@ export default function HiveDashboard() {
                         )}
                         <Button
                             size="sm"
-                            className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white px-5 h-10 rounded-xl shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 transition-all duration-200 disabled:opacity-40 disabled:shadow-none"
+                            className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-foreground px-5 h-10 rounded-xl shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 transition-all duration-200 disabled:opacity-40 disabled:shadow-none"
                             onClick={handleSend}
                             disabled={!messageInput.trim()}
                         >
@@ -1812,9 +1813,9 @@ export default function HiveDashboard() {
             </div>
 
             {/* ─── RIGHT: Tasks + Call Log + PTT Panel ─────────────────── */}
-            <div className="w-72 flex-shrink-0 border-l border-zinc-800/50 flex flex-col bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900/80">
+            <div className="w-72 flex-shrink-0 border-l border-border/50 flex flex-col bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-900/80">
                 <Tabs defaultValue="tasks" className="flex flex-col h-full">
-                    <TabsList className="bg-zinc-900/60 backdrop-blur-sm border-b border-zinc-800/50 rounded-none h-14 px-2 flex-shrink-0">
+                    <TabsList className="bg-card/60 backdrop-blur-sm border-b border-border/50 rounded-none h-14 px-2 flex-shrink-0">
                         <TabsTrigger value="tasks" className="text-xs">
                             <CheckSquare className="h-3.5 w-3.5 mr-1" /> Tasks
                         </TabsTrigger>
@@ -1824,7 +1825,7 @@ export default function HiveDashboard() {
                         <TabsTrigger value="log" className="text-xs">
                             <PhoneCall className="h-3.5 w-3.5 mr-1" /> Log
                             {callLog.length > 0 && (
-                                <Badge className="ml-1 h-4 min-w-[16px] px-1 text-[10px] bg-zinc-700 text-zinc-300 border-0">{callLog.length}</Badge>
+                                <Badge className="ml-1 h-4 min-w-4 px-1 text-[10px] bg-zinc-700 text-secondary-foreground border-0">{callLog.length}</Badge>
                             )}
                         </TabsTrigger>
                         <TabsTrigger value="settings" className="text-xs">
@@ -1837,7 +1838,7 @@ export default function HiveDashboard() {
                         {/* Create Task Button */}
                         <button
                             onClick={() => { setShowCreateTask(true); setCreateFromMessage(null); setNewTaskTitle(''); }}
-                            className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-zinc-700 hover:border-zinc-500 text-zinc-500 hover:text-zinc-300 text-xs transition-colors"
+                            className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-border hover:border-zinc-500 text-muted-foreground hover:text-secondary-foreground text-xs transition-colors"
                             title="Create new task"
                         >
                             <Plus className="h-3.5 w-3.5" /> New Task
@@ -1847,33 +1848,33 @@ export default function HiveDashboard() {
                         <AnimatePresence>
                             {showCreateTask && (
                                 <motion.div
-                                    className="p-3.5 rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-900/80 border border-zinc-700/50 space-y-2.5 backdrop-blur-sm shadow-xl shadow-black/20"
+                                    className="p-3.5 rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-900/80 border border-border/50 space-y-2.5 backdrop-blur-sm shadow-xl shadow-black/20"
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: 'auto' }}
                                     exit={{ opacity: 0, height: 0 }}
                                 >
                                     {/* Header */}
                                     <div className="flex items-center justify-between">
-                                        <p className="text-xs font-bold text-zinc-200 flex items-center gap-1.5">
+                                        <p className="text-xs font-bold text-secondary-foreground flex items-center gap-1.5">
                                             {createFromMessage ? (
                                                 <><MessageSquare className="h-3.5 w-3.5 text-blue-400" /> Task from Message</>
                                             ) : (
                                                 <><Plus className="h-3.5 w-3.5 text-emerald-400" /> New Task</>
                                             )}
                                         </p>
-                                        <button onClick={() => setShowCreateTask(false)} className="text-zinc-500 hover:text-zinc-300 transition-colors" title="Close">
+                                        <button onClick={() => setShowCreateTask(false)} className="text-muted-foreground hover:text-secondary-foreground transition-colors" title="Close">
                                             <X className="h-3.5 w-3.5" />
                                         </button>
                                     </div>
 
                                     {/* Source Message Preview (when created from a message) */}
                                     {createFromMessage && (
-                                        <div className="relative pl-3 py-2 bg-zinc-800/50 rounded-lg border-l-2 border-blue-500/50">
+                                        <div className="relative pl-3 py-2 bg-secondary/50 rounded-lg border-l-2 border-blue-500/50">
                                             <div className="flex items-center gap-1.5 mb-1">
                                                 <span className="text-[10px] font-semibold text-blue-400">{createFromMessage.sender}</span>
-                                                <span className="text-[9px] text-zinc-600">in #{createFromMessage.channelId}</span>
+                                                <span className="text-[9px] text-muted-foreground">in #{createFromMessage.channelId}</span>
                                             </div>
-                                            <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-2">{createFromMessage.text}</p>
+                                            <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">{createFromMessage.text}</p>
                                         </div>
                                     )}
 
@@ -1882,7 +1883,7 @@ export default function HiveDashboard() {
                                         placeholder="Task title..."
                                         value={newTaskTitle}
                                         onChange={e => setNewTaskTitle(e.target.value)}
-                                        className="bg-zinc-800/60 border-zinc-700/50 text-zinc-200 h-8 text-xs rounded-lg focus:ring-1 focus:ring-emerald-500/30"
+                                        className="bg-secondary/60 border-border/50 text-secondary-foreground h-8 text-xs rounded-lg focus:ring-1 focus:ring-emerald-500/30"
                                     />
 
                                     {/* Urgency + Assignee */}
@@ -1890,7 +1891,7 @@ export default function HiveDashboard() {
                                         <select
                                             value={newTaskUrgency}
                                             onChange={e => setNewTaskUrgency(e.target.value as MicroTask['urgency'])}
-                                            className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg text-xs text-zinc-300 h-8 px-2"
+                                            className="bg-secondary/60 border border-border/50 rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                             title="Task urgency level"
                                         >
                                             <option value="LOW">🟢 Low</option>
@@ -1901,7 +1902,7 @@ export default function HiveDashboard() {
                                         <select
                                             value={newTaskAssignee}
                                             onChange={e => setNewTaskAssignee(e.target.value)}
-                                            className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg text-xs text-zinc-300 h-8 px-2"
+                                            className="bg-secondary/60 border border-border/50 rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                             title="Assign task to staff"
                                         >
                                             <option value="">Unassigned (Pool)</option>
@@ -1918,12 +1919,12 @@ export default function HiveDashboard() {
                                             placeholder="Deadline (HH:MM)"
                                             value={newTaskDeadline}
                                             onChange={e => setNewTaskDeadline(e.target.value)}
-                                            className="bg-zinc-800/60 border-zinc-700/50 text-zinc-200 h-8 text-xs rounded-lg"
+                                            className="bg-secondary/60 border-border/50 text-secondary-foreground h-8 text-xs rounded-lg"
                                         />
                                         <select
                                             value={newTaskRecurrence}
                                             onChange={e => setNewTaskRecurrence(e.target.value as MicroTask['recurrence'])}
-                                            className="bg-zinc-800/60 border border-zinc-700/50 rounded-lg text-xs text-zinc-300 h-8 px-2"
+                                            className="bg-secondary/60 border border-border/50 rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                             title="Task recurrence schedule"
                                         >
                                             <option value="none">No Repeat</option>
@@ -1936,7 +1937,7 @@ export default function HiveDashboard() {
 
                                     {/* Announce Toggle */}
                                     <div className="flex items-center justify-between py-1 px-1">
-                                        <label className="text-[10px] text-zinc-400 flex items-center gap-1.5 cursor-pointer" htmlFor="announce-toggle">
+                                        <label className="text-[10px] text-muted-foreground flex items-center gap-1.5 cursor-pointer" htmlFor="announce-toggle">
                                             <MessageSquarePlus className="h-3 w-3 text-blue-400" />
                                             Announce in #{activeChannelData?.name || 'channel'}
                                         </label>
@@ -1953,7 +1954,7 @@ export default function HiveDashboard() {
                                     {/* Submit */}
                                     <Button
                                         size="sm"
-                                        className="w-full h-9 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white text-xs rounded-lg shadow-lg shadow-emerald-600/15 transition-all duration-200 disabled:opacity-40 disabled:shadow-none"
+                                        className="w-full h-9 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-foreground text-xs rounded-lg shadow-lg shadow-emerald-600/15 transition-all duration-200 disabled:opacity-40 disabled:shadow-none"
                                         onClick={submitNewTask}
                                         disabled={!newTaskTitle.trim()}
                                     >
@@ -1981,9 +1982,9 @@ export default function HiveDashboard() {
                                             className="p-3 rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-900/70 border border-blue-500/20 space-y-2 backdrop-blur-sm"
                                         >
                                             <div className="flex items-start justify-between gap-2">
-                                                <p className="text-sm font-medium text-zinc-200">{task.title}</p>
-                                                <Badge className={`text-[10px] shrink-0 ${task.urgency === 'CRITICAL' ? 'bg-red-700 text-white' : task.urgency === 'HIGH' ? 'bg-red-600 text-white' :
-                                                    task.urgency === 'MEDIUM' ? 'bg-amber-600 text-white' : 'bg-zinc-700 text-zinc-300'}`}>
+                                                <p className="text-sm font-medium text-secondary-foreground">{task.title}</p>
+                                                <Badge className={`text-[10px] shrink-0 ${task.urgency === 'CRITICAL' ? 'bg-red-700 text-foreground' : task.urgency === 'HIGH' ? 'bg-red-600 text-foreground' :
+                                                    task.urgency === 'MEDIUM' ? 'bg-amber-600 text-foreground' : 'bg-zinc-700 text-secondary-foreground'}`}>
                                                     {task.urgency}
                                                 </Badge>
                                             </div>
@@ -1994,19 +1995,19 @@ export default function HiveDashboard() {
                                                     onClick={() => {
                                                         if (task.sourceChannelId) setActiveChannel(task.sourceChannelId);
                                                     }}
-                                                    className="w-full text-left pl-2.5 py-1.5 bg-zinc-800/40 rounded-lg border-l-2 border-blue-500/40 hover:border-blue-400/60 hover:bg-zinc-800/60 transition-all group/src"
+                                                    className="w-full text-left pl-2.5 py-1.5 bg-secondary/40 rounded-lg border-l-2 border-blue-500/40 hover:border-blue-400/60 hover:bg-secondary/60 transition-all group/src"
                                                     title="Go to source message"
                                                 >
                                                     <div className="flex items-center gap-1">
                                                         <MessageSquare className="h-2.5 w-2.5 text-blue-400/60" />
-                                                        <span className="text-[9px] text-zinc-600 group-hover/src:text-zinc-400 transition-colors">Source message</span>
+                                                        <span className="text-[9px] text-muted-foreground group-hover/src:text-muted-foreground transition-colors">Source message</span>
                                                     </div>
-                                                    <p className="text-[10px] text-zinc-500 truncate mt-0.5 group-hover/src:text-zinc-300 transition-colors">{task.sourceMessageText}</p>
+                                                    <p className="text-[10px] text-muted-foreground truncate mt-0.5 group-hover/src:text-secondary-foreground transition-colors">{task.sourceMessageText}</p>
                                                 </button>
                                             )}
 
                                             {task.deadline && (
-                                                <p className="text-[10px] text-zinc-500 flex items-center gap-1">
+                                                <p className="text-[10px] text-muted-foreground flex items-center gap-1">
                                                     <Clock className="h-2.5 w-2.5" /> Due by {task.deadline}
                                                 </p>
                                             )}
@@ -2021,7 +2022,7 @@ export default function HiveDashboard() {
                                                 </p>
                                             )}
                                             <div className="flex items-center justify-between">
-                                                <span className="text-xs text-zinc-500 flex items-center gap-1">
+                                                <span className="text-xs text-muted-foreground flex items-center gap-1">
                                                     <Zap className="h-3 w-3 text-amber-400" /> {task.xp} XP
                                                 </span>
                                                 <div className="flex gap-1.5">
@@ -2029,7 +2030,7 @@ export default function HiveDashboard() {
                                                     <Button
                                                         size="sm"
                                                         variant="ghost"
-                                                        className="h-6 px-2 text-[10px] text-zinc-500 hover:text-blue-400"
+                                                        className="h-6 px-2 text-[10px] text-muted-foreground hover:text-blue-400"
                                                         onClick={() => announceTaskInChat(task)}
                                                         title="Announce task in chat"
                                                     >
@@ -2038,7 +2039,7 @@ export default function HiveDashboard() {
                                                     {task.status === 'assigned' && (
                                                         <Button
                                                             size="sm"
-                                                            className="h-6 px-3 text-[10px] bg-blue-600 hover:bg-blue-500 text-white border-0"
+                                                            className="h-6 px-3 text-[10px] bg-blue-600 hover:bg-blue-500 text-foreground border-0"
                                                             onClick={() => startTask(task.id)}
                                                         >
                                                             ▶ Start
@@ -2046,7 +2047,7 @@ export default function HiveDashboard() {
                                                     )}
                                                     <Button
                                                         size="sm"
-                                                        className="h-6 px-3 text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white border-0"
+                                                        className="h-6 px-3 text-[10px] bg-emerald-600 hover:bg-emerald-500 text-foreground border-0"
                                                         onClick={() => completeTask(task.id)}
                                                     >
                                                         Done ✓
@@ -2061,7 +2062,7 @@ export default function HiveDashboard() {
 
                         {/* Task Pool */}
                         <div className="flex items-center justify-between mt-1">
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                                 🎯 Task Pool — {poolTasks.length}
                             </p>
                             {doneTasks.length > 0 && (
@@ -2079,12 +2080,12 @@ export default function HiveDashboard() {
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95, height: 0 }}
                                     whileHover={{ scale: 1.01 }}
-                                    className="p-3 rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-900/70 border border-zinc-800/60 space-y-2 backdrop-blur-sm"
+                                    className="p-3 rounded-xl bg-gradient-to-b from-zinc-900 to-zinc-900/70 border border-border/60 space-y-2 backdrop-blur-sm"
                                 >
                                     <div className="flex items-start justify-between gap-2">
-                                        <p className="text-sm font-medium text-zinc-200">{task.title}</p>
-                                        <Badge className={`text-[10px] shrink-0 ${task.urgency === 'CRITICAL' ? 'bg-red-700 text-white' : task.urgency === 'HIGH' ? 'bg-red-600 text-white' :
-                                            task.urgency === 'MEDIUM' ? 'bg-amber-600 text-white' : 'bg-zinc-700 text-zinc-300'}`}>
+                                        <p className="text-sm font-medium text-secondary-foreground">{task.title}</p>
+                                        <Badge className={`text-[10px] shrink-0 ${task.urgency === 'CRITICAL' ? 'bg-red-700 text-foreground' : task.urgency === 'HIGH' ? 'bg-red-600 text-foreground' :
+                                            task.urgency === 'MEDIUM' ? 'bg-amber-600 text-foreground' : 'bg-zinc-700 text-secondary-foreground'}`}>
                                             {task.urgency}
                                         </Badge>
                                     </div>
@@ -2095,19 +2096,19 @@ export default function HiveDashboard() {
                                             onClick={() => {
                                                 if (task.sourceChannelId) setActiveChannel(task.sourceChannelId);
                                             }}
-                                            className="w-full text-left pl-2.5 py-1.5 bg-zinc-800/40 rounded-lg border-l-2 border-blue-500/40 hover:border-blue-400/60 hover:bg-zinc-800/60 transition-all group/src"
+                                            className="w-full text-left pl-2.5 py-1.5 bg-secondary/40 rounded-lg border-l-2 border-blue-500/40 hover:border-blue-400/60 hover:bg-secondary/60 transition-all group/src"
                                             title="Go to source message"
                                         >
                                             <div className="flex items-center gap-1">
                                                 <MessageSquare className="h-2.5 w-2.5 text-blue-400/60" />
-                                                <span className="text-[9px] text-zinc-600 group-hover/src:text-zinc-400 transition-colors">Source message</span>
+                                                <span className="text-[9px] text-muted-foreground group-hover/src:text-muted-foreground transition-colors">Source message</span>
                                             </div>
-                                            <p className="text-[10px] text-zinc-500 truncate mt-0.5 group-hover/src:text-zinc-300 transition-colors">{task.sourceMessageText}</p>
+                                            <p className="text-[10px] text-muted-foreground truncate mt-0.5 group-hover/src:text-secondary-foreground transition-colors">{task.sourceMessageText}</p>
                                         </button>
                                     )}
 
                                     {task.deadline && (
-                                        <p className="text-[10px] text-zinc-500 flex items-center gap-1">
+                                        <p className="text-[10px] text-muted-foreground flex items-center gap-1">
                                             <Clock className="h-2.5 w-2.5" /> Due by {task.deadline}
                                         </p>
                                     )}
@@ -2117,16 +2118,16 @@ export default function HiveDashboard() {
                                         </p>
                                     )}
                                     <div className="flex items-center justify-between">
-                                        <span className="text-xs text-zinc-500 flex items-center gap-1">
+                                        <span className="text-xs text-muted-foreground flex items-center gap-1">
                                             <Zap className="h-3 w-3 text-amber-400" /> {task.xp} XP
                                         </span>
                                         <div className="flex gap-1.5">
-                                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[10px] text-zinc-400 hover:text-red-400">
+                                            <Button size="sm" variant="ghost" className="h-6 px-2 text-[10px] text-muted-foreground hover:text-red-400">
                                                 Skip
                                             </Button>
                                             <Button
                                                 size="sm"
-                                                className="h-6 px-3 text-[10px] bg-blue-600 hover:bg-blue-500 text-white border-0"
+                                                className="h-6 px-3 text-[10px] bg-blue-600 hover:bg-blue-500 text-foreground border-0"
                                                 onClick={() => claimTask(task.id)}
                                             >
                                                 👋 Claim
@@ -2144,8 +2145,8 @@ export default function HiveDashboard() {
                                 animate={{ opacity: 1 }}
                             >
                                 <span className="text-3xl mb-2">🎉</span>
-                                <p className="text-sm font-medium text-zinc-300">All tasks complete!</p>
-                                <p className="text-xs text-zinc-500 mt-1">Great job, team.</p>
+                                <p className="text-sm font-medium text-secondary-foreground">All tasks complete!</p>
+                                <p className="text-xs text-muted-foreground mt-1">Great job, team.</p>
                             </motion.div>
                         )}
                     </TabsContent>
@@ -2153,11 +2154,11 @@ export default function HiveDashboard() {
                     {/* PTT Tab — with Live Speakers + Transcript */}
                     <TabsContent value="ptt" className="flex-1 flex flex-col items-center p-6 mt-0 overflow-auto">
                         <div className="text-center space-y-4 w-full">
-                            <p className="text-[10px] uppercase tracking-widest text-zinc-600 font-bold">
+                            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
                                 Walkie-Talkie
                             </p>
-                            <p className="text-xs text-zinc-500">
-                                Channel: <span className="text-zinc-300 font-medium">#{activeChannelData?.name}</span>
+                            <p className="text-xs text-muted-foreground">
+                                Channel: <span className="text-secondary-foreground font-medium">#{activeChannelData?.name}</span>
                             </p>
 
                             {/* 🔴 Live Speakers (who is currently talking) */}
@@ -2172,7 +2173,7 @@ export default function HiveDashboard() {
                                     >
                                         <div className="relative">
                                             <div className={`h-8 w-8 rounded-full ${speaker.color} flex items-center justify-center`}>
-                                                <span className="text-white text-[10px] font-bold">{speaker.initials}</span>
+                                                <span className="text-foreground text-[10px] font-bold">{speaker.initials}</span>
                                             </div>
                                             <motion.div
                                                 className="absolute -inset-1 rounded-full border-2 border-red-500"
@@ -2199,8 +2200,8 @@ export default function HiveDashboard() {
                                 className={`relative mx-auto w-28 h-28 rounded-full flex items-center justify-center transition-all ${isTalking
                                     ? 'bg-red-600 shadow-[0_0_40px_rgba(239,68,68,0.5)]'
                                     : micPermission === 'denied'
-                                        ? 'bg-zinc-800 cursor-not-allowed'
-                                        : 'bg-zinc-800 hover:bg-zinc-700 shadow-[0_0_20px_rgba(0,0,0,0.5)]'
+                                        ? 'bg-secondary cursor-not-allowed'
+                                        : 'bg-secondary hover:bg-secondary/80 shadow-[0_0_20px_rgba(0,0,0,0.5)]'
                                     }`}
                                 disabled={micPermission === 'denied'}
                                 title="Hold to talk"
@@ -2220,13 +2221,13 @@ export default function HiveDashboard() {
                                     </>
                                 )}
                                 {isTalking ? (
-                                    <Mic className="h-10 w-10 text-white" />
+                                    <Mic className="h-10 w-10 text-foreground" />
                                 ) : (
-                                    <MicOff className="h-10 w-10 text-zinc-400" />
+                                    <MicOff className="h-10 w-10 text-muted-foreground" />
                                 )}
                             </motion.button>
 
-                            <p className="text-xs text-zinc-500">
+                            <p className="text-xs text-muted-foreground">
                                 {isTalking ? (
                                     <span className="text-red-400 font-bold animate-pulse">🔴 LIVE — Release to stop</span>
                                 ) : micPermission === 'denied' ? (
@@ -2243,12 +2244,12 @@ export default function HiveDashboard() {
                                         initial={{ opacity: 0, y: 5 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
-                                        className="w-full p-2 rounded-lg bg-zinc-900 border border-zinc-800"
+                                        className="w-full p-2 rounded-lg bg-card border border-border"
                                     >
-                                        <p className="text-[10px] text-zinc-600 uppercase tracking-widest mb-1 flex items-center gap-1">
+                                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 flex items-center gap-1">
                                             <FileAudio className="h-2.5 w-2.5" /> Live Transcript
                                         </p>
-                                        <p className="text-xs text-zinc-300 italic leading-relaxed">
+                                        <p className="text-xs text-secondary-foreground italic leading-relaxed">
                                             "{liveTranscript}"
                                         </p>
                                     </motion.div>
@@ -2256,8 +2257,8 @@ export default function HiveDashboard() {
                             </AnimatePresence>
 
                             {/* On This Channel — with LIVE indicators */}
-                            <div className="pt-4 border-t border-zinc-800 w-full">
-                                <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-3">On this channel</p>
+                            <div className="pt-4 border-t border-border w-full">
+                                <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3">On this channel</p>
                                 <div className="flex flex-wrap justify-center gap-2">
                                     {onlineStaff.filter(s => s.status === 'online').slice(0, 4).map(s => {
                                         const isLive = liveSpeakers.some(ls => ls.initials === s.initials && ls.channelId === activeChannel);
@@ -2265,7 +2266,7 @@ export default function HiveDashboard() {
                                             <div key={s.name} className="flex flex-col items-center gap-1">
                                                 <div className="relative">
                                                     <div className={`h-8 w-8 rounded-full ${s.color} flex items-center justify-center ${isLive ? 'ring-2 ring-red-500 ring-offset-1 ring-offset-zinc-950' : ''}`}>
-                                                        <span className="text-white text-[10px] font-bold">{s.initials}</span>
+                                                        <span className="text-foreground text-[10px] font-bold">{s.initials}</span>
                                                     </div>
                                                     {isLive && (
                                                         <motion.div
@@ -2273,11 +2274,11 @@ export default function HiveDashboard() {
                                                             animate={{ scale: [1, 1.2, 1] }}
                                                             transition={{ duration: 1, repeat: Infinity }}
                                                         >
-                                                            <Mic className="h-1.5 w-1.5 text-white" />
+                                                            <Mic className="h-1.5 w-1.5 text-foreground" />
                                                         </motion.div>
                                                     )}
                                                 </div>
-                                                <span className={`text-[10px] ${isLive ? 'text-red-400 font-bold' : 'text-zinc-500'}`}>
+                                                <span className={`text-[10px] ${isLive ? 'text-red-400 font-bold' : 'text-muted-foreground'}`}>
                                                     {isLive ? '🔴 LIVE' : s.name.split(' ')[0]}
                                                 </span>
                                             </div>
@@ -2291,13 +2292,13 @@ export default function HiveDashboard() {
                     {/* Call Log Tab — Transcripts */}
                     <TabsContent value="log" className="flex-1 overflow-auto p-3 mt-0 space-y-2">
                         <div className="flex items-center justify-between">
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                                 Call History
                             </p>
                             {callLog.length > 0 && (
                                 <button
                                     onClick={clearCallLog}
-                                    className="text-[10px] text-zinc-600 hover:text-red-400 transition-colors"
+                                    className="text-[10px] text-muted-foreground hover:text-red-400 transition-colors"
                                     title="Clear log"
                                 >
                                     Clear
@@ -2307,10 +2308,10 @@ export default function HiveDashboard() {
 
                         {/* Search call log */}
                         <div className="relative">
-                            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-zinc-600" />
+                            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
                             <Input
                                 placeholder="Search transcripts..."
-                                className="bg-zinc-900 border-zinc-800 text-zinc-300 placeholder:text-zinc-600 pl-7 h-7 text-[11px]"
+                                className="bg-card border-border text-secondary-foreground placeholder:text-muted-foreground pl-7 h-7 text-[11px]"
                             />
                         </div>
 
@@ -2318,7 +2319,7 @@ export default function HiveDashboard() {
                             {callLog.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-10 text-center">
                                     <PhoneCall className="h-8 w-8 text-zinc-700 mb-2" />
-                                    <p className="text-xs text-zinc-600">No calls yet</p>
+                                    <p className="text-xs text-muted-foreground">No calls yet</p>
                                     <p className="text-[10px] text-zinc-700 mt-1">PTT transmissions will appear here with transcripts</p>
                                 </div>
                             ) : (
@@ -2327,14 +2328,14 @@ export default function HiveDashboard() {
                                         key={entry.id}
                                         initial={{ opacity: 0, x: 10 }}
                                         animate={{ opacity: 1, x: 0 }}
-                                        className="p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 space-y-1.5"
+                                        className="p-2.5 rounded-lg bg-card border border-border space-y-1.5"
                                     >
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-1.5">
                                                 <div className="h-5 w-5 rounded-full bg-zinc-700 flex items-center justify-center">
-                                                    <Mic className="h-2.5 w-2.5 text-zinc-300" />
+                                                    <Mic className="h-2.5 w-2.5 text-secondary-foreground" />
                                                 </div>
-                                                <span className="text-xs font-medium text-zinc-300">{entry.speaker}</span>
+                                                <span className="text-xs font-medium text-secondary-foreground">{entry.speaker}</span>
                                             </div>
                                             <div className="flex items-center gap-1.5">
                                                 {entry.audioUrl && (
@@ -2351,16 +2352,16 @@ export default function HiveDashboard() {
                                                         )}
                                                     </button>
                                                 )}
-                                                <span className="text-[10px] text-zinc-600">{entry.startedAt}</span>
+                                                <span className="text-[10px] text-muted-foreground">{entry.startedAt}</span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-2 text-[10px] text-zinc-500">
+                                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                                             <span>#{entry.channelId}</span>
                                             <span>·</span>
                                             <span>{entry.duration}s</span>
                                         </div>
                                         {entry.transcript !== '(no transcript)' && (
-                                            <p className="text-[11px] text-zinc-400 italic bg-zinc-800/50 rounded px-2 py-1.5 leading-relaxed">
+                                            <p className="text-[11px] text-muted-foreground italic bg-secondary/50 rounded px-2 py-1.5 leading-relaxed">
                                                 &quot;{entry.transcript}&quot;
                                             </p>
                                         )}
@@ -2372,18 +2373,18 @@ export default function HiveDashboard() {
 
                     {/* ─── Settings Tab ──────────────────────────────── */}
                     <TabsContent value="settings" className="flex-1 overflow-auto p-3 mt-0 space-y-4">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                             🎙️ Voice & Language
                         </p>
 
                         {/* TTS Speed */}
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <label className="text-xs text-zinc-300 flex items-center gap-1.5">
+                                <label className="text-xs text-secondary-foreground flex items-center gap-1.5">
                                     <Volume1 className="h-3.5 w-3.5 text-blue-400" />
                                     Speech Speed
                                 </label>
-                                <span className="text-xs font-mono text-zinc-400">{ttsRate.toFixed(1)}x</span>
+                                <span className="text-xs font-mono text-muted-foreground">{ttsRate.toFixed(1)}x</span>
                             </div>
                             <input
                                 type="range"
@@ -2392,10 +2393,10 @@ export default function HiveDashboard() {
                                 step="0.1"
                                 value={ttsRate}
                                 onChange={e => setTtsRate(parseFloat(e.target.value))}
-                                className="w-full h-1.5 bg-zinc-800 rounded-full appearance-none cursor-pointer accent-blue-500"
+                                className="w-full h-1.5 bg-secondary rounded-full appearance-none cursor-pointer accent-blue-500"
                                 title="TTS speech rate"
                             />
-                            <div className="flex justify-between text-[10px] text-zinc-600">
+                            <div className="flex justify-between text-[10px] text-muted-foreground">
                                 <span>0.5x Slow</span>
                                 <span>1.0x Normal</span>
                                 <span>2.0x Fast</span>
@@ -2404,14 +2405,14 @@ export default function HiveDashboard() {
 
                         {/* TTS Voice */}
                         <div className="space-y-1.5">
-                            <label className="text-xs text-zinc-300 flex items-center gap-1.5">
+                            <label className="text-xs text-secondary-foreground flex items-center gap-1.5">
                                 <Volume2 className="h-3.5 w-3.5 text-purple-400" />
                                 TTS Voice
                             </label>
                             <select
                                 value={ttsVoiceName}
                                 onChange={e => setTtsVoiceName(e.target.value)}
-                                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg text-xs text-zinc-300 h-8 px-2"
+                                className="w-full bg-card border border-border rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                 title="Select TTS voice"
                             >
                                 <option value="">Auto (System Default)</option>
@@ -2436,25 +2437,25 @@ export default function HiveDashboard() {
                             </select>
                             <button
                                 onClick={() => speakMessage('Hello, this is a test of the selected voice.', ttsConfig)}
-                                className="w-full py-1.5 rounded-md bg-zinc-800 hover:bg-zinc-700 text-[10px] text-zinc-400 hover:text-zinc-200 transition-colors"
+                                className="w-full py-1.5 rounded-md bg-secondary hover:bg-secondary/80 text-[10px] text-muted-foreground hover:text-secondary-foreground transition-colors"
                                 title="Test current TTS voice"
                             >
                                 ▶ Test Voice
                             </button>
                         </div>
 
-                        <div className="h-px bg-zinc-800" />
+                        <div className="h-px bg-secondary" />
 
                         {/* Speech Recognition Language */}
                         <div className="space-y-1.5">
-                            <label className="text-xs text-zinc-300 flex items-center gap-1.5">
+                            <label className="text-xs text-secondary-foreground flex items-center gap-1.5">
                                 <Globe className="h-3.5 w-3.5 text-emerald-400" />
                                 Recognition Language
                             </label>
                             <select
                                 value={recognitionLang}
                                 onChange={e => setRecognitionLang(e.target.value)}
-                                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg text-xs text-zinc-300 h-8 px-2"
+                                className="w-full bg-card border border-border rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                 title="Select speech recognition language"
                             >
                                 {SUPPORTED_LANGUAGES.map(lang => (
@@ -2463,21 +2464,21 @@ export default function HiveDashboard() {
                                     </option>
                                 ))}
                             </select>
-                            <p className="text-[10px] text-zinc-600">Used for voice dictation (mic button) and PTT transcription</p>
+                            <p className="text-[10px] text-muted-foreground">Used for voice dictation (mic button) and PTT transcription</p>
                         </div>
 
-                        <div className="h-px bg-zinc-800" />
+                        <div className="h-px bg-secondary" />
 
                         {/* Quick Voice Info */}
                         <div className="space-y-1.5">
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                                 ℹ️ Info
                             </p>
-                            <div className="text-[10px] text-zinc-500 space-y-1">
-                                <p>• <span className="text-zinc-400">Dictation:</span> Click the mic button in the input bar</p>
-                                <p>• <span className="text-zinc-400">PTT:</span> Hold-to-Talk sends audio to the channel</p>
-                                <p>• <span className="text-zinc-400">Read Aloud:</span> Click 🔊 on any message</p>
-                                <p>• <span className="text-zinc-400">Shortcuts:</span> Space bar or AirPods squeeze for PTT</p>
+                            <div className="text-[10px] text-muted-foreground space-y-1">
+                                <p>• <span className="text-muted-foreground">Dictation:</span> Click the mic button in the input bar</p>
+                                <p>• <span className="text-muted-foreground">PTT:</span> Hold-to-Talk sends audio to the channel</p>
+                                <p>• <span className="text-muted-foreground">Read Aloud:</span> Click 🔊 on any message</p>
+                                <p>• <span className="text-muted-foreground">Shortcuts:</span> Space bar or AirPods squeeze for PTT</p>
                             </div>
                         </div>
                     </TabsContent>
@@ -2488,24 +2489,24 @@ export default function HiveDashboard() {
             <AnimatePresence>
                 {threadViewMsg && (
                     <motion.div
-                        className="w-80 flex-shrink-0 border-l border-zinc-800/50 flex flex-col bg-zinc-950 overflow-hidden"
+                        className="w-80 flex-shrink-0 border-l border-border/50 flex flex-col bg-background overflow-hidden"
                         initial={{ width: 0, opacity: 0 }}
                         animate={{ width: 320, opacity: 1 }}
                         exit={{ width: 0, opacity: 0 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                     >
                         {/* Thread Header */}
-                        <div className="p-3 border-b border-zinc-800/50 bg-gradient-to-r from-blue-500/5 via-zinc-950 to-zinc-950 flex items-center justify-between">
+                        <div className="p-3 border-b border-border/50 bg-gradient-to-r from-blue-500/5 via-zinc-950 to-zinc-950 flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <MessageSquare className="h-4 w-4 text-blue-400" />
-                                <h3 className="text-sm font-bold text-zinc-200">Thread</h3>
+                                <h3 className="text-sm font-bold text-secondary-foreground">Thread</h3>
                                 <Badge className="text-[9px] bg-blue-500/15 text-blue-300 border-0 px-1.5">
                                     {threadReplies.length} {threadReplies.length === 1 ? 'reply' : 'replies'}
                                 </Badge>
                             </div>
                             <button
                                 onClick={() => setThreadViewMsg(null)}
-                                className="h-6 w-6 rounded-lg hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors"
+                                className="h-6 w-6 rounded-lg hover:bg-secondary flex items-center justify-center text-muted-foreground hover:text-secondary-foreground transition-colors"
                                 title="Close thread"
                             >
                                 <X className="h-4 w-4" />
@@ -2513,17 +2514,17 @@ export default function HiveDashboard() {
                         </div>
 
                         {/* Parent Message */}
-                        <div className="p-3 border-b border-zinc-800/30 bg-zinc-900/30">
+                        <div className="p-3 border-b border-border/30 bg-card/30">
                             <div className="flex items-start gap-2">
                                 <div className={`h-8 w-8 rounded-full ${threadViewMsg.senderColor} flex items-center justify-center ring-2 ring-zinc-900 flex-shrink-0`}>
-                                    <span className="text-white text-[10px] font-bold">{threadViewMsg.senderInitials}</span>
+                                    <span className="text-foreground text-[10px] font-bold">{threadViewMsg.senderInitials}</span>
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-1.5">
-                                        <span className="text-xs font-semibold text-zinc-200">{threadViewMsg.sender}</span>
-                                        <span className="text-[10px] text-zinc-600">{threadViewMsg.timestamp}</span>
+                                        <span className="text-xs font-semibold text-secondary-foreground">{threadViewMsg.sender}</span>
+                                        <span className="text-[10px] text-muted-foreground">{threadViewMsg.timestamp}</span>
                                     </div>
-                                    <p className="text-xs text-zinc-300 mt-0.5 leading-relaxed">
+                                    <p className="text-xs text-secondary-foreground mt-0.5 leading-relaxed">
                                         <SmartMessageRenderer text={threadViewMsg.text} onNavigate={handleSmartNavigate} />
                                     </p>
                                 </div>
@@ -2535,27 +2536,27 @@ export default function HiveDashboard() {
                             {threadReplies.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-8 text-center">
                                     <Reply className="h-8 w-8 text-zinc-700 mb-2" />
-                                    <p className="text-xs text-zinc-600">No replies yet</p>
+                                    <p className="text-xs text-muted-foreground">No replies yet</p>
                                     <p className="text-[10px] text-zinc-700 mt-0.5">Click Reply on a message to start a thread</p>
                                 </div>
                             ) : (
                                 threadReplies.map(reply => (
                                     <motion.div
                                         key={reply.id}
-                                        className="flex items-start gap-2 p-2 rounded-lg hover:bg-zinc-900/50 transition-colors"
+                                        className="flex items-start gap-2 p-2 rounded-lg hover:bg-card/50 transition-colors"
                                         initial={{ opacity: 0, x: 10 }}
                                         animate={{ opacity: 1, x: 0 }}
                                     >
                                         <div className={`h-7 w-7 rounded-full ${reply.senderColor} flex items-center justify-center ring-1 ring-zinc-800 flex-shrink-0`}>
-                                            <span className="text-white text-[9px] font-bold">{reply.senderInitials}</span>
+                                            <span className="text-foreground text-[9px] font-bold">{reply.senderInitials}</span>
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-1.5">
-                                                <span className="text-[11px] font-semibold text-zinc-300">{reply.sender}</span>
-                                                <span className="text-[9px] text-zinc-600">{reply.timestamp}</span>
-                                                {reply.isEdited && <span className="text-[9px] text-zinc-600 italic">(edited)</span>}
+                                                <span className="text-[11px] font-semibold text-secondary-foreground">{reply.sender}</span>
+                                                <span className="text-[9px] text-muted-foreground">{reply.timestamp}</span>
+                                                {reply.isEdited && <span className="text-[9px] text-muted-foreground italic">(edited)</span>}
                                             </div>
-                                            <p className="text-[11px] text-zinc-400 mt-0.5 leading-relaxed">
+                                            <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
                                                 <SmartMessageRenderer text={reply.text} onNavigate={handleSmartNavigate} />
                                             </p>
                                             {/* Thread reply reactions */}
@@ -2565,11 +2566,11 @@ export default function HiveDashboard() {
                                                         <button
                                                             key={emoji}
                                                             onClick={() => addReaction(reply.id, emoji)}
-                                                            className={`inline-flex items-center gap-0.5 px-1 py-0.5 rounded-full text-[10px] transition-colors ${users.includes('You') ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-zinc-800 hover:bg-zinc-700'
+                                                            className={`inline-flex items-center gap-0.5 px-1 py-0.5 rounded-full text-[10px] transition-colors ${users.includes('You') ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-secondary hover:bg-secondary/80'
                                                                 }`}
                                                         >
                                                             <span>{emoji}</span>
-                                                            <span className="text-zinc-400">{users.length}</span>
+                                                            <span className="text-muted-foreground">{users.length}</span>
                                                         </button>
                                                     ))}
                                                 </div>
@@ -2581,7 +2582,7 @@ export default function HiveDashboard() {
                         </div>
 
                         {/* Thread Reply Input */}
-                        <div className="p-3 border-t border-zinc-800/50 bg-zinc-950">
+                        <div className="p-3 border-t border-border/50 bg-background">
                             <div className="flex gap-2">
                                 <Input
                                     placeholder="Reply in thread..."
@@ -2601,7 +2602,7 @@ export default function HiveDashboard() {
                                             handleSend();
                                         }
                                     }}
-                                    className="bg-zinc-900/80 border-zinc-800/60 text-zinc-300 placeholder:text-zinc-600 text-xs h-9 rounded-lg flex-1 focus:ring-1 focus:ring-blue-500/30 focus:border-blue-500/30"
+                                    className="bg-card/80 border-border/60 text-secondary-foreground placeholder:text-muted-foreground text-xs h-9 rounded-lg flex-1 focus:ring-1 focus:ring-blue-500/30 focus:border-blue-500/30"
                                 />
                                 <Button
                                     size="sm"

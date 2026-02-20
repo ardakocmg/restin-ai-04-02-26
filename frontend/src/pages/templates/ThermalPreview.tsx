@@ -79,7 +79,7 @@ export default function ThermalPreview({ html, paperWidth = 576, onClose }: Ther
             </div>
 
             {/* Paper Simulation */}
-            <div className="flex-1 overflow-auto bg-zinc-800 p-6 flex justify-center">
+            <div className="flex-1 overflow-auto bg-secondary p-6 flex justify-center">
                 <div className="relative">
                     {/* Ruler */}
                     {showRuler && (

@@ -68,7 +68,7 @@ export default function BillingDashboard() {
         },
     });
 
-    if (isLoading) return <div className="p-8 text-center text-zinc-500">Loading billing…</div>;
+    if (isLoading) return <div className="p-8 text-center text-muted-foreground">Loading billing…</div>;
 
     const modules = billing?.modules?.items ?? [];
     const moduleKeys: Record<string, boolean> = {};
@@ -89,23 +89,23 @@ export default function BillingDashboard() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-zinc-100">Billing & Subscription</h1>
-                    <p className="text-sm text-zinc-500 mt-1">Manage your plan, modules, and usage</p>
+                    <h1 className="text-2xl font-bold text-foreground">Billing & Subscription</h1>
+                    <p className="text-sm text-muted-foreground mt-1">Manage your plan, modules, and usage</p>
                 </div>
                 <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-4 py-2">
                     <Sparkles className="w-4 h-4 text-emerald-400" />
                     <span className="text-emerald-400 font-semibold text-lg">{fmt(billing?.total_estimated ?? 0)}</span>
-                    <span className="text-zinc-500 text-sm">/mo</span>
+                    <span className="text-muted-foreground text-sm">/mo</span>
                 </div>
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 bg-zinc-900 rounded-lg p-1">
+            <div className="flex gap-1 bg-card rounded-lg p-1">
                 {(['overview', 'modules', 'usage', 'invoices'] as const).map(t => (
                     <button
                         key={t}
                         onClick={() => setTab(t)}
-                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all capitalize ${tab === t ? 'bg-zinc-800 text-zinc-100 shadow' : 'text-zinc-500 hover:text-zinc-300'
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all capitalize ${tab === t ? 'bg-secondary text-foreground shadow' : 'text-muted-foreground hover:text-secondary-foreground'
                             }`}
                     >
                         {t}
@@ -132,17 +132,17 @@ export default function BillingDashboard() {
                             whileHover={{ y: -2 }}
                             className={`p-5 rounded-xl border transition-all cursor-pointer ${billing?.plan?.name === p.name
                                 ? 'border-blue-500/50 bg-blue-500/5'
-                                : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-700'
+                                : 'border-border bg-card/50 hover:border-border'
                                 }`}
                             onClick={() => p.name !== billing?.plan?.name && changePlan.mutate(p.key)}
                         >
                             <div className="flex items-center justify-between mb-3">
-                                <span className="text-lg font-semibold text-zinc-100">{p.name}</span>
-                                <span className="text-xl font-bold text-blue-400">{fmt(p.price)}<span className="text-xs text-zinc-500">/mo</span></span>
+                                <span className="text-lg font-semibold text-foreground">{p.name}</span>
+                                <span className="text-xl font-bold text-blue-400">{fmt(p.price)}<span className="text-xs text-muted-foreground">/mo</span></span>
                             </div>
                             <div className="space-y-1">
                                 {p.features.map(f => (
-                                    <div key={f} className="flex items-center gap-2 text-sm text-zinc-400">
+                                    <div key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
                                         <ChevronRight className="w-3 h-3 text-emerald-500" />
                                         {f}
                                     </div>
@@ -162,13 +162,13 @@ export default function BillingDashboard() {
                     {MODULE_LIST.map(m => {
                         const active = moduleKeys[m.key] ?? false;
                         return (
-                            <div key={m.key} className={`flex items-center justify-between p-4 rounded-xl border transition-all ${active ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-zinc-800 bg-zinc-900/50'
+                            <div key={m.key} className={`flex items-center justify-between p-4 rounded-xl border transition-all ${active ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-border bg-card/50'
                                 }`}>
                                 <div className="flex items-center gap-3">
                                     <span className="text-2xl">{m.icon}</span>
                                     <div>
-                                        <div className="font-medium text-zinc-100">{m.name}</div>
-                                        <div className="text-sm text-zinc-500">{fmt(m.price)}/mo</div>
+                                        <div className="font-medium text-foreground">{m.name}</div>
+                                        <div className="text-sm text-muted-foreground">{fmt(m.price)}/mo</div>
                                     </div>
                                 </div>
                                 <button
@@ -178,7 +178,7 @@ export default function BillingDashboard() {
                                 >
                                     {active
                                         ? <ToggleRight className="w-8 h-8 text-emerald-400" />
-                                        : <ToggleLeft className="w-8 h-8 text-zinc-600" />}
+                                        : <ToggleLeft className="w-8 h-8 text-muted-foreground" />}
                                 </button>
                             </div>
                         );
@@ -190,8 +190,8 @@ export default function BillingDashboard() {
             {tab === 'usage' && usage && (
                 <div className="space-y-6">
                     {/* AI Model Selector */}
-                    <div className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/50">
-                        <h3 className="font-semibold text-zinc-100 mb-3 flex items-center gap-2">
+                    <div className="p-5 rounded-xl border border-border bg-card/50">
+                        <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                             <Brain className="w-5 h-5 text-amber-400" />
                             AI Model
                         </h3>
@@ -202,11 +202,11 @@ export default function BillingDashboard() {
                                     onClick={() => switchModel.mutate(m.key)}
                                     className={`p-3 rounded-lg border cursor-pointer transition-all ${usage.ai.model_key === m.key
                                         ? 'border-amber-500/50 bg-amber-500/10'
-                                        : 'border-zinc-800 hover:border-zinc-700'
+                                        : 'border-border hover:border-border'
                                         }`}
                                 >
-                                    <div className="font-medium text-zinc-200 text-sm">{m.name}</div>
-                                    <div className="text-xs text-zinc-500 mt-1">{fmt(m.price_per_1k)}/1k tokens</div>
+                                    <div className="font-medium text-secondary-foreground text-sm">{m.name}</div>
+                                    <div className="text-xs text-muted-foreground mt-1">{fmt(m.price_per_1k)}/1k tokens</div>
                                     {usage.ai.model_key === m.key && (
                                         <div className="text-xs text-amber-400 mt-1">✓ Active</div>
                                     )}
@@ -217,31 +217,31 @@ export default function BillingDashboard() {
 
                     {/* Usage Stats */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/50">
-                            <h3 className="font-semibold text-zinc-100 mb-2 flex items-center gap-2">
+                        <div className="p-5 rounded-xl border border-border bg-card/50">
+                            <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
                                 <Zap className="w-4 h-4 text-amber-400" /> AI Tokens
                             </h3>
-                            <div className="text-3xl font-bold text-zinc-100">{usage.ai.tokens_used.toLocaleString()}</div>
-                            <div className="text-sm text-zinc-500 mt-1">Cost: {fmt(usage.ai.cost_per_1k)}/1k tokens</div>
+                            <div className="text-3xl font-bold text-foreground">{usage.ai.tokens_used.toLocaleString()}</div>
+                            <div className="text-sm text-muted-foreground mt-1">Cost: {fmt(usage.ai.cost_per_1k)}/1k tokens</div>
                         </div>
-                        <div className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/50">
-                            <h3 className="font-semibold text-zinc-100 mb-2 flex items-center gap-2">
+                        <div className="p-5 rounded-xl border border-border bg-card/50">
+                            <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
                                 <HardDrive className="w-4 h-4 text-emerald-400" /> Storage
                             </h3>
-                            <div className="text-3xl font-bold text-zinc-100">{usage.storage.used_gb} GB</div>
-                            <div className="text-sm text-zinc-500 mt-1">{fmt(usage.storage.cost)}/mo ({fmt(usage.storage.rate_per_gb)}/GB)</div>
+                            <div className="text-3xl font-bold text-foreground">{usage.storage.used_gb} GB</div>
+                            <div className="text-sm text-muted-foreground mt-1">{fmt(usage.storage.cost)}/mo ({fmt(usage.storage.rate_per_gb)}/GB)</div>
                         </div>
                     </div>
 
                     {/* Recent Usage Log */}
                     {usage.recent_usage?.length > 0 && (
-                        <div className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/50">
-                            <h3 className="font-semibold text-zinc-100 mb-3">Recent AI Usage</h3>
+                        <div className="p-5 rounded-xl border border-border bg-card/50">
+                            <h3 className="font-semibold text-foreground mb-3">Recent AI Usage</h3>
                             <div className="space-y-2 max-h-64 overflow-y-auto">
                                 {usage.recent_usage.map((entry: { id: string; model: string; tokens: number; created_at: string }, i: number) => (
-                                    <div key={entry.id ?? i} className="flex items-center justify-between py-2 border-b border-zinc-800/50 last:border-0">
-                                        <span className="text-sm text-zinc-400">{entry.model ?? 'Gemini'}</span>
-                                        <span className="text-sm text-zinc-300">{entry.tokens?.toLocaleString() ?? '—'} tokens</span>
+                                    <div key={entry.id ?? i} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
+                                        <span className="text-sm text-muted-foreground">{entry.model ?? 'Gemini'}</span>
+                                        <span className="text-sm text-secondary-foreground">{entry.tokens?.toLocaleString() ?? '—'} tokens</span>
                                     </div>
                                 ))}
                             </div>
@@ -254,24 +254,24 @@ export default function BillingDashboard() {
             {tab === 'invoices' && (
                 <div className="space-y-3">
                     {invoices?.map((inv: { id: string; period_start: string; period_end: string; status: string; total: number }) => (
-                        <div key={inv.id} className="flex items-center justify-between p-4 rounded-xl border border-zinc-800 bg-zinc-900/50">
+                        <div key={inv.id} className="flex items-center justify-between p-4 rounded-xl border border-border bg-card/50">
                             <div className="flex items-center gap-3">
-                                <Receipt className="w-5 h-5 text-zinc-500" />
+                                <Receipt className="w-5 h-5 text-muted-foreground" />
                                 <div>
-                                    <div className="text-sm font-medium text-zinc-200">
+                                    <div className="text-sm font-medium text-secondary-foreground">
                                         {new Date(inv.period_start).toLocaleDateString('en', { month: 'short', year: 'numeric' })}
                                     </div>
-                                    <div className="text-xs text-zinc-500 capitalize">{inv.status}</div>
+                                    <div className="text-xs text-muted-foreground capitalize">{inv.status}</div>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="font-semibold text-zinc-100">{fmt(inv.total)}</span>
-                                <ArrowUpRight className="w-4 h-4 text-zinc-600" />
+                                <span className="font-semibold text-foreground">{fmt(inv.total)}</span>
+                                <ArrowUpRight className="w-4 h-4 text-muted-foreground" />
                             </div>
                         </div>
                     ))}
                     {(!invoices || invoices.length === 0) && (
-                        <div className="text-center py-8 text-zinc-500">No invoices yet</div>
+                        <div className="text-center py-8 text-muted-foreground">No invoices yet</div>
                     )}
                 </div>
             )}
@@ -291,9 +291,9 @@ function StatCard({ icon, label, value, sub, color }: {
     };
     return (
         <div className={`p-4 rounded-xl border bg-gradient-to-br ${colors[color] ?? colors.blue}`}>
-            <div className="flex items-center gap-2 text-zinc-500 mb-2">{icon}<span className="text-sm">{label}</span></div>
-            <div className="text-xl font-bold text-zinc-100">{value}</div>
-            <div className="text-sm text-zinc-500 mt-1">{sub}</div>
+            <div className="flex items-center gap-2 text-muted-foreground mb-2">{icon}<span className="text-sm">{label}</span></div>
+            <div className="text-xl font-bold text-foreground">{value}</div>
+            <div className="text-sm text-muted-foreground mt-1">{sub}</div>
         </div>
     );
 }

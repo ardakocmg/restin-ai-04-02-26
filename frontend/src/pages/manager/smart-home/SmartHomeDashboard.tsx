@@ -69,17 +69,17 @@ function StatCard({ label, value, icon: Icon, gradient, delay }: { label: string
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay }}
-            className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-zinc-900/60 backdrop-blur-xl p-6"
+            className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-card/60 backdrop-blur-xl p-6"
         >
             {/* eslint-disable-next-line react/forbid-dom-props */}
             <div className="absolute inset-0 opacity-[0.03]" style={{ background: `linear-gradient(135deg, ${gradient})` }} />
             <div className="relative flex items-center gap-4">
                 <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg`}>
-                    <Icon className="h-6 w-6 text-white" />
+                    <Icon className="h-6 w-6 text-foreground" />
                 </div>
                 <div>
-                    <p className="text-3xl font-black text-white tabular-nums">{value}</p>
-                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mt-0.5">{label}</p>
+                    <p className="text-3xl font-black text-foreground tabular-nums">{value}</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-0.5">{label}</p>
                 </div>
             </div>
         </motion.div>
@@ -96,7 +96,7 @@ function PowerToggle({ isOn, loading, onClick }: { isOn: boolean; loading: boole
         relative h-8 w-16 rounded-full transition-all duration-500 ease-out
         ${isOn
                     ? 'bg-gradient-to-r from-emerald-500 to-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.5)]'
-                    : 'bg-zinc-800 border border-zinc-700'
+                    : 'bg-secondary border border-border'
                 }
       `}
         >
@@ -113,7 +113,7 @@ function PowerToggle({ isOn, loading, onClick }: { isOn: boolean; loading: boole
                 ) : isOn ? (
                     <Power className="h-3 w-3 text-emerald-600" />
                 ) : (
-                    <Power className="h-3 w-3 text-zinc-400" />
+                    <Power className="h-3 w-3 text-muted-foreground" />
                 )}
             </motion.div>
         </button>
@@ -127,7 +127,7 @@ function GateControl({ loading, onOpen, onClose }: { loading: boolean; onOpen: (
             <button
                 onClick={onOpen}
                 disabled={loading}
-                className="flex-1 h-10 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white text-xs font-bold uppercase tracking-wider 
+                className="flex-1 h-10 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-foreground text-xs font-bold uppercase tracking-wider 
           hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-1.5
           disabled:opacity-50"
             >
@@ -137,8 +137,8 @@ function GateControl({ loading, onOpen, onClose }: { loading: boolean; onOpen: (
             <button
                 onClick={onClose}
                 disabled={loading}
-                className="flex-1 h-10 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-bold uppercase tracking-wider 
-          hover:bg-zinc-700 active:scale-95 transition-all duration-200 flex items-center justify-center gap-1.5
+                className="flex-1 h-10 rounded-xl bg-secondary border border-border text-secondary-foreground text-xs font-bold uppercase tracking-wider 
+          hover:bg-secondary/80 active:scale-95 transition-all duration-200 flex items-center justify-center gap-1.5
           disabled:opacity-50"
             >
                 {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <DoorClosed className="h-3.5 w-3.5" />}
@@ -208,8 +208,8 @@ function MusicPlayerControls({ device, onControl }: {
                         />
                     )}
                     <div className="min-w-0 flex-1">
-                        <p className="text-sm font-bold text-white truncate">{pb.track_name}</p>
-                        <p className="text-[11px] text-zinc-400 truncate">{pb.artist}</p>
+                        <p className="text-sm font-bold text-foreground truncate">{pb.track_name}</p>
+                        <p className="text-[11px] text-muted-foreground truncate">{pb.artist}</p>
                     </div>
                 </div>
             )}
@@ -223,7 +223,7 @@ function MusicPlayerControls({ device, onControl }: {
                     aria-label="Previous track"
                     className="h-9 w-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] flex items-center justify-center transition-all active:scale-90 disabled:opacity-40"
                 >
-                    <SkipBack className="h-4 w-4 text-zinc-300" />
+                    <SkipBack className="h-4 w-4 text-secondary-foreground" />
                 </button>
 
                 <button
@@ -238,11 +238,11 @@ function MusicPlayerControls({ device, onControl }: {
                         }`}
                 >
                     {loading ? (
-                        <Loader2 className="h-5 w-5 animate-spin text-white" />
+                        <Loader2 className="h-5 w-5 animate-spin text-foreground" />
                     ) : isPlaying ? (
-                        <Pause className="h-5 w-5 text-white" />
+                        <Pause className="h-5 w-5 text-foreground" />
                     ) : (
-                        <Play className="h-5 w-5 text-white ml-0.5" />
+                        <Play className="h-5 w-5 text-foreground ml-0.5" />
                     )}
                 </button>
 
@@ -253,13 +253,13 @@ function MusicPlayerControls({ device, onControl }: {
                     aria-label="Next track"
                     className="h-9 w-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] flex items-center justify-center transition-all active:scale-90 disabled:opacity-40"
                 >
-                    <SkipForward className="h-4 w-4 text-zinc-300" />
+                    <SkipForward className="h-4 w-4 text-secondary-foreground" />
                 </button>
             </div>
 
             {/* Volume Slider */}
             <div className="flex items-center gap-2">
-                <Volume2 className="h-3.5 w-3.5 text-zinc-500 flex-shrink-0" />
+                <Volume2 className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
                 <input
                     type="range"
                     min={0}
@@ -268,12 +268,12 @@ function MusicPlayerControls({ device, onControl }: {
                     onChange={handleVolume}
                     title="Volume"
                     aria-label="Volume"
-                    className="w-full h-1.5 rounded-full bg-zinc-800 appearance-none cursor-pointer
+                    className="w-full h-1.5 rounded-full bg-secondary appearance-none cursor-pointer
                         [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4
                         [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-green-500
                         [&::-webkit-slider-thumb]:shadow-[0_0_8px_rgba(34,197,94,0.5)] [&::-webkit-slider-thumb]:cursor-pointer"
                 />
-                <span className="text-[10px] font-mono text-zinc-500 w-8 text-right">{localVolume}%</span>
+                <span className="text-[10px] font-mono text-muted-foreground w-8 text-right">{localVolume}%</span>
             </div>
         </div>
     );
@@ -331,8 +331,8 @@ function DeviceCard({ device, index, onControl }: {
             <div className={`
         relative overflow-hidden rounded-2xl border transition-all duration-300
         ${device.online
-                    ? 'border-white/[0.08] bg-zinc-900/80 backdrop-blur-xl hover:border-white/[0.15] hover:shadow-2xl'
-                    : 'border-zinc-800/50 bg-zinc-950/60 opacity-60'
+                    ? 'border-white/[0.08] bg-card/80 backdrop-blur-xl hover:border-white/[0.15] hover:shadow-2xl'
+                    : 'border-border/50 bg-background/60 opacity-60'
                 }
       `}>
                 {/* Header */}
@@ -344,18 +344,18 @@ function DeviceCard({ device, index, onControl }: {
                   h-11 w-11 rounded-xl flex items-center justify-center transition-all duration-300
                   ${device.online
                                         ? `bg-gradient-to-br ${cfg.gradient} shadow-md`
-                                        : 'bg-zinc-800 border border-zinc-700'
+                                        : 'bg-secondary border border-border'
                                     }
                 `}
                                 style={device.online ? { boxShadow: `0 4px 15px ${cfg.glow}` } : {}}
                             >
-                                <Icon className={`h-5 w-5 ${device.online ? 'text-white' : 'text-zinc-500'}`} />
+                                <Icon className={`h-5 w-5 ${device.online ? 'text-foreground' : 'text-muted-foreground'}`} />
                             </div>
                             <div>
-                                <h3 className={`text-sm font-bold ${device.online ? 'text-white' : 'text-zinc-500'}`}>
+                                <h3 className={`text-sm font-bold ${device.online ? 'text-foreground' : 'text-muted-foreground'}`}>
                                     {device.name}
                                 </h3>
-                                <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mt-0.5">
+                                <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mt-0.5">
                                     {cfg.label}
                                 </p>
                             </div>
@@ -363,7 +363,7 @@ function DeviceCard({ device, index, onControl }: {
 
                         {/* Online Indicator */}
                         <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider
-              ${device.online ? 'text-emerald-400 bg-emerald-500/10' : 'text-zinc-600 bg-zinc-800'}
+              ${device.online ? 'text-emerald-400 bg-emerald-500/10' : 'text-muted-foreground bg-secondary'}
             `}>
                             <div className={`h-1.5 w-1.5 rounded-full ${device.online ? 'bg-emerald-400 animate-pulse' : 'bg-zinc-600'}`} />
                             {device.online ? 'Online' : 'Offline'}
@@ -378,7 +378,7 @@ function DeviceCard({ device, index, onControl }: {
                 <div className="p-5 pt-4">
                     {isControllable && device.online && (
                         <div className="flex items-center justify-between">
-                            <span className={`text-xs font-bold uppercase tracking-wider ${localIsOn ? 'text-emerald-400' : 'text-zinc-500'}`}>
+                            <span className={`text-xs font-bold uppercase tracking-wider ${localIsOn ? 'text-emerald-400' : 'text-muted-foreground'}`}>
                                 {localIsOn ? 'Power On' : 'Power Off'}
                             </span>
                             <PowerToggle isOn={!!localIsOn} loading={loading} onClick={handleToggle} />
@@ -397,9 +397,9 @@ function DeviceCard({ device, index, onControl }: {
                     )}
 
                     {device.device_category === 'hub' && (
-                        <div className="flex items-center gap-2 text-xs text-zinc-500">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             <Radio className="h-3.5 w-3.5 text-purple-400" />
-                            <span className="font-medium text-zinc-400">Central Hub — Sub-devices connected</span>
+                            <span className="font-medium text-muted-foreground">Central Hub — Sub-devices connected</span>
                         </div>
                     )}
 
@@ -408,7 +408,7 @@ function DeviceCard({ device, index, onControl }: {
                     )}
 
                     {!device.online && !isSensorType && (
-                        <div className="flex items-center gap-2 text-xs text-zinc-600">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             <WifiOff className="h-3.5 w-3.5" />
                             <span>Device unreachable</span>
                         </div>
@@ -536,7 +536,7 @@ export default function SmartHomeDashboard() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-zinc-900/40 backdrop-blur-xl p-8 mb-8"
+                className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-card/40 backdrop-blur-xl p-8 mb-8"
             >
                 {/* Animated Background */}
                 <div className="absolute inset-0 overflow-hidden">
@@ -547,15 +547,15 @@ export default function SmartHomeDashboard() {
                 <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     <div className="flex items-center gap-5">
                         <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.3)]">
-                            <Home className="h-8 w-8 text-white" />
+                            <Home className="h-8 w-8 text-foreground" />
                         </div>
                         <div>
-                            <h1 className="text-2xl lg:text-3xl font-black text-white tracking-tight">Smart Home</h1>
-                            <p className="text-sm text-zinc-500 font-medium mt-1">
+                            <h1 className="text-2xl lg:text-3xl font-black text-foreground tracking-tight">Smart Home</h1>
+                            <p className="text-sm text-muted-foreground font-medium mt-1">
                                 IoT Device Control Center — Meross + Tuya + Spotify
                             </p>
                             {lastUpdated && (
-                                <p className="text-[10px] text-zinc-600 font-mono mt-2 uppercase tracking-wider">
+                                <p className="text-[10px] text-muted-foreground font-mono mt-2 uppercase tracking-wider">
                                     Last synced: {lastUpdated.toLocaleTimeString()}
                                 </p>
                             )}
@@ -579,7 +579,7 @@ export default function SmartHomeDashboard() {
                         <button
                             onClick={() => { fetchDevices(); triggerSync(); }}
                             disabled={syncing}
-                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-sm font-bold
+                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.08] text-secondary-foreground text-sm font-bold
               hover:bg-white/[0.08] hover:border-white/[0.12] active:scale-95 transition-all duration-200 disabled:opacity-50"
                         >
                             <RefreshCw className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
@@ -609,11 +609,11 @@ export default function SmartHomeDashboard() {
                     >
                         <div className="relative">
                             <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center animate-pulse">
-                                <Radio className="h-8 w-8 text-white" />
+                                <Radio className="h-8 w-8 text-foreground" />
                             </div>
                             <div className="absolute -inset-2 rounded-2xl border-2 border-emerald-500/20 animate-ping" />
                         </div>
-                        <p className="text-sm font-bold text-zinc-500 uppercase tracking-wider">Loading devices...</p>
+                        <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Loading devices...</p>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -656,10 +656,10 @@ export default function SmartHomeDashboard() {
                                 >
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${catCfg.gradient} flex items-center justify-center`}>
-                                            <CatIcon className="h-4 w-4 text-white" />
+                                            <CatIcon className="h-4 w-4 text-foreground" />
                                         </div>
-                                        <h2 className="text-sm font-black text-zinc-400 uppercase tracking-wider">{catCfg.label}s</h2>
-                                        <span className="text-[10px] font-bold text-zinc-600 bg-zinc-800/60 px-2 py-0.5 rounded-full">
+                                        <h2 className="text-sm font-black text-muted-foreground uppercase tracking-wider">{catCfg.label}s</h2>
+                                        <span className="text-[10px] font-bold text-muted-foreground bg-secondary/60 px-2 py-0.5 rounded-full">
                                             {grouped[cat].length}
                                         </span>
                                     </div>
@@ -682,11 +682,11 @@ export default function SmartHomeDashboard() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="flex flex-col items-center justify-center py-24 gap-4"
                 >
-                    <div className="h-20 w-20 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                    <div className="h-20 w-20 rounded-2xl bg-card border border-border flex items-center justify-center">
                         <Radio className="h-10 w-10 text-zinc-700" />
                     </div>
-                    <h3 className="text-lg font-bold text-zinc-400">No Devices Found</h3>
-                    <p className="text-sm text-zinc-600 max-w-md text-center">
+                    <h3 className="text-lg font-bold text-muted-foreground">No Devices Found</h3>
+                    <p className="text-sm text-muted-foreground max-w-md text-center">
                         {syncing
                             ? 'Discovering devices from Meross & Tuya cloud... This may take a moment.'
                             : 'No devices synced yet. Make sure your Meross/Tuya credentials are configured in Sync Dashboard, then click Refresh.'}
@@ -694,7 +694,7 @@ export default function SmartHomeDashboard() {
                     {!syncing && (
                         <button
                             onClick={() => triggerSync()}
-                            className="mt-4 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-sm font-bold
+                            className="mt-4 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-foreground text-sm font-bold
                 hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] active:scale-95 transition-all duration-200 flex items-center gap-2"
                         >
                             <Cloud className="h-4 w-4" />

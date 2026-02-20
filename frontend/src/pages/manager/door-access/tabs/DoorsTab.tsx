@@ -42,7 +42,7 @@ function CreatePinDialog({ doorId, isOpen, onClose, onSuccess }: { doorId: strin
                 setName('');
                 setCode('');
             }
-        } catch (e) {
+        } catch (e: any) {
             toast.error('Failed to create PIN');
             logger.error('Create PIN failed', { error: String(e) });
         } finally {
@@ -52,23 +52,23 @@ function CreatePinDialog({ doorId, isOpen, onClose, onSuccess }: { doorId: strin
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100">
+            <DialogContent className="bg-background border-border text-foreground">
                 <DialogHeader>
                     <DialogTitle>Create New PIN</DialogTitle>
-                    <DialogDescription className="text-zinc-400">
+                    <DialogDescription className="text-muted-foreground">
                         Create a 6-digit access code for the Keypad.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                     <div className="space-y-2">
                         <Label>Name</Label>
-                        <Input placeholder="e.g. Guest Access" value={name} onChange={(e) => setName(e.target.value)} className="bg-zinc-900 border-zinc-700 text-zinc-200" />
+                        <Input placeholder="e.g. Guest Access" value={name} onChange={(e) => setName(e.target.value)} className="bg-card border-border text-secondary-foreground" />
                     </div>
                     <div className="space-y-2">
                         <Label>Code (6 digits)</Label>
-                        <Input placeholder="123456" value={code} maxLength={6} onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))} className="bg-zinc-900 border-zinc-700 text-zinc-200 font-mono tracking-widest text-center text-lg" />
+                        <Input placeholder="123456" value={code} maxLength={6} onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))} className="bg-card border-border text-secondary-foreground font-mono tracking-widest text-center text-lg" />
                     </div>
-                    <Button onClick={handleSubmit} disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
+                    <Button onClick={handleSubmit} disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-700 text-foreground">
                         {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
                         Create PIN
                     </Button>
@@ -106,7 +106,7 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
                 const resp = await accessControlAPI.getNativeLogs(door.id, getVenueId());
                 if (resp.status === 200) setLogs(resp.data);
             }
-        } catch (e) {
+        } catch (e: any) {
             logger.error(`Load ${tab} failed`, { error: String(e) });
             toast.error(`Failed to load ${tab}`);
         } finally {
@@ -120,7 +120,7 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
         try {
             const resp = await accessControlAPI.updateConfig(door.id, config, getVenueId());
             if (resp.status === 200) { toast.success('Settings saved'); setConfig(resp.data); }
-        } catch (e) {
+        } catch (e: any) {
             toast.error('Save failed');
             logger.error('Save config failed', { error: String(e) });
         } finally { setSaving(false); }
@@ -131,23 +131,23 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
         try {
             const resp = await accessControlAPI.deleteAuth(door.id, authId, getVenueId());
             if (resp.status === 200) { toast.success('User revoked'); loadTabContent('users'); }
-        } catch (e) { toast.error('Revoke failed'); }
+        } catch (e: any) { toast.error('Revoke failed'); }
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-100 max-w-4xl h-[80vh] flex flex-col p-0">
-                <DialogHeader className="p-6 border-b border-zinc-800">
+            <DialogContent className="bg-background border-border text-foreground max-w-4xl h-[80vh] flex flex-col p-0">
+                <DialogHeader className="p-6 border-b border-border">
                     <DialogTitle className="flex items-center gap-2">
-                        <Settings className="h-5 w-5 text-zinc-400" />
+                        <Settings className="h-5 w-5 text-muted-foreground" />
                         Manage {door?.display_name}
                     </DialogTitle>
-                    <DialogDescription className="text-zinc-400">
+                    <DialogDescription className="text-muted-foreground">
                         Configure device settings, manage authorizations, and view internal logs.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex-1 overflow-hidden flex">
-                    <div className="w-48 border-r border-zinc-800 bg-zinc-900/50 p-4 space-y-2">
+                    <div className="w-48 border-r border-border bg-card/50 p-4 space-y-2">
                         <Button variant={activeTab === 'settings' ? 'secondary' : 'ghost'} className="w-full justify-start" onClick={() => setActiveTab('settings')}>
                             <Settings className="h-4 w-4 mr-2" /> Settings
                         </Button>
@@ -158,33 +158,33 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
                             <Activity className="h-4 w-4 mr-2" /> Native Logs
                         </Button>
                     </div>
-                    <div className="flex-1 p-6 overflow-auto bg-zinc-950">
+                    <div className="flex-1 p-6 overflow-auto bg-background">
                         {loading ? (
-                            <div className="flex justify-center py-12"><RefreshCw className="h-8 w-8 animate-spin text-zinc-600" /></div>
+                            <div className="flex justify-center py-12"><RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" /></div>
                         ) : activeTab === 'settings' && config ? (
                             <div className="space-y-6 max-w-lg">
                                 <div className="space-y-4">
-                                    <h3 className="text-lg font-medium text-zinc-100">Device Behavior</h3>
+                                    <h3 className="text-lg font-medium text-foreground">Device Behavior</h3>
                                     <div className="flex items-center justify-between">
-                                        <div className="space-y-0.5"><Label className="text-base text-zinc-200">Single Lock</Label><p className="text-sm text-zinc-500">Only lock once (don't double bolt)</p></div>
+                                        <div className="space-y-0.5"><Label className="text-base text-secondary-foreground">Single Lock</Label><p className="text-sm text-muted-foreground">Only lock once (don't double bolt)</p></div>
                                         <Switch checked={config.single_lock} onCheckedChange={(c) => setConfig({ ...config, single_lock: c })} />
                                     </div>
                                     <div className="flex items-center justify-between">
-                                        <div className="space-y-0.5"><Label className="text-base text-zinc-200">Button Enabled</Label><p className="text-sm text-zinc-500">Allow physical button on device</p></div>
+                                        <div className="space-y-0.5"><Label className="text-base text-secondary-foreground">Button Enabled</Label><p className="text-sm text-muted-foreground">Allow physical button on device</p></div>
                                         <Switch checked={config.button_enabled} onCheckedChange={(c) => setConfig({ ...config, button_enabled: c })} />
                                     </div>
                                     <div className="flex items-center justify-between">
-                                        <div className="space-y-0.5"><Label className="text-base text-zinc-200">LED Enabled</Label><p className="text-sm text-zinc-500">Ring/Indicator light</p></div>
+                                        <div className="space-y-0.5"><Label className="text-base text-secondary-foreground">LED Enabled</Label><p className="text-sm text-muted-foreground">Ring/Indicator light</p></div>
                                         <Switch checked={config.led_enabled} onCheckedChange={(c) => setConfig({ ...config, led_enabled: c })} />
                                     </div>
                                     {config.led_enabled && (
                                         <div className="space-y-2 pt-2">
-                                            <Label className="text-sm text-zinc-400">LED Brightness ({config.led_brightness}%)</Label>
+                                            <Label className="text-sm text-muted-foreground">LED Brightness ({config.led_brightness}%)</Label>
                                             <Slider value={[config.led_brightness]} min={0} max={5} step={1} onValueChange={(v) => setConfig({ ...config, led_brightness: v[0] })} />
                                         </div>
                                     )}
                                 </div>
-                                <Button onClick={saveConfig} disabled={saving} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
+                                <Button onClick={saveConfig} disabled={saving} className="w-full bg-emerald-600 hover:bg-emerald-700 text-foreground">
                                     {saving ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Check className="h-4 w-4 mr-2" />}
                                     Save Changes
                                 </Button>
@@ -192,32 +192,32 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
                         ) : activeTab === 'users' ? (
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center">
-                                    <h3 className="text-lg font-medium text-zinc-100">Authorized Users</h3>
-                                    <Button size="sm" onClick={() => setIsCreatePinOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                                    <h3 className="text-lg font-medium text-foreground">Authorized Users</h3>
+                                    <Button size="sm" onClick={() => setIsCreatePinOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-foreground">
                                         <Plus className="h-4 w-4 mr-2" /> New PIN
                                     </Button>
                                     <CreatePinDialog doorId={door.id} isOpen={isCreatePinOpen} onClose={() => setIsCreatePinOpen(false)} onSuccess={() => loadTabContent('users')} />
                                 </div>
-                                <div className="border border-zinc-800 rounded-md">
+                                <div className="border border-border rounded-md">
                                     <table className="w-full">
-                                        <thead className="bg-zinc-900/50">
+                                        <thead className="bg-card/50">
                                             <tr>
-                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Name</th>
-                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Type</th>
-                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Status</th>
-                                                <th className="text-right p-3 text-xs font-medium text-zinc-500">Action</th>
+                                                <th className="text-left p-3 text-xs font-medium text-muted-foreground">Name</th>
+                                                <th className="text-left p-3 text-xs font-medium text-muted-foreground">Type</th>
+                                                <th className="text-left p-3 text-xs font-medium text-muted-foreground">Status</th>
+                                                <th className="text-right p-3 text-xs font-medium text-muted-foreground">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {auths.map(auth => (
-                                                <tr key={auth.id} className="border-t border-zinc-800 hover:bg-zinc-900/30">
-                                                    <td className="p-3 text-sm text-zinc-200">{auth.name}</td>
-                                                    <td className="p-3"><Badge variant="outline" className="text-xs border-zinc-700 text-zinc-400">{auth.type}</Badge></td>
-                                                    <td className="p-3"><span className={`text-xs ${auth.status === 'ACT' ? 'text-emerald-400' : 'text-zinc-500'}`}>{auth.status === 'ACT' ? 'Active' : auth.status}</span></td>
+                                                <tr key={auth.id} className="border-t border-border hover:bg-card/30">
+                                                    <td className="p-3 text-sm text-secondary-foreground">{auth.name}</td>
+                                                    <td className="p-3"><Badge variant="outline" className="text-xs border-border text-muted-foreground">{auth.type}</Badge></td>
+                                                    <td className="p-3"><span className={`text-xs ${auth.status === 'ACT' ? 'text-emerald-400' : 'text-muted-foreground'}`}>{auth.status === 'ACT' ? 'Active' : auth.status}</span></td>
                                                     <td className="p-3 text-right"><Button size="sm" variant="ghost" onClick={() => revokeAuth(auth.id)} className="text-red-400 hover:bg-red-950/50 h-6 w-6 p-0"><Trash2 className="h-3 w-3" /></Button></td>
                                                 </tr>
                                             ))}
-                                            {auths.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-zinc-500">No authorizations found.</td></tr>}
+                                            {auths.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-muted-foreground">No authorizations found.</td></tr>}
                                         </tbody>
                                     </table>
                                 </div>
@@ -225,33 +225,33 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
                         ) : activeTab === 'logs' ? (
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-lg font-medium text-zinc-100">Native Device Logs</h3>
+                                    <h3 className="text-lg font-medium text-foreground">Native Device Logs</h3>
                                     <Button size="sm" variant="outline" onClick={async () => {
                                         toast.loading("Syncing logs...");
                                         try { await accessControlAPI.syncLogs(door.id, getVenueId()); toast.dismiss(); toast.success("Logs synced!"); loadTabContent('logs'); }
-                                        catch (e) { toast.dismiss(); toast.error("Sync failed"); }
-                                    }} className="h-8 gap-2 border-zinc-700 text-zinc-300">
+                                        catch (e: any) { toast.dismiss(); toast.error("Sync failed"); }
+                                    }} className="h-8 gap-2 border-border text-secondary-foreground">
                                         <RefreshCw className="h-3 w-3" /> Sync from Device
                                     </Button>
                                 </div>
-                                <div className="border border-zinc-800 rounded-md overflow-hidden">
+                                <div className="border border-border rounded-md overflow-hidden">
                                     <table className="w-full">
-                                        <thead className="bg-zinc-900/50">
+                                        <thead className="bg-card/50">
                                             <tr>
-                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Time</th>
-                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Action</th>
-                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">User / Staff</th>
-                                                <th className="text-left p-3 text-xs font-medium text-zinc-500">Trigger</th>
+                                                <th className="text-left p-3 text-xs font-medium text-muted-foreground">Time</th>
+                                                <th className="text-left p-3 text-xs font-medium text-muted-foreground">Action</th>
+                                                <th className="text-left p-3 text-xs font-medium text-muted-foreground">User / Staff</th>
+                                                <th className="text-left p-3 text-xs font-medium text-muted-foreground">Trigger</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {logs.map(log => (
-                                                <tr key={log.id} className="border-t border-zinc-800 hover:bg-zinc-900/30">
-                                                    <td className="p-3 text-xs text-zinc-400">{new Date(log.date).toLocaleString()}</td>
-                                                    <td className="p-3 text-sm text-zinc-200">{log.action}</td>
+                                                <tr key={log.id} className="border-t border-border hover:bg-card/30">
+                                                    <td className="p-3 text-xs text-muted-foreground">{new Date(log.date).toLocaleString()}</td>
+                                                    <td className="p-3 text-sm text-secondary-foreground">{log.action}</td>
                                                     <td className="p-3">
                                                         <div className="flex flex-col">
-                                                            <span className="text-sm text-zinc-300">{log.auth_name || '—'}</span>
+                                                            <span className="text-sm text-secondary-foreground">{log.auth_name || '—'}</span>
                                                             {log.staff_name && (
                                                                 <Badge variant="outline" className="w-fit mt-1 text-[10px] h-4 px-1 gap-1 border-emerald-900/50 text-emerald-400 bg-emerald-950/30">
                                                                     <User className="h-2 w-2" />{log.staff_name}
@@ -259,10 +259,10 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
                                                             )}
                                                         </div>
                                                     </td>
-                                                    <td className="p-3 text-xs text-zinc-500">{log.trigger}</td>
+                                                    <td className="p-3 text-xs text-muted-foreground">{log.trigger}</td>
                                                 </tr>
                                             ))}
-                                            {logs.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-zinc-500">No logs found on device.</td></tr>}
+                                            {logs.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-muted-foreground">No logs found on device.</td></tr>}
                                         </tbody>
                                     </table>
                                 </div>
@@ -293,7 +293,7 @@ export default function DoorsTab() {
         try {
             const resp = await api.get(`/access-control/doors?venue_id=${getVenueId()}`);
             if (resp.status === 200) setDoors(resp.data);
-        } catch (e) { logger.error('Load doors failed', { error: String(e) }); }
+        } catch (e: any) { logger.error('Load doors failed', { error: String(e) }); }
         finally { setLoading(false); }
     };
 
@@ -306,7 +306,7 @@ export default function DoorsTab() {
                 toast.success(`Synced: ${data.discovered} devices (${data.new} new, ${data.updated} updated)`);
                 loadDoors();
             } else { toast.error(resp.data.detail || 'Sync failed'); }
-        } catch (e) { toast.error('Device sync failed'); logger.error('Sync failed', { error: String(e) }); }
+        } catch (e: any) { toast.error('Device sync failed'); logger.error('Sync failed', { error: String(e) }); }
         finally { setSyncing(false); }
     };
 
@@ -315,7 +315,7 @@ export default function DoorsTab() {
         try {
             const resp = await api.post(`/access-control/doors/${doorId}/rename?venue_id=${getVenueId()}`, { new_name: editName });
             if (resp.status === 200) { toast.success('Door renamed'); setEditingId(null); loadDoors(); }
-        } catch (e) { toast.error('Rename failed'); logger.error('Rename failed', { error: String(e) }); }
+        } catch (e: any) { toast.error('Rename failed'); logger.error('Rename failed', { error: String(e) }); }
     };
 
     const executeAction = async (doorId: string, action: string) => {
@@ -326,7 +326,7 @@ export default function DoorsTab() {
             const resp = await api.post(`/access-control/doors/${doorId}/${action.toLowerCase()}?venue_id=${getVenueId()}&user_id=${userId}`);
             if (resp.status === 200) { toast.success(`${action} successful via ${resp.data.provider_path} (${resp.data.duration_ms}ms)`); loadDoors(); }
             else { toast.error(resp.data.detail || `${action} failed`); }
-        } catch (e) { toast.error(`${action} failed`); logger.error('Action failed', { error: String(e) }); }
+        } catch (e: any) { toast.error(`${action} failed`); logger.error('Action failed', { error: String(e) }); }
         finally { setActionLoading(null); }
     };
 
@@ -334,7 +334,7 @@ export default function DoorsTab() {
         LOCKED: 'bg-emerald-500/10 text-emerald-400 border-emerald-800',
         UNLOCKED: 'bg-amber-500/10 text-amber-400 border-amber-800',
         UNLATCHED: 'bg-blue-500/10 text-blue-400 border-blue-800',
-        UNKNOWN: 'bg-zinc-700/30 text-zinc-400 border-zinc-700',
+        UNKNOWN: 'bg-zinc-700/30 text-muted-foreground border-border',
     };
 
     const lockStateIcons: Record<string, React.ReactNode> = {
@@ -347,48 +347,48 @@ export default function DoorsTab() {
     return (
         <div className="space-y-4">
             <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-zinc-100">Registered Doors</h3>
-                <Button onClick={syncDevices} disabled={syncing} variant="outline" className="border-zinc-700 text-zinc-300">
+                <h3 className="text-lg font-semibold text-foreground">Registered Doors</h3>
+                <Button onClick={syncDevices} disabled={syncing} variant="outline" className="border-border text-secondary-foreground">
                     <RefreshCw className={`h-4 w-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
                     {syncing ? 'Discovering...' : 'Sync Devices'}
                 </Button>
             </div>
 
             {loading ? (
-                <div className="flex justify-center py-12"><RefreshCw className="h-8 w-8 animate-spin text-zinc-600" /></div>
+                <div className="flex justify-center py-12"><RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" /></div>
             ) : doors.length === 0 ? (
-                <Card className="bg-zinc-950 border-zinc-800 p-8 text-center">
-                    <DoorOpen className="h-12 w-12 mx-auto text-zinc-600 mb-4" />
-                    <p className="text-zinc-400">No doors registered. Click "Sync Devices" to discover your Nuki locks.</p>
+                <Card className="bg-background border-border p-8 text-center">
+                    <DoorOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-muted-foreground">No doors registered. Click "Sync Devices" to discover your Nuki locks.</p>
                 </Card>
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     <AnimatePresence>
                         {doors.map((door) => (
                             <motion.div key={door.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2 }}>
-                                <Card className="bg-zinc-950 border-zinc-800 hover:border-zinc-700 transition-colors overflow-hidden">
+                                <Card className="bg-background border-border hover:border-border transition-colors overflow-hidden">
                                     <div className={`h-1 ${door.lock_state === 'LOCKED' ? 'bg-emerald-500' : door.lock_state === 'UNLOCKED' ? 'bg-amber-500' : 'bg-blue-500'}`} />
                                     <CardContent className="p-4 space-y-4">
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1">
                                                 {editingId === door.id ? (
                                                     <div className="flex items-center gap-2">
-                                                        <Input value={editName} onChange={(e) => setEditName(e.target.value)} className="bg-zinc-900 border-zinc-700 text-zinc-200 h-8 text-sm" autoFocus onKeyDown={(e) => e.key === 'Enter' && renameDoor(door.id)} />
+                                                        <Input value={editName} onChange={(e) => setEditName(e.target.value)} className="bg-card border-border text-secondary-foreground h-8 text-sm" autoFocus onKeyDown={(e) => e.key === 'Enter' && renameDoor(door.id)} />
                                                         <Button size="sm" variant="ghost" onClick={() => renameDoor(door.id)} className="text-emerald-400 h-8 w-8 p-0"><Check className="h-4 w-4" /></Button>
-                                                        <Button size="sm" variant="ghost" onClick={() => setEditingId(null)} className="text-zinc-400 h-8 w-8 p-0"><X className="h-4 w-4" /></Button>
+                                                        <Button size="sm" variant="ghost" onClick={() => setEditingId(null)} className="text-muted-foreground h-8 w-8 p-0"><X className="h-4 w-4" /></Button>
                                                     </div>
                                                 ) : (
                                                     <div className="flex items-center gap-2">
-                                                        <h4 className="font-semibold text-zinc-100">{door.display_name}</h4>
-                                                        <Button size="sm" variant="ghost" className="text-zinc-500 hover:text-zinc-300 h-6 w-6 p-0" onClick={() => { setEditingId(door.id); setEditName(door.display_name); }}>
+                                                        <h4 className="font-semibold text-foreground">{door.display_name}</h4>
+                                                        <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-secondary-foreground h-6 w-6 p-0" onClick={() => { setEditingId(door.id); setEditName(door.display_name); }}>
                                                             <Pencil className="h-3 w-3" />
                                                         </Button>
-                                                        <Button size="sm" variant="ghost" className="text-zinc-500 hover:text-emerald-400 h-6 w-6 p-0 ml-1" onClick={() => setManageDoor(door)} title="Manage Device">
+                                                        <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-emerald-400 h-6 w-6 p-0 ml-1" onClick={() => setManageDoor(door)} title="Manage Device">
                                                             <Settings className="h-3 w-3" />
                                                         </Button>
                                                     </div>
                                                 )}
-                                                <p className="text-xs text-zinc-500 mt-1">{door.device_type.replace(/_/g, ' ')}</p>
+                                                <p className="text-xs text-muted-foreground mt-1">{door.device_type.replace(/_/g, ' ')}</p>
                                             </div>
                                             <Badge variant="outline" className={lockStateColors[door.lock_state] || lockStateColors.UNKNOWN}>
                                                 {lockStateIcons[door.lock_state]}
@@ -397,8 +397,8 @@ export default function DoorsTab() {
                                         </div>
                                         <div className="flex items-center gap-2">
                                             {door.battery_critical ? <BatteryWarning className="h-4 w-4 text-red-400" /> : <Battery className="h-4 w-4 text-emerald-400" />}
-                                            <span className={`text-xs ${door.battery_critical ? 'text-red-400' : 'text-zinc-400'}`}>{door.battery_charge != null ? `${door.battery_charge}%` : 'N/A'}</span>
-                                            {door.last_synced_at && <span className="text-xs text-zinc-600 ml-auto"><Clock className="h-3 w-3 inline mr-1" />{new Date(door.last_synced_at).toLocaleTimeString()}</span>}
+                                            <span className={`text-xs ${door.battery_critical ? 'text-red-400' : 'text-muted-foreground'}`}>{door.battery_charge != null ? `${door.battery_charge}%` : 'N/A'}</span>
+                                            {door.last_synced_at && <span className="text-xs text-muted-foreground ml-auto"><Clock className="h-3 w-3 inline mr-1" />{new Date(door.last_synced_at).toLocaleTimeString()}</span>}
                                         </div>
                                         <div className="grid grid-cols-3 gap-2">
                                             <Button size="sm" className="bg-emerald-900/50 hover:bg-emerald-800 text-emerald-300 border border-emerald-900" onClick={() => executeAction(door.id, 'UNLOCK')} disabled={actionLoading === `${door.id}-UNLOCK`}>

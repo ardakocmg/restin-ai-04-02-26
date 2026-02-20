@@ -96,6 +96,99 @@
   --text-on-dark-bg: #F5F5F7;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   THEME 2: TECHNOLOGICAL OVERHAUL
+   futuristic deep-space aesthetics, neon glowing accents, glass
+   ═══════════════════════════════════════════════════════════════ */
+.theme-tech {
+  /* Core layout defaults to extremely deep blue/black */
+  --background: #040508;
+  --foreground: #F8FAFC;
+  --card: #0A0C13;
+  --card-foreground: #F8FAFC;
+  --popover: #0D101C;
+  --popover-foreground: #F8FAFC;
+
+  /* Primary translates to glowing cyan/blue in this theme */
+  --primary: #06B6D4;
+  --primary-foreground: #000000;
+
+  /* Deep interactive elements */
+  --secondary: #1E293B;
+  --secondary-foreground: #E2E8F0;
+  --muted: #0F172A;
+  --muted-foreground: #94A3B8;
+  --accent: #0284C7;
+  --accent-foreground: #FFFFFF;
+
+  /* Alerts/Danger in intense futuristic red */
+  --destructive: #E11D48;
+  --destructive-foreground: #FFF;
+
+  /* Fine cyber-borders */
+  --border: #1E293B;
+  --input: #1e293b;
+  --ring: #06B6D4;
+
+  /* Advanced Sidebar */
+  --sidebar: #020305;
+  --sidebarBorder: #1E293B;
+  --sidebarText: #94A3B8;
+  --sidebarActive: #06B6D420;
+  --sidebarActiveText: #06B6D4;
+
+  /* Adjust theme primary vars to link to the new tech mode */
+  --theme-primary: #06B6D4;
+  --theme-primary-hover: #0891B2;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   THEME 3: CYBERPUNK / TERMINAL HACKER
+   dark deep-space background, glowing neon red elements
+   ═══════════════════════════════════════════════════════════════ */
+.theme-cyber {
+  /* Ultra dark background like a terminal */
+  --background: #000000;
+  --foreground: #FF1A1A;
+  --card: #050505;
+  --card-foreground: #FF3333;
+  --popover: #0A0A0A;
+  --popover-foreground: #FF1A1A;
+
+  /* Primary is glowing neon red */
+  --primary: #FF0000;
+  --primary-foreground: #FFFFFF;
+
+  /* Secondary interactive elements */
+  --secondary: #1C0000;
+  --secondary-foreground: #FF4D4D;
+  --muted: #0D0000;
+  --muted-foreground: #990000;
+  --accent: #CC0000;
+  --accent-foreground: #FFFFFF;
+
+  /* Alerts/Danger in intense neon red */
+  --destructive: #FF0000;
+  --destructive-foreground: #FFF;
+
+  /* Cyber borders */
+  --border: #330000;
+  --input: #330000;
+  --ring: #FF0000;
+
+  /* Terminal Sidebar */
+  --sidebar: #020000;
+  --sidebarBorder: #4D0000;
+  --sidebarText: #CC0000;
+  --sidebarActive: #FF000020;
+  --sidebarActiveText: #FF0000;
+
+  /* Link brand variables */
+  --theme-primary: #FF0000;
+  --theme-primary-hover: #CC0000;
+}
+
 
 /* ═══════════════════════════════════════════════════════════════
    LIGHT MODE: Override hardcoded dark Tailwind classes
@@ -106,6 +199,13 @@
 
 /* ── Background overrides: primary dark backgrounds → light ── */
 :root:not(.dark) .bg-zinc-950,
+:root:not(.dark) .bg-zinc-950\/10,
+:root:not(.dark) .bg-zinc-950\/20,
+:root:not(.dark) .bg-zinc-950\/30,
+:root:not(.dark) .bg-zinc-950\/40,
+:root:not(.dark) .bg-zinc-950\/50,
+:root:not(.dark) .bg-zinc-950\/60,
+:root:not(.dark) .bg-zinc-950\/70,
 :root:not(.dark) .bg-\[\#0A0A0B\],
 :root:not(.dark) .bg-\[\#0F0F10\],
 :root:not(.dark) .bg-\[\#09090b\],
@@ -165,12 +265,14 @@
 
 :root:not(.dark) .text-zinc-300,
 :root:not(.dark) .text-zinc-400 {
-  color: var(--muted-foreground) !important;
+  color: #475569 !important;
+  /* slate-600 */
 }
 
 :root:not(.dark) .text-zinc-500,
 :root:not(.dark) .text-zinc-600 {
-  color: #94A3B8 !important;
+  color: #64748B !important;
+  /* slate-500 */
 }
 
 /* Exceptions: keep text-white on colored badges/buttons */
@@ -182,6 +284,19 @@
 :root:not(.dark) .bg-gradient-to-r .text-white,
 :root:not(.dark) .bg-gradient-to-br .text-white {
   color: #FFFFFF !important;
+}
+
+/* ── Light mode rule: Red text on dark backgrounds → force soft light red background ── */
+:root:not(.dark) .text-red-400.bg-red-500\/10,
+:root:not(.dark) .text-red-400.bg-red-950\/30,
+:root:not(.dark) .text-rose-400.bg-rose-500\/10,
+:root:not(.dark) .text-red-500.bg-red-500\/10 {
+  background-color: #FEF2F2 !important;
+  /* red-50 */
+  color: #DC2626 !important;
+  /* red-600 */
+  border-color: #FECACA !important;
+  /* red-200 */
 }
 
 /* ── Border overrides ── */

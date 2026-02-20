@@ -23,7 +23,7 @@ export default function BridgeTab() {
         try {
             const resp = await api.get(`/access-control/bridge/health?venue_id=${getVenueId()}`);
             if (resp.status === 200) setHealth(resp.data);
-        } catch (e) {
+        } catch (e: any) {
             logger.error('Bridge health check failed', { error: String(e) });
         }
     };
@@ -42,7 +42,7 @@ export default function BridgeTab() {
             } else {
                 toast.error('Configuration failed');
             }
-        } catch (e) {
+        } catch (e: any) {
             toast.error('Bridge configuration error');
             logger.error('Bridge config failed', { error: String(e) });
         } finally {
@@ -52,13 +52,13 @@ export default function BridgeTab() {
 
     return (
         <div className="space-y-6">
-            <Card className="bg-zinc-950 border-zinc-800">
+            <Card className="bg-background border-border">
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-zinc-100">
+                    <CardTitle className="flex items-center gap-2 text-foreground">
                         <Router className="h-5 w-5 text-cyan-400" />
                         Bridge Status
                     </CardTitle>
-                    <CardDescription className="text-zinc-400">
+                    <CardDescription className="text-muted-foreground">
                         Optional. When a bridge is present, actions execute via local LAN for faster response.
                         Falls back to Nuki Web API automatically if bridge is unavailable.
                     </CardDescription>
@@ -68,42 +68,42 @@ export default function BridgeTab() {
                         {health.configured ? (
                             <>
                                 <div className={`h-3 w-3 rounded-full ${health.is_healthy ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
-                                <span className="text-zinc-200 font-medium">
+                                <span className="text-secondary-foreground font-medium">
                                     {health.is_healthy ? 'Bridge Online' : 'Bridge Offline'}
                                 </span>
-                                {health.ip_address && <span className="text-xs text-zinc-500">{health.ip_address}:{health.port}</span>}
+                                {health.ip_address && <span className="text-xs text-muted-foreground">{health.ip_address}:{health.port}</span>}
                                 <Badge variant="outline" className={health.is_healthy ? 'border-emerald-800 text-emerald-400' : 'border-red-800 text-red-400'}>
                                     {health.is_healthy ? 'LAN Priority' : 'Web API Fallback'}
                                 </Badge>
                             </>
                         ) : (
                             <>
-                                <WifiOff className="h-5 w-5 text-zinc-600" />
-                                <span className="text-zinc-400">No bridge configured — using Nuki Web API only</span>
+                                <WifiOff className="h-5 w-5 text-muted-foreground" />
+                                <span className="text-muted-foreground">No bridge configured — using Nuki Web API only</span>
                             </>
                         )}
                     </div>
                 </CardContent>
             </Card>
 
-            <Card className="bg-zinc-950 border-zinc-800">
+            <Card className="bg-background border-border">
                 <CardHeader>
-                    <CardTitle className="text-zinc-100 flex items-center gap-2">
-                        <Settings className="h-5 w-5 text-zinc-400" />
+                    <CardTitle className="text-foreground flex items-center gap-2">
+                        <Settings className="h-5 w-5 text-muted-foreground" />
                         Configure Bridge
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-4 gap-3 items-end">
                         <div className="col-span-2">
-                            <label className="text-xs text-zinc-400 mb-1 block">Bridge IP Address</label>
-                            <Input placeholder="192.168.1.100" value={bridgeIp} onChange={(e) => setBridgeIp(e.target.value)} className="bg-zinc-900 border-zinc-700 text-zinc-200" />
+                            <label className="text-xs text-muted-foreground mb-1 block">Bridge IP Address</label>
+                            <Input placeholder="192.168.1.100" value={bridgeIp} onChange={(e) => setBridgeIp(e.target.value)} className="bg-card border-border text-secondary-foreground" />
                         </div>
                         <div>
-                            <label className="text-xs text-zinc-400 mb-1 block">Port</label>
-                            <Input placeholder="8080" value={bridgePort} onChange={(e) => setBridgePort(e.target.value)} className="bg-zinc-900 border-zinc-700 text-zinc-200" />
+                            <label className="text-xs text-muted-foreground mb-1 block">Port</label>
+                            <Input placeholder="8080" value={bridgePort} onChange={(e) => setBridgePort(e.target.value)} className="bg-card border-border text-secondary-foreground" />
                         </div>
-                        <Button onClick={configureBridge} disabled={loading} className="bg-cyan-600 hover:bg-cyan-700 text-white">
+                        <Button onClick={configureBridge} disabled={loading} className="bg-cyan-600 hover:bg-cyan-700 text-foreground">
                             {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-1" /> : <Router className="h-4 w-4 mr-1" />}
                             Connect
                         </Button>

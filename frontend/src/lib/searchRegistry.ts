@@ -338,7 +338,6 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'User Accounts', icon: UserCheck, href: '/manager/users', group: 'org-settings', requiredRole: 'OWNER' },
     { title: 'Roles & Permissions', icon: Shield, href: '/manager/access-control', group: 'org-settings', requiredRole: 'OWNER' },
     { title: 'Integration Sync', icon: RefreshCw, href: '/manager/sync', group: 'org-settings', requiredRole: 'OWNER' },
-    { title: 'Theme & Branding', icon: Palette, href: '/manager/theme', group: 'org-settings', requiredRole: 'OWNER' },
     { title: 'Template Studio', icon: LayoutDashboard, href: '/manager/templates', group: 'org-settings', requiredRole: 'MANAGER' },
     { title: 'Google Workspace', icon: Globe, href: '/manager/google-workspace', group: 'org-settings', requiredRole: 'MANAGER' },
     { title: 'My Google', icon: Globe, href: '/manager/my-google', group: 'org-settings', requiredRole: 'STAFF' },
@@ -366,6 +365,8 @@ export const MENU_ITEMS: MenuItem[] = [
     { title: 'Microservices', icon: Server, href: '/manager/microservices', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
     { title: 'Event Monitor', icon: Activity, href: '/manager/events', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
     { title: 'Updates & Changelog', icon: Activity, href: '/manager/updates', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+    { title: 'AI-OS Dashboard', icon: LayoutDashboard, href: '/manager/ai-os', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+    { title: 'Theme Engine', icon: Palette, href: '/manager/theme-engine', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
     { title: 'AI Models & Config', icon: Brain, href: '/manager/ai/models', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
     { title: 'AI Control Center', icon: Brain, href: '/manager/ai/settings', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
 

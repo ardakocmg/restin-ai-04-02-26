@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/ai/settings", tags=["Restin AI Settings"])
 
-VALID_MODULES = ["copilot", "voice", "studio", "radar", "crm"]
+VALID_MODULES = ["copilot", "voice", "studio", "radar", "crm", "theme_engine"]
 VALID_LEVELS = ["system", "venue"]
 
 # Default configs per module
@@ -80,6 +80,11 @@ DEFAULT_MODULE_CONFIGS: Dict[str, Dict] = {
         "segments": ["vip", "regular", "at_risk", "lost"],
         "campaign_templates": [],
         "ltv_calculation_period_days": 365
+    },
+    "theme_engine": {
+        "enabled": True,
+        "active_theme": "theme-standard",
+        "allowed_themes": ["theme-standard", "theme-tech"]
     }
 }
 

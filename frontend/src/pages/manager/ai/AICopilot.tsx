@@ -304,7 +304,7 @@ export default function AICopilot() {
             <div className="flex-shrink-0 border-b border-border bg-card px-6 py-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center shadow-lg shadow-red-500/10 border border-white/5">
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center shadow-lg shadow-red-500/10 border border-border">
                             <RinMascot size={28} />
                         </div>
                         <div>
@@ -321,7 +321,7 @@ export default function AICopilot() {
                                 {/* Role tier badge */}
                                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${roleTier === 'owner' ? 'bg-amber-500/10 text-amber-500' :
                                     roleTier === 'manager' ? 'bg-blue-500/10 text-blue-500' :
-                                        'bg-zinc-500/10 text-zinc-400'
+                                        'bg-zinc-500/10 text-muted-foreground'
                                     }`}>
                                     {roleTier === 'owner' ? '👑 Owner' : roleTier === 'manager' ? '🔧 Manager' : '👤 Staff'}
                                 </span>
@@ -475,7 +475,7 @@ export default function AICopilot() {
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
                 {messages.length === 0 && (
                     <div className="flex flex-col items-center justify-center h-full text-center">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 flex items-center justify-center mb-4 border border-white/5">
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 flex items-center justify-center mb-4 border border-border">
                             <RinMascot size={48} />
                         </div>
                         <h2 className="text-lg font-bold text-foreground mb-1">Merhaba! Ben <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-red-600 bg-clip-text text-transparent">Hey Rin</span> 🤖</h2>
@@ -608,7 +608,7 @@ export default function AICopilot() {
                     <button
                         onClick={() => sendMessage()}
                         disabled={!input.trim() || isLoading}
-                        className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white flex items-center justify-center hover:shadow-lg hover:shadow-violet-500/20 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-foreground flex items-center justify-center hover:shadow-lg hover:shadow-violet-500/20 transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     </button>

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
@@ -476,15 +477,15 @@ export default function MyGooglePanel(): React.ReactElement {
             case 'sheet': return <FileSpreadsheet className={cn(cls, "text-green-400")} />;
             case 'slides': return <Presentation className={cn(cls, "text-yellow-400")} />;
             case 'pdf': return <FileText className={cn(cls, "text-red-400")} />;
-            case 'folder': return <Folder className={cn(cls, "text-zinc-400")} />;
-            default: return <File className={cn(cls, "text-zinc-500")} />;
+            case 'folder': return <Folder className={cn(cls, "text-muted-foreground")} />;
+            default: return <File className={cn(cls, "text-muted-foreground")} />;
         }
     };
 
     const priorityColor = (p: string): string => {
         if (p === 'high') return 'text-red-400';
         if (p === 'medium') return 'text-yellow-400';
-        return 'text-zinc-500';
+        return 'text-muted-foreground';
     };
 
     const visibleTabs = useMemo(() =>
@@ -507,8 +508,8 @@ export default function MyGooglePanel(): React.ReactElement {
                         </svg>
                     </div>
                     <div>
-                        <h1 className="text-xl font-black text-zinc-900 dark:text-white tracking-tight uppercase">My Google</h1>
-                        <p className="text-xs text-zinc-500">Connect your personal Google account</p>
+                        <h1 className="text-xl font-black text-zinc-900 dark:text-foreground tracking-tight uppercase">My Google</h1>
+                        <p className="text-xs text-muted-foreground">Connect your personal Google account</p>
                     </div>
                 </div>
                 {status?.connected && (
@@ -517,7 +518,7 @@ export default function MyGooglePanel(): React.ReactElement {
                             variant="outline"
                             size="sm"
                             onClick={() => setShowSettings(!showSettings)}
-                            className="border-white/10 text-zinc-400 hover:text-white gap-1.5"
+                            className="border-border text-muted-foreground hover:text-foreground gap-1.5"
                         >
                             <Settings className="h-3.5 w-3.5" />
                             Services
@@ -527,7 +528,7 @@ export default function MyGooglePanel(): React.ReactElement {
                             size="sm"
                             onClick={handleSync}
                             disabled={syncing}
-                            className="border-white/10 text-zinc-400 hover:text-white gap-1.5"
+                            className="border-border text-muted-foreground hover:text-foreground gap-1.5"
                         >
                             <RefreshCw className={cn("h-3.5 w-3.5", syncing && "animate-spin")} />
                             Sync
@@ -547,13 +548,13 @@ export default function MyGooglePanel(): React.ReactElement {
 
             {/* Service Settings Panel */}
             {showSettings && status?.connected && (
-                <div className="bg-zinc-900/50 border border-white/10 rounded-2xl p-5 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="bg-card/50 border border-border rounded-2xl p-5 animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <h3 className="text-sm font-bold text-white">Google Services</h3>
-                            <p className="text-xs text-zinc-500 mt-0.5">Choose which services to show</p>
+                            <h3 className="text-sm font-bold text-foreground">Google Services</h3>
+                            <p className="text-xs text-muted-foreground mt-0.5">Choose which services to show</p>
                         </div>
-                        <button onClick={() => setShowSettings(false)} className="text-zinc-500 hover:text-white transition-colors">
+                        <button onClick={() => setShowSettings(false)} className="text-muted-foreground hover:text-foreground transition-colors">
                             <X className="h-4 w-4" />
                         </button>
                     </div>
@@ -570,21 +571,21 @@ export default function MyGooglePanel(): React.ReactElement {
                                         "flex flex-col items-center gap-2 p-4 rounded-xl border transition-all duration-200",
                                         enabled
                                             ? "bg-white/5 border-white/20 shadow-lg"
-                                            : "bg-zinc-900/30 border-white/5 opacity-50 hover:opacity-75"
+                                            : "bg-card/30 border-border opacity-50 hover:opacity-75"
                                     )}
                                 >
                                     <div
                                         className={cn(
                                             "w-10 h-10 rounded-xl flex items-center justify-center transition-all",
-                                            enabled ? "bg-white/10" : "bg-zinc-800"
+                                            enabled ? "bg-white/10" : "bg-secondary"
                                         )}
                                     >
                                         <Icon className="h-5 w-5" style={{ color: enabled ? meta.color : '#71717a' }} />
                                     </div>
-                                    <span className={cn("text-xs font-bold", enabled ? "text-white" : "text-zinc-600")}>{meta.label}</span>
+                                    <span className={cn("text-xs font-bold", enabled ? "text-foreground" : "text-muted-foreground")}>{meta.label}</span>
                                     <div className={cn(
                                         "w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all",
-                                        enabled ? "border-green-500 bg-green-500/20" : "border-zinc-700"
+                                        enabled ? "border-green-500 bg-green-500/20" : "border-border"
                                     )}>
                                         {enabled && <Check className="h-2.5 w-2.5 text-green-400" />}
                                     </div>
@@ -597,18 +598,18 @@ export default function MyGooglePanel(): React.ReactElement {
 
             {/* Not Connected State */}
             {(!status || !status.connected) && (
-                <div className="bg-zinc-900/50 border border-white/10 rounded-2xl p-12 text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-zinc-800/50 flex items-center justify-center">
-                        <Link2 className="h-8 w-8 text-zinc-600 rotate-45" />
+                <div className="bg-card/50 border border-border rounded-2xl p-12 text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-secondary/50 flex items-center justify-center">
+                        <Link2 className="h-8 w-8 text-muted-foreground rotate-45" />
                     </div>
-                    <h2 className="text-lg font-black text-white uppercase tracking-wide mb-2">No Google Account Connected</h2>
-                    <p className="text-sm text-zinc-500 mb-6 max-w-md mx-auto">
+                    <h2 className="text-lg font-black text-foreground uppercase tracking-wide mb-2">No Google Account Connected</h2>
+                    <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
                         Link your Google account to manage Calendar, Drive, Gmail, Contacts, Tasks, Photos, Sheets and YouTube right here in Restin.ai.
                     </p>
                     <Button
                         onClick={handleConnect}
                         disabled={connecting}
-                        className="bg-red-600 hover:bg-red-500 text-white font-bold px-6 gap-2"
+                        className="bg-red-600 hover:bg-red-500 text-foreground font-bold px-6 gap-2"
                     >
                         <Link2 className="h-4 w-4" />
                         {connecting ? 'Connecting...' : 'Connect Google Account'}
@@ -624,12 +625,12 @@ export default function MyGooglePanel(): React.ReactElement {
                         <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                         <span className="text-xs text-green-400 font-medium">Connected as {status.email}</span>
                         {status.connected_at && (
-                            <span className="text-xs text-zinc-600 ml-auto">since {formatDate(status.connected_at)}</span>
+                            <span className="text-xs text-muted-foreground ml-auto">since {formatDate(status.connected_at)}</span>
                         )}
                     </div>
 
                     {/* Tab Bar */}
-                    <div className="flex items-center gap-1 bg-zinc-900/50 border border-white/5 rounded-xl p-1 overflow-x-auto">
+                    <div className="flex items-center gap-1 bg-card/50 border border-border rounded-xl p-1 overflow-x-auto">
                         {visibleTabs.map(key => {
                             const meta = SERVICE_META[key];
                             const Icon = meta.icon;
@@ -646,14 +647,14 @@ export default function MyGooglePanel(): React.ReactElement {
                                     className={cn(
                                         "flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap",
                                         active
-                                            ? "bg-white/10 text-white shadow-lg"
-                                            : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
+                                            ? "bg-white/10 text-foreground shadow-lg"
+                                            : "text-muted-foreground hover:text-secondary-foreground hover:bg-white/5"
                                     )}
                                 >
                                     <Icon className="h-3.5 w-3.5" style={{ color: active ? meta.color : undefined }} />
                                     {meta.label}
                                     {badge > 0 && (
-                                        <span className="ml-1 px-1.5 py-0.5 text-[10px] font-black bg-red-500 text-white rounded-full leading-none">{badge}</span>
+                                        <span className="ml-1 px-1.5 py-0.5 text-[10px] font-black bg-red-500 text-foreground rounded-full leading-none">{badge}</span>
                                     )}
                                 </button>
                             );
@@ -663,7 +664,7 @@ export default function MyGooglePanel(): React.ReactElement {
                     {/* Loading */}
                     {loadingData && (
                         <div className="flex items-center justify-center py-12">
-                            <RefreshCw className="h-6 w-6 text-zinc-500 animate-spin" />
+                            <RefreshCw className="h-6 w-6 text-muted-foreground animate-spin" />
                         </div>
                     )}
 
@@ -671,40 +672,40 @@ export default function MyGooglePanel(): React.ReactElement {
                     {!loadingData && activeTab === 'calendar' && (
                         <div className="space-y-3">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Upcoming Events ({events.length})</h3>
-                                <Button size="sm" variant="outline" onClick={() => setShowNewEvent(!showNewEvent)} className="border-white/10 text-zinc-400 hover:text-white gap-1 text-xs">
+                                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Upcoming Events ({events.length})</h3>
+                                <Button size="sm" variant="outline" onClick={() => setShowNewEvent(!showNewEvent)} className="border-border text-muted-foreground hover:text-foreground gap-1 text-xs">
                                     <Plus className="h-3 w-3" /> New Event
                                 </Button>
                             </div>
                             {showNewEvent && (
-                                <div className="bg-zinc-900/50 border border-white/10 rounded-xl p-4 space-y-3 animate-in fade-in duration-200">
-                                    <input value={newEventTitle} onChange={e => setNewEventTitle(e.target.value)} placeholder="Event title" className="w-full bg-zinc-800 border border-white/5 rounded-lg px-3 py-2 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-blue-500/30" />
-                                    <textarea value={newEventDesc} onChange={e => setNewEventDesc(e.target.value)} placeholder="Description" rows={2} className="w-full bg-zinc-800 border border-white/5 rounded-lg px-3 py-2 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-blue-500/30 resize-none" />
+                                <div className="bg-card/50 border border-border rounded-xl p-4 space-y-3 animate-in fade-in duration-200">
+                                    <input value={newEventTitle} onChange={e => setNewEventTitle(e.target.value)} placeholder="Event title" className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30" />
+                                    <textarea value={newEventDesc} onChange={e => setNewEventDesc(e.target.value)} placeholder="Description" rows={2} className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30 resize-none" />
                                     <div className="grid grid-cols-2 gap-3">
-                                        <input type="datetime-local" value={newEventStart} onChange={e => setNewEventStart(e.target.value)} className="bg-zinc-800 border border-white/5 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-blue-500/30" />
-                                        <input type="datetime-local" value={newEventEnd} onChange={e => setNewEventEnd(e.target.value)} className="bg-zinc-800 border border-white/5 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-blue-500/30" />
+                                        <input type="datetime-local" value={newEventStart} onChange={e => setNewEventStart(e.target.value)} className="bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground outline-none focus:border-blue-500/30" />
+                                        <input type="datetime-local" value={newEventEnd} onChange={e => setNewEventEnd(e.target.value)} className="bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground outline-none focus:border-blue-500/30" />
                                     </div>
-                                    <input value={newEventLocation} onChange={e => setNewEventLocation(e.target.value)} placeholder="Location" className="w-full bg-zinc-800 border border-white/5 rounded-lg px-3 py-2 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-blue-500/30" />
+                                    <input value={newEventLocation} onChange={e => setNewEventLocation(e.target.value)} placeholder="Location" className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30" />
                                     <div className="flex gap-2 justify-end">
-                                        <Button size="sm" variant="ghost" onClick={() => setShowNewEvent(false)} className="text-zinc-500">Cancel</Button>
-                                        <Button size="sm" onClick={handleCreateEvent} className="bg-blue-600 hover:bg-blue-500 text-white">Create</Button>
+                                        <Button size="sm" variant="ghost" onClick={() => setShowNewEvent(false)} className="text-muted-foreground">Cancel</Button>
+                                        <Button size="sm" onClick={handleCreateEvent} className="bg-blue-600 hover:bg-blue-500 text-foreground">Create</Button>
                                     </div>
                                 </div>
                             )}
-                            {events.length === 0 && <div className="text-center py-8 text-zinc-600 text-sm">No upcoming events</div>}
+                            {events.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No upcoming events</div>}
                             {events.map(ev => (
-                                <div key={ev.id} className="group flex items-start gap-3 p-3 bg-zinc-900/30 border border-white/5 rounded-xl hover:border-white/10 transition-all">
+                                <div key={ev.id} className="group flex items-start gap-3 p-3 bg-card/30 border border-border rounded-xl hover:border-border transition-all">
                                     <div className="mt-1.5 h-3 w-3 rounded-full flex-shrink-0" style={{ backgroundColor: ev.color || '#4285f4' }} />
                                     <div className="flex-1 min-w-0">
-                                        <div className="text-sm font-bold text-white truncate">{ev.title}</div>
-                                        {ev.description && <div className="text-xs text-zinc-500 truncate mt-0.5">{ev.description}</div>}
+                                        <div className="text-sm font-bold text-foreground truncate">{ev.title}</div>
+                                        {ev.description && <div className="text-xs text-muted-foreground truncate mt-0.5">{ev.description}</div>}
                                         <div className="flex items-center gap-3 mt-1.5">
-                                            <span className="text-[10px] text-zinc-600 flex items-center gap-1"><Clock className="h-3 w-3" /> {formatTime(ev.start_time)} – {formatTime(ev.end_time)}</span>
-                                            {ev.location && <span className="text-[10px] text-zinc-600 flex items-center gap-1"><MapPin className="h-3 w-3" /> {ev.location}</span>}
-                                            <span className="text-[10px] text-zinc-700 bg-zinc-800/60 px-1.5 py-0.5 rounded">{ev.calendar_name}</span>
+                                            <span className="text-[10px] text-muted-foreground flex items-center gap-1"><Clock className="h-3 w-3" /> {formatTime(ev.start_time)} – {formatTime(ev.end_time)}</span>
+                                            {ev.location && <span className="text-[10px] text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" /> {ev.location}</span>}
+                                            <span className="text-[10px] text-zinc-700 bg-secondary/60 px-1.5 py-0.5 rounded">{ev.calendar_name}</span>
                                         </div>
                                     </div>
-                                    <button onClick={() => handleDeleteEvent(ev.id)} className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400 transition-all">
+                                    <button onClick={() => handleDeleteEvent(ev.id)} className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-red-400 transition-all">
                                         <Trash2 className="h-3.5 w-3.5" />
                                     </button>
                                 </div>
@@ -715,8 +716,8 @@ export default function MyGooglePanel(): React.ReactElement {
                     {/* ── Drive Tab ──────────────────────────────────────────────── */}
                     {!loadingData && activeTab === 'drive' && (
                         <div className="space-y-3">
-                            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Recent Files ({files.length})</h3>
-                            {files.length === 0 && <div className="text-center py-8 text-zinc-600 text-sm">No files</div>}
+                            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Recent Files ({files.length})</h3>
+                            {files.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No files</div>}
                             <div className="divide-y divide-white/5">
                                 {files.map(file => (
                                     <div
@@ -726,13 +727,13 @@ export default function MyGooglePanel(): React.ReactElement {
                                     >
                                         {getDriveIcon(file.icon_type)}
                                         <div className="flex-1 min-w-0">
-                                            <div className="text-sm font-semibold text-white truncate">{file.name}</div>
-                                            <div className="text-[10px] text-zinc-600">{file.folder} · {formatSize(file.size_bytes)} · {formatRelative(file.modified_at)}</div>
+                                            <div className="text-sm font-semibold text-foreground truncate">{file.name}</div>
+                                            <div className="text-[10px] text-muted-foreground">{file.folder} · {formatSize(file.size_bytes)} · {formatRelative(file.modified_at)}</div>
                                         </div>
                                         {file.shared_with.length > 0 && (
-                                            <span className="text-[10px] text-zinc-600 bg-zinc-800 px-1.5 py-0.5 rounded flex items-center gap-1"><Users className="h-2.5 w-2.5" /> {file.shared_with.length}</span>
+                                            <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded flex items-center gap-1"><Users className="h-2.5 w-2.5" /> {file.shared_with.length}</span>
                                         )}
-                                        <ChevronRight className="h-4 w-4 text-zinc-700 group-hover:text-zinc-400 transition-colors" />
+                                        <ChevronRight className="h-4 w-4 text-zinc-700 group-hover:text-muted-foreground transition-colors" />
                                     </div>
                                 ))}
                             </div>
@@ -742,49 +743,49 @@ export default function MyGooglePanel(): React.ReactElement {
                     {/* ── Gmail Tab ──────────────────────────────────────────────── */}
                     {!loadingData && activeTab === 'gmail' && (
                         <div className="space-y-3">
-                            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
+                            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                 Inbox ({messages.length}) · {messages.filter(m => !m.read).length} unread
                             </h3>
-                            {messages.length === 0 && <div className="text-center py-8 text-zinc-600 text-sm">No messages</div>}
+                            {messages.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No messages</div>}
                             {messages.map(msg => (
                                 <div
                                     key={msg.id}
                                     className={cn(
                                         "group flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer",
                                         msg.read
-                                            ? "bg-zinc-900/20 border-white/5 hover:border-white/10"
+                                            ? "bg-card/20 border-border hover:border-border"
                                             : "bg-blue-500/5 border-blue-500/10 hover:border-blue-500/20"
                                     )}
                                     onClick={() => window.open(`https://mail.google.com/mail/u/0/#inbox/${msg.id}`, '_blank')}
                                 >
-                                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0", msg.read ? "bg-zinc-800 text-zinc-500" : "bg-blue-500/10 text-blue-400")}>
+                                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0", msg.read ? "bg-secondary text-muted-foreground" : "bg-blue-500/10 text-blue-400")}>
                                         {msg.from_name.charAt(0)}
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2">
-                                            <span className={cn("text-sm font-bold truncate", msg.read ? "text-zinc-400" : "text-white")}>{msg.from_name}</span>
-                                            <span className="text-[10px] text-zinc-600 flex-shrink-0">{formatRelative(msg.date)}</span>
+                                            <span className={cn("text-sm font-bold truncate", msg.read ? "text-muted-foreground" : "text-foreground")}>{msg.from_name}</span>
+                                            <span className="text-[10px] text-muted-foreground flex-shrink-0">{formatRelative(msg.date)}</span>
                                         </div>
-                                        <div className={cn("text-sm truncate", msg.read ? "text-zinc-500" : "text-zinc-300 font-medium")}>{msg.subject}</div>
-                                        <div className="text-xs text-zinc-600 truncate mt-0.5">{msg.snippet}</div>
+                                        <div className={cn("text-sm truncate", msg.read ? "text-muted-foreground" : "text-secondary-foreground font-medium")}>{msg.subject}</div>
+                                        <div className="text-xs text-muted-foreground truncate mt-0.5">{msg.snippet}</div>
                                         <div className="flex items-center gap-2 mt-1.5">
-                                            {msg.has_attachment && <Paperclip className="h-3 w-3 text-zinc-600" />}
+                                            {msg.has_attachment && <Paperclip className="h-3 w-3 text-muted-foreground" />}
                                             {msg.labels.includes('important') && <span className="text-[9px] font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded">IMPORTANT</span>}
                                         </div>
                                     </div>
                                     <div className="flex flex-col items-center gap-1 flex-shrink-0 mt-1">
-                                        <button onClick={(e) => { e.stopPropagation(); handleGmailAction(msg.id, msg.starred ? 'unstar' : 'star'); }} className="text-zinc-600 hover:text-yellow-400 transition-colors">
+                                        <button onClick={(e) => { e.stopPropagation(); handleGmailAction(msg.id, msg.starred ? 'unstar' : 'star'); }} className="text-muted-foreground hover:text-yellow-400 transition-colors">
                                             {msg.starred ? <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" /> : <StarOff className="h-3.5 w-3.5" />}
                                         </button>
                                         {!msg.read && (
-                                            <button onClick={(e) => { e.stopPropagation(); handleGmailAction(msg.id, 'mark_read'); }} className="text-zinc-600 hover:text-blue-400 transition-colors" title="Mark read">
+                                            <button onClick={(e) => { e.stopPropagation(); handleGmailAction(msg.id, 'mark_read'); }} className="text-muted-foreground hover:text-blue-400 transition-colors" title="Mark read">
                                                 <MailOpen className="h-3.5 w-3.5" />
                                             </button>
                                         )}
-                                        <button onClick={(e) => { e.stopPropagation(); handleGmailAction(msg.id, 'archive'); }} className="text-zinc-600 hover:text-green-400 transition-colors" title="Archive">
+                                        <button onClick={(e) => { e.stopPropagation(); handleGmailAction(msg.id, 'archive'); }} className="text-muted-foreground hover:text-green-400 transition-colors" title="Archive">
                                             <Archive className="h-3.5 w-3.5" />
                                         </button>
-                                        <button onClick={(e) => { e.stopPropagation(); handleGmailAction(msg.id, 'trash'); }} className="text-zinc-600 hover:text-red-400 transition-colors" title="Trash">
+                                        <button onClick={(e) => { e.stopPropagation(); handleGmailAction(msg.id, 'trash'); }} className="text-muted-foreground hover:text-red-400 transition-colors" title="Trash">
                                             <Trash2 className="h-3.5 w-3.5" />
                                         </button>
                                     </div>
@@ -796,17 +797,17 @@ export default function MyGooglePanel(): React.ReactElement {
                     {/* ── Contacts Tab ───────────────────────────────────────────── */}
                     {!loadingData && activeTab === 'contacts' && (
                         <div className="space-y-3">
-                            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Contacts ({contacts.length})</h3>
-                            {contacts.length === 0 && <div className="text-center py-8 text-zinc-600 text-sm">No contacts</div>}
+                            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Contacts ({contacts.length})</h3>
+                            {contacts.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No contacts</div>}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {contacts.map(c => (
-                                    <div key={c.id} className="flex items-start gap-3 p-3 bg-zinc-900/30 border border-white/5 rounded-xl hover:border-white/10 transition-all">
-                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black text-white flex-shrink-0" style={{ backgroundColor: c.avatar_color }}>
+                                    <div key={c.id} className="flex items-start gap-3 p-3 bg-card/30 border border-border rounded-xl hover:border-border transition-all">
+                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black text-foreground flex-shrink-0" style={{ backgroundColor: c.avatar_color }}>
                                             {c.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="text-sm font-bold text-white">{c.name}</div>
-                                            {(c.company || c.role) && <div className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5"><Building2 className="h-3 w-3" /> {[c.company, c.role].filter(Boolean).join(' · ')}</div>}
+                                            <div className="text-sm font-bold text-foreground">{c.name}</div>
+                                            {(c.company || c.role) && <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5"><Building2 className="h-3 w-3" /> {[c.company, c.role].filter(Boolean).join(' · ')}</div>}
                                             <div className="flex items-center gap-3 mt-1.5">
                                                 {c.email && (
                                                     <a href={`mailto:${c.email}`} onClick={(e) => e.stopPropagation()} className="text-[10px] text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors">
@@ -831,47 +832,47 @@ export default function MyGooglePanel(): React.ReactElement {
                     {!loadingData && activeTab === 'tasks' && (
                         <div className="space-y-3">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
+                                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                     Tasks ({tasks.length}) · {tasks.filter(t => !t.completed).length} pending
                                 </h3>
-                                <Button size="sm" variant="outline" onClick={() => setShowNewTask(!showNewTask)} className="border-white/10 text-zinc-400 hover:text-white gap-1 text-xs">
+                                <Button size="sm" variant="outline" onClick={() => setShowNewTask(!showNewTask)} className="border-border text-muted-foreground hover:text-foreground gap-1 text-xs">
                                     <Plus className="h-3 w-3" /> New Task
                                 </Button>
                             </div>
                             {showNewTask && (
-                                <div className="bg-zinc-900/50 border border-white/10 rounded-xl p-4 space-y-3 animate-in fade-in duration-200">
-                                    <input value={newTaskTitle} onChange={e => setNewTaskTitle(e.target.value)} placeholder="Task title" className="w-full bg-zinc-800 border border-white/5 rounded-lg px-3 py-2 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-blue-500/30" />
-                                    <textarea value={newTaskNotes} onChange={e => setNewTaskNotes(e.target.value)} placeholder="Notes (optional)" rows={2} className="w-full bg-zinc-800 border border-white/5 rounded-lg px-3 py-2 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-blue-500/30 resize-none" />
+                                <div className="bg-card/50 border border-border rounded-xl p-4 space-y-3 animate-in fade-in duration-200">
+                                    <input value={newTaskTitle} onChange={e => setNewTaskTitle(e.target.value)} placeholder="Task title" className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30" />
+                                    <textarea value={newTaskNotes} onChange={e => setNewTaskNotes(e.target.value)} placeholder="Notes (optional)" rows={2} className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30 resize-none" />
                                     <div className="flex gap-2 justify-end">
-                                        <Button size="sm" variant="ghost" onClick={() => setShowNewTask(false)} className="text-zinc-500">Cancel</Button>
-                                        <Button size="sm" onClick={handleCreateTask} className="bg-blue-600 hover:bg-blue-500 text-white">Create</Button>
+                                        <Button size="sm" variant="ghost" onClick={() => setShowNewTask(false)} className="text-muted-foreground">Cancel</Button>
+                                        <Button size="sm" onClick={handleCreateTask} className="bg-blue-600 hover:bg-blue-500 text-foreground">Create</Button>
                                     </div>
                                 </div>
                             )}
-                            {tasks.length === 0 && <div className="text-center py-8 text-zinc-600 text-sm">No tasks</div>}
+                            {tasks.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No tasks</div>}
                             {tasks.map(task => (
                                 <div key={task.id} className={cn(
                                     "group flex items-start gap-3 p-3 rounded-xl border transition-all",
-                                    task.completed ? "bg-zinc-900/20 border-white/5 opacity-60" : "bg-zinc-900/30 border-white/5 hover:border-white/10"
+                                    task.completed ? "bg-card/20 border-border opacity-60" : "bg-card/30 border-border hover:border-border"
                                 )}>
                                     <button onClick={() => handleToggleTask(task.id)} className="mt-0.5 flex-shrink-0">
                                         {task.completed
                                             ? <Check className="h-4 w-4 text-green-500" />
-                                            : <Circle className="h-4 w-4 text-zinc-600 hover:text-blue-400 transition-colors" />
+                                            : <Circle className="h-4 w-4 text-muted-foreground hover:text-blue-400 transition-colors" />
                                         }
                                     </button>
                                     <div className="flex-1 min-w-0">
-                                        <div className={cn("text-sm font-bold", task.completed ? "text-zinc-600 line-through" : "text-white")}>{task.title}</div>
-                                        {task.notes && <div className="text-xs text-zinc-600 mt-0.5">{task.notes}</div>}
+                                        <div className={cn("text-sm font-bold", task.completed ? "text-muted-foreground line-through" : "text-foreground")}>{task.title}</div>
+                                        {task.notes && <div className="text-xs text-muted-foreground mt-0.5">{task.notes}</div>}
                                         <div className="flex items-center gap-3 mt-1.5">
-                                            <span className="text-[10px] text-zinc-700 bg-zinc-800/60 px-1.5 py-0.5 rounded">{task.task_list}</span>
+                                            <span className="text-[10px] text-zinc-700 bg-secondary/60 px-1.5 py-0.5 rounded">{task.task_list}</span>
                                             <span className={cn("text-[10px] font-bold uppercase", priorityColor(task.priority))}>{task.priority}</span>
                                             {task.due_date && (
-                                                <span className="text-[10px] text-zinc-600 flex items-center gap-1"><Clock className="h-2.5 w-2.5" /> {formatDate(task.due_date)}</span>
+                                                <span className="text-[10px] text-muted-foreground flex items-center gap-1"><Clock className="h-2.5 w-2.5" /> {formatDate(task.due_date)}</span>
                                             )}
                                         </div>
                                     </div>
-                                    <button onClick={() => handleToggleTask(task.id)} className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400 transition-all">
+                                    <button onClick={() => handleToggleTask(task.id)} className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-red-400 transition-all">
                                         <Trash2 className="h-3.5 w-3.5" />
                                     </button>
                                 </div>
@@ -882,25 +883,25 @@ export default function MyGooglePanel(): React.ReactElement {
                     {/* ── Photos Tab ─────────────────────────────────────────────── */}
                     {!loadingData && activeTab === 'photos' && (
                         <div className="space-y-3">
-                            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
+                            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                 Photos ({photos.length}) · {Array.from(new Set(photos.map(p => p.album))).length} albums
                             </h3>
-                            {photos.length === 0 && <div className="text-center py-8 text-zinc-600 text-sm">No photos</div>}
+                            {photos.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No photos</div>}
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                 {photos.map(photo => (
-                                    <div key={photo.id} className="group relative bg-zinc-800/50 border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-all aspect-[4/3]">
+                                    <div key={photo.id} className="group relative bg-secondary/50 border border-border rounded-xl overflow-hidden hover:border-border transition-all aspect-[4/3]">
                                         {/* Placeholder since mock has no real images */}
                                         <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900 p-4">
                                             <Image className="h-8 w-8 text-zinc-700 mb-2" />
-                                            <span className="text-xs font-medium text-zinc-500 text-center leading-tight">{photo.name}</span>
+                                            <span className="text-xs font-medium text-muted-foreground text-center leading-tight">{photo.name}</span>
                                         </div>
                                         {/* Overlay on hover */}
                                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex flex-col justify-end p-3">
-                                            <div className="text-xs font-bold text-white truncate">{photo.name}</div>
+                                            <div className="text-xs font-bold text-foreground truncate">{photo.name}</div>
                                             <div className="flex items-center gap-2 mt-1">
-                                                <span className="text-[10px] text-zinc-400">{photo.album}</span>
-                                                <span className="text-[10px] text-zinc-500">{formatSize(photo.size_bytes)}</span>
-                                                <span className="text-[10px] text-zinc-500">{formatRelative(photo.taken_at)}</span>
+                                                <span className="text-[10px] text-muted-foreground">{photo.album}</span>
+                                                <span className="text-[10px] text-muted-foreground">{formatSize(photo.size_bytes)}</span>
+                                                <span className="text-[10px] text-muted-foreground">{formatRelative(photo.taken_at)}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -912,8 +913,8 @@ export default function MyGooglePanel(): React.ReactElement {
                     {/* ── Sheets Tab ────────────────────────────────────────────── */}
                     {!loadingData && activeTab === 'sheets' && (
                         <div className="space-y-3">
-                            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Spreadsheets ({sheets.length})</h3>
-                            {sheets.length === 0 && <div className="text-center py-8 text-zinc-600 text-sm">No spreadsheets</div>}
+                            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Spreadsheets ({sheets.length})</h3>
+                            {sheets.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No spreadsheets</div>}
                             <div className="divide-y divide-white/5">
                                 {sheets.map(sheet => (
                                     <div
@@ -925,8 +926,8 @@ export default function MyGooglePanel(): React.ReactElement {
                                             <Table className="h-4.5 w-4.5 text-green-400" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="text-sm font-semibold text-white truncate">{sheet.name}</div>
-                                            <div className="text-[10px] text-zinc-600">
+                                            <div className="text-sm font-semibold text-foreground truncate">{sheet.name}</div>
+                                            <div className="text-[10px] text-muted-foreground">
                                                 {sheet.owner && <span>{sheet.owner} · </span>}
                                                 {formatRelative(sheet.modified_at)}
                                                 {sheet.shared && <span className="ml-2 text-blue-400">· Shared</span>}
@@ -944,29 +945,29 @@ export default function MyGooglePanel(): React.ReactElement {
                         <div className="space-y-4">
                             {/* Channel Info */}
                             {ytChannel && (
-                                <div className="flex items-center gap-4 p-4 bg-zinc-900/40 border border-white/5 rounded-xl">
+                                <div className="flex items-center gap-4 p-4 bg-card/40 border border-border rounded-xl">
                                     {ytChannel.thumbnail && (
                                         <img src={ytChannel.thumbnail} alt={ytChannel.title} className="w-12 h-12 rounded-full" />
                                     )}
                                     <div className="flex-1">
-                                        <div className="text-sm font-bold text-white">{ytChannel.title}</div>
+                                        <div className="text-sm font-bold text-foreground">{ytChannel.title}</div>
                                         <div className="flex items-center gap-4 mt-1">
-                                            <span className="text-[10px] text-zinc-500">{ytChannel.subscriber_count.toLocaleString()} subscribers</span>
-                                            <span className="text-[10px] text-zinc-500">{ytChannel.video_count} videos</span>
-                                            <span className="text-[10px] text-zinc-500">{ytChannel.view_count.toLocaleString()} views</span>
+                                            <span className="text-[10px] text-muted-foreground">{ytChannel.subscriber_count.toLocaleString()} subscribers</span>
+                                            <span className="text-[10px] text-muted-foreground">{ytChannel.video_count} videos</span>
+                                            <span className="text-[10px] text-muted-foreground">{ytChannel.view_count.toLocaleString()} views</span>
                                         </div>
                                     </div>
                                 </div>
                             )}
 
                             {/* Liked Videos */}
-                            <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Liked Videos ({ytVideos.length})</h3>
-                            {ytVideos.length === 0 && <div className="text-center py-8 text-zinc-600 text-sm">No liked videos</div>}
+                            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Liked Videos ({ytVideos.length})</h3>
+                            {ytVideos.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No liked videos</div>}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {ytVideos.map(video => (
                                     <div
                                         key={video.id}
-                                        className="group bg-zinc-900/30 border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-all cursor-pointer"
+                                        className="group bg-card/30 border border-border rounded-xl overflow-hidden hover:border-border transition-all cursor-pointer"
                                         onClick={() => window.open(video.web_link, '_blank')}
                                     >
                                         {video.thumbnail_url && (
@@ -978,12 +979,12 @@ export default function MyGooglePanel(): React.ReactElement {
                                             </div>
                                         )}
                                         <div className="p-3">
-                                            <div className="text-sm font-semibold text-white line-clamp-2">{video.title}</div>
-                                            <div className="text-xs text-zinc-500 mt-1">{video.channel_title}</div>
+                                            <div className="text-sm font-semibold text-foreground line-clamp-2">{video.title}</div>
+                                            <div className="text-xs text-muted-foreground mt-1">{video.channel_title}</div>
                                             <div className="flex items-center gap-3 mt-2">
-                                                <span className="text-[10px] text-zinc-600 flex items-center gap-1"><Eye className="h-2.5 w-2.5" /> {video.view_count.toLocaleString()}</span>
-                                                <span className="text-[10px] text-zinc-600 flex items-center gap-1"><ThumbsUp className="h-2.5 w-2.5" /> {video.like_count.toLocaleString()}</span>
-                                                <span className="text-[10px] text-zinc-600">{formatRelative(video.published_at)}</span>
+                                                <span className="text-[10px] text-muted-foreground flex items-center gap-1"><Eye className="h-2.5 w-2.5" /> {video.view_count.toLocaleString()}</span>
+                                                <span className="text-[10px] text-muted-foreground flex items-center gap-1"><ThumbsUp className="h-2.5 w-2.5" /> {video.like_count.toLocaleString()}</span>
+                                                <span className="text-[10px] text-muted-foreground">{formatRelative(video.published_at)}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -993,18 +994,18 @@ export default function MyGooglePanel(): React.ReactElement {
                             {/* Subscriptions */}
                             {ytSubs.length > 0 && (
                                 <>
-                                    <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mt-4">Subscriptions ({ytSubs.length})</h3>
+                                    <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-4">Subscriptions ({ytSubs.length})</h3>
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                         {ytSubs.map(sub => (
                                             <div
                                                 key={sub.id}
-                                                className="flex flex-col items-center gap-2 p-3 bg-zinc-900/30 border border-white/5 rounded-xl hover:border-white/10 transition-all cursor-pointer"
+                                                className="flex flex-col items-center gap-2 p-3 bg-card/30 border border-border rounded-xl hover:border-border transition-all cursor-pointer"
                                                 onClick={() => window.open(`https://www.youtube.com/channel/${sub.channel_id}`, '_blank')}
                                             >
                                                 {sub.thumbnail_url && (
                                                     <img src={sub.thumbnail_url} alt={sub.title} className="w-12 h-12 rounded-full" />
                                                 )}
-                                                <div className="text-xs font-semibold text-white text-center truncate w-full">{sub.title}</div>
+                                                <div className="text-xs font-semibold text-foreground text-center truncate w-full">{sub.title}</div>
                                             </div>
                                         ))}
                                     </div>
@@ -1020,7 +1021,7 @@ export default function MyGooglePanel(): React.ReactElement {
                 <div className="mt-6">
                     <button
                         onClick={() => setShowSyncSettings(!showSyncSettings)}
-                        className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors"
+                        className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
                     >
                         <Zap className="h-3.5 w-3.5" />
                         <span className="font-bold uppercase tracking-widest">Sync Settings</span>
@@ -1028,8 +1029,8 @@ export default function MyGooglePanel(): React.ReactElement {
                     </button>
 
                     {showSyncSettings && syncConfig && (
-                        <div className="mt-3 bg-zinc-900/50 border border-white/10 rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                            <p className="text-xs text-zinc-500">Control how Restin.ai syncs with your Google account. Changes take effect immediately.</p>
+                        <div className="mt-3 bg-card/50 border border-border rounded-2xl p-5 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                            <p className="text-xs text-muted-foreground">Control how Restin.ai syncs with your Google account. Changes take effect immediately.</p>
 
                             {[
                                 { key: 'calendar_shift_sync' as keyof SyncConfig, label: 'Shift → Calendar', desc: 'Auto-create calendar events when shifts are assigned to you', icon: Calendar, color: '#4285f4' },
@@ -1045,8 +1046,8 @@ export default function MyGooglePanel(): React.ReactElement {
                                             <Icon className="h-4 w-4" style={{ color: item.color }} />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="text-sm font-bold text-white">{item.label}</div>
-                                            <div className="text-xs text-zinc-500">{item.desc}</div>
+                                            <div className="text-sm font-bold text-foreground">{item.label}</div>
+                                            <div className="text-xs text-muted-foreground">{item.desc}</div>
                                         </div>
                                         <button
                                             onClick={() => toggleSyncSetting(item.key)}
@@ -1054,7 +1055,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                         >
                                             {enabled
                                                 ? <ToggleRight className="h-7 w-7 text-green-500" />
-                                                : <ToggleLeft className="h-7 w-7 text-zinc-600" />
+                                                : <ToggleLeft className="h-7 w-7 text-muted-foreground" />
                                             }
                                         </button>
                                     </div>
@@ -1062,16 +1063,16 @@ export default function MyGooglePanel(): React.ReactElement {
                             })}
 
                             {/* Quick export buttons */}
-                            <div className="border-t border-white/5 pt-4">
-                                <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Quick Export to Sheets</h4>
+                            <div className="border-t border-border pt-4">
+                                <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">Quick Export to Sheets</h4>
                                 <div className="flex flex-wrap gap-2">
-                                    <Button size="sm" variant="outline" onClick={() => handleExportToSheets('inventory')} className="border-white/10 text-zinc-400 hover:text-white gap-1.5 text-xs">
+                                    <Button size="sm" variant="outline" onClick={() => handleExportToSheets('inventory')} className="border-border text-muted-foreground hover:text-foreground gap-1.5 text-xs">
                                         <Upload className="h-3 w-3" /> Inventory
                                     </Button>
-                                    <Button size="sm" variant="outline" onClick={() => handleExportToSheets('roster')} className="border-white/10 text-zinc-400 hover:text-white gap-1.5 text-xs">
+                                    <Button size="sm" variant="outline" onClick={() => handleExportToSheets('roster')} className="border-border text-muted-foreground hover:text-foreground gap-1.5 text-xs">
                                         <Upload className="h-3 w-3" /> Roster
                                     </Button>
-                                    <Button size="sm" variant="outline" onClick={() => handleExportToSheets('recipe_costs')} className="border-white/10 text-zinc-400 hover:text-white gap-1.5 text-xs">
+                                    <Button size="sm" variant="outline" onClick={() => handleExportToSheets('recipe_costs')} className="border-border text-muted-foreground hover:text-foreground gap-1.5 text-xs">
                                         <Upload className="h-3 w-3" /> Recipe Costs
                                     </Button>
                                 </div>

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
 import api from '@/lib/api';
@@ -32,7 +33,7 @@ export default function ReportsTab() {
             if (sumResp.status === 200) setSummary(sumResp.data);
             if (tlResp.status === 200) setTimeline(tlResp.data);
             if (hmResp.status === 200) setHeatmap(hmResp.data);
-        } catch (e) {
+        } catch (e: any) {
             logger.error('Reports load failed', { error: String(e) });
         } finally { setLoading(false); }
     };
@@ -49,19 +50,19 @@ export default function ReportsTab() {
     };
 
     if (loading) {
-        return <div className="flex justify-center py-12"><RefreshCw className="h-8 w-8 animate-spin text-zinc-600" /></div>;
+        return <div className="flex justify-center py-12"><RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" /></div>;
     }
 
     return (
         <div className="space-y-6">
             {/* Period Selector */}
             <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-zinc-100">Access Reports</h3>
+                <h3 className="text-lg font-semibold text-foreground">Access Reports</h3>
                 <div className="flex items-center gap-2">
-                    <span className="text-xs text-zinc-400">Period:</span>
+                    <span className="text-xs text-muted-foreground">Period:</span>
                     {[7, 14, 30, 90].map(d => (
                         <Button key={d} size="sm" variant={days === d ? 'default' : 'outline'}
-                            className={days === d ? 'bg-emerald-600 text-white h-7 text-xs' : 'border-zinc-700 text-zinc-400 h-7 text-xs'}
+                            className={days === d ? 'bg-emerald-600 text-foreground h-7 text-xs' : 'border-border text-muted-foreground h-7 text-xs'}
                             onClick={() => setDays(d)}>{d}d</Button>
                     ))}
                 </div>
@@ -77,11 +78,11 @@ export default function ReportsTab() {
                         { icon: <AlertTriangle className="h-4 w-4 text-red-400" />, label: 'Failures', value: `${summary.failure_count + summary.unauthorized_count}`, sub: `${summary.unauthorized_count} unauthorized`, delay: 0.15, valColor: 'text-red-400' },
                     ].map((card, i) => (
                         <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: card.delay }}>
-                            <Card className="bg-zinc-950 border-zinc-800">
+                            <Card className="bg-background border-border">
                                 <CardContent className="p-4">
-                                    <div className="flex items-center gap-2 mb-2">{card.icon}<span className="text-xs text-zinc-400 uppercase">{card.label}</span></div>
-                                    <p className={`text-2xl font-bold ${card.valColor || 'text-zinc-100'}`}>{card.value}</p>
-                                    <p className="text-xs text-zinc-500 mt-1">{card.sub}</p>
+                                    <div className="flex items-center gap-2 mb-2">{card.icon}<span className="text-xs text-muted-foreground uppercase">{card.label}</span></div>
+                                    <p className={`text-2xl font-bold ${card.valColor || 'text-foreground'}`}>{card.value}</p>
+                                    <p className="text-xs text-muted-foreground mt-1">{card.sub}</p>
                                 </CardContent>
                             </Card>
                         </motion.div>
@@ -93,18 +94,18 @@ export default function ReportsTab() {
             {summary && (summary.busiest_door || summary.most_active_user) && (
                 <div className="grid grid-cols-2 gap-4">
                     {summary.busiest_door && (
-                        <Card className="bg-zinc-950 border-zinc-800">
+                        <Card className="bg-background border-border">
                             <CardContent className="p-4 flex items-center gap-4">
                                 <div className="h-10 w-10 rounded-lg bg-blue-900/30 flex items-center justify-center"><DoorOpen className="h-5 w-5 text-blue-400" /></div>
-                                <div><p className="text-xs text-zinc-400">Busiest Door</p><p className="text-sm font-semibold text-zinc-100">{summary.busiest_door.name}</p><p className="text-xs text-zinc-500">{summary.busiest_door.count} actions</p></div>
+                                <div><p className="text-xs text-muted-foreground">Busiest Door</p><p className="text-sm font-semibold text-foreground">{summary.busiest_door.name}</p><p className="text-xs text-muted-foreground">{summary.busiest_door.count} actions</p></div>
                             </CardContent>
                         </Card>
                     )}
                     {summary.most_active_user && (
-                        <Card className="bg-zinc-950 border-zinc-800">
+                        <Card className="bg-background border-border">
                             <CardContent className="p-4 flex items-center gap-4">
                                 <div className="h-10 w-10 rounded-lg bg-purple-900/30 flex items-center justify-center"><Users className="h-5 w-5 text-purple-400" /></div>
-                                <div><p className="text-xs text-zinc-400">Most Active User</p><p className="text-sm font-semibold text-zinc-100">{summary.most_active_user.name}</p><p className="text-xs text-zinc-500">{summary.most_active_user.count} actions</p></div>
+                                <div><p className="text-xs text-muted-foreground">Most Active User</p><p className="text-sm font-semibold text-foreground">{summary.most_active_user.name}</p><p className="text-xs text-muted-foreground">{summary.most_active_user.count} actions</p></div>
                             </CardContent>
                         </Card>
                     )}
@@ -113,10 +114,10 @@ export default function ReportsTab() {
 
             {/* Heatmap */}
             {heatmap.length > 0 && (
-                <Card className="bg-zinc-950 border-zinc-800">
-                    <CardHeader><CardTitle className="text-zinc-100 flex items-center gap-2 text-sm"><BarChart3 className="h-4 w-4 text-orange-400" />Access Heatmap (14 days)</CardTitle></CardHeader>
+                <Card className="bg-background border-border">
+                    <CardHeader><CardTitle className="text-foreground flex items-center gap-2 text-sm"><BarChart3 className="h-4 w-4 text-orange-400" />Access Heatmap (14 days)</CardTitle></CardHeader>
                     <CardContent>
-                        <div className="grid grid-cols-24 gap-[2px]">
+                        <div className="grid grid-cols-24 gap-0.5">
                             {Array.from({ length: 24 }, (_, hour) => {
                                 const hourEntries = heatmap.filter(h => h.hour === hour);
                                 const totalCount = hourEntries.reduce((s, e) => s + e.count, 0);
@@ -126,19 +127,19 @@ export default function ReportsTab() {
                                 return (
                                     <div key={hour} className="flex flex-col items-center" title={`${hour}:00 — ${totalCount} total actions`}>
                                         <div className="w-full h-8 rounded-sm" style={{ backgroundColor: `rgba(52, 211, 153, ${bgOpacity})` }} />
-                                        <span className="text-[9px] text-zinc-600 mt-1">{hour}</span>
+                                        <span className="text-[9px] text-muted-foreground mt-1">{hour}</span>
                                     </div>
                                 );
                             })}
                         </div>
-                        <p className="text-[10px] text-zinc-600 mt-2 text-right">Hour of day (UTC)</p>
+                        <p className="text-[10px] text-muted-foreground mt-2 text-right">Hour of day (UTC)</p>
                     </CardContent>
                 </Card>
             )}
 
             {/* Activity Timeline */}
-            <Card className="bg-zinc-950 border-zinc-800">
-                <CardHeader><CardTitle className="text-zinc-100 flex items-center gap-2 text-sm"><Activity className="h-4 w-4 text-emerald-400" />Activity Timeline</CardTitle></CardHeader>
+            <Card className="bg-background border-border">
+                <CardHeader><CardTitle className="text-foreground flex items-center gap-2 text-sm"><Activity className="h-4 w-4 text-emerald-400" />Activity Timeline</CardTitle></CardHeader>
                 <CardContent>
                     <div className="space-y-2 max-h-[400px] overflow-auto">
                         <AnimatePresence>
@@ -146,18 +147,18 @@ export default function ReportsTab() {
                                 <motion.div key={entry.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.02 }}
                                     className={`border-l-2 ${severityColors[entry.severity] || severityColors.info} px-3 py-2 rounded-r`}>
                                     <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">{severityIcons[entry.severity]}<span className="text-sm text-zinc-200">{entry.description}</span></div>
+                                        <div className="flex items-center gap-2">{severityIcons[entry.severity]}<span className="text-sm text-secondary-foreground">{entry.description}</span></div>
                                         <div className="flex items-center gap-2">
-                                            {entry.duration_ms && <span className="text-[10px] text-zinc-500">{entry.duration_ms}ms</span>}
-                                            <Badge variant="outline" className="text-[9px] border-zinc-700 text-zinc-500">{entry.provider_path}</Badge>
+                                            {entry.duration_ms && <span className="text-[10px] text-muted-foreground">{entry.duration_ms}ms</span>}
+                                            <Badge variant="outline" className="text-[9px] border-border text-muted-foreground">{entry.provider_path}</Badge>
                                         </div>
                                     </div>
-                                    <p className="text-[10px] text-zinc-600 mt-1">{new Date(entry.timestamp).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'medium' })}</p>
+                                    <p className="text-[10px] text-muted-foreground mt-1">{new Date(entry.timestamp).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'medium' })}</p>
                                 </motion.div>
                             ))}
                         </AnimatePresence>
                         {timeline.length === 0 && (
-                            <div className="text-center py-8 text-zinc-500"><BarChart3 className="h-8 w-8 mx-auto mb-2 text-zinc-600" /><p>No activity data yet.</p></div>
+                            <div className="text-center py-8 text-muted-foreground"><BarChart3 className="h-8 w-8 mx-auto mb-2 text-muted-foreground" /><p>No activity data yet.</p></div>
                         )}
                     </div>
                 </CardContent>

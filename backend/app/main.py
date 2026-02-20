@@ -181,6 +181,7 @@ from routes.template_assets_routes import create_template_assets_router  # Templ
 from routes.import_template_routes import router as import_template_router  # Import Templates
 from routes.crm_enhanced import router as crm_enhanced_router  # CRM 360 Guest Profiles
 from routes.spotify_routes import create_spotify_router  # Spotify Music Control
+from routes.notification_routes import create_notification_badge_router  # Notification Badges
 
 # HR Parity Routes
 from routes.summary_dashboard import router as summary_dashboard_router
@@ -690,6 +691,31 @@ api_main.include_router(employee_detail_router)
 api_main.include_router(bank_export_router)
 api_main.include_router(gov_reports_router)
 api_main.include_router(hr_compliance_mt_router)
+
+# ── Shireburn Indigo Parity Routers (Gap Closure) ──
+from routes.hiring import create_hiring_router
+hiring_router = create_hiring_router()
+api_main.include_router(hiring_router)
+
+from routes.hr_calendar import create_hr_calendar_router
+hr_calendar_router = create_hr_calendar_router()
+api_main.include_router(hr_calendar_router)
+
+from routes.hr_onboarding import create_hr_onboarding_router
+hr_onboarding_router = create_hr_onboarding_router()
+api_main.include_router(hr_onboarding_router)
+
+from routes.salary_benchmarks import create_salary_benchmarks_router
+salary_benchmarks_router = create_salary_benchmarks_router()
+api_main.include_router(salary_benchmarks_router)
+
+from routes.employee_tags import create_employee_tags_router
+employee_tags_router = create_employee_tags_router()
+api_main.include_router(employee_tags_router)
+
+from routes.webhook_audit import create_webhook_audit_router
+webhook_audit_router = create_webhook_audit_router()
+api_main.include_router(webhook_audit_router)
 
 # AI Copilot Routes
 from routes.ai_routes import router as ai_copilot_router

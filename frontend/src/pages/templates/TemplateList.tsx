@@ -27,7 +27,7 @@ const STATUS_CONFIG: Record<string, { label: string; icon: React.ReactNode; clas
     archived: {
         label: 'Archived',
         icon: <XCircle className="w-3 h-3" />,
-        className: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30'
+        className: 'bg-zinc-500/20 text-muted-foreground border-zinc-500/30'
     }
 };
 
@@ -71,7 +71,7 @@ export default function TemplateList() {
 
             const response = await api.get('/templates', { params });
             setTemplates(response.data || []);
-        } catch (err) {
+        } catch (err: any) {
             toast.error('Failed to load templates');
         } finally {
             setLoading(false);
@@ -122,7 +122,7 @@ export default function TemplateList() {
                 {canEdit && (
                     <button
                         onClick={() => navigate('/manager/templates/new')}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-violet-600/20"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-foreground font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-violet-600/20"
                     >
                         <Plus className="w-4 h-4" />
                         {t('New Template')}
@@ -132,7 +132,7 @@ export default function TemplateList() {
 
             {/* ── Filter Strip ───────────────────────────────── */}
             <div className="flex items-center gap-3 flex-wrap">
-                <div className="relative flex-1 min-w-[240px]">
+                <div className="relative flex-1 min-w-60">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <input
                         type="text"
@@ -193,7 +193,7 @@ export default function TemplateList() {
                     {canEdit && (
                         <button
                             onClick={() => navigate('/manager/templates/new')}
-                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium transition-all"
+                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-foreground font-medium transition-all"
                         >
                             <Plus className="w-4 h-4" />
                             {t('Create Template')}

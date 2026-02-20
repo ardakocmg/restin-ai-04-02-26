@@ -34,13 +34,13 @@ export default function KDSFeature() {
         <PageLayout title="Kitchen Display System" description="Live Orders View">
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {orders.length === 0 && !loading && (
-                    <div className="col-span-full text-center text-zinc-500 mt-20 text-xl">No active orders in kitchen</div>
+                    <div className="col-span-full text-center text-muted-foreground mt-20 text-xl">No active orders in kitchen</div>
                 )}
 
                 {orders.map(order => (
                     <Card
                         key={order.id}
-                        className={`p-0 bg-zinc-950 border-2 overflow-hidden flex flex-col ${getAgingColor(order.createdAt)}`}
+                        className={`p-0 bg-background border-2 overflow-hidden flex flex-col ${getAgingColor(order.createdAt)}`}
                     >
                         <div className={`p-2 font-bold flex justify-between items-center text-black ${getAgingColor(order.createdAt).replace('text', 'bg').replace('border', 'bg')}`}>
                             <span>Table {order.tableId}</span>
@@ -49,11 +49,11 @@ export default function KDSFeature() {
                         <div className="p-4 flex-1 space-y-2">
                             {order.items.map((item, idx) => (
                                 <div key={idx} className="flex justify-between items-start border-b border-zinc-900 pb-2 last:border-0">
-                                    <span className="text-zinc-200 font-medium">{item.quantity}x {item.name}</span>
+                                    <span className="text-secondary-foreground font-medium">{item.quantity}x {item.name}</span>
                                 </div>
                             ))}
                         </div>
-                        <div className="p-2 bg-zinc-900 text-center text-sm text-zinc-400">
+                        <div className="p-2 bg-card text-center text-sm text-muted-foreground">
                             Server: {order.userId}
                         </div>
                     </Card>

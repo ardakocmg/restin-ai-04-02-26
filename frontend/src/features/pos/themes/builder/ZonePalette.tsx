@@ -46,7 +46,7 @@ const VARIANT_COLOR_MAP: Record<string, string> = {
     emerald: 'bg-emerald-500/20 text-emerald-400 border-emerald-600/30',
     blue: 'bg-blue-500/20 text-blue-400 border-blue-600/30',
     red: 'bg-red-500/20 text-red-400 border-red-600/30',
-    zinc: 'bg-zinc-500/20 text-zinc-400 border-zinc-600/30',
+    zinc: 'bg-zinc-500/20 text-muted-foreground border-zinc-600/30',
 };
 
 // ─── Props ───────────────────────────────────────────────────────
@@ -99,7 +99,7 @@ export default function ZonePalette({ layoutType, zones, onAddZone }: ZonePalett
                     <h3 className={cn("text-xs font-semibold uppercase tracking-wider", meta.color)}>
                         {meta.label}
                     </h3>
-                    <span className="text-[10px] text-zinc-600 ml-auto">
+                    <span className="text-[10px] text-muted-foreground ml-auto">
                         {components.length}
                     </span>
                 </div>
@@ -125,24 +125,24 @@ export default function ZonePalette({ layoutType, zones, onAddZone }: ZonePalett
                                     "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-sm transition-all",
                                     "border",
                                     maxReached
-                                        ? "opacity-40 cursor-not-allowed bg-zinc-900/30 border-zinc-800/50"
+                                        ? "opacity-40 cursor-not-allowed bg-card/30 border-border/50"
                                         : isExpanded
-                                            ? "bg-zinc-800 border-teal-700 ring-1 ring-teal-700/30"
-                                            : "bg-zinc-900/60 border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 cursor-grab active:cursor-grabbing"
+                                            ? "bg-secondary border-teal-700 ring-1 ring-teal-700/30"
+                                            : "bg-card/60 border-border hover:bg-secondary hover:border-border cursor-grab active:cursor-grabbing"
                                 )}
                             >
-                                <GripVertical className="h-3.5 w-3.5 text-zinc-600 flex-shrink-0" />
+                                <GripVertical className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
                                 <Icon className={cn("h-4 w-4 flex-shrink-0", meta.color)} />
                                 <div className="min-w-0 flex-1">
                                     <div className="flex items-center gap-1.5">
-                                        <p className="font-medium text-zinc-200 truncate text-[13px]">{def.name}</p>
+                                        <p className="font-medium text-secondary-foreground truncate text-[13px]">{def.name}</p>
                                         {def.required && usedCount === 0 && (
                                             <span title="Required">
                                                 <AlertTriangle className="h-3 w-3 text-red-400 flex-shrink-0" />
                                             </span>
                                         )}
                                     </div>
-                                    <p className="text-[10px] text-zinc-500 truncate">{def.description}</p>
+                                    <p className="text-[10px] text-muted-foreground truncate">{def.description}</p>
                                 </div>
 
                                 {/* Status badges */}
@@ -152,12 +152,12 @@ export default function ZonePalette({ layoutType, zones, onAddZone }: ZonePalett
                                         Added
                                     </span>
                                 ) : usedCount > 0 && def.maxInstances > 1 ? (
-                                    <span className="flex-shrink-0 text-[10px] text-zinc-400 bg-zinc-800 px-1.5 py-0.5 rounded">
+                                    <span className="flex-shrink-0 text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">
                                         {usedCount}/{def.maxInstances}
                                     </span>
                                 ) : def.variants && def.variants.length > 0 ? (
                                     <ChevronDown className={cn(
-                                        "h-3.5 w-3.5 text-zinc-500 transition-transform flex-shrink-0",
+                                        "h-3.5 w-3.5 text-muted-foreground transition-transform flex-shrink-0",
                                         isExpanded && "rotate-180 text-teal-400"
                                     )} />
                                 ) : null}
@@ -165,7 +165,7 @@ export default function ZonePalette({ layoutType, zones, onAddZone }: ZonePalett
 
                             {/* Variant picker (expanded) */}
                             {isExpanded && def.variants && (
-                                <div className="ml-6 mt-1 space-y-1 mb-2 border-l-2 border-zinc-700/50 pl-3">
+                                <div className="ml-6 mt-1 space-y-1 mb-2 border-l-2 border-border/50 pl-3">
                                     {def.variants.map((variant) => {
                                         const VIcon = ZONE_ICON_MAP[variant.icon] || CircleDot;
                                         const colorClass = VARIANT_COLOR_MAP[variant.color] || VARIANT_COLOR_MAP.zinc;
@@ -184,7 +184,7 @@ export default function ZonePalette({ layoutType, zones, onAddZone }: ZonePalett
                                                 className={cn(
                                                     "w-full flex items-center gap-2 px-2.5 py-2 rounded-md text-left text-xs transition-all border",
                                                     variantUsed
-                                                        ? "opacity-40 cursor-not-allowed bg-zinc-900/30 border-zinc-800/50"
+                                                        ? "opacity-40 cursor-not-allowed bg-card/30 border-border/50"
                                                         : cn(colorClass, "hover:brightness-125 cursor-pointer")
                                                 )}
                                             >

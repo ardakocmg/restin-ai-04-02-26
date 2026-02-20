@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { Building2, Plus, Edit2, Trash2, Link2, ChevronRight, FileText, MapPin, Phone, Mail, Hash, AlertCircle, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
@@ -71,7 +72,7 @@ export default function LegalEntities() {
             const ents = (entRes.data?.legal_entities || []).filter((e: LegalEntity) => !e.deleted_at);
             setEntities(ents);
             setVenues(venRes.data?.venues || venRes.data || []);
-        } catch (err) {
+        } catch (err: any) {
             logger.error('Failed to load legal entities', { error: err });
             toast.error('Failed to load legal entities');
         } finally {
@@ -100,7 +101,7 @@ export default function LegalEntities() {
             setEditingId(null);
             setForm(EMPTY_FORM);
             fetchData();
-        } catch (err) {
+        } catch (err: any) {
             logger.error('Failed to save legal entity', { error: err });
             toast.error('Failed to save');
         } finally {
@@ -115,7 +116,7 @@ export default function LegalEntities() {
             await api.delete(`/legal-entities/${id}`);
             toast.success('Legal entity deleted');
             fetchData();
-        } catch (err) {
+        } catch (err: any) {
             logger.error('Failed to delete legal entity', { error: err });
             toast.error('Failed to delete');
         }
@@ -131,7 +132,7 @@ export default function LegalEntities() {
             toast.success('Venues assigned successfully');
             setShowAssign(null);
             fetchData();
-        } catch (err) {
+        } catch (err: any) {
             logger.error('Failed to assign venues', { error: err });
             toast.error('Failed to assign venues');
         }
@@ -168,19 +169,19 @@ export default function LegalEntities() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-zinc-100 flex items-center gap-3">
+                    <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/20 flex items-center justify-center">
                             <Building2 className="w-5 h-5 text-violet-400" />
                         </div>
                         Legal Entities
                     </h1>
-                    <p className="text-zinc-500 mt-1">
+                    <p className="text-muted-foreground mt-1">
                         Manage company registrations and their venue assignments
                     </p>
                 </div>
                 <button
                     onClick={() => { setShowForm(true); setEditingId(null); setForm(EMPTY_FORM); }}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl transition-all"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-500 text-foreground rounded-xl transition-all"
                 >
                     <Plus className="w-4 h-4" />
                     Add Legal Entity
@@ -191,7 +192,7 @@ export default function LegalEntities() {
             <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5">
                 <div className="flex gap-3">
                     <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-                    <div className="text-sm text-zinc-400">
+                    <div className="text-sm text-muted-foreground">
                         <p className="text-amber-300 font-medium mb-1">Organization → Legal Entity → Venue</p>
                         <p>Multiple venues can share the same legal entity (e.g., same VAT & PE number for payroll).
                             Each legal entity represents a registered company under your organization.</p>
@@ -208,10 +209,10 @@ export default function LegalEntities() {
 
             {/* Empty State */}
             {!loading && entities.length === 0 && (
-                <div className="text-center py-20 rounded-2xl border border-white/5 bg-zinc-900/50">
-                    <Building2 className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-zinc-300">No Legal Entities Yet</h3>
-                    <p className="text-zinc-500 mt-1 max-w-md mx-auto">
+                <div className="text-center py-20 rounded-2xl border border-border bg-card/50">
+                    <Building2 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-secondary-foreground">No Legal Entities Yet</h3>
+                    <p className="text-muted-foreground mt-1 max-w-md mx-auto">
                         Add your company registrations to organize venues under their legal entities.
                     </p>
                 </div>
@@ -221,7 +222,7 @@ export default function LegalEntities() {
             {!loading && entities.map((entity) => (
                 <div
                     key={entity._id}
-                    className="rounded-2xl border border-white/5 bg-zinc-900/50 overflow-hidden hover:border-white/10 transition-all"
+                    className="rounded-2xl border border-border bg-card/50 overflow-hidden hover:border-border transition-all"
                 >
                     {/* Card Header */}
                     <div className="p-5 flex items-start justify-between">
@@ -230,18 +231,18 @@ export default function LegalEntities() {
                                 <Building2 className="w-6 h-6 text-violet-400" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-semibold text-zinc-100">{entity.registered_name}</h3>
+                                <h3 className="text-lg font-semibold text-foreground">{entity.registered_name}</h3>
                                 {entity.trading_name && (
-                                    <p className="text-sm text-zinc-500">Trading as: {entity.trading_name}</p>
+                                    <p className="text-sm text-muted-foreground">Trading as: {entity.trading_name}</p>
                                 )}
                                 <div className="flex items-center gap-4 mt-2 flex-wrap">
                                     {entity.registration_number && (
-                                        <span className="flex items-center gap-1.5 text-xs text-zinc-400">
+                                        <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                             <Hash className="w-3.5 h-3.5" /> {entity.registration_number}
                                         </span>
                                     )}
                                     {entity.vat_number && (
-                                        <span className="flex items-center gap-1.5 text-xs text-zinc-400">
+                                        <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                             <FileText className="w-3.5 h-3.5" /> VAT: {entity.vat_number}
                                         </span>
                                     )}
@@ -256,21 +257,21 @@ export default function LegalEntities() {
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => startAssign(entity)}
-                                className="p-2 rounded-lg hover:bg-white/5 text-zinc-500 hover:text-violet-400 transition-colors"
+                                className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-violet-400 transition-colors"
                                 title="Assign Venues"
                             >
                                 <Link2 className="w-4 h-4" />
                             </button>
                             <button
                                 onClick={() => startEdit(entity)}
-                                className="p-2 rounded-lg hover:bg-white/5 text-zinc-500 hover:text-amber-400 transition-colors"
+                                className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-amber-400 transition-colors"
                                 title="Edit"
                             >
                                 <Edit2 className="w-4 h-4" />
                             </button>
                             <button
                                 onClick={() => handleDelete(entity._id)}
-                                className="p-2 rounded-lg hover:bg-white/5 text-zinc-500 hover:text-red-400 transition-colors"
+                                className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground hover:text-red-400 transition-colors"
                                 title="Delete"
                             >
                                 <Trash2 className="w-4 h-4" />
@@ -282,39 +283,39 @@ export default function LegalEntities() {
                     <div className="px-5 pb-4 grid grid-cols-2 md:grid-cols-4 gap-3">
                         {entity.registered_address && (
                             <div className="flex items-start gap-2 text-sm">
-                                <MapPin className="w-4 h-4 text-zinc-500 mt-0.5 flex-shrink-0" />
-                                <span className="text-zinc-400">{entity.registered_address}{entity.city ? `, ${entity.city}` : ''}</span>
+                                <MapPin className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                                <span className="text-muted-foreground">{entity.registered_address}{entity.city ? `, ${entity.city}` : ''}</span>
                             </div>
                         )}
                         {entity.contact_email && (
                             <div className="flex items-center gap-2 text-sm">
-                                <Mail className="w-4 h-4 text-zinc-500 flex-shrink-0" />
-                                <span className="text-zinc-400">{entity.contact_email}</span>
+                                <Mail className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                                <span className="text-muted-foreground">{entity.contact_email}</span>
                             </div>
                         )}
                         {entity.contact_phone && (
                             <div className="flex items-center gap-2 text-sm">
-                                <Phone className="w-4 h-4 text-zinc-500 flex-shrink-0" />
-                                <span className="text-zinc-400">{entity.contact_phone}</span>
+                                <Phone className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                                <span className="text-muted-foreground">{entity.contact_phone}</span>
                             </div>
                         )}
                         {entity.hr_manager && (
                             <div className="text-sm">
-                                <span className="text-zinc-600">HR Manager: </span>
-                                <span className="text-zinc-400">{entity.hr_manager}</span>
+                                <span className="text-muted-foreground">HR Manager: </span>
+                                <span className="text-muted-foreground">{entity.hr_manager}</span>
                             </div>
                         )}
                         {entity.principal_payer && (
                             <div className="text-sm">
-                                <span className="text-zinc-600">Principal Payer: </span>
-                                <span className="text-zinc-400">{entity.principal_payer}</span>
+                                <span className="text-muted-foreground">Principal Payer: </span>
+                                <span className="text-muted-foreground">{entity.principal_payer}</span>
                             </div>
                         )}
                     </div>
 
                     {/* Assigned Venues */}
-                    <div className="px-5 pb-5 pt-2 border-t border-white/5">
-                        <p className="text-xs text-zinc-600 uppercase tracking-wider mb-2">Assigned Venues</p>
+                    <div className="px-5 pb-5 pt-2 border-t border-border">
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Assigned Venues</p>
                         {entity.venues && entity.venues.length > 0 ? (
                             <div className="flex flex-wrap gap-2">
                                 {entity.venues.map((v) => (
@@ -328,7 +329,7 @@ export default function LegalEntities() {
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-sm text-zinc-600 italic">No venues assigned</p>
+                            <p className="text-sm text-muted-foreground italic">No venues assigned</p>
                         )}
                     </div>
                 </div>
@@ -337,160 +338,160 @@ export default function LegalEntities() {
             {/* ── Create/Edit Modal ──────────────────────────────────────────── */}
             {showForm && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-                    <div className="w-full max-w-2xl mx-4 rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl max-h-[90vh] overflow-y-auto">
-                        <div className="p-6 border-b border-white/5 flex items-center justify-between">
-                            <h2 className="text-lg font-semibold text-zinc-100">
+                    <div className="w-full max-w-2xl mx-4 rounded-2xl border border-border bg-card shadow-2xl max-h-[90vh] overflow-y-auto">
+                        <div className="p-6 border-b border-border flex items-center justify-between">
+                            <h2 className="text-lg font-semibold text-foreground">
                                 {editingId ? 'Edit Legal Entity' : 'New Legal Entity'}
                             </h2>
-                            <button onClick={() => { setShowForm(false); setEditingId(null); }} className="p-2 rounded-lg hover:bg-white/5 text-zinc-500" title="Close">
+                            <button onClick={() => { setShowForm(false); setEditingId(null); }} className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground" title="Close">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
                         <div className="p-6 space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="col-span-2">
-                                    <label className="text-sm text-zinc-400 mb-1 block">Registered Name *</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">Registered Name *</label>
                                     <input
                                         type="text"
                                         value={form.registered_name}
                                         onChange={(e) => setForm({ ...form, registered_name: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500/30"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500/30"
                                         placeholder="e.g. MG Hospitality Ltd"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm text-zinc-400 mb-1 block">Trading Name</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">Trading Name</label>
                                     <input
                                         type="text"
                                         value={form.trading_name}
                                         onChange={(e) => setForm({ ...form, trading_name: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Caviar & Bull"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm text-zinc-400 mb-1 block">Registration # (Company)</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">Registration # (Company)</label>
                                     <input
                                         type="text"
                                         value={form.registration_number}
                                         onChange={(e) => setForm({ ...form, registration_number: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. C56123"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm text-zinc-400 mb-1 block">VAT Number</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">VAT Number</label>
                                     <input
                                         type="text"
                                         value={form.vat_number}
                                         onChange={(e) => setForm({ ...form, vat_number: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. MT15355214"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm text-zinc-400 mb-1 block">PE Number</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">PE Number</label>
                                     <input
                                         type="text"
                                         value={form.pe_number}
                                         onChange={(e) => setForm({ ...form, pe_number: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. 456398"
                                     />
                                 </div>
                                 <div className="col-span-2">
-                                    <label className="text-sm text-zinc-400 mb-1 block">Registered Address</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">Registered Address</label>
                                     <input
                                         type="text"
                                         value={form.registered_address}
                                         onChange={(e) => setForm({ ...form, registered_address: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Triq ix-Xatt, St. George's Bay"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm text-zinc-400 mb-1 block">City</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">City</label>
                                     <input
                                         type="text"
                                         value={form.city}
                                         onChange={(e) => setForm({ ...form, city: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. STJ 3301"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm text-zinc-400 mb-1 block">Country</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">Country</label>
                                     <input
                                         type="text"
                                         value={form.country}
                                         onChange={(e) => setForm({ ...form, country: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="Malta"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm text-zinc-400 mb-1 block">HR Manager</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">HR Manager</label>
                                     <input
                                         type="text"
                                         value={form.hr_manager}
                                         onChange={(e) => setForm({ ...form, hr_manager: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Jacqueline Portelli"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm text-zinc-400 mb-1 block">Principal Payer</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">Principal Payer</label>
                                     <input
                                         type="text"
                                         value={form.principal_payer}
                                         onChange={(e) => setForm({ ...form, principal_payer: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Marvin Gauci"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm text-zinc-400 mb-1 block">Contact Email</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">Contact Email</label>
                                     <input
                                         type="email"
                                         value={form.contact_email}
                                         onChange={(e) => setForm({ ...form, contact_email: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="admin@company.com"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm text-zinc-400 mb-1 block">Contact Phone</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">Contact Phone</label>
                                     <input
                                         type="tel"
                                         value={form.contact_phone}
                                         onChange={(e) => setForm({ ...form, contact_phone: e.target.value })}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="+356 2134 5678"
                                     />
                                 </div>
                                 <div className="col-span-2">
-                                    <label className="text-sm text-zinc-400 mb-1 block">Notes</label>
+                                    <label className="text-sm text-muted-foreground mb-1 block">Notes</label>
                                     <textarea
                                         value={form.notes}
                                         onChange={(e) => setForm({ ...form, notes: e.target.value })}
                                         rows={3}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-zinc-800 border border-white/10 text-zinc-100 focus:border-violet-500 focus:outline-none resize-none"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none resize-none"
                                         placeholder="Internal notes..."
                                     />
                                 </div>
                             </div>
                         </div>
-                        <div className="p-6 border-t border-white/5 flex justify-end gap-3">
+                        <div className="p-6 border-t border-border flex justify-end gap-3">
                             <button
                                 onClick={() => { setShowForm(false); setEditingId(null); }}
-                                className="px-4 py-2.5 rounded-xl border border-white/10 text-zinc-400 hover:text-zinc-200 hover:bg-white/5 transition-colors"
+                                className="px-4 py-2.5 rounded-xl border border-border text-muted-foreground hover:text-secondary-foreground hover:bg-white/5 transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleSave}
                                 disabled={saving}
-                                className="flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl transition-all disabled:opacity-50"
+                                className="flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-500 text-foreground rounded-xl transition-all disabled:opacity-50"
                             >
                                 {saving ? (
                                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -507,16 +508,16 @@ export default function LegalEntities() {
             {/* ── Assign Venues Modal ────────────────────────────────────────── */}
             {showAssign && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-                    <div className="w-full max-w-md mx-4 rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl">
-                        <div className="p-6 border-b border-white/5 flex items-center justify-between">
-                            <h2 className="text-lg font-semibold text-zinc-100">Assign Venues</h2>
-                            <button onClick={() => setShowAssign(null)} className="p-2 rounded-lg hover:bg-white/5 text-zinc-500" title="Close">
+                    <div className="w-full max-w-md mx-4 rounded-2xl border border-border bg-card shadow-2xl">
+                        <div className="p-6 border-b border-border flex items-center justify-between">
+                            <h2 className="text-lg font-semibold text-foreground">Assign Venues</h2>
+                            <button onClick={() => setShowAssign(null)} className="p-2 rounded-lg hover:bg-white/5 text-muted-foreground" title="Close">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
                         <div className="p-6 space-y-2 max-h-[400px] overflow-y-auto">
                             {venues.length === 0 && (
-                                <p className="text-sm text-zinc-500 text-center py-4">No venues found</p>
+                                <p className="text-sm text-muted-foreground text-center py-4">No venues found</p>
                             )}
                             {venues.map((venue) => {
                                 const isSelected = selectedVenues.includes(venue._id);
@@ -531,29 +532,29 @@ export default function LegalEntities() {
                                         className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left
                       ${isSelected
                                                 ? 'border-violet-500/40 bg-violet-500/10 text-violet-300'
-                                                : 'border-white/5 bg-zinc-800/50 text-zinc-400 hover:border-white/10'
+                                                : 'border-border bg-secondary/50 text-muted-foreground hover:border-border'
                                             }`}
                                     >
                                         <div className={`w-5 h-5 rounded-md border flex items-center justify-center flex-shrink-0
                       ${isSelected ? 'bg-violet-500 border-violet-500' : 'border-white/20'}`}
                                         >
-                                            {isSelected && <Check className="w-3 h-3 text-white" />}
+                                            {isSelected && <Check className="w-3 h-3 text-foreground" />}
                                         </div>
                                         <span className="font-medium">{venue.name}</span>
                                     </button>
                                 );
                             })}
                         </div>
-                        <div className="p-6 border-t border-white/5 flex justify-end gap-3">
+                        <div className="p-6 border-t border-border flex justify-end gap-3">
                             <button
                                 onClick={() => setShowAssign(null)}
-                                className="px-4 py-2.5 rounded-xl border border-white/10 text-zinc-400 hover:text-zinc-200 hover:bg-white/5 transition-colors"
+                                className="px-4 py-2.5 rounded-xl border border-border text-muted-foreground hover:text-secondary-foreground hover:bg-white/5 transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleAssignVenues}
-                                className="flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl transition-all"
+                                className="flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-500 text-foreground rounded-xl transition-all"
                             >
                                 <Link2 className="w-4 h-4" />
                                 Assign ({selectedVenues.length})

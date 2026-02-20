@@ -85,7 +85,7 @@ export const TypingIndicator = React.memo(function TypingIndicator({ names }: { 
                     />
                 ))}
             </div>
-            <span className="text-[10px] text-zinc-500 italic">{text}</span>
+            <span className="text-[10px] text-muted-foreground italic">{text}</span>
         </motion.div>
     );
 });
@@ -95,14 +95,14 @@ export const AttachmentBubble = React.memo(function AttachmentBubble(
     { att }: { att: { name: string; type: 'image' | 'file'; size: string } }
 ) {
     return (
-        <div className="mt-1.5 inline-flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-zinc-800/60 border border-zinc-700/50 hover:bg-zinc-700/60 transition-colors cursor-pointer">
+        <div className="mt-1.5 inline-flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-secondary/60 border border-border/50 hover:bg-secondary/80/60 transition-colors cursor-pointer">
             {att.type === 'image' ? (
                 <Image className="h-3.5 w-3.5 text-blue-400" />
             ) : (
                 <FileText className="h-3.5 w-3.5 text-amber-400" />
             )}
-            <span className="text-xs text-zinc-300">{att.name}</span>
-            <span className="text-[10px] text-zinc-600">{att.size}</span>
+            <span className="text-xs text-secondary-foreground">{att.name}</span>
+            <span className="text-[10px] text-muted-foreground">{att.size}</span>
         </div>
     );
 });

@@ -11,7 +11,7 @@ const VenueSettings = React.lazy(() => import('../pages/manager/VenueSettings'))
 const OrganizationProfile = React.lazy(() => import('../pages/manager/OrganizationProfile'));
 const LegalEntities = React.lazy(() => import('../pages/manager/LegalEntities'));
 const RestaurantAppSettings = React.lazy(() => import('../pages/manager/RestaurantAppSettings'));
-const ThemeCustomizer = React.lazy(() => import('../pages/manager/ThemeCustomizer'));
+const ThemeEngineSettings = React.lazy(() => import('../pages/manager/system/ThemeEngineSettings'));
 const FeatureFlagAdmin = React.lazy(() => import('../pages/manager/settings/FeatureFlagAdmin'));
 const DataExportPage = React.lazy(() => import('../pages/manager/settings/DataExportPage'));
 
@@ -69,6 +69,7 @@ const StaffGamification = React.lazy(() => import('../pages/manager/staff/Gamifi
 const TemplateList = React.lazy(() => import('../pages/templates/TemplateList'));
 const TemplateEditor = React.lazy(() => import('../pages/templates/TemplateEditor'));
 const SystemDashboard = React.lazy(() => import('../pages/manager/SystemDashboard'));
+const AIOSDashboard = React.lazy(() => import('../pages/manager/system/AIOSDashboard'));
 
 // ─── Lightspeed Parity ──────────────────────────────────────────────────────────
 const TipPresetsSettings = React.lazy(() => import('../pages/manager/TipPresetsSettings'));
@@ -81,6 +82,7 @@ export const systemRoutes = (
     <>
         {/* Dashboard */}
         <Route path="dashboard" element={<RoleRoute requiredRole="MANAGER"><SystemDashboard /></RoleRoute>} />
+        <Route path="ai-os" element={<RoleRoute requiredRole="OWNER"><AIOSDashboard /></RoleRoute>} />
 
         {/* Settings & Admin */}
         <Route path="venues" element={<RoleRoute requiredRole="OWNER"><VenueSettings /></RoleRoute>} />
@@ -88,7 +90,7 @@ export const systemRoutes = (
         <Route path="company-settings" element={<RoleRoute requiredRole="OWNER"><OrganizationProfile /></RoleRoute>} />
         <Route path="legal-entities" element={<RoleRoute requiredRole="OWNER"><LegalEntities /></RoleRoute>} />
         <Route path="app-settings" element={<RoleRoute requiredRole="OWNER"><RestaurantAppSettings /></RoleRoute>} />
-        <Route path="theme" element={<RoleRoute requiredRole="OWNER"><ThemeCustomizer /></RoleRoute>} />
+        <Route path="theme-engine" element={<RoleRoute requiredRole="PRODUCT_OWNER"><ThemeEngineSettings /></RoleRoute>} />
         <Route path="feature-flags" element={<RoleRoute requiredRole="OWNER"><FeatureFlagAdmin /></RoleRoute>} />
         <Route path="data-export" element={<RoleRoute requiredRole="OWNER"><DataExportPage /></RoleRoute>} />
         <Route path="tip-presets" element={<RoleRoute requiredRole="OWNER"><TipPresetsSettings /></RoleRoute>} />

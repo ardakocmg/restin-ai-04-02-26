@@ -142,7 +142,7 @@ export default function SetupWizard() {
     };
 
     return (
-        <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-background flex items-center justify-center p-4">
             {/* Background gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/20 via-zinc-950 to-purple-950/20" />
 
@@ -153,8 +153,8 @@ export default function SetupWizard() {
                         <Crown className="w-5 h-5 text-indigo-400" />
                         <span className="text-sm font-semibold text-indigo-300">First Time Setup</span>
                     </div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Restin.AI</h1>
-                    <p className="text-zinc-500 text-sm">Configure your Super Owner account</p>
+                    <h1 className="text-3xl font-bold text-foreground tracking-tight">Restin.AI</h1>
+                    <p className="text-muted-foreground text-sm">Configure your Super Owner account</p>
                 </div>
 
                 {/* Step Indicator */}
@@ -166,11 +166,11 @@ export default function SetupWizard() {
                         return (
                             <div key={step.id} className="flex items-center gap-2">
                                 {i > 0 && (
-                                    <div className={`w-8 h-0.5 rounded ${isDone ? 'bg-indigo-500' : 'bg-zinc-800'}`} />
+                                    <div className={`w-8 h-0.5 rounded ${isDone ? 'bg-indigo-500' : 'bg-secondary'}`} />
                                 )}
                                 <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${isDone ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
                                         isActive ? 'bg-indigo-500/10 text-indigo-300 border border-indigo-500/20' :
-                                            'bg-zinc-900 text-zinc-600 border border-zinc-800'
+                                            'bg-card text-muted-foreground border border-border'
                                     }`}>
                                     {isDone ? <Check className="w-3.5 h-3.5" /> : <StepIcon className="w-3.5 h-3.5" />}
                                     {step.title}
@@ -181,49 +181,49 @@ export default function SetupWizard() {
                 </div>
 
                 {/* Step Content */}
-                <Card className="bg-zinc-900/90 border-zinc-800 backdrop-blur-xl">
+                <Card className="bg-card/90 border-border backdrop-blur-xl">
                     {/* Step 0: Welcome */}
                     {currentStep === 0 && (
                         <>
                             <CardHeader className="text-center">
-                                <CardTitle className="text-white text-xl">Welcome, Arda Koc</CardTitle>
-                                <CardDescription className="text-zinc-400">
+                                <CardTitle className="text-foreground text-xl">Welcome, Arda Koc</CardTitle>
+                                <CardDescription className="text-muted-foreground">
                                     Let&apos;s secure your Super Owner account. This is a one-time setup.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-5">
                                 <div className="space-y-3">
-                                    <div className="flex items-center gap-3 p-3 bg-zinc-800/50 rounded-lg border border-zinc-700">
+                                    <div className="flex items-center gap-3 p-3 bg-secondary/50 rounded-lg border border-border">
                                         <div className="p-2 bg-indigo-500/10 rounded-lg">
                                             <Shield className="w-5 h-5 text-indigo-400" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-zinc-200">Full System Access</p>
-                                            <p className="text-xs text-zinc-500">All permissions, all venues, all operations</p>
+                                            <p className="text-sm font-medium text-secondary-foreground">Full System Access</p>
+                                            <p className="text-xs text-muted-foreground">All permissions, all venues, all operations</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3 p-3 bg-zinc-800/50 rounded-lg border border-zinc-700">
+                                    <div className="flex items-center gap-3 p-3 bg-secondary/50 rounded-lg border border-border">
                                         <div className="p-2 bg-emerald-500/10 rounded-lg">
                                             <Lock className="w-5 h-5 text-emerald-400" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-zinc-200">Password + Optional 2FA</p>
-                                            <p className="text-xs text-zinc-500">Maximum security for the highest authority</p>
+                                            <p className="text-sm font-medium text-secondary-foreground">Password + Optional 2FA</p>
+                                            <p className="text-xs text-muted-foreground">Maximum security for the highest authority</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3 p-3 bg-zinc-800/50 rounded-lg border border-zinc-700">
+                                    <div className="flex items-center gap-3 p-3 bg-secondary/50 rounded-lg border border-border">
                                         <div className="p-2 bg-amber-500/10 rounded-lg">
                                             <Crown className="w-5 h-5 text-amber-400" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-zinc-200">Irrevocable Role</p>
-                                            <p className="text-xs text-zinc-500">Super Owner cannot be deleted or demoted</p>
+                                            <p className="text-sm font-medium text-secondary-foreground">Irrevocable Role</p>
+                                            <p className="text-xs text-muted-foreground">Super Owner cannot be deleted or demoted</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <Button
-                                    className="w-full h-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold"
+                                    className="w-full h-12 bg-indigo-600 hover:bg-indigo-500 text-foreground font-semibold"
                                     onClick={() => setCurrentStep(1)}
                                 >
                                     Get Started
@@ -237,26 +237,26 @@ export default function SetupWizard() {
                     {currentStep === 1 && (
                         <>
                             <CardHeader className="text-center">
-                                <CardTitle className="text-white text-xl">Create Your Password</CardTitle>
-                                <CardDescription className="text-zinc-400">
+                                <CardTitle className="text-foreground text-xl">Create Your Password</CardTitle>
+                                <CardDescription className="text-muted-foreground">
                                     Use for arda@restin.ai — minimum 8 characters
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-5">
                                 <div className="space-y-2">
-                                    <Label className="text-zinc-300 text-xs uppercase tracking-wide">Password</Label>
+                                    <Label className="text-secondary-foreground text-xs uppercase tracking-wide">Password</Label>
                                     <div className="relative">
                                         <Input
                                             type={showPassword ? "text" : "password"}
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             placeholder="Enter a strong password"
-                                            className="bg-zinc-800 border-zinc-700 text-white h-12 pr-10"
+                                            className="bg-secondary border-border text-foreground h-12 pr-10"
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-secondary-foreground"
                                         >
                                             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                         </button>
@@ -269,7 +269,7 @@ export default function SetupWizard() {
                                                 {[1, 2, 3, 4, 5, 6].map((i) => (
                                                     <div
                                                         key={i}
-                                                        className={`h-1 flex-1 rounded ${i <= passwordStrength.score ? passwordStrength.color : 'bg-zinc-800'
+                                                        className={`h-1 flex-1 rounded ${i <= passwordStrength.score ? passwordStrength.color : 'bg-secondary'
                                                             }`}
                                                     />
                                                 ))}
@@ -284,13 +284,13 @@ export default function SetupWizard() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label className="text-zinc-300 text-xs uppercase tracking-wide">Confirm Password</Label>
+                                    <Label className="text-secondary-foreground text-xs uppercase tracking-wide">Confirm Password</Label>
                                     <Input
                                         type="password"
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                         placeholder="Repeat your password"
-                                        className={`bg-zinc-800 border-zinc-700 text-white h-12 ${confirmPassword.length > 0
+                                        className={`bg-secondary border-border text-foreground h-12 ${confirmPassword.length > 0
                                                 ? passwordsMatch
                                                     ? 'border-emerald-500/50'
                                                     : 'border-red-500/50'
@@ -303,7 +303,7 @@ export default function SetupWizard() {
                                 </div>
 
                                 <Button
-                                    className="w-full h-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold"
+                                    className="w-full h-12 bg-indigo-600 hover:bg-indigo-500 text-foreground font-semibold"
                                     onClick={handleSetPassword}
                                     disabled={!passwordValid}
                                 >
@@ -318,10 +318,10 @@ export default function SetupWizard() {
                     {currentStep === 2 && (
                         <>
                             <CardHeader className="text-center">
-                                <CardTitle className="text-white text-xl">
+                                <CardTitle className="text-foreground text-xl">
                                     {mfaSetupDone ? "Setup Complete!" : "Two-Factor Authentication"}
                                 </CardTitle>
-                                <CardDescription className="text-zinc-400">
+                                <CardDescription className="text-muted-foreground">
                                     {mfaSetupDone
                                         ? "Redirecting to login..."
                                         : qrCode
@@ -335,7 +335,7 @@ export default function SetupWizard() {
                                         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-4">
                                             <Check className="w-8 h-8 text-emerald-400" />
                                         </div>
-                                        <p className="text-zinc-300 text-sm">Your Super Owner account is ready.</p>
+                                        <p className="text-secondary-foreground text-sm">Your Super Owner account is ready.</p>
                                     </div>
                                 ) : qrCode ? (
                                     <>
@@ -343,24 +343,24 @@ export default function SetupWizard() {
                                             <img src={qrCode} alt="2FA QR Code" className="w-48 h-48 rounded-lg bg-white p-2" />
                                         </div>
                                         {secret && (
-                                            <div className="p-3 bg-zinc-800/50 rounded-lg border border-zinc-700 text-center">
-                                                <p className="text-[11px] text-zinc-500 mb-1">Manual Entry Code</p>
-                                                <p className="text-sm font-mono text-zinc-300 tracking-wider select-all">{secret}</p>
+                                            <div className="p-3 bg-secondary/50 rounded-lg border border-border text-center">
+                                                <p className="text-[11px] text-muted-foreground mb-1">Manual Entry Code</p>
+                                                <p className="text-sm font-mono text-secondary-foreground tracking-wider select-all">{secret}</p>
                                             </div>
                                         )}
                                         <div className="space-y-2">
-                                            <Label className="text-zinc-300 text-xs uppercase tracking-wide">Verification Code</Label>
+                                            <Label className="text-secondary-foreground text-xs uppercase tracking-wide">Verification Code</Label>
                                             <Input
                                                 type="text"
                                                 maxLength={6}
                                                 value={totpCode}
                                                 onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, ''))}
                                                 placeholder="000000"
-                                                className="bg-zinc-800 border-zinc-700 text-white text-center text-2xl font-mono h-14 tracking-[0.5em]"
+                                                className="bg-secondary border-border text-foreground text-center text-2xl font-mono h-14 tracking-[0.5em]"
                                             />
                                         </div>
                                         <Button
-                                            className="w-full h-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold"
+                                            className="w-full h-12 bg-indigo-600 hover:bg-indigo-500 text-foreground font-semibold"
                                             onClick={handleVerify2FA}
                                             disabled={loading || totpCode.length !== 6}
                                         >
@@ -370,7 +370,7 @@ export default function SetupWizard() {
                                 ) : (
                                     <div className="space-y-4">
                                         <Button
-                                            className="w-full h-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold"
+                                            className="w-full h-12 bg-indigo-600 hover:bg-indigo-500 text-foreground font-semibold"
                                             onClick={handleSetup2FA}
                                             disabled={loading}
                                         >
@@ -378,13 +378,13 @@ export default function SetupWizard() {
                                         </Button>
                                         <Button
                                             variant="outline"
-                                            className="w-full h-12 bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700"
+                                            className="w-full h-12 bg-secondary border-border text-secondary-foreground hover:bg-secondary/80"
                                             onClick={handleSkip2FA}
                                             disabled={loading}
                                         >
                                             Skip for now
                                         </Button>
-                                        <p className="text-center text-zinc-600 text-[11px]">
+                                        <p className="text-center text-muted-foreground text-[11px]">
                                             You can always enable 2FA later from Settings → Security
                                         </p>
                                     </div>
@@ -394,7 +394,7 @@ export default function SetupWizard() {
                     )}
                 </Card>
 
-                <p className="text-center text-zinc-600 text-xs">
+                <p className="text-center text-muted-foreground text-xs">
                     Restin.AI — Restaurant Operating System
                 </p>
             </div>

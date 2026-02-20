@@ -27,11 +27,11 @@ export function StatCard({ title, value, icon: Icon, trend, description, classNa
         {Icon && <Icon className="h-4 w-4" style={{ color: '#71717A' }} />}
       </CardHeader>
       <CardContent>
-        <div className="text-3xl font-black text-white font-heading tracking-tight">
+        <div className="text-3xl font-black text-foreground font-heading tracking-tight">
           {value}
         </div>
         {description && (
-          <p className="text-[10px] mt-1 font-medium text-zinc-500 uppercase tracking-widest">
+          <p className="text-[10px] mt-1 font-medium text-muted-foreground uppercase tracking-widest">
             {description}
           </p>
         )}
