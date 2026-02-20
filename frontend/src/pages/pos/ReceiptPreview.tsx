@@ -161,9 +161,15 @@ export default function ReceiptPreview({ order, items, orderTotal, venueInfo, on
                         <>
                             <div style={s.divider} />
                             <div style={s.paymentMethod}>
-                                <span>Paid by: {order.tender_type}</span>
+                                <span>Paid by: {order.tender_type === 'ROOM_CHARGE' ? 'Room Charge' : order.tender_type}</span>
                                 {order.change > 0 && <span>Change: €{order.change.toFixed(2)}</span>}
                             </div>
+                            {order.tender_type === 'ROOM_CHARGE' && order.room_number && (
+                                <div style={{ ...s.paymentMethod, marginTop: 2 }}>
+                                    <span>Room: {order.room_number}</span>
+                                    {order.guest_name && <span>Guest: {order.guest_name}</span>}
+                                </div>
+                            )}
                         </>
                     )}
 

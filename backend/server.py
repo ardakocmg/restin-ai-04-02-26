@@ -230,6 +230,7 @@ from pos.routes import create_pos_runtime_router
 from pos.routes.pos_snapshots import create_pos_snapshot_router
 from pos.routes.pos_discount_routes import create_pos_discount_router
 from pos.routes.pos_split_bill_routes import create_pos_split_bill_router
+from routes.room_charge_routes import create_room_charge_router
 
 # Inventory System Imports
 from inventory.routes import create_inventory_routes
@@ -429,6 +430,7 @@ kds_reports_router = create_kds_reports_router()
 # POS System Routers
 pos_runtime_router = create_pos_runtime_router()
 pos_snapshot_router = create_pos_snapshot_router()
+room_charge_router = create_room_charge_router()
 
 # Inventory System Routers
 inventory_router_new = create_inventory_routes()
@@ -682,6 +684,7 @@ api_main.include_router(pos_runtime_router)
 api_main.include_router(pos_snapshot_router)
 api_main.include_router(create_pos_discount_router())
 api_main.include_router(create_pos_split_bill_router())
+api_main.include_router(room_charge_router)  # Room Charge (OPERA PMS)
 api_main.include_router(inventory_router_new)
 api_main.include_router(production_router)
 api_main.include_router(pos_session_router)

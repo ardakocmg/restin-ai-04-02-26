@@ -930,7 +930,7 @@ export default function RecipeEditor() {
                                 {/* Additional images */}
                                 {form.images.map((img, idx) => (
                                     <div key={idx} className="relative group">
-                                        <img src={img} alt="" className="aspect-square object-cover rounded-lg" />
+                                        <img src={img} alt={`Recipe image ${idx + 1}`} className="aspect-square object-cover rounded-lg" />
                                         <Button
                                             variant="destructive"
                                             size="icon"

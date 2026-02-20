@@ -3,7 +3,8 @@
  * Renders the appropriate POS component based on the active theme from the Theme Engine.
  * 
  * Supported engines:
- * - l-series: POSRuntimeEnhanced (Lightspeed clone)
+ * - l-series: POSRuntimeEnhanced (Lightspeed L-Series clone)
+ * - k-series: POSRuntimeKSeries (Lightspeed K-Series clone — standalone 5th engine)
  * - restin:   POSMain (Classic Restin.AI via POSLayoutRestin)
  * - pro:      POSMain (iPad full-service via POSLayoutPro)
  * - express:  POSMain (Quick service via POSLayoutExpress)
@@ -14,6 +15,7 @@ import type { POSLayoutEngine } from '@/features/pos/themes/posThemeTypes';
 
 const POSMain = React.lazy(() => import('./POSMain'));
 const POSRuntimeEnhanced = React.lazy(() => import('./POSRuntimeEnhanced'));
+const POSRuntimeKSeries = React.lazy(() => import('./POSRuntimeKSeries'));
 
 export type POSTheme = 'restin' | 'l-series' | 'k-series';
 
@@ -52,6 +54,7 @@ export default function POSThemeRouter() {
     return (
         <Suspense fallback={<LoadingFallback />}>
             {engine === 'l-series' && <POSRuntimeEnhanced />}
+            {engine === 'k-series' && <POSRuntimeKSeries />}
             {(engine === 'restin' || engine === 'pro' || engine === 'express') && <POSMain />}
             {engine === 'custom' && <POSRuntimeEnhanced />}
         </Suspense>

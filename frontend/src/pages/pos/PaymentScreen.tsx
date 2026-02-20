@@ -2,10 +2,10 @@
 /**
  * Payment Screen — Full payment flow with Lightspeed parity
  * Features: Cash, Card, Gift Card, Tab, Split (Equal/By Seat/Custom),
- *           Tips, Discounts, Partial Pay, Change, Unfinalize
+ *           Tips, Discounts, Partial Pay, Change, Unfinalize, Room Charge
  */
-import React, { useState, useMemo } from 'react';
-import { X, CreditCard, Banknote, Gift, Bookmark, Scissors, Percent, RotateCcw, Users } from 'lucide-react';
+import React, { useState, useMemo, useCallback } from 'react';
+import { X, CreditCard, Banknote, Gift, Bookmark, Scissors, Percent, RotateCcw, Users, Hotel, Search, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 const s = {
     overlay: {
@@ -145,7 +145,7 @@ const s = {
 };
 
 const TIP_OPTIONS = [0, 5, 10, 15, 20];
-const METHODS = [
+const BASE_METHODS = [
     { key: 'CASH', icon: Banknote, label: 'Cash', color: '#4ade80' },
     { key: 'CARD', icon: CreditCard, label: 'Card', color: '#5B8DEF' },
     { key: 'GIFT_CARD', icon: Gift, label: 'Gift Card', color: '#C77DBA' },
@@ -153,8 +153,9 @@ const METHODS = [
     { key: 'SPLIT', icon: Scissors, label: 'Split Bill', color: '#2A9D8F' },
     { key: 'PARTIAL', icon: Percent, label: 'Partial Pay', color: '#E05A33' },
 ];
+const ROOM_CHARGE_METHOD = { key: 'ROOM_CHARGE', icon: Hotel, label: 'Room Charge', color: '#C74634' };
 
-export default function PaymentScreen({ order, items, orderTotal, onPay, onClose, onUnfinalize }) {
+export default function PaymentScreen({ order, items, orderTotal, onPay, onClose, onUnfinalize, venueId, roomChargeEnabled = false }) {
     const [selectedMethod, setSelectedMethod] = useState(null);
     const [tipPercent, setTipPercent] = useState(0);
     const [customTip, setCustomTip] = useState('');
@@ -167,6 +168,88 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
     const [giftCardCode, setGiftCardCode] = useState('');
     const [giftCardBalance, setGiftCardBalance] = useState(null);
     const [giftCardChecking, setGiftCardChecking] = useState(false);
+
+    /* ─── Room Charge State ─────────────────────────────────────── */
+    const [rcRoomNumber, setRcRoomNumber] = useState('');
+    const [rcSearching, setRcSearching] = useState(false);
+    const [rcGuests, setRcGuests] = useState([]);
+    const [rcSelectedGuest, setRcSelectedGuest] = useState(null);
+    const [rcError, setRcError] = useState('');
+    const [rcPosting, setRcPosting] = useState(false);
+    const [rcSuccess, setRcSuccess] = useState(false);
+
+    const METHODS = useMemo(() => {
+        const m = [...BASE_METHODS];
+        if (roomChargeEnabled) m.push(ROOM_CHARGE_METHOD);
+        return m;
+    }, [roomChargeEnabled]);
+
+    /* ─── Room Charge: Guest Lookup ─────────────────────────────── */
+    const searchGuest = useCallback(async () => {
+        if (!rcRoomNumber.trim()) return;
+        setRcSearching(true);
+        setRcGuests([]);
+        setRcSelectedGuest(null);
+        setRcError('');
+        try {
+            const resp = await fetch(`/api/venues/${venueId}/room-charge/guest?room=${encodeURIComponent(rcRoomNumber.trim())}`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+            });
+            const data = await resp.json();
+            if (!resp.ok) throw new Error(data.detail || 'Lookup failed');
+            if (data.found && data.guests?.length > 0) {
+                setRcGuests(data.guests);
+                if (data.guests.length === 1) setRcSelectedGuest(data.guests[0]);
+            } else {
+                setRcError(`No in-house guest found in Room ${rcRoomNumber}`);
+            }
+        } catch (err) {
+            setRcError(err.message || 'Connection error');
+        } finally {
+            setRcSearching(false);
+        }
+    }, [rcRoomNumber, venueId]);
+
+    /* ─── Room Charge: Post to Folio ────────────────────────────── */
+    const postRoomCharge = useCallback(async () => {
+        if (!rcSelectedGuest) return;
+        setRcPosting(true);
+        setRcError('');
+        try {
+            const resp = await fetch(`/api/venues/${venueId}/room-charge/post`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    reservation_id: rcSelectedGuest.reservation_id,
+                    amount_cents: Math.round(finalTotal * 100),
+                    description: `POS Order ${order?.order_number || order?.id || ''}`.trim(),
+                    currency_code: 'EUR',
+                    pos_check_id: order?.id || null,
+                }),
+            });
+            const data = await resp.json();
+            if (!resp.ok) throw new Error(data.detail || 'Charge failed');
+            setRcSuccess(true);
+            setTimeout(() => {
+                onPay({
+                    tender_type: 'ROOM_CHARGE',
+                    amount: finalTotal,
+                    tip: tipAmount,
+                    discount: discountAmount,
+                    room_number: rcRoomNumber,
+                    guest_name: `${rcSelectedGuest.first_name} ${rcSelectedGuest.last_name}`,
+                    reservation_id: rcSelectedGuest.reservation_id,
+                });
+            }, 1500);
+        } catch (err) {
+            setRcError(err.message || 'Charge failed');
+        } finally {
+            setRcPosting(false);
+        }
+    }, [rcSelectedGuest, venueId, finalTotal, tipAmount, discountAmount, rcRoomNumber, order, onPay]);
 
     const tipAmount = customTip ? parseFloat(customTip) || 0 : (orderTotal * tipPercent) / 100;
     const finalTotal = orderTotal + tipAmount - discountAmount;
@@ -409,6 +492,106 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                     </div>
                                 )}
 
+                                {/* Room Charge Panel */}
+                                {selectedMethod === 'ROOM_CHARGE' && (
+                                    <div style={{ marginBottom: 16, padding: 16, backgroundColor: '#1a1210', borderRadius: 12, border: '1px solid #C7463440' }}>
+                                        <div style={{ fontSize: 12, fontWeight: 700, color: '#C74634', marginBottom: 12 }}>🏨 Room Charge — Guest Lookup</div>
+
+                                        {/* Room number input */}
+                                        <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+                                            <input
+                                                style={{ ...s.customInput, flex: 1, marginBottom: 0 }}
+                                                placeholder="Room number (e.g. 101)"
+                                                value={rcRoomNumber}
+                                                onChange={e => setRcRoomNumber(e.target.value)}
+                                                onKeyDown={e => { if (e.key === 'Enter') searchGuest(); }}
+                                                autoFocus
+                                            />
+                                            <button
+                                                onClick={searchGuest}
+                                                disabled={rcSearching || !rcRoomNumber.trim()}
+                                                style={{ padding: '8px 16px', borderRadius: 8, border: 'none', backgroundColor: '#C74634', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: (rcSearching || !rcRoomNumber.trim()) ? 0.5 : 1, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 6 }}
+                                            >
+                                                {rcSearching ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <Search size={14} />}
+                                                {rcSearching ? 'Searching…' : 'Search'}
+                                            </button>
+                                        </div>
+
+                                        {/* Error */}
+                                        {rcError && (
+                                            <div style={{ marginBottom: 10, padding: 10, borderRadius: 8, backgroundColor: '#2a1515', border: '1px solid #E05A33', display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                <AlertCircle size={16} color="#E05A33" />
+                                                <span style={{ fontSize: 12, color: '#E05A33', fontWeight: 600 }}>{rcError}</span>
+                                            </div>
+                                        )}
+
+                                        {/* Guest results */}
+                                        {rcGuests.length > 0 && (
+                                            <div style={{ marginBottom: 10 }}>
+                                                <div style={{ fontSize: 11, color: '#888', marginBottom: 6 }}>
+                                                    {rcGuests.length} guest{rcGuests.length > 1 ? 's' : ''} found:
+                                                </div>
+                                                {rcGuests.map((g, i) => {
+                                                    const isSelected = rcSelectedGuest?.reservation_id === g.reservation_id;
+                                                    return (
+                                                        <div
+                                                            key={g.reservation_id || i}
+                                                            onClick={() => setRcSelectedGuest(g)}
+                                                            style={{
+                                                                padding: '10px 12px', borderRadius: 8, marginBottom: 6, cursor: 'pointer',
+                                                                border: `2px solid ${isSelected ? '#C74634' : '#333'}`,
+                                                                backgroundColor: isSelected ? '#C7463422' : '#111',
+                                                                transition: 'all 0.15s',
+                                                            }}
+                                                        >
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                <div>
+                                                                    <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>
+                                                                        {g.first_name} {g.last_name}
+                                                                    </div>
+                                                                    <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
+                                                                        Room {g.room_number} · Res #{g.confirmation_number || g.reservation_id}
+                                                                        {g.vip_code && <span style={{ marginLeft: 6, color: '#F4A261' }}>⭐ VIP</span>}
+                                                                    </div>
+                                                                    <div style={{ fontSize: 10, color: '#666', marginTop: 2 }}>
+                                                                        {g.arrival_date} → {g.departure_date}
+                                                                    </div>
+                                                                </div>
+                                                                {isSelected && <CheckCircle size={20} color="#C74634" />}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+
+                                        {/* Success state */}
+                                        {rcSuccess && (
+                                            <div style={{ padding: 16, borderRadius: 10, backgroundColor: '#1a2a1a', border: '1px solid #4ade80', textAlign: 'center' }}>
+                                                <CheckCircle size={32} color="#4ade80" style={{ marginBottom: 8 }} />
+                                                <div style={{ fontSize: 16, fontWeight: 700, color: '#4ade80' }}>Charged to Room {rcRoomNumber}</div>
+                                                <div style={{ fontSize: 12, color: '#888', marginTop: 4 }}>
+                                                    €{finalTotal.toFixed(2)} → {rcSelectedGuest?.first_name} {rcSelectedGuest?.last_name}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Charge summary */}
+                                        {rcSelectedGuest && !rcSuccess && (
+                                            <div style={{ padding: 12, borderRadius: 8, backgroundColor: '#111', border: '1px solid #333', marginTop: 8 }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+                                                    <span style={{ color: '#888' }}>Charge to:</span>
+                                                    <span style={{ color: '#fff', fontWeight: 700 }}>{rcSelectedGuest.first_name} {rcSelectedGuest.last_name} · Room {rcRoomNumber}</span>
+                                                </div>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginTop: 4 }}>
+                                                    <span style={{ color: '#888' }}>Amount:</span>
+                                                    <span style={{ color: '#C74634', fontWeight: 700 }}>€{finalTotal.toFixed(2)}</span>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
                                 {/* Tip */}
                                 <div style={s.tipSection}>
                                     <div style={s.tipLabel}>TIP</div>
@@ -539,21 +722,36 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                 </div>
 
                                 {/* Pay button */}
-                                <button
-                                    style={{
-                                        ...s.confirmBtn,
-                                        opacity: selectedMethod ? 1 : 0.5,
-                                        cursor: selectedMethod ? 'pointer' : 'not-allowed',
-                                    }}
-                                    onClick={handlePay}
-                                    disabled={!selectedMethod}
-                                >
-                                    {selectedMethod === 'TAB' ? 'Charge to Tab' :
-                                        selectedMethod === 'PARTIAL' ? `Pay €${(parseFloat(customAmount) || 0).toFixed(2)}` :
-                                            splitWay === 'equal' ? `Pay €${perPersonAmount.toFixed(2)} per person` :
-                                                splitWay === 'seat' ? `Finalize (${paidSeats.size}/${seatNumbers.length} seats paid)` :
-                                                    `Pay €${finalTotal.toFixed(2)}`}
-                                </button>
+                                {selectedMethod === 'ROOM_CHARGE' ? (
+                                    <button
+                                        style={{
+                                            ...s.confirmBtn,
+                                            backgroundColor: rcSelectedGuest && !rcPosting && !rcSuccess ? '#C74634' : '#333',
+                                            opacity: rcSelectedGuest && !rcPosting && !rcSuccess ? 1 : 0.5,
+                                            cursor: rcSelectedGuest && !rcPosting && !rcSuccess ? 'pointer' : 'not-allowed',
+                                        }}
+                                        onClick={postRoomCharge}
+                                        disabled={!rcSelectedGuest || rcPosting || rcSuccess}
+                                    >
+                                        {rcPosting ? 'Posting charge…' : rcSuccess ? '✓ Charged' : `Charge €${finalTotal.toFixed(2)} to Room ${rcRoomNumber || '—'}`}
+                                    </button>
+                                ) : (
+                                    <button
+                                        style={{
+                                            ...s.confirmBtn,
+                                            opacity: selectedMethod ? 1 : 0.5,
+                                            cursor: selectedMethod ? 'pointer' : 'not-allowed',
+                                        }}
+                                        onClick={handlePay}
+                                        disabled={!selectedMethod}
+                                    >
+                                        {selectedMethod === 'TAB' ? 'Charge to Tab' :
+                                            selectedMethod === 'PARTIAL' ? `Pay €${(parseFloat(customAmount) || 0).toFixed(2)}` :
+                                                splitWay === 'equal' ? `Pay €${perPersonAmount.toFixed(2)} per person` :
+                                                    splitWay === 'seat' ? `Finalize (${paidSeats.size}/${seatNumbers.length} seats paid)` :
+                                                        `Pay €${finalTotal.toFixed(2)}`}
+                                    </button>
+                                )}
                             </>
                         )}
                     </div>

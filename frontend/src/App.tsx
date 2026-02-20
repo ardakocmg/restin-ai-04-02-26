@@ -92,8 +92,8 @@ function RootOverlays() {
     const clearSessionHard = () => {
       localStorage.removeItem("restin_token");
       localStorage.removeItem("restin_user");
-      try { delete axios.defaults.headers.common.Authorization; } catch { }
-      try { delete api.defaults.headers.common.Authorization; } catch { }
+      try { delete axios.defaults.headers.common.Authorization; } catch { /* header may not exist */ }
+      try { delete api.defaults.headers.common.Authorization; } catch { /* header may not exist */ }
     };
 
     (async () => {

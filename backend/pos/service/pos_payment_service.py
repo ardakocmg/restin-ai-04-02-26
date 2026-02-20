@@ -34,6 +34,9 @@ class PosPaymentService:
             amount=data.amount,
             tip_amount=data.tip_amount,
             external_ref=data.external_ref,
+            room_number=data.room_number,
+            guest_name=data.guest_name,
+            reservation_id=data.reservation_id,
             created_by=user_id
         )
         

@@ -1,0 +1,1032 @@
+/* ==========================================================================
+   KDS 2.0 — Kitchen Display System
+   Pixel-perfect Lightspeed K-Series clone
+   Light + Dark theme support
+   ========================================================================== */
+
+:root {
+    /* KDS 2.0 Light Theme */
+    --kds2-bg: #f3f4f6;
+    --kds2-header-bg: #ffffff;
+    --kds2-header-border: #e5e7eb;
+    --kds2-text: #111827;
+    --kds2-text-secondary: #6b7280;
+    --kds2-card-bg: #ffffff;
+    --kds2-card-border: #e5e7eb;
+    --kds2-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+    /* Status Colors */
+    --kds2-status-new: #9CA3AF;
+    --kds2-status-new-bg: #F3F4F6;
+    --kds2-status-preparing: #3B82F6;
+    --kds2-status-preparing-bg: #EFF6FF;
+    --kds2-status-ready: #22C55E;
+    --kds2-status-ready-bg: #F0FDF4;
+    --kds2-status-hold: #92400E;
+    --kds2-status-hold-bg: #FFFBEB;
+    --kds2-status-canceled: #EF4444;
+    --kds2-status-canceled-bg: #FEF2F2;
+    --kds2-status-completed: #6B7280;
+    --kds2-status-completed-bg: #F9FAFB;
+
+    /* Filter bar */
+    --kds2-filter-bg: #ffffff;
+    --kds2-filter-active: #3B82F6;
+    --kds2-filter-inactive: #9CA3AF;
+
+    /* Settings panel */
+    --kds2-settings-bg: #ffffff;
+    --kds2-settings-overlay: rgba(0, 0, 0, 0.3);
+
+    /* Instruction colors */
+    --kds2-instruction-warning: #F97316;
+    --kds2-instruction-addition: #22C55E;
+    --kds2-instruction-removal: #EF4444;
+    --kds2-instruction-comment: #3B82F6;
+
+    /* Wait time glows */
+    --kds2-delayed-glow: rgba(249, 115, 22, 0.5);
+    --kds2-late-glow: rgba(239, 68, 68, 0.5);
+}
+
+/* Dark Theme */
+.kds2-dark {
+    --kds2-bg: #111827;
+    --kds2-header-bg: #1F2937;
+    --kds2-header-border: #374151;
+    --kds2-text: #F9FAFB;
+    --kds2-text-secondary: #9CA3AF;
+    --kds2-card-bg: #1F2937;
+    --kds2-card-border: #374151;
+    --kds2-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --kds2-filter-bg: #1F2937;
+    --kds2-settings-bg: #1F2937;
+    --kds2-settings-overlay: rgba(0, 0, 0, 0.6);
+    --kds2-status-new-bg: #1F2937;
+    --kds2-status-preparing-bg: #1E293B;
+    --kds2-status-ready-bg: #14271A;
+    --kds2-status-hold-bg: #2A1F0E;
+    --kds2-status-canceled-bg: #2A1212;
+    --kds2-status-completed-bg: #1F2937;
+}
+
+/* ==================== Layout ==================== */
+
+.kds2-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--kds2-bg);
+    color: var(--kds2-text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* ==================== Header Bar ==================== */
+
+.kds2-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: var(--kds2-header-bg);
+    border-bottom: 1px solid var(--kds2-header-border);
+    min-height: 48px;
+    gap: 12px;
+    z-index: 10;
+}
+
+.kds2-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.kds2-station-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--kds2-text);
+}
+
+.kds2-item-count {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: var(--kds2-text-secondary);
+    background: var(--kds2-bg);
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.kds2-item-count-number {
+    font-weight: 700;
+    color: var(--kds2-status-preparing);
+}
+
+.kds2-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.kds2-header-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--kds2-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.kds2-header-btn:hover {
+    background: var(--kds2-bg);
+    color: var(--kds2-text);
+}
+
+.kds2-connection-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--kds2-status-ready);
+}
+
+.kds2-connection-dot.disconnected {
+    background: var(--kds2-status-canceled);
+}
+
+/* ==================== Filter Bars ==================== */
+
+.kds2-filters {
+    display: flex;
+    flex-direction: column;
+    background: var(--kds2-filter-bg);
+    border-bottom: 1px solid var(--kds2-header-border);
+}
+
+.kds2-filter-row {
+    display: flex;
+    align-items: center;
+    padding: 6px 16px;
+    gap: 8px;
+    overflow-x: auto;
+}
+
+.kds2-filter-row:not(:last-child) {
+    border-bottom: 1px solid var(--kds2-header-border);
+}
+
+.kds2-filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid var(--kds2-header-border);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--kds2-text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+.kds2-filter-btn:hover {
+    border-color: var(--kds2-filter-active);
+    color: var(--kds2-filter-active);
+}
+
+.kds2-filter-btn.active {
+    background: var(--kds2-filter-active);
+    border-color: var(--kds2-filter-active);
+    color: #ffffff;
+}
+
+.kds2-filter-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.kds2-filter-count {
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 1px 6px;
+    border-radius: 8px;
+}
+
+.kds2-filter-btn.active .kds2-filter-count {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==================== Tickets Grid ==================== */
+
+.kds2-tickets-area {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.kds2-tickets-area.layout-equal {
+    flex-wrap: wrap;
+    overflow-y: auto;
+    align-content: flex-start;
+}
+
+.kds2-tickets-area.layout-equal .kds2-ticket {
+    flex: 0 0 calc(25% - 9px);
+    min-width: 240px;
+    max-height: 400px;
+}
+
+/* ==================== Ticket Card ==================== */
+
+.kds2-ticket {
+    flex: 0 0 260px;
+    min-width: 260px;
+    max-width: 260px;
+    background: var(--kds2-card-bg);
+    border: 1px solid var(--kds2-card-border);
+    border-radius: 10px;
+    box-shadow: var(--kds2-card-shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s ease;
+}
+
+.kds2-ticket.status-new {
+    border-top: 4px solid var(--kds2-status-new);
+}
+
+.kds2-ticket.status-preparing {
+    border-top: 4px solid var(--kds2-status-preparing);
+}
+
+.kds2-ticket.status-ready {
+    border-top: 4px solid var(--kds2-status-ready);
+}
+
+.kds2-ticket.status-hold {
+    border-top: 4px solid var(--kds2-status-hold);
+}
+
+.kds2-ticket.status-canceled {
+    border-top: 4px solid var(--kds2-status-canceled);
+}
+
+/* Delayed / Late pulsing */
+.kds2-ticket.delayed {
+    animation: kds2-delayed-pulse 2s ease-in-out infinite;
+}
+
+.kds2-ticket.late {
+    animation: kds2-late-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes kds2-delayed-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 var(--kds2-delayed-glow);
+    }
+
+    50% {
+        box-shadow: 0 0 12px 4px var(--kds2-delayed-glow);
+    }
+}
+
+@keyframes kds2-late-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 var(--kds2-late-glow);
+    }
+
+    50% {
+        box-shadow: 0 0 12px 4px var(--kds2-late-glow);
+    }
+}
+
+/* Blink animation for updated orders */
+.kds2-ticket.blink {
+    animation: kds2-blink 0.8s ease-in-out infinite;
+}
+
+@keyframes kds2-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Course color bar at top */
+.kds2-ticket-courses-bar {
+    display: flex;
+    height: 4px;
+}
+
+.kds2-ticket-courses-bar .course-segment {
+    flex: 1;
+    height: 100%;
+}
+
+.kds2-ticket-courses-bar .course-segment.completed {
+    opacity: 0.3;
+}
+
+/* ==================== Ticket Summary ==================== */
+
+.kds2-ticket-summary {
+    padding: 10px 12px 8px;
+    border-bottom: 1px solid var(--kds2-card-border);
+}
+
+.kds2-ticket-summary-full {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.kds2-ticket-summary-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--kds2-text-secondary);
+}
+
+.kds2-ticket-summary-row .label {
+    font-weight: 600;
+    color: var(--kds2-text);
+}
+
+.kds2-ticket-collection-code {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--kds2-text);
+}
+
+.kds2-ticket-summary-condensed {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 12px;
+}
+
+.kds2-ticket-summary-condensed .kds2-ticket-summary-row {
+    font-size: 11px;
+}
+
+/* ==================== Ticket Body ==================== */
+
+.kds2-ticket-body {
+    padding: 8px 12px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.kds2-ticket-course-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0;
+    margin-bottom: 4px;
+}
+
+.kds2-ticket-course-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--kds2-status-preparing);
+    text-transform: uppercase;
+}
+
+.kds2-ticket-item-count {
+    font-size: 11px;
+    color: var(--kds2-text-secondary);
+    cursor: pointer;
+}
+
+.kds2-ticket-items-toggle {
+    border: none;
+    background: none;
+    color: var(--kds2-text-secondary);
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+}
+
+/* Item rows */
+.kds2-ticket-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.kds2-ticket-item:last-child {
+    border-bottom: none;
+}
+
+.kds2-ticket-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.kds2-ticket-item-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--kds2-text);
+}
+
+.kds2-ticket-item-qty {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--kds2-text);
+    margin-right: 6px;
+}
+
+.kds2-ticket-item-completed .kds2-ticket-item-name {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+/* Production Instructions */
+.kds2-instruction {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    padding: 2px 0;
+    font-weight: 500;
+}
+
+.kds2-instruction.warning {
+    color: var(--kds2-instruction-warning);
+}
+
+.kds2-instruction.addition {
+    color: var(--kds2-instruction-addition);
+}
+
+.kds2-instruction.removal {
+    color: var(--kds2-instruction-removal);
+}
+
+.kds2-instruction.comment {
+    color: var(--kds2-instruction-comment);
+}
+
+.kds2-instruction-icon {
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 800;
+}
+
+/* Item Action button */
+.kds2-ticket-item-action {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.kds2-ticket-item-action.play {
+    background: var(--kds2-status-preparing);
+    color: #fff;
+}
+
+.kds2-ticket-item-action.bell {
+    background: var(--kds2-status-ready);
+    color: #fff;
+}
+
+.kds2-ticket-item-action.check {
+    background: var(--kds2-status-completed);
+    color: #fff;
+}
+
+.kds2-ticket-item-action:hover {
+    transform: scale(1.1);
+}
+
+/* ==================== Ticket Footer / Timestamps ==================== */
+
+.kds2-ticket-footer {
+    padding: 8px 12px;
+    border-top: 1px solid var(--kds2-card-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--kds2-text-secondary);
+    cursor: pointer;
+}
+
+.kds2-ticket-timestamps {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.kds2-ticket-timestamp {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.kds2-ticket-timestamp .time {
+    font-weight: 600;
+}
+
+/* ==================== Undo Toast ==================== */
+
+.kds2-undo-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1F2937;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    animation: kds2-slide-up 0.3s ease;
+}
+
+.kds2-undo-btn {
+    padding: 6px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    background: transparent;
+    color: #60A5FA;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.kds2-undo-btn:hover {
+    background: rgba(96, 165, 250, 0.15);
+}
+
+@keyframes kds2-slide-up {
+    from {
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ==================== Items List View ==================== */
+
+.kds2-items-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.kds2-items-list-group {
+    margin-bottom: 20px;
+}
+
+.kds2-items-list-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--kds2-header-bg);
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.kds2-items-list-group-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.kds2-items-list-group-count {
+    font-size: 13px;
+    color: var(--kds2-text-secondary);
+}
+
+.kds2-items-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--kds2-card-bg);
+    border: 1px solid var(--kds2-card-border);
+    border-radius: 8px;
+    margin-bottom: 6px;
+}
+
+.kds2-items-list-item-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.kds2-items-list-item-qty {
+    font-size: 18px;
+    font-weight: 700;
+    min-width: 32px;
+    text-align: center;
+}
+
+.kds2-items-list-item-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ==================== Settings Sidebar ==================== */
+
+.kds2-settings-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--kds2-settings-overlay);
+    z-index: 100;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.kds2-settings-panel {
+    width: 380px;
+    max-width: 90vw;
+    background: var(--kds2-settings-bg);
+    height: 100%;
+    overflow-y: auto;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.kds2-settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--kds2-header-border);
+}
+
+.kds2-settings-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.kds2-settings-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--kds2-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kds2-settings-section {
+    margin-bottom: 8px;
+}
+
+.kds2-settings-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--kds2-text-secondary);
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.kds2-settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.kds2-settings-row-label {
+    font-size: 14px;
+    color: var(--kds2-text);
+}
+
+.kds2-settings-row-desc {
+    font-size: 11px;
+    color: var(--kds2-text-secondary);
+    margin-top: 2px;
+}
+
+/* Toggle Switch */
+.kds2-toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    border-radius: 12px;
+    background: #D1D5DB;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+}
+
+.kds2-toggle.active {
+    background: var(--kds2-status-preparing);
+}
+
+.kds2-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.kds2-toggle.active::after {
+    transform: translateX(20px);
+}
+
+/* Select dropdown */
+.kds2-select {
+    padding: 6px 10px;
+    border: 1px solid var(--kds2-header-border);
+    border-radius: 6px;
+    background: var(--kds2-card-bg);
+    color: var(--kds2-text);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* Radio group */
+.kds2-radio-group {
+    display: flex;
+    gap: 8px;
+}
+
+.kds2-radio-option {
+    padding: 8px 14px;
+    border: 1px solid var(--kds2-header-border);
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--kds2-text-secondary);
+}
+
+.kds2-radio-option.active {
+    border-color: var(--kds2-status-preparing);
+    background: var(--kds2-status-preparing-bg);
+    color: var(--kds2-status-preparing);
+    font-weight: 600;
+}
+
+/* Number input for wait times */
+.kds2-number-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.kds2-number-input input {
+    width: 60px;
+    padding: 6px 8px;
+    border: 1px solid var(--kds2-header-border);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    background: var(--kds2-card-bg);
+    color: var(--kds2-text);
+}
+
+.kds2-number-input .unit {
+    font-size: 12px;
+    color: var(--kds2-text-secondary);
+}
+
+/* Save button */
+.kds2-settings-save {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: var(--kds2-status-preparing);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    margin-top: auto;
+}
+
+.kds2-settings-save:hover {
+    background: #2563EB;
+}
+
+/* All Settings link */
+.kds2-all-settings-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 0;
+    color: var(--kds2-status-preparing);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+/* ==================== Status Menu (long-press) ==================== */
+
+.kds2-status-menu {
+    position: fixed;
+    z-index: 200;
+    background: var(--kds2-card-bg);
+    border: 1px solid var(--kds2-card-border);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    min-width: 180px;
+}
+
+.kds2-status-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    color: var(--kds2-text);
+    cursor: pointer;
+}
+
+.kds2-status-menu-item:hover {
+    background: var(--kds2-bg);
+}
+
+.kds2-status-menu-item .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* ==================== Items List Toggle ==================== */
+
+.kds2-view-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid var(--kds2-header-border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.kds2-view-toggle-btn {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    color: var(--kds2-text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.kds2-view-toggle-btn.active {
+    background: var(--kds2-status-preparing);
+    color: #fff;
+}
+
+/* ==================== Empty state ==================== */
+
+.kds2-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--kds2-text-secondary);
+}
+
+.kds2-empty-icon {
+    font-size: 48px;
+    opacity: 0.3;
+}
+
+.kds2-empty-text {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* ==================== Statistics ==================== */
+
+.kds2-stats-modal {
+    position: fixed;
+    inset: 0;
+    background: var(--kds2-settings-overlay);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kds2-stats-panel {
+    width: 600px;
+    max-width: 90vw;
+    max-height: 80vh;
+    background: var(--kds2-settings-bg);
+    border-radius: 12px;
+    overflow-y: auto;
+    padding: 24px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.kds2-stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+.kds2-stats-table th,
+.kds2-stats-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--kds2-card-border);
+    font-size: 13px;
+}
+
+.kds2-stats-table th {
+    font-weight: 600;
+    color: var(--kds2-text-secondary);
+    text-transform: uppercase;
+    font-size: 11px;
+}
+
+/* ==================== Responsive ==================== */
+
+@media (max-width: 768px) {
+    .kds2-ticket {
+        flex: 0 0 220px;
+        min-width: 220px;
+        max-width: 220px;
+    }
+
+    .kds2-settings-panel {
+        width: 100%;
+    }
+
+    .kds2-header {
+        padding: 6px 10px;
+    }
+}
