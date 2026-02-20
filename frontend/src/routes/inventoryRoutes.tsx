@@ -36,6 +36,8 @@ const TheoreticalVsActual = React.lazy(() => import('../pages/manager/inventory/
 const TraceabilityView = React.lazy(() => import('../pages/manager/inventory/TraceabilityView'));
 const UnitConversionMatrix = React.lazy(() => import('../pages/manager/inventory/UnitConversionMatrix'));
 const MobileStockCount = React.lazy(() => import('../pages/manager/inventory/MobileStockCount'));
+const NutritionalCalculator = React.lazy(() => import('../pages/manager/inventory/NutritionalCalculator'));
+const LabelDesigner = React.lazy(() => import('../pages/manager/inventory/LabelDesigner'));
 
 export const inventoryRoutes = (
     <>
@@ -71,5 +73,7 @@ export const inventoryRoutes = (
         <Route path="inventory-traceability" element={<RoleRoute requiredRole="MANAGER"><TraceabilityView /></RoleRoute>} />
         <Route path="unit-conversion" element={<RoleRoute requiredRole="MANAGER"><UnitConversionMatrix /></RoleRoute>} />
         <Route path="mobile-stock-count" element={<RoleRoute requiredRole="MANAGER"><MobileStockCount /></RoleRoute>} />
+        <Route path="nutritional-calculator" element={<RoleRoute requiredRole="MANAGER"><NutritionalCalculator /></RoleRoute>} />
+        <Route path="label-designer" element={<RoleRoute requiredRole="MANAGER"><LabelDesigner /></RoleRoute>} />
     </>
 );
