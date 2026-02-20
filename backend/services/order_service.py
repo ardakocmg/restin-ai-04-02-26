@@ -390,10 +390,11 @@ async def close_order(db, order_id: str, current_user: dict) -> Tuple[bool, Dict
         }}
     )
     
-    # Free the table
-    if order.get("table_id"):
+    # Free the table (skip for counter/takeaway orders)
+    table_id = order.get("table_id")
+    if table_id and table_id not in ('counter', 'takeaway') and not table_id.startswith('counter-'):
         await db.tables.update_one(
-            {"id": order["table_id"]},
+            {"id": table_id},
             {"$set": {"status": "available", "current_order_id": None}}
         )
     

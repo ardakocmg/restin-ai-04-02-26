@@ -13,10 +13,10 @@
  */
 import { useState, useCallback, useEffect } from 'react';
 
-export type POSTheme = 'restin' | 'pro' | 'express';
+export type POSTheme = 'restin' | 'pro' | 'express' | 'k-series' | 'l-series';
 
 const STORAGE_KEY = 'restin_pos_theme';
-const VALID_THEMES: POSTheme[] = ['restin', 'pro', 'express'];
+const VALID_THEMES: POSTheme[] = ['restin', 'pro', 'express', 'k-series', 'l-series'];
 
 function isValidTheme(value: unknown): value is POSTheme {
     return typeof value === 'string' && VALID_THEMES.includes(value as POSTheme);
@@ -69,6 +69,20 @@ const THEME_META: ThemeMeta[] = [
         description: 'Quick service with auto-send payment at counter',
         icon: '⚡',
         target: 'Counter / Quick Service',
+    },
+    {
+        id: 'k-series',
+        name: 'K-Series',
+        description: 'Kitchen-focused layout with integrated KDS and course management',
+        icon: '🔥',
+        target: 'Full-Service / Kitchen',
+    },
+    {
+        id: 'l-series',
+        name: 'L-Series',
+        description: 'Dark professional iPad-optimized layout with left sidebar tools and color-coded categories',
+        icon: '✨',
+        target: 'iPad / Full-Service',
     },
 ];
 

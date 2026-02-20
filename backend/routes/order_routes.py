@@ -47,13 +47,21 @@ def create_order_router():
     async def create_order(data: OrderCreate, current_user: dict = Depends(get_current_user)):
         await check_venue_access(current_user, data.venue_id)
         
-        table = await db.tables.find_one({"id": data.table_id}, {"_id": 0})
-        if not table:
-            raise HTTPException(status_code=404, detail="Table not found")
+        # Counter / takeaway orders don't need a physical table
+        is_counter = data.table_id in ('counter', 'takeaway') or data.table_id.startswith('counter-')
+        
+        if is_counter:
+            table = {"id": data.table_id, "name": f"Counter", "seats": 1}
+        else:
+            table = await db.tables.find_one({"id": data.table_id}, {"_id": 0})
+            if not table:
+                raise HTTPException(status_code=404, detail="Table not found")
         
         server = await db.users.find_one({"id": data.server_id}, {"_id": 0})
         if not server:
             raise HTTPException(status_code=404, detail="Server not found")
+        
+        order_type = data.order_type if hasattr(data, 'order_type') and data.order_type else ('counter' if is_counter else 'dine_in')
         
         order = Order(
             venue_id=data.venue_id,
@@ -70,10 +78,11 @@ def create_order_router():
         # Create a copy before inserting to avoid MongoDB _id in response
         order_dict_copy = order_dict.copy()
         await db.orders.insert_one(order_dict_copy)
-        await db.tables.update_one(
-            {"id": data.table_id},
-            {"$set": {"status": "occupied", "current_order_id": order_dict["id"]}}
-        )
+        if not is_counter:
+            await db.tables.update_one(
+                {"id": data.table_id},
+                {"$set": {"status": "occupied", "current_order_id": order_dict["id"]}}
+            )
         
         await create_audit_log(
             data.venue_id, current_user["id"], current_user["name"],

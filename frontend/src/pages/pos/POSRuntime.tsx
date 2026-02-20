@@ -451,7 +451,7 @@ export default function POSRuntime() {
   if (loading && !venue) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-purple-500 animate-spin" />
+        <Loader2 className="w-12 h-12 text-primary animate-spin" />
       </div>
     );
   }
@@ -484,7 +484,7 @@ export default function POSRuntime() {
                     w-full p-3 rounded-lg flex flex-col items-center gap-2
                     transition-all duration-200
                     ${isActive
-                      ? 'bg-purple-600 text-foreground shadow-lg shadow-purple-900/40'
+                      ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
                       : 'bg-secondary text-muted-foreground hover:bg-secondary hover:text-foreground'}
                   `}
                 >
@@ -515,7 +515,7 @@ export default function POSRuntime() {
         {/* Simple Mobile Header */}
         <div className="md:hidden flex justify-between items-center mb-4 pb-4 border-b border-border">
           <h2 className="text-foreground font-bold text-lg">Menu</h2>
-          <button className="text-purple-500">
+          <button className="text-primary">
             <Grid3x3 className="w-6 h-6" />
           </button>
         </div>
@@ -593,7 +593,7 @@ export default function POSRuntime() {
                       {safeArray(item.modifiers).length > 0 && (
                         <div className="mt-1 space-y-0.5">
                           {safeArray(item.modifiers).map((mod, i) => (
-                            <p key={i} className="text-xs text-purple-300">• {mod.option_name || mod.name || mod}</p>
+                            <p key={i} className="text-xs text-primary/70">• {mod.option_name || mod.name || mod}</p>
                           ))}
                         </div>
                       )}
@@ -605,7 +605,7 @@ export default function POSRuntime() {
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="bg-zinc-700 rounded px-2 text-foreground text-sm">x{item.quantity}</div>
+                      <div className="bg-secondary rounded px-2 text-foreground text-sm">x{item.quantity}</div>
                     </div>
                     <span className="text-foreground font-bold">€{safeNumber(item.total_price || (item.price * item.quantity), 0).toFixed(2)}</span>
                   </div>
@@ -619,7 +619,7 @@ export default function POSRuntime() {
         <div className="p-4 border-t border-border space-y-3">
           <div className="flex items-center justify-between text-foreground text-xl font-bold">
             <span>Total</span>
-            <span className="text-purple-400">€{total.toFixed(2)}</span>
+            <span className="text-primary">€{total.toFixed(2)}</span>
           </div>
         </div>
 
@@ -647,7 +647,7 @@ export default function POSRuntime() {
           <Button
             onClick={() => setShowPaymentDialog(true)}
             disabled={!currentOrder || orderItems.length === 0}
-            className="w-full bg-purple-600 hover:bg-purple-700 h-12 text-base font-bold shadow-lg shadow-purple-900/20"
+            className="w-full bg-primary hover:bg-primary/90 h-12 text-base text-primary-foreground font-bold shadow-lg shadow-primary/20"
           >
             Pay €{total.toFixed(2)}
           </Button>
@@ -707,7 +707,7 @@ export default function POSRuntime() {
                       p-4 rounded-lg border-2 transition-all h-32 flex flex-col items-center justify-center gap-2
                       ${table.status === 'occupied'
                           ? 'bg-red-500/20 border-red-500/50 text-red-400'
-                          : 'bg-secondary border-border text-foreground hover:border-purple-500'}
+                          : 'bg-secondary border-border text-foreground hover:border-primary'}
                     `}
                     >
                       <div className="text-xl font-bold">{table.name}</div>

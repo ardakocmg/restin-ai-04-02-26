@@ -34,9 +34,49 @@ def create_orders_router():
     router = APIRouter(prefix="/orders", tags=["orders"])
     order_service = PosOrderService(db)
     
-    # ... (create_order remains same)
-    
-    # ... (get_order remains same)
+    @router.get("/{order_id}")
+    async def get_order(
+        order_id: str,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Get order by ID"""
+        order_doc = await db.pos_orders.find_one({"id": order_id}, {"_id": 0})
+        if not order_doc:
+            raise HTTPException(status_code=404, detail="Order not found")
+        
+        # Also fetch items
+        items_cursor = db.pos_order_items.find({"order_id": order_id}, {"_id": 0})
+        items = await items_cursor.to_list(1000)
+        order_doc["items"] = items
+        return order_doc
+
+
+    @router.post("")
+    async def create_order(
+        data: PosOrderCreate,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Create a new order"""
+        user_id = current_user.get("user_id") or current_user.get("id")
+        order = await order_service.create_order(data, user_id)
+        return {"ok": True, "order": order.model_dump(), "id": order.id}
+
+    @router.post("/{order_id}/send")
+    async def send_order(
+        order_id: str,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """Send order to kitchen"""
+        user_id = current_user.get("user_id") or current_user.get("id")
+        
+        # Get order to find venue_id
+        order_doc = await db.pos_orders.find_one({"id": order_id}, {"_id": 0, "venue_id": 1})
+        if not order_doc:
+            raise HTTPException(status_code=404, detail="Order not found")
+        
+        venue_id = order_doc.get("venue_id")
+        await order_service.send_order(order_id, venue_id, user_id)
+        return {"ok": True, "round_label": "Round 1"}
 
     @router.post("/{order_id}/items")
     async def add_item_to_order(
@@ -89,7 +129,7 @@ def create_orders_router():
         item = await order_service.add_item(item_data, menu_item, user_id)
         return {"ok": True, "item": item.model_dump()}
     
-    # ... (send_order remains same)
+
 
     @router.get("/{order_id}/billing-eligibility")
     async def check_billing_eligibility(
@@ -97,10 +137,9 @@ def create_orders_router():
         current_user: dict = Depends(get_current_user)
     ):
         """Check if order can be billed"""
-        # For MVP, mostly allow. Real logic checks if items are printed/kitchen'd.
-        order = await order_service.get_order(order_id)
-        if not order:
-             raise HTTPException(status_code=404, detail="Order not found")
+        order_doc = await db.pos_orders.find_one({"id": order_id}, {"_id": 0, "venue_id": 1})
+        if not order_doc:
+            raise HTTPException(status_code=404, detail="Order not found")
              
         # Example logic: If there are unsent items, maybe warn? 
         # For now, just return eligible.

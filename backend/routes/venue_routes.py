@@ -26,6 +26,23 @@ def create_venue_router():
             raise HTTPException(status_code=404, detail="Venue not found")
         return venue
 
+    @router.get("/venues/{venue_id}/orders")
+    async def list_venue_orders(
+        venue_id: str,
+        status: Optional[str] = None,
+        table_id: Optional[str] = None,
+        current_user: dict = Depends(get_current_user)
+    ):
+        """List orders for a venue, optionally filtered by status and table_id"""
+        query = {"venue_id": venue_id}
+        if status:
+            query["status"] = status.upper()
+        if table_id:
+            query["table_id"] = table_id
+        
+        orders = await db.pos_orders.find(query, {"_id": 0}).sort("created_at", -1).to_list(100)
+        return orders
+
     @router.post("/venues", response_model=Venue)
     async def create_venue(data: VenueCreate, current_user: dict = Depends(get_current_user)):
         if current_user["role"] != UserRole.OWNER:

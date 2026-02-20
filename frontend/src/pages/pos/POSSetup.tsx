@@ -14,8 +14,11 @@ import { Switch } from "../../components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import {
   Monitor, Building2, Printer, Server, CreditCard,
-  MapPin, Save, RotateCcw, CheckCircle, Loader2
+  MapPin, Save, RotateCcw, CheckCircle, Loader2,
+  LayoutGrid, Tablet, Zap, Check, Flame, Sparkles
 } from "lucide-react";
+import { usePOSTheme, POSTheme } from "../../hooks/usePOSTheme";
+import { setActiveTheme } from "../../features/pos/themes/builtinThemes";
 
 export default function POSSetup() {
   const navigate = useNavigate();
@@ -30,6 +33,10 @@ export default function POSSetup() {
 
   // Configuration State
   const [activeTab, setActiveTab] = useState("general");
+
+  // POS Theme
+  const { theme: posTheme, setTheme: setPosTheme, themes: posThemes } = usePOSTheme();
+  const THEME_ICONS: Record<string, React.ElementType> = { restin: Monitor, pro: Tablet, express: Zap, 'k-series': Flame, 'l-series': Sparkles };
 
   // -- General Settings --
   const [selectedVenue, setSelectedVenue] = useState("");
@@ -159,29 +166,29 @@ export default function POSSetup() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-12 h-12 text-red-500 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 p-6 flex items-center justify-center">
-      <Card className="w-full max-w-4xl bg-zinc-900 border-zinc-800 text-zinc-100">
-        <CardHeader className="border-b border-zinc-800 pb-4">
+    <div className="min-h-screen bg-background p-6 flex items-center justify-center">
+      <Card className="w-full max-w-4xl bg-card border-border text-foreground">
+        <CardHeader className="border-b border-border pb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-lg bg-red-500/10">
                 <Monitor className="w-8 h-8 text-red-500" />
               </div>
               <div>
-                <CardTitle className="text-2xl text-white">POS Configuration</CardTitle>
-                <CardDescription className="text-zinc-400">
+                <CardTitle className="text-2xl text-foreground">POS Configuration</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Setup terminal hardware and preferences
                 </CardDescription>
               </div>
             </div>
-            <div className="text-xs text-zinc-500 font-mono">
+            <div className="text-xs text-muted-foreground font-mono">
               ID: {deviceId}
             </div>
           </div>
@@ -189,18 +196,21 @@ export default function POSSetup() {
 
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="bg-zinc-800 border-zinc-700">
-              <TabsTrigger value="general" className="data-[state=active]:bg-zinc-700 text-zinc-300">
+            <TabsList className="bg-secondary border-border">
+              <TabsTrigger value="general" className="data-[state=active]:bg-secondary/80 text-secondary-foreground">
                 <Building2 className="w-4 h-4 mr-2" /> General
               </TabsTrigger>
-              <TabsTrigger value="hardware" className="data-[state=active]:bg-zinc-700 text-zinc-300">
+              <TabsTrigger value="hardware" className="data-[state=active]:bg-secondary/80 text-secondary-foreground">
                 <Printer className="w-4 h-4 mr-2" /> Hardware
               </TabsTrigger>
-              <TabsTrigger value="kds" className="data-[state=active]:bg-zinc-700 text-zinc-300">
+              <TabsTrigger value="kds" className="data-[state=active]:bg-secondary/80 text-secondary-foreground">
                 <Server className="w-4 h-4 mr-2" /> KDS
               </TabsTrigger>
-              <TabsTrigger value="payments" className="data-[state=active]:bg-zinc-700 text-zinc-300">
+              <TabsTrigger value="payments" className="data-[state=active]:bg-secondary/80 text-secondary-foreground">
                 <CreditCard className="w-4 h-4 mr-2" /> Payments
+              </TabsTrigger>
+              <TabsTrigger value="templates" className="data-[state=active]:bg-secondary/80 text-secondary-foreground">
+                <LayoutGrid className="w-4 h-4 mr-2" /> Templates
               </TabsTrigger>
             </TabsList>
 
@@ -210,10 +220,10 @@ export default function POSSetup() {
                 <div className="space-y-2">
                   <Label>Venue</Label>
                   <Select value={selectedVenue} onValueChange={handleVenueSelect}>
-                    <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
+                    <SelectTrigger className="bg-secondary border-border text-foreground">
                       <SelectValue placeholder="Select Venue" />
                     </SelectTrigger>
-                    <SelectContent className="bg-zinc-800 border-zinc-700 text-white">
+                    <SelectContent className="bg-secondary border-border text-foreground">
                       {venues.map(v => (
                         <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
                       ))}
@@ -224,10 +234,10 @@ export default function POSSetup() {
                 <div className="space-y-2">
                   <Label>Zone / Station</Label>
                   <Select value={selectedZone} onValueChange={setSelectedZone} disabled={!selectedVenue}>
-                    <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
+                    <SelectTrigger className="bg-secondary border-border text-foreground">
                       <SelectValue placeholder="Select Zone" />
                     </SelectTrigger>
-                    <SelectContent className="bg-zinc-800 border-zinc-700 text-white">
+                    <SelectContent className="bg-secondary border-border text-foreground">
                       {zones.map(z => (
                         <SelectItem key={z.id} value={z.id}>{z.name}</SelectItem>
                       ))}
@@ -241,7 +251,7 @@ export default function POSSetup() {
                     value={deviceName}
                     onChange={(e) => setDeviceName(e.target.value)}
                     placeholder="e.g. Bar Pos 1"
-                    className="bg-zinc-800 border-zinc-700 text-white"
+                    className="bg-secondary border-border text-foreground"
                   />
                 </div>
               </div>
@@ -250,15 +260,15 @@ export default function POSSetup() {
             {/* --- HARDWARE TAB --- */}
             <TabsContent value="hardware" className="space-y-6">
               <div className="space-y-4">
-                <h3 className="text-lg font-medium text-white border-b border-zinc-800 pb-2">Receipt Printer</h3>
+                <h3 className="text-lg font-medium text-foreground border-b border-border pb-2">Receipt Printer</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Connection Type</Label>
                     <Select value={printerType} onValueChange={setPrinterType}>
-                      <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
+                      <SelectTrigger className="bg-secondary border-border text-foreground">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-zinc-800 border-zinc-700 text-white">
+                      <SelectContent className="bg-secondary border-border text-foreground">
                         <SelectItem value="browser">Browser Print (Default)</SelectItem>
                         <SelectItem value="network">Network (ESC/POS)</SelectItem>
                       </SelectContent>
@@ -272,7 +282,7 @@ export default function POSSetup() {
                         value={printerIp}
                         onChange={(e) => setPrinterIp(e.target.value)}
                         placeholder="192.168.1.100"
-                        className="bg-zinc-800 border-zinc-700 text-white"
+                        className="bg-secondary border-border text-foreground"
                       />
                     </div>
                   )}
@@ -280,26 +290,26 @@ export default function POSSetup() {
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-lg font-medium text-white border-b border-zinc-800 pb-2">Kitchen Printer (Backup)</h3>
+                <h3 className="text-lg font-medium text-foreground border-b border-border pb-2">Kitchen Printer (Backup)</h3>
                 <div className="space-y-2">
                   <Label>Kitchen Printer IP</Label>
                   <Input
                     value={kitchenPrinterIp}
                     onChange={(e) => setKitchenPrinterIp(e.target.value)}
                     placeholder="192.168.1.101"
-                    className="bg-zinc-800 border-zinc-700 text-white"
+                    className="bg-secondary border-border text-foreground"
                   />
-                  <p className="text-xs text-zinc-500">Only used if KDS is offline.</p>
+                  <p className="text-xs text-muted-foreground">Only used if KDS is offline.</p>
                 </div>
               </div>
             </TabsContent>
 
             {/* --- KDS TAB --- */}
             <TabsContent value="kds" className="space-y-6">
-              <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-secondary rounded-lg">
                 <div className="space-y-1">
-                  <h4 className="font-medium text-white">Enable KDS Integration</h4>
-                  <p className="text-sm text-zinc-400">Send orders to Kitchen Display System</p>
+                  <h4 className="font-medium text-foreground">Enable KDS Integration</h4>
+                  <p className="text-sm text-muted-foreground">Send orders to Kitchen Display System</p>
                 </div>
                 <Switch checked={enableKds} onCheckedChange={setEnableKds} />
               </div>
@@ -311,7 +321,7 @@ export default function POSSetup() {
                     value={kdsUrl}
                     onChange={(e) => setKdsUrl(e.target.value)}
                     placeholder="http://localhost:8000/kds"
-                    className="bg-zinc-800 border-zinc-700 text-white"
+                    className="bg-secondary border-border text-foreground"
                   />
                 </div>
               )}
@@ -319,10 +329,10 @@ export default function POSSetup() {
 
             {/* --- PAYMENTS TAB --- */}
             <TabsContent value="payments" className="space-y-6">
-              <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-secondary rounded-lg">
                 <div className="space-y-1">
-                  <h4 className="font-medium text-white">Split Bill</h4>
-                  <p className="text-sm text-zinc-400">Allow customers to split payments</p>
+                  <h4 className="font-medium text-foreground">Split Bill</h4>
+                  <p className="text-sm text-muted-foreground">Allow customers to split payments</p>
                 </div>
                 <Switch checked={enableSplitBill} onCheckedChange={setEnableSplitBill} />
               </div>
@@ -333,14 +343,63 @@ export default function POSSetup() {
                   value={terminalIp}
                   onChange={(e) => setTerminalIp(e.target.value)}
                   placeholder="192.168.1.200"
-                  className="bg-zinc-800 border-zinc-700 text-white"
+                  className="bg-secondary border-border text-foreground"
                 />
+              </div>
+            </TabsContent>
+
+            {/* --- TEMPLATES TAB --- */}
+            <TabsContent value="templates" className="space-y-4">
+              <div className="space-y-2 mb-4">
+                <h3 className="text-lg font-medium text-foreground">POS Layout Template</h3>
+                <p className="text-sm text-muted-foreground">Choose the POS layout that best fits your service style. Changes take effect immediately.</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {posThemes.map(t => {
+                  const TIcon = THEME_ICONS[t.id] || Monitor;
+                  const isActive = posTheme === t.id;
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        setPosTheme(t.id);
+                        // Map usePOSTheme id to builtinThemes theme id
+                        const themeIdMap: Record<string, string> = {
+                          restin: 'theme-restin', pro: 'theme-pro', express: 'theme-express',
+                          'k-series': 'theme-kseries', 'l-series': 'theme-lseries'
+                        };
+                        setActiveTheme(themeIdMap[t.id] || 'theme-restin');
+                      }}
+                      className={`relative p-5 rounded-xl border-2 text-left transition-all duration-200 hover:scale-[1.02] ${isActive
+                        ? 'border-primary bg-primary/10 ring-2 ring-primary/30 shadow-lg shadow-primary/10'
+                        : 'border-border bg-card hover:border-muted-foreground/30'
+                        }`}
+                    >
+                      {isActive && (
+                        <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                          <Check className="w-3.5 h-3.5 text-primary-foreground" />
+                        </div>
+                      )}
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isActive ? 'bg-primary/20 text-primary' : 'bg-secondary text-muted-foreground'
+                          }`}>
+                          <TIcon className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-foreground">{t.name}</div>
+                          <div className="text-[11px] text-muted-foreground">{t.target}</div>
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{t.description}</p>
+                    </button>
+                  );
+                })}
               </div>
             </TabsContent>
 
           </Tabs>
 
-          <div className="flex justify-between mt-8 pt-6 border-t border-zinc-800">
+          <div className="flex justify-between mt-8 pt-6 border-t border-border">
             <Button
               variant="ghost"
               onClick={resetConfig}
@@ -353,14 +412,14 @@ export default function POSSetup() {
               <Button
                 variant="outline"
                 onClick={() => navigate('/login')}
-                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                className="border-border text-secondary-foreground hover:bg-secondary hover:text-foreground"
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleSave}
                 disabled={!selectedVenue || saving}
-                className="bg-red-600 hover:bg-red-700 text-white min-w-[120px]"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[120px]"
               >
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                   <>

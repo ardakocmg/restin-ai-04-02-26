@@ -629,20 +629,25 @@ h6 {
 
 /* ── Button Styles ── */
 
-/* POS Button — dark stays dark (POS is always dark-themed) */
+/* POS Button — theme-aware */
 .btn-pos {
-  @apply bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-white font-bold uppercase tracking-wide transition-all duration-150;
-
+  background: var(--card);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.15s;
   box-shadow: 0 1px 3px rgb(0 0 0 / 30%);
 }
 
 .btn-pos:hover {
+  background: var(--secondary);
   box-shadow: 0 0 12px var(--brand-accent-soft);
 }
 
 .btn-pos:active {
-  @apply bg-zinc-700;
-
+  background: var(--secondary);
   transform: scale(0.98);
 }
 

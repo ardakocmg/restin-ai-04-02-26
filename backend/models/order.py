@@ -37,6 +37,7 @@ class OrderCreate(BaseModel):
     venue_id: str
     table_id: str
     server_id: str
+    order_type: Optional[str] = None  # counter, dine_in, takeaway
 
 class Order(BaseModel):
     model_config = ConfigDict(extra="ignore")

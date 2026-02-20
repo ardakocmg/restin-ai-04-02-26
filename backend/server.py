@@ -215,6 +215,15 @@ from routes.hr_employee_analytics import create_hr_employee_analytics_router
 from routes.content_editor import create_content_editor_router
 from routes.analytics_routes import create_analytics_routes as create_dashboard_analytics_router
 from app.domains.analytics.routes import create_analytics_router as create_new_analytics_router
+
+# Shireburn Indigo Parity Routes
+from routes.hiring import create_hiring_router
+from routes.hr_onboarding import create_hr_onboarding_router
+from routes.salary_benchmarks import create_salary_benchmarks_router
+from routes.hr_calendar import create_hr_calendar_router
+from routes.employee_tags import create_employee_tags_router
+from routes.webhook_audit import create_webhook_audit_router
+
 # Print Bridge for Network Printing (Rule #30)
 from devices.print_bridge import router as print_bridge_router
 
@@ -418,6 +427,14 @@ content_editor_router = create_content_editor_router()
 hr_compliance_mt_router = create_hr_compliance_mt_router()
 dashboard_analytics_router = create_dashboard_analytics_router()
 
+# Shireburn Indigo Parity Routers
+hiring_router = create_hiring_router()
+hr_onboarding_router = create_hr_onboarding_router()
+salary_benchmarks_router = create_salary_benchmarks_router()
+hr_calendar_router = create_hr_calendar_router()
+employee_tags_router = create_employee_tags_router()
+webhook_audit_router = create_webhook_audit_router()
+
 # KDS System Routers
 devices_router = create_devices_router()
 pairing_router = create_pairing_router()
@@ -556,6 +573,14 @@ api_main.include_router(table_merge_router)
 api_main.include_router(observability_router)
 api_main.include_router(migration_router, tags=["Migration"])
 api_main.include_router(user_settings_router)
+
+# Shireburn Indigo Parity Routes
+api_main.include_router(hiring_router)
+api_main.include_router(hr_onboarding_router)
+api_main.include_router(salary_benchmarks_router)
+api_main.include_router(hr_calendar_router)
+api_main.include_router(employee_tags_router)
+api_main.include_router(webhook_audit_router)
 
 # WebSocket for real-time notifications
 websocket_router = create_websocket_router()

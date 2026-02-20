@@ -10,8 +10,8 @@
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-    background: #1a1d2e;
-    color: #ffffff;
+    background: var(--background);
+    color: var(--foreground);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-user-select: none;
     user-select: none;
@@ -25,8 +25,8 @@
     height: 48px;
     min-height: 48px;
     padding: 0 16px;
-    background: #12152a;
-    border-bottom: 1px solid #2a2d3e;
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
 }
 
 .ks-topbar-left {
@@ -65,12 +65,12 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    background: #2a2d3e;
+    background: var(--card);
     padding: 6px 14px;
     border-radius: 6px;
     font-size: 14px;
     font-weight: 500;
-    color: #e2e8f0;
+    color: var(--foreground);
 }
 
 .ks-alert-badge {
@@ -90,7 +90,7 @@
 .ks-topbar-icon {
     background: none;
     border: none;
-    color: #94a3b8;
+    color: var(--muted-foreground);
     cursor: pointer;
     padding: 6px;
     border-radius: 6px;
@@ -100,8 +100,8 @@
 }
 
 .ks-topbar-icon:hover {
-    background: #2a2d3e;
-    color: #e2e8f0;
+    background: var(--card);
+    color: var(--foreground);
 }
 
 /* ─── Main Content (3-Column Layout) ─────────────────────────── */
@@ -118,8 +118,8 @@
     max-width: 420px;
     display: flex;
     flex-direction: column;
-    background: #1e2135;
-    border-right: 1px solid #2a2d3e;
+    background: var(--card);
+    border-right: 1px solid var(--border);
 }
 
 /* Order Header */
@@ -128,13 +128,13 @@
     align-items: center;
     justify-content: space-between;
     padding: 12px 16px;
-    border-bottom: 1px solid #2a2d3e;
+    border-bottom: 1px solid var(--border);
 }
 
 .ks-order-title {
     font-size: 16px;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--foreground);
 }
 
 .ks-order-actions-link {
@@ -156,7 +156,7 @@
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-    border-bottom: 1px solid #2a2d3e;
+    border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
 }
 
@@ -168,9 +168,9 @@
     border-radius: 4px;
     font-size: 12px;
     font-weight: 500;
-    color: #cbd5e1;
-    background: #2a2d3e;
-    border: 1px solid #3a3d4e;
+    color: var(--secondary-foreground);
+    background: var(--card);
+    border: 1px solid var(--secondary);
 }
 
 .ks-meta-tag.active {
@@ -181,12 +181,12 @@
 
 .ks-meta-tag-select {
     appearance: none;
-    background: #2a2d3e;
-    border: 1px solid #3a3d4e;
+    background: var(--card);
+    border: 1px solid var(--secondary);
     border-radius: 4px;
     padding: 4px 24px 4px 10px;
     font-size: 12px;
-    color: #cbd5e1;
+    color: var(--secondary-foreground);
     cursor: pointer;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -205,7 +205,7 @@
 }
 
 .ks-order-items::-webkit-scrollbar-thumb {
-    background: #3a3d4e;
+    background: var(--secondary);
     border-radius: 4px;
 }
 
@@ -213,13 +213,13 @@
     display: flex;
     align-items: center;
     padding: 10px 16px;
-    border-bottom: 1px solid #252840;
+    border-bottom: 1px solid var(--border);
     cursor: pointer;
     transition: background 0.15s;
 }
 
 .ks-order-item:hover {
-    background: #252840;
+    background: var(--border);
 }
 
 .ks-order-item.selected {
@@ -230,7 +230,7 @@
 .ks-order-item-qty {
     font-size: 14px;
     font-weight: 500;
-    color: #94a3b8;
+    color: var(--muted-foreground);
     width: 20px;
     flex-shrink: 0;
 }
@@ -238,21 +238,21 @@
 .ks-order-item-name {
     flex: 1;
     font-size: 14px;
-    color: #e2e8f0;
+    color: var(--foreground);
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
 .ks-order-item-edit-icon {
-    color: #64748b;
+    color: var(--muted-foreground);
     cursor: pointer;
     flex-shrink: 0;
 }
 
 .ks-order-item-meta {
     font-size: 12px;
-    color: #64748b;
+    color: var(--muted-foreground);
     margin-right: 8px;
     white-space: nowrap;
 }
@@ -260,7 +260,7 @@
 .ks-order-item-price {
     font-size: 14px;
     font-weight: 500;
-    color: #e2e8f0;
+    color: var(--foreground);
     text-align: right;
     min-width: 60px;
 }
@@ -284,7 +284,7 @@
 .ks-course-header button {
     background: none;
     border: none;
-    color: #64748b;
+    color: var(--muted-foreground);
     cursor: pointer;
 }
 
@@ -304,14 +304,14 @@
 }
 
 .ks-add-link:hover {
-    background: #252840;
+    background: var(--border);
 }
 
 /* Order Totals */
 .ks-order-totals {
     padding: 10px 16px;
-    border-top: 1px solid #2a2d3e;
-    border-bottom: 1px solid #2a2d3e;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
 }
 
 .ks-total-row {
@@ -319,20 +319,20 @@
     justify-content: space-between;
     padding: 2px 0;
     font-size: 13px;
-    color: #94a3b8;
+    color: var(--muted-foreground);
 }
 
 .ks-total-row.main {
     font-size: 14px;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--foreground);
 }
 
 /* ─── Keypad ─────────────────────────────────────────────────── */
 .ks-keypad-hint {
     text-align: center;
     font-size: 11px;
-    color: #64748b;
+    color: var(--muted-foreground);
     padding: 6px 0 4px;
 }
 
@@ -341,7 +341,7 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 2px;
     padding: 2px;
-    background: #12152a;
+    background: var(--background);
 }
 
 .ks-key {
@@ -351,8 +351,8 @@
     height: 52px;
     font-size: 18px;
     font-weight: 500;
-    color: #e2e8f0;
-    background: #1e2135;
+    color: var(--foreground);
+    background: var(--card);
     border: none;
     cursor: pointer;
     transition: background 0.12s;
@@ -360,11 +360,11 @@
 }
 
 .ks-key:hover {
-    background: #2a2d3e;
+    background: var(--card);
 }
 
 .ks-key:active {
-    background: #3a3d4e;
+    background: var(--secondary);
 }
 
 .ks-key.clear {
@@ -375,7 +375,7 @@
 .ks-key.action {
     font-size: 12px;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--foreground);
 }
 
 .ks-key.action-blue {
@@ -420,8 +420,8 @@
     min-width: 130px;
     display: flex;
     flex-direction: column;
-    background: #12152a;
-    border-right: 1px solid #2a2d3e;
+    background: var(--background);
+    border-right: 1px solid var(--border);
     overflow-y: auto;
 }
 
@@ -430,7 +430,7 @@
 }
 
 .ks-category-sidebar::-webkit-scrollbar-thumb {
-    background: #3a3d4e;
+    background: var(--secondary);
     border-radius: 3px;
 }
 
@@ -444,7 +444,7 @@
     font-weight: 700;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    color: #94a3b8;
+    color: var(--muted-foreground);
     background: transparent;
     border: none;
     cursor: pointer;
@@ -455,13 +455,13 @@
 }
 
 .ks-category-btn:hover {
-    background: #1e2135;
-    color: #e2e8f0;
+    background: var(--card);
+    color: var(--foreground);
 }
 
 .ks-category-btn.active {
     background: #2563eb;
-    color: #ffffff;
+    color: var(--foreground);
     border-left-color: #60a5fa;
 }
 
@@ -470,7 +470,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #1a1d2e;
+    background: var(--background);
     overflow: hidden;
 }
 
@@ -480,13 +480,13 @@
     align-items: center;
     gap: 8px;
     padding: 10px 16px;
-    border-bottom: 1px solid #2a2d3e;
+    border-bottom: 1px solid var(--border);
     min-height: 44px;
 }
 
 .ks-seat-label {
     font-size: 13px;
-    color: #94a3b8;
+    color: var(--muted-foreground);
 }
 
 .ks-seat-btn {
@@ -499,21 +499,21 @@
     font-size: 13px;
     font-weight: 600;
     border-radius: 6px;
-    border: 1px solid #3a3d4e;
-    background: #2a2d3e;
-    color: #cbd5e1;
+    border: 1px solid var(--secondary);
+    background: var(--card);
+    color: var(--secondary-foreground);
     cursor: pointer;
     transition: all 0.15s;
 }
 
 .ks-seat-btn:hover {
-    background: #3a3d4e;
+    background: var(--secondary);
 }
 
 .ks-seat-btn.active {
     background: #2563eb;
     border-color: #2563eb;
-    color: #ffffff;
+    color: var(--foreground);
 }
 
 .ks-seat-add {
@@ -523,23 +523,23 @@
     width: 32px;
     height: 32px;
     border-radius: 6px;
-    border: 1px dashed #3a3d4e;
+    border: 1px dashed var(--secondary);
     background: transparent;
-    color: #64748b;
+    color: var(--muted-foreground);
     cursor: pointer;
     font-size: 18px;
 }
 
 .ks-seat-add:hover {
-    background: #2a2d3e;
-    color: #94a3b8;
+    background: var(--card);
+    color: var(--muted-foreground);
 }
 
 /* Category Title in Menu Area */
 .ks-menu-category-title {
     font-size: 16px;
     font-weight: 600;
-    color: #e2e8f0;
+    color: var(--foreground);
     text-align: center;
     padding: 12px 16px 8px;
 }
@@ -560,7 +560,7 @@
 }
 
 .ks-menu-grid::-webkit-scrollbar-thumb {
-    background: #3a3d4e;
+    background: var(--secondary);
     border-radius: 4px;
 }
 
@@ -571,7 +571,7 @@
     justify-content: center;
     align-items: center;
     min-height: 80px;
-    background: #2a2d3e;
+    background: var(--card);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.15s;
@@ -580,7 +580,7 @@
 }
 
 .ks-item-tile:hover {
-    background: #353850;
+    background: var(--secondary);
     transform: scale(1.02);
 }
 
@@ -591,7 +591,7 @@
 .ks-item-tile-name {
     font-size: 14px;
     font-weight: 500;
-    color: #e2e8f0;
+    color: var(--foreground);
     text-align: center;
     padding: 12px 8px;
     line-height: 1.3;
@@ -639,7 +639,7 @@
     align-items: center;
     justify-content: center;
     padding: 40px;
-    color: #64748b;
+    color: var(--muted-foreground);
     gap: 8px;
 }
 
@@ -653,8 +653,8 @@
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-    background: #12152a;
-    border-top: 1px solid #2a2d3e;
+    background: var(--background);
+    border-top: 1px solid var(--border);
 }
 
 .ks-action-btn {
@@ -682,17 +682,17 @@
 
 .ks-action-btn.send {
     background: #16a34a;
-    color: #ffffff;
+    color: var(--foreground);
 }
 
 .ks-action-btn.split {
     background: #2563eb;
-    color: #ffffff;
+    color: var(--foreground);
 }
 
 .ks-action-btn.pay {
     background: #1d4ed8;
-    color: #ffffff;
+    color: var(--foreground);
 }
 
 .ks-action-btn:disabled {
@@ -708,8 +708,8 @@
     justify-content: space-around;
     height: 56px;
     min-height: 56px;
-    background: #12152a;
-    border-top: 1px solid #2a2d3e;
+    background: var(--background);
+    border-top: 1px solid var(--border);
 }
 
 .ks-nav-item {
@@ -720,7 +720,7 @@
     padding: 6px 12px;
     background: none;
     border: none;
-    color: #64748b;
+    color: var(--muted-foreground);
     font-size: 11px;
     font-weight: 500;
     cursor: pointer;
@@ -728,7 +728,7 @@
 }
 
 .ks-nav-item:hover {
-    color: #94a3b8;
+    color: var(--muted-foreground);
 }
 
 .ks-nav-item.active {
@@ -762,12 +762,12 @@
 }
 
 .ks-actions-panel {
-    background: #1e2135;
+    background: var(--card);
     border-radius: 12px;
     width: 360px;
     max-height: 80vh;
     overflow-y: auto;
-    border: 1px solid #2a2d3e;
+    border: 1px solid var(--border);
     animation: ks-slideUp 0.2s ease;
 }
 
@@ -788,7 +788,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px;
-    border-bottom: 1px solid #2a2d3e;
+    border-bottom: 1px solid var(--border);
 }
 
 .ks-actions-panel-header button {
@@ -803,7 +803,7 @@
 .ks-actions-panel-header span {
     font-size: 15px;
     font-weight: 600;
-    color: #e2e8f0;
+    color: var(--foreground);
 }
 
 .ks-actions-section {
@@ -813,7 +813,7 @@
 .ks-actions-section-title {
     font-size: 12px;
     font-weight: 500;
-    color: #64748b;
+    color: var(--muted-foreground);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 8px;
@@ -821,12 +821,12 @@
 
 .ks-actions-input {
     width: 100%;
-    background: #2a2d3e;
-    border: 1px solid #3a3d4e;
+    background: var(--card);
+    border: 1px solid var(--secondary);
     border-radius: 6px;
     padding: 10px 12px;
     font-size: 14px;
-    color: #e2e8f0;
+    color: var(--foreground);
     outline: none;
 }
 
@@ -842,15 +842,15 @@
     padding: 12px 16px;
     background: none;
     border: none;
-    border-bottom: 1px solid #252840;
-    color: #e2e8f0;
+    border-bottom: 1px solid var(--border);
+    color: var(--foreground);
     font-size: 14px;
     cursor: pointer;
     transition: background 0.12s;
 }
 
 .ks-actions-btn:hover {
-    background: #252840;
+    background: var(--border);
 }
 
 .ks-actions-btn.destructive {
@@ -863,13 +863,13 @@
     align-items: center;
     gap: 12px;
     padding: 12px 16px;
-    border-bottom: 1px solid #252840;
+    border-bottom: 1px solid var(--border);
     cursor: pointer;
     transition: background 0.12s;
 }
 
 .ks-discount-item:hover {
-    background: #252840;
+    background: var(--border);
 }
 
 .ks-discount-radio {
@@ -893,7 +893,7 @@
 
 .ks-discount-name {
     font-size: 14px;
-    color: #e2e8f0;
+    color: var(--foreground);
 }
 
 /* ─── Search Overlay ─────────────────────────────────────────── */
@@ -903,8 +903,8 @@
     right: 0;
     width: 400px;
     height: 100vh;
-    background: #1e2135;
-    border-left: 1px solid #2a2d3e;
+    background: var(--card);
+    border-left: 1px solid var(--border);
     z-index: 900;
     display: flex;
     flex-direction: column;
@@ -926,17 +926,17 @@
     align-items: center;
     gap: 8px;
     padding: 12px 16px;
-    border-bottom: 1px solid #2a2d3e;
+    border-bottom: 1px solid var(--border);
 }
 
 .ks-search-input {
     flex: 1;
-    background: #2a2d3e;
-    border: 1px solid #3a3d4e;
+    background: var(--card);
+    border: 1px solid var(--secondary);
     border-radius: 8px;
     padding: 10px 12px;
     font-size: 14px;
-    color: #e2e8f0;
+    color: var(--foreground);
     outline: none;
 }
 
@@ -947,7 +947,7 @@
 .ks-search-close {
     background: none;
     border: none;
-    color: #94a3b8;
+    color: var(--muted-foreground);
     cursor: pointer;
     padding: 4px;
 }
@@ -966,14 +966,14 @@
     align-items: center;
     justify-content: center;
     gap: 16px;
-    color: #64748b;
+    color: var(--muted-foreground);
 }
 
 .ks-loading-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid #2a2d3e;
-    border-top: 3px solid #3b82f6;
+    border: 3px solid var(--border);
+    border-top: 3px solid var(--primary);
     border-radius: 50%;
     animation: ks-spin 0.8s linear infinite;
 }
