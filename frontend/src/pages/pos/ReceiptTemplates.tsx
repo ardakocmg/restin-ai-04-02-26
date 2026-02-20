@@ -1,200 +1,700 @@
 /**
- * ReceiptTemplates.tsx — K-Series Receipt Templates
- * Customize receipt layout: header, footer, logo, fields
- * Lightspeed K-Series Back Office > Configuration > Receipt Templates parity
+ * ReceiptTemplates.tsx — Premium Receipt Template Management
+ * Full-featured template editor with live thermal preview, type filtering,
+ * and venue auto-population. Covers all POS print scenarios.
  */
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, X, FileText, Eye, Wifi } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+    FileText, Plus, Save, Trash2, Eye, Printer, ChefHat, BarChart3,
+    Receipt, Hotel, Truck, Gift, Copy, Wifi, SlidersHorizontal, LayoutGrid
+} from 'lucide-react';
 import { toast } from 'sonner';
+import { Card, CardContent } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Switch } from '../../components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../../components/ui/sheet';
+import { Tabs, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { cn } from '../../lib/utils';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';
+import api from '../../lib/api';
+
+/* ─── Types ─── */
+type TemplateType = 'customer' | 'kitchen' | 'report' | 'invoice' | 'room_charge' | 'delivery' | 'gift';
 
 interface ReceiptTemplate {
-    id: string; name: string; type: 'customer' | 'kitchen' | 'report' | 'notes' | 'invoice'; isDefault: boolean; isActive: boolean;
-    headerLine1: string; headerLine2: string; headerLine3: string;
-    showLogo: boolean; showDateTime: boolean; showServer: boolean; showTable: boolean; showOrderNumber: boolean;
-    showItemPrices: boolean; showTax: boolean; showPaymentMethod: boolean; showTipLine: boolean;
-    footerLine1: string; footerLine2: string; footerLine3: string;
-    qrCodeUrl: string; qrGuestConsole: boolean; invoicePrefix: string;
-    paperWidth: '58mm' | '80mm'; fontSize: 'small' | 'medium' | 'large';
+    id: string;
+    name: string;
+    type: TemplateType;
+    isDefault: boolean;
+    isActive: boolean;
+    headerLine1: string;
+    headerLine2: string;
+    headerLine3: string;
+    showLogo: boolean;
+    showDateTime: boolean;
+    showServer: boolean;
+    showTable: boolean;
+    showOrderNumber: boolean;
+    showItemPrices: boolean;
+    showModifiers: boolean;
+    showTax: boolean;
+    showPaymentMethod: boolean;
+    showTipLine: boolean;
+    showCourseHeaders: boolean;
+    showBarcode: boolean;
+    footerLine1: string;
+    footerLine2: string;
+    footerLine3: string;
+    qrCodeUrl: string;
+    qrGuestConsole: boolean;
+    invoicePrefix: string;
+    paperWidth: '58mm' | '80mm';
+    fontSize: 'small' | 'medium' | 'large';
 }
 
-const pg: React.CSSProperties = { minHeight: '100vh', background: 'var(--bg-primary,#0a0a0a)', color: 'var(--text-primary,#fafafa)', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' };
-const ct: React.CSSProperties = { maxWidth: 1100, margin: '0 auto', padding: '24px 20px' };
-const cd: React.CSSProperties = { background: 'var(--bg-card,#18181b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 12, padding: 20, marginBottom: 16 };
-const bp: React.CSSProperties = { padding: '10px 24px', background: '#3B82F6', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const bo: React.CSSProperties = { padding: '10px 24px', background: 'transparent', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 };
-const ip: React.CSSProperties = { width: '100%', padding: '10px 14px', background: 'var(--bg-secondary,#09090b)', border: '1px solid var(--border-primary,#27272a)', borderRadius: 8, color: 'var(--text-primary,#fafafa)', fontSize: 14 };
-const rw: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' };
+/* ─── Type Metadata ─── */
+const TYPE_META: Record<TemplateType, { label: string; icon: React.ElementType; color: string }> = {
+    customer: { label: 'Customer', icon: Receipt, color: '#3B82F6' },
+    kitchen: { label: 'Kitchen', icon: ChefHat, color: '#F59E0B' },
+    report: { label: 'Report', icon: BarChart3, color: '#10B981' },
+    invoice: { label: 'Invoice', icon: FileText, color: '#8B5CF6' },
+    room_charge: { label: 'Room Charge', icon: Hotel, color: '#C74634' },
+    delivery: { label: 'Delivery', icon: Truck, color: '#06B6D4' },
+    gift: { label: 'Gift', icon: Gift, color: '#EC4899' },
+};
 
-const Toggle: React.FC<{ value: boolean; onChange: () => void }> = ({ value, onChange }) => (
-    <div style={{ width: 44, height: 24, borderRadius: 12, background: value ? '#3B82F6' : '#3f3f46', cursor: 'pointer', position: 'relative' }} onClick={onChange}>
-        <div style={{ position: 'absolute', top: 2, left: value ? 22 : 2, width: 20, height: 20, borderRadius: '50%', background: '#fff', transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
-    </div>
-);
+/* ─── Default Template Factory ─── */
+const makeTemplate = (o: Partial<ReceiptTemplate> & { id: string; name: string; type: TemplateType }): ReceiptTemplate => ({
+    isDefault: false, isActive: true,
+    headerLine1: '', headerLine2: '', headerLine3: '',
+    showLogo: true, showDateTime: true, showServer: true, showTable: true,
+    showOrderNumber: true, showItemPrices: true, showModifiers: true,
+    showTax: true, showPaymentMethod: true, showTipLine: true,
+    showCourseHeaders: false, showBarcode: false,
+    footerLine1: '', footerLine2: '', footerLine3: '',
+    qrCodeUrl: '', qrGuestConsole: false, invoicePrefix: '',
+    paperWidth: '80mm', fontSize: 'medium',
+    ...o,
+});
 
+/* ─── 10 Seed Templates ─── */
 const SEED: ReceiptTemplate[] = [
-    { id: '1', name: 'Standard Receipt', type: 'customer', isDefault: true, isActive: true, headerLine1: 'Restin Restaurant', headerLine2: '123 Triq il-Kbira, Valletta', headerLine3: 'Tel: +356 2123 4567', showLogo: true, showDateTime: true, showServer: true, showTable: true, showOrderNumber: true, showItemPrices: true, showTax: true, showPaymentMethod: true, showTipLine: true, footerLine1: 'Thank you for dining with us!', footerLine2: 'WiFi: RestinGuest / Pass: welcome2024', footerLine3: '', qrCodeUrl: 'https://restin.ai/feedback', qrGuestConsole: true, invoicePrefix: '', paperWidth: '80mm', fontSize: 'medium' },
-    { id: '2', name: 'Takeaway Receipt', type: 'customer', isDefault: false, isActive: true, headerLine1: 'Restin Restaurant', headerLine2: 'Order for Pickup/Delivery', headerLine3: '', showLogo: true, showDateTime: true, showServer: false, showTable: false, showOrderNumber: true, showItemPrices: true, showTax: true, showPaymentMethod: true, showTipLine: false, footerLine1: 'Thank you for your order!', footerLine2: '', footerLine3: '', qrCodeUrl: '', qrGuestConsole: false, invoicePrefix: '', paperWidth: '80mm', fontSize: 'medium' },
-    { id: '3', name: 'Kitchen Ticket', type: 'kitchen', isDefault: true, isActive: true, headerLine1: '', headerLine2: '', headerLine3: '', showLogo: false, showDateTime: true, showServer: true, showTable: true, showOrderNumber: true, showItemPrices: false, showTax: false, showPaymentMethod: false, showTipLine: false, footerLine1: '', footerLine2: '', footerLine3: '', qrCodeUrl: '', qrGuestConsole: false, invoicePrefix: '', paperWidth: '80mm', fontSize: 'large' },
-    { id: '4', name: 'End of Day Report', type: 'report', isDefault: true, isActive: true, headerLine1: 'Daily Summary Report', headerLine2: '', headerLine3: '', showLogo: true, showDateTime: true, showServer: false, showTable: false, showOrderNumber: false, showItemPrices: true, showTax: true, showPaymentMethod: true, showTipLine: false, footerLine1: '', footerLine2: '', footerLine3: '', qrCodeUrl: '', qrGuestConsole: false, invoicePrefix: '', paperWidth: '80mm', fontSize: 'small' },
-    { id: '5', name: 'Invoice', type: 'invoice', isDefault: true, isActive: true, headerLine1: 'Restin Restaurant Ltd', headerLine2: 'VAT: MT1234567', headerLine3: '', showLogo: true, showDateTime: true, showServer: false, showTable: true, showOrderNumber: true, showItemPrices: true, showTax: true, showPaymentMethod: true, showTipLine: false, footerLine1: 'This is a fiscal invoice', footerLine2: '', footerLine3: '', qrCodeUrl: '', qrGuestConsole: false, invoicePrefix: 'INV-', paperWidth: '80mm', fontSize: 'medium' },
+    makeTemplate({
+        id: 'tpl-1', name: 'Customer Receipt', type: 'customer', isDefault: true,
+        headerLine1: 'Caviar & Bull', headerLine2: '131 Old Bakery Street, Valletta', headerLine3: 'Tel: +356 2123 4567',
+        showTipLine: true, footerLine1: 'Thank you for dining with us!', footerLine2: 'WiFi: CaviarGuest / Pass: welcome2024',
+        qrCodeUrl: 'https://restin.ai/feedback', qrGuestConsole: true
+    }),
+
+    makeTemplate({
+        id: 'tpl-2', name: 'Takeaway Receipt', type: 'customer',
+        headerLine1: 'Caviar & Bull', headerLine2: 'Order for Pickup / Delivery',
+        showServer: false, showTable: false, showTipLine: false,
+        footerLine1: 'Thank you for your order!', footerLine2: 'Order Again: restin.ai'
+    }),
+
+    makeTemplate({
+        id: 'tpl-3', name: 'Kitchen Ticket', type: 'kitchen', isDefault: true,
+        showLogo: false, showItemPrices: false, showTax: false, showPaymentMethod: false,
+        showTipLine: false, showCourseHeaders: true, fontSize: 'large'
+    }),
+
+    makeTemplate({
+        id: 'tpl-4', name: 'Bar Ticket', type: 'kitchen',
+        headerLine1: '🍸 BAR', showLogo: false, showItemPrices: false, showTax: false,
+        showPaymentMethod: false, showTipLine: false, showTable: true, fontSize: 'large'
+    }),
+
+    makeTemplate({
+        id: 'tpl-5', name: 'End of Day Report', type: 'report', isDefault: true,
+        headerLine1: 'Daily Summary Report', showServer: false, showTable: false, showTipLine: false, fontSize: 'small'
+    }),
+
+    makeTemplate({
+        id: 'tpl-6', name: 'X-Report (Shift)', type: 'report',
+        headerLine1: 'Shift Summary', showTable: false, showTipLine: false, fontSize: 'small'
+    }),
+
+    makeTemplate({
+        id: 'tpl-7', name: 'Invoice / Fiscal', type: 'invoice', isDefault: true,
+        headerLine1: 'Caviar & Bull Ltd', headerLine2: 'VAT: MT12345678', headerLine3: '131 Old Bakery Street, Valletta',
+        invoicePrefix: 'INV-', showTipLine: false,
+        footerLine1: 'This is a fiscal document', footerLine2: 'Retain for your records'
+    }),
+
+    makeTemplate({
+        id: 'tpl-8', name: 'Room Charge Slip', type: 'room_charge', isDefault: true,
+        headerLine1: 'Caviar & Bull', headerLine2: 'Hotel Room Charge',
+        showTipLine: true, showTable: true,
+        footerLine1: 'Charged to Room — Signature below', footerLine2: '____________________________'
+    }),
+
+    makeTemplate({
+        id: 'tpl-9', name: 'Delivery Docket', type: 'delivery', isDefault: true,
+        headerLine1: 'Caviar & Bull', headerLine2: 'Delivery Order',
+        showServer: false, showTable: false, showTipLine: false,
+        showBarcode: true, footerLine1: 'Driver Notes:', footerLine2: '____________________________'
+    }),
+
+    makeTemplate({
+        id: 'tpl-10', name: 'Gift Receipt', type: 'gift', isDefault: true,
+        headerLine1: 'Caviar & Bull', headerLine2: '🎁 Gift Receipt',
+        showItemPrices: false, showTax: false, showPaymentMethod: false, showTipLine: false,
+        footerLine1: 'Gift Message:', footerLine2: '____________________________'
+    }),
 ];
 
-const ReceiptTemplates: React.FC = () => {
-    const navigate = useNavigate();
-    const [templates, setTemplates] = useState(SEED);
-    const [editing, setEditing] = useState<ReceiptTemplate | null>(null);
-    const [preview, setPreview] = useState<ReceiptTemplate | null>(null);
-    const [isLive, setIsLive] = useState(false);
+/* ═══════════════════════════════════════════════════════════════
+   LIVE THERMAL PREVIEW
+   ═══════════════════════════════════════════════════════════════ */
 
-    const venueId = localStorage.getItem('restin_pos_venue') || '';
-    const { data: apiData } = useVenueConfig<ReceiptTemplate>({ venueId, configType: 'receipt-templates' });
-    useEffect(() => {
-        if (apiData && apiData.length > 0) {
-            setTemplates(apiData.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (t: any) => ({ id: t.id || t._id || crypto.randomUUID(), name: t.name || '', type: t.type || 'customer', isDefault: t.isDefault ?? t.is_default ?? false, isActive: t.isActive ?? t.is_active ?? true, headerLine1: t.headerLine1 ?? t.header_line_1 ?? '', headerLine2: t.headerLine2 ?? t.header_line_2 ?? '', headerLine3: t.headerLine3 ?? t.header_line_3 ?? '', showLogo: t.showLogo ?? t.show_logo ?? true, showDateTime: t.showDateTime ?? t.show_date_time ?? true, showServer: t.showServer ?? t.show_server ?? true, showTable: t.showTable ?? t.show_table ?? true, showOrderNumber: t.showOrderNumber ?? t.show_order_number ?? true, showItemPrices: t.showItemPrices ?? t.show_item_prices ?? true, showTax: t.showTax ?? t.show_tax ?? true, showPaymentMethod: t.showPaymentMethod ?? t.show_payment_method ?? true, showTipLine: t.showTipLine ?? t.show_tip_line ?? true, footerLine1: t.footerLine1 ?? t.footer_line_1 ?? '', footerLine2: t.footerLine2 ?? t.footer_line_2 ?? '', footerLine3: t.footerLine3 ?? t.footer_line_3 ?? '', qrCodeUrl: t.qrCodeUrl ?? t.qr_code_url ?? '', qrGuestConsole: t.qrGuestConsole ?? t.qr_guest_console ?? false, invoicePrefix: t.invoicePrefix ?? t.invoice_prefix ?? '', paperWidth: t.paperWidth ?? t.paper_width ?? '80mm', fontSize: t.fontSize ?? t.font_size ?? 'medium' }))); setIsLive(true);
-        }
-    }, [apiData]);
+const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }) => {
+    const pw = t.paperWidth === '58mm' ? 240 : 300;
+    const fs = t.fontSize === 'small' ? 10 : t.fontSize === 'large' ? 14 : 12;
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
-    const save = () => { if (!editing) return; const e = templates.find(t => t.id === editing.id); if (e) setTemplates(p => p.map(t => t.id === editing.id ? editing : t)); else setTemplates(p => [...p, editing]); setEditing(null); toast.success('Saved'); };
+    const isKitchen = t.type === 'kitchen';
+    const isRoomCharge = t.type === 'room_charge';
+    const isDelivery = t.type === 'delivery';
+
+    const items = [
+        { qty: 1, name: 'Margherita Pizza', price: 12.50, course: 'Starters' },
+        { qty: 1, name: '  + Extra Mozzarella', price: 2.00, course: 'Starters' },
+        { qty: 2, name: 'Grilled Sea Bass', price: 24.00, course: 'Mains' },
+        { qty: 1, name: 'Caesar Salad', price: 9.80, course: 'Mains' },
+        { qty: 2, name: 'House Red Wine', price: 16.00, course: 'Drinks' },
+    ];
+
+    const subtotal = items.reduce((s, i) => s + i.qty * i.price, 0);
+    const tax = subtotal * 0.18;
+    const total = subtotal + tax;
+    let prevCourse = '';
 
     return (
-        <div style={pg}><div style={ct}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
-                <div>
-                    <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
-                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Receipt Templates {isLive && <Wifi size={14} style={{ color: '#10B981', verticalAlign: 'middle', marginLeft: 6 }} />}</h1>
-                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>Customize receipt layouts for customer receipts, kitchen tickets, and reports</p>
+        <div className="flex flex-col items-center">
+            <div className="text-xs text-zinc-500 mb-2 flex items-center gap-1.5">
+                <Printer className="w-3 h-3" /> {t.paperWidth} Preview
+            </div>
+            <div className="bg-white text-black rounded-sm shadow-xl relative overflow-hidden"
+                style={{ width: pw, fontFamily: '"Courier New", Courier, monospace', fontSize: fs, lineHeight: 1.4, padding: '16px 12px' }}>
+                {/* Torn edge top */}
+                <div className="absolute top-0 left-0 right-0 h-2"
+                    style={{ background: 'repeating-linear-gradient(90deg, transparent, transparent 4px, #e5e5e5 4px, #e5e5e5 5px)' }} />
+
+                {/* HEADER */}
+                <div className="text-center mb-2 mt-1">
+                    {t.showLogo && <div className="text-lg mb-0.5">🍽️</div>}
+                    {t.headerLine1 && <div className="font-bold" style={{ fontSize: fs + 2 }}>{t.headerLine1}</div>}
+                    {t.headerLine2 && <div className="text-gray-600" style={{ fontSize: fs - 1 }}>{t.headerLine2}</div>}
+                    {t.headerLine3 && <div className="text-gray-600" style={{ fontSize: fs - 1 }}>{t.headerLine3}</div>}
                 </div>
-                <button style={bp} onClick={() => setEditing({ id: crypto.randomUUID(), name: '', type: 'customer', isDefault: false, isActive: true, headerLine1: '', headerLine2: '', headerLine3: '', showLogo: true, showDateTime: true, showServer: true, showTable: true, showOrderNumber: true, showItemPrices: true, showTax: true, showPaymentMethod: true, showTipLine: true, footerLine1: '', footerLine2: '', footerLine3: '', qrCodeUrl: '', qrGuestConsole: false, invoicePrefix: '', paperWidth: '80mm', fontSize: 'medium' })}><Plus size={16} /> Add Template</button>
-            </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 16 }}>
-                {templates.map(t => (
-                    <div key={t.id} style={{ ...cd, cursor: 'pointer' }} onClick={() => setEditing({ ...t })}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <FileText size={16} style={{ color: t.type === 'customer' ? '#3B82F6' : t.type === 'kitchen' ? '#F59E0B' : '#10B981' }} />
-                                <div><h3 style={{ fontSize: 15, fontWeight: 600, margin: 0 }}>{t.name}</h3>
-                                    <span style={{ fontSize: 11, color: 'var(--text-secondary)', textTransform: 'capitalize' }}>{t.type}</span></div>
-                            </div>
-                            <div style={{ display: 'flex', gap: 4 }}>
-                                {t.isDefault && <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 3, background: 'rgba(59,130,246,0.1)', color: '#3B82F6' }}>DEFAULT</span>}
-                                <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 3, background: t.isActive ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', color: t.isActive ? '#10B981' : '#EF4444' }}>{t.isActive ? 'Active' : 'Off'}</span>
-                            </div>
-                        </div>
-                        {t.headerLine1 && <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 4, fontStyle: 'italic' }}>"{t.headerLine1}"</div>}
-                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
-                            <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{t.paperWidth}</span>
-                            <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>Font: {t.fontSize}</span>
-                            {t.showLogo && <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>Logo ✓</span>}
-                            {t.showTipLine && <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>Tip Line ✓</span>}
-                            {t.qrCodeUrl && <span style={{ fontSize: 10, color: '#06B6D4' }}>QR ✓</span>}
-                            {t.invoicePrefix && <span style={{ fontSize: 10, color: '#F59E0B' }}>Invoice: {t.invoicePrefix}</span>}
-                        </div>
-                        <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
-                            <button style={{ ...bo, padding: '4px 10px', fontSize: 11 }} onClick={e => { e.stopPropagation(); setPreview(t); }}><Eye size={12} /> Preview</button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
+                {t.invoicePrefix && (
+                    <div className="text-center font-bold mb-1" style={{ fontSize: fs + 1 }}>{t.invoicePrefix}2026-00042</div>
+                )}
 
-            {/* Edit Modal */}
-            {editing && <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setEditing(null)}>
-                <div style={{ ...cd, width: 520, maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                        <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{templates.find(t => t.id === editing.id) ? 'Edit' : 'New'} Template</h3>
-                        <button title="Close" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditing(null)}><X size={20} /></button>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name *</label>
-                            <input style={ip} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} aria-label="Template name" /></div>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label>
-                            <select style={{ ...ip, cursor: 'pointer' }} value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as ReceiptTemplate['type'] } : null)} aria-label="Template type"><option value="customer">Customer</option><option value="kitchen">Kitchen</option><option value="report">Report</option><option value="notes">Notes</option><option value="invoice">Invoice</option></select></div>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-                        <label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
-                            <input type="checkbox" checked={editing.isDefault} onChange={() => setEditing(p => p ? { ...p, isDefault: !p.isDefault } : null)} /> Set as default for this type
-                        </label>
-                    </div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>Header</div>
-                    {(['headerLine1', 'headerLine2', 'headerLine3'] as const).map((key, i) => <div key={key} style={{ marginBottom: 8 }}>
-                        <input style={{ ...ip, padding: '8px 12px', fontSize: 12 }} value={editing[key]} onChange={e => setEditing(p => p ? { ...p, [key]: e.target.value } : null)} placeholder={`Header line ${i + 1}`} />
-                    </div>)}
-                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8, marginTop: 14, textTransform: 'uppercase', letterSpacing: 0.5 }}>Fields</div>
-                    <div style={{ ...cd, background: 'var(--bg-secondary,#09090b)', padding: 12, marginBottom: 14 }}>
-                        {([['showLogo', 'Show Logo'], ['showDateTime', 'Date & Time'], ['showServer', 'Server Name'], ['showTable', 'Table Number'], ['showOrderNumber', 'Order Number'], ['showItemPrices', 'Item Prices'], ['showTax', 'Tax Breakdown'], ['showPaymentMethod', 'Payment Method'], ['showTipLine', 'Tip Line']] as const).map(([key, label]) =>
-                            <div key={key} style={rw}><span style={{ fontSize: 13 }}>{label}</span><Toggle value={editing[key]} onChange={() => setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /></div>
+                <div className="border-t border-dashed border-gray-400 my-1.5" />
+
+                {/* META */}
+                <div className="mb-1.5" style={{ fontSize: fs - 1 }}>
+                    {t.showDateTime && <div>{dateStr} {timeStr}</div>}
+                    {t.showOrderNumber && <div>Order: #1042</div>}
+                    {t.showServer && <div>Server: Sofia C.</div>}
+                    {t.showTable && !isDelivery && <div>Table: T-12</div>}
+                    {isRoomCharge && <div className="font-bold mt-0.5">Room: 304 — John Smith</div>}
+                    {isDelivery && <><div>Platform: UberEats</div><div>Delivery #: UE-889210</div></>}
+                </div>
+
+                <div className="border-t border-dashed border-gray-400 my-1.5" />
+
+                {/* ITEMS */}
+                <div className="mb-1.5">
+                    {items.map((item, idx) => {
+                        const showCourse = t.showCourseHeaders && item.course !== prevCourse;
+                        if (showCourse) prevCourse = item.course;
+                        const isMod = t.showModifiers && item.name.startsWith('  +');
+                        return (
+                            <React.Fragment key={idx}>
+                                {showCourse && (
+                                    <div className="font-bold mt-1 mb-0.5 uppercase tracking-wide"
+                                        style={{ fontSize: fs - 2, color: '#666' }}>— {item.course} —</div>
+                                )}
+                                <div className={cn('flex justify-between', isMod && 'text-gray-500')}
+                                    style={{ fontSize: isMod ? fs - 2 : fs }}>
+                                    <span className={cn(isKitchen && !isMod && 'font-bold')}
+                                        style={{ fontSize: isKitchen && !isMod ? fs + 2 : undefined }}>
+                                        {!isMod && `${item.qty}x `}{item.name}
+                                    </span>
+                                    {t.showItemPrices && !isMod && <span>€{(item.qty * item.price).toFixed(2)}</span>}
+                                </div>
+                            </React.Fragment>
+                        );
+                    })}
+                </div>
+
+                {/* TOTALS */}
+                {!isKitchen && (
+                    <>
+                        <div className="border-t border-dashed border-gray-400 my-1.5" />
+                        {t.showItemPrices && (
+                            <div className="flex justify-between" style={{ fontSize: fs - 1 }}>
+                                <span>Subtotal</span><span>€{subtotal.toFixed(2)}</span>
+                            </div>
                         )}
-                    </div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>Footer</div>
-                    {(['footerLine1', 'footerLine2', 'footerLine3'] as const).map((key, i) => <div key={key} style={{ marginBottom: 8 }}>
-                        <input style={{ ...ip, padding: '8px 12px', fontSize: 12 }} value={editing[key]} onChange={e => setEditing(p => p ? { ...p, [key]: e.target.value } : null)} placeholder={`Footer line ${i + 1}`} />
-                    </div>)}
-                    {/* QR & Invoice Section */}
-                    <div style={{ ...cd, background: 'var(--bg-secondary,#09090b)', padding: 12, marginBottom: 14 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 }}>QR Code & Invoice</div>
-                        <div style={{ marginBottom: 8 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>QR Code URL</label>
-                            <input style={{ ...ip, padding: '8px 12px', fontSize: 12 }} value={editing.qrCodeUrl} onChange={e => setEditing(p => p ? { ...p, qrCodeUrl: e.target.value } : null)} placeholder="https://example.com/feedback" />
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
-                                <input type="checkbox" checked={editing.qrGuestConsole} onChange={() => setEditing(p => p ? { ...p, qrGuestConsole: !p.qrGuestConsole } : null)} /> QR links to Guest Console
-                            </label>
-                        </div>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Invoice Prefix</label>
-                            <input style={{ ...ip, padding: '8px 12px', fontSize: 12 }} value={editing.invoicePrefix} onChange={e => setEditing(p => p ? { ...p, invoicePrefix: e.target.value } : null)} placeholder="e.g. INV-" maxLength={10} />
-                        </div>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14, marginTop: 10 }}>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Paper Width</label>
-                            <select style={{ ...ip, cursor: 'pointer' }} value={editing.paperWidth} onChange={e => setEditing(p => p ? { ...p, paperWidth: e.target.value as '58mm' | '80mm' } : null)} aria-label="Paper width"><option value="58mm">58mm</option><option value="80mm">80mm</option></select></div>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Font Size</label>
-                            <select style={{ ...ip, cursor: 'pointer' }} value={editing.fontSize} onChange={e => setEditing(p => p ? { ...p, fontSize: e.target.value as 'small' | 'medium' | 'large' } : null)} aria-label="Font size"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></div>
-                    </div>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                        <button style={{ ...bp, flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
-                        <button title="Delete template" style={{ ...bo, color: '#EF4444' }} onClick={() => { setTemplates(p => p.filter(t => t.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
-                        <button style={bo} onClick={() => setEditing(null)}>Cancel</button>
-                    </div>
-                </div>
-            </div>}
+                        {t.showTax && (
+                            <div className="flex justify-between text-gray-500" style={{ fontSize: fs - 1 }}>
+                                <span>VAT 18%</span><span>€{tax.toFixed(2)}</span>
+                            </div>
+                        )}
+                        {t.showItemPrices && (
+                            <>
+                                <div className="border-t border-black my-1" />
+                                <div className="flex justify-between font-bold" style={{ fontSize: fs + 2 }}>
+                                    <span>TOTAL</span><span>€{total.toFixed(2)}</span>
+                                </div>
+                            </>
+                        )}
+                    </>
+                )}
 
-            {/* Preview Modal */}
-            {preview && <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setPreview(null)}>
-                <div style={{ background: '#fff', color: '#000', width: 300, borderRadius: 8, padding: 20, fontFamily: 'monospace', fontSize: 12 }} onClick={e => e.stopPropagation()}>
-                    <div style={{ textAlign: 'center', marginBottom: 12 }}>
-                        {preview.showLogo && <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>🍽️</div>}
-                        {preview.headerLine1 && <div style={{ fontWeight: 700 }}>{preview.headerLine1}</div>}
-                        {preview.headerLine2 && <div>{preview.headerLine2}</div>}
-                        {preview.headerLine3 && <div>{preview.headerLine3}</div>}
+                {/* PAYMENT */}
+                {t.showPaymentMethod && !isKitchen && (
+                    <div className="mt-1" style={{ fontSize: fs - 1 }}>
+                        Paid: {isRoomCharge ? 'Room Charge — Rm 304' : 'Visa ****4242'}
                     </div>
-                    <div style={{ borderTop: '1px dashed #ccc', borderBottom: '1px dashed #ccc', padding: '8px 0', marginBottom: 8 }}>
-                        {preview.showDateTime && <div>Date: 19/02/2026 14:32</div>}
-                        {preview.showOrderNumber && <div>Order: #1042</div>}
-                        {preview.showServer && <div>Server: Sofia C.</div>}
-                        {preview.showTable && <div>Table: T-12</div>}
+                )}
+
+                {/* TIP */}
+                {t.showTipLine && (
+                    <div className="mt-2 border-t border-dashed border-gray-400 pt-2" style={{ fontSize: fs - 1 }}>
+                        Tip: __________ Total: __________
                     </div>
-                    <div style={{ marginBottom: 8 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>1x Margherita</span>{preview.showItemPrices && <span>€12.50</span>}</div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>1x Caesar Salad</span>{preview.showItemPrices && <span>€9.80</span>}</div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>2x House Wine</span>{preview.showItemPrices && <span>€16.00</span>}</div>
-                    </div>
-                    {preview.showTax && <div style={{ borderTop: '1px dashed #ccc', padding: '4px 0', fontSize: 10 }}>VAT 18%: €5.73</div>}
-                    <div style={{ borderTop: '1px solid #000', padding: '4px 0', fontWeight: 700, display: 'flex', justifyContent: 'space-between' }}><span>TOTAL</span><span>€38.30</span></div>
-                    {preview.showPaymentMethod && <div style={{ fontSize: 10, marginTop: 4 }}>Paid: Visa ****4242</div>}
-                    {preview.showTipLine && <div style={{ borderTop: '1px dashed #ccc', marginTop: 8, paddingTop: 8 }}>Tip: _________ Total: _________</div>}
-                    <div style={{ textAlign: 'center', marginTop: 12, fontSize: 10 }}>
-                        {preview.footerLine1 && <div>{preview.footerLine1}</div>}
-                        {preview.footerLine2 && <div>{preview.footerLine2}</div>}
-                    </div>
-                    <button style={{ ...bp, width: '100%', justifyContent: 'center', marginTop: 12, background: '#333' }} onClick={() => setPreview(null)}>Close Preview</button>
+                )}
+
+                {/* FOOTER */}
+                <div className="text-center mt-3" style={{ fontSize: fs - 1 }}>
+                    {t.footerLine1 && <div>{t.footerLine1}</div>}
+                    {t.footerLine2 && <div className="text-gray-500">{t.footerLine2}</div>}
+                    {t.footerLine3 && <div className="text-gray-500">{t.footerLine3}</div>}
                 </div>
-            </div>}
+
+                {/* QR */}
+                {t.qrCodeUrl && (
+                    <div className="flex flex-col items-center mt-3">
+                        <div className="w-14 h-14 border-2 border-black rounded-sm flex items-center justify-center">
+                            <div className="grid grid-cols-5 grid-rows-5 gap-px w-10 h-10">
+                                {Array.from({ length: 25 }).map((_, i) => (
+                                    <div key={i} className={cn('w-full h-full', i % 3 === 0 ? 'bg-black' : 'bg-white')} />
+                                ))}
+                            </div>
+                        </div>
+                        <div className="text-gray-500 mt-0.5" style={{ fontSize: 7 }}>Scan for feedback</div>
+                    </div>
+                )}
+
+                {/* BARCODE */}
+                {t.showBarcode && (
+                    <div className="flex flex-col items-center mt-2">
+                        <div className="flex gap-px h-8">
+                            {Array.from({ length: 30 }).map((_, i) => (
+                                <div key={i} className="bg-black" style={{ width: i % 3 === 0 ? 2 : 1 }} />
+                            ))}
+                        </div>
+                        <div className="text-gray-500" style={{ fontSize: 7 }}>1042-{dateStr.replace(/\//g, '')}</div>
+                    </div>
+                )}
+
+                {/* Torn edge bottom */}
+                <div className="absolute bottom-0 left-0 right-0 h-3"
+                    style={{ background: 'repeating-conic-gradient(#fff 0deg 45deg, transparent 45deg 90deg) 0 0 / 8px 8px' }} />
+            </div>
         </div>
     );
 };
 
-export default ReceiptTemplates;
+/* ═══════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════════════════════════════ */
+
+export default function ReceiptTemplates() {
+    const [templates, setTemplates] = useState<ReceiptTemplate[]>(SEED);
+    const [editing, setEditing] = useState<ReceiptTemplate | null>(null);
+    const [selectedPreview, setSelectedPreview] = useState<ReceiptTemplate | null>(null);
+    const [activeType, setActiveType] = useState<string>('all');
+    const [isLive, setIsLive] = useState(false);
+
+    const venueId = localStorage.getItem('restin_pos_venue') || '';
+    const { data: apiData } = useVenueConfig<ReceiptTemplate>({ venueId, configType: 'receipt-templates' });
+
+    useEffect(() => {
+        if (apiData && apiData.length > 0) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            setTemplates(apiData.map((t: any) => makeTemplate({
+                id: t.id || t._id || crypto.randomUUID(), name: t.name || 'Untitled', type: t.type || 'customer', ...t,
+            })));
+            setIsLive(true);
+        }
+    }, [apiData]);
+
+    const filtered = useMemo(() =>
+        activeType === 'all' ? templates : templates.filter(t => t.type === activeType),
+        [templates, activeType]);
+
+    useEffect(() => {
+        if (!selectedPreview && filtered.length > 0) setSelectedPreview(filtered[0]);
+    }, [filtered, selectedPreview]);
+
+    /* Save */
+    const handleSave = async () => {
+        if (!editing) return;
+        const exists = templates.find(t => t.id === editing.id);
+        setTemplates(exists ? templates.map(t => t.id === editing.id ? editing : t) : [...templates, editing]);
+        setSelectedPreview(editing);
+        try { await api.put(`/print/templates/${editing.id}`, editing); } catch { /* save locally even if API fails */ }
+        setEditing(null);
+        toast.success(`Template "${editing.name}" saved`);
+    };
+
+    const handleDelete = () => {
+        if (!editing) return;
+        setTemplates(p => p.filter(t => t.id !== editing.id));
+        setSelectedPreview(null);
+        setEditing(null);
+        toast.success('Template deleted');
+    };
+
+    const handleDuplicate = () => {
+        if (!editing) return;
+        const dup = { ...editing, id: crypto.randomUUID(), name: `Copy of ${editing.name}`, isDefault: false };
+        setTemplates(p => [...p, dup]);
+        setEditing(dup);
+        toast.success('Template duplicated');
+    };
+
+    const handleNew = () => {
+        const typeKey = activeType !== 'all' ? (activeType as TemplateType) : 'customer';
+        setEditing(makeTemplate({ id: crypto.randomUUID(), name: `New ${TYPE_META[typeKey].label} Template`, type: typeKey }));
+    };
+
+    const toggleField = (key: keyof ReceiptTemplate) => {
+        setEditing(p => p ? { ...p, [key]: !p[key as keyof ReceiptTemplate] } as ReceiptTemplate : null);
+    };
+    const updateField = (key: keyof ReceiptTemplate, value: string) => {
+        setEditing(p => p ? { ...p, [key]: value } as ReceiptTemplate : null);
+    };
+
+    const typeCounts = useMemo(() => {
+        const c: Record<string, number> = { all: templates.length };
+        Object.keys(TYPE_META).forEach(k => { c[k] = templates.filter(t => t.type === k).length; });
+        return c;
+    }, [templates]);
+
+    return (
+        <div className="min-h-screen bg-background">
+            <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+
+                {/* ── Page Header ── */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+                            <Receipt className="w-6 h-6 text-blue-400" />
+                            Receipt Templates
+                            {isLive && (
+                                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px] ml-2">
+                                    <Wifi className="w-3 h-3 mr-1" /> Live
+                                </Badge>
+                            )}
+                        </h1>
+                        <p className="text-sm text-zinc-500 mt-1">Manage and preview all receipt, ticket, and document templates for printing</p>
+                    </div>
+                    <Button onClick={handleNew} className="bg-blue-600 hover:bg-blue-700">
+                        <Plus className="w-4 h-4 mr-2" /> New Template
+                    </Button>
+                </div>
+
+                {/* ── Type Filter Tabs ── */}
+                <div className="mb-6 overflow-x-auto">
+                    <Tabs value={activeType} onValueChange={setActiveType}>
+                        <TabsList className="bg-zinc-900/60 border border-white/5 p-1 h-auto flex-wrap">
+                            <TabsTrigger value="all" className="data-[state=active]:bg-zinc-700 data-[state=active]:text-white gap-1.5">
+                                <LayoutGrid className="w-3.5 h-3.5" />
+                                All <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">{typeCounts.all}</Badge>
+                            </TabsTrigger>
+                            {Object.entries(TYPE_META).map(([key, meta]) => {
+                                const Icon = meta.icon;
+                                return (
+                                    <TabsTrigger key={key} value={key}
+                                        className="data-[state=active]:bg-zinc-700 data-[state=active]:text-white gap-1.5">
+                                        <Icon className="w-3.5 h-3.5" style={{ color: meta.color }} />
+                                        {meta.label}
+                                        {typeCounts[key] > 0 && (
+                                            <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">{typeCounts[key]}</Badge>
+                                        )}
+                                    </TabsTrigger>
+                                );
+                            })}
+                        </TabsList>
+                    </Tabs>
+                </div>
+
+                {/* ── Two-Panel Layout ── */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* LEFT — Template Grid */}
+                    <div className="lg:col-span-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                            {filtered.map(t => {
+                                const meta = TYPE_META[t.type];
+                                const Icon = meta.icon;
+                                const isSelected = selectedPreview?.id === t.id;
+                                return (
+                                    <Card key={t.id}
+                                        className={cn(
+                                            'border-white/5 bg-zinc-900/50 backdrop-blur-xl cursor-pointer transition-all group hover:border-zinc-600',
+                                            isSelected && 'ring-2 ring-blue-500/50 border-blue-500/30'
+                                        )}
+                                        onClick={() => setSelectedPreview(t)}>
+                                        <CardContent className="pt-5 pb-4 px-5">
+                                            <div className="flex items-start justify-between mb-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-9 h-9 rounded-lg flex items-center justify-center"
+                                                        style={{ background: `${meta.color}15` }}>
+                                                        <Icon className="w-4 h-4" style={{ color: meta.color }} />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="text-sm font-semibold text-white leading-tight">{t.name}</h3>
+                                                        <span className="text-[11px] text-zinc-500">{meta.label} • {t.paperWidth}</span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col items-end gap-1">
+                                                    {t.isDefault && (
+                                                        <Badge className="text-[9px] px-1.5 py-0 bg-blue-500/10 text-blue-400 border-blue-500/20">DEFAULT</Badge>
+                                                    )}
+                                                    <Badge className={cn('text-[9px] px-1.5 py-0',
+                                                        t.isActive ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'
+                                                    )}>{t.isActive ? 'Active' : 'Off'}</Badge>
+                                                </div>
+                                            </div>
+
+                                            {/* Feature pills */}
+                                            <div className="flex flex-wrap gap-1.5 mb-3">
+                                                {t.showLogo && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">Logo</span>}
+                                                {t.showTax && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">Tax</span>}
+                                                {t.showTipLine && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">Tip</span>}
+                                                {t.qrCodeUrl && <span className="text-[10px] text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded">QR</span>}
+                                                {t.showBarcode && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">Barcode</span>}
+                                                {t.invoicePrefix && <span className="text-[10px] text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded">{t.invoicePrefix}</span>}
+                                            </div>
+
+                                            {/* Actions */}
+                                            <div className="flex gap-2 mt-1">
+                                                <Button variant="ghost" size="sm" className="h-7 text-xs flex-1 text-zinc-400 hover:text-white"
+                                                    onClick={(e) => { e.stopPropagation(); setEditing({ ...t }); }}>
+                                                    <SlidersHorizontal className="w-3 h-3 mr-1" /> Edit
+                                                </Button>
+                                                <Button variant="ghost" size="sm" className="h-7 text-xs text-zinc-400 hover:text-white"
+                                                    onClick={(e) => { e.stopPropagation(); setSelectedPreview(t); }}>
+                                                    <Eye className="w-3 h-3 mr-1" /> Preview
+                                                </Button>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                );
+                            })}
+
+                            {filtered.length === 0 && (
+                                <div className="col-span-full text-center py-16">
+                                    <FileText className="w-12 h-12 mx-auto text-zinc-600 mb-3" />
+                                    <p className="text-zinc-500 mb-4">No templates of this type</p>
+                                    <Button onClick={handleNew} variant="outline" size="sm">
+                                        <Plus className="w-4 h-4 mr-2" /> Create One
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* RIGHT — Live Preview */}
+                    <div className="lg:col-span-1">
+                        <div className="sticky top-6">
+                            <Card className="border-white/5 bg-zinc-900/50 backdrop-blur-xl">
+                                <CardContent className="pt-5 pb-6">
+                                    <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                        <Eye className="w-3.5 h-3.5" /> Live Preview
+                                    </div>
+                                    {selectedPreview ? (
+                                        <ThermalPreview template={editing && editing.id === selectedPreview.id ? editing : selectedPreview} />
+                                    ) : (
+                                        <div className="text-center py-12 text-zinc-600">
+                                            <Printer className="w-8 h-8 mx-auto mb-2" />
+                                            <p className="text-sm">Select a template to preview</p>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </div>
+                </div>
+
+                {/* ── Edit Drawer ── */}
+                <Sheet open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
+                    <SheetContent className="bg-zinc-950 border-white/10 text-white w-full sm:max-w-lg overflow-y-auto">
+                        <SheetHeader>
+                            <SheetTitle className="text-white text-lg">
+                                {templates.find(t => t.id === editing?.id) ? 'Edit Template' : 'New Template'}
+                            </SheetTitle>
+                        </SheetHeader>
+
+                        {editing && (
+                            <div className="space-y-6 mt-6">
+                                {/* Name & Type */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label className="text-zinc-400 text-xs">Template Name</Label>
+                                        <Input value={editing.name} onChange={e => updateField('name', e.target.value)}
+                                            className="bg-zinc-900 border-white/10 text-white" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="text-zinc-400 text-xs">Type</Label>
+                                        <Select value={editing.type} onValueChange={v => updateField('type', v)}>
+                                            <SelectTrigger className="bg-zinc-900 border-white/10 text-white"><SelectValue /></SelectTrigger>
+                                            <SelectContent>
+                                                {Object.entries(TYPE_META).map(([k, m]) => (
+                                                    <SelectItem key={k} value={k}>{m.label}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+
+                                {/* Status */}
+                                <div className="flex items-center gap-4">
+                                    <label className="flex items-center gap-2 text-sm">
+                                        <Switch checked={editing.isDefault} onCheckedChange={() => toggleField('isDefault')} />
+                                        <span className="text-zinc-300">Default for type</span>
+                                    </label>
+                                    <label className="flex items-center gap-2 text-sm">
+                                        <Switch checked={editing.isActive} onCheckedChange={() => toggleField('isActive')} />
+                                        <span className="text-zinc-300">Active</span>
+                                    </label>
+                                </div>
+
+                                {/* Header */}
+                                <div>
+                                    <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Header</div>
+                                    <div className="space-y-2">
+                                        {(['headerLine1', 'headerLine2', 'headerLine3'] as const).map((key, i) => (
+                                            <Input key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
+                                                placeholder={`Header line ${i + 1}`} className="bg-zinc-900 border-white/10 text-white text-sm" />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Fields */}
+                                <div>
+                                    <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Fields</div>
+                                    <div className="bg-zinc-900/50 rounded-lg border border-white/5 divide-y divide-white/5">
+                                        {([
+                                            ['showLogo', 'Show Logo'], ['showDateTime', 'Date & Time'], ['showServer', 'Server Name'],
+                                            ['showTable', 'Table Number'], ['showOrderNumber', 'Order Number'], ['showItemPrices', 'Item Prices'],
+                                            ['showModifiers', 'Modifiers / Add-ons'], ['showCourseHeaders', 'Course Headers'],
+                                            ['showTax', 'Tax Breakdown'], ['showPaymentMethod', 'Payment Method'],
+                                            ['showTipLine', 'Tip Line'], ['showBarcode', 'Barcode'],
+                                        ] as const).map(([key, label]) => (
+                                            <div key={key} className="flex items-center justify-between px-4 py-3">
+                                                <span className="text-sm text-zinc-300">{label}</span>
+                                                <Switch checked={editing[key] as boolean} onCheckedChange={() => toggleField(key)} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Footer */}
+                                <div>
+                                    <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Footer</div>
+                                    <div className="space-y-2">
+                                        {(['footerLine1', 'footerLine2', 'footerLine3'] as const).map((key, i) => (
+                                            <Input key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
+                                                placeholder={`Footer line ${i + 1}`} className="bg-zinc-900 border-white/10 text-white text-sm" />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* QR & Invoice */}
+                                <div>
+                                    <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">QR Code & Invoice</div>
+                                    <div className="space-y-3">
+                                        <div className="space-y-1.5">
+                                            <Label className="text-zinc-400 text-xs">QR Code URL</Label>
+                                            <Input value={editing.qrCodeUrl} onChange={e => updateField('qrCodeUrl', e.target.value)}
+                                                placeholder="https://restin.ai/feedback" className="bg-zinc-900 border-white/10 text-white text-sm" />
+                                        </div>
+                                        <label className="flex items-center gap-2 text-sm">
+                                            <Switch checked={editing.qrGuestConsole} onCheckedChange={() => toggleField('qrGuestConsole')} />
+                                            <span className="text-zinc-300">QR links to Guest Console</span>
+                                        </label>
+                                        <div className="space-y-1.5">
+                                            <Label className="text-zinc-400 text-xs">Invoice Prefix</Label>
+                                            <Input value={editing.invoicePrefix} onChange={e => updateField('invoicePrefix', e.target.value)}
+                                                placeholder="e.g. INV-" maxLength={10}
+                                                className="bg-zinc-900 border-white/10 text-white text-sm" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Paper Settings */}
+                                <div>
+                                    <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Paper Settings</div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-1.5">
+                                            <Label className="text-zinc-400 text-xs">Paper Width</Label>
+                                            <Select value={editing.paperWidth} onValueChange={v => updateField('paperWidth', v)}>
+                                                <SelectTrigger className="bg-zinc-900 border-white/10 text-white"><SelectValue /></SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="58mm">58mm</SelectItem>
+                                                    <SelectItem value="80mm">80mm</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <Label className="text-zinc-400 text-xs">Font Size</Label>
+                                            <Select value={editing.fontSize} onValueChange={v => updateField('fontSize', v)}>
+                                                <SelectTrigger className="bg-zinc-900 border-white/10 text-white"><SelectValue /></SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="small">Small</SelectItem>
+                                                    <SelectItem value="medium">Medium</SelectItem>
+                                                    <SelectItem value="large">Large</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex gap-2 pt-4 border-t border-white/5">
+                                    <Button onClick={handleSave} className="flex-1 bg-blue-600 hover:bg-blue-700">
+                                        <Save className="w-4 h-4 mr-2" /> Save
+                                    </Button>
+                                    <Button variant="outline" onClick={handleDuplicate}
+                                        className="text-cyan-400 border-cyan-500/30 hover:bg-cyan-500/10">
+                                        <Copy className="w-4 h-4 mr-1" /> Copy
+                                    </Button>
+                                    <Button variant="outline" onClick={handleDelete}
+                                        className="text-red-400 border-red-500/30 hover:bg-red-500/10">
+                                        <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </SheetContent>
+                </Sheet>
+
+            </div>
+        </div>
+    );
+}
