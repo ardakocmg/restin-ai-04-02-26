@@ -33,8 +33,9 @@ import ModifierDialog from "../../../components/ModifierDialog";
 import CourseSelector, { COURSE_COLORS } from "../CourseSelector";
 import SeatSelector from "../SeatSelector";
 import { safeNumber, safeArray, safeString } from "../../../lib/safe";
+import type { POSLayoutProps, CategoryIconMap, POSMenuItem, POSOrderItem, ItemStyle } from './types';
 
-const CATEGORY_ICONS = {
+const CATEGORY_ICONS: CategoryIconMap = {
     appetizers: UtensilsCrossed,
     mains: UtensilsCrossed,
     breakfast: Coffee,
@@ -46,62 +47,23 @@ const CATEGORY_ICONS = {
 };
 
 export default function POSLayoutPro({
-    // Data
-    venue,
-    user,
-    categories,
-    menuItems,
-    tables,
-    activeCategory,
-    selectedTable,
-    currentOrder,
-    orderItems,
-    settings,
-    sendOptions,
-    sendInProgress,
-    floorPlan,
-    selectedItem,
-    // Dialog states
-    showTableDialog,
-    showPaymentDialog,
-    showFloorPlanDialog,
-    showModifierDialog,
-    // Calculated values
-    subtotal,
-    tax,
-    total,
-    searchQuery,
-    onSearchChange,
-    isKeyboardOpen,
-    onSetKeyboardOpen,
-    // Actions
-    onLoadCategoryItems,
-    onSelectTable,
-    onAddItemToOrder,
-    onConfirmItemWithModifiers,
-    onUpdateItemQuantity,
-    onRemoveItem,
-    onSendOrder,
-    onHandlePayment,
-    onClearOrder,
-    onDeselectTable,
-    onSetSendOptions,
-    onSetShowTableDialog,
-    onSetShowPaymentDialog,
-    onSetShowFloorPlanDialog,
-    onSetShowModifierDialog,
-    onCloseModifierDialog,
-    onNavigate,
-    // Theme switcher slot
+    venue, user, categories, menuItems, tables, activeCategory, selectedTable,
+    currentOrder, orderItems, settings, sendOptions, sendInProgress, floorPlan, selectedItem,
+    showTableDialog, showPaymentDialog, showFloorPlanDialog, showModifierDialog,
+    subtotal, tax, total, searchQuery, onSearchChange, isKeyboardOpen, onSetKeyboardOpen,
+    onLoadCategoryItems, onSelectTable, onAddItemToOrder, onConfirmItemWithModifiers,
+    onUpdateItemQuantity, onRemoveItem, onSendOrder, onHandlePayment, onClearOrder,
+    onDeselectTable, onSetSendOptions, onSetShowTableDialog, onSetShowPaymentDialog,
+    onSetShowFloorPlanDialog, onSetShowModifierDialog, onCloseModifierDialog, onNavigate,
     themeSelector,
-}) {
+}: POSLayoutProps) {
     // --- Pro-specific local state ---
     const [activeCourse, setActiveCourse] = useState(1);
     const [activeSeat, setActiveSeat] = useState(1);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
 
     // --- Helper functions ---
-    const getCategoryIcon = (categoryName) => {
+    const getCategoryIcon = (categoryName: string) => {
         const name = categoryName.toLowerCase();
         for (const [key, Icon] of Object.entries(CATEGORY_ICONS)) {
             if (name.includes(key)) return Icon;
@@ -109,7 +71,7 @@ export default function POSLayoutPro({
         return CATEGORY_ICONS.default;
     };
 
-    const getItemStyle = (item) => {
+    const getItemStyle = (item: POSMenuItem): ItemStyle => {
         if (item.image) {
             return {
                 backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.85) 100%), url(${item.image})`,
@@ -124,7 +86,7 @@ export default function POSLayoutPro({
     };
 
     // Group order items by course
-    const groupedByCourse = orderItems.reduce((acc, item, idx) => {
+    const groupedByCourse = orderItems.reduce<Record<number, (POSOrderItem & { _originalIndex: number })[]>>((acc, item, idx) => {
         const course = item.course || 1;
         if (!acc[course]) acc[course] = [];
         acc[course].push({ ...item, _originalIndex: idx });
@@ -134,7 +96,7 @@ export default function POSLayoutPro({
     const courseKeys = Object.keys(groupedByCourse).map(Number).sort((a, b) => a - b);
 
     // Add item with pro-specific course & seat
-    const handleAddItem = (item) => {
+    const handleAddItem = (item: POSMenuItem) => {
         onAddItemToOrder({
             ...item,
             _proCourse: activeCourse,
@@ -142,7 +104,7 @@ export default function POSLayoutPro({
         });
     };
 
-    const getCourseColor = (course) => {
+    const getCourseColor = (course: number) => {
         return COURSE_COLORS[course] || COURSE_COLORS[4];
     };
 
@@ -449,7 +411,7 @@ export default function POSLayoutPro({
                         <label className="flex items-center gap-1.5 cursor-pointer">
                             <Checkbox
                                 checked={sendOptions.do_print}
-                                onCheckedChange={(checked) => onSetSendOptions(prev => ({ ...prev, do_print: checked }))}
+                                onCheckedChange={(checked) => onSetSendOptions(prev => ({ ...prev, do_print: !!checked }))}
                                 className="border-zinc-600 data-[state=checked]:bg-white data-[state=checked]:border-white"
                             />
                             <Printer className="w-3.5 h-3.5 text-muted-foreground" />
@@ -459,7 +421,7 @@ export default function POSLayoutPro({
                         <label className="flex items-center gap-1.5 cursor-pointer">
                             <Checkbox
                                 checked={sendOptions.do_kds}
-                                onCheckedChange={(checked) => onSetSendOptions(prev => ({ ...prev, do_kds: checked }))}
+                                onCheckedChange={(checked) => onSetSendOptions(prev => ({ ...prev, do_kds: !!checked }))}
                                 className="border-zinc-600 data-[state=checked]:bg-white data-[state=checked]:border-white"
                             />
                             <UtensilsCrossed className="w-3.5 h-3.5 text-muted-foreground" />

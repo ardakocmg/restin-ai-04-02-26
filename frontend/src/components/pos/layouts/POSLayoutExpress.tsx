@@ -25,8 +25,9 @@ import { ScrollArea } from "../../../components/ui/scroll-area";
 import ModifierDialog from "../../../components/ModifierDialog";
 import QuickPayPanel from "../QuickPayPanel";
 import { safeNumber, safeArray, safeString } from "../../../lib/safe";
+import type { POSLayoutProps, CategoryIconMap, POSMenuItem, ItemStyle } from './types';
 
-const CATEGORY_ICONS = {
+const CATEGORY_ICONS: CategoryIconMap = {
     appetizers: UtensilsCrossed,
     mains: UtensilsCrossed,
     breakfast: Coffee,
@@ -38,57 +39,18 @@ const CATEGORY_ICONS = {
 };
 
 export default function POSLayoutExpress({
-    // Data
-    venue,
-    user,
-    categories,
-    menuItems,
-    tables,
-    activeCategory,
-    selectedTable,
-    currentOrder,
-    orderItems,
-    settings,
-    sendOptions,
-    sendInProgress,
-    floorPlan,
-    selectedItem,
-    // Dialog states
-    showTableDialog,
-    showPaymentDialog,
-    showFloorPlanDialog,
-    showModifierDialog,
-    // Calculated values
-    subtotal,
-    tax,
-    total,
-    searchQuery,
-    onSearchChange,
-    isKeyboardOpen,
-    onSetKeyboardOpen,
-    // Actions
-    onLoadCategoryItems,
-    onSelectTable,
-    onAddItemToOrder,
-    onConfirmItemWithModifiers,
-    onUpdateItemQuantity,
-    onRemoveItem,
-    onSendOrder,
-    onHandlePayment,
-    onClearOrder,
-    onDeselectTable,
-    onSetSendOptions,
-    onSetShowTableDialog,
-    onSetShowPaymentDialog,
-    onSetShowFloorPlanDialog,
-    onSetShowModifierDialog,
-    onCloseModifierDialog,
-    onNavigate,
-    // Theme switcher slot
+    venue, user, categories, menuItems, tables, activeCategory, selectedTable,
+    currentOrder, orderItems, settings, sendOptions, sendInProgress, floorPlan, selectedItem,
+    showTableDialog, showPaymentDialog, showFloorPlanDialog, showModifierDialog,
+    subtotal, tax, total, searchQuery, onSearchChange, isKeyboardOpen, onSetKeyboardOpen,
+    onLoadCategoryItems, onSelectTable, onAddItemToOrder, onConfirmItemWithModifiers,
+    onUpdateItemQuantity, onRemoveItem, onSendOrder, onHandlePayment, onClearOrder,
+    onDeselectTable, onSetSendOptions, onSetShowTableDialog, onSetShowPaymentDialog,
+    onSetShowFloorPlanDialog, onSetShowModifierDialog, onCloseModifierDialog, onNavigate,
     themeSelector,
-}) {
+}: POSLayoutProps) {
     // --- Helper functions ---
-    const getCategoryIcon = (categoryName) => {
+    const getCategoryIcon = (categoryName: string) => {
         const name = categoryName.toLowerCase();
         for (const [key, Icon] of Object.entries(CATEGORY_ICONS)) {
             if (name.includes(key)) return Icon;
@@ -96,7 +58,7 @@ export default function POSLayoutExpress({
         return CATEGORY_ICONS.default;
     };
 
-    const getItemStyle = (item) => {
+    const getItemStyle = (item: POSMenuItem): ItemStyle => {
         if (item.image) {
             return {
                 backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%), url(${item.image})`,
@@ -111,7 +73,7 @@ export default function POSLayoutExpress({
     };
 
     // Express auto-payment: sends order AND processes payment in one step
-    const handleExpressPayment = (method) => {
+    const handleExpressPayment = (method: string) => {
         // Auto-send to kitchen first (if items haven't been sent)
         if (orderItems.length > 0 && !currentOrder) {
             // For Express, we rely on the parent's payment handler

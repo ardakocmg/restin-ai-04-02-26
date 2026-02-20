@@ -20,8 +20,9 @@ import { Checkbox } from "../../../components/ui/checkbox";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import ModifierDialog from "../../../components/ModifierDialog";
 import { safeNumber, safeArray, safeString } from "../../../lib/safe";
+import type { POSLayoutProps, CategoryIconMap, POSCategory, POSMenuItem, ItemStyle } from './types';
 
-const CATEGORY_ICONS = {
+const CATEGORY_ICONS: CategoryIconMap = {
     appetizers: UtensilsCrossed,
     mains: UtensilsCrossed,
     breakfast: Coffee,
@@ -33,57 +34,18 @@ const CATEGORY_ICONS = {
 };
 
 export default function POSLayoutRestin({
-    // Data
-    venue,
-    user,
-    categories,
-    menuItems,
-    tables,
-    activeCategory,
-    selectedTable,
-    currentOrder,
-    orderItems,
-    settings,
-    sendOptions,
-    sendInProgress,
-    floorPlan,
-    selectedItem,
-    // Dialog states
-    showTableDialog,
-    showPaymentDialog,
-    showFloorPlanDialog,
-    showModifierDialog,
-    // Calculated values
-    subtotal,
-    tax,
-    total,
-    searchQuery,
-    onSearchChange,
-    isKeyboardOpen,
-    onSetKeyboardOpen,
-    // Actions
-    onLoadCategoryItems,
-    onSelectTable,
-    onAddItemToOrder,
-    onConfirmItemWithModifiers,
-    onUpdateItemQuantity,
-    onRemoveItem,
-    onSendOrder,
-    onHandlePayment,
-    onClearOrder,
-    onDeselectTable,
-    onSetSendOptions,
-    onSetShowTableDialog,
-    onSetShowPaymentDialog,
-    onSetShowFloorPlanDialog,
-    onSetShowModifierDialog,
-    onCloseModifierDialog,
-    onNavigate,
-    // Theme switcher slot
+    venue, user, categories, menuItems, tables, activeCategory, selectedTable,
+    currentOrder, orderItems, settings, sendOptions, sendInProgress, floorPlan, selectedItem,
+    showTableDialog, showPaymentDialog, showFloorPlanDialog, showModifierDialog,
+    subtotal, tax, total, searchQuery, onSearchChange, isKeyboardOpen, onSetKeyboardOpen,
+    onLoadCategoryItems, onSelectTable, onAddItemToOrder, onConfirmItemWithModifiers,
+    onUpdateItemQuantity, onRemoveItem, onSendOrder, onHandlePayment, onClearOrder,
+    onDeselectTable, onSetSendOptions, onSetShowTableDialog, onSetShowPaymentDialog,
+    onSetShowFloorPlanDialog, onSetShowModifierDialog, onCloseModifierDialog, onNavigate,
     themeSelector,
-}) {
+}: POSLayoutProps) {
     // --- Helper functions (pure UI) ---
-    const getCategoryIcon = (categoryName) => {
+    const getCategoryIcon = (categoryName: string) => {
         const name = categoryName.toLowerCase();
         for (const [key, Icon] of Object.entries(CATEGORY_ICONS)) {
             if (name.includes(key)) return Icon;
@@ -91,7 +53,7 @@ export default function POSLayoutRestin({
         return CATEGORY_ICONS.default;
     };
 
-    const getCategoryStyle = (cat) => {
+    const getCategoryStyle = (cat: POSCategory): ItemStyle => {
         if (cat.image) {
             return {
                 backgroundImage: `url(${cat.image})`,
@@ -106,7 +68,7 @@ export default function POSLayoutRestin({
         return {};
     };
 
-    const getItemStyle = (item) => {
+    const getItemStyle = (item: POSMenuItem): ItemStyle => {
         if (item.image) {
             return {
                 backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8) 100%), url(${item.image})`,
@@ -404,7 +366,7 @@ export default function POSLayoutRestin({
                             <label className="flex items-center space-x-2 cursor-pointer">
                                 <Checkbox
                                     checked={sendOptions.do_print}
-                                    onCheckedChange={(checked) => onSetSendOptions(prev => ({ ...prev, do_print: checked }))}
+                                    onCheckedChange={(checked) => onSetSendOptions(prev => ({ ...prev, do_print: !!checked }))}
                                     className="border-input"
                                 />
                                 <Printer className="w-4 h-4 text-muted-foreground" />
@@ -416,7 +378,7 @@ export default function POSLayoutRestin({
                             <label className="flex items-center space-x-2 cursor-pointer">
                                 <Checkbox
                                     checked={sendOptions.do_kds}
-                                    onCheckedChange={(checked) => onSetSendOptions(prev => ({ ...prev, do_kds: checked }))}
+                                    onCheckedChange={(checked) => onSetSendOptions(prev => ({ ...prev, do_kds: !!checked }))}
                                     className="border-input"
                                 />
                                 <UtensilsCrossed className="w-4 h-4 text-muted-foreground" />
@@ -428,7 +390,7 @@ export default function POSLayoutRestin({
                             <label className="flex items-center space-x-2 cursor-pointer">
                                 <Checkbox
                                     checked={sendOptions.do_stock}
-                                    onCheckedChange={(checked) => onSetSendOptions(prev => ({ ...prev, do_stock: checked }))}
+                                    onCheckedChange={(checked) => onSetSendOptions(prev => ({ ...prev, do_stock: !!checked }))}
                                     className="border-input"
                                 />
                                 <span className="text-foreground text-sm">Deduct Stock</span>

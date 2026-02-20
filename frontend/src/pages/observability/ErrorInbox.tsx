@@ -323,7 +323,7 @@ export default function ErrorInbox() {
       return (
         <Input
           type="number"
-          value={value}
+          value={value as string | number}
           onChange={(e) => onChange(Number(e.target.value))}
           data-testid={`retry - field - ${field.path} `}
         />
@@ -344,7 +344,7 @@ export default function ErrorInbox() {
 
     return (
       <Input
-        value={value}
+        value={value as string}
         onChange={(e) => onChange(e.target.value)}
         data-testid={`retry - field - ${field.path} `}
       />
