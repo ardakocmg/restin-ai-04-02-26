@@ -1,19 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { logger } from '@/lib/logger';
 import PermissionGate from '@/components/shared/PermissionGate';
-import { useAuditLog } from '@/hooks/useAuditLog';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import {
-  Calendar, Edit, MapPin, Trash, ArrowUpDown, Search, Filter,
-  Clock, Monitor, Smartphone, Globe, Download, Timer,
-  CheckCircle2, Loader2, Users, Plus
-} from 'lucide-react';
-import api from '@/lib/api';
-import { useVenue } from '@/context/VenueContext';
 import { useAuth } from '@/context/AuthContext';
+import { useVenue } from '@/context/VenueContext';
+import { useAuditLog } from '@/hooks/useAuditLog';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
+import {
+ArrowUpDown,
+Clock,
+Download,
+Edit,
+Filter,
+Globe,
+Loader2,
+MapPin,
+Monitor,
+Plus,
+Search,
+Smartphone,
+Timer,
+Trash
+} from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface ClockingRecord {
   id?: string;

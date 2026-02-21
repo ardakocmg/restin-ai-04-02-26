@@ -10,17 +10,28 @@
  * Bottom: Action Buttons (Send/Split/Pay) + Navigation Bar
  */
 
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
-    Search, X, Plus, Pencil, Lock, AlertTriangle,
-    LayoutGrid, ShoppingCart, Users, Receipt, Settings,
-    UtensilsCrossed, Send, CreditCard, Trash2, RotateCcw,
-    ChevronDown, Star
+AlertTriangle,
+LayoutGrid,
+Lock,
+Pencil,
+Plus,
+Receipt,
+RotateCcw,
+Search,
+Settings,
+ShoppingCart,
+Star,
+Trash2,
+Users,
+UtensilsCrossed,
+X
 } from 'lucide-react';
+import { useCallback,useEffect,useMemo,useRef,useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
-import { venueAPI, menuAPI, orderAPI } from '../../lib/api';
+import { menuAPI,orderAPI } from '../../lib/api';
 import { logger } from '../../lib/logger';
 import './pos-kseries.css';
 

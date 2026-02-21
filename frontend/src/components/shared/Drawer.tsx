@@ -1,7 +1,6 @@
-import React from 'react';
-import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Sheet,SheetContent,SheetHeader,SheetTitle } from '@/components/ui/sheet';
+import { X } from 'lucide-react';
 
 export default function Drawer({ open, onClose, title, children, width = "lg" }) {
   const widths = {

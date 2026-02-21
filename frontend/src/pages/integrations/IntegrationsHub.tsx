@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
 import { useVenue } from '../../context/VenueContext';
 
@@ -9,7 +9,7 @@ import api from '../../lib/api';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
 
 import { Badge } from '../../components/ui/badge';
 
@@ -21,16 +21,28 @@ import { Label } from '../../components/ui/label';
 
 import { Switch } from '../../components/ui/switch';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
+import { Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle } from '../../components/ui/dialog';
 
-import { Alert, AlertDescription } from '../../components/ui/alert';
+import { Alert,AlertDescription } from '../../components/ui/alert';
 
 import {
-  MessageSquare, Mail, Globe, Star, Zap, CheckCircle2, XCircle,
-  Settings, Key, Info, TrendingUp, Clock, ExternalLink, Copy, Eye, EyeOff,
-  DollarSign, Brain, Hotel, Building2
+Building2,
+CheckCircle2,
+Clock,
+Copy,
+DollarSign,
+ExternalLink,
+Eye,EyeOff,
+Globe,
+Hotel,
+Info,
+Key,
+Mail,
+MessageSquare,
+Settings,
+Star,Zap
 } from 'lucide-react';
 
 import { toast } from 'sonner';

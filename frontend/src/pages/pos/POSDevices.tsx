@@ -3,8 +3,8 @@
  * Register and manage POS terminals, printers, and peripherals
  * Lightspeed K-Series Back Office > Hardware > Devices parity
  */
-import React, { useState } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, X, Monitor, Printer, Smartphone, Wifi, WifiOff, RefreshCw, Settings } from 'lucide-react';
+import { ArrowLeft,Monitor,Plus,Printer,RefreshCw,Save,Smartphone,Trash2,Wifi,WifiOff,X } from 'lucide-react';
+import React,{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import './pos-shared.css';

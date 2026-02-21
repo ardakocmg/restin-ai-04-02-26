@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../../context/VenueContext';
-import { useAuth } from '../../../context/AuthContext';
-import api from '../../../lib/api';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
-import { Label } from '../../../components/ui/label';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/table';
-import { FileDown, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { AlertCircle,CheckCircle2,FileDown,Loader2 } from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { toast } from 'sonner';
+import { Button } from '../../../components/ui/button';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '../../../components/ui/card';
+import { Label } from '../../../components/ui/label';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '../../../components/ui/select';
+import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from '../../../components/ui/table';
+import { useVenue } from '../../../context/VenueContext';
+import PageContainer from '../../../layouts/PageContainer';
+import api from '../../../lib/api';
 
-import { logger } from '@/lib/logger';
 import PermissionGate from '@/components/shared/PermissionGate';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import { logger } from '@/lib/logger';
 export default function AccountingMalta() {
   const { activeVenue } = useVenue();
   const { logAction } = useAuditLog();

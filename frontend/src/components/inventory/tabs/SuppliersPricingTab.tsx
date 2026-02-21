@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Building2, Star, Euro } from 'lucide-react';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card';
+import { Building2,Euro,Star } from 'lucide-react';
 
 export default function SuppliersPricingTab({ data = [], sku }) {
   const preferred = data.find(s => s.is_preferred);

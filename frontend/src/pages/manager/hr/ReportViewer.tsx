@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { Button } from '@/components/ui/button';
 
 import {
-    ArrowLeft,
-    Download,
-    Filter,
-    RefreshCw,
-    FileText,
-    Search,
-    ChevronRight
+ArrowLeft,
+Download,
+Filter,
+RefreshCw
 } from 'lucide-react';
 
 import api from '@/lib/api';

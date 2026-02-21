@@ -10,13 +10,12 @@
  * Usage in App.tsx:
  *   <Route path="finance" element={<RoleRoute requiredRole="OWNER"><FinanceDashboard /></RoleRoute>} />
  */
-import React, { useEffect, useState } from 'react';
+import { ArrowLeft,Lock,Shield } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
+import { useLocation,useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Shield, Lock, ArrowLeft } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { ROLE_HIERARCHY } from '../../lib/roles';
-import { getRouteAuthLevel, AuthLevel } from '../../lib/roles';
 import { useAuthElevation } from '../../hooks/useAuthElevation';
+import { AuthLevel,getRouteAuthLevel,ROLE_HIERARCHY } from '../../lib/roles';
 
 type RoleLevel = 'STAFF' | 'MANAGER' | 'OWNER' | 'PRODUCT_OWNER';
 

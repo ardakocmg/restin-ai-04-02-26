@@ -14,12 +14,12 @@
  *  7. Reporting           — Analytics, heatmap, timeline
  *  8. Keypad PINs         — Time-limited PIN lifecycle
  */
-import React from 'react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Lock, Wifi, DoorOpen, Shield, Eye, BarChart3, Keyboard, Router } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
 import PermissionGate from '@/components/shared/PermissionGate';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/context/AuthContext';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import { BarChart3,DoorOpen,Eye,Keyboard,Lock,Router,Shield,Wifi } from 'lucide-react';
+import React from 'react';
 
 // ─── Lazy-loaded tab components (code-split per tab) ──────────────────────
 const ConnectionTab = React.lazy(() => import('./tabs/ConnectionTab'));

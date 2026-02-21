@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
+import { Printer,X } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '../ui/button';
-import { Printer, Download, X } from 'lucide-react';
+import { Dialog,DialogContent,DialogFooter,DialogHeader,DialogTitle } from '../ui/dialog';
 import { ScrollArea } from '../ui/scroll-area';
 
 export default function PrintPreviewModal({ open, onClose, content, type = 'receipt' }) {

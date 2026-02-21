@@ -2,12 +2,12 @@
  * V3: Permissioned Table Component
  * Server-authoritative column visibility - frontend only renders what backend allows
  */
-import { useState, useEffect } from "react";
+import { Badge } from "@/components/ui/badge";
+import { AlertTriangle,Loader2,ShieldOff } from "lucide-react";
+import { useEffect,useState } from "react";
+import { toast } from "sonner";
 import api from "../lib/api";
 import { logger } from "../lib/logger";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { Loader2, ShieldOff, AlertTriangle } from "lucide-react";
 
 interface TableColumn {
   key: string;

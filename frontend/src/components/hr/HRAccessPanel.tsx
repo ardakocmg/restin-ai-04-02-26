@@ -1,4 +1,4 @@
-import { Card, CardContent } from '../ui/card';
+import { Card,CardContent } from '../ui/card';
 
 export default function HRAccessPanel({ message = 'Access restricted for your role.' }) {
   return (

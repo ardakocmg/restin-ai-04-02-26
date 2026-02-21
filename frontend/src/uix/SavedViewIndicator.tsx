@@ -1,6 +1,5 @@
-import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { RotateCcw, Check } from 'lucide-react';
+import { Check,RotateCcw } from 'lucide-react';
 
 export default function SavedViewIndicator({ isRestored, onReset }) {
   if (!isRestored) return null;

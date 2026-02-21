@@ -2,7 +2,7 @@
  * Legacy Redirects
  * All Navigate/redirect routes consolidated for easy auditing
  */
-import { Route, Navigate } from 'react-router-dom';
+import { Navigate,Route } from 'react-router-dom';
 
 export const legacyRedirects = (
     <>

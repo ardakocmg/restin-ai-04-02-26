@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import { useAuth } from '../../context/AuthContext';
-import api from '../../lib/api';
+import { logger } from '@/lib/logger';
+import { Plus,Save,X } from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { toast } from 'sonner';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Switch } from '../../components/ui/switch';
-import { Badge } from '../../components/ui/badge';
-import { Save, Plus, X } from 'lucide-react';
-import { logger } from '@/lib/logger';
+import { useAuth } from '../../context/AuthContext';
+import { useVenue } from '../../context/VenueContext';
+import PageContainer from '../../layouts/PageContainer';
+import api from '../../lib/api';
 
 export default function Operations() {
   const { activeVenue } = useVenue();

@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent } from '../../../components/ui/card';
-import { Calendar, TrendingUp } from 'lucide-react';
-import api from '../../../lib/api';
 import { logger } from '@/lib/logger';
+import { Calendar } from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { Card,CardContent } from '../../../components/ui/card';
+import PageContainer from '../../../layouts/PageContainer';
 
 export default function SeasonalPatterns() {
   const [patterns, setPatterns] = useState([]);

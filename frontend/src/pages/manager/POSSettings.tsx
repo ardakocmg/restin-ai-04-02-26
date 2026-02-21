@@ -1,26 +1,38 @@
-import { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
-import { useVenue } from '../../context/VenueContext';
-import { useAuth } from '../../context/AuthContext';
-import PermissionGate from '../../components/shared/PermissionGate';
-import { useAuditLog } from '../../hooks/useAuditLog';
-import api, { venueAPI } from '../../lib/api';
+import {
+AlertTriangle,
+Clock,DollarSign,
+Edit2,
+Gift,
+Languages,
+Monitor,
+Percent,
+Plus,
+Printer,
+Receipt,
+Save,
+Shield,
+Tag,
+Trash2,
+Utensils
+} from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { toast } from 'sonner';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import DataTable from '../../components/shared/DataTable';
+import PermissionGate from '../../components/shared/PermissionGate';
+import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Switch } from '../../components/ui/switch';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
+import { useAuth } from '../../context/AuthContext';
+import { useVenue } from '../../context/VenueContext';
+import { useAuditLog } from '../../hooks/useAuditLog';
+import PageContainer from '../../layouts/PageContainer';
+import api,{ venueAPI } from '../../lib/api';
 import { cn } from '../../lib/utils';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Badge } from '../../components/ui/badge';
-import DataTable from '../../components/shared/DataTable';
-import {
-  Save, Building2, Plus, Trash2, Edit2, Printer, Monitor,
-  Percent, Clock, DollarSign, Receipt, Shield, Languages,
-  Settings, Palette, Tag, Gift, Utensils, AlertTriangle
-} from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface VenueFormData {

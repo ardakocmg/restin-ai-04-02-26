@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
-import { useAuth } from '@/context/AuthContext';
 import PermissionGate from '@/components/shared/PermissionGate';
+import { useAuth } from '@/context/AuthContext';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { Bar,BarChart,CartesianGrid,Line,LineChart,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 
 import api from '@/lib/api';
 

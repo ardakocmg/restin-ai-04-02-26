@@ -1,23 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
-import api, { accessControlAPI } from '@/lib/api';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
 import {
-    Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+Dialog,DialogContent,
+DialogDescription,
+DialogHeader,DialogTitle,
 } from '@/components/ui/dialog';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import api,{ accessControlAPI } from '@/lib/api';
+import { logger } from '@/lib/logger';
+import { AnimatePresence,motion } from 'framer-motion';
 import {
-    Lock, Unlock, DoorOpen, Battery, BatteryWarning, RefreshCw, Pencil,
-    Check, X, Clock, Plus, Trash2, Settings, AlertTriangle, Activity, User,
+Activity,
+AlertTriangle,
+Battery,BatteryWarning,
+Check,
+Clock,
+DoorOpen,
+Lock,
+Pencil,
+Plus,
+RefreshCw,
+Settings,
+Trash2,
+Unlock,
+User,
+X,
 } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import { toast } from 'sonner';
-import { AnimatePresence, motion } from 'framer-motion';
-import type { Door, DoorConfig, NukiAuth, NukiLog } from '../doorAccessTypes';
+import type { Door,DoorConfig,NukiAuth,NukiLog } from '../doorAccessTypes';
 import { getVenueId } from '../doorAccessTypes';
 
 // ==================== CREATE PIN DIALOG ====================

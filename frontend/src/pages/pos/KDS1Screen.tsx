@@ -14,11 +14,17 @@
  * - Last completed items bar
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
 import {
-    Maximize2, Minimize2, RotateCcw, Trash2, X,
-    BarChart3, Clock, Users, Truck, ShoppingBag, UtensilsCrossed
+BarChart3,Clock,
+Maximize2,Minimize2,RotateCcw,
+ShoppingBag,
+Trash2,
+Truck,
+Users,
+UtensilsCrossed,
+X
 } from 'lucide-react';
+import React,{ useCallback,useMemo,useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import './kds1.css';
 

@@ -1,20 +1,33 @@
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { logger } from '@/lib/logger';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import {
-    Clock, Timer, MapPin, Users, ArrowLeft, LogIn, LogOut,
-    CheckCircle2, Loader2, Search, Wifi, WifiOff,
-    Activity, Coffee, Utensils, GlassWater, BookOpen, Monitor,
-    Crosshair, Fingerprint, Globe, Navigation, Plus
-} from 'lucide-react';
-import api from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { useVenue } from '@/context/VenueContext';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
+import {
+Activity,
+ArrowLeft,
+BookOpen,
+CheckCircle2,
+Clock,
+Coffee,
+Crosshair,Fingerprint,
+GlassWater,
+Loader2,
+LogIn,LogOut,
+MapPin,
+Monitor,
+Navigation,Plus,
+Search,
+Users,
+Utensils,
+Wifi,WifiOff
+} from 'lucide-react';
+import React,{ useCallback,useEffect,useRef,useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 /* ── Device & Location Helpers ──────────────────────── */

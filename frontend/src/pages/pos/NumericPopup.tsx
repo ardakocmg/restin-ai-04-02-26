@@ -2,7 +2,7 @@
  * POS Numeric Popup — Used for Quantity, Price, PLU entry
  * Reusable numeric keypad component for L-Series POS
  */
-import React, { useState } from 'react';
+import React,{ useState } from 'react';
 
 interface NumericPopupProps {
     title: string;

@@ -238,4 +238,4 @@ class OfflineSyncManager {
 }
 
 export const offlineSync = new OfflineSyncManager();
-export type { SyncQueueItem, CacheItem };
+export type { CacheItem,SyncQueueItem };

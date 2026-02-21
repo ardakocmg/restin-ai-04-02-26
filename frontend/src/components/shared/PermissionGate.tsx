@@ -17,11 +17,11 @@
  *     <DeleteButton />  // Just hidden for non-managers
  *   </PermissionGate>
  */
+import { ShieldOff } from 'lucide-react';
 import { ReactNode } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { ShieldOff } from 'lucide-react';
 import { logger } from '../../lib/logger';
-import { ROLE_HIERARCHY, hasRoleAccess } from '../../lib/roles';
+import { hasRoleAccess } from '../../lib/roles';
 
 type RoleLevel = 'OWNER' | 'MANAGER' | 'STAFF' | 'PRODUCT_OWNER';
 

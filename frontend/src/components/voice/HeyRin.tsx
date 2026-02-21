@@ -1,17 +1,28 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
-import {
-    Mic, MicOff, X, Volume2, VolumeX, Loader2, MessageSquare,
-    Send, Radio, Hash, ChevronDown, Users, ExternalLink, Copy, Forward,
-    CheckCircle2, XCircle,
-} from 'lucide-react';
-import { useVenue } from '../../hooks/useVenue';
 import { useAuth } from '@/features/auth/AuthContext';
+import { motion } from 'framer-motion';
+import {
+CheckCircle2,
+ChevronDown,
+Copy,
+ExternalLink,
+Forward,
+Hash,
+Loader2,MessageSquare,
+Mic,MicOff,
+Radio,
+Send,
+Users,
+Volume2,VolumeX,
+X,
+XCircle,
+} from 'lucide-react';
+import React,{ useCallback,useEffect,useRef,useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useVenue } from '../../hooks/useVenue';
 import api from '../../lib/api';
 import { smartCopy } from '../../lib/copyUtils';
-import RinMascot from './RinMascot';
-import { motion } from 'framer-motion';
 import './HeyRin.css';
+import RinMascot from './RinMascot';
 
 /* ─── Markdown-lite Renderer (ported from AICopilot) ──────────── */
 function renderMarkdown(text: string): React.ReactNode {

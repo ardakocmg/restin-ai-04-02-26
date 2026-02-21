@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { useVenue } from '@/context/VenueContext';
 import { useAuth } from '@/context/AuthContext';
+import { useVenue } from '@/context/VenueContext';
 
 import PermissionGate from '@/components/shared/PermissionGate';
 import { useAuditLog } from '@/hooks/useAuditLog';
@@ -11,15 +11,14 @@ import api from '@/lib/api';
 
 import PageContainer from '@/layouts/PageContainer';
 
-import { Card, CardContent } from '@/components/ui/card';
+import { Card,CardContent } from '@/components/ui/card';
 
 import { Button } from '@/components/ui/button';
 
-import { Badge } from '@/components/ui/badge';
 
-import { Calendar, ChevronLeft, ChevronRight, Clock, Users, ArrowRight } from 'lucide-react';
+import { ArrowRight,ChevronLeft,ChevronRight,Clock,Users } from 'lucide-react';
 
-import { format, addHours, startOfDay, addDays } from 'date-fns';
+import { addDays,addHours,format,startOfDay } from 'date-fns';
 
 export default function ReservationTimeline() {
     const { activeVenue } = useVenue();

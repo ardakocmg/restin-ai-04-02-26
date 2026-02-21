@@ -10,7 +10,7 @@
  */
 
 declare module "@/components/ui/scroll-area" {
-    import { ComponentPropsWithoutRef, ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ComponentPropsWithoutRef,ForwardRefExoticComponent,RefAttributes } from "react";
     export const ScrollArea: ForwardRefExoticComponent<
         ComponentPropsWithoutRef<"div"> & { className?: string; children?: React.ReactNode } & RefAttributes<HTMLDivElement>
     >;
@@ -20,7 +20,7 @@ declare module "@/components/ui/scroll-area" {
 }
 
 declare module "@/components/ui/avatar" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const Avatar: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode } & RefAttributes<HTMLSpanElement>
     >;
@@ -33,7 +33,7 @@ declare module "@/components/ui/avatar" {
 }
 
 declare module "@/components/ui/accordion" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const Accordion: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; type?: "single" | "multiple"; collapsible?: boolean; defaultValue?: string; value?: string; onValueChange?: (v: string) => void } & RefAttributes<HTMLDivElement>
     >;
@@ -49,7 +49,7 @@ declare module "@/components/ui/accordion" {
 }
 
 declare module "@/components/ui/alert" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const Alert: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; variant?: string } & RefAttributes<HTMLDivElement>
     >;
@@ -62,7 +62,7 @@ declare module "@/components/ui/alert" {
 }
 
 declare module "@/components/ui/alert-dialog" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const AlertDialog: React.FC<{ children?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }>;
     export const AlertDialogTrigger: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; asChild?: boolean } & RefAttributes<HTMLButtonElement>
@@ -87,8 +87,7 @@ declare module "@/components/ui/alert-dialog" {
 }
 
 declare module "@/components/ui/calendar" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
-    export const Calendar: React.FC<{
+        export const Calendar: React.FC<{
         className?: string;
         mode?: "single" | "range" | "multiple";
         selected?: Date | Date[] | { from?: Date; to?: Date };
@@ -102,7 +101,7 @@ declare module "@/components/ui/calendar" {
 }
 
 declare module "@/components/ui/carousel" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     export const Carousel: React.FC<{ className?: string; children?: React.ReactNode;[key: string]: /**/any }>;
     export const CarouselContent: ForwardRefExoticComponent<
@@ -120,7 +119,7 @@ declare module "@/components/ui/carousel" {
 }
 
 declare module "@/components/ui/collapsible" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const Collapsible: React.FC<{ className?: string; children?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }>;
     export const CollapsibleTrigger: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; asChild?: boolean } & RefAttributes<HTMLButtonElement>
@@ -131,7 +130,7 @@ declare module "@/components/ui/collapsible" {
 }
 
 declare module "@/components/ui/command" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const Command: ForwardRefExoticComponent<
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         { className?: string; children?: React.ReactNode;[key: string]: /**/any } & RefAttributes<HTMLDivElement>
@@ -157,7 +156,7 @@ declare module "@/components/ui/command" {
 }
 
 declare module "@/components/ui/context-menu" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const ContextMenu: React.FC<{ children?: React.ReactNode }>;
     export const ContextMenuTrigger: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; asChild?: boolean } & RefAttributes<HTMLSpanElement>
@@ -171,7 +170,7 @@ declare module "@/components/ui/context-menu" {
 }
 
 declare module "@/components/ui/drawer" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     export const Drawer: React.FC<{ children?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void;[key: string]: /**/any }>;
     export const DrawerTrigger: ForwardRefExoticComponent<
@@ -194,7 +193,7 @@ declare module "@/components/ui/drawer" {
 }
 
 declare module "@/components/ui/form" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     export const Form: React.FC<{ children?: React.ReactNode;[key: string]: /**/any }>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -217,7 +216,7 @@ declare module "@/components/ui/form" {
 }
 
 declare module "@/components/ui/hover-card" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const HoverCard: React.FC<{ children?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }>;
     export const HoverCardTrigger: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; asChild?: boolean } & RefAttributes<HTMLAnchorElement>
@@ -228,7 +227,7 @@ declare module "@/components/ui/hover-card" {
 }
 
 declare module "@/components/ui/menubar" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const Menubar: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode } & RefAttributes<HTMLDivElement>
     >;
@@ -245,7 +244,7 @@ declare module "@/components/ui/menubar" {
 }
 
 declare module "@/components/ui/navigation-menu" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const NavigationMenu: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode } & RefAttributes<HTMLElement>
     >;
@@ -268,7 +267,7 @@ declare module "@/components/ui/navigation-menu" {
 }
 
 declare module "@/components/ui/pagination" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const Pagination: React.FC<{ className?: string; children?: React.ReactNode }>;
     export const PaginationContent: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode } & RefAttributes<HTMLUListElement>
@@ -283,7 +282,7 @@ declare module "@/components/ui/pagination" {
 }
 
 declare module "@/components/ui/radio-group" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const RadioGroup: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; value?: string; onValueChange?: (v: string) => void; defaultValue?: string } & RefAttributes<HTMLDivElement>
     >;
@@ -293,22 +292,20 @@ declare module "@/components/ui/radio-group" {
 }
 
 declare module "@/components/ui/resizable" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
-    export const ResizablePanelGroup: React.FC<{ className?: string; children?: React.ReactNode; direction?: "horizontal" | "vertical" }>;
+        export const ResizablePanelGroup: React.FC<{ className?: string; children?: React.ReactNode; direction?: "horizontal" | "vertical" }>;
     export const ResizablePanel: React.FC<{ className?: string; children?: React.ReactNode; defaultSize?: number; minSize?: number; maxSize?: number }>;
     export const ResizableHandle: React.FC<{ className?: string; withHandle?: boolean }>;
 }
 
 declare module "@/components/ui/separator" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const Separator: ForwardRefExoticComponent<
         { className?: string; orientation?: "horizontal" | "vertical"; decorative?: boolean } & RefAttributes<HTMLDivElement>
     >;
 }
 
 declare module "@/components/ui/skeleton" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     export const Skeleton: React.FC<{ className?: string;[key: string]: /**/any }>;
 }
 
@@ -318,21 +315,21 @@ declare module "@/components/ui/sonner" {
 }
 
 declare module "@/components/ui/textarea" {
-    import { ForwardRefExoticComponent, TextareaHTMLAttributes, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes,TextareaHTMLAttributes } from "react";
     export const Textarea: ForwardRefExoticComponent<
         TextareaHTMLAttributes<HTMLTextAreaElement> & { className?: string } & RefAttributes<HTMLTextAreaElement>
     >;
 }
 
 declare module "@/components/ui/toggle" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const Toggle: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; variant?: string; size?: string; pressed?: boolean; onPressedChange?: (pressed: boolean) => void } & RefAttributes<HTMLButtonElement>
     >;
 }
 
 declare module "@/components/ui/toggle-group" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const ToggleGroup: ForwardRefExoticComponent<
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         { className?: string; children?: React.ReactNode; type?: "single" | "multiple"; value?: string | string[]; onValueChange?: (v: /**/any) => void; variant?: string; size?: string } & RefAttributes<HTMLDivElement>
@@ -343,7 +340,7 @@ declare module "@/components/ui/toggle-group" {
 }
 
 declare module "@/components/ui/tooltip" {
-    import { ForwardRefExoticComponent, RefAttributes } from "react";
+    import { ForwardRefExoticComponent,RefAttributes } from "react";
     export const Tooltip: React.FC<{ children?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void; delayDuration?: number }>;
     export const TooltipTrigger: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; asChild?: boolean } & RefAttributes<HTMLButtonElement>

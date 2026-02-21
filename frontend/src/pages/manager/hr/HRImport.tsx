@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-    Upload,
-    CheckCircle2,
-    AlertCircle,
-    Download,
-    ArrowRight,
-    Clock,
-    Users
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card,CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import {
+AlertCircle,
+ArrowRight,
+CheckCircle2,
+Clock,
+Download,
+Upload,
+Users
+} from 'lucide-react';
+import React,{ useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function HRImport() {
     const navigate = useNavigate();

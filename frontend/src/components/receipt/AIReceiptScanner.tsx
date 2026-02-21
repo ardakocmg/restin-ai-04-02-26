@@ -3,17 +3,31 @@
  * Supports 25+ file formats, clipboard paste, camera capture, and URL import.
  * Uses Gemini Vision API to analyze any receipt source and auto-create templates.
  */
-import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
-    Upload, Camera, Sparkles, Loader2, CheckCircle, X, Wand2,
-    FileImage, ZoomIn, RotateCcw, AlertTriangle, FileSpreadsheet,
-    FileText, File, Image, Clipboard, Globe, FileCode, FileJson,
-    Link2
+AlertTriangle,
+Camera,
+CheckCircle,
+Clipboard,
+File,
+FileCode,FileJson,
+FileSpreadsheet,
+FileText,
+Globe,
+Image,
+Link2,
+Loader2,
+RotateCcw,
+Sparkles,
+Upload,
+Wand2,
+X,
+ZoomIn
 } from 'lucide-react';
-import { Button } from '../../components/ui/button';
+import React,{ useCallback,useEffect,useRef,useState } from 'react';
 import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
 import { cn } from '../../lib/utils';
-import { type ReceiptTemplate, type AIScanResult, type TemplateType, makeTemplate, TYPE_META } from './types';
+import { type AIScanResult,type ReceiptTemplate,type TemplateType,makeTemplate,TYPE_META } from './types';
 
 interface AIReceiptScannerProps {
     open: boolean;

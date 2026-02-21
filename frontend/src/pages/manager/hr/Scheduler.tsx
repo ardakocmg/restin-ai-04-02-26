@@ -1,30 +1,25 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { logger } from '@/lib/logger';
 import PermissionGate from '@/components/shared/PermissionGate';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import { logger } from '@/lib/logger';
+import React,{ useEffect,useState } from 'react';
 
-import { Card, CardContent } from '@/components/ui/card';
 
 import { Button } from '@/components/ui/button';
 
 import {
-  ChevronLeft,
-  ChevronRight,
-  Filter,
-  Settings,
-  Download,
-  Copy,
-  Trash2,
-  Edit,
-  MoreHorizontal,
-  Plus,
-  Calendar as CalendarIcon,
-  Search,
-  ArrowUp,
-  ArrowDown,
-  ArrowUpDown,
-  ChevronDown
+ArrowDown,
+ArrowUp,
+ArrowUpDown,
+ChevronDown,
+ChevronLeft,
+ChevronRight,
+Copy,
+Edit,
+MoreHorizontal,
+Plus,
+Search,
+Trash2
 } from 'lucide-react';
 
 import api from '@/lib/api';
@@ -34,16 +29,14 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+DropdownMenu,
+DropdownMenuContent,
+DropdownMenuItem,
+DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
+import { toast } from 'sonner';
 
 /* ── Types ────────────────────────────────────────── */
 interface SchedulerCell {

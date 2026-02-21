@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { ChefHat,KeyRound,LayoutGrid,Mail,Monitor,Undo2 } from "lucide-react";
+import React,{ useCallback,useEffect,useRef,useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "./AuthContext";
-import { authAPI } from "../../lib/api";
-import api from "../../lib/api";
+import { useNavigate,useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import { ChefHat, LayoutGrid, Monitor, Undo2, KeyRound, Mail } from "lucide-react";
 import { Button } from "../../components/ui/button";
-import { LoginResponse } from "./types";
-import { User } from "../../types";
+import api,{ authAPI } from "../../lib/api";
 import { logger } from "../../lib/logger";
+import { User } from "../../types";
+import { useAuth } from "./AuthContext";
 import './Login.css';
+import { LoginResponse } from "./types";
 
 export default function Login() {
     const navigate = useNavigate();

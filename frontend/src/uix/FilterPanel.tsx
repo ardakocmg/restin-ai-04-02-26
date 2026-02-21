@@ -1,8 +1,7 @@
-import React from 'react';
-import { Check, ChevronDown, ChevronUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
+import { ChevronDown,ChevronUp } from 'lucide-react';
 
 export default function FilterPanel({ 
   isOpen, 

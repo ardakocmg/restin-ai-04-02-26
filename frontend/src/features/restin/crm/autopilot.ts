@@ -1,6 +1,6 @@
 import { AiServiceFactory } from '../../../lib/ai/google';
-import { BillingBroker } from '../../billing/broker';
 import { logger } from '../../../lib/logger';
+import { BillingBroker } from '../../billing/broker';
 
 /**
  * 🤖 Autopilot CRM Engine (Pillar 3)

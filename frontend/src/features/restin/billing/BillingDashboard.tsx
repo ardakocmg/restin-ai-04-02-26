@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useVenue } from '../../../context/VenueContext';
 import api from '@/lib/api';
-import {
-    CreditCard, Zap, HardDrive, Receipt, Package, ToggleLeft, ToggleRight,
-    ArrowUpRight, Brain, TrendingUp, ChevronRight, Sparkles
-} from 'lucide-react';
-import { toast } from 'sonner';
+import { useMutation,useQuery,useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import {
+ArrowUpRight,Brain,
+ChevronRight,
+CreditCard,
+HardDrive,
+Package,
+Receipt,
+Sparkles,
+ToggleLeft,ToggleRight,
+Zap
+} from 'lucide-react';
+import React,{ useState } from 'react';
+import { toast } from 'sonner';
+import { useVenue } from '../../../context/VenueContext';
 
 /* ────────────────────── helpers ────────────────────── */
 const fmt = (v: number) => `€${v.toFixed(2)}`;

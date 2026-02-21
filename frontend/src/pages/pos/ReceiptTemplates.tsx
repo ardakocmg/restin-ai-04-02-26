@@ -7,33 +7,51 @@
  * 3. Smart Conditional Logic — Rules-based dynamic content
  * 4. Template Gallery — 22 curated industry presets
  */
-import React, { useState, useEffect, useMemo } from 'react';
 import {
-    FileText, Plus, Save, Trash2, Eye, Printer, ChefHat, BarChart3,
-    Receipt, Hotel, Truck, Gift, Copy, Wifi, SlidersHorizontal, LayoutGrid,
-    Sparkles, Star, Layers
+BarChart3,
+ChefHat,
+Copy,
+Eye,
+FileText,
+Gift,
+Hotel,
+Layers,
+LayoutGrid,
+Plus,
+Printer,
+Receipt,
+Save,
+SlidersHorizontal,
+Sparkles,Star,
+Trash2,
+Truck,
+Wifi
 } from 'lucide-react';
+import React,{ useEffect,useMemo,useState } from 'react';
 import { toast } from 'sonner';
-import { Card, CardContent } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
+import { Card,CardContent } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '../../components/ui/select';
+import { Sheet,SheetContent,SheetHeader,SheetTitle } from '../../components/ui/sheet';
 import { Switch } from '../../components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../../components/ui/sheet';
-import { Tabs, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { cn } from '../../lib/utils';
+import { Tabs,TabsList,TabsTrigger } from '../../components/ui/tabs';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';
 import api from '../../lib/api';
+import { cn } from '../../lib/utils';
 
 /* ─── Sub-Components ─── */
 import { AIReceiptScanner } from '../../components/receipt/AIReceiptScanner';
 import { BlockEditor } from '../../components/receipt/BlockEditor';
 import { TemplateGallery } from '../../components/receipt/TemplateGallery';
 import {
-    type ReceiptTemplate, type TemplateType, type TemplateBlock,
-    TYPE_META, DEFAULT_BLOCKS, makeTemplate
+makeTemplate,
+type ReceiptTemplate,
+type TemplateBlock,
+type TemplateType,
+TYPE_META
 } from '../../components/receipt/types';
 
 /* ─── Type Metadata with Icons ─── */

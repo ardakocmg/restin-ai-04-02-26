@@ -1,18 +1,32 @@
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { logger } from '@/lib/logger';
-import { toast } from 'sonner';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence,motion } from 'framer-motion';
 import {
-    Clock, CheckCircle2, XCircle, AlertTriangle, Filter, Search,
-    ChevronDown, ChevronUp, User, Calendar, FileText, Timer,
-    Loader2, Shield, MapPin, Monitor, Fingerprint, ArrowLeft,
-    ArrowUpDown, ArrowUp, ArrowDown
+AlertTriangle,
+ArrowDown,
+ArrowLeft,
+ArrowUp,
+ArrowUpDown,
+Calendar,
+CheckCircle2,
+Clock,
+FileText,
+Filter,
+Fingerprint,
+Loader2,
+MapPin,Monitor,
+Search,
+Shield,
+Timer,
+User,
+XCircle
 } from 'lucide-react';
+import { useCallback,useEffect,useMemo,useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 /* ── Types ────────────────────────────────────────── */
 interface ApprovalRequest {

@@ -1,4 +1,4 @@
-import { Activity, Receipt, UtensilsCrossed, ChefHat, CheckCircle2 } from 'lucide-react';
+import { Activity,CheckCircle2,ChefHat,Receipt,UtensilsCrossed } from 'lucide-react';
 
 export default function RealTimeEfficiency({ data }) {
     const safeData = data || {

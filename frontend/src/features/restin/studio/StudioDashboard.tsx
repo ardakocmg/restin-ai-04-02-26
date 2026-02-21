@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import { useMutation,useQuery,useQueryClient } from '@tanstack/react-query';
 import {
-    Wand2, Image as ImageIcon, Video, Palette, Sparkles,
-    RefreshCw, Download, Share2, Layers, Search,
-    Zap, Camera, Heart
+Camera,
+Download,
+Heart,
+Image as ImageIcon,
+Layers,
+Loader2,
+Palette,
+RefreshCw,
+Search,
+Settings,
+Share2,
+Sparkles,
+Video,
+Wand2,
+Zap
 } from 'lucide-react';
-import { Card } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { cn } from '../../../lib/utils';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { studioService } from './studio-service';
-import { useVenue } from '../../../context/VenueContext';
-import { useAuth } from '../../../context/AuthContext';
+import { useState } from 'react';
 import { toast } from 'sonner';
-import { Loader2, Settings } from 'lucide-react';
+import { Button } from '../../../components/ui/button';
+import { Card } from '../../../components/ui/card';
+import { useAuth } from '../../../context/AuthContext';
+import { useVenue } from '../../../context/VenueContext';
+import { cn } from '../../../lib/utils';
+import { studioService } from './studio-service';
 
 /**
  * 🎨 GENERATIVE STUDIO (Pillar 5)

@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/dialog';
+import { DollarSign,Users } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '../../components/ui/button';
-import { Checkbox } from '../../components/ui/checkbox';
-import { Badge } from '../../components/ui/badge';
-import { DollarSign, Users } from 'lucide-react';
+import { Dialog,DialogContent,DialogFooter,DialogHeader,DialogTitle } from '../../components/ui/dialog';
 
 export default function BillSplitModal({ open, onClose, order, onConfirm }) {
   const [splitType, setSplitType] = useState('equal'); // 'equal' | 'by_item' | 'custom'

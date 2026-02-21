@@ -4,18 +4,43 @@
  * Phase 4: Grouped by category (Layout / Actions / Display),
  * shows variant badges, required indicators, and "Added" states.
  */
-import React, { useState } from 'react';
-import {
-    PanelTop, SidebarOpen, LayoutList, LayoutGrid, Receipt,
-    CreditCard, PanelBottom, Clock, Columns, BarChart3,
-    GripVertical, Send, ChefHat, Wine, Flame, Zap, Banknote,
-    Split, Wallet, Grid3x3, Trash2, LogOut, Settings2,
-    Calculator, Hash, Palette, Map, List, ListOrdered,
-    ChevronDown, Check, AlertTriangle, CircleDot
-} from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { LayoutType, ZoneComponentDef, ZoneConfig, ZoneCategory, ZoneVariant } from './themeZoneTypes';
-import { getComponentsByCategory, getComponentDef } from './themeZoneTypes';
+import {
+AlertTriangle,
+Banknote,
+BarChart3,
+Calculator,
+Check,
+ChefHat,
+ChevronDown,
+CircleDot,
+Clock,Columns,
+CreditCard,
+Flame,
+Grid3x3,
+GripVertical,
+Hash,
+LayoutGrid,
+LayoutList,
+List,ListOrdered,
+LogOut,
+Map,
+Palette,
+PanelBottom,
+PanelTop,
+Receipt,
+Send,
+Settings2,
+SidebarOpen,
+Split,
+Trash2,
+Wallet,
+Wine,
+Zap
+} from 'lucide-react';
+import React,{ useState } from 'react';
+import type { LayoutType,ZoneCategory,ZoneComponentDef,ZoneConfig,ZoneVariant } from './themeZoneTypes';
+import { getComponentDef,getComponentsByCategory } from './themeZoneTypes';
 
 // ─── Icon mapping ────────────────────────────────────────────────
 

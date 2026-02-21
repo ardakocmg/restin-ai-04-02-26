@@ -3,7 +3,7 @@
  * Inventory Hub, Items, Suppliers, POs, Stock, Recipes, Production, Transfers
  */
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Navigate,Route } from 'react-router-dom';
 import RoleRoute from '../components/shared/RoleRoute';
 
 // ─── Lazy Imports ───────────────────────────────────────────────────────────────

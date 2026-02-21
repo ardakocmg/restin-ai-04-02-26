@@ -1,41 +1,39 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PermissionGate from '@/components/shared/PermissionGate';
-import { useAuditLog } from '@/hooks/useAuditLog';
-import { logger } from '@/lib/logger';
-import { useAuth } from '@/context/AuthContext';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
+import {
+Dialog,
+DialogContent,
+DialogDescription,
+DialogHeader,
+DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { useVenue } from '@/context/VenueContext';
+import { useAuditLog } from '@/hooks/useAuditLog';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import {
-  Calendar,
-  Ban,
-  TrendingUp,
-  Plus,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  Palmtree,
-  Heart,
-  User,
-  CalendarDays,
-  ListChecks,
-  ShieldCheck,
-  Send,
+Ban,
+Calendar,
+CalendarDays,
+CheckCircle2,
+Clock,
+Heart,
+ListChecks,
+Palmtree,
+Plus,
+Send,
+TrendingUp,
+User,
+XCircle
 } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
-import api from '@/lib/api';
+import { useEffect,useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { useVenue } from '@/context/VenueContext';
 
 interface LeaveRequest {
   id: string;

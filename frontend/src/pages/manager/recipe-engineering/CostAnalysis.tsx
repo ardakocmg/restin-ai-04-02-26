@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent } from '../../../components/ui/card';
-import { DollarSign, TrendingUp } from 'lucide-react';
-import api from '../../../lib/api';
 import { logger } from '@/lib/logger';
+import { TrendingUp } from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { Card,CardContent } from '../../../components/ui/card';
+import PageContainer from '../../../layouts/PageContainer';
+import api from '../../../lib/api';
 
 export default function CostAnalysis() {
   const [analysis, setAnalysis] = useState([]);

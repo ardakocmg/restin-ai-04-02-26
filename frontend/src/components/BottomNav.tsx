@@ -2,8 +2,8 @@
  * MEGA PATCH: Bottom Navigation Component
  * Mobile/Tablet-friendly bottom navigation for POS and KDS
  */
-import { useNavigate, useLocation } from "react-router-dom";
-import { Home, UtensilsCrossed, DollarSign, Settings } from "lucide-react";
+import { DollarSign,Home,Settings,UtensilsCrossed } from "lucide-react";
+import { useLocation,useNavigate } from "react-router-dom";
 
 export default function BottomNav({ mode = "pos", onFilterChange }) {
   const navigate = useNavigate();

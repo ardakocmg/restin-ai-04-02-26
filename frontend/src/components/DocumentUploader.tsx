@@ -2,12 +2,12 @@
  * Shared Document Uploader Component
  * Reusable across all modules
  */
+import { FileText,Loader2,Upload,X } from "lucide-react";
 import { useState } from "react";
-import DocumentService, { type DocumentModule } from "../services/DocumentService";
-import { Button } from "./ui/button";
 import { toast } from "sonner";
-import { Upload, Loader2, FileText, X } from "lucide-react";
 import { logger } from "../lib/logger";
+import DocumentService,{ type DocumentModule } from "../services/DocumentService";
+import { Button } from "./ui/button";
 
 interface DocumentUploaderProps {
   venueId: string;

@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card,CardContent } from '@/components/ui/card';
+import { Award,Cake,Calendar,TrendingDown,Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Users, TrendingDown, Calendar, Cake, Award } from 'lucide-react';
 
 const reports = [
   { id: 'employee-details', title: 'Employee Details', icon: Users, path: '/manager/hr-reports/employee-details' },

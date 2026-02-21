@@ -2,8 +2,8 @@
  * ReceiptPreview — Digital receipt modal with print-ready layout
  * Displays a formatted receipt that can be printed (thermal or A4)
  */
+import { Download,Mail,Printer,X } from 'lucide-react';
 import { useState } from 'react';
-import { X, Printer, Mail, Download } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function ReceiptPreview({ order, items, orderTotal, venueInfo, onClose }) {

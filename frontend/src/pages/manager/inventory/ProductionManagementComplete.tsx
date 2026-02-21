@@ -1,25 +1,21 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { logger } from '@/lib/logger';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import PageContainer from '@/layouts/PageContainer';
 import DataTable from '@/components/shared/DataTable';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Factory,
-  Plus,
-  RefreshCw,
-  Clock,
-  CheckCircle2,
-  AlertTriangle,
-  Package,
-  Loader2,
-  Calendar,
-} from 'lucide-react';
+import { Card,CardContent } from '@/components/ui/card';
+import { useVenue } from '@/context/VenueContext';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
 import type { LucideIcon } from 'lucide-react';
-import { toast } from 'sonner';
+import {
+AlertTriangle,
+Calendar,
+CheckCircle2,
+Clock,
+Factory,
+Plus,
+RefreshCw
+} from 'lucide-react';
+import { useCallback,useEffect,useMemo,useState } from 'react';
 
 interface ProductionBatch {
   id: string;

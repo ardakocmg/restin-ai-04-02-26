@@ -1,4 +1,3 @@
-import React from 'react';
 /* 
   Recharts is a standard charting library for React. 
   Assuming it's installed or we use a simple SVG fallback if not.

@@ -1,21 +1,19 @@
-import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import api from "../../lib/api";
+import {
+ArrowLeft,
+Circle as CircleIcon,
+Grid3x3,
+Save,
+Square,
+Trash2,
+Upload
+} from "lucide-react";
+import { useEffect,useRef,useState } from "react";
+import { useNavigate,useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
 import { Card } from "../../components/ui/card";
-import { 
-  Save, 
-  ArrowLeft, 
-  Square, 
-  Circle as CircleIcon,
-  Upload,
-  ZoomIn,
-  ZoomOut,
-  Grid3x3,
-  Trash2
-} from "lucide-react";
+import { Input } from "../../components/ui/input";
+import api from "../../lib/api";
 
 export default function FloorPlanEditor() {
   const { planId } = useParams();

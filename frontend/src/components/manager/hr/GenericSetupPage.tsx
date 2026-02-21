@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../../context/AuthContext';
-import api from '../../../lib/api';
+import { Building2,Loader2,Plus,Search,Trash2,type LucideIcon } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import { toast } from 'sonner';
-import { logger } from '../../../lib/logger';
-import { Plus, Trash2, Search, Building2, Code, FileText, Loader2, type LucideIcon } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
+import {
+Dialog,
+DialogContent,
+DialogFooter,
+DialogHeader,
+DialogTitle,
+} from "../../../components/ui/dialog";
 import { Input } from '../../../components/ui/input';
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter,
-} from "../../../components/ui/dialog";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+Table,
+TableBody,
+TableCell,
+TableHead,
+TableHeader,
+TableRow,
 } from "../../../components/ui/table";
+import { useAuth } from '../../../context/AuthContext';
+import api from '../../../lib/api';
+import { logger } from '../../../lib/logger';
 
 /**
  * Generic Setup Page for HR Dictionaries

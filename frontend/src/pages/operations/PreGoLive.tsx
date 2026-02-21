@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { logger } from '@/lib/logger';
+import { useState } from 'react';
 
 import { useVenue } from '../../context/VenueContext';
 
@@ -7,13 +7,12 @@ import api from '../../lib/api';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card,CardContent } from '../../components/ui/card';
 
 import { Button } from '../../components/ui/button';
 
-import { Badge } from '../../components/ui/badge';
 
-import { Play, CheckCircle2, XCircle, Loader2, Award } from 'lucide-react';
+import { Award,CheckCircle2,Loader2,Play,XCircle } from 'lucide-react';
 
 export default function PreGoLive() {
   const { activeVenue } = useVenue();

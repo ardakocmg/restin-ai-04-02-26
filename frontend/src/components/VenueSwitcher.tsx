@@ -1,15 +1,14 @@
-import React from 'react';
-import { useMultiVenue } from '../context/MultiVenueContext';
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+DropdownMenu,
+DropdownMenuContent,
+DropdownMenuItem,
+DropdownMenuLabel,
+DropdownMenuSeparator,
+DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Building2, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { Building2,CheckCircle2,ChevronDown } from 'lucide-react';
+import { useMultiVenue } from '../context/MultiVenueContext';
 
 export default function VenueSwitcher() {
   const { availableVenues, currentVenue, switchVenue, hasMultipleVenues } = useMultiVenue();

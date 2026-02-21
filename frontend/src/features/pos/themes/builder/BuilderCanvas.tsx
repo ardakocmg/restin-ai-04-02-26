@@ -2,13 +2,13 @@
  * BuilderCanvas — Premium POS/KDS layout preview with drag-drop,
  * resize handles, context menu, and framer-motion animations.
  */
-import React, { useState, useRef, useCallback } from 'react';
-import { X, Move, Eye, EyeOff, GripVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
-import type { ZoneConfig, ZoneComponentDef, ZonePosition } from './themeZoneTypes';
-import { getComponentDef } from './themeZoneTypes';
+import { AnimatePresence,motion } from 'framer-motion';
+import { Eye,EyeOff,GripVertical,X } from 'lucide-react';
+import React,{ useCallback,useRef,useState } from 'react';
 import type { ThemeStyleValues } from './StyleEditor';
+import type { ZoneComponentDef,ZoneConfig,ZonePosition } from './themeZoneTypes';
+import { getComponentDef } from './themeZoneTypes';
 import ZoneContextMenu from './ZoneContextMenu';
 
 interface BuilderCanvasProps {

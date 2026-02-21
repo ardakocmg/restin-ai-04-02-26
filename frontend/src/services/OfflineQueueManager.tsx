@@ -2,9 +2,9 @@
  * OfflineQueueManager - Replay logic for offline queue
  * @module services/OfflineQueueManager
  */
-import StorageService, { QueueItem } from './StorageService';
 import axios from 'axios';
 import { logger } from '../lib/logger';
+import StorageService,{ QueueItem } from './StorageService';
 
 export type QueueItemType = 'CREATE_ORDER' | 'ADD_ORDER_ITEM' | 'SEND_ORDER';
 

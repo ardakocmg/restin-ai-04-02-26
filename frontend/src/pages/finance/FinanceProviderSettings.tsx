@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
 import { useVenue } from '../../context/VenueContext';
 
@@ -7,7 +7,7 @@ import api from '../../lib/api';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '../../components/ui/card';
 
 import { Button } from '../../components/ui/button';
 
@@ -17,7 +17,7 @@ import { Label } from '../../components/ui/label';
 
 import { Badge } from '../../components/ui/badge';
 
-import { Settings, CheckCircle2, XCircle, Link2 } from 'lucide-react';
+import { CheckCircle2,Link2,Settings,XCircle } from 'lucide-react';
 
 import { toast } from 'sonner';
 

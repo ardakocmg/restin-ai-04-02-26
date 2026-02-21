@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
-import { Delete, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Delete,X } from 'lucide-react';
+import { useMemo } from 'react';
 
 export interface SmartKeyboardProps {
     value: string;

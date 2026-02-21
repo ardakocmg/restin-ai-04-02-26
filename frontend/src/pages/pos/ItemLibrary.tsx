@@ -4,12 +4,30 @@
  * Exact Lightspeed K-Series Back Office > Menu > Items parity
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
 import {
-    ArrowLeft, Plus, Search, Filter, Edit3, Trash2, Archive, Tag,
-    MoreVertical, Download, Upload, ChevronDown, X, Save, Copy,
-    Package, DollarSign, Grid3X3, List, Check, Image, Loader2, RefreshCw
+Archive,
+ArrowLeft,
+Check,
+ChevronDown,
+Copy,
+DollarSign,
+Download,
+Edit3,
+Filter,
+Grid3X3,
+Image,
+List,
+Loader2,
+Package,
+Plus,
+Save,
+Search,
+Tag,
+Trash2,
+Upload,
+X
 } from 'lucide-react';
+import React,{ useEffect,useMemo,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useItemService } from '../../hooks/shared/useItemService';

@@ -1,27 +1,26 @@
-import React, { Suspense, useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { Toaster } from "sonner";
-import systemService from "./services/SystemService";
 import axios from "axios";
+import React,{ Suspense,useEffect,useState } from "react";
+import { BrowserRouter,Navigate,Route,Routes,useLocation } from "react-router-dom";
 import api from "./lib/api";
 import { logger } from "./lib/logger";
+import systemService from "./services/SystemService";
 
 // ─── EAGER: Critical path only (Login, Layout, Landing, NotFound) ─────────────
 import ManagerLayout from "./pages/manager/ManagerLayout";
 
 // ─── Route Modules (domain-based, code-split) ────────────────────────────────
 import {
-  hrRoutes,
-  inventoryRoutes,
-  aiRoutes,
-  posKdsManagerRoutes,
-  posKdsStandaloneRoutes,
-  reportsRoutes,
-  procurementRoutes,
-  systemRoutes,
-  collabRoutes,
-  publicRoutes,
-  legacyRedirects,
+aiRoutes,
+collabRoutes,
+hrRoutes,
+inventoryRoutes,
+legacyRedirects,
+posKdsManagerRoutes,
+posKdsStandaloneRoutes,
+procurementRoutes,
+publicRoutes,
+reportsRoutes,
+systemRoutes,
 } from "./routes";
 
 // ─── Lazy Loading Fallback ─────────────────────────────────────────────────────
@@ -57,14 +56,14 @@ function PageLoader() {
 }
 
 // ─── Context Providers (consolidated) ─────────────────────────────────────────
-import { AppProviders, RuntimeProvider, SafeModeProvider } from "./context/AppProviders";
+import { AppProviders,RuntimeProvider,SafeModeProvider } from "./context/AppProviders";
 import { useUI } from "./context/UIContext";
 
 // ─── Components (keep eager — used at root level) ─────────────────────────────
-import LoadingOverlay from "./components/LoadingOverlay";
-import ErrorModal from "./components/ErrorModal";
-import ErrorBoundary from "./components/ErrorBoundary";
 import AuthExpiredModal from "./components/AuthExpiredModal";
+import ErrorBoundary from "./components/ErrorBoundary";
+import ErrorModal from "./components/ErrorModal";
+import LoadingOverlay from "./components/LoadingOverlay";
 import GlobalSearch from "./components/shared/GlobalSearch";
 
 // ─── Hey Rin Voice Assistant (lazy) ───────────────────────────────────────────

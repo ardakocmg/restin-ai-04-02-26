@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useVenue } from '@/context/VenueContext';
+import api from '@/lib/api';
+import {
+DollarSign,Layers,
+Monitor,
+Percent,
+Receipt,
+Save,
+Smartphone,ToggleLeft,ToggleRight
+} from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { toast } from 'sonner';
 import PageContainer from '../../layouts/PageContainer';
 import { cn } from '../../lib/utils';
-import { toast } from 'sonner';
-import api from '@/lib/api';
-import { useVenue } from '@/context/VenueContext';
-import { useAuth } from '@/context/AuthContext';
-import {
-    Percent, DollarSign, Layers, Save,
-    Monitor, Receipt, Smartphone, ToggleLeft, ToggleRight
-} from 'lucide-react';
 
 interface TipPresetConfig {
     id: string;

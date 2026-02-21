@@ -1,19 +1,38 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
 import { useVenue } from '@/context/VenueContext';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { Bar,BarChart,CartesianGrid,Cell,Legend,Line,LineChart,Pie,PieChart,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 
 import {
-  Users, UserPlus, UserMinus, Calendar, Clock, ShieldCheck, Wallet, FileText,
-  Umbrella, SlidersHorizontal, ClipboardList, DollarSign, Upload, Map, AlertCircle,
-  Settings, Layout, Layers, Box, Smartphone, UserCheck, Activity, Gift, XCircle,
-  Scissors, Landmark, BarChart3, Briefcase
+Activity,
+AlertCircle,
+Briefcase,
+Calendar,
+ClipboardList,
+Clock,
+FileText,
+Gift,
+Landmark,
+Layers,
+Layout,
+Map,
+Settings,
+SlidersHorizontal,
+Smartphone,
+Umbrella,
+Upload,
+UserCheck,
+UserMinus,
+UserPlus,
+Users,
+Wallet,
+XCircle
 } from 'lucide-react';
 
 import api from '@/lib/api';

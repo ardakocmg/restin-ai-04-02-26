@@ -11,7 +11,7 @@
  * 2. User localStorage preference — per-user override
  * 3. Falls back to 'restin'
  */
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback,useEffect,useState } from 'react';
 
 export type POSTheme = 'restin' | 'pro' | 'express' | 'k-series' | 'l-series';
 

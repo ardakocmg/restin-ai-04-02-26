@@ -1,7 +1,6 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, ShoppingCart, Users, BarChart3, Settings } from 'lucide-react';
+import { BarChart3,LayoutDashboard,Settings,ShoppingCart,Users } from 'lucide-react';
+import { Link,useLocation } from 'react-router-dom';
 
 const mobileMenuItems = [
   {

@@ -3,8 +3,8 @@
  * Configure points, tiers, rewards, and bonus rules
  * Lightspeed K-Series Back Office > Configuration > Loyalty parity
  */
-import React, { useState } from 'react';
-import { ArrowLeft, Save, Gift, Crown, Star, Shield, Zap, Award, Settings, TrendingUp, X, Trash2, Plus, ToggleRight } from 'lucide-react';
+import { ArrowLeft,Crown,Gift,Plus,Save,Star,Trash2,X } from 'lucide-react';
+import React,{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import './pos-shared.css';

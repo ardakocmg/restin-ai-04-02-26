@@ -1,7 +1,6 @@
 
-import React from 'react';
-import GenericSetupPage from '../../../../components/manager/hr/GenericSetupPage';
 import { UserMinus } from 'lucide-react';
+import GenericSetupPage from '../../../../components/manager/hr/GenericSetupPage';
 
 export default function TerminationReasonsPage() {
   return (

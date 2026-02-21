@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Table2, ArrowRightLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowRightLeft,CheckCircle2,Table2,X } from 'lucide-react';
+import { useState } from 'react';
 
 export default function MergeTableModal({ currentTableId, activeTables, onClose, onMerge }) {
     const [selectedTable, setSelectedTable] = useState(null);

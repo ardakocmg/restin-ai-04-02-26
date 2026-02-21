@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
 import PermissionGate from '@/components/shared/PermissionGate';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 
-import { Leaf, TrendingUp, Award } from 'lucide-react';
+import { Award } from 'lucide-react';
 
-import api from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
+import api from '@/lib/api';
 
 export default function ESGModule() {
   const { user, isManager, isOwner } = useAuth();

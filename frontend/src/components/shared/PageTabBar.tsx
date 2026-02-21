@@ -1,18 +1,18 @@
-import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { MENU_ITEMS, type MenuItem } from '@/lib/searchRegistry';
-import { ROLE_HIERARCHY } from '@/lib/roles';
-import { useAuth } from '@/features/auth/AuthContext';
-import { useBreadcrumbActions, type BreadcrumbAction } from '@/hooks/useBreadcrumbActions';
-import { MoreHorizontal } from 'lucide-react';
-import { logger } from '@/lib/logger';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
+DropdownMenu,
+DropdownMenuContent,
+DropdownMenuItem,
+DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/features/auth/AuthContext';
+import { useBreadcrumbActions,type BreadcrumbAction } from '@/hooks/useBreadcrumbActions';
+import { logger } from '@/lib/logger';
+import { ROLE_HIERARCHY } from '@/lib/roles';
+import { MENU_ITEMS,type MenuItem } from '@/lib/searchRegistry';
+import { cn } from '@/lib/utils';
+import { MoreHorizontal } from 'lucide-react';
+import React,{ useCallback,useEffect,useMemo,useRef,useState } from 'react';
+import { Link,useLocation,useNavigate } from 'react-router-dom';
 
 /**
  * PageTabBar — Single unified navigation bar below the TopBar.

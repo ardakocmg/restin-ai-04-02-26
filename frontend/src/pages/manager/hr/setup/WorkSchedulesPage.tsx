@@ -1,7 +1,6 @@
 
-import React from 'react';
-import GenericSetupPage from '../../../../components/manager/hr/GenericSetupPage';
 import { CalendarClock } from 'lucide-react';
+import GenericSetupPage from '../../../../components/manager/hr/GenericSetupPage';
 
 export default function WorkSchedulesPage() {
   return (

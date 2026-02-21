@@ -1,5 +1,4 @@
-import React from 'react';
-import { Power, Map } from 'lucide-react';
+import { Map,Power } from 'lucide-react';
 
 export default function TechTopBar() {
     return (

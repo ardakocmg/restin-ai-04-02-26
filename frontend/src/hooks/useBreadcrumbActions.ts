@@ -1,16 +1,16 @@
+import {
+Calendar,
+Download,
+FileSpreadsheet,
+Filter,
+Plus,
+Printer,
+RefreshCw,
+Settings,
+type LucideIcon,
+} from 'lucide-react';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import {
-    Download,
-    Plus,
-    RefreshCw,
-    Printer,
-    FileSpreadsheet,
-    Filter,
-    Settings,
-    Calendar,
-    type LucideIcon,
-} from 'lucide-react';
 
 export interface BreadcrumbAction {
     id: string;

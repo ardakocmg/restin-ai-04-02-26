@@ -1,5 +1,3 @@
-import React from 'react';
-import { Card } from '@/components/ui/card';
 
 /**
  * SkillsPassDocument - Exact replica of the Malta Skills Pass Certificate

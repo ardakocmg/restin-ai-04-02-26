@@ -9,26 +9,35 @@
  * Supports both POS and KDS layout types.
  * Can preload built-in templates as editable copies.
  */
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import {
-    ArrowLeft, Save, Eye, Monitor, Tablet, Smartphone,
-    RotateCcw, Loader2, Palette, Info, AlertTriangle,
-    AlertCircle, CheckCircle2, ChevronDown, X
-} from 'lucide-react';
-import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import { logger } from '@/lib/logger';
 import api from '@/lib/api';
-import { motion, AnimatePresence } from 'framer-motion';
+import { logger } from '@/lib/logger';
+import { cn } from '@/lib/utils';
+import { AnimatePresence,motion } from 'framer-motion';
+import {
+AlertCircle,
+AlertTriangle,
+ArrowLeft,
+CheckCircle2,ChevronDown,
+Info,
+Loader2,
+Monitor,
+Palette,
+RotateCcw,
+Save,
+Smartphone,
+Tablet
+} from 'lucide-react';
+import { useCallback,useEffect,useMemo,useState } from 'react';
+import { useNavigate,useParams,useSearchParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
-import ZonePalette from '@/features/pos/themes/builder/ZonePalette';
 import BuilderCanvas from '@/features/pos/themes/builder/BuilderCanvas';
-import StyleEditor, { DEFAULT_STYLES } from '@/features/pos/themes/builder/StyleEditor';
+import { canSaveLayout,getValidationSummary,validateLayout,type ValidationResult,type ValidationSeverity } from '@/features/pos/themes/builder/builderValidation';
 import type { ThemeStyleValues } from '@/features/pos/themes/builder/StyleEditor';
-import type { ZoneConfig, ZoneComponentDef, LayoutType, ZonePosition } from '@/features/pos/themes/builder/themeZoneTypes';
+import StyleEditor,{ DEFAULT_STYLES } from '@/features/pos/themes/builder/StyleEditor';
+import type { LayoutType,ZoneComponentDef,ZoneConfig,ZonePosition } from '@/features/pos/themes/builder/themeZoneTypes';
+import ZonePalette from '@/features/pos/themes/builder/ZonePalette';
 import { BUILTIN_THEMES } from '@/features/pos/themes/builtinThemes';
-import { validateLayout, getValidationSummary, canSaveLayout, type ValidationResult, type ValidationSeverity } from '@/features/pos/themes/builder/builderValidation';
 
 // ─── Default zone presets ────────────────────────────────────────
 

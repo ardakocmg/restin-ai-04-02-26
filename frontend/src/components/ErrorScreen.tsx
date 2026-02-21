@@ -1,6 +1,5 @@
-import React from "react";
-import { useUISettings } from "../context/UISettingsContext";
 import { useAuth } from "../context/AuthContext";
+import { useUISettings } from "../context/UISettingsContext";
 
 interface ErrorScreenProps {
   error?: Error | string | null;

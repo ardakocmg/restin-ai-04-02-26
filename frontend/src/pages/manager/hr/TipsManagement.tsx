@@ -1,8 +1,8 @@
 /**
  * MODULE 4: Tips Tracking & Allocation
  */
-import { useState, useEffect } from "react";
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from "react";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 
 import { Badge } from "@/components/ui/badge";
 
-import { Loader2, DollarSign, Plus, Lock } from "lucide-react";
+import { DollarSign,Loader2,Lock,Plus } from "lucide-react";
 
 import { useHRFeatureFlags } from "@/hooks/useHRFeatureFlags";
 

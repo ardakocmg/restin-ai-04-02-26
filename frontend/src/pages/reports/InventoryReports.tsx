@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Bar,BarChart,CartesianGrid,Legend,Line,LineChart,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 
-import { Package, AlertTriangle, TrendingDown, DollarSign } from 'lucide-react';
+import { AlertTriangle,DollarSign,Package,TrendingDown } from 'lucide-react';
 
 import api from '../../lib/api';
 

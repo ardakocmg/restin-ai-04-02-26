@@ -1,4 +1,3 @@
-import React from 'react';
 
 /* ─── Futuristic Kitchen Robot Mascot for Hey Rin ─────────────── */
 /* Red body with modern blue LED eyes/face visor                  */

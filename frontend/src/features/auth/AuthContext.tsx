@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React,{ createContext,ReactNode,useContext,useEffect,useState } from "react";
 import authStore from "../../lib/AuthStore";
+import { logger } from "../../lib/logger";
 import { User } from "../../types";
 import { AuthContextType } from "./types";
-import { logger } from "../../lib/logger";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Bar,BarChart,CartesianGrid,Legend,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 
-import { Package, TrendingDown, AlertTriangle, DollarSign } from 'lucide-react';
+import { AlertTriangle,DollarSign,Package,TrendingDown } from 'lucide-react';
 
 import PageContainer from '../../layouts/PageContainer';
 

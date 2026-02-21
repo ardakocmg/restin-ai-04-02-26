@@ -1,14 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useVenue } from '@/context/VenueContext';
+import api from '@/lib/api';
+import {
+ChevronRight,
+CreditCard,
+Eye,
+Loader2,
+Plus,
+RefreshCw,
+Save,
+Settings,
+Shield,
+Smartphone,
+Table2,
+ToggleLeft,ToggleRight,
+Trash2,
+Users,
+Zap,
+} from 'lucide-react';
+import { useCallback,useEffect,useState } from 'react';
+import { toast } from 'sonner';
 import PageContainer from '../../layouts/PageContainer';
 import { cn } from '../../lib/utils';
-import { toast } from 'sonner';
-import api from '@/lib/api';
-import { useVenue } from '@/context/VenueContext';
-import {
-    Smartphone, Settings, Users, Table2, Plus, Trash2,
-    ToggleLeft, ToggleRight, Save, RefreshCw,
-    Loader2, Shield, Eye, Zap, CreditCard, ChevronRight,
-} from 'lucide-react';
 
 // ── Types ───────────────────────────────────────────────────────
 interface TablesideConfigData {

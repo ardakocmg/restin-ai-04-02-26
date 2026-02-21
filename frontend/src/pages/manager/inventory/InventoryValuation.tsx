@@ -2,25 +2,36 @@
  * InventoryValuation — Stock Valuation Report with FIFO / Weighted Avg / Current Cost
  * Apicbase parity: multi-method valuation, category breakdown, trend charts
  */
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { logger } from '@/lib/logger';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
+import { useVenue } from '@/context/VenueContext';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import {
-    DollarSign, TrendingUp, TrendingDown, Package, Search,
-    RefreshCw, Loader2, Download, BarChart3, Filter,
-    ArrowUpRight, ArrowDownRight, Warehouse, Scale,
-    PieChart, Calendar, Minus,
+ArrowDownRight,
+ArrowUpRight,
+BarChart3,
+DollarSign,
+Download,
+Filter,
+Loader2,
+Minus,
+Package,
+PieChart,
+RefreshCw,
+Scale,
+Search,
+TrendingUp,
+Warehouse
 } from 'lucide-react';
-import { toast } from 'sonner';
+import React,{ useCallback,useEffect,useMemo,useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 /* ────────────────────────────────────────── Types ────────────────── */
 type ValuationMethod = 'weighted_avg' | 'fifo' | 'current_cost';

@@ -1,10 +1,10 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 import { useBreadcrumb } from '@/hooks/useBreadcrumb';
-import { useBreadcrumbActions, type BreadcrumbAction } from '@/hooks/useBreadcrumbActions';
-import { ChevronRight } from 'lucide-react';
+import { useBreadcrumbActions,type BreadcrumbAction } from '@/hooks/useBreadcrumbActions';
 import { logger } from '@/lib/logger';
+import { cn } from '@/lib/utils';
+import { ChevronRight } from 'lucide-react';
+import React from 'react';
+import { Link,useNavigate } from 'react-router-dom';
 
 interface BreadcrumbProps {
     className?: string;

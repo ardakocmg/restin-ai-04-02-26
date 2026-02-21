@@ -164,5 +164,5 @@ class CircuitBreakerRegistry {
 
 export const circuitRegistry = new CircuitBreakerRegistry();
 
-export { CircuitBreaker, CircuitBreakerOpenError };
-export type { CircuitBreakerOptions, CircuitBreakerState, CircuitState };
+export { CircuitBreaker,CircuitBreakerOpenError };
+export type { CircuitBreakerOptions,CircuitBreakerState,CircuitState };

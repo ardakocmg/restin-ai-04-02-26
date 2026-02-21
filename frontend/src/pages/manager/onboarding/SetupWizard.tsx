@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
-import {
-    Rocket, Building2, UtensilsCrossed, LayoutGrid,
-    Users, Check, ChevronRight, ChevronLeft, Loader2,
-    Sparkles, MapPin, Clock, Phone, Globe, Wifi
-} from 'lucide-react';
-import { Card } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { cn } from '../../../lib/utils';
 import { useMutation } from '@tanstack/react-query';
+import {
+Building2,
+Check,
+ChevronLeft,
+ChevronRight,
+LayoutGrid,
+Loader2,
+Rocket,
+Sparkles,
+Users,
+UtensilsCrossed
+} from 'lucide-react';
+import React,{ useState } from 'react';
 import { toast } from 'sonner';
+import { Button } from '../../../components/ui/button';
+import { Card } from '../../../components/ui/card';
+import { Input } from '../../../components/ui/input';
 import api from '../../../lib/api';
+import { cn } from '../../../lib/utils';
 
 const STEPS = [
     { id: 'venue', label: 'Venue Info', icon: Building2 },

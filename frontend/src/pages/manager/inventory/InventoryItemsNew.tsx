@@ -1,43 +1,38 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { logger } from '@/lib/logger';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import PageContainer from '@/layouts/PageContainer';
-import DataTable from '@/components/shared/DataTable';
 import ItemDetailDrawer from '@/components/inventory/ItemDetailDrawer';
-import { Card, CardContent } from '@/components/ui/card';
+import DataTable from '@/components/shared/DataTable';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Card,CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
+import { useVenue } from '@/context/VenueContext';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
 import {
-  Package,
-  Plus,
-  Download,
-  Upload,
-  AlertTriangle,
-  TrendingDown,
-  CheckCircle2,
-  DollarSign,
-  Printer,
-  Filter,
-  X,
-  ChevronDown,
-  ChevronRight,
-  Columns,
-  Search,
-  SlidersHorizontal,
-  Snowflake,
-  Thermometer,
-  Sun,
-  Eye,
-  EyeOff,
-  TrendingUp,
-  History,
+AlertTriangle,
+CheckCircle2,
+ChevronDown,
+ChevronRight,
+Columns,
+DollarSign,
+Download,
+Filter,
+History,
+Package,
+Plus,
+Printer,
+SlidersHorizontal,
+Snowflake,
+Sun,
+Thermometer,
+TrendingDown,
+TrendingUp,
+Upload,
+X
 } from 'lucide-react';
+import React,{ useCallback,useEffect,useMemo,useState } from 'react';
+import { useNavigate,useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 // ── EU 14 Allergens ────────────────────────────────────────────────

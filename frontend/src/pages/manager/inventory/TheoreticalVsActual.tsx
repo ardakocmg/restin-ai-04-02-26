@@ -2,25 +2,34 @@
  * TheoreticalVsActual — Compare POS-depleted stock vs physical count
  * Apicbase parity: variance analysis, shrinkage costs, category breakdown
  */
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { logger } from '@/lib/logger';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
+import { useVenue } from '@/context/VenueContext';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import {
-    Scale, Search, RefreshCw, Loader2, Download, Filter,
-    ArrowUpRight, ArrowDownRight, AlertTriangle, CheckCircle2,
-    TrendingDown, Package, DollarSign, BarChart3, Minus,
-    Target, Eye, Zap,
+AlertTriangle,
+ArrowDownRight,
+ArrowUpRight,
+BarChart3,
+CheckCircle2,
+DollarSign,
+Download,Filter,
+Loader2,
+Minus,
+Package,
+RefreshCw,
+Search,
+Target
 } from 'lucide-react';
-import { toast } from 'sonner';
+import React,{ useCallback,useEffect,useMemo,useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 /* ────────────────────────────────────────── Types ────────────────── */
 interface StockComparison {

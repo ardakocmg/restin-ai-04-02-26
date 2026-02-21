@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import React,{ useEffect,useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { useVenue } from '../../context/VenueContext';
-import { useAuth } from '../../context/AuthContext';
 import PermissionGate from '../../components/shared/PermissionGate';
+import { useAuth } from '../../context/AuthContext';
+import { useVenue } from '../../context/VenueContext';
 import { useAuditLog } from '../../hooks/useAuditLog';
 
 import api from '../../lib/api';
@@ -14,7 +14,7 @@ import PageContainer from '../../layouts/PageContainer';
 
 import DataTable from '../../components/shared/DataTable';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '../../components/ui/card';
 
 import { Button } from '../../components/ui/button';
 
@@ -23,18 +23,14 @@ import { Badge } from '../../components/ui/badge';
 import { Input } from '../../components/ui/input';
 
 import {
-    Plus,
-    Search,
-    Filter,
-    MoreVertical,
-    UtensilsCrossed,
-    Wine,
-    Coffee,
-    CheckCircle2,
-    AlertCircle
+CheckCircle2,
+Coffee,
+Plus,
+Search,
+UtensilsCrossed,
+Wine
 } from 'lucide-react';
 
-import { toast } from 'sonner';
 
 import { cn } from '../../lib/utils';
 

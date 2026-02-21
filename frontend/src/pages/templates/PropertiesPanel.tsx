@@ -2,9 +2,9 @@
  * PropertiesPanel — renders block properties editor sidebar.
  * Extracted from TemplateEditor.tsx → renderPropertiesPanel helper.
  */
+import { Settings2 } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Settings2 } from 'lucide-react';
 
 interface PropertiesPanelProps {
     selectedBlock: /**/any | null;

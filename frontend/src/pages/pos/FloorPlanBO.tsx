@@ -3,8 +3,8 @@
  * Visual floor plan editor for table layout management
  * Lightspeed K-Series Back Office > Configuration > Floor Plans parity
  */
-import React, { useState } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, X, Square, Circle, Armchair, LayoutGrid } from 'lucide-react';
+import { ArrowLeft,Circle,LayoutGrid,Plus,Save,Square,Trash2 } from 'lucide-react';
+import React,{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import './pos-shared.css';

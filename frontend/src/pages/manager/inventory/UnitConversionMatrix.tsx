@@ -2,21 +2,29 @@
  * UnitConversionMatrix — Automatic unit conversion engine
  * Apicbase parity: kg↔lb, L↔gal, piece↔case, custom conversions
  */
-import React, { useState, useMemo } from 'react';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
+import PageContainer from '@/layouts/PageContainer';
 import { cn } from '@/lib/utils';
 import {
-    Scale, ArrowRightLeft, Plus, Trash2, Search, RefreshCw,
-    Calculator, Ruler, Droplets, Weight, Package, Thermometer,
+ArrowRightLeft,
+Calculator,
+Droplets,
+Package,
+Plus,
+Ruler,
+Scale,
+Thermometer,
+Trash2,
+Weight
 } from 'lucide-react';
-import { toast } from 'sonner';
+import React,{ useMemo,useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 /* ────────────────────────── Types ────────────────── */
 interface UnitConversion {

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
-import api from '@/lib/api';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Shield, ShieldCheck, ShieldAlert, Plus, Trash2, RefreshCw } from 'lucide-react';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
+import { Plus,RefreshCw,Shield,ShieldAlert,ShieldCheck,Trash2 } from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { toast } from 'sonner';
-import type { Door, Permission } from '../doorAccessTypes';
+import type { Door,Permission } from '../doorAccessTypes';
 import { getVenueId } from '../doorAccessTypes';
 
 export default function PermissionsTab() {

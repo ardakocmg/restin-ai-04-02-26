@@ -1,7 +1,7 @@
+import { AlertTriangle,ChevronDown,Home,RefreshCcw } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
-import { AlertTriangle, Home, RefreshCcw, ChevronDown } from 'lucide-react';
 
 export default function ErrorPage({ error, resetError }) {
   const navigate = useNavigate();

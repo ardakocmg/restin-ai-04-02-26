@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import api from '../../lib/api';
-import { toast } from 'sonner';
-import PageContainer from '../../layouts/PageContainer';
-import { StatCard, StatsGrid } from '../../components/shared/Stats';
-import PermissionedTable from '../../components/PermissionedTable';
-import { Button } from '../../components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { DollarSign, Receipt, ShoppingCart, CheckCircle, RefreshCw } from 'lucide-react';
 import { logger } from '@/lib/logger';
+import { CheckCircle,DollarSign,Receipt,RefreshCw,ShoppingCart } from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { toast } from 'sonner';
+import PermissionedTable from '../../components/PermissionedTable';
+import { StatCard,StatsGrid } from '../../components/shared/Stats';
+import { Button } from '../../components/ui/button';
+import { Card,CardContent,CardHeader } from '../../components/ui/card';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
+import { useAuth } from '../../context/AuthContext';
+import PageContainer from '../../layouts/PageContainer';
+import api from '../../lib/api';
 
 export default function FinanceDashboard() {
   const { user } = useAuth();

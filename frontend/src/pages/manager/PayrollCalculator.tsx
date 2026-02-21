@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
 import PermissionGate from '@/components/shared/PermissionGate';
 import { useAuditLog } from '@/hooks/useAuditLog';
-import PageLayout from '../../layouts/PageLayout';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
+import { Calculator,TrendingUp } from 'lucide-react';
+import React,{ useState } from 'react';
 import { Button } from '../../components/ui/button';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Calculator, TrendingUp, DollarSign } from 'lucide-react';
-import { calculateNetFromGross, calculateGrossFromNet, TaxCalculationResult } from '../../utils/calculations';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
+import PageLayout from '../../layouts/PageLayout';
+import { calculateGrossFromNet,calculateNetFromGross,TaxCalculationResult } from '../../utils/calculations';
 
 export default function PayrollCalculator() {
   const { logAction } = useAuditLog();

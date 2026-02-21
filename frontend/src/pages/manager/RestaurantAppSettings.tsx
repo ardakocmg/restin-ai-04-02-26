@@ -1,25 +1,28 @@
-import React from 'react';
 import {
-    Settings, ShoppingCart, Utensils, Users,
-    Receipt, Clock, Layout, Save, Info,
-    ChevronRight, ArrowLeft
+Info,
+Receipt,
+Save,
+ShoppingCart,
+Users,
+Utensils
 } from 'lucide-react';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Switch } from '../../components/ui/switch';
-import { Label } from '../../components/ui/label';
-import { Input } from '../../components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from '../../components/ui/select';
-import { useAuth } from '../../context/AuthContext';
+import React from 'react';
 import PermissionGate from '../../components/shared/PermissionGate';
+import { Button } from '../../components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import {
+Select,
+SelectContent,
+SelectItem,
+SelectTrigger,
+SelectValue
+} from '../../components/ui/select';
+import { Switch } from '../../components/ui/switch';
+import { useAuth } from '../../context/AuthContext';
 import { useAuditLog } from '../../hooks/useAuditLog';
+import PageContainer from '../../layouts/PageContainer';
 
 export default function RestaurantAppSettings() {
     const { user } = useAuth();

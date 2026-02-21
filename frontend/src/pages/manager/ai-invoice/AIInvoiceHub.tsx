@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { AlertTriangle,CheckCircle,FileText,Upload } from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Card,CardContent } from '../../../components/ui/card';
 import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent } from '../../../components/ui/card';
-import { Upload, FileText, AlertTriangle, CheckCircle } from 'lucide-react';
 
 const MODULES = [
   { key: 'ocr', title: 'Invoice OCR', desc: 'AI-powered invoice scanning', icon: Upload, path: '/manager/ai-invoice/ocr', color: 'blue' },

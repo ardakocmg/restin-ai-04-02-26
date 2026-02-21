@@ -3,8 +3,8 @@
  * 
  * All layouts receive the same set of props from POSMain.tsx
  */
-import type { ReactNode, CSSProperties } from 'react';
 import type { LucideIcon } from 'lucide-react';
+import type { CSSProperties,ReactNode } from 'react';
 
 export interface POSVenue {
     id: string;

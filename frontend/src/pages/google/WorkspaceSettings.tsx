@@ -3,24 +3,38 @@
  * @route /manager/google-workspace
  * Wraps Workspace SSO, Business Profile, Maps, and Reviews.
  */
-import React, { useState, useEffect, useCallback } from 'react';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog,DialogContent,DialogFooter,DialogHeader,DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Tabs,TabsContent,TabsList,TabsTrigger } from "@/components/ui/tabs";
+import {
+AlertTriangle,
+BarChart3,
+Building2,
+Calendar,
+CheckCircle2,
+Globe,
+HardDrive,
+LinkIcon,
+Loader2,
+Lock,
+MapPin,
+Plus,
+Send,
+Shield,
+Star,
+TestTube,
+Trash2,
+XCircle
+} from 'lucide-react';
+import { useCallback,useEffect,useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import {
-    Shield, Globe, Users, Plus, Trash2, TestTube, CheckCircle2,
-    XCircle, Loader2, LinkIcon, AlertTriangle, Settings2, Lock,
-    MapPin, Star, Calendar, HardDrive, Building2, ExternalLink,
-    BarChart3, RefreshCw, Send, ChevronRight
-} from 'lucide-react';
-import api from '../../lib/api';
 import { useAuth } from '../../features/auth/AuthContext';
+import api from '../../lib/api';
 import { logger } from '../../lib/logger';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 // ── Types ────────────────────────────────────────────────────────────────
 

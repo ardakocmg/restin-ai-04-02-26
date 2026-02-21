@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import React,{ useEffect,useState } from 'react';
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
 import {
-    Shield, User, Lock, History, AlertTriangle, Check,
-    RotateCcw, Save, Trash2, Archive, Activity, Globe
+Activity,
+Archive,
+Globe,
+Lock,
+RotateCcw,
+Shield,User
 } from 'lucide-react';
 
 import { toast } from 'sonner';
@@ -14,17 +18,17 @@ import api from '../../lib/api';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
 
 import { Button } from '../../components/ui/button';
 
 import { Badge } from '../../components/ui/badge';
 
 import DataTable from '../../components/shared/DataTable';
-import { useAuth } from '../../context/AuthContext';
 import PermissionGate from '../../components/shared/PermissionGate';
+import { useAuth } from '../../context/AuthContext';
 import { useAuditLog } from '../../hooks/useAuditLog';
 
 export default function UserAccess() {

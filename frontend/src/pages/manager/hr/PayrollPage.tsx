@@ -1,64 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '@/context/VenueContext';
-import { useAuth } from '@/context/AuthContext';
-import PageContainer from '@/layouts/PageContainer';
 import PermissionGate from '@/components/shared/PermissionGate';
-import { useAuditLog } from '@/hooks/useAuditLog';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 import {
-    Wallet,
-    Users,
-    Calculator,
-    CalendarClock,
-    Download,
-    Send,
-    Lock,
-    FileText,
-    Trash2,
-    Trash,
-    Search,
-    ChevronDown,
-    Calendar,
-    ArrowUpDown,
-    CheckCircle2,
-    Clock,
-    AlertCircle,
-    Eye,
-    Mail,
-    Share2,
-    Filter,
-    Award as AwardIcon,
-    ShieldCheck,
-    BarChart3,
-    TrendingUp,
-    PieChart,
-    ListChecks
-} from 'lucide-react';
-import api, { userAPI } from '@/lib/api';
-import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
-import { cn } from "@/lib/utils";
-import { logger } from '@/lib/logger';
+Dialog,
+DialogContent,
+DialogDescription,
+DialogHeader,
+DialogTitle,
+} from "@/components/ui/dialog";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+DropdownMenu,
+DropdownMenuContent,
+DropdownMenuItem,
+DropdownMenuLabel,
+DropdownMenuSeparator,
+DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from '@/components/ui/input';
 import { Label } from "@/components/ui/label";
+import { Separator } from '@/components/ui/separator';
+import { useVenue } from '@/context/VenueContext';
+import { useAuditLog } from '@/hooks/useAuditLog';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
+import { cn } from "@/lib/utils";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from "@/components/ui/dialog";
+AlertCircle,
+Award as AwardIcon,
+BarChart3,
+Calendar,
+CheckCircle2,
+ChevronDown,
+Clock,
+Download,
+Eye,
+Filter,
+ListChecks,
+Mail,
+PieChart,
+Search,
+Send,
+Share2,
+ShieldCheck,
+Trash2,
+TrendingUp,
+Users,
+Wallet
+} from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface Payslip {
     employee_name?: string;

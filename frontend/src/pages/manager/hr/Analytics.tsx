@@ -1,8 +1,8 @@
 /**
  * PHASE 1: HR Analytics Dashboard
  */
-import { useState, useEffect } from "react";
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from "react";
 
 import { useAuth } from "../../../context/AuthContext";
 
@@ -10,7 +10,7 @@ import api from "../../../lib/api";
 
 import { toast } from "sonner";
 
-import { Loader2, Users, Calendar, Umbrella, FileText } from "lucide-react";
+import { Calendar,FileText,Loader2,Umbrella,Users } from "lucide-react";
 
 import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";
 

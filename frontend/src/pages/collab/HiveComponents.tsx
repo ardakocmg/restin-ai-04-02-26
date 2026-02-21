@@ -2,10 +2,10 @@
  * Hive Chat — Small Helper Components
  * Extracted from HiveDashboard.tsx and wrapped with React.memo for perf
  */
-import React, { useMemo } from 'react';
+import { parseSmartMessage,SmartToken } from '@/lib/smartParser';
 import { motion } from 'framer-motion';
-import { ArrowRight, Image, FileText } from 'lucide-react';
-import { parseSmartMessage, SmartToken } from '@/lib/smartParser';
+import { ArrowRight,FileText,Image } from 'lucide-react';
+import React,{ useMemo } from 'react';
 import { SMART_CHIP_STYLES } from './hiveTypes';
 
 // ─── Smart Token Span (memoized) ────────────────────────────────────────

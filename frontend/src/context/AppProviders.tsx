@@ -13,17 +13,17 @@
  * 
  * @module context/AppProviders
  */
-import React, { ReactNode } from 'react';
+import React,{ ReactNode } from 'react';
 
 import { AuthProvider } from '../features/auth/AuthContext';
-import { MultiVenueProvider } from './MultiVenueContext';
-import { VenueProvider } from './VenueContext';
 import { DesignSystemProvider } from './DesignSystemContext';
+import { MultiVenueProvider } from './MultiVenueContext';
+import { POSFilterProvider } from './POSFilterContext';
 import { SubdomainProvider } from './SubdomainContext';
-import { UserSettingsProvider } from './UserSettingsContext';
 import { ThemeProvider } from './ThemeContext';
 import { UIProvider } from './UIContext';
-import { POSFilterProvider } from './POSFilterContext';
+import { UserSettingsProvider } from './UserSettingsContext';
+import { VenueProvider } from './VenueContext';
 
 // ─── Helper: compose providers without deep nesting ──────────────────────────
 type ProviderComponent = React.FC<{ children: ReactNode }>;

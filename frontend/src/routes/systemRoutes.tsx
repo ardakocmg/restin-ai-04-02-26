@@ -3,7 +3,7 @@
  * Settings, Users, Access Control, Billing, Observability, Devices, Smart Home, etc.
  */
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import RoleRoute from '../components/shared/RoleRoute';
 
 // ─── Settings & Admin ───────────────────────────────────────────────────────────

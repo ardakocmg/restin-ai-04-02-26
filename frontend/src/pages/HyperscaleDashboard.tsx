@@ -1,13 +1,29 @@
-import React, { useState, useEffect } from 'react';
 import {
-    Activity, Server, Database, TrendingUp, AlertTriangle, Shield,
-    DollarSign, Activity as Pulse, Zap, Globe, Cpu, StopCircle,
-    Map, ArrowUpRight, ArrowDownRight, Maximize2
+Activity,
+AlertTriangle,
+ArrowDownRight,
+ArrowUpRight,
+Database,
+DollarSign,
+Globe,
+Maximize2,
+Activity as Pulse,
+Server,
+Shield,
+StopCircle
 } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import {
-    LineChart, Line, AreaChart, Area, BarChart, Bar,
-    XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-    ReferenceLine, PieChart, Pie, Cell
+Area,
+AreaChart,
+Bar,
+BarChart,
+CartesianGrid,
+Line,
+LineChart,
+ResponsiveContainer,
+Tooltip,
+XAxis,YAxis
 } from 'recharts';
 
 // Simulate live data generation

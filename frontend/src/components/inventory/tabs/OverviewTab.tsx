@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Package, TrendingDown, AlertTriangle } from 'lucide-react';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
+import { AlertTriangle,Package,TrendingDown } from 'lucide-react';
 
 export default function OverviewTab({ data, onRefresh }) {
   const sku = data?.sku || {};

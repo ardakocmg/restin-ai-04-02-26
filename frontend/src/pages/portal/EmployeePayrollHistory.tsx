@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
 import PageContainer from '@/layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card,CardContent } from '@/components/ui/card';
 
 import { Button } from '@/components/ui/button';
 
-import { Badge } from '@/components/ui/badge';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
 
-import { FileText, Download, Printer, Eye, Calendar, Award, ShieldCheck, Image, FileSignature, LogOut } from 'lucide-react';
+import { Award,Download,Eye,FileSignature,FileText,Image,LogOut,Printer,ShieldCheck } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -25,9 +24,9 @@ import EngagementLetter from '@/components/payroll/EngagementLetter';
 
 import ExitTemplate from '@/components/payroll/ExitTemplate';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog,DialogContent } from '@/components/ui/dialog';
 
-import { exportToPdf, exportToJpeg } from '@/lib/exportUtils';
+import { exportToJpeg,exportToPdf } from '@/lib/exportUtils';
 
 import { useMultiVenue } from '@/context/MultiVenueContext';
 

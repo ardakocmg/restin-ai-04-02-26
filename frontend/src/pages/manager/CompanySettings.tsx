@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { useVenue } from '../../context/VenueContext';
 import { useAuth } from '../../context/AuthContext';
+import { useVenue } from '../../context/VenueContext';
 
 import { venueAPI } from '../../lib/api';
 
@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
 
 import { Button } from '../../components/ui/button';
 
@@ -20,19 +20,19 @@ import { Label } from '../../components/ui/label';
 
 import { Switch } from '../../components/ui/switch';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
 
 import { Badge } from '../../components/ui/badge';
 
 import { Textarea } from '../../components/ui/textarea';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '../../components/ui/select';
 
 import { Separator } from '../../components/ui/separator';
 
 import DataTable from '../../components/shared/DataTable';
 
-import { Save, Building2, Plus, Globe, MapPin, Contact2, Receipt, Settings2, Activity } from 'lucide-react';
+import { Building2,Contact2,Globe,MapPin,Plus,Receipt,Save,Settings2 } from 'lucide-react';
 
 import { cn } from '../../lib/utils';
 

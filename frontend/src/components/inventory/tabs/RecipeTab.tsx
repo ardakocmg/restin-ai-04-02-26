@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { GitBranch, Package } from 'lucide-react';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
+import { GitBranch,Package } from 'lucide-react';
 
 function RecipeNode({ component, depth = 0 }) {
   const indent = depth * 24;

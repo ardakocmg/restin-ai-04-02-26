@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
 import { useVenue } from '../../context/VenueContext';
 
@@ -12,15 +12,18 @@ import SearchBar from '../../components/shared/SearchBar';
 
 import ItemDetailDrawer from '../../components/inventory/ItemDetailDrawer';
 
-import { Card, CardContent } from '../../components/ui/card';
+import { Card,CardContent } from '../../components/ui/card';
 
 import { Badge } from '../../components/ui/badge';
 
 import { Button } from '../../components/ui/button';
 
 import {
-  Package, AlertTriangle, TrendingDown, CheckCircle2,
-  Plus, RefreshCw
+AlertTriangle,
+CheckCircle2,
+Package,
+Plus,RefreshCw,
+TrendingDown
 } from 'lucide-react';
 
 export default function InventoryPage() {

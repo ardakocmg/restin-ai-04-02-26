@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import {
-    Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import {
+Dialog,DialogContent,
+DialogDescription,DialogFooter,
+DialogHeader,DialogTitle
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, Users, Clock, Loader2, UserPlus, Info } from 'lucide-react';
-import { toast } from 'sonner';
-import api from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import api from '@/lib/api';
+import { Calendar,Loader2,UserPlus } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function ReservationModal({ open, onOpenChange, venueId, onCreated }) {
     const { user, isManager, isOwner } = useAuth();

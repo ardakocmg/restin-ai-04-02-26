@@ -1,28 +1,29 @@
 
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
 import PageContainer from '@/layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 
 import { Button } from '@/components/ui/button';
 
-import { Badge } from '@/components/ui/badge';
 
-import { Separator } from '@/components/ui/separator';
 
 import {
-    ArrowLeft, Download, Lock, Send, Printer,
-    FileText, CheckCircle2, AlertCircle, Building2
+AlertCircle,
+ArrowLeft,
+CheckCircle2,
+Download,Lock,
+Printer
 } from 'lucide-react';
 
 import api from '@/lib/api';
 
-import { useAuth } from '@/context/AuthContext';
 import PermissionGate from '@/components/shared/PermissionGate';
+import { useAuth } from '@/context/AuthContext';
 import { useAuditLog } from '@/hooks/useAuditLog';
 
 import { toast } from 'sonner';

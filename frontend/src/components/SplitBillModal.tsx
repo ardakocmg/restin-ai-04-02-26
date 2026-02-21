@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Users, CheckCircle2, Split, ArrowRight, ArrowLeftRight, MoveRight, Receipt } from 'lucide-react';
+import { ArrowLeftRight,ArrowRight,MoveRight,Receipt,Split,X } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 

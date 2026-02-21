@@ -3,8 +3,8 @@
  * Low stock thresholds, par levels, and notification rules
  * Lightspeed K-Series Back Office > Inventory > Alerts parity
  */
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Save, Search, Bell, AlertTriangle, Package, TrendingDown, Mail, MessageSquare, Loader2 } from 'lucide-react';
+import { AlertTriangle,ArrowLeft,Bell,Loader2,Mail,MessageSquare,Package,Save,Search,TrendingDown } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useItemService } from '../../hooks/shared/useItemService';

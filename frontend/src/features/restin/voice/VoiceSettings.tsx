@@ -1,23 +1,39 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../components/ui/card';
+import { useMutation,useQuery,useQueryClient } from '@tanstack/react-query';
+import {
+AlertCircle,
+Bot,
+CheckCircle,
+ChevronRight,ExternalLink,
+FileText,
+Globe,
+Key,
+Loader2,
+Mic,
+PhoneCall,
+Phone as PhoneIcon,
+RefreshCw,
+Save,
+Shield,
+Trash2,
+Unplug,
+Upload,
+Volume2,
+Zap,
+} from 'lucide-react';
+import { useEffect,useRef,useState } from 'react';
+import { useLocation,useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { Button } from '../../../components/ui/button';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '../../../components/ui/card';
 import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
-import { Switch } from '../../../components/ui/switch';
 import { Slider } from '../../../components/ui/slider';
+import { Switch } from '../../../components/ui/switch';
 import { Textarea } from '../../../components/ui/textarea';
-import {
-    Save, Mic, Upload, FileText, Bot, Trash2, Loader2, CheckCircle,
-    Globe, Phone as PhoneIcon, Volume2, Key, Zap, RefreshCw, PhoneCall,
-    Unplug, Shield, ChevronRight, ExternalLink, AlertCircle,
-} from 'lucide-react';
-import { toast } from 'sonner';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { voiceService } from './voice-service';
-import { useVenue } from '../../../context/VenueContext';
 import { useAuth } from '../../../context/AuthContext';
+import { useVenue } from '../../../context/VenueContext';
 import { cn } from '../../../lib/utils';
+import { voiceService } from './voice-service';
 
 /* ========== Tab Nav ========== */
 const TABS = [

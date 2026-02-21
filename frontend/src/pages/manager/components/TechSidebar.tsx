@@ -1,5 +1,4 @@
-import React from 'react';
-import { Home, ClipboardList, Activity, Truck, Settings, AlertCircle, Database } from 'lucide-react';
+import { Activity,AlertCircle,ClipboardList,Database,Home,Truck } from 'lucide-react';
 
 export default function TechSidebar() {
     return (

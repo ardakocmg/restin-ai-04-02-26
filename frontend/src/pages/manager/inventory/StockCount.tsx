@@ -1,34 +1,33 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { logger } from '@/lib/logger';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import PageContainer from '@/layouts/PageContainer';
 import DataTable from '@/components/shared/DataTable';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
+import { useVenue } from '@/context/VenueContext';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
 import {
-  ClipboardCheck,
-  Save,
-  AlertTriangle,
-  CheckCircle2,
-  RefreshCw,
-  Calculator,
-  ArrowUpDown,
-  Package,
-  ScanBarcode,
-  Boxes,
-  X,
-  Search,
-  Mic,
-  MicOff,
-  TrendingDown,
-  Target,
-  Percent,
+AlertTriangle,
+ArrowUpDown,
+Boxes,
+Calculator,
+CheckCircle2,
+ClipboardCheck,
+Mic,
+MicOff,
+Package,
+RefreshCw,
+Save,
+ScanBarcode,
+Search,
+Target,
+TrendingDown,
+X
 } from 'lucide-react';
+import { useCallback,useEffect,useMemo,useRef,useState } from 'react';
 import { toast } from 'sonner';
 
 // ── KPI Stat Card ──────────────────────────────────────────────────

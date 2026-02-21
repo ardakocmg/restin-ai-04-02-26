@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    Trophy, Star, Zap, Target, TrendingUp, Award,
-    Clock, Flame, Crown, Medal, Sparkles, User, Loader2
-} from 'lucide-react';
-import { motion } from 'framer-motion';
-import { levelProgress, xpForNextLevel, getLevelTitle } from '@/lib/gamification';
+import { Card,CardContent,CardHeader,CardTitle } from "@/components/ui/card";
 import { useAuth } from '@/context/AuthContext';
 import { useVenue } from '@/context/VenueContext';
-import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
+import { getLevelTitle,levelProgress,xpForNextLevel } from '@/lib/gamification';
+import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+import {
+Award,
+Clock,
+Crown,
+Flame,
+Loader2,
+Medal,Sparkles,
+Star,
+Target,TrendingUp,
+Trophy,
+User,
+Zap
+} from 'lucide-react';
+import React,{ useState } from 'react';
 import './GamificationDashboard.css';
 
 // ─── Types ──────────────────────────────────────────────────────────────

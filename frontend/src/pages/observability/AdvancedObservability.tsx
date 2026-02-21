@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
 import { useVenue } from '../../context/VenueContext';
 
@@ -7,13 +7,12 @@ import api from '../../lib/api';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
 
-import { Button } from '../../components/ui/button';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
 
-import { Activity, Database, TrendingUp, Clock, Zap } from 'lucide-react';
+import { Clock,Database,Zap } from 'lucide-react';
 
 export default function AdvancedObservability() {
   const { activeVenue } = useVenue();

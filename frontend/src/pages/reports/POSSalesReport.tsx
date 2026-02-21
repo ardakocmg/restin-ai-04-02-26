@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import React,{ useEffect,useState } from 'react';
 
 import { useVenue } from '@/context/VenueContext';
 
@@ -11,25 +11,40 @@ import { usePOSFilters } from '@/context/POSFilterContext';
 
 import PageContainer from '@/layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 
 import { Button } from '@/components/ui/button';
 
 import { Badge } from '@/components/ui/badge';
 
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, LineChart, Line, AreaChart, Area
+Bar,
+BarChart,
+CartesianGrid,
+ResponsiveContainer,
+Tooltip,
+XAxis,YAxis
 } from 'recharts';
 
 import {
-  TrendingUp, Users, DollarSign, Package, Download,
-  Filter, Calendar, Clock, ArrowUpRight, ArrowDownRight,
-  ChevronRight, Search, FileText, LayoutDashboard, Settings,
-  UserCheck, CreditCard, Receipt, ShoppingCart,
-  FileDown, Share2, Save, Plus, Trash2, GripVertical, Info,
-  Activity, BarChart3, PieChart as PieChartIcon,
-  Table as TableIcon, Type, Home, ChevronLeft
+Activity,BarChart3,
+Calendar,
+ChevronLeft,
+Clock,
+DollarSign,
+Download,
+FileDown,
+FileText,
+GripVertical,
+Package,
+Plus,
+Receipt,
+Settings,
+Table as TableIcon,
+Trash2,
+TrendingUp,
+UserCheck,
+Users
 } from 'lucide-react';
 
 import api from '@/lib/api';
@@ -38,11 +53,11 @@ import POSFilterBar from '@/components/pos/POSFilterBar';
 
 import { format } from 'date-fns';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from '@/components/ui/table';
 
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
-import { exportToCsv, exportToPdf } from '@/lib/exportUtils';
+import { exportToCsv,exportToPdf } from '@/lib/exportUtils';
 
 import { toast } from 'sonner';
 

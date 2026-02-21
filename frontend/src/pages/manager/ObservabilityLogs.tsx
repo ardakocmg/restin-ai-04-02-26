@@ -1,20 +1,20 @@
 /**
  * Observability Logs - Live Logs + Error Code Registry
  */
-import { useState, useEffect } from 'react';
-import { logger } from '../../lib/logger';
-import { useAuth } from '../../context/AuthContext';
-import LogService, { type LogEntry, type ErrorCode } from '../../services/LogService';
+import { AlertTriangle,CheckCircle,Copy,FileText,Info,Loader2,Search,Shield } from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { toast } from 'sonner';
+import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
+import { Dialog,DialogContent,DialogHeader,DialogTitle } from '../../components/ui/dialog';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Badge } from '../../components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';
-import { Loader2, Search, AlertTriangle, Info, Shield, CheckCircle, Copy, FileText } from 'lucide-react';
-import { safeArray, safeString } from '../../lib/safe';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '../../components/ui/select';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
+import { useAuth } from '../../context/AuthContext';
+import { logger } from '../../lib/logger';
+import { safeArray,safeString } from '../../lib/safe';
+import LogService,{ type ErrorCode,type LogEntry } from '../../services/LogService';
 
 const LEVEL_COLORS: Record<string, string> = {
   ERROR: 'bg-red-100 text-red-700 dark:text-red-400 border-red-200',

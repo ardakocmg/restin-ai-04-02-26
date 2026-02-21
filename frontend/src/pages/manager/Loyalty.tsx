@@ -1,27 +1,26 @@
 
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import React,{ useEffect,useState } from 'react';
 
-import { useVenue } from '../../context/VenueContext';
-import { useAuth } from '../../context/AuthContext';
 import PermissionGate from '../../components/shared/PermissionGate';
+import { useAuth } from '../../context/AuthContext';
+import { useVenue } from '../../context/VenueContext';
 import { useAuditLog } from '../../hooks/useAuditLog';
 
 import api from '../../lib/api';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card,CardContent } from '../../components/ui/card';
 
 import { Badge } from '../../components/ui/badge';
 
 import { Button } from '../../components/ui/button';
 
-import { Tabs, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Tabs,TabsList,TabsTrigger } from '../../components/ui/tabs';
 
-import { Gift, Star, Award, TrendingUp, Settings, Plus, Trophy } from 'lucide-react';
+import { Award,Gift,Plus,Settings,Star,TrendingUp,Trophy } from 'lucide-react';
 
-import { toast } from 'sonner';
 
 export default function LoyaltyPage() {
     const { activeVenue } = useVenue();

@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
 import PermissionGate from '@/components/shared/PermissionGate';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import { logger } from '@/lib/logger';
+import React,{ useEffect,useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { useVenue } from '../../context/VenueContext';
 import { useAuth } from '../../context/AuthContext';
+import { useVenue } from '../../context/VenueContext';
 
 import { venueAPI } from '../../lib/api';
 
 import PageLayout from '../../layouts/PageLayout';
 
-import { StatCard, StatsGrid } from '../../components/shared/Stats';
+import { StatCard,StatsGrid } from '../../components/shared/Stats';
 
 import DataTable from '../../components/shared/DataTable';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '../../components/ui/card';
 
 import { Button } from '../../components/ui/button';
 
@@ -25,10 +25,23 @@ import { Badge } from '../../components/ui/badge';
 import { Progress } from '../../components/ui/progress';
 
 import {
-  ShoppingCart, Clock, Package, AlertTriangle,
-  Utensils, Monitor, ChefHat,
-  ArrowRight, Activity, CheckCircle2, Users, DollarSign,
-  Shield, BarChart3, ClipboardList, TrendingUp, Gauge
+Activity,
+AlertTriangle,
+ArrowRight,
+BarChart3,
+CheckCircle2,
+ChefHat,
+ClipboardList,
+Clock,
+DollarSign,
+Gauge,
+Monitor,
+Package,
+Shield,
+ShoppingCart,
+TrendingUp,
+Users,
+Utensils
 } from 'lucide-react';
 
 interface VenueStats {

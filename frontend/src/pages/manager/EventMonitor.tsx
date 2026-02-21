@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent } from '../../components/ui/card';
+import { logger } from '@/lib/logger';
+import { CheckCircle2,Clock,Database,XCircle,Zap } from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Zap, Clock, CheckCircle2, XCircle, Database } from 'lucide-react';
-import { logger } from '@/lib/logger';
+import { Card,CardContent } from '../../components/ui/card';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
+import PageContainer from '../../layouts/PageContainer';
+import api from '../../lib/api';
 
 export default function EventMonitorPage() {
   const [outboxEvents, setOutboxEvents] = useState([]);

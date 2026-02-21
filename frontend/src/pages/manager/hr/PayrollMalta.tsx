@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { Download,FileText,Loader2,Play } from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useVenue } from '../../../context/VenueContext';
-import { useAuth } from '../../../context/AuthContext';
-import api from '../../../lib/api';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../../components/ui/tabs';
-import { Download, FileText, Calculator, Play, Loader2, RefreshCw } from 'lucide-react';
-import DataTable from '../../../components/shared/DataTable';
 import { toast } from 'sonner';
+import DataTable from '../../../components/shared/DataTable';
 import PermissionGate from '../../../components/shared/PermissionGate';
+import { Button } from '../../../components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '../../../components/ui/card';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '../../../components/ui/select';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../../components/ui/tabs';
+import { useAuth } from '../../../context/AuthContext';
+import { useVenue } from '../../../context/VenueContext';
 import { useAuditLog } from '../../../hooks/useAuditLog';
+import PageContainer from '../../../layouts/PageContainer';
+import api from '../../../lib/api';
 
 import { logger } from '@/lib/logger';
 export default function PayrollMalta() {

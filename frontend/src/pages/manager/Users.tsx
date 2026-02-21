@@ -3,30 +3,43 @@
  * Connected to /venues/{id}/users + /venues/{id}/admin/users/* APIs
  * Links to: Roles (/manager/access-control), Employee Directory (/manager/hr/people)
  */
-import { useState, useEffect, useMemo, useCallback } from 'react';
 import { logger } from '@/lib/logger';
+import {
+AlertCircle,
+Archive,
+CheckCircle2,
+Eye,
+EyeOff,
+Key,
+Link2,
+Loader2,Lock,
+Plus,
+RotateCcw,
+Search,
+Shield,
+Unlink,
+UserCheck,
+XCircle
+} from 'lucide-react';
+import { useCallback,useEffect,useMemo,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
 import { toast } from 'sonner';
 import DataTable from '../../components/shared/DataTable';
-import { Card, CardContent } from '../../components/ui/card';
+import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
+import {
+Dialog,DialogContent,
+DialogDescription,
+DialogHeader,DialogTitle
+} from '../../components/ui/dialog';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription
-} from '../../components/ui/dialog';
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue
+Select,SelectContent,SelectItem,SelectTrigger,SelectValue
 } from '../../components/ui/select';
-import {
-  Plus, Shield, Key, Users as UsersIcon, Search, Settings,
-  Archive, RotateCcw, Link2, Unlink, Eye, Loader2, Lock, EyeOff,
-  UserCheck, AlertCircle, CheckCircle2, XCircle, Clock
-} from 'lucide-react';
+import { Tabs,TabsList,TabsTrigger } from '../../components/ui/tabs';
+import { useVenue } from '../../context/VenueContext';
+import api from '../../lib/api';
 
 const ROLES = [
   'owner', 'general_manager', 'manager', 'supervisor',

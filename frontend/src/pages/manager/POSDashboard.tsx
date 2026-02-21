@@ -1,33 +1,29 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import React,{ useEffect,useState } from 'react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 
 import { Button } from '@/components/ui/button';
 
-import { Calendar } from '@/components/ui/calendar';
 
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog,DialogContent,DialogFooter,DialogHeader,DialogTitle,DialogTrigger } from "@/components/ui/dialog";
 
 import { Input } from "@/components/ui/input";
 
 import { Label } from "@/components/ui/label";
 
-import { Switch } from "@/components/ui/switch";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns';
+import { format,isSameDay } from 'date-fns';
 
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, DollarSign, Receipt, Users, Clock, Settings, Check, ArrowUpRight, CalendarClock, Play, Palette } from 'lucide-react';
+import { ArrowUpRight,Check,ChevronLeft,DollarSign,Palette,Play,Receipt,Settings,Users } from 'lucide-react';
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { Area,AreaChart,CartesianGrid,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 
 import { cn } from '@/lib/utils';
 
-import { Slider } from '@/components/ui/slider';
 
 import { Progress } from "@/components/ui/progress";
 
@@ -37,8 +33,8 @@ import POSFilterBar from '@/components/pos/POSFilterBar';
 
 import api from '@/lib/api';
 
-import { useVenue } from '@/context/VenueContext';
 import { useAuth } from '@/context/AuthContext';
+import { useVenue } from '@/context/VenueContext';
 import PermissionGate from '../../components/shared/PermissionGate';
 import { useAuditLog } from '../../hooks/useAuditLog';
 

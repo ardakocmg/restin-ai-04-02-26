@@ -4,7 +4,7 @@
  * These are the 4 factory themes that ship with Restin.AI.
  * Each wraps an existing layout component — NO layouts are deleted.
  */
-import { POSThemeConfig, DEFAULT_ENGINE_STYLES } from './posThemeTypes';
+import { DEFAULT_ENGINE_STYLES,POSThemeConfig } from './posThemeTypes';
 
 export const BUILTIN_THEMES: POSThemeConfig[] = [
     {

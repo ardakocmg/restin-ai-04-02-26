@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
-    Printer, RotateCcw, ZoomIn, ZoomOut, Maximize2,
-    Thermometer, Eye, Download
+Maximize2,
+Printer,
+Thermometer,
+ZoomIn,ZoomOut
 } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ThermalPreviewProps {
     html: string;

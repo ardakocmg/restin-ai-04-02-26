@@ -1,23 +1,31 @@
-import { useState } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import {
-    Layout, Type, Image as ImageIcon,
-    Hash, Smartphone, Monitor, Tablet,
-    Plus, Eye, Globe, MousePointer2, Rocket
+Eye,Globe,
+Hash,
+Image as ImageIcon,
+Layout,
+Monitor,
+MousePointer2,
+Plus,
+Rocket,
+Smartphone,
+Tablet,
+Type
 } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '../../../components/ui/button';
 import { Card } from '../../../components/ui/card';
 import { cn } from '../../../lib/utils';
-import type { LucideIcon } from 'lucide-react';
 
 /**
  * 🕸️ WEB ARCHITECT (Pillar 2)
  * Drag & Drop Website Builder synced with POS Inventory.
  */
-import { webBuilderService } from './web-service';
-import { useVenue } from '../../../context/VenueContext';
-import { useAuth } from '../../../context/AuthContext';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation,useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { useAuth } from '../../../context/AuthContext';
+import { useVenue } from '../../../context/VenueContext';
+import { webBuilderService } from './web-service';
 
 interface MenuItem {
     name: string;

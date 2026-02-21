@@ -4,10 +4,10 @@
  * Provides color pickers, font selection, radius controls, and
  * per-zone config fields generated from the zone's configSchema.
  */
-import React, { useState } from 'react';
-import { Settings, Paintbrush, Type as TypeIcon, Box, ChevronDown, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { ZoneConfig, ZoneConfigField } from './themeZoneTypes';
+import { Box,ChevronDown,ChevronRight,Paintbrush,Settings,Type as TypeIcon } from 'lucide-react';
+import { useState } from 'react';
+import type { ZoneConfig,ZoneConfigField } from './themeZoneTypes';
 import { getComponentDef } from './themeZoneTypes';
 
 // ─── Style Types ──────────────────────────────────────────────────

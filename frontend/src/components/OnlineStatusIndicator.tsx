@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Wifi, WifiOff, Cloud, HardDrive, Activity, Network, Layers } from 'lucide-react';
-import syncService from '../services/SyncService';
+import { logger } from '@/lib/logger';
+import { Activity,Cloud,HardDrive,Layers,Network,WifiOff } from 'lucide-react';
+import { useEffect,useState } from 'react';
 import offlineDB from '../services/OfflineDB';
 import resilienceManager from '../services/ResilienceManager';
-import { logger } from '@/lib/logger';
+import syncService from '../services/SyncService';
 
 /**
  * OnlineStatusIndicator - Multi-Layer Resilience Status Display

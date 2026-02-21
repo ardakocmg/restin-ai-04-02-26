@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { logger } from '@/lib/logger';
-import { TrendingUp, DollarSign, Users, BarChart2, AlertTriangle, Clock } from 'lucide-react';
+import { AlertTriangle,BarChart2,DollarSign,TrendingUp,Users } from 'lucide-react';
+import { useCallback,useEffect,useState } from 'react';
 
 interface SalaryBenchmark {
     occupation?: string;

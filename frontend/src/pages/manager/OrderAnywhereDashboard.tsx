@@ -1,15 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useVenue } from '@/context/VenueContext';
+import api from '@/lib/api';
+import {
+AlertCircle,CheckCircle2,
+ChefHat,
+Clock,
+Copy,
+DollarSign,
+ExternalLink,
+Globe,
+Loader2,
+Package,
+QrCode,
+RefreshCw,
+Save,
+Settings,ShoppingBag,
+ToggleLeft,ToggleRight,
+TrendingUp
+} from 'lucide-react';
+import { useCallback,useEffect,useState } from 'react';
+import { toast } from 'sonner';
 import PageContainer from '../../layouts/PageContainer';
 import { cn } from '../../lib/utils';
-import { toast } from 'sonner';
-import api from '@/lib/api';
-import { useVenue } from '@/context/VenueContext';
-import {
-    QrCode, Globe, Settings, ShoppingBag, Clock, DollarSign,
-    ToggleLeft, ToggleRight, Save, Copy, ExternalLink,
-    TrendingUp, Package, AlertCircle, CheckCircle2, XCircle,
-    Loader2, RefreshCw, Eye, ChefHat
-} from 'lucide-react';
 
 interface OrderAnywhereConfig {
     id: string;

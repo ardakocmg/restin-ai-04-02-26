@@ -1,23 +1,37 @@
-import React, { useState, useCallback } from 'react';
-import { logger } from '@/lib/logger';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert,AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
+import { logger } from '@/lib/logger';
 import {
-  User, Mail, Shield, Eye, EyeOff, Smartphone, Download,
-  AlertCircle, CheckCircle2, Save, Loader2, LayoutDashboard,
-  Calendar, FileText, DollarSign, Clock, Lock, Globe, Palette,
-  BellRing, KeyRound
+AlertCircle,
+BellRing,
+Calendar,
+CheckCircle2,
+DollarSign,
+Download,
+Eye,EyeOff,
+FileText,
+Globe,
+KeyRound,
+LayoutDashboard,
+Loader2,
+Lock,
+Palette,
+Save,
+Shield,
+Smartphone,
+User
 } from 'lucide-react';
-import { useUserSettings } from '../context/UserSettingsContext';
-import { useDesignSystem } from '../context/DesignSystemContext';
-import { useAuth } from '../context/AuthContext';
 import { QRCodeSVG } from 'qrcode.react';
+import React,{ useCallback,useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useDesignSystem } from '../context/DesignSystemContext';
+import { useUserSettings } from '../context/UserSettingsContext';
 import { useVenue } from '../context/VenueContext';
 import api from '../lib/api';
 

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import PageContainer from '../../../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../../components/ui/card';
+import { Building2,MapPin,Plus,Trash2,Users } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '../../../../components/ui/badge';
 import { Button } from '../../../../components/ui/button';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '../../../../components/ui/card';
 import { Input } from '../../../../components/ui/input';
 import { Label } from '../../../../components/ui/label';
-import { Badge } from '../../../../components/ui/badge';
-import { Building2, Plus, Users, MapPin, ChevronRight, Edit, Trash2 } from 'lucide-react';
-import { toast } from 'sonner';
+import PageContainer from '../../../../layouts/PageContainer';
 
 export default function OrganisationPage() {
   const [departments, setDepartments] = useState([

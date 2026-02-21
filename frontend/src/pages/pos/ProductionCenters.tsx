@@ -3,8 +3,8 @@
  * Kitchen stations / bar / pastry with printer assignments
  * Lightspeed K-Series Back Office > Hardware > Production Centers parity
  */
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, Search, X, Factory, Printer, Clock, Users, Loader2 } from 'lucide-react';
+import { ArrowLeft,Clock,Edit3,Factory,Loader2,Plus,Printer,Save,Search,Trash2,Users,X } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';

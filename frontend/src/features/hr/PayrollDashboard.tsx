@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
 import PageLayout from '../../layouts/PageLayout';
 
@@ -11,7 +11,7 @@ import { Button } from '../../components/ui/button';
 
 import { Badge } from '../../components/ui/badge';
 
-import { Employee, Payslip } from '../../types';
+import { Employee,Payslip } from '../../types';
 
 import { HRService } from './HRService';
 

@@ -3,8 +3,8 @@
  * Percentage/fixed discounts with rules and scheduling
  * Lightspeed K-Series Back Office > Configuration > Discounts parity
  */
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, Search, X, Tag, Percent, DollarSign, Clock, Wifi, QrCode } from 'lucide-react';
+import { ArrowLeft,DollarSign,Edit3,Percent,Plus,Save,Search,Trash2,Wifi,X } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';

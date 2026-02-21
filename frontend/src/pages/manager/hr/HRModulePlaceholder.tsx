@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button'; // Verified import
-import { ArrowLeft, Construction, ChevronRight } from 'lucide-react';
 import PageContainer from '@/layouts/PageContainer';
 import { logger } from '@/lib/logger';
+import { ArrowLeft,ChevronRight,Construction } from 'lucide-react';
+import { useEffect } from 'react';
+import { useNavigate,useParams } from 'react-router-dom';
 
 export default function HRModulePlaceholder() {
     const { moduleName } = useParams();

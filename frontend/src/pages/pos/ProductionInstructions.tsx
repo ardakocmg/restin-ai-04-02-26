@@ -3,8 +3,8 @@
  * Manage instruction groups  and modifier options for menu items
  * Lightspeed K-Series Back Office > Configuration > Production Instructions parity
  */
-import React, { useState } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, X, ChevronRight, GripVertical, Printer, LayoutGrid, ListChecks, ToggleRight, CheckSquare, Circle } from 'lucide-react';
+import { ArrowLeft,CheckSquare,ChevronRight,Circle,Edit3,GripVertical,LayoutGrid,ListChecks,Plus,Printer,Save,ToggleRight,Trash2,X } from 'lucide-react';
+import React,{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import './pos-shared.css';

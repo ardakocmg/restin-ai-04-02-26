@@ -2,10 +2,10 @@
  * PrintJobManager - Manages print jobs for POS/KDS
  * @module services/PrintJobManager
  */
-import { ReceiptBuilder } from '../utils/escpos';
-import api from '../lib/api';
 import { toast } from 'sonner';
+import api from '../lib/api';
 import { logger } from '../lib/logger';
+import { ReceiptBuilder } from '../utils/escpos';
 
 export interface OrderModifier {
     name: string;

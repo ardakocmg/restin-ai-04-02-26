@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { Order } from '../../types';
-import { initDB } from '../../lib/db';
 import { toast } from 'sonner';
+import { initDB } from '../../lib/db';
 import { logger } from '../../lib/logger';
+import { Order } from '../../types';
 
 const API_URL = '/api/pos';
 

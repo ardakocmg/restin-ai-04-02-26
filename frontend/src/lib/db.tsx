@@ -1,5 +1,5 @@
-import { openDB, DBSchema } from 'idb';
-import { Payslip, InventoryItem, Order } from '../types';
+import { DBSchema,openDB } from 'idb';
+import { InventoryItem,Order,Payslip } from '../types';
 
 interface RestaurantOSDB extends DBSchema {
     payroll_drafts: {

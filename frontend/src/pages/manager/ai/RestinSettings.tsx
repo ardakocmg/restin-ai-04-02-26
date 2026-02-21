@@ -1,23 +1,43 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import {
-    Brain, Bot, Phone, Wand2, Radar, Users, Shield, MapPin, Save,
-    Activity, TrendingUp, BarChart3, Clock, AlertCircle, CheckCircle2,
-    Settings, Zap, RefreshCw, History, ToggleLeft, ToggleRight,
-    MessageSquare, Mic, Palette, Target, ChevronRight, Loader2,
-    Database, Eye, ArrowUpRight, Layers, Key, Cpu
-} from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { useVenue } from '@/context/VenueContext';
 import { useAuth } from '@/features/auth/AuthContext';
 import api from '@/lib/api';
+import {
+Activity,
+AlertCircle,
+BarChart3,
+Bot,
+Brain,
+CheckCircle2,
+ChevronRight,
+Clock,
+Cpu,
+Database,Eye,
+History,
+Layers,
+Loader2,
+MapPin,
+Palette,
+Phone,
+RefreshCw,
+Save,
+Settings,
+Shield,
+Target,
+TrendingUp,
+Users,
+Wand2,
+Zap
+} from 'lucide-react';
+import React,{ useEffect,useMemo,useState } from 'react';
 import { toast } from 'sonner';
 import AIProvidersTab from './AIProvidersTab';
 

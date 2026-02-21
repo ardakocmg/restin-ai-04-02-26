@@ -1,30 +1,27 @@
-import { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
+import {
+Activity,
+AlertCircle,
+Cpu,
+Database,
+HardDrive,
+Monitor,
+Printer,
+RefreshCw,
+Server,
+Tablet,
+Wifi
+} from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { Link } from 'react-router-dom';
+import { StatCard,StatsGrid } from '../../components/shared/Stats';
+import { Button } from '../../components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
 import { useAuth } from '../../context/AuthContext';
 import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import { toast } from 'sonner';
 import PageContainer from '../../layouts/PageContainer';
-import { StatsGrid, StatCard } from '../../components/shared/Stats';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import {
-  Activity,
-  Database,
-  Cpu,
-  HardDrive,
-  RefreshCw,
-  Wifi,
-  WifiOff,
-  Monitor,
-  Printer,
-  Server,
-  Tablet,
-  Smartphone,
-  AlertCircle
-} from 'lucide-react';
+import api from '../../lib/api';
 import { cn } from '../../lib/utils';
-import { logger } from '@/lib/logger';
 
 // Status Pill Component (CLOUD ONLINE Style)
 const StatusPill = ({ icon: Icon, status, label, sublabel }) => {

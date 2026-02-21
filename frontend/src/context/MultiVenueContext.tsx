@@ -2,7 +2,7 @@
  * MultiVenueContext - Multi-venue support and switching
  * @module context/MultiVenueContext
  */
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext,ReactNode,useContext,useEffect,useState } from 'react';
 import api from '../lib/api';
 import { logger } from '../lib/logger';
 

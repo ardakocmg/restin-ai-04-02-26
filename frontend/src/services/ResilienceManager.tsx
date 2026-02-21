@@ -4,12 +4,12 @@
  * Manages: Cloud -> Edge -> Device -> Mesh failover
  */
 
-import offlineAPI from './OfflineAPI';
-import syncService from './SyncService';
-import edgeGatewayClient from './EdgeGatewayClient';
-import deviceMesh from './DeviceMesh';
-import offlineDB from './OfflineDB';
 import { logger } from '../lib/logger';
+import deviceMesh from './DeviceMesh';
+import edgeGatewayClient from './EdgeGatewayClient';
+import offlineAPI from './OfflineAPI';
+import offlineDB from './OfflineDB';
+import syncService from './SyncService';
 
 export type ResilienceMode = 'unknown' | 'online' | 'edge' | 'device' | 'mesh';
 

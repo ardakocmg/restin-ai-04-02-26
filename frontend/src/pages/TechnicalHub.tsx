@@ -1,24 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import {
-  Shield,
-  Cpu,
-  Layers,
-  Workflow,
-  Database,
-  Globe,
-  Zap,
-  Lock,
-  Code2,
-  Terminal as TerminalIcon,
-  Activity,
-  FileText,
-  Layout,
-  Network,
-  Settings,
-  Briefcase
-} from 'lucide-react';
 import { logger } from '@/lib/logger';
+import {
+Activity,
+Cpu,
+Database,
+Globe,
+Layers,
+Layout,
+Lock,
+Network,
+Shield,
+Terminal as TerminalIcon,
+Workflow,
+Zap
+} from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import api from '../lib/api';
 

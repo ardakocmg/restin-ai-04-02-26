@@ -2,17 +2,23 @@
  * TemplateGallery — Curated industry template presets
  * 7 categories with one-click install into user's templates.
  */
-import React, { useState } from 'react';
 import {
-    X, Download, Eye, Star, Search, ChefHat, Coffee,
-    Hotel, UtensilsCrossed, Truck, GlassWater
+ChefHat,Coffee,
+Download,Eye,
+GlassWater,
+Hotel,
+Search,
+Star,
+Truck,
+UtensilsCrossed,
+X
 } from 'lucide-react';
-import { Button } from '../../components/ui/button';
+import React,{ useState } from 'react';
 import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
+import { Card,CardContent } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
-import { Card, CardContent } from '../../components/ui/card';
-import { cn } from '../../lib/utils';
-import { type ReceiptTemplate, type GalleryCategory, makeTemplate } from './types';
+import { type GalleryCategory,makeTemplate,type ReceiptTemplate } from './types';
 
 interface TemplateGalleryProps {
     open: boolean;

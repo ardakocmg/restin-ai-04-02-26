@@ -1,8 +1,8 @@
 /**
  * MODULE 3: Timesheets Management
  */
-import { useState, useEffect } from "react";
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from "react";
 
 import { useAuth } from "../../../context/AuthContext";
 
@@ -14,7 +14,7 @@ import { Button } from "../../../components/ui/button";
 
 import { Badge } from "../../../components/ui/badge";
 
-import { Loader2, Clock, Send, CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle,Clock,Loader2,Send } from "lucide-react";
 
 import { useHRFeatureFlags } from "../../../hooks/useHRFeatureFlags";
 

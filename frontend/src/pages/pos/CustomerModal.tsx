@@ -2,8 +2,8 @@
  * Customer Modal — Assign/search/create customer for order
  * Phase 7: Customers & Seats
  */
-import React, { useState } from 'react';
-import { X, UserPlus, Search } from 'lucide-react';
+import { Search,UserPlus,X } from 'lucide-react';
+import React,{ useState } from 'react';
 
 /* ===== Types ===== */
 

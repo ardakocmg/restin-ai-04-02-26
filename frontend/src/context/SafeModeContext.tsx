@@ -2,8 +2,8 @@
  * SafeModeContext - Safety mode for POS/KDS critical operations
  * @module context/SafeModeContext
  */
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useLocation, NavigateOptions } from 'react-router-dom';
+import React,{ createContext,ReactNode,useContext,useEffect,useState } from 'react';
+import { NavigateOptions,useLocation } from 'react-router-dom';
 import { logger } from '../lib/logger';
 
 export interface SafeModeContextValue {

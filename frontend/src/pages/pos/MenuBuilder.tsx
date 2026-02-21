@@ -4,12 +4,20 @@
  * Exact Lightspeed K-Series Back Office > Menu > Menus parity
  */
 
-import React, { useState, useCallback } from 'react';
 import {
-    ArrowLeft, Plus, Save, Grid3X3, Edit3, Trash2, Copy, Eye,
-    ChevronRight, ChevronDown, Move, Palette, MoreVertical,
-    Search, Menu as MenuIcon, Layout, Settings, X, GripVertical
+ArrowLeft,
+ChevronRight,
+Copy,Eye,
+Grid3X3,
+GripVertical,
+Layout,
+Menu as MenuIcon,
+Plus,Save,
+Search,
+Trash2,
+X
 } from 'lucide-react';
+import React,{ useCallback,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 

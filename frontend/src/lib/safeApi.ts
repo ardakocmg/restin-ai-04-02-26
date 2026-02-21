@@ -15,7 +15,7 @@
  *   const venues = await safeGet('/venues', z.array(VenueSchema));
  *   const order  = await safePost('/orders', data, OrderSchema);
  */
-import { z, ZodError } from 'zod';
+import { z,ZodError } from 'zod';
 import api from './api';
 import { logger } from './logger';
 
@@ -152,4 +152,4 @@ export function validateData<T>(schema: z.ZodType<T>, data: unknown, label = 'un
 
 // ─── Re-exports for convenience ─────────────────────────────────────────
 
-export type { SafeResponse, SafeResult, SafeError };
+export type { SafeError,SafeResponse,SafeResult };

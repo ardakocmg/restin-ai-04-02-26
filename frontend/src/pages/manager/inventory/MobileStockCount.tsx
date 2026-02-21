@@ -2,25 +2,37 @@
  * MobileStockCount — PWA-ready mobile stock counting interface
  * Apicbase parity: offline capable, barcode scan, category browse, quick count
  */
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { logger } from '@/lib/logger';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
+import { useVenue } from '@/context/VenueContext';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import {
-    Smartphone, Search, Plus, Minus, CheckCircle2, Package, Camera,
-    RefreshCw, Loader2, Filter, Save, WifiOff, Wifi, BarChart3,
-    ChevronRight, Clock, ScanLine, Warehouse, ArrowUpDown,
-    Upload, AlertTriangle,
+Camera,
+CheckCircle2,
+Clock,
+Filter,
+Loader2,
+Minus,
+Package,
+Plus,
+RefreshCw,
+ScanLine,
+Search,
+Smartphone,
+Upload,
+Warehouse,
+Wifi,
+WifiOff
 } from 'lucide-react';
-import { toast } from 'sonner';
+import { useCallback,useEffect,useMemo,useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 /* ────────────────────────────────────────── Types ────────────────── */
 interface CountItem {

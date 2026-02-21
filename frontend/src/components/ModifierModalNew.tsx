@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Plus, Minus, Check } from 'lucide-react';
+import { Check,Minus,Plus,X } from 'lucide-react';
+import { useState } from 'react';
 
 interface ModifierOption {
   id: string;

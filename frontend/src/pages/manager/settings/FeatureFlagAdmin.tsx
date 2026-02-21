@@ -1,17 +1,26 @@
-import React, { useState } from 'react';
+import { useMutation,useQuery,useQueryClient } from '@tanstack/react-query';
 import {
-    ToggleLeft, Shield, Settings, Save, RefreshCw,
-    Users, Clock, FileText, DollarSign, BarChart3,
-    Briefcase, Calendar, Award, Flag, AlertTriangle,
-    ChevronRight, Loader2, CheckCircle
+AlertTriangle,
+Award,
+BarChart3,
+Briefcase,Calendar,
+Clock,
+DollarSign,
+FileText,
+Flag,
+Loader2,
+Save,
+Settings,
+Shield,
+Users
 } from 'lucide-react';
-import { Card } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { cn } from '../../../lib/utils';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useVenue } from '../../../context/VenueContext';
+import React,{ useState } from 'react';
 import { toast } from 'sonner';
+import { Button } from '../../../components/ui/button';
+import { Card } from '../../../components/ui/card';
+import { useVenue } from '../../../context/VenueContext';
 import api from '../../../lib/api';
+import { cn } from '../../../lib/utils';
 
 const MODULE_META = {
     people: { icon: Users, label: 'People', desc: 'Employee directory & profiles' },

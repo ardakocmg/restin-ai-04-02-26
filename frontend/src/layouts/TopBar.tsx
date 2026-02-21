@@ -1,26 +1,25 @@
-import React, { useState } from 'react';
 import { logger } from '@/lib/logger';
+import { useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { cn } from '@/lib/utils';
 
 import { Button } from '@/components/ui/button';
 
 import { Input } from '@/components/ui/input';
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+DropdownMenu,
+DropdownMenuContent,
+DropdownMenuItem,
+DropdownMenuLabel,
+DropdownMenuSeparator,
+DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar,AvatarFallback } from '@/components/ui/avatar';
 
-import { Search, Bell, Menu, LogOut, User } from 'lucide-react';
+import { Bell,LogOut,Menu,Search,User } from 'lucide-react';
 
 import VenueSwitcher from '../components/VenueSwitcher';
 

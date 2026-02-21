@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import PageLayout from '../../layouts/PageLayout';
+import { useEffect,useState } from 'react';
 import { Card } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import PageLayout from '../../layouts/PageLayout';
 import { Order } from '../../types';
 import { POSService } from './POSService'; // Reusing service for fetch
 

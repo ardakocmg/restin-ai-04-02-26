@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
 import {
-    Split, Users, DollarSign, Calculator, Loader2,
-    Check, Percent, Equal, UserMinus, ChevronDown,
-    ChevronRight, Receipt, CreditCard, Banknote,
-    Hash, ArrowRight
+Calculator,
+CreditCard,
+Equal,
+Receipt,
+Split,Users
 } from 'lucide-react';
-import { Card } from '../../../components/ui/card';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '../../../components/ui/button';
+import { Card } from '../../../components/ui/card';
 import { Input } from '../../../components/ui/input';
 import { cn } from '../../../lib/utils';
-import { toast } from 'sonner';
 
 /**
  * 💰 Split Bill Advanced UI — Rule 50 / Pillar 8

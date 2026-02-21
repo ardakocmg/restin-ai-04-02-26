@@ -13,7 +13,7 @@
  *   disabled: boolean
  */
 
-import { CreditCard, Banknote, Wallet } from "lucide-react";
+import { Banknote,CreditCard,Wallet } from "lucide-react";
 
 export default function QuickPayPanel({ total, subtotal, tax, orderItems, onHandlePayment, disabled }) {
     const itemCount = (orderItems || []).reduce((sum, item) => sum + (item.quantity || 1), 0);

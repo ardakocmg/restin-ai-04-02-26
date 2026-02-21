@@ -3,8 +3,8 @@
  * Real-time table status overview for managers
  * Lightspeed K-Series Back Office > Live > Table Tracker parity
  */
-import React, { useState } from 'react';
-import { ArrowLeft, Clock, Users, DollarSign, RefreshCw, Eye } from 'lucide-react';
+import { ArrowLeft,Clock,DollarSign,Eye,RefreshCw,Users } from 'lucide-react';
+import React,{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './pos-shared.css';
 

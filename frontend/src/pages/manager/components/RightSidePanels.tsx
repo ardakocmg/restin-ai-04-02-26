@@ -1,5 +1,4 @@
-import React from 'react';
-import { Target, TrendingUp, Package, AlertTriangle } from 'lucide-react';
+import { AlertTriangle,Package,Target,TrendingUp } from 'lucide-react';
 
 export function DemandForecast({ data }) {
     const safeData = data || { peakExpected: "19:00 - 21:00", covers: 0 };

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Plus, Minus } from 'lucide-react';
+import { X } from 'lucide-react';
+import { useState } from 'react';
 
 function ModifierModal({ menuItem, onClose, onConfirm }) {
   const [selectedModifiers, setSelectedModifiers] = useState([]);

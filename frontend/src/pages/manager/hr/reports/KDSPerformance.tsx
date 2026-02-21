@@ -1,12 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '../../../../components/ui/card';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { Timer, TrendingUp, AlertTriangle, ChefHat, Activity, Loader2 } from 'lucide-react';
-import { Button } from '../../../../components/ui/button';
-import api from '../../../../lib/api';
-import { useVenue } from '../../../../context/VenueContext';
+import { Activity,AlertTriangle,ChefHat,Loader2,Timer,TrendingUp } from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { Bar,BarChart,CartesianGrid,Line,LineChart,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 import { toast } from 'sonner';
+import { Button } from '../../../../components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '../../../../components/ui/card';
+import { useVenue } from '../../../../context/VenueContext';
+import api from '../../../../lib/api';
 
 import { logger } from '@/lib/logger';
 export default function KDSPerformance() {

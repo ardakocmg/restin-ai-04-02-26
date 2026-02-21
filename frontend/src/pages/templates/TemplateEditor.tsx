@@ -1,22 +1,50 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import {
-    Save, Eye, ChevronLeft, Trash2, ChevronUp, ChevronDown,
-    Type, Image, Table, Minus, Barcode, QrCode, Shield, Layers,
-    Settings2, Sparkles, LayoutTemplate, CheckCircle, AlertTriangle,
-    FileText, Bookmark, Building2, Receipt, ListOrdered, Package,
-    StickyNote, Percent, CreditCard, Heart, Scale, PenLine,
-    ZoomIn, ZoomOut, Printer, Upload, History, GripVertical,
-    Download, Copy, Plus, Wifi, WifiOff, Clock, Tag
+AlertTriangle,
+Bookmark,Building2,
+CheckCircle,
+ChevronDown,
+ChevronLeft,
+ChevronUp,
+CreditCard,
+Download,
+Eye,
+FileText,
+GripVertical,
+Heart,
+History,
+Image,
+Layers,
+LayoutTemplate,
+ListOrdered,
+Minus,
+Package,
+PenLine,
+Percent,
+Plus,
+Printer,
+QrCode,
+Save,
+Scale,
+Shield,
+Sparkles,
+StickyNote,
+Table,
+Trash2,
+Type,
+Upload,
+Wifi,WifiOff,
+ZoomIn,ZoomOut
 } from 'lucide-react';
+import React,{ useCallback,useEffect,useMemo,useRef,useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate,useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
-import './template-studio.css';
+import api from '../../lib/api';
 import CanvasBlockRenderer from './CanvasBlockRenderer';
-import PropertiesPanel from './PropertiesPanel';
 import ConditionalPanel from './ConditionalPanel';
+import PropertiesPanel from './PropertiesPanel';
+import './template-studio.css';
 
 /* ═══════════════════════════════════════════════════════════
    Block Type Categories (Matching Reference Design)

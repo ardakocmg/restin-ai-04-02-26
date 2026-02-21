@@ -1,6 +1,6 @@
-import { toJpeg, toPng } from 'html-to-image';
-import jsPDF from 'jspdf';
 import { logger } from '@/lib/logger';
+import { toJpeg,toPng } from 'html-to-image';
+import jsPDF from 'jspdf';
 
 /**
  * Utility to export a DOM element to PDF or JPEG

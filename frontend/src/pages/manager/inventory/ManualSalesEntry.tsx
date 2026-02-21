@@ -2,18 +2,18 @@
  * ManualSalesEntry — Register sales without POS for food cost calculations
  * Apicbase parity: manual dish entry, quantity, outlet, CoGS impact
  */
-import React, { useState, useMemo, useCallback } from 'react';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
+import { Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
+import PageContainer from '@/layouts/PageContainer';
 import { cn } from '@/lib/utils';
-import { Plus, Trash2, Search, Download } from 'lucide-react';
+import { Download,Plus,Search,Trash2 } from 'lucide-react';
+import { useCallback,useMemo,useState } from 'react';
 import { toast } from 'sonner';
 
 interface SalesEntry {

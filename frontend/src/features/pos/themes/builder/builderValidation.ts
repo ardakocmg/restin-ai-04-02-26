@@ -11,11 +11,11 @@
  */
 
 import {
-    type ZoneConfig,
-    type ZoneComponentDef,
-    type LayoutType,
-    getComponentDef,
-    getComponentsForLayout,
+type LayoutType,
+type ZoneComponentDef,
+type ZoneConfig,
+getComponentDef,
+getComponentsForLayout,
 } from './themeZoneTypes';
 
 // ─── Types ───────────────────────────────────────────────────────

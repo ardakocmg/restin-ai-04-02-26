@@ -1,23 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-    Cpu,
-    Wifi,
-    Battery,
-    Signal,
-    RefreshCcw,
-    Settings2,
-    CheckCircle2,
-    AlertCircle,
-    Activity,
-    Shield,
-    HardDrive,
-    Terminal,
-    ChevronLeft
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
+import {
+Activity,
+AlertCircle,
+Battery,
+CheckCircle2,
+ChevronLeft,
+Cpu,
+HardDrive,
+RefreshCcw,
+Settings2,
+Shield,
+Terminal,
+Wifi
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function HRDevices() {
     const navigate = useNavigate();

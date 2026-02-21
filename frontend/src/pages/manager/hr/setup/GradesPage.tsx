@@ -1,7 +1,6 @@
 
-import React from 'react';
-import GenericSetupPage from '../../../../components/manager/hr/GenericSetupPage';
 import { Award } from 'lucide-react';
+import GenericSetupPage from '../../../../components/manager/hr/GenericSetupPage';
 
 export default function GradesPage() {
   return (

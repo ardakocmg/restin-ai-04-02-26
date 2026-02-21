@@ -3,8 +3,8 @@
  * Configure the customer-facing display settings
  * Lightspeed K-Series Back Office > Hardware > Customer Display parity
  */
-import React, { useState } from 'react';
-import { ArrowLeft, Save, Monitor, Image, Palette, Type, Eye } from 'lucide-react';
+import { ArrowLeft,Eye,Image,Monitor,Palette,Save,Type } from 'lucide-react';
+import React,{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import './pos-shared.css';

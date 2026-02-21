@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Save, Apple, Info } from 'lucide-react';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Apple,Info,Save } from 'lucide-react';
+import { useState } from 'react';
 
 const NUTRITION_FIELDS = [
     { key: 'energy_kcal', label: 'Energy', unit: 'kcal', group: 'energy' },

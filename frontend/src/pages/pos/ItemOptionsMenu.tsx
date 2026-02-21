@@ -2,7 +2,6 @@
  * Item Options Menu — Touch-and-hold popup for order items
  * Phase 3: Cancel, Void, Modifiers, Transfer, Notes, Course Edit, Split
  */
-import React from 'react';
 
 const s = {
     overlay: {

@@ -1,35 +1,70 @@
-import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    MessageSquare, Hash, Mic, MicOff, Send, Users, Radio,
-    Search, Pin, Star,
-    CheckSquare, Clock, Zap, Volume2, Paperclip, Smile,
-    Reply, Trash2, Edit3, MoreHorizontal, Image, FileText,
-    X, Check, PhoneCall, FileAudio, Share2,
-    Play, Pause, Square, Calendar, UserPlus, ListTodo, RotateCw, Timer, GripVertical, Plus,
-    Settings, Globe, Volume1, Bookmark, Flag, BarChart3,
-    AlarmClock, Languages, Sparkles, Eye, MessageSquarePlus,
-    Copy, Sticker, LayoutTemplate, Layout, VolumeX
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useGlobalPTT, TransmissionResult, LiveSpeaker } from '@/contexts/GlobalPTTContext';
-import { useVoiceDictation, speakMessage, stopSpeaking, isSpeaking, getAvailableVoices, SUPPORTED_LANGUAGES } from '@/hooks/useVoiceDictation';
-import type { TTSConfig } from '@/hooks/useVoiceDictation';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from '@/context/AuthContext';
 import { useVenue } from '@/context/VenueContext';
-import { useNavigate } from 'react-router-dom';
+import { TransmissionResult,useGlobalPTT } from '@/contexts/GlobalPTTContext';
+import type { TTSConfig } from '@/hooks/useVoiceDictation';
+import { getAvailableVoices,isSpeaking,speakMessage,stopSpeaking,SUPPORTED_LANGUAGES,useVoiceDictation } from '@/hooks/useVoiceDictation';
 import api from '@/lib/api';
+import { AnimatePresence,motion } from 'framer-motion';
+import {
+AlarmClock,
+BarChart3,
+Bookmark,
+Check,
+CheckSquare,Clock,
+Copy,
+Edit3,
+Eye,
+FileAudio,
+FileText,
+Flag,
+Globe,
+Hash,
+Image,
+Languages,
+Layout,
+MessageSquare,
+MessageSquarePlus,
+Mic,MicOff,
+Paperclip,
+Pause,
+PhoneCall,
+Pin,
+Play,
+Plus,
+Radio,
+Reply,
+RotateCw,
+Search,
+Send,
+Settings,
+Share2,
+Smile,
+Sparkles,
+Timer,
+Trash2,
+Users,
+Volume1,
+Volume2,
+VolumeX,
+X,
+Zap
+} from 'lucide-react';
+import React,{ useCallback,useEffect,useMemo,useRef,useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // ─── Extracted types, constants & helpers ────────────────────────────────
-import type { Channel, ChatMessage, OnlineStaff, MicroTask, QuickMessage } from './hiveTypes';
+import { AttachmentBubble,SmartMessageRenderer,TypingIndicator } from './HiveComponents';
+import type { ChatMessage,MicroTask,OnlineStaff } from './hiveTypes';
 import {
-    CHANNELS, QUICK_MESSAGES, REACTION_EMOJIS, MESSAGE_TEMPLATES,
-    API_BASE, mapApiMessage,
+API_BASE,
+CHANNELS,
+mapApiMessage,
+QUICK_MESSAGES,REACTION_EMOJIS
 } from './hiveTypes';
-import { SmartMessageRenderer, TypingIndicator, AttachmentBubble } from './HiveComponents';
 
 
 // ─── Main Dashboard ─────────────────────────────────────────────────────

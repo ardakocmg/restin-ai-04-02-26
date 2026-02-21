@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { logger } from '@/lib/logger';
-import { Briefcase, Plus, Users, ChevronRight, Search, Filter, BarChart2, ExternalLink, Eye, Calendar, CheckCircle, Clock, X } from 'lucide-react';
+import { Briefcase,CheckCircle,ChevronRight,Filter,Plus,Users,X } from 'lucide-react';
+import { useCallback,useEffect,useState } from 'react';
 
 const PIPELINE_STAGES = ['Applied', 'Screening', 'Interview', 'Offer', 'Hired', 'Rejected'] as const;
 const STAGE_COLORS: Record<string, string> = { Applied: 'text-indigo-400', Screening: 'text-amber-400', Interview: 'text-blue-400', Offer: 'text-emerald-400', Hired: 'text-green-400', Rejected: 'text-red-400' };

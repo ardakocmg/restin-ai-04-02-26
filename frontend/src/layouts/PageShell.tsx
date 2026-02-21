@@ -1,6 +1,6 @@
+import { format } from 'date-fns';
 import React from 'react';
 import { cn } from '../lib/utils';
-import { format } from 'date-fns';
 
 interface PageShellProps {
     /** Page content */

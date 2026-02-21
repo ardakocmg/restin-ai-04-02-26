@@ -3,8 +3,8 @@
  * Weekly shift management with drag-and-drop scheduling
  * Lightspeed K-Series Back Office > Staff > Scheduling parity
  */
-import React, { useState, useMemo } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Plus, Clock, DollarSign, Users, RefreshCw, Download, Calendar } from 'lucide-react';
+import { ArrowLeft,Calendar,ChevronLeft,ChevronRight,Clock,DollarSign,Download,Plus,Users } from 'lucide-react';
+import React,{ useMemo,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 // import { useShiftService } from '../../hooks/useShiftService';

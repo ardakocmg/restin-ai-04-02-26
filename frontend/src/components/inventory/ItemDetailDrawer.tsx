@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
+import { toast } from 'sonner';
 import api from '../../lib/api';
 import Drawer from '../shared/Drawer';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
-import { toast } from 'sonner';
-import OverviewTab from './tabs/OverviewTab';
-import SuppliersPricingTab from './tabs/SuppliersPricingTab';
-import RecipeTab from './tabs/RecipeTab';
-import MovementsTab from './tabs/MovementsTab';
-import ProductionTab from './tabs/ProductionTab';
-import WasteTab from './tabs/WasteTab';
-import AuditTab from './tabs/AuditTab';
 import AllergensTab from './tabs/AllergensTab';
+import AuditTab from './tabs/AuditTab';
+import MovementsTab from './tabs/MovementsTab';
 import NutritionTab from './tabs/NutritionTab';
+import OverviewTab from './tabs/OverviewTab';
+import ProductionTab from './tabs/ProductionTab';
+import RecipeTab from './tabs/RecipeTab';
+import SuppliersPricingTab from './tabs/SuppliersPricingTab';
+import WasteTab from './tabs/WasteTab';
 
 export default function ItemDetailDrawer({ open, onClose, skuId, venueId }) {
   const [detail, setDetail] = useState(null);

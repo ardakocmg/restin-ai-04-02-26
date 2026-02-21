@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/tabs';
+import { AlertTriangle,CheckCircle,History,Loader2,Play,XCircle } from 'lucide-react';
+import { useEffect,useMemo,useState } from 'react';
+import { toast } from 'sonner';
 import { Badge } from '../../components/ui/badge';
-import { Play, Loader2, CheckCircle, XCircle, AlertTriangle, History } from 'lucide-react';
+import { Button } from '../../components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
+import { Input } from '../../components/ui/input';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '../../components/ui/select';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
 import PageContainer from '../../layouts/PageContainer';
 import api from '../../lib/api';
-import { toast } from 'sonner';
 
 export default function TestPanel() {
   const [method, setMethod] = useState('GET');

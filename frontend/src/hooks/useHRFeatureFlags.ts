@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
-import { hrFeatureFlagsAPI } from '../lib/api';
+import { useEffect,useMemo,useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useVenue } from '../context/VenueContext';
+import { hrFeatureFlagsAPI } from '../lib/api';
 
 export const useHRFeatureFlags = () => {
   const { user } = useAuth();

@@ -1,31 +1,31 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import { useAuth } from '../../context/AuthContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
-import { Input } from '../../components/ui/input';
-import PermissionGate from '../../components/shared/PermissionGate';
-import { useAuditLog } from '../../hooks/useAuditLog';
 import { logger } from '@/lib/logger';
 import {
-  RefreshCw,
-  Shield,
-  AlertTriangle,
-  AlertCircle,
-  Info,
-  Download,
-  Search,
-  Filter,
-  Clock,
-  User,
-  Activity,
-  ChevronDown,
-  ChevronUp,
-  X,
+Activity,
+AlertCircle,
+AlertTriangle,
+ChevronDown,
+ChevronUp,
+Clock,
+Download,
+Filter,
+Info,
+RefreshCw,
+Search,
+Shield,
+User,
+X,
 } from 'lucide-react';
+import { useCallback,useEffect,useMemo,useState } from 'react';
+import PermissionGate from '../../components/shared/PermissionGate';
+import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
+import { Card,CardContent } from '../../components/ui/card';
+import { Input } from '../../components/ui/input';
+import { useAuth } from '../../context/AuthContext';
+import { useVenue } from '../../context/VenueContext';
+import { useAuditLog } from '../../hooks/useAuditLog';
+import PageContainer from '../../layouts/PageContainer';
+import api from '../../lib/api';
 
 // ─── Severity Colors ────────────────────────────────────────────────────────────
 const SEVERITY_CONFIG = {

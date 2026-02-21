@@ -1,21 +1,30 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-    Monitor, Tablet, Zap, Coffee, Check, Play, Copy, Plus,
-    Palette, ChevronRight, ArrowLeft, Star, Pencil, Trash2,
-    Loader2
-} from 'lucide-react';
-import { BUILTIN_THEMES, getActiveTheme, setActiveTheme } from '@/features/pos/themes/builtinThemes';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
+import { BUILTIN_THEMES,getActiveTheme,setActiveTheme } from '@/features/pos/themes/builtinThemes';
 import { POSThemeConfig } from '@/features/pos/themes/posThemeTypes';
-import { logger } from '@/lib/logger';
-import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
 import api from '@/lib/api';
+import { logger } from '@/lib/logger';
+import { cn } from '@/lib/utils';
+import { AnimatePresence,motion } from 'framer-motion';
+import {
+ArrowLeft,
+Check,
+Loader2,
+Monitor,
+Palette,
+Pencil,
+Play,
+Plus,
+Star,
+Tablet,
+Trash2,
+Zap
+} from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 /** Icon map for engine types */
 const ENGINE_ICONS: Record<string, React.ElementType> = {

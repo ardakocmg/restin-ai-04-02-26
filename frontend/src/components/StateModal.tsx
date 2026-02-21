@@ -1,15 +1,15 @@
-import React from 'react';
 import {
-  AlertCircle,
-  AlertTriangle,
-  Info,
-  CheckCircle2,
-  XCircle,
-  Lock,
-  Database,
-  Wifi,
-  Ban
+AlertCircle,
+AlertTriangle,
+Ban,
+CheckCircle2,
+Database,
+Info,
+Lock,
+Wifi,
+XCircle
 } from 'lucide-react';
+import React from 'react';
 
 const ICON_MAP = {
   error: XCircle,

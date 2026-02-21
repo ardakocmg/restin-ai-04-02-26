@@ -1,14 +1,14 @@
-import { useState, useEffect, useRef } from "react";
 import { logger } from '@/lib/logger';
+import { useEffect,useRef,useState } from "react";
 
 import api from "../../lib/api";
 
-import { useVenue } from "../../context/VenueContext";
-import { useAuth } from '../../context/AuthContext';
 import PermissionGate from '../../components/shared/PermissionGate';
+import { useAuth } from '../../context/AuthContext';
+import { useVenue } from "../../context/VenueContext";
 import { useAuditLog } from '../../hooks/useAuditLog';
 
-import { Loader2, Activity, ShieldAlert, DollarSign, Users, Wifi, Calendar, Monitor } from "lucide-react";
+import { Activity,Calendar,DollarSign,Loader2,Monitor,ShieldAlert,Users,Wifi } from "lucide-react";
 
 import { Button } from "../../components/ui/button";
 

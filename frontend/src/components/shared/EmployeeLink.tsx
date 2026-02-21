@@ -6,8 +6,8 @@
  *   <EmployeeLink code="EMP001" name="John Doe" />
  *   <EmployeeLink code={row.employee_code} name={`${row.first_name} ${row.last_name}`} subtitle="Waiter" />
  */
-import { useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function EmployeeLink({ code, name, subtitle, showIcon = false, className = '' }) {
     const navigate = useNavigate();

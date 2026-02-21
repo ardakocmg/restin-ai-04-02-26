@@ -1,21 +1,21 @@
 
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { useVenue } from '../../context/VenueContext';
 import { useAuth } from '../../context/AuthContext';
+import { useVenue } from '../../context/VenueContext';
 
 import api from '../../lib/api';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent } from '../../components/ui/card';
+import { Card,CardContent } from '../../components/ui/card';
 
 import { Badge } from '../../components/ui/badge';
 
 import { Button } from '../../components/ui/button';
 
-import { CheckSquare, Plus, MoreHorizontal, User, Filter } from 'lucide-react';
+import { CheckSquare,Filter,MoreHorizontal,Plus,User } from 'lucide-react';
 
 import { toast } from 'sonner';
 

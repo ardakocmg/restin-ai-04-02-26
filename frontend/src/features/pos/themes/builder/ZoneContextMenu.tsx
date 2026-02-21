@@ -4,12 +4,18 @@
  * Appears at cursor position with zone operations:
  * Edit, Duplicate, Move, Reorder, Toggle Visibility, Delete
  */
-import React, { useEffect, useRef } from 'react';
-import {
-    Pencil, Copy, Trash2, Eye, EyeOff,
-    ArrowUp, ArrowDown, MoveRight, ChevronRight
-} from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+ArrowDown,
+ArrowUp,
+ChevronRight,
+Copy,
+Eye,EyeOff,
+MoveRight,
+Pencil,
+Trash2
+} from 'lucide-react';
+import React,{ useEffect,useRef } from 'react';
 import type { ZonePosition } from './themeZoneTypes';
 
 interface ContextMenuAction {

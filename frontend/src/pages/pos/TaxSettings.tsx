@@ -3,8 +3,8 @@
  * Tax rates + tax profiles with conditional rules
  * Exact Lightspeed K-Series Back Office > Payment > Taxes parity
  */
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, Search, X, Percent, FileText, Wifi } from 'lucide-react';
+import { ArrowLeft,Edit3,FileText,Percent,Plus,Save,Search,Trash2,Wifi,X } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';

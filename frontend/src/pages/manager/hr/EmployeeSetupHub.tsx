@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card,CardContent } from '@/components/ui/card';
+import { Award,Briefcase,Building2,Calendar,Clock,Database,DollarSign,Globe,MapPin,Settings,Target,UserPlus,Users,XCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Calendar, DollarSign, Settings, UserPlus, Database, Globe, MapPin, Briefcase, Award, Building2, Clock, Target, XCircle } from 'lucide-react';
 
 const modules = [
   { id: 'employees', title: 'Employees', icon: Users, path: '/manager/hr-setup/employees', color: 'blue' },

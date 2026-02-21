@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
 import { useVenue } from '../../context/VenueContext';
 
@@ -7,15 +7,14 @@ import api from '../../lib/api';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
 
 import { Badge } from '../../components/ui/badge';
 
 import { Button } from '../../components/ui/button';
 
-import DataTable from '../../components/shared/DataTable';
 
-import { Play, Shield, AlertTriangle } from 'lucide-react';
+import { AlertTriangle,Play,Shield } from 'lucide-react';
 
 export default function IntegrityPage() {
   const { activeVenue } = useVenue();

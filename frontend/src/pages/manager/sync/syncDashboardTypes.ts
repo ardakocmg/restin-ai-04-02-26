@@ -2,12 +2,26 @@
  * 🔄 Sync Dashboard — Types, Constants & Provider Definitions
  * Extracted from SyncDashboard.tsx for better code organization.
  */
-import React from 'react';
 import {
-    Database, Server, Smartphone, ShoppingCart, Users, Cloud,
-    Key, Activity, Globe, CreditCard, MessageSquare, Mail, Star, Zap,
-    Building2, Lock, Store, Brain, Music
+Activity,
+Brain,
+Building2,
+Cloud,
+CreditCard,
+Database,
+Globe,
+Lock,
+Mail,
+MessageSquare,
+Music,
+Server,
+ShoppingCart,
+Smartphone,
+Star,
+Users,
+Zap
 } from 'lucide-react';
+import React from 'react';
 
 // ─── Per-Provider Credential Field Definitions ──────────────────────────
 export interface CredField {

@@ -2,8 +2,8 @@
  * Actions Panel — Slide-out panel for Transfer, Send selective, Table Merge
  * Phase 5: Actions Panel
  */
-import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import React,{ useState } from 'react';
 
 /* ===== Types ===== */
 

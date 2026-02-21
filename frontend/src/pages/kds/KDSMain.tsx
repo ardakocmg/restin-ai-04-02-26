@@ -2,24 +2,29 @@
  * MEGA PATCH: KDS Main - Item-Based Workflow
  * Complete rewrite for item-level status tracking with timers, badges, and dynamic colors
  */
-import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useAuth } from "../../context/AuthContext";
-import api from "../../lib/api";
-import { toast } from "sonner";
-import { useVenueSettings } from "../../hooks/useVenueSettings";
-import { getStatusColor } from "../../lib/palette";
-import { Button } from "../../components/ui/button";
-import { Badge } from "../../components/ui/badge";
-import { ScrollArea } from "../../components/ui/scroll-area";
-import BottomNav from "../../components/BottomNav";
-import {
-  LogOut, Clock, CheckCircle, PlayCircle, RefreshCw, Loader2,
-  PauseCircle, AlertTriangle, Bell, Truck, Award, Wifi, WifiOff
-} from "lucide-react";
-import SyncService from '../../services/SyncService';
 import { logger } from '@/lib/logger';
+import {
+Award,
+CheckCircle,
+Loader2,
+LogOut,
+PauseCircle,
+PlayCircle,RefreshCw,
+Truck,
+Wifi,WifiOff
+} from "lucide-react";
+import { useEffect,useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import BottomNav from "../../components/BottomNav";
+import { Badge } from "../../components/ui/badge";
+import { Button } from "../../components/ui/button";
+import { useAuth } from "../../context/AuthContext";
+import { useVenueSettings } from "../../hooks/useVenueSettings";
+import api from "../../lib/api";
+import { getStatusColor } from "../../lib/palette";
+import SyncService from '../../services/SyncService';
 
 // Simulated hook for sync status
 const useSyncStatus = () => {

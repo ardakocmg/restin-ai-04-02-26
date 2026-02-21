@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, Save, ShieldAlert } from 'lucide-react';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { AlertTriangle,Save,ShieldAlert } from 'lucide-react';
+import { useState } from 'react';
 
 // EU14 mandatory allergens
 const EU_ALLERGENS = [

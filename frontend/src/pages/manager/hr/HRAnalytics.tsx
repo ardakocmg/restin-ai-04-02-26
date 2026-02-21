@@ -3,24 +3,45 @@
  * Tabs: Overview | POS Analytics | KDS Analytics | System Usage
  * Date-filtered, employee-filtered, period comparison
  */
-import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useVenue } from '@/context/VenueContext';
 import PermissionGate from '@/components/shared/PermissionGate';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
+import { useVenue } from '@/context/VenueContext';
 import api from '@/lib/api';
 import logger from '@/lib/logger';
 import {
-  BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell,
-  ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Legend
-} from 'recharts';
-import {
-  TrendingUp, TrendingDown, ShoppingCart, Flame, Timer,
-  Users, BookOpen, Clock, Activity, Layers, ChefHat,
-  Euro, BarChart3, Calendar, Filter, ArrowUpRight, ArrowDownRight,
-  Minus, RefreshCw
+Activity,
+ArrowDownRight,
+ArrowUpRight,
+BarChart3,
+BookOpen,
+Calendar,
+ChefHat,
+Clock,
+Euro,
+Flame,
+Layers,
+Minus,RefreshCw,
+ShoppingCart,
+Timer,
+Users
 } from 'lucide-react';
+import React,{ useEffect,useMemo,useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+Area,
+AreaChart,
+Bar,
+BarChart,
+CartesianGrid,
+Cell,
+Legend,
+Pie,
+PieChart,
+ResponsiveContainer,
+Tooltip,
+XAxis,YAxis
+} from 'recharts';
 
 // ── Constants ────────────────────────────────────────────────
 const TABS = [

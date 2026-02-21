@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
 import {
-  MoreVertical,
-  BookOpen,
-  Edit,
-  Trash2,
-  Copy,
+BookOpen,
+Copy,
+Edit,
+MoreVertical,
+Trash2,
 } from 'lucide-react';
+import React,{ useState } from 'react';
 import GuideDrawer from './GuideDrawer';
 import { Button } from './ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+DropdownMenu,
+DropdownMenuContent,
+DropdownMenuItem,
+DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
 interface EntityMenuProps {

@@ -2,19 +2,27 @@
  * InsightsHub — Apicbase-style Sales Analytics Dashboard
  * Revenue vs CoGS, profit margin evolution, outlet comparison, category drill-down
  */
-import React, { useState, useMemo } from 'react';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
+import PageContainer from '@/layouts/PageContainer';
 import { cn } from '@/lib/utils';
 import {
-    TrendingUp, TrendingDown, DollarSign, BarChart3, PieChart,
-    Download, Calendar, Store, ArrowUpRight, ArrowDownRight,
-    Minus, Target, ShoppingCart, Utensils, Percent,
+ArrowDownRight,
+ArrowUpRight,
+BarChart3,
+DollarSign,
+Download,
+Percent,
+ShoppingCart,
+Store,
+Target,
+TrendingUp,
+Utensils
 } from 'lucide-react';
+import { useMemo,useState } from 'react';
 import { toast } from 'sonner';
 
 /* ────────────────── Data ────────────────── */

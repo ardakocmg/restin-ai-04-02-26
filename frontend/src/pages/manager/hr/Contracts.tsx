@@ -1,8 +1,8 @@
 /**
  * MODULE 2: Contracts Management
  */
-import { useState, useEffect } from "react";
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from "react";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 
 import { Badge } from "@/components/ui/badge";
 
-import { Loader2, FileText, Plus, CheckCircle } from "lucide-react";
+import { CheckCircle,FileText,Loader2,Plus } from "lucide-react";
 
 const STATUS_COLORS = {
   draft: "bg-yellow-500/20 text-yellow-400 border-yellow-500/50",

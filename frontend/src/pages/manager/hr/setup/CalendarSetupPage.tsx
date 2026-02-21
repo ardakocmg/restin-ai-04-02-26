@@ -1,7 +1,6 @@
 
-import React from 'react';
-import GenericSetupPage from '../../../../components/manager/hr/GenericSetupPage';
 import { Calendar } from 'lucide-react';
+import GenericSetupPage from '../../../../components/manager/hr/GenericSetupPage';
 
 export default function CalendarSetupPage() {
   return (

@@ -1,20 +1,38 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useVenue } from '@/context/VenueContext';
+import api from '@/lib/api';
+import {
+Activity,
+Building2,
+Circle,
+DollarSign,
+Flame,
+Percent,
+RefreshCw,
+ShoppingBag,
+Star,
+TrendingDown,
+TrendingUp,
+Users,
+Zap
+} from 'lucide-react';
+import React,{ useCallback,useEffect,useMemo,useState } from 'react';
+import {
+Area,
+AreaChart,
+Bar,
+BarChart,
+CartesianGrid,
+Cell,
+Pie,
+PieChart,
+ResponsiveContainer,
+Tooltip,
+XAxis,YAxis
+} from 'recharts';
+import { toast } from 'sonner';
 import PageContainer from '../../layouts/PageContainer';
 import { cn } from '../../lib/utils';
-import { toast } from 'sonner';
 import './PulseAnalytics.css';
-import api from '@/lib/api';
-import { useVenue } from '@/context/VenueContext';
-import {
-    AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
-    XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
-} from 'recharts';
-import {
-    TrendingUp, TrendingDown, DollarSign, ShoppingBag,
-    Clock, Users, BarChart3, RefreshCw,
-    Flame, Star, Building2, Zap, Activity, Percent,
-    ChevronRight, Circle
-} from 'lucide-react';
 
 // ── Types ───────────────────────────────────────────────────────
 interface OverviewData {

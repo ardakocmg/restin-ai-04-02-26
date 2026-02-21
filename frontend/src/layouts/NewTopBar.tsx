@@ -1,24 +1,23 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../features/auth/AuthContext';
-import { useVenue } from '../context/VenueContext';
-import { useTheme } from '../context/ThemeContext';
-import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
-import { buildSearchIndex, MENU_ITEMS, type SearchableItem } from '@/lib/searchRegistry';
-import { ROLE_HIERARCHY } from '../lib/roles';
-import { Bell, User, LogOut, ChevronDown, Moon, Sun, Monitor, Database, Palette, Settings, Building2, Search, X, Check, Wifi, WifiOff, AlertTriangle, ShieldAlert, ShieldCheck, Clock, Bot, Radio, MessageSquare } from 'lucide-react';
-import { useSafeMode } from '../context/SafeModeContext';
 import { useNotifications } from '@/hooks/useNotifications';
+import { buildSearchIndex,type SearchableItem } from '@/lib/searchRegistry';
+import { cn } from '@/lib/utils';
+import { AlertTriangle,Bell,Bot,Building2,Check,ChevronDown,Clock,LogOut,MessageSquare,Monitor,Moon,Radio,Search,ShieldAlert,ShieldCheck,Sun,User,Wifi,WifiOff,X } from 'lucide-react';
+import React,{ useEffect,useMemo,useRef,useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useLocation,useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+DropdownMenu,
+DropdownMenuContent,
+DropdownMenuItem,
+DropdownMenuLabel,
+DropdownMenuSeparator,
+DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu';
+import { useSafeMode } from '../context/SafeModeContext';
+import { useTheme } from '../context/ThemeContext';
+import { useVenue } from '../context/VenueContext';
+import { useAuth } from '../features/auth/AuthContext';
 
 type SystemStatus = 'healthy' | 'degraded' | 'offline';
 

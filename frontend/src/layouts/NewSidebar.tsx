@@ -1,14 +1,14 @@
-import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useAuth } from '../features/auth/AuthContext';
-import { MENU_ITEMS, DOMAINS, getDomainForGroup, type MenuItem, type Domain } from '@/lib/searchRegistry';
-import { ChevronRight, ChevronLeft, ChevronDown, Search, X, Star } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ROLE_HIERARCHY } from '../lib/roles';
 import { useNotifications } from '@/hooks/useNotifications';
+import { DOMAINS,getDomainForGroup,MENU_ITEMS,type Domain,type MenuItem } from '@/lib/searchRegistry';
+import { cn } from '@/lib/utils';
+import { AnimatePresence,motion } from 'framer-motion';
+import { ChevronDown,ChevronLeft,ChevronRight,Search,Star,X } from 'lucide-react';
+import React,{ useCallback,useEffect,useMemo,useState } from 'react';
+import { Link,useLocation,useNavigate } from 'react-router-dom';
+import { useAuth } from '../features/auth/AuthContext';
+import { ROLE_HIERARCHY } from '../lib/roles';
 
 // ─── Types ───────────────────────────────────────────────────────────
 

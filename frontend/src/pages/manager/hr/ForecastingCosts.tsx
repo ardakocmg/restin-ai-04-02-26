@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
-import { useAuth } from '@/context/AuthContext';
 import PermissionGate from '@/components/shared/PermissionGate';
+import { useAuth } from '@/context/AuthContext';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { CartesianGrid,Line,LineChart,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 
 import { TrendingUp } from 'lucide-react';
 

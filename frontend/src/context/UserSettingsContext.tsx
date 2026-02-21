@@ -4,10 +4,10 @@
  * 
  * Handles personal preferences, 2FA, notifications, display settings
  */
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext,ReactNode,useContext,useEffect,useState } from 'react';
+import { useAuth } from '../features/auth/AuthContext';
 import api from '../lib/api';
 import { logger } from '../lib/logger';
-import { useAuth } from '../features/auth/AuthContext';
 
 export type MfaMethod = 'google_authenticator' | 'sms' | 'email' | null;
 export type FontSize = 'small' | 'medium' | 'large';

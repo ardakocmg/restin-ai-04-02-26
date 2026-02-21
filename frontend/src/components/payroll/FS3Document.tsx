@@ -1,5 +1,3 @@
-import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 
 /**
  * FS3Document - Exact replica of the Maltese FS3 (Final Settlement System)

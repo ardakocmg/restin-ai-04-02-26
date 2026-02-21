@@ -19,21 +19,36 @@
  * 
  * This is a PURE UI component — all business logic comes via props from POSMain.js
  */
-import { useState } from "react";
 import {
-    LogOut, X, Send, Trash2, Users, Grid3x3, ChevronRight,
-    UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus,
-    Loader2, Printer, Flame, CreditCard, MoreHorizontal, Receipt, Search
+ChevronRight,
+Coffee,
+CreditCard,
+Dessert,
+Flame,
+Grid3x3,
+Loader2,
+LogOut,
+Minus,
+MoreHorizontal,
+Pizza,
+Plus,
+Printer,
+Receipt,Search,
+Send,Trash2,Users,
+UtensilsCrossed,
+Wine,
+X
 } from "lucide-react";
-import { Button } from "../../../components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../components/ui/dialog";
-import { Checkbox } from "../../../components/ui/checkbox";
-import { ScrollArea } from "../../../components/ui/scroll-area";
+import { useState } from "react";
 import ModifierDialog from "../../../components/ModifierDialog";
-import CourseSelector, { COURSE_COLORS } from "../CourseSelector";
+import { Button } from "../../../components/ui/button";
+import { Checkbox } from "../../../components/ui/checkbox";
+import { Dialog,DialogContent,DialogHeader,DialogTitle } from "../../../components/ui/dialog";
+import { ScrollArea } from "../../../components/ui/scroll-area";
+import { safeArray,safeNumber,safeString } from "../../../lib/safe";
+import CourseSelector,{ COURSE_COLORS } from "../CourseSelector";
 import SeatSelector from "../SeatSelector";
-import { safeNumber, safeArray, safeString } from "../../../lib/safe";
-import type { POSLayoutProps, CategoryIconMap, POSMenuItem, POSOrderItem, ItemStyle } from './types';
+import type { CategoryIconMap,ItemStyle,POSLayoutProps,POSMenuItem,POSOrderItem } from './types';
 
 const CATEGORY_ICONS: CategoryIconMap = {
     appetizers: UtensilsCrossed,

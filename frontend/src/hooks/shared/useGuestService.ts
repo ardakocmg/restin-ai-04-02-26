@@ -4,7 +4,7 @@
  * Shared data layer for POS + CRM modules.
  * Fetches guest profiles with order history and loyalty points.
  */
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback,useEffect,useMemo,useState } from 'react';
 import api from '../../lib/api';
 import { logger } from '../../lib/logger';
 

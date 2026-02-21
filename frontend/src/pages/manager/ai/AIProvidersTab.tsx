@@ -1,20 +1,31 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import {
-    Wifi, WifiOff, Cpu, Zap, Database, Brain, Clock, BarChart3,
-    ExternalLink, ChevronDown, ChevronRight, Layers, Sparkles,
-    RefreshCw, TrendingUp, Award, AlertTriangle, Loader2
-} from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+Select,
+SelectContent,
+SelectItem,
+SelectTrigger,
+SelectValue,
 } from '@/components/ui/select';
 import api from '@/lib/api';
+import {
+Award,
+BarChart3,
+Brain,
+ChevronDown,ChevronRight,
+Cpu,
+Database,
+ExternalLink,
+Layers,
+Loader2,
+RefreshCw,
+Sparkles,
+TrendingUp,
+Wifi,WifiOff,
+Zap
+} from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 
 // ─── Types ─────────────────────────────────────────
 interface ProviderModel {

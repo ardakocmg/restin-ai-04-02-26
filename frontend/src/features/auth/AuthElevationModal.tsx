@@ -7,13 +7,13 @@
  *
  * product_owner never sees this (bypassed in useAuthElevation).
  */
-import React, { useState, useEffect, useRef } from 'react';
-import { Shield, Fingerprint, Lock, X, AlertTriangle, Eye, EyeOff } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useElevationStore } from '../../hooks/useAuthElevation';
-import { useAuth } from '../../context/AuthContext';
-import { authAPI } from '../../lib/api';
+import { AnimatePresence,motion } from 'framer-motion';
+import { AlertTriangle,Eye,EyeOff,Fingerprint,Lock,Shield,X } from 'lucide-react';
+import React,{ useEffect,useRef,useState } from 'react';
 import { toast } from 'sonner';
+import { useAuth } from '../../context/AuthContext';
+import { useElevationStore } from '../../hooks/useAuthElevation';
+import { authAPI } from '../../lib/api';
 
 export default function AuthElevationModal() {
     const { user } = useAuth();

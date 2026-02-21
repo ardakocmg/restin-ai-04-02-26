@@ -2,8 +2,8 @@
  * RuntimeContext - App mode and navigation safety
  * @module context/RuntimeContext
  */
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useLocation, NavigateOptions } from 'react-router-dom';
+import React,{ createContext,ReactNode,useContext,useEffect,useState } from 'react';
+import { NavigateOptions,useLocation } from 'react-router-dom';
 import { logger } from '../lib/logger';
 
 export type AppMode = 'ADMIN' | 'POS' | 'KDS' | 'PUBLIC';

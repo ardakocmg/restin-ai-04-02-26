@@ -2,9 +2,9 @@
  * useNotifications - Production hook for real-time notification badge counts.
  * Fetches from GET /api/notifications/badge-counts and polls every 30s.
  */
-import { useState, useEffect, useCallback, useRef } from 'react';
-import api from '@/lib/api';
 import { useAuth } from '@/features/auth/AuthContext';
+import api from '@/lib/api';
+import { useCallback,useEffect,useRef,useState } from 'react';
 
 interface BadgeCounts {
     /** Per-domain badge counts (e.g., pos: 2, hr: 5) */

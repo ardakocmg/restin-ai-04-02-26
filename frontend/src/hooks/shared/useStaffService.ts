@@ -5,7 +5,7 @@
  * Fetches enriched staff with POS config, shifts, and transaction stats.
  * Falls back to local data when API is unavailable.
  */
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback,useEffect,useMemo,useState } from 'react';
 import api from '../../lib/api';
 import { logger } from '../../lib/logger';
 

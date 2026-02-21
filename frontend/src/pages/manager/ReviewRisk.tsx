@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import DataTable from '../../components/shared/DataTable';
-import { Card, CardContent } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { AlertTriangle, TrendingUp } from 'lucide-react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
+import DataTable from '../../components/shared/DataTable';
+import { Badge } from '../../components/ui/badge';
+import { Card,CardContent } from '../../components/ui/card';
+import { useVenue } from '../../context/VenueContext';
+import PageContainer from '../../layouts/PageContainer';
+import api from '../../lib/api';
 
 const RISK_COLORS = {
   low: 'bg-green-100 text-green-700',

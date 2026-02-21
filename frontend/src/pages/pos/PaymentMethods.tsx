@@ -4,12 +4,26 @@
  * Exact Lightspeed K-Series Back Office > Payment > Payment Methods parity
  */
 
-import React, { useState, useEffect } from 'react';
 import {
-    ArrowLeft, Plus, Save, Edit3, Trash2, Search, X,
-    CreditCard, Banknote, Wallet, QrCode, Gift, Smartphone,
-    ChevronRight, Settings, Eye, EyeOff, Wifi, Hotel
+ArrowLeft,
+Banknote,
+CreditCard,
+Edit3,
+Eye,
+Gift,
+Hotel,
+Plus,
+QrCode,
+Save,
+Search,
+Settings,
+Smartphone,
+Trash2,
+Wallet,
+Wifi,
+X
 } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';

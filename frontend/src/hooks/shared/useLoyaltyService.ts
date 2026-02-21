@@ -3,7 +3,7 @@
  * 
  * Shared data layer for POS Loyalty Config + CRM Loyalty pages.
  */
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback,useEffect,useState } from 'react';
 import api from '../../lib/api';
 import { logger } from '../../lib/logger';
 

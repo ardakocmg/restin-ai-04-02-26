@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { Plus, Factory, X } from 'lucide-react';
-import api from '../../../lib/api';
 import { logger } from '@/lib/logger';
+import { Factory,Plus,X } from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { Badge } from '../../../components/ui/badge';
+import { Card,CardContent } from '../../../components/ui/card';
+import PageContainer from '../../../layouts/PageContainer';
+import api from '../../../lib/api';
 
 export default function ProductionBatches() {
   const [batches, setBatches] = useState([]);

@@ -2,7 +2,7 @@
  * Void Reason Modal — Select reason when voiding items/orders
  * Phase 3: Cancel/Void with reason
  */
-import React, { useState } from 'react';
+import React,{ useState } from 'react';
 
 const REASONS = [
     'Customer changed mind',

@@ -1,33 +1,30 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { buildSearchIndex } from '@/lib/searchRegistry';
+import { cn } from '@/lib/utils';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
+ArrowRight,
+Layers,
+Package,
+Search,
+ShoppingCart,
+TrendingUp,
+Users,
+Utensils
+} from 'lucide-react';
+import { useCallback,useEffect,useMemo,useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useVenue } from '../../context/VenueContext';
+import { useAuth } from '../../features/auth/AuthContext';
+import api from '../../lib/api';
+import { Badge } from '../ui/badge';
+import {
+Dialog,
+DialogContent,
+DialogDescription,
+DialogHeader,
+DialogTitle,
 } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
-import { Badge } from '../ui/badge';
-import {
-  Search,
-  ShoppingCart,
-  Users,
-  Package,
-  Utensils,
-  Calendar,
-  FileText,
-  Settings,
-  TrendingUp,
-  ArrowRight,
-  Layers,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import api from '../../lib/api';
-import { useVenue } from '../../context/VenueContext';
-import { useAuth } from '../../features/auth/AuthContext';
-import { buildSearchIndex } from '@/lib/searchRegistry';
 
 const ENTITY_ICONS = {
   menu_items: Utensils,

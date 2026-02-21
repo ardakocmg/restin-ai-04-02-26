@@ -1,7 +1,6 @@
-import React, { ElementType } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import React,{ ElementType } from 'react';
 import { cn } from '../../lib/utils';
-import { LucideIcon } from 'lucide-react';
+import { Card,CardContent,CardHeader,CardTitle } from '../ui/card';
 
 interface StatTrend {
   value: string;

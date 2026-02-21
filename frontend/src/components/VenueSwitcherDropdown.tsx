@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Building2, Check, ChevronDown } from 'lucide-react';
+import {
+DropdownMenu,
+DropdownMenuContent,
+DropdownMenuItem,
+DropdownMenuLabel,
+DropdownMenuSeparator,
+DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { logger } from '@/lib/logger';
+import { Building2,Check,ChevronDown } from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { useSubdomain } from '../context/SubdomainContext';
 import api from '../lib/api';
-import { logger } from '@/lib/logger';
 
 export default function VenueSwitcherDropdown() {
   const { venue, group, module, switchVenue } = useSubdomain();

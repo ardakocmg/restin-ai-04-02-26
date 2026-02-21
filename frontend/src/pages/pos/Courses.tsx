@@ -3,8 +3,8 @@
  * Configure meal courses for kitchen timing
  * Lightspeed K-Series Back Office > Configuration > Courses parity
  */
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, X, Clock, GripVertical, Wifi } from 'lucide-react';
+import { ArrowLeft,Edit3,GripVertical,Plus,Save,Trash2,Wifi,X } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';

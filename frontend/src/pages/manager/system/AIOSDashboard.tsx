@@ -1,18 +1,18 @@
-import { useState, useEffect, useRef } from "react";
 import { logger } from '@/lib/logger';
-import api from "../../../lib/api";
+import { Loader2 } from "lucide-react";
+import { useEffect,useRef,useState } from "react";
+import PermissionGate from '../../../components/shared/PermissionGate';
 import { useVenue } from "../../../context/VenueContext";
 import { useAuth } from '../../../features/auth/AuthContext';
-import PermissionGate from '../../../components/shared/PermissionGate';
 import { useAuditLog } from '../../../hooks/useAuditLog';
-import { Loader2 } from "lucide-react";
+import api from "../../../lib/api";
 
 // Tech Dashboard Components
+import RealTimeEfficiency from "../components/RealTimeEfficiency";
+import { DemandForecast,InventoryStatus } from "../components/RightSidePanels";
+import SentimentNodeGraph from "../components/SentimentNodeGraph";
 import TechSidebar from "../components/TechSidebar";
 import TechTopBar from "../components/TechTopBar";
-import RealTimeEfficiency from "../components/RealTimeEfficiency";
-import SentimentNodeGraph from "../components/SentimentNodeGraph";
-import { DemandForecast, InventoryStatus } from "../components/RightSidePanels";
 
 export default function AIOSDashboard() {
     const { activeVenue } = useVenue();

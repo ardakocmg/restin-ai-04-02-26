@@ -16,16 +16,31 @@
  * - Bell sound alerts
  */
 
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import {
-    Settings, Maximize2, Minimize2, ChevronDown, ChevronUp,
-    Play, Bell, Check, X, RotateCcw, List, LayoutGrid,
-    AlertTriangle, Plus, MinusCircle, MessageSquare,
-    Clock, Users, Truck, ShoppingBag, UtensilsCrossed,
-    Wifi, WifiOff, Volume2, BarChart3, Printer
+AlertTriangle,
+BarChart3,
+Bell,Check,
+ChevronDown,ChevronUp,
+Clock,
+LayoutGrid,
+List,
+Maximize2,
+MessageSquare,
+Minimize2,
+MinusCircle,
+Play,
+Plus,
+RotateCcw,
+Settings,
+ShoppingBag,
+Truck,
+Users,
+UtensilsCrossed,
+X
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import React,{ useCallback,useEffect,useMemo,useRef,useState } from 'react';
 import { toast } from 'sonner';
+import { useAuth } from '../../context/AuthContext';
 import './kds2.css';
 
 /* ===== Types ===== */

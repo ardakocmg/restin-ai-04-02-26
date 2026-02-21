@@ -3,8 +3,8 @@
  * Kitchen speed, ticket times, production center efficiency
  * Lightspeed K-Series Back Office > Reports > Kitchen parity
  */
-import React, { useState } from 'react';
-import { ArrowLeft, Clock, ChefHat, TrendingUp, TrendingDown, AlertTriangle, Zap } from 'lucide-react';
+import { AlertTriangle,ArrowLeft,ChefHat,Clock,TrendingDown,TrendingUp,Zap } from 'lucide-react';
+import React,{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './pos-shared.css';
 

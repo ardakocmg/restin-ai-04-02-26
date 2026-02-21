@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
+import { Area,AreaChart,CartesianGrid,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 
-import { DollarSign, ShoppingBag, TrendingUp, CreditCard } from 'lucide-react';
+import { CreditCard,DollarSign,ShoppingBag,TrendingUp } from 'lucide-react';
 
 import api from '../../lib/api';
 

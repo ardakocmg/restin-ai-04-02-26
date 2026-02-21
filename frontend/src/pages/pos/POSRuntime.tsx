@@ -1,25 +1,32 @@
-import { useState, useEffect, useRef } from "react";
+import {
+Coffee,
+Dessert,
+Grid3x3,
+Loader2,
+Map,
+Pizza,
+Send,
+Timer,
+Trash2,Users, // Added Map, Timer
+UtensilsCrossed,
+Wine,
+X
+} from "lucide-react";
+import { useEffect,useRef,useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { useSafeMode } from "../../context/SafeModeContext";
-import { venueAPI, menuAPI, orderAPI } from "../../lib/api";
-import api from "../../lib/api";
-import { logger } from "../../lib/logger";
 import { toast } from "sonner";
-import { safeNumber, safeArray, safeString } from "../../lib/safe";
-import { useVenueSettings } from "../../hooks/useVenueSettings";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
-import { Checkbox } from "../../components/ui/checkbox";
-import { ScrollArea } from "../../components/ui/scroll-area";
 import ModifierModalNew from "../../components/ModifierModalNew"; // Updated Component
 import SplitBillModal from "../../components/SplitBillModal"; // New Feature
+import { Button } from "../../components/ui/button";
+import { Dialog,DialogContent,DialogHeader,DialogTitle } from "../../components/ui/dialog";
+import { ScrollArea } from "../../components/ui/scroll-area";
+import { useAuth } from "../../context/AuthContext";
+import { useSafeMode } from "../../context/SafeModeContext";
+import { useVenueSettings } from "../../hooks/useVenueSettings";
+import api,{ menuAPI,orderAPI,venueAPI } from "../../lib/api";
+import { logger } from "../../lib/logger";
+import { safeArray,safeNumber,safeString } from "../../lib/safe";
 import syncService from "../../services/SyncService";
-import {
-  LogOut, X, Send, Trash2, Users, Grid3x3, Map, Timer, // Added Map, Timer
-  UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus, Loader2, AlertTriangle, Printer
-} from "lucide-react";
 
 import FloorPlanWidget from "../../components/pos/FloorPlanWidget"; // New Widget
 

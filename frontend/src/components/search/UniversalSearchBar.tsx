@@ -1,5 +1,5 @@
 // /app/frontend/src/components/search/UniversalSearchBar.js
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect,useMemo,useRef,useState } from "react";
 
 /**
  * UniversalSearchBar (credit-friendly skeleton)

@@ -3,22 +3,37 @@
  * Campaign management, templates, and analytics.
  * Connected to: /api/marketing/*
  */
-import React, { useState, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation,useQuery,useQueryClient } from '@tanstack/react-query';
 import {
-    Mail, MessageSquare, Bell, Send, Plus, BarChart3,
-    FileText, Users, TrendingUp, Zap, Clock, CheckCircle,
-    Loader2, Target, Megaphone, Sparkles, Eye, MousePointer
+BarChart3,
+Bell,
+CheckCircle,
+Clock,
+Eye,
+FileText,
+Loader2,
+Mail,
+Megaphone,
+MessageSquare,
+MousePointer,
+Plus,
+Send,
+Sparkles,
+Target,
+TrendingUp,
+Users,
+Zap
 } from 'lucide-react';
+import { useCallback,useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { useVenue } from '../../../context/VenueContext';
+import { Button } from '../../../components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '../../../components/ui/card';
+import { Input } from '../../../components/ui/input';
 import { useAuth } from '../../../context/AuthContext';
-import { cn } from '../../../lib/utils';
+import { useVenue } from '../../../context/VenueContext';
 import api from '../../../lib/api';
+import { cn } from '../../../lib/utils';
 
 // ─── Types ───
 interface Campaign {

@@ -3,8 +3,8 @@
  * Configure kiosk mode for self-ordering terminals
  * Lightspeed K-Series Back Office > Hardware > Kiosk parity
  */
-import React, { useState } from 'react';
-import { ArrowLeft, Save, Monitor, Eye, Palette, CreditCard, ShieldCheck, Settings } from 'lucide-react';
+import { ArrowLeft,CreditCard,Eye,Monitor,Palette,Save,Settings,ShieldCheck } from 'lucide-react';
+import React,{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import './pos-shared.css';

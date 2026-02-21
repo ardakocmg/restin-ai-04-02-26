@@ -1,25 +1,22 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
 import {
-    MapPin,
-    Navigation,
-    Navigation2,
-    Layers,
-    Filter,
-    Calendar,
-    Users,
-    Info,
-    Smartphone,
-    Search,
-    ChevronLeft
+Calendar,
+ChevronLeft,
+Filter,
+Layers,
+MapPin,
+Navigation2,
+Search,
+Smartphone
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import { Card, CardContent } from '@/components/ui/card';
+import { Card,CardContent } from '@/components/ui/card';
 
 import api from '@/lib/api';
 

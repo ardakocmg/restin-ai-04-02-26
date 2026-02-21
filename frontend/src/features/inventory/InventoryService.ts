@@ -1,7 +1,7 @@
 import api from '../../lib/api';
-import { Ingredient, StockAdjustment } from '../../types';
 import { initDB } from '../../lib/db';
 import logger from '../../lib/logger';
+import { Ingredient,StockAdjustment } from '../../types';
 
 const API_URL = '/inventory';
 

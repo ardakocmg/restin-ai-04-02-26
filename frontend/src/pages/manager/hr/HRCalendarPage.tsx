@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { logger } from '@/lib/logger';
-import { Calendar, Gift, Award, AlertTriangle, FileText, Plus, ChevronLeft, ChevronRight, X, Clock, LucideIcon } from 'lucide-react';
+import { AlertTriangle,Award,Calendar,ChevronLeft,ChevronRight,FileText,Gift,LucideIcon,Plus,X } from 'lucide-react';
+import { useCallback,useEffect,useState } from 'react';
 
 type EventType = 'birthday' | 'anniversary' | 'probation_expiry' | 'contract_end' | 'custom';
 

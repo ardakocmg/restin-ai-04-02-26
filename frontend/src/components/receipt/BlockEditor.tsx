@@ -3,18 +3,22 @@
  * Users reorder receipt sections, toggle visibility, and add conditional rules.
  * Uses native HTML5 drag & drop (no external library needed).
  */
-import React, { useState, useCallback, useRef } from 'react';
 import {
-    GripVertical, Eye, EyeOff, ChevronDown, ChevronRight,
-    Plus, Trash2, Settings2, Zap
+ChevronDown,ChevronRight,
+GripVertical,
+Plus,
+Settings2,
+Trash2,
+Zap
 } from 'lucide-react';
-import { Button } from '../../components/ui/button';
-import { Switch } from '../../components/ui/switch';
+import React,{ useCallback,useRef,useState } from 'react';
 import { Badge } from '../../components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '../../components/ui/select';
+import { Switch } from '../../components/ui/switch';
 import { cn } from '../../lib/utils';
-import { type TemplateBlock, type ConditionalRule, type ConditionField, type ConditionOperator } from './types';
+import { type ConditionalRule,type ConditionField,type ConditionOperator,type TemplateBlock } from './types';
 
 /* ─── Condition Field Options ─── */
 const CONDITION_FIELDS: { value: ConditionField; label: string }[] = [

@@ -2,8 +2,8 @@
  * PrintingProfiles.tsx — K-Series Printing Profiles
  * Lightspeed K-Series Back Office > Hardware > Printing Profiles parity
  */
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, Search, X, Printer, Wifi } from 'lucide-react';
+import { ArrowLeft,Plus,Printer,Save,Search,Trash2,Wifi,X } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';

@@ -4,7 +4,7 @@
  * K-Series Parity: KDS 2.0, KDS 1.0, POS Config Settings
  */
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Navigate,Route } from 'react-router-dom';
 import RoleRoute from '../components/shared/RoleRoute';
 
 // ─── Lazy Imports ───────────────────────────────────────────────────────────────

@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
-import api from '@/lib/api';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
+import { AnimatePresence,motion } from 'framer-motion';
 import {
-    DoorOpen, RefreshCw, Check, X, BarChart3, Activity,
-    AlertTriangle, TrendingUp, Users, Zap,
+Activity,
+AlertTriangle,
+BarChart3,
+Check,
+DoorOpen,RefreshCw,
+TrendingUp,Users,
+X,
+Zap,
 } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
-import type { AccessSummary, TimelineEntry, HeatmapEntry } from '../doorAccessTypes';
+import React,{ useEffect,useState } from 'react';
+import type { AccessSummary,HeatmapEntry,TimelineEntry } from '../doorAccessTypes';
 import { getVenueId } from '../doorAccessTypes';
 
 export default function ReportsTab() {

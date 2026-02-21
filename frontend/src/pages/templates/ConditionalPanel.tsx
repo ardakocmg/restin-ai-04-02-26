@@ -2,7 +2,6 @@
  * ConditionalPanel — renders the conditional visibility editor for blocks.
  * Extracted from TemplateEditor.tsx → renderConditionalPanel helper.
  */
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ConditionalPanelProps {

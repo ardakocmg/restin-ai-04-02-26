@@ -1,19 +1,19 @@
 
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { useVenue } from '../../context/VenueContext';
 import { useAuth } from '../../context/AuthContext';
+import { useVenue } from '../../context/VenueContext';
 
 import api from '../../lib/api';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
 
 import { Badge } from '../../components/ui/badge';
 
-import { Inbox, CheckCircle2, User, Bell, Archive, Trash2 } from 'lucide-react';
+import { Bell,CheckCircle2,Inbox,User } from 'lucide-react';
 
 export default function CollabInbox() {
   const { activeVenue } = useVenue();

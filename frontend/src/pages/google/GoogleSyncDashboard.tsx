@@ -3,18 +3,28 @@
  * @route /manager/google-sync
  * Shows sync activity across all venues/personnel, sync health, logs, config.
  */
-import React, { useState, useEffect, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import api from '@/lib/api';
 import { logger } from '@/lib/logger';
-import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
-    RefreshCw, Activity, Calendar, HardDrive, Mail, Table,
-    CheckCircle2, XCircle, AlertTriangle, Clock, Users,
-    ChevronRight, Zap, ArrowUpDown, Filter, Search,
-    ToggleLeft, ToggleRight, Download, Upload
+Activity,
+AlertTriangle,
+ArrowUpDown,
+Calendar,
+CheckCircle2,
+Clock,
+HardDrive,Mail,
+RefreshCw,
+Search,
+Table,
+ToggleLeft,ToggleRight,
+Users,
+XCircle,
+Zap
 } from 'lucide-react';
+import React,{ useCallback,useEffect,useState } from 'react';
+import { toast } from 'sonner';
 
 // ── Types ──────────────────────────────────────────────────────────────
 

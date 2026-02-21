@@ -1,22 +1,45 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { logger } from '@/lib/logger';
 import {
-    Shield, User, Lock, Save, AlertTriangle, Check,
-    ChevronRight, ChevronDown, Search, Layout, Printer, Coffee,
-    DollarSign, BarChart2, Users, Settings, Package, Truck,
-    Calendar, FileText, Mic, Globe, Wand2, Radar, Home,
-    Layers, Monitor, Activity, TrendingUp, Award, Clock,
-    MessageSquare, ShoppingCart, MapPin, Utensils, Zap,
-    CreditCard, PieChart, Heart, Bell, Eye, Edit, Trash2,
-    Plus, Download, Upload, RefreshCw, Key, Database,
-    Smartphone, Copy, Fingerprint
+Activity,
+BarChart2,
+Calendar,
+Check,
+ChevronDown,
+ChevronRight,
+Copy,
+CreditCard,
+Database,
+DollarSign,
+Fingerprint,
+Heart,
+Home,
+Key,
+Layers,
+Layout,
+Lock,
+MessageSquare,
+Package,
+Plus,
+Save,
+Search,
+Settings,
+Shield,
+ShoppingCart,
+Smartphone,
+Trash2,
+Truck,
+Upload,
+User,
+Users,
+Utensils,Zap
 } from 'lucide-react';
+import { useCallback,useEffect,useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import api from '../../lib/api';
-import { useAuth } from '../../context/AuthContext';
 import PermissionGate from '../../components/shared/PermissionGate';
+import { useAuth } from '../../context/AuthContext';
 import { useAuditLog } from '../../hooks/useAuditLog';
+import api from '../../lib/api';
 
 // ─── COMPREHENSIVE PERMISSION TREE ─────────────────────────────────────────────
 // Scanned from: App.tsx routes, NewSidebar.jsx menus, backend domain routes

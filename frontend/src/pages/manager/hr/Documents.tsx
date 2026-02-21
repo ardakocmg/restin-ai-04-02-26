@@ -1,8 +1,8 @@
 /**
  * PHASE 1: HR Documents & Compliance
  */
-import { useState, useEffect } from "react";
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from "react";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -12,9 +12,8 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 
-import { Badge } from "@/components/ui/badge";
 
-import { Loader2, FileText, Upload, AlertTriangle } from "lucide-react";
+import { AlertTriangle,FileText,Loader2,Upload } from "lucide-react";
 
 import { useHRFeatureFlags } from "@/hooks/useHRFeatureFlags";
 

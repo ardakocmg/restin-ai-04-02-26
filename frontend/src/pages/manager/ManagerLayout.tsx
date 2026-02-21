@@ -1,15 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React,{ useCallback,useEffect,useState } from 'react';
+import { useLocation,useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import NewSidebar from '../../layouts/NewSidebar';
 import NewTopBar from '../../layouts/NewTopBar';
 import { logger } from '../../lib/logger';
 
+import AnimatedOutlet from '../../components/shared/AnimatedOutlet';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 import { GlobalPTTProvider } from '../../contexts/GlobalPTTContext';
 import AuthElevationModal from '../../features/auth/AuthElevationModal';
-import Breadcrumb from '../../components/shared/Breadcrumb';
-import PageTabBar from '../../components/shared/PageTabBar';
-import AnimatedOutlet from '../../components/shared/AnimatedOutlet';
 
 /**
  * ManagerLayout — Root shell for all /manager/* routes.

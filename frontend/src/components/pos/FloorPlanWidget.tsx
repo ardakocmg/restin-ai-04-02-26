@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Card } from '../ui/card';
+import { Receipt,Timer,Users } from 'lucide-react';
+import React,{ useEffect,useRef,useState } from 'react';
 import { cn } from '../../lib/utils';
-import { Users, Timer, Receipt } from 'lucide-react';
 
 interface TableData {
     id: string;

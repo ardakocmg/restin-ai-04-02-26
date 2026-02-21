@@ -1,14 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Checkbox } from '../../../components/ui/checkbox';
-import { Badge } from '../../../components/ui/badge';
-import { useHRFeatureFlags } from '@/hooks/useHRFeatureFlags';
-import { hrFeatureFlagsAPI } from '@/lib/api';
+import HRAccessPanel from '@/components/hr/HRAccessPanel';
+import { Card,CardContent } from '@/components/ui/card';
 import { useAuth } from '@/context/AuthContext';
 import { useVenue } from '@/context/VenueContext';
-import HRAccessPanel from '@/components/hr/HRAccessPanel';
+import { useHRFeatureFlags } from '@/hooks/useHRFeatureFlags';
+import PageContainer from '@/layouts/PageContainer';
+import { hrFeatureFlagsAPI } from '@/lib/api';
+import { useEffect,useMemo,useState } from 'react';
+import { Badge } from '../../../components/ui/badge';
+import { Button } from '../../../components/ui/button';
+import { Checkbox } from '../../../components/ui/checkbox';
 
 const ROLE_OPTIONS = [
   { label: 'Owner', value: 'owner' },

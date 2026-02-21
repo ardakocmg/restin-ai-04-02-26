@@ -1,13 +1,12 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, isSameDay } from 'date-fns';
-import { Calendar as CalendarIcon, Clock, Settings, CalendarClock, ChevronDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { usePOSFilters, type ShiftType } from '@/context/POSFilterContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Popover,PopoverContent,PopoverTrigger } from '@/components/ui/popover';
+import { usePOSFilters,type ShiftType } from '@/context/POSFilterContext';
+import { cn } from '@/lib/utils';
+import { endOfMonth,endOfWeek,format,isSameDay,startOfMonth,startOfWeek } from 'date-fns';
+import { CalendarClock,Calendar as CalendarIcon,ChevronDown,Clock,Settings } from 'lucide-react';
 
 interface POSFilterBarProps {
     onSettingsClick?: () => void;

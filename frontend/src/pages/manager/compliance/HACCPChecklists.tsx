@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import { useMutation,useQuery,useQueryClient } from '@tanstack/react-query';
 import {
-    ClipboardCheck, Thermometer, Plus, CheckCircle, XCircle,
-    AlertTriangle, Clock, Loader2, RefreshCw, ChevronDown,
-    ChevronRight, Trash2, Database, ShieldCheck
+CheckCircle,
+ChevronDown,
+ChevronRight,
+ClipboardCheck,
+Clock,
+Database,
+Loader2,
+ShieldCheck,
+Thermometer,
+XCircle
 } from 'lucide-react';
-import { Card } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { cn } from '../../../lib/utils';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useVenue } from '../../../context/VenueContext';
-import { useAuth } from '../../../context/AuthContext';
+import React,{ useState } from 'react';
 import { toast } from 'sonner';
-import api from '../../../lib/api';
 import PermissionGate from '../../../components/shared/PermissionGate';
+import { Button } from '../../../components/ui/button';
+import { Card } from '../../../components/ui/card';
+import { useAuth } from '../../../context/AuthContext';
+import { useVenue } from '../../../context/VenueContext';
 import { useAuditLog } from '../../../hooks/useAuditLog';
+import api from '../../../lib/api';
+import { cn } from '../../../lib/utils';
 
 /**
  * 🛡️ Digital HACCP Checklists (Auto-HACCP — Rule 53)

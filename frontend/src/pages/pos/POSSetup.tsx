@@ -1,24 +1,34 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+Building2,
+Check,
+CreditCard,
+Flame,
+LayoutGrid,
+Loader2,
+Monitor,
+Printer,
+RotateCcw,
+Save,
+Server,
+Sparkles,
+Tablet,Zap
+} from "lucide-react";
+import React,{ useEffect,useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../../context/AuthContext";
-import { venueAPI, deviceAPI } from "../../lib/api";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { logger } from "../../lib/logger";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "../../components/ui/select";
 import { Switch } from "../../components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
-import {
-  Monitor, Building2, Printer, Server, CreditCard,
-  MapPin, Save, RotateCcw, CheckCircle, Loader2,
-  LayoutGrid, Tablet, Zap, Check, Flame, Sparkles
-} from "lucide-react";
-import { usePOSTheme, POSTheme } from "../../hooks/usePOSTheme";
+import { Tabs,TabsContent,TabsList,TabsTrigger } from "../../components/ui/tabs";
+import { useAuth } from "../../context/AuthContext";
 import { setActiveTheme } from "../../features/pos/themes/builtinThemes";
+import { usePOSTheme } from "../../hooks/usePOSTheme";
+import { deviceAPI,venueAPI } from "../../lib/api";
+import { logger } from "../../lib/logger";
 
 export default function POSSetup() {
   const navigate = useNavigate();

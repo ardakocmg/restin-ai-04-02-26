@@ -1,4 +1,3 @@
-import { Card } from '../ui/card';
 import { QRCodeCanvas } from 'qrcode.react';
 
 /**

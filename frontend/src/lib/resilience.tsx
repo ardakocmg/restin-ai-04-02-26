@@ -5,7 +5,7 @@
  * Also provides a VirtualizedList component — Rule 6
  * Virtualize all lists > 50 items.
  */
-import React, { useCallback, useRef, useEffect, useState } from 'react';
+import React,{ useCallback,useRef,useState } from 'react';
 import logger from './logger';
 
 // ──────────────────────────────────────
@@ -199,4 +199,4 @@ export class ModuleErrorBoundary extends React.Component<ErrorBoundaryProps, Err
 }
 
 export { chaosConfig };
-export type { ChaosConfig, VirtualizedListProps };
+export type { ChaosConfig,VirtualizedListProps };

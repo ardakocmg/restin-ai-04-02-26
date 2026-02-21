@@ -18,14 +18,24 @@
  * This is a PURE UI component — all business logic comes via props from POSMain.js
  */
 import {
-    LogOut, X, Hash, MapPin, Search,
-    UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus
+Coffee,
+Dessert,
+Hash,
+LogOut,
+MapPin,
+Minus,
+Pizza,
+Plus,
+Search,
+UtensilsCrossed,
+Wine,
+X
 } from "lucide-react";
-import { ScrollArea } from "../../../components/ui/scroll-area";
 import ModifierDialog from "../../../components/ModifierDialog";
+import { ScrollArea } from "../../../components/ui/scroll-area";
+import { safeArray,safeNumber,safeString } from "../../../lib/safe";
 import QuickPayPanel from "../QuickPayPanel";
-import { safeNumber, safeArray, safeString } from "../../../lib/safe";
-import type { POSLayoutProps, CategoryIconMap, POSMenuItem, ItemStyle } from './types';
+import type { CategoryIconMap,ItemStyle,POSLayoutProps,POSMenuItem } from './types';
 
 const CATEGORY_ICONS: CategoryIconMap = {
     appetizers: UtensilsCrossed,

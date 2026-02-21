@@ -1,4 +1,3 @@
-import React from 'react';
 
 /**
  * EngagementLetter - 4-page Malta Employment Contract (Letter of Engagement)

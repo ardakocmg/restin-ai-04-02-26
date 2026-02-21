@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowDown, ArrowUp, RefreshCw, AlertCircle } from 'lucide-react';
+import { Card,CardContent } from '@/components/ui/card';
+import { AlertCircle,ArrowDown,ArrowUp,RefreshCw } from 'lucide-react';
 
 type MovementAction = 'IN' | 'OUT' | 'ADJUST' | 'WASTE';
 

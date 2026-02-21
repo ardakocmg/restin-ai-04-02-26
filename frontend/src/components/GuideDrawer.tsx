@@ -1,33 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import logger from '../lib/logger';
 import {
-  X,
-  Image as ImageIcon,
-  List as StepsIcon,
-  Scale as MeasuresIcon,
-  Edit2 as EditIcon,
-  Plus as AddIcon,
-  Loader2,
+Plus as AddIcon,
+Edit2 as EditIcon,
+Image as ImageIcon,
+Loader2,
+Scale as MeasuresIcon,
+List as StepsIcon
 } from 'lucide-react';
-import GuideService, { GuideDocument } from '../services/GuideService';
+import React,{ useEffect,useState } from 'react';
+import logger from '../lib/logger';
+import GuideService,{ GuideDocument } from '../services/GuideService';
 import { Button } from './ui/button';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
+Card
+} from './ui/card';
+import {
+Sheet,
+SheetContent,
+SheetDescription,
+SheetTitle
 } from './ui/sheet';
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
+Tabs,
+TabsContent,
+TabsList,
+TabsTrigger,
 } from './ui/tabs';
-import {
-  Card,
-  CardContent,
-} from './ui/card';
 
 interface GuideDrawerProps {
   open: boolean;

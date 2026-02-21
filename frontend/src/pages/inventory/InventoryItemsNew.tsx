@@ -1,27 +1,26 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { logger } from '@/lib/logger';
+import {
+AlertTriangle,
+CheckCircle2,
+DollarSign,
+Download,
+Package,
+Plus,
+Printer,
+TrendingDown,
+Upload
+} from 'lucide-react';
+import { useCallback,useEffect,useMemo,useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import DataTable from '../../components/shared/DataTable';
+import { toast } from 'sonner';
 import ItemDetailDrawer from '../../components/inventory/ItemDetailDrawer';
-import { Card, CardContent } from '../../components/ui/card';
+import DataTable from '../../components/shared/DataTable';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
-import {
-  Package,
-  Plus,
-  Download,
-  Upload,
-  AlertTriangle,
-  TrendingDown,
-  CheckCircle2,
-  DollarSign,
-  BarChart3,
-  Printer,
-} from 'lucide-react';
-import { toast } from 'sonner';
+import { Card,CardContent } from '../../components/ui/card';
+import { useVenue } from '../../context/VenueContext';
+import PageContainer from '../../layouts/PageContainer';
+import api from '../../lib/api';
 
 // ── Column Definitions ─────────────────────────────────────────────
 const COLUMNS = [

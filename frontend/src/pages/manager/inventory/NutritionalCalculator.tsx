@@ -2,23 +2,35 @@
  * NutritionalCalculator — Auto-compute nutrition from ingredient database
  * Apicbase parity: calories, macros, vitamins, minerals per recipe/menu
  */
-import React, { useState, useMemo, useCallback } from 'react';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
+import { Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import PageContainer from '@/layouts/PageContainer';
 import { cn } from '@/lib/utils';
 import {
-    Calculator, Search, Plus, Trash2, Apple, Flame, Droplets,
-    Wheat, Beef, Egg, Fish, Leaf, Scale, Zap, Heart,
-    PieChart, BarChart3, RefreshCw, Download, Eye, ChevronRight,
+Apple,
+BarChart3,
+Beef,
+ChevronRight,
+Droplets,
+Eye,
+Flame,
+Heart,
+Leaf,
+PieChart,
+Plus,
+Scale,
+Search,
+Trash2,
+Wheat,
+Zap
 } from 'lucide-react';
-import { toast } from 'sonner';
+import React,{ useCallback,useMemo,useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 /* ────────────────────────── Types ────────────────── */
 interface NutrientProfile {

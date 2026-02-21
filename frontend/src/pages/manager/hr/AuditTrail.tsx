@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent } from '@/components/ui/card';
-import DataTable from '@/components/shared/DataTable';
-import { useVenue } from '@/context/VenueContext';
-import { useAuth } from '@/context/AuthContext';
-import { hrAuditAPI } from '@/lib/api';
-import { Badge } from '@/components/ui/badge';
-import { useHRFeatureFlags } from '@/hooks/useHRFeatureFlags';
 import HRAccessPanel from '@/components/hr/HRAccessPanel';
+import DataTable from '@/components/shared/DataTable';
 import PermissionGate from '@/components/shared/PermissionGate';
+import { Badge } from '@/components/ui/badge';
+import { Card,CardContent } from '@/components/ui/card';
+import { useAuth } from '@/context/AuthContext';
+import { useVenue } from '@/context/VenueContext';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import { useHRFeatureFlags } from '@/hooks/useHRFeatureFlags';
+import PageContainer from '@/layouts/PageContainer';
+import { hrAuditAPI } from '@/lib/api';
+import { useEffect,useState } from 'react';
 
 export default function AuditTrail() {
   const { activeVenue } = useVenue();

@@ -1,12 +1,21 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { cn } from '../../lib/utils';
-import { toast, Toaster } from 'sonner';
 import {
-    ShoppingBag, Plus, Minus, X, ArrowRight,
-    Clock, MapPin, ChefHat, Loader2, CheckCircle2,
-    UtensilsCrossed, Heart, Tag, Search
+ArrowRight,
+CheckCircle2,
+ChefHat,
+Clock,
+Loader2,
+MapPin,
+Minus,
+Plus,
+Search,
+ShoppingBag,
+UtensilsCrossed,
+X
 } from 'lucide-react';
+import React,{ useCallback,useEffect,useMemo,useState } from 'react';
+import { useParams,useSearchParams } from 'react-router-dom';
+import { toast,Toaster } from 'sonner';
+import { cn } from '../../lib/utils';
 import './GuestOrderPage.css';
 
 const API_BASE = process.env.REACT_APP_BACKEND_URL

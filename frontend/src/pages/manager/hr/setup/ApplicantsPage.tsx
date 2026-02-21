@@ -1,12 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '../../../../components/ui/card';
-import { Users, Filter, Plus, Mail, Loader2 } from 'lucide-react';
-import { Button } from '../../../../components/ui/button';
+import { Filter,Loader2,Mail,Plus,Users } from 'lucide-react';
+import { useEffect,useState } from 'react';
 import { Badge } from '../../../../components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../../components/ui/table';
-import api from '../../../../lib/api';
+import { Button } from '../../../../components/ui/button';
+import { Card,CardContent } from '../../../../components/ui/card';
+import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from '../../../../components/ui/table';
 import { useVenue } from '../../../../context/VenueContext';
+import api from '../../../../lib/api';
 
 import { logger } from '@/lib/logger';
 export default function ApplicantsPage() {

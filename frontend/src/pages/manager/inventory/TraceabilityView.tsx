@@ -2,22 +2,32 @@
  * TraceabilityView — 2-Way Ingredient Traceability: Supplier → Ingredient → Recipe → Order
  * Apicbase parity: full supply chain visibility, allergen tracking, recall simulation
  */
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { logger } from '@/lib/logger';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
+import { useVenue } from '@/context/VenueContext';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import {
-    Search, RefreshCw, Loader2, GitBranch, ArrowRight,
-    Truck, Package, ChefHat, ShoppingCart, AlertTriangle,
-    Shield, Filter, ChevronRight, Eye, Zap, Leaf,
+AlertTriangle,
+ArrowRight,
+ChefHat,
+ChevronRight,
+Filter,
+GitBranch,
+Loader2,
+Package,
+RefreshCw,
+Search,
+ShoppingCart,
+Truck,
+Zap
 } from 'lucide-react';
+import React,{ useCallback,useEffect,useMemo,useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /* ────────────────────────────────────────── Types ────────────────── */

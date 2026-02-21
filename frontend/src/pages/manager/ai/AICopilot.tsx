@@ -1,14 +1,24 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useAuth } from '@/features/auth/AuthContext';
 import {
-    Bot, Send, Sparkles, Brain, BarChart3, Clock,
-    Settings2, Zap, ChevronDown, Loader2, MessageSquare,
-    Database, Shield, ExternalLink, ToggleLeft, ToggleRight,
-    History, TrendingUp, HelpCircle, Trash2, Copy, Forward
+BarChart3,
+Bot,
+Copy,
+Database,
+Forward,
+HelpCircle,
+Loader2,MessageSquare,
+Send,
+Settings2,
+Shield,
+ToggleLeft,ToggleRight,
+Trash2,
+TrendingUp,
+Zap
 } from 'lucide-react';
+import React,{ useCallback,useEffect,useMemo,useRef,useState } from 'react';
+import { toast } from 'sonner';
 import RinMascot from '../../../components/voice/RinMascot';
 import { useVenue } from '../../../hooks/useVenue';
-import { useAuth } from '@/features/auth/AuthContext';
-import { toast } from 'sonner';
 import api from '../../../lib/api';
 import { smartCopy } from '../../../lib/copyUtils';
 

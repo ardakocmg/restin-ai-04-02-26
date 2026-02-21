@@ -2,17 +2,47 @@
  * Module Catalog — All Restin.AI capabilities
  * Active modules link to their pages. Planned modules show "Coming Soon".
  */
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-    ShoppingCart, UtensilsCrossed, ChefHat, Warehouse, CalendarDays,
-    Smartphone, Activity, FileDown, DollarSign, BarChart3, Users,
-    Briefcase, CreditCard, Heart, Mail, Plug, Brain, Mic, Palette,
-    Radar, Globe, Building2, GraduationCap, Leaf, ShieldCheck,
-    TrendingUp, Home, Music, Truck, Package, Network, Wallet,
-    LayoutDashboard, HardDrive, CalendarClock, Sparkles
+Activity,
+BarChart3,
+Brain,
+Briefcase,
+Building2,
+CalendarClock,
+CalendarDays,
+ChefHat,
+CreditCard,
+DollarSign,
+FileDown,
+Globe,
+GraduationCap,
+HardDrive,
+Heart,
+Home,
+LayoutDashboard,
+Leaf,
+Mail,
+Mic,
+Music,
+Network,
+Package,
+Palette,
+Plug,
+Radar,
+ShieldCheck,
+ShoppingCart,
+Smartphone,
+Sparkles,
+TrendingUp,
+Truck,
+Users,
+UtensilsCrossed,
+Wallet,
+Warehouse
 } from 'lucide-react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // ─── Module Definitions ──────────────────────────────────────────────────
 

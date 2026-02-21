@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { ArrowRight,Check,Crown,Eye,EyeOff,Lock,Shield } from "lucide-react";
+import { useEffect,useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authAPI } from "../lib/api";
 import { toast } from "sonner";
 import { Button } from "../components/ui/button";
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Shield, Check, Eye, EyeOff, Crown, ArrowRight, Lock } from "lucide-react";
+import { authAPI } from "../lib/api";
 
 interface PasswordStrength {
     score: number;

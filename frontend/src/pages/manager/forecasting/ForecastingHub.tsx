@@ -1,7 +1,7 @@
+import { BarChart,Calendar,Settings,TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Card,CardContent } from '../../../components/ui/card';
 import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent } from '../../../components/ui/card';
-import { TrendingUp, BarChart, Calendar, Settings } from 'lucide-react';
 
 const MODULES = [
   { title: 'Demand Dashboard', desc: 'View forecasts & predictions', icon: TrendingUp, path: '/manager/forecasting/dashboard' },

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
 import { useVenue } from '../../context/VenueContext';
 
@@ -7,15 +7,15 @@ import api from '../../lib/api';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '../../components/ui/card';
 
 import { Badge } from '../../components/ui/badge';
 
 import { Button } from '../../components/ui/button';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
 
-import { Truck, UtensilsCrossed, CheckCircle2, XCircle, Activity } from 'lucide-react';
+import { CheckCircle2,Truck,UtensilsCrossed } from 'lucide-react';
 
 export default function DeliveryAggregators() {
   const { activeVenue } = useVenue();

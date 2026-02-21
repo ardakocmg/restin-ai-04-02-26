@@ -1,11 +1,26 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence,motion } from 'framer-motion';
 import {
-    Power, Wifi, WifiOff, Zap, DoorOpen, DoorClosed, Shield, Droplets,
-    Flame, Radio, RefreshCw, ChevronRight, Activity, Home, AlertTriangle,
-    CheckCircle2, XCircle, ToggleLeft, ToggleRight, Loader2, Plug, Server,
-    CloudOff, Cloud, Music, SkipBack, SkipForward, Play, Pause, Volume2, Shuffle, Repeat, List
+AlertTriangle,
+Cloud,
+CloudOff,
+DoorClosed,
+DoorOpen,
+Droplets,
+Flame,
+Home,
+Loader2,
+Music,
+Pause,
+Play,
+Plug,
+Power,
+Radio,RefreshCw,
+Server,
+SkipBack,SkipForward,
+Volume2,
+Wifi,WifiOff,Zap
 } from 'lucide-react';
+import React,{ useCallback,useEffect,useRef,useState } from 'react';
 import api from '../../../lib/api';
 
 // ─── Types ──────────────────────────────────────────────────────────────

@@ -3,7 +3,7 @@
  * HR Main, HR Setup, HR Reports, HR Advanced
  */
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Navigate,Route } from 'react-router-dom';
 import RoleRoute from '../components/shared/RoleRoute';
 
 // ─── HR Main ────────────────────────────────────────────────────────────────────

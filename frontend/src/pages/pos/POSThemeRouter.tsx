@@ -9,9 +9,9 @@
  * - pro:      POSMain (iPad full-service via POSLayoutPro)
  * - express:  POSMain (Quick service via POSLayoutExpress)
  */
-import React, { Suspense } from 'react';
 import { getActiveTheme } from '@/features/pos/themes/builtinThemes';
 import type { POSLayoutEngine } from '@/features/pos/themes/posThemeTypes';
+import React,{ Suspense } from 'react';
 
 const POSMain = React.lazy(() => import('./POSMain'));
 const POSRuntimeEnhanced = React.lazy(() => import('./POSRuntimeEnhanced'));

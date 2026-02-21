@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
 import PageContainer from '../../../layouts/PageContainer';
 
@@ -10,17 +10,17 @@ import PayslipDocument from '../../../components/payroll/PayslipDocument';
 
 import { Button } from '../../../components/ui/button';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Card,CardContent,CardHeader,CardTitle } from '../../../components/ui/card';
 
-import { Download, Mail, Printer, ArrowLeft, Calendar, Image } from 'lucide-react';
+import { ArrowLeft,Download,Image,Mail,Printer } from 'lucide-react';
 
 import api from '@/lib/api';
 
-import { exportToPdf, exportToJpeg } from '../../../lib/exportUtils';
+import { exportToJpeg,exportToPdf } from '../../../lib/exportUtils';
 
-import { useVenue } from '../../../context/VenueContext';
-import { useAuth } from '../../../context/AuthContext';
 import PermissionGate from '../../../components/shared/PermissionGate';
+import { useAuth } from '../../../context/AuthContext';
+import { useVenue } from '../../../context/VenueContext';
 import { useAuditLog } from '../../../hooks/useAuditLog';
 
 import { toast } from 'sonner';

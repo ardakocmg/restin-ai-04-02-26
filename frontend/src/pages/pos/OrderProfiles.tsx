@@ -3,8 +3,8 @@
  * Dine-in, Takeaway, Delivery, etc order type configuration
  * Lightspeed K-Series Back Office > Configuration > Order Profiles parity
  */
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, X, ShoppingBag, UtensilsCrossed, Truck, Coffee, Building, Wifi } from 'lucide-react';
+import { ArrowLeft,Building,Coffee,Plus,Save,ShoppingBag,Trash2,Truck,UtensilsCrossed,Wifi,X } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useVenueConfig } from '../../hooks/shared/useVenueConfig';

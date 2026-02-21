@@ -1,18 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import {
+Calendar,
+ChevronRight,
+Clock,
+Heart,
+MoreHorizontal,
+Search,
+Star,
+TrendingUp,
+Users
+} from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
+import { Card,CardContent } from '../../components/ui/card';
+import { Input } from '../../components/ui/input';
+import { Tabs,TabsList,TabsTrigger } from '../../components/ui/tabs';
 import { useVenue } from '../../context/VenueContext';
+import PageContainer from '../../layouts/PageContainer';
 import api from '../../lib/api';
 import { logger } from '../../lib/logger';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/tabs';
-import {
-  Users, Heart, Search, Filter, TrendingUp, Calendar, CreditCard,
-  ChevronRight, Star, Clock, Info, ShieldAlert, MoreHorizontal
-} from 'lucide-react';
-import { toast } from 'sonner';
 import GuestDrawer from './GuestDrawer';
 
 interface Guest {

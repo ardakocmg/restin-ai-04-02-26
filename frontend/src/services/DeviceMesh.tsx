@@ -3,8 +3,8 @@
  * @module services/DeviceMesh
  */
 
-import offlineDB from './OfflineDB';
 import { logger } from '../lib/logger';
+import offlineDB from './OfflineDB';
 
 const MESH_WS_URL = process.env.REACT_APP_EDGE_WS_URL?.replace('8081', '8082') || 'ws://localhost:8082';
 

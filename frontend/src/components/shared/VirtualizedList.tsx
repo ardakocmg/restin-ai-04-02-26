@@ -14,8 +14,8 @@
  *     renderItem={(item, index) => <MessageRow key={index} message={item} />}
  *   />
  */
-import React, { useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import React,{ useRef } from 'react';
 
 const VIRTUALIZATION_THRESHOLD = 50;
 

@@ -8,9 +8,9 @@
  */
 
 import axios from 'axios';
-import offlineDB, { OfflineCommand } from './OfflineDB';
-import syncService from './SyncService';
 import { logger } from '../lib/logger';
+import offlineDB,{ OfflineCommand } from './OfflineDB';
+import syncService from './SyncService';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 const EDGE_GATEWAY_URL = process.env.REACT_APP_EDGE_GATEWAY_URL;

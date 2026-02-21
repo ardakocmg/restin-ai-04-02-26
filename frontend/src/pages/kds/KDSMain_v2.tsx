@@ -2,22 +2,26 @@
  * MEGA PATCH: KDS Main - Item-Based Workflow
  * Complete rewrite for item-level status tracking with timers, badges, and dynamic colors
  */
-import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import api from "../../lib/api";
-import { toast } from "sonner";
-import { useVenueSettings } from "../../hooks/useVenueSettings";
-import { getStatusColor } from "../../lib/palette";
-import { Button } from "../../components/ui/button";
-import { Badge } from "../../components/ui/badge";
-import { ScrollArea } from "../../components/ui/scroll-area";
-import BottomNav from "../../components/BottomNav";
 import { logger } from '@/lib/logger';
 import {
-  LogOut, Clock, CheckCircle, PlayCircle, RefreshCw, Loader2,
-  PauseCircle, AlertTriangle, Bell, Truck, Award
+Award,
+CheckCircle,
+Loader2,
+LogOut,
+PauseCircle,
+PlayCircle,RefreshCw,
+Truck
 } from "lucide-react";
+import { useEffect,useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import BottomNav from "../../components/BottomNav";
+import { Badge } from "../../components/ui/badge";
+import { Button } from "../../components/ui/button";
+import { useAuth } from "../../context/AuthContext";
+import { useVenueSettings } from "../../hooks/useVenueSettings";
+import api from "../../lib/api";
+import { getStatusColor } from "../../lib/palette";
 
 export default function KDSMain() {
   const navigate = useNavigate();

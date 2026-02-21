@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent } from '../../components/ui/card';
+import { Card,CardContent } from '../../components/ui/card';
 
-import { Save, Eye } from 'lucide-react';
+import { Eye,Save } from 'lucide-react';
 
 import api from '../../lib/api';
 
 import { toast } from 'sonner';
-import { useAuth } from '../../context/AuthContext';
 import PermissionGate from '../../components/shared/PermissionGate';
+import { useAuth } from '../../context/AuthContext';
 import { useAuditLog } from '../../hooks/useAuditLog';
 
 export default function VisualContentEditor() {

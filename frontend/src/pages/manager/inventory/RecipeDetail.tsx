@@ -1,24 +1,46 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { logger } from '@/lib/logger';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import { toast } from 'sonner';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
+import { useVenue } from '@/context/VenueContext';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
 import {
-    ChefHat, ArrowLeft, Edit, Download, Share2, Trash2, Plus,
-    UtensilsCrossed, Info, Scale, ShieldAlert, Leaf, Clock,
-    DollarSign, TrendingUp, Building2, ImageIcon, AlertTriangle,
-    FileText, RefreshCw, Check, X, Flame, Droplets, TreePine, Printer,
-    type LucideIcon,
+AlertTriangle,
+ArrowLeft,
+Building2,
+Check,
+ChefHat,
+Clock,
+DollarSign,
+Download,
+Droplets,
+Edit,
+FileText,
+Flame,
+ImageIcon,
+Info,
+Leaf,
+Plus,
+Printer,
+RefreshCw,
+Scale,
+Share2,
+ShieldAlert,
+Trash2,
+TreePine,
+TrendingUp,
+UtensilsCrossed,
+X,
+type LucideIcon,
 } from 'lucide-react';
+import { useCallback,useEffect,useMemo,useState } from 'react';
+import { useNavigate,useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import type { RecipeData } from './recipeDetailTypes';
-import { fmt, demoRecipe, EU_ALLERGENS } from './recipeDetailTypes';
+import { demoRecipe,EU_ALLERGENS,fmt } from './recipeDetailTypes';
 
 function InfoField({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
     return (

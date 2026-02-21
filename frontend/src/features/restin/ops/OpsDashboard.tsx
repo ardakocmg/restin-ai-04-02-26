@@ -1,31 +1,29 @@
+import { useMutation,useQuery,useQueryClient } from '@tanstack/react-query';
+import {
+AlertCircle,
+AlertTriangle,
+ArrowUpRight,
+CheckCircle2,
+DollarSign,
+Flame,
+Layers,
+Loader2,
+RefreshCw,
+Settings,
+TrendingUp,
+Truck,
+Users
+} from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardHeader, CardTitle, CardContent } from "../../../components/ui/card";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "../../../components/ui/badge";
-import {
-    Activity,
-    Truck,
-    Clock,
-    AlertCircle,
-    CheckCircle2,
-    Layers,
-    ArrowUpRight,
-    RefreshCw,
-    Loader2,
-    Settings,
-    DollarSign,
-    Users,
-    Flame,
-    AlertTriangle,
-    TrendingUp,
-} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { opsService, aggregatorService } from './ops-service';
-import { useVenue } from '../../../context/VenueContext';
-import { useAuth } from '../../../context/AuthContext';
 import { toast } from 'sonner';
+import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
+import { Card,CardContent,CardHeader,CardTitle } from "../../../components/ui/card";
+import { useAuth } from '../../../context/AuthContext';
+import { useVenue } from '../../../context/VenueContext';
+import { aggregatorService,opsService } from './ops-service';
 
 // Rule 1: No 'any'
 interface OpsMetrics {

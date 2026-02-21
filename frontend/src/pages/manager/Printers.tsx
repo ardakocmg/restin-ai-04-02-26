@@ -1,28 +1,27 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { logger } from '@/lib/logger';
 import PermissionGate from '@/components/shared/PermissionGate';
-import { useAuditLog } from '@/hooks/useAuditLog';
 import { useVenue } from '@/context/VenueContext';
+import { useAuditLog } from '@/hooks/useAuditLog';
+import { logger } from '@/lib/logger';
+import { useCallback,useEffect,useState } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card,CardContent } from '../../components/ui/card';
 
 import { Button } from '../../components/ui/button';
 
 import { Input } from '../../components/ui/input';
 
-import { Printer, Plus, Settings, Trash2, Copy, FileText } from 'lucide-react';
+import { Copy,FileText,Plus,Printer,Settings,Trash2 } from 'lucide-react';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
 
-import { cn } from '../../lib/utils';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/dialog';
+import { Dialog,DialogContent,DialogFooter,DialogHeader,DialogTitle } from '../../components/ui/dialog';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '../../components/ui/select';
 
 import { Checkbox } from '../../components/ui/checkbox';
 
@@ -32,13 +31,12 @@ import { Badge } from '../../components/ui/badge';
 
 import { toast } from 'sonner';
 
-import { printersAPI, printerTemplatesAPI } from '../../lib/api/printers';
+import { printersAPI,printerTemplatesAPI } from '../../lib/api/printers';
 
 import api from '../../lib/api';
 
 import { useAuth } from '../../context/AuthContext';
 
-import { Loader2 } from 'lucide-react';
 
 import DataTable from '../../components/shared/DataTable';
 

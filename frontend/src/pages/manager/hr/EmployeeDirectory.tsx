@@ -2,40 +2,46 @@
  * People & Talent — Employee Directory
  * Connected to live API: /venues/{venue_id}/hr/employees
  */
-import React, { useState, useEffect, useMemo } from "react";
-import { logger } from '@/lib/logger';
-import { useVenue } from "@/context/VenueContext";
-import { useAuth } from "@/context/AuthContext";
+import DataTable from "@/components/shared/DataTable";
 import PermissionGate from "@/components/shared/PermissionGate";
-import { useAuditLog } from "@/hooks/useAuditLog";
-import api from "@/lib/api";
-import { useHRFeatureFlags } from "@/hooks/useHRFeatureFlags";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import {
+Dialog,
+DialogContent,
+DialogDescription,
+DialogHeader,
+DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
+Select,
+SelectContent,
+SelectItem,
+SelectTrigger,
+SelectValue
 } from "@/components/ui/select";
+import { Tabs,TabsList,TabsTrigger } from "@/components/ui/tabs";
+import { useVenue } from "@/context/VenueContext";
+import { useAuditLog } from "@/hooks/useAuditLog";
+import { useHRFeatureFlags } from "@/hooks/useHRFeatureFlags";
+import api from "@/lib/api";
+import { logger } from '@/lib/logger';
 import {
-  UserPlus, Mail, Calendar, Search, Users,
-  CheckCircle2, AlertCircle, Clock, XCircle, Loader2
+AlertCircle,
+Calendar,
+CheckCircle2,
+Clock,
+Loader2,
+Mail,
+Search,
+UserPlus,
+XCircle
 } from "lucide-react";
-import DataTable from "@/components/shared/DataTable";
+import { useEffect,useMemo,useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const STATUS_MAP = {
   active: "success",

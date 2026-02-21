@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Plug, Activity } from 'lucide-react';
 import { logger } from '@/lib/logger';
+import { Plug } from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { Badge } from '../../components/ui/badge';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
+import { useVenue } from '../../context/VenueContext';
+import PageContainer from '../../layouts/PageContainer';
+import api from '../../lib/api';
 
 export default function ConnectorsPage() {
   const { activeVenue } = useVenue();

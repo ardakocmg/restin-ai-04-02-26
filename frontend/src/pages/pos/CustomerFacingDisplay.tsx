@@ -9,7 +9,7 @@
  * - Welcome / Thank You states
  * - Venue branding
  */
-import React, { useState, useEffect } from 'react';
+import React,{ useEffect,useState } from 'react';
 
 /* ===== Types ===== */
 

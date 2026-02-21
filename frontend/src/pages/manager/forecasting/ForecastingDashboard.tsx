@@ -1,17 +1,16 @@
 
-import React from 'react';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { TrendingUp, Users, CloudRain, Loader2, BarChart3, CalendarDays, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
-import api from '../../../lib/api';
-import { useVenue } from '../../../context/VenueContext';
-import { useAuth } from '../../../context/AuthContext';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
+import { ArrowDownRight,ArrowUpRight,BarChart3,CalendarDays,Loader2,TrendingUp,Users } from 'lucide-react';
+import React from 'react';
+import { Area,AreaChart,CartesianGrid,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 import PermissionGate from '../../../components/shared/PermissionGate';
+import { Badge } from '../../../components/ui/badge';
+import { Card,CardContent,CardHeader,CardTitle } from '../../../components/ui/card';
+import { useAuth } from '../../../context/AuthContext';
+import { useVenue } from '../../../context/VenueContext';
 import { useAuditLog } from '../../../hooks/useAuditLog';
+import PageContainer from '../../../layouts/PageContainer';
+import api from '../../../lib/api';
 
 /**
  * 📊 DEMAND FORECASTING DASHBOARD

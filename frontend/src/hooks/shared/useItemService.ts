@@ -4,7 +4,7 @@
  * Shared data layer for POS + Inventory modules.
  * Fetches inventory items with stock levels, allergens, and categories.
  */
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback,useEffect,useMemo,useState } from 'react';
 import api from '../../lib/api';
 import { logger } from '../../lib/logger';
 

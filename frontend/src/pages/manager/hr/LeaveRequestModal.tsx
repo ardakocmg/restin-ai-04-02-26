@@ -1,10 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
-import { logger } from '@/lib/logger';
-import { useAuth } from '@/context/AuthContext';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import { logger } from '@/lib/logger';
+import React,{ useEffect,useState } from 'react';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog,DialogContent,DialogFooter,DialogHeader,DialogTitle } from '@/components/ui/dialog';
 
 import { Button } from '@/components/ui/button';
 
@@ -12,7 +11,7 @@ import { Input } from '@/components/ui/input';
 
 import { Label } from '@/components/ui/label';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
 
 import { Textarea } from '@/components/ui/textarea';
 

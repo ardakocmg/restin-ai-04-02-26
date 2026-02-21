@@ -1,31 +1,27 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { logger } from '@/lib/logger';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import PageContainer from '@/layouts/PageContainer';
 import DataTable from '@/components/shared/DataTable';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useVenue } from '@/context/VenueContext';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
 import {
-    ShoppingCart,
-    RefreshCw,
-    AlertTriangle,
-    TrendingDown,
-    TrendingUp,
-    Package,
-    Zap,
-    FileText,
-    Loader2,
-    Brain,
-    CalendarClock,
-    BarChart3,
-    Sun,
-    Snowflake,
-    CloudRain,
-    Thermometer,
+AlertTriangle,
+Brain,
+CloudRain,
+Loader2,
+Package,
+RefreshCw,
+ShoppingCart,
+Snowflake,
+Sun,
+TrendingDown,
+TrendingUp,
+Zap
 } from 'lucide-react';
+import React,{ useCallback,useEffect,useMemo,useState } from 'react';
 import { toast } from 'sonner';
 
 interface SuggestionItem {

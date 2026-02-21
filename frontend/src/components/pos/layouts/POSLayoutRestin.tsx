@@ -11,16 +11,27 @@
  * This is a PURE UI component — all business logic comes via props from POSMain.js
  */
 import {
-    LogOut, X, Send, Trash2, Users, Grid3x3,
-    UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus, Loader2, Printer, Search
+Coffee,
+Dessert,
+Grid3x3,
+Loader2,
+LogOut,
+Minus,
+Pizza,
+Plus,
+Printer,Search,
+Send,Trash2,Users,
+UtensilsCrossed,
+Wine,
+X
 } from "lucide-react";
-import { Button } from "../../../components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../components/ui/dialog";
-import { Checkbox } from "../../../components/ui/checkbox";
-import { ScrollArea } from "../../../components/ui/scroll-area";
 import ModifierDialog from "../../../components/ModifierDialog";
-import { safeNumber, safeArray, safeString } from "../../../lib/safe";
-import type { POSLayoutProps, CategoryIconMap, POSCategory, POSMenuItem, ItemStyle } from './types';
+import { Button } from "../../../components/ui/button";
+import { Checkbox } from "../../../components/ui/checkbox";
+import { Dialog,DialogContent,DialogHeader,DialogTitle } from "../../../components/ui/dialog";
+import { ScrollArea } from "../../../components/ui/scroll-area";
+import { safeArray,safeNumber,safeString } from "../../../lib/safe";
+import type { CategoryIconMap,ItemStyle,POSCategory,POSLayoutProps,POSMenuItem } from './types';
 
 const CATEGORY_ICONS: CategoryIconMap = {
     appetizers: UtensilsCrossed,

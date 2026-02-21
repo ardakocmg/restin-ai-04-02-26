@@ -3,25 +3,33 @@
  * Apicbase parity: shelf-life labels, allergen stickers, barcode labels, prep container labels
  * NOTE: Uses the Receipt Templates system for actual print template management
  */
-import React, { useState, useMemo, useCallback } from 'react';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
+import { Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
+import PageContainer from '@/layouts/PageContainer';
 import { cn } from '@/lib/utils';
 import {
-    Tag, Printer, QrCode, AlertTriangle, Clock, Barcode,
-    Search, Plus, Edit, Trash2, Copy, Eye, Download,
-    Calendar, Thermometer, Shield, Utensils, ChevronRight,
-    Package, LayoutTemplate, Settings, BookTemplate,
+AlertTriangle,
+Barcode,
+BookTemplate,
+Clock,
+Copy,
+Edit,
+Eye,
+LayoutTemplate,
+Printer,
+Search,
+Settings,
+Utensils
 } from 'lucide-react';
-import { toast } from 'sonner';
+import React,{ useCallback,useMemo,useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 /* ────────────────────────── Types ────────────────── */
 interface LabelTemplate {

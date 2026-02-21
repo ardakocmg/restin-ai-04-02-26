@@ -2,9 +2,12 @@
  * CanvasBlockRenderer — renders a block preview on the template canvas.
  * Extracted from TemplateEditor.tsx → renderBlockOnCanvas helper.
  */
-import React from 'react';
 import {
-    Bookmark, QrCode, Barcode, Shield, Image, Type,
+Barcode,
+Bookmark,
+Image,
+QrCode,
+Shield
 } from 'lucide-react';
 
 interface CanvasBlockRendererProps {

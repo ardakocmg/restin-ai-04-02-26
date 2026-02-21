@@ -1,19 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { Loader2,Monitor,Tablet,Zap } from "lucide-react";
+import { useEffect,useRef,useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import POSLayoutExpress from "../../components/pos/layouts/POSLayoutExpress";
+import POSLayoutPro from "../../components/pos/layouts/POSLayoutPro";
+import POSLayoutRestin from "../../components/pos/layouts/POSLayoutRestin";
+import SmartKeyboard from "../../components/pos/SmartKeyboard"; // Added import
 import { useAuth } from "../../context/AuthContext";
 import { useSafeMode } from "../../context/SafeModeContext";
-import { venueAPI, menuAPI, orderAPI } from "../../lib/api";
-import api from "../../lib/api";
-import { logger } from "../../lib/logger";
-import { toast } from "sonner";
-import { safeNumber, safeArray } from "../../lib/safe";
-import { useVenueSettings } from "../../hooks/useVenueSettings";
 import { usePOSTheme } from "../../hooks/usePOSTheme";
-import POSLayoutRestin from "../../components/pos/layouts/POSLayoutRestin";
-import POSLayoutPro from "../../components/pos/layouts/POSLayoutPro";
-import POSLayoutExpress from "../../components/pos/layouts/POSLayoutExpress";
-import SmartKeyboard from "../../components/pos/SmartKeyboard"; // Added import
-import { Loader2, Monitor, Tablet, Zap } from "lucide-react";
+import { useVenueSettings } from "../../hooks/useVenueSettings";
+import api,{ menuAPI,orderAPI,venueAPI } from "../../lib/api";
+import { logger } from "../../lib/logger";
+import { safeArray,safeNumber } from "../../lib/safe";
 
 export default function POSMain() {
   const navigate = useNavigate();

@@ -1,12 +1,20 @@
-import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { parseSmartMessage,SmartToken } from '@/lib/smartParser';
+import { AnimatePresence,motion } from 'framer-motion';
 import {
-    MessageSquare, X, Send, Hash, ChefHat, Wine, Briefcase, Bell,
-    Minimize2, Maximize2, ChevronDown
+Bell,
+Briefcase,
+ChefHat,
+ChevronDown,
+Hash,
+MessageSquare,
+Minimize2,
+Send,
+Wine,
+X
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { parseSmartMessage, SmartToken } from '@/lib/smartParser';
+import React,{ useCallback,useEffect,useMemo,useRef,useState } from 'react';
 
 // ─── Channel Definitions ────────────────────────────────────────────────
 interface Channel {

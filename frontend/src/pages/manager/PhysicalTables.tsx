@@ -1,29 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import {
-    Box, Maximize2, Move, Plus, Search,
-    Trash2, Undo, Redo, Save, Layers,
-    LayoutGrid, List, Smartphone, Music,
-    Trees, Snowflake, Heart, Users, Loader2
-} from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { cn } from '../../lib/utils';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Badge } from '../../components/ui/badge';
-import { toast } from 'sonner';
-import { TableIcon } from 'lucide-react';
-import { Calendar } from 'lucide-react';
-import { Activity } from 'lucide-react';
-import { Clock } from 'lucide-react';
-import DataTable from '../../components/shared/DataTable';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import { useAuth } from '@/context/AuthContext';
 import PermissionGate from '@/components/shared/PermissionGate';
+import { useAuth } from '@/context/AuthContext';
+import { useVenue } from '@/context/VenueContext';
 import { useAuditLog } from '@/hooks/useAuditLog';
+import api from '@/lib/api';
+import {
+Box,
+LayoutGrid,List,
+Move,
+Music,
+Plus,
+Trees
+} from 'lucide-react';
+import React,{ useCallback,useEffect,useState } from 'react';
+import { toast } from 'sonner';
+import DataTable from '../../components/shared/DataTable';
+import { Button } from '../../components/ui/button';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
+import { Input } from '../../components/ui/input';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
+import PageContainer from '../../layouts/PageContainer';
+import { cn } from '../../lib/utils';
 
 const DECORATIONS = [
     { id: 'plant1', name: 'Plant', icon: Trees, x: 50, y: 50 },

@@ -3,47 +3,61 @@
  * 8 Tabs: Overview, Employment, Fiscal, Documents, Leave, Payroll, Security, Notes
  * Connected to live API
  */
-import React, { useState, useEffect, useCallback } from 'react';
-import { logger } from '@/lib/logger';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useVenue } from '@/context/VenueContext';
-import { useAuth } from '@/context/AuthContext';
 import PermissionGate from '@/components/shared/PermissionGate';
+import { useVenue } from '@/context/VenueContext';
 import { useAuditLog } from '@/hooks/useAuditLog';
 import api from '@/lib/api';
+import { logger } from '@/lib/logger';
+import React,{ useCallback,useEffect,useState } from 'react';
+import { useNavigate,useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+Select,
+SelectContent,
+SelectItem,
+SelectTrigger,
+SelectValue,
 } from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 
-import {
-  ArrowLeft, User, Briefcase, CreditCard, MapPin, ShieldCheck,
-  Clock, Mail, Phone, FileText, Printer, ChevronRight, Download,
-  Calendar, Save, Loader2, Upload, Trash2, Eye, EyeOff, Shield,
-  Key, History, StickyNote, AlertCircle, CheckCircle2,
-  DollarSign, Building2, Lock, Unlock, RotateCcw, Plus,
-  PanelLeft, KeyRound
-} from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import {
+AlertCircle,
+ArrowLeft,
+Briefcase,
+Calendar,
+ChevronRight,
+Clock,
+CreditCard,
+DollarSign,
+Download,
+Eye,EyeOff,
+FileText,
+History,
+Key,
+KeyRound,
+Loader2,
+Lock,
+Mail,Phone,
+Plus,
+Printer,
+RotateCcw,
+Save,
+Shield,
+ShieldCheck,
+StickyNote,
+Trash2,
+Unlock,
+Upload,
+User
+} from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface EmployeeData {

@@ -1,22 +1,19 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-    AlertCircle,
-    Clock,
-    UserX,
-    CheckCircle2,
-    ArrowRight,
-    Search,
-    Filter,
-    Calendar,
-    ChevronLeft,
-    MoreHorizontal,
-    Mail,
-    Bell
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
+import {
+AlertCircle,
+ArrowRight,
+Bell,
+Calendar,
+CheckCircle2,
+ChevronLeft,
+Clock,
+Mail,
+MoreHorizontal,
+UserX
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function HRExceptions() {
     const navigate = useNavigate();

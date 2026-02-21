@@ -1,27 +1,37 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
 import {
-  Search, Plus, DollarSign, Info, Menu as MenuIcon,
-  Send, Printer, CreditCard, UserPlus, Wine, UtensilsCrossed,
-  Globe, Percent, Cake, ChefHat, ShoppingBag, RotateCcw, List,
-  LayoutGrid, LayoutList, Eye
+Cake,ChefHat,
+CreditCard,
+DollarSign,
+Globe,
+Info,Menu as MenuIcon,
+Percent,
+Plus,
+Printer,
+Search,
+Send,
+ShoppingBag,
+UserPlus,
+UtensilsCrossed,
+Wine
 } from 'lucide-react';
-import api, { venueAPI, menuAPI } from '../../lib/api';
-import ModifierModal from './ModifierModal';
-import NumericPopup from './NumericPopup';
-import ItemOptionsMenu from './ItemOptionsMenu';
-import ActionsPanel from './ActionsPanel';
-import SearchModal from './SearchModal';
-import CustomerModal from './CustomerModal';
-import PaymentScreen from './PaymentScreen';
-import OrdersList from './OrdersList';
-import VoidReasonModal from './VoidReasonModal';
-import ReceiptPreview from './ReceiptPreview';
+import { useEffect,useMemo,useRef,useState } from 'react';
+import { toast } from 'sonner';
 import FloorPlanWidget from '../../components/pos/FloorPlanWidget';
 import TableMergeModal from '../../components/pos/TableMergeModal';
-import { broadcastToCustomerDisplay } from './CustomerFacingDisplay';
-import { logger } from '../../lib/logger';
-import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
+import api,{ menuAPI,venueAPI } from '../../lib/api';
+import { logger } from '../../lib/logger';
+import ActionsPanel from './ActionsPanel';
+import { broadcastToCustomerDisplay } from './CustomerFacingDisplay';
+import CustomerModal from './CustomerModal';
+import ItemOptionsMenu from './ItemOptionsMenu';
+import ModifierModal from './ModifierModal';
+import NumericPopup from './NumericPopup';
+import OrdersList from './OrdersList';
+import PaymentScreen from './PaymentScreen';
+import ReceiptPreview from './ReceiptPreview';
+import SearchModal from './SearchModal';
+import VoidReasonModal from './VoidReasonModal';
 
 /* ─── L-Series Category Color Map ──────────────────────────────── */
 const CATEGORY_COLORS = {

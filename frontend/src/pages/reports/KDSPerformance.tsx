@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
 
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Bar,BarChart,CartesianGrid,Line,LineChart,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 
-import { Clock, Activity, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Activity,AlertCircle,CheckCircle2,Clock } from 'lucide-react';
 
 import api from '../../lib/api';
 

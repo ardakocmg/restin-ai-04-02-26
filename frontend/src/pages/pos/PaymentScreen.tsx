@@ -3,8 +3,8 @@
  * Features: Cash, Card, Gift Card, Tab, Split (Equal/By Seat/Custom),
  *           Tips, Discounts, Partial Pay, Change, Unfinalize, Room Charge
  */
-import React, { useState, useMemo, useCallback } from 'react';
-import { X, CreditCard, Banknote, Gift, Bookmark, Scissors, Percent, RotateCcw, Users, Hotel, Search, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { AlertCircle,Banknote,Bookmark,CheckCircle,CreditCard,Gift,Hotel,Loader2,Percent,RotateCcw,Scissors,Search,Users,X } from 'lucide-react';
+import { useCallback,useMemo,useState } from 'react';
 
 const s = {
     overlay: {

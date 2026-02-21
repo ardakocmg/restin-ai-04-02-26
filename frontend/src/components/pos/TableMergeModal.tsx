@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/dialog';
-import { Button } from '../../components/ui/button';
+import { ArrowRight } from 'lucide-react';
+import React,{ useState } from 'react';
 import { Badge } from '../../components/ui/badge';
-import { Users, ArrowRight } from 'lucide-react';
+import { Button } from '../../components/ui/button';
+import { Dialog,DialogContent,DialogFooter,DialogHeader,DialogTitle } from '../../components/ui/dialog';
 
 export default function TableMergeModal({ open, onClose, currentTable, availableTables, onConfirm }) {
   const [selectedTables, setSelectedTables] = useState([]);

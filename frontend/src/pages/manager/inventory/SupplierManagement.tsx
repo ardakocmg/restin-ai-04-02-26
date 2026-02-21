@@ -2,35 +2,58 @@
  * SupplierManagement — Full Supplier Directory with CRUD
  * Apicbase parity: contacts, certifications, min order, delivery schedule, performance scores
  */
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { logger } from '@/lib/logger';
-import { useVenue } from '@/context/VenueContext';
-import api from '@/lib/api';
-import PageContainer from '@/layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card,CardContent } from '@/components/ui/card';
+import {
+Dialog,DialogContent,
+DialogDescription,
+DialogFooter,
+DialogHeader,DialogTitle,
+} from '@/components/ui/dialog';
+import {
+DropdownMenu,DropdownMenuContent,DropdownMenuItem,
+DropdownMenuSeparator,
+DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import {
-    Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
-} from '@/components/ui/dialog';
+import { useVenue } from '@/context/VenueContext';
+import PageContainer from '@/layouts/PageContainer';
+import api from '@/lib/api';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import {
-    Truck, Plus, Search, Phone, Mail, MapPin, FileText, Star,
-    Shield, Clock, Package, DollarSign, RefreshCw, Loader2,
-    Edit, Trash2, CheckCircle2, AlertTriangle, Globe, Filter,
-    Award, Calendar, TrendingUp, Building2, MoreHorizontal,
-    ChevronDown, X, Copy, ExternalLink,
+AlertTriangle,
+Building2,
+Calendar,
+CheckCircle2,
+Clock,
+Copy,
+DollarSign,
+Edit,
+ExternalLink,
+Filter,
+Globe,
+Loader2,
+Mail,MapPin,
+MoreHorizontal,
+Package,
+Phone,
+Plus,
+RefreshCw,
+Search,
+Shield,
+Star,
+Trash2,
+Truck,
+X
 } from 'lucide-react';
-import {
-    DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
-    DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
-import { toast } from 'sonner';
+import React,{ useCallback,useEffect,useMemo,useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 /* ────────────────────────────────────────── Types ────────────────── */
 interface SupplierContact {

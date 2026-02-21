@@ -4,12 +4,12 @@
  * Lightspeed K-Series Back Office > Configuration > POS Users parity
  * WIRED TO: /api/venues/{venueId}/staff (useStaffService)
  */
-import React, { useState, useEffect, useMemo } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, Search, X, Shield, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { ArrowLeft,Edit3,Eye,EyeOff,Loader2,Plus,Save,Search,Shield,Trash2,X } from 'lucide-react';
+import React,{ useEffect,useMemo,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import type { StaffMember } from '../../hooks/shared/useStaffService';
 import { useStaffService } from '../../hooks/shared/useStaffService';
-import type { StaffMember, PosConfig } from '../../hooks/shared/useStaffService';
 import authStore from '../../lib/AuthStore';
 import './pos-shared.css';
 

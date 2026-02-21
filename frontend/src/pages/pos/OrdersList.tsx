@@ -2,11 +2,11 @@
  * Orders List — View all orders (open, finalized, voided) with filters
  * Phase 9: Orders List & History + Z-Report
  */
-import React, { useState, useEffect, CSSProperties } from 'react';
-import { X, Filter, FileText, RotateCcw, Trash2, Printer, Search, ArrowDownLeft } from 'lucide-react';
+import { ArrowDownLeft,FileText,Filter,Printer,RotateCcw,Search,Trash2,X } from 'lucide-react';
+import { CSSProperties,useEffect,useState } from 'react';
+import { toast } from 'sonner';
 import api from '../../lib/api';
 import { logger } from '../../lib/logger';
-import { toast } from 'sonner';
 
 interface OrderEntry {
     id: string;

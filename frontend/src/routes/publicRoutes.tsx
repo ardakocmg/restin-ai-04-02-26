@@ -3,7 +3,7 @@
  * Login, Landing, Setup Wizard, Booking Widget, Payroll standalone
  */
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Navigate,Route } from 'react-router-dom';
 
 // ─── Eager Imports (critical path) ──────────────────────────────────────────────
 import Login from '../features/auth/Login';

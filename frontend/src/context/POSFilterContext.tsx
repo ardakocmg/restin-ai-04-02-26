@@ -2,8 +2,8 @@
  * POSFilterContext - POS date/time/shift filtering
  * @module context/POSFilterContext
  */
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { startOfDay, endOfDay } from 'date-fns';
+import { endOfDay,startOfDay } from 'date-fns';
+import React,{ createContext,ReactNode,useContext,useEffect,useState } from 'react';
 import { logger } from '../lib/logger';
 
 export type ShiftType = 'breakfast' | 'lunch' | 'dinner' | null;

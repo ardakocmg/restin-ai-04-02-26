@@ -1,7 +1,7 @@
+import { Apple,ChefHat,DollarSign,GitBranch } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Card,CardContent } from '../../../components/ui/card';
 import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent } from '../../../components/ui/card';
-import { ChefHat, DollarSign, Apple, GitBranch } from 'lucide-react';
 
 const MODULES = [
   { title: 'Recipe List', desc: 'Engineered recipes', icon: ChefHat, path: '/manager/recipe-engineering/list' },

@@ -1,7 +1,7 @@
+import { ClipboardList,Factory,Package,Truck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Card,CardContent } from '../../../components/ui/card';
 import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent } from '../../../components/ui/card';
-import { Factory, Package, Truck, ClipboardList } from 'lucide-react';
 
 const MODULES = [
   { title: 'Production Batches', desc: 'Manage production runs', icon: Factory, path: '/manager/central-kitchen/batches' },

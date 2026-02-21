@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CreditCard, DollarSign, Zap, Server, Activity, ArrowUpRight } from 'lucide-react';
-import { toast } from "sonner";
+import { useAuth } from '@/features/auth/AuthContext';
 import api from '@/lib/api';
 import logger from '@/lib/logger';
-import { useAuth } from '@/features/auth/AuthContext';
+import { CreditCard,DollarSign,Zap } from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { toast } from "sonner";
 
 interface UsageData {
     ai_cost: number;

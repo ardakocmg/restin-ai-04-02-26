@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
-import { useLocation, useOutlet } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence,motion } from 'framer-motion';
+import React,{ useRef } from 'react';
+import { useLocation,useOutlet } from 'react-router-dom';
 
 /**
  * Drop-in replacement for <Outlet> that animates page transitions.

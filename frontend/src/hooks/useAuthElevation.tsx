@@ -11,10 +11,10 @@
  *   const { requireElevation, isElevated } = useAuthElevation();
  *   const granted = await requireElevation('password');
  */
+import { useCallback,useRef } from 'react';
 import { create } from 'zustand';
-import { useCallback, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { AuthLevel, AUTH_LEVEL_TTL } from '../lib/roles';
+import { AUTH_LEVEL_TTL,AuthLevel } from '../lib/roles';
 
 // ─── Zustand Store ────────────────────────────────────────
 interface ElevationState {

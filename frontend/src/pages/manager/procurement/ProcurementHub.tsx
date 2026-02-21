@@ -1,11 +1,9 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import PageContainer from '../../../layouts/PageContainer';
-import { Card, CardContent } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
-import { ShoppingCart, FileText, TrendingUp, Settings, CheckCircle } from 'lucide-react';
-import api from '../../../lib/api';
 import { logger } from '@/lib/logger';
+import { CheckCircle,FileText,Settings,ShoppingCart,TrendingUp } from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card,CardContent } from '../../../components/ui/card';
+import PageContainer from '../../../layouts/PageContainer';
 
 const PROCUREMENT_MODULES = [
   { key: 'rfq', title: 'RFQ Management', desc: 'Request for Quotation workflow', icon: FileText, path: '/manager/procurement/rfq', color: 'blue' },

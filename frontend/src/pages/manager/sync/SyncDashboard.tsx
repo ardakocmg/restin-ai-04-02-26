@@ -1,27 +1,49 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card,CardContent,CardHeader,CardTitle } from "@/components/ui/card";
+import {
+Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle
-} from "@/components/ui/dialog";
-import {
-    RefreshCw, Settings, Key, Eye, EyeOff, CheckCircle2, AlertTriangle, Clock, Power,
-    Activity, Loader2, Globe, Zap, ExternalLink, Users, Search, Lock, ArrowUpDown,
-    BookOpen, ChevronDown, ChevronUp, LayoutGrid, Store
-} from 'lucide-react';
-import { toast } from "sonner";
-import api from '@/lib/api';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from "@/components/ui/tabs";
 import { useVenue } from '@/context/VenueContext';
-import { ProviderCard } from './components/ProviderCard';
-import type { IntegrationConfig, SyncRun, GroupData, SortMode } from './syncDashboardTypes';
+import api from '@/lib/api';
 import {
-    PROVIDER_FIELDS, PORTAL_URLS, PROVIDER_SETUP_GUIDES,
-    SORT_OPTIONS, STATUS_WEIGHT, PROVIDERS, CATEGORY_META,
+Activity,
+AlertTriangle,
+ArrowUpDown,
+BookOpen,
+CheckCircle2,
+ChevronDown,ChevronUp,
+Clock,
+ExternalLink,
+Eye,EyeOff,
+Globe,
+Key,
+LayoutGrid,
+Loader2,
+Lock,
+Power,
+RefreshCw,
+Search,
+Settings,
+Store,
+Users,
+Zap
+} from 'lucide-react';
+import { useCallback,useEffect,useState } from 'react';
+import { toast } from "sonner";
+import { ProviderCard } from './components/ProviderCard';
+import type { GroupData,IntegrationConfig,SortMode,SyncRun } from './syncDashboardTypes';
+import {
+CATEGORY_META,
+PORTAL_URLS,
+PROVIDER_FIELDS,
+PROVIDER_SETUP_GUIDES,
+PROVIDERS,
+SORT_OPTIONS,STATUS_WEIGHT,
 } from './syncDashboardTypes';
 
 export default function SyncDashboard() {

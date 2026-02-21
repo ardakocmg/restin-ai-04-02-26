@@ -3,8 +3,8 @@
  * Bundle items into combos with pricing rules
  * Lightspeed K-Series Back Office > Menu > Combos parity
  */
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Save, Edit3, Trash2, Search, X, Package, DollarSign, Layers, Loader2 } from 'lucide-react';
+import { ArrowLeft,Loader2,Package,Plus,Save,Search,Trash2,X } from 'lucide-react';
+import React,{ useEffect,useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useRecipeService } from '../../hooks/shared/useRecipeService';

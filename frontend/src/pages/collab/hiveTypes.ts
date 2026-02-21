@@ -2,7 +2,7 @@
  * Hive Chat — Shared Types & Constants
  * Extracted from HiveDashboard.tsx for code splitting
  */
-import { Hash, ChefHat, Wine, Briefcase, Bell, Bot } from 'lucide-react';
+import { Bell,Bot,Briefcase,ChefHat,Hash,Wine } from 'lucide-react';
 
 // ─── Channel Definitions ────────────────────────────────────────────────
 export interface Channel {

@@ -1,17 +1,15 @@
-import React from 'react';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '../ui/sheet';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { ScrollArea } from '../ui/scroll-area';
-import { Button } from '../ui/button';
+import { ExternalLink } from 'lucide-react';
 import { Badge } from '../ui/badge';
-import { Separator } from '../ui/separator';
-import { X, ExternalLink } from 'lucide-react';
+import { Button } from '../ui/button';
+import { ScrollArea } from '../ui/scroll-area';
+import {
+Sheet,
+SheetContent,
+SheetDescription,
+SheetHeader,
+SheetTitle,
+} from '../ui/sheet';
+import { Tabs,TabsContent,TabsList,TabsTrigger } from '../ui/tabs';
 
 /**
  * DetailDrawer - Slide-out drawer for showing entity details

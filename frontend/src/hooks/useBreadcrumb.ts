@@ -1,7 +1,7 @@
+import { DOMAINS,getDomainForGroup,MENU_ITEMS,type MenuItem } from '@/lib/searchRegistry';
+import { Home,type LucideIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { MENU_ITEMS, DOMAINS, getDomainForGroup, type MenuItem } from '@/lib/searchRegistry';
-import { Home, type LucideIcon } from 'lucide-react';
 
 export interface BreadcrumbSegment {
     label: string;

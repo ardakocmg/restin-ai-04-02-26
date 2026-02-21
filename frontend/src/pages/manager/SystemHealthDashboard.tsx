@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Server, Database, Cpu, HardDrive, Activity, AlertCircle, CheckCircle, Clock } from 'lucide-react';
-import PageContainer from '../../layouts/PageContainer';
+import { Activity,AlertCircle,CheckCircle,Cpu,Database,Server } from 'lucide-react';
+import { useEffect,useState } from 'react';
+import PermissionGate from '../../components/shared/PermissionGate';
 import { Badge } from '../../components/ui/badge';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
+import { useAuth } from '../../context/AuthContext';
+import { useAuditLog } from '../../hooks/useAuditLog';
+import PageContainer from '../../layouts/PageContainer';
+import deviceMesh from '../../services/DeviceMesh';
 import edgeGatewayClient from '../../services/EdgeGatewayClient';
 import resilienceManager from '../../services/ResilienceManager';
-import deviceMesh from '../../services/DeviceMesh';
-import { useAuth } from '../../context/AuthContext';
-import PermissionGate from '../../components/shared/PermissionGate';
-import { useAuditLog } from '../../hooks/useAuditLog';
 
 export default function SystemHealthDashboard() {
   const { user } = useAuth();

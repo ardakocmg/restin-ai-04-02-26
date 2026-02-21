@@ -1,17 +1,26 @@
-import React, { useState } from 'react';
+import { useMutation,useQueryClient } from '@tanstack/react-query';
 import {
-    Monitor, TabletSmartphone, Settings, Eye, Palette,
-    Layout, Type, Image, ShoppingCart, CreditCard,
-    ToggleLeft, ToggleRight, Loader2, Save, RotateCcw
+CreditCard,
+Eye,
+Image,
+Layout,
+Loader2,
+Monitor,
+Save,
+Settings,
+ShoppingCart,
+TabletSmartphone,
+ToggleLeft,ToggleRight,
+Type
 } from 'lucide-react';
-import { Card } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { cn } from '../../../lib/utils';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useVenue } from '../../../context/VenueContext';
+import { useState } from 'react';
 import { toast } from 'sonner';
+import { Button } from '../../../components/ui/button';
+import { Card } from '../../../components/ui/card';
+import { Input } from '../../../components/ui/input';
+import { useVenue } from '../../../context/VenueContext';
 import api from '../../../lib/api';
+import { cn } from '../../../lib/utils';
 
 /**
  * 🖥️ Kiosk Mode — Rule 47 (Pillar 8: Fintech)

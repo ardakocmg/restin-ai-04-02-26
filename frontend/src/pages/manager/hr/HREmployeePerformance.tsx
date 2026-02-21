@@ -3,24 +3,41 @@
  * HREmployeePerformance.jsx — Deep Drill-Down per Employee
  * POS Performance | KDS Performance | System Usage | Comparisons
  */
-import React, { useState, useEffect, useMemo } from 'react';
-import PageContainer from '@/layouts/PageContainer';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { useVenue } from '@/context/VenueContext';
 import PermissionGate from '@/components/shared/PermissionGate';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
+import { useVenue } from '@/context/VenueContext';
+import PageContainer from '@/layouts/PageContainer';
 import api from '@/lib/api';
 import logger from '@/lib/logger';
 import {
-    BarChart, Bar, AreaChart, Area, ResponsiveContainer,
-    XAxis, YAxis, Tooltip, CartesianGrid
-} from 'recharts';
-import {
-    ArrowLeft, ShoppingCart, Flame, Timer, Users, BookOpen,
-    Clock, Layers, ChefHat, Euro, Activity, Calendar,
-    ArrowUpRight, ArrowDownRight, Minus, TrendingUp, Award
+Activity,
+ArrowDownRight,
+ArrowLeft,
+ArrowUpRight,
+Award,
+BookOpen,
+Calendar,
+ChefHat,
+Clock,
+Euro,
+Flame,
+Layers,
+Minus,
+ShoppingCart,
+Timer,
+TrendingUp
 } from 'lucide-react';
+import React,{ useEffect,useMemo,useState } from 'react';
+import { useNavigate,useParams,useSearchParams } from 'react-router-dom';
+import {
+Area,
+AreaChart,
+CartesianGrid,
+ResponsiveContainer,
+Tooltip,
+XAxis,YAxis
+} from 'recharts';
 
 // ── Helpers ──────────────────────────────────────────────────
 const DATE_PRESETS = [

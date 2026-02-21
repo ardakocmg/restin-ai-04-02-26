@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import api from '../lib/api';
 import { logger } from '@/lib/logger';
+import { useEffect,useState } from 'react';
+import api from '../lib/api';
 
 export function useViewState(venueId, pageKey) {
   const [viewState, setViewState] = useState(null);

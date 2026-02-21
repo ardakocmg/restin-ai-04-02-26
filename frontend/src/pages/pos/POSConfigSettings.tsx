@@ -12,12 +12,21 @@
  * 7. Scheduling & Reporting — Timed menus, tags, shift reports, stock transfer
  */
 
-import React, { useState } from 'react';
 import {
-    ArrowLeft, Save, Settings, ShoppingCart, FileText,
-    CreditCard, Receipt, Monitor, Calendar, ChevronRight,
-    Plus, X, Clock, Trash2, Copy, Link, HelpCircle
+ArrowLeft,
+Calendar,
+Copy,
+CreditCard,
+FileText,
+Link,
+Monitor,
+Plus,
+Receipt,
+Save,Settings,ShoppingCart,
+Trash2,
+X
 } from 'lucide-react';
+import React,{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import './pos-shared.css';

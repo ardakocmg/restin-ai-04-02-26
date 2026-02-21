@@ -1,21 +1,28 @@
-import React, { useState, useRef, useCallback } from 'react';
+import { useMutation,useQuery,useQueryClient } from '@tanstack/react-query';
 import {
-    LayoutGrid, Move, Plus, Trash2, RotateCw,
-    Save, Loader2, Maximize, Square, Circle,
-    Layers, Eye, Palette, ZoomIn, ZoomOut,
-    Grid3X3, Users, Flame as HeatIcon
+Circle,
+Grid3X3,
+Flame as HeatIcon,
+LayoutGrid,
+Loader2,Maximize,
+RotateCw,
+Save,
+Square,
+Trash2,
+Users,
+ZoomIn,ZoomOut
 } from 'lucide-react';
-import { Card } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { cn } from '../../../lib/utils';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useVenue } from '../../../context/VenueContext';
+import React,{ useCallback,useRef,useState } from 'react';
 import { toast } from 'sonner';
-import api from '../../../lib/api';
-import { useAuth } from '../../../context/AuthContext';
 import PermissionGate from '../../../components/shared/PermissionGate';
+import { Button } from '../../../components/ui/button';
+import { Card } from '../../../components/ui/card';
+import { Input } from '../../../components/ui/input';
+import { useAuth } from '../../../context/AuthContext';
+import { useVenue } from '../../../context/VenueContext';
 import { useAuditLog } from '../../../hooks/useAuditLog';
+import api from '../../../lib/api';
+import { cn } from '../../../lib/utils';
 
 interface FloorplanTable {
     id: string;

@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useAuth } from "../../context/AuthContext";
-import { venueAPI, deviceAPI } from "../../lib/api";
-import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
-import { Label } from "../../components/ui/label";
-import { ChefHat, Building2, MapPin, ArrowRight, Loader2 } from "lucide-react";
 import { logger } from '@/lib/logger';
+import { ArrowRight,Building2,ChefHat,Loader2,MapPin } from "lucide-react";
+import { useEffect,useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { Button } from "../../components/ui/button";
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "../../components/ui/card";
+import { Label } from "../../components/ui/label";
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "../../components/ui/select";
+import { useAuth } from "../../context/AuthContext";
+import { deviceAPI,venueAPI } from "../../lib/api";
 
 export default function KDSSetup() {
   const navigate = useNavigate();

@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
-    Leaf, Recycle, Trash2, TrendingDown, BarChart3,
-    Droplets, Flame, Package, Loader2, Database,
-    ArrowDown, ArrowUp, Target, Scale
+BarChart3,
+Droplets,Flame,
+Leaf,
+Loader2,
+Package,
+Recycle,
+Target,
+Trash2
 } from 'lucide-react';
+import { useState } from 'react';
 import { Card } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { cn } from '../../../lib/utils';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useVenue } from '../../../context/VenueContext';
-import { toast } from 'sonner';
 import api from '../../../lib/api';
+import { cn } from '../../../lib/utils';
 
 /**
  * 🌱 Eco-OS / Carbon Footprint — Rule 39

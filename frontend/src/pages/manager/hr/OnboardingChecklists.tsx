@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { logger } from '@/lib/logger';
-import { ClipboardList, Plus, Check, Clock, Users, ChevronRight, X, Trash2, CheckCircle } from 'lucide-react';
+import { Check,CheckCircle,ChevronRight,ClipboardList,Plus,Trash2,Users,X } from 'lucide-react';
+import { useCallback,useEffect,useState } from 'react';
 
 interface ChecklistItem {
     title: string;

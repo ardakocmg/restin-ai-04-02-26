@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useVenue } from '../../context/VenueContext';
-import api from '../../lib/api';
-import PageContainer from '../../layouts/PageContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { BarChart3, TrendingUp, Clock, DollarSign } from 'lucide-react';
 import { logger } from '@/lib/logger';
+import { BarChart3,TrendingUp } from 'lucide-react';
+import { useEffect,useState } from 'react';
+import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
+import { useVenue } from '../../context/VenueContext';
+import PageContainer from '../../layouts/PageContainer';
+import api from '../../lib/api';
 
 export default function AnalyticsPage() {
   const { activeVenue } = useVenue();

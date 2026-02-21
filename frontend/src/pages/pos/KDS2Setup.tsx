@@ -10,11 +10,17 @@
  * 5. Order Status Setup — Activate/deactivate New and Ready statuses
  */
 
-import React, { useState } from 'react';
 import {
-    Wifi, Monitor, Plus, ChevronRight, Check, X,
-    Settings, ArrowLeft, Edit3, Trash2, Eye
+ArrowLeft,
+Check,
+ChevronRight,
+Edit3,
+Eye,
+Plus,
+Settings,
+Trash2
 } from 'lucide-react';
+import React,{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 

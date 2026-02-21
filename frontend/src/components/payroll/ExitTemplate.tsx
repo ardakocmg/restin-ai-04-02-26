@@ -1,4 +1,3 @@
-import React from 'react';
 
 /**
  * ExitTemplate - Employee Termination/Resignation Settlement Form
