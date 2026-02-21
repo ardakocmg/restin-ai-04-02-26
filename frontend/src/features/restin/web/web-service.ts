@@ -10,8 +10,8 @@ interface MenuItemResponse {
 }
 
 interface WebSiteConfig {
-    sections: Array<{ id: string; type: string; content: Record<string, unknown> }>;
-    theme: Record<string, unknown>;
+    sections: Array<{ id: string; type: string; content: /**/any }>;
+    theme: /**/any;
     metadata?: Record<string, string>;
 }
 

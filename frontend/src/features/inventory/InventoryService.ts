@@ -31,7 +31,7 @@ export const InventoryService = {
 
             return items;
         } catch (error) {
-            logger.error('Failed to fetch inventory from API, trying IndexedDB', error as Record<string, unknown>);
+            logger.error('Failed to fetch inventory from API, trying IndexedDB', error as /**/any);
             // Fallback to IndexedDB cache
             try {
                 const db = await initDB();

@@ -67,7 +67,7 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
             });
             setItems(response.data || []);
         } catch (err: unknown) {
-            const error = err as Record<string, unknown>;
+            const error = err as /**/any;
             logger.error(`Failed to load ${type}:`, error);
             toast.error(`Failed to load ${title}`);
         } finally {
@@ -91,10 +91,10 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
             setFormData({ name: "", code: "", description: "" });
             loadData();
         } catch (err: unknown) {
-            const error = err as Record<string, unknown>;
+            const error = err as /**/any;
             logger.error("Create failed:", error);
-            const response = error.response as Record<string, unknown> | undefined;
-            const data = response?.data as Record<string, unknown> | undefined;
+            const response = error.response as /**/any | undefined;
+            const data = response?.data as /**/any | undefined;
             toast.error((data?.detail as string) || "Failed to create item");
         } finally {
             setSubmitting(false);
@@ -112,7 +112,7 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
             toast.success("Item deleted");
             loadData();
         } catch (err: unknown) {
-            logger.error("Delete failed:", err as Record<string, unknown>);
+            logger.error("Delete failed:", err as /**/any);
             toast.error("Failed to delete item");
         }
     };

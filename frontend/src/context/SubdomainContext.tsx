@@ -35,8 +35,8 @@ export interface SubdomainContextState {
     isSubdomain: boolean;
     venueSlug: string | null;
     module: SupportedModule | null;
-    venue: Record<string, unknown> | null;
-    group: Record<string, unknown> | null;
+    venue: /**/any | null;
+    group: /**/any | null;
     loading: boolean;
 }
 

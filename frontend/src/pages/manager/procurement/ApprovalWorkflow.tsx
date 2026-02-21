@@ -118,7 +118,7 @@ export default function ApprovalWorkflow() {
                   <input aria-label="Input"
                     type="text"
                     value={formData.rule_name}
-                    onChange={(e) = aria-label="Input field"> setFormData({ ...formData, rule_name: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, rule_name: e.target.value })}
                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded"
                     placeholder="e.g., Manager Approval for Orders > $1000"
                   />
@@ -127,7 +127,7 @@ export default function ApprovalWorkflow() {
                   <label className="block text-sm font-medium mb-1">Condition</label>
                   <select aria-label="Input"
                     value={formData.condition}
-                    onChange={(e) = aria-label="Input field"> setFormData({ ...formData, condition: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded"
                   >
                     <option value="amount_gt">Amount Greater Than</option>
@@ -141,7 +141,7 @@ export default function ApprovalWorkflow() {
                     <input aria-label="Input"
                       type="number"
                       value={formData.threshold}
-                      onChange={(e) = aria-label="Input field"> setFormData({ ...formData, threshold: parseFloat(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, threshold: parseFloat(e.target.value) })}
                       className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded"
                     />
                   </div>
@@ -151,7 +151,7 @@ export default function ApprovalWorkflow() {
                   <input aria-label="Input"
                     type="number"
                     value={formData.escalation_hours}
-                    onChange={(e) = aria-label="Input field"> setFormData({ ...formData, escalation_hours: parseInt(e.target.value) })}
+                    onChange={(e) => setFormData({ ...formData, escalation_hours: parseInt(e.target.value) })}
                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded"
                   />
                 </div>

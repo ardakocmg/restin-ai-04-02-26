@@ -49,7 +49,7 @@ export default function FeatureFlagAdmin() {
     // Sync localFlags from fetched data
     React.useEffect(() => {
         if (flagsData && !localFlags) {
-            setLocalFlags((flagsData as Record<string, unknown>).flags as typeof localFlags ?? []);
+            setLocalFlags((flagsData as /**/any).flags as typeof localFlags ?? []);
         }
     }, [flagsData]);
 
@@ -68,7 +68,7 @@ export default function FeatureFlagAdmin() {
         onError: () => toast.error('Failed to save feature flags')
     });
 
-    const flags = localFlags || (flagsData as Record<string, unknown>)?.flags as typeof localFlags || [];
+    const flags = localFlags || (flagsData as /**/any)?.flags as typeof localFlags || [];
 
     const toggleFlag = (moduleKey: string) => {
         const updated = flags.map(f =>

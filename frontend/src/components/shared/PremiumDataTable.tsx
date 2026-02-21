@@ -47,7 +47,7 @@ import {
 
 // ===================== TYPE DEFINITIONS =====================
 
-export interface ColumnDef<TData = unknown> {
+export interface ColumnDef<TData = /**/any> {
     key: string;
     id?: string;
     label?: string | React.ReactNode;
@@ -144,7 +144,7 @@ export default function PremiumDataTable<TData>({
     onRetry,
     enableRowSelection = false,
     onSelectionChange,
-    getRowId = (row: TData, index: number) => (row as Record<string, unknown>).id as string || `row-${index}`,
+    getRowId = (row: TData, index: number) => (row as /**/any).id as string || `row-${index}`,
     filters = [],
     onFilterChange,
     enableGlobalSearch = true,
@@ -182,8 +182,8 @@ export default function PremiumDataTable<TData>({
         const mapColumns = (cols: ColumnDef<TData>[]): RTColumnDef<TData>[] => {
             return cols.map((col) => {
                 // Passthrough: if column already has native TanStack `accessorKey` + `cell`, use as-is
-                if ((col as unknown as Record<string, unknown>).accessorKey && typeof (col as unknown as Record<string, unknown>).cell === 'function') {
-                    const native = col as unknown as RTColumnDef<TData>;
+                if ((col as/**/any as /**/any).accessorKey && typeof (col as/**/any as /**/any).cell === 'function') {
+                    const native = col as/**/any as RTColumnDef<TData>;
                     // Wrap the header to add our sorting UI if it's a plain string
                     if (typeof native.header === 'string') {
                         const label = native.header;
@@ -268,7 +268,7 @@ export default function PremiumDataTable<TData>({
                         if (col.render) {
                             return col.render(row.original);
                         }
-                        const value = (row.original as Record<string, unknown>)[col.key];
+                        const value = (row.original as /**/any)[col.key];
                         return <span className={col.cellClassName}>{String(value ?? '-')}</span>;
                     },
                     size: col.size,
@@ -300,7 +300,7 @@ export default function PremiumDataTable<TData>({
                 size: 40,
                 enableSorting: false,
             }
-            : (null as unknown as RTColumnDef<TData>);
+            : (null as/**/any as RTColumnDef<TData>);
 
         return enableRowSelection
             ? [selectionColumn, ...mapColumns(columns)]

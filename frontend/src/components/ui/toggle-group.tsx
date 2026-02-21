@@ -42,7 +42,7 @@ const ToggleGroup = React.forwardRef<
     ref={ref}
     className={cn("flex items-center justify-center gap-1", className)}
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    {...(props as unknown)}>
+    {...(props as/**/any)}>
     <ToggleGroupContext.Provider value={{ variant, size }}>
       {children}
     </ToggleGroupContext.Provider>

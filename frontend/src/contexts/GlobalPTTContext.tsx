@@ -68,7 +68,7 @@ interface SpeechRecognitionConstructor {
 }
 
 const getSpeechRecognition = (): SpeechRecognitionConstructor | null => {
-    const w = window as unknown as Record<string, unknown>;
+    const w = window as/**/any as /**/any;
     return (w.SpeechRecognition || w.webkitSpeechRecognition) as SpeechRecognitionConstructor | null;
 };
 

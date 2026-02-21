@@ -56,7 +56,7 @@ export const studioService = {
     /**
      * Update Brand Identity
      */
-    updateBrand: async (venueId: string, brand: Record<string, unknown>) => {
+    updateBrand: async (venueId: string, brand: /**/any) => {
         const res = await api.post(`/studio/brand?venue_id=${venueId}`, brand);
         return res.data;
     },
@@ -76,7 +76,7 @@ export const studioService = {
     /**
      * Upload Asset (Metadata)
      */
-    uploadAsset: async (venueId: string, asset: Record<string, unknown>) => {
+    uploadAsset: async (venueId: string, asset: /**/any) => {
         const res = await api.post(`/studio/assets?venue_id=${venueId}`, asset);
         return res.data;
     }

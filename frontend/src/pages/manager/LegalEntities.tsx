@@ -353,7 +353,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="text"
                                         value={form.registered_name}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, registered_name: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, registered_name: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500/30"
                                         placeholder="e.g. MG Hospitality Ltd"
                                     />
@@ -363,7 +363,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="text"
                                         value={form.trading_name}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, trading_name: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, trading_name: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Caviar & Bull"
                                     />
@@ -373,7 +373,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="text"
                                         value={form.registration_number}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, registration_number: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, registration_number: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. C56123"
                                     />
@@ -383,7 +383,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="text"
                                         value={form.vat_number}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, vat_number: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, vat_number: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. MT15355214"
                                     />
@@ -393,7 +393,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="text"
                                         value={form.pe_number}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, pe_number: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, pe_number: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. 456398"
                                     />
@@ -403,7 +403,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="text"
                                         value={form.registered_address}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, registered_address: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, registered_address: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Triq ix-Xatt, St. George's Bay"
                                     />
@@ -413,7 +413,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="text"
                                         value={form.city}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, city: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, city: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. STJ 3301"
                                     />
@@ -423,7 +423,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="text"
                                         value={form.country}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, country: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, country: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="Malta"
                                     />
@@ -433,7 +433,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="text"
                                         value={form.hr_manager}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, hr_manager: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, hr_manager: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Jacqueline Portelli"
                                     />
@@ -443,7 +443,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="text"
                                         value={form.principal_payer}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, principal_payer: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, principal_payer: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Marvin Gauci"
                                     />
@@ -453,7 +453,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="email"
                                         value={form.contact_email}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, contact_email: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, contact_email: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="admin@company.com"
                                     />
@@ -463,7 +463,7 @@ export default function LegalEntities() {
                                     <input aria-label="Input"
                                         type="tel"
                                         value={form.contact_phone}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, contact_phone: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, contact_phone: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="+356 2134 5678"
                                     />
@@ -472,7 +472,7 @@ export default function LegalEntities() {
                                     <label className="text-sm text-muted-foreground mb-1 block">Notes</label>
                                     <textarea aria-label="Input"
                                         value={form.notes}
-                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, notes: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, notes: e.target.value })}
                                         rows={3}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none resize-none"
                                         placeholder="Internal notes..."

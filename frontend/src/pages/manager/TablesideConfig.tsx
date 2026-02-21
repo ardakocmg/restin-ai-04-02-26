@@ -204,7 +204,7 @@ export default function TablesideConfig() {
                             <div className="flex items-center gap-4">
                                 <div className={cn(
                                     "w-10 h-10 rounded-xl flex items-center justify-center",
-                                    (config as Record<string, unknown>)?.[cfg.field]
+                                    (config as /**/any)?.[cfg.field]
                                         ? "bg-red-600/15 text-red-400"
                                         : "bg-secondary text-muted-foreground"
                                 )}>
@@ -216,7 +216,7 @@ export default function TablesideConfig() {
                                 </div>
                             </div>
                             <button onClick={() => toggleConfig(cfg.field)} title={`Toggle ${cfg.label}`}>
-                                {(config as Record<string, unknown>)?.[cfg.field]
+                                {(config as /**/any)?.[cfg.field]
                                     ? <ToggleRight className="w-10 h-10 text-red-500" />
                                     : <ToggleLeft className="w-10 h-10 text-muted-foreground" />
                                 }
@@ -235,13 +235,13 @@ export default function TablesideConfig() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <input aria-label="Input"
                                 value={newServerName}
-                                onChange={e = aria-label="Input field"> setNewServerName(e.target.value)}
+                                onChange={e => setNewServerName(e.target.value)}
                                 placeholder="Server Name (e.g. John)"
                                 className="h-10 bg-background border border-border rounded-lg text-foreground px-3 text-sm outline-none focus:border-red-500"
                             />
                             <input aria-label="Input"
                                 value={newTableNames}
-                                onChange={e = aria-label="Input field"> setNewTableNames(e.target.value)}
+                                onChange={e => setNewTableNames(e.target.value)}
                                 placeholder="Tables (comma-separated: T1, T2, T3)"
                                 className="h-10 bg-background border border-border rounded-lg text-foreground px-3 text-sm outline-none focus:border-red-500"
                             />

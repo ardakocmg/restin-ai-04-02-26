@@ -159,7 +159,7 @@ export default function CustomerFacingDisplay() {
 }
 
 /* ═══ Broadcast Helper — call from POS Runtime ════════════════ */
-export function broadcastToCustomerDisplay(type: string, data: Record<string, unknown> = {}) {
+export function broadcastToCustomerDisplay(type: string, data: /**/any = {}) {
     try {
         const channel = new BroadcastChannel(BROADCAST_CHANNEL);
         channel.postMessage({ type, ...data });

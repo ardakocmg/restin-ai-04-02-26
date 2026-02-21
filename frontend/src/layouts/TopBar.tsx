@@ -55,7 +55,7 @@ export default function TopBar({ onMenuToggle, user }) {
           size="icon" aria-label="Action"
           className="lg:hidden"
           onClick={onMenuToggle}
-         aria-label="Action">
+         >
           <Menu className="h-5 w-5" />
         </Button>
 

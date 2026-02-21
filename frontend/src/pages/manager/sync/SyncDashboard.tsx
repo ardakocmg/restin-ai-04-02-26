@@ -61,12 +61,12 @@ export default function SyncDashboard() {
         try {
             const res = await api.get(`/venues/${activeVenueId}/integrations`);
             const raw = Array.isArray(res.data) ? res.data : (res.data?.data ?? []);
-            const mapped: IntegrationConfig[] = raw.map((item: Record<string, unknown>) => ({
+            const mapped: IntegrationConfig[] = raw.map((item: /**/any) => ({
                 key: (item.key as string) || '',
                 enabled: !!(item.enabled ?? item.isEnabled),
                 status: (item.status as string) || ((item.enabled ?? item.isEnabled) ? 'CONNECTED' : 'NOT_CONFIGURED'),
                 lastSync: (item.lastSync as string) || null,
-                config: (item.config as Record<string, unknown>) || {},
+                config: (item.config as /**/any) || {},
                 configured_at: (item.configured_at as string) || (item.createdAt as string) || null,
                 configured_by: (item.configured_by as string) || null,
                 organization_id: (item.organization_id as string) || null,
@@ -357,7 +357,7 @@ export default function SyncDashboard() {
                                         lastSync={config?.lastSync ?? null}
                                         configuredAt={config?.configured_at ?? null}
                                         configuredBy={config?.configured_by ?? null}
-                                        configSummary={config?.config as Record<string, unknown>}
+                                        configSummary={config?.config as /**/any}
                                         loading={syncing === p.key}
                                         onSync={() => handleSync(p.key)}
                                         onConfigure={() => handleConfigure(p.key)}

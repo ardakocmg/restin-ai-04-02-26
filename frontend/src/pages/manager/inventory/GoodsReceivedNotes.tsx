@@ -285,7 +285,7 @@ export default function GoodsReceivedNotes() {
             loadAll();
         } catch (err: unknown) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            logger.error('Failed to create GRN', err as unknown);
+            logger.error('Failed to create GRN', err as/**/any);
             toast.error('Failed to create GRN');
         } finally {
             setSaving(false);
@@ -299,7 +299,7 @@ export default function GoodsReceivedNotes() {
             loadAll();
         } catch (err: unknown) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            logger.error('Failed to post GRN', err as unknown);
+            logger.error('Failed to post GRN', err as/**/any);
             toast.error('Failed to post GRN');
         }
     };

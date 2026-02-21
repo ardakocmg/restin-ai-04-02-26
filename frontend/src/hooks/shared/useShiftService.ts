@@ -60,7 +60,7 @@ export function useShiftService(options: UseShiftServiceOptions) {
             const res = await api.get(`/venues/${venueId}/shifts?${params.toString()}`);
             setShifts(Array.isArray(res.data) ? res.data : []);
         } catch (err) {
-            logger.error('Failed to fetch shifts:', err as Record<string, unknown>);
+            logger.error('Failed to fetch shifts:', err as /**/any);
             setError('Failed to load shifts');
             setShifts([]);
         } finally {
@@ -78,7 +78,7 @@ export function useShiftService(options: UseShiftServiceOptions) {
             );
             setWeeklyGrid(res.data);
         } catch (err) {
-            logger.error('Failed to fetch weekly grid:', err as Record<string, unknown>);
+            logger.error('Failed to fetch weekly grid:', err as /**/any);
             setWeeklyGrid(null);
         } finally {
             setLoading(false);
@@ -102,7 +102,7 @@ export function useShiftService(options: UseShiftServiceOptions) {
                 await fetchShifts();
                 return res.data;
             } catch (err) {
-                logger.error('Failed to create shift:', err as Record<string, unknown>);
+                logger.error('Failed to create shift:', err as /**/any);
                 throw err;
             }
         },
@@ -116,7 +116,7 @@ export function useShiftService(options: UseShiftServiceOptions) {
                 await api.post(`/venues/${venueId}/shifts/${shiftId}/check-in`);
                 await fetchShifts();
             } catch (err) {
-                logger.error('Failed to check in:', err as Record<string, unknown>);
+                logger.error('Failed to check in:', err as /**/any);
                 throw err;
             }
         },
@@ -130,7 +130,7 @@ export function useShiftService(options: UseShiftServiceOptions) {
                 await api.post(`/venues/${venueId}/shifts/${shiftId}/check-out`);
                 await fetchShifts();
             } catch (err) {
-                logger.error('Failed to check out:', err as Record<string, unknown>);
+                logger.error('Failed to check out:', err as /**/any);
                 throw err;
             }
         },
@@ -143,7 +143,7 @@ export function useShiftService(options: UseShiftServiceOptions) {
             const res = await api.get(`/venues/${venueId}/shifts/active`);
             return res.data || [];
         } catch (err) {
-            logger.error('Failed to fetch active shifts:', err as Record<string, unknown>);
+            logger.error('Failed to fetch active shifts:', err as /**/any);
             return [];
         }
     }, [venueId]);

@@ -257,7 +257,7 @@ export default function InventoryReports() {
         const nameMap: Record<string, string> = { movements: 'stock_movements', variance: 'variance_analysis', waste: 'waste_analysis' };
         const data = dataMap[activeTab] || [];
         if (data.length > 0) {
-            exportToCsv(data as Record<string, unknown>[], `${nameMap[activeTab] || 'report'}_${new Date().toISOString().split('T')[0]}.csv`);
+            exportToCsv(data as /**/any[], `${nameMap[activeTab] || 'report'}_${new Date().toISOString().split('T')[0]}.csv`);
         }
     };
 

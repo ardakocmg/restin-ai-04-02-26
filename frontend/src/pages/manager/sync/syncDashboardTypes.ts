@@ -286,7 +286,7 @@ export interface IntegrationConfig {
     enabled: boolean;
     status: string;
     lastSync: string | null;
-    config: Record<string, unknown>;
+    config: /**/any;
     configured_at: string | null;
     configured_by: string | null;
     organization_id?: string;

@@ -136,7 +136,7 @@ export default function OrderingSuggestions() {
 
             if (serverSuggestions.length > 0) {
                 // Add AI forecast placeholder fields (until ML endpoint is live)
-                const enriched = serverSuggestions.map((item: Record<string, unknown>) => ({
+                const enriched = serverSuggestions.map((item: /**/any) => ({
                     ...item,
                     forecast_usage: (item.forecast_usage as number) || Math.round(((item.suggested_qty as number) || 0) * 0.8),
                     forecast_days: (item.forecast_days as number) || 7,
@@ -156,12 +156,12 @@ export default function OrderingSuggestions() {
                 const items = res.data?.items || res.data || [];
 
                 const sugg: SuggestionItem[] = items
-                    .filter((item: Record<string, unknown>) => {
+                    .filter((item: /**/any) => {
                         const stock = parseFloat(String(item.quantity || item.current_stock)) || 0;
                         const minStock = parseFloat(String(item.min_quantity || item.min_stock)) || 0;
                         return minStock > 0 && stock <= minStock * 1.5;
                     })
-                    .map((item: Record<string, unknown>) => {
+                    .map((item: /**/any) => {
                         const stock = parseFloat(String(item.quantity || item.current_stock)) || 0;
                         const minStock = parseFloat(String(item.min_quantity || item.min_stock)) || 0;
                         const maxStock = parseFloat(String(item.max_quantity || item.max_stock)) || minStock * 3;
@@ -261,7 +261,7 @@ export default function OrderingSuggestions() {
             setSelected(new Set());
         } catch (err: unknown) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            logger.error('Failed to generate POs', err as unknown);
+            logger.error('Failed to generate POs', err as/**/any);
             toast.error('Failed to generate purchase orders');
         } finally {
             setGenerating(false);

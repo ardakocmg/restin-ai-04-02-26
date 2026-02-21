@@ -184,7 +184,7 @@ export default function AuthElevationModal() {
                                         ref={inputRef}
                                         type={showPassword ? 'text' : 'password'}
                                         value={password}
-                                        onChange={(e) = aria-label="Input field"> setPassword(e.target.value)}
+                                        onChange={(e) => setPassword(e.target.value)}
                                         placeholder="Enter your password"
                                         className="w-full px-4 py-3 rounded-xl text-sm text-foreground placeholder-zinc-600 outline-none transition-all pr-10"
                                         style={{
@@ -209,7 +209,7 @@ export default function AuthElevationModal() {
                                         ref={inputRef}
                                         type="text"
                                         value={totpCode}
-                                        onChange={(e) = aria-label="Input field"> setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                        onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                         placeholder="000 000"
                                         className="w-full text-center text-2xl tracking-[0.5em] py-3 rounded-xl text-foreground placeholder-zinc-600 outline-none transition-all font-mono"
                                         style={{

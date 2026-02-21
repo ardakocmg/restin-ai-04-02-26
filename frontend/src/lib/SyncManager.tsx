@@ -9,7 +9,7 @@ interface QueueItem {
     id: string;
     url: string;
     method: 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-    body: Record<string, unknown>;
+    body: /**/any;
     timestamp: number;
     retries: number;
 }
@@ -49,7 +49,7 @@ class SyncManagerService {
     /**
      * Add an item to the offline sync queue
      */
-    async enqueue(url: string, method: QueueItem['method'], body: Record<string, unknown>): Promise<void> {
+    async enqueue(url: string, method: QueueItem['method'], body: /**/any): Promise<void> {
         const db = await openDB();
         const tx = db.transaction(STORE_NAME, 'readwrite');
         const store = tx.objectStore(STORE_NAME);

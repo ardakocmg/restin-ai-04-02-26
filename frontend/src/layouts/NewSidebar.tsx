@@ -507,7 +507,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
             size="icon" aria-label="Action"
             onClick={onToggle}
             className="w-full h-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary"
-           aria-label="Action">
+           >
             <ChevronRight className="h-5 w-5" />
           </Button>
         ) : (

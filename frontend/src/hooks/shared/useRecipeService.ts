@@ -58,7 +58,7 @@ export function useRecipeService(options: UseRecipeServiceOptions) {
             const data = res.data?.recipes || res.data || [];
             setRecipes(Array.isArray(data) ? data : []);
         } catch (err) {
-            logger.error('Failed to fetch recipes:', err as Record<string, unknown>);
+            logger.error('Failed to fetch recipes:', err as /**/any);
             setError('Failed to load recipes');
             setRecipes([]);
         } finally {
@@ -81,7 +81,7 @@ export function useRecipeService(options: UseRecipeServiceOptions) {
                 const res = await api.get(`/recipes/${recipeId}`);
                 return res.data;
             } catch (err) {
-                logger.error('Failed to fetch recipe detail:', err as Record<string, unknown>);
+                logger.error('Failed to fetch recipe detail:', err as /**/any);
                 return null;
             }
         },

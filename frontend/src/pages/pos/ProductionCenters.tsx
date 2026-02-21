@@ -46,7 +46,7 @@ const ProductionCenters: React.FC = () => {
     useEffect(() => {
         if (apiCenters.length > 0) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const mapped: ProductionCenter[] = apiCenters.map((ac: Record<string, unknown>, idx: number) => ({
+            const mapped: ProductionCenter[] = apiCenters.map((ac: /**/any, idx: number) => ({
                 id: String(ac.id || ac._id || ''), name: String(ac.name || ''), color: String(ac.color || COLORS[idx % COLORS.length]),
                 type: String(ac.type || 'kitchen') as ProductionCenter['type'], printer: String(ac.printer || 'None'),
                 backupPrinter: String(ac.backup_printer || ac.backupPrinter || 'None'), itemCount: Number(ac.item_count || ac.itemCount || 0),
@@ -147,18 +147,18 @@ const ProductionCenters: React.FC = () => {
             {editing && <div className="pos-modal-overlay" onClick={() => setEditing(null)}>
                 <div className="pos-card pos-modal pos-modal--sm" onClick={e => e.stopPropagation()}>
                     <div className="pos-modal-header"><h3 className="pos-modal-title">{centers.find(c => c.id === editing.id) ? 'Edit' : 'New'} Production Center</h3><button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button></div>
-                    <div className="pos-form-group"><label className="pos-form-label">Name *</label><input className="pos-input" value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Main Kitchen" /></div>
+                    <div className="pos-form-group"><label className="pos-form-label">Name *</label><input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Main Kitchen" /></div>
                     <div className="pos-form-group"><label className="pos-form-label pos-mb-4">Color</label>
                         <div className="pos-flex pos-flex--wrap pos-gap-6">{COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} style={{ width: 28, height: 28, borderRadius: 6, background: c, cursor: 'pointer', border: editing.color === c ? '3px solid #fff' : '3px solid transparent' }} />)}</div></div>
                     <div className="pos-form-grid">
-                        <div><label className="pos-form-label">Type</label><select className="pos-select" value={editing.type} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, type: e.target.value as ProductionCenter['type'] } : null)} aria-label="Type">{TYPES.map(t => <option key={t.v} value={t.v}>{t.l}</option>)}</select></div>
-                        <div><label className="pos-form-label">Avg Prep Time (min)</label><input type="number" min={0} className="pos-input" value={editing.avgPrepTime} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, avgPrepTime: parseInt(e.target.value) || 0 } : null)} aria-label="Average prep time" /></div>
+                        <div><label className="pos-form-label">Type</label><select className="pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as ProductionCenter['type'] } : null)} aria-label="Type">{TYPES.map(t => <option key={t.v} value={t.v}>{t.l}</option>)}</select></div>
+                        <div><label className="pos-form-label">Avg Prep Time (min)</label><input type="number" min={0} className="pos-input" value={editing.avgPrepTime} onChange={e => setEditing(p => p ? { ...p, avgPrepTime: parseInt(e.target.value) || 0 } : null)} aria-label="Average prep time" /></div>
                     </div>
                     <div className="pos-form-grid">
-                        <div><label className="pos-form-label">Primary Printer</label><select className="pos-select" value={editing.printer} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, printer: e.target.value } : null)} aria-label="Printer">{PRINTERS.map(p => <option key={p}>{p}</option>)}</select></div>
-                        <div><label className="pos-form-label">Backup Printer</label><select className="pos-select" value={editing.backupPrinter} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, backupPrinter: e.target.value } : null)} aria-label="Backup printer">{PRINTERS.map(p => <option key={p}>{p}</option>)}</select></div>
+                        <div><label className="pos-form-label">Primary Printer</label><select className="pos-select" value={editing.printer} onChange={e => setEditing(p => p ? { ...p, printer: e.target.value } : null)} aria-label="Printer">{PRINTERS.map(p => <option key={p}>{p}</option>)}</select></div>
+                        <div><label className="pos-form-label">Backup Printer</label><select className="pos-select" value={editing.backupPrinter} onChange={e => setEditing(p => p ? { ...p, backupPrinter: e.target.value } : null)} aria-label="Backup printer">{PRINTERS.map(p => <option key={p}>{p}</option>)}</select></div>
                     </div>
-                    <div className="pos-form-group"><label className="pos-form-label">Staff Count</label><input type="number" min={0} className="pos-input" value={editing.staffCount} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, staffCount: parseInt(e.target.value) || 0 } : null)} aria-label="Staff count" /></div>
+                    <div className="pos-form-group"><label className="pos-form-label">Staff Count</label><input type="number" min={0} className="pos-input" value={editing.staffCount} onChange={e => setEditing(p => p ? { ...p, staffCount: parseInt(e.target.value) || 0 } : null)} aria-label="Staff count" /></div>
                     <div className="pos-flex pos-flex--center pos-flex--between pos-mb-16" style={{ padding: '12px 0' }}><span className="pos-cell-value">Active</span>
                         <Toggle value={editing.isActive} onChange={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /></div>
                     <div className="pos-modal-footer">

@@ -75,7 +75,7 @@ const KioskMode: React.FC = () => {
                         <div className="pos-form-group" style={{ marginTop: 8 }}><label className="pos-form-label">Accepted Methods</label>
                             <div className="pos-flex pos-gap-6 pos-flex--wrap">{PAYMENTS.map(p => { const on = config.acceptedPayments.includes(p); return <button key={p} onClick={() => upd('acceptedPayments', on ? config.acceptedPayments.filter(x => x !== p) : [...config.acceptedPayments, p])} className={`pos-btn-outline ${on ? 'pos-badge--green' : ''}`} style={{ padding: '4px 12px', fontSize: 11, background: on ? 'rgba(16,185,129,0.1)' : undefined, color: on ? '#10B981' : undefined, borderColor: on ? 'rgba(16,185,129,0.3)' : undefined }}>{p}</button>; })}</div></div>
                         <div className="pos-form-group" style={{ marginTop: 12 }}><label className="pos-form-label">Max Order Value (€)</label>
-                            <input type="number" className="pos-input" value={config.maxOrderValue} onChange={e = aria-label="Input field"> upd('maxOrderValue', parseInt(e.target.value) || 0)} /></div>
+                            <input type="number" className="pos-input" value={config.maxOrderValue} onChange={e => upd('maxOrderValue', parseInt(e.target.value) || 0)} /></div>
                     </div>
                 </div>
 
@@ -116,7 +116,7 @@ const KioskMode: React.FC = () => {
                     <div className="pos-card">
                         <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><ShieldCheck size={16} style={{ color: '#EF4444' }} /> Security</h3>
                         <div className="pos-form-group"><label className="pos-form-label">Inactivity Timeout (seconds)</label>
-                            <input type="number" min={10} className="pos-input" value={config.inactivityTimeout} onChange={e = aria-label="Input field"> upd('inactivityTimeout', parseInt(e.target.value) || 60)} /></div>
+                            <input type="number" min={10} className="pos-input" value={config.inactivityTimeout} onChange={e => upd('inactivityTimeout', parseInt(e.target.value) || 60)} /></div>
                     </div>
                 </div>
             </div>

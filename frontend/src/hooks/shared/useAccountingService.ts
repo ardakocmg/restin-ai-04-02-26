@@ -73,7 +73,7 @@ export function useAccountingService(options: UseAccountingServiceOptions) {
                 setPaymentMethods(Array.isArray(data) ? data : []);
             }
         } catch (err) {
-            logger.error('Failed to fetch accounting data:', err as Record<string, unknown>);
+            logger.error('Failed to fetch accounting data:', err as /**/any);
             setError('Failed to load accounting configuration');
         } finally {
             setLoading(false);
@@ -95,7 +95,7 @@ export function useAccountingService(options: UseAccountingServiceOptions) {
                 }
                 await fetchAll();
             } catch (err) {
-                logger.error('Failed to save accounting group:', err as Record<string, unknown>);
+                logger.error('Failed to save accounting group:', err as /**/any);
                 throw err;
             }
         },
@@ -113,7 +113,7 @@ export function useAccountingService(options: UseAccountingServiceOptions) {
                 }
                 await fetchAll();
             } catch (err) {
-                logger.error('Failed to save tax profile:', err as Record<string, unknown>);
+                logger.error('Failed to save tax profile:', err as /**/any);
                 throw err;
             }
         },
@@ -131,7 +131,7 @@ export function useAccountingService(options: UseAccountingServiceOptions) {
                 }
                 await fetchAll();
             } catch (err) {
-                logger.error('Failed to save payment method:', err as Record<string, unknown>);
+                logger.error('Failed to save payment method:', err as /**/any);
                 throw err;
             }
         },

@@ -133,9 +133,9 @@ const FloorPlanBO: React.FC = () => {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
                     <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name</label>
-                        <input className="pos-input" value={editingTable.name} onChange={e = aria-label="Input field"> setEditingTable(p => p ? { ...p, name: e.target.value } : null)} /></div>
+                        <input className="pos-input" value={editingTable.name} onChange={e => setEditingTable(p => p ? { ...p, name: e.target.value } : null)} /></div>
                     <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Seats</label>
-                        <input type="number" min={1} className="pos-input" value={editingTable.seats} onChange={e = aria-label="Input field"> setEditingTable(p => p ? { ...p, seats: parseInt(e.target.value) || 1 } : null)} /></div>
+                        <input type="number" min={1} className="pos-input" value={editingTable.seats} onChange={e => setEditingTable(p => p ? { ...p, seats: parseInt(e.target.value) || 1 } : null)} /></div>
                     <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Shape</label>
                         <div style={{ display: 'flex', gap: 6 }}>
                             <button onClick={() => setEditingTable(p => p ? { ...p, shape: 'rect' } : null)} className={`pos-btn pos-btn--outline${editingTable.shape === 'rect' ? ' pos-radio-option--active' : ''}`} style={{ padding: '8px 14px', fontSize: 12 }}><Square size={14} /></button>
@@ -143,8 +143,8 @@ const FloorPlanBO: React.FC = () => {
                         </div></div>
                     <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Size (W×H)</label>
                         <div style={{ display: 'flex', gap: 4 }}>
-                            <input type="number" min={40} className="pos-input" style={{ width: '50%' }} value={editingTable.width} onChange={e = aria-label="Input field"> setEditingTable(p => p ? { ...p, width: parseInt(e.target.value) || 40 } : null)} />
-                            <input type="number" min={40} className="pos-input" style={{ width: '50%' }} value={editingTable.height} onChange={e = aria-label="Input field"> setEditingTable(p => p ? { ...p, height: parseInt(e.target.value) || 40 } : null)} />
+                            <input type="number" min={40} className="pos-input" style={{ width: '50%' }} value={editingTable.width} onChange={e => setEditingTable(p => p ? { ...p, width: parseInt(e.target.value) || 40 } : null)} />
+                            <input type="number" min={40} className="pos-input" style={{ width: '50%' }} value={editingTable.height} onChange={e => setEditingTable(p => p ? { ...p, height: parseInt(e.target.value) || 40 } : null)} />
                         </div></div>
                 </div>
             </div>}

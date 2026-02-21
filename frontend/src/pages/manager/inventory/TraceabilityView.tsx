@@ -94,7 +94,7 @@ function AllergenBadge({ allergen }: { allergen: string }) {
 export default function TraceabilityView() {
     const { t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { activeVenue: selectedVenue } = useVenue() as unknown;
+    const { activeVenue: selectedVenue } = useVenue() as/**/any;
 
     const [items, setItems] = useState<TraceableItem[]>([]);
     const [loading, setLoading] = useState(false);

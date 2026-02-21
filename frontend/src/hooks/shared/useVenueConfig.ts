@@ -36,7 +36,7 @@ interface UseVenueConfigOptions {
     enabled?: boolean;
 }
 
-export function useVenueConfig<T = Record<string, unknown>>(options: UseVenueConfigOptions) {
+export function useVenueConfig<T = /**/any>(options: UseVenueConfigOptions) {
     const { venueId, configType, enabled = true } = options;
 
     const [data, setData] = useState<T[]>([]);
@@ -52,7 +52,7 @@ export function useVenueConfig<T = Record<string, unknown>>(options: UseVenueCon
             const result = res.data?.items || res.data || [];
             setData(Array.isArray(result) ? result : []);
         } catch (err) {
-            logger.error(`Failed to fetch config ${configType}:`, err as Record<string, unknown>);
+            logger.error(`Failed to fetch config ${configType}:`, err as /**/any);
             setError(`Failed to load ${configType}`);
             setData([]);
         } finally {
@@ -75,7 +75,7 @@ export function useVenueConfig<T = Record<string, unknown>>(options: UseVenueCon
                 }
                 await fetchConfig();
             } catch (err) {
-                logger.error(`Failed to save ${configType}:`, err as Record<string, unknown>);
+                logger.error(`Failed to save ${configType}:`, err as /**/any);
                 throw err;
             }
         },
@@ -89,7 +89,7 @@ export function useVenueConfig<T = Record<string, unknown>>(options: UseVenueCon
                 await api.delete(`/venues/${venueId}/config/${configType}/${itemId}`);
                 await fetchConfig();
             } catch (err) {
-                logger.error(`Failed to delete ${configType}:`, err as Record<string, unknown>);
+                logger.error(`Failed to delete ${configType}:`, err as /**/any);
                 throw err;
             }
         },

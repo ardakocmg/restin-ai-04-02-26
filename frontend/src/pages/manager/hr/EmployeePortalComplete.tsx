@@ -689,7 +689,7 @@ export default function EmployeePortalComplete() {
                 <select aria-label="Input"
                   className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                   defaultValue={leaveRequestType === 'sick' ? 'sick' : 'vacation'}
-                  aria-label="Leave type"
+                  
                 >
                   {leaveRequestType === 'sick' ? (
                     <>

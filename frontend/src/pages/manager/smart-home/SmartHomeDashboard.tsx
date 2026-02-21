@@ -267,7 +267,7 @@ function MusicPlayerControls({ device, onControl }: {
                     value={localVolume}
                     onChange={handleVolume}
                     title="Volume"
-                    aria-label="Volume"
+                    
                     className="w-full h-1.5 rounded-full bg-secondary appearance-none cursor-pointer
                         [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4
                         [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-green-500

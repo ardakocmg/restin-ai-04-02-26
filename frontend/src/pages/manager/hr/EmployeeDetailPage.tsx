@@ -932,7 +932,7 @@ export default function EmployeeDetailPage() {
                                   className="bg-background border-border text-secondary-foreground pr-10"
                                   placeholder="••••••••"
                                 />
-                                <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() = aria-label="Action"> setPwShowCurrent(!pwShowCurrent)}>
+                                <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => setPwShowCurrent(!pwShowCurrent)}>
                                   {pwShowCurrent ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                                 </Button>
                               </div>
@@ -948,7 +948,7 @@ export default function EmployeeDetailPage() {
                                 className="bg-background border-border text-secondary-foreground pr-10"
                                 placeholder="Min. 6 chars"
                               />
-                              <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() = aria-label="Action"> setPwShowNew(!pwShowNew)}>
+                              <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => setPwShowNew(!pwShowNew)}>
                                 {pwShowNew ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                               </Button>
                             </div>

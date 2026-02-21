@@ -19,7 +19,7 @@ import syncService from "../../services/SyncService";
 import {
   LogOut, X, Send, Trash2, Users, Grid3x3, Map, // Added Map
   UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus, Loader2, AlertTriangle, Printer
-} from "lucide-react";
+, Timer} from "lucide-react";
 
 import FloorPlanWidget from "../../components/pos/FloorPlanWidget"; // New Widget
 

@@ -9,7 +9,7 @@ export interface ReportDefinition {
     name: string;
     description?: string;
     category: string;
-    params_schema?: Record<string, unknown>;
+    params_schema?: /**/any;
 }
 
 export interface ReportRun {
@@ -17,7 +17,7 @@ export interface ReportRun {
     venue_id: string;
     report_key: string;
     status: 'pending' | 'running' | 'completed' | 'failed';
-    params: Record<string, unknown>;
+    params: /**/any;
     result?: unknown;
     created_at: string;
     completed_at?: string;
@@ -43,7 +43,7 @@ class ReportingService {
     async runReport(
         venueId: string,
         reportKey: string,
-        params: Record<string, unknown> = {},
+        params: /**/any = {},
         format: ReportFormat = 'json'
     ): Promise<ReportRun> {
         const response = await api.post('/reports/run', {
@@ -85,11 +85,11 @@ class ReportingService {
     }
 
     // Cache management
-    private cacheKey(venueId: string, reportKey: string, params: Record<string, unknown>): string {
+    private cacheKey(venueId: string, reportKey: string, params: /**/any): string {
         return `report_${venueId}_${reportKey}_${JSON.stringify(params)}`;
     }
 
-    getCachedResult(venueId: string, reportKey: string, params: Record<string, unknown>): unknown | null {
+    getCachedResult(venueId: string, reportKey: string, params: /**/any): unknown | null {
         const key = this.cacheKey(venueId, reportKey, params);
         const cached = localStorage.getItem(key);
         if (!cached) return null;
@@ -104,7 +104,7 @@ class ReportingService {
         }
     }
 
-    setCachedResult(venueId: string, reportKey: string, params: Record<string, unknown>, result: unknown): void {
+    setCachedResult(venueId: string, reportKey: string, params: /**/any, result: unknown): void {
         const key = this.cacheKey(venueId, reportKey, params);
         const data: CachedResult = {
             result,

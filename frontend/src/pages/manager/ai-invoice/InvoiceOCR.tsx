@@ -50,7 +50,7 @@ export default function InvoiceOCR() {
                 <label className="block text-sm font-medium mb-2">Match to PO (Optional)</label>
                 <select aria-label="Input"
                   title="Match to PO"
-                  aria-label="Match to PO"
+                  
                   value={selectedPO}
                   onChange={(e) => setSelectedPO(e.target.value)}
                   className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded"

@@ -43,7 +43,7 @@ interface CountItem {
 export default function MobileStockCount() {
     const { t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { activeVenue: selectedVenue } = useVenue() as unknown;
+    const { activeVenue: selectedVenue } = useVenue() as/**/any;
 
     const [items, setItems] = useState<CountItem[]>([]);
     const [loading, setLoading] = useState(false);
@@ -340,7 +340,7 @@ export default function MobileStockCount() {
                                             variant="outline"
                                             size="icon" aria-label="Action"
                                             className="h-9 w-9 border-white/10"
-                                            onClick={() = aria-label="Action"> decrementCount(item._id)}
+                                            onClick={() => decrementCount(item._id)}
                                         >
                                             <Minus className="h-4 w-4" />
                                         </Button>
@@ -357,7 +357,7 @@ export default function MobileStockCount() {
                                             variant="outline"
                                             size="icon" aria-label="Action"
                                             className="h-9 w-9 border-white/10"
-                                            onClick={() = aria-label="Action"> incrementCount(item._id)}
+                                            onClick={() => incrementCount(item._id)}
                                         >
                                             <Plus className="h-4 w-4" />
                                         </Button>

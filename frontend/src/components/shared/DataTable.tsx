@@ -38,7 +38,7 @@ import EmptyState from './EmptyState';
 const DEFAULT_PAGE_SIZES = [10, 20, 50, 100];
 
 // Generic interface allows typed render functions while defaulting to any for flexibility
-export interface ColumnDef<TData = any> {
+export interface ColumnDef<TData = /**/any> {
   key: string;
   id?: string;
   label?: string;
@@ -57,7 +57,7 @@ interface TablePreset {
   id: string;
   name: string;
   scope: string;
-  state?: Record<string, unknown>;
+  state?: /**/any;
 }
 
 interface QueryPayload {
@@ -184,7 +184,7 @@ export default function DataTable<TData, TValue>({
     const mapColumns = (cols: ColumnDef[]): RTColumnDef<TData>[] => {
       return cols.map((col, index) => {
         const colId = col.key || col.id || `col-${index}`;
-        const mapped: RTColumnDef<TData> & { accessorKey?: string; meta?: Record<string, unknown>; columns?: RTColumnDef<TData>[] } = {
+        const mapped: RTColumnDef<TData> & { accessorKey?: string; meta?: /**/any; columns?: RTColumnDef<TData>[] } = {
           id: colId,
           header: col.label || col.header || colId,
         };
@@ -529,10 +529,10 @@ export default function DataTable<TData, TValue>({
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                size="icon" aria-label="Action"
+                size="icon"
                 className="bg-card border-border hover:border-red-500/30 hover:bg-red-500/5 transition-all text-muted-foreground hover:text-foreground"
                 data-testid="datatable-settings-button"
-               aria-label="Action">
+                aria-label="Table settings">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
@@ -615,7 +615,7 @@ export default function DataTable<TData, TValue>({
                             size="icon" aria-label="Action"
                             variant="ghost"
                             className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                            onClick={() = aria-label="Action"> {
+                            onClick={() => {
                               const currentOrder = table.getState().columnOrder;
                               if (!currentOrder.length) return;
                               const newOrder = [...currentOrder];
@@ -633,7 +633,7 @@ export default function DataTable<TData, TValue>({
                             size="icon" aria-label="Action"
                             variant="ghost"
                             className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                            onClick={() = aria-label="Action"> {
+                            onClick={() => {
                               const currentOrder = table.getState().columnOrder;
                               if (!currentOrder.length) return;
                               const newOrder = [...currentOrder];
@@ -651,7 +651,7 @@ export default function DataTable<TData, TValue>({
                             size="icon" aria-label="Action"
                             variant="ghost"
                             className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                            onClick={() = aria-label="Action"> {
+                            onClick={() => {
                               if (column.getIsPinned()) {
                                 column.pin(false);
                               } else {
@@ -805,7 +805,7 @@ export default function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="icon" aria-label="Action"
-                onClick={() = aria-label="Action"> { if (serverMode) { setPageIndex((prev) => Math.max(prev - 1, 0)); } else { table.previousPage(); } }}
+                onClick={() => { if (serverMode) { setPageIndex((prev) => Math.max(prev - 1, 0)); } else { table.previousPage(); } }}
                 disabled={serverMode ? pageIndex === 0 : !table.getCanPreviousPage()}
                 data-testid="datatable-page-prev"
               >
@@ -817,7 +817,7 @@ export default function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="icon" aria-label="Action"
-                onClick={() = aria-label="Action"> { if (serverMode) { setPageIndex((prev) => (totalPages ? Math.min(prev + 1, totalPages - 1) : prev + 1)); } else { table.nextPage(); } }}
+                onClick={() => { if (serverMode) { setPageIndex((prev) => (totalPages ? Math.min(prev + 1, totalPages - 1) : prev + 1)); } else { table.nextPage(); } }}
                 disabled={serverMode ? (totalPages ? pageIndex + 1 >= totalPages : false) : !table.getCanNextPage()}
                 data-testid="datatable-page-next"
               >

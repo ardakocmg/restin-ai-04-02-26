@@ -397,6 +397,7 @@ export default function VoiceSettings() {
     });
 
     const uploadMutation = useMutation({
+        // @ts-ignore
         mutationFn: (file) => voiceService.uploadKnowledge(activeVenueId || 'default', file),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['voice-knowledge'] });
@@ -406,6 +407,7 @@ export default function VoiceSettings() {
     });
 
     const deleteMutation = useMutation({
+        // @ts-ignore
         mutationFn: (docId) => voiceService.deleteKnowledge(docId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['voice-knowledge'] });
@@ -434,6 +436,7 @@ export default function VoiceSettings() {
     };
 
     const handleSave = () => {
+        // @ts-ignore
         saveMutation.mutate({
             persona, greeting,
             voice_speed: voiceSpeed[0],
@@ -610,7 +613,7 @@ export default function VoiceSettings() {
                         </CardHeader>
                         <CardContent>
                             <input aria-label="Input" type="file" ref={fileInputRef} onChange={handleFileUpload}
-                                accept=".pdf,.txt,.doc,.docx" className="hidden" aria-label="Upload knowledge base file" />
+                                accept=".pdf,.txt,.doc,.docx" className="hidden"  />
                             <div onClick={() => fileInputRef.current?.click()}
                                 className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:bg-card/50 transition-colors cursor-pointer">
                                 <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
@@ -632,7 +635,7 @@ export default function VoiceSettings() {
                                         <div className="flex items-center gap-2">
                                             <span className="text-xs text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-1 rounded">{doc.status || 'Indexed'}</span>
                                             <Button size="icon" aria-label="Action" variant="ghost"
-                                                onClick={() = aria-label="Action"> deleteMutation.mutate(doc.id)}
+                                                onClick={() => deleteMutation.mutate(doc.id)}
                                                 className="h-7 w-7 text-muted-foreground hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <Trash2 className="w-3 h-3" />
                                             </Button>

@@ -19,7 +19,7 @@ export interface GuestProfile {
     total_spent?: number;
     last_visit?: string;
     tags?: string[];
-    preferences?: Record<string, unknown>;
+    preferences?: /**/any;
     notes?: string;
     created_at?: string;
 }
@@ -48,7 +48,7 @@ export function useGuestService(options: UseGuestServiceOptions) {
             const data = res.data?.guests || res.data || [];
             setGuests(Array.isArray(data) ? data : []);
         } catch (err) {
-            logger.error('Failed to fetch guests:', err as Record<string, unknown>);
+            logger.error('Failed to fetch guests:', err as /**/any);
             setError('Failed to load guest profiles');
             setGuests([]);
         } finally {
@@ -66,7 +66,7 @@ export function useGuestService(options: UseGuestServiceOptions) {
                 const res = await api.get(`/guests/${guestId}`);
                 return res.data;
             } catch (err) {
-                logger.error('Failed to fetch guest detail:', err as Record<string, unknown>);
+                logger.error('Failed to fetch guest detail:', err as /**/any);
                 return null;
             }
         },

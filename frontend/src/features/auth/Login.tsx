@@ -292,7 +292,7 @@ export default function Login() {
 
         try {
             // Load Google Identity Services if not already loaded
-            if (!(window as unknown as Record<string, unknown>).google) {
+            if (!(window as/**/any as /**/any).google) {
                 await new Promise<void>((resolve, reject) => {
                     const script = document.createElement('script');
                     script.src = 'https://accounts.google.com/gsi/client';
@@ -303,10 +303,10 @@ export default function Login() {
                 });
             }
 
-            const google = (window as unknown as Record<string, unknown>).google as {
+            const google = (window as/**/any as /**/any).google as {
                 accounts: {
                     id: {
-                        initialize: (config: Record<string, unknown>) => void;
+                        initialize: (config: /**/any) => void;
                         prompt: (callback?: (notification: { isNotDisplayed: () => boolean; getNotDisplayedReason: () => string }) => void) => void;
                     };
                 };
@@ -424,7 +424,7 @@ export default function Login() {
                             <input aria-label="Input"
                                 type="text"
                                 value={totpCode}
-                                onChange={(e) = aria-label="Input field"> setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                 className="w-full text-center text-2xl tracking-widest py-4 rounded-xl bg-black/40 text-foreground border border-border"
                                 placeholder="••••••"
                                 data-testid="mfa-code-input"

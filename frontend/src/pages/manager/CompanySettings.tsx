@@ -69,7 +69,7 @@ export default function CompanySettings() {
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [venueForm, setVenueForm] = useState<Record<string, any>>({});
+    const [venueForm, setVenueForm] = useState</**/any>({});
 
     useEffect(() => {
         if (activeVenue?.id) {
@@ -166,7 +166,7 @@ export default function CompanySettings() {
 
                             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            <Separator {...{ className: 'bg-white/5' } as unknown} />
+                            <Separator {...{ className: 'bg-white/5' } as/**/any} />
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">

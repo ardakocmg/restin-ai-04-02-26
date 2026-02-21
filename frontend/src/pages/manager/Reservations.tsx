@@ -157,7 +157,7 @@ export default function Reservations() {
                     {row.status === 'confirmed' && (
                       <Button
                         variant="ghost" size="icon" aria-label="Action" className="h-7 w-7 text-green-600 dark:text-green-400 hover:bg-green-500/10"
-                        onClick={() = aria-label="Action"> updateStatus(row.id, 'seated')}
+                        onClick={() => updateStatus(row.id, 'seated')}
                       >
                         <Users className="h-3 w-3" />
                       </Button>
@@ -165,7 +165,7 @@ export default function Reservations() {
                     {row.status === 'seated' && (
                       <Button
                         variant="ghost" size="icon" aria-label="Action" className="h-7 w-7 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10"
-                        onClick={() = aria-label="Action"> updateStatus(row.id, 'completed')}
+                        onClick={() => updateStatus(row.id, 'completed')}
                       >
                         <Calendar className="h-3 w-3" />
                       </Button>
@@ -173,7 +173,7 @@ export default function Reservations() {
                     {['pending', 'confirmed'].includes(row.status) && (
                       <Button
                         variant="ghost" size="icon" aria-label="Action" className="h-7 w-7 text-red-600 dark:text-red-400 hover:bg-red-500/10"
-                        onClick={() = aria-label="Action"> updateStatus(row.id, 'no_show')}
+                        onClick={() => updateStatus(row.id, 'no_show')}
                       >
                         <ShieldAlert className="h-3 w-3" />
                       </Button>

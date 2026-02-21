@@ -29,7 +29,7 @@ export default function InventoryPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [filters, setFilters] = useState<Record<string, any>>({});
+  const [filters, setFilters] = useState</**/any>({});
   const [selectedItem, setSelectedItem] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -61,13 +61,13 @@ export default function InventoryPage() {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleItemClick = (item: Record<string, unknown>) => {
+  const handleItemClick = (item: /**/any) => {
     setSelectedItem(item);
     setDrawerOpen(true);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const getStockStatus = (item: Record<string, unknown>) => {
+  const getStockStatus = (item: /**/any) => {
     const balance = item.quantity || 0;
     const minStock = item.min_stock || item.min_quantity || 0;
 
@@ -108,7 +108,7 @@ export default function InventoryPage() {
             <label className="text-sm font-medium text-foreground mb-2 block">Status</label>
             <select aria-label="Input"
               value={filters.status || ''}
-              onChange={(e) = aria-label="Input field"> setFilters({ ...filters, status: e.target.value })}
+              onChange={(e) => setFilters({ ...filters, status: e.target.value })}
               className="w-full p-2 border rounded"
             >
               <option value="">All</option>
@@ -132,7 +132,7 @@ export default function InventoryPage() {
             <input aria-label="Input"
               type="checkbox"
               checked={filters.min_stock_only || false}
-              onChange={(e) = aria-label="Input field"> setFilters({ ...filters, min_stock_only: e.target.checked })}
+              onChange={(e) => setFilters({ ...filters, min_stock_only: e.target.checked })}
               className="h-5 w-5 mt-2"
             />
           </div>
@@ -150,7 +150,7 @@ export default function InventoryPage() {
           </div>
         ) : (
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          items.map((item: Record<string, unknown>) => {
+          items.map((item: /**/any) => {
             const status = getStockStatus(item);
             const StatusIcon = status.icon;
 
@@ -167,7 +167,7 @@ export default function InventoryPage() {
                       <span className="font-medium text-foreground">{item.name}</span>
                     </div>
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    <Badge variant={status.color as unknown} className={status.className}>
+                    <Badge variant={status.color as/**/any} className={status.className}>
                       <StatusIcon className="h-3 w-3 mr-1" />
                       {status.label}
                     </Badge>

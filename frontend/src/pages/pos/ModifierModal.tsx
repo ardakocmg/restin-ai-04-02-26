@@ -90,7 +90,7 @@ function ModifierModal({ menuItem, onClose, onConfirm }) {
             <h3 className="text-lg font-semibold text-foreground mb-3">Special Instructions</h3>
             <textarea aria-label="Input"
               value={instructions}
-              onChange={(e) = aria-label="Input field"> setInstructions(e.target.value)}
+              onChange={(e) => setInstructions(e.target.value)}
               placeholder="Add cooking instructions..."
               className="w-full px-4 py-3 border border-border rounded-lg resize-none"
               rows={3}

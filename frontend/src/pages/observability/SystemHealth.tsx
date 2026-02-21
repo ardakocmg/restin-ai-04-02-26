@@ -18,7 +18,7 @@ import { Activity, Database, AlertTriangle, CheckCircle2, RefreshCw } from 'luci
 export default function SystemHealth() {
   const { activeVenue } = useVenue();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [health, setHealth] = useState<Record<string, any> | null>(null);
+  const [health, setHealth] = useState</**/any | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

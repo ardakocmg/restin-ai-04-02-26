@@ -71,7 +71,7 @@ export default function Observability() {
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const venueId = activeVenue?.id || user?.venueId || user?.venue_id;
+  const venueId = activeVenue?.id || user?.venueId || user?.venueId;
 
   useEffect(() => {
     if (venueId) {

@@ -147,7 +147,7 @@ export default function DynamicPricingPage() {
                             <label className="text-xs text-muted-foreground block mb-1">Type</label>
                             <select aria-label="Input"
                                 value={newBook.type}
-                                onChange={(e) = aria-label="Input field"> setNewBook({ ...newBook, type: e.target.value })}
+                                onChange={(e) => setNewBook({ ...newBook, type: e.target.value })}
                                 className="w-full h-9 rounded-md border border-border bg-background text-foreground text-sm px-3"
                             >
                                 <option value="happy_hour">Happy Hour</option>
@@ -160,7 +160,7 @@ export default function DynamicPricingPage() {
                             <label className="text-xs text-muted-foreground block mb-1">Modifier</label>
                             <select aria-label="Input"
                                 value={newBook.modifier_type}
-                                onChange={(e) = aria-label="Input field"> setNewBook({ ...newBook, modifier_type: e.target.value })}
+                                onChange={(e) => setNewBook({ ...newBook, modifier_type: e.target.value })}
                                 className="w-full h-9 rounded-md border border-border bg-background text-foreground text-sm px-3"
                             >
                                 <option value="PERCENTAGE">Percentage (%)</option>

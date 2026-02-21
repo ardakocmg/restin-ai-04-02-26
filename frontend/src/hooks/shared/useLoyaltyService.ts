@@ -44,7 +44,7 @@ export function useLoyaltyService(options: UseLoyaltyServiceOptions) {
             const res = await api.get(`/venues/${venueId}/loyalty/config`);
             setConfig(res.data);
         } catch (err) {
-            logger.error('Failed to fetch loyalty config:', err as Record<string, unknown>);
+            logger.error('Failed to fetch loyalty config:', err as /**/any);
             setError('Failed to load loyalty configuration');
             setConfig(null);
         } finally {
@@ -64,7 +64,7 @@ export function useLoyaltyService(options: UseLoyaltyServiceOptions) {
                 setConfig(res.data);
                 return res.data;
             } catch (err) {
-                logger.error('Failed to update loyalty config:', err as Record<string, unknown>);
+                logger.error('Failed to update loyalty config:', err as /**/any);
                 throw err;
             }
         },

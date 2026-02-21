@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { Settings2 } from 'lucide-react';
 
 interface PropertiesPanelProps {
-    selectedBlock: Record<string, unknown> | null;
+    selectedBlock: /**/any | null;
     updateProp: (bid: string, pk: string, f: string, v: unknown) => void;
-    setBlocks: React.Dispatch<React.SetStateAction<Record<string, unknown>[]>>;
+    setBlocks: React.Dispatch<React.SetStateAction</**/any[]>>;
 }
 
 export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }: PropertiesPanelProps) {
@@ -26,11 +26,11 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
 
     const bid = selectedBlock.id as string;
     const type = selectedBlock.type as string;
-    const tp = selectedBlock.text_props as Record<string, unknown> | undefined;
-    const tbp = selectedBlock.table_props as Record<string, unknown> | undefined;
-    const dp = selectedBlock.divider_props as Record<string, unknown> | undefined;
-    const bp = selectedBlock.barcode_props as Record<string, unknown> | undefined;
-    const ip = selectedBlock.image_props as Record<string, unknown> | undefined;
+    const tp = selectedBlock.text_props as /**/any | undefined;
+    const tbp = selectedBlock.table_props as /**/any | undefined;
+    const dp = selectedBlock.divider_props as /**/any | undefined;
+    const bp = selectedBlock.barcode_props as /**/any | undefined;
+    const ip = selectedBlock.image_props as /**/any | undefined;
 
     const isTextType = ['text', 'venue_info', 'document_title', 'notes', 'thank_you', 'legal_footer', 'signature_line'].includes(type);
     const isTableType = ['items_list', 'grouped_items', 'table', 'discounts_charges', 'payment_summary'].includes(type);
@@ -125,7 +125,7 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                                     <input aria-label="Input"
                                         type="checkbox"
                                         checked={Boolean(tp?.[s])}
-                                        onChange={e = aria-label="Input field"> updateProp(bid, 'text_props', s, e.target.checked)}
+                                        onChange={e => updateProp(bid, 'text_props', s, e.target.checked)}
                                     />
                                     {s.charAt(0).toUpperCase() + s.slice(1)}
                                 </label>

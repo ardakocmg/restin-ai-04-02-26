@@ -17,7 +17,7 @@ interface ProviderCardProps {
     lastSync: string | null;
     configuredAt: string | null;
     configuredBy: string | null;
-    configSummary?: Record<string, unknown>;
+    configSummary?: /**/any;
     onSync: () => void;
     onConfigure: () => void;
     loading?: boolean;

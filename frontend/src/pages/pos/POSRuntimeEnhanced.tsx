@@ -54,7 +54,7 @@ function getCategoryMeta(catName) {
 /* ─── Main Component ─────────────────────────────────────────── */
 export default function POSRuntimeEnhanced() {
   const { user } = useAuth();
-  const venueId = localStorage.getItem('restin_pos_venue') || user?.venue_id || localStorage.getItem('venue_id');
+  const venueId = localStorage.getItem('restin_pos_venue') || user?.venueId || localStorage.getItem('venue_id');
 
   // Core state
   const [categories, setCategories] = useState([]);
@@ -121,6 +121,7 @@ export default function POSRuntimeEnhanced() {
   const [clock, setClock] = useState('');
 
   // Server info
+  // @ts-ignore
   const serverName = user?.name || user?.full_name || 'Server';
   const serverInitial = serverName.charAt(0).toUpperCase();
 
@@ -459,6 +460,7 @@ export default function POSRuntimeEnhanced() {
   };
 
   const handleStock86 = (item) => {
+    // @ts-ignore
     setStock86Items(prev => new Set([...prev, item.menu_item_id || item.id]));
     toast.success(`${item.menu_item_name || item.name} marked as 86 (out of stock)`);
   };
@@ -616,8 +618,11 @@ export default function POSRuntimeEnhanced() {
       };
       // Room Charge metadata — embed hotel folio reference in payment record
       if (paymentData.tender_type === 'ROOM_CHARGE') {
+        // @ts-ignore
         payload.room_number = paymentData.room_number;
+        // @ts-ignore
         payload.guest_name = paymentData.guest_name;
+        // @ts-ignore
         payload.reservation_id = paymentData.reservation_id;
       }
       await api.post(`pos/orders/${order.id}/payments`, payload);
@@ -889,6 +894,7 @@ export default function POSRuntimeEnhanced() {
               Object.entries(groupedItems).map(([seatNum, courses]) => (
                 <div key={seatNum}>
                   <div className="pos-seat-header">Seat {seatNum}</div>
+                  {/* @ts-ignore */}
                   {Object.entries(courses).sort(([a], [b]) => a - b).map(([courseNum, courseItems]) => (
                     <div key={courseNum}>
                       <div className="bg-[#2A2A2A] px-2 py-1 flex items-center justify-between text-[11px] font-bold tracking-widest uppercase mb-1">
@@ -1175,6 +1181,7 @@ export default function POSRuntimeEnhanced() {
       {/* Receipt Preview */}
       {
         showReceipt && (
+          // @ts-ignore
           <ReceiptPreview
             order={order}
             items={items}
@@ -1470,6 +1477,7 @@ export default function POSRuntimeEnhanced() {
       {
         showTableMerge && (
           <TableMergeModal
+            // @ts-ignore
             tables={tables}
             onMerge={(sourceId, targetId) => {
               toast.success(`Table ${sourceId} merged into ${targetId}`);

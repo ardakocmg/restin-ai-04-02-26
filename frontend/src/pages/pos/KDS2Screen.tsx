@@ -852,7 +852,7 @@ const KDS2Screen: React.FC = () => {
 
                                 <div className="kds2-settings-section">
                                     <div className="kds2-settings-section-title">Language</div>
-                                    <select className="kds2-select" value={settings.language} onChange={e = aria-label="Input field"> setSettings(s => ({ ...s, language: e.target.value }))} aria-label="Language">
+                                    <select className="kds2-select" value={settings.language} onChange={e => setSettings(s => ({ ...s, language: e.target.value }))} aria-label="Language">
                                         <option>English</option>
                                         <option>Deutsch</option>
                                         <option>Français</option>
@@ -949,7 +949,7 @@ const KDS2Screen: React.FC = () => {
                                     <div className="kds2-settings-section-title">Language & Time</div>
                                     <div className="kds2-settings-row">
                                         <div className="kds2-settings-row-label">Language</div>
-                                        <select className="kds2-select" value={settings.language} onChange={e = aria-label="Input field"> setSettings(s => ({ ...s, language: e.target.value }))} aria-label="Language">
+                                        <select className="kds2-select" value={settings.language} onChange={e => setSettings(s => ({ ...s, language: e.target.value }))} aria-label="Language">
                                             <option>English</option><option>Deutsch</option><option>Français</option><option>Nederlands</option><option>Türkçe</option>
                                         </select>
                                     </div>
@@ -977,7 +977,7 @@ const KDS2Screen: React.FC = () => {
                                                     <div className="kds2-settings-row-desc">Ticket pulses orange</div>
                                                 </div>
                                                 <div className="kds2-number-input">
-                                                    <input type="number" value={settings.delayedAfter} onChange={e = aria-label="Input field"> setSettings(s => ({ ...s, delayedAfter: parseInt(e.target.value) || 0 }))} />
+                                                    <input type="number" value={settings.delayedAfter} onChange={e => setSettings(s => ({ ...s, delayedAfter: parseInt(e.target.value) || 0 }))} />
                                                     <span className="unit">min</span>
                                                 </div>
                                             </div>
@@ -987,7 +987,7 @@ const KDS2Screen: React.FC = () => {
                                                     <div className="kds2-settings-row-desc">Ticket pulses red</div>
                                                 </div>
                                                 <div className="kds2-number-input">
-                                                    <input type="number" value={settings.lateAfter} onChange={e = aria-label="Input field"> setSettings(s => ({ ...s, lateAfter: parseInt(e.target.value) || 0 }))} />
+                                                    <input type="number" value={settings.lateAfter} onChange={e => setSettings(s => ({ ...s, lateAfter: parseInt(e.target.value) || 0 }))} />
                                                     <span className="unit">min</span>
                                                 </div>
                                             </div>

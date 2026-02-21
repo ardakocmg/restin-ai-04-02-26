@@ -52,7 +52,7 @@ export function useItemService(options: UseItemServiceOptions) {
             const data = res.data?.items || res.data || [];
             setItems(Array.isArray(data) ? data : []);
         } catch (err) {
-            logger.error('Failed to fetch inventory items:', err as Record<string, unknown>);
+            logger.error('Failed to fetch inventory items:', err as /**/any);
             setError('Failed to load items');
             setItems([]);
         } finally {

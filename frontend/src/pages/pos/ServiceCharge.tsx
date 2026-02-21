@@ -33,7 +33,7 @@ const ServiceCharge: React.FC = () => {
     useEffect(() => {
         if (apiData && apiData.length > 0) {
             setRules(apiData.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (r: Record<string, unknown>) => ({ id: r.id || r._id || crypto.randomUUID(), name: r.name || '', type: r.type || 'percentage', value: r.value ?? 0, applyTo: r.applyTo ?? r.apply_to ?? 'all', minGuests: r.minGuests ?? r.min_guests ?? 0, autoApply: r.autoApply ?? r.auto_apply ?? true, taxable: r.taxable ?? true, isActive: r.isActive ?? r.is_active ?? true, description: r.description || '' }))); setIsLive(true);
+                (r: /**/any) => ({ id: r.id || r._id || crypto.randomUUID(), name: r.name || '', type: r.type || 'percentage', value: r.value ?? 0, applyTo: r.applyTo ?? r.apply_to ?? 'all', minGuests: r.minGuests ?? r.min_guests ?? 0, autoApply: r.autoApply ?? r.auto_apply ?? true, taxable: r.taxable ?? true, isActive: r.isActive ?? r.is_active ?? true, description: r.description || '' }))); setIsLive(true);
         }
     }, [apiData]);
 
@@ -83,25 +83,25 @@ const ServiceCharge: React.FC = () => {
                         <button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Name *</label>
-                        <input className="pos-input" value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Standard Service" /></div>
+                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Standard Service" /></div>
                     <div className="pos-form-group"><label className="pos-form-label">Description</label>
-                        <input className="pos-input" value={editing.description} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Optional description" /></div>
+                        <input className="pos-input" value={editing.description} onChange={e => setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Optional description" /></div>
                     <div className="pos-form-grid">
                         <div><label className="pos-form-label">Type</label>
-                            <select className="pos-select" value={editing.type} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, type: e.target.value as 'percentage' | 'fixed' } : null)} aria-label="Type"><option value="percentage">Percentage</option><option value="fixed">Fixed Amount</option></select></div>
+                            <select className="pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as 'percentage' | 'fixed' } : null)} aria-label="Type"><option value="percentage">Percentage</option><option value="fixed">Fixed Amount</option></select></div>
                         <div><label className="pos-form-label">Value</label>
-                            <input type="number" step="0.01" className="pos-input" value={editing.value} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, value: parseFloat(e.target.value) || 0 } : null)} aria-label="Charge value" /></div>
+                            <input type="number" step="0.01" className="pos-input" value={editing.value} onChange={e => setEditing(p => p ? { ...p, value: parseFloat(e.target.value) || 0 } : null)} aria-label="Charge value" /></div>
                     </div>
                     <div className="pos-form-grid">
                         <div><label className="pos-form-label">Apply To</label>
-                            <select className="pos-select" value={editing.applyTo} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, applyTo: e.target.value as ServiceChargeRule['applyTo'] } : null)} aria-label="Apply to"><option value="all">All Orders</option><option value="dine-in">Dine-In Only</option><option value="delivery">Delivery Only</option><option value="takeaway">Takeaway Only</option></select></div>
+                            <select className="pos-select" value={editing.applyTo} onChange={e => setEditing(p => p ? { ...p, applyTo: e.target.value as ServiceChargeRule['applyTo'] } : null)} aria-label="Apply to"><option value="all">All Orders</option><option value="dine-in">Dine-In Only</option><option value="delivery">Delivery Only</option><option value="takeaway">Takeaway Only</option></select></div>
                         <div><label className="pos-form-label">Min Guests (0=any)</label>
-                            <input type="number" min={0} className="pos-input" value={editing.minGuests} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, minGuests: parseInt(e.target.value) || 0 } : null)} aria-label="Minimum guests" /></div>
+                            <input type="number" min={0} className="pos-input" value={editing.minGuests} onChange={e => setEditing(p => p ? { ...p, minGuests: parseInt(e.target.value) || 0 } : null)} aria-label="Minimum guests" /></div>
                     </div>
                     <div className="pos-flex pos-gap-16 pos-mb-16 pos-flex--wrap">
                         {([['autoApply', 'Auto-apply'], ['taxable', 'Taxable'], ['isActive', 'Active']] as const).map(([key, label]) =>
                             <label key={key} className="pos-toggle-label">
-                                <input type="checkbox" checked={editing[key]} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
+                                <input type="checkbox" checked={editing[key]} onChange={() => setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
                         )}
                     </div>
                     <div className="pos-modal-footer">

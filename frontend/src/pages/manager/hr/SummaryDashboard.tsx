@@ -143,7 +143,7 @@ export default function SummaryDashboard() {
             <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">Venue</label>
             <select aria-label="Input"
               title="Venue Selection"
-              aria-label="Venue Selection"
+              
               value={selectedCompany}
               onChange={(e) => setSelectedCompany(e.target.value)}
               className="border rounded-lg px-4 py-1.5 bg-card border-border text-foreground text-[10px] font-bold uppercase tracking-widest focus:ring-1 focus:ring-red-500/50 outline-none"
@@ -181,7 +181,7 @@ export default function SummaryDashboard() {
 
       {/* KPI Row */}
       <div className="grid gap-4 md:grid-cols-3">
-        {(data as Record<string, any>).kpi_metrics.map((metric: Record<string, string>, idx: number) => {
+        {(data as /**/any).kpi_metrics.map((metric: Record<string, string>, idx: number) => {
           const Icon = metric.icon === 'wallet' ? Wallet : (metric.icon === 'clock' ? Clock : Users);
           return (
             <Card key={idx} className="border-border bg-card/40 shadow-xl backdrop-blur-md">
@@ -208,7 +208,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Temporal Headcount Trend</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={(data as unknown).headcount_by_year}>
+              <LineChart data={(data as/**/any).headcount_by_year}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="year" stroke="#666" fontSize={10} />
                 <YAxis stroke="#666" fontSize={10} />
@@ -223,7 +223,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Employment Archetype</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={(data as unknown).headcount_by_employment_type}>
+              <BarChart data={(data as/**/any).headcount_by_employment_type}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis type="number" stroke="#666" fontSize={10} />
                 <YAxis dataKey="type_name" type="category" width={80} stroke="#666" fontSize={10} />
@@ -238,7 +238,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Demographic Bracket</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={(data as unknown).headcount_by_age_bracket}>
+              <BarChart data={(data as/**/any).headcount_by_age_bracket}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="bracket" angle={-45} textAnchor="end" height={60} stroke="#666" fontSize={9} />
                 <YAxis stroke="#666" fontSize={10} />
@@ -256,7 +256,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Attrition vs Engagement Dynamics</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={(data as unknown).engagements_terminations}>
+              <BarChart data={(data as/**/any).engagements_terminations}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="year" stroke="#666" fontSize={10} />
                 <YAxis stroke="#666" fontSize={10} />
@@ -275,13 +275,13 @@ export default function SummaryDashboard() {
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
-                  data={(data as Record<string, unknown>).headcount_by_gender}
+                  data={(data as /**/any).headcount_by_gender}
                   cx="50%" cy="50%" innerRadius={60} outerRadius={90}
                   paddingAngle={8} dataKey="count"
                   // @ts-expect-error Recharts internal types for labels are hardcoded to generic objects
                   label={(props: { gender?: string; percentage?: number | string }) => `${props.gender || ''} ${props.percentage || ''}%`}
                 >
-                  {(data as Record<string, unknown>).headcount_by_gender.map((entry: Record<string, unknown>, index: number) => (
+                  {(data as /**/any).headcount_by_gender.map((entry: /**/any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

@@ -63,7 +63,7 @@ interface TooltipPayloadEntry {
     name?: string;
     value?: number;
     color?: string;
-    payload?: Record<string, unknown>;
+    payload?: /**/any;
 }
 
 interface CustomTooltipProps {

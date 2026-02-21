@@ -334,7 +334,7 @@ const KDS2Setup: React.FC = () => {
                                 <input aria-label="Input"
                                     type="text"
                                     value={newName}
-                                    onChange={e = aria-label="Input field"> setNewName(e.target.value.slice(0, 25))}
+                                    onChange={e => setNewName(e.target.value.slice(0, 25))}
                                     placeholder="e.g. Kitchen, Bar, Grill, Cold Service"
                                     style={inputStyle}
                                     maxLength={25}

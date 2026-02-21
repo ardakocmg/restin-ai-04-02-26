@@ -17,7 +17,7 @@ const NUTRITION_FIELDS = [
 ];
 
 interface NutritionTabProps {
-    data?: Record<string, unknown>;
+    data?: /**/any;
     sku?: { nutrition?: Record<string, number | null>;[key: string]: unknown };
     onSave?: (updates: { nutrition: Record<string, number | null> }) => void;
 }

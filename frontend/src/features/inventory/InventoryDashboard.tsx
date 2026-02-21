@@ -207,23 +207,23 @@ export default function InventoryDashboard() {
             const pos = poRes.status === 'fulfilled' ? (poRes.value.data?.items || poRes.value.data || []) : [];
             const recipesTotal = recipesRes.status === 'fulfilled' ? (recipesRes.value.data?.total || recipesRes.value.data?.length || 0) : 0;
 
-            const low = items.filter((i: Record<string, unknown>) => {
+            const low = items.filter((i: /**/any) => {
                 const stock = parseFloat(String(i.current_stock)) || 0;
                 const min = parseFloat(String(i.min_stock)) || 0;
                 return min > 0 && stock > 0 && stock <= min;
             }).length;
 
-            const out = items.filter((i: Record<string, unknown>) => (parseFloat(String(i.current_stock)) || 0) <= 0).length;
+            const out = items.filter((i: /**/any) => (parseFloat(String(i.current_stock)) || 0) <= 0).length;
 
-            const totalValue = items.reduce((sum: number, i: Record<string, unknown>) => {
+            const totalValue = items.reduce((sum: number, i: /**/any) => {
                 const stock = parseFloat(String(i.current_stock)) || 0;
                 const cost = parseFloat(String(i.unit_cost)) || 0;
                 return sum + (stock * cost);
             }, 0);
 
-            const cats = new Set(items.map((i: Record<string, unknown>) => i.category).filter(Boolean));
-            const activeSupps = suppliers.filter((s: Record<string, unknown>) => s.status !== 'archived').length;
-            const openPOs = pos.filter((p: Record<string, unknown>) => p.status && !['cancelled', 'completed', 'received'].includes(String(p.status))).length;
+            const cats = new Set(items.map((i: /**/any) => i.category).filter(Boolean));
+            const activeSupps = suppliers.filter((s: /**/any) => s.status !== 'archived').length;
+            const openPOs = pos.filter((p: /**/any) => p.status && !['cancelled', 'completed', 'received'].includes(String(p.status))).length;
 
             setStats({
                 totalItems: items.length,
@@ -239,10 +239,10 @@ export default function InventoryDashboard() {
             });
 
             // ── Data Quality metrics ──
-            const noAllergens = items.filter((i: Record<string, unknown>) => !i.allergens || (i.allergens as unknown[]).length === 0).length;
-            const noImages = items.filter((i: Record<string, unknown>) => !i.image_url).length;
-            const noSupplier = items.filter((i: Record<string, unknown>) => !i.supplier_id && !i.supplier_name).length;
-            const noNutrition = items.filter((i: Record<string, unknown>) => !i.nutrition || Object.keys(i.nutrition as object || {}).length === 0).length;
+            const noAllergens = items.filter((i: /**/any) => !i.allergens || (i.allergens as/**/any[]).length === 0).length;
+            const noImages = items.filter((i: /**/any) => !i.image_url).length;
+            const noSupplier = items.filter((i: /**/any) => !i.supplier_id && !i.supplier_name).length;
+            const noNutrition = items.filter((i: /**/any) => !i.nutrition || Object.keys(i.nutrition as object || {}).length === 0).length;
             const total = items.length || 1;
             const completeness = Math.round(((total - noAllergens) + (total - noImages) + (total - noSupplier) + (total - noNutrition)) / (total * 4) * 100);
             setDataQuality({
@@ -255,7 +255,7 @@ export default function InventoryDashboard() {
             });
 
             // ── POS Sync metrics (simulated — real impl would check POS sync API) ──
-            const synced = items.filter((i: Record<string, unknown>) => i.pos_synced || i.linked_menu_item).length;
+            const synced = items.filter((i: /**/any) => i.pos_synced || i.linked_menu_item).length;
             setPosSync({
                 syncedItems: synced,
                 unsyncedItems: items.length - synced,
@@ -265,8 +265,8 @@ export default function InventoryDashboard() {
 
             // ── Negative stock items ──
             const negItems = items
-                .filter((i: Record<string, unknown>) => (parseFloat(String(i.current_stock || i.quantity)) || 0) < 0)
-                .map((i: Record<string, unknown>) => ({
+                .filter((i: /**/any) => (parseFloat(String(i.current_stock || i.quantity)) || 0) < 0)
+                .map((i: /**/any) => ({
                     name: String(i.name || i.item_name || 'Unknown'),
                     qty: parseFloat(String(i.current_stock || i.quantity)) || 0,
                     unit: String(i.unit || 'EA'),

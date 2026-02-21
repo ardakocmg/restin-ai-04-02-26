@@ -298,7 +298,7 @@ class DeviceMesh {
     }
 
     private async handleReplication(data: MeshMessage): Promise<void> {
-        const command = data.command as Record<string, unknown>;
+        const command = data.command as /**/any;
         const sourceDevice = data.sourceDevice;
 
         // Store replicated command
@@ -306,7 +306,7 @@ class DeviceMesh {
             ...command,
             replicated: true,
             source_device: sourceDevice,
-        } as unknown as Parameters<typeof offlineDB.addCommand>[0]);
+        } as/**/any as Parameters<typeof offlineDB.addCommand>[0]);
 
         logger.info('Command replicated from peer', { requestId: (command as { request_id?: string }).request_id });
 

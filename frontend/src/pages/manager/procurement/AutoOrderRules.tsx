@@ -114,24 +114,24 @@ export default function AutoOrderRules() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">Item ID</label>
-                  <input type="text" value={formData.item_id} onChange={(e) = aria-label="Input field"> setFormData({ ...formData, item_id: e.target.value })} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded" />
+                  <input type="text" value={formData.item_id} onChange={(e) => setFormData({ ...formData, item_id: e.target.value })} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Supplier ID</label>
-                  <input type="text" value={formData.supplier_id} onChange={(e) = aria-label="Input field"> setFormData({ ...formData, supplier_id: e.target.value })} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded" />
+                  <input type="text" value={formData.supplier_id} onChange={(e) => setFormData({ ...formData, supplier_id: e.target.value })} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded" />
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">Reorder Point</label>
-                    <input type="number" value={formData.reorder_point} onChange={(e) = aria-label="Input field"> setFormData({ ...formData, reorder_point: parseFloat(e.target.value) })} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded" />
+                    <input type="number" value={formData.reorder_point} onChange={(e) => setFormData({ ...formData, reorder_point: parseFloat(e.target.value) })} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Order Quantity</label>
-                    <input type="number" value={formData.order_quantity} onChange={(e) = aria-label="Input field"> setFormData({ ...formData, order_quantity: parseFloat(e.target.value) })} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded" />
+                    <input type="number" value={formData.order_quantity} onChange={(e) => setFormData({ ...formData, order_quantity: parseFloat(e.target.value) })} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Lead Time (days)</label>
-                    <input type="number" value={formData.lead_time_days} onChange={(e) = aria-label="Input field"> setFormData({ ...formData, lead_time_days: parseInt(e.target.value) })} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded" />
+                    <input type="number" value={formData.lead_time_days} onChange={(e) => setFormData({ ...formData, lead_time_days: parseInt(e.target.value) })} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded" />
                   </div>
                 </div>
                 <div className="flex gap-2 pt-4">

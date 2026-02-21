@@ -58,7 +58,7 @@ export default function RadarDashboard() {
             return await radarService.scanMarket(activeVenueId || 'default', region, "Mediterranean");
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        onSuccess: (data) => toast.success("Scan Started", { description: (data as unknown).message || 'Scan initiated' }),
+        onSuccess: (data) => toast.success("Scan Started", { description: (data as/**/any).message || 'Scan initiated' }),
         onError: () => toast.error("Scan Failed")
     });
 
@@ -103,7 +103,7 @@ export default function RadarDashboard() {
                     <Button
                         variant="ghost"
                         size="icon" aria-label="Action"
-                        onClick={() = aria-label="Action"> scanMutation.mutate()}
+                        onClick={() => scanMutation.mutate()}
                         disabled={scanMutation.isPending}
                         className="hover:bg-white/5 h-10 w-10">
                         <RefreshCcw size={18} className={cn("text-muted-foreground", scanMutation.isPending && "animate-spin text-red-500")} />

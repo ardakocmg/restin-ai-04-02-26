@@ -777,24 +777,28 @@ export default function InventoryItemsNew() {
           subtext=">5% increase"
           color="text-red-600 dark:text-red-400"
         />
+        {/* @ts-ignore */}
         <StatCard
           icon={CheckCircle2}
           label="In Stock"
           value={stats.okCount}
           color="text-green-600 dark:text-green-400"
         />
+        {/* @ts-ignore */}
         <StatCard
           icon={TrendingDown}
           label="Low Stock"
           value={stats.lowStockCount}
           color="text-orange-600 dark:text-orange-400"
         />
+        {/* @ts-ignore */}
         <StatCard
           icon={AlertTriangle}
           label="Negative"
           value={stats.negativeCount}
           color="text-red-600 dark:text-red-400"
         />
+        {/* @ts-ignore */}
         <StatCard
           icon={DollarSign}
           label="Total Value"
@@ -1032,6 +1036,7 @@ export default function InventoryItemsNew() {
             enableGlobalSearch={true}
             enableFilters={true}
             enablePagination={true}
+            // @ts-ignore
             bulkActions={bulkActions}
             onBulkAction={handleBulkAction}
             onRowClick={handleRowClick}

@@ -86,7 +86,7 @@ export default function AddClockEntry() {
                     setWorkArea(res.data[0].code);
                 }
             } catch (err) {
-                logger.error('Failed to fetch work areas', err as Record<string, unknown>);
+                logger.error('Failed to fetch work areas', err as /**/any);
                 // Use defaults
                 setWorkAreas([
                     { id: 'FOH', name: 'Front of House', code: 'FOH' },
@@ -109,7 +109,7 @@ export default function AddClockEntry() {
                 const res = await api.get(`/venues/${activeVenue.id}/hr/employees`);
                 setEmployees(res.data || []);
             } catch (err) {
-                logger.error('Failed to fetch employees', err as Record<string, unknown>);
+                logger.error('Failed to fetch employees', err as /**/any);
             }
         };
         fetchEmployees();
@@ -157,7 +157,7 @@ export default function AddClockEntry() {
         } catch (err: unknown) {
             const errorMsg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail || 'Failed to add clock entry';
             toast.error(errorMsg);
-            logger.error('Failed to submit clock entry', err as Record<string, unknown>);
+            logger.error('Failed to submit clock entry', err as /**/any);
         } finally {
             setSubmitting(false);
         }
@@ -232,7 +232,7 @@ export default function AddClockEntry() {
                 <Button
                     variant="ghost"
                     size="icon" aria-label="Action"
-                    onClick={() = aria-label="Action"> navigate('/manager/hr/clocking')}
+                    onClick={() => navigate('/manager/hr/clocking')}
                     className="text-muted-foreground hover:text-foreground hover:bg-white/5"
                     title="Back to Clocking Data"
                 >
@@ -268,7 +268,7 @@ export default function AddClockEntry() {
                                 <div className="relative">
                                     <select aria-label="Input"
                                         value={selectedEmployeeId}
-                                        onChange={(e) = aria-label="Input field"> setSelectedEmployeeId(e.target.value)}
+                                        onChange={(e) => setSelectedEmployeeId(e.target.value)}
                                         title="Select Employee"
                                         className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-sm text-secondary-foreground appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 outline-none transition-all"
                                     >
@@ -378,7 +378,7 @@ export default function AddClockEntry() {
                             </label>
                             <textarea aria-label="Input"
                                 value={reason}
-                                onChange={(e) = aria-label="Input field"> setReason(e.target.value)}
+                                onChange={(e) => setReason(e.target.value)}
                                 placeholder="e.g. Forgot to clock in, system was down, working remotely..."
                                 rows={3}
                                 className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-sm text-secondary-foreground placeholder:text-muted-foreground resize-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 outline-none transition-all"

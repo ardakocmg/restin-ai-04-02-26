@@ -136,7 +136,7 @@ interface ActionPayload {
     sensitivity: 'normal' | 'sensitive' | 'critical';
     icon: string;
     label: string;
-    params: Record<string, unknown>;
+    params: /**/any;
 }
 
 interface RinMessage {
@@ -409,12 +409,12 @@ export default function HeyRin() {
     // ─── Active Listening ───────────────────────────────────────
     const startListening = useCallback(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const SR = (window as Record<string, any>).SpeechRecognition || (window as Record<string, any>).webkitSpeechRecognition;
+        const SR = (window as /**/any).SpeechRecognition || (window as /**/any).webkitSpeechRecognition;
         if (!SR) return;
         recognitionRef.current?.stop();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const recognition = new (SR as { new(): Record<string, unknown> })();
+        const recognition = new (SR as { new(): /**/any })();
         recognition.lang = lang;
         recognition.interimResults = true;
         recognition.continuous = false;
@@ -443,11 +443,11 @@ export default function HeyRin() {
     // ─── Wake Word Listener ─────────────────────────────────────
     const startWakeWordListener = useCallback(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const SR = (window as Record<string, any>).SpeechRecognition || (window as Record<string, any>).webkitSpeechRecognition;
+        const SR = (window as /**/any).SpeechRecognition || (window as /**/any).webkitSpeechRecognition;
         if (!SR) return;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const recognition = new (SR as { new(): Record<string, unknown> })();
+        const recognition = new (SR as { new(): /**/any })();
         recognition.lang = lang;
         recognition.interimResults = true;
         recognition.continuous = true;
@@ -798,7 +798,7 @@ export default function HeyRin() {
                                         type="text"
                                         className="rin-text-input"
                                         value={textInput}
-                                        onChange={e = aria-label="Input field"> setTextInput(e.target.value)}
+                                        onChange={e => setTextInput(e.target.value)}
                                         placeholder="Ask Rin anything..."
                                     />
                                     <button type="submit" className="rin-send-btn" disabled={!textInput.trim()}

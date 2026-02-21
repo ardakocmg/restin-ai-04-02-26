@@ -462,13 +462,13 @@ export default function ThemeEngineSettings() {
                                                     <Input aria-label="Input field"
                                                         type="color"
                                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                        value={(customThemeObj as unknown)[field.key]}
+                                                        value={(customThemeObj as/**/any)[field.key]}
                                                         onChange={(e) => setCustomThemeObj({ ...customThemeObj, [field.key]: e.target.value })}
                                                         className="w-16 h-10 p-1 cursor-pointer bg-secondary"
                                                     />
                                                     <Input aria-label="Input field"
                                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                                        value={(customThemeObj as unknown)[field.key]}
+                                                        value={(customThemeObj as/**/any)[field.key]}
                                                         onChange={(e) => setCustomThemeObj({ ...customThemeObj, [field.key]: e.target.value })}
                                                         className="bg-secondary font-mono"
                                                     />

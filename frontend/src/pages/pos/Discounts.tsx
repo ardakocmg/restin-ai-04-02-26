@@ -38,7 +38,7 @@ const Discounts: React.FC = () => {
     useEffect(() => {
         if (apiData && apiData.length > 0) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            setDiscounts(apiData.map((d: Record<string, unknown>) => ({ id: d.id || d._id || crypto.randomUUID(), name: d.name || '', type: d.type || 'percentage', value: d.value ?? 0, isCustom: d.isCustom ?? d.is_custom ?? false, group: d.group || '', excludedAccountingGroups: d.excludedAccountingGroups ?? d.excluded_accounting_groups ?? [], qrEnabled: d.qrEnabled ?? d.qr_enabled ?? false, requiresReason: d.requiresReason ?? d.requires_reason ?? false, requiresManager: d.requiresManager ?? d.requires_manager ?? false, applicableTo: d.applicableTo ?? d.applicable_to ?? 'all', maxUsesPerDay: d.maxUsesPerDay ?? d.max_uses_per_day ?? 0, schedule: d.schedule || 'Always', isActive: d.isActive ?? d.is_active ?? true, usesToday: d.usesToday ?? d.uses_today ?? 0, sortOrder: d.sortOrder ?? d.sort_order ?? 0 }) as Discount)); setIsLive(true);
+            setDiscounts(apiData.map((d: /**/any) => ({ id: d.id || d._id || crypto.randomUUID(), name: d.name || '', type: d.type || 'percentage', value: d.value ?? 0, isCustom: d.isCustom ?? d.is_custom ?? false, group: d.group || '', excludedAccountingGroups: d.excludedAccountingGroups ?? d.excluded_accounting_groups ?? [], qrEnabled: d.qrEnabled ?? d.qr_enabled ?? false, requiresReason: d.requiresReason ?? d.requires_reason ?? false, requiresManager: d.requiresManager ?? d.requires_manager ?? false, applicableTo: d.applicableTo ?? d.applicable_to ?? 'all', maxUsesPerDay: d.maxUsesPerDay ?? d.max_uses_per_day ?? 0, schedule: d.schedule || 'Always', isActive: d.isActive ?? d.is_active ?? true, usesToday: d.usesToday ?? d.uses_today ?? 0, sortOrder: d.sortOrder ?? d.sort_order ?? 0 }) as Discount)); setIsLive(true);
         }
     }, [apiData]);
     const filtered = discounts.filter(d => !search || d.name.toLowerCase().includes(search.toLowerCase()));
@@ -133,7 +133,7 @@ const Discounts: React.FC = () => {
                         {([['isCustom', 'Custom discount (POS user enters amount)'], ['qrEnabled', 'Enable QR code'], ['requiresReason', 'Requires reason'], ['requiresManager', 'Requires manager'], ['isActive', 'Active']] as const).map(([key, label]) =>
                             <label key={key} className="pos-toggle-label">
                                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                <input type="checkbox" checked={editing[key] as boolean} onChange={() => setEditing(p => p ? { ...p, [key]: !(p as unknown as Record<string, boolean>)[key] } : null)} /> {label}</label>
+                                <input type="checkbox" checked={editing[key] as boolean} onChange={() => setEditing(p => p ? { ...p, [key]: !(p as/**/any as Record<string, boolean>)[key] } : null)} /> {label}</label>
                         )}
                     </div>
                     <div className="pos-modal-footer">

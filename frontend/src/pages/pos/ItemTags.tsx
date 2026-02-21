@@ -38,7 +38,7 @@ const ItemTags: React.FC = () => {
     useEffect(() => {
         if (apiData && apiData.length > 0) {
             setTags(apiData.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (t: Record<string, unknown>) => ({ id: t.id || t._id || crypto.randomUUID(), name: t.name || '', description: t.description || '', color: t.color || '#3B82F6', icon: t.icon || '🏷️', showOnPOS: t.showOnPOS ?? t.show_on_pos ?? true, showOnReceipt: t.showOnReceipt ?? t.show_on_receipt ?? false, showOnKDS: t.showOnKDS ?? t.show_on_kds ?? false, showOnWeb: t.showOnWeb ?? t.show_on_web ?? true, itemCount: t.itemCount ?? t.item_count ?? 0 }))); setIsLive(true);
+                (t: /**/any) => ({ id: t.id || t._id || crypto.randomUUID(), name: t.name || '', description: t.description || '', color: t.color || '#3B82F6', icon: t.icon || '🏷️', showOnPOS: t.showOnPOS ?? t.show_on_pos ?? true, showOnReceipt: t.showOnReceipt ?? t.show_on_receipt ?? false, showOnKDS: t.showOnKDS ?? t.show_on_kds ?? false, showOnWeb: t.showOnWeb ?? t.show_on_web ?? true, itemCount: t.itemCount ?? t.item_count ?? 0 }))); setIsLive(true);
         }
     }, [apiData]);
     const filtered = tags.filter(t => !search || t.name.toLowerCase().includes(search.toLowerCase()));
@@ -58,7 +58,7 @@ const ItemTags: React.FC = () => {
 
             <div className="pos-search-wrapper pos-mb-16">
                 <Search size={14} className="pos-search-icon" />
-                <input aria-label="Search tags..." className="pos-input pos-search-input" placeholder="Search tags..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Search tags" />
+                <input aria-label="Search tags..." className="pos-input pos-search-input" placeholder="Search tags..." value={search} onChange={e => setSearch(e.target.value)}  />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 12 }}>
@@ -91,9 +91,9 @@ const ItemTags: React.FC = () => {
                         <button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Name *</label>
-                        <input className="pos-input" value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Vegan" /></div>
+                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Vegan" /></div>
                     <div className="pos-form-group"><label className="pos-form-label">Description</label>
-                        <textarea className="pos-input pos-textarea" value={editing.description} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Brief description of this tag" /></div>
+                        <textarea className="pos-input pos-textarea" value={editing.description} onChange={e => setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Brief description of this tag" /></div>
                     <div className="pos-form-group"><label className="pos-form-label">Icon</label>
                         <div className="pos-flex pos-gap-6 pos-flex--wrap">{ICONS.map(i => <button key={i} title={`Select icon ${i}`} onClick={() => setEditing(p => p ? { ...p, icon: i } : null)} className="pos-btn-icon" style={{ width: 36, height: 36, borderRadius: 8, border: editing.icon === i ? '2px solid #3B82F6' : '1px solid rgba(255,255,255,0.06)', background: 'var(--bg-secondary)', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{i}</button>)}</div></div>
                     <div className="pos-form-group"><label className="pos-form-label">Color</label>
@@ -102,7 +102,7 @@ const ItemTags: React.FC = () => {
                     <div className="pos-form-grid pos-mb-16">
                         {([['showOnPOS', 'Show on POS'], ['showOnReceipt', 'Show on Receipt'], ['showOnKDS', 'Show on KDS'], ['showOnWeb', 'Show on Website']] as const).map(([key, label]) =>
                             <label key={key} className="pos-toggle-label" style={{ padding: '6px 10px', background: 'var(--bg-secondary)', borderRadius: 6 }}>
-                                <input type="checkbox" checked={editing[key]} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
+                                <input type="checkbox" checked={editing[key]} onChange={() => setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
                         )}
                     </div>
                     <div className="pos-modal-footer">

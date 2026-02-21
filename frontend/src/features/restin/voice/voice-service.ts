@@ -12,7 +12,7 @@ export const voiceService = {
         return data;
     },
 
-    updateConfig: async (venueId: string, config: Record<string, unknown>) => {
+    updateConfig: async (venueId: string, config: /**/any) => {
         const { data } = await api.post(`/voice/config?venue_id=${venueId}`, config);
         return data;
     },
@@ -64,9 +64,9 @@ export const voiceService = {
     },
 
     // === EXPORT ===
-    exportLogsCSV: (logs: Record<string, unknown>[]) => {
+    exportLogsCSV: (logs: /**/any[]) => {
         const headers = ['Caller', 'Time', 'Duration (s)', 'Status', 'Guest Said', 'AI Response', 'Provider', 'Tokens'];
-        const rows = logs.map((l: Record<string, unknown>) => [
+        const rows = logs.map((l: /**/any) => [
             l.caller || '',
             l.created_at || '',
             l.duration_seconds || 0,

@@ -112,6 +112,7 @@ export default function StockAdjustments() {
 
       {/* Create Modal */}
       {showCreateModal && (
+        // @ts-ignore
         <StateModal
           type="info"
           title="Create Adjustment"

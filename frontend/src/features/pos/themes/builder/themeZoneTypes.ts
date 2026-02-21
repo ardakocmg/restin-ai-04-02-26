@@ -41,7 +41,7 @@ export interface ZoneConfig {
     height?: string;
     order: number;
     visible: boolean;
-    config: Record<string, unknown>;
+    config: /**/any;
 }
 
 // ─── Component Registry ──────────────────────────────────────────
@@ -55,7 +55,7 @@ export interface ZoneComponentDef {
     category: ZoneCategory;
     defaultPosition: ZonePosition;
     defaultWidth?: string;
-    defaultConfig: Record<string, unknown>;
+    defaultConfig: /**/any;
     maxInstances: number;   // how many of this component can exist (1 = singleton)
     required: boolean;      // triggers "missing" warning if not included
     variants?: ZoneVariant[];

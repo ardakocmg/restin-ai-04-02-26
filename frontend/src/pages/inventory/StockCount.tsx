@@ -175,7 +175,7 @@ function StockCount() {
                         type="number"
                         step="0.01"
                         value={countLines[item.id] || ''}
-                        onChange={(e) = aria-label="Input field"> setCountLines({ ...countLines, [item.id]: e.target.value })}
+                        onChange={(e) => setCountLines({ ...countLines, [item.id]: e.target.value })}
                         className="w-32 px-3 py-2 border border-border rounded-lg"
                         placeholder="0.00"
                       />

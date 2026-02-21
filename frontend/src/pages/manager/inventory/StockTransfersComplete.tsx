@@ -36,7 +36,7 @@ interface TransferData {
   display_id?: string;
   destination_venue_name?: string;
   destination_venue_id?: string;
-  items: Record<string, unknown>[];
+  items: /**/any[];
   created_at?: string;
   status: string;
   notes?: string;

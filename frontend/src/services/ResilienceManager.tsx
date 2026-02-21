@@ -161,13 +161,13 @@ class ResilienceManager {
 
     // ============= OPERATION ROUTING =============
 
-    async executeCommand(type: string, payload: unknown): Promise<unknown> {
+    async executeCommand(type: string, payload: unknown): Promise</**/any> {
         logger.info('Executing command', { mode: this.mode, type });
 
         switch (this.mode) {
             case 'online':
                 // Direct to cloud
-                return await offlineAPI.createOrder(payload as Record<string, unknown>);
+                return await offlineAPI.createOrder(payload as /**/any);
 
             case 'edge':
                 // Route via edge gateway
@@ -176,7 +176,7 @@ class ResilienceManager {
             case 'device':
             case 'mesh':
                 // Queue locally
-                return await offlineAPI.createOrder(payload as Record<string, unknown>);
+                return await offlineAPI.createOrder(payload as /**/any);
 
             default:
                 throw new Error('Unknown mode');

@@ -95,20 +95,20 @@ const LoyaltyConfig: React.FC = () => {
                     <h3 className="pos-section-title">General</h3>
                     <SettingRow label="Enable Loyalty" desc="Turn the loyalty program on/off"><Toggle value={config.enabled} onChange={() => upd('enabled', !config.enabled)} /></SettingRow>
                     <SettingRow label="Points Per Euro" desc="Points earned per €1 spent">
-                        <input type="number" min={1} className="pos-input" style={{ width: 80, textAlign: 'center' }} value={config.pointsPerEuro} onChange={e = aria-label="Input field"> upd('pointsPerEuro', parseInt(e.target.value) || 1)} /></SettingRow>
+                        <input type="number" min={1} className="pos-input" style={{ width: 80, textAlign: 'center' }} value={config.pointsPerEuro} onChange={e => upd('pointsPerEuro', parseInt(e.target.value) || 1)} /></SettingRow>
                     <SettingRow label="Auto-Enroll" desc="New customers auto-join"><Toggle value={config.autoEnroll} onChange={() => upd('autoEnroll', !config.autoEnroll)} /></SettingRow>
                     <SettingRow label="Show on Receipt" desc="Print loyalty status on receipt"><Toggle value={config.showOnReceipt} onChange={() => upd('showOnReceipt', !config.showOnReceipt)} /></SettingRow>
                 </div>
                 <div className="pos-card">
                     <h3 className="pos-section-title">Redemption</h3>
                     <SettingRow label="Min Points to Redeem" desc="Minimum points before redemption">
-                        <input type="number" min={1} className="pos-input" style={{ width: 80, textAlign: 'center' }} value={config.redeemThreshold} onChange={e = aria-label="Input field"> upd('redeemThreshold', parseInt(e.target.value) || 1)} /></SettingRow>
+                        <input type="number" min={1} className="pos-input" style={{ width: 80, textAlign: 'center' }} value={config.redeemThreshold} onChange={e => upd('redeemThreshold', parseInt(e.target.value) || 1)} /></SettingRow>
                     <SettingRow label="Redemption Value (€)" desc="Euro value per redemption unit">
-                        <input type="number" min={1} className="pos-input" style={{ width: 80, textAlign: 'center' }} value={config.redeemValue} onChange={e = aria-label="Input field"> upd('redeemValue', parseInt(e.target.value) || 1)} /></SettingRow>
+                        <input type="number" min={1} className="pos-input" style={{ width: 80, textAlign: 'center' }} value={config.redeemValue} onChange={e => upd('redeemValue', parseInt(e.target.value) || 1)} /></SettingRow>
                     <SettingRow label="Points Expiry (Days)" desc="Days before points expire">
-                        <input type="number" min={0} className="pos-input" style={{ width: 80, textAlign: 'center' }} value={config.expiryDays} onChange={e = aria-label="Input field"> upd('expiryDays', parseInt(e.target.value) || 0)} /></SettingRow>
+                        <input type="number" min={0} className="pos-input" style={{ width: 80, textAlign: 'center' }} value={config.expiryDays} onChange={e => upd('expiryDays', parseInt(e.target.value) || 0)} /></SettingRow>
                     <SettingRow label="Referral Bonus" desc="Points for successful referral">
-                        <input type="number" min={0} className="pos-input" style={{ width: 80, textAlign: 'center' }} value={config.referralBonus} onChange={e = aria-label="Input field"> upd('referralBonus', parseInt(e.target.value) || 0)} /></SettingRow>
+                        <input type="number" min={0} className="pos-input" style={{ width: 80, textAlign: 'center' }} value={config.referralBonus} onChange={e => upd('referralBonus', parseInt(e.target.value) || 0)} /></SettingRow>
                 </div>
                 <div className="pos-card">
                     <h3 className="pos-section-title">Double Points Days</h3>
@@ -180,7 +180,7 @@ const LoyaltyConfig: React.FC = () => {
                         <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditReward(null)}><X size={20} /></button>
                     </div>
                     <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name</label>
-                        <input className="pos-input" value={editReward.name} onChange={e = aria-label="Input field"> setEditReward(p => p ? { ...p, name: e.target.value } : null)} /></div>
+                        <input className="pos-input" value={editReward.name} onChange={e => setEditReward(p => p ? { ...p, name: e.target.value } : null)} /></div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label>
                             <div style={{ display: 'flex', gap: 4 }}>{(['discount', 'freeItem', 'upgrade'] as const).map(t => (
@@ -189,10 +189,10 @@ const LoyaltyConfig: React.FC = () => {
                                 </button>
                             ))}</div></div>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Points Cost</label>
-                            <input type="number" min={1} className="pos-input" value={editReward.pointsCost} onChange={e = aria-label="Input field"> setEditReward(p => p ? { ...p, pointsCost: parseInt(e.target.value) || 1 } : null)} /></div>
+                            <input type="number" min={1} className="pos-input" value={editReward.pointsCost} onChange={e => setEditReward(p => p ? { ...p, pointsCost: parseInt(e.target.value) || 1 } : null)} /></div>
                     </div>
                     <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Value / Description</label>
-                        <input className="pos-input" value={editReward.value} onChange={e = aria-label="Input field"> setEditReward(p => p ? { ...p, value: e.target.value } : null)} /></div>
+                        <input className="pos-input" value={editReward.value} onChange={e => setEditReward(p => p ? { ...p, value: e.target.value } : null)} /></div>
                     <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
                         <Toggle value={editReward.isActive} onChange={() => setEditReward(p => p ? { ...p, isActive: !p.isActive } : null)} />
                         <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Active</span>

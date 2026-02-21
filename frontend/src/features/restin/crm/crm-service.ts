@@ -37,7 +37,7 @@ export const crmService = {
         return response.data;
     },
 
-    createCampaign: async (venueId: string, campaign: Record<string, unknown>) => {
+    createCampaign: async (venueId: string, campaign: /**/any) => {
         const response = await api.post(`/crm/campaigns?venue_id=${venueId}`, campaign);
         return response.data;
     },

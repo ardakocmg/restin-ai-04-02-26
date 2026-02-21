@@ -26,7 +26,7 @@ interface BlockDef {
     type: string;
     label: string;
     icon: React.ReactNode;
-    defaultProps: Record<string, unknown>;
+    defaultProps: /**/any;
 }
 
 interface BlockCategory {
@@ -122,7 +122,7 @@ export default function TemplateEditor() {
     const [templateDesc, setTemplateDesc] = useState('');
     const [templateType, setTemplateType] = useState('receipt');
     const [templateStatus, setTemplateStatus] = useState('draft');
-    const [blocks, setBlocks] = useState<Record<string, unknown>[]>([]);
+    const [blocks, setBlocks] = useState</**/any[]>([]);
     const [paperIdx, setPaperIdx] = useState(1); // default 80mm
     const [paperProfile, setPaperProfile] = useState({
         width: '80mm', margin_left: 4, margin_right: 4,
@@ -149,7 +149,7 @@ export default function TemplateEditor() {
     const assetInputRef = useRef<HTMLInputElement>(null);
 
     const selectedBlock = useMemo(
-        () => blocks.find((b: Record<string, unknown>) => b.id === selectedBlockId) || null,
+        () => blocks.find((b: /**/any) => b.id === selectedBlockId) || null,
         [blocks, selectedBlockId]
     );
     const currentPaper = PAPER_PROFILES[paperIdx];
@@ -189,7 +189,7 @@ export default function TemplateEditor() {
 
     /* ── Block Actions ──────────────────────────────────────── */
     const addBlock = useCallback((bt: BlockDef) => {
-        const b: Record<string, unknown> = {
+        const b: /**/any = {
             id: `blk_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
             type: bt.type,
             label: bt.label,
@@ -223,7 +223,7 @@ export default function TemplateEditor() {
 
     const updateProp = useCallback((bid: string, pk: string, f: string, v: unknown) => {
         setBlocks(prev => prev.map(b =>
-            b.id !== bid ? b : { ...b, [pk]: { ...((b[pk] as Record<string, unknown>) || {}), [f]: v } }
+            b.id !== bid ? b : { ...b, [pk]: { ...((b[pk] as /**/any) || {}), [f]: v } }
         ));
     }, []);
 
@@ -259,7 +259,7 @@ export default function TemplateEditor() {
     const handleCanvasDrop = useCallback((e: React.DragEvent, targetIdx: number) => {
         e.preventDefault();
         if (draggingBlockType) {
-            const b: Record<string, unknown> = {
+            const b: /**/any = {
                 id: `blk_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
                 type: draggingBlockType.type,
                 label: draggingBlockType.label,
@@ -480,7 +480,7 @@ export default function TemplateEditor() {
                     type="text"
                     className="ts-input"
                     value={templateName}
-                    onChange={e = aria-label="Input field"> setTemplateName(e.target.value)}
+                    onChange={e => setTemplateName(e.target.value)}
                     placeholder={t('Template name...')}
                     title={t('Template name')}
                     style={{ width: 200, background: 'transparent', border: 'none', fontWeight: 600, fontSize: 13 }}

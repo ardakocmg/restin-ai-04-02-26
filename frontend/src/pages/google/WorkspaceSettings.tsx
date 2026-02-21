@@ -381,7 +381,7 @@ export default function WorkspaceSettings() {
                                             <input aria-label="Input"
                                                 type="text"
                                                 value={newDomain}
-                                                onChange={(e) = aria-label="Input field"> setNewDomain(e.target.value)}
+                                                onChange={(e) => setNewDomain(e.target.value)}
                                                 placeholder="caviar-bull.com"
                                                 className="w-full px-3 py-2 rounded-md bg-background text-foreground border border-input text-sm focus:ring-1 focus:ring-ring"
                                             />
@@ -391,7 +391,7 @@ export default function WorkspaceSettings() {
                                             <input aria-label="Input"
                                                 type="email"
                                                 value={newAdminEmail}
-                                                onChange={(e) = aria-label="Input field"> setNewAdminEmail(e.target.value)}
+                                                onChange={(e) => setNewAdminEmail(e.target.value)}
                                                 placeholder="admin@caviar-bull.com"
                                                 className="w-full px-3 py-2 rounded-md bg-background text-foreground border border-input text-sm focus:ring-1 focus:ring-ring"
                                             />
@@ -401,7 +401,7 @@ export default function WorkspaceSettings() {
                                             <input aria-label="Input"
                                                 type="text"
                                                 value={newCustomerId}
-                                                onChange={(e) = aria-label="Input field"> setNewCustomerId(e.target.value)}
+                                                onChange={(e) => setNewCustomerId(e.target.value)}
                                                 placeholder="C0xxxxxxx"
                                                 className="w-full px-3 py-2 rounded-md bg-background text-foreground border border-input text-sm focus:ring-1 focus:ring-ring"
                                             />
@@ -435,10 +435,10 @@ export default function WorkspaceSettings() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> handleTestDomain(d.domain)} disabled={testingDomain === d.domain}>
+                                                <Button variant="ghost" size="icon" onClick={() => handleTestDomain(d.domain)} disabled={testingDomain === d.domain}>
                                                     {testingDomain === d.domain ? <Loader2 className="w-4 h-4 animate-spin" /> : <TestTube className="w-4 h-4" />}
                                                 </Button>
-                                                <Button variant="ghost" size="icon" className="hover:text-destructive" onClick={() = aria-label="Action"> handleRemoveDomain(d.domain)}>
+                                                <Button variant="ghost" size="icon" className="hover:text-destructive" onClick={() => handleRemoveDomain(d.domain)}>
                                                     <Trash2 className="w-4 h-4" />
                                                 </Button>
                                             </div>

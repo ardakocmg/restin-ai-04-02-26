@@ -258,7 +258,7 @@ export default function POSThemeGallery() {
                         <Button
                             variant="ghost"
                             size="icon" aria-label="Action"
-                            onClick={() = aria-label="Action"> navigate('/manager/pos-dashboard')}
+                            onClick={() => navigate('/manager/pos-dashboard')}
                             className="text-muted-foreground hover:text-foreground"
                         >
                             <ArrowLeft className="h-5 w-5" />

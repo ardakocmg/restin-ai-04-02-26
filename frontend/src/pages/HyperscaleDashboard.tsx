@@ -55,7 +55,7 @@ const HyperscaleDashboard: React.FC = () => {
 
     // Handlers
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleMetricClick = (title: string, data: Record<string, unknown>, description: string, impact: string[]) => {
+    const handleMetricClick = (title: string, data: /**/any, description: string, impact: string[]) => {
         setSelectedMetric({ title, data, description, impact });
     };
 
@@ -68,7 +68,7 @@ const HyperscaleDashboard: React.FC = () => {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const TopStatCard = ({ title, value, unit, icon: Icon, trend, statusClass, onClickMap }: Record<string, unknown>) => (
+    const TopStatCard = ({ title, value, unit, icon: Icon, trend, statusClass, onClickMap }: /**/any) => (
         <div
             onClick={() => handleMetricClick(title, onClickMap.data, onClickMap.desc, onClickMap.impact)}
             className="bg-slate-900 border border-slate-800 rounded-xl p-4 cursor-pointer hover:border-indigo-500 transition-all group relative overflow-hidden"

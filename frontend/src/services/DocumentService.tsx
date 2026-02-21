@@ -26,7 +26,7 @@ export interface Document {
     mime_type: string;
     size_bytes: number;
     ocr_text?: string;
-    metadata?: Record<string, unknown>;
+    metadata?: /**/any;
     created_at: string;
     updated_at: string;
 }

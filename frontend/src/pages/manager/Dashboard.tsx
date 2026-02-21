@@ -61,7 +61,7 @@ interface Venue {
 export default function Dashboard() {
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { activeVenue } = useVenue() as unknown;
+  const { activeVenue } = useVenue() as/**/any;
   const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
   // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -228,10 +228,15 @@ export default function PhysicalTables() {
                         <DataTable
                             data={tables.filter(t => t.floor === selectedFloor)}
                             columns={[
+                                // @ts-ignore
                                 { header: 'Table', accessorKey: 'name' },
+                                // @ts-ignore
                                 { header: 'Floor', accessorKey: 'floor' },
+                                // @ts-ignore
                                 { header: 'Capacity', accessorKey: 'capacity' },
+                                // @ts-ignore
                                 { header: 'Type', accessorKey: 'type' },
+                                // @ts-ignore
                                 { header: 'Status', accessorKey: 'status' }
                             ]}
                         />

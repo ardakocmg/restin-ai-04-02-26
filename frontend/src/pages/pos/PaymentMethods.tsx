@@ -82,7 +82,7 @@ const PaymentMethods: React.FC = () => {
     useEffect(() => {
         if (apiData && apiData.length > 0) {
             setMethods(apiData.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (m: Record<string, unknown>) => ({ id: (m.id || m._id || crypto.randomUUID()) as string, name: (m.name || '') as string, type: (m.type || 'other') as PaymentMethod['type'], isActive: (m.isActive ?? m.is_active ?? true) as boolean, isDefault: (m.isDefault ?? m.is_default ?? false) as boolean, accountingRef: (m.accountingRef ?? m.accounting_ref ?? '') as string, opensCashDrawer: (m.opensCashDrawer ?? m.opens_cash_drawer ?? false) as boolean, requiresAmount: (m.requiresAmount ?? m.requires_amount ?? false) as boolean, allowsChange: (m.allowsChange ?? m.allows_change ?? false) as boolean, allowsTips: (m.allowsTips ?? m.allows_tips ?? false) as boolean, printReceipt: (m.printReceipt ?? m.print_receipt ?? true) as boolean, autoCloseOrder: (m.autoCloseOrder ?? m.auto_close_order ?? true) as boolean, icon: (m.icon || 'credit-card') as string, color: (m.color || '#3B82F6') as string, sortOrder: (m.sortOrder ?? m.sort_order ?? 0) as number }))); setIsLive(true);
+                (m: /**/any) => ({ id: (m.id || m._id || crypto.randomUUID()) as string, name: (m.name || '') as string, type: (m.type || 'other') as PaymentMethod['type'], isActive: (m.isActive ?? m.is_active ?? true) as boolean, isDefault: (m.isDefault ?? m.is_default ?? false) as boolean, accountingRef: (m.accountingRef ?? m.accounting_ref ?? '') as string, opensCashDrawer: (m.opensCashDrawer ?? m.opens_cash_drawer ?? false) as boolean, requiresAmount: (m.requiresAmount ?? m.requires_amount ?? false) as boolean, allowsChange: (m.allowsChange ?? m.allows_change ?? false) as boolean, allowsTips: (m.allowsTips ?? m.allows_tips ?? false) as boolean, printReceipt: (m.printReceipt ?? m.print_receipt ?? true) as boolean, autoCloseOrder: (m.autoCloseOrder ?? m.auto_close_order ?? true) as boolean, icon: (m.icon || 'credit-card') as string, color: (m.color || '#3B82F6') as string, sortOrder: (m.sortOrder ?? m.sort_order ?? 0) as number }))); setIsLive(true);
         }
     }, [apiData]);
 
@@ -215,7 +215,7 @@ const PaymentMethods: React.FC = () => {
                             </div>
                             <div>
                                 <label className="pos-form-label">Type</label>
-                                <select aria-label="Select option" className="pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as PaymentMethod['type'] } : null)} aria-label="Payment type">
+                                <select aria-label="Select option" className="pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as PaymentMethod['type'] } : null)} >
                                     <option value="cash">Cash</option><option value="card">Card</option><option value="voucher">Voucher</option>
                                     <option value="mobile">Mobile Payment</option><option value="account">Account Charge</option><option value="other">Other</option>
                                 </select>

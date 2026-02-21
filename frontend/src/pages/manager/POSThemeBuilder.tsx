@@ -253,7 +253,7 @@ export default function POSThemeBuilder() {
         setZones(prev => prev.map(z => z.id === id ? { ...z, visible: !z.visible } : z));
     }, []);
 
-    const updateZoneConfig = useCallback((zoneId: string, config: Record<string, unknown>) => {
+    const updateZoneConfig = useCallback((zoneId: string, config: /**/any) => {
         setZones(prev => prev.map(z => z.id === zoneId ? { ...z, config } : z));
     }, []);
 
@@ -402,7 +402,7 @@ export default function POSThemeBuilder() {
                         <input aria-label="Input"
                             type="text"
                             value={themeName}
-                            onChange={(e) = aria-label="Input field"> setThemeName(e.target.value)}
+                            onChange={(e) => setThemeName(e.target.value)}
                             className="bg-transparent text-sm font-semibold text-foreground border-none outline-none focus:bg-secondary rounded px-2 py-1 min-w-[200px]"
                             placeholder="Theme Name..."
                         />

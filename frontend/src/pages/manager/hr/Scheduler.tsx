@@ -322,7 +322,7 @@ export default function Scheduler() {
                 variant="ghost"
                 size="icon" aria-label="Action"
                 className="h-7 w-7 hover:bg-white/10 rounded-md text-muted-foreground hover:text-foreground"
-                onClick={() = aria-label="Action"> {
+                onClick={() => {
                   const d = new Date(weekStart);
                   d.setDate(d.getDate() - (viewType === 'month' ? 28 : 7));
                   setWeekStart(d.toISOString().split('T')[0]);
@@ -338,7 +338,7 @@ export default function Scheduler() {
                 variant="ghost"
                 size="icon" aria-label="Action"
                 className="h-7 w-7 hover:bg-white/10 rounded-md text-muted-foreground hover:text-foreground"
-                onClick={() = aria-label="Action"> {
+                onClick={() => {
                   const d = new Date(weekStart);
                   d.setDate(d.getDate() + (viewType === 'month' ? 28 : 7));
                   setWeekStart(d.toISOString().split('T')[0]);

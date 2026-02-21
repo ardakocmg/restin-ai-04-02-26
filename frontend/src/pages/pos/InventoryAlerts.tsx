@@ -44,7 +44,7 @@ const InventoryAlerts: React.FC = () => {
     useEffect(() => {
         if (apiItems.length > 0) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const mapped: AlertItem[] = apiItems.map((ai: Record<string, unknown>) => {
+            const mapped: AlertItem[] = apiItems.map((ai: /**/any) => {
                 const current = Number(ai.current_stock || ai.currentStock || 0);
                 const par = Number(ai.par_level || ai.parLevel || 50);
                 const reorder = Number(ai.reorder_point || ai.reorderPoint || 10);

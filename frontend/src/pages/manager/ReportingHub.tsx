@@ -44,7 +44,7 @@ export default function ReportingHub() {
       setReportDefs(defs);
     } catch (error: unknown) {
       logger.error('Failed to load report defs:', { error: String(error) });
-      if ((error as Record<string, unknown>)?.response) {
+      if ((error as /**/any)?.response) {
         toast.error('Failed to load reports');
       }
     } finally {

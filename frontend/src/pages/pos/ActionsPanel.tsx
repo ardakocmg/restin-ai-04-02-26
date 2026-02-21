@@ -21,7 +21,7 @@ interface Order {
 interface ActionsPanelProps {
     order: Order | null;
     tables: Table[];
-    onAction: (key: string, data?: Record<string, unknown>) => void;
+    onAction: (key: string, data?: /**/any) => void;
     onClose: () => void;
 }
 

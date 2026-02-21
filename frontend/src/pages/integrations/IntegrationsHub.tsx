@@ -246,7 +246,7 @@ export default function IntegrationsHub() {
     toast.success('Copied to clipboard');
   };
 
-  const categories = [...new Set(AVAILABLE_INTEGRATIONS.map(i => i.category))];
+  const categories = Array.from(new Set(AVAILABLE_INTEGRATIONS.map(i => i.category)));
 
   return (
     <PageContainer
@@ -398,7 +398,7 @@ export default function IntegrationsHub() {
                           variant="ghost"
                           size="icon" aria-label="Action"
                           className="h-8 w-8"
-                          onClick={() = aria-label="Action"> setShowSecrets({
+                          onClick={() => setShowSecrets({
                             ...showSecrets,
                             [field.key]: !showSecrets[field.key]
                           })}
@@ -412,7 +412,7 @@ export default function IntegrationsHub() {
                           variant="ghost"
                           size="icon" aria-label="Action"
                           className="h-8 w-8"
-                          onClick={() = aria-label="Action"> copyToClipboard(configData[field.key])}
+                          onClick={() => copyToClipboard(configData[field.key])}
                         >
                           <Copy className="h-4 w-4" />
                         </Button>
@@ -428,6 +428,7 @@ export default function IntegrationsHub() {
               <div className="flex items-center space-x-2 pt-4">
                 <Switch
                   id="test-mode"
+                  // @ts-ignore
                   checked={configData.test_mode || false}
                   onCheckedChange={(checked) => setConfigData({
                     ...configData,

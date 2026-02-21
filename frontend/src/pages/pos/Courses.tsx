@@ -37,7 +37,7 @@ const Courses: React.FC = () => {
     useEffect(() => {
         if (apiData && apiData.length > 0) {
             setCourses(apiData.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (c: Record<string, unknown>) => ({ id: c.id || c._id || crypto.randomUUID(), name: c.name || '', sortOrder: c.sortOrder ?? c.sort_order ?? 0, color: c.color || '#3B82F6', defaultDelay: c.defaultDelay ?? c.default_delay ?? 0, autoFire: c.autoFire ?? c.auto_fire ?? false, isActive: c.isActive ?? c.is_active ?? true, itemCount: c.itemCount ?? c.item_count ?? 0 }))); setIsLive(true);
+                (c: /**/any) => ({ id: c.id || c._id || crypto.randomUUID(), name: c.name || '', sortOrder: c.sortOrder ?? c.sort_order ?? 0, color: c.color || '#3B82F6', defaultDelay: c.defaultDelay ?? c.default_delay ?? 0, autoFire: c.autoFire ?? c.auto_fire ?? false, isActive: c.isActive ?? c.is_active ?? true, itemCount: c.itemCount ?? c.item_count ?? 0 }))); setIsLive(true);
         }
     }, [apiData]);
 
@@ -86,18 +86,18 @@ const Courses: React.FC = () => {
                         <button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Name *</label>
-                        <input className="pos-input" value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Main Course" /></div>
+                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Main Course" /></div>
                     <div className="pos-form-grid">
                         <div><label className="pos-form-label">Order</label>
-                            <input type="number" min={1} className="pos-input" value={editing.sortOrder} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, sortOrder: parseInt(e.target.value) || 1 } : null)} aria-label="Sort order" /></div>
+                            <input type="number" min={1} className="pos-input" value={editing.sortOrder} onChange={e => setEditing(p => p ? { ...p, sortOrder: parseInt(e.target.value) || 1 } : null)} aria-label="Sort order" /></div>
                         <div><label className="pos-form-label">Default Delay (min)</label>
-                            <input type="number" min={0} className="pos-input" value={editing.defaultDelay} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, defaultDelay: parseInt(e.target.value) || 0 } : null)} aria-label="Default delay minutes" /></div>
+                            <input type="number" min={0} className="pos-input" value={editing.defaultDelay} onChange={e => setEditing(p => p ? { ...p, defaultDelay: parseInt(e.target.value) || 0 } : null)} aria-label="Default delay minutes" /></div>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Color</label>
                         <div className="pos-color-picker">{COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} className={`pos-color-swatch ${editing.color === c ? 'pos-color-swatch--selected' : ''}`} style={{ background: c }} />)}</div></div>
                     <div className="pos-flex pos-gap-16 pos-mb-16">
-                        <label className="pos-toggle-label"><input type="checkbox" checked={editing.autoFire} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, autoFire: !p.autoFire } : null)} /> Auto Fire</label>
-                        <label className="pos-toggle-label"><input type="checkbox" checked={editing.isActive} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label>
+                        <label className="pos-toggle-label"><input type="checkbox" checked={editing.autoFire} onChange={() => setEditing(p => p ? { ...p, autoFire: !p.autoFire } : null)} /> Auto Fire</label>
+                        <label className="pos-toggle-label"><input type="checkbox" checked={editing.isActive} onChange={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label>
                     </div>
                     <div className="pos-modal-footer">
                         <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>

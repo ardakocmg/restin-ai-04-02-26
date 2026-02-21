@@ -210,9 +210,9 @@ export default function HiringATS() {
                             <div key={field} className="mb-4">
                                 <label className="text-slate-400 text-[13px] block mb-1.5 capitalize">{field}</label>
                                 {field === 'description' ? (
-                                    <textarea value={newJob[field]} onChange={e = aria-label="Input field"> setNewJob(p => ({ ...p, [field]: e.target.value }))} aria-label={field} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm min-h-[80px] resize-y" />
+                                    <textarea value={newJob[field]} onChange={e => setNewJob(p => ({ ...p, [field]: e.target.value }))} aria-label={field} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm min-h-[80px] resize-y" />
                                 ) : (
-                                    <input value={newJob[field]} onChange={e = aria-label="Input field"> setNewJob(p => ({ ...p, [field]: e.target.value }))} aria-label={field} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm" />
+                                    <input value={newJob[field]} onChange={e => setNewJob(p => ({ ...p, [field]: e.target.value }))} aria-label={field} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm" />
                                 )}
                             </div>
                         ))}

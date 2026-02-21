@@ -66,7 +66,7 @@ function validate<T>(schema: z.ZodType<T>, data: unknown, endpoint: string): T {
 export async function safeGet<T>(
     endpoint: string,
     schema: z.ZodType<T>,
-    config?: Record<string, unknown>
+    config?: /**/any
 ): Promise<SafeResponse<T>> {
     try {
         const response = await api.get(endpoint, config);
@@ -85,7 +85,7 @@ export async function safePost<T>(
     endpoint: string,
     body: unknown,
     responseSchema: z.ZodType<T>,
-    config?: Record<string, unknown>
+    config?: /**/any
 ): Promise<SafeResponse<T>> {
     try {
         const response = await api.post(endpoint, body, config);
@@ -104,7 +104,7 @@ export async function safePut<T>(
     endpoint: string,
     body: unknown,
     responseSchema: z.ZodType<T>,
-    config?: Record<string, unknown>
+    config?: /**/any
 ): Promise<SafeResponse<T>> {
     try {
         const response = await api.put(endpoint, body, config);
@@ -122,7 +122,7 @@ export async function safePut<T>(
 export async function safeDelete<T>(
     endpoint: string,
     responseSchema: z.ZodType<T>,
-    config?: Record<string, unknown>
+    config?: /**/any
 ): Promise<SafeResponse<T>> {
     try {
         const response = await api.delete(endpoint, config);

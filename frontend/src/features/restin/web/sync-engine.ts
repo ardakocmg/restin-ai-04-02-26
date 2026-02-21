@@ -20,7 +20,7 @@ export class MenuSyncEngine {
      * Publish Web Configuration
      * Saves the drag & drop builder state to the public content API.
      */
-    async saveWebConfig(venueId: string, config: Record<string, unknown>) {
+    async saveWebConfig(venueId: string, config: /**/any) {
         logger.info('[Pillar 2] Saving Web Config', { venueId });
 
         // This would call the public content API

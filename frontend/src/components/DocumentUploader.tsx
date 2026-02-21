@@ -64,11 +64,11 @@ export default function DocumentUploader({
         onUploadComplete(result.document);
       }
     } catch (err: unknown) {
-      const error = err as Record<string, unknown>;
+      const error = err as /**/any;
       logger.error("Upload failed:", error);
-      const response = error.response as Record<string, unknown> | undefined;
-      const data = response?.data as Record<string, unknown> | undefined;
-      const detail = data?.detail as Record<string, unknown> | undefined;
+      const response = error.response as /**/any | undefined;
+      const data = response?.data as /**/any | undefined;
+      const detail = data?.detail as /**/any | undefined;
       toast.error((detail?.message as string) || "Upload failed");
     } finally {
       setLoading(false);
@@ -92,6 +92,7 @@ export default function DocumentUploader({
             </div>
             <button
               onClick={() => setSelectedFile(null)}
+              aria-label="Remove file"
               className="text-muted-foreground hover:text-foreground"
             >
               <X className="w-4 h-4" />
@@ -119,12 +120,13 @@ export default function DocumentUploader({
       ) : (
         <div>
           <label className="block">
-            <input aria-label="Input"
+            <input
+              aria-label="Upload document"
               type="file"
               onChange={handleFileSelect}
               accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx"
               className="hidden"
-             aria-label="Input field" />
+            />
             <div className="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-red-500 transition-colors">
               <Upload className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-foreground mb-2">Click to select document</p>

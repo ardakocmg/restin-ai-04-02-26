@@ -81,7 +81,7 @@ const ItemLibrary: React.FC = () => {
     useEffect(() => {
         if (apiItems.length > 0) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const mapped: Item[] = apiItems.map((ai: Record<string, unknown>) => ({
+            const mapped: Item[] = apiItems.map((ai: /**/any) => ({
                 id: String(ai.id || ai._id || ''),
                 name: String(ai.name || ''),
                 type: String(ai.type || 'single') as Item['type'],
@@ -222,7 +222,7 @@ const ItemLibrary: React.FC = () => {
                 <div style={{ ...cd, padding: 12, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     <div style={{ position: 'relative', flex: 1, minWidth: 200 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         <Search size={14} style={{ position: 'absolute', left: 12, top: 10, color: 'var(--text-secondary)' }} />
-                        <input aria-label="Search items by name or SKU..." style={{ ...ip, paddingLeft: 34, fontSize: 13, padding: '8px 12px 8px 34px' }} placeholder="Search items by name or SKU..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Search items" /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <input aria-label="Search items by name or SKU..." style={{ ...ip, paddingLeft: 34, fontSize: 13, padding: '8px 12px 8px 34px' }} placeholder="Search items by name or SKU..." value={search} onChange={e => setSearch(e.target.value)}  /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     </div>
 
                     <button style={{ ...bo, padding: '8px 12px', fontSize: 12, ...(showFilters ? { background: 'rgba(59,130,246,0.1)', borderColor: '#3B82F6', color: '#3B82F6' } : {}) }} onClick={() => setShowFilters(!showFilters)}> /* keep-inline */ /* keep-inline */ /* keep-inline */
@@ -243,17 +243,17 @@ const ItemLibrary: React.FC = () => {
                 {/* Filters Row */}
                 {showFilters && (
                     <div style={{ ...cd, padding: 14, display: 'flex', gap: 12, alignItems: 'center' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                        <select style={{ ...sl, width: 200, fontSize: 12, padding: '8px 12px' }} value={filterGroup} onChange={e = aria-label="Input field"> setFilterGroup(e.target.value)} aria-label="Filter by group"> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <select style={{ ...sl, width: 200, fontSize: 12, padding: '8px 12px' }} value={filterGroup} onChange={e => setFilterGroup(e.target.value)} aria-label="Filter by group"> /* keep-inline */ /* keep-inline */ /* keep-inline */
                             <option value="all">All Accounting Groups</option>
                             {GROUPS.map(g => <option key={g} value={g}>{g}</option>)}
                         </select>
-                        <select style={{ ...sl, width: 160, fontSize: 12, padding: '8px 12px' }} value={filterType} onChange={e = aria-label="Input field"> setFilterType(e.target.value as typeof filterType)} aria-label="Filter by type"> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <select style={{ ...sl, width: 160, fontSize: 12, padding: '8px 12px' }} value={filterType} onChange={e => setFilterType(e.target.value as typeof filterType)} aria-label="Filter by type"> /* keep-inline */ /* keep-inline */ /* keep-inline */
                             <option value="all">All Types</option>
                             <option value="single">Single Items</option>
                             <option value="combo">Combos</option>
                             <option value="item-group">Item Groups</option>
                         </select>
-                        <select style={{ ...sl, width: 160, fontSize: 12, padding: '8px 12px' }} value={filterCenter} onChange={e = aria-label="Input field"> setFilterCenter(e.target.value)} aria-label="Filter by production center"> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <select style={{ ...sl, width: 160, fontSize: 12, padding: '8px 12px' }} value={filterCenter} onChange={e => setFilterCenter(e.target.value)} aria-label="Filter by production center"> /* keep-inline */ /* keep-inline */ /* keep-inline */
                             <option value="all">All Centers</option>
                             {CENTERS.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
@@ -388,11 +388,11 @@ const ItemLibrary: React.FC = () => {
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                             <div style={{ gridColumn: '1 / -1' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name *</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <input style={ip} value={editingItem.name} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, name: e.target.value } : null)} placeholder="Item name" />
+                                <input style={ip} value={editingItem.name} onChange={e => setEditingItem(p => p ? { ...p, name: e.target.value } : null)} placeholder="Item name" />
                             </div>
                             <div>
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <select style={sl} value={editingItem.type} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, type: e.target.value as Item['type'] } : null)} aria-label="Item type">
+                                <select style={sl} value={editingItem.type} onChange={e => setEditingItem(p => p ? { ...p, type: e.target.value as Item['type'] } : null)} aria-label="Item type">
                                     <option value="single">Single Item</option>
                                     <option value="combo">Combo</option>
                                     <option value="item-group">Item Group</option>
@@ -400,7 +400,7 @@ const ItemLibrary: React.FC = () => {
                             </div>
                             <div>
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Course</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <select style={sl} value={editingItem.course} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, course: parseInt(e.target.value) } : null)} aria-label="Course">
+                                <select style={sl} value={editingItem.course} onChange={e => setEditingItem(p => p ? { ...p, course: parseInt(e.target.value) } : null)} aria-label="Course">
                                     <option value={0}>{"No "}Course</option>
                                     <option value={1}>Course 1 - Starters</option>
                                     <option value={2}>Course 2 - Mains</option>
@@ -409,33 +409,33 @@ const ItemLibrary: React.FC = () => {
                             </div>
                             <div>
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Price (€)</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <input type="number" step="0.01" style={ip} value={editingItem.price} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, price: parseFloat(e.target.value) || 0 } : null)} aria-label="Price" />
+                                <input type="number" step="0.01" style={ip} value={editingItem.price} onChange={e => setEditingItem(p => p ? { ...p, price: parseFloat(e.target.value) || 0 } : null)} aria-label="Price" />
                             </div>
                             <div>
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Cost Price (€)</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <input type="number" step="0.01" style={ip} value={editingItem.costPrice} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, costPrice: parseFloat(e.target.value) || 0 } : null)} aria-label="Cost price" />
+                                <input type="number" step="0.01" style={ip} value={editingItem.costPrice} onChange={e => setEditingItem(p => p ? { ...p, costPrice: parseFloat(e.target.value) || 0 } : null)} aria-label="Cost price" />
                             </div>
                             <div>
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Accounting Group</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <select style={sl} value={editingItem.accountingGroup} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, accountingGroup: e.target.value } : null)} aria-label="Accounting group">{GROUPS.map(g => <option key={g} value={g}>{g}</option>)}</select>
+                                <select style={sl} value={editingItem.accountingGroup} onChange={e => setEditingItem(p => p ? { ...p, accountingGroup: e.target.value } : null)} aria-label="Accounting group">{GROUPS.map(g => <option key={g} value={g}>{g}</option>)}</select>
                             </div>
                             <div>
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Production Center</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <select style={sl} value={editingItem.productionCenter} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, productionCenter: e.target.value } : null)} aria-label="Production center">{CENTERS.map(c => <option key={c} value={c}>{c}</option>)}</select>
+                                <select style={sl} value={editingItem.productionCenter} onChange={e => setEditingItem(p => p ? { ...p, productionCenter: e.target.value } : null)} aria-label="Production center">{CENTERS.map(c => <option key={c} value={c}>{c}</option>)}</select>
                             </div>
                             <div>
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Tax Profile</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <select style={sl} value={editingItem.taxProfile} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, taxProfile: e.target.value } : null)} aria-label="Tax profile">
+                                <select style={sl} value={editingItem.taxProfile} onChange={e => setEditingItem(p => p ? { ...p, taxProfile: e.target.value } : null)} aria-label="Tax profile">
                                     <option>Standard 18%</option><option>Reduced 5%</option><option>Zero Rate</option><option>Eco Tax 7%</option>
                                 </select>
                             </div>
                             <div>
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>SKU</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <input style={ip} value={editingItem.sku} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, sku: e.target.value } : null)} placeholder="e.g. MN-001" />
+                                <input style={ip} value={editingItem.sku} onChange={e => setEditingItem(p => p ? { ...p, sku: e.target.value } : null)} placeholder="e.g. MN-001" />
                             </div>
                             <div>
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Barcode</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <input style={ip} value={editingItem.barcode} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, barcode: e.target.value } : null)} placeholder="Scan or enter" />
+                                <input style={ip} value={editingItem.barcode} onChange={e => setEditingItem(p => p ? { ...p, barcode: e.target.value } : null)} placeholder="Scan or enter" />
                             </div>
                         </div>
 

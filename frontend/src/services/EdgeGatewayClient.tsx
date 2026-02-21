@@ -199,7 +199,7 @@ class EdgeGatewayClient {
 
     // ============= COMMAND QUEUE =============
 
-    async queueCommandViaEdge(type: string, payload: unknown): Promise<unknown> {
+    async queueCommandViaEdge(type: string, payload: unknown): Promise</**/any> {
         try {
             const response = await axios.post(`${this.edgeUrl}/api/queue/enqueue`, {
                 type,

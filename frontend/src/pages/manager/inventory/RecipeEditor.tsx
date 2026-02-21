@@ -188,7 +188,7 @@ export default function RecipeEditor() {
                         sell_price: r.sell_price ?? 0,
                         tax_pct: r.tax_pct ?? 18,
                         target_margin: 70,
-                        ingredients: (r.ingredients || []).map((ing: Record<string, unknown>, i: number) => ({
+                        ingredients: (r.ingredients || []).map((ing: /**/any, i: number) => ({
                             id: (ing.id as string) || `ing-${i}`,
                             type: (ing.type as string) || 'ingredient',
                             name: (ing.name as string) || '',
@@ -221,7 +221,7 @@ export default function RecipeEditor() {
         const timer = setTimeout(async () => {
             try {
                 const res = await api.get(`/inventory/items?venue_id=${activeVenue?.id}&search=${encodeURIComponent(ingredientSearch)}&limit=10`);
-                const items = (res.data?.items || res.data || []).map((item: Record<string, unknown>) => ({
+                const items = (res.data?.items || res.data || []).map((item: /**/any) => ({
                     id: (item.id as string) || (item._id as string) || '',
                     name: (item.item_name as string) || (item.name as string) || '',
                     type: 'ingredient' as const,
@@ -500,7 +500,7 @@ export default function RecipeEditor() {
                                                     />
                                                 </td>
                                                 <td className="py-2">
-                                                    <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100" onClick={() = aria-label="Action"> removeIngredient(idx)}>
+                                                    <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100" onClick={() => removeIngredient(idx)}>
                                                         <Trash2 className="h-4 w-4 text-red-500" />
                                                     </Button>
                                                 </td>
@@ -934,7 +934,7 @@ export default function RecipeEditor() {
                                             variant="destructive"
                                             size="icon" aria-label="Action"
                                             className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                                            onClick={() = aria-label="Action"> updateField('images', form.images.filter((_, i) => i !== idx))}
+                                            onClick={() => updateField('images', form.images.filter((_, i) => i !== idx))}
                                         >
                                             <X className="h-3 w-3" />
                                         </Button>

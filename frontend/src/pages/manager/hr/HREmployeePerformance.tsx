@@ -99,9 +99,9 @@ export default function HREmployeePerformance() {
     const [activeTab, setActiveTab] = useState('pos');
     const [datePreset, setDatePreset] = useState('30d');
     const [employee, setEmployee] = useState<{ name: string; department?: string; role?: string } | null>(null);
-    const [posData, setPosData] = useState<Record<string, unknown> | null>(null);
-    const [kdsData, setKdsData] = useState<Record<string, unknown> | null>(null);
-    const [systemData, setSystemData] = useState<Record<string, unknown> | null>(null);
+    const [posData, setPosData] = useState</**/any | null>(null);
+    const [kdsData, setKdsData] = useState</**/any | null>(null);
+    const [systemData, setSystemData] = useState</**/any | null>(null);
     const [loading, setLoading] = useState(true);
 
     const dateRange = useMemo(() => {
@@ -149,9 +149,9 @@ export default function HREmployeePerformance() {
         fetchAll();
     }, [venueId, employeeId, dateRange]);
 
-    const posEmp: Record<string, unknown> = (posData as Record<string, unknown> & { employees?: Record<string, unknown>[] })?.employees?.[0] || {};
-    const kdsEmp: Record<string, unknown> = (kdsData as Record<string, unknown> & { employees?: Record<string, unknown>[] })?.employees?.[0] || {};
-    const sysEmp: Record<string, unknown> = (systemData as Record<string, unknown> & { employees?: Record<string, unknown>[] })?.employees?.[0] || {};
+    const posEmp: /**/any = (posData as /**/any & { employees?: /**/any[] })?.employees?.[0] || {};
+    const kdsEmp: /**/any = (kdsData as /**/any & { employees?: /**/any[] })?.employees?.[0] || {};
+    const sysEmp: /**/any = (systemData as /**/any & { employees?: /**/any[] })?.employees?.[0] || {};
 
     return (
         <PermissionGate requiredRole="MANAGER">
@@ -240,13 +240,13 @@ export default function HREmployeePerformance() {
                                     </div>
                                 </Card>
                                 {/* Daily chart from full POS data */}
-                                {(posData as Record<string, unknown> & { daily_trend?: unknown[] })?.daily_trend && (posData as Record<string, unknown> & { daily_trend?: unknown[] }).daily_trend!.length > 0 && (
+                                {(posData as /**/any & { daily_trend?: unknown[] })?.daily_trend && (posData as /**/any & { daily_trend?: unknown[] }).daily_trend!.length > 0 && (
                                     <Card className="border-border bg-card/40">
                                         <CardHeader><CardTitle className="text-sm font-bold flex items-center gap-2"><Activity className="h-4 w-4 text-blue-400" />Daily Orders Trend</CardTitle></CardHeader>
                                         <CardContent>
                                             <div className="h-60">
                                                 <ResponsiveContainer width="100%" height="100%">
-                                                    <AreaChart data={(posData as Record<string, unknown> & { daily_trend?: Record<string, unknown>[] }).daily_trend}>
+                                                    <AreaChart data={(posData as /**/any & { daily_trend?: /**/any[] }).daily_trend}>
                                                         <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
                                                         <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 11 }} tickFormatter={(d: string) => d.slice(5)} />
                                                         <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />

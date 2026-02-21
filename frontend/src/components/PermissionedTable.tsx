@@ -75,10 +75,10 @@ export default function PermissionedTable({
       setRows(dataRes.data.rows || []);
       setMeta(dataRes.data.meta || {});
     } catch (err: unknown) {
-      const error = err as Record<string, unknown>;
+      const error = err as /**/any;
       logger.error("PermissionedTable error:", error);
 
-      const response = error.response as Record<string, unknown> | undefined;
+      const response = error.response as /**/any | undefined;
       if (response?.status === 403) {
         setForbidden(true);
       } else {

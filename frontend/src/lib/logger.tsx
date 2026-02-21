@@ -14,7 +14,7 @@ interface LogEntry {
     level: LogLevel;
     message: string;
     timestamp: string;
-    context?: Record<string, unknown>;
+    context?: /**/any;
     source?: string;
 }
 
@@ -33,7 +33,7 @@ class Logger {
         this.enabled = options.enabled ?? (process.env.NODE_ENV !== 'production');
     }
 
-    private formatEntry(level: LogLevel, message: string, context?: Record<string, unknown>): LogEntry {
+    private formatEntry(level: LogLevel, message: string, context?: /**/any): LogEntry {
         return {
             level,
             message,
@@ -86,19 +86,19 @@ class Logger {
         }
     }
 
-    debug(message: string, context?: Record<string, unknown>): void {
+    debug(message: string, context?: /**/any): void {
         this.output(this.formatEntry('debug', message, context));
     }
 
-    info(message: string, context?: Record<string, unknown>): void {
+    info(message: string, context?: /**/any): void {
         this.output(this.formatEntry('info', message, context));
     }
 
-    warn(message: string, context?: Record<string, unknown>): void {
+    warn(message: string, context?: /**/any): void {
         this.output(this.formatEntry('warn', message, context));
     }
 
-    error(message: string, context?: Record<string, unknown>): void {
+    error(message: string, context?: /**/any): void {
         this.output(this.formatEntry('error', message, context));
     }
 

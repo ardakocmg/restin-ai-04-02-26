@@ -17,8 +17,8 @@ export interface PosConfig {
 }
 
 export interface StaffShifts {
-    current: Record<string, unknown> | null;
-    upcoming: Record<string, unknown>[];
+    current: /**/any | null;
+    upcoming: /**/any[];
 }
 
 export interface StaffStats {
@@ -45,16 +45,16 @@ export interface StaffMember {
 export interface StaffActivity {
     user_id: string;
     period_days: number;
-    orders: Record<string, unknown>[];
+    orders: /**/any[];
     order_count: number;
     total_revenue: number;
-    voids: Record<string, unknown>[];
+    voids: /**/any[];
     void_count: number;
-    discounts: Record<string, unknown>[];
+    discounts: /**/any[];
     discount_count: number;
-    shifts: Record<string, unknown>[];
+    shifts: /**/any[];
     shift_count: number;
-    clockings: Record<string, unknown>[];
+    clockings: /**/any[];
     total_hours: number;
 }
 
@@ -99,7 +99,7 @@ export function useStaffService(options: UseStaffServiceOptions) {
             const res = await api.get(`/venues/${venueId}/staff?${params.toString()}`);
             setStaff(res.data.staff || []);
         } catch (err) {
-            logger.error('Failed to fetch staff:', err as Record<string, unknown>);
+            logger.error('Failed to fetch staff:', err as /**/any);
             setError('Failed to load staff data');
             setStaff([]);
         } finally {
@@ -118,7 +118,7 @@ export function useStaffService(options: UseStaffServiceOptions) {
                 const res = await api.get(`/venues/${venueId}/staff/${userId}`);
                 return res.data;
             } catch (err) {
-                logger.error('Failed to fetch staff detail:', err as Record<string, unknown>);
+                logger.error('Failed to fetch staff detail:', err as /**/any);
                 return null;
             }
         },
@@ -134,7 +134,7 @@ export function useStaffService(options: UseStaffServiceOptions) {
                 );
                 return res.data;
             } catch (err) {
-                logger.error('Failed to fetch staff activity:', err as Record<string, unknown>);
+                logger.error('Failed to fetch staff activity:', err as /**/any);
                 return null;
             }
         },
@@ -153,7 +153,7 @@ export function useStaffService(options: UseStaffServiceOptions) {
                 await fetchStaff();
                 return res.data;
             } catch (err) {
-                logger.error('Failed to update POS config:', err as Record<string, unknown>);
+                logger.error('Failed to update POS config:', err as /**/any);
                 throw err;
             }
         },

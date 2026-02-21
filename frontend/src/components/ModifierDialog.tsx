@@ -43,7 +43,7 @@ interface ModifierDialogProps {
   item: MenuItem | null;
   open: boolean;
   onClose: () => void;
-  onConfirm: (item: Record<string, unknown> & { modifiers: unknown[]; final_price: number }) => void;
+  onConfirm: (item: /**/any & { modifiers: unknown[]; final_price: number }) => void;
 }
 
 export default function ModifierDialog({ item, open, onClose, onConfirm }: ModifierDialogProps) {
@@ -77,7 +77,7 @@ export default function ModifierDialog({ item, open, onClose, onConfirm }: Modif
       });
       setSelections(defaults);
     } catch (err: unknown) {
-      logger.error('Failed to load modifiers:', err as Record<string, unknown>);
+      logger.error('Failed to load modifiers:', err as /**/any);
     } finally {
       setLoading(false);
     }

@@ -95,7 +95,7 @@ export default function SalesMixAnalysis() {
             const recipes = res.data?.recipes || [];
 
             // Enrich with derived fields needed by the Sales Mix UI
-            const enriched = recipes.map((item: Record<string, unknown>, i: number) => {
+            const enriched = recipes.map((item: /**/any, i: number) => {
                 const revenue = (item.revenue as number) || 0;
                 const foodCost = (item.food_cost as number) || 0;
                 const cost = (item.cost as number) || 0;

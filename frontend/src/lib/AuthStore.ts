@@ -5,7 +5,7 @@ import { logger } from './logger';
 interface AuthEvent {
   type: 'TOKEN_UPDATED' | 'TOKEN_CLEARED' | 'USER_UPDATED';
   token?: string;
-  user?: Record<string, unknown>;
+  user?: /**/any;
 }
 
 type AuthListener = (event: AuthEvent) => void;
@@ -35,12 +35,12 @@ class AuthStore {
     this.notify({ type: 'TOKEN_CLEARED' });
   }
 
-  getUser(): Record<string, unknown> | null {
+  getUser(): /**/any | null {
     const userStr = localStorage.getItem(this.USER_KEY);
     return userStr ? JSON.parse(userStr) : null;
   }
 
-  setUser(user: Record<string, unknown>): void {
+  setUser(user: /**/any): void {
     if (!user) {
       logger.error('Attempted to set null/undefined user');
       return;
@@ -49,7 +49,7 @@ class AuthStore {
     this.notify({ type: 'USER_UPDATED', user });
   }
 
-  setAuth(token: string, user: Record<string, unknown>): void {
+  setAuth(token: string, user: /**/any): void {
     this.setToken(token);
     this.setUser(user);
   }

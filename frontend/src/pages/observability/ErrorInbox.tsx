@@ -24,7 +24,7 @@ interface RetryPlan {
   mode?: string;
   allowed?: boolean;
   editable_fields?: RetryField[];
-  base_body_redacted?: Record<string, unknown>;
+  base_body_redacted?: /**/any;
   base_query?: Record<string, string>;
   target?: { method?: string; path?: string };
 }
@@ -58,12 +58,12 @@ interface TableQuery {
   pageSize: number;
   sorting: Array<{ id: string; desc: boolean }>;
   globalSearch: string;
-  filters: Record<string, unknown>;
+  filters: /**/any;
 }
 
 interface RetryPatch {
-  body: Record<string, unknown>;
-  query: Record<string, unknown>;
+  body: /**/any;
+  query: /**/any;
 }
 
 export default function ErrorInbox() {
@@ -73,7 +73,7 @@ export default function ErrorInbox() {
   const [selectedError, setSelectedError] = useState<ErrorEntry | null>(null);
   const [retryableOnly, setRetryableOnly] = useState(false);
   const [blockingOnly, setBlockingOnly] = useState(false);
-  const [retryFormValues, setRetryFormValues] = useState<Record<string, unknown>>({});
+  const [retryFormValues, setRetryFormValues] = useState</**/any>({});
   const [tableQuery, setTableQuery] = useState<TableQuery>({
     pageIndex: 0,
     pageSize: 20,
@@ -89,7 +89,7 @@ export default function ErrorInbox() {
 
   useEffect(() => {
     if (selectedError?.retry_plan?.editable_fields) {
-      const initialValues: Record<string, unknown> = {};
+      const initialValues: /**/any = {};
       const baseBody = selectedError.retry_plan?.base_body_redacted || {};
       const baseQuery = selectedError.retry_plan?.base_query || {};
       selectedError.retry_plan.editable_fields.forEach((field: RetryField) => {
@@ -109,7 +109,7 @@ export default function ErrorInbox() {
   const loadErrors = async (query: TableQuery = tableQuery) => {
     try {
       setLoading(true);
-      const params: Record<string, unknown> = {
+      const params: /**/any = {
         venue_id: venueId,
         page: query.pageIndex + 1,
         page_size: query.pageSize,
@@ -118,7 +118,7 @@ export default function ErrorInbox() {
         blocking_only: blockingOnly || undefined
       };
 
-      const filters = query.filters || {} as Record<string, unknown>;
+      const filters = query.filters || {} as /**/any;
       const fDomain = filters.domain as string[] | undefined;
       const fStatus = filters.status as string[] | undefined;
       const fSeverity = filters.severity as string[] | undefined;
@@ -197,7 +197,7 @@ export default function ErrorInbox() {
 
   const handleExport = async (query: TableQuery = tableQuery) => {
     try {
-      const params: Record<string, unknown> = {
+      const params: /**/any = {
         venue_id: venueId,
         page: 1,
         page_size: 1000,
@@ -336,7 +336,7 @@ export default function ErrorInbox() {
           className="w-full p-2 rounded-lg text-xs font-mono"
           style={{ backgroundColor: '#09090B', color: '#F8FAFC', border: '1px solid rgba(255,255,255,0.05)' }}
           value={typeof value === 'string' ? value : JSON.stringify(value, null, 2)}
-          onChange={(e) = aria-label="Input field"> onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value)}
           data-testid={`retry - field - ${field.path} `}
         />
       );

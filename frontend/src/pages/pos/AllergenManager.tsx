@@ -40,7 +40,7 @@ const AllergenManager: React.FC = () => {
     useEffect(() => {
         if (apiAllergens.length > 0) {
             const mapped: Allergen[] = apiAllergens.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (aa: Record<string, unknown>) => ({
+                (aa: /**/any) => ({
                     id: String(aa.id || aa._id || ''),
                     name: String(aa.name || ''),
                     icon: String(aa.icon || '⚠️'),

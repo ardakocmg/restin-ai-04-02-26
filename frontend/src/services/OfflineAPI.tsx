@@ -97,7 +97,7 @@ class OfflineAPI {
 
     // ============= POS OPERATIONS =============
 
-    async createOrder(orderData: OfflineOrderData | Record<string, unknown>): Promise<OfflineResponse> {
+    async createOrder(orderData: OfflineOrderData | /**/any): Promise<OfflineResponse> {
         const token = localStorage.getItem('restin_token');
         const requestId = this.generateRequestId();
 
@@ -126,7 +126,7 @@ class OfflineAPI {
         }
     }
 
-    private async queueOrderOffline(orderData: OfflineOrderData | Record<string, unknown>, requestId: string): Promise<OfflineResponse<{ order: OptimisticOrder }>> {
+    private async queueOrderOffline(orderData: OfflineOrderData | /**/any, requestId: string): Promise<OfflineResponse<{ order: OptimisticOrder }>> {
         await offlineDB.addCommand({
             request_id: requestId,
             entity_type: 'pos_order',
@@ -156,7 +156,7 @@ class OfflineAPI {
         };
     }
 
-    async addOrderItem(orderId: string, itemData: OfflineItemData | Record<string, unknown>): Promise<OfflineResponse> {
+    async addOrderItem(orderId: string, itemData: OfflineItemData | /**/any): Promise<OfflineResponse> {
         const token = localStorage.getItem('restin_token');
         const requestId = this.generateRequestId();
 
@@ -181,7 +181,7 @@ class OfflineAPI {
         }
     }
 
-    private async queueOrderItemOffline(orderId: string, itemData: OfflineItemData | Record<string, unknown>, requestId: string): Promise<OfflineResponse<{ item: OptimisticItem }>> {
+    private async queueOrderItemOffline(orderId: string, itemData: OfflineItemData | /**/any, requestId: string): Promise<OfflineResponse<{ item: OptimisticItem }>> {
         await offlineDB.addCommand({
             request_id: requestId,
             entity_type: 'pos_order_item',
@@ -213,7 +213,7 @@ class OfflineAPI {
         };
     }
 
-    async processPayment(orderId: string, paymentData: OfflinePaymentData | Record<string, unknown>): Promise<OfflineResponse> {
+    async processPayment(orderId: string, paymentData: OfflinePaymentData | /**/any): Promise<OfflineResponse> {
         const token = localStorage.getItem('restin_token');
         const requestId = this.generateRequestId();
 
@@ -238,7 +238,7 @@ class OfflineAPI {
         }
     }
 
-    private async queuePaymentOffline(orderId: string, paymentData: OfflinePaymentData | Record<string, unknown>, requestId: string): Promise<OfflineResponse> {
+    private async queuePaymentOffline(orderId: string, paymentData: OfflinePaymentData | /**/any, requestId: string): Promise<OfflineResponse> {
         await offlineDB.addCommand({
             request_id: requestId,
             entity_type: 'pos_payment',

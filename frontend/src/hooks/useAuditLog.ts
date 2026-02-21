@@ -31,7 +31,7 @@ interface AuditLogEntry {
     resource_id?: string;
     venue_id: string;
     timestamp: string;
-    metadata?: Record<string, unknown>;
+    metadata?: /**/any;
 }
 
 interface UseAuditLogReturn {
@@ -40,7 +40,7 @@ interface UseAuditLogReturn {
         action: string,
         resourceType: string,
         resourceId?: string,
-        metadata?: Record<string, unknown>
+        metadata?: /**/any
     ) => void;
 }
 
@@ -53,7 +53,7 @@ export function useAuditLog(): UseAuditLogReturn {
             action: string,
             resourceType: string,
             resourceId?: string,
-            metadata?: Record<string, unknown>
+            metadata?: /**/any
         ) => {
             // Guard: need user + venue to log
             if (!user?.id || !activeVenue?.id) {

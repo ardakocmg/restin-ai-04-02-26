@@ -20,14 +20,14 @@ export const aggregatorService = {
     /**
      * Update Aggregator Config
      */
-    updateConfig: async (venueId: string, config: Record<string, unknown>) => {
+    updateConfig: async (venueId: string, config: /**/any) => {
         return api.post(`/ops/aggregator/config?venue_id=${venueId}`, config);
     },
 
     /**
      * Inject External Order into KDS
      */
-    injectOrder: async (venueId: string, platform: string, items: Array<Record<string, unknown>>) => {
+    injectOrder: async (venueId: string, platform: string, items: Array</**/any>) => {
         return api.post(`/ops/aggregator/inject?venue_id=${venueId}`, { platform, items });
     },
 };

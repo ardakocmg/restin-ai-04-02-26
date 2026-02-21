@@ -63,7 +63,7 @@ export default function WebBuilder() {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const menuItems: MenuItem[] = (menuData as unknown)?.items ?? [];
+    const menuItems: MenuItem[] = (menuData as/**/any)?.items ?? [];
 
     const sections: SectionItem[] = [
         { id: 'hero', title: 'Hero Header', icon: Layout },

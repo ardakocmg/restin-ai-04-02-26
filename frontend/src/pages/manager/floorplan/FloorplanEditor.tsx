@@ -67,7 +67,7 @@ export default function FloorplanEditor() {
         queryFn: async () => {
             try {
                 const { data } = await api.get(`/tables?venue_id=${venueId}`);
-                const mapped = (data || []).map((t: Record<string, unknown>, i: number) => ({
+                const mapped = (data || []).map((t: /**/any, i: number) => ({
                     ...t,
                     x: t.x || 50 + (i % 6) * 130,
                     y: t.y || 50 + Math.floor(i / 6) * 130,

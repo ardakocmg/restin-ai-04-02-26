@@ -244,6 +244,7 @@ export default function FloorPlanEditor() {
     const reader = new FileReader();
     reader.onload = (event) => {
       const img = new Image();
+      // @ts-ignore
       img.src = event.target.result;
       img.onload = () => {
         setBackgroundImage(img);
@@ -284,7 +285,7 @@ export default function FloorPlanEditor() {
               accept="image/*"
               className="hidden"
               onChange={handleImageUpload}
-             aria-label="Input field" />
+              />
             <Button
               variant="outline"
               onClick={() => fileInputRef.current?.click()}

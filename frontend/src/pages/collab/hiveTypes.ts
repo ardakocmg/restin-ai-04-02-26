@@ -122,7 +122,7 @@ export const SMART_CHIP_STYLES: Record<string, { bg: string; text: string; borde
 // ─── API Helpers ────────────────────────────────────────────────────────
 export const API_BASE = process.env.REACT_APP_BACKEND_URL || '';
 
-export function mapApiMessage(m: Record<string, unknown>): ChatMessage {
+export function mapApiMessage(m: /**/any): ChatMessage {
     return {
         id: (m.id as string) || '',
         channelId: (m.channel_id as string) || 'general',

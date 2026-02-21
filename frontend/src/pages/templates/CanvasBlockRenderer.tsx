@@ -8,16 +8,16 @@ import {
 } from 'lucide-react';
 
 interface CanvasBlockRendererProps {
-    block: Record<string, unknown>;
+    block: /**/any;
 }
 
 export default function CanvasBlockRenderer({ block }: CanvasBlockRendererProps) {
-    const tp = block.text_props as Record<string, unknown> | undefined;
-    const ip = block.image_props as Record<string, unknown> | undefined;
-    const tbp = block.table_props as Record<string, unknown> | undefined;
-    const dp = block.divider_props as Record<string, unknown> | undefined;
-    const bp = block.barcode_props as Record<string, unknown> | undefined;
-    const qp = block.qr_props as Record<string, unknown> | undefined;
+    const tp = block.text_props as /**/any | undefined;
+    const ip = block.image_props as /**/any | undefined;
+    const tbp = block.table_props as /**/any | undefined;
+    const dp = block.divider_props as /**/any | undefined;
+    const bp = block.barcode_props as /**/any | undefined;
+    const qp = block.qr_props as /**/any | undefined;
     const type = block.type as string;
 
     switch (type) {

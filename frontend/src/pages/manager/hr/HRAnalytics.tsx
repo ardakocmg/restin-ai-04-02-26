@@ -83,7 +83,7 @@ function KpiCard({ label, value, icon: Icon, change, subtitle }: { label: string
   );
 }
 
-function DataTable({ columns, data, onRowClick }: { columns: { key: string; header: string; render?: (value: unknown, row: Record<string, unknown>) => React.ReactNode }[]; data: Record<string, unknown>[]; onRowClick?: (row: Record<string, unknown>) => void }) {
+function DataTable({ columns, data, onRowClick }: { columns: { key: string; header: string; render?: (value: unknown, row: /**/any) => React.ReactNode }[]; data: /**/any[]; onRowClick?: (row: /**/any) => void }) {
   if (!data || data.length === 0) {
     return <p className="text-muted-foreground text-sm p-4 text-center">{"No "}data for this period</p>;
   }
@@ -120,7 +120,7 @@ function DataTable({ columns, data, onRowClick }: { columns: { key: string; head
 }
 
 // ── Tab Content Components ───────────────────────────────────
-function OverviewTab({ data }: { data: Record<string, unknown> | null }) {
+function OverviewTab({ data }: { data: /**/any | null }) {
   if (!data) return null;
   const kpis = (data as Record<string, unknown[]>).kpis || [];
   const iconMap = {
@@ -131,7 +131,7 @@ function OverviewTab({ data }: { data: Record<string, unknown> | null }) {
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {kpis.map((kpiRaw, i) => {
-          const kpi = kpiRaw as Record<string, unknown>;
+          const kpi = kpiRaw as /**/any;
           return (
             <KpiCard
               key={i}
@@ -147,9 +147,9 @@ function OverviewTab({ data }: { data: Record<string, unknown> | null }) {
   );
 }
 
-function PosTab({ data, onEmployeeClick }: { data: Record<string, unknown> | null; onEmployeeClick?: (id: string) => void }) {
+function PosTab({ data, onEmployeeClick }: { data: /**/any | null; onEmployeeClick?: (id: string) => void }) {
   if (!data) return null;
-  const { summary = {} as Record<string, unknown>, employees = [] as Record<string, unknown>[], daily_trend = [] as Record<string, unknown>[] } = data as { summary?: Record<string, unknown>; employees?: Record<string, unknown>[]; daily_trend?: Record<string, unknown>[] };
+  const { summary = {} as /**/any, employees = [] as /**/any[], daily_trend = [] as /**/any[] } = data as { summary?: /**/any; employees?: /**/any[]; daily_trend?: /**/any[] };
   return (
     <div className="space-y-6">
       {/* Summary KPIs */}
@@ -209,9 +209,9 @@ function PosTab({ data, onEmployeeClick }: { data: Record<string, unknown> | nul
   );
 }
 
-function KdsTab({ data, onEmployeeClick }: { data: Record<string, unknown> | null; onEmployeeClick?: (id: string) => void }) {
+function KdsTab({ data, onEmployeeClick }: { data: /**/any | null; onEmployeeClick?: (id: string) => void }) {
   if (!data) return null;
-  const { summary = {} as Record<string, unknown>, employees = [] as Record<string, unknown>[], hourly_distribution = [] as Record<string, unknown>[] } = data as { summary?: Record<string, unknown>; employees?: Record<string, unknown>[]; hourly_distribution?: Record<string, unknown>[] };
+  const { summary = {} as /**/any, employees = [] as /**/any[], hourly_distribution = [] as /**/any[] } = data as { summary?: /**/any; employees?: /**/any[]; hourly_distribution?: /**/any[] };
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -274,9 +274,9 @@ function KdsTab({ data, onEmployeeClick }: { data: Record<string, unknown> | nul
   );
 }
 
-function SystemTab({ data, onEmployeeClick }: { data: Record<string, unknown> | null; onEmployeeClick?: (id: string) => void }) {
+function SystemTab({ data, onEmployeeClick }: { data: /**/any | null; onEmployeeClick?: (id: string) => void }) {
   if (!data) return null;
-  const { summary = {} as Record<string, unknown>, employees = [] as Record<string, unknown>[] } = data as { summary?: Record<string, unknown>; employees?: Record<string, unknown>[] };
+  const { summary = {} as /**/any, employees = [] as /**/any[] } = data as { summary?: /**/any; employees?: /**/any[] };
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -297,7 +297,7 @@ function SystemTab({ data, onEmployeeClick }: { data: Record<string, unknown> | 
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={employees.slice(0, 8).map(e => ({ name: String((e as Record<string, unknown>).employee_name ?? ''), value: Number((e as Record<string, unknown>).orders_taken ?? 0) + Number((e as Record<string, unknown>).total_system_actions ?? 0) }))}
+                      data={employees.slice(0, 8).map(e => ({ name: String((e as /**/any).employee_name ?? ''), value: Number((e as /**/any).orders_taken ?? 0) + Number((e as /**/any).total_system_actions ?? 0) }))}
                       cx="50%" cy="50%" innerRadius={50} outerRadius={100}
                       paddingAngle={2} dataKey="value"
                     >
@@ -368,10 +368,10 @@ export default function HRAnalytics() {
 
   const [activeTab, setActiveTab] = useState('overview');
   const [datePreset, setDatePreset] = useState('30d');
-  const [overviewData, setOverviewData] = useState<Record<string, unknown> | null>(null);
-  const [posData, setPosData] = useState<Record<string, unknown> | null>(null);
-  const [kdsData, setKdsData] = useState<Record<string, unknown> | null>(null);
-  const [systemData, setSystemData] = useState<Record<string, unknown> | null>(null);
+  const [overviewData, setOverviewData] = useState</**/any | null>(null);
+  const [posData, setPosData] = useState</**/any | null>(null);
+  const [kdsData, setKdsData] = useState</**/any | null>(null);
+  const [systemData, setSystemData] = useState</**/any | null>(null);
   const [loading, setLoading] = useState(true);
 
   const dateRange = useMemo(() => {

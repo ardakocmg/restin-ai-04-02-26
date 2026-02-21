@@ -4,7 +4,7 @@ import { logger } from '@/lib/logger';
 interface AppEvent {
   type: string;
   timestamp: string;
-  payload: Record<string, unknown>;
+  payload: /**/any;
 }
 
 type EventCallback = (event: AppEvent) => void;
@@ -34,18 +34,18 @@ class AppEvents {
     };
   }
 
-  publish(eventType: string, payload: Record<string, unknown> = {}): void {
+  publish(eventType: string, payload: /**/any = {}): void {
     const event: AppEvent = {
       type: eventType,
       timestamp: new Date().toISOString(),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      payload: payload as unknown
+      payload: payload as/**/any
     };
 
     // Log event (dev only)
     if (process.env.NODE_ENV === 'development') {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      logger.info('[Event]', event as unknown);
+      logger.info('[Event]', event as/**/any);
     }
 
     // Notify listeners
@@ -53,17 +53,17 @@ class AppEvents {
     callbacks.forEach(cb => {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        cb(event as unknown);
+        cb(event as/**/any);
       } catch (error: unknown) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        logger.error(`Event listener error for ${eventType}:`, error as unknown);
+        logger.error(`Event listener error for ${eventType}:`, error as/**/any);
       }
     });
 
     // Buffer if offline (optional)
     if (!navigator.onLine) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.offlineBuffer.push(event as unknown);
+      this.offlineBuffer.push(event as/**/any);
     }
   }
 

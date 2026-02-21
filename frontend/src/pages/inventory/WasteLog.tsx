@@ -106,7 +106,7 @@ function WasteLog() {
               <label className="block text-sm font-medium text-foreground mb-2">Item</label>
               <select aria-label="Input"
                 value={formData.item_id}
-                onChange={(e) = aria-label="Input field"> setFormData({ ...formData, item_id: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, item_id: e.target.value })}
                 className="w-full px-4 py-2 border border-border rounded-lg"
               >
                 <option value="">Select item...</option>
@@ -122,7 +122,7 @@ function WasteLog() {
                 type="number"
                 step="0.01"
                 value={formData.qty}
-                onChange={(e) = aria-label="Input field"> setFormData({ ...formData, qty: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, qty: e.target.value })}
                 className="w-full px-4 py-2 border border-border rounded-lg"
                 placeholder="0.00"
               />
@@ -132,7 +132,7 @@ function WasteLog() {
               <label className="block text-sm font-medium text-foreground mb-2">Reason</label>
               <select aria-label="Input"
                 value={formData.reason}
-                onChange={(e) = aria-label="Input field"> setFormData({ ...formData, reason: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
                 className="w-full px-4 py-2 border border-border rounded-lg"
               >
                 <option value="SPOILAGE">Spoilage</option>
@@ -147,7 +147,7 @@ function WasteLog() {
               <input aria-label="Input"
                 type="text"
                 value={formData.notes || ''}
-                onChange={(e) = aria-label="Input field"> setFormData({ ...formData, notes: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 className="w-full px-4 py-2 border border-border rounded-lg"
                 placeholder="Optional notes..."
               />

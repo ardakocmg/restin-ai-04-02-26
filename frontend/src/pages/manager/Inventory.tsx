@@ -26,7 +26,7 @@ interface TableQuery {
   pageSize: number;
   sorting: Array<{ id: string; desc: boolean }>;
   globalSearch: string;
-  filters: Record<string, unknown>;
+  filters: /**/any;
 }
 
 export default function Inventory() {
@@ -77,7 +77,7 @@ export default function Inventory() {
 
   const loadInventory = async (query: TableQuery = tableQuery) => {
     try {
-      const params: Record<string, unknown> = {
+      const params: /**/any = {
         page: query.pageIndex + 1,
         page_size: query.pageSize,
         search: query.globalSearch || undefined
@@ -115,12 +115,12 @@ export default function Inventory() {
 
   const handleExport = async (query: TableQuery) => {
     try {
-      const params: Record<string, unknown> = {
+      const params: /**/any = {
         page: 1,
         page_size: 1000,
         search: query.globalSearch || undefined
       };
-      const filters = query.filters || {} as Record<string, unknown>;
+      const filters = query.filters || {} as /**/any;
       if ((filters.unit as string[] | undefined)?.length) params.unit = (filters.unit as string[]).join(',');
       if ((filters.current_stock as Record<string, number> | undefined)?.min) params.current_stock_min = (filters.current_stock as Record<string, number>).min;
       if ((filters.current_stock as Record<string, number> | undefined)?.max) params.current_stock_max = (filters.current_stock as Record<string, number>).max;

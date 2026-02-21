@@ -146,7 +146,7 @@ function KDSStationDetail() {
                     <input aria-label="Input"
                       type="checkbox"
                       checked={Boolean(value)}
-                      onChange={(e) = aria-label="Input field"> {
+                      onChange={(e) => {
                         const newSettings = {
                           ticket_summary: {
                             ...settings.ticket_summary,
@@ -175,7 +175,7 @@ function KDSStationDetail() {
                       type="checkbox"
                       checked={Boolean(value)}
                       disabled={['preparing', 'on_hold', 'completed'].includes(key)}
-                      onChange={(e) = aria-label="Input field"> {
+                      onChange={(e) => {
                         const newSettings = {
                           order_status_enabled: {
                             ...settings.order_status_enabled,
@@ -261,7 +261,7 @@ function KDSStationDetail() {
                   <input aria-label="Input"
                     type="checkbox"
                     checked={settings.wait_times?.enabled}
-                    onChange={(e) = aria-label="Input field"> {
+                    onChange={(e) => {
                       updateSettings({
                         wait_times: { ...settings.wait_times, enabled: e.target.checked }
                       });
@@ -280,7 +280,7 @@ function KDSStationDetail() {
                   <input aria-label="Input"
                     type="number"
                     value={settings.wait_times?.delayed_after_min || 10}
-                    onChange={(e) = aria-label="Input field"> {
+                    onChange={(e) => {
                       updateSettings({
                         wait_times: {
                           ...settings.wait_times,
@@ -299,7 +299,7 @@ function KDSStationDetail() {
                   <input aria-label="Input"
                     type="number"
                     value={settings.wait_times?.late_after_min || 20}
-                    onChange={(e) = aria-label="Input field"> {
+                    onChange={(e) => {
                       updateSettings({
                         wait_times: {
                           ...settings.wait_times,

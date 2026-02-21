@@ -24,7 +24,7 @@ const EU_ALLERGENS = [
 ];
 
 interface AllergensTabProps {
-    data?: Record<string, unknown>;
+    data?: /**/any;
     sku?: { allergens?: string[];[key: string]: unknown };
     onSave?: (updates: { allergens: string[] }) => void;
 }

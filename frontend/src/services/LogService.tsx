@@ -23,11 +23,11 @@ export interface LogEntry {
     ts?: string;
     venue_id?: string;
     acknowledged?: boolean;
-    metadata?: Record<string, unknown>;
+    metadata?: /**/any;
     endpoint?: string;
     request_id?: string;
     fingerprint?: string;
-    details?: Record<string, unknown>;
+    details?: /**/any;
 }
 
 export interface LogListParams {

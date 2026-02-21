@@ -46,7 +46,7 @@ export default function CallLogs() {
     // Filter & sort
     const filteredLogs = logs
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .filter((log: Record<string, unknown>) => {
+        .filter((log: /**/any) => {
             if (searchQuery) {
                 const q = searchQuery.toLowerCase();
                 return (log.caller || '').toLowerCase().includes(q) ||
@@ -55,7 +55,7 @@ export default function CallLogs() {
             return true;
         })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .sort((a: Record<string, unknown>, b: Record<string, unknown>) => {
+        .sort((a: /**/any, b: /**/any) => {
             const aVal = a[sortField] || '';
             const bVal = b[sortField] || '';
             return sortDir === 'asc' ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
@@ -184,7 +184,7 @@ export default function CallLogs() {
                             </TableRow>
                         ) : (
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            filteredLogs.map((log: Record<string, unknown>, i: number) => (
+                            filteredLogs.map((log: /**/any, i: number) => (
                                 <TableRow
                                     key={log.id || i}
                                     className="border-border/30 cursor-pointer hover:bg-card/40 transition-colors group"

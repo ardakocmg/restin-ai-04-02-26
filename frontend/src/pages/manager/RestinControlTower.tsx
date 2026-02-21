@@ -30,8 +30,8 @@ interface PillarConfig {
     description: string;
     route: string;
     metricsEndpoint: string;
-    metricsExtractor: (data: Record<string, unknown>) => string;
-    statusExtractor: (data: Record<string, unknown>) => string;
+    metricsExtractor: (data: /**/any) => string;
+    statusExtractor: (data: /**/any) => string;
 }
 
 const PILLAR_CONFIGS: PillarConfig[] = [
@@ -280,7 +280,7 @@ export default function RestinControlTower() {
                                             variant="ghost"
                                             size="icon" aria-label="Action"
                                             className="rounded-full bg-secondary/10 hover:bg-secondary hover:text-foreground"
-                                         aria-label="Action">
+                                         >
                                             <ArrowUpRight size={20} />
                                         </Button>
                                     </div>

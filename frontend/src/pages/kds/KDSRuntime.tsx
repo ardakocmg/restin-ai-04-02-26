@@ -262,6 +262,7 @@ function KDSRuntime() {
               {ticket.status !== 'ON_HOLD' && ticket.status !== 'COMPLETED' && (
                 <button
                   onClick={() => bumpTicket(ticket.id, 'ON_HOLD')}
+                  aria-label="Hold ticket"
                   className="px-3 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition"
                 >
                   <AlertTriangle className="w-5 h-5" />

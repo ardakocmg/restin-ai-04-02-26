@@ -177,20 +177,20 @@ const ProductionInstructions: React.FC = () => {
                         <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditingGroup(null)}><X size={20} /></button>
                     </div>
                     <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name</label>
-                        <input className="pos-input" value={editingGroup.name} onChange={e = aria-label="Input field"> setEditingGroup(p => p ? { ...p, name: e.target.value } : null)} /></div>
+                        <input className="pos-input" value={editingGroup.name} onChange={e => setEditingGroup(p => p ? { ...p, name: e.target.value } : null)} /></div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label>
                             <div style={{ display: 'flex', gap: 6 }}>{(['single', 'multi'] as const).map(t => (
                                 <button key={t} onClick={() => setEditingGroup(p => p ? { ...p, type: t } : null)} className={`pos-radio-option${editingGroup.type === t ? ' pos-radio-option--active' : ''}`} style={{ flex: 1, textAlign: 'center' }}>{t === 'single' ? '○ Single' : '☑ Multi'}</button>
                             ))}</div></div>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Max Selections</label>
-                            <input type="number" min={1} className="pos-input" value={editingGroup.maxSelections} onChange={e = aria-label="Input field"> setEditingGroup(p => p ? { ...p, maxSelections: parseInt(e.target.value) || 1 } : null)} /></div>
+                            <input type="number" min={1} className="pos-input" value={editingGroup.maxSelections} onChange={e => setEditingGroup(p => p ? { ...p, maxSelections: parseInt(e.target.value) || 1 } : null)} /></div>
                     </div>
                     <div style={{ display: 'flex', gap: 14, marginBottom: 16 }}>
                         {['required', 'printOnKDS', 'printOnTicket'].map(k => (
                             <label key={k} style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                <input type="checkbox" checked={(editingGroup as unknown)[k] as boolean} onChange={() = aria-label="Input field"> setEditingGroup(p => p ? { ...p, [k]: !(p as unknown)[k] } : null)} />
+                                <input type="checkbox" checked={(editingGroup as/**/any)[k] as boolean} onChange={() => setEditingGroup(p => p ? { ...p, [k]: !(p as/**/any)[k] } : null)} />
                                 {k === 'printOnKDS' ? 'Print KDS' : k === 'printOnTicket' ? 'Print Ticket' : 'Required'}
                             </label>
                         ))}
@@ -207,13 +207,13 @@ const ProductionInstructions: React.FC = () => {
                         <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditingInstruction(null)}><X size={20} /></button>
                     </div>
                     <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name</label>
-                        <input className="pos-input" value={editingInstruction.name} onChange={e = aria-label="Input field"> setEditingInstruction(p => p ? { ...p, name: e.target.value } : null)} /></div>
+                        <input className="pos-input" value={editingInstruction.name} onChange={e => setEditingInstruction(p => p ? { ...p, name: e.target.value } : null)} /></div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Price Modifier (€)</label>
-                            <input type="number" step="0.01" className="pos-input" value={editingInstruction.priceModifier} onChange={e = aria-label="Input field"> setEditingInstruction(p => p ? { ...p, priceModifier: parseFloat(e.target.value) || 0 } : null)} /></div>
+                            <input type="number" step="0.01" className="pos-input" value={editingInstruction.priceModifier} onChange={e => setEditingInstruction(p => p ? { ...p, priceModifier: parseFloat(e.target.value) || 0 } : null)} /></div>
                         <div style={{ display: 'flex', alignItems: 'flex-end' }}>
                             <label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
-                                <input type="checkbox" checked={editingInstruction.isDefault} onChange={() = aria-label="Input field"> setEditingInstruction(p => p ? { ...p, isDefault: !p.isDefault } : null)} /> Default
+                                <input type="checkbox" checked={editingInstruction.isDefault} onChange={() => setEditingInstruction(p => p ? { ...p, isDefault: !p.isDefault } : null)} /> Default
                             </label></div>
                     </div>
                     <button className="pos-btn pos-btn--primary" style={{ width: '100%', justifyContent: 'center' }} onClick={saveInstruction}><Save size={14} /> Save</button>

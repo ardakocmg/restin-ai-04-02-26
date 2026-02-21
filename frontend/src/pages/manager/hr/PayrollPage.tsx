@@ -564,7 +564,7 @@ export default function PayrollPage() {
                                                                     variant="ghost"
                                                                     size="icon" aria-label="Action"
                                                                     className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-xl border border-transparent hover:border-border"
-                                                                    onClick={(e) = aria-label="Action"> e.stopPropagation()}
+                                                                    onClick={(e) => e.stopPropagation()}
                                                                 >
                                                                     <Download className="h-5 w-5" />
                                                                 </Button>
@@ -590,7 +590,7 @@ export default function PayrollPage() {
                                                             variant="ghost"
                                                             size="icon" aria-label="Action"
                                                             className="h-10 w-10 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 rounded-xl border border-transparent hover:border-rose-500/20"
-                                                            onClick={(e) = aria-label="Action"> handleDeleteRun(e, run.id)}
+                                                            onClick={(e) => handleDeleteRun(e, run.id)}
                                                         >
                                                             <Trash2 className="h-5 w-5" />
                                                         </Button>

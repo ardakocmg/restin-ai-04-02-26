@@ -63,7 +63,7 @@ export const radarService = {
     /**
      * Yield Rules — create/update a rule
      */
-    upsertYieldRule: async (venueId: string, rule: Record<string, unknown>) => {
+    upsertYieldRule: async (venueId: string, rule: /**/any) => {
         return api.post(`/radar/yield-rules?venue_id=${venueId}`, rule);
     },
 };

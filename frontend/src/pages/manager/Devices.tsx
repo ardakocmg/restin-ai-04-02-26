@@ -166,7 +166,7 @@ export default function Devices() {
                                             variant="ghost"
                                             size="icon" aria-label="Action"
                                             className="text-muted-foreground hover:text-foreground"
-                                            onClick={() = aria-label="Action"> setSelectedDevice(row)}
+                                            onClick={() => setSelectedDevice(row)}
                                         >
                                             <ChevronRight className="w-5 h-5" />
                                         </Button>

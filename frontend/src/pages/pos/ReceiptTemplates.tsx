@@ -337,7 +337,7 @@ export default function ReceiptTemplates() {
     useEffect(() => {
         if (apiData && apiData.length > 0) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            setTemplates(apiData.map((t: Record<string, unknown>) => makeTemplate({
+            setTemplates(apiData.map((t: /**/any) => makeTemplate({
                 id: t.id || t._id || crypto.randomUUID(), name: t.name || 'Untitled', type: t.type || 'customer', ...t,
             })));
             setIsLive(true);

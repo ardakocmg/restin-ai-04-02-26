@@ -32,7 +32,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
     // Subscribe to resilience status
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const unsubscribe = resilienceManager.onStatusChange((newStatus: unknown) => {
+    const unsubscribe = resilienceManager.onStatusChange((newStatus: /**/any) => {
       setStatus(newStatus);
     });
 

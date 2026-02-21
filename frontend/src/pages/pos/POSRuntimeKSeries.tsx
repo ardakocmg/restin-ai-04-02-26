@@ -374,7 +374,7 @@ export default function POSRuntimeKSeries() {
                         <select aria-label="Input"
                             className="ks-meta-tag-select"
                             value={viewMode}
-                            aria-label="Order view mode"
+                            
                             onChange={(e) => setViewMode(e.target.value as 'seat' | 'course')}
                         >
                             <option value="course">By course</option>
@@ -713,7 +713,7 @@ export default function POSRuntimeKSeries() {
                             ref={searchInputRef}
                             className="ks-search-input"
                             value={searchQuery}
-                            onChange={(e) = aria-label="Input field"> setSearchQuery(e.target.value)}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Search menu items..."
                             autoFocus
                         />

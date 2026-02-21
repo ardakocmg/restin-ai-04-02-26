@@ -6,7 +6,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ConditionalPanelProps {
-    selectedBlock: Record<string, unknown> | null;
+    selectedBlock: /**/any | null;
 }
 
 export default function ConditionalPanel({ selectedBlock }: ConditionalPanelProps) {

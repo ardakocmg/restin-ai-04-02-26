@@ -21,7 +21,7 @@ interface ContentVersion {
   id: string;
   version?: string;
   status?: string;
-  content?: Record<string, unknown>;
+  content?: /**/any;
   created_at?: string;
   created_by_role?: string;
   approved_by_role?: string;

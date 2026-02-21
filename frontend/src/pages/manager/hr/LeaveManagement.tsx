@@ -443,7 +443,7 @@ export default function LeaveManagement() {
                   <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">Leave Type</label>
                   <select aria-label="Input"
                     value={newRequest.type}
-                    onChange={e = aria-label="Input field"> setNewRequest(p => ({ ...p, type: e.target.value }))}
+                    onChange={e => setNewRequest(p => ({ ...p, type: e.target.value }))}
                     className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                   >
                     <option value="vacation">Vacation Leave</option>
@@ -477,7 +477,7 @@ export default function LeaveManagement() {
                   <textarea aria-label="Input"
                     rows={3}
                     value={newRequest.notes}
-                    onChange={e = aria-label="Input field"> setNewRequest(p => ({ ...p, notes: e.target.value }))}
+                    onChange={e => setNewRequest(p => ({ ...p, notes: e.target.value }))}
                     className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
                     placeholder="Optional notes..."
                   />

@@ -153,7 +153,7 @@ class SyncService {
         }
     }
 
-    private async replayCommand(command: OfflineCommand): Promise<unknown> {
+    private async replayCommand(command: OfflineCommand): Promise</**/any> {
         const token = localStorage.getItem('restin_token');
 
         // Build request config with idempotency
@@ -188,7 +188,7 @@ class SyncService {
         }
     }
 
-    private async replayPOSOrder(command: OfflineCommand, config: AxiosRequestConfig): Promise<unknown> {
+    private async replayPOSOrder(command: OfflineCommand, config: AxiosRequestConfig): Promise</**/any> {
         const response = await axios.post(
             `${API_URL}/api/pos/orders`,
             command.payload,
@@ -197,7 +197,7 @@ class SyncService {
         return response.data;
     }
 
-    private async replayPOSOrderItem(command: OfflineCommand, config: AxiosRequestConfig): Promise<unknown> {
+    private async replayPOSOrderItem(command: OfflineCommand, config: AxiosRequestConfig): Promise</**/any> {
         const payload = command.payload as { order_id: string };
         const response = await axios.post(
             `${API_URL}/api/pos/orders/${payload.order_id}/items`,
@@ -207,7 +207,7 @@ class SyncService {
         return response.data;
     }
 
-    private async replayPOSPayment(command: OfflineCommand, config: AxiosRequestConfig): Promise<unknown> {
+    private async replayPOSPayment(command: OfflineCommand, config: AxiosRequestConfig): Promise</**/any> {
         const payload = command.payload as { order_id: string };
         const response = await axios.post(
             `${API_URL}/api/pos/orders/${payload.order_id}/payments`,
@@ -217,7 +217,7 @@ class SyncService {
         return response.data;
     }
 
-    private async replayKDSBump(command: OfflineCommand, config: AxiosRequestConfig): Promise<unknown> {
+    private async replayKDSBump(command: OfflineCommand, config: AxiosRequestConfig): Promise</**/any> {
         const payload = command.payload as { station_key: string; ticket_id: string };
         const response = await axios.post(
             `${API_URL}/api/kds/runtime/${payload.station_key}/tickets/${payload.ticket_id}/bump`,
@@ -227,7 +227,7 @@ class SyncService {
         return response.data;
     }
 
-    private async replayInventoryAdjustment(command: OfflineCommand, config: AxiosRequestConfig): Promise<unknown> {
+    private async replayInventoryAdjustment(command: OfflineCommand, config: AxiosRequestConfig): Promise</**/any> {
         const response = await axios.post(
             `${API_URL}/api/inventory/adjustments`,
             command.payload,

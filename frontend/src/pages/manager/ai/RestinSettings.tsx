@@ -26,7 +26,7 @@ interface ModuleConfig {
     module: string;
     level: string;
     venue_id?: string;
-    config: Record<string, unknown>;
+    config: /**/any;
     is_default: boolean;
     updated_at: string | null;
     updated_by: string | null;
@@ -56,7 +56,7 @@ interface AuditEntry {
     venue_id?: string;
     changed_by: string;
     changed_at: string;
-    new_config: Record<string, unknown>;
+    new_config: /**/any;
 }
 
 // ─── Module Metadata ──────────────────────────────
@@ -104,7 +104,7 @@ export default function RestinSettings() {
     // Data
     const [moduleStatuses, setModuleStatuses] = useState<Record<string, ModuleStatus>>({});
     const [moduleConfig, setModuleConfig] = useState<ModuleConfig | null>(null);
-    const [editConfig, setEditConfig] = useState<Record<string, unknown>>({});
+    const [editConfig, setEditConfig] = useState</**/any>({});
     const [analytics, setAnalytics] = useState<{
         usage_by_module: Record<string, UsageByModule>;
         daily_trend: Array<{ date: string; module: string; requests: number; tokens: number; cost: number }>;
