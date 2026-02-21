@@ -106,6 +106,7 @@ from routes.loyalty import create_loyalty_router
 from routes.automations import create_automations_router
 from routes.connectors import create_connectors_router
 from routes.voice_routes import router as voice_router
+from routes.hyperscale_routes import router as hyperscale_router
 from routes.media_routes import router as media_router
 from routes.radar_routes import router as radar_router
 from routes.ops_routes import create_ops_router
@@ -723,6 +724,7 @@ api_main.include_router(import_template_router)  # Import Template CRUD
 api_main.include_router(ai_copilot_router)  # AI Copilot
 from routes.restin_settings_routes import router as restin_settings_router
 api_main.include_router(restin_settings_router)  # Restin AI Module Settings
+api_main.include_router(hyperscale_router)  # Hyperscale Dashboard APM
 
 # Group-level integration overview (cross-venue matrix)
 from routes.group_integrations import create_group_integrations_router
@@ -794,6 +796,19 @@ async def startup_event():
         from scripts.keep_alive import start_keep_alive
         start_keep_alive()
         logger.info("✓ Keep-alive ping started (14min interval)")
+        
+        # Start metrics snapshot worker for Hyperscale Dashboard charts
+        from core.metrics_collector import metrics as _mc
+        async def _metrics_snapshot_loop():
+            import asyncio as _aio
+            while True:
+                try:
+                    _mc.take_snapshot()
+                except Exception as snap_err:
+                    logger.warning("Metrics snapshot error: %s", snap_err)
+                await _aio.sleep(20)
+        asyncio.create_task(_metrics_snapshot_loop())
+        logger.info("✓ Metrics snapshot worker started (20s interval)")
         
     except Exception as e:
         logger.error(f"Startup error: {e}")

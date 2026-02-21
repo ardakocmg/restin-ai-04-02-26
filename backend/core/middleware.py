@@ -1,4 +1,5 @@
 import uuid
+import time as _time
 import traceback
 import logging
 import re
@@ -11,18 +12,33 @@ from core.database import get_database
 from models.observability import Domain, Severity, StepDetail, StepStatus
 from services.observability_service import get_observability_service
 from core.security import verify_jwt_token
+from core.metrics_collector import metrics as _metrics_collector
 
 class RequestIDMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         request_id = str(uuid.uuid4())
         request.state.request_id = request_id
+        start = _time.monotonic()
+        status_code = 500
         try:
             response = await call_next(request)
+            status_code = response.status_code
             response.headers["X-Request-ID"] = request_id
             return response
         except Exception as e:
-            # Re-raise to be caught by exception handlers
+            status_code = 500
             raise e
+        finally:
+            latency_ms = (_time.monotonic() - start) * 1000
+            try:
+                _metrics_collector.record_request(
+                    latency_ms=latency_ms,
+                    status_code=status_code,
+                    path=str(request.url.path),
+                )
+            except Exception:
+                pass  # Never let metrics recording crash the request
+
 
 def make_error(code: str, message: str, detail: dict = None, request_id: str = None):
     return {
