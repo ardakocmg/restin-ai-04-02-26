@@ -45,7 +45,7 @@ function Get-BehindCount {
 function Invoke-AutoPull {
     $hasLocal = Test-UncommittedChanges
     if ($hasLocal) {
-        Write-Log "Local changes detected — stashing before pull..." "Yellow"
+        Write-Log "Local changes detected -- stashing before pull..." "Yellow"
         git stash push -m "auto-pull-watcher-stash" 2>$null | Out-Null
     }
 
@@ -59,13 +59,12 @@ function Invoke-AutoPull {
     }
 
     if ($success) {
-        Write-Log "Pull successful! Codebase updated." "Green"
-        # Play a beep to notify
+        Write-Log "[OK] Pull successful! Codebase updated." "Green"
         [console]::beep(800, 200)
         [console]::beep(1000, 150)
     }
     else {
-        Write-Log "Pull failed! Manual intervention needed." "Red"
+        Write-Log "[FAIL] Pull failed! Manual intervention needed." "Red"
         Write-Log $pullResult "Red"
         [console]::beep(400, 500)
     }
@@ -76,11 +75,11 @@ function Invoke-AutoPull {
 # === MAIN LOOP ===
 
 Write-Host ""
-Write-Host "  ╔═══════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "  ║   Restin.AI Git Auto-Pull Watcher  v1.0   ║" -ForegroundColor Cyan
-Write-Host "  ║   Polling every ${Interval}s for remote changes    ║" -ForegroundColor Cyan
-Write-Host "  ║   Press Ctrl+C to stop                    ║" -ForegroundColor Cyan
-Write-Host "  ╚═══════════════════════════════════════════╝" -ForegroundColor Cyan
+Write-Host "  +=============================================+" -ForegroundColor Cyan
+Write-Host "  |   Restin.AI Git Auto-Pull Watcher  v1.0     |" -ForegroundColor Cyan
+Write-Host "  |   Polling every ${Interval}s for remote changes      |" -ForegroundColor Cyan
+Write-Host "  |   Press Ctrl+C to stop                      |" -ForegroundColor Cyan
+Write-Host "  +=============================================+" -ForegroundColor Cyan
 Write-Host ""
 
 Write-Log "Watching: $repoRoot" "DarkCyan"
@@ -93,7 +92,7 @@ do {
     try {
         $behind = Get-BehindCount
         if ($behind -gt 0) {
-            Write-Log "Remote is $behind commit(s) ahead — triggering auto-pull!" "Magenta"
+            Write-Log "Remote is $behind commit(s) ahead -- triggering auto-pull!" "Magenta"
             $ok = Invoke-AutoPull
             if ($ok) {
                 $pullCount++

@@ -1,11 +1,10 @@
 <#
 .SYNOPSIS
-    Activity Status Broadcaster — Shows what this PC is doing in real-time
+    Activity Status Broadcaster -- Shows what this PC is doing in real-time
 .DESCRIPTION
     Writes a JSON status file that the other PC can read to see:
     - Which files are open/modified
     - Current git branch
-    - Last action taken
     - Whether dev servers are running
 .USAGE
     .\scripts\activity-status.ps1             # Watch mode (poll every 15s)
@@ -79,7 +78,6 @@ function Get-ActivityStatus {
     }
 }
 
-# Also read the other PC's status if available
 function Show-OtherPC {
     $otherFiles = Get-ChildItem (Join-Path $repoRoot ".agent") -Filter "status-*.json" -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -ne "status-$PCName.json" }
@@ -88,8 +86,9 @@ function Show-OtherPC {
         try {
             $data = Get-Content $f.FullName -Raw | ConvertFrom-Json
             $age = [Math]::Round((New-TimeSpan -Start ([datetime]$data.timestamp)).TotalMinutes, 1)
-            $icon = if ($age -lt 2) { "🟢" } elseif ($age -lt 10) { "🟡" } else { "🔴" }
-            Write-Host "  $icon $($data.pc.ToUpper()): $($data.totalChanges) changes, branch=$($data.branch), last seen ${age}m ago" -ForegroundColor $(if ($age -lt 2) { "Green" }elseif ($age -lt 10) { "Yellow" }else { "DarkGray" })
+            $statusTag = if ($age -lt 2) { "[ONLINE]" } elseif ($age -lt 10) { "[IDLE]" } else { "[OFFLINE]" }
+            $color = if ($age -lt 2) { "Green" } elseif ($age -lt 10) { "Yellow" } else { "DarkGray" }
+            Write-Host "  $statusTag $($data.pc.ToUpper()): $($data.totalChanges) changes, branch=$($data.branch), last seen ${age}m ago" -ForegroundColor $color
         }
         catch {}
     }
@@ -97,11 +96,11 @@ function Show-OtherPC {
 
 # === MAIN LOOP ===
 Write-Host ""
-Write-Host "  ╔═══════════════════════════════════════════╗" -ForegroundColor Green
-Write-Host "  ║   Restin.AI Activity Status  v1.0         ║" -ForegroundColor Green
-Write-Host "  ║   Broadcasting every ${Interval}s                 ║" -ForegroundColor Green
-Write-Host "  ║   Press Ctrl+C to stop                    ║" -ForegroundColor Green
-Write-Host "  ╚═══════════════════════════════════════════╝" -ForegroundColor Green
+Write-Host "  +=============================================+" -ForegroundColor Green
+Write-Host "  |   Restin.AI Activity Status  v1.0           |" -ForegroundColor Green
+Write-Host "  |   Broadcasting every ${Interval}s                   |" -ForegroundColor Green
+Write-Host "  |   Press Ctrl+C to stop                      |" -ForegroundColor Green
+Write-Host "  +=============================================+" -ForegroundColor Green
 Write-Host ""
 
 while ($true) {
@@ -109,9 +108,10 @@ while ($true) {
         $status = Get-ActivityStatus
         $status | ConvertTo-Json -Depth 5 | Out-File -Encoding UTF8 $StatusFile -Force
 
-        Write-Log "$($PCName.ToUpper()): branch=$($status.branch), $($status.totalChanges) changes, FE=$(if($status.servers.frontend -match 'running'){'✅'}else{'❌'}) BE=$(if($status.servers.backend -match 'running'){'✅'}else{'❌'})" "Cyan"
+        $feStatus = if ($status.servers.frontend -match "running") { "OK" } else { "OFF" }
+        $beStatus = if ($status.servers.backend -match "running") { "OK" } else { "OFF" }
+        Write-Log "$($PCName.ToUpper()): branch=$($status.branch), $($status.totalChanges) changes, FE=$feStatus BE=$beStatus" "Cyan"
 
-        # Show other PC status
         Show-OtherPC
     }
     catch {

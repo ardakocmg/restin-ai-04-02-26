@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Shared Task Queue — Send tasks between PC1 and PC2
+    Shared Task Queue -- Send tasks between PC1 and PC2
 .DESCRIPTION
     A lightweight task assignment system. One PC can add a task for the other,
     and the git-auto-pull watcher on the receiving PC will display it.
@@ -25,7 +25,7 @@ param(
 )
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$QueueFile = Join-Path $repoRoot ".agent" "task-queue.json"
+$QueueFile = Join-Path (Join-Path $repoRoot ".agent") "task-queue.json"
 $PCName = $env:COMPUTERNAME
 
 # Ensure .agent dir exists
@@ -50,24 +50,25 @@ function Save-Queue {
 function Show-Tasks {
     param($Tasks)
     if ($Tasks.Count -eq 0) {
-        Write-Host "📭 No tasks in queue" -ForegroundColor Green
+        Write-Host "[EMPTY] No tasks in queue" -ForegroundColor Green
         return
     }
 
     Write-Host ""
-    Write-Host "  📋 SHARED TASK QUEUE ($($Tasks.Count) tasks)" -ForegroundColor Cyan
-    Write-Host "  ════════════════════════════════════════" -ForegroundColor DarkCyan
-    
+    Write-Host "  SHARED TASK QUEUE ($($Tasks.Count) tasks)" -ForegroundColor Cyan
+    Write-Host "  ========================================" -ForegroundColor DarkCyan
+
     foreach ($t in $Tasks) {
         $icon = switch ($t.priority) {
-            "high" { "🔴" }
-            "medium" { "🟡" }
-            default { "🟢" }
+            "high" { "[!!!]" }
+            "medium" { "[!!]" }
+            default { "[!]" }
         }
-        $statusIcon = if ($t.status -eq "done") { "✅" } else { "⬜" }
-        $assignee = if ($t.to) { " → $($t.to)" } else { "" }
-        
-        Write-Host "  $statusIcon $icon [$($t.id)] $($t.task)$assignee" -ForegroundColor $(if ($t.status -eq "done") { "DarkGray" } else { "White" })
+        $statusIcon = if ($t.status -eq "done") { "[DONE]" } else { "[TODO]" }
+        $assignee = if ($t.to) { " -> $($t.to)" } else { "" }
+
+        $color = if ($t.status -eq "done") { "DarkGray" } else { "White" }
+        Write-Host "  $statusIcon $icon [$($t.id)] $($t.task)$assignee" -ForegroundColor $color
         Write-Host "       From: $($t.from) | $($t.created)" -ForegroundColor DarkGray
     }
     Write-Host ""
@@ -79,7 +80,7 @@ switch ($Action) {
             Write-Host "Usage: .\task-queue.ps1 add 'Task description' -Priority high -To PC2" -ForegroundColor Yellow
             exit 1
         }
-        
+
         $tasks = @(Get-Queue)
         $newTask = @{
             id       = (Get-Random -Minimum 1000 -Maximum 9999).ToString()
@@ -96,10 +97,10 @@ switch ($Action) {
         # Auto-push so the other PC sees it
         Set-Location $repoRoot
         git add $QueueFile 2>$null
-        git commit -m "task-queue: $PCName added task '$TaskText'" --no-verify 2>$null | Out-Null
+        git commit -m "task-queue: $PCName added task" --no-verify 2>$null | Out-Null
         git push origin main 2>$null | Out-Null
 
-        Write-Host "✅ Task added: [$($newTask.id)] $TaskText" -ForegroundColor Green
+        Write-Host "[OK] Task added: [$($newTask.id)] $TaskText" -ForegroundColor Green
         if ($To) { Write-Host "   Assigned to: $To" -ForegroundColor Cyan }
         [console]::beep(600, 100)
         [console]::beep(800, 100)
@@ -113,7 +114,7 @@ switch ($Action) {
             git checkout origin/main -- $QueueFile 2>$null | Out-Null
         }
         $tasks = @(Get-Queue)
-        
+
         # Show tasks relevant to this PC
         $myTasks = @($tasks | Where-Object { $_.to -eq "" -or $_.to -eq $PCName -or $_.from -eq $PCName })
         Show-Tasks $myTasks
@@ -125,7 +126,7 @@ switch ($Action) {
             Write-Host "Usage: .\task-queue.ps1 done <task-id>" -ForegroundColor Yellow
             exit 1
         }
-        
+
         $tasks = @(Get-Queue)
         $found = $false
         for ($i = 0; $i -lt $tasks.Count; $i++) {
@@ -136,17 +137,17 @@ switch ($Action) {
                 $found = $true
             }
         }
-        
+
         if ($found) {
             Save-Queue -Tasks $tasks
             Set-Location $repoRoot
             git add $QueueFile 2>$null
             git commit -m "task-queue: $PCName completed task $taskId" --no-verify 2>$null | Out-Null
             git push origin main 2>$null | Out-Null
-            Write-Host "✅ Task $taskId marked as done" -ForegroundColor Green
+            Write-Host "[OK] Task $taskId marked as done" -ForegroundColor Green
         }
         else {
-            Write-Host "❌ Task $taskId not found" -ForegroundColor Red
+            Write-Host "[ERROR] Task $taskId not found" -ForegroundColor Red
         }
     }
 
@@ -157,6 +158,6 @@ switch ($Action) {
         git add $QueueFile 2>$null
         git commit -m "task-queue: cleared completed tasks" --no-verify 2>$null | Out-Null
         git push origin main 2>$null | Out-Null
-        Write-Host "🧹 Cleared completed tasks" -ForegroundColor Green
+        Write-Host "[OK] Cleared completed tasks" -ForegroundColor Green
     }
 }
