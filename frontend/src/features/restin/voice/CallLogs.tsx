@@ -127,7 +127,7 @@ export default function CallLogs() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <Input
+                    <Input aria-label="Search caller or transcript..."
                         placeholder="Search caller or transcript..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}

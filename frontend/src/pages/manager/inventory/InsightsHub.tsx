@@ -81,7 +81,7 @@ export default function InsightsHub() {
     return (
         <PageContainer title="Insights Hub" description="Sales analytics, profitability trends, and outlet performance"
             actions={<div className="flex gap-2">
-                <Select value={period} onValueChange={setPeriod}><SelectTrigger className="w-28 h-8 text-xs"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="ytd">Year to Date</SelectItem><SelectItem value="mtd">This Month</SelectItem><SelectItem value="q4">Q4 2025</SelectItem><SelectItem value="q3">Q3 2025</SelectItem></SelectContent></Select>
+                <Select aria-label="Select option" value={period} onValueChange={setPeriod}><SelectTrigger aria-label="Select option" className="w-28 h-8 text-xs"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="ytd">Year to Date</SelectItem><SelectItem value="mtd">This Month</SelectItem><SelectItem value="q4">Q4 2025</SelectItem><SelectItem value="q3">Q3 2025</SelectItem></SelectContent></Select>
                 <Button variant="outline" size="sm" onClick={() => toast.info('Exported')}><Download className="h-4 w-4 mr-1" /> Export</Button>
             </div>}>
 

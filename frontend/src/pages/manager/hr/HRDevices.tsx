@@ -141,7 +141,7 @@ export default function HRDevices() {
                                             </div>
 
                                             <div className="flex gap-2">
-                                                <Button variant="outline" className="h-10 w-10 p-0 border-border bg-secondary/50 hover:bg-secondary text-muted-foreground">
+                                                <Button variant="outline" aria-label="Action" className="h-10 w-10 p-0 border-border bg-secondary/50 hover:bg-secondary text-muted-foreground">
                                                     <Settings2 className="w-4 h-4" />
                                                 </Button>
                                                 <Button size="sm" className="bg-zinc-100 text-black hover:bg-white font-bold uppercase text-[9px] tracking-widest h-10 px-4">

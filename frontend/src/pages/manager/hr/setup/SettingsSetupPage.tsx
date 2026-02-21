@@ -76,23 +76,23 @@ export default function SettingsSetupPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Annual Leave Days</Label>
-                <Input type="number" value={settings.annual_leave_days} onChange={(e) => updateField('annual_leave_days', parseInt(e.target.value))} />
+                <Input aria-label="Input field" type="number" value={settings.annual_leave_days} onChange={(e) => updateField('annual_leave_days', parseInt(e.target.value))} />
               </div>
               <div>
                 <Label>Sick Leave Days</Label>
-                <Input type="number" value={settings.sick_leave_days} onChange={(e) => updateField('sick_leave_days', parseInt(e.target.value))} />
+                <Input aria-label="Input field" type="number" value={settings.sick_leave_days} onChange={(e) => updateField('sick_leave_days', parseInt(e.target.value))} />
               </div>
               <div>
                 <Label>Leave Year Start (MM-DD)</Label>
-                <Input value={settings.leave_year_start} onChange={(e) => updateField('leave_year_start', e.target.value)} placeholder="01-01" />
+                <Input aria-label="Input field" value={settings.leave_year_start} onChange={(e) => updateField('leave_year_start', e.target.value)} placeholder="01-01" />
               </div>
               <div>
                 <Label>Max Carry-Over Days</Label>
-                <Input type="number" value={settings.carry_over_max} onChange={(e) => updateField('carry_over_max', parseInt(e.target.value))} />
+                <Input aria-label="Input field" type="number" value={settings.carry_over_max} onChange={(e) => updateField('carry_over_max', parseInt(e.target.value))} />
               </div>
               <div>
                 <Label>Min Notice for Leave (days)</Label>
-                <Input type="number" value={settings.min_notice_days} onChange={(e) => updateField('min_notice_days', parseInt(e.target.value))} />
+                <Input aria-label="Input field" type="number" value={settings.min_notice_days} onChange={(e) => updateField('min_notice_days', parseInt(e.target.value))} />
               </div>
             </div>
           </CardContent>
@@ -110,23 +110,23 @@ export default function SettingsSetupPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Work Hours / Week</Label>
-                <Input type="number" value={settings.work_hours_per_week} onChange={(e) => updateField('work_hours_per_week', parseInt(e.target.value))} />
+                <Input aria-label="Input field" type="number" value={settings.work_hours_per_week} onChange={(e) => updateField('work_hours_per_week', parseInt(e.target.value))} />
               </div>
               <div>
                 <Label>Overtime Multiplier</Label>
-                <Input type="number" step="0.1" value={settings.overtime_multiplier} onChange={(e) => updateField('overtime_multiplier', parseFloat(e.target.value))} />
+                <Input aria-label="Input field" type="number" step="0.1" value={settings.overtime_multiplier} onChange={(e) => updateField('overtime_multiplier', parseFloat(e.target.value))} />
               </div>
               <div>
                 <Label>Sunday Multiplier</Label>
-                <Input type="number" step="0.1" value={settings.sunday_multiplier} onChange={(e) => updateField('sunday_multiplier', parseFloat(e.target.value))} />
+                <Input aria-label="Input field" type="number" step="0.1" value={settings.sunday_multiplier} onChange={(e) => updateField('sunday_multiplier', parseFloat(e.target.value))} />
               </div>
               <div>
                 <Label>Probation Period (months)</Label>
-                <Input type="number" value={settings.probation_months} onChange={(e) => updateField('probation_months', parseInt(e.target.value))} />
+                <Input aria-label="Input field" type="number" value={settings.probation_months} onChange={(e) => updateField('probation_months', parseInt(e.target.value))} />
               </div>
               <div>
                 <Label>Notice Period (weeks)</Label>
-                <Input type="number" value={settings.notice_period_weeks} onChange={(e) => updateField('notice_period_weeks', parseInt(e.target.value))} />
+                <Input aria-label="Input field" type="number" value={settings.notice_period_weeks} onChange={(e) => updateField('notice_period_weeks', parseInt(e.target.value))} />
               </div>
             </div>
           </CardContent>
@@ -156,11 +156,11 @@ export default function SettingsSetupPage() {
               </div>
               <div>
                 <Label>Maternity Leave (weeks)</Label>
-                <Input type="number" value={settings.maternity_weeks} onChange={(e) => updateField('maternity_weeks', parseInt(e.target.value))} />
+                <Input aria-label="Input field" type="number" value={settings.maternity_weeks} onChange={(e) => updateField('maternity_weeks', parseInt(e.target.value))} />
               </div>
               <div>
                 <Label>Paternity Leave (days)</Label>
-                <Input type="number" value={settings.paternity_days} onChange={(e) => updateField('paternity_days', parseInt(e.target.value))} />
+                <Input aria-label="Input field" type="number" value={settings.paternity_days} onChange={(e) => updateField('paternity_days', parseInt(e.target.value))} />
               </div>
             </div>
             <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-sm">
@@ -198,7 +198,7 @@ export default function SettingsSetupPage() {
             ))}
             <div>
               <Label>Document Expiry Reminder (days before)</Label>
-              <Input type="number" value={settings.document_expiry_reminder_days} onChange={(e) => updateField('document_expiry_reminder_days', parseInt(e.target.value))} />
+              <Input aria-label="Input field" type="number" value={settings.document_expiry_reminder_days} onChange={(e) => updateField('document_expiry_reminder_days', parseInt(e.target.value))} />
             </div>
           </CardContent>
         </Card>

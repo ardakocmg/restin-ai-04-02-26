@@ -91,7 +91,7 @@ export default function RecipeVideoBites() {
             </div>
 
             {/* Search */}
-            <Input
+            <Input aria-label="Search recipes..."
                 placeholder="Search recipes..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -185,7 +185,7 @@ export default function RecipeVideoBites() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Button variant="ghost" size="sm">
+                                            <Button aria-label="Action" variant="ghost" size="sm">
                                                 <Play className="w-3 h-3" />
                                             </Button>
                                         </div>

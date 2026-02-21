@@ -68,7 +68,7 @@ export default function ReceiptPreview({ order, items, orderTotal, venueInfo, on
                         <button style={s.iconBtn} onClick={handleDownload} title="Download PDF">
                             <Download size={16} color="#fff" />
                         </button>
-                        <button style={s.closeBtn} onClick={onClose}>
+                        <button style={s.closeBtn} aria-label="Action" onClick={onClose}>
                             <X size={18} color="#888" />
                         </button>
                     </div>

@@ -248,8 +248,8 @@ export default function ContentStudio() {
             <CardTitle>Content Type</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Select value={contentType} onValueChange={setContentType}>
-              <SelectTrigger data-testid="content-studio-type-select">
+            <Select aria-label="Select option" value={contentType} onValueChange={setContentType}>
+              <SelectTrigger aria-label="Content Studio Type Select" data-testid="content-studio-type-select">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -330,13 +330,13 @@ export default function ContentStudio() {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Input
+            <Input aria-label="Changelog / release note"
               placeholder="Changelog / release note"
               value={changelog}
               onChange={(e) => setChangelog(e.target.value)}
               data-testid="content-studio-changelog"
             />
-            <Input
+            <Input aria-label="Input field"
               type="datetime-local"
               value={scheduledAt}
               onChange={(e) => setScheduledAt(e.target.value)}
@@ -369,39 +369,39 @@ export default function ContentStudio() {
                     <h4 className="text-sm font-semibold text-secondary-foreground">Pricing Packages</h4>
                     {(visualContent?.pricing || []).map((plan, index) => (
                       <div key={plan.key || index} className="p-3 rounded-lg border border-border space-y-2" data-testid={`content-studio-pricing-${index}`}>
-                        <Input
+                        <Input aria-label="Input field"
                           value={plan.name || ''}
                           onChange={(e) => updateVisualPricing(index, 'name', e.target.value)}
                           placeholder="Plan name"
                           data-testid={`content-studio-pricing-name-${index}`}
                         />
                         <div className="grid grid-cols-2 gap-2">
-                          <Input
+                          <Input aria-label="Input field"
                             value={plan.price || ''}
                             onChange={(e) => updateVisualPricing(index, 'price', e.target.value)}
                             placeholder="Price"
                             data-testid={`content-studio-pricing-price-${index}`}
                           />
-                          <Input
+                          <Input aria-label="Input field"
                             value={plan.period || ''}
                             onChange={(e) => updateVisualPricing(index, 'period', e.target.value)}
                             placeholder="Period"
                             data-testid={`content-studio-pricing-period-${index}`}
                           />
                         </div>
-                        <Input
+                        <Input aria-label="Input field"
                           value={plan.tagline || ''}
                           onChange={(e) => updateVisualPricing(index, 'tagline', e.target.value)}
                           placeholder="Tagline"
                           data-testid={`content-studio-pricing-tagline-${index}`}
                         />
-                        <Textarea
+                        <Textarea aria-label="Input field"
                           value={(plan.highlights || []).join('\n')}
                           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateVisualPricing(index, 'highlights', e.target.value.split('\n').filter(Boolean))}
                           placeholder="Highlights (one per line)"
                           data-testid={`content-studio-pricing-highlights-${index}`}
                         />
-                        <Textarea
+                        <Textarea aria-label="Input field"
                           value={(plan.future || []).join('\n')}
                           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateVisualPricing(index, 'future', e.target.value.split('\n').filter(Boolean))}
                           placeholder="Future items (one per line)"
@@ -416,19 +416,19 @@ export default function ContentStudio() {
                   <h4 className="text-sm font-semibold text-secondary-foreground">Modules</h4>
                   {(visualContent?.modules || []).map((module, index) => (
                     <div key={module.key || index} className="p-3 rounded-lg border border-border space-y-2" data-testid={`content-studio-module-${index}`}>
-                      <Input
+                      <Input aria-label="Input field"
                         value={module.title || ''}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateVisualModule(index, 'title', e.target.value)}
                         placeholder="Module title"
                         data-testid={`content-studio-module-title-${index}`}
                       />
-                      <Textarea
+                      <Textarea aria-label="Input field"
                         value={module.description || ''}
                         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateVisualModule(index, 'description', e.target.value)}
                         placeholder="Module description"
                         data-testid={`content-studio-module-description-${index}`}
                       />
-                      <Textarea
+                      <Textarea aria-label="Input field"
                         value={(module.capabilities || []).join('\n')}
                         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateVisualModule(index, 'capabilities', e.target.value.split('\n').filter(Boolean))}
                         placeholder="Capabilities (one per line)"
@@ -445,7 +445,7 @@ export default function ContentStudio() {
             )}
 
             {(editorMode === 'JSON' || contentType === 'technical') && (
-              <Textarea
+              <Textarea aria-label="Input field"
                 value={editorValue}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditorValue(e.target.value)}
                 className="min-h-[420px] font-mono text-xs"

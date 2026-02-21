@@ -200,7 +200,7 @@ const CrmDashboard: React.FC = () => {
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
-                            <Button variant="outline" size="sm" className="border-border text-muted-foreground">
+                            <Button variant="outline" size="sm" aria-label="Action" className="border-border text-muted-foreground">
                                 <Filter className="w-4 h-4" />
                             </Button>
                         </div>

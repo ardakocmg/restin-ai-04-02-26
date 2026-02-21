@@ -154,7 +154,7 @@ export default function PerformanceReviews() {
         <div className="flex gap-4 items-center mb-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <Input
+            <Input aria-label="Search Reviews..."
               placeholder="Search Reviews..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

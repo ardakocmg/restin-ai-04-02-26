@@ -82,7 +82,7 @@ export default function SearchModal({ allItems, onSelect, onClose }: SearchModal
                         value={query}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
                     />
-                    <button style={s.closeBtn} onClick={onClose}>
+                    <button style={s.closeBtn} aria-label="Action" onClick={onClose}>
                         <X size={18} color="#888" />
                     </button>
                 </div>

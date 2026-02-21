@@ -192,7 +192,7 @@ export default function OrdersList({ venueId, onReopen, onClose }: OrdersListPro
                             <FileText size={14} style={{ marginRight: 4, verticalAlign: 'middle' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                             Z-Report
                         </button>
-                        <button style={s.closeBtn} onClick={onClose}>
+                        <button style={s.closeBtn} aria-label="Action" onClick={onClose}>
                             <X size={22} color="#888" />
                         </button>
                     </div>

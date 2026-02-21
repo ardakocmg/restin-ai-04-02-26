@@ -198,7 +198,7 @@ export default function SplitBillPage() {
                                     {splitMode === 'custom' ? (
                                         <div className="flex items-center gap-1">
                                             <span className="text-xs text-muted-foreground">€</span>
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 type="number"
                                                 value={customAmounts[i] || ''}
                                                 onChange={(e) => setCustomAmounts(prev => ({

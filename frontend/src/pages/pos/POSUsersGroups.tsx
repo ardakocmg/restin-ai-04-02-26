@@ -86,7 +86,7 @@ const POSUsersGroups: React.FC = () => {
                 ))}
             </div>
 
-            <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input className="pos-input pos-search-input" placeholder={`Search ${tab}...`} value={search} onChange={e => setSearch(e.target.value)} /></div>
+            <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input aria-label="Input field" className="pos-input pos-search-input" placeholder={`Search ${tab}...`} value={search} onChange={e => setSearch(e.target.value)} /></div>
 
             {loading && <div className="pos-card pos-flex pos-flex--center justify-center gap-2 p-10"><Loader2 size={18} className="animate-spin text-blue-500" /><span className="pos-text-secondary">{"Loading "}staff from API...</span></div>}
             {error && <div className="pos-card pos-flex pos-flex--between pos-flex--center pos-mb-16 border-red-500 p-4"><span className="text-red-500 text-[13px]">⚠ {error} — showing cached data</span><button className="pos-btn-outline py-1.5 px-3.5 text-xs" onClick={() => refetch()}>Retry</button></div>}

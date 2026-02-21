@@ -293,7 +293,7 @@ export default function NutritionalCalculator() {
                                     </CardTitle>
                                     <div className="flex items-center gap-2">
                                         <Label className="text-xs text-muted-foreground">Servings:</Label>
-                                        <Input type="number" value={servings} onChange={e => setServings(Math.max(1, Number(e.target.value)))} className="w-16 h-7 text-center text-xs" />
+                                        <Input aria-label="Input field" type="number" value={servings} onChange={e => setServings(Math.max(1, Number(e.target.value)))} className="w-16 h-7 text-center text-xs" />
                                     </div>
                                 </div>
                             </CardHeader>
@@ -313,7 +313,7 @@ export default function NutritionalCalculator() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-1">
-                                                <Input
+                                                <Input aria-label="Input field"
                                                     type="number"
                                                     value={ri.quantity}
                                                     onChange={e => updateQty(idx, Number(e.target.value))}
@@ -472,7 +472,7 @@ export default function NutritionalCalculator() {
                     </DialogHeader>
                     <div className="relative mb-3">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input className="pl-9" placeholder="Search ingredients..." value={search} onChange={e => setSearch(e.target.value)} autoFocus />
+                        <Input aria-label="Search ingredients..." className="pl-9" placeholder="Search ingredients..." value={search} onChange={e => setSearch(e.target.value)} autoFocus />
                     </div>
                     <div className="space-y-1">
                         {filteredDB.map(ing => (

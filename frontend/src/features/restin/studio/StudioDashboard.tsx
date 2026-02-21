@@ -166,10 +166,10 @@ export default function StudioDashboard() {
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-80"></div>
                                     <div className="absolute top-4 right-4 flex gap-2">
-                                        <button className="p-2 bg-black/50 backdrop-blur-md rounded-lg text-foreground hover:text-red-500 transition-colors">
+                                        <button aria-label="Action" className="p-2 bg-black/50 backdrop-blur-md rounded-lg text-foreground hover:text-red-500 transition-colors">
                                             <Heart size={16} />
                                         </button>
-                                        <button className="p-2 bg-black/50 backdrop-blur-md rounded-lg text-foreground hover:text-blue-500 transition-colors">
+                                        <button aria-label="Action" className="p-2 bg-black/50 backdrop-blur-md rounded-lg text-foreground hover:text-blue-500 transition-colors">
                                             <Share2 size={16} />
                                         </button>
                                     </div>

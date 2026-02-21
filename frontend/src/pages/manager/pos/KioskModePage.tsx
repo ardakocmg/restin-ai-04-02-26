@@ -209,7 +209,7 @@ export default function KioskModePage() {
 
                     <div>
                         <label className="text-sm text-muted-foreground mb-1 block">Welcome Message</label>
-                        <Input
+                        <Input aria-label="Input field"
                             value={config.welcome_message}
                             onChange={(e) => update('welcome_message', e.target.value)}
                             className="bg-background border-border text-foreground"
@@ -218,7 +218,7 @@ export default function KioskModePage() {
 
                     <div>
                         <label className="text-sm text-muted-foreground mb-1 block">Idle Timeout (seconds)</label>
-                        <Input
+                        <Input aria-label="Input field"
                             type="number"
                             value={config.idle_timeout}
                             onChange={(e) => update('idle_timeout', parseInt(e.target.value) || 30)}

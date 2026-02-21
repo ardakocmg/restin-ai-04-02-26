@@ -317,8 +317,8 @@ export default function InventoryDashboard() {
             description="Central command for all inventory operations"
             actions={
                 <div className="flex items-center gap-2">
-                    <Select value={outletFilter} onValueChange={setOutletFilter}>
-                        <SelectTrigger className="w-40 h-9 text-sm">
+                    <Select aria-label="Select option" value={outletFilter} onValueChange={setOutletFilter}>
+                        <SelectTrigger aria-label="Select option" className="w-40 h-9 text-sm">
                             <Building2 className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                             <SelectValue placeholder="All Outlets" />
                         </SelectTrigger>
@@ -329,8 +329,8 @@ export default function InventoryDashboard() {
                             <SelectItem value="pastry">Pastry</SelectItem>
                         </SelectContent>
                     </Select>
-                    <Select value={dateRange} onValueChange={setDateRange}>
-                        <SelectTrigger className="w-[130px] h-9 text-sm">
+                    <Select aria-label="Select option" value={dateRange} onValueChange={setDateRange}>
+                        <SelectTrigger aria-label="Select option" className="w-[130px] h-9 text-sm">
                             <Calendar className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                             <SelectValue placeholder="Period" />
                         </SelectTrigger>
@@ -784,8 +784,8 @@ export default function InventoryDashboard() {
                             {/* Provider Selection */}
                             <div className="space-y-2">
                                 <p className="text-xs text-muted-foreground font-medium">Export Provider</p>
-                                <Select value={accountingProvider} onValueChange={(v) => setAccountingProvider(v)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                <Select aria-label="Select option" value={accountingProvider} onValueChange={(v) => setAccountingProvider(v)}>
+                                    <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="xero">Xero</SelectItem>
                                         <SelectItem value="quickbooks">QuickBooks</SelectItem>

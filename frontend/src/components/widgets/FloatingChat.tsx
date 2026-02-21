@@ -290,7 +290,7 @@ export default function FloatingChat() {
                 {/* Input */}
                 <div className="p-3 border-t border-border bg-card/50 flex-shrink-0">
                     <div className="flex gap-2">
-                        <Input
+                        <Input aria-label="Input field"
                             placeholder={`Message #${activeChannelData?.name || 'channel'}...`}
                             value={messageInput}
                             onChange={e => setMessageInput(e.target.value)}

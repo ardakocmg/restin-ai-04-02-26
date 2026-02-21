@@ -347,7 +347,7 @@ export default function POSSettings() {
 
   /* ─── Inline Edit Helper ─────────────────────────────────────────── */
   const InlineEdit = ({ value, onChange, type = 'text', className = '' }: InlineEditProps) => (
-    <Input className={cn(inputClass, className)} value={value || ''} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)} type={type} />
+    <Input aria-label="Input field" className={cn(inputClass, className)} value={value || ''} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)} type={type} />
   );
 
   const ToggleRow = ({ label, description, checked, onChange }: ToggleRowProps) => (
@@ -542,8 +542,8 @@ export default function POSSettings() {
                         <span className="text-xs text-muted-foreground">min:{group.min} max:{group.max}</span>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0"><Edit2 className="w-3 h-3 text-muted-foreground" /></Button>
-                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0"><Trash2 className="w-3 h-3 text-red-400" /></Button>
+                        <Button variant="ghost" size="sm" aria-label="Action" className="h-7 w-7 p-0"><Edit2 className="w-3 h-3 text-muted-foreground" /></Button>
+                        <Button variant="ghost" size="sm" aria-label="Action" className="h-7 w-7 p-0"><Trash2 className="w-3 h-3 text-red-400" /></Button>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -752,8 +752,8 @@ export default function POSSettings() {
                         <Switch checked={menu.active} onCheckedChange={v => setTimedMenus(prev => prev.map(m => m.id === menu.id ? { ...m, active: v } : m))} />
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0"><Edit2 className="w-3 h-3 text-muted-foreground" /></Button>
-                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0"><Trash2 className="w-3 h-3 text-red-400" /></Button>
+                        <Button variant="ghost" size="sm" aria-label="Action" className="h-7 w-7 p-0"><Edit2 className="w-3 h-3 text-muted-foreground" /></Button>
+                        <Button variant="ghost" size="sm" aria-label="Action" className="h-7 w-7 p-0"><Trash2 className="w-3 h-3 text-red-400" /></Button>
                       </div>
                     </div>
                     <div className="flex gap-2 mb-2">
@@ -794,7 +794,7 @@ export default function POSSettings() {
                         <Badge className="bg-pink-500/10 text-pink-400 border-pink-500/20 text-xs">{hh.discount}% off</Badge>
                         <Switch checked={hh.active} onCheckedChange={v => setHappyHours(prev => prev.map(h => h.id === hh.id ? { ...h, active: v } : h))} />
                       </div>
-                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0"><Edit2 className="w-3 h-3 text-muted-foreground" /></Button>
+                      <Button variant="ghost" size="sm" aria-label="Action" className="h-7 w-7 p-0"><Edit2 className="w-3 h-3 text-muted-foreground" /></Button>
                     </div>
                     <div className="flex gap-2 mb-2">
                       {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
@@ -1119,7 +1119,7 @@ export default function POSSettings() {
                         <InlineEdit value={pt.code} onChange={v => { const u = [...paymentTypes]; u[idx].code = v; setPaymentTypes(u); }} />
                         <InlineEdit value={pt.accountingGroup} onChange={v => { const u = [...paymentTypes]; u[idx].accountingGroup = v; setPaymentTypes(u); }} />
                         <div className="flex items-center gap-2">
-                          <input type="checkbox" id={`ref-${pt.id}`} checked={pt.requiresReference} onChange={e => { const u = [...paymentTypes]; u[idx].requiresReference = e.target.checked; setPaymentTypes(u); }} className="accent-red-500" />
+                          <input aria-label="Input field" type="checkbox" id={`ref-${pt.id}`} checked={pt.requiresReference} onChange={e => { const u = [...paymentTypes]; u[idx].requiresReference = e.target.checked; setPaymentTypes(u); }} className="accent-red-500" />
                           <label htmlFor={`ref-${pt.id}`} className="text-xs text-muted-foreground">Requires Ref</label>
                         </div>
                       </div>

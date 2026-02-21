@@ -249,7 +249,7 @@ export default function PhysicalTables() {
                                         {/* Table Name (Alphanumeric) */}
                                         <div>
                                             <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Table Name</label>
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 value={selectedTable?.name || ''}
                                                 onChange={(e) => selectedTable && updateTableProperty(selectedTable.id, 'name', e.target.value)}
                                                 placeholder="e.g. Patio-A1"

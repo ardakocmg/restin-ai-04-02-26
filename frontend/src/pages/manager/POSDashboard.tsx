@@ -324,7 +324,7 @@ export default function POSDashboard() {
                                         <div className="grid grid-cols-3 gap-3">
                                             <div className="space-y-1">
                                                 <Label htmlFor="target-revenue" className="text-xs">Revenue</Label>
-                                                <Input
+                                                <Input aria-label="Target Revenue"
                                                     id="target-revenue"
                                                     type="number"
                                                     value={targets.revenue}
@@ -333,7 +333,7 @@ export default function POSDashboard() {
                                             </div>
                                             <div className="space-y-1">
                                                 <Label htmlFor="target-receipts" className="text-xs">Receipts</Label>
-                                                <Input
+                                                <Input aria-label="Target Receipts"
                                                     id="target-receipts"
                                                     type="number"
                                                     value={targets.receipts}
@@ -342,7 +342,7 @@ export default function POSDashboard() {
                                             </div>
                                             <div className="space-y-1">
                                                 <Label htmlFor="target-customers" className="text-xs">Customers</Label>
-                                                <Input
+                                                <Input aria-label="Target Customers"
                                                     id="target-customers"
                                                     type="number"
                                                     value={targets.customers}
@@ -367,7 +367,7 @@ export default function POSDashboard() {
                                                         <div className="flex-1">
                                                             <Label htmlFor={`shift-${key}`} className="text-sm font-medium capitalize text-foreground dark:text-slate-100 cursor-pointer">{key}</Label>
                                                             <div className="flex items-center gap-2 mt-1">
-                                                                <Input
+                                                                <Input aria-label="Input field"
                                                                     type="number"
                                                                     className="h-6 w-16 text-xs bg-card border-border"
                                                                     value={shift.start}
@@ -375,7 +375,7 @@ export default function POSDashboard() {
                                                                     disabled={!shift.enabled}
                                                                 />
                                                                 <span className="text-xs text-muted-foreground">to</span>
-                                                                <Input
+                                                                <Input aria-label="Input field"
                                                                     type="number"
                                                                     className="h-6 w-16 text-xs bg-card border-border"
                                                                     value={shift.end}
@@ -403,7 +403,7 @@ export default function POSDashboard() {
                                                 <div className="flex-1">
                                                     <Label htmlFor="event-enabled" className="text-sm font-medium text-foreground dark:text-slate-100 cursor-pointer">Event</Label>
                                                     <div className="flex items-center gap-2 mt-1">
-                                                        <Input
+                                                        <Input aria-label="Input field"
                                                             type="time"
                                                             className="h-6 w-24 text-xs bg-card border-border"
                                                             value={eventTime.start}
@@ -411,7 +411,7 @@ export default function POSDashboard() {
                                                             disabled={!eventTime.enabled}
                                                         />
                                                         <span className="text-xs text-muted-foreground">to</span>
-                                                        <Input
+                                                        <Input aria-label="Input field"
                                                             type="time"
                                                             className="h-6 w-24 text-xs bg-card border-border"
                                                             value={eventTime.start}
@@ -764,7 +764,7 @@ export default function POSDashboard() {
                                             </span>
                                         </div>
                                         <div className="w-64">
-                                            <Input
+                                            <Input aria-label="Filter..."
                                                 placeholder="Filter..."
                                                 value={searchQuery}
                                                 onChange={(e) => setSearchQuery(e.target.value)}

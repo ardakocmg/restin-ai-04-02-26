@@ -212,7 +212,7 @@ export default function SyncDashboard() {
                 <div className="flex items-center gap-3">
                     <div className="relative w-full lg:w-72">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
+                        <Input aria-label="Search integrations..."
                             placeholder="Search integrations..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -744,7 +744,7 @@ export default function SyncDashboard() {
                                     {field.label}
                                 </Label>
                                 <div className="relative">
-                                    <Input
+                                    <Input aria-label="Input field"
                                         id={`field-${field.key}`}
                                         type={field.type === 'password' && !showSecrets[field.key] ? 'password' : 'text'}
                                         placeholder={field.placeholder}

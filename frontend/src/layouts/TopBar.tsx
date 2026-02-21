@@ -63,7 +63,7 @@ export default function TopBar({ onMenuToggle, user }) {
         <form onSubmit={handleSearch} className="flex-1 max-w-md hidden md:block">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
+            <Input aria-label="Search orders, items, staff..."
               type="search"
               placeholder="Search orders, items, staff..."
               value={searchQuery}

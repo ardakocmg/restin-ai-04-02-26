@@ -90,7 +90,7 @@ export default function FinanceProviderSettings() {
 
             <div>
               <Label>Provider Name (Your Label)</Label>
-              <Input
+              <Input aria-label="Input field"
                 value={settings.provider_label || ''}
                 onChange={(e) => setSettings({ ...settings, provider_label: e.target.value })}
                 placeholder="e.g., Payroll System A"
@@ -113,7 +113,7 @@ export default function FinanceProviderSettings() {
 
             <div>
               <Label>Company Code</Label>
-              <Input
+              <Input aria-label="Input field"
                 value={settings.company_code || ''}
                 onChange={(e) => setSettings({ ...settings, company_code: e.target.value })}
                 placeholder="Your company code in external system"

@@ -328,7 +328,7 @@ export default function StockCount() {
         const hasVariance = counts[row.id] !== undefined && getVariance(row) !== 0;
         return (
           <div className="flex items-center gap-2">
-            <Input
+            <Input aria-label="Input field"
               type="number"
               className={`w-24 h-8 text-right font-mono ${hasVariance ? 'border-orange-500 bg-orange-900/10' : 'bg-background border-input'}`}
               placeholder={(row.quantity ?? 0).toString()}
@@ -413,8 +413,8 @@ export default function StockCount() {
       description="Reconcile system stock with actual physical inventory — Theoretical vs Actual"
       actions={
         <div className="flex items-center gap-2">
-          <Select value={countMode} onValueChange={setCountMode}>
-            <SelectTrigger className="w-[130px] h-9 text-sm">
+          <Select aria-label="Select option" value={countMode} onValueChange={setCountMode}>
+            <SelectTrigger aria-label="Select option" className="w-[130px] h-9 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -472,7 +472,7 @@ export default function StockCount() {
                 </div>
               )}
             </div>
-            <Button size="sm" variant="ghost" onClick={stopVoice}>
+            <Button size="sm" variant="ghost" aria-label="Action" onClick={stopVoice}>
               <X className="h-4 w-4" />
             </Button>
           </CardContent>
@@ -491,7 +491,7 @@ export default function StockCount() {
                 <Label className="text-sm font-medium">Barcode / SKU Scanner</Label>
                 <p className="text-xs text-muted-foreground mb-2">Scan barcode or type SKU and press Enter. Each scan adds {countMode === 'package' ? 'package qty' : '1 unit'}.</p>
                 <div className="flex gap-2">
-                  <Input
+                  <Input aria-label="Input field"
                     ref={barcodeRef}
                     value={barcodeInput}
                     onChange={(e) => setBarcodeInput(e.target.value)}

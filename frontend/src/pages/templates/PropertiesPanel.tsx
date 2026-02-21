@@ -147,19 +147,19 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                     {/* Advanced text options */}
                     <div className="ts-field">
                         <div className="ts-checkbox-row">
-                            <input type="checkbox" id="ts-show-modifiers" />
+                            <input aria-label="Ts Show Modifiers" type="checkbox" id="ts-show-modifiers" />
                             <label htmlFor="ts-show-modifiers">{t('Show modifiers')}</label>
                         </div>
                         <div className="ts-checkbox-row">
-                            <input type="checkbox" id="ts-show-notes" />
+                            <input aria-label="Ts Show Notes" type="checkbox" id="ts-show-notes" />
                             <label htmlFor="ts-show-notes">{t('Show notes')}</label>
                         </div>
                         <div className="ts-checkbox-row">
-                            <input type="checkbox" id="ts-hide-prices" />
+                            <input aria-label="Ts Hide Prices" type="checkbox" id="ts-hide-prices" />
                             <label htmlFor="ts-hide-prices">{t('Hide prices')}</label>
                         </div>
                         <div className="ts-checkbox-row">
-                            <input type="checkbox" id="ts-compact" />
+                            <input aria-label="Ts Compact" type="checkbox" id="ts-compact" />
                             <label htmlFor="ts-compact">{t('Compact mode')}</label>
                         </div>
                     </div>
@@ -197,11 +197,11 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                         </select>
                     </div>
                     <div className="ts-checkbox-row">
-                        <input type="checkbox" id="ts-show-header" checked={Boolean(tbp?.show_header)} onChange={e => updateProp(bid, 'table_props', 'show_header', e.target.checked)} />
+                        <input aria-label="Ts Show Header" type="checkbox" id="ts-show-header" checked={Boolean(tbp?.show_header)} onChange={e => updateProp(bid, 'table_props', 'show_header', e.target.checked)} />
                         <label htmlFor="ts-show-header">{t('Show header')}</label>
                     </div>
                     <div className="ts-checkbox-row">
-                        <input type="checkbox" id="ts-show-totals" checked={Boolean(tbp?.show_totals)} onChange={e => updateProp(bid, 'table_props', 'show_totals', e.target.checked)} />
+                        <input aria-label="Ts Show Totals" type="checkbox" id="ts-show-totals" checked={Boolean(tbp?.show_totals)} onChange={e => updateProp(bid, 'table_props', 'show_totals', e.target.checked)} />
                         <label htmlFor="ts-show-totals">{t('Show totals')}</label>
                     </div>
                     <div className="ts-field">
@@ -214,7 +214,7 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                         </select>
                     </div>
                     <div className="ts-checkbox-row">
-                        <input type="checkbox" id="ts-divider-line" />
+                        <input aria-label="Ts Divider Line" type="checkbox" id="ts-divider-line" />
                         <label htmlFor="ts-divider-line">{t('Divider line')}</label>
                     </div>
                 </>
@@ -244,7 +244,7 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                 <>
                     <div className="ts-field">
                         <label className="ts-label" htmlFor="ts-bc-src">{t('Data Source')}</label>
-                        <input id="ts-bc-src" type="text" className="ts-input" style={{ fontFamily: 'monospace' }} value={(bp?.data_source as string) || ''} onChange={e => updateProp(bid, 'barcode_props', 'data_source', e.target.value)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <input aria-label="Ts Bc Src" id="ts-bc-src" type="text" className="ts-input" style={{ fontFamily: 'monospace' }} value={(bp?.data_source as string) || ''} onChange={e => updateProp(bid, 'barcode_props', 'data_source', e.target.value)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     </div>
                     <div className="ts-field">
                         <label className="ts-label" htmlFor="ts-bc-format">{t('Format')}</label>
@@ -258,15 +258,15 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                     <div className="ts-grid-2">
                         <div className="ts-field">
                             <label className="ts-label" htmlFor="ts-bc-h">{t('Height')}</label>
-                            <input id="ts-bc-h" type="number" min={20} max={200} className="ts-input" value={Number(bp?.height || 60)} onChange={e => updateProp(bid, 'barcode_props', 'height', Number(e.target.value))} />
+                            <input aria-label="Ts Bc H" id="ts-bc-h" type="number" min={20} max={200} className="ts-input" value={Number(bp?.height || 60)} onChange={e => updateProp(bid, 'barcode_props', 'height', Number(e.target.value))} />
                         </div>
                         <div className="ts-field">
                             <label className="ts-label" htmlFor="ts-bc-w">{t('Width')}</label>
-                            <input id="ts-bc-w" type="number" min={1} max={5} className="ts-input" value={Number(bp?.width || 2)} onChange={e => updateProp(bid, 'barcode_props', 'width', Number(e.target.value))} />
+                            <input aria-label="Ts Bc W" id="ts-bc-w" type="number" min={1} max={5} className="ts-input" value={Number(bp?.width || 2)} onChange={e => updateProp(bid, 'barcode_props', 'width', Number(e.target.value))} />
                         </div>
                     </div>
                     <div className="ts-checkbox-row">
-                        <input type="checkbox" id="ts-bc-text" checked={Boolean(bp?.show_text)} onChange={e => updateProp(bid, 'barcode_props', 'show_text', e.target.checked)} />
+                        <input aria-label="Ts Bc Text" type="checkbox" id="ts-bc-text" checked={Boolean(bp?.show_text)} onChange={e => updateProp(bid, 'barcode_props', 'show_text', e.target.checked)} />
                         <label htmlFor="ts-bc-text">{t('Show text label')}</label>
                     </div>
                 </>
@@ -277,12 +277,12 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                 <>
                     <div className="ts-field">
                         <label className="ts-label" htmlFor="ts-img-url">{t('Image URL')}</label>
-                        <input id="ts-img-url" type="text" className="ts-input" value={(ip?.url as string) || ''} onChange={e => updateProp(bid, 'image_props', 'url', e.target.value)} placeholder="https://..." />
+                        <input aria-label="Ts Img Url" id="ts-img-url" type="text" className="ts-input" value={(ip?.url as string) || ''} onChange={e => updateProp(bid, 'image_props', 'url', e.target.value)} placeholder="https://..." />
                     </div>
                     <div className="ts-grid-2">
                         <div className="ts-field">
                             <label className="ts-label" htmlFor="ts-img-w">{t('Width')}</label>
-                            <input id="ts-img-w" type="number" min={20} max={576} className="ts-input" value={Number(ip?.width || 180)} onChange={e => updateProp(bid, 'image_props', 'width', Number(e.target.value))} />
+                            <input aria-label="Ts Img W" id="ts-img-w" type="number" min={20} max={576} className="ts-input" value={Number(ip?.width || 180)} onChange={e => updateProp(bid, 'image_props', 'width', Number(e.target.value))} />
                         </div>
                         <div className="ts-field">
                             <label className="ts-label" htmlFor="ts-img-align">{t('Align')}</label>

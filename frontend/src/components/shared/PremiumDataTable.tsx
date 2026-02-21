@@ -389,7 +389,7 @@ export default function PremiumDataTable<TData>({
                 {enableGlobalSearch && (
                     <div className="relative flex-1 max-w-md">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
+                        <Input aria-label="Input field"
                             placeholder={globalSearchPlaceholder}
                             value={globalFilter}
                             onChange={(e) => setGlobalFilter(e.target.value)}
@@ -481,11 +481,11 @@ export default function PremiumDataTable<TData>({
                                         {filter.label}
                                     </label>
                                     {filter.type === 'select' && filter.options ? (
-                                        <Select
+                                        <Select aria-label="Select option"
                                             value={activeFilters[filter.key] || ''}
                                             onValueChange={(v) => handleFilterChange(filter.key, v)}
                                         >
-                                            <SelectTrigger className="w-[140px] h-9 bg-background/50 border-border/50 text-sm">
+                                            <SelectTrigger aria-label="Select option" className="w-[140px] h-9 bg-background/50 border-border/50 text-sm">
                                                 <SelectValue placeholder={filter.placeholder || 'All'} />
                                             </SelectTrigger>
                                             <SelectContent className="bg-card border-border">
@@ -498,7 +498,7 @@ export default function PremiumDataTable<TData>({
                                             </SelectContent>
                                         </Select>
                                     ) : (
-                                        <Input
+                                        <Input aria-label="Input field"
                                             placeholder={filter.placeholder}
                                             value={activeFilters[filter.key] || ''}
                                             onChange={(e) => handleFilterChange(filter.key, e.target.value)}
@@ -719,11 +719,11 @@ export default function PremiumDataTable<TData>({
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-1">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <span>Rows per page:</span>
-                            <Select
+                            <Select aria-label="Select option"
                                 value={String(pageSize)}
                                 onValueChange={(v) => onPageSizeChange?.(Number(v))}
                             >
-                                <SelectTrigger className="w-[70px] h-8 bg-card border-border/50">
+                                <SelectTrigger aria-label="Select option" className="w-[70px] h-8 bg-card border-border/50">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="bg-card border-border">

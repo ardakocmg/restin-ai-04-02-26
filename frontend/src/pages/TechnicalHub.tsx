@@ -604,7 +604,7 @@ export default function TechnicalHub() {
 
       {/* Floating Action Button for Support */}
       <div className="fixed bottom-8 right-8 z-50">
-        <button className="w-14 h-14 rounded-full bg-red-600 text-foreground flex items-center justify-center shadow-[0_0_35px_rgba(220,38,38,0.4)] transition-transform active:scale-95 hover:scale-105">
+        <button aria-label="Action" className="w-14 h-14 rounded-full bg-red-600 text-foreground flex items-center justify-center shadow-[0_0_35px_rgba(220,38,38,0.4)] transition-transform active:scale-95 hover:scale-105">
           <Activity size={24} />
         </button>
       </div>

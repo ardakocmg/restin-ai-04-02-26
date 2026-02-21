@@ -119,7 +119,7 @@ function VapiConfigPanel({ venueId }: { venueId: string }) {
                 <CardContent className="space-y-4">
                     <div className="flex gap-3">
                         <div className="relative flex-1">
-                            <Input
+                            <Input aria-label="Input field"
                                 type={showKey ? 'text' : 'password'}
                                 value={apiKey}
                                 onChange={(e) => setApiKey(e.target.value)}
@@ -314,7 +314,7 @@ function VapiConfigPanel({ venueId }: { venueId: string }) {
                         <div className="flex items-center gap-2 px-3 bg-black/20 border border-border rounded-lg">
                             <PhoneCall className="w-4 h-4 text-muted-foreground" />
                         </div>
-                        <Input
+                        <Input aria-label="Input field"
                             value={testNumber}
                             onChange={(e) => setTestNumber(e.target.value)}
                             placeholder="+356 9999 0000"
@@ -516,7 +516,7 @@ export default function VoiceSettings() {
                                         {isPlaying ? "Playing..." : "Test Voice"}
                                     </Button>
                                 </div>
-                                <Textarea value={greeting} onChange={(e) => setGreeting(e.target.value)}
+                                <Textarea aria-label="Input field" value={greeting} onChange={(e) => setGreeting(e.target.value)}
                                     className="bg-black/20 border-border min-h-20" />
                             </div>
 
@@ -590,7 +590,7 @@ export default function VoiceSettings() {
                                         <div className="flex items-center gap-2 px-3 bg-black/20 border border-border rounded-lg">
                                             <PhoneIcon className="w-4 h-4 text-muted-foreground" />
                                         </div>
-                                        <Input value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}
+                                        <Input aria-label="Input field" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}
                                             className="bg-black/20 border-border flex-1" placeholder="+356 2100 0001" />
                                     </div>
                                     <p className="text-[10px] text-muted-foreground">The number your AI receptionist answers on.</p>

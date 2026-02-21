@@ -228,10 +228,10 @@ export default function HACCPScheduler() {
             <div className="flex flex-wrap items-center gap-3 mb-4">
                 <div className="relative flex-1 min-w-[200px] max-w-sm">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input className="pl-9 bg-zinc-900/50 border-white/10" placeholder="Search tasks..." value={search} onChange={e => setSearch(e.target.value)} />
+                    <Input aria-label="Search tasks..." className="pl-9 bg-zinc-900/50 border-white/10" placeholder="Search tasks..." value={search} onChange={e => setSearch(e.target.value)} />
                 </div>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-[140px] bg-zinc-900/50 border-white/10"><SelectValue placeholder="Status" /></SelectTrigger>
+                <Select aria-label="Select option" value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger aria-label="Select option" className="w-[140px] bg-zinc-900/50 border-white/10"><SelectValue placeholder="Status" /></SelectTrigger>
                     <SelectContent>
                         <SelectItem value="all">All Status</SelectItem>
                         <SelectItem value="overdue">Overdue</SelectItem>
@@ -240,8 +240,8 @@ export default function HACCPScheduler() {
                         <SelectItem value="completed">Completed</SelectItem>
                     </SelectContent>
                 </Select>
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="w-[160px] bg-zinc-900/50 border-white/10">
+                <Select aria-label="Select option" value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger aria-label="Select option" className="w-[160px] bg-zinc-900/50 border-white/10">
                         <Filter className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                         <SelectValue placeholder="Category" />
                     </SelectTrigger>
@@ -364,17 +364,17 @@ export default function HACCPScheduler() {
                     <div className="space-y-4">
                         <div>
                             <Label>Title *</Label>
-                            <Input value={form.title || ''} onChange={e => updateForm('title', e.target.value)} placeholder="Temperature check..." />
+                            <Input aria-label="Input field" value={form.title || ''} onChange={e => updateForm('title', e.target.value)} placeholder="Temperature check..." />
                         </div>
                         <div>
                             <Label>Description</Label>
-                            <Textarea value={form.description || ''} onChange={e => updateForm('description', e.target.value)} rows={2} />
+                            <Textarea aria-label="Input field" value={form.description || ''} onChange={e => updateForm('description', e.target.value)} rows={2} />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <Label>Category</Label>
-                                <Select value={form.category || 'temperature'} onValueChange={v => updateForm('category', v)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                <Select aria-label="Select option" value={form.category || 'temperature'} onValueChange={v => updateForm('category', v)}>
+                                    <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         {Object.entries(CATEGORY_CONFIG).map(([k, v]) => <SelectItem key={k} value={k}>{v.label}</SelectItem>)}
                                     </SelectContent>
@@ -382,8 +382,8 @@ export default function HACCPScheduler() {
                             </div>
                             <div>
                                 <Label>Frequency</Label>
-                                <Select value={form.frequency || 'daily'} onValueChange={v => updateForm('frequency', v)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                <Select aria-label="Select option" value={form.frequency || 'daily'} onValueChange={v => updateForm('frequency', v)}>
+                                    <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="hourly">Hourly</SelectItem>
                                         <SelectItem value="daily">Daily</SelectItem>
@@ -396,18 +396,18 @@ export default function HACCPScheduler() {
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <Label>Assigned To</Label>
-                                <Input value={form.assignedTo || ''} onChange={e => updateForm('assignedTo', e.target.value)} placeholder="Staff name" />
+                                <Input aria-label="Input field" value={form.assignedTo || ''} onChange={e => updateForm('assignedTo', e.target.value)} placeholder="Staff name" />
                             </div>
                             <div>
                                 <Label>Due Time</Label>
-                                <Input type="time" value={form.dueTime || '08:00'} onChange={e => updateForm('dueTime', e.target.value)} />
+                                <Input aria-label="Input field" type="time" value={form.dueTime || '08:00'} onChange={e => updateForm('dueTime', e.target.value)} />
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <Label>Area</Label>
-                                <Select value={form.area || 'Kitchen'} onValueChange={v => updateForm('area', v)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                <Select aria-label="Select option" value={form.area || 'Kitchen'} onValueChange={v => updateForm('area', v)}>
+                                    <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         {AREAS.map(a => <SelectItem key={a} value={a}>{a}</SelectItem>)}
                                     </SelectContent>
@@ -415,8 +415,8 @@ export default function HACCPScheduler() {
                             </div>
                             <div>
                                 <Label>Priority</Label>
-                                <Select value={form.priority || 'medium'} onValueChange={v => updateForm('priority', v)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                <Select aria-label="Select option" value={form.priority || 'medium'} onValueChange={v => updateForm('priority', v)}>
+                                    <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="low">Low</SelectItem>
                                         <SelectItem value="medium">Medium</SelectItem>
@@ -428,7 +428,7 @@ export default function HACCPScheduler() {
                         </div>
                         <div>
                             <Label>Corrective Action</Label>
-                            <Textarea value={form.correctiveAction || ''} onChange={e => updateForm('correctiveAction', e.target.value)} rows={2} placeholder="What to do if task fails..." />
+                            <Textarea aria-label="Input field" value={form.correctiveAction || ''} onChange={e => updateForm('correctiveAction', e.target.value)} rows={2} placeholder="What to do if task fails..." />
                         </div>
                     </div>
                     <DialogFooter>

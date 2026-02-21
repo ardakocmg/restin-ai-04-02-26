@@ -81,15 +81,15 @@ export default function KeypadTab() {
                         </div>
                         <div>
                             <label className="text-xs text-muted-foreground mb-1 block">Label</label>
-                            <Input placeholder="Morning Shift" value={newPin.name} onChange={(e) => setNewPin({ ...newPin, name: e.target.value })} className="bg-card border-border text-secondary-foreground" />
+                            <Input aria-label="Morning Shift" placeholder="Morning Shift" value={newPin.name} onChange={(e) => setNewPin({ ...newPin, name: e.target.value })} className="bg-card border-border text-secondary-foreground" />
                         </div>
                         <div>
                             <label className="text-xs text-muted-foreground mb-1 block">PIN (4-6 digits)</label>
-                            <Input type="password" placeholder="••••" value={newPin.code} maxLength={6} onChange={(e) => setNewPin({ ...newPin, code: e.target.value.replace(/\D/g, '') })} className="bg-card border-border text-secondary-foreground" />
+                            <Input aria-label="••••" type="password" placeholder="••••" value={newPin.code} maxLength={6} onChange={(e) => setNewPin({ ...newPin, code: e.target.value.replace(/\D/g, '') })} className="bg-card border-border text-secondary-foreground" />
                         </div>
                         <div>
                             <label className="text-xs text-muted-foreground mb-1 block">Valid Until</label>
-                            <Input type="datetime-local" value={newPin.valid_until} onChange={(e) => setNewPin({ ...newPin, valid_until: e.target.value })} className="bg-card border-border text-secondary-foreground text-xs" />
+                            <Input aria-label="Input field" type="datetime-local" value={newPin.valid_until} onChange={(e) => setNewPin({ ...newPin, valid_until: e.target.value })} className="bg-card border-border text-secondary-foreground text-xs" />
                         </div>
                         <Button onClick={createPin} disabled={creating} className="bg-emerald-600 text-foreground hover:bg-emerald-700">
                             {creating ? <RefreshCw className="h-4 w-4 animate-spin mr-1" /> : <Key className="h-4 w-4 mr-1" />}Create

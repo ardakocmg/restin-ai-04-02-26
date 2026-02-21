@@ -54,7 +54,7 @@ export default function PayrollCalculator() {
                 <TabsContent value="gross" className="space-y-4">
                   <div>
                     <Label>Annual Gross Salary (€)</Label>
-                    <Input
+                    <Input aria-label="e.g., 30000"
                       type="number"
                       placeholder="e.g., 30000"
                       value={grossSalary}
@@ -69,7 +69,7 @@ export default function PayrollCalculator() {
                 <TabsContent value="net" className="space-y-4">
                   <div>
                     <Label>Annual Net Salary (€)</Label>
-                    <Input
+                    <Input aria-label="e.g., 25000"
                       type="number"
                       placeholder="e.g., 25000"
                       value={netSalary}

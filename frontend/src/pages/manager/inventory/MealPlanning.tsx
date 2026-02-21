@@ -147,7 +147,7 @@ export default function MealPlanning() {
 
                 <div className="flex items-center gap-1.5 border rounded-lg px-2 py-1">
                     <Users className="h-3.5 w-3.5 text-muted-foreground" />
-                    <Input type="number" value={guestCount} onChange={(e) => setGuestCount(parseInt(e.target.value) || 0)}
+                    <Input aria-label="Input field" type="number" value={guestCount} onChange={(e) => setGuestCount(parseInt(e.target.value) || 0)}
                         className="w-16 h-7 text-sm border-0 p-0 text-center" />
                     <span className="text-xs text-muted-foreground">guests</span>
                 </div>
@@ -155,13 +155,13 @@ export default function MealPlanning() {
                 <div className="flex items-center gap-1.5 border rounded-lg px-2 py-1">
                     <Target className="h-3.5 w-3.5 text-muted-foreground" />
                     <span className="text-xs text-muted-foreground">€</span>
-                    <Input type="number" step="0.50" value={costCeiling} onChange={(e) => setCostCeiling(parseFloat(e.target.value) || 0)}
+                    <Input aria-label="Input field" type="number" step="0.50" value={costCeiling} onChange={(e) => setCostCeiling(parseFloat(e.target.value) || 0)}
                         className="w-16 h-7 text-sm border-0 p-0 text-center" />
                     <span className="text-xs text-muted-foreground">/meal max</span>
                 </div>
 
-                <Select value={dietaryFilter} onValueChange={setDietaryFilter}>
-                    <SelectTrigger className="w-36">
+                <Select aria-label="Select option" value={dietaryFilter} onValueChange={setDietaryFilter}>
+                    <SelectTrigger aria-label="Select option" className="w-36">
                         <Leaf className="h-3 w-3 mr-1" /><SelectValue />
                     </SelectTrigger>
                     <SelectContent>

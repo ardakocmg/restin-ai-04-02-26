@@ -333,7 +333,7 @@ export default function VoiceDashboard() {
                     CALL SIMULATOR
                 </h3>
                 <div className="flex gap-3">
-                    <Input
+                    <Input aria-label="Input field"
                         value={simulateText}
                         onChange={(e) => setSimulateText(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSimulate()}

@@ -188,7 +188,7 @@ export default function GlobalSearch({ open, onOpenChange }) {
 
         <div className="flex items-center border-b border-border px-4 py-3">
           <Search className="h-5 w-5 text-muted-foreground mr-3" />
-          <Input
+          <Input aria-label="Search pages, orders, guests, staff..."
             placeholder="Search pages, orders, guests, staff..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}

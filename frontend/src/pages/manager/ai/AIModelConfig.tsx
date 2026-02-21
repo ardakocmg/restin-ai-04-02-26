@@ -317,8 +317,8 @@ export default function AIModelConfig() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     {isSystemAdmin ? (
-                                        <Select value={configLevel} onValueChange={(v: 'system' | 'venue') => setConfigLevel(v)}>
-                                            <SelectTrigger className="w-32 h-8 text-xs">
+                                        <Select aria-label="Select option" value={configLevel} onValueChange={(v: 'system' | 'venue') => setConfigLevel(v)}>
+                                            <SelectTrigger aria-label="Select option" className="w-32 h-8 text-xs">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -349,11 +349,11 @@ export default function AIModelConfig() {
                                         <span className="text-sm font-medium">
                                             {TASK_LABELS[task] || task}
                                         </span>
-                                        <Select
+                                        <Select aria-label="Select option"
                                             value={modelId}
                                             onValueChange={(v) => setEditRouting(prev => ({ ...prev, [task]: v }))}
                                         >
-                                            <SelectTrigger className="w-48 h-8 text-xs">
+                                            <SelectTrigger aria-label="Select option" className="w-48 h-8 text-xs">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -505,7 +505,7 @@ export default function AIModelConfig() {
                                     <div className="grid grid-cols-2 gap-3">
                                         <div>
                                             <Label className="text-xs text-muted-foreground">Daily Token Limit</Label>
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 type="number"
                                                 value={editLimits.daily_token_limit}
                                                 onChange={(e) => setEditLimits(prev => ({ ...prev, daily_token_limit: parseInt(e.target.value) || 0 }))}
@@ -514,7 +514,7 @@ export default function AIModelConfig() {
                                         </div>
                                         <div>
                                             <Label className="text-xs text-muted-foreground">Monthly Cost Cap (USD)</Label>
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 type="number"
                                                 step="0.01"
                                                 value={editLimits.monthly_cost_cap_usd}

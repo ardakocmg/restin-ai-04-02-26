@@ -80,7 +80,7 @@ const PrintingProfiles: React.FC = () => {
                 </div>
             </div>
 
-            <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input className="pos-input pos-search-input" placeholder="Search profiles..." value={search} onChange={e => setSearch(e.target.value)} /></div>
+            <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input aria-label="Search profiles..." className="pos-input pos-search-input" placeholder="Search profiles..." value={search} onChange={e => setSearch(e.target.value)} /></div>
 
             {/* Profile Cards */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(340px,1fr))', gap: 16 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */

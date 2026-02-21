@@ -231,7 +231,7 @@ export default function POSLayoutRestin({
                                 size="sm"
                                 variant="ghost"
                                 onClick={onDeselectTable}
-                                className="text-muted-foreground hover:text-foreground hover:bg-accent"
+                                aria-label="Action" className="text-muted-foreground hover:text-foreground hover:bg-accent"
                             >
                                 <X className="w-4 h-4" />
                             </Button>

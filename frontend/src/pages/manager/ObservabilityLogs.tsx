@@ -135,8 +135,8 @@ export default function ObservabilityLogs() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div>
                   <Label className="text-foreground text-sm">Level</Label>
-                  <Select value={filters.level} onValueChange={(value) => setFilters({ ...filters, level: value })}>
-                    <SelectTrigger className="bg-secondary border-border text-foreground">
+                  <Select aria-label="Select option" value={filters.level} onValueChange={(value) => setFilters({ ...filters, level: value })}>
+                    <SelectTrigger aria-label="Select option" className="bg-secondary border-border text-foreground">
                       <SelectValue placeholder="All Levels" />
                     </SelectTrigger>
                     <SelectContent className="bg-secondary border-border">
@@ -152,7 +152,7 @@ export default function ObservabilityLogs() {
 
                 <div>
                   <Label className="text-foreground text-sm">Code</Label>
-                  <Input
+                  <Input aria-label="Input field"
                     value={filters.code}
                     onChange={(e) => setFilters({ ...filters, code: e.target.value })}
                     placeholder="e.g., ORDER_SENT"
@@ -162,7 +162,7 @@ export default function ObservabilityLogs() {
 
                 <div className="md:col-span-2">
                   <Label className="text-foreground text-sm">Search</Label>
-                  <Input
+                  <Input aria-label="Input field"
                     value={filters.q}
                     onChange={(e) => setFilters({ ...filters, q: e.target.value })}
                     placeholder="Search message or code..."
@@ -264,7 +264,7 @@ export default function ObservabilityLogs() {
             <div className="mb-6">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
+                <Input aria-label="Search error codes..."
                   placeholder="Search error codes..."
                   value={searchCodeQuery}
                   onChange={(e) => setSearchCodeQuery(e.target.value)}

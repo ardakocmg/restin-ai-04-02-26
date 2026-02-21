@@ -191,8 +191,8 @@ export default function KDSSetup() {
                 <Building2 className="w-4 h-4 inline mr-2" />
                 {t('common.venue')}
               </Label>
-              <Select value={selectedVenue} onValueChange={handleVenueSelect}>
-                <SelectTrigger className="bg-secondary border-border text-foreground">
+              <Select aria-label="Select option" value={selectedVenue} onValueChange={handleVenueSelect}>
+                <SelectTrigger aria-label="Select option" className="bg-secondary border-border text-foreground">
                   <SelectValue placeholder="Choose venue" />
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border">
@@ -211,8 +211,8 @@ export default function KDSSetup() {
                   <MapPin className="w-4 h-4 inline mr-2" />
                   Select Kitchen Zone (Optional)
                 </Label>
-                <Select value={selectedZone} onValueChange={setSelectedZone}>
-                  <SelectTrigger className="bg-secondary border-border text-foreground">
+                <Select aria-label="Select option" value={selectedZone} onValueChange={setSelectedZone}>
+                  <SelectTrigger aria-label="Select option" className="bg-secondary border-border text-foreground">
                     <SelectValue placeholder="Choose zone" />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border">

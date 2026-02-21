@@ -222,7 +222,7 @@ const ItemLibrary: React.FC = () => {
                 <div style={{ ...cd, padding: 12, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     <div style={{ position: 'relative', flex: 1, minWidth: 200 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         <Search size={14} style={{ position: 'absolute', left: 12, top: 10, color: 'var(--text-secondary)' }} />
-                        <input style={{ ...ip, paddingLeft: 34, fontSize: 13, padding: '8px 12px 8px 34px' }} placeholder="Search items by name or SKU..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Search items" /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <input aria-label="Search items by name or SKU..." style={{ ...ip, paddingLeft: 34, fontSize: 13, padding: '8px 12px 8px 34px' }} placeholder="Search items by name or SKU..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Search items" /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     </div>
 
                     <button style={{ ...bo, padding: '8px 12px', fontSize: 12, ...(showFilters ? { background: 'rgba(59,130,246,0.1)', borderColor: '#3B82F6', color: '#3B82F6' } : {}) }} onClick={() => setShowFilters(!showFilters)}> /* keep-inline */ /* keep-inline */ /* keep-inline */

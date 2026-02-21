@@ -261,10 +261,10 @@ export default function TraceabilityView() {
             <div className="flex flex-wrap items-center gap-3 mb-4">
                 <div className="relative flex-1 min-w-[200px] max-w-sm">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input className="pl-9 bg-zinc-900/50 border-white/10" placeholder="Search ingredients, suppliers, batches, recipes..." value={search} onChange={e => setSearch(e.target.value)} />
+                    <Input aria-label="Search ingredients, suppliers, batches, recipes..." className="pl-9 bg-zinc-900/50 border-white/10" placeholder="Search ingredients, suppliers, batches, recipes..." value={search} onChange={e => setSearch(e.target.value)} />
                 </div>
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="w-[160px] bg-zinc-900/50 border-white/10">
+                <Select aria-label="Select option" value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger aria-label="Select option" className="w-[160px] bg-zinc-900/50 border-white/10">
                         <Filter className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                         <SelectValue placeholder="Category" />
                     </SelectTrigger>

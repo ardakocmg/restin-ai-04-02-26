@@ -80,15 +80,15 @@ export default function OrganisationPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <Label>Department Name *</Label>
-                <Input value={newDept.name} onChange={(e) => setNewDept({ ...newDept, name: e.target.value })} placeholder="e.g. Sommelier" />
+                <Input aria-label="Input field" value={newDept.name} onChange={(e) => setNewDept({ ...newDept, name: e.target.value })} placeholder="e.g. Sommelier" />
               </div>
               <div>
                 <Label>Department Head</Label>
-                <Input value={newDept.head} onChange={(e) => setNewDept({ ...newDept, head: e.target.value })} placeholder="Head of Department" />
+                <Input aria-label="Input field" value={newDept.head} onChange={(e) => setNewDept({ ...newDept, head: e.target.value })} placeholder="Head of Department" />
               </div>
               <div>
                 <Label>Location</Label>
-                <Input value={newDept.location} onChange={(e) => setNewDept({ ...newDept, location: e.target.value })} placeholder="Which venue/area" />
+                <Input aria-label="Input field" value={newDept.location} onChange={(e) => setNewDept({ ...newDept, location: e.target.value })} placeholder="Which venue/area" />
               </div>
             </div>
             <div className="flex gap-3 mt-4 justify-end">

@@ -514,7 +514,7 @@ export default function POSRuntime() {
         {/* Simple Mobile Header */}
         <div className="md:hidden flex justify-between items-center mb-4 pb-4 border-b border-border">
           <h2 className="text-foreground font-bold text-lg">Menu</h2>
-          <button className="text-primary">
+          <button aria-label="Action" className="text-primary">
             <Grid3x3 className="w-6 h-6" />
           </button>
         </div>

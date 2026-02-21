@@ -229,7 +229,7 @@ export default function FloorplanEditor() {
                                 </h3>
                                 <div>
                                     <label className="text-xs text-muted-foreground block mb-1">Name</label>
-                                    <Input
+                                    <Input aria-label="Input field"
                                         value={selected.name}
                                         onChange={(e) => updateTable(selected.id, { name: e.target.value })}
                                         className="bg-background border-border text-foreground h-8 text-sm"
@@ -237,7 +237,7 @@ export default function FloorplanEditor() {
                                 </div>
                                 <div>
                                     <label className="text-xs text-muted-foreground block mb-1">Seats</label>
-                                    <Input
+                                    <Input aria-label="Input field"
                                         type="number"
                                         value={selected.seats}
                                         onChange={(e) => updateTable(selected.id, { seats: parseInt(e.target.value) || 1 })}

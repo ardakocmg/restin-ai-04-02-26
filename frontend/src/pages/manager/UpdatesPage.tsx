@@ -103,14 +103,14 @@ export default function UpdatesPage() {
             <CardContent className="p-6 space-y-4">
               <h3 className="text-lg font-semibold text-indigo-50">Log a Change</h3>
               <div className="grid gap-3">
-                <Input
+                <Input aria-label="Input field"
                   value={form.title}
                   onChange={(event) => handleFormChange('title', event.target.value)}
                   placeholder="Change title"
                   data-testid="updates-title-input"
                 />
-                <Select value={form.change_type} onValueChange={(value) => handleFormChange('change_type', value)}>
-                  <SelectTrigger data-testid="updates-type-select">
+                <Select aria-label="Select option" value={form.change_type} onValueChange={(value) => handleFormChange('change_type', value)}>
+                  <SelectTrigger aria-label="Updates Type Select" data-testid="updates-type-select">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -119,19 +119,19 @@ export default function UpdatesPage() {
                     ))}
                   </SelectContent>
                 </Select>
-                <Input
+                <Input aria-label="Input field"
                   value={form.domain}
                   onChange={(event) => handleFormChange('domain', event.target.value)}
                   placeholder="Domain (Inventory, POS, HR...)"
                   data-testid="updates-domain-input"
                 />
-                <Textarea
+                <Textarea aria-label="Input field"
                   value={form.user_summary}
                   onChange={(event) => handleFormChange('user_summary', event.target.value)}
                   placeholder="User-facing summary"
                   data-testid="updates-user-summary"
                 />
-                <Textarea
+                <Textarea aria-label="Input field"
                   value={form.technical_summary}
                   onChange={(event) => handleFormChange('technical_summary', event.target.value)}
                   placeholder="Technical summary"

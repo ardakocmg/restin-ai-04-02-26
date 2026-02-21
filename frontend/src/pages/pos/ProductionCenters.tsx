@@ -101,7 +101,7 @@ const ProductionCenters: React.FC = () => {
                 ))}
             </div>
 
-            <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input className="pos-input pos-search-input" placeholder="Search centers..." value={search} onChange={e => setSearch(e.target.value)} /></div>
+            <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input aria-label="Search centers..." className="pos-input pos-search-input" placeholder="Search centers..." value={search} onChange={e => setSearch(e.target.value)} /></div>
 
             {/* Active Centers */}
             <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Active Centers ({active.length})</div> /* keep-inline */ /* keep-inline */ /* keep-inline */

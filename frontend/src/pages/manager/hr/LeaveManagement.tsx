@@ -455,7 +455,7 @@ export default function LeaveManagement() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">Start Date</label>
-                    <Input
+                    <Input aria-label="Input field"
                       type="date"
                       value={newRequest.start}
                       onChange={e => setNewRequest(p => ({ ...p, start: e.target.value }))}
@@ -464,7 +464,7 @@ export default function LeaveManagement() {
                   </div>
                   <div>
                     <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">End Date</label>
-                    <Input
+                    <Input aria-label="Input field"
                       type="date"
                       value={newRequest.end}
                       onChange={e => setNewRequest(p => ({ ...p, end: e.target.value }))}

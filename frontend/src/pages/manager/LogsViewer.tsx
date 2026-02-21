@@ -71,8 +71,8 @@ export default function LogsViewer() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <Label className="text-sm font-medium mb-2">Level</Label>
-              <Select value={filters.level} onValueChange={(value) => setFilters({ ...filters, level: value })}>
-                <SelectTrigger>
+              <Select aria-label="Select option" value={filters.level} onValueChange={(value) => setFilters({ ...filters, level: value })}>
+                <SelectTrigger aria-label="Select option">
                   <SelectValue placeholder="All Levels" />
                 </SelectTrigger>
                 <SelectContent>
@@ -87,7 +87,7 @@ export default function LogsViewer() {
             </div>
             <div>
               <Label className="text-sm font-medium mb-2">Code</Label>
-              <Input
+              <Input aria-label="Input field"
                 value={filters.code}
                 onChange={(e) => setFilters({ ...filters, code: e.target.value })}
                 placeholder="Error code..."
@@ -95,7 +95,7 @@ export default function LogsViewer() {
             </div>
             <div>
               <Label className="text-sm font-medium mb-2">Search</Label>
-              <Input
+              <Input aria-label="Input field"
                 value={filters.q}
                 onChange={(e) => setFilters({ ...filters, q: e.target.value })}
                 placeholder="Search logs..."

@@ -106,7 +106,7 @@ export default function SetupWizard() {
                     <div className="space-y-6">
                         <div>
                             <label className="text-sm text-muted-foreground mb-1 block">Venue Name</label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.name}
                                 onChange={(e) => update('name', e.target.value)}
                                 placeholder="e.g., Harbour Club Restaurant"
@@ -138,7 +138,7 @@ export default function SetupWizard() {
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="text-sm text-muted-foreground mb-1 block">City</label>
-                                <Input
+                                <Input aria-label="Input field"
                                     value={formData.city}
                                     onChange={(e) => update('city', e.target.value)}
                                     className="bg-background border-border text-foreground"
@@ -146,7 +146,7 @@ export default function SetupWizard() {
                             </div>
                             <div>
                                 <label className="text-sm text-muted-foreground mb-1 block">Phone</label>
-                                <Input
+                                <Input aria-label="Input field"
                                     value={formData.phone}
                                     onChange={(e) => update('phone', e.target.value)}
                                     placeholder="+356 2123 4567"
@@ -195,7 +195,7 @@ export default function SetupWizard() {
                     <div className="space-y-6">
                         <div>
                             <label className="text-sm text-muted-foreground mb-1 block">Number of Tables</label>
-                            <Input
+                            <Input aria-label="Input field"
                                 type="number"
                                 value={formData.table_count}
                                 onChange={(e) => update('table_count', parseInt(e.target.value) || 0)}

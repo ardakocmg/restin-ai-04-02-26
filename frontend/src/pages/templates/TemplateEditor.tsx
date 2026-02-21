@@ -766,11 +766,11 @@ export default function TemplateEditor() {
                                 </div>
                                 <div className="ts-field">
                                     <label className="ts-label" htmlFor="tv-name">{t('Name')}</label>
-                                    <input id="tv-name" type="text" className="ts-input" value={templateName} onChange={e => setTemplateName(e.target.value)} />
+                                    <input aria-label="Tv Name" id="tv-name" type="text" className="ts-input" value={templateName} onChange={e => setTemplateName(e.target.value)} />
                                 </div>
                                 <div className="ts-field">
                                     <label className="ts-label" htmlFor="tv-desc">{t('Description')}</label>
-                                    <textarea id="tv-desc" className="ts-textarea" rows={3} value={templateDesc} onChange={e => setTemplateDesc(e.target.value)} placeholder={t('Template description...')} />
+                                    <textarea aria-label="Tv Desc" id="tv-desc" className="ts-textarea" rows={3} value={templateDesc} onChange={e => setTemplateDesc(e.target.value)} placeholder={t('Template description...')} />
                                 </div>
                                 <div className="ts-grid-2">
                                     <div className="ts-field">
@@ -834,7 +834,7 @@ export default function TemplateEditor() {
                                     </div>
                                     <div className="ts-field">
                                         <label className="ts-label" htmlFor="tv-notes">{t('Publish Notes')}</label>
-                                        <textarea id="tv-notes" className="ts-textarea" rows={2} placeholder={t('What changed in this version...')} />
+                                        <textarea aria-label="Tv Notes" id="tv-notes" className="ts-textarea" rows={2} placeholder={t('What changed in this version...')} />
                                     </div>
                                     <button onClick={handlePublish} disabled={publishing} className="ts-btn ts-btn-primary" style={{ width: '100%', justifyContent: 'center' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                         <Sparkles style={{ width: 16, height: 16 }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */

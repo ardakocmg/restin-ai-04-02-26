@@ -100,7 +100,7 @@ export default function ConnectionTab() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <Input
+                        <Input aria-label="Paste your Nuki API token..."
                             type="password"
                             placeholder="Paste your Nuki API token..."
                             value={apiToken}

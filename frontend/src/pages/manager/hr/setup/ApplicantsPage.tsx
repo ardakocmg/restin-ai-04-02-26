@@ -129,7 +129,7 @@ export default function ApplicantsPage() {
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button size="sm" variant="ghost" className="text-indigo-400">
+                  <Button size="sm" variant="ghost" aria-label="Action" className="text-indigo-400">
                     <Mail className="w-4 h-4" />
                   </Button>
                 </TableCell>

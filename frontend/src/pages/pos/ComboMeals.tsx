@@ -96,7 +96,7 @@ const ComboMeals: React.FC = () => {
 
             <div className="pos-search-wrapper pos-mb-16">
                 <Search size={14} className="pos-search-icon" />
-                <input className="pos-input pos-search-input" placeholder="Search combos..." value={search} onChange={e => setSearch(e.target.value)} />
+                <input aria-label="Search combos..." className="pos-input pos-search-input" placeholder="Search combos..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
 
             <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
@@ -133,14 +133,14 @@ const ComboMeals: React.FC = () => {
                         <button className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Name *</label>
-                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Lunch Special" /></div>
+                        <input aria-label="Input field" className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Lunch Special" /></div>
                     <div className="pos-form-grid">
                         <div><label className="pos-form-label">Pricing Type</label>
-                            <select className="pos-select" value={editing.pricingType} onChange={e => setEditing(p => p ? { ...p, pricingType: e.target.value as Combo['pricingType'] } : null)} aria-label="Pricing type">
+                            <select aria-label="Select option" className="pos-select" value={editing.pricingType} onChange={e => setEditing(p => p ? { ...p, pricingType: e.target.value as Combo['pricingType'] } : null)} aria-label="Pricing type">
                                 <option value="fixed">Fixed Price</option><option value="sum">Sum of Items</option><option value="cheapest-free">Cheapest Free</option>
                             </select></div>
                         {editing.pricingType === 'fixed' && <div><label className="pos-form-label">Price (€)</label>
-                            <input type="number" step="0.01" className="pos-input" value={editing.price} onChange={e => setEditing(p => p ? { ...p, price: parseFloat(e.target.value) || 0 } : null)} aria-label="Price" /></div>}
+                            <input aria-label="Input field" type="number" step="0.01" className="pos-input" value={editing.price} onChange={e => setEditing(p => p ? { ...p, price: parseFloat(e.target.value) || 0 } : null)} aria-label="Price" /></div>}
                     </div>
                     <div className="pos-form-group">
                         <div className="pos-flex pos-flex--between pos-flex--center pos-mb-8">
@@ -151,18 +151,18 @@ const ComboMeals: React.FC = () => {
                             <div key={step.id} className="pos-card bg-[var(--bg-secondary,#09090b)] p-3 mb-2">
                                 <div className="pos-flex pos-gap-8 pos-flex--center pos-mb-8">
                                     <span className="pos-badge pos-badge--blue w-[22px] h-[22px] rounded text-[11px] font-bold p-0 justify-center shrink-0">{i + 1}</span>
-                                    <input className="pos-input flex-1 py-1.5 px-2.5 text-xs" value={step.name} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], name: e.target.value }; setEditing({ ...editing, steps: s }); }} placeholder="Step name" aria-label="Step name" />
+                                    <input aria-label="Input field" className="pos-input flex-1 py-1.5 px-2.5 text-xs" value={step.name} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], name: e.target.value }; setEditing({ ...editing, steps: s }); }} placeholder="Step name" aria-label="Step name" />
                                     <label className="pos-toggle-label text-[10px] shrink-0">
-                                        <input type="checkbox" checked={step.required} onChange={() => { const s = [...editing.steps]; s[i] = { ...s[i], required: !s[i].required }; setEditing({ ...editing, steps: s }); }} /> Req
+                                        <input aria-label="Input field" type="checkbox" checked={step.required} onChange={() => { const s = [...editing.steps]; s[i] = { ...s[i], required: !s[i].required }; setEditing({ ...editing, steps: s }); }} /> Req
                                     </label>
                                     <button title="Remove step" className="pos-btn-icon pos-btn-icon--danger shrink-0" onClick={() => setEditing({ ...editing, steps: editing.steps.filter((_, j) => j !== i) })}><X size={14} /></button>
                                 </div>
-                                <textarea className="pos-input pos-textarea h-[50px] text-[11px]" value={step.options.join('\n')} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], options: e.target.value.split('\n').filter(Boolean) }; setEditing({ ...editing, steps: s }); }} placeholder="One option per line" aria-label="Step options" />
+                                <textarea aria-label="Input field" className="pos-input pos-textarea h-[50px] text-[11px]" value={step.options.join('\n')} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], options: e.target.value.split('\n').filter(Boolean) }; setEditing({ ...editing, steps: s }); }} placeholder="One option per line" aria-label="Step options" />
                             </div>
                         ))}
                     </div>
                     <div className="pos-mb-16"><label className="pos-toggle-label">
-                        <input type="checkbox" checked={editing.isActive} onChange={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label></div>
+                        <input aria-label="Input field" type="checkbox" checked={editing.isActive} onChange={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label></div>
                     <div className="pos-modal-footer">
                         <button className="pos-btn-primary flex-1 justify-center" onClick={save}><Save size={14} /> Save</button>
                         <button title="Delete combo" className="pos-btn-outline text-red-400" onClick={() => { setCombos(p => p.filter(c => c.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>

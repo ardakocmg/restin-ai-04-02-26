@@ -237,8 +237,8 @@ export default function RestinSettings() {
                     </div>
                     <div className="flex items-center gap-2">
                         {isSystemAdmin ? (
-                            <Select value={configLevel} onValueChange={(v: 'system' | 'venue') => setConfigLevel(v)}>
-                                <SelectTrigger className="w-28 h-8 text-xs">
+                            <Select aria-label="Select option" value={configLevel} onValueChange={(v: 'system' | 'venue') => setConfigLevel(v)}>
+                                <SelectTrigger aria-label="Select option" className="w-28 h-8 text-xs">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -298,8 +298,8 @@ export default function RestinSettings() {
         <div className="space-y-3">
             <div>
                 <Label className="text-xs text-muted-foreground">Personality</Label>
-                <Select value={editConfig.personality as string || 'professional'} onValueChange={(v) => setEditConfig(p => ({ ...p, personality: v }))}>
-                    <SelectTrigger className="h-8 text-sm bg-secondary border-border"><SelectValue /></SelectTrigger>
+                <Select aria-label="Select option" value={editConfig.personality as string || 'professional'} onValueChange={(v) => setEditConfig(p => ({ ...p, personality: v }))}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-sm bg-secondary border-border"><SelectValue /></SelectTrigger>
                     <SelectContent>
                         <SelectItem value="professional">Professional</SelectItem>
                         <SelectItem value="friendly">Friendly</SelectItem>
@@ -310,7 +310,7 @@ export default function RestinSettings() {
             </div>
             <div>
                 <Label className="text-xs text-muted-foreground">Greeting Message</Label>
-                <Textarea
+                <Textarea aria-label="Input field"
                     value={editConfig.greeting as string || ''}
                     onChange={(e) => setEditConfig(p => ({ ...p, greeting: e.target.value }))}
                     className="text-sm bg-secondary border-border min-h-15"
@@ -319,11 +319,11 @@ export default function RestinSettings() {
             <div className="grid grid-cols-2 gap-3">
                 <div>
                     <Label className="text-xs text-muted-foreground">Max Context Tokens</Label>
-                    <Input type="number" value={editConfig.max_context_tokens as number || 4000} onChange={(e) => setEditConfig(p => ({ ...p, max_context_tokens: parseInt(e.target.value) || 4000 }))} className="h-8 text-sm bg-secondary border-border" />
+                    <Input aria-label="Input field" type="number" value={editConfig.max_context_tokens as number || 4000} onChange={(e) => setEditConfig(p => ({ ...p, max_context_tokens: parseInt(e.target.value) || 4000 }))} className="h-8 text-sm bg-secondary border-border" />
                 </div>
                 <div>
                     <Label className="text-xs text-muted-foreground">Temperature</Label>
-                    <Input type="number" step="0.1" min="0" max="1" value={editConfig.temperature as number || 0.3} onChange={(e) => setEditConfig(p => ({ ...p, temperature: parseFloat(e.target.value) || 0.3 }))} className="h-8 text-sm bg-secondary border-border" />
+                    <Input aria-label="Input field" type="number" step="0.1" min="0" max="1" value={editConfig.temperature as number || 0.3} onChange={(e) => setEditConfig(p => ({ ...p, temperature: parseFloat(e.target.value) || 0.3 }))} className="h-8 text-sm bg-secondary border-border" />
                 </div>
             </div>
             <div className="space-y-2">
@@ -346,8 +346,8 @@ export default function RestinSettings() {
             <div className="grid grid-cols-2 gap-3">
                 <div>
                     <Label className="text-xs text-muted-foreground">Persona</Label>
-                    <Select value={editConfig.persona as string || 'receptionist'} onValueChange={(v) => setEditConfig(p => ({ ...p, persona: v }))}>
-                        <SelectTrigger className="h-8 text-sm bg-secondary border-border"><SelectValue /></SelectTrigger>
+                    <Select aria-label="Select option" value={editConfig.persona as string || 'receptionist'} onValueChange={(v) => setEditConfig(p => ({ ...p, persona: v }))}>
+                        <SelectTrigger aria-label="Select option" className="h-8 text-sm bg-secondary border-border"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="receptionist">Receptionist</SelectItem>
                             <SelectItem value="concierge">Concierge</SelectItem>
@@ -358,8 +358,8 @@ export default function RestinSettings() {
                 </div>
                 <div>
                     <Label className="text-xs text-muted-foreground">Language</Label>
-                    <Select value={editConfig.language as string || 'en'} onValueChange={(v) => setEditConfig(p => ({ ...p, language: v }))}>
-                        <SelectTrigger className="h-8 text-sm bg-secondary border-border"><SelectValue /></SelectTrigger>
+                    <Select aria-label="Select option" value={editConfig.language as string || 'en'} onValueChange={(v) => setEditConfig(p => ({ ...p, language: v }))}>
+                        <SelectTrigger aria-label="Select option" className="h-8 text-sm bg-secondary border-border"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="en">English</SelectItem>
                             <SelectItem value="mt">Maltese</SelectItem>
@@ -373,21 +373,21 @@ export default function RestinSettings() {
             </div>
             <div>
                 <Label className="text-xs text-muted-foreground">Greeting Message</Label>
-                <Textarea value={editConfig.greeting_message as string || ''} onChange={(e) => setEditConfig(p => ({ ...p, greeting_message: e.target.value }))} className="text-sm bg-secondary border-border min-h-15" />
+                <Textarea aria-label="Input field" value={editConfig.greeting_message as string || ''} onChange={(e) => setEditConfig(p => ({ ...p, greeting_message: e.target.value }))} className="text-sm bg-secondary border-border min-h-15" />
             </div>
             <div className="grid grid-cols-2 gap-3">
                 <div>
                     <Label className="text-xs text-muted-foreground">Operating Hours Start</Label>
-                    <Input type="time" value={(editConfig.operating_hours as Record<string, string>)?.start || '09:00'} onChange={(e) => setEditConfig(p => ({ ...p, operating_hours: { ...(p.operating_hours as Record<string, string> || {}), start: e.target.value } }))} className="h-8 text-sm bg-secondary border-border" />
+                    <Input aria-label="Input field" type="time" value={(editConfig.operating_hours as Record<string, string>)?.start || '09:00'} onChange={(e) => setEditConfig(p => ({ ...p, operating_hours: { ...(p.operating_hours as Record<string, string> || {}), start: e.target.value } }))} className="h-8 text-sm bg-secondary border-border" />
                 </div>
                 <div>
                     <Label className="text-xs text-muted-foreground">Operating Hours End</Label>
-                    <Input type="time" value={(editConfig.operating_hours as Record<string, string>)?.end || '23:00'} onChange={(e) => setEditConfig(p => ({ ...p, operating_hours: { ...(p.operating_hours as Record<string, string> || {}), end: e.target.value } }))} className="h-8 text-sm bg-secondary border-border" />
+                    <Input aria-label="Input field" type="time" value={(editConfig.operating_hours as Record<string, string>)?.end || '23:00'} onChange={(e) => setEditConfig(p => ({ ...p, operating_hours: { ...(p.operating_hours as Record<string, string> || {}), end: e.target.value } }))} className="h-8 text-sm bg-secondary border-border" />
                 </div>
             </div>
             <div>
                 <Label className="text-xs text-muted-foreground">Max Call Duration (seconds)</Label>
-                <Input type="number" value={editConfig.max_call_duration_seconds as number || 300} onChange={(e) => setEditConfig(p => ({ ...p, max_call_duration_seconds: parseInt(e.target.value) || 300 }))} className="h-8 text-sm bg-secondary border-border" />
+                <Input aria-label="Input field" type="number" value={editConfig.max_call_duration_seconds as number || 300} onChange={(e) => setEditConfig(p => ({ ...p, max_call_duration_seconds: parseInt(e.target.value) || 300 }))} className="h-8 text-sm bg-secondary border-border" />
             </div>
             <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Transfer to Human</span>
@@ -400,8 +400,8 @@ export default function RestinSettings() {
         <div className="space-y-3">
             <div>
                 <Label className="text-xs text-muted-foreground">Brand Tone</Label>
-                <Select value={editConfig.brand_tone as string || 'modern'} onValueChange={(v) => setEditConfig(p => ({ ...p, brand_tone: v }))}>
-                    <SelectTrigger className="h-8 text-sm bg-secondary border-border"><SelectValue /></SelectTrigger>
+                <Select aria-label="Select option" value={editConfig.brand_tone as string || 'modern'} onValueChange={(v) => setEditConfig(p => ({ ...p, brand_tone: v }))}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-sm bg-secondary border-border"><SelectValue /></SelectTrigger>
                     <SelectContent>
                         <SelectItem value="modern">Modern & Clean</SelectItem>
                         <SelectItem value="rustic">Rustic & Warm</SelectItem>
@@ -415,27 +415,27 @@ export default function RestinSettings() {
                 <div>
                     <Label className="text-xs text-muted-foreground">Primary Color</Label>
                     <div className="flex items-center gap-2">
-                        <Input type="color" value={editConfig.primary_color as string || '#3b82f6'} onChange={(e) => setEditConfig(p => ({ ...p, primary_color: e.target.value }))} className="h-8 w-12 p-0.5 bg-secondary border-border cursor-pointer" />
-                        <Input value={editConfig.primary_color as string || '#3b82f6'} onChange={(e) => setEditConfig(p => ({ ...p, primary_color: e.target.value }))} className="h-8 text-xs bg-secondary border-border font-mono" />
+                        <Input aria-label="Input field" type="color" value={editConfig.primary_color as string || '#3b82f6'} onChange={(e) => setEditConfig(p => ({ ...p, primary_color: e.target.value }))} className="h-8 w-12 p-0.5 bg-secondary border-border cursor-pointer" />
+                        <Input aria-label="Input field" value={editConfig.primary_color as string || '#3b82f6'} onChange={(e) => setEditConfig(p => ({ ...p, primary_color: e.target.value }))} className="h-8 text-xs bg-secondary border-border font-mono" />
                     </div>
                 </div>
                 <div>
                     <Label className="text-xs text-muted-foreground">Secondary Color</Label>
                     <div className="flex items-center gap-2">
-                        <Input type="color" value={editConfig.secondary_color as string || '#8b5cf6'} onChange={(e) => setEditConfig(p => ({ ...p, secondary_color: e.target.value }))} className="h-8 w-12 p-0.5 bg-secondary border-border cursor-pointer" />
-                        <Input value={editConfig.secondary_color as string || '#8b5cf6'} onChange={(e) => setEditConfig(p => ({ ...p, secondary_color: e.target.value }))} className="h-8 text-xs bg-secondary border-border font-mono" />
+                        <Input aria-label="Input field" type="color" value={editConfig.secondary_color as string || '#8b5cf6'} onChange={(e) => setEditConfig(p => ({ ...p, secondary_color: e.target.value }))} className="h-8 w-12 p-0.5 bg-secondary border-border cursor-pointer" />
+                        <Input aria-label="Input field" value={editConfig.secondary_color as string || '#8b5cf6'} onChange={(e) => setEditConfig(p => ({ ...p, secondary_color: e.target.value }))} className="h-8 text-xs bg-secondary border-border font-mono" />
                     </div>
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
                 <div>
                     <Label className="text-xs text-muted-foreground">Max Generations / Day</Label>
-                    <Input type="number" value={editConfig.max_generations_per_day as number || 20} onChange={(e) => setEditConfig(p => ({ ...p, max_generations_per_day: parseInt(e.target.value) || 20 }))} className="h-8 text-sm bg-secondary border-border" />
+                    <Input aria-label="Input field" type="number" value={editConfig.max_generations_per_day as number || 20} onChange={(e) => setEditConfig(p => ({ ...p, max_generations_per_day: parseInt(e.target.value) || 20 }))} className="h-8 text-sm bg-secondary border-border" />
                 </div>
                 <div>
                     <Label className="text-xs text-muted-foreground">Default Style</Label>
-                    <Select value={editConfig.default_style as string || 'food-photography'} onValueChange={(v) => setEditConfig(p => ({ ...p, default_style: v }))}>
-                        <SelectTrigger className="h-8 text-sm bg-secondary border-border"><SelectValue /></SelectTrigger>
+                    <Select aria-label="Select option" value={editConfig.default_style as string || 'food-photography'} onValueChange={(v) => setEditConfig(p => ({ ...p, default_style: v }))}>
+                        <SelectTrigger aria-label="Select option" className="h-8 text-sm bg-secondary border-border"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="food-photography">Food Photography</SelectItem>
                             <SelectItem value="flat-lay">Flat Lay</SelectItem>
@@ -460,16 +460,16 @@ export default function RestinSettings() {
         <div className="space-y-3">
             <div>
                 <Label className="text-xs text-muted-foreground">Monitor Region</Label>
-                <Input value={editConfig.monitor_region as string || ''} onChange={(e) => setEditConfig(p => ({ ...p, monitor_region: e.target.value }))} placeholder="e.g. Sliema, Malta" className="h-8 text-sm bg-secondary border-border" />
+                <Input aria-label="Input field" value={editConfig.monitor_region as string || ''} onChange={(e) => setEditConfig(p => ({ ...p, monitor_region: e.target.value }))} placeholder="e.g. Sliema, Malta" className="h-8 text-sm bg-secondary border-border" />
             </div>
             <div className="grid grid-cols-2 gap-3">
                 <div>
                     <Label className="text-xs text-muted-foreground">Price Alert Threshold (%)</Label>
-                    <Input type="number" value={editConfig.price_alert_threshold_pct as number || 10} onChange={(e) => setEditConfig(p => ({ ...p, price_alert_threshold_pct: parseInt(e.target.value) || 10 }))} className="h-8 text-sm bg-secondary border-border" />
+                    <Input aria-label="Input field" type="number" value={editConfig.price_alert_threshold_pct as number || 10} onChange={(e) => setEditConfig(p => ({ ...p, price_alert_threshold_pct: parseInt(e.target.value) || 10 }))} className="h-8 text-sm bg-secondary border-border" />
                 </div>
                 <div>
                     <Label className="text-xs text-muted-foreground">Scan Frequency (hours)</Label>
-                    <Input type="number" value={editConfig.scan_frequency_hours as number || 24} onChange={(e) => setEditConfig(p => ({ ...p, scan_frequency_hours: parseInt(e.target.value) || 24 }))} className="h-8 text-sm bg-secondary border-border" />
+                    <Input aria-label="Input field" type="number" value={editConfig.scan_frequency_hours as number || 24} onChange={(e) => setEditConfig(p => ({ ...p, scan_frequency_hours: parseInt(e.target.value) || 24 }))} className="h-8 text-sm bg-secondary border-border" />
                 </div>
             </div>
             <div className="flex items-center justify-between">
@@ -488,16 +488,16 @@ export default function RestinSettings() {
             <div className="grid grid-cols-2 gap-3">
                 <div>
                     <Label className="text-xs text-muted-foreground">Churn Threshold (days since last visit)</Label>
-                    <Input type="number" value={editConfig.churn_threshold_days as number || 30} onChange={(e) => setEditConfig(p => ({ ...p, churn_threshold_days: parseInt(e.target.value) || 30 }))} className="h-8 text-sm bg-secondary border-border" />
+                    <Input aria-label="Input field" type="number" value={editConfig.churn_threshold_days as number || 30} onChange={(e) => setEditConfig(p => ({ ...p, churn_threshold_days: parseInt(e.target.value) || 30 }))} className="h-8 text-sm bg-secondary border-border" />
                 </div>
                 <div>
                     <Label className="text-xs text-muted-foreground">High-Risk Visit Drop (%)</Label>
-                    <Input type="number" value={editConfig.high_risk_visit_drop_pct as number || 50} onChange={(e) => setEditConfig(p => ({ ...p, high_risk_visit_drop_pct: parseInt(e.target.value) || 50 }))} className="h-8 text-sm bg-secondary border-border" />
+                    <Input aria-label="Input field" type="number" value={editConfig.high_risk_visit_drop_pct as number || 50} onChange={(e) => setEditConfig(p => ({ ...p, high_risk_visit_drop_pct: parseInt(e.target.value) || 50 }))} className="h-8 text-sm bg-secondary border-border" />
                 </div>
             </div>
             <div>
                 <Label className="text-xs text-muted-foreground">LTV Calculation Period (days)</Label>
-                <Input type="number" value={editConfig.ltv_calculation_period_days as number || 365} onChange={(e) => setEditConfig(p => ({ ...p, ltv_calculation_period_days: parseInt(e.target.value) || 365 }))} className="h-8 text-sm bg-secondary border-border" />
+                <Input aria-label="Input field" type="number" value={editConfig.ltv_calculation_period_days as number || 365} onChange={(e) => setEditConfig(p => ({ ...p, ltv_calculation_period_days: parseInt(e.target.value) || 365 }))} className="h-8 text-sm bg-secondary border-border" />
             </div>
             <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">SMS Notifications</span>
@@ -520,7 +520,7 @@ export default function RestinSettings() {
                 </p>
                 <div className="mt-4 space-y-3">
                     <Label className="text-xs text-muted-foreground">Active Aesthetic</Label>
-                    <Select value={editConfig.active_theme as string || 'theme-standard'} onValueChange={(v) => {
+                    <Select aria-label="Select option" value={editConfig.active_theme as string || 'theme-standard'} onValueChange={(v) => {
                         setEditConfig(p => ({ ...p, active_theme: v }));
                         // Optimistically apply for preview purposes (only to current session)
                         const root = window.document.documentElement;
@@ -530,7 +530,7 @@ export default function RestinSettings() {
                             root.classList.remove('theme-tech');
                         }
                     }}>
-                        <SelectTrigger className="h-10 text-sm bg-background border-border">
+                        <SelectTrigger aria-label="Select option" className="h-10 text-sm bg-background border-border">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="bg-card border-border">
@@ -732,8 +732,8 @@ export default function RestinSettings() {
                 <TabsContent value="analytics" className="space-y-4 mt-4">
                     <div className="flex items-center justify-between mb-2">
                         <h3 className="text-sm font-semibold text-secondary-foreground">Usage Analytics by Module</h3>
-                        <Select value={analyticsDays.toString()} onValueChange={(v) => setAnalyticsDays(parseInt(v))}>
-                            <SelectTrigger className="w-28 h-8 text-xs"><SelectValue /></SelectTrigger>
+                        <Select aria-label="Select option" value={analyticsDays.toString()} onValueChange={(v) => setAnalyticsDays(parseInt(v))}>
+                            <SelectTrigger aria-label="Select option" className="w-28 h-8 text-xs"><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="7">Last 7 days</SelectItem>
                                 <SelectItem value="14">Last 14 days</SelectItem>

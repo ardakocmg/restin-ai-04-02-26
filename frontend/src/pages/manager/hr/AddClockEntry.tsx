@@ -291,7 +291,7 @@ export default function AddClockEntry() {
                                 <Calendar className="inline h-3 w-3 mr-1 mb-0.5" />
                                 Work Date
                             </label>
-                            <Input
+                            <Input aria-label="Input field"
                                 type="date"
                                 value={date}
                                 max={new Date().toISOString().split('T')[0]}
@@ -306,7 +306,7 @@ export default function AddClockEntry() {
                                 <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                     Clock In
                                 </label>
-                                <Input
+                                <Input aria-label="Input field"
                                     type="time"
                                     value={clockIn}
                                     onChange={(e) => setClockIn(e.target.value)}
@@ -317,7 +317,7 @@ export default function AddClockEntry() {
                                 <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                     Clock Out
                                 </label>
-                                <Input
+                                <Input aria-label="Input field"
                                     type="time"
                                     value={clockOut}
                                     onChange={(e) => setClockOut(e.target.value)}

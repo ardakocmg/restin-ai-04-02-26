@@ -152,15 +152,15 @@ export default function CompanySettings() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <Label className="text-xs font-bold text-muted-foreground uppercase">Company Name</Label>
-                                    <Input value={formData.companyName} onChange={e => handleInputChange('companyName', e.target.value)} className="bg-background border-border" />
+                                    <Input aria-label="Input field" value={formData.companyName} onChange={e => handleInputChange('companyName', e.target.value)} className="bg-background border-border" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs font-bold text-muted-foreground uppercase">Display Name</Label>
-                                    <Input value={formData.displayName} onChange={e => handleInputChange('displayName', e.target.value)} className="bg-background border-border" />
+                                    <Input aria-label="Input field" value={formData.displayName} onChange={e => handleInputChange('displayName', e.target.value)} className="bg-background border-border" />
                                 </div>
                                 <div className="col-span-2 space-y-2">
                                     <Label className="text-xs font-bold text-muted-foreground uppercase">Description</Label>
-                                    <Textarea value={formData.description} onChange={e => handleInputChange('description', e.target.value)} className="bg-background border-border min-h-20" />
+                                    <Textarea aria-label="Input field" value={formData.description} onChange={e => handleInputChange('description', e.target.value)} className="bg-background border-border min-h-20" />
                                 </div>
                             </div>
 
@@ -171,19 +171,19 @@ export default function CompanySettings() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <Label className="text-xs font-bold text-muted-foreground uppercase">Street Name</Label>
-                                    <Input value={formData.streetName} onChange={e => handleInputChange('streetName', e.target.value)} className="bg-background border-border" />
+                                    <Input aria-label="Input field" value={formData.streetName} onChange={e => handleInputChange('streetName', e.target.value)} className="bg-background border-border" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs font-bold text-muted-foreground uppercase">Number / Building</Label>
-                                    <Input value={formData.number} onChange={e => handleInputChange('number', e.target.value)} className="bg-background border-border" />
+                                    <Input aria-label="Input field" value={formData.number} onChange={e => handleInputChange('number', e.target.value)} className="bg-background border-border" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs font-bold text-muted-foreground uppercase">City</Label>
-                                    <Input value={formData.city} onChange={e => handleInputChange('city', e.target.value)} className="bg-background border-border" />
+                                    <Input aria-label="Input field" value={formData.city} onChange={e => handleInputChange('city', e.target.value)} className="bg-background border-border" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs font-bold text-muted-foreground uppercase">Postal Code</Label>
-                                    <Input value={formData.postalCode} onChange={e => handleInputChange('postalCode', e.target.value)} className="bg-background border-border" />
+                                    <Input aria-label="Input field" value={formData.postalCode} onChange={e => handleInputChange('postalCode', e.target.value)} className="bg-background border-border" />
                                 </div>
                             </div>
                         </CardContent>
@@ -203,7 +203,7 @@ export default function CompanySettings() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <Label className="text-xs uppercase text-muted-foreground font-bold">Internal Venue Name</Label>
-                                    <Input
+                                    <Input aria-label="Input field"
                                         className="bg-background border-border"
                                         value={venueForm.name || ''}
                                         onChange={(e) => setVenueForm({ ...venueForm, name: e.target.value })}
@@ -211,7 +211,7 @@ export default function CompanySettings() {
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs uppercase text-muted-foreground font-bold">Concept / Type</Label>
-                                    <Input
+                                    <Input aria-label="Input field"
                                         className="bg-background border-border"
                                         value={venueForm.type || ''}
                                         onChange={(e) => setVenueForm({ ...venueForm, type: e.target.value })}
@@ -245,16 +245,16 @@ export default function CompanySettings() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <Label className="text-xs font-bold text-muted-foreground uppercase">Currency (e.g. EUR)</Label>
-                                    <Input value={venueForm.currency || 'EUR'} onChange={e => setVenueForm({ ...venueForm, currency: e.target.value })} className="bg-background border-border" />
+                                    <Input aria-label="Input field" value={venueForm.currency || 'EUR'} onChange={e => setVenueForm({ ...venueForm, currency: e.target.value })} className="bg-background border-border" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs font-bold text-muted-foreground uppercase">VAT Number</Label>
-                                    <Input value={formData.vatNumber} onChange={e => handleInputChange('vatNumber', e.target.value)} className="bg-background border-border" />
+                                    <Input aria-label="Input field" value={formData.vatNumber} onChange={e => handleInputChange('vatNumber', e.target.value)} className="bg-background border-border" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs font-bold text-muted-foreground uppercase">Time Zone</Label>
-                                    <Select value={venueForm.timezone || 'Europe/Malta'} onValueChange={val => setVenueForm({ ...venueForm, timezone: val })}>
-                                        <SelectTrigger className="bg-background border-border">
+                                    <Select aria-label="Select option" value={venueForm.timezone || 'Europe/Malta'} onValueChange={val => setVenueForm({ ...venueForm, timezone: val })}>
+                                        <SelectTrigger aria-label="Select option" className="bg-background border-border">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -265,7 +265,7 @@ export default function CompanySettings() {
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs font-bold text-muted-foreground uppercase">Opening Time</Label>
-                                    <Input type="time" value={formData.openingTime} onChange={e => handleInputChange('openingTime', e.target.value)} className="bg-background border-border" />
+                                    <Input aria-label="Input field" type="time" value={formData.openingTime} onChange={e => handleInputChange('openingTime', e.target.value)} className="bg-background border-border" />
                                 </div>
                             </div>
                         </CardContent>

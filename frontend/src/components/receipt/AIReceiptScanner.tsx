@@ -201,7 +201,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
     const [analysisStep, setAnalysisStep] = useState(0);
     const [result, setResult] = useState<AIScanResult | null>(null);
     const [editedName, setEditedName] = useState('');
-    const [inputMethod, setInputMethod] = useState<InputMethod>('file');
+    const [inputMethod, setInputMethod] = useState<Input aria-label="Input field"Method>('file');
     const [urlInput, setUrlInput] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
     const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -345,7 +345,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
     if (!open) return null;
 
     /* ── Input Method Label ── */
-    const methodLabels: Record<InputMethod, string> = {
+    const methodLabels: Record<Input aria-label="Input field"Method, string> = {
         file: 'File Upload',
         clipboard: 'Clipboard Paste',
         camera: 'Camera Capture',
@@ -633,7 +633,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                         <div className="rounded-lg overflow-hidden border border-white/10 bg-zinc-900 relative">
                                             <img src={imagePreview} alt="Receipt" className="w-full h-auto" />
                                             <div className="absolute top-2 right-2 flex gap-1">
-                                                <Button variant="ghost" size="sm" className="h-7 w-7 bg-black/50 p-0">
+                                                <Button variant="ghost" size="sm" aria-label="Action" className="h-7 w-7 bg-black/50 p-0">
                                                     <ZoomIn className="w-3.5 h-3.5 text-white" />
                                                 </Button>
                                             </div>

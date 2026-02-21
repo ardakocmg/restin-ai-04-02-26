@@ -72,8 +72,8 @@ export default function AccountingMalta() {
             <CardContent className="space-y-6">
               <div className="space-y-2">
                 <Label>Target System</Label>
-                <Select value={target} onValueChange={setTarget}>
-                  <SelectTrigger className="bg-card border-border">
+                <Select aria-label="Select option" value={target} onValueChange={setTarget}>
+                  <SelectTrigger aria-label="Select option" className="bg-card border-border">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -86,8 +86,8 @@ export default function AccountingMalta() {
 
               <div className="space-y-2">
                 <Label>Period</Label>
-                <Select value={range} onValueChange={setRange}>
-                  <SelectTrigger className="bg-card border-border">
+                <Select aria-label="Select option" value={range} onValueChange={setRange}>
+                  <SelectTrigger aria-label="Select option" className="bg-card border-border">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -153,7 +153,7 @@ export default function AccountingMalta() {
                           </span>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <Button variant="ghost" size="sm" aria-label="Action" className="h-8 w-8 p-0">
                             <FileDown className="w-4 h-4 text-muted-foreground" />
                           </Button>
                         </TableCell>

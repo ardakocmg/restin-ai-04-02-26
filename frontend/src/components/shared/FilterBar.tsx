@@ -11,12 +11,12 @@ export default function FilterBar({ filters, onFilterChange, className }) {
       <span className="text-sm font-medium text-foreground">Filters:</span>
 
       {filters.map((filter) => (
-        <Select
+        <Select aria-label="Select option"
           key={filter.key}
           value={filter.value}
           onValueChange={(value) => onFilterChange(filter.key, value)}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger aria-label="Select option" className="w-[180px]">
             <SelectValue placeholder={filter.label} />
           </SelectTrigger>
           <SelectContent>

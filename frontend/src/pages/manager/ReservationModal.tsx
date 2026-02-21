@@ -104,16 +104,16 @@ export default function ReservationModal({ open, onOpenChange, venueId, onCreate
                         <div className="grid grid-cols-2 gap-2">
                             <div className="space-y-1">
                                 <Label className="text-[10px] uppercase font-bold text-muted-foreground">First Name</Label>
-                                <Input value={formData.first_name} onChange={e => setFormData({ ...formData, first_name: e.target.value })} className="bg-card border-border h-9" />
+                                <Input aria-label="Input field" value={formData.first_name} onChange={e => setFormData({ ...formData, first_name: e.target.value })} className="bg-card border-border h-9" />
                             </div>
                             <div className="space-y-1">
                                 <Label className="text-[10px] uppercase font-bold text-muted-foreground">Last Name</Label>
-                                <Input value={formData.last_name} onChange={e => setFormData({ ...formData, last_name: e.target.value })} className="bg-card border-border h-9" />
+                                <Input aria-label="Input field" value={formData.last_name} onChange={e => setFormData({ ...formData, last_name: e.target.value })} className="bg-card border-border h-9" />
                             </div>
                         </div>
                         <div className="space-y-1">
                             <Label className="text-[10px] uppercase font-bold text-muted-foreground">Phone</Label>
-                            <Input value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="bg-card border-border h-9" />
+                            <Input aria-label="Input field" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="bg-card border-border h-9" />
                         </div>
                         <div className="space-y-1">
                             <Label className="text-[10px] uppercase font-bold text-muted-foreground">Notes</Label>
@@ -136,11 +136,11 @@ export default function ReservationModal({ open, onOpenChange, venueId, onCreate
                         <div className="grid grid-cols-2 gap-2">
                             <div className="space-y-1">
                                 <Label className="text-[10px] uppercase font-bold text-muted-foreground">Date</Label>
-                                <Input type="date" value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })} className="bg-card border-border h-9" />
+                                <Input aria-label="Input field" type="date" value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })} className="bg-card border-border h-9" />
                             </div>
                             <div className="space-y-1">
                                 <Label className="text-[10px] uppercase font-bold text-muted-foreground">Covers</Label>
-                                <Input type="number" value={formData.guests} onChange={e => setFormData({ ...formData, guests: e.target.value })} className="bg-card border-border h-9" />
+                                <Input aria-label="Input field" type="number" value={formData.guests} onChange={e => setFormData({ ...formData, guests: e.target.value })} className="bg-card border-border h-9" />
                             </div>
                         </div>
 

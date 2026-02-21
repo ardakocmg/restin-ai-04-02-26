@@ -71,7 +71,7 @@ export default function SplitBillModal({ order, items, onClose, onSplit }) {
                         </button>
                     </div>
 
-                    <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+                    <button onClick={onClose} aria-label="Action" className="p-2 hover:bg-white/10 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
                         <X className="w-6 h-6" />
                     </button>
                 </div>

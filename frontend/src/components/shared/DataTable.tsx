@@ -422,7 +422,7 @@ export default function DataTable<TData, TValue>({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           {enableGlobalSearch && (
-            <Input
+            <Input aria-label="Input field"
               value={globalSearch}
               onChange={(e) => setGlobalSearch(e.target.value)}
               placeholder="Search..."
@@ -447,7 +447,7 @@ export default function DataTable<TData, TValue>({
                       <div key={col.key} className="space-y-2">
                         <label className="text-xs font-bold text-secondary-foreground uppercase tracking-widest">{col.label}</label>
                         {filterType === 'text' && (
-                          <Input
+                          <Input aria-label="Input field"
                             value={value as string}
                             onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: e.target.value }))}
                             data-testid={`datatable-filter-${col.key}`}
@@ -455,14 +455,14 @@ export default function DataTable<TData, TValue>({
                         )}
                         {filterType === 'numberRange' && (
                           <div className="flex gap-2">
-                            <Input
+                            <Input aria-label="Min"
                               type="number"
                               placeholder="Min"
                               value={(value as { min?: string; max?: string })?.min || ''}
                               onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: { ...(value as Record<string, string>), min: e.target.value } }))}
                               data-testid={`datatable-filter-${col.key}-min`}
                             />
-                            <Input
+                            <Input aria-label="Max"
                               type="number"
                               placeholder="Max"
                               value={(value as { min?: string; max?: string })?.max || ''}
@@ -473,13 +473,13 @@ export default function DataTable<TData, TValue>({
                         )}
                         {filterType === 'dateRange' && (
                           <div className="flex gap-2">
-                            <Input
+                            <Input aria-label="Input field"
                               type="date"
                               value={(value as { start?: string; end?: string })?.start || ''}
                               onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: { ...(value as Record<string, string>), start: e.target.value } }))}
                               data-testid={`datatable-filter-${col.key}-start`}
                             />
-                            <Input
+                            <Input aria-label="Input field"
                               type="date"
                               value={(value as { start?: string; end?: string })?.end || ''}
                               onChange={(e) => setColumnFilters((prev: FilterState) => ({ ...prev, [col.key]: { ...(value as Record<string, string>), end: e.target.value } }))}
@@ -541,7 +541,7 @@ export default function DataTable<TData, TValue>({
               <div className="p-4 border-b border-border">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">Presets</p>
                 <div className="space-y-2">
-                  <Select
+                  <Select aria-label="Select option"
                     value={selectedPresetId}
                     onValueChange={(value) => {
                       setSelectedPresetId(value);
@@ -549,7 +549,7 @@ export default function DataTable<TData, TValue>({
                       if (preset) applyPreset(preset);
                     }}
                   >
-                    <SelectTrigger className="bg-card border-border" data-testid="datatable-presets-select">
+                    <SelectTrigger aria-label="Datatable Presets Select" className="bg-card border-border" data-testid="datatable-presets-select">
                       <SelectValue placeholder="Load a preset..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -562,15 +562,15 @@ export default function DataTable<TData, TValue>({
                   </Select>
 
                   <div className="flex gap-2">
-                    <Input
+                    <Input aria-label="Input field"
                       value={presetName}
                       onChange={(e) => setPresetName(e.target.value)}
                       placeholder="New preset name..."
                       className="bg-card border-border flex-1 text-xs"
                       data-testid="datatable-presets-name"
                     />
-                    <Select value={presetScope} onValueChange={setPresetScope}>
-                      <SelectTrigger className="w-[90px] bg-card border-border text-xs" data-testid="datatable-presets-scope">
+                    <Select aria-label="Select option" value={presetScope} onValueChange={setPresetScope}>
+                      <SelectTrigger aria-label="Datatable Presets Scope" className="w-[90px] bg-card border-border text-xs" data-testid="datatable-presets-scope">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -790,8 +790,8 @@ export default function DataTable<TData, TValue>({
           <div className="flex flex-wrap items-center justify-between gap-3" data-testid="datatable-pagination">
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground">Rows per page</span>
-              <Select value={String(pageSize)} onValueChange={(value) => setPageSize(Number(value))}>
-                <SelectTrigger className="w-20" data-testid="datatable-page-size">
+              <Select aria-label="Select option" value={String(pageSize)} onValueChange={(value) => setPageSize(Number(value))}>
+                <SelectTrigger aria-label="Datatable Page Size" className="w-20" data-testid="datatable-page-size">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

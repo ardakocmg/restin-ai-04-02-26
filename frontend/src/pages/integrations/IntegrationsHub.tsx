@@ -380,7 +380,7 @@ export default function IntegrationsHub() {
                 <div key={field.key} className="space-y-2">
                   <Label htmlFor={field.key}>{field.label}</Label>
                   <div className="relative">
-                    <Input
+                    <Input aria-label="Input field"
                       id={field.key}
                       type={showSecrets[field.key] ? 'text' : field.type}
                       placeholder={field.placeholder}

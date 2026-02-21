@@ -104,7 +104,7 @@ export default function CustomFieldsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <Label>Field Label</Label>
-                <Input
+                <Input aria-label="Input field"
                   value={newField.label}
                   onChange={(e) => setNewField({ ...newField, label: e.target.value })}
                   placeholder="e.g. Emergency Contact"
@@ -112,7 +112,7 @@ export default function CustomFieldsPage() {
               </div>
               <div>
                 <Label>Field Key (auto-generated)</Label>
-                <Input
+                <Input aria-label="Input field"
                   value={newField.key || newField.label.toLowerCase().replace(/\s+/g, '_')}
                   onChange={(e) => setNewField({ ...newField, key: e.target.value })}
                   placeholder="emergency_contact"
@@ -136,7 +136,7 @@ export default function CustomFieldsPage() {
             {newField.type === 'select' && (
               <div className="mt-4">
                 <Label>Options (comma-separated)</Label>
-                <Input
+                <Input aria-label="Input field"
                   value={newField.options}
                   onChange={(e) => setNewField({ ...newField, options: e.target.value })}
                   placeholder="Option A, Option B, Option C"

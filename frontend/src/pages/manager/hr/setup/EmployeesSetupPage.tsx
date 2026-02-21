@@ -100,11 +100,11 @@ export default function EmployeesSetupPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Full Name *</Label>
-                <Input value={newEmployee.full_name} onChange={(e) => setNewEmployee({ ...newEmployee, full_name: e.target.value })} placeholder="John Doe" />
+                <Input aria-label="Input field" value={newEmployee.full_name} onChange={(e) => setNewEmployee({ ...newEmployee, full_name: e.target.value })} placeholder="John Doe" />
               </div>
               <div>
                 <Label>Email *</Label>
-                <Input type="email" value={newEmployee.email} onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })} placeholder="john@restaurant.com" />
+                <Input aria-label="Input field" type="email" value={newEmployee.email} onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })} placeholder="john@restaurant.com" />
               </div>
               <div>
                 <Label>Role</Label>
@@ -121,7 +121,7 @@ export default function EmployeesSetupPage() {
               </div>
               <div>
                 <Label>Department</Label>
-                <Input value={newEmployee.department} onChange={(e) => setNewEmployee({ ...newEmployee, department: e.target.value })} placeholder="Kitchen / FOH / Bar" />
+                <Input aria-label="Input field" value={newEmployee.department} onChange={(e) => setNewEmployee({ ...newEmployee, department: e.target.value })} placeholder="Kitchen / FOH / Bar" />
               </div>
             </div>
             <div className="flex gap-3 mt-4 justify-end">
@@ -140,7 +140,7 @@ export default function EmployeesSetupPage() {
               <CardTitle>Employee Directory ({filteredEmployees.length})</CardTitle>
               <div className="relative w-72">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" placeholder="Search employees..." />
+                <Input aria-label="Input field" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" placeholder="Search employees..." />
               </div>
             </div>
           </CardHeader>

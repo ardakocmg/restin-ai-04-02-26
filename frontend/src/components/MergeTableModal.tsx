@@ -28,7 +28,7 @@ export default function MergeTableModal({ currentTableId, activeTables, onClose,
                             <p className="text-sm text-muted-foreground">Merge with current table ({currentTableId})</p>
                         </div>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg text-muted-foreground">
+                    <button onClick={onClose} aria-label="Action" className="p-2 hover:bg-white/5 rounded-lg text-muted-foreground">
                         <X className="w-6 h-6" />
                     </button>
                 </div>

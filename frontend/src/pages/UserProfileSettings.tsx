@@ -324,19 +324,19 @@ export default function UserProfileSettings() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="profile-name">Full Name</Label>
-                  <Input id="profile-name" value={profileForm.name}
+                  <Input aria-label="Profile Name" id="profile-name" value={profileForm.name}
                     onChange={(e) => setProfileForm(p => ({ ...p, name: e.target.value }))} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="profile-email">Email</Label>
-                  <Input id="profile-email" type="email" value={profileForm.email}
+                  <Input aria-label="Profile Email" id="profile-email" type="email" value={profileForm.email}
                     onChange={(e) => setProfileForm(p => ({ ...p, email: e.target.value }))} />
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="profile-phone">Phone Number</Label>
-                  <Input id="profile-phone" value={profileForm.phone}
+                  <Input aria-label="Profile Phone" id="profile-phone" value={profileForm.phone}
                     onChange={(e) => setProfileForm(p => ({ ...p, phone: e.target.value }))} />
                 </div>
                 <div className="space-y-2">
@@ -591,7 +591,7 @@ export default function UserProfileSettings() {
                   </Alert>
                   <div className="space-y-2">
                     <Label htmlFor="code">Verification Code</Label>
-                    <Input id="code" placeholder="000000" maxLength={6}
+                    <Input aria-label="000000" id="code" placeholder="000000" maxLength={6}
                       value={verificationCode}
                       onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ''))} />
                   </div>
@@ -638,7 +638,7 @@ export default function UserProfileSettings() {
                   <div className="space-y-2">
                     <Label htmlFor="pw-current">Current Password</Label>
                     <div className="relative">
-                      <Input id="pw-current" type={pwShowCurrent ? 'text' : 'password'}
+                      <Input aria-label="Pw Current" id="pw-current" type={pwShowCurrent ? 'text' : 'password'}
                         value={pwCurrent} onChange={e => setPwCurrent(e.target.value)}
                         placeholder="••••••••" />
                       <Button type="button" variant="ghost" size="icon" aria-label="Action"
@@ -652,7 +652,7 @@ export default function UserProfileSettings() {
                 <div className="space-y-2">
                   <Label htmlFor="pw-new">New Password</Label>
                   <div className="relative">
-                    <Input id="pw-new" type={pwShowNew ? 'text' : 'password'}
+                    <Input aria-label="Pw New" id="pw-new" type={pwShowNew ? 'text' : 'password'}
                       value={pwNew} onChange={e => setPwNew(e.target.value)}
                       placeholder="Min. 8 characters" />
                     <Button type="button" variant="ghost" size="icon" aria-label="Action"
@@ -665,7 +665,7 @@ export default function UserProfileSettings() {
                 <div className="space-y-2">
                   <Label htmlFor="pw-confirm">Confirm Password</Label>
                   <div className="relative">
-                    <Input id="pw-confirm" type={pwShowConfirm ? 'text' : 'password'}
+                    <Input aria-label="Pw Confirm" id="pw-confirm" type={pwShowConfirm ? 'text' : 'password'}
                       value={pwConfirm} onChange={e => setPwConfirm(e.target.value)}
                       placeholder="••••••••" />
                     <Button type="button" variant="ghost" size="icon" aria-label="Action"
@@ -731,20 +731,20 @@ export default function UserProfileSettings() {
                 <div className="space-y-2">
                   <Label htmlFor="current-pin">Current PIN</Label>
                   <div className="relative">
-                    <Input id="current-pin" type={showPassword ? 'text' : 'password'} maxLength={6}
+                    <Input aria-label="Current Pin" id="current-pin" type={showPassword ? 'text' : 'password'} maxLength={6}
                       value={pinForm.currentPin}
                       onChange={(e) => setPinForm(p => ({ ...p, currentPin: e.target.value.replace(/\D/g, '') }))} />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-pin">New PIN</Label>
-                  <Input id="new-pin" type={showPassword ? 'text' : 'password'} maxLength={6}
+                  <Input aria-label="New Pin" id="new-pin" type={showPassword ? 'text' : 'password'} maxLength={6}
                     value={pinForm.newPin}
                     onChange={(e) => setPinForm(p => ({ ...p, newPin: e.target.value.replace(/\D/g, '') }))} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirm-pin">Confirm New PIN</Label>
-                  <Input id="confirm-pin" type={showPassword ? 'text' : 'password'} maxLength={6}
+                  <Input aria-label="Confirm Pin" id="confirm-pin" type={showPassword ? 'text' : 'password'} maxLength={6}
                     value={pinForm.confirmPin}
                     onChange={(e) => setPinForm(p => ({ ...p, confirmPin: e.target.value.replace(/\D/g, '') }))} />
                 </div>
@@ -860,7 +860,7 @@ export default function UserProfileSettings() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="language-select">Interface Language</Label>
-                <select id="language-select" value={settings.language || 'en'}
+                <select aria-label="Language Select" id="language-select" value={settings.language || 'en'}
                   onChange={(e) => handleSettingToggle('language', e.target.value)}
                   className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
                   <option value="en">English</option>

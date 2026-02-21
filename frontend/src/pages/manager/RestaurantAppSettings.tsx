@@ -113,8 +113,8 @@ export default function RestaurantAppSettings() {
                                                 {setting.type === 'switch' ? (
                                                     <Switch defaultChecked={setting.default} className="data-[state=checked]:bg-red-600 mt-1" />
                                                 ) : setting.type === 'select' ? (
-                                                    <Select defaultValue={setting.default}>
-                                                        <SelectTrigger className="w-[140px] bg-background border-border h-9 text-xs">
+                                                    <Select aria-label="Select option" defaultValue={setting.default}>
+                                                        <SelectTrigger aria-label="Select option" className="w-[140px] bg-background border-border h-9 text-xs">
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                         <SelectContent className="bg-card border-border">
@@ -124,7 +124,7 @@ export default function RestaurantAppSettings() {
                                                         </SelectContent>
                                                     </Select>
                                                 ) : (
-                                                    <Input className="w-[140px] bg-background border-border h-9 text-xs" />
+                                                    <Input aria-label="Input field" className="w-[140px] bg-background border-border h-9 text-xs" />
                                                 )}
                                             </div>
                                         </div>

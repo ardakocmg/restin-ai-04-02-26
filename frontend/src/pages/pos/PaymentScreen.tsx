@@ -356,7 +356,7 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                 Unfinalize
                             </button>
                         )}
-                        <button style={s.closeBtn} onClick={onClose}>
+                        <button style={s.closeBtn} aria-label="Action" onClick={onClose}>
                             <X size={22} color="#888" />
                         </button>
                     </div>

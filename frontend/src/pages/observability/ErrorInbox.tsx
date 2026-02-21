@@ -307,8 +307,8 @@ export default function ErrorInbox() {
     if (field.type === 'boolean') {
       const normalizedValue = value === '' ? 'false' : String(value);
       return (
-        <Select value={normalizedValue} onValueChange={(val) => onChange(val === 'true')}>
-          <SelectTrigger data-testid={`retry - field - ${field.path} `}>
+        <Select aria-label="Select option" value={normalizedValue} onValueChange={(val) => onChange(val === 'true')}>
+          <SelectTrigger aria-label="Select option" data-testid={`retry - field - ${field.path} `}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -321,7 +321,7 @@ export default function ErrorInbox() {
 
     if (field.type === 'number') {
       return (
-        <Input
+        <Input aria-label="Input field"
           type="number"
           value={value as string | number}
           onChange={(e) => onChange(Number(e.target.value))}
@@ -343,7 +343,7 @@ export default function ErrorInbox() {
     }
 
     return (
-      <Input
+      <Input aria-label="Input field"
         value={value as string}
         onChange={(e) => onChange(e.target.value)}
         data-testid={`retry - field - ${field.path} `}

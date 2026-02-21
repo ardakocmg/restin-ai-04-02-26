@@ -246,7 +246,7 @@ export default function SetupWizard() {
                                 <div className="space-y-2">
                                     <Label className="text-secondary-foreground text-xs uppercase tracking-wide">Password</Label>
                                     <div className="relative">
-                                        <Input
+                                        <Input aria-label="Input field"
                                             type={showPassword ? "text" : "password"}
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
@@ -285,7 +285,7 @@ export default function SetupWizard() {
 
                                 <div className="space-y-2">
                                     <Label className="text-secondary-foreground text-xs uppercase tracking-wide">Confirm Password</Label>
-                                    <Input
+                                    <Input aria-label="Input field"
                                         type="password"
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
@@ -350,7 +350,7 @@ export default function SetupWizard() {
                                         )}
                                         <div className="space-y-2">
                                             <Label className="text-secondary-foreground text-xs uppercase tracking-wide">Verification Code</Label>
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 type="text"
                                                 maxLength={6}
                                                 value={totpCode}

@@ -63,7 +63,7 @@ const VoidReasons: React.FC = () => {
 
             <div className="pos-search-wrapper pos-mb-16">
                 <Search size={14} className="pos-search-icon" />
-                <input className="pos-input pos-search-input" placeholder="Search reasons..." value={search} onChange={e => setSearch(e.target.value)} />
+                <input aria-label="Search reasons..." className="pos-input pos-search-input" placeholder="Search reasons..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
 
             <div className="pos-card">

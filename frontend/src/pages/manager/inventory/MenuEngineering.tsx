@@ -243,8 +243,8 @@ export default function MenuEngineering() {
             description="Profitability × Popularity matrix — classify every dish"
             actions={
                 <div className="flex gap-2">
-                    <Select value={dateRange} onValueChange={setDateRange}>
-                        <SelectTrigger className="w-[100px] h-9 text-xs"><SelectValue /></SelectTrigger>
+                    <Select aria-label="Select option" value={dateRange} onValueChange={setDateRange}>
+                        <SelectTrigger aria-label="Select option" className="w-[100px] h-9 text-xs"><SelectValue /></SelectTrigger>
                         <SelectContent>
                             <SelectItem value="7d">Last 7d</SelectItem>
                             <SelectItem value="30d">Last 30d</SelectItem>
@@ -252,8 +252,8 @@ export default function MenuEngineering() {
                             <SelectItem value="ytd">YTD</SelectItem>
                         </SelectContent>
                     </Select>
-                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                        <SelectTrigger className="w-[140px] h-9 text-xs">
+                    <Select aria-label="Select option" value={categoryFilter} onValueChange={setCategoryFilter}>
+                        <SelectTrigger aria-label="Select option" className="w-[140px] h-9 text-xs">
                             <Filter className="h-3.5 w-3.5 mr-1" /><SelectValue />
                         </SelectTrigger>
                         <SelectContent>

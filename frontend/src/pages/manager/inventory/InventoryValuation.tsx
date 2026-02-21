@@ -317,15 +317,15 @@ export default function InventoryValuation() {
             <div className="flex flex-wrap items-center gap-3 mb-4">
                 <div className="relative flex-1 min-w-[200px] max-w-sm">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
+                    <Input aria-label="Search items..."
                         className="pl-9 bg-zinc-900/50 border-white/10"
                         placeholder="Search items..."
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                     />
                 </div>
-                <Select value={method} onValueChange={v => setMethod(v as ValuationMethod)}>
-                    <SelectTrigger className="w-[200px] bg-zinc-900/50 border-white/10">
+                <Select aria-label="Select option" value={method} onValueChange={v => setMethod(v as ValuationMethod)}>
+                    <SelectTrigger aria-label="Select option" className="w-[200px] bg-zinc-900/50 border-white/10">
                         <Scale className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                         <SelectValue />
                     </SelectTrigger>
@@ -335,8 +335,8 @@ export default function InventoryValuation() {
                         <SelectItem value="current_cost">Current Cost</SelectItem>
                     </SelectContent>
                 </Select>
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="w-[160px] bg-zinc-900/50 border-white/10">
+                <Select aria-label="Select option" value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger aria-label="Select option" className="w-[160px] bg-zinc-900/50 border-white/10">
                         <Filter className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                         <SelectValue placeholder="Category" />
                     </SelectTrigger>

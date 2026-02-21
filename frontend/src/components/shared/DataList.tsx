@@ -288,11 +288,11 @@ export default function DataList({
             <span className="text-sm text-muted-foreground">
               Rows per page:
             </span>
-            <Select
+            <Select aria-label="Select option"
               value={pagination.pageSize.toString()}
               onValueChange={(value) => onPageSizeChange && onPageSizeChange(parseInt(value))}
             >
-              <SelectTrigger className="h-8 w-[70px]">
+              <SelectTrigger aria-label="Select option" className="h-8 w-[70px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

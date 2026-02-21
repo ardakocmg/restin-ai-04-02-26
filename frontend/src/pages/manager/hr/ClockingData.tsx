@@ -215,7 +215,7 @@ export default function ClockingData() {
           <div className="flex flex-wrap items-center gap-3">
             <div className="relative group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-blue-400 transition-colors" />
-              <Input
+              <Input aria-label="Search employees..."
                 placeholder="Search employees..."
                 className="pl-9 bg-card/50 border-border text-xs w-64 focus:ring-1 focus:ring-blue-500/50 h-10"
                 value={searchQuery}
@@ -225,14 +225,14 @@ export default function ClockingData() {
             </div>
 
             <div className="flex items-center gap-2 bg-card/50 p-1 rounded-lg border border-border">
-              <Input
+              <Input aria-label="Input field"
                 type="date"
                 className="bg-transparent border-none h-8 text-xs w-32 focus:ring-0 px-2 text-muted-foreground [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert-[0.5]"
                 value={dateRange.start}
                 onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
               />
               <span className="text-muted-foreground">–</span>
-              <Input
+              <Input aria-label="Input field"
                 type="date"
                 className="bg-transparent border-none h-8 text-xs w-32 focus:ring-0 px-2 text-muted-foreground [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert-[0.5]"
                 value={dateRange.end}
