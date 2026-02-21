@@ -179,7 +179,7 @@ export default function POSSalesReport() {
         <Card className="bg-card border-border lg:col-span-1 shadow-xl">
           <CardHeader className="border-b border-border py-4 flex flex-row items-center justify-between">
             <CardTitle className="text-foreground text-base">Sales List</CardTitle>
-            <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> handleExportCsv(salesData.items, 'product_sales')} className="h-8 w-8 text-muted-foreground">
+            <Button variant="ghost" size="icon" onClick={() => handleExportCsv(salesData.items, 'product_sales')} aria-label="Action" className="h-8 w-8 text-muted-foreground">
               <FileDown className="h-4 w-4" />
             </Button>
           </CardHeader>
@@ -294,7 +294,7 @@ export default function POSSalesReport() {
                   <div className="flex items-center gap-3">
                     <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab active:cursor-grabbing" />
                     <CardTitle className="text-sm font-bold text-foreground uppercase tracking-widest">{widget.title}</CardTitle>
-                    <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> handleExportCsv([], widget.type)} className="h-6 w-6 text-muted-foreground hover:text-red-400">
+                    <Button variant="ghost" size="icon" onClick={() => handleExportCsv([], widget.type)} aria-label="Action" className="h-6 w-6 text-muted-foreground hover:text-red-400">
                       <FileDown className="h-3.5 w-3.5" />
                     </Button>
                   </div>
@@ -412,7 +412,7 @@ export default function POSSalesReport() {
           <Button
             variant="ghost"
             size="icon" aria-label="Action"
-            onClick={() = aria-label="Action"> setSearchParams({})}
+            onClick={() => setSearchParams({})}
             className="h-10 w-10 bg-card border border-border text-muted-foreground hover:text-foreground rounded-xl shadow-lg"
           >
             <ChevronLeft className="h-6 w-6" />
@@ -656,7 +656,7 @@ export default function POSSalesReport() {
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-card/50 p-6 rounded-2xl border border-border shadow-xl">
           <div className="flex items-center gap-5">
-            <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> setActiveReport('hub')} className="h-12 w-12 bg-secondary hover:bg-secondary/80 text-muted-foreground hover:text-foreground rounded-xl transition-all shadow-lg border border-border">
+            <Button variant="ghost" size="icon" onClick={() => setActiveReport('hub')} aria-label="Action" className="h-12 w-12 bg-secondary hover:bg-secondary/80 text-muted-foreground hover:text-foreground rounded-xl transition-all shadow-lg border border-border">
               <ChevronLeft className="h-6 w-6" />
             </Button>
             <div>
