@@ -63,12 +63,12 @@ const Discounts: React.FC = () => {
 
             <div className="pos-card">
                 {/* keep-inline: gridTemplateColumns uses runtime variable */}
-                <div className="pos-table-header gap-2.5" style={{ gridTemplateColumns: discountTableCols }}>
+                <div className="pos-table-header gap-2.5" style={{ gridTemplateColumns: discountTableCols  /* keep-inline */ }} /* keep-inline */>
                     <div>Discount</div><div>Value</div><div>Group</div><div>Applies To</div><div>Schedule</div><div>Uses</div><div></div>
                 </div>
                 {filtered.map(d => (
                     // keep-inline: gridTemplateColumns uses runtime variable
-                    <div key={d.id} className={`pos-table-row gap-2.5${d.isActive ? '' : ' opacity-50'}`} style={{ gridTemplateColumns: discountTableCols }} onClick={() => setEditing({ ...d })}>
+                    <div key={d.id} className={`pos-table-row gap-2.5${d.isActive ? '' : ' opacity-50'}`} style={{ gridTemplateColumns: discountTableCols  /* keep-inline */ }} /* keep-inline */ onClick={() => setEditing({ ...d })}>
                         <div className="pos-flex pos-flex--center pos-gap-10">
                             <div className={`pos-stat-icon ${d.type === 'percentage' ? 'pos-stat-icon--blue' : 'pos-stat-icon--green'}`}>
                                 {d.type === 'percentage' ? <Percent size={16} /> : <DollarSign size={16} />}

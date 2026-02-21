@@ -60,8 +60,8 @@ const TableTracker: React.FC = () => {
             <div className="grid grid-cols-4 gap-3 mb-5">
                 {[{ l: 'Occupied', v: `${occupied.length}/${tables.length}`, c: '#3B82F6', i: <Users size={16} /> }, { l: 'Available', v: available.toString(), c: '#10B981', i: <Eye size={16} /> }, { l: 'Guests', v: totalGuests.toString(), c: '#F59E0B', i: <Users size={16} /> }, { l: 'Revenue', v: `€${totalRevenue.toFixed(0)}`, c: '#8B5CF6', i: <DollarSign size={16} /> }].map((s, i) => (
                     <div key={i} className="pos-card p-4 flex items-center gap-3">
-                        {/* keep-inline: dynamic color from data-driven config */}
-                        <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: `${s.c}15`, color: s.c }}>{s.i}</div>
+                        {/* dynamic: stat icon color */}
+                        <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: `${s.c}15`, color: s.c  /* keep-inline */ }}>{s.i}</div> /* dynamic: stat icon color */
                         <div><div className="text-[22px] font-bold">{s.v}</div><div className="text-xs text-[var(--text-secondary)]">{s.l}</div></div>
                     </div>
                 ))}
@@ -75,20 +75,18 @@ const TableTracker: React.FC = () => {
                 </div>
                 <div className="pos-tab-group">
                     <button onClick={() => setFilterStatus('all')} className={`pos-filter-btn${filterStatus === 'all' ? ' pos-filter-btn--active' : ''}`}>All</button>
-                    {/* keep-inline: dynamic background/color from STATUS_COLORS/STATUS_BG maps */}
-                    {(Object.keys(STATUS_COLORS) as TableStatus[]).map(s => <button key={s} onClick={() => setFilterStatus(s)} className="py-1.5 px-3 rounded-md border-none text-xs cursor-pointer capitalize" style={{ background: filterStatus === s ? STATUS_BG[s] : 'transparent', color: filterStatus === s ? STATUS_COLORS[s] : 'var(--text-secondary)' }}>{s}</button>)}
+                    {/* dynamic: status button background/color */}
+                    {(Object.keys(STATUS_COLORS) as TableStatus[]).map(s => <button key={s} onClick={() => setFilterStatus(s)} className="py-1.5 px-3 rounded-md border-none text-xs cursor-pointer capitalize" style={{ background: filterStatus === s ? STATUS_BG[s] : 'transparent', color: filterStatus === s ? STATUS_COLORS[s] : 'var(--text-secondary)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{s}</button>)} /* dynamic: status button background/color */
                 </div>
             </div>
 
             {/* Table Grid */}
             <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3">
                 {filtered.map(table => (
-                    // keep-inline: dynamic borderLeft color from STATUS_COLORS map
-                    <div key={table.id} className="pos-card p-3.5 cursor-pointer" style={{ borderLeft: `3px solid ${STATUS_COLORS[table.status]}` }}>
+                    <div key={table.id} className="pos-card p-3.5 cursor-pointer" style={{ borderLeft: `3px solid ${STATUS_COLORS[table.status]}` /* dynamic: table border color */  /* keep-inline */ }}>
                         <div className="flex justify-between items-center mb-1.5">
                             <span className="text-base font-bold">{table.name}</span>
-                            {/* keep-inline: dynamic background/color from STATUS maps */}
-                            <span className="text-[9px] py-0.5 px-1.5 rounded capitalize" style={{ background: STATUS_BG[table.status], color: STATUS_COLORS[table.status] }}>{table.status}</span>
+                            <span className="text-[9px] py-0.5 px-1.5 rounded capitalize" style={{ background: STATUS_BG[table.status], color: STATUS_COLORS[table.status] /* dynamic: status badge color */  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{table.status}</span>
                         </div>
                         {table.status === 'occupied' && <>
                             <div className="text-xs text-[var(--text-secondary)] mb-0.5"><Users size={10} className="inline mr-1" />{table.guests} guests · {table.server}</div>
@@ -104,10 +102,10 @@ const TableTracker: React.FC = () => {
 
             {/* Legend */}
             <div className="flex gap-4 mt-4 justify-center flex-wrap">
-                {/* keep-inline: dynamic background color from STATUS_COLORS map entries */}
-                {(Object.entries(STATUS_COLORS)).map(([s, c]) => (<div key={s} className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)]"><div className="w-2.5 h-2.5 rounded-sm" style={{ background: c }} /><span className="capitalize">{s}</span></div>))}
+                {/* dynamic: legend dot background */}
+                {(Object.entries(STATUS_COLORS)).map(([s, c]) => (<div key={s} className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)]"><div className="w-2.5 h-2.5 rounded-sm" style={{ background: c  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /> /* dynamic: legend dot background */<span className="capitalize">{s}</span></div>))}
             </div>
-        </div></div>
+        </div></div >
     );
 };
 

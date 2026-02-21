@@ -55,14 +55,14 @@ export default function RealTimeEfficiency({ data }) {
                     {/* SVG Connector Lines - Circuit Board Style */}
                     <svg viewBox="0 0 850 260" className="absolute inset-0 w-full h-full pointer-events-none">
                         {/* Left Side: 3 incoming lines merging into center */}
-                        <path d="M 30,50 L 120,50 L 170,80 L 320,130" fill="none" stroke="#00FFFF" strokeWidth="1.5" opacity="0.7" style={{ filter: 'drop-shadow(0 0 3px #00FFFF)' }} />
+                        <path d="M 30,50 L 120,50 L 170,80 L 320,130" fill="none" stroke="#00FFFF" strokeWidth="1.5" opacity="0.7" style={{ filter: 'drop-shadow(0 0 3px #00FFFF)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
                         <path d="M 30,130 L 200,130 L 320,130" fill="none" stroke="#00FFFF" strokeWidth="1.5" opacity="0.5" />
-                        <path d="M 30,210 L 120,210 L 170,180 L 320,130" fill="none" stroke="#00FFFF" strokeWidth="1.5" opacity="0.7" style={{ filter: 'drop-shadow(0 0 3px #00FFFF)' }} />
+                        <path d="M 30,210 L 120,210 L 170,180 L 320,130" fill="none" stroke="#00FFFF" strokeWidth="1.5" opacity="0.7" style={{ filter: 'drop-shadow(0 0 3px #00FFFF)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
 
                         {/* Right Side: 3 outgoing lines from center */}
-                        <path d="M 530,130 L 680,80 L 730,50 L 820,50" fill="none" stroke="#00FFFF" strokeWidth="1.5" opacity="0.7" style={{ filter: 'drop-shadow(0 0 3px #00FFFF)' }} />
-                        <path d="M 530,130 L 650,130 L 820,130" fill="none" stroke="#FF0000" strokeWidth="2" opacity="0.9" style={{ filter: 'drop-shadow(0 0 6px #FF0000)' }} />
-                        <path d="M 530,130 L 680,180 L 730,210 L 820,210" fill="none" stroke="#00FFFF" strokeWidth="1.5" opacity="0.7" style={{ filter: 'drop-shadow(0 0 3px #00FFFF)' }} />
+                        <path d="M 530,130 L 680,80 L 730,50 L 820,50" fill="none" stroke="#00FFFF" strokeWidth="1.5" opacity="0.7" style={{ filter: 'drop-shadow(0 0 3px #00FFFF)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
+                        <path d="M 530,130 L 650,130 L 820,130" fill="none" stroke="#FF0000" strokeWidth="2" opacity="0.9" style={{ filter: 'drop-shadow(0 0 6px #FF0000)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
+                        <path d="M 530,130 L 680,180 L 730,210 L 820,210" fill="none" stroke="#00FFFF" strokeWidth="1.5" opacity="0.7" style={{ filter: 'drop-shadow(0 0 3px #00FFFF)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
 
                         {/* Extra branching sub-lines for density */}
                         <path d="M 120,50 L 140,30" fill="none" stroke="#00FFFF" strokeWidth="1" opacity="0.3" />
@@ -77,13 +77,13 @@ export default function RealTimeEfficiency({ data }) {
                         <line x1="540" y1="160" x2="650" y2="160" stroke="#00FFFF" strokeWidth="1" opacity="0.3" strokeDasharray="4 4" />
 
                         {/* Connection Nodes */}
-                        <circle cx="320" cy="130" r="4" fill="#00FFFF" style={{ filter: 'drop-shadow(0 0 5px #00FFFF)' }} />
-                        <circle cx="530" cy="130" r="4" fill="#00FFFF" style={{ filter: 'drop-shadow(0 0 5px #00FFFF)' }} />
+                        <circle cx="320" cy="130" r="4" fill="#00FFFF" style={{ filter: 'drop-shadow(0 0 5px #00FFFF)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
+                        <circle cx="530" cy="130" r="4" fill="#00FFFF" style={{ filter: 'drop-shadow(0 0 5px #00FFFF)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
                         <circle cx="120" cy="50" r="2.5" fill="#00FFFF" />
                         <circle cx="120" cy="210" r="2.5" fill="#00FFFF" />
                         <circle cx="200" cy="130" r="2" fill="#00FFFF" opacity="0.6" />
                         <circle cx="680" cy="80" r="2.5" fill="#00FFFF" />
-                        <circle cx="650" cy="130" r="2.5" fill="#FF0000" style={{ filter: 'drop-shadow(0 0 5px #FF0000)' }} />
+                        <circle cx="650" cy="130" r="2.5" fill="#FF0000" style={{ filter: 'drop-shadow(0 0 5px #FF0000)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
                         <circle cx="680" cy="180" r="2.5" fill="#00FFFF" />
                     </svg>
 
@@ -93,7 +93,7 @@ export default function RealTimeEfficiency({ data }) {
                         <span className="font-mono text-[7px] text-[#00FFFF]/60 mb-1">09:00</span>
                         <div className="flex items-end gap-[2px] h-8">
                             {[30, 70, 45, 90, 60, 40, 55, 75].map((h, i) => (
-                                <div key={`tl-${i}`} className="w-1.5 bg-[#00FFFF] rounded-t opacity-80 shadow-[0_0_3px_#00FFFF]" style={{ height: `${h}%` }}></div>
+                                <div key={`tl-${i}`} className="w-1.5 bg-[#00FFFF] rounded-t opacity-80 shadow-[0_0_3px_#00FFFF]" style={{ height: `${h}%`  /* keep-inline */ }}></div>
                             ))}
                         </div>
                     </div>
@@ -103,7 +103,7 @@ export default function RealTimeEfficiency({ data }) {
                         <span className="font-mono text-[7px] text-[#00FFFF]/60 mb-1">10:00</span>
                         <div className="flex items-end gap-[2px] h-8">
                             {[60, 40, 80, 50, 70, 30, 90, 45].map((h, i) => (
-                                <div key={`ml-${i}`} className="w-1.5 bg-[#00FFFF] rounded-t opacity-80 shadow-[0_0_3px_#00FFFF]" style={{ height: `${h}%` }}></div>
+                                <div key={`ml-${i}`} className="w-1.5 bg-[#00FFFF] rounded-t opacity-80 shadow-[0_0_3px_#00FFFF]" style={{ height: `${h}%`  /* keep-inline */ }}></div>
                             ))}
                         </div>
                     </div>
@@ -113,7 +113,7 @@ export default function RealTimeEfficiency({ data }) {
                         <span className="font-mono text-[7px] text-[#00FFFF]/60 mb-1">11:00</span>
                         <div className="flex items-end gap-[2px] h-8">
                             {[80, 50, 60, 30, 90, 100, 55, 70].map((h, i) => (
-                                <div key={`bl-${i}`} className="w-1.5 bg-[#00FFFF] rounded-t opacity-80 shadow-[0_0_3px_#00FFFF]" style={{ height: `${h}%` }}></div>
+                                <div key={`bl-${i}`} className="w-1.5 bg-[#00FFFF] rounded-t opacity-80 shadow-[0_0_3px_#00FFFF]" style={{ height: `${h}%`  /* keep-inline */ }}></div>
                             ))}
                         </div>
                     </div>
@@ -123,7 +123,7 @@ export default function RealTimeEfficiency({ data }) {
                         <span className="font-mono text-[7px] text-[#00FFFF]/60 mb-1">09:30</span>
                         <div className="flex items-end gap-[2px] h-6">
                             {[50, 80, 35, 65, 45, 70].map((h, i) => (
-                                <div key={`elc-${i}`} className="w-1 bg-[#00FFFF] rounded-t opacity-60 shadow-[0_0_3px_#00FFFF]" style={{ height: `${h}%` }}></div>
+                                <div key={`elc-${i}`} className="w-1 bg-[#00FFFF] rounded-t opacity-60 shadow-[0_0_3px_#00FFFF]" style={{ height: `${h}%`  /* keep-inline */ }}></div>
                             ))}
                         </div>
                     </div>
@@ -133,7 +133,7 @@ export default function RealTimeEfficiency({ data }) {
                         <span className="font-mono text-[7px] text-[#FF0000]/60 mb-1">04:20</span>
                         <div className="flex items-end gap-[2px] h-8">
                             {[20, 30, 40, 80, 100, 90, 85, 95].map((h, i) => (
-                                <div key={`tr-${i}`} className="w-1.5 bg-[#FF0000] rounded-t opacity-80 shadow-[0_0_3px_#FF0000] animate-[pulse_1.5s_infinite]" style={{ height: `${h}%` }}></div>
+                                <div key={`tr-${i}`} className="w-1.5 bg-[#FF0000] rounded-t opacity-80 shadow-[0_0_3px_#FF0000] animate-[pulse_1.5s_infinite]" style={{ height: `${h}%`  /* keep-inline */ }}></div>
                             ))}
                         </div>
                     </div>
@@ -143,7 +143,7 @@ export default function RealTimeEfficiency({ data }) {
                         <span className="font-mono text-[7px] text-[#FF0000]/60 mb-1">LOAD</span>
                         <div className="flex items-end gap-[2px] h-8">
                             {[50, 60, 70, 90, 80, 100, 75, 85].map((h, i) => (
-                                <div key={`mr-${i}`} className="w-1.5 bg-[#FF0000] rounded-t opacity-70 shadow-[0_0_3px_#FF0000]" style={{ height: `${h}%` }}></div>
+                                <div key={`mr-${i}`} className="w-1.5 bg-[#FF0000] rounded-t opacity-70 shadow-[0_0_3px_#FF0000]" style={{ height: `${h}%`  /* keep-inline */ }}></div>
                             ))}
                         </div>
                     </div>
@@ -153,7 +153,7 @@ export default function RealTimeEfficiency({ data }) {
                         <span className="font-mono text-[7px] text-[#00FFFF]/60 mb-1">00:08</span>
                         <div className="flex items-end gap-[2px] h-8">
                             {[40, 60, 30, 70, 50, 80, 65, 45].map((h, i) => (
-                                <div key={`br-${i}`} className="w-1.5 bg-[#00FFFF] rounded-t opacity-80 shadow-[0_0_3px_#00FFFF]" style={{ height: `${h}%` }}></div>
+                                <div key={`br-${i}`} className="w-1.5 bg-[#00FFFF] rounded-t opacity-80 shadow-[0_0_3px_#00FFFF]" style={{ height: `${h}%`  /* keep-inline */ }}></div>
                             ))}
                         </div>
                     </div>
@@ -163,7 +163,7 @@ export default function RealTimeEfficiency({ data }) {
                         <span className="font-mono text-[7px] text-[#FF0000]/60 mb-1">HEAT</span>
                         <div className="flex items-end gap-[2px] h-6">
                             {[70, 90, 55, 85, 60, 75].map((h, i) => (
-                                <div key={`erc-${i}`} className="w-1 bg-[#FF0000] rounded-t opacity-60 shadow-[0_0_3px_#FF0000]" style={{ height: `${h}%` }}></div>
+                                <div key={`erc-${i}`} className="w-1 bg-[#FF0000] rounded-t opacity-60 shadow-[0_0_3px_#FF0000]" style={{ height: `${h}%`  /* keep-inline */ }}></div>
                             ))}
                         </div>
                     </div>
@@ -174,7 +174,7 @@ export default function RealTimeEfficiency({ data }) {
                         <div className="absolute inset-0 bg-[#020610] rounded-full"></div>
 
                         {/* Outer Rotating Dashes */}
-                        <div className="absolute inset-0 border-2 border-dashed border-[#00FF00]/30 rounded-full animate-[spin_10s_linear_infinite]" style={{ maskImage: "radial-gradient(transparent 65%, black 65%)", WebkitMaskImage: "radial-gradient(transparent 65%, black 65%)" }}></div>
+                        <div className="absolute inset-0 border-2 border-dashed border-[#00FF00]/30 rounded-full animate-[spin_10s_linear_infinite]" style={{ maskImage: "radial-gradient(transparent 65%, black 65%)", WebkitMaskImage: "radial-gradient(transparent 65%, black 65%)"  /* keep-inline */ }} /* keep-inline */ /* keep-inline */></div>
 
                         {/* Dynamic Health Ring */}
                         <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 160 160">
@@ -185,7 +185,7 @@ export default function RealTimeEfficiency({ data }) {
                                 strokeDasharray={ringCircumference}
                                 strokeDashoffset={healthOffset}
                                 strokeLinecap="round"
-                                style={{ filter: 'drop-shadow(0 0 8px #00FF00)', transition: 'stroke-dashoffset 1s ease-in-out' }}
+                                style={{ filter: 'drop-shadow(0 0 8px #00FF00)', transition: 'stroke-dashoffset 1s ease-in-out'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                             />
                         </svg>
 

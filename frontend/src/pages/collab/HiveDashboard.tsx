@@ -1278,7 +1278,7 @@ export default function HiveDashboard() {
                                                                     <div
                                                                         key={i}
                                                                         className={`w-1 rounded-full ${playingAudioId === msg.id ? 'bg-red-400 animate-pulse' : 'bg-red-500/60'}`}
-                                                                        style={{ height: `${4 + Math.sin(i * 0.7) * 8 + Math.random() * 6}px` }}
+                                                                        style={{ height: `${4 + Math.sin(i * 0.7) * 8 + Math.random() * 6}px`  /* keep-inline */ }}
                                                                     />
                                                                 ))}
                                                             </div>
@@ -1333,7 +1333,7 @@ export default function HiveDashboard() {
                                                                 >
                                                                     <div
                                                                         className="absolute inset-y-0 left-0 bg-purple-500/15 transition-all"
-                                                                        style={{ width: `${pct}%` }}
+                                                                        style={{ width: `${pct}%`  /* keep-inline */ }}
                                                                     />
                                                                     <div className="relative flex items-center justify-between">
                                                                         <span className="text-secondary-foreground">{opt.text}</span>

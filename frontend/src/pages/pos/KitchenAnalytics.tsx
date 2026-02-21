@@ -58,7 +58,7 @@ const KitchenAnalytics: React.FC = () => {
                 {/* keep-inline: dynamic background/color from data-driven stat config */}
                 {[{ l: 'Avg Ticket Time', v: `${avgOverall}m`, c: '#3B82F6', i: <Clock size={16} /> }, { l: 'Tickets Today', v: totalTickets.toString(), c: '#10B981', i: <ChefHat size={16} /> }, { l: 'On-Time Rate', v: '87%', c: '#F59E0B', i: <Zap size={16} /> }, { l: 'Recalls', v: STATIONS.reduce((s, st) => s + st.recalled, 0).toString(), c: '#EF4444', i: <AlertTriangle size={16} /> }].map((s, i) => (
                     <div key={i} className="pos-stat-card">
-                        <div className="pos-stat-icon" style={{ background: `${s.c}15`, color: s.c }}>{s.i}</div>
+                        <div className="pos-stat-icon" style={{ background: `${s.c}15`, color: s.c  /* keep-inline */ }}>{s.i}</div>
                         <div><div className="pos-stat-value">{s.v}</div><div className="pos-stat-label">{s.l}</div></div>
                     </div>
                 ))}
@@ -93,7 +93,7 @@ const KitchenAnalytics: React.FC = () => {
                             const pct = (h.avgTime / maxTime) * 100; return (
                                 <div key={h.hour} className="flex-1 flex flex-col items-center gap-1">
                                     <span className={`text-[9px] font-semibold ${h.avgTime > 15 ? 'text-red-500' : 'text-blue-500'}`}>{h.avgTime}m</span>
-                                    <div className={`w-full rounded min-h-1 ${h.avgTime > 15 ? 'bg-red-500/40' : 'bg-blue-500/40'}`} style={{ height: `${pct}%` }} /> {/* keep-inline: dynamic height from calculated percentage */}
+                                    <div className={`w-full rounded min-h-1 ${h.avgTime > 15 ? 'bg-red-500/40' : 'bg-blue-500/40'}`} style={{ height: `${pct}%`  /* keep-inline */ }} /> {/* keep-inline: dynamic height from calculated percentage */}
                                     <span className="text-[8px] text-[var(--text-secondary)] -rotate-45 whitespace-nowrap">{h.hour}</span>
                                 </div>
                             );

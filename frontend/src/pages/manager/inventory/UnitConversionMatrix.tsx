@@ -209,7 +209,7 @@ export default function UnitConversionMatrix() {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <Button variant="ghost" size="icon" aria-label="Action" className="h-12 w-12"
+                            <Button variant="ghost" size="icon" className="h-12 w-12"
                                 onClick={() => { setFromUnit(toUnit); setToUnit(fromUnit); }}>
                                 <ArrowRightLeft className="h-5 w-5" />
                             </Button>

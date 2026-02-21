@@ -311,7 +311,7 @@ export default function MenuEngineering() {
                         </CardHeader>
                         <CardContent>
                             <div className="w-full overflow-x-auto">
-                                <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full max-w-[800px] mx-auto h-auto" style={{ minHeight: 300 }}>
+                                <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full max-w-[800px] mx-auto h-auto" style={{ minHeight: 300  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                                     {/* Background quadrants */}
                                     <rect x={padding} y={padding} width={avgX - padding} height={avgY - padding} fill="rgba(59,130,246,0.04)" />
                                     <rect x={avgX} y={padding} width={chartWidth - padding - avgX} height={avgY - padding} fill="rgba(34,197,94,0.04)" />

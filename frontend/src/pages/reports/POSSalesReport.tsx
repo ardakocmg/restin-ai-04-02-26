@@ -169,7 +169,7 @@ export default function POSSalesReport() {
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={true} vertical={false} />
                   <XAxis type="number" stroke="#71717A" fontSize={11} tickFormatter={(val) => `€${val}`} tickLine={false} axisLine={false} />
                   <YAxis dataKey="name" type="category" stroke="#F4F4F5" fontSize={10} width={120} tickLine={false} axisLine={false} />
-                  <Tooltip cursor={{ fill: 'rgba(255,255,255,0.03)' }} contentStyle={{ backgroundColor: '#18181B', border: '1px solid #27272A', borderRadius: '8px' }} />
+                  <Tooltip cursor={{ fill: 'rgba(255,255,255,0.03)' }} contentStyle={{ backgroundColor: '#18181B', border: '1px solid #27272A', borderRadius: '8px' }} /* keep-inline */ />
                   <Bar dataKey="revenue" name="Revenue" fill="#E53935" radius={[0, 4, 4, 0]} barSize={24} />
                 </BarChart>
               </ResponsiveContainer>

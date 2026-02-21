@@ -83,8 +83,8 @@ const ProductionCenters: React.FC = () => {
                 <button className="pos-btn-primary" onClick={() => setEditing({ id: crypto.randomUUID(), name: '', color: '#3B82F6', type: 'kitchen', printer: 'None', backupPrinter: 'None', itemCount: 0, avgPrepTime: 0, isActive: true, staffCount: 0, sortOrder: centers.length + 1 })}><Plus size={16} /> Add Center</button>
             </div>
 
-            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">{"Loading "}production centers...</span></div>}
-            {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center" style={{ borderColor: '#EF4444', padding: 14 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button className="pos-btn-outline" style={{ padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>}
+            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30  /* keep-inline */ }} /* keep-inline */ /* keep-inline */><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /><span className="pos-text-secondary">{"Loading "}production centers...</span></div>}
+            {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center" style={{ borderColor: '#EF4444', padding: 14  /* keep-inline */ }} /* keep-inline */ /* keep-inline */><span style={{ color: '#EF4444', fontSize: 13  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>⚠ {apiError}</span><button className="pos-btn-outline" style={{ padding: '6px 14px', fontSize: 12  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ onClick={() => refetch()}>Retry</button></div>}
 
             {/* Stats */}
             <div className="pos-stats-grid pos-mb-20">
@@ -95,7 +95,7 @@ const ProductionCenters: React.FC = () => {
                     { icon: <Users size={16} />, val: totalStaff, label: 'Total Staff', color: '#8B5CF6' },
                 ].map((s, i) => (
                     <div key={i} className="pos-stat-card">
-                        <div className="pos-stat-icon" style={{ background: `${s.color}15`, color: s.color }}>{s.icon}</div>
+                        <div className="pos-stat-icon" style={{ background: `${s.color}15`, color: s.color  /* keep-inline */ }}>{s.icon}</div>
                         <div><div className="pos-stat-value">{s.val}</div><div className="pos-stat-label">{s.label}</div></div>
                     </div>
                 ))}
@@ -104,27 +104,27 @@ const ProductionCenters: React.FC = () => {
             <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input aria-label="Search centers..." className="pos-input pos-search-input" placeholder="Search centers..." value={search} onChange={e => setSearch(e.target.value)} /></div>
 
             {/* Active Centers */}
-            <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Active Centers ({active.length})</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 16, marginBottom: 24 }}>
+            <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Active Centers ({active.length})</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 16, marginBottom: 24  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                 {active.map(center => (
-                    <div key={center.id} className="pos-card" style={{ cursor: 'pointer', borderLeft: `4px solid ${center.color}` }} onClick={() => setEditing({ ...center })}>
-                        <div className="pos-flex pos-flex--between" style={{ alignItems: 'flex-start', marginBottom: 10 }}>
+                    <div key={center.id} className="pos-card" style={{ cursor: 'pointer', borderLeft: `4px solid ${center.color}`  /* keep-inline */ }} onClick={() => setEditing({ ...center })}>
+                        <div className="pos-flex pos-flex--between" style={{ alignItems: 'flex-start', marginBottom: 10  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                             <div className="pos-flex pos-flex--center pos-gap-10">
-                                <div className="pos-stat-icon" style={{ background: `${center.color}15`, color: center.color }}><Factory size={16} /></div>
-                                <div><h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>{center.name}</h3>
-                                    <span className="pos-cell-secondary" style={{ textTransform: 'capitalize' }}>{center.type}</span></div>
+                                <div className="pos-stat-icon" style={{ background: `${center.color}15`, color: center.color  /* keep-inline */ }}><Factory size={16} /></div>
+                                <div><h3 style={{ fontSize: 16, fontWeight: 600, margin: 0  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{center.name}</h3>
+                                    <span className="pos-cell-secondary" style={{ textTransform: 'capitalize'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{center.type}</span></div>
                             </div>
                             <button title="Edit center" className="pos-btn-icon" onClick={e => { e.stopPropagation(); setEditing({ ...center }); }}><Edit3 size={13} /></button>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
-                            <div style={{ padding: '8px 12px', background: 'var(--bg-secondary,#09090b)', borderRadius: 6 }}>
-                                <div style={{ fontSize: 18, fontWeight: 700 }}>{center.itemCount}</div><div className="pos-cell-secondary">Items</div></div>
-                            <div style={{ padding: '8px 12px', background: 'var(--bg-secondary,#09090b)', borderRadius: 6 }}>
-                                <div style={{ fontSize: 18, fontWeight: 700 }}>{center.avgPrepTime}m</div><div className="pos-cell-secondary">Avg Prep</div></div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
+                            <div style={{ padding: '8px 12px', background: 'var(--bg-secondary,#09090b)', borderRadius: 6  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
+                                <div style={{ fontSize: 18, fontWeight: 700  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{center.itemCount}</div><div className="pos-cell-secondary">Items</div></div>
+                            <div style={{ padding: '8px 12px', background: 'var(--bg-secondary,#09090b)', borderRadius: 6  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
+                                <div style={{ fontSize: 18, fontWeight: 700  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{center.avgPrepTime}m</div><div className="pos-cell-secondary">Avg Prep</div></div>
                         </div>
                         <div className="pos-cell-secondary pos-flex pos-flex--col pos-gap-4">
                             <div className="pos-flex pos-flex--center pos-gap-6"><Printer size={11} /> {center.printer}</div>
-                            {center.backupPrinter !== 'None' && <div className="pos-flex pos-flex--center pos-gap-6" style={{ opacity: 0.6 }}><Printer size={11} /> Backup: {center.backupPrinter}</div>}
+                            {center.backupPrinter !== 'None' && <div className="pos-flex pos-flex--center pos-gap-6" style={{ opacity: 0.6  /* keep-inline */ }} /* keep-inline */ /* keep-inline */><Printer size={11} /> Backup: {center.backupPrinter}</div>}
                             <div className="pos-flex pos-flex--center pos-gap-6"><Users size={11} /> {center.staffCount} staff</div>
                         </div>
                     </div>
@@ -133,11 +133,11 @@ const ProductionCenters: React.FC = () => {
 
             {/* Inactive */}
             {inactive.length > 0 && <>
-                <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Inactive ({inactive.length})</div>
-                <div className="pos-card" style={{ opacity: 0.5 }}>
-                    {inactive.map(c => <div key={c.id} className="pos-flex pos-flex--center pos-gap-12" style={{ padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer' }} onClick={() => setEditing({ ...c })}>
-                        <div style={{ width: 12, height: 12, borderRadius: 3, background: c.color }} /> <span style={{ fontSize: 14, flex: 1 }}>{c.name}</span>
-                        <button className="pos-btn-outline" style={{ padding: '4px 10px', fontSize: 11 }} onClick={e => { e.stopPropagation(); setCenters(prev => prev.map(x => x.id === c.id ? { ...x, isActive: true } : x)); toast.success('Activated'); }}>Activate</button>
+                <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Inactive ({inactive.length})</div>
+                <div className="pos-card" style={{ opacity: 0.5  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
+                    {inactive.map(c => <div key={c.id} className="pos-flex pos-flex--center pos-gap-12" style={{ padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ onClick={() => setEditing({ ...c })}>
+                        <div style={{ width: 12, height: 12, borderRadius: 3, background: c.color  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /> <span style={{ fontSize: 14, flex: 1  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{c.name}</span>
+                        <button className="pos-btn-outline" style={{ padding: '4px 10px', fontSize: 11  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ onClick={e => { e.stopPropagation(); setCenters(prev => prev.map(x => x.id === c.id ? { ...x, isActive: true } : x)); toast.success('Activated'); }}>Activate</button>
                     </div>)}
                 </div>
             </>}
@@ -149,7 +149,7 @@ const ProductionCenters: React.FC = () => {
                     <div className="pos-modal-header"><h3 className="pos-modal-title">{centers.find(c => c.id === editing.id) ? 'Edit' : 'New'} Production Center</h3><button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button></div>
                     <div className="pos-form-group"><label className="pos-form-label">Name *</label><input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Main Kitchen" /></div>
                     <div className="pos-form-group"><label className="pos-form-label pos-mb-4">Color</label>
-                        <div className="pos-flex pos-flex--wrap pos-gap-6">{COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} style={{ width: 28, height: 28, borderRadius: 6, background: c, cursor: 'pointer', border: editing.color === c ? '3px solid #fff' : '3px solid transparent' }} />)}</div></div>
+                        <div className="pos-flex pos-flex--wrap pos-gap-6">{COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} style={{ width: 28, height: 28, borderRadius: 6, background: c, cursor: 'pointer', border: editing.color === c ? '3px solid #fff' : '3px solid transparent'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />)}</div></div>
                     <div className="pos-form-grid">
                         <div><label className="pos-form-label">Type</label><select className="pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as ProductionCenter['type'] } : null)} aria-label="Type">{TYPES.map(t => <option key={t.v} value={t.v}>{t.l}</option>)}</select></div>
                         <div><label className="pos-form-label">Avg Prep Time (min)</label><input type="number" min={0} className="pos-input" value={editing.avgPrepTime} onChange={e => setEditing(p => p ? { ...p, avgPrepTime: parseInt(e.target.value) || 0 } : null)} aria-label="Average prep time" /></div>
@@ -159,11 +159,11 @@ const ProductionCenters: React.FC = () => {
                         <div><label className="pos-form-label">Backup Printer</label><select className="pos-select" value={editing.backupPrinter} onChange={e => setEditing(p => p ? { ...p, backupPrinter: e.target.value } : null)} aria-label="Backup printer">{PRINTERS.map(p => <option key={p}>{p}</option>)}</select></div>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Staff Count</label><input type="number" min={0} className="pos-input" value={editing.staffCount} onChange={e => setEditing(p => p ? { ...p, staffCount: parseInt(e.target.value) || 0 } : null)} aria-label="Staff count" /></div>
-                    <div className="pos-flex pos-flex--center pos-flex--between pos-mb-16" style={{ padding: '12px 0' }}><span className="pos-cell-value">Active</span>
+                    <div className="pos-flex pos-flex--center pos-flex--between pos-mb-16" style={{ padding: '12px 0'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */><span className="pos-cell-value">Active</span>
                         <Toggle value={editing.isActive} onChange={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /></div>
                     <div className="pos-modal-footer">
-                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
-                        <button title="Delete center" className="pos-btn-outline" style={{ color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => { setCenters(prev => prev.filter(c => c.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ onClick={save}><Save size={14} /> Save</button>
+                        <button title="Delete center" className="pos-btn-outline" style={{ color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ onClick={() => { setCenters(prev => prev.filter(c => c.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
                         <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>

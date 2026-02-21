@@ -371,7 +371,7 @@ export default function POSRuntimeKSeries() {
 
                     {/* Order Meta Row */}
                     <div className="ks-order-meta">
-                        <select aria-label="Input"
+                        <select
                             className="ks-meta-tag-select"
                             value={viewMode}
                             
@@ -653,7 +653,7 @@ export default function POSRuntimeKSeries() {
 
                         <div className="ks-actions-section">
                             <div className="ks-actions-section-title">Tap to rename order</div>
-                            <input aria-label="Input"
+                            <input
                                 className="ks-actions-input"
                                 defaultValue={order.tableName || 'Order 1'}
                                 placeholder="Order name"
@@ -709,7 +709,7 @@ export default function POSRuntimeKSeries() {
             {showSearch && (
                 <div className="ks-search-overlay">
                     <div className="ks-search-header">
-                        <input aria-label="Input"
+                        <input
                             ref={searchInputRef}
                             className="ks-search-input"
                             value={searchQuery}

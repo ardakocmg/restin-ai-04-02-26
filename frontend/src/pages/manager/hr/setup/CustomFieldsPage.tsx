@@ -203,7 +203,7 @@ export default function CustomFieldsPage() {
                     )}
                     <Button
                       variant="ghost"
-                      size="icon" aria-label="Action"
+                      size="icon"
                       className="opacity-0 group-hover:opacity-100 text-destructive"
                       onClick={() => handleDelete(field.id)}
                     >

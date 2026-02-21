@@ -127,9 +127,9 @@ export default function InsightsHub() {
                                     {MONTHLY_DATA.map(m => {
                                         const revH = (m.revenue / maxMonthlyRev) * 100; const cogsH = (m.cogs / maxMonthlyRev) * 100; return (
                                             <div key={m.month} className="flex-1 flex flex-col items-center gap-0.5">
-                                                <div className="w-full flex gap-px" style={{ height: `${revH}%` }}>
+                                                <div className="w-full flex gap-px" style={{ height: `${revH}%`  /* keep-inline */ }}>
                                                     <div className="flex-1 bg-emerald-500/60 rounded-t-sm" />
-                                                    <div className="flex-1 bg-red-500/40 rounded-t-sm" style={{ height: `${(cogsH / revH) * 100}%`, alignSelf: 'flex-end' }} />
+                                                    <div className="flex-1 bg-red-500/40 rounded-t-sm" style={{ height: `${(cogsH / revH) * 100}%`, alignSelf: 'flex-end'  /* keep-inline */ }} />
                                                 </div>
                                                 <span className="text-[8px] text-muted-foreground">{m.month}</span>
                                             </div>
@@ -152,7 +152,7 @@ export default function InsightsHub() {
                                         const margin = ((m.revenue - m.cogs) / m.revenue) * 100; const h = margin; const color = margin >= 72 ? 'bg-emerald-500/60' : margin >= 68 ? 'bg-amber-500/60' : 'bg-red-500/60'; return (
                                             <div key={m.month} className="flex-1 flex flex-col items-center gap-0.5">
                                                 <span className="text-[8px] text-muted-foreground">{margin.toFixed(0)}%</span>
-                                                <div className={cn('w-full rounded-t-sm transition-all', color)} style={{ height: `${h}%` }} />
+                                                <div className={cn('w-full rounded-t-sm transition-all', color)} style={{ height: `${h}%`  /* keep-inline */ }} />
                                                 <span className="text-[8px] text-muted-foreground">{m.month}</span>
                                             </div>
                                         );
@@ -175,7 +175,7 @@ export default function InsightsHub() {
                                         const pct = (m.cogs / m.revenue) * 100; const color = pct <= 28 ? 'bg-emerald-500/60' : pct <= 32 ? 'bg-amber-500/60' : 'bg-red-500/60'; return (
                                             <div key={m.month} className="flex-1 flex flex-col items-center gap-0.5">
                                                 <span className="text-[8px] text-muted-foreground">{pct.toFixed(0)}%</span>
-                                                <div className={cn('w-full rounded-t-sm', color)} style={{ height: `${pct * 2.5}%` }} />
+                                                <div className={cn('w-full rounded-t-sm', color)} style={{ height: `${pct * 2.5}%`  /* keep-inline */ }} />
                                                 <span className="text-[8px] text-muted-foreground">{m.month}</span>
                                             </div>
                                         );
@@ -198,7 +198,7 @@ export default function InsightsHub() {
                                         const h = (m.covers / Math.max(...MONTHLY_DATA.map(x => x.covers))) * 100; return (
                                             <div key={m.month} className="flex-1 flex flex-col items-center gap-0.5">
                                                 <span className="text-[8px] text-muted-foreground">{m.covers}</span>
-                                                <div className="w-full bg-purple-500/50 rounded-t-sm" style={{ height: `${h}%` }} />
+                                                <div className="w-full bg-purple-500/50 rounded-t-sm" style={{ height: `${h}%`  /* keep-inline */ }} />
                                                 <span className="text-[8px] text-muted-foreground">{m.month}</span>
                                             </div>
                                         );
@@ -220,7 +220,7 @@ export default function InsightsHub() {
                                         {/* Revenue bar */}
                                         <div className="mb-3">
                                             <div className="flex justify-between text-[10px] mb-1"><span className="text-muted-foreground">Revenue</span><span className="text-emerald-400 font-bold">€{(o.revenue / 1000).toFixed(0)}k</span></div>
-                                            <div className="h-2 bg-zinc-800 rounded-full overflow-hidden"><div className="h-full bg-emerald-500/60 rounded-full" style={{ width: `${(o.revenue / OUTLETS[0].revenue) * 100}%` }} /></div>
+                                            <div className="h-2 bg-zinc-800 rounded-full overflow-hidden"><div className="h-full bg-emerald-500/60 rounded-full" style={{ width: `${(o.revenue / OUTLETS[0].revenue) * 100}%`  /* keep-inline */ }} /></div>
                                         </div>
 
                                         <div className="grid grid-cols-4 gap-2 text-center">
@@ -248,7 +248,7 @@ export default function InsightsHub() {
                                     const segments = OUTLETS.map((o, i) => { const pct = (o.revenue / totalRev) * 100; const start = cumPct; cumPct += pct; return { color: colors[i], start, end: cumPct }; });
                                     const gradient = segments.map(s => `${s.color} ${s.start}% ${s.end}%`).join(', ');
                                     return (<>
-                                        <div className="w-full h-full rounded-full" style={{ background: `conic-gradient(${gradient})` }} />
+                                        <div className="w-full h-full rounded-full" style={{ background: `conic-gradient(${gradient})`  /* keep-inline */ }} />
                                         <div className="absolute inset-4 bg-zinc-900 rounded-full flex items-center justify-center">
                                             <span className="text-xs font-bold">€{(totalRev / 1000).toFixed(0)}k</span>
                                         </div>
@@ -284,7 +284,7 @@ export default function InsightsHub() {
                                                     <Badge variant="outline" className={cn('text-[9px]', margin >= 75 ? 'text-emerald-400' : margin >= 65 ? 'text-amber-400' : 'text-red-400')}>{margin.toFixed(1)}% margin</Badge>
                                                 </div>
                                                 {/* Revenue bar */}
-                                                <div className="h-2 bg-zinc-800 rounded-full overflow-hidden mb-2"><div className="h-full bg-emerald-500/50 rounded-full" style={{ width: `${(cat.revenue / maxRev) * 100}%` }} /></div>
+                                                <div className="h-2 bg-zinc-800 rounded-full overflow-hidden mb-2"><div className="h-full bg-emerald-500/50 rounded-full" style={{ width: `${(cat.revenue / maxRev) * 100}%`  /* keep-inline */ }} /></div>
                                                 <div className="flex items-center gap-6 text-[10px] text-muted-foreground">
                                                     <span>Revenue: <span className="text-emerald-400 font-bold">€{(cat.revenue / 1000).toFixed(0)}k</span></span>
                                                     <span>CoGS: <span className="text-red-400 font-bold">€{(cat.cogs / 1000).toFixed(0)}k</span></span>

@@ -304,7 +304,7 @@ export default function ComboBuilder() {
                                 <div className="flex-1">
                                     {editingName ? (
                                         <div className="flex items-center gap-2">
-                                            <input aria-label="Input"
+                                            <input
                                                 autoFocus
                                                 value={selectedCombo.name}
                                                 onChange={(e) => updateComboField('name', e.target.value)}
@@ -332,7 +332,7 @@ export default function ComboBuilder() {
                                         <label className="text-[9px] font-bold uppercase text-muted-foreground block">Base Price</label>
                                         <div className="relative">
                                             <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-bold">€</span>
-                                            <input aria-label="Input"
+                                            <input
                                                 type="number"
                                                 value={(selectedCombo.price_cents / 100).toFixed(2)}
                                                 onChange={(e) => updateComboField('price_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
@@ -376,7 +376,7 @@ export default function ComboBuilder() {
                                         >
                                             <GripVertical className="w-4 h-4 text-zinc-700" />
                                             <div className="flex-1">
-                                                <input aria-label="Input"
+                                                <input
                                                     value={group.name}
                                                     onChange={(e) => updateGroup(group.id, 'name', e.target.value)}
                                                     onClick={(e) => e.stopPropagation()}
@@ -389,7 +389,7 @@ export default function ComboBuilder() {
                                             </div>
                                             <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                                                 <label className="text-[9px] text-muted-foreground font-bold">Min</label>
-                                                <input aria-label="Input"
+                                                <input
                                                     type="number"
                                                     value={group.min_select}
                                                     onChange={(e) => updateGroup(group.id, 'min_select', parseInt(e.target.value) || 0)}
@@ -398,7 +398,7 @@ export default function ComboBuilder() {
                                                     
                                                 />
                                                 <label className="text-[9px] text-muted-foreground font-bold">Max</label>
-                                                <input aria-label="Input"
+                                                <input
                                                     type="number"
                                                     value={group.max_select}
                                                     onChange={(e) => updateGroup(group.id, 'max_select', parseInt(e.target.value) || 1)}
@@ -445,7 +445,7 @@ export default function ComboBuilder() {
                                                         />
                                                         <div className="flex items-center gap-1">
                                                             <span className="text-[10px] text-muted-foreground">+€</span>
-                                                            <input aria-label="Input"
+                                                            <input
                                                                 type="number"
                                                                 value={(item.price_delta_cents / 100).toFixed(2)}
                                                                 onChange={(e) => updateItemInGroup(group.id, ii, 'price_delta_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}

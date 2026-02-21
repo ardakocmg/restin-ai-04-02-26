@@ -278,7 +278,7 @@ export default function RestinControlTower() {
                                         </div>
                                         <Button
                                             variant="ghost"
-                                            size="icon" aria-label="Action"
+                                            size="icon"
                                             className="rounded-full bg-secondary/10 hover:bg-secondary hover:text-foreground"
                                          >
                                             <ArrowUpRight size={20} />

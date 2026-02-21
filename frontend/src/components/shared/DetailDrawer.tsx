@@ -152,7 +152,7 @@ export function InfoRow({ label, value, copyable = false }) {
         {copyable && value && (
           <Button
             variant="ghost"
-            size="icon" aria-label="Action"
+            size="icon"
             className="h-6 w-6"
             onClick={handleCopy}
           >

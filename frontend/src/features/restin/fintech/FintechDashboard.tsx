@@ -270,7 +270,7 @@ const FintechDashboard: React.FC = () => {
                                         <span className="text-secondary-foreground">{item.val}%</span>
                                     </div>
                                     <div className="h-1 bg-secondary rounded-full overflow-hidden">
-                                        <div className={`h-full ${item.color} shadow-sm shadow-current`} style={{ width: `${item.val}%` }} />
+                                        <div className={`h-full ${item.color} shadow-sm shadow-current`} style={{ width: `${item.val}%`  /* keep-inline */ }} />
                                     </div>
                                 </div>
                             ))}

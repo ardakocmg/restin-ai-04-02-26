@@ -49,17 +49,17 @@ const KioskMode: React.FC = () => {
                 </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                 {/* Left Column */}
                 <div>
                     <div className="pos-card">
-                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><Settings size={16} style={{ color: '#3B82F6' }} /> General</h3>
+                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><Settings size={16} style={{ color: '#3B82F6'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /> General</h3>
                         <div className="pos-setting-row"><span className="pos-cell-value">Enable Kiosk Mode</span><Toggle value={config.enabled} onChange={() => upd('enabled', !config.enabled)} /></div>
                         <div className="pos-setting-row">
                             <span className="pos-cell-value">Order Type</span>
                             <div className="pos-flex pos-gap-4">
                                 {(['dine-in', 'takeaway', 'both'] as const).map(t => (
-                                    <button key={t} onClick={() => upd('orderType', t)} className={`pos-btn-outline ${config.orderType === t ? 'pos-toggle-btn--active' : ''}`} style={{ padding: '4px 12px', fontSize: 11, textTransform: 'capitalize' }}>{t}</button>
+                                    <button key={t} onClick={() => upd('orderType', t)} className={`pos-btn-outline ${config.orderType === t ? 'pos-toggle-btn--active' : ''}`} style={{ padding: '4px 12px', fontSize: 11, textTransform: 'capitalize'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{t}</button>
                                 ))}
                             </div>
                         </div>
@@ -70,11 +70,11 @@ const KioskMode: React.FC = () => {
                     </div>
 
                     <div className="pos-card">
-                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><CreditCard size={16} style={{ color: '#10B981' }} /> Payment</h3>
+                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><CreditCard size={16} style={{ color: '#10B981'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /> Payment</h3>
                         <div className="pos-setting-row"><span className="pos-cell-value">Require Payment Before Send</span><Toggle value={config.requirePayment} onChange={() => upd('requirePayment', !config.requirePayment)} /></div>
-                        <div className="pos-form-group" style={{ marginTop: 8 }}><label className="pos-form-label">Accepted Methods</label>
-                            <div className="pos-flex pos-gap-6 pos-flex--wrap">{PAYMENTS.map(p => { const on = config.acceptedPayments.includes(p); return <button key={p} onClick={() => upd('acceptedPayments', on ? config.acceptedPayments.filter(x => x !== p) : [...config.acceptedPayments, p])} className={`pos-btn-outline ${on ? 'pos-badge--green' : ''}`} style={{ padding: '4px 12px', fontSize: 11, background: on ? 'rgba(16,185,129,0.1)' : undefined, color: on ? '#10B981' : undefined, borderColor: on ? 'rgba(16,185,129,0.3)' : undefined }}>{p}</button>; })}</div></div>
-                        <div className="pos-form-group" style={{ marginTop: 12 }}><label className="pos-form-label">Max Order Value (€)</label>
+                        <div className="pos-form-group" style={{ marginTop: 8  /* keep-inline */ }} /* keep-inline */ /* keep-inline */><label className="pos-form-label">Accepted Methods</label>
+                            <div className="pos-flex pos-gap-6 pos-flex--wrap">{PAYMENTS.map(p => { const on = config.acceptedPayments.includes(p); return <button key={p} onClick={() => upd('acceptedPayments', on ? config.acceptedPayments.filter(x => x !== p) : [...config.acceptedPayments, p])} className={`pos-btn-outline ${on ? 'pos-badge--green' : ''}`} style={{ padding: '4px 12px', fontSize: 11, background: on ? 'rgba(16,185,129,0.1)' : undefined, color: on ? '#10B981' : undefined, borderColor: on ? 'rgba(16,185,129,0.3)' : undefined  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{p}</button>; })}</div></div>
+                        <div className="pos-form-group" style={{ marginTop: 12  /* keep-inline */ }} /* keep-inline */ /* keep-inline */><label className="pos-form-label">Max Order Value (€)</label>
                             <input type="number" className="pos-input" value={config.maxOrderValue} onChange={e => upd('maxOrderValue', parseInt(e.target.value) || 0)} /></div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@ const KioskMode: React.FC = () => {
                 {/* Right Column */}
                 <div>
                     <div className="pos-card">
-                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><Monitor size={16} style={{ color: '#F59E0B' }} /> Display</h3>
+                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><Monitor size={16} style={{ color: '#F59E0B'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /> Display</h3>
                         <div className="pos-setting-row"><span className="pos-cell-value">Show Product Images</span><Toggle value={config.showImages} onChange={() => upd('showImages', !config.showImages)} /></div>
                         <div className="pos-setting-row"><span className="pos-cell-value">Show Descriptions</span><Toggle value={config.showDescriptions} onChange={() => upd('showDescriptions', !config.showDescriptions)} /></div>
                         <div className="pos-setting-row"><span className="pos-cell-value">Show Calories</span><Toggle value={config.showCalories} onChange={() => upd('showCalories', !config.showCalories)} /></div>
@@ -90,31 +90,31 @@ const KioskMode: React.FC = () => {
                     </div>
 
                     <div className="pos-card">
-                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><Palette size={16} style={{ color: '#8B5CF6' }} /> Appearance</h3>
-                        <div className="pos-form-group" style={{ marginBottom: 14 }}>
+                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><Palette size={16} style={{ color: '#8B5CF6'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /> Appearance</h3>
+                        <div className="pos-form-group" style={{ marginBottom: 14  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                             <label className="pos-form-label">Theme</label>
                             <div className="pos-flex pos-gap-6">
                                 {(['dark', 'light'] as const).map(t => (
-                                    <button key={t} onClick={() => upd('theme', t)} className={`pos-btn-outline ${config.theme === t ? 'pos-toggle-btn--active' : ''}`} style={{ padding: '8px 16px', fontSize: 12, textTransform: 'capitalize' }}>{t}</button>
+                                    <button key={t} onClick={() => upd('theme', t)} className={`pos-btn-outline ${config.theme === t ? 'pos-toggle-btn--active' : ''}`} style={{ padding: '8px 16px', fontSize: 12, textTransform: 'capitalize'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{t}</button>
                                 ))}
                             </div>
                         </div>
-                        <div className="pos-form-group" style={{ marginBottom: 14 }}>
+                        <div className="pos-form-group" style={{ marginBottom: 14  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                             <label className="pos-form-label">Accent Color</label>
-                            <div className="pos-flex pos-gap-6">{['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'].map(c => (<div key={c} onClick={() => upd('accentColor', c)} style={{ width: 28, height: 28, borderRadius: 6, background: c, cursor: 'pointer', border: config.accentColor === c ? '3px solid #fff' : '3px solid transparent' }} />))}</div>
+                            <div className="pos-flex pos-gap-6">{['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'].map(c => (<div key={c} onClick={() => upd('accentColor', c)} style={{ width: 28, height: 28, borderRadius: 6, background: c, cursor: 'pointer', border: config.accentColor === c ? '3px solid #fff' : '3px solid transparent'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />))}</div>
                         </div>
                         <div className="pos-form-group">
                             <label className="pos-form-label">Language</label>
                             <div className="pos-flex pos-gap-6">
                                 {([['en', 'English'], ['mt', 'Maltese'], ['it', 'Italian'], ['multi', 'Multi']] as const).map(([v, l]) => (
-                                    <button key={v} onClick={() => upd('language', v)} className={`pos-btn-outline ${config.language === v ? 'pos-toggle-btn--active' : ''}`} style={{ padding: '4px 12px', fontSize: 11 }}>{l}</button>
+                                    <button key={v} onClick={() => upd('language', v)} className={`pos-btn-outline ${config.language === v ? 'pos-toggle-btn--active' : ''}`} style={{ padding: '4px 12px', fontSize: 11  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{l}</button>
                                 ))}
                             </div>
                         </div>
                     </div>
 
                     <div className="pos-card">
-                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><ShieldCheck size={16} style={{ color: '#EF4444' }} /> Security</h3>
+                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><ShieldCheck size={16} style={{ color: '#EF4444'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /> Security</h3>
                         <div className="pos-form-group"><label className="pos-form-label">Inactivity Timeout (seconds)</label>
                             <input type="number" min={10} className="pos-input" value={config.inactivityTimeout} onChange={e => upd('inactivityTimeout', parseInt(e.target.value) || 60)} /></div>
                     </div>

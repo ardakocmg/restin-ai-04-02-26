@@ -32,7 +32,7 @@ import {
 import { toast } from 'sonner';
 
 // ── KPI Stat Card ──────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+function StatCard({ icon: Icon, label, value, subtext = '', color = 'text-foreground' }) {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 flex items-center gap-4">
@@ -52,7 +52,7 @@ function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground'
 export default function StockCount() {
   const { activeVenue } = useVenue();
   const [items, setItems] = useState([]);
-  const [counts, setCounts] = useState({});
+  const [counts, setCounts] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -183,7 +183,7 @@ export default function StockCount() {
     };
 
     recognition.onerror = (e) => {
-      logger.error('Voice recognition error:', e.error);
+      logger.error('Voice recognition error:', { error: e.error });
       setVoiceActive(false);
     };
 
@@ -220,7 +220,7 @@ export default function StockCount() {
           // @ts-ignore
           quantity: parseFloat(val),
           reason: 'Physical Stock Count',
-          venue_id: activeVenue.id,
+          venue_id: activeVenue?.id,
         });
       }
       toast.success('Stock count applied successfully');

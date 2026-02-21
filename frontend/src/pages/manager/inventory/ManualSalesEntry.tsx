@@ -165,7 +165,7 @@ export default function ManualSalesEntry() {
                             const profit = d.revenue - d.cogs; const margin = d.revenue > 0 ? (profit / d.revenue) * 100 : 0; const maxRev = catBreakdown[0]?.[1].revenue || 1; return (
                                 <Card key={cat} className="border-white/5 bg-zinc-900/40"><CardContent className="p-4">
                                     <div className="flex items-center justify-between mb-3"><p className="text-sm font-medium">{cat}</p><Badge variant="outline" className={cn('text-[9px]', margin >= 75 ? 'text-emerald-400' : 'text-amber-400')}>{margin.toFixed(1)}%</Badge></div>
-                                    <div className="h-2 bg-zinc-800 rounded-full mb-3 overflow-hidden"><div className="h-full bg-emerald-500/60 rounded-full" style={{ width: `${(d.revenue / maxRev) * 100}%` }} /></div>
+                                    <div className="h-2 bg-zinc-800 rounded-full mb-3 overflow-hidden"><div className="h-full bg-emerald-500/60 rounded-full" style={{ width: `${(d.revenue / maxRev) * 100}%`  /* keep-inline */ }} /></div>
                                     <div className="grid grid-cols-3 gap-2 text-center">
                                         <div><p className="text-[10px] text-muted-foreground">Revenue</p><p className="text-sm font-bold text-emerald-400">€{d.revenue.toFixed(0)}</p></div>
                                         <div><p className="text-[10px] text-muted-foreground">CoGS</p><p className="text-sm font-bold text-red-400">€{d.cogs.toFixed(0)}</p></div>

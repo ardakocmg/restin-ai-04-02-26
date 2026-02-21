@@ -173,7 +173,7 @@ export default function TipPresetsSettings() {
                         <div className="grid grid-cols-3 gap-3">
                             {(config?.percent_options || [10, 15, 20]).map((val, i) => (
                                 <div key={i} className="relative">
-                                    <input aria-label="Input"
+                                    <input
                                         type="number"
                                         value={val}
                                         onChange={(e) => updatePercentOption(i, e.target.value)}
@@ -196,7 +196,7 @@ export default function TipPresetsSettings() {
                             {(config?.fixed_options_cents || [200, 500, 1000]).map((val, i) => (
                                 <div key={i} className="relative">
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">€</span>
-                                    <input aria-label="Input"
+                                    <input
                                         type="number"
                                         value={(val / 100).toFixed(2)}
                                         onChange={(e) => updateFixedOption(i, Math.round(parseFloat(e.target.value) * 100))}

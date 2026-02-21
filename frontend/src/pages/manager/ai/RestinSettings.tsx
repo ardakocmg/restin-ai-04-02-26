@@ -759,7 +759,7 @@ export default function RestinSettings() {
                                             <div className="flex-1 h-2 bg-secondary rounded-full overflow-hidden">
                                                 <div
                                                     className="h-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500"
-                                                    style={{ width: `${pct}%` }}
+                                                    style={{ width: `${pct}%`  /* keep-inline */ }}
                                                 />
                                             </div>
                                             <span className="text-xs text-secondary-foreground w-16 text-right">{formatNumber(usage?.total_requests || 0)} req</span>

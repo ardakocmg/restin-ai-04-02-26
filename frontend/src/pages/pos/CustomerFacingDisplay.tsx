@@ -93,11 +93,11 @@ export default function CustomerFacingDisplay() {
                     <>
                         <div style={styles.itemsList}>
                             {items.map((item, idx) => (
-                                <div key={item.id || idx} style={{
+                                <div key={item.id || idx} style={{ /* keep-inline */
                                     ...styles.itemRow,
                                     animation: Date.now() - lastUpdate < 500 && idx === items.length - 1
                                         ? 'slideIn 0.3s ease-out' : 'none',
-                                }}>
+                                 /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                                     <div style={styles.itemQty}>{item.qty || 1}x</div>
                                     <div style={styles.itemName}>
                                         {item.menu_item_name || item.name}

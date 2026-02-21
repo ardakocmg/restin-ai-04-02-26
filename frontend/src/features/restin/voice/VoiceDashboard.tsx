@@ -248,8 +248,8 @@ export default function VoiceDashboard() {
                             <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 10 }} axisLine={false} tickLine={false} />
                             <YAxis hide allowDecimals={false} />
                             <Tooltip
-                                contentStyle={{ background: '#18181b', border: '1px solid #27272a', borderRadius: '8px', fontSize: '12px', color: '#f5f5f7' }}
-                                labelStyle={{ color: '#a1a1aa' }}
+                                contentStyle={{ background: '#18181b', border: '1px solid #27272a', borderRadius: '8px', fontSize: '12px', color: '#f5f5f7' }} /* keep-inline */
+                                labelStyle={{ color: '#a1a1aa' }} /* keep-inline */
                             />
                             <Area type="monotone" dataKey="calls" stroke="#3b82f6" fill="url(#volGrad)" strokeWidth={2} />
                         </AreaChart>
@@ -285,7 +285,7 @@ export default function VoiceDashboard() {
                             {sentimentData.map((s: /**/any) => (
                                 <div key={s.name} className="flex items-center justify-between text-xs">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: s.color }}></div>
+                                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: s.color  /* keep-inline */ }} /* keep-inline */ /* keep-inline */></div>
                                         <span className="text-muted-foreground font-medium">{s.name}</span>
                                     </div>
                                     <span className="font-black text-foreground">{s.value}</span>
@@ -316,7 +316,7 @@ export default function VoiceDashboard() {
                                     <div className="h-1.5 bg-background rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-amber-500/60 rounded-full transition-all duration-500"
-                                            style={{ width: `${maxCount > 0 ? (t.count / maxCount) * 100 : 0}%` }}
+                                            style={{ width: `${maxCount > 0 ? (t.count / maxCount) * 100 : 0}%`  /* keep-inline */ }}
                                         />
                                     </div>
                                 </div>

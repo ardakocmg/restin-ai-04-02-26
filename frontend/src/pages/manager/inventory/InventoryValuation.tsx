@@ -86,7 +86,7 @@ function CategoryBar({ categories }: { categories: CategorySummary[] }) {
                     <div
                         key={cat.category}
                         className={cn(colors[i % colors.length], 'transition-all')}
-                        style={{ width: `${cat.percentage}%` }}
+                        style={{ width: `${cat.percentage}%`  /* keep-inline */ }}
                         title={`${cat.category}: €${cat.totalValue.toLocaleString()} (${cat.percentage.toFixed(1)}%)`}
                     />
                 ))}

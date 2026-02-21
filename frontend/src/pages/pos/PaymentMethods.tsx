@@ -136,7 +136,7 @@ const PaymentMethods: React.FC = () => {
                         <div key={method.id} className="pos-flex pos-flex--center pos-gap-14 py-3.5 border-b border-white/[0.03] cursor-pointer"
                             onClick={() => setEditing({ ...method })}>
                             {/* keep-inline: dynamic background/color from user-configurable method.color */}
-                            <div className="w-11 h-11 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: `${method.color}15`, color: method.color }}>
+                            <div className="w-11 h-11 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: `${method.color}15`, color: method.color  /* keep-inline */ }}>
                                 {ICONS[method.icon] || <CreditCard size={20} />}
                             </div>
                             <div className="flex-1">
@@ -176,7 +176,7 @@ const PaymentMethods: React.FC = () => {
                                 <div key={method.id} className="pos-flex pos-flex--center pos-gap-14 py-3 border-b border-white/[0.03] cursor-pointer opacity-60"
                                     onClick={() => setEditing({ ...method })}>
                                     {/* keep-inline: dynamic background/color from user-configurable method.color */}
-                                    <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `${method.color}10`, color: method.color }}>
+                                    <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `${method.color}10`, color: method.color  /* keep-inline */ }}>
                                         {ICONS[method.icon] || <CreditCard size={18} />}
                                     </div>
                                     <div className="flex-1">

@@ -366,7 +366,7 @@ export default function NutritionalCalculator() {
                                                 <span className="text-xs flex-1">{n.label}</span>
                                                 <span className="text-xs font-medium tabular-nums">{perServing[n.key].toFixed(1)} {n.unit}</span>
                                                 <div className="w-16 h-1.5 rounded-full bg-zinc-700 overflow-hidden">
-                                                    <div className="h-full rounded-full bg-emerald-500 transition-all" style={{ width: `${Math.min(100, dv)}%` }} />
+                                                    <div className="h-full rounded-full bg-emerald-500 transition-all" style={{ width: `${Math.min(100, dv)}%`  /* keep-inline */ }} />
                                                 </div>
                                                 <span className="text-[10px] text-muted-foreground w-8 text-right">{dv.toFixed(0)}%</span>
                                             </div>

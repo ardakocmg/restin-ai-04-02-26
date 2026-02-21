@@ -96,7 +96,7 @@ export default function ZoneContextMenu({
         <div
             ref={menuRef}
             className="fixed z-50 animate-in fade-in zoom-in-95 duration-100"
-            style={{ left: clampedX, top: clampedY }}
+            style={{ left: clampedX, top: clampedY  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
         >
             <div className="w-52 bg-card border border-border rounded-xl shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl">
                 {/* Header */}

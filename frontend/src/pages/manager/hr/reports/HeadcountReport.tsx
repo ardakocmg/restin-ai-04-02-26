@@ -64,8 +64,8 @@ export default function HeadcountReport() {
                 <XAxis dataKey="name" stroke="#71717a" />
                 <YAxis stroke="#71717a" />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#fff' }}
-                  itemStyle={{ color: '#818cf8' }}
+                  contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#fff' }} /* keep-inline */
+                  itemStyle={{ color: '#818cf8' }} /* keep-inline */
                 />
                 <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]}>
                   {data.map((entry, index) => (

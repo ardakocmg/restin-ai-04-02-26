@@ -42,7 +42,7 @@ function BarSegment({ label, value, max, color }: { label: string; value: number
                 <span className="font-medium">€{fmt(value)}</span>
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
-                <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
+                <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%`  /* keep-inline */ }} />
             </div>
         </div>
     );
@@ -591,7 +591,7 @@ export default function RecipeDetail() {
                                     <div key={ing.id} className="flex items-center gap-3">
                                         <span className="text-sm w-48 truncate">{ing.name}</span>
                                         <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
-                                            <div className="h-full bg-gradient-to-r from-green-500 via-amber-500 to-red-500 rounded-full" style={{ width: `${Math.random() * 60 + 20}%` }} />
+                                            <div className="h-full bg-gradient-to-r from-green-500 via-amber-500 to-red-500 rounded-full" style={{ width: `${Math.random() * 60 + 20}%`  /* keep-inline */ }} />
                                         </div>
                                     </div>
                                 ))}
@@ -747,9 +747,9 @@ export default function RecipeDetail() {
                                     const tx = (taxAmount / sp) * 100;
                                     const pr = 100 - fc - tx;
                                     return (<>
-                                        <div className="bg-blue-500 flex items-center justify-center text-[10px] text-foreground font-medium" style={{ width: `${fc}%` }}>{fc > 8 ? 'Food' : ''}</div>
-                                        <div className="bg-amber-500 flex items-center justify-center text-[10px] text-foreground font-medium" style={{ width: `${tx}%` }}>{tx > 8 ? 'Tax' : ''}</div>
-                                        <div className="bg-green-500 flex items-center justify-center text-[10px] text-foreground font-medium" style={{ width: `${pr}%` }}>{pr > 8 ? 'Profit' : ''}</div>
+                                        <div className="bg-blue-500 flex items-center justify-center text-[10px] text-foreground font-medium" style={{ width: `${fc}%`  /* keep-inline */ }}>{fc > 8 ? 'Food' : ''}</div>
+                                        <div className="bg-amber-500 flex items-center justify-center text-[10px] text-foreground font-medium" style={{ width: `${tx}%`  /* keep-inline */ }}>{tx > 8 ? 'Tax' : ''}</div>
+                                        <div className="bg-green-500 flex items-center justify-center text-[10px] text-foreground font-medium" style={{ width: `${pr}%`  /* keep-inline */ }}>{pr > 8 ? 'Profit' : ''}</div>
                                     </>);
                                 })()}
                             </div>
@@ -842,8 +842,8 @@ export default function RecipeDetail() {
                                     return (
                                         <div key={month} className="flex-1 flex flex-col items-center gap-0.5">
                                             <div className="w-full flex flex-col gap-0.5">
-                                                <div className="bg-green-500/60 rounded-t" style={{ height: `${(rev / 1000) * 120}px` }} />
-                                                <div className="bg-red-400/60 rounded-b" style={{ height: `${(cogs / 1000) * 120}px` }} />
+                                                <div className="bg-green-500/60 rounded-t" style={{ height: `${(rev / 1000) * 120}px`  /* keep-inline */ }} />
+                                                <div className="bg-red-400/60 rounded-b" style={{ height: `${(cogs / 1000) * 120}px`  /* keep-inline */ }} />
                                             </div>
                                             <span className="text-[9px] text-muted-foreground">{month}</span>
                                         </div>

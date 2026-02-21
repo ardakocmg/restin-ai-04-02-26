@@ -52,7 +52,7 @@ export default function TopBar({ onMenuToggle, user }) {
         {/* Mobile Menu Button */}
         <Button
           variant="ghost"
-          size="icon" aria-label="Action"
+          size="icon"
           className="lg:hidden"
           onClick={onMenuToggle}
          >

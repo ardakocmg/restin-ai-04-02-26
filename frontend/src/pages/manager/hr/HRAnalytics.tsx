@@ -177,7 +177,7 @@ function PosTab({ data, onEmployeeClick }: { data: /**/any | null; onEmployeeCli
                   <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
                   <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 11 }} tickFormatter={(d) => d.slice(5)} />
                   <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
-                  <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} />
+                  <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} /* keep-inline */ />
                   <Area type="monotone" dataKey="orders" stroke="#3b82f6" fill="url(#gradOrders)" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
@@ -232,7 +232,7 @@ function KdsTab({ data, onEmployeeClick }: { data: /**/any | null; onEmployeeCli
                   <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
                   <XAxis dataKey="hour" tick={{ fill: '#71717a', fontSize: 11 }} tickFormatter={(h) => `${h}:00`} />
                   <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
-                  <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} />
+                  <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} /* keep-inline */ />
                   <Bar dataKey="tickets" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -303,8 +303,8 @@ function SystemTab({ data, onEmployeeClick }: { data: /**/any | null; onEmployee
                     >
                       {employees.slice(0, 8).map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
                     </Pie>
-                    <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} />
-                    <Legend wrapperStyle={{ fontSize: 11, color: '#a1a1aa' }} />
+                    <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} /* keep-inline */ />
+                    <Legend wrapperStyle={{ fontSize: 11, color: '#a1a1aa' }} /* keep-inline */ />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -321,7 +321,7 @@ function SystemTab({ data, onEmployeeClick }: { data: /**/any | null; onEmployee
                     <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
                     <XAxis type="number" tick={{ fill: '#71717a', fontSize: 11 }} />
                     <YAxis dataKey="employee_name" type="category" tick={{ fill: '#71717a', fontSize: 10 }} width={100} />
-                    <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} />
+                    <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} /* keep-inline */ />
                     <Bar dataKey="total_hours_worked" fill="#06b6d4" radius={[0, 4, 4, 0]} />
                   </BarChart>
                 </ResponsiveContainer>

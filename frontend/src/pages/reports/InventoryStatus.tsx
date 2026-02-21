@@ -122,8 +122,8 @@ export default function InventoryStatus() {
                                     ))}
                                 </Pie>
                                 <Tooltip
-                                    contentStyle={{ backgroundColor: '#18181B', border: '1px solid #3F3F46', borderRadius: '8px' }}
-                                    itemStyle={{ color: '#E4E4E7' }}
+                                    contentStyle={{ backgroundColor: '#18181B', border: '1px solid #3F3F46', borderRadius: '8px' }} /* keep-inline */
+                                    itemStyle={{ color: '#E4E4E7' }} /* keep-inline */
                                 />
                                 <Legend />
                             </PieChart>

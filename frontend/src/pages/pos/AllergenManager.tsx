@@ -65,17 +65,17 @@ const AllergenManager: React.FC = () => {
                 <div>
                     <button onClick={() => navigate(-1)} className="pos-btn-outline pos-btn-back"><ArrowLeft size={14} /> Back</button>
                     <h1 className="pos-title">Allergen Management</h1>
-                    <p className="pos-subtitle">EU 14 mandatory allergens — enable/disable per your menu{apiWired && <span className="pos-badge--green" style={{ marginLeft: 8, fontSize: 11 }}>● Live</span>}</p>
+                    <p className="pos-subtitle">EU 14 mandatory allergens — enable/disable per your menu{apiWired && <span className="pos-badge--green" style={{ marginLeft: 8, fontSize: 11  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>● Live</span>}</p>
                 </div>
                 <button className="pos-btn-primary" onClick={() => toast.success('Allergen settings saved')}><Save size={16} /> Save Changes</button>
             </div>
 
             {/* Loading / Error */}
-            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">{"Loading "}allergens...</span></div>}
-            {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center" style={{ borderColor: '#EF4444', padding: 14 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button className="pos-btn-outline pos-btn-back" onClick={() => refetch()}>Retry</button></div>}
+            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30  /* keep-inline */ }} /* keep-inline */ /* keep-inline */><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /><span className="pos-text-secondary">{"Loading "}allergens...</span></div>}
+            {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center" style={{ borderColor: '#EF4444', padding: 14  /* keep-inline */ }} /* keep-inline */ /* keep-inline */><span style={{ color: '#EF4444', fontSize: 13  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>⚠ {apiError}</span><button className="pos-btn-outline pos-btn-back" onClick={() => refetch()}>Retry</button></div>}
 
             {/* Stats */}
-            <div className="pos-stats-grid" style={{ gridTemplateColumns: 'repeat(3,1fr)' }}>
+            <div className="pos-stats-grid" style={{ gridTemplateColumns: 'repeat(3,1fr)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                 <div className="pos-card pos-stat-card">
                     <div className="pos-stat-icon pos-stat-icon--blue"><AlertTriangle size={16} /></div>
                     <div><div className="pos-stat-value">{activeCount}</div><div className="pos-stat-label">Active Allergens</div></div>
@@ -95,12 +95,12 @@ const AllergenManager: React.FC = () => {
                 <input aria-label="Search allergens..." className="pos-input pos-search-input" placeholder="Search allergens..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 12  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                 {filtered.map(allergen => (
-                    <div key={allergen.id} className="pos-card pos-flex pos-flex--center pos-gap-12" style={{ cursor: 'pointer', padding: 14, borderColor: allergen.isActive ? 'rgba(59,130,246,0.3)' : undefined, opacity: allergen.isActive ? 1 : 0.5 }} onClick={() => toggle(allergen.id)}>
-                        <span style={{ fontSize: 28 }}>{allergen.icon}</span>
-                        <div style={{ flex: 1 }}>
-                            <div className="pos-cell-value" style={{ fontSize: 14, fontWeight: 600 }}>{allergen.name}</div>
+                    <div key={allergen.id} className="pos-card pos-flex pos-flex--center pos-gap-12" style={{ cursor: 'pointer', padding: 14, borderColor: allergen.isActive ? 'rgba(59,130,246,0.3)' : undefined, opacity: allergen.isActive ? 1 : 0.5  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ onClick={() => toggle(allergen.id)}>
+                        <span style={{ fontSize: 28  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{allergen.icon}</span>
+                        <div style={{ flex: 1  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
+                            <div className="pos-cell-value" style={{ fontSize: 14, fontWeight: 600  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{allergen.name}</div>
                             <div className="pos-cell-secondary">{allergen.itemCount} items tagged</div>
                         </div>
                         <div className={`pos-toggle-track ${allergen.isActive ? 'pos-toggle-track--on' : 'pos-toggle-track--off'}`}>
@@ -110,9 +110,9 @@ const AllergenManager: React.FC = () => {
                 ))}
             </div>
 
-            <div className="pos-card" style={{ background: 'rgba(245,158,11,0.04)', borderColor: 'rgba(245,158,11,0.2)', marginTop: 16 }}>
-                <div className="pos-text-sm pos-text-bold pos-mb-8" style={{ color: '#F59E0B' }}>⚠️ Legal Requirement</div>
-                <p className="pos-cell-secondary pos-mb-0" style={{ lineHeight: 1.6 }}>
+            <div className="pos-card" style={{ background: 'rgba(245,158,11,0.04)', borderColor: 'rgba(245,158,11,0.2)', marginTop: 16  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
+                <div className="pos-text-sm pos-text-bold pos-mb-8" style={{ color: '#F59E0B'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>⚠️ Legal Requirement</div>
+                <p className="pos-cell-secondary pos-mb-0" style={{ lineHeight: 1.6  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                     Under EU Regulation 1169/2011, all 14 allergens must be declared when present in food served to consumers.
                     Disabling an allergen here only hides it from the POS selection — you remain legally responsible for allergen disclosure.
                 </p>

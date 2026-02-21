@@ -184,7 +184,7 @@ export default function ForecastingDashboard() {
                                         <XAxis dataKey="date" stroke="#666" />
                                         <YAxis stroke="#666" tickFormatter={(v) => `€${v}`} />
                                         <Tooltip
-                                            contentStyle={{ backgroundColor: '#09090b', borderColor: '#333', color: '#fff' }}
+                                            contentStyle={{ backgroundColor: '#09090b', borderColor: '#333', color: '#fff' }} /* keep-inline */
                                             formatter={(value) => [`€${value}`, undefined]}
                                         />
                                         <Area type="monotone" dataKey="forecast" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorForecast)" name="AI Forecast" />

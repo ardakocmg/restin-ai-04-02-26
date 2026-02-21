@@ -164,7 +164,7 @@ export default function Devices() {
                                     <div className="flex justify-end pr-2">
                                         <Button
                                             variant="ghost"
-                                            size="icon" aria-label="Action"
+                                            size="icon"
                                             className="text-muted-foreground hover:text-foreground"
                                             onClick={() => setSelectedDevice(row)}
                                         >

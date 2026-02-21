@@ -188,7 +188,7 @@ export default function HiringATS() {
                                     <span className="text-slate-100 font-bold">{stage.count}</span>
                                 </div>
                                 <div className="h-1.5 bg-slate-950 rounded-sm">
-                                    <div className="h-full bg-indigo-500 rounded-sm" style={{ width: `${Math.min((stage.count / (analytics.total_candidates || 1)) * 100, 100)}%` }} /> {}
+                                    <div className="h-full bg-indigo-500 rounded-sm" style={{ width: `${Math.min((stage.count / (analytics.total_candidates || 1)) * 100, 100)}%`  /* keep-inline */ }} /> {}
                                 </div>
                             </div>
                         ))}

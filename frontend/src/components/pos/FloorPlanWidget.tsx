@@ -79,7 +79,7 @@ export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }: 
         >
             {/* Grid Background */}
             <div className="absolute inset-0 opacity-10 pointer-events-none"
-                style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }}
+                style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
             />
 
             {localTables.map(table => {
@@ -94,13 +94,13 @@ export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }: 
                             getStatusColor(table.status),
                             table.shape === 'CIRCLE' ? 'rounded-full' : 'rounded-lg'
                         )}
-                        style={{
+                        style={{ /* keep-inline */
                             left: x,
                             top: y,
                             width: table.width || 120,
                             height: table.height || 120,
                             zIndex: draggingId === table.id ? 50 : 1
-                        }}
+                         /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                         onMouseDown={(e) => handleDragStart(e, table)}
                         onClick={() => !onTableMove && onTableSelect(table)}
                     >

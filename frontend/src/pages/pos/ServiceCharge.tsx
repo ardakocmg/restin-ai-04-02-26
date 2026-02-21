@@ -50,26 +50,26 @@ const ServiceCharge: React.FC = () => {
                 <button className="pos-btn-primary" onClick={() => setEditing({ id: crypto.randomUUID(), name: '', type: 'percentage', value: 10, applyTo: 'all', minGuests: 0, autoApply: true, taxable: true, isActive: true, description: '' })}><Plus size={16} /> Add Rule</button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 16  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                 {rules.map(rule => (
-                    <div key={rule.id} className="pos-card" style={{ cursor: 'pointer', opacity: rule.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...rule })}>
-                        <div className="pos-flex pos-flex--between" style={{ alignItems: 'flex-start', marginBottom: 10 }}>
+                    <div key={rule.id} className="pos-card" style={{ cursor: 'pointer', opacity: rule.isActive ? 1 : 0.5  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ onClick={() => setEditing({ ...rule })}>
+                        <div className="pos-flex pos-flex--between" style={{ alignItems: 'flex-start', marginBottom: 10  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                             <div className="pos-flex pos-flex--center pos-gap-10">
-                                <div className="pos-stat-icon pos-stat-icon--blue" style={{ width: 40, height: 40, borderRadius: 10 }}>
+                                <div className="pos-stat-icon pos-stat-icon--blue" style={{ width: 40, height: 40, borderRadius: 10  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                                     <Percent size={18} />
                                 </div>
-                                <div><h3 className="pos-modal-title" style={{ fontSize: 16 }}>{rule.name}</h3>
-                                    <span className="pos-cell-secondary" style={{ fontSize: 11 }}>
+                                <div><h3 className="pos-modal-title" style={{ fontSize: 16  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{rule.name}</h3>
+                                    <span className="pos-cell-secondary" style={{ fontSize: 11  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                                         {rule.type === 'percentage' ? `${rule.value}%` : `€${rule.value.toFixed(2)}`} · {rule.applyTo}
                                     </span></div>
                             </div>
-                            <span className={`pos-badge ${rule.isActive ? 'pos-badge--green' : 'pos-badge--red'}`} style={{ fontSize: 9 }}>{rule.isActive ? 'Active' : 'Off'}</span>
+                            <span className={`pos-badge ${rule.isActive ? 'pos-badge--green' : 'pos-badge--red'}`} style={{ fontSize: 9  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{rule.isActive ? 'Active' : 'Off'}</span>
                         </div>
-                        <p className="pos-cell-secondary pos-mb-8" style={{ lineHeight: 1.5 }}>{rule.description}</p>
+                        <p className="pos-cell-secondary pos-mb-8" style={{ lineHeight: 1.5  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{rule.description}</p>
                         <div className="pos-flex pos-gap-6 pos-flex--wrap">
-                            {rule.autoApply && <span className="pos-badge pos-badge--blue" style={{ fontSize: 9 }}>Auto-Apply</span>}
-                            {rule.taxable && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9 }}>Taxable</span>}
-                            {rule.minGuests > 0 && <span className="pos-badge pos-badge--purple" style={{ fontSize: 9 }}>Min {rule.minGuests} guests</span>}
+                            {rule.autoApply && <span className="pos-badge pos-badge--blue" style={{ fontSize: 9  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Auto-Apply</span>}
+                            {rule.taxable && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Taxable</span>}
+                            {rule.minGuests > 0 && <span className="pos-badge pos-badge--purple" style={{ fontSize: 9  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Min {rule.minGuests} guests</span>}
                         </div>
                     </div>
                 ))}
@@ -105,8 +105,8 @@ const ServiceCharge: React.FC = () => {
                         )}
                     </div>
                     <div className="pos-modal-footer">
-                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
-                        <button title="Delete rule" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setRules(p => p.filter(r => r.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ onClick={save}><Save size={14} /> Save</button>
+                        <button title="Delete rule" className="pos-btn-outline" style={{ color: '#EF4444'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ onClick={() => { setRules(p => p.filter(r => r.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
                         <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>

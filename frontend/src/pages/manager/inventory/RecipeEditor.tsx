@@ -932,7 +932,7 @@ export default function RecipeEditor() {
                                         <img src={img} alt={`Recipe image ${idx + 1}`} className="aspect-square object-cover rounded-lg" />
                                         <Button
                                             variant="destructive"
-                                            size="icon" aria-label="Action"
+                                            size="icon"
                                             className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
                                             onClick={() => updateField('images', form.images.filter((_, i) => i !== idx))}
                                         >

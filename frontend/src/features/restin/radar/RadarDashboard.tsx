@@ -161,7 +161,7 @@ export default function RadarDashboard() {
                                                 "absolute bottom-0 left-0 right-0 rounded-t-lg transition-all duration-1000",
                                                 i === 3 ? "bg-red-600 shadow-[0_0_20px_rgba(220,38,38,0.5)]" : "bg-zinc-700"
                                             )}
-                                            style={{ height: `${h}%` }}
+                                            style={{ height: `${h}%`  /* keep-inline */ }}
                                         ></div>
                                         <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-white text-black text-[10px] font-black px-2 py-1 rounded">
                                             {h}%

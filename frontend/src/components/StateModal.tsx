@@ -126,14 +126,14 @@ export default function StateModal({
         >
           <Icon
             className="w-10 h-10"
-            style={{ color: colors.icon }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+            style={{ color: colors.icon  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /* keep-inline */ /* keep-inline */
           />
         </div>
 
         {/* Title */}
         <h2
           className="text-2xl font-heading text-center mb-3"
-          style={{ color: '#F5F5F7' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+          style={{ color: '#F5F5F7'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /* keep-inline */ /* keep-inline */
         >
           {title}
         </h2>
@@ -141,7 +141,7 @@ export default function StateModal({
         {/* Message */}
         <p
           className="text-center mb-6 leading-relaxed"
-          style={{ color: '#D4D4D8', fontSize: '15px' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+          style={{ color: '#D4D4D8', fontSize: '15px'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /* keep-inline */ /* keep-inline */
         >
           {message}
         </p>
@@ -195,7 +195,7 @@ export default function StateModal({
           <button
             onClick={onClose}
             aria-label="Action" className="absolute top-4 right-4 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-            style={{ color: '#9CA3AF' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+            style={{ color: '#9CA3AF'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /* keep-inline */ /* keep-inline */
           >
             <XCircle className="w-6 h-6" />
           </button>

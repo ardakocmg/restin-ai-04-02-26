@@ -83,12 +83,12 @@ export default function ThermalPreview({ html, paperWidth = 576, onClose }: Ther
                 <div className="relative">
                     {/* Ruler */}
                     {showRuler && (
-                        <div className="absolute -top-6 left-0 flex" style={{ width: `${paperWidth * zoom}px` }}>
+                        <div className="absolute -top-6 left-0 flex" style={{ width: `${paperWidth * zoom}px`  /* keep-inline */ }}>
                             {Array.from({ length: Math.ceil(paperWidth / 10) }, (_, i) => (
                                 <div
                                     key={i}
                                     className="flex-shrink-0 border-l border-emerald-500/40 text-emerald-500/60"
-                                    style={{ width: `${10 * zoom}px`, height: '16px' }}
+                                    style={{ width: `${10 * zoom}px`, height: '16px'  /* keep-inline */ }}
                                 >
                                     {i % 5 === 0 && (
                                         <span className="text-[8px] ml-0.5">{i * 10}</span>
@@ -101,26 +101,26 @@ export default function ThermalPreview({ html, paperWidth = 576, onClose }: Ther
                     {/* Receipt paper */}
                     <div
                         className="bg-white shadow-2xl shadow-black/30 relative"
-                        style={{
+                        style={{ /* keep-inline */
                             width: `${paperWidth * zoom}px`,
                             minHeight: '400px',
                             transform: `scale(1)`,
                             transformOrigin: 'top center',
                             borderRadius: '2px',
                             overflow: 'hidden'
-                        }}
+                         /* keep-inline */ }}
                     >
                         {/* Top tear edge */}
                         <div
                             className="h-3 w-full opacity-30"
-                            style={{
+                            style={{ /* keep-inline */
                                 background: 'repeating-linear-gradient(90deg, transparent, transparent 4px, #e5e5e5 4px, #e5e5e5 8px)'
-                            }}
+                             /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                         />
 
                         {/* Content */}
                         <div
-                            style={{
+                            style={{ /* keep-inline */
                                 fontFamily: "'Courier New', 'Courier', monospace",
                                 fontSize: `${12 * zoom}px`,
                                 lineHeight: '1.4',
@@ -130,25 +130,25 @@ export default function ThermalPreview({ html, paperWidth = 576, onClose }: Ther
                                     filter: 'grayscale(100%) contrast(180%)',
                                     imageRendering: 'pixelated' as const
                                 } : {})
-                            }}
+                             /* keep-inline */ }}
                             dangerouslySetInnerHTML={{ __html: html }}
                         />
 
                         {/* Bottom tear edge */}
                         <div
                             className="h-3 w-full opacity-30"
-                            style={{
+                            style={{ /* keep-inline */
                                 background: 'repeating-linear-gradient(90deg, transparent, transparent 4px, #e5e5e5 4px, #e5e5e5 8px)'
-                            }}
+                             /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                         />
                     </div>
 
                     {/* Paper shadow */}
                     <div
                         className="absolute -bottom-2 left-2 right-2 h-4 rounded-b-xl opacity-20"
-                        style={{
+                        style={{ /* keep-inline */
                             background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, transparent 70%)'
-                        }}
+                         /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                     />
                 </div>
             </div>

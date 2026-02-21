@@ -117,8 +117,8 @@ export default function POSSales() {
                 <XAxis dataKey="time" stroke="#71717A" />
                 <YAxis stroke="#71717A" />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#18181B', border: '1px solid #3F3F46', borderRadius: '8px' }}
-                  itemStyle={{ color: '#E4E4E7' }}
+                  contentStyle={{ backgroundColor: '#18181B', border: '1px solid #3F3F46', borderRadius: '8px' }} /* keep-inline */
+                  itemStyle={{ color: '#E4E4E7' }} /* keep-inline */
                 />
                 <Area type="monotone" dataKey="amount" stroke="#10B981" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={3} />
               </AreaChart>

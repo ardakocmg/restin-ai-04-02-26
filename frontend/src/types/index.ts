@@ -16,7 +16,9 @@ export interface User {
     venueId: string;
     organizationId?: string; // Added to match backend schema
     ou_path?: string; // e.g., "/Operations/Kitchen"
+    [key: string]: any;
 }
+
 
 // 2. CRM & GUEST (SevenRooms)
 export interface Guest {

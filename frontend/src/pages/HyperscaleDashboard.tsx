@@ -119,8 +119,8 @@ const HyperscaleDashboard: React.FC = () => {
                                         <XAxis dataKey="time" stroke="#94a3b8" fontSize={12} tickLine={false} />
                                         <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
                                         <Tooltip
-                                            contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px' }}
-                                            itemStyle={{ color: '#e2e8f0' }}
+                                            contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px' }} /* keep-inline */
+                                            itemStyle={{ color: '#e2e8f0' }} /* keep-inline */
                                         />
                                         <Area type="monotone" dataKey="value" stroke="#818cf8" strokeWidth={2} fillOpacity={1} fill="url(#colorVal)" />
                                     </AreaChart>
@@ -334,7 +334,7 @@ const HyperscaleDashboard: React.FC = () => {
                                     <XAxis dataKey="time" stroke="#64748b" fontSize={12} tickLine={false} />
                                     <YAxis yAxisId="left" stroke="#818cf8" fontSize={12} tickLine={false} axisLine={false} />
                                     <YAxis yAxisId="right" orientation="right" stroke="#f87171" fontSize={12} tickLine={false} axisLine={false} />
-                                    <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }} />
+                                    <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }} /* keep-inline */ />
                                     <Area yAxisId="left" type="monotone" dataKey="value" name="RPS" stroke="#818cf8" fill="url(#rpsGrad)" strokeWidth={2} />
                                     <Area yAxisId="right" type="monotone" dataKey="secondary" name="p99 Latency (ms)" stroke="#f87171" fill="url(#latGrad)" strokeWidth={2} />
                                 </AreaChart>
@@ -383,7 +383,7 @@ const HyperscaleDashboard: React.FC = () => {
                                     <BarChart data={queueData}>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
                                         <XAxis dataKey="time" hide />
-                                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }} />
+                                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }} /* keep-inline */ />
                                         <Bar dataKey="value" name="Events/sec" fill="#a855f7" radius={[4, 4, 0, 0]} />
                                     </BarChart>
                                 </ResponsiveContainer>
@@ -424,7 +424,7 @@ const HyperscaleDashboard: React.FC = () => {
                                 <LineChart data={costData}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
                                     <XAxis dataKey="time" hide />
-                                    <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }} />
+                                    <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }} /* keep-inline */ />
                                     <Line type="step" dataKey="value" name="Cost per 1k Req (€)" stroke="#10b981" strokeWidth={2} dot={false} />
                                 </LineChart>
                             </ResponsiveContainer>

@@ -114,7 +114,7 @@ export default function KDSPerformance() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis type="number" stroke="#666" />
                 <YAxis dataKey="name" type="category" stroke="#fff" width={60} />
-                <Tooltip contentStyle={{ backgroundColor: '#111', borderColor: '#333' }} />
+                <Tooltip contentStyle={{ backgroundColor: '#111', borderColor: '#333' }} /* keep-inline */ />
                 <Bar dataKey="avgTime" fill="#ef4444" radius={[0, 4, 4, 0]} barSize={20} />
               </BarChart>
             </ResponsiveContainer>
@@ -129,7 +129,7 @@ export default function KDSPerformance() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="hour" stroke="#666" />
                 <YAxis stroke="#666" />
-                <Tooltip contentStyle={{ backgroundColor: '#111', borderColor: '#333' }} />
+                <Tooltip contentStyle={{ backgroundColor: '#111', borderColor: '#333' }} /* keep-inline */ />
                 <Line type="monotone" dataKey="orders" stroke="#3b82f6" strokeWidth={2} dot={{ fill: '#3b82f6' }} />
               </LineChart>
             </ResponsiveContainer>

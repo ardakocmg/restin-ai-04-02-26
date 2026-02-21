@@ -307,7 +307,7 @@ export default function AIProvidersTab() {
                                             <div className="h-1 bg-secondary rounded-full overflow-hidden">
                                                 <div
                                                     className={`h-full rounded-full ${colors.bg.replace('/15', '/60')}`}
-                                                    style={{ width: `${Math.max((providerUsage / maxUsage) * 100, 3)}%` }}
+                                                    style={{ width: `${Math.max((providerUsage / maxUsage) * 100, 3)}%`  /* keep-inline */ }}
                                                 />
                                             </div>
                                         </div>
@@ -400,7 +400,7 @@ export default function AIProvidersTab() {
                                         <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
                                             <div
                                                 className={`h-full rounded-full transition-all duration-500 ${colors.bg.replace('/15', '/70')}`}
-                                                style={{ width: `${(count / maxUsage) * 100}%` }}
+                                                style={{ width: `${(count / maxUsage) * 100}%`  /* keep-inline */ }}
                                             />
                                         </div>
                                     </div>
@@ -427,7 +427,7 @@ export default function AIProvidersTab() {
                                     <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
                                         <div
                                             className="h-full rounded-full bg-purple-500/60 transition-all duration-500"
-                                            style={{ width: `${(count / maxTaskUsage) * 100}%` }}
+                                            style={{ width: `${(count / maxTaskUsage) * 100}%`  /* keep-inline */ }}
                                         />
                                     </div>
                                 </div>
@@ -491,7 +491,7 @@ export default function AIProvidersTab() {
                                                         <div className="w-12 h-1.5 bg-secondary rounded-full overflow-hidden">
                                                             <div
                                                                 className={`h-full rounded-full ${insight.avg_overlap >= 0.7 ? 'bg-emerald-500' : insight.avg_overlap >= 0.4 ? 'bg-amber-500' : 'bg-red-500'}`}
-                                                                style={{ width: `${insight.avg_overlap * 100}%` }}
+                                                                style={{ width: `${insight.avg_overlap * 100}%`  /* keep-inline */ }}
                                                             />
                                                         </div>
                                                         <span className="text-secondary-foreground font-mono w-10 text-right">{(insight.avg_overlap * 100).toFixed(0)}%</span>

@@ -212,7 +212,7 @@ export default function MobileStockCount() {
                     <div className="h-3 rounded-full bg-zinc-800 overflow-hidden">
                         <div
                             className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-500"
-                            style={{ width: `${stats.progress}%` }}
+                            style={{ width: `${stats.progress}%`  /* keep-inline */ }}
                         />
                     </div>
                     <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">

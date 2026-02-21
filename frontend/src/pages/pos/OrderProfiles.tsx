@@ -72,11 +72,11 @@ const OrderProfiles: React.FC = () => {
             <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
                 {filtered.map(profile => (
                     // keep-inline: borderLeft uses dynamic profile.color from user-configurable data
-                    <div key={profile.id} className={`pos-card cursor-pointer${profile.isActive ? '' : ' opacity-50'}`} style={{ borderLeft: `4px solid ${profile.color}` }} onClick={() => setEditing({ ...profile })}>
+                    <div key={profile.id} className={`pos-card cursor-pointer${profile.isActive ? '' : ' opacity-50'}`} style={{ borderLeft: `4px solid ${profile.color}`  /* keep-inline */ }} onClick={() => setEditing({ ...profile })}>
                         <div className="pos-flex pos-flex--between items-start mb-3">
                             <div className="pos-flex pos-flex--center pos-gap-10">
                                 {/* keep-inline: dynamic background/color from user-configurable profile.color */}
-                                <div className="w-11 h-11 rounded-[10px] flex items-center justify-center" style={{ background: `${profile.color}15`, color: profile.color }}>{ICONS[profile.icon] || <ShoppingBag size={20} />}</div>
+                                <div className="w-11 h-11 rounded-[10px] flex items-center justify-center" style={{ background: `${profile.color}15`, color: profile.color  /* keep-inline */ }}>{ICONS[profile.icon] || <ShoppingBag size={20} />}</div>
                                 <div><h3 className="text-[17px] font-semibold m-0">{profile.name} {profile.code && <span className="pos-cell-secondary text-[10px] font-normal">({profile.code})</span>}</h3>
                                     <span className="pos-cell-secondary">{profile.taxProfile}</span></div>
                             </div>
@@ -110,7 +110,7 @@ const OrderProfiles: React.FC = () => {
                     <div className="pos-form-grid grid-cols-[1fr_auto]">
                         <div><label className="pos-form-label pos-mb-4">Color</label><div className="pos-flex pos-gap-6">{['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316', '#6366F1'].map(c => (
                             // keep-inline: dynamic background from color picker palette
-                            <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} className="w-7 h-7 rounded-md cursor-pointer" style={{ background: c, border: editing.color === c ? '3px solid #fff' : '3px solid transparent' }} />))}</div></div>
+                            <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} className="w-7 h-7 rounded-md cursor-pointer" style={{ background: c, border: editing.color === c ? '3px solid #fff' : '3px solid transparent'  /* keep-inline */ }} /* keep-inline */ />))}</div></div>
                         <div><label className="pos-form-label">Sort Order</label><input aria-label="Input field" type="number" min={0} className="pos-input w-20 text-center" value={editing.sortOrder} onChange={e => setEditing(p => p ? { ...p, sortOrder: parseInt(e.target.value) || 0 } : null)}  /></div>
                     </div>
                     <div className="pos-form-grid">

@@ -119,26 +119,28 @@ export default function ActionsPanel({ order, tables, onAction, onClose }: Actio
     };
 
     return (
-        <div style={s.overlay} onClick={onClose}>
-            <div style={s.panel} onClick={e => e.stopPropagation()}>
-                <div style={s.header}>
-                    <span style={s.title}>Actions</span>
-                    <button style={s.closeBtn} onClick={onClose} title="Close actions panel">
+        <div style={s.overlay} onClick={onClose} aria-hidden="true" /* static: overlay opacity */>
+            <div style={s.panel} onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="actions-title" /* static: panel dimensions */>
+                <div style={s.header} /* static: header spacing */>
+                    <span id="actions-title" style={s.title} /* static: title weight */>Actions</span>
+                    <button style={s.closeBtn} onClick={onClose} title="Close actions panel" aria-label="Close panel" /* static: clear background */>
                         <X size={20} color="#888" />
                     </button>
                 </div>
-                <div style={s.body}>
+                <div style={s.body} /* static: body scroll */>
                     {showTablePicker ? (
                         <div>
                             <div style={s.sectionTitle}>
                                 {showTablePicker === 'transferReceipt' ? 'Transfer to Table' : 'Merge with Table'}
                             </div>
-                            <div style={s.tableGrid}>
+                            <div style={s.tableGrid} /* static: 4-column grid */>
                                 {(tables || []).map(t => (
                                     <button
                                         key={t.id}
                                         style={transferTarget?.id === t.id ? s.tableBtnActive : s.tableBtn}
                                         onClick={() => handleTableSelect(t)}
+                                        aria-label={`Select table ${t.name || t.number}`}
+                                    /* dynamic: active bg color */
                                     >
                                         {t.name || `T${t.number || t.id}`}
                                     </button>
@@ -147,8 +149,8 @@ export default function ActionsPanel({ order, tables, onAction, onClose }: Actio
                         </div>
                     ) : (
                         ACTIONS.map(section => (
-                            <div key={section.section} style={s.section}>
-                                <div style={s.sectionTitle}>{section.section}</div>
+                            <div key={section.section} style={s.section} /* static: bottom margin */>
+                                <div style={s.sectionTitle} /* static: uppercase label */>{section.section}</div>
                                 {section.items.map(item => (
                                     <button
                                         key={item.key}
@@ -156,11 +158,14 @@ export default function ActionsPanel({ order, tables, onAction, onClose }: Actio
                                         onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#333'; }}
                                         onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                                         onClick={() => handleAction(item.key)}
+                                        aria-label={item.label}
+                                        title={item.desc}
+                                    /* dynamic: hover bg color */
                                     >
-                                        <span style={s.actionIcon}>{item.icon}</span>
-                                        <div style={s.actionLabel}>
-                                            <div>{item.label}</div>
-                                            <div style={s.actionDesc}>{item.desc}</div>
+                                        <span style={s.actionIcon} /* static: icon width */>{item.icon}</span>
+                                        <div style={s.actionLabel} /* static: left align */>
+                                            <div /* static: bold label */>{item.label}</div>
+                                            <div style={s.actionDesc} /* static: muted desc */>{item.desc}</div>
                                         </div>
                                     </button>
                                 ))}

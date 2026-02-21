@@ -1,0 +1,292 @@
+﻿src/components/inventory/ItemDetailDrawer.tsx(64,12): error TS2322: Type '{ className: string; }' is not assignable to type '{ [key: string]: Record<string, unknown>; className?: string; }'.
+  Property 'className' is incompatible with index signature.
+    Type 'string' is not assignable to type 'Record<string, unknown>'.
+src/components/inventory/ItemDetailDrawer.tsx(65,12): error TS2322: Type '{ className: string; }' is not assignable to type '{ [key: string]: Record<string, unknown>; className?: string; }'.
+  Property 'className' is incompatible with index signature.
+    Type 'string' is not assignable to type 'Record<string, unknown>'.
+src/components/inventory/ItemDetailDrawer.tsx(66,12): error TS2322: Type '{ className: string; }' is not assignable to type '{ [key: string]: Record<string, unknown>; className?: string; }'.
+  Property 'className' is incompatible with index signature.
+    Type 'string' is not assignable to type 'Record<string, unknown>'.
+src/components/OnlineStatusIndicator.tsx(36,17): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'SetStateAction<{ mode: string; cloudReachable: boolean; edgeReachable: boolean; meshActive: boolean; }>'.
+src/components/pos/POSFilterBar.tsx(141,66): error TS2739: Type 'Record<string, unknown>' is missing the following properties from type 'DateRange': from, to
+src/components/pos/POSFilterBar.tsx(142,29): error TS2322: Type 'number' is not assignable to type 'Record<string, unknown>'.
+src/components/ui/breadcrumb.tsx(39,11): error TS2698: Spread types may only be created from object types.
+src/components/ui/toggle-group.tsx(41,4): error TS2322: Type '{ children: Element; ref: ForwardedRef<HTMLDivElement>; className: string; }' is not assignable to type 'IntrinsicAttributes & ((ToggleGroupSingleProps | ToggleGroupMultipleProps) & RefAttributes<HTMLDivElement>)'.
+  Property 'type' is missing in type '{ children: Element; ref: ForwardedRef<HTMLDivElement>; className: string; }' but required in type 'ToggleGroupMultipleProps'.
+src/components/ui/toggle-group.tsx(45,9): error TS2698: Spread types may only be created from object types.
+src/components/voice/HeyRin.tsx(434,9): error TS2739: Type 'Record<string, unknown>' is missing the following properties from type '{ stop: () => void; start: () => void; }': stop, start
+src/components/voice/HeyRin.tsx(435,21): error TS2349: This expression is not callable.
+  Type '{}' has no call signatures.
+src/components/voice/HeyRin.tsx(460,33): error TS2349: This expression is not callable.
+  Type '{}' has no call signatures.
+src/components/voice/HeyRin.tsx(475,9): error TS2739: Type 'Record<string, unknown>' is missing the following properties from type '{ stop: () => void; start: () => void; }': stop, start
+src/components/voice/HeyRin.tsx(476,21): error TS2349: This expression is not callable.
+  Type '{}' has no call signatures.
+src/features/auth/AuthContext.tsx(60,38): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/features/restin/radar/RadarDashboard.tsx(61,93): error TS2339: Property 'message' does not exist on type 'unknown'.
+src/features/restin/voice/CallLogs.tsx(52,43): error TS2339: Property 'toLowerCase' does not exist on type 'unknown'.
+src/features/restin/voice/CallLogs.tsx(53,47): error TS2339: Property 'toLowerCase' does not exist on type 'unknown'.
+src/features/restin/voice/CallLogs.tsx(189,37): error TS2322: Type 'unknown' is not assignable to type 'Key'.
+src/features/restin/voice/CallLogs.tsx(193,94): error TS2322: Type 'unknown' is not assignable to type 'ReactI18NextChildren | Iterable<ReactI18NextChildren>'.
+src/features/restin/voice/CallLogs.tsx(195,68): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'unknown' is not assignable to parameter of type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'unknown' is not assignable to parameter of type 'string | number'.
+src/features/restin/voice/CallLogs.tsx(197,100): error TS2322: Type 'unknown' is not assignable to type 'string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal'.
+src/features/restin/voice/CallLogs.tsx(199,158): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/features/restin/voice/CallLogs.tsx(200,45): error TS2322: Type 'unknown' is not assignable to type 'ReactI18NextChildren | Iterable<ReactI18NextChildren>'.
+src/features/restin/voice/CallLogs.tsx(203,86): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/features/restin/voice/CallLogs.tsx(205,41): error TS2322: Type 'unknown' is not assignable to type 'ReactI18NextChildren | Iterable<ReactI18NextChildren>'.
+src/features/restin/voice/VoiceSettings.tsx(391,85): error TS2345: Argument of type 'void' is not assignable to parameter of type 'Record<string, unknown>'.
+src/features/restin/voice/VoiceSettings.tsx(400,88): error TS2345: Argument of type 'void' is not assignable to parameter of type 'File'.
+src/features/restin/voice/VoiceSettings.tsx(409,61): error TS2345: Argument of type 'void' is not assignable to parameter of type 'string'.
+src/features/restin/voice/VoiceSettings.tsx(437,29): error TS2345: Argument of type '{ persona: any; greeting: any; voice_speed: any; auto_reservations: any; call_transfer: any; sms_confirmation: any; voice_provider: any; language: any; phone_number: any; }' is not assignable to parameter of type 'void'.
+src/features/restin/voice/VoiceSettings.tsx(613,82): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/features/restin/web/WebBuilder.tsx(66,58): error TS2339: Property 'items' does not exist on type 'unknown'.
+src/pages/integrations/IntegrationsHub.tsx(249,26): error TS2802: Type 'Set<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/pages/integrations/IntegrationsHub.tsx(431,39): error TS2339: Property 'test_mode' does not exist on type '{}'.
+src/pages/inventory/InventoryItemsNew.tsx(310,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: number; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/inventory/InventoryItemsNew.tsx(316,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: number; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/inventory/InventoryItemsNew.tsx(329,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: string; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/inventory/InventoryItemsNew.tsx(347,9): error TS2322: Type '({ id: string; label: string; variant: string; } | { id: string; label: string; variant?: undefined; })[]' is not assignable to type '{ id: string; label: string; variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost"; }[]'.
+  Type '{ id: string; label: string; variant: string; } | { id: string; label: string; variant?: undefined; }' is not assignable to type '{ id: string; label: string; variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost"; }'.
+    Type '{ id: string; label: string; variant: string; }' is not assignable to type '{ id: string; label: string; variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost"; }'.
+      Types of property 'variant' are incompatible.
+        Type 'string' is not assignable to type '"link" | "default" | "destructive" | "outline" | "secondary" | "ghost"'.
+src/pages/inventory/InventoryPage.tsx(74,9): error TS2365: Operator '<' cannot be applied to types 'unknown' and 'number'.
+src/pages/inventory/InventoryPage.tsx(159,17): error TS2322: Type 'unknown' is not assignable to type 'Key'.
+src/pages/inventory/InventoryPage.tsx(167,69): error TS2322: Type 'unknown' is not assignable to type 'ReactI18NextChildren | Iterable<ReactI18NextChildren>'.
+src/pages/inventory/InventoryPage.tsx(170,28): error TS2322: Type 'unknown' is not assignable to type '"default" | "destructive" | "outline" | "secondary"'.
+src/pages/inventory/InventoryPage.tsx(179,41): error TS2339: Property 'toFixed' does not exist on type 'unknown'.
+src/pages/inventory/InventoryPage.tsx(185,69): error TS2339: Property 'toFixed' does not exist on type 'unknown'.
+src/pages/inventory/InventoryPage.tsx(191,72): error TS2322: Type 'unknown' is not assignable to type 'ReactI18NextChildren | Iterable<ReactI18NextChildren>'.
+src/pages/inventory/StockAdjustments.tsx(115,10): error TS2739: Type '{ type: string; title: string; message: string; actions: { label: string; onClick: () => void; }[]; onClose: () => void; }' is missing the following properties from type '{ type?: string; title: any; message: any; details: any; actions?: any[]; onClose: any; showBackground?: boolean; icon: any; }': details, icon
+src/pages/manager/ai-invoice/InvoiceOCR.tsx(53,19): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/ComboBuilder.tsx(313,49): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/ComboBuilder.tsx(341,49): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/ComboBuilder.tsx(384,53): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/ComboBuilder.tsx(398,53): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/ComboBuilder.tsx(407,53): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/ComboBuilder.tsx(454,65): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/CompanySettings.tsx(169,44): error TS2698: Spread types may only be created from object types.
+src/pages/manager/Dashboard.tsx(64,11): error TS2339: Property 'activeVenue' does not exist on type '{}'.
+src/pages/manager/door-access/tabs/DoorsTab.tsx(121,71): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/pages/manager/FloorPlanEditor.tsx(247,7): error TS2322: Type 'string | ArrayBuffer' is not assignable to type 'string'.
+  Type 'ArrayBuffer' is not assignable to type 'string'.
+src/pages/manager/FloorPlanEditor.tsx(287,14): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/hr/EmployeePortalComplete.tsx(692,19): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/hr/HRMap.tsx(157,32): error TS2339: Property 'id' does not exist on type 'unknown'.
+src/pages/manager/hr/HRMap.tsx(167,109): error TS2339: Property 'name' does not exist on type 'unknown'.
+src/pages/manager/hr/HRMap.tsx(168,109): error TS2339: Property 'loc' does not exist on type 'unknown'.
+src/pages/manager/hr/HRMap.tsx(168,119): error TS2339: Property 'time' does not exist on type 'unknown'.
+src/pages/manager/hr/HRMap.tsx(175,36): error TS2339: Property 'name' does not exist on type 'unknown'.
+src/pages/manager/hr/SummaryDashboard.tsx(146,15): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/hr/SummaryDashboard.tsx(211,50): error TS2339: Property 'headcount_by_year' does not exist on type 'unknown'.
+src/pages/manager/hr/SummaryDashboard.tsx(226,49): error TS2339: Property 'headcount_by_employment_type' does not exist on type 'unknown'.
+src/pages/manager/hr/SummaryDashboard.tsx(241,49): error TS2339: Property 'headcount_by_age_bracket' does not exist on type 'unknown'.
+src/pages/manager/hr/SummaryDashboard.tsx(259,49): error TS2339: Property 'engagements_terminations' does not exist on type 'unknown'.
+src/pages/manager/hr/SummaryDashboard.tsx(278,19): error TS2740: Type '{}' is missing the following properties from type 'readonly unknown[]': length, concat, join, slice, and 26 more.
+src/pages/manager/hr/SummaryDashboard.tsx(284,74): error TS2339: Property 'map' does not exist on type 'unknown'.
+src/pages/manager/inventory/GoodsReceivedNotes.tsx(288,50): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/pages/manager/inventory/GoodsReceivedNotes.tsx(302,48): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/pages/manager/inventory/InventoryItemsNew.tsx(780,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: number; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/manager/inventory/InventoryItemsNew.tsx(786,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: number; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/manager/inventory/InventoryItemsNew.tsx(792,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: number; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/manager/inventory/InventoryItemsNew.tsx(798,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: string; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/manager/inventory/InventoryItemsNew.tsx(1035,13): error TS2322: Type '({ id: string; label: string; variant: string; } | { id: string; label: string; variant?: undefined; })[]' is not assignable to type '{ id: string; label: string; variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost"; }[]'.
+  Type '{ id: string; label: string; variant: string; } | { id: string; label: string; variant?: undefined; }' is not assignable to type '{ id: string; label: string; variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost"; }'.
+    Type '{ id: string; label: string; variant: string; }' is not assignable to type '{ id: string; label: string; variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost"; }'.
+      Types of property 'variant' are incompatible.
+        Type 'string' is not assignable to type '"link" | "default" | "destructive" | "outline" | "secondary" | "ghost"'.
+src/pages/manager/inventory/InventoryValuation.tsx(114,13): error TS2339: Property 'activeVenue' does not exist on type '{}'.
+src/pages/manager/inventory/MealPlanning.tsx(107,23): error TS2339: Property 'forEach' does not exist on type 'unknown'.
+src/pages/manager/inventory/MealPlanning.tsx(193,18): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: number; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/manager/inventory/MenuEngineering.tsx(280,121): error TS2339: Property 'STAR' does not exist on type '{ STAR: number; PUZZLE: number; PLOW_HORSE: number; DOG: number; } | {}'.
+  Property 'STAR' does not exist on type '{}'.
+src/pages/manager/inventory/MenuEngineering.tsx(280,156): error TS2339: Property 'DOG' does not exist on type '{ STAR: number; PUZZLE: number; PLOW_HORSE: number; DOG: number; } | {}'.
+  Property 'DOG' does not exist on type '{}'.
+src/pages/manager/inventory/MenuEngineering.tsx(389,33): error TS2322: Type '{ data: any[]; columns: ({ key: string; label: string; sortable: boolean; size: number; render?: undefined; } | { key: string; label: string; sortable: boolean; size: number; render: (row: any) => Element; } | { ...; })[]; searchField: string; searchPlaceholder: string; defaultSort: string; defaultSortDir: string; }' is not assignable to type 'IntrinsicAttributes & DataTableProps<any, unknown>'.
+  Property 'searchField' does not exist on type 'IntrinsicAttributes & DataTableProps<any, unknown>'.
+src/pages/manager/inventory/MobileStockCount.tsx(46,13): error TS2339: Property 'activeVenue' does not exist on type '{}'.
+src/pages/manager/inventory/OrderingSuggestions.tsx(264,52): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/pages/manager/inventory/RecipeManagementComplete.tsx(686,25): error TS2365: Operator '>=' cannot be applied to types 'string' and 'number'.
+src/pages/manager/inventory/RecipeManagementComplete.tsx(686,59): error TS2365: Operator '>=' cannot be applied to types 'string' and 'number'.
+src/pages/manager/inventory/RecipeManagementComplete.tsx(940,13): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/inventory/RecipeManagementComplete.tsx(951,106): error TS2339: Property 'total_trash' does not exist on type '{ total_active: number; total_archived: number; added_today: number; missing_ids: number; categories: number; }'.
+src/pages/manager/inventory/RecipeManagementComplete.tsx(1316,17): error TS2322: Type '({ id: string; accessorKey: string; header: string; size: number; minSize: number; cell: ({ row }: { row: any; }) => Element; filterFn: string; } | { id: string; accessorKey: string; header: string; size: number; minSize: number; cell: ({ row }: { ...; }) => Element; filterFn?: undefined; })[]' is not assignable to type 'ColumnDef<any>[]'.
+  Type '{ id: string; accessorKey: string; header: string; size: number; minSize: number; cell: ({ row }: { row: any; }) => Element; filterFn: string; } | { id: string; accessorKey: string; header: string; size: number; minSize: number; cell: ({ row }: { ...; }) => Element; filterFn?: undefined; }' is not assignable to type 'ColumnDef<any>'.
+    Property 'key' is missing in type '{ id: string; accessorKey: string; header: string; size: number; minSize: number; cell: ({ row }: { row: any; }) => Element; filterFn: string; }' but required in type 'ColumnDef<any>'.
+src/pages/manager/inventory/RecipeManagementComplete.tsx(1385,57): error TS2339: Property 'blur' does not exist on type 'EventTarget'.
+src/pages/manager/inventory/StockCount.tsx(186,48): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Record<string, unknown>'.
+src/pages/manager/inventory/StockCount.tsx(207,47): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/pages/manager/inventory/StockCount.tsx(219,32): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/pages/manager/inventory/StockCount.tsx(407,45): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/pages/manager/inventory/StockCount.tsx(518,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: number; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/manager/inventory/StockCount.tsx(531,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: number; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/manager/inventory/SupplierManagement.tsx(163,13): error TS2339: Property 'activeVenue' does not exist on type '{}'.
+src/pages/manager/inventory/TheoreticalVsActual.tsx(84,13): error TS2339: Property 'activeVenue' does not exist on type '{}'.
+src/pages/manager/inventory/TraceabilityView.tsx(97,13): error TS2339: Property 'activeVenue' does not exist on type '{}'.
+src/pages/manager/LogsViewer.tsx(46,38): error TS2339: Property 'items' does not exist on type 'unknown'.
+src/pages/manager/migration/MigrationHub.tsx(167,17): error TS2740: Type '{}' is missing the following properties from type 'any[]': length, pop, push, concat, and 35 more.
+src/pages/manager/migration/MigrationHub.tsx(273,49): error TS2322: Type 'string' is not assignable to type 'number'.
+src/pages/manager/migration/MigrationHub.tsx(688,54): error TS2304: Cannot find name 'Search'.
+src/pages/manager/Observability.tsx(74,61): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/manager/onboarding/SetupWizard.tsx(350,75): error TS2339: Property 'isLoading' does not exist on type 'UseMutationResult<AxiosResponse<any, any, {}>, Error, void, unknown>'.
+  Property 'isLoading' does not exist on type 'Override<MutationObserverIdleResult<AxiosResponse<any, any, {}>, Error, void, unknown>, { mutate: UseMutateFunction<AxiosResponse<any, any, {}>, Error, void, unknown>; }> & { ...; }'.
+src/pages/manager/onboarding/SetupWizard.tsx(353,49): error TS2339: Property 'isLoading' does not exist on type 'UseMutationResult<AxiosResponse<any, any, {}>, Error, void, unknown>'.
+  Property 'isLoading' does not exist on type 'Override<MutationObserverIdleResult<AxiosResponse<any, any, {}>, Error, void, unknown>, { mutate: UseMutateFunction<AxiosResponse<any, any, {}>, Error, void, unknown>; }> & { ...; }'.
+src/pages/manager/PhysicalTables.tsx(231,52): error TS2353: Object literal may only specify known properties, and 'accessorKey' does not exist in type 'ColumnDef<any>'.
+src/pages/manager/PhysicalTables.tsx(232,52): error TS2353: Object literal may only specify known properties, and 'accessorKey' does not exist in type 'ColumnDef<any>'.
+src/pages/manager/PhysicalTables.tsx(233,55): error TS2353: Object literal may only specify known properties, and 'accessorKey' does not exist in type 'ColumnDef<any>'.
+src/pages/manager/PhysicalTables.tsx(234,51): error TS2353: Object literal may only specify known properties, and 'accessorKey' does not exist in type 'ColumnDef<any>'.
+src/pages/manager/PhysicalTables.tsx(235,53): error TS2353: Object literal may only specify known properties, and 'accessorKey' does not exist in type 'ColumnDef<any>'.
+src/pages/manager/POSDashboard.tsx(401,90): error TS2345: Argument of type '(prev: { start: string; end: string; enabled: boolean; }) => { enabled: CheckedState; start: string; end: string; }' is not assignable to parameter of type 'SetStateAction<{ start: string; end: string; enabled: boolean; }>'.
+  Type '(prev: { start: string; end: string; enabled: boolean; }) => { enabled: CheckedState; start: string; end: string; }' is not assignable to type '(prevState: { start: string; end: string; enabled: boolean; }) => { start: string; end: string; enabled: boolean; }'.
+    Call signature return types '{ enabled: CheckedState; start: string; end: string; }' and '{ start: string; end: string; enabled: boolean; }' are incompatible.
+      The types of 'enabled' are incompatible between these types.
+        Type 'string | boolean' is not assignable to type 'boolean'.
+          Type 'string' is not assignable to type 'boolean'.
+src/pages/manager/POSDashboard.tsx(453,64): error TS2552: Cannot find name 'setTaxInclusive'. Did you mean 'taxInclusive'?
+src/pages/manager/POSDashboard.tsx(464,64): error TS2552: Cannot find name 'setTaxInclusive'. Did you mean 'taxInclusive'?
+src/pages/manager/POSDashboard.tsx(551,56): error TS2739: Type '{}' is missing the following properties from type '{ active: any; payload: any; label: any; }': active, payload, label
+src/pages/manager/quality/HACCPScheduler.tsx(90,13): error TS2339: Property 'activeVenue' does not exist on type '{}'.
+src/pages/manager/RolesPermissions.tsx(450,38): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/RolesPermissions.tsx(622,51): error TS2339: Property 'permissions' does not exist on type '{ id: string; title: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; children: ({ ...; } | { ...; })[]; }'.
+src/pages/manager/RolesPermissions.tsx(627,100): error TS2339: Property 'permissions' does not exist on type '{ id: string; title: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; children: ({ ...; } | { ...; })[]; }'.
+src/pages/manager/RolesPermissions.tsx(639,83): error TS2339: Property 'permissions' does not exist on type '{ id: string; title: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; children: ({ ...; } | { ...; })[]; }'.
+src/pages/manager/smart-home/SmartHomeDashboard.tsx(270,21): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/SystemDashboard.tsx(199,26): error TS2741: Property 'data' is missing in type '{ title: string; }' but required in type '{ data: any; title?: string; }'.
+src/pages/manager/TipPresetsSettings.tsx(181,41): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/TipPresetsSettings.tsx(204,41): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/manager/UpdatesPage.tsx(190,37): error TS2322: Type 'unknown' is not assignable to type 'Key'.
+src/pages/manager/UpdatesPage.tsx(190,50): error TS2322: Type 'unknown' is not assignable to type 'string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal'.
+src/pages/pos/AccountingGroups.tsx(70,23): error TS2345: Argument of type '{ id: unknown; name: unknown; code: unknown; category: unknown; description: unknown; parentGroup: unknown; color: unknown; taxProfile: unknown; productionCenter: unknown; course: unknown; itemCount: unknown; revenue: unknown; isActive: unknown; sortOrder: unknown; externalRef: unknown; }[]' is not assignable to parameter of type 'SetStateAction<AccountingGroup[]>'.
+  Type '{ id: unknown; name: unknown; code: unknown; category: unknown; description: unknown; parentGroup: unknown; color: unknown; taxProfile: unknown; productionCenter: unknown; course: unknown; itemCount: unknown; revenue: unknown; isActive: unknown; sortOrder: unknown; externalRef: unknown; }[]' is not assignable to type 'AccountingGroup[]'.
+    Type '{ id: unknown; name: unknown; code: unknown; category: unknown; description: unknown; parentGroup: unknown; color: unknown; taxProfile: unknown; productionCenter: unknown; course: unknown; itemCount: unknown; revenue: unknown; isActive: unknown; sortOrder: unknown; externalRef: unknown; }' is not assignable to type 'AccountingGroup'.
+      Types of property 'id' are incompatible.
+        Type 'unknown' is not assignable to type 'string'.
+src/pages/pos/AccountingGroups.tsx(71,17): error TS2345: Argument of type '(g: Record<string, unknown>) => { id: unknown; name: unknown; code: unknown; category: unknown; description: unknown; parentGroup: unknown; color: unknown; taxProfile: unknown; productionCenter: unknown; course: unknown; itemCount: unknown; revenue: unknown; isActive: unknown; sortOrder: unknown; externalRef: unknow...' is not assignable to parameter of type '(value: AccountingGroup[], index: number, array: AccountingGroup[][]) => { id: unknown; name: unknown; code: unknown; category: unknown; description: unknown; parentGroup: unknown; color: unknown; taxProfile: unknown; productionCenter: unknown; ... 5 more ...; externalRef: unknown; }'.
+  Types of parameters 'g' and 'value' are incompatible.
+    Type 'AccountingGroup[]' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type 'AccountingGroup[]'.
+src/pages/pos/Courses.tsx(39,24): error TS2345: Argument of type '{ id: unknown; name: unknown; sortOrder: unknown; color: unknown; defaultDelay: unknown; autoFire: unknown; isActive: unknown; itemCount: unknown; }[]' is not assignable to parameter of type 'SetStateAction<Course[]>'.
+  Type '{ id: unknown; name: unknown; sortOrder: unknown; color: unknown; defaultDelay: unknown; autoFire: unknown; isActive: unknown; itemCount: unknown; }[]' is not assignable to type 'Course[]'.
+    Type '{ id: unknown; name: unknown; sortOrder: unknown; color: unknown; defaultDelay: unknown; autoFire: unknown; isActive: unknown; itemCount: unknown; }' is not assignable to type 'Course'.
+      Types of property 'id' are incompatible.
+        Type 'unknown' is not assignable to type 'string'.
+src/pages/pos/Courses.tsx(40,17): error TS2345: Argument of type '(c: Record<string, unknown>) => { id: unknown; name: unknown; sortOrder: unknown; color: unknown; defaultDelay: unknown; autoFire: unknown; isActive: unknown; itemCount: unknown; }' is not assignable to parameter of type '(value: Course, index: number, array: Course[]) => { id: unknown; name: unknown; sortOrder: unknown; color: unknown; defaultDelay: unknown; autoFire: unknown; isActive: unknown; itemCount: unknown; }'.
+  Types of parameters 'c' and 'value' are incompatible.
+    Type 'Course' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type 'Course'.
+src/pages/pos/CustomerModal.tsx(135,33): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/Discounts.tsx(41,38): error TS2345: Argument of type '(d: Record<string, unknown>) => Discount' is not assignable to parameter of type '(value: Discount, index: number, array: Discount[]) => Discount'.
+  Types of parameters 'd' and 'value' are incompatible.
+    Type 'Discount' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type 'Discount'.
+src/pages/pos/InventoryAlerts.tsx(47,54): error TS2345: Argument of type '(ai: Record<string, unknown>) => { id: string; name: string; category: string; currentStock: number; parLevel: number; reorderPoint: number; unit: string; status: AlertItem["status"]; }' is not assignable to parameter of type '(value: InventoryItem, index: number, array: InventoryItem[]) => { id: string; name: string; category: string; currentStock: number; parLevel: number; reorderPoint: number; unit: string; status: "low" | ... 2 more ... | "out"; }'.
+  Types of parameters 'ai' and 'value' are incompatible.
+    Type 'InventoryItem' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type 'InventoryItem'.
+src/pages/pos/ItemLibrary.tsx(84,49): error TS2345: Argument of type '(ai: Record<string, unknown>) => { id: string; name: string; type: Item["type"]; price: number; costPrice: number; accountingGroup: string; productionCenter: string; taxProfile: string; sku: string; ... 7 more ...; createdAt: string; }' is not assignable to parameter of type '(value: InventoryItem, index: number, array: InventoryItem[]) => { id: string; name: string; type: "single" | "combo" | "item-group"; price: number; costPrice: number; ... 11 more ...; createdAt: string; }'.
+  Types of parameters 'ai' and 'value' are incompatible.
+    Type 'InventoryItem' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type 'InventoryItem'.
+src/pages/pos/ItemLibrary.tsx(225,257): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/ItemTags.tsx(40,21): error TS2345: Argument of type '{ id: unknown; name: unknown; description: unknown; color: unknown; icon: unknown; showOnPOS: unknown; showOnReceipt: unknown; showOnKDS: unknown; showOnWeb: unknown; itemCount: unknown; }[]' is not assignable to parameter of type 'SetStateAction<ItemTag[]>'.
+  Type '{ id: unknown; name: unknown; description: unknown; color: unknown; icon: unknown; showOnPOS: unknown; showOnReceipt: unknown; showOnKDS: unknown; showOnWeb: unknown; itemCount: unknown; }[]' is not assignable to type 'ItemTag[]'.
+    Type '{ id: unknown; name: unknown; description: unknown; color: unknown; icon: unknown; showOnPOS: unknown; showOnReceipt: unknown; showOnKDS: unknown; showOnWeb: unknown; itemCount: unknown; }' is not assignable to type 'ItemTag'.
+      Types of property 'id' are incompatible.
+        Type 'unknown' is not assignable to type 'string'.
+src/pages/pos/ItemTags.tsx(41,17): error TS2345: Argument of type '(t: Record<string, unknown>) => { id: unknown; name: unknown; description: unknown; color: unknown; icon: unknown; showOnPOS: unknown; showOnReceipt: unknown; showOnKDS: unknown; showOnWeb: unknown; itemCount: unknown; }' is not assignable to parameter of type '(value: ItemTag, index: number, array: ItemTag[]) => { id: unknown; name: unknown; description: unknown; color: unknown; icon: unknown; showOnPOS: unknown; showOnReceipt: unknown; showOnKDS: unknown; showOnWeb: unknown; itemCount: unknown; }'.
+  Types of parameters 't' and 'value' are incompatible.
+    Type 'ItemTag' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type 'ItemTag'.
+src/pages/pos/ItemTags.tsx(61,177): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/KDS1Setup.tsx(301,29): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/OrderProfiles.tsx(55,37): error TS2345: Argument of type '(p: Record<string, unknown>) => { id: string; name: string; code: string; icon: string; color: string; taxProfile: string; printProfile: string; continuous: boolean; orderModifier: boolean; ... 11 more ...; sortOrder: number; }' is not assignable to parameter of type '(value: OrderProfile, index: number, array: OrderProfile[]) => { id: string; name: string; code: string; icon: string; color: string; taxProfile: string; printProfile: string; ... 13 more ...; sortOrder: number; }'.
+  Types of parameters 'p' and 'value' are incompatible.
+    Type 'OrderProfile' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type 'OrderProfile'.
+src/pages/pos/OrderProfiles.tsx(114,296): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/OrderProfiles.tsx(117,249): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/OrderProfiles.tsx(118,255): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/OrderProfiles.tsx(124,282): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/OrderProfiles.tsx(125,335): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/OrderProfiles.tsx(132,262): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/OrderProfiles.tsx(133,322): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/PaymentMethods.tsx(85,17): error TS2345: Argument of type '(m: Record<string, unknown>) => { id: string; name: string; type: PaymentMethod["type"]; isActive: boolean; isDefault: boolean; accountingRef: string; opensCashDrawer: boolean; requiresAmount: boolean; ... 6 more ...; sortOrder: number; }' is not assignable to parameter of type '(value: PaymentMethod, index: number, array: PaymentMethod[]) => { id: string; name: string; type: "other" | "mobile" | "cash" | "card" | "voucher" | "account"; ... 11 more ...; sortOrder: number; }'.
+  Types of parameters 'm' and 'value' are incompatible.
+    Type 'PaymentMethod' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type 'PaymentMethod'.
+src/pages/pos/PaymentMethods.tsx(218,212): error TS17001: JSX elements cannot have multiple attributes with the same name.
+src/pages/pos/POSMain.tsx(57,82): error TS2339: Property 'theme' does not exist on type '{ send_default_print_only: boolean; send_checkbox_kds: boolean; send_checkbox_stock: boolean; send_checkbox_print: boolean; bill_require_done: boolean; bill_require_done_message: string; }'.
+src/pages/pos/POSMain.tsx(382,9): error TS2353: Object literal may only specify known properties, and 'meta' does not exist in type 'AxiosRequestConfig<{ do_print: boolean; do_kds: boolean; do_stock: boolean; client_send_id: string; }>'.
+src/pages/pos/POSMain.tsx(632,8): error TS2322: Type '{ venue: any; user: User; categories: any[]; menuItems: any[]; searchQuery: string; tables: any[]; activeCategory: any; selectedTable: any; currentOrder: any; orderItems: any[]; settings: { search: { kds_enabled: boolean; ... 4 more ...; admin_default_scope: string; }; ui: { ...; }; pos: { ...; }; kds: { ...; }; ops...' is not assignable to type 'POSLayoutProps'.
+  Types of property 'user' are incompatible.
+    Type 'User' is not assignable to type 'POSUser'.
+      Index signature for type 'string' is missing in type 'User'.
+src/pages/pos/POSRuntime.tsx(714,57): error TS2304: Cannot find name 'Timer'.
+src/pages/pos/POSRuntimeEnhanced.tsx(57,69): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/pos/POSRuntimeEnhanced.tsx(124,42): error TS2339: Property 'full_name' does not exist on type 'User'.
+src/pages/pos/POSRuntimeEnhanced.tsx(462,41): error TS2802: Type 'Set<unknown>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/pages/pos/POSRuntimeEnhanced.tsx(619,17): error TS2339: Property 'room_number' does not exist on type '{ order_id: any; venue_id: any; tender_type: any; amount: any; tip: any; discount: any; }'.
+src/pages/pos/POSRuntimeEnhanced.tsx(620,17): error TS2339: Property 'guest_name' does not exist on type '{ order_id: any; venue_id: any; tender_type: any; amount: any; tip: any; discount: any; }'.
+src/pages/pos/POSRuntimeEnhanced.tsx(621,17): error TS2339: Property 'reservation_id' does not exist on type '{ order_id: any; venue_id: any; tender_type: any; amount: any; tip: any; discount: any; }'.
+src/pages/pos/POSRuntimeEnhanced.tsx(892,63): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/pos/POSRuntimeEnhanced.tsx(892,67): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/pos/POSRuntimeEnhanced.tsx(1178,12): error TS2741: Property 'venueInfo' is missing in type '{ order: any; items: any[]; orderTotal: any; onClose: () => void; }' but required in type '{ order: any; items: any; orderTotal: any; venueInfo: any; onClose: any; }'.
+src/pages/pos/POSRuntimeEnhanced.tsx(1473,13): error TS2322: Type '{ tables: any[]; onMerge: (sourceId: any, targetId: any) => void; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & { open: any; onClose: any; currentTable: any; availableTables: any; onConfirm: any; }'.
+  Property 'tables' does not exist on type 'IntrinsicAttributes & { open: any; onClose: any; currentTable: any; availableTables: any; onConfirm: any; }'.
+src/pages/pos/PrintingProfiles.tsx(51,62): error TS2345: Argument of type '{ id: unknown; name: unknown; description: unknown; printers: unknown; fallbackPrinter: unknown; productionCenters: unknown; printReceipts: unknown; printOrderTickets: unknown; printKitchenTickets: unknown; copies: unknown; paperWidth: unknown; fontSize: unknown; cutAfterPrint: unknown; buzzAfterPrint: unknown; isAc...' is not assignable to parameter of type 'SetStateAction<PrintingProfile[]>'.
+  Type '{ id: unknown; name: unknown; description: unknown; printers: unknown; fallbackPrinter: unknown; productionCenters: unknown; printReceipts: unknown; printOrderTickets: unknown; printKitchenTickets: unknown; copies: unknown; paperWidth: unknown; fontSize: unknown; cutAfterPrint: unknown; buzzAfterPrint: unknown; isAc...' is not assignable to type 'PrintingProfile[]'.
+    Type '{ id: unknown; name: unknown; description: unknown; printers: unknown; fallbackPrinter: unknown; productionCenters: unknown; printReceipts: unknown; printOrderTickets: unknown; printKitchenTickets: unknown; copies: unknown; paperWidth: unknown; fontSize: unknown; cutAfterPrint: unknown; buzzAfterPrint: unknown; isAc...' is not assignable to type 'PrintingProfile'.
+      Types of property 'id' are incompatible.
+        Type 'unknown' is not assignable to type 'string'.
+src/pages/pos/ReceiptTemplates.tsx(340,38): error TS2345: Argument of type '(t: Record<string, unknown>) => ReceiptTemplate' is not assignable to parameter of type '(value: ReceiptTemplate, index: number, array: ReceiptTemplate[]) => ReceiptTemplate'.
+  Types of parameters 't' and 'value' are incompatible.
+    Type 'ReceiptTemplate' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type 'ReceiptTemplate'.
+src/pages/pos/ReceiptTemplates.tsx(341,17): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/pages/pos/ReceiptTemplates.tsx(341,59): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/pages/pos/ReceiptTemplates.tsx(341,87): error TS2322: Type 'unknown' is not assignable to type 'TemplateType'.
+src/pages/pos/ServiceCharge.tsx(35,22): error TS2345: Argument of type '{ id: unknown; name: unknown; type: unknown; value: unknown; applyTo: unknown; minGuests: unknown; autoApply: unknown; taxable: unknown; isActive: unknown; description: unknown; }[]' is not assignable to parameter of type 'SetStateAction<ServiceChargeRule[]>'.
+  Type '{ id: unknown; name: unknown; type: unknown; value: unknown; applyTo: unknown; minGuests: unknown; autoApply: unknown; taxable: unknown; isActive: unknown; description: unknown; }[]' is not assignable to type 'ServiceChargeRule[]'.
+    Type '{ id: unknown; name: unknown; type: unknown; value: unknown; applyTo: unknown; minGuests: unknown; autoApply: unknown; taxable: unknown; isActive: unknown; description: unknown; }' is not assignable to type 'ServiceChargeRule'.
+      Types of property 'id' are incompatible.
+        Type 'unknown' is not assignable to type 'string'.
+src/pages/pos/ServiceCharge.tsx(36,17): error TS2345: Argument of type '(r: Record<string, unknown>) => { id: unknown; name: unknown; type: unknown; value: unknown; applyTo: unknown; minGuests: unknown; autoApply: unknown; taxable: unknown; isActive: unknown; description: unknown; }' is not assignable to parameter of type '(value: ServiceChargeRule, index: number, array: ServiceChargeRule[]) => { id: unknown; name: unknown; type: unknown; value: unknown; applyTo: unknown; minGuests: unknown; autoApply: unknown; taxable: unknown; isActive: unknown; description: unknown; }'.
+  Types of parameters 'r' and 'value' are incompatible.
+    Type 'ServiceChargeRule' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type 'ServiceChargeRule'.
+src/pages/pos/TaxSettings.tsx(50,60): error TS2345: Argument of type '{ id: unknown; name: unknown; rate: unknown; isDefault: unknown; isActive: unknown; accountingRef: unknown; }[]' is not assignable to parameter of type 'SetStateAction<TaxRate[]>'.
+  Type '{ id: unknown; name: unknown; rate: unknown; isDefault: unknown; isActive: unknown; accountingRef: unknown; }[]' is not assignable to type 'TaxRate[]'.
+    Type '{ id: unknown; name: unknown; rate: unknown; isDefault: unknown; isActive: unknown; accountingRef: unknown; }' is not assignable to type 'TaxRate'.
+      Types of property 'id' are incompatible.
+        Type 'unknown' is not assignable to type 'string'.
+src/pages/pos/VoidReasons.tsx(41,24): error TS2345: Argument of type '{ id: unknown; name: unknown; requiresManager: unknown; requiresNote: unknown; isActive: unknown; usageCount: unknown; sortOrder: unknown; category: unknown; }[]' is not assignable to parameter of type 'SetStateAction<VoidReason[]>'.
+  Type '{ id: unknown; name: unknown; requiresManager: unknown; requiresNote: unknown; isActive: unknown; usageCount: unknown; sortOrder: unknown; category: unknown; }[]' is not assignable to type 'VoidReason[]'.
+    Type '{ id: unknown; name: unknown; requiresManager: unknown; requiresNote: unknown; isActive: unknown; usageCount: unknown; sortOrder: unknown; category: unknown; }' is not assignable to type 'VoidReason'.
+      Types of property 'id' are incompatible.
+        Type 'unknown' is not assignable to type 'string'.
+src/pages/pos/VoidReasons.tsx(42,17): error TS2345: Argument of type '(r: Record<string, unknown>) => { id: unknown; name: unknown; requiresManager: unknown; requiresNote: unknown; isActive: unknown; usageCount: unknown; sortOrder: unknown; category: unknown; }' is not assignable to parameter of type '(value: VoidReason, index: number, array: VoidReason[]) => { id: unknown; name: unknown; requiresManager: unknown; requiresNote: unknown; isActive: unknown; usageCount: unknown; sortOrder: unknown; category: unknown; }'.
+  Types of parameters 'r' and 'value' are incompatible.
+    Type 'VoidReason' is not assignable to type 'Record<string, unknown>'.
+      Index signature for type 'string' is missing in type 'VoidReason'.
+src/pages/UserProfileSettings.tsx(54,18): error TS2339: Property 'phone' does not exist on type 'User'.
+src/pages/UserProfileSettings.tsx(63,21): error TS2339: Property 'phone' does not exist on type 'User'.
+src/platform/AppEvents.ts(42,7): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/platform/AppEvents.ts(48,30): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/platform/AppEvents.ts(56,12): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'AppEvent'.
+  Type '{}' is missing the following properties from type 'AppEvent': type, timestamp, payload
+src/platform/AppEvents.ts(59,64): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/platform/AppEvents.ts(66,31): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'AppEvent'.
+  Type '{}' is missing the following properties from type 'AppEvent': type, timestamp, payload

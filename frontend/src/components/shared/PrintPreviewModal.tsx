@@ -67,7 +67,7 @@ export default function PrintPreviewModal({ open, onClose, content, type = 'rece
         <ScrollArea className="max-h-[500px] w-full">
           <div 
             className="p-4 font-mono text-xs rounded-lg"
-            style={{ backgroundColor: '#FFFFFF', color: '#000000' }}
+            style={{ backgroundColor: '#FFFFFF', color: '#000000'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
             dangerouslySetInnerHTML={{ __html: content }}
           />
         </ScrollArea>

@@ -164,7 +164,7 @@ export default function OnboardingChecklists() {
                                 <span className={`font-semibold ${c.progress === 100 ? 'text-green-400' : 'text-amber-400'}`}>{c.progress || 0}%</span>
                             </div>
                             <div className="h-1.5 bg-slate-800 rounded-sm mb-3">
-                                <div className={`h-full rounded-sm transition-[width] duration-300 ${c.progress === 100 ? 'bg-green-400' : 'bg-indigo-500'}`} style={{ width: `${c.progress || 0}%` }} /> {}
+                                <div className={`h-full rounded-sm transition-[width] duration-300 ${c.progress === 100 ? 'bg-green-400' : 'bg-indigo-500'}`} style={{ width: `${c.progress || 0}%`  /* keep-inline */ }} /> {}
                             </div>
                             {(c.tasks || []).map((task) => (
                                 <div key={task.id} onClick={() => !task.completed && completeTask(c.id, task.id)} className={`flex items-center gap-2.5 py-2 border-b border-slate-800/20 ${task.completed ? 'cursor-default' : 'cursor-pointer'}`}>

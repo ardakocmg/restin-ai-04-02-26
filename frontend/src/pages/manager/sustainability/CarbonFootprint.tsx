@@ -124,7 +124,7 @@ export default function CarbonFootprint() {
                                 <div className="h-2 bg-muted rounded-full overflow-hidden">
                                     <div
                                         className={cn("h-full rounded-full", cat.color)}
-                                        style={{ width: `${cat.pct}%` }}
+                                        style={{ width: `${cat.pct}%`  /* keep-inline */ }}
                                     />
                                 </div>
                             </div>
@@ -157,7 +157,7 @@ export default function CarbonFootprint() {
                                                 "h-full rounded-full transition-all",
                                                 pct >= 80 ? "bg-emerald-500" : pct >= 50 ? "bg-amber-500" : "bg-red-500"
                                             )}
-                                            style={{ width: `${Math.min(pct, 100)}%` }}
+                                            style={{ width: `${Math.min(pct, 100)}%`  /* keep-inline */ }}
                                         />
                                     </div>
                                 </div>

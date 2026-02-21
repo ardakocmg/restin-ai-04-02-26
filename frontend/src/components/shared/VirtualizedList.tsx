@@ -97,20 +97,20 @@ function VirtualizedInner<T>({
         <div
             ref={containerRef}
             className={className}
-            style={{ height, overflow: 'auto' }}
+            style={{ height, overflow: 'auto'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
         >
-            <div style={{ height: `${virtualizer.getTotalSize()}px`, width: '100%', position: 'relative' }}>
+            <div style={{ height: `${virtualizer.getTotalSize()}px`, width: '100%', position: 'relative'  /* keep-inline */ }}>
                 {virtualizer.getVirtualItems().map((virtualRow) => (
                     <div
                         key={virtualRow.key}
-                        style={{
+                        style={{ /* keep-inline */
                             position: 'absolute',
                             top: 0,
                             left: 0,
                             width: '100%',
                             height: `${virtualRow.size}px`,
                             transform: `translateY(${virtualRow.start}px)`,
-                        }}
+                         /* keep-inline */ }}
                     >
                         {renderItem(items[virtualRow.index], virtualRow.index)}
                     </div>

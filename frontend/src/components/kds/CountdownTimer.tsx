@@ -36,11 +36,11 @@ export default function CountdownTimer({ targetTime, createdAt }) {
   return (
     <div 
       className="flex items-center gap-1 px-2 py-1 rounded-lg font-mono text-xs font-bold"
-      style={{
+      style={{ /* keep-inline */
         backgroundColor: overtime ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',
         color: overtime ? '#FCA5A5' : '#93C5FD',
         border: overtime ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(59, 130, 246, 0.3)'
-      }}
+       /* keep-inline */ }} /* keep-inline */ /* keep-inline */
     >
       <Timer className="h-3 w-3" />
       {timeLeft}

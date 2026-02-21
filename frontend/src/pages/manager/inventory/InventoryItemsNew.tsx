@@ -107,8 +107,16 @@ function CheckboxFilter({ options, selected, onChange, maxVisible = 6 }) {
   );
 }
 
+interface StatCardProps {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string | number;
+  subtext?: string;
+  color?: string;
+}
+
 // ── KPI Stat Card ──────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: StatCardProps) {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 flex items-center gap-4">
@@ -700,7 +708,7 @@ export default function InventoryItemsNew() {
 
   // ── Bulk Actions ──
   const bulkActions = [
-    { id: 'archive', label: 'Archive Selected', variant: 'destructive' },
+    { id: 'archive', label: 'Archive Selected', variant: 'destructive' as const },
     { id: 'set_category', label: 'Set Category' },
     { id: 'export', label: 'Export Selected' },
   ];

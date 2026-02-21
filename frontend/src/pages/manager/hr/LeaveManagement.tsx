@@ -281,7 +281,7 @@ export default function LeaveManagement() {
                       <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-indigo-500 rounded-full transition-all"
-                          style={{ width: `${Math.min(100, ((b.total - b.balance) / (b.total || 1)) * 100)}%` }}
+                          style={{ width: `${Math.min(100, ((b.total - b.balance) / (b.total || 1)) * 100)}%`  /* keep-inline */ }}
                         />
                       </div>
                       <p className="text-[10px] text-muted-foreground mt-2">{b.used} used of {b.total || b.accrued || 25}</p>

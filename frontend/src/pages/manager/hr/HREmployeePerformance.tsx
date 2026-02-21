@@ -250,7 +250,7 @@ export default function HREmployeePerformance() {
                                                         <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
                                                         <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 11 }} tickFormatter={(d: string) => d.slice(5)} />
                                                         <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
-                                                        <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} />
+                                                        <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} /* keep-inline */ />
                                                         <Area type="monotone" dataKey="orders" stroke="#3b82f6" fill="#3b82f680" strokeWidth={2} />
                                                     </AreaChart>
                                                 </ResponsiveContainer>

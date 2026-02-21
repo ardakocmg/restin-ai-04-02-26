@@ -30,8 +30,16 @@ const RECIPE_POOL = [
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const MEAL_SLOTS = ['Lunch', 'Dinner'];
 
+interface StatCardProps {
+    icon: React.ComponentType<{ className?: string }>;
+    label: string;
+    value: string | number;
+    subtext?: string;
+    color?: string;
+}
+
 // ── KPI Card ─────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: StatCardProps) {
     return (
         <Card className="bg-card/50 border-border/50">
             <CardContent className="p-4">
@@ -61,8 +69,8 @@ export default function MealPlanning() {
     const [dietaryFilter, setDietaryFilter] = useState('all');
 
     // Menu plan: { 'Monday-Lunch': [recipe_ids], ... }
-    const [menuPlan, setMenuPlan] = useState(() => {
-        const plan = {};
+    const [menuPlan, setMenuPlan] = useState<Record<string, string[]>>(() => {
+        const plan: Record<string, string[]> = {};
         DAYS.forEach(day => {
             MEAL_SLOTS.forEach(meal => {
                 const key = `${day}-${meal}`;
@@ -201,7 +209,7 @@ export default function MealPlanning() {
 
             {/* Weekly Grid */}
             <div className="overflow-x-auto">
-                <div className="grid gap-2" style={{ gridTemplateColumns: `80px repeat(${DAYS.length}, 1fr)`, minWidth: '900px' }}>
+                <div className="grid gap-2" style={{ gridTemplateColumns: `80px repeat(${DAYS.length}, 1fr)`, minWidth: '900px'  /* keep-inline */ }}>
                     {/* Header */}
                     <div />
                     {DAYS.map(day => (

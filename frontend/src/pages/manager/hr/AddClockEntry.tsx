@@ -231,7 +231,7 @@ export default function AddClockEntry() {
             <div className="flex items-center gap-4 mb-8">
                 <Button
                     variant="ghost"
-                    size="icon" aria-label="Action"
+                    size="icon"
                     onClick={() => navigate('/manager/hr/clocking')}
                     className="text-muted-foreground hover:text-foreground hover:bg-white/5"
                     title="Back to Clocking Data"

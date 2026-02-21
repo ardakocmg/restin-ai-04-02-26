@@ -499,7 +499,7 @@ export default function InventoryDashboard() {
                             </Badge>
                         </div>
                         <div className="w-full bg-muted rounded-full h-2 mb-3">
-                            <div className={`h-2 rounded-full transition-all ${dataQuality.score >= 80 ? 'bg-green-500' : dataQuality.score >= 50 ? 'bg-amber-500' : 'bg-red-500'}`} style={{ width: `${dataQuality.score}%` }} />
+                            <div className={`h-2 rounded-full transition-all ${dataQuality.score >= 80 ? 'bg-green-500' : dataQuality.score >= 50 ? 'bg-amber-500' : 'bg-red-500'}`} style={{ width: `${dataQuality.score}%`  /* keep-inline */ }} />
                         </div>
                         <div className="space-y-2 text-sm">
                             <div className="flex justify-between items-center">
@@ -585,7 +585,7 @@ export default function InventoryDashboard() {
                                     <div
                                         className={`w-full rounded-t transition-all ${w.pct >= 33 ? 'bg-red-500/80' : w.pct >= 30 ? 'bg-amber-500/80' : 'bg-emerald-500/80'
                                             }`}
-                                        style={{ height: `${(w.pct / 40) * 100}%` }}
+                                        style={{ height: `${(w.pct / 40) * 100}%`  /* keep-inline */ }}
                                     />
                                     <span className="text-[9px] text-muted-foreground tabular-nums">{w.label}</span>
                                 </div>
@@ -629,9 +629,9 @@ export default function InventoryDashboard() {
                         </div>
                         {/* Visual bar */}
                         <div className="flex h-3 rounded-full overflow-hidden bg-muted mt-2">
-                            <div className="bg-green-500 transition-all" style={{ width: `${((stats.totalItems - stats.lowStockCount - stats.outOfStockCount) / Math.max(stats.totalItems, 1)) * 100}%` }} />
-                            <div className="bg-amber-500 transition-all" style={{ width: `${(stats.lowStockCount / Math.max(stats.totalItems, 1)) * 100}%` }} />
-                            <div className="bg-red-500 transition-all" style={{ width: `${(stats.outOfStockCount / Math.max(stats.totalItems, 1)) * 100}%` }} />
+                            <div className="bg-green-500 transition-all" style={{ width: `${((stats.totalItems - stats.lowStockCount - stats.outOfStockCount) / Math.max(stats.totalItems, 1)) * 100}%`  /* keep-inline */ }} />
+                            <div className="bg-amber-500 transition-all" style={{ width: `${(stats.lowStockCount / Math.max(stats.totalItems, 1)) * 100}%`  /* keep-inline */ }} />
+                            <div className="bg-red-500 transition-all" style={{ width: `${(stats.outOfStockCount / Math.max(stats.totalItems, 1)) * 100}%`  /* keep-inline */ }} />
                         </div>
                     </CardContent>
                 </Card>

@@ -38,7 +38,7 @@ export default function HRExceptions() {
                         <div className="flex items-center gap-4 mb-2">
                             <Button
                                 variant="outline"
-                                size="icon" aria-label="Action"
+                                size="icon"
                                 onClick={() => navigate('/manager/hr/summary')}
                                 className="bg-card border-border rounded-xl"
                             >

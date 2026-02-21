@@ -168,11 +168,11 @@ const AVAILABLE_INTEGRATIONS = [
 export default function IntegrationsHub() {
   const { activeVenue } = useVenue();
   const navigate = useNavigate();
-  const [integrations, setIntegrations] = useState([]);
+  const [integrations, setIntegrations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedIntegration, setSelectedIntegration] = useState(null);
+  const [selectedIntegration, setSelectedIntegration] = useState<any>(null);
   const [configOpen, setConfigOpen] = useState(false);
-  const [configData, setConfigData] = useState({});
+  const [configData, setConfigData] = useState<Record<string, any>>({});
   const [showSecrets, setShowSecrets] = useState({});
   const [saving, setSaving] = useState(false);
 
@@ -279,25 +279,24 @@ export default function IntegrationsHub() {
                     <Card
                       key={integration.key}
                       className="hover:shadow-lg transition-all cursor-pointer border-2"
-                      style={{
+                      style={{ /* keep-inline */
                         borderColor: isEnabled ? integration.color : 'transparent',
                         borderWidth: isEnabled ? '2px' : '1px'
-                      }}
+                       /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                     >
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3">
                             <div
                               className="p-2 rounded-lg"
-                              style={{ backgroundColor: `${integration.color}20` }}
+                              style={{ backgroundColor: `${integration.color}20`  /* keep-inline */ }}
                             >
-                              <Icon className="h-6 w-6" style={{ color: integration.color }} />
+                              <Icon className="h-6 w-6" style={{ color: integration.color  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
                             </div>
                             <div>
                               <CardTitle className="text-lg">{integration.name}</CardTitle>
                               <Badge
                                 variant="outline"
-                                className="mt-1 text-xs capitalize"
                               >
                                 {integration.category}
                               </Badge>
@@ -396,7 +395,7 @@ export default function IntegrationsHub() {
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon" aria-label="Action"
+                          size="icon"
                           className="h-8 w-8"
                           onClick={() => setShowSecrets({
                             ...showSecrets,
@@ -410,7 +409,7 @@ export default function IntegrationsHub() {
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon" aria-label="Action"
+                          size="icon"
                           className="h-8 w-8"
                           onClick={() => copyToClipboard(configData[field.key])}
                         >

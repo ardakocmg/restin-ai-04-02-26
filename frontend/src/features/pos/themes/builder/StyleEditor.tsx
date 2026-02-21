@@ -110,7 +110,7 @@ function ConfigFieldInput({
                                 "w-3.5 h-3.5 rounded-full bg-white absolute top-0.5 transition-transform",
                                 value ? "translate-x-4.5 left-[1px]" : "left-[3px]"
                             )}
-                            style={{ transform: value ? 'translateX(16px)' : 'translateX(0)' }}
+                            style={{ transform: value ? 'translateX(16px)' : 'translateX(0)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                         />
                     </button>
                 </label>

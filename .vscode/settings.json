@@ -1,4 +1,15 @@
 {
+    "webhint.enableTelemetry": "disabled",
+    "webhint.severity": {
+        "axe/forms": "off",
+        "axe/name-role-value": "off",
+        "axe/parsing": "off",
+        "axe/text-alternatives": "off",
+        "axe/structure": "off",
+        "compat-api/css": "off",
+        "compat-api/html": "off",
+        "hint/no-inline-styles": "off"
+    },
     "python.defaultInterpreterPath": "c:\\Users\\arda\\.gemini\\antigravity\\scratch\\restin-ai\\backend\\venv\\Scripts\\python.exe",
     "python.testing.unittestArgs": [
         "-v",

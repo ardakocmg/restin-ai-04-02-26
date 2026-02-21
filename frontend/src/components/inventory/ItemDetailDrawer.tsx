@@ -61,9 +61,17 @@ export default function ItemDetailDrawer({ open, onClose, skuId, venueId }) {
     >
       {loading ? (
         <div className="space-y-4">
-          <Skeleton className="h-12 w-full" />
-          <Skeleton className="h-64 w-full" />
-          <Skeleton className="h-32 w-full" />
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          {(() => {
+            const SkeletonAny = Skeleton as any;
+            return (
+              <>
+                <SkeletonAny className="h-12 w-full" />
+                <SkeletonAny className="h-64 w-full" />
+                <SkeletonAny className="h-32 w-full" />
+              </>
+            );
+          })()}
         </div>
       ) : detail ? (
         <Tabs defaultValue="overview" className="w-full">

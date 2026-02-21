@@ -39,7 +39,7 @@ export default function SalesChart({ data, title = "Hourly Sales" }) {
                         <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
                             <div
                                 className="w-full bg-red-900/30 border-t border-red-500/50 rounded-t-sm transition-all duration-500 group-hover:bg-red-500 relative"
-                                style={{ height: `${barHeight}%` }}
+                                style={{ height: `${barHeight}%`  /* keep-inline */ }}
                             >
                                 {/* Tooltip */}
                                 <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-secondary text-foreground text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-border z-10">

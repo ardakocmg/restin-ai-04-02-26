@@ -94,14 +94,13 @@ const POSUsersGroups: React.FC = () => {
             {/* Users Tab */}
             {/* keep-inline: gridTemplateColumns uses runtime variable userTableCols */}
             {tab === 'users' && !loading && <div className="pos-card">
-                <div className="pos-table-header" style={{ gridTemplateColumns: userTableCols }}><div></div><div>Name</div><div>Group</div><div>PIN</div><div>Last Login</div><div></div></div>
+                <div className="pos-table-header" style={{ gridTemplateColumns: userTableCols  /* keep-inline */ }} /* keep-inline */> /* dynamic: grid layout */ <div></div><div>Name</div><div>Group</div><div>PIN</div><div>Last Login</div><div></div></div>
                 {filteredUsers.length === 0 && <div className="pos-empty-state">{"No "}staff found. {!venueId && 'Please select a venue first.'}</div>}
                 {filteredUsers.map(user => (
-                    <div key={user.id} className={`pos-table-row${user.isActive ? '' : ' opacity-50'}`} style={{ gridTemplateColumns: userTableCols }} onClick={() => setEditUser({ ...user })}>
+                    <div key={user.id} className={`pos-table-row${user.isActive ? '' : ' opacity-50'}`} style={{ gridTemplateColumns: userTableCols  /* keep-inline */ }} /* keep-inline */ onClick={() => setEditUser({ ...user })}> /* dynamic: grid layout */
                         <div className="w-9 h-9 rounded-full bg-blue-500/15 flex items-center justify-center text-xs font-semibold text-blue-500">{user.avatar}</div>
                         <div><div className="pos-cell-value">{user.name}</div><div className="pos-cell-secondary">{user.email}</div></div>
-                        {/* keep-inline: dynamic background/color from getGroupColor() which resolves user-configurable group colors */}
-                        <span className="pos-badge" style={{ background: `${getGroupColor(user.group)}15`, color: getGroupColor(user.group) }}>{user.group}</span>
+                        <span className="pos-badge" style={{ background: `${getGroupColor(user.group)}15`, color: getGroupColor(user.group)  /* keep-inline */ }}>{user.group}</span> /* dynamic: group color */
                         <span className="pos-cell-secondary font-mono">{'••••'}</span>
                         <span className="pos-cell-secondary">{user.lastLogin}</span>
                         <button className="pos-btn-icon" onClick={e => { e.stopPropagation(); setEditUser({ ...user }); }} title="Edit user"><Edit3 size={13} /></button>
@@ -112,11 +111,9 @@ const POSUsersGroups: React.FC = () => {
             {/* Groups Tab */}
             {tab === 'groups' && <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
                 {filteredGroups.map(group => (
-                    // keep-inline: borderLeft uses dynamic group.color from user-configurable data
-                    <div key={group.id} className="pos-card cursor-pointer" style={{ borderLeft: `4px solid ${group.color}` }} onClick={() => setEditGroup({ ...group })}>
+                    <div key={group.id} className="pos-card cursor-pointer" style={{ borderLeft: `4px solid ${group.color}`  /* keep-inline */ }} onClick={() => setEditGroup({ ...group })}> /* dynamic: group border color */
                         <div className="pos-flex pos-flex--between pos-flex--center pos-mb-12">
-                            {/* keep-inline: color uses dynamic group.color */}
-                            <div className="pos-flex pos-flex--center pos-gap-8"><Shield size={16} style={{ color: group.color }} /><h3 className="text-base font-semibold m-0">{group.name}</h3></div>
+                            <div className="pos-flex pos-flex--center pos-gap-8"><Shield size={16} style={{ color: group.color  /* keep-inline */ }} /* keep-inline */ /> /* dynamic: shield color */ <h3 className="text-base font-semibold m-0">{group.name}</h3></div>
                             <span className="pos-cell-secondary">{localUsers.filter(u => u.group === group.name).length} members</span>
                         </div>
                         <div className="pos-flex pos-flex--wrap pos-gap-4">

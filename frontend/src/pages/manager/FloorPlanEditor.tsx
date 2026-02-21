@@ -353,10 +353,10 @@ export default function FloorPlanEditor() {
             onMouseUp={handleCanvasMouseUp}
             onMouseLeave={handleCanvasMouseUp}
             className="cursor-crosshair"
-            style={{
+            style={{ /* keep-inline */
               transform: `scale(${zoom})`,
               transformOrigin: "top left"
-            }}
+             /* keep-inline */ }}
           />
         </Card>
       </div>

@@ -257,7 +257,7 @@ export default function POSThemeGallery() {
                     <div className="flex items-center gap-4">
                         <Button
                             variant="ghost"
-                            size="icon" aria-label="Action"
+                            size="icon"
                             onClick={() => navigate('/manager/pos-dashboard')}
                             className="text-muted-foreground hover:text-foreground"
                         >
@@ -560,7 +560,7 @@ export default function POSThemeGallery() {
                                                         <div
                                                             key={i}
                                                             className="w-8 h-8 rounded-md border border-border"
-                                                            style={{ backgroundColor: color }}
+                                                            style={{ backgroundColor: color  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                                                             title={color}
                                                         />
                                                     ))}

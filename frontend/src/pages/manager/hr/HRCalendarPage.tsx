@@ -128,7 +128,7 @@ export default function HRCalendarPage() {
                                             <div className={`text-[13px] ${isToday ? 'text-indigo-400 font-bold' : 'text-slate-400'}`}>{day}</div>
                                             {dayEvents.slice(0, 2).map((ev, j) => {
                                                 const color = EVENT_COLORS[ev.event_type] || '#6366f1';
-                                                return <div key={j} className="text-[10px] px-1 py-0.5 rounded mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis" style={{ background: color + '22', color }}>{ev.title || ev.employee_name}</div>; // keep-inline
+                                                return <div key={j} className="text-[10px] px-1 py-0.5 rounded mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis" style={{ background: color + '22', color  /* keep-inline */ }} /* keep-inline */>{ev.title || ev.employee_name}</div>; // keep-inline
                                             })}
                                             {dayEvents.length > 2 && <div className="text-slate-500 text-[10px] mt-0.5">+{dayEvents.length - 2} more</div>}
                                         </>
@@ -149,8 +149,8 @@ export default function HRCalendarPage() {
                         const color = EVENT_COLORS[ev.type] || '#6366f1';
                         return (
                             <div key={i} className="flex gap-3 py-2.5 border-b border-slate-800">
-                                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: color + '22' }}> {}
-                                    <Icon size={18} style={{ color }} /> {}
+                                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: color + '22'  /* keep-inline */ }} /* keep-inline */> {}
+                                    <Icon size={18} style={{ color  /* keep-inline */ }} /* keep-inline */ /> {}
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="text-slate-100 text-[13px] font-medium whitespace-nowrap overflow-hidden text-ellipsis">{ev.employee || ev.title}</div>
@@ -163,7 +163,7 @@ export default function HRCalendarPage() {
                         <h4 className="text-slate-400 text-xs font-semibold mb-2 mt-0">Event Types</h4>
                         {(Object.entries(EVENT_COLORS) as [EventType, string][]).map(([type, color]) => (
                             <div key={type} className="flex items-center gap-2 mb-1">
-                                <div className="w-2.5 h-2.5 rounded-sm" style={{ background: color }} /> {}
+                                <div className="w-2.5 h-2.5 rounded-sm" style={{ background: color  /* keep-inline */ }} /* keep-inline */ /> {}
                                 <span className="text-slate-400 text-xs capitalize">{type.replace('_', ' ')}</span>
                             </div>
                         ))}

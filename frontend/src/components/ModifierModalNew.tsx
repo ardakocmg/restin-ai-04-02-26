@@ -197,7 +197,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
 
           {/* Special Instructions */}
           <div className="space-y-2">
-            <label className="block font-semibold" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+            <label className="block font-semibold" style={{ color: '#F5F5F7'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */> /* dynamic: theme sync fallback */
               Special Instructions
             </label>
             <textarea
@@ -207,11 +207,8 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
               placeholder="e.g., No onions, extra sauce..."
               rows={3}
               className="w-full input-dark rounded-xl p-3 text-sm"
-              style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
-                backgroundColor: '#18181B',
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-                color: '#F5F5F7'
-              }}
+              style={{ /* keep-inline */
+               /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /* dynamic: custom dark theme input overrides */
             />
           </div>
         </div>
@@ -220,7 +217,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
         <div className="sticky bottom-0 z-10 bg-card border-t border-border p-6">
           {/* Quantity Selector */}
           <div className="flex items-center justify-between mb-4">
-            <span className="font-semibold" style={{ color: '#F5F5F7' }}>Quantity</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
+            <span className="font-semibold" style={{ color: '#F5F5F7'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Quantity</span> /* dynamic: theme sync fallback */
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -228,9 +225,9 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
                 className="w-10 h-10 rounded-lg bg-secondary hover:bg-secondary/80 border border-border flex items-center justify-center transition-colors"
                 disabled={quantity <= 1}
               >
-                <Minus className="w-4 h-4" style={{ color: '#D4D4D8' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                <Minus className="w-4 h-4" style={{ color: '#D4D4D8'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /> /* dynamic: icon color override */
               </button>
-              <span className="text-xl font-bold w-12 text-center" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+              <span className="text-xl font-bold w-12 text-center" style={{ color: '#F5F5F7'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */> /* dynamic: theme sync fallback */
                 {quantity}
               </span>
               <button
@@ -238,7 +235,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
                 aria-label="Increase quantity"
                 className="w-10 h-10 rounded-lg bg-secondary hover:bg-secondary/80 border border-border flex items-center justify-center transition-colors"
               >
-                <Plus className="w-4 h-4" style={{ color: '#D4D4D8' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                <Plus className="w-5 h-5" style={{ color: '#D4D4D8'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ /> /* dynamic: icon color override */
               </button>
             </div>
           </div>

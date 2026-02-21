@@ -96,17 +96,17 @@ export function InventoryStatus({ data }) {
                             {item.status === 'critical' ? (
                                 <div className="w-full h-1.5 bg-[#021020] rounded overflow-hidden border border-[#FF0000]/30 relative">
                                     <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,0,0,0.2)_50%,transparent_75%,transparent_100%)] bg-[length:10px_10px]"></div>
-                                    <div className={`h-full bg-[${color}] shadow-[0_0_5px_${color}] relative z-10`} style={{ width: `${item.left}%` }}></div>
+                                    <div className={`h-full bg-[${color}] shadow-[0_0_5px_${color}] relative z-10`} style={{ width: `${item.left}%`  /* keep-inline */ }}></div>
                                 </div>
                             ) : item.status === 'warning' ? (
                                 <div className="w-full h-1.5 bg-[#021020] rounded overflow-hidden p-[1px]">
                                     <div className={`h-full bg-gradient-to-r from-[${color}] to-[transparent] w-full animate-pulse relative`}>
-                                        <div className={`absolute top-0 left-0 h-full bg-[${color}] shadow-[0_0_5px_${color}]`} style={{ width: `${item.left}%` }}></div>
+                                        <div className={`absolute top-0 left-0 h-full bg-[${color}] shadow-[0_0_5px_${color}]`} style={{ width: `${item.left}%`  /* keep-inline */ }}></div>
                                     </div>
                                 </div>
                             ) : (
                                 <div className="w-full h-1.5 bg-[#021020] rounded overflow-hidden">
-                                    <div className={`h-full bg-[${color}] shadow-[0_0_5px_${color}]`} style={{ width: `${item.left}%` }}></div>
+                                    <div className={`h-full bg-[${color}] shadow-[0_0_5px_${color}]`} style={{ width: `${item.left}%`  /* keep-inline */ }}></div>
                                 </div>
                             )}
                         </div>

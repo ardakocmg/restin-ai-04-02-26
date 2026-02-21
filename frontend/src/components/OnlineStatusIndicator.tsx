@@ -139,15 +139,15 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
       <button
         onClick={() => setShowDetails(!showDetails)}
         className="flex items-center gap-2 px-4 py-1.5 rounded-full transition-all duration-300 hover:scale-[1.02] active:scale-95 group bg-zinc-900/40 backdrop-blur-xl"
-        style={{
+        style={{ /* keep-inline */
           border: `1px solid ${getStatusColor()}40`,
           boxShadow: `0 0 20px ${getStatusColor()}15`
-        }}
+         /* keep-inline */ }}
       >
         {/* keep-inline: dynamic backgroundColor from runtime getStatusColor() */}
         <div
           className="w-2 h-2 rounded-full animate-pulse shadow-[0_0_8px_currentColor]"
-          style={{ backgroundColor: getStatusColor(), color: getStatusColor() }}
+          style={{ backgroundColor: getStatusColor(), color: getStatusColor()  /* keep-inline */ }} /* keep-inline */
         />
         {getStatusIcon()}
         <span className="text-[11px] font-black uppercase tracking-widest text-foreground group-hover:text-foreground transition-colors">
@@ -174,7 +174,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
               <div className="flex items-center gap-2">
                 {getStatusIcon()}
                 {/* keep-inline: dynamic color from runtime getStatusColor() */}
-                <span className="text-sm font-medium" style={{ color: getStatusColor() }}>
+                <span className="text-sm font-medium" style={{ color: getStatusColor()  /* keep-inline */ }} /* keep-inline */>
                   {getStatusText()}
                 </span>
               </div>

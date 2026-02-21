@@ -212,7 +212,7 @@ export default function SummaryDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="year" stroke="#666" fontSize={10} />
                 <YAxis stroke="#666" fontSize={10} />
-                <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46' }} />
+                <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46' }} /* keep-inline */ />
                 <Line type="monotone" dataKey="count" stroke="#3B82F6" strokeWidth={3} dot={false} />
               </LineChart>
             </ResponsiveContainer>
@@ -227,7 +227,7 @@ export default function SummaryDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis type="number" stroke="#666" fontSize={10} />
                 <YAxis dataKey="type_name" type="category" width={80} stroke="#666" fontSize={10} />
-                <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46' }} />
+                <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46' }} /* keep-inline */ />
                 <Bar dataKey="count" fill="#3B82F6" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -242,7 +242,7 @@ export default function SummaryDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="bracket" angle={-45} textAnchor="end" height={60} stroke="#666" fontSize={9} />
                 <YAxis stroke="#666" fontSize={10} />
-                <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46' }} />
+                <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46' }} /* keep-inline */ />
                 <Bar dataKey="count" fill="#3B82F6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -260,8 +260,8 @@ export default function SummaryDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="year" stroke="#666" fontSize={10} />
                 <YAxis stroke="#666" fontSize={10} />
-                <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46' }} />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: 10, textTransform: 'uppercase', fontWeight: 'bold' }} />
+                <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#3f3f46' }} /* keep-inline */ />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: 10, textTransform: 'uppercase', fontWeight: 'bold' }} /* keep-inline */ />
                 <Bar dataKey="engagements" fill="#3B82F6" name="Engaged" stackId="a" />
                 <Bar dataKey="terminations" fill="#1E3A8A" name="Terminated" stackId="a" />
               </BarChart>

@@ -643,7 +643,7 @@ export default function UserProfileSettings() {
                       <Input aria-label="Pw Current" id="pw-current" type={pwShowCurrent ? 'text' : 'password'}
                         value={pwCurrent} onChange={e => setPwCurrent(e.target.value)}
                         placeholder="••••••••" />
-                      <Button type="button" variant="ghost" size="icon" aria-label="Action"
+                      <Button type="button" variant="ghost" size="icon"
                         className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
                         onClick={() => setPwShowCurrent(!pwShowCurrent)}>
                         {pwShowCurrent ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
@@ -657,7 +657,7 @@ export default function UserProfileSettings() {
                     <Input aria-label="Pw New" id="pw-new" type={pwShowNew ? 'text' : 'password'}
                       value={pwNew} onChange={e => setPwNew(e.target.value)}
                       placeholder="Min. 8 characters" />
-                    <Button type="button" variant="ghost" size="icon" aria-label="Action"
+                    <Button type="button" variant="ghost" size="icon"
                       className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
                       onClick={() => setPwShowNew(!pwShowNew)}>
                       {pwShowNew ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
@@ -670,7 +670,7 @@ export default function UserProfileSettings() {
                     <Input aria-label="Pw Confirm" id="pw-confirm" type={pwShowConfirm ? 'text' : 'password'}
                       value={pwConfirm} onChange={e => setPwConfirm(e.target.value)}
                       placeholder="••••••••" />
-                    <Button type="button" variant="ghost" size="icon" aria-label="Action"
+                    <Button type="button" variant="ghost" size="icon"
                       className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
                       onClick={() => setPwShowConfirm(!pwShowConfirm)}>
                       {pwShowConfirm ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
@@ -687,7 +687,7 @@ export default function UserProfileSettings() {
                     <span className={`text-xs font-bold ${pwStrengthCount >= 4 ? 'text-emerald-400' : pwStrengthCount >= 3 ? 'text-amber-400' : 'text-rose-400'}`}>{pwStrengthLabel}</span>
                   </div>
                   <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full transition-all duration-300 ${pwStrengthColor}`} style={{ width: `${(pwStrengthCount / 5) * 100}%` }} />
+                    <div className={`h-full rounded-full transition-all duration-300 ${pwStrengthColor}`} style={{ width: `${(pwStrengthCount / 5) * 100}%`  /* keep-inline */ }} />
                   </div>
                   <div className="grid grid-cols-2 gap-1">
                     {[

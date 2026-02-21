@@ -167,7 +167,15 @@ const COLUMNS = [
 ];
 
 // ── KPI Stat Card ──────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+interface StatCardProps {
+  icon: any;
+  label: any;
+  value: any;
+  subtext?: any;
+  color?: string;
+}
+
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: StatCardProps) {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 flex items-center gap-4">
@@ -271,7 +279,7 @@ export default function InventoryItemsNew() {
 
   // ── Bulk Actions ──
   const bulkActions = [
-    { id: 'archive', label: 'Archive Selected', variant: 'destructive' },
+    { id: 'archive', label: 'Archive Selected', variant: 'destructive' as const },
     { id: 'set_category', label: 'Set Category' },
     { id: 'export', label: 'Export Selected' },
   ];

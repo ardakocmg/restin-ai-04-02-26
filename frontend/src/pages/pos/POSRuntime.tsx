@@ -17,9 +17,9 @@ import ModifierModalNew from "../../components/ModifierModalNew"; // Updated Com
 import SplitBillModal from "../../components/SplitBillModal"; // New Feature
 import syncService from "../../services/SyncService";
 import {
-  LogOut, X, Send, Trash2, Users, Grid3x3, Map, // Added Map
+  LogOut, X, Send, Trash2, Users, Grid3x3, Map, Timer, // Added Map, Timer
   UtensilsCrossed, Coffee, Pizza, Wine, Dessert, Plus, Minus, Loader2, AlertTriangle, Printer
-, Timer} from "lucide-react";
+} from "lucide-react";
 
 import FloorPlanWidget from "../../components/pos/FloorPlanWidget"; // New Widget
 

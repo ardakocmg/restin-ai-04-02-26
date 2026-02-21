@@ -49,8 +49,8 @@ export default function CallLogs() {
         .filter((log: /**/any) => {
             if (searchQuery) {
                 const q = searchQuery.toLowerCase();
-                return (log.caller || '').toLowerCase().includes(q) ||
-                    (log.transcript_in || '').toLowerCase().includes(q);
+                return (log.caller as string || '').toLowerCase().includes(q) ||
+                    (log.transcript_in as string || '').toLowerCase().includes(q);
             }
             return true;
         })
@@ -186,23 +186,23 @@ export default function CallLogs() {
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             filteredLogs.map((log: /**/any, i: number) => (
                                 <TableRow
-                                    key={log.id || i}
+                                    key={(log.id as string) || i}
                                     className="border-border/30 cursor-pointer hover:bg-card/40 transition-colors group"
                                     onClick={() => setSelectedLog(selectedLog?.id === log.id ? null : log)}
                                 >
-                                    <TableCell className="font-bold text-foreground text-sm">{log.caller || 'Unknown'}</TableCell>
+                                    <TableCell className="font-bold text-foreground text-sm">{(log.caller as string) || 'Unknown'}</TableCell>
                                     <TableCell className="text-xs text-muted-foreground font-medium">
-                                        {log.created_at ? new Date(log.created_at).toLocaleString('en-MT', { dateStyle: 'short', timeStyle: 'short' }) : '—'}
+                                        {log.created_at ? new Date(log.created_at as string).toLocaleString('en-MT', { dateStyle: 'short', timeStyle: 'short' }) : '—'}
                                     </TableCell>
-                                    <TableCell className="text-xs text-muted-foreground font-bold">{log.duration_seconds || 0}s</TableCell>
+                                    <TableCell className="text-xs text-muted-foreground font-bold">{(log.duration_seconds as number) || 0}s</TableCell>
                                     <TableCell>
-                                        <span className={cn('px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border', getStatusBadge(log.status || ''))}>
-                                            {log.status || 'Unknown'}
+                                        <span className={cn('px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border', getStatusBadge((log.status as string) || ''))}>
+                                            {(log.status as string) || 'Unknown'}
                                         </span>
                                     </TableCell>
-                                    <TableCell className="text-sm">{getSentimentIcon(log.sentiment)}</TableCell>
+                                    <TableCell className="text-sm">{getSentimentIcon(log.sentiment as string)}</TableCell>
                                     <TableCell className="hidden lg:table-cell text-xs text-muted-foreground font-medium truncate max-w-[200px]">
-                                        {log.transcript_in || '—'}
+                                        {(log.transcript_in as string) || '—'}
                                     </TableCell>
                                     <TableCell>
                                         <ChevronRight size={14} className={cn(

@@ -141,7 +141,7 @@ export default function TrainingOngoingReport() {
                     className={`h-full rounded-full transition-all ${item.progress === 100 ? 'bg-green-500' :
                         item.status === 'at_risk' ? 'bg-amber-500' : 'bg-primary'
                       }`}
-                    style={{ width: `${item.progress}%` }}
+                    style={{ width: `${item.progress}%`  /* keep-inline */ }}
                   />
                 </div>
               </CardContent>

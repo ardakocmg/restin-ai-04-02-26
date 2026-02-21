@@ -90,7 +90,7 @@ const CustomerDisplayBO: React.FC = () => {
                             <div className="pos-flex pos-gap-6">
                                 {/* keep-inline: dynamic background from color picker & dynamic border for selection state */}
                                 {['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'].map(c => (
-                                    <div key={c} onClick={() => upd('accentColor', c)} className="w-7 h-7 rounded-md cursor-pointer" style={{ background: c, border: config.accentColor === c ? '3px solid #fff' : '3px solid transparent' }} />
+                                    <div key={c} onClick={() => upd('accentColor', c)} className="w-7 h-7 rounded-md cursor-pointer" style={{ background: c, border: config.accentColor === c ? '3px solid #fff' : '3px solid transparent'  /* keep-inline */ }} /* keep-inline */ />
                                 ))}
                             </div>
                         </div>
@@ -118,7 +118,7 @@ const CustomerDisplayBO: React.FC = () => {
                     <div className="pos-card bg-black border-2 border-zinc-800 overflow-hidden">
                         <div className="p-5 text-center min-h-[200px] flex flex-col justify-center items-center gap-3">
                             <div className="pos-text-xs pos-text-secondary uppercase tracking-widest">Live Preview</div>
-                            <div className="text-base font-semibold" style={{ color: config.accentColor }}>{config.welcomeMessage}</div>
+                            <div className="text-base font-semibold" style={{ color: config.accentColor  /* keep-inline */ }} /* keep-inline */>{config.welcomeMessage}</div>
                             <div className="w-4/5 border-t border-white/10 my-2" />
                             <div className="pos-text-sm pos-text-secondary">Order items will appear here...</div>
                             <div className="text-2xl font-bold text-white mt-2">€0.00</div>

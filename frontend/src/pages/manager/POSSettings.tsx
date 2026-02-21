@@ -1040,7 +1040,7 @@ export default function POSSettings() {
                 <div className="space-y-3">
                   {productionInstructions.map((pi, idx) => (
                     <div key={pi.id} className="flex items-center gap-3 p-3 bg-background rounded-lg border border-border">
-                      <div className="w-3 h-8 rounded" style={{ backgroundColor: pi.color }} />
+                      <div className="w-3 h-8 rounded" style={{ backgroundColor: pi.color  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
                       <div className="flex-1 grid grid-cols-3 gap-3">
                         <InlineEdit value={pi.name} onChange={v => { const u = [...productionInstructions]; u[idx].name = v; setProductionInstructions(u); }} />
                         <InlineEdit value={pi.text} onChange={v => { const u = [...productionInstructions]; u[idx].text = v; setProductionInstructions(u); }} />

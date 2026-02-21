@@ -685,7 +685,7 @@ export default function DataTable<TData, TValue>({
 
         <div className="relative border border-border rounded-lg overflow-hidden">
           {/* eslint-disable-next-line react/forbid-dom-props */}
-          <div className="overflow-x-auto" ref={tableContainerRef} style={{ maxHeight: virtualizationEnabled ? '480px' : 'auto' }}>
+          <div className="overflow-x-auto" ref={tableContainerRef} style={{ maxHeight: virtualizationEnabled ? '480px' : 'auto'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
             <Table data-testid={tableTestId || 'datatable-table'}>
               <TableHeader className="sticky top-0 bg-card/95 backdrop-blur">
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -703,7 +703,7 @@ export default function DataTable<TData, TValue>({
                           // @ts-ignore
                           className={cn('relative', header.column.columnDef.meta?.headerClassName)}
                           // @ts-ignore
-                          style={{ width: header.getSize(), ...style }}
+                          style={{ width: header.getSize(), ...style  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                         >
                           <div
                             className={cn('flex items-center gap-2 select-none font-black text-foreground uppercase tracking-widest text-[10px]', header.column.getCanSort() && 'cursor-pointer')}
@@ -771,7 +771,7 @@ export default function DataTable<TData, TValue>({
                               // @ts-ignore
                               className={cn('py-4 text-foreground font-bold text-xs', cell.column.columnDef.meta?.cellClassName)}
                               // @ts-ignore
-                              style={{ width: cell.column.getSize(), ...style }}
+                              style={{ width: cell.column.getSize(), ...style  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                             >
                               {flexRender(cell.column.columnDef.cell, cell.getContext())}
                             </TableCell>

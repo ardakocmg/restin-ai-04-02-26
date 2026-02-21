@@ -160,7 +160,7 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
     const h = template.sizeH * scale * 2.5;
 
     return (
-        <div className="bg-white rounded border border-border overflow-hidden relative" style={{ width: w, height: h }}>
+        <div className="bg-white rounded border border-border overflow-hidden relative" style={{ width: w, height: h  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
             {template.fields.map(field => {
                 const fx = field.x * scale * 2.5;
                 const fy = field.y * scale * 2.5;
@@ -169,14 +169,14 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
                 const fs = (field.fontSize ?? 10) * scale * 1.2;
 
                 if (field.type === 'line') {
-                    return <div key={field.id} className="absolute bg-zinc-800" style={{ left: fx, top: fy, width: fw, height: 1 }} />;
+                    return <div key={field.id} className="absolute bg-zinc-800" style={{ left: fx, top: fy, width: fw, height: 1  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />;
                 }
                 if (field.type === 'barcode') {
                     return (
-                        <div key={field.id} className="absolute flex items-center justify-center" style={{ left: fx, top: fy, width: fw, height: fh }}>
+                        <div key={field.id} className="absolute flex items-center justify-center" style={{ left: fx, top: fy, width: fw, height: fh  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                             <div className="flex gap-px items-end h-full w-full">
                                 {Array.from({ length: Math.floor(fw / 2) }).map((_, i) => (
-                                    <div key={i} className="bg-zinc-900 flex-1" style={{ height: `${50 + Math.random() * 50}%` }} />
+                                    <div key={i} className="bg-zinc-900 flex-1" style={{ height: `${50 + Math.random() * 50}%`  /* keep-inline */ }} />
                                 ))}
                             </div>
                         </div>
@@ -184,7 +184,7 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
                 }
                 if (field.type === 'qr') {
                     return (
-                        <div key={field.id} className="absolute border border-border flex items-center justify-center" style={{ left: fx, top: fy, width: fw, height: fh }}>
+                        <div key={field.id} className="absolute border border-border flex items-center justify-center" style={{ left: fx, top: fy, width: fw, height: fh  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                             <div className="grid grid-cols-5 grid-rows-5 gap-px w-3/4 h-3/4">
                                 {Array.from({ length: 25 }).map((_, i) => (
                                     <div key={i} className={Math.random() > 0.4 ? 'bg-zinc-900' : 'bg-white'} />
@@ -195,17 +195,17 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
                 }
                 if (field.type === 'allergen-icons') {
                     return (
-                        <div key={field.id} className="absolute flex flex-wrap gap-0.5 items-start" style={{ left: fx, top: fy, width: fw, height: fh }}>
+                        <div key={field.id} className="absolute flex flex-wrap gap-0.5 items-start" style={{ left: fx, top: fy, width: fw, height: fh  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                             {ALLERGEN_ICONS.slice(0, 6).map(a => (
-                                <span key={a.code} style={{ fontSize: fs * 0.8 }}>{a.emoji}</span>
+                                <span key={a.code} style={{ fontSize: fs * 0.8  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{a.emoji}</span>
                             ))}
                         </div>
                     );
                 }
                 if (field.type === 'logo') {
                     return (
-                        <div key={field.id} className="absolute bg-muted border border-border rounded flex items-center justify-center" style={{ left: fx, top: fy, width: fw, height: fh }}>
-                            <span className="text-zinc-400" style={{ fontSize: fs * 0.6 }}>LOGO</span>
+                        <div key={field.id} className="absolute bg-muted border border-border rounded flex items-center justify-center" style={{ left: fx, top: fy, width: fw, height: fh  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
+                            <span className="text-zinc-400" style={{ fontSize: fs * 0.6  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>LOGO</span>
                         </div>
                     );
                 }
@@ -214,12 +214,12 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
                     <div
                         key={field.id}
                         className="absolute text-foreground leading-tight overflow-hidden"
-                        style={{
+                        style={{ /* keep-inline */
                             left: fx, top: fy, width: fw, height: fh,
                             fontSize: fs,
                             fontWeight: field.fontWeight ?? 'normal',
                             textAlign: field.align ?? 'left',
-                        }}
+                         /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                     >
                         {field.type === 'date' ? (
                             <span>{field.label}: <strong>20/02/2025</strong></span>

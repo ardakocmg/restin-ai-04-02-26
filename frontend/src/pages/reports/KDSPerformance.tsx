@@ -109,8 +109,8 @@ export default function KDSPerformance() {
                 <XAxis dataKey="time" stroke="#71717A" />
                 <YAxis stroke="#71717A" />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#18181B', border: '1px solid #3F3F46', borderRadius: '8px' }}
-                  itemStyle={{ color: '#E4E4E7' }}
+                  contentStyle={{ backgroundColor: '#18181B', border: '1px solid #3F3F46', borderRadius: '8px' }} /* keep-inline */
+                  itemStyle={{ color: '#E4E4E7' }} /* keep-inline */
                 />
                 <Line type="monotone" dataKey="orders" stroke="#3B82F6" strokeWidth={3} dot={{ r: 4, fill: '#3B82F6' }} />
               </LineChart>
@@ -129,8 +129,8 @@ export default function KDSPerformance() {
                 <YAxis dataKey="name" type="category" stroke="#71717A" width={80} />
                 <Tooltip
                   cursor={{ fill: '#3F3F46', opacity: 0.2 }}
-                  contentStyle={{ backgroundColor: '#18181B', border: '1px solid #3F3F46', borderRadius: '8px' }}
-                  itemStyle={{ color: '#E4E4E7' }}
+                  contentStyle={{ backgroundColor: '#18181B', border: '1px solid #3F3F46', borderRadius: '8px' }} /* keep-inline */
+                  itemStyle={{ color: '#E4E4E7' }} /* keep-inline */
                 />
                 <Bar dataKey="avg_time" fill="#8B5CF6" radius={[0, 4, 4, 0]} barSize={32} />
               </BarChart>

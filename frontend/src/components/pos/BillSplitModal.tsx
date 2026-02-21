@@ -51,7 +51,7 @@ export default function BillSplitModal({ open, onClose, order, onConfirm }) {
       <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>Split Bill</DialogTitle>
-          <p style={{ color: '#A1A1AA' }}>Total: €{totalAmount.toFixed(2)}</p>
+          <p style={{ color: '#A1A1AA'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Total: €{totalAmount.toFixed(2)}</p>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -77,16 +77,16 @@ export default function BillSplitModal({ open, onClose, order, onConfirm }) {
 
           {/* Equal Split */}
           {splitType === 'equal' && (
-            <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
-              <label className="block mb-2" style={{ color: '#D4D4D8' }}>Number of People</label>
+            <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.05)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
+              <label className="block mb-2" style={{ color: '#D4D4D8'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Number of People</label>
               <div className="flex items-center gap-4">
                 <Button onClick={() => setNumberOfSplits(Math.max(2, numberOfSplits - 1))}>-</Button>
-                <span className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{numberOfSplits}</span>
+                <span className="text-2xl font-bold" style={{ color: '#F5F5F7'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{numberOfSplits}</span>
                 <Button onClick={() => setNumberOfSplits(Math.min(10, numberOfSplits + 1))}>+</Button>
               </div>
               <div className="mt-4">
-                <p style={{ color: '#A1A1AA' }}>Amount per person:</p>
-                <p className="text-2xl font-bold" style={{ color: '#E53935' }}>€{(totalAmount / numberOfSplits).toFixed(2)}</p>
+                <p style={{ color: '#A1A1AA'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Amount per person:</p>
+                <p className="text-2xl font-bold" style={{ color: '#E53935'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>€{(totalAmount / numberOfSplits).toFixed(2)}</p>
               </div>
             </div>
           )}
@@ -94,16 +94,16 @@ export default function BillSplitModal({ open, onClose, order, onConfirm }) {
           {/* By Item Split */}
           {splitType === 'by_item' && (
             <div className="space-y-3">
-              <p className="text-sm" style={{ color: '#A1A1AA' }}>Select items for each person</p>
+              <p className="text-sm" style={{ color: '#A1A1AA'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Select items for each person</p>
               {items.map((item, idx) => (
                 <div 
                   key={item.id || idx}
                   className="flex items-center justify-between p-3 rounded-lg"
-                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.05)' }}
+                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.05)'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                 >
                   <div className="flex-1">
-                    <p style={{ color: '#F5F5F7' }}>{item.name}</p>
-                    <p className="text-sm" style={{ color: '#71717A' }}>€{item.line_total?.toFixed(2)}</p>
+                    <p style={{ color: '#F5F5F7'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{item.name}</p>
+                    <p className="text-sm" style={{ color: '#71717A'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>€{item.line_total?.toFixed(2)}</p>
                   </div>
                   <div className="flex gap-2">
                     {[1, 2, 3, 4].map(splitNum => (

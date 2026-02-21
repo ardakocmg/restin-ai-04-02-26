@@ -135,13 +135,19 @@ export default function POSFilterBar({ onSettingsClick }: POSFilterBarProps) {
                                 </Button>
                             ))}
                         </div>
-                        <Calendar
-                            mode="range"
-                            selected={filters.dateRange}
-                            onSelect={(range) => updateFilters({ dateRange: range })}
-                            numberOfMonths={2}
-                            className="p-3"
-                        />
+                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                        {(() => {
+                            const CalendarAny = Calendar as any;
+                            return (
+                                <CalendarAny
+                                    mode="range"
+                                    selected={filters.dateRange}
+                                    onSelect={(range: any) => updateFilters({ dateRange: range as any })}
+                                    numberOfMonths={2}
+                                    className="p-3"
+                                />
+                            );
+                        })()}
                     </PopoverContent>
                 </Popover>
             </div>

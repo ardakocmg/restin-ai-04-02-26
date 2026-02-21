@@ -44,21 +44,21 @@ export default function ReceiptPreview({ order, items, orderTotal, venueInfo, on
 
                 {/* Action bar */}
                 <div style={s.actionBar}>
-                    <div style={{ display: 'flex', gap: 4 }}>
+                    <div style={{ display: 'flex', gap: 4  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                         <button
-                            style={{ ...s.formatBtn, backgroundColor: format === 'thermal' ? '#2A9D8F' : '#333' }}
+                            style={{ ...s.formatBtn, backgroundColor: format === 'thermal' ? '#2A9D8F' : '#333'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                             onClick={() => setFormat('thermal')}
                         >
                             Thermal
                         </button>
                         <button
-                            style={{ ...s.formatBtn, backgroundColor: format === 'a4' ? '#2A9D8F' : '#333' }}
+                            style={{ ...s.formatBtn, backgroundColor: format === 'a4' ? '#2A9D8F' : '#333'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */
                             onClick={() => setFormat('a4')}
                         >
                             A4
                         </button>
                     </div>
-                    <div style={{ display: 'flex', gap: 8 }}>
+                    <div style={{ display: 'flex', gap: 8  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                         <button style={s.iconBtn} onClick={handlePrint} title="Print">
                             <Printer size={16} color="#fff" />
                         </button>
@@ -75,7 +75,7 @@ export default function ReceiptPreview({ order, items, orderTotal, venueInfo, on
                 </div>
 
                 {/* Receipt Paper */}
-                <div style={{ ...s.paper, maxWidth: format === 'thermal' ? 320 : 500 }}>
+                <div style={{ ...s.paper, maxWidth: format === 'thermal' ? 320 : 500  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
 
                     {/* Logo & Venue Header */}
                     <div style={s.receiptHeader}>
@@ -92,7 +92,7 @@ export default function ReceiptPreview({ order, items, orderTotal, venueInfo, on
                     <div style={s.receiptInfo}>
                         <div style={s.infoRow}>
                             <span>Receipt #:</span>
-                            <span style={{ fontWeight: 700 }}>{receiptNumber}</span>
+                            <span style={{ fontWeight: 700  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{receiptNumber}</span>
                         </div>
                         <div style={s.infoRow}>
                             <span>Date:</span>
@@ -120,17 +120,17 @@ export default function ReceiptPreview({ order, items, orderTotal, venueInfo, on
                     {/* Items */}
                     <div style={s.itemsSection}>
                         <div style={s.itemHeader}>
-                            <span style={{ flex: 1 }}>Item</span>
-                            <span style={{ width: 40, textAlign: 'center' }}>Qty</span>
-                            <span style={{ width: 70, textAlign: 'right' }}>Amount</span>
+                            <span style={{ flex: 1  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Item</span>
+                            <span style={{ width: 40, textAlign: 'center'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Qty</span>
+                            <span style={{ width: 70, textAlign: 'right'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Amount</span>
                         </div>
                         {(items || []).map((item, idx) => {
                             const price = (item.unit_price || item.price || 0) * (item.qty || 1);
                             return (
                                 <div key={item.id || idx} style={s.itemRow}>
-                                    <span style={{ flex: 1, fontSize: 12 }}>{item.menu_item_name || item.name}</span>
-                                    <span style={{ width: 40, textAlign: 'center', fontSize: 12 }}>{item.qty || 1}</span>
-                                    <span style={{ width: 70, textAlign: 'right', fontSize: 12, fontWeight: 600 }}>€{price.toFixed(2)}</span>
+                                    <span style={{ flex: 1, fontSize: 12  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{item.menu_item_name || item.name}</span>
+                                    <span style={{ width: 40, textAlign: 'center', fontSize: 12  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>{item.qty || 1}</span>
+                                    <span style={{ width: 70, textAlign: 'right', fontSize: 12, fontWeight: 600  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>€{price.toFixed(2)}</span>
                                 </div>
                             );
                         })}
@@ -165,7 +165,7 @@ export default function ReceiptPreview({ order, items, orderTotal, venueInfo, on
                                 {order.change > 0 && <span>Change: €{order.change.toFixed(2)}</span>}
                             </div>
                             {order.tender_type === 'ROOM_CHARGE' && order.room_number && (
-                                <div style={{ ...s.paymentMethod, marginTop: 2 }}>
+                                <div style={{ ...s.paymentMethod, marginTop: 2  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                                     <span>Room: {order.room_number}</span>
                                     {order.guest_name && <span>Guest: {order.guest_name}</span>}
                                 </div>
@@ -176,16 +176,16 @@ export default function ReceiptPreview({ order, items, orderTotal, venueInfo, on
                     {/* Footer */}
                     <div style={s.divider} />
                     <div style={s.footer}>
-                        <div style={{ fontSize: 11, textAlign: 'center', color: '#666', marginBottom: 8 }}>
+                        <div style={{ fontSize: 11, textAlign: 'center', color: '#666', marginBottom: 8  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                             Thank you for dining with us!
                         </div>
-                        <div style={{ fontSize: 10, textAlign: 'center', color: '#888' }}>
+                        <div style={{ fontSize: 10, textAlign: 'center', color: '#888'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                             Powered by Restin.AI
                         </div>
                         {/* Barcode placeholder */}
                         <div style={s.barcode}>
                             {'|'.repeat(40).split('').map((_, i) => (
-                                <div key={i} style={{ width: Math.random() > 0.5 ? 2 : 1, height: 30, backgroundColor: '#333' }} />
+                                <div key={i} style={{ width: Math.random() > 0.5 ? 2 : 1, height: 30, backgroundColor: '#333'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
                             ))}
                         </div>
                     </div>

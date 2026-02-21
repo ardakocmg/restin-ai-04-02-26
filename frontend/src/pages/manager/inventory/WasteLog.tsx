@@ -500,7 +500,7 @@ export default function WasteLog() {
                   <span className="tabular-nums font-medium">{r.count}</span>
                 </div>
                 <div className="h-2 rounded-full bg-muted overflow-hidden">
-                  <div className="h-full rounded-full bg-red-500/70 transition-all" style={{ width: `${r.pct}%` }} />
+                  <div className="h-full rounded-full bg-red-500/70 transition-all" style={{ width: `${r.pct}%`  /* keep-inline */ }} />
                 </div>
               </div>
             ))}

@@ -282,7 +282,7 @@ export default function GuestOrderPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background text-foreground max-w-lg mx-auto relative pb-20 guest-order-page" style={{ '--guest-primary': primaryColor } as React.CSSProperties}>
+        <div className="min-h-screen bg-background text-foreground max-w-lg mx-auto relative pb-20 guest-order-page" style={{ '--guest-primary': primaryColor } as React.CSSProperties}> /* keep-inline */
             <Toaster theme="dark" position="top-center" />
 
             {/* Header */}

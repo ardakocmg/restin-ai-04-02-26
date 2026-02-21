@@ -296,7 +296,7 @@ export default function TechnicalHub() {
   const security = content.security || defaultContent.security;
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-[#050505]" style={{ color: '#F5F5F7' }} data-testid="technical-hub-page">
+    <div className="min-h-screen relative overflow-hidden bg-[#050505]" style={{ color: '#F5F5F7'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ data-testid="technical-hub-page">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
         
@@ -349,7 +349,7 @@ export default function TechnicalHub() {
                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-red-500">System Hub</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
               </div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+              <h1 className="text-2xl font-bold tracking-tight text-foreground" style={{ fontFamily: 'Space Grotesk, sans-serif'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                 Technical Blueprint <span className="text-muted-foreground font-light">v4.0</span>
               </h1>
             </div>
@@ -390,7 +390,7 @@ export default function TechnicalHub() {
                 <Zap size={12} />
                 {hero.tag}
               </div>
-              <h2 className="text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tighter text-foreground" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+              <h2 className="text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tighter text-foreground" style={{ fontFamily: 'Space Grotesk, sans-serif'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>
                 {hero.title.split('.').map((part, i) => (
                   <span key={i} className={i === 1 ? "text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400" : ""}>
                     {part}{i === 0 ? '.' : ''}

@@ -686,7 +686,7 @@ export default function EmployeePortalComplete() {
             <div className="space-y-4 pt-2">
               <div>
                 <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1.5">Leave Type</label>
-                <select aria-label="Input"
+                <select
                   className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                   defaultValue={leaveRequestType === 'sick' ? 'sick' : 'vacation'}
                   
