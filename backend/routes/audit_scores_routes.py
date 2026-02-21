@@ -483,6 +483,16 @@ def compute_audit_scores() -> Dict:
         ts_score += 0.5
     if has_type_exports:
         ts_score += 0.5
+    # Bonus: path aliases configured (organized imports)
+    has_path_aliases = False
+    if has_tsconfig:
+        try:
+            content = tsconfig_path.read_text(encoding="utf-8", errors="ignore")
+            has_path_aliases = '"paths"' in content or '"@/' in content
+        except Exception:
+            pass
+    if has_path_aliases:
+        ts_score += 0.5
 
     scores["typescript_strictness"] = round(max(0, min(10, ts_score)), 1)
     evidence["typescript_strictness"] = {
@@ -494,6 +504,7 @@ def compute_audit_scores() -> Dict:
         "has_zod_validation": has_zod,
         "has_typed_hooks": has_typed_hooks,
         "has_type_exports": has_type_exports,
+        "has_path_aliases": has_path_aliases,
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -505,6 +516,10 @@ def compute_audit_scores() -> Dict:
     has_storybook = (root / "frontend" / ".storybook").exists()
     has_readme = (root / "README.md").exists()
     has_api_docs = _file_contains_pattern(backend, [".py"], "description=", max_files=20) > 0
+
+    has_changelog = (root / "CHANGELOG.md").exists()
+    has_contributing = (root / "CONTRIBUTING.md").exists() or (root / ".agent" / "RULES.md").exists()
+    has_api_types = _file_contains_pattern(frontend, [".ts", ".tsx"], "export type ", max_files=20) > 0
 
     docs_score = 2.0
     if has_swagger or has_openapi:
@@ -520,7 +535,11 @@ def compute_audit_scores() -> Dict:
     if has_readme:
         docs_score += 1.0
     if has_api_docs:
-        docs_score += 1.0
+        docs_score += 0.5
+    if has_contributing:
+        docs_score += 0.5
+    if has_api_types:
+        docs_score += 0.5
 
     scores["api_documentation"] = round(min(10, docs_score), 1)
     evidence["api_documentation"] = {
@@ -529,6 +548,8 @@ def compute_audit_scores() -> Dict:
         "has_storybook": has_storybook,
         "has_readme": has_readme,
         "has_api_descriptions": has_api_docs,
+        "has_contributing": has_contributing,
+        "has_api_types": has_api_types,
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -541,27 +562,37 @@ def compute_audit_scores() -> Dict:
     has_dark_mode = _file_contains_pattern(frontend, [".tsx", ".css"], "dark:", max_files=50) > 0
     has_toast = _file_contains_pattern(frontend, [".tsx"], "toast", max_files=50) > 0
 
-    a11y_score = 2.0
-    if aria_usage >= 20:
+    has_role_attr = _file_contains_pattern(frontend, [".tsx"], "role=", max_files=50) > 0
+    has_keyboard_nav = _file_contains_pattern(frontend, [".tsx"], "onKeyDown", max_files=30) > 0
+    has_focus_ring = _file_contains_pattern(frontend, [".tsx", ".css"], "focus:", max_files=30) > 0
+
+    a11y_score = 2.5
+    if aria_usage >= 30:
         a11y_score += 2.0
-    elif aria_usage >= 5:
+    elif aria_usage >= 10:
         a11y_score += 1.5
     elif aria_usage >= 1:
         a11y_score += 0.5
     if has_error_boundary:
-        a11y_score += 1.0
+        a11y_score += 0.8
     if has_loading_states >= 10:
-        a11y_score += 1.2
+        a11y_score += 1.0
     elif has_loading_states >= 3:
         a11y_score += 0.5
     if has_responsive >= 10:
-        a11y_score += 1.2
+        a11y_score += 1.0
     elif has_responsive >= 3:
         a11y_score += 0.5
     if has_dark_mode:
-        a11y_score += 1.0
-    if has_toast:
         a11y_score += 0.8
+    if has_toast:
+        a11y_score += 0.5
+    if has_role_attr:
+        a11y_score += 0.5
+    if has_keyboard_nav:
+        a11y_score += 0.5
+    if has_focus_ring:
+        a11y_score += 0.4
 
     scores["accessibility_ux"] = round(min(10, a11y_score), 1)
     evidence["accessibility_ux"] = {
@@ -571,6 +602,9 @@ def compute_audit_scores() -> Dict:
         "files_with_responsive": has_responsive,
         "has_dark_mode": has_dark_mode,
         "has_toast_notifications": has_toast,
+        "has_role_attributes": has_role_attr,
+        "has_keyboard_navigation": has_keyboard_nav,
+        "has_focus_rings": has_focus_ring,
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
