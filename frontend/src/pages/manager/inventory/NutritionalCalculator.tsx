@@ -221,7 +221,7 @@ export default function NutritionalCalculator() {
 
     return (
         <PageContainer
-            title="Nutritional Calculator"
+            title={t("inventory.nutritional.title", "Nutritional Calculator")}
             description="Auto-compute calories, macros & micronutrients from ingredient database"
             actions={
                 <div className="flex items-center gap-2">

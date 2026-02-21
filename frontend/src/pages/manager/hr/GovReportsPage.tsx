@@ -126,7 +126,7 @@ export default function GovReportsPage() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Button onClick={() => handleDownload('FS5', run.id)} variant="outline">
+                                            <Button onClick={() => handleDownload('FS5', run.id)} variant="outline" disabled={!isOwner}>
                                                 <Download className="mr-2 h-4 w-4" /> Download FS5
                                             </Button>
                                         </div>

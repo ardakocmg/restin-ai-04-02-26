@@ -188,7 +188,7 @@ export default function MobileStockCount() {
 
     return (
         <PageContainer
-            title="Mobile Stock Count"
+            title={t("inventory.stockCount.title", "Mobile Stock Count")}
             subtitle="PWA-ready stock counting — works offline with barcode scanning"
             icon={<Smartphone className="h-5 w-5 text-cyan-400" />}
             actions={

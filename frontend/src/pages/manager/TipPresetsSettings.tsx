@@ -93,7 +93,7 @@ export default function TipPresetsSettings() {
 
     if (loading) {
         return (
-            <PageContainer title="Tip Presets" description="Loading..." actions={undefined}>
+            <PageContainer title="Tip Presets" description="Loading data..." actions={undefined}>
                 <div className="flex items-center justify-center min-h-[40vh]">
                     <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
                 </div>

@@ -59,7 +59,7 @@ export default function KioskModePage() {
 
     const saveMutation = useMutation({
         mutationFn: () => api.post(`/venue-config/kiosk?venue_id=${venueId}`, config),
-        onSuccess: () => toast.success('Kiosk configuration saved'),
+        onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['kiosk-config'] }); toast.success('Kiosk configuration saved'); },
         onError: () => toast.error('Failed to save kiosk config')
     });
 

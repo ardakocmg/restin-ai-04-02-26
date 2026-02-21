@@ -135,7 +135,7 @@ export default function OrderAnywhereDashboard() {
 
     if (loading) {
         return (
-            <PageContainer title="Order Anywhere" description="Loading..." actions={undefined}>
+            <PageContainer title="Order Anywhere" description="Loading data..." actions={undefined}>
                 <div className="flex items-center justify-center min-h-[40vh]">
                     <Loader2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400 animate-spin" />
                 </div>

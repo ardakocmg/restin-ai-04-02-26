@@ -189,7 +189,7 @@ export default function PrepLists() {
 
     return (
         <PageContainer
-            title="Prep Lists"
+            title={t("inventory.prepLists.title", "Prep Lists")}
             description="Auto-generated mise-en-place tasks from production plans"
             actions={
                 <div className="flex items-center gap-2">

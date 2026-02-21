@@ -148,7 +148,7 @@ export default function TablesideConfig() {
 
     if (loading) {
         return (
-            <PageContainer title="Tableside Ordering" description="Loading..." actions={undefined}>
+            <PageContainer title="Tableside Ordering" description="Loading data..." actions={undefined}>
                 <div className="flex items-center justify-center min-h-[40vh]">
                     <Loader2 className="w-8 h-8 text-red-600 dark:text-red-400 animate-spin" />
                 </div>

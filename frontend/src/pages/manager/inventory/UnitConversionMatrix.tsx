@@ -171,7 +171,7 @@ export default function UnitConversionMatrix() {
 
     return (
         <PageContainer
-            title="Unit Conversion Matrix"
+            title={t("inventory.unitConversion.title", "Unit Conversion Matrix")}
             subtitle="Convert between measurement units — standard & custom conversions"
             icon={<Scale className="h-5 w-5 text-blue-400" />}
         >

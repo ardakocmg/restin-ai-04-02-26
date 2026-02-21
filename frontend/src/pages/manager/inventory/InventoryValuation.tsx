@@ -265,7 +265,7 @@ export default function InventoryValuation() {
     /* ═══════════════════ RENDER ═══════════════════ */
     return (
         <PageContainer
-            title="Inventory Valuation"
+            title={t("inventory.valuation.title", "Inventory Valuation")}
             subtitle={`Total stock value using ${methodLabel}`}
             icon={<Scale className="h-5 w-5 text-emerald-400" />}
             actions={

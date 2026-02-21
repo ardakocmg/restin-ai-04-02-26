@@ -1,23 +1,23 @@
 import { useAuditLog } from '@/hooks/useAuditLog';
 import { logger } from '@/lib/logger';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Sheet,SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 
 import { Badge } from '@/components/ui/badge';
 
 import { Button } from '@/components/ui/button';
 
-import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import {
-Calendar,
-Loader2,
-Mail,
-Phone,
-Plus,
-ShoppingBag,
-Star
+    Calendar,
+    Loader2,
+    Mail,
+    Phone,
+    Plus,
+    ShoppingBag,
+    Star
 } from 'lucide-react';
 
 import api from '@/lib/api';
@@ -83,6 +83,7 @@ export default function GuestDrawer({ open, onOpenChange, guestId }: GuestDrawer
 
     const loadGuestData = async () => {
         setLoading(true);
+        logAction('GUEST_PROFILE_VIEWED', 'guest_drawer', guestId || undefined);
         try {
             const res = await api.get(`/crm/guests/${guestId}/360`);
             setData(res.data);

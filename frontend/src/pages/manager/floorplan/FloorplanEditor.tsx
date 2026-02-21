@@ -1,18 +1,18 @@
-import { useMutation,useQuery,useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-Circle,
-Grid3X3,
-Flame as HeatIcon,
-LayoutGrid,
-Loader2,Maximize,
-RotateCw,
-Save,
-Square,
-Trash2,
-Users,
-ZoomIn,ZoomOut
+    Circle,
+    Grid3X3,
+    Flame as HeatIcon,
+    LayoutGrid,
+    Loader2, Maximize,
+    RotateCw,
+    Save,
+    Square,
+    Trash2,
+    Users,
+    ZoomIn, ZoomOut
 } from 'lucide-react';
-import React,{ useCallback,useRef,useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import PermissionGate from '../../../components/shared/PermissionGate';
 import { Button } from '../../../components/ui/button';
@@ -94,7 +94,7 @@ export default function FloorplanEditor() {
 
     const saveMutation = useMutation({
         mutationFn: () => api.post(`/tables/layout?venue_id=${venueId}`, { tables }),
-        onSuccess: () => toast.success('Floor plan saved'),
+        onSuccess: () => { toast.success('Floor plan saved'); queryClient.invalidateQueries({ queryKey: ['floorplan'] }); },
         onError: () => toast.error('Failed to save layout')
     });
 
@@ -285,7 +285,8 @@ export default function FloorplanEditor() {
                             style={{ /* keep-inline */
                                 backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)',
                                 backgroundSize: `${20 * zoom}px ${20 * zoom}px`,
-                             /* keep-inline */ }}
+                                /* keep-inline */
+}}
                             onMouseMove={handleMouseMove}
                             onMouseUp={handleMouseUp}
                             onMouseLeave={handleMouseUp}
@@ -321,7 +322,8 @@ export default function FloorplanEditor() {
                                             height: table.height * zoom,
                                             transform: `rotate(${table.rotation}deg)`,
                                             backgroundColor: showHeatmap ? heatColor(table.heatValue) : 'rgba(39, 39, 42, 0.8)',
-                                         /* keep-inline */ }}
+                                            /* keep-inline */
+}}
                                     >
                                         <span className="text-xs font-bold text-foreground">{table.number}</span>
                                         <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
