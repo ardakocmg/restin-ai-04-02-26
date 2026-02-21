@@ -2,11 +2,11 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Popover,PopoverContent,PopoverTrigger } from '@/components/ui/popover';
-import { usePOSFilters,type ShiftType } from '@/context/POSFilterContext';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { usePOSFilters, type ShiftType } from '@/context/POSFilterContext';
 import { cn } from '@/lib/utils';
-import { endOfMonth,endOfWeek,format,isSameDay,startOfMonth,startOfWeek } from 'date-fns';
-import { CalendarClock,Calendar as CalendarIcon,ChevronDown,Clock,Settings } from 'lucide-react';
+import { endOfMonth, endOfWeek, format, isSameDay, startOfMonth, startOfWeek } from 'date-fns';
+import { CalendarClock, Calendar as CalendarIcon, ChevronDown, Clock, Settings } from 'lucide-react';
 
 interface POSFilterBarProps {
     onSettingsClick?: () => void;
@@ -136,12 +136,12 @@ export default function POSFilterBar({ onSettingsClick }: POSFilterBarProps) {
                         </div>
                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                         {(() => {
-                            const CalendarAny = Calendar as any;
+                            const CalendarAny = Calendar as React.ComponentType<Record<string, unknown>>;
                             return (
                                 <CalendarAny
                                     mode="range"
                                     selected={filters.dateRange}
-                                    onSelect={(range: any) => updateFilters({ dateRange: range as any })}
+                                    onSelect={(range: { from?: Date; to?: Date }) => updateFilters({ dateRange: range as { from: Date; to: Date } })}
                                     numberOfMonths={2}
                                     className="p-3"
                                 />

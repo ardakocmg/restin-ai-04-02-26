@@ -16,7 +16,7 @@ export interface User {
     venueId: string;
     organizationId?: string; // Added to match backend schema
     ou_path?: string; // e.g., "/Operations/Kitchen"
-    [key: string]: any;
+    [key: string]: string | string[] | number | boolean | undefined;
 }
 
 

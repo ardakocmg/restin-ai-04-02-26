@@ -1,23 +1,23 @@
 import { logger } from '@/lib/logger';
 import {
-AlertTriangle,
-CheckCircle2,
-DollarSign,
-Download,
-Package,
-Plus,
-Printer,
-TrendingDown,
-Upload
+  AlertTriangle,
+  CheckCircle2,
+  DollarSign,
+  Download,
+  Package,
+  Plus,
+  Printer,
+  TrendingDown,
+  Upload
 } from 'lucide-react';
-import { useCallback,useEffect,useMemo,useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import ItemDetailDrawer from '../../components/inventory/ItemDetailDrawer';
 import DataTable from '../../components/shared/DataTable';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
-import { Card,CardContent } from '../../components/ui/card';
+import { Card, CardContent } from '../../components/ui/card';
 import { useVenue } from '../../context/VenueContext';
 import PageContainer from '../../layouts/PageContainer';
 import api from '../../lib/api';
@@ -167,10 +167,10 @@ const COLUMNS = [
 
 // ── KPI Stat Card ──────────────────────────────────────────────────
 interface StatCardProps {
-  icon: any;
-  label: any;
-  value: any;
-  subtext?: any;
+  icon: React.ElementType;
+  label: string;
+  value: string | number;
+  subtext?: string;
   color?: string;
 }
 
@@ -314,14 +314,12 @@ export default function InventoryItemsNew() {
     >
       {/* ── KPI Stat Cards ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        {/* @ts-ignore */}
         <StatCard
           icon={Package}
           label="Total Items"
           value={stats.totalItems}
           color="text-blue-600 dark:text-blue-400"
         />
-        {/* @ts-ignore */}
         <StatCard
           icon={CheckCircle2}
           label="In Stock"
@@ -335,7 +333,6 @@ export default function InventoryItemsNew() {
           subtext={stats.negativeCount > 0 ? `${stats.negativeCount} negative` : undefined}
           color="text-orange-600 dark:text-orange-400"
         />
-        {/* @ts-ignore */}
         <StatCard
           icon={DollarSign}
           label="Total Value"

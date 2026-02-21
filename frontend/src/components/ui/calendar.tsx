@@ -1,4 +1,4 @@
-import { ChevronLeft,ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import * as React from "react"
 import { DayPicker } from "react-day-picker"
 
@@ -12,7 +12,7 @@ function Calendar({
   classNames,
   showOutsideDays = true,
   ...props
-}: any) {
+}: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}

@@ -8,9 +8,9 @@ export interface POSVenue {
         send_checkbox_print?: boolean;
         send_checkbox_kds?: boolean;
         send_checkbox_stock?: boolean;
-        [key: string]: any;
+        [key: string]: string | boolean | number | undefined;
     };
-    [key: string]: any;
+    [key: string]: string | boolean | number | Record<string, unknown> | undefined;
 }
 
 export interface POSCategory {
@@ -19,7 +19,14 @@ export interface POSCategory {
     sort_order?: number;
     image?: string;
     color?: string;
-    [key: string]: any;
+    [key: string]: string | number | undefined;
+}
+
+export interface POSModifier {
+    id: string;
+    name: string;
+    price?: number;
+    group_id?: string;
 }
 
 export interface POSMenuItem {
@@ -33,8 +40,8 @@ export interface POSMenuItem {
     category_id?: string;
     image?: string;
     color?: string;
-    modifiers?: any[];
-    [key: string]: any;
+    modifiers?: POSModifier[];
+    [key: string]: string | number | boolean | POSModifier[] | undefined;
 }
 
 export interface POSTable {
@@ -45,7 +52,7 @@ export interface POSTable {
     capacity?: number;
     seats: number;
     zone_id?: string;
-    [key: string]: any;
+    [key: string]: string | number | undefined;
 }
 
 
@@ -59,9 +66,9 @@ export interface POSOrderItem {
     total_price: number;
     seat?: number;
     course?: number;
-    modifiers?: any[];
+    modifiers?: POSModifier[];
     notes?: string;
-    [key: string]: any;
+    [key: string]: string | number | boolean | POSModifier[] | undefined;
 }
 
 export interface POSSendOptions {
@@ -78,7 +85,5 @@ export interface POSOrder {
     status?: string;
     items?: POSOrderItem[];
     total_price?: number;
-    [key: string]: any;
+    [key: string]: string | number | boolean | POSOrderItem[] | undefined;
 }
-
-
