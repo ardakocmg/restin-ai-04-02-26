@@ -5,6 +5,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { ShoppingCart, FileText, TrendingUp, Settings, CheckCircle } from 'lucide-react';
 import api from '../../../lib/api';
+import { logger } from '@/lib/logger';
 
 const PROCUREMENT_MODULES = [
   { key: 'rfq', title: 'RFQ Management', desc: 'Request for Quotation workflow', icon: FileText, path: '/manager/procurement/rfq', color: 'blue' },
@@ -27,7 +28,7 @@ export default function ProcurementHub() {
       const venueId = localStorage.getItem('currentVenueId');
       setStats({ rfqs: 12, pending: 3, approved: 8, suppliers: 24 });
     } catch (error: any) {
-      console.error('Failed to fetch stats:', error);
+      logger.error('Failed to fetch stats:', error);
     } finally {
       setLoading(false);
     }

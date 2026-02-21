@@ -319,7 +319,7 @@ export default function POSMain() {
 
     // In-flight lock (prevent double-send)
     if (sendInFlightRef.current) {
-      console.warn('[POS] Send already in progress');
+      logger.warn('[POS] Send already in progress');
       return;
     }
 
@@ -404,7 +404,7 @@ export default function POSMain() {
       const tablesRes = await venueAPI.getTables(venueId);
       setTables(tablesRes.data);
     } catch (error: any) {
-      console.error("Failed to send order:", error);
+      logger.error("Failed to send order:", error);
 
       // Safe mode: Extract error, show in-place, NO navigate
       const errorDetail = error.response?.data?.detail;
@@ -451,7 +451,7 @@ export default function POSMain() {
           return;
         }
       } catch (error: any) {
-        console.error("Express auto-send failed:", error);
+        logger.error("Express auto-send failed:", error);
         toast.error(error.response?.data?.detail || "Failed to process order");
         return;
       }
@@ -475,7 +475,7 @@ export default function POSMain() {
         return;
       }
     } catch (error: any) {
-      console.error("Failed to check billing eligibility:", error);
+      logger.error("Failed to check billing eligibility:", error);
       // Allow if check fails (graceful degradation)
     }
 
@@ -505,7 +505,7 @@ export default function POSMain() {
       const tablesRes = await venueAPI.getTables(venueId);
       setTables(tablesRes.data);
     } catch (error: any) {
-      console.error("Payment failed:", error);
+      logger.error("Payment failed:", error);
       toast.error("Failed to process payment");
     }
   };

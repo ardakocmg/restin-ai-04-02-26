@@ -8,6 +8,7 @@ import { Button } from '../../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Card, CardContent } from '../../components/ui/card';
 import { FileDown } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function AccountingHub() {
   const { user } = useAuth();
@@ -27,7 +28,7 @@ export default function AccountingHub() {
       const permissions = response.data.roles?.[userRole] || [];
       setCanExport(permissions.includes('FINANCE_EXPORT') || permissions.includes('CHECKS_EXPORT'));
     } catch (error: any) {
-      console.error('Failed to check permissions:', error);
+      logger.error('Failed to check permissions:', error);
     }
   };
 
@@ -60,8 +61,6 @@ export default function AccountingHub() {
               <PermissionedTable
                 venueId={venueId}
                 tableKey="accounting_journal"
-                dataEndpoint={`/venues/${venueId}/accounting/journal`}
-                onRowClick={() => { }}
               />
             </TabsContent>
 

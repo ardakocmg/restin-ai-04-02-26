@@ -15,6 +15,7 @@ import PageContainer from '@/layouts/PageContainer';
 import { useTheme, ThemeColors } from '@/context/ThemeContext';
 import { useAuth } from '@/features/auth/AuthContext';
 import { cn } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 function timeAgo(dateString: string): string {
     const date = new Date(dateString);
@@ -79,7 +80,7 @@ export default function ThemeEngineSettings() {
                     setUpdatedBy(res.data.updated_by || null);
                 }
             } catch (error: any) {
-                console.error("Failed to fetch theme engine status", error);
+                logger.error("Failed to fetch theme engine status", error);
             } finally {
                 setEngineLoading(false);
             }

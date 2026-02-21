@@ -5,6 +5,7 @@ import PageContainer from '../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import DataTable from '../../components/shared/DataTable';
 import { FileSpreadsheet, BookOpen } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function AccountingMaltaPage() {
   const { activeVenue } = useVenue();
@@ -28,7 +29,7 @@ export default function AccountingMaltaPage() {
       setAccounts(accRes.data?.data || []);
       setJournals(jrnRes.data?.data || []);
     } catch (error: any) {
-      console.error('Accounting error:', error);
+      logger.error('Accounting error:', error);
     } finally {
       setLoading(false);
     }

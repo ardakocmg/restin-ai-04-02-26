@@ -67,6 +67,7 @@ export default function SummaryDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedCompany, setSelectedCompany] = useState('All');
+  const [period, setPeriod] = useState("All");
 
   const mainActions = [
     { title: 'People & Talent', icon: Users, path: '/manager/hr/people' },
@@ -135,12 +136,14 @@ export default function SummaryDashboard() {
       <div className="flex justify-between items-end border-b border-border pb-8">
         <div>
           <h1 className="text-4xl font-black text-foreground uppercase tracking-tighter leading-none mb-2">Human Resources</h1>
-          <p className="text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px]">Unified Intelligence & Global Control</p>
+          <p className="text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px]">Unified Intelligence &amp; Global Control</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right">
             <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">Venue</label>
             <select
+              title="Venue Selection"
+              aria-label="Venue Selection"
               value={selectedCompany}
               onChange={(e) => setSelectedCompany(e.target.value)}
               className="border rounded-lg px-4 py-1.5 bg-card border-border text-foreground text-[10px] font-bold uppercase tracking-widest focus:ring-1 focus:ring-red-500/50 outline-none"
@@ -150,7 +153,8 @@ export default function SummaryDashboard() {
           </div>
         </div>
       </div>
-      {/* QUICK NAVIGATION (MATCHING PREFERRED STYLE) */}
+
+      {/* QUICK NAVIGATION */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
         {[
           { title: "Directory", icon: Users, path: "/manager/hr/people" },
@@ -175,9 +179,9 @@ export default function SummaryDashboard() {
         ))}
       </div>
 
-      {/* KPI Row (Automated Summary) */}
+      {/* KPI Row */}
       <div className="grid gap-4 md:grid-cols-3">
-        {data.kpi_metrics.map((metric, idx) => {
+        {(data as any).kpi_metrics.map((metric: any, idx: number) => {
           const Icon = metric.icon === 'wallet' ? Wallet : (metric.icon === 'clock' ? Clock : Users);
           return (
             <Card key={idx} className="border-border bg-card/40 shadow-xl backdrop-blur-md">
@@ -204,7 +208,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Temporal Headcount Trend</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={data.headcount_by_year}>
+              <LineChart data={(data as any).headcount_by_year}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="year" stroke="#666" fontSize={10} />
                 <YAxis stroke="#666" fontSize={10} />
@@ -219,7 +223,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Employment Archetype</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={data.headcount_by_employment_type}>
+              <BarChart data={(data as any).headcount_by_employment_type}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis type="number" stroke="#666" fontSize={10} />
                 <YAxis dataKey="type_name" type="category" width={80} stroke="#666" fontSize={10} />
@@ -234,7 +238,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Demographic Bracket</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={data.headcount_by_age_bracket}>
+              <BarChart data={(data as any).headcount_by_age_bracket}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="bracket" angle={-45} textAnchor="end" height={60} stroke="#666" fontSize={9} />
                 <YAxis stroke="#666" fontSize={10} />
@@ -252,7 +256,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Attrition vs Engagement Dynamics</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={data.engagements_terminations}>
+              <BarChart data={(data as any).engagements_terminations}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="year" stroke="#666" fontSize={10} />
                 <YAxis stroke="#666" fontSize={10} />
@@ -271,12 +275,12 @@ export default function SummaryDashboard() {
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
-                  data={data.headcount_by_gender}
+                  data={(data as any).headcount_by_gender}
                   cx="50%" cy="50%" innerRadius={60} outerRadius={90}
                   paddingAngle={8} dataKey="count"
-                  label={(props: any) => `${props.gender} ${props.percentage}%`}
+                  label={({ gender, percentage }: any) => `${gender} ${percentage}%`}
                 >
-                  {data.headcount_by_gender.map((entry, index) => (
+                  {(data as any).headcount_by_gender.map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

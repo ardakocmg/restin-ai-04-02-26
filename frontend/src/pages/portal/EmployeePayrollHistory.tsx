@@ -206,7 +206,7 @@ export default function EmployeePayrollHistory() {
                         </div>
                     </div>
                     <div className="p-8 bg-zinc-200">
-                        {docType === 'FS3' && <FS3Document fs3Data={selectedDoc} venue={currentVenue} />}
+                        {docType === 'FS3' && <FS3Document fs3Data={selectedDoc} />}
                         {docType === 'SkillsPass' && <SkillsPassDocument data={selectedDoc} />}
                         {docType === 'Contract' && <EngagementLetter data={{ ...selectedDoc, venue: currentVenue }} />}
                         {docType === 'Exit' && <ExitTemplate data={{ ...selectedDoc, venue: currentVenue }} />}

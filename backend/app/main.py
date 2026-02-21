@@ -1075,7 +1075,7 @@ async def generate_ai_content(
     import time
     time.sleep(0.5)
     return {
-        "text": f"**[AI Generated Content]**\nBased on your request for '{prompt[:30]}...', here is a simulated response from {model}. In production, this would connect to Vertex AI.",
+        "text": f"**[AI Generated Content]**\nBased on your request for '{str(prompt)[:30]}...', here is a simulated response from {model}. In production, this would connect to Vertex AI.",
         "usage": {"prompt_tokens": 50, "candidate_tokens": 100, "total_tokens": 150},
         "citationMetadata": {"citations": []}
     }
@@ -1096,8 +1096,10 @@ async def startup_event():
         logger.info("🗺️ REGISTERED ROUTES:")
         for route in app.routes:
             if hasattr(route, "path"):
-                methods = ", ".join(route.methods) if hasattr(route, "methods") else "ALL"
-                logger.info(f"   [{methods}] {route.path}")
+                methods_attr = getattr(route, "methods", None)
+                methods = ", ".join(methods_attr) if methods_attr else "ALL"
+                path_attr = getattr(route, "path", "unknown")
+                logger.info(f"   [{methods}] {path_attr}")
 
         # Register built-in reports
         await register_builtin_reports(db, venue_id="GLOBAL")

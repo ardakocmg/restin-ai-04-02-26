@@ -4,6 +4,7 @@ import api from '../../lib/api';
 import PageContainer from '../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { BarChart3, TrendingUp, Clock, DollarSign } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function AnalyticsPage() {
   const { activeVenue } = useVenue();
@@ -27,7 +28,7 @@ export default function AnalyticsPage() {
       setDashboards(dashRes.data?.data || []);
       setMetrics(metricsRes.data?.data || []);
     } catch (error: any) {
-      console.error('Analytics error:', error);
+      logger.error('Analytics error:', error);
     } finally {
       setLoading(false);
     }

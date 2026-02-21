@@ -23,7 +23,7 @@ import { toast } from 'sonner';
 
 import api from '../../lib/api';
 
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@/context/AuthContext';
 
 export default function StockTransfersComplete() {
   const { user } = useAuth();

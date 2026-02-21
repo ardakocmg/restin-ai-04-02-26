@@ -27,7 +27,7 @@ export default function PrintPreviewPage() {
     const [bridgePort, setBridgePort] = useState('9100');
     const [testStatus, setTestStatus] = useState(null); // 'testing' | 'success' | 'fail'
 
-    const { data: printers = [], isLoading } = useQuery({
+    const { data: printers = [], isPending } = useQuery({
         queryKey: ['printers', venueId],
         queryFn: async () => {
             try {
@@ -141,7 +141,7 @@ export default function PrintPreviewPage() {
 
                     {/* Printer List */}
                     <h3 className="font-semibold text-foreground">Registered Printers</h3>
-                    {isLoading ? (
+                    {isPending ? (
                         <div className="flex items-center justify-center py-12">
                             <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
                         </div>

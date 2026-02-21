@@ -9,6 +9,7 @@ import { Button } from '../../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { DollarSign, Receipt, ShoppingCart, CheckCircle, RefreshCw } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function FinanceDashboard() {
   const { user } = useAuth();
@@ -27,7 +28,7 @@ export default function FinanceDashboard() {
       const response = await api.get(`/venues/${venueId}/finance/summary`);
       setSummary(response.data);
     } catch (error: any) {
-      console.error('Failed to load finance summary:', error);
+      logger.error('Failed to load finance summary:', error);
       if (error.response?.status !== 403) {
         toast.error('Failed to load finance data');
       }
@@ -97,8 +98,6 @@ export default function FinanceDashboard() {
               <PermissionedTable
                 venueId={venueId}
                 tableKey="orders_open"
-                dataEndpoint={`/venues/${venueId}/orders?status=open`}
-                onRowClick={() => { }}
               />
             </TabsContent>
 
@@ -106,8 +105,6 @@ export default function FinanceDashboard() {
               <PermissionedTable
                 venueId={venueId}
                 tableKey="checks_closed"
-                dataEndpoint={`/venues/${venueId}/orders?status=closed`}
-                onRowClick={() => { }}
               />
             </TabsContent>
           </CardContent>

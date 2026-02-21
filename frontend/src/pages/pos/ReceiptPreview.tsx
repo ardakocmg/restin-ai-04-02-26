@@ -197,12 +197,12 @@ export default function ReceiptPreview({ order, items, orderTotal, venueInfo, on
 
 const s: Record<string, React.CSSProperties> = {
     overlay: {
-        position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)',
+        position: 'fixed' as const, inset: 0, backgroundColor: 'rgba(0,0,0,0.7)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1200,
     },
     modal: {
         backgroundColor: '#1a1a1a', borderRadius: 16, border: '1px solid #333',
-        maxHeight: '90vh', overflow: 'hidden', display: 'flex', flexDirection: 'column',
+        maxHeight: '90vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' as const,
     },
     actionBar: {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -221,9 +221,9 @@ const s: Record<string, React.CSSProperties> = {
     },
     paper: {
         backgroundColor: '#fefefe', color: '#111', margin: 16, borderRadius: 4,
-        padding: 20, overflowY: 'auto', fontFamily: "'Courier New', monospace",
+        padding: 20, overflowY: 'auto' as const, fontFamily: "'Courier New', monospace",
     },
-    receiptHeader: { textAlign: 'center', marginBottom: 12 },
+    receiptHeader: { textAlign: 'center' as const, marginBottom: 12 },
     venueName: { fontSize: 18, fontWeight: 800, letterSpacing: 1 },
     venueDetail: { fontSize: 11, color: '#555', marginTop: 2 },
     divider: {
@@ -239,7 +239,7 @@ const s: Record<string, React.CSSProperties> = {
     itemsSection: { padding: '4px 0' },
     itemHeader: {
         display: 'flex', fontSize: 10, fontWeight: 700, color: '#888',
-        textTransform: 'uppercase', padding: '4px 0', borderBottom: '1px solid #eee',
+        textTransform: 'uppercase' as const, padding: '4px 0', borderBottom: '1px solid #eee',
     },
     itemRow: {
         display: 'flex', padding: '4px 0', borderBottom: '1px dotted #eee',

@@ -4,6 +4,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import api from '../../../lib/api';
+import { logger } from '@/lib/logger';
 
 export default function InvoiceList() {
   const [invoices, setInvoices] = useState([]);
@@ -21,7 +22,7 @@ export default function InvoiceList() {
       const response = await api.get(`/venues/${venueId}/invoices/ai`, { params: { status } });
       setInvoices(response.data || []);
     } catch (error: any) {
-      console.error('Failed to fetch invoices:', error);
+      logger.error('Failed to fetch invoices:', error);
       setInvoices([]);
     } finally {
       setLoading(false);

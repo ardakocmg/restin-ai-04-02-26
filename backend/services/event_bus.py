@@ -1,11 +1,12 @@
 """Event Bus - Publish/Subscribe system with MongoDB Outbox Pattern"""
 import asyncio
-from typing import Dict, List, Callable, Any
+from typing import Dict, List, Callable, Any, Optional
 from datetime import datetime, timezone
 import json
 import uuid
 
 from core.database import db
+from services.observability_service import get_observability_service
 
 
 class EventBus:
@@ -22,7 +23,7 @@ class EventBus:
         self.subscribers[event_type].append(handler)
         return self
     
-    async def publish(self, event_type: str, data: Dict[str, Any], metadata: Dict[str, Any] = None):
+    async def publish(self, event_type: str, data: Dict[str, Any], metadata: Optional[Dict[str, Any]] = None):
         """
         Publish event to outbox (MongoDB)
         Uses outbox pattern for reliability
@@ -45,21 +46,60 @@ class EventBus:
     
     async def process_pending_events(self):
         """Process pending events from outbox (background worker)"""
+        # 1. Recovery on startup: Process any leftover PENDING events
+        try:
+            pending_events = await db.event_outbox.find(
+                {"status": "PENDING"},
+                {"_id": 0}
+            ).limit(1000).to_list(1000)
+            
+            for event in pending_events:
+                asyncio.create_task(self._process_event(event))
+                
+            if pending_events:
+                print(f"♻️ EventBus: Recovered {len(pending_events)} pending events on startup")
+        except Exception as e:
+            print(f"Error recovering pending events: {e}")
+
+        # 2. Main processing loop
+        has_watch = hasattr(db.event_outbox, 'watch')
+        print(f"📡 EventBus: Change Streams supported = {has_watch}")
+        
         while self.running:
             try:
-                # Get pending events
-                events = await db.event_outbox.find(
-                    {"status": "PENDING"},
-                    {"_id": 0}
-                ).limit(10).to_list(10)
-                
-                for event in events:
-                    await self._process_event(event)
-                
-                # Sleep before next batch
-                await asyncio.sleep(1)
+                if has_watch:
+                    # Real-time change stream (MongoDB Replica Set / Atlas)
+                    pipeline = [{"$match": {"operationType": "insert"}}]
+                    try:
+                        async with db.event_outbox.watch(pipeline) as stream:
+                            async for change in stream:
+                                if not self.running:
+                                    break
+                                
+                                event = change.get("fullDocument")
+                                if event and event.get("status") == "PENDING":
+                                    asyncio.create_task(self._process_event(event))
+                    except Exception as watch_err:
+                        if "changeStream" in str(watch_err) or "40573" in str(watch_err):
+                            print("⚠️ EventBus: MongoDB Standalone detected. Falling back to interval polling.")
+                            has_watch = False
+                        else:
+                            raise watch_err
+                else:
+                    # Fallback to polling (Mock DB or Standalone)
+                    events = await db.event_outbox.find(
+                        {"status": "PENDING"},
+                        {"_id": 0}
+                    ).limit(10).to_list(10)
+                    
+                    for event in events:
+                        asyncio.create_task(self._process_event(event))
+                    
+                    await asyncio.sleep(1)
+                    
             except Exception as e:
-                print(f"Error processing events: {e}")
+                # Sleep briefly to avoid tight crash loops if DB disconnects
+                print(f"Error in EventBus watch/poll loop: {e}")
                 await asyncio.sleep(5)
     
     async def _process_event(self, event: Dict):
@@ -81,6 +121,15 @@ class EventBus:
                         await handler(event)
                     except Exception as handler_error:
                         print(f"Handler error for {event_type}: {handler_error}")
+                        # Log handler error to observability
+                        import asyncio
+                        obs = get_observability_service(db)
+                        if obs:
+                            asyncio.create_task(obs.log_background_error(
+                                source_name=f"EventBus.Handler[{event_type}]",
+                                error_msg=str(handler_error),
+                                metadata={"event_id": event_id}
+                            ))
                         # Continue with other handlers
             
             # Mark as completed
@@ -100,6 +149,15 @@ class EventBus:
             if retry_count >= max_retries:
                 # Move to dead letter queue
                 await self._move_to_dlq(event, str(e))
+                # Alert observability about DLQ insertion
+                obs = get_observability_service(db)
+                if obs:
+                    import asyncio
+                    asyncio.create_task(obs.log_background_error(
+                        source_name="EventBus.DLQ",
+                        error_msg=f"Event {event_id} ({event_type}) moved to DLQ. Reason: {str(e)}",
+                        metadata={"event_id": event_id, "event_type": event_type}
+                    ))
             else:
                 # Retry later
                 await db.event_outbox.update_one(

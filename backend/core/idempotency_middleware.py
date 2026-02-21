@@ -55,38 +55,46 @@ class IdempotencyMiddleware(BaseHTTPMiddleware):
 
         # Cache the response for successful operations
         if 200 <= response.status_code < 300:
-            try:
-                # Read response body
-                body = b""
-                async for chunk in response.body_iterator:
-                    body += chunk
+            content_type = response.headers.get("Content-Type", "")
+            
+            # Only cache application/json responses. Streaming/binary will crash body_iterator consumption
+            if "application/json" in content_type:
+                try:
+                    # Read response body
+                    body = b""
+                    async for chunk in response.body_iterator:
+                        body += chunk
 
-                response_body = json.loads(body.decode())
+                    response_body = json.loads(body.decode())
 
-                # Store idempotency record
-                await db.idempotency_keys.insert_one({
-                    "key": idempotency_key,
-                    "method": request.method,
-                    "path": str(request.url.path),
-                    "status_code": response.status_code,
-                    "response_body": response_body,
-                    "created_at": datetime.now(timezone.utc).isoformat(),
-                    "expires_at": (datetime.now(timezone.utc) + timedelta(hours=self.ttl_hours)).isoformat(),
-                    "device_id": request.headers.get('X-Device-Id'),
-                    "offline_replay": request.headers.get('X-Offline-Replay') == 'true'
-                })
+                    # Store idempotency record
+                    await db.idempotency_keys.insert_one({
+                        "key": idempotency_key,
+                        "method": request.method,
+                        "path": str(request.url.path),
+                        "status_code": response.status_code,
+                        "response_body": response_body,
+                        "created_at": datetime.now(timezone.utc).isoformat(),
+                        "expires_at": (datetime.now(timezone.utc) + timedelta(hours=self.ttl_hours)).isoformat(),
+                        "device_id": request.headers.get('X-Device-Id'),
+                        "offline_replay": request.headers.get('X-Offline-Replay') == 'true'
+                    })
 
-                print(f"💾 Idempotency key cached: {idempotency_key}")
+                    print(f"💾 Idempotency key cached: {idempotency_key} for path {request.url.path}")
 
-                # Recreate response with the body
-                return Response(
-                    content=body,
-                    status_code=response.status_code,
-                    headers=dict(response.headers),
-                    media_type=response.media_type
-                )
-            except Exception as e:
-                print(f"⚠️ Failed to cache idempotency: {e}")
+                    # Recreate response with the body
+                    return Response(
+                        content=body,
+                        status_code=response.status_code,
+                        headers=dict(response.headers),
+                        media_type=response.media_type
+                    )
+                except Exception as e:
+                    print(f"⚠️ Failed to cache idempotency: {e}")
+                    # If we failed to cache, we still need to return the response, but body_iterator might be consumed.
+                    # Since we only try caching on application/json, returning the consumed body is necessary here.
+                    if 'body' in locals():
+                        return Response(content=body, status_code=response.status_code, headers=dict(response.headers), media_type=response.media_type)
 
         return response
 

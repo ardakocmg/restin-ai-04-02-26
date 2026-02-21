@@ -3,6 +3,7 @@ import PageContainer from '../../../layouts/PageContainer';
 import { Card, CardContent } from '../../../components/ui/card';
 import { DollarSign, TrendingUp } from 'lucide-react';
 import api from '../../../lib/api';
+import { logger } from '@/lib/logger';
 
 export default function CostAnalysis() {
   const [analysis, setAnalysis] = useState([]);
@@ -18,7 +19,7 @@ export default function CostAnalysis() {
       const response = await api.get(`/venues/${venueId}/recipes/engineered/analytics/profitability`);
       setAnalysis(response.data || []);
     } catch (error: any) {
-      console.error('Failed to fetch analysis:', error);
+      logger.error('Failed to fetch analysis:', error);
       setAnalysis([]);
     } finally {
       setLoading(false);

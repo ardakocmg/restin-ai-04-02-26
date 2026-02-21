@@ -29,6 +29,7 @@ const MonitoringDashboard = React.lazy(() => import('../pages/manager/Monitoring
 const TestPanel = React.lazy(() => import('../pages/observability/TestPanel'));
 const ErrorInbox = React.lazy(() => import('../pages/observability/ErrorInbox'));
 const LogsViewer = React.lazy(() => import('../pages/manager/LogsViewer'));
+const HyperscaleDashboard = React.lazy(() => import('../pages/HyperscaleDashboard'));
 
 // ─── Devices & IoT ──────────────────────────────────────────────────────────────
 const DeviceHub = React.lazy(() => import('../pages/manager/DeviceHub'));
@@ -110,6 +111,7 @@ export const systemRoutes = (
         <Route path="system-health-advanced" element={<RoleRoute requiredRole="OWNER"><SystemHealthDashboard /></RoleRoute>} />
         <Route path="monitoring" element={<RoleRoute requiredRole="OWNER"><MonitoringDashboard /></RoleRoute>} />
         <Route path="logs" element={<RoleRoute requiredRole="OWNER"><LogsViewer /></RoleRoute>} />
+        <Route path="hyperscale" element={<RoleRoute requiredRole="PRODUCT_OWNER"><HyperscaleDashboard /></RoleRoute>} />
 
         {/* Devices & IoT */}
         <Route path="device-hub" element={<RoleRoute requiredRole="MANAGER"><DeviceHub /></RoleRoute>} />

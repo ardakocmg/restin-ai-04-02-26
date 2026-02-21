@@ -4,6 +4,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { ShieldCheck, Plus, X } from 'lucide-react';
 import api from '../../../lib/api';
+import { logger } from '@/lib/logger';
 
 export default function QualityAudits() {
   const [audits, setAudits] = useState([]);
@@ -21,7 +22,7 @@ export default function QualityAudits() {
       const response = await api.get(`/venues/${venueId}/quality/audits`);
       setAudits(response.data || []);
     } catch (error: any) {
-      console.error('Failed to fetch audits:', error);
+      logger.error('Failed to fetch audits:', error);
       setAudits([]);
     } finally {
       setLoading(false);
@@ -35,7 +36,7 @@ export default function QualityAudits() {
       setShowModal(false);
       fetchAudits();
     } catch (error: any) {
-      console.error('Failed to create audit:', error);
+      logger.error('Failed to create audit:', error);
     }
   };
 

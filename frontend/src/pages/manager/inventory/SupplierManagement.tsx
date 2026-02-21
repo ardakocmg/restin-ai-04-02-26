@@ -159,7 +159,7 @@ function CertBadge({ cert }: { cert: SupplierCertification }) {
    ═══════════════════════════════════════════════════════════════════ */
 export default function SupplierManagement() {
     const { t } = useTranslation();
-    const { activeVenue } = useVenue();
+    const { activeVenue: selectedVenue } = useVenue() as any;
 
     /* ── State ── */
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -183,10 +183,10 @@ export default function SupplierManagement() {
 
     /* ── Load Data ── */
     const loadData = useCallback(async () => {
-        if (!activeVenue?.id) return;
+        if (!selectedVenue?._id) return;
         setLoading(true);
         try {
-            const res = await api.get(`/api/inventory/suppliers?venue_id=${activeVenue?.id}`);
+            const res = await api.get(`/api/inventory/suppliers?venue_id=${selectedVenue._id}`);
             setSuppliers(res.data?.suppliers || res.data || []);
         } catch (err) {
             logger.error('Failed to load suppliers', err);
@@ -195,7 +195,7 @@ export default function SupplierManagement() {
         } finally {
             setLoading(false);
         }
-    }, [activeVenue?.id]);
+    }, [selectedVenue?._id]);
 
     useEffect(() => { loadData(); }, [loadData]);
 
@@ -356,12 +356,12 @@ export default function SupplierManagement() {
         try {
             if (editingSupplier?._id) {
                 await api.put(`/api/inventory/suppliers/${editingSupplier._id}`, {
-                    ...form, venue_id: activeVenue?.id,
+                    ...form, venue_id: selectedVenue?._id,
                 });
                 toast.success('Supplier updated');
             } else {
                 await api.post('/api/inventory/suppliers', {
-                    ...form, venue_id: activeVenue?.id,
+                    ...form, venue_id: selectedVenue?._id,
                 });
                 toast.success('Supplier created');
             }

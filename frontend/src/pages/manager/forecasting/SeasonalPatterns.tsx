@@ -3,6 +3,7 @@ import PageContainer from '../../../layouts/PageContainer';
 import { Card, CardContent } from '../../../components/ui/card';
 import { Calendar, TrendingUp } from 'lucide-react';
 import api from '../../../lib/api';
+import { logger } from '@/lib/logger';
 
 export default function SeasonalPatterns() {
   const [patterns, setPatterns] = useState([]);
@@ -18,7 +19,7 @@ export default function SeasonalPatterns() {
       // Fetch from API when available
       setPatterns([]);
     } catch (error: any) {
-      console.error('Failed to fetch patterns:', error);
+      logger.error('Failed to fetch patterns:', error);
     } finally {
       setLoading(false);
     }

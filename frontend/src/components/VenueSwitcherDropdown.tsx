@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Building2, Check, ChevronDown } from 'lucide-react';
 import { useSubdomain } from '../context/SubdomainContext';
 import api from '../lib/api';
+import { logger } from '@/lib/logger';
 
 export default function VenueSwitcherDropdown() {
   const { venue, group, module, switchVenue } = useSubdomain();
@@ -29,7 +30,7 @@ export default function VenueSwitcherDropdown() {
       const response = await api.get(`/venue-groups/${group.id}/venues`);
       setVenues(response.data);
     } catch (error: any) {
-      console.error('Failed to load venues:', error);
+      logger.error('Failed to load venues:', error);
     } finally {
       setLoading(false);
     }

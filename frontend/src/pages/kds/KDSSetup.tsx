@@ -10,6 +10,7 @@ import { Button } from "../../components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import { Label } from "../../components/ui/label";
 import { ChefHat, Building2, MapPin, ArrowRight, Loader2 } from "lucide-react";
+import { logger } from '@/lib/logger';
 
 export default function KDSSetup() {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ export default function KDSSetup() {
 
       await loadVenues();
     } catch (error: any) {
-      console.error("Failed to check binding:", error);
+      logger.error("Failed to check binding:", error);
       setError("Failed to load setup data. Please try again.");
       await loadVenues();
     } finally {
@@ -83,7 +84,7 @@ export default function KDSSetup() {
         setError("No venues found. Please contact your administrator.");
       }
     } catch (error: any) {
-      console.error("Failed to load venues:", error);
+      logger.error("Failed to load venues:", error);
       setError("Failed to load venues. Please login from Admin first.");
     }
   };
@@ -93,7 +94,7 @@ export default function KDSSetup() {
       const response = await venueAPI.getZones(venueId);
       setZones(response.data.filter(z => z.type === "kitchen" || z.type === "prep"));
     } catch (error: any) {
-      console.error("Failed to load zones:", error);
+      logger.error("Failed to load zones:", error);
       toast.error("Failed to load zones");
     }
   };
@@ -125,7 +126,7 @@ export default function KDSSetup() {
       toast.success("KDS terminal configured");
       navigate("/kds");
     } catch (error: any) {
-      console.error("Failed to bind device:", error);
+      logger.error("Failed to bind device:", error);
 
       // Prevent React crash by ensuring detail is a string
       const detail = error.response?.data?.detail;

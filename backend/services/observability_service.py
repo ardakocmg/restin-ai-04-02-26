@@ -220,6 +220,38 @@ class ObservabilityService:
         await self.db.obs_testpanel_runs.insert_one(run_dict.copy())
         
         return run
+
+    # ============= SYSTEM & DLQ MONITORING (Added for 100% Maturity) =============
+    
+    async def log_background_error(self, source_name: str, error_msg: str, metadata: dict = None):
+        """Log a silently suppressed background task error to DB."""
+        try:
+            log_entry = {
+                "source": source_name,
+                "error_message": error_msg,
+                "metadata": metadata or {},
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "status": "UNRESOLVED"
+            }
+            await self.db.system_errors.insert_one(log_entry)
+            print(f"🚨 [Observability] {source_name} Error: {error_msg}")
+        except Exception as e:
+            print(f"Failed to log background error: {e}")
+
+    async def get_dlq_stats(self) -> dict:
+        """Fetch current stats on Dead Letter Queue health."""
+        total_dlq = await self.db.event_dlq.count_documents({})
+        unresolved_errors = await self.db.system_errors.count_documents({"status": "UNRESOLVED"})
+        
+        recent_dlq = await self.db.event_dlq.find({}, {"_id": 0, "event_type": 1, "final_error": 1, "moved_to_dlq_at": 1}).sort("moved_to_dlq_at", -1).limit(5).to_list(5)
+        
+        return {
+            "dlq_size": total_dlq,
+            "unresolved_system_errors": unresolved_errors,
+            "recent_dlq_events": recent_dlq,
+            "status": "HEALTHY" if total_dlq == 0 else "WARNING"
+        }
+    
     
     # ============= STEPS GENERATOR =============
     

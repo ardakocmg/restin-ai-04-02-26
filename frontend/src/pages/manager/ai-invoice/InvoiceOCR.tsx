@@ -4,6 +4,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Upload, Loader } from 'lucide-react';
 import api from '../../../lib/api';
 import { toast } from 'sonner';
+import { logger } from '@/lib/logger';
 
 export default function InvoiceOCR() {
   const [processing, setProcessing] = useState(false);
@@ -18,7 +19,7 @@ export default function InvoiceOCR() {
     try {
       const reader = new FileReader();
       reader.onload = async (event) => {
-        const base64 = (event.target?.result as string)?.split(',')[1];
+        const base64 = (event.target.result as string).split(',')[1];
         const venueId = localStorage.getItem('currentVenueId');
 
         const response = await api.post(`/venues/${venueId}/invoices/ocr`, {
@@ -31,7 +32,7 @@ export default function InvoiceOCR() {
       };
       reader.readAsDataURL(file);
     } catch (error: any) {
-      console.error('OCR failed:', error);
+      logger.error('OCR failed:', error);
       toast.error('Failed to process invoice');
     } finally {
       setProcessing(false);
@@ -47,7 +48,13 @@ export default function InvoiceOCR() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Match to PO (Optional)</label>
-                <select value={selectedPO} onChange={(e) => setSelectedPO(e.target.value)} className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded">
+                <select
+                  title="Match to PO"
+                  aria-label="Match to PO"
+                  value={selectedPO}
+                  onChange={(e) => setSelectedPO(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded"
+                >
                   <option value="">No PO</option>
                 </select>
               </div>

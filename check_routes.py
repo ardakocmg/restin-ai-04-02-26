@@ -1,30 +1,28 @@
-import sys
 import os
-from fastapi import FastAPI
-from fastapi.routing import APIRouter
+import re
 
-# Add backend to path
-sys.path.append(os.path.join(os.getcwd(), 'backend'))
+routes_dir = 'backend/routes'
+main_file = 'backend/app/main.py'
 
-try:
-    from routes.scheduler import router as scheduler_router
-    print("Successfully imported scheduler_router")
-    print(f"Prefix: {scheduler_router.prefix}")
-    
-    app = FastAPI()
-    app.include_router(scheduler_router)
-    
-    found = False
-    for route in app.routes:
-        if route.path == "/api/scheduler/week":
-            print(f"Found route: {route.path}")
-            found = True
-            break
-    
-    if not found:
-        print("Route /api/scheduler/week NOT found in router")
-        for route in app.routes:
-            print(f"Available route: {route.path}")
+if not os.path.exists(main_file):
+    print(f"Error: {main_file} not found")
+    exit(1)
 
-except Exception as e:
-    print(f"Error importing scheduler: {e}")
+with open(main_file, "r", encoding="utf-8") as f:
+    main_content = f.read()
+
+route_files = [f for f in os.listdir(routes_dir) if f.endswith(".py") and f != "__init__.py"]
+
+missing = []
+for file in route_files:
+    module_name = file.replace(".py", "")
+    # Check if this module is imported or mounted in main.py
+    if module_name not in main_content:
+        missing.append(file)
+
+if missing:
+    print("MISSING ROUTES NOT MOUNTED IN MAIN.PY:")
+    for m in missing:
+        print(m)
+else:
+    print("ALL ROUTES MOUNTED")

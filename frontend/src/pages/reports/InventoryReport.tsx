@@ -43,7 +43,7 @@ export default function InventoryReport() {
     }
   };
 
-  if (loading) return <LoadingSpinner fullScreen text="Loading inventory report..." className="" />;
+  if (loading) return <LoadingSpinner fullScreen className="" text="Loading inventory report..." />;
 
   return (
     <PageContainer title="Inventory Report" description="Stock levels and waste analysis">

@@ -4,6 +4,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { ClipboardList, Plus } from 'lucide-react';
 import api from '../../../lib/api';
+import { logger } from '@/lib/logger';
 
 export default function InternalOrders() {
   const [orders, setOrders] = useState([]);
@@ -19,7 +20,7 @@ export default function InternalOrders() {
       const response = await api.get(`/venues/${venueId}/internal-orders`);
       setOrders(response.data || []);
     } catch (error: any) {
-      console.error('Failed to fetch orders:', error);
+      logger.error('Failed to fetch orders:', error);
       setOrders([]);
     } finally {
       setLoading(false);

@@ -5,6 +5,7 @@ import PageContainer from '../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Plug, Activity } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function ConnectorsPage() {
   const { activeVenue } = useVenue();
@@ -22,7 +23,7 @@ export default function ConnectorsPage() {
       const res = await api.get(`/connectors?venue_id=${activeVenue.id}`).catch(() => ({ data: { data: [] } }));
       setConnectors(res.data?.data || []);
     } catch (error: any) {
-      console.error('Connectors error:', error);
+      logger.error('Connectors error:', error);
     } finally {
       setLoading(false);
     }

@@ -6,9 +6,12 @@ import logging
 
 from core.database import db
 from core.dependencies import get_current_user
+from core.rate_limiter import strict_rate_limit
 from pos.service.pos_order_service import PosOrderService
 from pos.service.pos_payment_service import pos_payment_service
 from pos.models import PosOrderCreate, PosOrderItemCreate, PosPaymentCreate
+from fastapi import Request
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -52,8 +55,10 @@ def create_orders_router():
 
 
     @router.post("")
+    @strict_rate_limit(max_requests=5, window_seconds=60)
     async def create_order(
         data: PosOrderCreate,
+        request: Request,
         current_user: dict = Depends(get_current_user)
     ):
         """Create a new order"""

@@ -12,7 +12,6 @@ Tasks:
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
-from apscheduler.triggers.cron import CronTrigger
 from datetime import datetime, timezone
 import logging
 from services.updates_service import UpdatesService
@@ -79,6 +78,15 @@ class ScheduledTasksService:
             CronTrigger(hour=23, minute=55),
             id='publish_daily_updates',
             name='Publish daily release notes',
+            replace_existing=True
+        )
+        
+        # Reconciliation: Cancel stalled pending payments (every 10 minutes)
+        self.scheduler.add_job(
+            self.reconcile_payments,
+            IntervalTrigger(minutes=10),
+            id='reconcile_payments',
+            name='Cancel stalled pending payments',
             replace_existing=True
         )
         
@@ -166,6 +174,19 @@ class ScheduledTasksService:
             await service.publish_release(actor_id="system", actor_role="system", auto_published=True)
         except Exception as e:
             logger.error(f'❌ Daily updates publish failed: {e}')
+            
+    async def reconcile_payments(self):
+        """Find and cancel stalled PENDING_PAYMENT orders"""
+        try:
+            from services.reconciliation_service import ReconciliationService
+            recon_service = ReconciliationService(self.db)
+            reconciled = await recon_service.reconcile_stale_payments()
+            if reconciled > 0:
+                logger.info(f'🔄 Reconciled {reconciled} stalled payments')
+            return reconciled
+        except Exception as e:
+            logger.error(f'❌ Payment reconciliation failed: {e}')
+            return 0
     
     # ============= BACKUP JOBS =============
     

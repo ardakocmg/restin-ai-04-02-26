@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import DataTable from '../../components/shared/DataTable';
 import { Plus, CheckCircle2 } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function ReceivingPage() {
   const { activeVenue } = useVenue();
@@ -24,7 +25,7 @@ export default function ReceivingPage() {
       const res = await api.get(`/inventory/receiving/grns?venue_id=${activeVenue.id}`);
       setGrns(res.data || []);
     } catch (error: any) {
-      console.error('Failed to load GRNs:', error);
+      logger.error('Failed to load GRNs:', error);
     } finally {
       setLoading(false);
     }

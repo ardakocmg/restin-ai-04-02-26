@@ -8,6 +8,7 @@ import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Upload, FileText } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 const STATUS_COLORS = {
   pending: 'bg-yellow-100 text-yellow-700',
@@ -32,7 +33,7 @@ export default function Documents() {
       const response = await api.get(`/venues/${activeVenue.id}/documents`);
       setDocuments(response.data);
     } catch (error: any) {
-      console.error('Failed to load documents:', error);
+      logger.error('Failed to load documents:', error);
     } finally {
       setLoading(false);
     }

@@ -6,6 +6,7 @@ import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Zap, Clock, CheckCircle2, XCircle, Database } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function EventMonitorPage() {
   const [outboxEvents, setOutboxEvents] = useState([]);
@@ -44,7 +45,7 @@ export default function EventMonitorPage() {
       setDlqEvents(dlqRes.data.events || []);
       setCompletedEvents(completedRes.data.events || []);
     } catch (error: any) {
-      console.error('Failed to load events:', error);
+      logger.error('Failed to load events:', error);
     } finally {
       setLoading(false);
     }

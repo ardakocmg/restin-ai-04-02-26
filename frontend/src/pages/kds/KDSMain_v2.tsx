@@ -13,6 +13,7 @@ import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { ScrollArea } from "../../components/ui/scroll-area";
 import BottomNav from "../../components/BottomNav";
+import { logger } from '@/lib/logger';
 import {
   LogOut, Clock, CheckCircle, PlayCircle, RefreshCw, Loader2,
   PauseCircle, AlertTriangle, Bell, Truck, Award
@@ -61,7 +62,7 @@ export default function KDSMain() {
       setTickets(response.data);
       setLastUpdate(new Date());
     } catch (error: any) {
-      console.error("Failed to load tickets:", error);
+      logger.error("Failed to load tickets:", error);
     } finally {
       setLoading(false);
     }
@@ -74,7 +75,7 @@ export default function KDSMain() {
       toast.success("Item started");
       await loadData();
     } catch (error: any) {
-      console.error("Failed to start item:", error);
+      logger.error("Failed to start item:", error);
       toast.error("Failed to start item");
     }
   };
@@ -85,7 +86,7 @@ export default function KDSMain() {
       toast.success("Item ready");
       await loadData();
     } catch (error: any) {
-      console.error("Failed to mark ready:", error);
+      logger.error("Failed to mark ready:", error);
       toast.error("Failed to mark ready");
     }
   };
@@ -99,7 +100,7 @@ export default function KDSMain() {
       toast.success("Item held");
       await loadData();
     } catch (error: any) {
-      console.error("Failed to hold item:", error);
+      logger.error("Failed to hold item:", error);
       toast.error("Failed to hold item");
     }
   };
@@ -110,7 +111,7 @@ export default function KDSMain() {
       toast.success("PASS approved");
       await loadData();
     } catch (error: any) {
-      console.error("Failed to approve:", error);
+      logger.error("Failed to approve:", error);
       toast.error("Failed to approve");
     }
   };
@@ -121,7 +122,7 @@ export default function KDSMain() {
       toast.success("Delivered to table");
       await loadData();
     } catch (error: any) {
-      console.error("Failed to deliver:", error);
+      logger.error("Failed to deliver:", error);
       toast.error(error.response?.data?.message || "Failed to deliver");
     }
   };
@@ -179,8 +180,8 @@ export default function KDSMain() {
               key={station}
               onClick={() => setStationFilter(station)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${stationFilter === station
-                ? "bg-red-500 text-foreground"
-                : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                  ? "bg-red-500 text-foreground"
+                  : "bg-secondary text-muted-foreground hover:bg-secondary/80"
                 }`}
             >
               {station.toUpperCase()}
@@ -229,7 +230,7 @@ export default function KDSMain() {
 
       {/* Bottom Navigation */}
       <div className="md:hidden">
-        <BottomNav mode="kds" onFilterChange={setStationFilter} />
+        <BottomNav mode="kds" onFilterChange={() => {}} />
       </div>
     </div>
   );
@@ -244,8 +245,8 @@ function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onD
     if (item.status === "PREPARING" && item.started_at) {
       const interval = setInterval(() => {
         const started = new Date(item.started_at);
-        const now = new Date();
-        const elapsedSeconds = Math.floor((now.getTime() - started.getTime()) / 1000);
+        const now = new Date().getTime();
+        const elapsedSeconds = Math.floor((now - started.getTime()) / 1000);
         setElapsed(elapsedSeconds);
 
         const target = item.target_prep_seconds || 900;

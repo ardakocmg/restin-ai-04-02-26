@@ -5,6 +5,7 @@ import PageContainer from '../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Zap, Mail, MessageSquare } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function AutomationsPage() {
   const { activeVenue } = useVenue();
@@ -22,7 +23,7 @@ export default function AutomationsPage() {
       const res = await api.get(`/automations/flows?venue_id=${activeVenue.id}`).catch(() => ({ data: { data: [] } }));
       setFlows(res.data?.data || []);
     } catch (error: any) {
-      console.error('Automations error:', error);
+      logger.error('Automations error:', error);
     } finally {
       setLoading(false);
     }

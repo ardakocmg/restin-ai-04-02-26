@@ -4,6 +4,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { AlertTriangle } from 'lucide-react';
 import api from '../../../lib/api';
+import { logger } from '@/lib/logger';
 
 export default function VarianceAnalysis() {
   const [invoices, setInvoices] = useState([]);
@@ -13,10 +14,10 @@ export default function VarianceAnalysis() {
     setLoading(true);
     try {
       const venueId = localStorage.getItem('currentVenueId');
-      const response = await api.get(`/venues/${venueId}/invoices/ai`, { params: { status: 'variance_detected' } });
+      const response = await api.get(`/venues/${venueId}/invoices/ai?status=variance_detected`);
       setInvoices(response.data || []);
     } catch (error: any) {
-      console.error('Failed to fetch variances:', error);
+      logger.error('Failed to fetch variances:', error);
     } finally {
       setLoading(false);
     }

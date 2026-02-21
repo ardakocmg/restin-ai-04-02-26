@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
+from core.cache_layer import cached, system_cache
 from models import (
     Menu, MenuCreate, MenuCategory, MenuCategoryCreate,
     MenuItem, MenuItemCreate, ModifierGroup, ModifierGroupCreate,
@@ -63,6 +64,7 @@ def create_menu_router():
 
     # ==================== CATEGORY ENDPOINTS ====================
     @router.get("/venues/{venue_id}/menu/categories", response_model=List[MenuCategory])
+    @cached("menu_routes", ttl=300)
     async def list_categories(venue_id: str, menu_id: Optional[str] = None):
         query = {"venue_id": venue_id}
         if menu_id:
@@ -106,6 +108,7 @@ def create_menu_router():
 
     # ==================== MENU ITEM ENDPOINTS ====================
     @router.get("/venues/{venue_id}/menu/items", response_model=List[MenuItem])
+    @cached("menu_routes", ttl=300)
     async def list_menu_items(
         venue_id: str, 
         category_id: Optional[str] = None, 
@@ -123,6 +126,7 @@ def create_menu_router():
         return items
 
     @router.get("/menu/items/{item_id}")
+    @cached("menu_routes", ttl=300)
     async def get_menu_item(item_id: str):
         item = await db.menu_items.find_one({"id": item_id}, {"_id": 0})
         if not item:
@@ -189,9 +193,12 @@ def create_menu_router():
         group = ModifierGroup(**group_data.model_dump())
         await db.modifier_groups.insert_one(group.model_dump())
         
+        await system_cache.invalidate("menu_routes:")
+        
         return group.model_dump()
 
     @router.get("/venues/{venue_id}/modifier-groups")
+    @cached("menu_routes", ttl=300)
     async def list_modifier_groups(venue_id: str, current_user: dict = Depends(get_current_user)):
         """List all modifier groups for a venue"""
         await check_venue_access(current_user, venue_id)
@@ -215,9 +222,12 @@ def create_menu_router():
         option = ModifierOption(**option_data.model_dump())
         await db.modifier_options.insert_one(option.model_dump())
         
+        await system_cache.invalidate("menu_routes:")
+        
         return option.model_dump()
 
     @router.get("/modifier-groups/{group_id}/options")
+    @cached("menu_routes", ttl=300)
     async def list_modifier_options(group_id: str):
         """List all options for a modifier group"""
         options = await db.modifier_options.find({"group_id": group_id}, {"_id": 0}).sort("sort_order", 1).to_list(100)
@@ -239,9 +249,12 @@ def create_menu_router():
         link = MenuItemModifier(menu_item_id=item_id, modifier_group_id=group_id)
         await db.menu_item_modifiers.insert_one(link.model_dump())
         
+        await system_cache.invalidate("menu_routes:")
+        
         return {"message": "Modifier linked to item"}
 
     @router.get("/menu/items/{item_id}/modifiers")
+    @cached("menu_routes", ttl=300)
     async def get_item_modifiers(item_id: str):
         """Get all modifier groups for a menu item"""
         links = await db.menu_item_modifiers.find({"menu_item_id": item_id}, {"_id": 0}).to_list(100)

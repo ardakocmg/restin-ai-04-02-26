@@ -3,6 +3,7 @@ import { Wifi, WifiOff, Cloud, HardDrive, Activity, Network, Layers } from 'luci
 import syncService from '../services/SyncService';
 import offlineDB from '../services/OfflineDB';
 import resilienceManager from '../services/ResilienceManager';
+import { logger } from '@/lib/logger';
 
 /**
  * OnlineStatusIndicator - Multi-Layer Resilience Status Display
@@ -69,7 +70,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
       setPendingCount(stats.pending_commands);
       setLastSync(stats.last_sync);
     } catch (error: any) {
-      console.error('Failed to load sync stats:', error);
+      logger.error('Failed to load sync stats:', error);
     }
   };
 

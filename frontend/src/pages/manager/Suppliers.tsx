@@ -242,18 +242,21 @@ export default function SuppliersPage() {
           icon={Building2}
           label="Total Suppliers"
           value={stats.total}
+          subtext=""
           color="text-blue-600 dark:text-blue-400"
         />
         <StatCard
           icon={CheckCircle2}
           label="Active"
           value={stats.active}
+          subtext=""
           color="text-green-600 dark:text-green-400"
         />
         <StatCard
           icon={Archive}
           label="Archived"
           value={stats.archived}
+          subtext=""
           color="text-muted-foreground"
         />
         <StatCard

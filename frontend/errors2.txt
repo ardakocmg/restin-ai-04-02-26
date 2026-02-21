@@ -1,0 +1,186 @@
+src/components/payroll/EngagementLetter.tsx(126,67): error TS2322: Type 'string' is not assignable to type 'number'.
+src/lib/AuthStore.ts(6,10): error TS2339: Property 'TOKEN_KEY' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(7,10): error TS2339: Property 'USER_KEY' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(8,10): error TS2339: Property 'API_HOST_KEY' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(9,10): error TS2339: Property 'listeners' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(13,38): error TS2339: Property 'TOKEN_KEY' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(21,31): error TS2339: Property 'TOKEN_KEY' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(26,34): error TS2339: Property 'TOKEN_KEY' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(27,34): error TS2339: Property 'USER_KEY' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(32,47): error TS2339: Property 'USER_KEY' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(41,31): error TS2339: Property 'USER_KEY' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(56,38): error TS2339: Property 'API_HOST_KEY' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(60,31): error TS2339: Property 'API_HOST_KEY' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(105,10): error TS2339: Property 'listeners' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(107,12): error TS2339: Property 'listeners' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(107,29): error TS2339: Property 'listeners' does not exist on type 'AuthStore'.
+src/lib/AuthStore.ts(112,10): error TS2339: Property 'listeners' does not exist on type 'AuthStore'.
+src/pages/inventory/ProductionManagementComplete.tsx(51,65): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/ProductionManagementComplete.tsx(52,34): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/ProductionManagementComplete.tsx(71,25): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/ProductionManagementComplete.tsx(97,24): error TS2741: Property 'className' is missing in type '{ fullScreen: true; }' but required in type '{ size?: string; text?: string; fullScreen?: boolean; className: any; }'.
+src/pages/inventory/RecipeManagementComplete.tsx(43,18): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/RecipeManagementComplete.tsx(44,54): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/RecipeManagementComplete.tsx(64,25): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/RecipeManagementComplete.tsx(68,39): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/RecipeManagementComplete.tsx(71,40): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/RecipeManagementComplete.tsx(91,24): error TS2741: Property 'className' is missing in type '{ fullScreen: true; }' but required in type '{ size?: string; text?: string; fullScreen?: boolean; className: any; }'.
+src/pages/inventory/StockTransfers.tsx(189,61): error TS2322: Type 'string' is not assignable to type 'number'.
+src/pages/inventory/StockTransfersComplete.tsx(51,34): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/StockTransfersComplete.tsx(53,34): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/StockTransfersComplete.tsx(72,39): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/StockTransfersComplete.tsx(125,61): error TS2551: Property 'venue_id' does not exist on type 'User'. Did you mean 'venueId'?
+src/pages/inventory/WasteLog.tsx(70,27): error TS2339: Property 'notes' does not exist on type '{ item_id: string; qty: string; reason: string; }'.
+src/pages/inventory/WasteLog.tsx(148,33): error TS2339: Property 'notes' does not exist on type '{ item_id: string; qty: string; reason: string; }'.
+src/pages/inventory/WasteLog.tsx(149,61): error TS2353: Object literal may only specify known properties, and 'notes' does not exist in type 'SetStateAction<{ item_id: string; qty: string; reason: string; }>'.
+src/pages/kds/KDSMain.tsx(282,44): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/kds/KDSMain.tsx(282,50): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/kds/KDSMain_v2.tsx(233,10): error TS2741: Property 'onFilterChange' is missing in type '{ mode: string; }' but required in type '{ mode?: string; onFilterChange: any; }'.
+src/pages/kds/KDSMain_v2.tsx(249,44): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/kds/KDSMain_v2.tsx(249,50): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/kds/KDSStationDetail.tsx(148,23): error TS2322: Type 'unknown' is not assignable to type 'boolean'.
+src/pages/kds/KDSStationDetail.tsx(176,23): error TS2322: Type 'unknown' is not assignable to type 'boolean'.
+src/pages/manager/AccountingHub.tsx(64,17): error TS2322: Type '{ venueId: string; tableKey: string; title: string; emptyMessage: string; }' is not assignable to type 'IntrinsicAttributes & { venueId: any; tableKey: any; dataEndpoint: any; onRowClick: any; className?: string; }'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & { venueId: any; tableKey: any; dataEndpoint: any; onRowClick: any; className?: string; }'.
+src/pages/manager/ai-invoice/InvoiceOCR.tsx(22,44): error TS2339: Property 'split' does not exist on type 'string | ArrayBuffer'.
+  Property 'split' does not exist on type 'ArrayBuffer'.
+src/pages/manager/ai-invoice/VarianceAnalysis.tsx(28,6): error TS2554: Expected 0-1 arguments, but got 2.
+src/pages/manager/Dashboard.tsx(63,27): error TS2352: Conversion of type 'VenueContextValue' to type '{ activeVenue: Venue; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Types of property 'activeVenue' are incompatible.
+    Property 'type' is missing in type 'import("C:/Users/arda/.gemini/antigravity/scratch/restin-ai/frontend/src/context/VenueContext").Venue' but required in type 'Venue'.
+src/pages/manager/Dashboard.tsx(89,18): error TS2554: Expected 3 arguments, but got 1.
+src/pages/manager/FinanceDashboard.tsx(101,17): error TS2322: Type '{ venueId: string; tableKey: string; title: string; emptyMessage: string; }' is not assignable to type 'IntrinsicAttributes & { venueId: any; tableKey: any; dataEndpoint: any; onRowClick: any; className?: string; }'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & { venueId: any; tableKey: any; dataEndpoint: any; onRowClick: any; className?: string; }'.
+src/pages/manager/FinanceDashboard.tsx(110,17): error TS2322: Type '{ venueId: string; tableKey: string; title: string; emptyMessage: string; }' is not assignable to type 'IntrinsicAttributes & { venueId: any; tableKey: any; dataEndpoint: any; onRowClick: any; className?: string; }'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & { venueId: any; tableKey: any; dataEndpoint: any; onRowClick: any; className?: string; }'.
+src/pages/manager/hr/HRMap.tsx(155,18): error TS2304: Cannot find name 'mockMarkers'.
+src/pages/manager/hr/HRMap.tsx(194,20): error TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+src/pages/manager/hr/PayrollMalta.tsx(99,11): error TS2353: Object literal may only specify known properties, and 'venue_id' does not exist in type 'AxiosRequestConfig<any>'.
+src/pages/manager/hr/reports/EmploymentDatesReport.tsx(51,50): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/manager/hr/reports/EmploymentDatesReport.tsx(51,63): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/manager/hr/reports/TurnoverReport.tsx(33,9): error TS2353: Object literal may only specify known properties, and 'turnoverRate' does not exist in type 'SetStateAction<{ joined: number; left: number; turnoverRadio: number; }>'.
+src/pages/manager/hr/reports/TurnoverReport.tsx(73,72): error TS2339: Property 'turnoverRate' does not exist on type '{ joined: number; left: number; turnoverRadio: number; }'.
+src/pages/manager/hr/SummaryDashboard.tsx(277,29): error TS2339: Property 'gender' does not exist on type 'PieLabelRenderProps'.
+src/pages/manager/hr/SummaryDashboard.tsx(277,37): error TS2339: Property 'percentage' does not exist on type 'PieLabelRenderProps'.
+src/pages/manager/inventory/GoodsReceivedNotes.tsx(287,50): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/pages/manager/inventory/GoodsReceivedNotes.tsx(300,48): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/pages/manager/inventory/InventoryValuation.tsx(113,13): error TS2339: Property 'selectedVenue' does not exist on type 'VenueContextValue'.
+src/pages/manager/inventory/InventoryValuation.tsx(258,13): error TS2322: Type '{ children: Element[]; title: string; subtitle: string; icon: Element; actions: Element; }' is not assignable to type 'IntrinsicAttributes & PageContainerProps'.
+  Property 'icon' does not exist on type 'IntrinsicAttributes & PageContainerProps'.
+src/pages/manager/inventory/MobileStockCount.tsx(45,13): error TS2339: Property 'selectedVenue' does not exist on type 'VenueContextValue'.
+src/pages/manager/inventory/MobileStockCount.tsx(180,13): error TS2322: Type '{ children: Element[]; title: string; subtitle: string; icon: Element; actions: Element; }' is not assignable to type 'IntrinsicAttributes & PageContainerProps'.
+  Property 'icon' does not exist on type 'IntrinsicAttributes & PageContainerProps'.
+src/pages/manager/inventory/OrderingSuggestions.tsx(263,52): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/pages/manager/inventory/SalesMixAnalysis.tsx(271,13): error TS2322: Type '{ children: Element; title: string; subtitle: string; icon: Element; }' is not assignable to type 'IntrinsicAttributes & PageContainerProps'.
+  Property 'icon' does not exist on type 'IntrinsicAttributes & PageContainerProps'.
+src/pages/manager/inventory/SalesMixAnalysis.tsx(358,25): error TS2322: Type '{ data: SalesMixItem[]; columns: ({ key: string; label: string; enableSorting: boolean; size: number; render: (row: SalesMixItem) => Element; } | { key: string; label: string; size: number; render: (row: SalesMixItem) => Element; enableSorting?: undefined; })[]; pageSize: number; searchable: true; searchPlaceholder:...' is not assignable to type 'IntrinsicAttributes & DataTableProps<SalesMixItem, unknown>'.
+  Property 'pageSize' does not exist on type 'IntrinsicAttributes & DataTableProps<SalesMixItem, unknown>'.
+src/pages/manager/inventory/SupplierManagement.tsx(162,13): error TS2339: Property 'selectedVenue' does not exist on type 'VenueContextValue'.
+src/pages/manager/inventory/SupplierManagement.tsx(450,13): error TS2322: Type '{ children: Element[]; title: string; subtitle: string; icon: Element; actions: Element; }' is not assignable to type 'IntrinsicAttributes & PageContainerProps'.
+  Property 'icon' does not exist on type 'IntrinsicAttributes & PageContainerProps'.
+src/pages/manager/inventory/TheoreticalVsActual.tsx(83,13): error TS2339: Property 'selectedVenue' does not exist on type 'VenueContextValue'.
+src/pages/manager/inventory/TheoreticalVsActual.tsx(160,13): error TS2322: Type '{ children: Element[]; title: string; subtitle: string; icon: Element; actions: Element; }' is not assignable to type 'IntrinsicAttributes & PageContainerProps'.
+  Property 'icon' does not exist on type 'IntrinsicAttributes & PageContainerProps'.
+src/pages/manager/inventory/TraceabilityView.tsx(96,13): error TS2339: Property 'selectedVenue' does not exist on type 'VenueContextValue'.
+src/pages/manager/inventory/TraceabilityView.tsx(209,13): error TS2322: Type '{ children: Element[]; title: string; subtitle: string; icon: Element; actions: Element; }' is not assignable to type 'IntrinsicAttributes & PageContainerProps'.
+  Property 'icon' does not exist on type 'IntrinsicAttributes & PageContainerProps'.
+src/pages/manager/inventory/UnitConversionMatrix.tsx(168,13): error TS2322: Type '{ children: Element[]; title: string; subtitle: string; icon: Element; }' is not assignable to type 'IntrinsicAttributes & PageContainerProps'.
+  Property 'icon' does not exist on type 'IntrinsicAttributes & PageContainerProps'.
+src/pages/manager/LogsViewer.tsx(45,24): error TS2339: Property 'items' does not exist on type 'LogListResponse'.
+src/pages/manager/marketplace/PluginMarketplace.tsx(168,83): error TS2322: Type '{ className: string; title: string; }' is not assignable to type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+  Property 'title' does not exist on type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+src/pages/manager/Microservices.tsx(62,19): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/manager/Microservices.tsx(62,25): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/manager/pos/KioskModePage.tsx(83,44): error TS2339: Property 'isLoading' does not exist on type 'UseMutationResult<AxiosResponse<any, any, {}>, Error, void, unknown>'.
+  Property 'isLoading' does not exist on type 'Override<MutationObserverIdleResult<AxiosResponse<any, any, {}>, Error, void, unknown>, { mutate: UseMutateFunction<AxiosResponse<any, any, {}>, Error, void, unknown>; }> & { ...; }'.
+src/pages/manager/pos/KioskModePage.tsx(86,35): error TS2339: Property 'isLoading' does not exist on type 'UseMutationResult<AxiosResponse<any, any, {}>, Error, void, unknown>'.
+  Property 'isLoading' does not exist on type 'Override<MutationObserverIdleResult<AxiosResponse<any, any, {}>, Error, void, unknown>, { mutate: UseMutateFunction<AxiosResponse<any, any, {}>, Error, void, unknown>; }> & { ...; }'.
+src/pages/manager/pos/PrintPreviewPage.tsx(46,43): error TS2559: Type 'string[]' has no properties in common with type 'InvalidateQueryFilters<readonly unknown[]>'.
+src/pages/manager/pos/PrintPreviewPage.tsx(100,48): error TS2339: Property 'isLoading' does not exist on type 'UseMutationResult<AxiosResponse<any, any, {}>, Error, void, unknown>'.
+  Property 'isLoading' does not exist on type 'Override<MutationObserverIdleResult<AxiosResponse<any, any, {}>, Error, void, unknown>, { mutate: UseMutateFunction<AxiosResponse<any, any, {}>, Error, void, unknown>; }> & { ...; }'.
+src/pages/manager/pos/PrintPreviewPage.tsx(102,39): error TS2339: Property 'isLoading' does not exist on type 'UseMutationResult<AxiosResponse<any, any, {}>, Error, void, unknown>'.
+  Property 'isLoading' does not exist on type 'Override<MutationObserverIdleResult<AxiosResponse<any, any, {}>, Error, void, unknown>, { mutate: UseMutateFunction<AxiosResponse<any, any, {}>, Error, void, unknown>; }> & { ...; }'.
+src/pages/manager/quality/HACCPScheduler.tsx(89,13): error TS2339: Property 'selectedVenue' does not exist on type 'VenueContextValue'.
+src/pages/manager/quality/HACCPScheduler.tsx(191,13): error TS2322: Type '{ children: Element[]; title: string; subtitle: string; icon: Element; actions: Element; }' is not assignable to type 'IntrinsicAttributes & PageContainerProps'.
+  Property 'icon' does not exist on type 'IntrinsicAttributes & PageContainerProps'.
+src/pages/manager/radar/CompetitorMonitoring.tsx(46,43): error TS2559: Type 'string[]' has no properties in common with type 'InvalidateQueryFilters<readonly unknown[]>'.
+src/pages/manager/radar/CompetitorMonitoring.tsx(47,43): error TS2559: Type 'string[]' has no properties in common with type 'InvalidateQueryFilters<readonly unknown[]>'.
+src/pages/manager/settings/DataExportPage.tsx(56,43): error TS2559: Type 'string[]' has no properties in common with type 'InvalidateQueryFilters<readonly unknown[]>'.
+src/pages/manager/settings/DataExportPage.tsx(89,46): error TS2339: Property 'isLoading' does not exist on type 'UseMutationResult<AxiosResponse<any, any, {}>, Error, void, unknown>'.
+  Property 'isLoading' does not exist on type 'Override<MutationObserverIdleResult<AxiosResponse<any, any, {}>, Error, void, unknown>, { mutate: UseMutateFunction<AxiosResponse<any, any, {}>, Error, void, unknown>; }> & { ...; }'.
+src/pages/manager/settings/DataExportPage.tsx(92,37): error TS2339: Property 'isLoading' does not exist on type 'UseMutationResult<AxiosResponse<any, any, {}>, Error, void, unknown>'.
+  Property 'isLoading' does not exist on type 'Override<MutationObserverIdleResult<AxiosResponse<any, any, {}>, Error, void, unknown>, { mutate: UseMutateFunction<AxiosResponse<any, any, {}>, Error, void, unknown>; }> & { ...; }'.
+src/pages/manager/Suppliers.tsx(241,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: number; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/manager/Suppliers.tsx(247,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: number; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/manager/Suppliers.tsx(253,10): error TS2741: Property 'subtext' is missing in type '{ icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; label: string; value: number; color: string; }' but required in type '{ icon: any; label: any; value: any; subtext: any; color?: string; }'.
+src/pages/manager/UpdatesPage.tsx(188,46): error TS2339: Property 'map' does not exist on type 'unknown'.
+src/pages/observability/AdvancedObservability.tsx(100,101): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/observability/AdvancedObservability.tsx(100,126): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/pages/portal/EmployeePayrollHistory.tsx(210,93): error TS2322: Type '{ data: any; venue: MultiVenue; }' is not assignable to type 'IntrinsicAttributes & { data: any; view?: string; }'.
+  Property 'venue' does not exist on type 'IntrinsicAttributes & { data: any; view?: string; }'.
+src/pages/pos/ItemOptionsMenu.tsx(52,14): error TS2322: Type '{ position: string; inset: number; backgroundColor: string; display: string; alignItems: string; justifyContent: string; zIndex: number; }' is not assignable to type 'CSSProperties'.
+  Types of property 'position' are incompatible.
+    Type 'string' is not assignable to type 'Position'.
+src/pages/pos/ItemOptionsMenu.tsx(53,18): error TS2322: Type '{ backgroundColor: string; borderRadius: number; padding: number; minWidth: number; border: string; maxHeight: string; overflowY: string; }' is not assignable to type 'CSSProperties'.
+  Types of property 'overflowY' are incompatible.
+    Type 'string' is not assignable to type 'OverflowY'.
+src/pages/pos/ItemOptionsMenu.tsx(65,29): error TS2322: Type '{ color: string; display: string; alignItems: string; gap: number; width: string; padding: string; borderRadius: number; border: string; cursor: string; backgroundColor: string; fontSize: number; textAlign: string; }' is not assignable to type 'CSSProperties'.
+  Types of property 'textAlign' are incompatible.
+    Type 'string' is not assignable to type 'TextAlign'.
+src/pages/pos/ItemOptionsMenu.tsx(70,35): error TS2322: Type '{ fontSize: number; minWidth: number; textAlign: string; }' is not assignable to type 'CSSProperties'.
+  Types of property 'textAlign' are incompatible.
+    Type 'string' is not assignable to type 'TextAlign'.
+src/pages/pos/POSRuntimeKSeries.tsx(135,25): error TS2554: Expected 2 arguments, but got 1.
+src/pages/pos/POSRuntimeKSeries.tsx(136,25): error TS2554: Expected 4 arguments, but got 1.
+src/pages/pos/ProductionInstructions.tsx(192,66): error TS2352: Conversion of type 'InstructionGroup' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'InstructionGroup'.
+src/pages/pos/ProductionInstructions.tsx(192,178): error TS2352: Conversion of type 'InstructionGroup' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'InstructionGroup'.
+src/pages/pos/ReceiptPreview.tsx(42,14): error TS2322: Type '{ position: string; inset: number; backgroundColor: string; display: string; alignItems: string; justifyContent: string; zIndex: number; }' is not assignable to type 'CSSProperties'.
+  Types of property 'position' are incompatible.
+    Type 'string' is not assignable to type 'Position'.
+src/pages/pos/ReceiptPreview.tsx(43,18): error TS2322: Type '{ backgroundColor: string; borderRadius: number; border: string; maxHeight: string; overflow: string; display: string; flexDirection: string; }' is not assignable to type 'CSSProperties'.
+  Types of property 'flexDirection' are incompatible.
+    Type 'string' is not assignable to type 'FlexDirection'.
+src/pages/pos/ReceiptPreview.tsx(78,22): error TS2322: Type '{ maxWidth: number; backgroundColor: string; color: string; margin: number; borderRadius: number; padding: number; overflowY: string; fontFamily: string; }' is not assignable to type 'CSSProperties'.
+  Types of property 'overflowY' are incompatible.
+    Type 'string' is not assignable to type 'OverflowY'.
+src/pages/pos/ReceiptPreview.tsx(81,26): error TS2322: Type '{ textAlign: string; marginBottom: number; }' is not assignable to type 'CSSProperties'.
+  Types of property 'textAlign' are incompatible.
+    Type 'string' is not assignable to type 'TextAlign'.
+src/pages/pos/StaffScheduler.tsx(10,33): error TS2307: Cannot find module '../../hooks/useShiftService' or its corresponding type declarations.
+src/pages/pos/StaffScheduler.tsx(11,33): error TS2307: Cannot find module '../../hooks/useStaffService' or its corresponding type declarations.
+src/pages/pos/VoidReasonModal.tsx(63,14): error TS2322: Type '{ position: string; inset: number; backgroundColor: string; display: string; alignItems: string; justifyContent: string; zIndex: number; }' is not assignable to type 'CSSProperties'.
+  Types of property 'position' are incompatible.
+    Type 'string' is not assignable to type 'Position'.
+src/pages/pos/VoidReasonModal.tsx(65,22): error TS2322: Type '{ fontSize: number; fontWeight: number; color: string; marginBottom: number; textAlign: string; }' is not assignable to type 'CSSProperties'.
+  Types of property 'textAlign' are incompatible.
+    Type 'string' is not assignable to type 'TextAlign'.
+src/pages/pos/VoidReasonModal.tsx(69,29): error TS2322: Type '{ width: string; padding: string; borderRadius: number; border: string; backgroundColor: string; color: string; fontSize: number; textAlign: string; cursor: string; marginBottom: number; }' is not assignable to type 'CSSProperties'.
+  Types of property 'textAlign' are incompatible.
+    Type 'string' is not assignable to type 'TextAlign'.
+src/pages/pos/VoidReasonModal.tsx(78,33): error TS2322: Type '{ width: string; backgroundColor: string; border: string; borderRadius: number; padding: string; color: string; fontSize: number; outline: string; marginTop: number; marginBottom: number; boxSizing: string; }' is not assignable to type 'CSSProperties'.
+  Types of property 'boxSizing' are incompatible.
+    Type 'string' is not assignable to type 'BoxSizing'.
+src/pages/public/booking/BookingWidget.tsx(57,39): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+src/pages/public/booking/BookingWidget.tsx(79,39): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+src/pages/public/booking/BookingWidget.tsx(113,52): error TS2322: Type 'Dispatch<SetStateAction<number>>' is not assignable to type '(value: string) => void'.
+  Types of parameters 'value' and 'value' are incompatible.
+    Type 'string' is not assignable to type 'SetStateAction<number>'.
+src/pages/reports/InventoryReport.tsx(46,24): error TS2741: Property 'className' is missing in type '{ fullScreen: true; text: string; }' but required in type '{ size?: string; text?: string; fullScreen?: boolean; className: any; }'.
+src/pages/reports/KDSPerformanceReport.tsx(56,24): error TS2741: Property 'className' is missing in type '{ fullScreen: true; text: string; }' but required in type '{ size?: string; text?: string; fullScreen?: boolean; className: any; }'.
+src/platform/AppEvents.ts(46,14): error TS2339: Property 'log' does not exist on type 'Logger'.
+src/platform/AppEvents.ts(55,64): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type '{}'.
+src/platform/ServiceRegistry.ts(6,10): error TS2339: Property 'services' does not exist on type 'ServiceRegistry'.
+src/platform/ServiceRegistry.ts(7,10): error TS2339: Property 'initialized' does not exist on type 'ServiceRegistry'.
+src/platform/ServiceRegistry.ts(11,14): error TS2339: Property 'services' does not exist on type 'ServiceRegistry'.
+src/platform/ServiceRegistry.ts(14,10): error TS2339: Property 'services' does not exist on type 'ServiceRegistry'.
+src/platform/ServiceRegistry.ts(18,26): error TS2339: Property 'services' does not exist on type 'ServiceRegistry'.
+src/platform/ServiceRegistry.ts(26,14): error TS2339: Property 'initialized' does not exist on type 'ServiceRegistry'.
+src/platform/ServiceRegistry.ts(32,10): error TS2339: Property 'initialized' does not exist on type 'ServiceRegistry'.
+src/platform/ServiceRegistry.ts(36,40): error TS2339: Property 'services' does not exist on type 'ServiceRegistry'.

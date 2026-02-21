@@ -8,25 +8,25 @@ const s = {
     overlay: {
         position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100,
-    } as React.CSSProperties,
+    },
     menu: {
         backgroundColor: '#1a1a1a', borderRadius: 12, padding: 8, minWidth: 280,
-        border: '1px solid #333', maxHeight: '80vh', overflowY: 'auto',
-    } as React.CSSProperties,
+        border: '1px solid #333', maxHeight: '80vh', overflowY: 'auto' as const,
+    },
     header: {
         padding: '12px 16px', borderBottom: '1px solid #333',
         fontSize: 14, fontWeight: 700, color: '#fff',
-    } as React.CSSProperties,
-    headerSub: { fontSize: 11, color: '#888', marginTop: 2 } as React.CSSProperties,
+    },
+    headerSub: { fontSize: 11, color: '#888', marginTop: 2 },
     option: {
         display: 'flex', alignItems: 'center', gap: 12, width: '100%',
         padding: '12px 16px', borderRadius: 6, border: 'none', cursor: 'pointer',
-        backgroundColor: 'transparent', color: '#fff', fontSize: 14, textAlign: 'left',
-    } as React.CSSProperties,
-    optionIcon: { fontSize: 18, minWidth: 24, textAlign: 'center' } as React.CSSProperties,
-    divider: { height: 1, backgroundColor: '#333', margin: '4px 16px' } as React.CSSProperties,
-    danger: { color: '#E05A33' } as React.CSSProperties,
-};
+        backgroundColor: 'transparent', color: '#fff', fontSize: 14, textAlign: 'left' as const,
+    },
+    optionIcon: { fontSize: 18, minWidth: 24, textAlign: 'center' as const },
+    divider: { height: 1, backgroundColor: '#333', margin: '4px 16px' },
+    danger: { color: '#E05A33' },
+} as const;
 
 const OPTIONS = [
     { key: 'modifiers', icon: '🔧', label: 'Edit Modifiers', danger: false },

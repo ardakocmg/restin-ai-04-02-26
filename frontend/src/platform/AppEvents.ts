@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 // Event Bus for Cross-Component Communication
 
 interface AppEvent {
@@ -37,27 +38,27 @@ class AppEvents {
     const event: AppEvent = {
       type: eventType,
       timestamp: new Date().toISOString(),
-      payload
+      payload: payload as any
     };
 
     // Log event (dev only)
     if (process.env.NODE_ENV === 'development') {
-      console.log('[Event]', event);
+      logger.info('[Event]', event as any);
     }
 
     // Notify listeners
     const callbacks = this.listeners.get(eventType) || [];
     callbacks.forEach(cb => {
       try {
-        cb(event);
+        cb(event as any);
       } catch (error: unknown) {
-        console.error(`Event listener error for ${eventType}:`, error);
+        logger.error(`Event listener error for ${eventType}:`, error as any);
       }
     });
 
     // Buffer if offline (optional)
     if (!navigator.onLine) {
-      this.offlineBuffer.push(event);
+      this.offlineBuffer.push(event as any);
     }
   }
 

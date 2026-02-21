@@ -4,6 +4,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { ChefHat, DollarSign } from 'lucide-react';
 import api from '../../../lib/api';
+import { logger } from '@/lib/logger';
 
 export default function RecipeList() {
   const [recipes, setRecipes] = useState([]);
@@ -19,7 +20,7 @@ export default function RecipeList() {
       const response = await api.get(`/venues/${venueId}/recipes/engineered`);
       setRecipes(response.data || []);
     } catch (error: any) {
-      console.error('Failed to fetch recipes:', error);
+      logger.error('Failed to fetch recipes:', error);
       setRecipes([]);
     } finally {
       setLoading(false);

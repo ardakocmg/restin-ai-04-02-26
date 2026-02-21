@@ -7,8 +7,8 @@ import React, { useState, useMemo } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, Plus, Clock, DollarSign, Users, RefreshCw, Download, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { useShiftService } from '../../hooks/useShiftService';
-import { useStaffService } from '../../hooks/useStaffService';
+// import { useShiftService } from '../../hooks/useShiftService';
+// import { useStaffService } from '../../hooks/useStaffService';
 import './pos-shared.css';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];

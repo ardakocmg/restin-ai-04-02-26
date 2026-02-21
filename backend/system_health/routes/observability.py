@@ -4,10 +4,20 @@ from fastapi import APIRouter, Depends, Query
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
 from system_health.services.data_volume_monitor import data_volume_monitor
-
+from services.observability_service import get_observability_service
 
 def create_system_observability_router():
     router = APIRouter(tags=["system_observability"])
+
+    @router.get("/system/observability/dlq")
+    async def get_dlq_info(current_user: dict = Depends(get_current_user)):
+        # System-level health endpoint (requires admin or superadmin)
+        if current_user.get("role") not in ["admin", "superadmin", "owner"]:
+            return {"ok": False, "error": "Insufficient permissions. System observability requires admin access."}
+        
+        obs = get_observability_service(db)
+        stats = await obs.get_dlq_stats()
+        return {"ok": True, "data": stats}
 
     @router.get("/system/observability/slow-queries")
     async def get_slow_queries(

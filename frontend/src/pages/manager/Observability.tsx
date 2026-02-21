@@ -25,6 +25,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { logger } from '@/lib/logger';
 
 // Status Pill Component (CLOUD ONLINE Style)
 const StatusPill = ({ icon: Icon, status, label, sublabel }) => {
@@ -91,7 +92,7 @@ export default function Observability() {
       setMetrics(metricsRes.data);
       setDevices(devicesRes.data || []);
     } catch (error: any) {
-      console.error('Failed to load observability data:', error);
+      logger.error('Failed to load observability data:', error);
     } finally {
       setLoading(false);
     }

@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/ca
 import { Badge } from '../../components/ui/badge';
 import DataTable from '../../components/shared/DataTable';
 import { DollarSign, FileText, Lock } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function PayrollMaltaPage() {
   const { activeVenue } = useVenue();
@@ -29,7 +30,7 @@ export default function PayrollMaltaPage() {
       setProfiles(profRes.data?.data || []);
       setPayruns(runRes.data?.data || []);
     } catch (error: any) {
-      console.error('Payroll error:', error);
+      logger.error('Payroll error:', error);
     } finally {
       setLoading(false);
     }

@@ -355,6 +355,7 @@ export const MENU_ITEMS: MenuItem[] = [
             { title: 'Advanced Health', icon: Activity, href: '/manager/system-health-advanced', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
             { title: 'Error Inbox', icon: Activity, href: '/manager/observability/error-inbox', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
             { title: 'Test Panel', icon: Activity, href: '/manager/observability/testpanel', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
+            { title: 'Hyperscale APM', icon: Activity, href: '/manager/hyperscale', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },
         ],
     },
     { title: 'Pre-Go-Live', icon: Activity, href: '/manager/pre-go-live', group: 'system-admin', requiredRole: 'PRODUCT_OWNER' },

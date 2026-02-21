@@ -5,6 +5,8 @@ from typing import List, Optional
 from core.database import db
 from core.dependencies import get_current_user, check_venue_access
 from core.security import hash_pin
+from core.cache_layer import cached, system_cache
+from core.pii_encryption import encrypt_sensitive_dict, decrypt_sensitive_dict
 from models import Venue, VenueCreate, Zone, ZoneCreate, Table, TableCreate, User, UserCreate, UserRole
 from services.audit_service import create_audit_log
 from services.settings_service import DEFAULT_VENUE_SETTINGS
@@ -84,6 +86,14 @@ def create_venue_router():
         if not venue:
             raise HTTPException(status_code=404, detail="Venue not found")
         
+        # Encrypt sensitive keys before saving
+        sensitive_fields = ["stripe_secret_key", "adyen_api_key", "adyen_merchant_account", "square_access_token"]
+        settings_update = encrypt_sensitive_dict(settings_update, sensitive_fields)
+        
+        # Encrypt sensitive keys before saving
+        sensitive_fields = ["stripe_secret_key", "adyen_api_key", "adyen_merchant_account", "square_access_token"]
+        settings_update = encrypt_sensitive_dict(settings_update, sensitive_fields)
+        
         # Deep merge with defaults
         current_settings = venue.get("settings", DEFAULT_VENUE_SETTINGS.copy())
         
@@ -111,6 +121,7 @@ def create_venue_router():
         return {"message": "Settings updated", "settings": merged_settings}
 
     @router.get("/venues/{venue_id}/settings")
+    @cached("venue_settings", ttl=300)
     async def get_venue_settings(venue_id: str, current_user: dict = Depends(get_current_user)):
         """Get venue settings with defaults (MEGA PATCH)"""
         venue = await db.venues.find_one({"id": venue_id}, {"_id": 0})
@@ -133,6 +144,11 @@ def create_venue_router():
             return result
         
         merged = deep_merge(DEFAULT_VENUE_SETTINGS, settings)
+        
+        # Decrypt sensitive keys before returning to authorized client
+        sensitive_fields = ["stripe_secret_key", "adyen_api_key", "adyen_merchant_account", "square_access_token"]
+        merged = decrypt_sensitive_dict(merged, sensitive_fields)
+        
         return {"settings": merged}
 
     @router.get("/venues/{venue_id}/active-floor-plan")
@@ -293,6 +309,11 @@ def create_venue_router():
         
         user_dict = data.model_dump()
         user_dict["pin_hash"] = hash_pin(user_dict.pop("pin"))
+        
+        # Encrypt internal PII contacts
+        if "phone" in user_dict and user_dict["phone"]:
+            user_dict = encrypt_sensitive_dict(user_dict, ["phone"])
+            
         user = User(**user_dict)
         
         await db.users.insert_one(user.model_dump())

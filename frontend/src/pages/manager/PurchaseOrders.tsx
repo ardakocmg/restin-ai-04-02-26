@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import DataTable from '../../components/shared/DataTable';
 import { Plus, Send, CheckCircle, XCircle } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function PurchaseOrdersPage() {
   const { activeVenue } = useVenue();
@@ -24,7 +25,7 @@ export default function PurchaseOrdersPage() {
       const res = await api.get(`/inventory/purchase-orders?venue_id=${activeVenue.id}`);
       setPos(res.data || []);
     } catch (error: any) {
-      console.error('Failed to load purchase orders:', error);
+      logger.error('Failed to load purchase orders:', error);
     } finally {
       setLoading(false);
     }

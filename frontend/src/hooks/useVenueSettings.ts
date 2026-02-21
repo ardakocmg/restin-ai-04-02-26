@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect } from 'react';
 import api from '../lib/api';
+import { logger } from '@/lib/logger';
 
 const DEFAULT_SETTINGS = {
   search: {
@@ -73,7 +74,7 @@ export function useVenueSettings(venueId) {
         // Cache in localStorage
         localStorage.setItem(`venue_settings_${venueId}`, JSON.stringify(merged));
       } catch (error: any) {
-        console.error("Failed to load venue settings:", error);
+        logger.error("Failed to load venue settings:", error);
         // Fallback to localStorage
         const cached = localStorage.getItem(`venue_settings_${venueId}`);
         if (cached) {

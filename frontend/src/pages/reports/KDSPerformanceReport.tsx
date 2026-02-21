@@ -53,7 +53,7 @@ export default function KDSPerformanceReport() {
     }
   };
 
-  if (loading) return <LoadingSpinner fullScreen text="Loading KDS performance..." className="" />;
+  if (loading) return <LoadingSpinner fullScreen className="" text="Loading KDS performance..." />;
 
   return (
     <PageContainer title="KDS Performance" description="Kitchen display system analytics">
