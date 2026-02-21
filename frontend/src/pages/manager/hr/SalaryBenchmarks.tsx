@@ -139,7 +139,7 @@ export default function SalaryBenchmarks() {
                                     <td className="px-4 py-3">
                                         <div className="flex items-center gap-2">
                                             <div className="w-[60px] h-1.5 bg-slate-800 rounded-sm">
-                                                <div className={`h-full rounded-sm ${spread > 50 ? 'bg-red-400' : spread > 25 ? 'bg-amber-400' : 'bg-green-400'}`} style={{ width: `${Math.min(spread, 100)}%` }} /> {/* keep-inline */}
+                                                <div className={`h-full rounded-sm ${spread > 50 ? 'bg-red-400' : spread > 25 ? 'bg-amber-400' : 'bg-green-400'}`} style={{ width: `${Math.min(spread, 100)}%` }} /> {}
                                             </div>
                                             <span className="text-slate-500 text-xs">{spread}%</span>
                                         </div>

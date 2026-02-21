@@ -530,7 +530,7 @@ const KDS2Screen: React.FC = () => {
                     </button>
                 );
             default:
-                return <Check size={14} style={{ color: 'var(--kds2-status-ready)', opacity: 0.5 }} />; /* keep-inline */ /* keep-inline */ /* keep-inline */
+                return <Check size={14} style={{ color: 'var(--kds2-status-ready)', opacity: 0.5 }} />;
         }
     };
 
@@ -578,21 +578,21 @@ const KDS2Screen: React.FC = () => {
                         </button>
                         {settings.statusNew && (
                             <button className={`kds2-filter-btn ${statusFilter === 'new' ? 'active' : ''}`} onClick={() => { setStatusFilter('new'); setShowCompleted(false); }}>
-                                <span className="kds2-filter-dot" style={{ background: STATUS_CONFIG.new.color }} /> New <span className="kds2-filter-count">{statusCounts.new}</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                <span className="kds2-filter-dot" style={{ background: STATUS_CONFIG.new.color }} /> New <span className="kds2-filter-count">{statusCounts.new}</span>
                             </button>
                         )}
                         <button className={`kds2-filter-btn ${statusFilter === 'preparing' ? 'active' : ''}`} onClick={() => { setStatusFilter('preparing'); setShowCompleted(false); }}>
-                            <span className="kds2-filter-dot" style={{ background: STATUS_CONFIG.preparing.color }} /> Preparing <span className="kds2-filter-count">{statusCounts.preparing}</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                            <span className="kds2-filter-dot" style={{ background: STATUS_CONFIG.preparing.color }} /> Preparing <span className="kds2-filter-count">{statusCounts.preparing}</span>
                         </button>
                         {settings.statusReady && (
                             <button className={`kds2-filter-btn ${statusFilter === 'ready' ? 'active' : ''}`} onClick={() => { setStatusFilter('ready'); setShowCompleted(false); }}>
-                                <span className="kds2-filter-dot" style={{ background: STATUS_CONFIG.ready.color }} /> Ready <span className="kds2-filter-count">{statusCounts.ready}</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                <span className="kds2-filter-dot" style={{ background: STATUS_CONFIG.ready.color }} /> Ready <span className="kds2-filter-count">{statusCounts.ready}</span>
                             </button>
                         )}
                         <button className={`kds2-filter-btn ${statusFilter === 'hold' ? 'active' : ''}`} onClick={() => { setStatusFilter('hold'); setShowCompleted(false); }}>
-                            <span className="kds2-filter-dot" style={{ background: STATUS_CONFIG.hold.color }} /> On Hold <span className="kds2-filter-count">{statusCounts.hold}</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                            <span className="kds2-filter-dot" style={{ background: STATUS_CONFIG.hold.color }} /> On Hold <span className="kds2-filter-count">{statusCounts.hold}</span>
                         </button>
-                        <button className={`kds2-filter-btn ${showCompleted ? 'active' : ''}`} onClick={() => setShowCompleted(!showCompleted)} style={{ marginLeft: 'auto' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <button className={`kds2-filter-btn ${showCompleted ? 'active' : ''}`} onClick={() => setShowCompleted(!showCompleted)} style={{ marginLeft: 'auto' }}>
                             Completed <span className="kds2-filter-count">{statusCounts.completed}</span>
                         </button>
                     </div>
@@ -637,7 +637,7 @@ const KDS2Screen: React.FC = () => {
                                     {ticket.courses.length > 1 && (
                                         <div className="kds2-ticket-courses-bar">
                                             {ticket.courses.map((c, idx) => (
-                                                <div key={idx} className={`course-segment ${idx === 0 ? 'completed' : ''}`} style={{ background: ['#3B82F6', '#22C55E', '#F97316', '#8B5CF6'][idx % 4] }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                <div key={idx} className={`course-segment ${idx === 0 ? 'completed' : ''}`} style={{ background: ['#3B82F6', '#22C55E', '#F97316', '#8B5CF6'][idx % 4] }} />
                                             ))}
                                         </div>
                                     )}
@@ -706,7 +706,7 @@ const KDS2Screen: React.FC = () => {
                                                         {!collapsedItems.has(`${ticket.id}-c${course}`) && courseItems.map(item => (
                                                             <div key={item.id} className={`kds2-ticket-item ${item.status === 'completed' ? 'kds2-ticket-item-completed' : ''}`}>
                                                                 <div className="kds2-ticket-item-info">
-                                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                                                                         <span className="kds2-ticket-item-qty">{item.quantity}×</span>
                                                                         <span className="kds2-ticket-item-name">{item.name}</span>
                                                                     </div>
@@ -733,7 +733,7 @@ const KDS2Screen: React.FC = () => {
                                                 {!isCollapsed && ticket.items.map(item => (
                                                     <div key={item.id} className={`kds2-ticket-item ${item.status === 'completed' ? 'kds2-ticket-item-completed' : ''}`}>
                                                         <div className="kds2-ticket-item-info">
-                                                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                                                                 <span className="kds2-ticket-item-qty">{item.quantity}×</span>
                                                                 <span className="kds2-ticket-item-name">{item.name}</span>
                                                             </div>
@@ -763,8 +763,8 @@ const KDS2Screen: React.FC = () => {
                                                 </div>
                                             )}
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                            <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: STATUS_CONFIG[ticket.status].color, color: '#fff' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                            <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: STATUS_CONFIG[ticket.status].color, color: '#fff' }}>
                                                 {STATUS_CONFIG[ticket.status].label}
                                             </span>
                                         </div>
@@ -783,7 +783,7 @@ const KDS2Screen: React.FC = () => {
                         return (
                             <div key={status} className="kds2-items-list-group">
                                 <div className="kds2-items-list-group-header">
-                                    <span className="kds2-items-list-group-title" style={{ color: STATUS_CONFIG[status as OrderStatus]?.color }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    <span className="kds2-items-list-group-title" style={{ color: STATUS_CONFIG[status as OrderStatus]?.color }}>
                                         {STATUS_CONFIG[status as OrderStatus]?.label || status} ({totalQty} items)
                                     </span>
                                 </div>
@@ -794,7 +794,7 @@ const KDS2Screen: React.FC = () => {
                                             <div>
                                                 <span className="kds2-items-list-item-name">{item.name}</span>
                                                 {item.instructions.map((inst, i) => (
-                                                    <div key={i} className={`kds2-instruction ${inst.type}`} style={{ fontSize: 12 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                    <div key={i} className={`kds2-instruction ${inst.type}`} style={{ fontSize: 12 }}>
                                                         {INSTRUCTION_ICONS[inst.type].icon} {inst.text}
                                                     </div>
                                                 ))}
@@ -825,7 +825,7 @@ const KDS2Screen: React.FC = () => {
                 <div className="kds2-status-menu" style={{ left: statusMenu.x, top: statusMenu.y }} onClick={e => e.stopPropagation()}>
                     {(['new', 'preparing', 'ready', 'hold', 'canceled'] as OrderStatus[]).map(s => (
                         <button key={s} className="kds2-status-menu-item" onClick={() => setTicketStatus(statusMenu.ticketId, s)}>
-                            <span className="status-dot" style={{ background: STATUS_CONFIG[s].color }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                            <span className="status-dot" style={{ background: STATUS_CONFIG[s].color }} />
                             {STATUS_CONFIG[s].label}
                         </button>
                     ))}
@@ -1054,8 +1054,8 @@ const KDS2Screen: React.FC = () => {
             {showStats && (
                 <div className="kds2-stats-modal" onClick={() => setShowStats(false)}>
                     <div className="kds2-stats-panel" onClick={e => e.stopPropagation()}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>KDS Statistics</h2> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                            <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>KDS Statistics</h2>
                             <button className="kds2-settings-close" onClick={() => setShowStats(false)}>
                                 <X size={18} />
                             </button>

@@ -141,7 +141,7 @@ export default function ReservationTimeline() {
                                                 {/* Dynamic Reservation Block */}
                                                 <div
                                                     className="absolute top-2 h-12 bg-red-100 dark:bg-red-600/20 border border-red-200 dark:border-red-500/40 rounded-lg p-2 flex flex-col justify-center cursor-pointer hover:bg-red-200 dark:hover:bg-red-600/30 transition-all z-10"
-                                                    style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                    style={{
                                                         left: `${res.datetime_start ? ((parseInt(res.datetime_start.split('T')[1].split(':')[0]) - 17) * 60 + parseInt(res.datetime_start.split('T')[1].split(':')[1])) / 4.8 : 0}%`,
                                                         width: '15%'
                                                     }}

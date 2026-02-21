@@ -87,7 +87,7 @@ export default function VoidReasonModal({ itemName, onConfirm, onCancel }) {
                 <div style={s.actions}>
                     <button style={s.cancelBtn} onClick={onCancel}>Cancel</button>
                     <button
-                        style={{ ...s.confirmBtn, opacity: selected ? 1 : 0.5 }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        style={{ ...s.confirmBtn, opacity: selected ? 1 : 0.5 }}
                         onClick={handleConfirm}
                         disabled={!selected}
                     >Void Item</button>

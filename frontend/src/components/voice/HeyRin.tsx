@@ -596,10 +596,10 @@ export default function HeyRin() {
                     drag
                     dragMomentum={false}
                     dragElastic={0.1}
-                    style={{ touchAction: "none" }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+                    style={{ touchAction: "none" }}
                 >
                     {/* Header */}
-                    <div className="rin-header" style={{ cursor: "move" }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                    <div className="rin-header" style={{ cursor: "move" }}>
                         <div className="rin-header-left">
                             <RinMascot size={24} listening={isProcessing} />
                             <span className="rin-title">Hey Rin</span>
@@ -876,7 +876,7 @@ export default function HeyRin() {
                                     <div className="wk-member-chips">
                                         {CHANNEL_MEMBERS.map(m => (
                                             <div key={m.name} className="wk-chip">
-                                                <span className="wk-avatar" style={{ background: m.color }}>{m.initials}</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                <span className="wk-avatar" style={{ background: m.color }}>{m.initials}</span>
                                                 <span className="wk-name">{m.name}</span>
                                             </div>
                                         ))}
@@ -900,7 +900,7 @@ export default function HeyRin() {
                                 {hiveMessages.map(msg => (
                                     <div key={msg.id} className={`hv-msg ${msg.sender === (user?.name || 'You') ? 'me' : ''}`}>
                                         {msg.sender !== (user?.name || 'You') && (
-                                            <span className="hv-avatar" style={{ background: msg.color }}>{msg.initials}</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                            <span className="hv-avatar" style={{ background: msg.color }}>{msg.initials}</span>
                                         )}
                                         <div className="hv-bubble">
                                             {msg.sender !== (user?.name || 'You') && (

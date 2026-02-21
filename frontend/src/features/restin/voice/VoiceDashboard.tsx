@@ -285,7 +285,7 @@ export default function VoiceDashboard() {
                             {sentimentData.map((s: Record<string, unknown>) => (
                                 <div key={s.name} className="flex items-center justify-between text-xs">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: s.color }}></div> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: s.color }}></div>
                                         <span className="text-muted-foreground font-medium">{s.name}</span>
                                     </div>
                                     <span className="font-black text-foreground">{s.value}</span>

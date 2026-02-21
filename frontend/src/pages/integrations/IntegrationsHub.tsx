@@ -279,7 +279,7 @@ export default function IntegrationsHub() {
                     <Card
                       key={integration.key}
                       className="hover:shadow-lg transition-all cursor-pointer border-2"
-                      style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
+                      style={{
                         borderColor: isEnabled ? integration.color : 'transparent',
                         borderWidth: isEnabled ? '2px' : '1px'
                       }}
@@ -289,9 +289,9 @@ export default function IntegrationsHub() {
                           <div className="flex items-center gap-3">
                             <div
                               className="p-2 rounded-lg"
-                              style={{ backgroundColor: `${integration.color}20` }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+                              style={{ backgroundColor: `${integration.color}20` }}
                             >
-                              <Icon className="h-6 w-6" style={{ color: integration.color }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                              <Icon className="h-6 w-6" style={{ color: integration.color }} />
                             </div>
                             <div>
                               <CardTitle className="text-lg">{integration.name}</CardTitle>

@@ -108,7 +108,7 @@ export default function PerformanceReviews() {
               <div className="mt-4 space-y-2">
                 {statusData.map((item: StatusDataEntry, idx: number) => (
                   <div key={idx} className="flex items-center gap-2 text-sm">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
                     <span className="text-foreground">{item.name}</span>
                   </div>
                 ))}

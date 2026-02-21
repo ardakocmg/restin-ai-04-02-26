@@ -80,20 +80,20 @@ const FloorPlanBO: React.FC = () => {
 
     return (
         <div className="pos-page"><div className="pos-container pos-container--1200">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                 <div>
-                    <button onClick={() => navigate(-1)} className="pos-btn pos-btn--outline" style={{ marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Floor Plans</h1> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>{floors.length} floors · {totalTables} tables · {totalSeats} seats</p> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                    <button onClick={() => navigate(-1)} className="pos-btn pos-btn--outline" style={{ marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
+                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Floor Plans</h1>
+                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>{floors.length} floors · {totalTables} tables · {totalSeats} seats</p>
                 </div>
-                <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                <div style={{ display: 'flex', gap: 8 }}>
                     <button className="pos-btn pos-btn--outline" onClick={addFloor}><Plus size={14} /> Add Floor</button>
                     <button className="pos-btn pos-btn--primary" onClick={addTable}><Plus size={16} /> Add Table</button>
                 </div>
             </div>
 
             {/* Floor Tabs */}
-            <div className="pos-tab-group" style={{ marginBottom: 16 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+            <div className="pos-tab-group" style={{ marginBottom: 16 }}>
                 {floors.map(f => (
                     <button key={f.id} onClick={() => setActiveFloor(f.id)} className={`pos-tab-btn${activeFloor === f.id ? ' pos-tab-btn--active' : ''}`}>
                         {f.name} ({f.tables.length})
@@ -102,49 +102,49 @@ const FloorPlanBO: React.FC = () => {
             </div>
 
             {/* Canvas Area */}
-            {floor && <div className="pos-card" style={{ padding: 0, overflow: 'hidden' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                <div style={{ position: 'relative', width: '100%', height: 400, background: 'var(--bg-secondary,#09090b)', backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '20px 20px' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+            {floor && <div className="pos-card" style={{ padding: 0, overflow: 'hidden' }}>
+                <div style={{ position: 'relative', width: '100%', height: 400, background: 'var(--bg-secondary,#09090b)', backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
                     {floor.tables.map(table => (
                         <div key={table.id} onClick={() => { setSelectedTable(table.id); setEditingTable({ ...table }); }}
-                            style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
+                            style={{
                                 position: 'absolute', left: table.x, top: table.y, width: table.width, height: table.height, borderRadius: table.shape === 'circle' ? '50%' : 8,
                                 background: selectedTable === table.id ? 'rgba(59,130,246,0.3)' : 'rgba(59,130,246,0.12)',
                                 border: selectedTable === table.id ? '2px solid #3B82F6' : '1px solid rgba(59,130,246,0.3)',
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.15s ease'
                             }}>
-                            <span style={{ fontSize: 12, fontWeight: 600, color: '#3B82F6' }}>{table.name}</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{table.seats} seats</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                            <span style={{ fontSize: 12, fontWeight: 600, color: '#3B82F6' }}>{table.name}</span>
+                            <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{table.seats} seats</span>
                         </div>
                     ))}
-                    {floor.tables.length === 0 && <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                        <LayoutGrid size={36} style={{ opacity: 0.3, marginBottom: 8 }} /><p style={{ fontSize: 14 }}>Click "Add Table" to start designing</p> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                    {floor.tables.length === 0 && <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)' }}>
+                        <LayoutGrid size={36} style={{ opacity: 0.3, marginBottom: 8 }} /><p style={{ fontSize: 14 }}>Click "Add Table" to start designing</p>
                     </div>}
                 </div>
             </div>}
 
             {/* Selected Table Panel */}
             {editingTable && <div className="pos-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                    <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Table: {editingTable.name}</h3> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                    <div style={{ display: 'flex', gap: 6 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                        <button className="pos-btn pos-btn--primary" style={{ padding: '6px 14px', fontSize: 12 }} onClick={saveTable}><Save size={12} /> Save</button> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                        <button className="pos-btn pos-btn--outline" style={{ padding: '6px 14px', fontSize: 12, color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => deleteTable(editingTable.id)}><Trash2 size={12} /> Delete</button> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                    <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Table: {editingTable.name}</h3>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                        <button className="pos-btn pos-btn--primary" style={{ padding: '6px 14px', fontSize: 12 }} onClick={saveTable}><Save size={12} /> Save</button>
+                        <button className="pos-btn pos-btn--outline" style={{ padding: '6px 14px', fontSize: 12, color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => deleteTable(editingTable.id)}><Trash2 size={12} /> Delete</button>
                     </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                    <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+                    <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name</label>
                         <input className="pos-input" value={editingTable.name} onChange={e = aria-label="Input field"> setEditingTable(p => p ? { ...p, name: e.target.value } : null)} /></div>
-                    <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Seats</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                    <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Seats</label>
                         <input type="number" min={1} className="pos-input" value={editingTable.seats} onChange={e = aria-label="Input field"> setEditingTable(p => p ? { ...p, seats: parseInt(e.target.value) || 1 } : null)} /></div>
-                    <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Shape</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                        <div style={{ display: 'flex', gap: 6 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <button onClick={() => setEditingTable(p => p ? { ...p, shape: 'rect' } : null)} className={`pos-btn pos-btn--outline${editingTable.shape === 'rect' ? ' pos-radio-option--active' : ''}`} style={{ padding: '8px 14px', fontSize: 12 }}><Square size={14} /></button> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <button onClick={() => setEditingTable(p => p ? { ...p, shape: 'circle' } : null)} className={`pos-btn pos-btn--outline${editingTable.shape === 'circle' ? ' pos-radio-option--active' : ''}`} style={{ padding: '8px 14px', fontSize: 12 }}><Circle size={14} /></button> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                    <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Shape</label>
+                        <div style={{ display: 'flex', gap: 6 }}>
+                            <button onClick={() => setEditingTable(p => p ? { ...p, shape: 'rect' } : null)} className={`pos-btn pos-btn--outline${editingTable.shape === 'rect' ? ' pos-radio-option--active' : ''}`} style={{ padding: '8px 14px', fontSize: 12 }}><Square size={14} /></button>
+                            <button onClick={() => setEditingTable(p => p ? { ...p, shape: 'circle' } : null)} className={`pos-btn pos-btn--outline${editingTable.shape === 'circle' ? ' pos-radio-option--active' : ''}`} style={{ padding: '8px 14px', fontSize: 12 }}><Circle size={14} /></button>
                         </div></div>
-                    <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Size (W×H)</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                        <div style={{ display: 'flex', gap: 4 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <input type="number" min={40} className="pos-input" style={{ width: '50%' }} value={editingTable.width} onChange={e = aria-label="Input field"> setEditingTable(p => p ? { ...p, width: parseInt(e.target.value) || 40 } : null)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <input type="number" min={40} className="pos-input" style={{ width: '50%' }} value={editingTable.height} onChange={e = aria-label="Input field"> setEditingTable(p => p ? { ...p, height: parseInt(e.target.value) || 40 } : null)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                    <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Size (W×H)</label>
+                        <div style={{ display: 'flex', gap: 4 }}>
+                            <input type="number" min={40} className="pos-input" style={{ width: '50%' }} value={editingTable.width} onChange={e = aria-label="Input field"> setEditingTable(p => p ? { ...p, width: parseInt(e.target.value) || 40 } : null)} />
+                            <input type="number" min={40} className="pos-input" style={{ width: '50%' }} value={editingTable.height} onChange={e = aria-label="Input field"> setEditingTable(p => p ? { ...p, height: parseInt(e.target.value) || 40 } : null)} />
                         </div></div>
                 </div>
             </div>}

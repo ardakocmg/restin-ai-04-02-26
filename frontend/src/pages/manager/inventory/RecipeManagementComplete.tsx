@@ -939,19 +939,19 @@ export default function RecipeManagement() {
             onChange={(e) = aria-label="Input field"> setViewMode(e.target.value)}
             aria-label="View mode"
             className="appearance-none cursor-pointer h-8 pl-3 pr-8 rounded-lg text-[11px] font-bold border transition-all"
-            style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
+            style={{
               backgroundColor: viewMode === 'active' ? 'rgba(16, 185, 129, 0.15)' : viewMode === 'archived' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(239, 68, 68, 0.15)',
               color: viewMode === 'active' ? '#34D399' : viewMode === 'archived' ? '#FBBF24' : '#F87171',
               borderColor: viewMode === 'active' ? 'rgba(16, 185, 129, 0.4)' : viewMode === 'archived' ? 'rgba(245, 158, 11, 0.4)' : 'rgba(239, 68, 68, 0.4)',
               outline: 'none',
             }}
           >
-            <option value="active" style={{ backgroundColor: '#18181b', color: '#e4e4e7' }}>Active ({stats.total_active || 0})</option> /* keep-inline */ /* keep-inline */ /* keep-inline */
-            <option value="archived" style={{ backgroundColor: '#18181b', color: '#e4e4e7' }}>Archived ({stats.total_archived || 0})</option> /* keep-inline */ /* keep-inline */ /* keep-inline */
-            <option value="trash" style={{ backgroundColor: '#18181b', color: '#e4e4e7' }}>Trash ({stats.total_trash || 0})</option> /* keep-inline */ /* keep-inline */ /* keep-inline */
+            <option value="active" style={{ backgroundColor: '#18181b', color: '#e4e4e7' }}>Active ({stats.total_active || 0})</option>
+            <option value="archived" style={{ backgroundColor: '#18181b', color: '#e4e4e7' }}>Archived ({stats.total_archived || 0})</option>
+            <option value="trash" style={{ backgroundColor: '#18181b', color: '#e4e4e7' }}>Trash ({stats.total_trash || 0})</option>
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
-            <svg className="w-3 h-3" style={{ color: viewMode === 'active' ? '#34D399' : viewMode === 'archived' ? '#FBBF24' : '#F87171' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"> /* keep-inline */ /* keep-inline */ /* keep-inline */
+            <svg className="w-3 h-3" style={{ color: viewMode === 'active' ? '#34D399' : viewMode === 'archived' ? '#FBBF24' : '#F87171' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
             </svg>
           </div>

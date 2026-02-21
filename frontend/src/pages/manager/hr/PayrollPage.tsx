@@ -661,7 +661,7 @@ export default function PayrollPage() {
                                                     <div key={idx} className="flex items-center gap-4">
                                                         <div className="w-32 text-xs font-bold text-muted-foreground uppercase tracking-wider truncate">{name}</div>
                                                         <div className="flex-1 h-6 bg-white/5 rounded-lg overflow-hidden">
-                                                            <div className={`h-full ${colors[idx]} rounded-lg`} style={{ width: '0%' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                            <div className={`h-full ${colors[idx]} rounded-lg`} style={{ width: '0%' }} />
                                                         </div>
                                                         <div className="w-24 text-right text-xs font-black text-muted-foreground font-mono">€0</div>
                                                     </div>
@@ -714,13 +714,13 @@ export default function PayrollPage() {
                                                     <div className="flex-1">
                                                         <div className="flex gap-2 items-center">
                                                             <div className="flex-1 h-4 bg-white/5 rounded overflow-hidden">
-                                                                <div className="h-full bg-blue-500 rounded" style={{ width: '0%' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                                <div className="h-full bg-blue-500 rounded" style={{ width: '0%' }} />
                                                             </div>
                                                             <span className="text-[10px] font-black text-blue-400 w-24 text-right font-mono">€0</span>
                                                         </div>
                                                         <div className="flex gap-2 items-center mt-1">
                                                             <div className="flex-1 h-4 bg-white/5 rounded overflow-hidden">
-                                                                <div className="h-full bg-emerald-500 rounded" style={{ width: '0%' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                                <div className="h-full bg-emerald-500 rounded" style={{ width: '0%' }} />
                                                             </div>
                                                             <span className="text-[10px] font-black text-emerald-400 w-24 text-right font-mono">€0</span>
                                                         </div>

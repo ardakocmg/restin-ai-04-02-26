@@ -336,7 +336,7 @@ const KDS1Screen: React.FC = () => {
                                 key={order.id}
                                 className={`kds1-receipt-tile ${order.isReady ? 'ready' : ''}`}
                                 onClick={() => !order.isReady && setSelectedOrder(order)}
-                                style={{ borderLeft: `4px solid ${timerColor}` }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                style={{ borderLeft: `4px solid ${timerColor}` }}
                             >
                                 <div className="kds1-receipt-tile-header">
                                     <div className="kds1-receipt-tile-header-left">
@@ -344,8 +344,8 @@ const KDS1Screen: React.FC = () => {
                                         {order.tableNumber && <span className="kds1-receipt-table">{order.tableNumber}</span>}
                                         {getOrderTypeBadge(order.orderType)}
                                     </div>
-                                    <span className="kds1-receipt-timer" style={{ color: timerColor, background: `${timerColor}15` }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                        <Clock size={12} style={{ marginRight: 4, display: 'inline' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    <span className="kds1-receipt-timer" style={{ color: timerColor, background: `${timerColor}15` }}>
+                                        <Clock size={12} style={{ marginRight: 4, display: 'inline' }} />
                                         {getTimerText(mins)}
                                     </span>
                                 </div>
@@ -371,22 +371,22 @@ const KDS1Screen: React.FC = () => {
                                     {order.courses.length > 1 && (
                                         <div className="course-info">
                                             {order.courses.map(c => (
-                                                <span key={c} style={{ fontSize: 10, padding: '2px 6px', background: 'rgba(255,255,255,0.06)', borderRadius: 3 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                <span key={c} style={{ fontSize: 10, padding: '2px 6px', background: 'rgba(255,255,255,0.06)', borderRadius: 3 }}>
                                                     C{c}
                                                 </span>
                                             ))}
                                         </div>
                                     )}
-                                    {order.customerName && <span style={{ fontSize: 11 }}>👤 {order.customerName}</span>} /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    {order.customerName && <span style={{ fontSize: 11 }}>👤 {order.customerName}</span>}
                                 </div>
                             </div>
                         );
                     })}
 
                     {activeOrders.length === 0 && (
-                        <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: 60, color: 'var(--kds1-text-secondary)' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <div style={{ fontSize: 48, opacity: 0.3, marginBottom: 12 }}>🍳</div> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <div style={{ fontSize: 16, fontWeight: 500 }}>{"No "}active orders</div> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: 60, color: 'var(--kds1-text-secondary)' }}>
+                            <div style={{ fontSize: 48, opacity: 0.3, marginBottom: 12 }}>🍳</div>
+                            <div style={{ fontSize: 16, fontWeight: 500 }}>{"No "}active orders</div>
                         </div>
                     )}
                 </div>
@@ -406,7 +406,7 @@ const KDS1Screen: React.FC = () => {
                                         key={item.name}
                                         className="kds1-production-tile"
                                         onClick={() => setSelectedProductionItem({ name: item.name, totalQty: item.totalQty })}
-                                        style={{ borderLeft: `4px solid ${timerColor}` }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                        style={{ borderLeft: `4px solid ${timerColor}` }}
                                     >
                                         <div className="kds1-production-item-name">{item.name}</div>
                                         {item.instructions.length > 0 && (
@@ -414,7 +414,7 @@ const KDS1Screen: React.FC = () => {
                                                 {Array.from(new Set(item.instructions)).join(', ')}
                                             </div>
                                         )}
-                                        <div className="kds1-production-total-qty" style={{ color: timerColor }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                        <div className="kds1-production-total-qty" style={{ color: timerColor }}>
                                             {item.totalQty}
                                         </div>
                                         <div className="kds1-production-breakdowns">
@@ -435,9 +435,9 @@ const KDS1Screen: React.FC = () => {
                     ))}
 
                     {productionItems.length === 0 && (
-                        <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: 60, color: 'var(--kds1-text-secondary)' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <div style={{ fontSize: 48, opacity: 0.3, marginBottom: 12 }}>🍳</div> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <div style={{ fontSize: 16, fontWeight: 500 }}>{"No "}items waiting</div> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: 60, color: 'var(--kds1-text-secondary)' }}>
+                            <div style={{ fontSize: 48, opacity: 0.3, marginBottom: 12 }}>🍳</div>
+                            <div style={{ fontSize: 16, fontWeight: 500 }}>{"No "}items waiting</div>
                         </div>
                     )}
                 </div>
@@ -489,7 +489,7 @@ const KDS1Screen: React.FC = () => {
                 <div className="kds1-tap-overlay" onClick={() => setSelectedProductionItem(null)}>
                     <div className="kds1-tap-panel" onClick={e => e.stopPropagation()}>
                         <div className="kds1-tap-title">{selectedProductionItem.name}</div>
-                        <div style={{ textAlign: 'center', fontSize: 36, fontWeight: 800, margin: '16px 0', color: 'var(--kds1-time-green)' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <div style={{ textAlign: 'center', fontSize: 36, fontWeight: 800, margin: '16px 0', color: 'var(--kds1-time-green)' }}>
                             {selectedProductionItem.totalQty}
                         </div>
                         <button className="kds1-tap-button primary" onClick={() => acknowledgeProductionItem(selectedProductionItem.name, selectedProductionItem.totalQty)}>
@@ -506,8 +506,8 @@ const KDS1Screen: React.FC = () => {
             {showReport && (
                 <div className="kds1-report-modal" onClick={() => setShowReport(false)}>
                     <div className="kds1-report-panel" onClick={e => e.stopPropagation()}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>KDS Statistics Report</h2> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                            <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>KDS Statistics Report</h2>
                             <button className="kds1-header-btn" onClick={() => setShowReport(false)}>
                                 <X size={16} />
                             </button>

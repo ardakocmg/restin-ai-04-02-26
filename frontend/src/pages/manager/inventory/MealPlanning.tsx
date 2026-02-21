@@ -199,7 +199,7 @@ export default function MealPlanning() {
 
             {/* Weekly Grid */}
             <div className="overflow-x-auto">
-                <div className="grid gap-2" style={{ gridTemplateColumns: `80px repeat(${DAYS.length}, 1fr)`, minWidth: '900px' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                <div className="grid gap-2" style={{ gridTemplateColumns: `80px repeat(${DAYS.length}, 1fr)`, minWidth: '900px' }}>
                     {/* Header */}
                     <div />
                     {DAYS.map(day => (

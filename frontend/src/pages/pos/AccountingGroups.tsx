@@ -165,7 +165,7 @@ const AccountingGroups: React.FC = () => {
                         <div key={group.id} className="ag-table-row" onClick={() => setEditing({ ...group })}>
                             <GripVertical size={14} className="ag-grip-icon" />
                             <div className="ag-name-cell">
-                                <div className="ag-color-dot" style={{ background: group.color }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                <div className="ag-color-dot" style={{ background: group.color }} />
                                 <span className="ag-name-text">{group.name}</span>
                             </div>
                             <span className="ag-cell-secondary">{group.taxProfile}</span>
@@ -244,7 +244,7 @@ const AccountingGroups: React.FC = () => {
                                 {COLORS.map(c => (
                                     <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)}
                                         className={`ag-color-swatch ${editing.color === c ? 'ag-color-swatch--selected' : ''}`}
-                                        style={{ background: c }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                        style={{ background: c }} />
                                 ))}
                             </div>
                         </div>

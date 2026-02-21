@@ -106,7 +106,7 @@ export default function AuthElevationModal() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
                     className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(8px)' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(8px)' }}
                 >
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -117,7 +117,7 @@ export default function AuthElevationModal() {
                         exit={{ scale: 0.9, opacity: 0, y: 20 }}
                         transition={{ duration: 0.3, type: 'spring', damping: 20 }}
                         className="relative w-full max-w-sm rounded-2xl overflow-hidden"
-                        style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        style={{
                             background: 'linear-gradient(145deg, rgba(39, 39, 42, 0.95) 0%, rgba(24, 24, 27, 0.98) 100%)',
                             border: '1px solid rgba(255, 255, 255, 0.08)',
                             boxShadow: `0 25px 50px rgba(0,0,0,0.5), 0 0 100px rgba(${accentColorRgb}, 0.07)`,
@@ -136,15 +136,15 @@ export default function AuthElevationModal() {
                         <div className="px-6 pt-6 pb-4 text-center">
                             <div
                                 className="mx-auto w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
-                                style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                style={{
                                     background: `linear-gradient(135deg, rgba(${accentColorRgb}, 0.15) 0%, rgba(${accentColorRgb}, 0.05) 100%)`,
                                     border: `1px solid rgba(${accentColorRgb}, 0.25)`,
                                 }}
                             >
                                 {isPasswordMode ? (
-                                    <Lock className="w-7 h-7" style={{ color: accentColor }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    <Lock className="w-7 h-7" style={{ color: accentColor }} />
                                 ) : (
-                                    <Fingerprint className="w-7 h-7" style={{ color: accentColor }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    <Fingerprint className="w-7 h-7" style={{ color: accentColor }} />
                                 )}
                             </div>
 
@@ -162,7 +162,7 @@ export default function AuthElevationModal() {
                         <div className="px-6 pb-3">
                             <div
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg"
-                                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
                             >
                                 <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold text-secondary-foreground">
                                     {user?.name?.charAt(0)?.toUpperCase() || '?'}
@@ -187,7 +187,7 @@ export default function AuthElevationModal() {
                                         onChange={(e) = aria-label="Input field"> setPassword(e.target.value)}
                                         placeholder="Enter your password"
                                         className="w-full px-4 py-3 rounded-xl text-sm text-foreground placeholder-zinc-600 outline-none transition-all pr-10"
-                                        style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                        style={{
                                             background: 'rgba(0,0,0,0.3)',
                                             border: error ? '1px solid rgba(239, 68, 68, 0.5)' : '1px solid rgba(255,255,255,0.1)',
                                         }}
@@ -212,7 +212,7 @@ export default function AuthElevationModal() {
                                         onChange={(e) = aria-label="Input field"> setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                         placeholder="000 000"
                                         className="w-full text-center text-2xl tracking-[0.5em] py-3 rounded-xl text-foreground placeholder-zinc-600 outline-none transition-all font-mono"
-                                        style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                        style={{
                                             background: 'rgba(0,0,0,0.3)',
                                             border: error ? '1px solid rgba(239, 68, 68, 0.5)' : '1px solid rgba(255,255,255,0.1)',
                                         }}
@@ -226,7 +226,7 @@ export default function AuthElevationModal() {
                                             <div
                                                 key={i}
                                                 className="w-2 h-2 rounded-full transition-all duration-200"
-                                                style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                style={{
                                                     backgroundColor: i < totpCode.length
                                                         ? accentColor
                                                         : 'rgba(255,255,255,0.1)',
@@ -244,7 +244,7 @@ export default function AuthElevationModal() {
                             {error && (
                                 <div
                                     className="flex items-center gap-2 text-xs px-3 py-2 rounded-lg"
-                                    style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
                                 >
                                     <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0" />
                                     <span className="text-red-300">{error}</span>
@@ -257,7 +257,7 @@ export default function AuthElevationModal() {
                                     type="button"
                                     onClick={handleCancel}
                                     className="flex-1 py-2.5 rounded-xl text-sm font-medium text-muted-foreground transition-colors hover:text-secondary-foreground"
-                                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
                                 >
                                     Cancel
                                 </button>
@@ -265,7 +265,7 @@ export default function AuthElevationModal() {
                                     type="submit"
                                     disabled={loading || (isPasswordMode ? !password : totpCode.length < 6)}
                                     className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-foreground transition-all disabled:opacity-40"
-                                    style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    style={{
                                         background: `linear-gradient(135deg, ${accentColor} 0%, ${isCritical ? '#C62828' : '#D97706'} 100%)`,
                                         boxShadow: `0 4px 12px rgba(${accentColorRgb}, 0.3)`,
                                     }}

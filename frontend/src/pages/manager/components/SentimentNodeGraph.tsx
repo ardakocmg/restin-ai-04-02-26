@@ -32,7 +32,7 @@ export default function SentimentNodeGraph({ data }) {
                     <div className="absolute inset-0 bg-[linear-gradient(to_right,#00FFFF_1px,transparent_1px),linear-gradient(to_bottom,#00FFFF_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-[0.05]"></div>
 
                     {/* SVG Connector Lines */}
-                    <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                    <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
                         <line x1="20%" y1="50%" x2="40%" y2="20%" stroke="#00FFFF" strokeWidth="1" opacity="0.5" />
                         <line x1="20%" y1="50%" x2="50%" y2="70%" stroke="#00FFFF" strokeWidth="1" opacity="0.3" />
                         <line x1="50%" y1="70%" x2="70%" y2="40%" stroke="#FF9900" strokeWidth="1" opacity="0.5" />

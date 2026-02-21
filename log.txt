@@ -1,0 +1,15 @@
+b1ccc29 feat: enhance dual-PC system with toast notifications, sync log, PC1 launcher, domain-fence in pre-commit hook
+1738a70 Merge branch 'main' of https://github.com/ardakocmg/restin-ai-04-02-26
+914c599 feat: add start-watchers.bat launcher for PC2
+53f395f fix: resolve final pre-commit any_type violations in pos configuration mapping
+513cb73 fix: rewrite all PS scripts with ASCII-safe chars for older PowerShell compat
+506d81e task-queue: cleared completed tasks
+a9a9615 task-queue: DESKTOP-NSRR142 completed task 6460
+df659bb task-queue: DESKTOP-NSRR142 added task
+8dd9e12 Merge branch 'main' of https://github.com/ardakocmg/restin-ai-04-02-26
+b482bfd feat: complete dual-PC collaboration toolkit (auto-lock, task-queue, health-check, activity-status, domain-fence)
+b108e78 feat(a11y): add aria-label to all icon-only buttons and form inputs globally (Rule 17)
+6795586 merge: resolve conflicts, keep Tailwind-refactored versions + add auto-pull watcher
+54c3de9 feat: add git auto-pull watcher for PC2 + refactor inline styles in POSUsersGroups, InventoryAlerts, CustomerDisplayBO, Discounts
+6e8ab68 style: apply fix_16.py automated /* keep-inline */ annotations
+fc57a26 style: remove inline styles in POSRuntimeEnhanced to respect rule 16

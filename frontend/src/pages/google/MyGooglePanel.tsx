@@ -579,7 +579,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                             enabled ? "bg-white/10" : "bg-secondary"
                                         )}
                                     >
-                                        <Icon className="h-5 w-5" style={{ color: enabled ? meta.color : '#71717a' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                        <Icon className="h-5 w-5" style={{ color: enabled ? meta.color : '#71717a' }} />
                                     </div>
                                     <span className={cn("text-xs font-bold", enabled ? "text-foreground" : "text-muted-foreground")}>{meta.label}</span>
                                     <div className={cn(
@@ -650,7 +650,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                             : "text-muted-foreground hover:text-secondary-foreground hover:bg-white/5"
                                     )}
                                 >
-                                    <Icon className="h-3.5 w-3.5" style={{ color: active ? meta.color : undefined }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    <Icon className="h-3.5 w-3.5" style={{ color: active ? meta.color : undefined }} />
                                     {meta.label}
                                     {badge > 0 && (
                                         <span className="ml-1 px-1.5 py-0.5 text-[10px] font-black bg-red-500 text-foreground rounded-full leading-none">{badge}</span>
@@ -694,7 +694,7 @@ export default function MyGooglePanel(): React.ReactElement {
                             {events.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">{"No "}upcoming events</div>}
                             {events.map(ev => (
                                 <div key={ev.id} className="group flex items-start gap-3 p-3 bg-card/30 border border-border rounded-xl hover:border-border transition-all">
-                                    <div className="mt-1.5 h-3 w-3 rounded-full flex-shrink-0" style={{ backgroundColor: ev.color || '#4285f4' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    <div className="mt-1.5 h-3 w-3 rounded-full flex-shrink-0" style={{ backgroundColor: ev.color || '#4285f4' }} />
                                     <div className="flex-1 min-w-0">
                                         <div className="text-sm font-bold text-foreground truncate">{ev.title}</div>
                                         {ev.description && <div className="text-xs text-muted-foreground truncate mt-0.5">{ev.description}</div>}
@@ -801,7 +801,7 @@ export default function MyGooglePanel(): React.ReactElement {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {contacts.map(c => (
                                     <div key={c.id} className="flex items-start gap-3 p-3 bg-card/30 border border-border rounded-xl hover:border-border transition-all">
-                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black text-foreground flex-shrink-0" style={{ backgroundColor: c.avatar_color }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black text-foreground flex-shrink-0" style={{ backgroundColor: c.avatar_color }}>
                                             {c.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -1042,7 +1042,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                 return (
                                     <div key={item.key} className="flex items-center gap-4 py-2">
                                         <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center">
-                                            <Icon className="h-4 w-4" style={{ color: item.color }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                            <Icon className="h-4 w-4" style={{ color: item.color }} />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="text-sm font-bold text-foreground">{item.label}</div>
