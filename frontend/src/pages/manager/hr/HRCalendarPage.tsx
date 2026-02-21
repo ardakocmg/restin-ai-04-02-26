@@ -182,7 +182,7 @@ export default function HRCalendarPage() {
                         {[{ f: 'title' as const, t: 'text' }, { f: 'date' as const, t: 'date' }, { f: 'description' as const, t: 'text' }].map(({ f, t }) => (
                             <div key={f} className="mb-4">
                                 <label className="text-slate-400 text-[13px] block mb-1.5 capitalize">{f}</label>
-                                <input type={t} value={newEvent[f]} onChange={e = aria-label="Input field"> setNewEvent(p => ({ ...p, [f]: e.target.value }))} aria-label={f} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm" />
+                                <input type={t} value={newEvent[f]} onChange={e => setNewEvent(p => ({ ...p, [f]: e.target.value }))} aria-label={f} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm" />
                             </div>
                         ))}
                         <button onClick={createEvent} className="w-full py-3 rounded-lg border-none bg-indigo-500 text-white font-semibold text-sm cursor-pointer">Create Event</button>

@@ -235,13 +235,13 @@ export default function TablesideConfig() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <input aria-label="Input"
                                 value={newServerName}
-                                onChange={e = aria-label="Input field"> setNewServerName(e.target.value)}
+                                onChange={e => setNewServerName(e.target.value)}
                                 placeholder="Server Name (e.g. John)"
                                 className="h-10 bg-background border border-border rounded-lg text-foreground px-3 text-sm outline-none focus:border-red-500"
                             />
                             <input aria-label="Input"
                                 value={newTableNames}
-                                onChange={e = aria-label="Input field"> setNewTableNames(e.target.value)}
+                                onChange={e => setNewTableNames(e.target.value)}
                                 placeholder="Tables (comma-separated: T1, T2, T3)"
                                 className="h-10 bg-background border border-border rounded-lg text-foreground px-3 text-sm outline-none focus:border-red-500"
                             />

@@ -99,29 +99,29 @@ const POSDevices: React.FC = () => {
                         <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditing(null)}><X size={20} /></button> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     </div>
                     <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name *</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                        <input className="pos-input" value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} /></div>
+                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} /></div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <select className="pos-input pos-select" value={editing.type} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, type: e.target.value as DeviceType } : null)} aria-label="Device type">
+                            <select className="pos-input pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as DeviceType } : null)} aria-label="Device type">
                                 {(['terminal', 'printer', 'scanner', 'drawer', 'display', 'payment'] as DeviceType[]).map(t => <option key={t} value={t} style={{ textTransform: 'capitalize' }}>{t}</option>)} /* keep-inline */ /* keep-inline */ /* keep-inline */
                             </select></div>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Model</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <input className="pos-input" value={editing.model} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, model: e.target.value } : null)} /></div>
+                            <input className="pos-input" value={editing.model} onChange={e => setEditing(p => p ? { ...p, model: e.target.value } : null)} /></div>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>IP / Connection</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <input className="pos-input" value={editing.ipAddress} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, ipAddress: e.target.value } : null)} placeholder="192.168.1.x or USB" /></div>
+                            <input className="pos-input" value={editing.ipAddress} onChange={e => setEditing(p => p ? { ...p, ipAddress: e.target.value } : null)} placeholder="192.168.1.x or USB" /></div>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Location</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <input className="pos-input" value={editing.location} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, location: e.target.value } : null)} /></div>
+                            <input className="pos-input" value={editing.location} onChange={e => setEditing(p => p ? { ...p, location: e.target.value } : null)} /></div>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Serial Number</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <input className="pos-input" value={editing.serialNumber} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, serialNumber: e.target.value } : null)} /></div>
+                            <input className="pos-input" value={editing.serialNumber} onChange={e => setEditing(p => p ? { ...p, serialNumber: e.target.value } : null)} /></div>
                         <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Firmware</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <input className="pos-input" value={editing.firmware} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, firmware: e.target.value } : null)} /></div>
+                            <input className="pos-input" value={editing.firmware} onChange={e => setEditing(p => p ? { ...p, firmware: e.target.value } : null)} /></div>
                     </div>
                     <div style={{ marginBottom: 16 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                        <input type="checkbox" checked={editing.isActive} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label></div>
+                        <input type="checkbox" checked={editing.isActive} onChange={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label></div>
                     <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         <button className="pos-btn pos-btn--primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         <button className="pos-btn pos-btn--outline" style={{ color: '#EF4444' }} onClick={() => { setDevices(p => p.filter(d => d.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */ /* keep-inline */ /* keep-inline */

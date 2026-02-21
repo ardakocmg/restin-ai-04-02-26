@@ -125,7 +125,7 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                                     <input aria-label="Input"
                                         type="checkbox"
                                         checked={Boolean(tp?.[s])}
-                                        onChange={e = aria-label="Input field"> updateProp(bid, 'text_props', s, e.target.checked)}
+                                        onChange={e => updateProp(bid, 'text_props', s, e.target.checked)}
                                     />
                                     {s.charAt(0).toUpperCase() + s.slice(1)}
                                 </label>

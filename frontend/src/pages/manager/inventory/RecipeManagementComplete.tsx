@@ -936,7 +936,7 @@ export default function RecipeManagement() {
         <div className="relative">
           <select aria-label="Input"
             value={viewMode}
-            onChange={(e) = aria-label="Input field"> setViewMode(e.target.value)}
+            onChange={(e) => setViewMode(e.target.value)}
             aria-label="View mode"
             className="appearance-none cursor-pointer h-8 pl-3 pr-8 rounded-lg text-[11px] font-bold border transition-all"
             style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
@@ -1375,7 +1375,7 @@ export default function RecipeManagement() {
                       min={1}
                       max={totalPages || 1}
                       value={page}
-                      onChange={(e) = aria-label="Input field"> {
+                      onChange={(e) => {
                         const val = parseInt(e.target.value, 10);
                         if (!isNaN(val) && val >= 1 && val <= (totalPages || 1)) {
                           setPage(val);
@@ -1439,7 +1439,7 @@ export default function RecipeManagement() {
                 <select aria-label="Input"
                   className="w-full bg-background border-border rounded-xl px-4 py-3 text-foreground focus:border-orange-500/50 outline-none transition-all appearance-none"
                   value={editingRecipe?.category || ''}
-                  onChange={(e) = aria-label="Input field"> setEditingRecipe({ ...editingRecipe, category: e.target.value })}
+                  onChange={(e) => setEditingRecipe({ ...editingRecipe, category: e.target.value })}
                 >
                   <option value="">Select Category</option>
                   <option value="Pizza">Pizza</option>
@@ -1535,7 +1535,7 @@ export default function RecipeManagement() {
                     <input aria-label="Input"
                       className="w-full bg-background/60 border border-border/60 rounded-lg px-3 py-2 text-sm text-cyan-300 focus:border-cyan-500/50 outline-none font-mono"
                       value={plu.code}
-                      onChange={e = aria-label="Input field"> { const m = [...pluMappings]; m[idx].code = e.target.value; setPluMappings(m); }}
+                      onChange={e => { const m = [...pluMappings]; m[idx].code = e.target.value; setPluMappings(m); }}
                       placeholder="PLU code"
                     />
                   </div>
@@ -1543,7 +1543,7 @@ export default function RecipeManagement() {
                     <select aria-label="Input"
                       className="w-full bg-background/60 border border-border/60 rounded-lg px-3 py-2 text-sm text-secondary-foreground outline-none appearance-none"
                       value={plu.outlet || 'all'}
-                      onChange={e = aria-label="Input field"> { const m = [...pluMappings]; m[idx].outlet = e.target.value; setPluMappings(m); }}
+                      onChange={e => { const m = [...pluMappings]; m[idx].outlet = e.target.value; setPluMappings(m); }}
                     >
                       <option value="all">All Outlets</option>
                       <option value="dine_in">Dine-In</option>
@@ -1556,7 +1556,7 @@ export default function RecipeManagement() {
                     <input aria-label="Input"
                       className="w-full bg-background/60 border border-border/60 rounded-lg px-3 py-2 text-sm text-secondary-foreground outline-none"
                       value={plu.pos_name || ''}
-                      onChange={e = aria-label="Input field"> { const m = [...pluMappings]; m[idx].pos_name = e.target.value; setPluMappings(m); }}
+                      onChange={e => { const m = [...pluMappings]; m[idx].pos_name = e.target.value; setPluMappings(m); }}
                       placeholder="POS display name"
                     />
                   </div>
@@ -1579,7 +1579,7 @@ export default function RecipeManagement() {
                 <h4 className="text-[10px] font-black uppercase tracking-widest">Stockable Recipe</h4>
                 <label className="ml-auto flex items-center gap-2 cursor-pointer">
                   <span className="text-[9px] text-muted-foreground">{stockableEnabled ? 'Active' : 'Off'}</span>
-                  <input type="checkbox" checked={stockableEnabled} onChange={(e) = aria-label="Input field"> setStockableEnabled(e.target.checked)}
+                  <input type="checkbox" checked={stockableEnabled} onChange={(e) => setStockableEnabled(e.target.checked)}
                     className="accent-emerald-500 w-4 h-4" />
                 </label>
               </div>
@@ -1590,7 +1590,7 @@ export default function RecipeManagement() {
                     <div>
                       <label className="text-[9px] font-bold text-muted-foreground uppercase block mb-1">Inventory Unit</label>
                       <select aria-label="Input" className="w-full bg-background/60 border border-border/60 rounded-lg px-2 py-2 text-sm text-secondary-foreground focus:border-emerald-500/50 outline-none"
-                        value={stockableFields.unit} onChange={(e) = aria-label="Input field"> setStockableFields({ ...stockableFields, unit: e.target.value })}>
+                        value={stockableFields.unit} onChange={(e) => setStockableFields({ ...stockableFields, unit: e.target.value })}>
                         <option value="portion">Portion</option>
                         <option value="batch">Batch</option>
                         <option value="liter">Litre</option>
@@ -1601,12 +1601,12 @@ export default function RecipeManagement() {
                     <div>
                       <label className="text-[9px] font-bold text-muted-foreground uppercase block mb-1">Shelf Life (days)</label>
                       <input aria-label="Input" type="number" className="w-full bg-background/60 border border-border/60 rounded-lg px-2 py-2 text-sm text-secondary-foreground focus:border-emerald-500/50 outline-none"
-                        value={stockableFields.shelf_life_days} onChange={(e) = aria-label="Input field"> setStockableFields({ ...stockableFields, shelf_life_days: parseInt(e.target.value) || 0 })} />
+                        value={stockableFields.shelf_life_days} onChange={(e) => setStockableFields({ ...stockableFields, shelf_life_days: parseInt(e.target.value) || 0 })} />
                     </div>
                     <div>
                       <label className="text-[9px] font-bold text-muted-foreground uppercase block mb-1">Storage</label>
                       <select aria-label="Input" className="w-full bg-background/60 border border-border/60 rounded-lg px-2 py-2 text-sm text-secondary-foreground focus:border-emerald-500/50 outline-none"
-                        value={stockableFields.storage} onChange={(e) = aria-label="Input field"> setStockableFields({ ...stockableFields, storage: e.target.value })}>
+                        value={stockableFields.storage} onChange={(e) => setStockableFields({ ...stockableFields, storage: e.target.value })}>
                         <option value="ambient">â˜€ï¸ Ambient</option>
                         <option value="refrigerated">â„ï¸ Refrigerated</option>
                         <option value="frozen">ğŸ§Š Frozen</option>

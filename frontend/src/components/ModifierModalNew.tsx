@@ -125,7 +125,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
         <div className="sticky top-0 z-10 bg-card border-b border-border p-6">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h2 className="text-2xl font-heading mb-1" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+              <h2 className="text-2xl font-heading mb-1 text-zinc-100">
                 {item.name}
               </h2>
               <p className="text-lg font-bold text-red-500">
@@ -134,8 +134,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
             </div>
             <button
               onClick={onClose}
-              aria-label="Action" className="p-2 rounded-lg hover:bg-white/5 transition-colors"
-              style={{ color: '#71717A' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
+              aria-label="Close modal" className="p-2 rounded-lg hover:bg-white/5 transition-colors text-zinc-500"
             >
               <X className="w-6 h-6" />
             </button>
@@ -148,7 +147,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
           {modifierGroups.map((group) => (
             <div key={group.id} className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                <h3 className="font-semibold text-zinc-100">
                   {group.name}
                 </h3>
                 {group.required && (
@@ -167,25 +166,20 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
                       key={option.id}
                       onClick={() => handleModifierToggle(group.id, option.id, group.multiple)}
                       className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all duration-200 ${isSelected
-                          ? 'bg-red-950/30 border-red-500'
-                          : 'bg-card/50 border-border hover:border-red-500/50'
+                        ? 'bg-red-950/30 border-red-500 shadow-[0_0_16px_rgba(229,57,53,0.3)]'
+                        : 'bg-card/50 border-border hover:border-red-500/50'
                         }`}
-                      style={
-                        isSelected
-                          ? { boxShadow: '0 0 16px rgba(229, 57, 53, 0.3)' }
-                          : {}
-                      }
                     >
                       <div className="flex items-center gap-3">
                         <div
                           className={`w-5 h-5 rounded flex items-center justify-center border-2 ${isSelected
-                              ? 'bg-red-500 border-red-500'
-                              : 'border-white/30'
+                            ? 'bg-red-500 border-red-500'
+                            : 'border-white/30'
                             }`}
                         >
                           {isSelected && <Check className="w-3 h-3 text-foreground" />}
                         </div>
-                        <span style={{ color: isSelected ? '#F5F5F7' : '#D4D4D8' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <span className={isSelected ? 'text-zinc-100' : 'text-zinc-300'}>
                           {option.name}
                         </span>
                       </div>
@@ -206,9 +200,10 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
             <label className="block font-semibold" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
               Special Instructions
             </label>
-            <textarea aria-label="Input"
+            <textarea
+              aria-label="Special instructions"
               value={specialInstructions}
-              onChange={(e) = aria-label="Input field"> setSpecialInstructions(e.target.value)}
+              onChange={(e) => setSpecialInstructions(e.target.value)}
               placeholder="e.g., No onions, extra sauce..."
               rows={3}
               className="w-full input-dark rounded-xl p-3 text-sm"
@@ -229,6 +224,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                aria-label="Decrease quantity"
                 className="w-10 h-10 rounded-lg bg-secondary hover:bg-secondary/80 border border-border flex items-center justify-center transition-colors"
                 disabled={quantity <= 1}
               >
@@ -239,6 +235,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
               </span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
+                aria-label="Increase quantity"
                 className="w-10 h-10 rounded-lg bg-secondary hover:bg-secondary/80 border border-border flex items-center justify-center transition-colors"
               >
                 <Plus className="w-4 h-4" style={{ color: '#D4D4D8' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */

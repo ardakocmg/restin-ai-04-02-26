@@ -130,17 +130,17 @@ const ComboMeals: React.FC = () => {
                 <div className="pos-card pos-modal max-h-[85vh] overflow-auto w-[520px]" onClick={e => e.stopPropagation()}>
                     <div className="pos-modal-header">
                         <h3 className="pos-modal-title">{combos.find(c => c.id === editing.id) ? 'Edit' : 'New'} Combo</h3>
-                        <button className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
+                        <button className="pos-btn-icon" aria-label="Close modal" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Name *</label>
                         <input aria-label="Input field" className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Lunch Special" /></div>
                     <div className="pos-form-grid">
                         <div><label className="pos-form-label">Pricing Type</label>
-                            <select aria-label="Select option" className="pos-select" value={editing.pricingType} onChange={e => setEditing(p => p ? { ...p, pricingType: e.target.value as Combo['pricingType'] } : null)} aria-label="Pricing type">
+                            <select aria-label="Pricing type" className="pos-select" value={editing.pricingType} onChange={e => setEditing(p => p ? { ...p, pricingType: e.target.value as Combo['pricingType'] } : null)}>
                                 <option value="fixed">Fixed Price</option><option value="sum">Sum of Items</option><option value="cheapest-free">Cheapest Free</option>
                             </select></div>
                         {editing.pricingType === 'fixed' && <div><label className="pos-form-label">Price (€)</label>
-                            <input aria-label="Input field" type="number" step="0.01" className="pos-input" value={editing.price} onChange={e => setEditing(p => p ? { ...p, price: parseFloat(e.target.value) || 0 } : null)} aria-label="Price" /></div>}
+                            <input aria-label="Price" type="number" step="0.01" className="pos-input" value={editing.price} onChange={e => setEditing(p => p ? { ...p, price: parseFloat(e.target.value) || 0 } : null)} /></div>}
                     </div>
                     <div className="pos-form-group">
                         <div className="pos-flex pos-flex--between pos-flex--center pos-mb-8">
@@ -151,13 +151,13 @@ const ComboMeals: React.FC = () => {
                             <div key={step.id} className="pos-card bg-[var(--bg-secondary,#09090b)] p-3 mb-2">
                                 <div className="pos-flex pos-gap-8 pos-flex--center pos-mb-8">
                                     <span className="pos-badge pos-badge--blue w-[22px] h-[22px] rounded text-[11px] font-bold p-0 justify-center shrink-0">{i + 1}</span>
-                                    <input aria-label="Input field" className="pos-input flex-1 py-1.5 px-2.5 text-xs" value={step.name} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], name: e.target.value }; setEditing({ ...editing, steps: s }); }} placeholder="Step name" aria-label="Step name" />
+                                    <input aria-label="Step name" className="pos-input flex-1 py-1.5 px-2.5 text-xs" value={step.name} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], name: e.target.value }; setEditing({ ...editing, steps: s }); }} placeholder="Step name" />
                                     <label className="pos-toggle-label text-[10px] shrink-0">
                                         <input aria-label="Input field" type="checkbox" checked={step.required} onChange={() => { const s = [...editing.steps]; s[i] = { ...s[i], required: !s[i].required }; setEditing({ ...editing, steps: s }); }} /> Req
                                     </label>
                                     <button title="Remove step" className="pos-btn-icon pos-btn-icon--danger shrink-0" onClick={() => setEditing({ ...editing, steps: editing.steps.filter((_, j) => j !== i) })}><X size={14} /></button>
                                 </div>
-                                <textarea aria-label="Input field" className="pos-input pos-textarea h-[50px] text-[11px]" value={step.options.join('\n')} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], options: e.target.value.split('\n').filter(Boolean) }; setEditing({ ...editing, steps: s }); }} placeholder="One option per line" aria-label="Step options" />
+                                <textarea aria-label="Step options" className="pos-input pos-textarea h-[50px] text-[11px]" value={step.options.join('\n')} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], options: e.target.value.split('\n').filter(Boolean) }; setEditing({ ...editing, steps: s }); }} placeholder="One option per line" />
                             </div>
                         ))}
                     </div>

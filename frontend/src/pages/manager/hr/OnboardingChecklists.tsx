@@ -189,11 +189,11 @@ export default function OnboardingChecklists() {
                         </div>
                         <div className="mb-4">
                             <label className="text-slate-400 text-[13px] block mb-1.5">Template Name</label>
-                            <input value={newTemplate.name} onChange={e = aria-label="Input field"> setNewTemplate(p => ({ ...p, name: e.target.value }))} aria-label="Template name" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm" />
+                            <input value={newTemplate.name} onChange={e => setNewTemplate(p => ({ ...p, name: e.target.value }))} aria-label="Template name" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm" />
                         </div>
                         <div className="mb-4">
                             <label className="text-slate-400 text-[13px] block mb-1.5">Type</label>
-                            <select value={newTemplate.template_type} onChange={e = aria-label="Input field"> setNewTemplate(p => ({ ...p, template_type: e.target.value }))} aria-label="Template type" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm">
+                            <select value={newTemplate.template_type} onChange={e => setNewTemplate(p => ({ ...p, template_type: e.target.value }))} aria-label="Template type" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm">
                                 <option value="onboarding">Onboarding</option>
                                 <option value="offboarding">Offboarding</option>
                                 <option value="probation_review">Probation Review</option>
@@ -203,7 +203,7 @@ export default function OnboardingChecklists() {
                         <label className="text-slate-400 text-[13px] block mb-2">Tasks</label>
                         {newTemplate.items.map((item, i) => (
                             <div key={i} className="flex gap-2 mb-2">
-                                <input value={item.title} onChange={e = aria-label="Input field"> updateItem(i, 'title', e.target.value)} placeholder="Task title" className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-100 text-[13px]" />
+                                <input value={item.title} onChange={e => updateItem(i, 'title', e.target.value)} placeholder="Task title" className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-100 text-[13px]" />
                                 <button onClick={() => removeItem(i)} className="bg-red-500/10 border-none rounded-lg px-2.5 py-1.5 text-red-400 cursor-pointer" aria-label="Remove task"><Trash2 size={14} /></button>
                             </div>
                         ))}

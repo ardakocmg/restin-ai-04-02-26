@@ -314,13 +314,13 @@ const POSConfigSettings: React.FC = () => {
                             <div className="pos-card">
                                 <h3 className="pos-section-title">Configuration</h3>
                                 <SettingRow label="Configuration Name" desc="Name displayed in the Back Office">
-                                    <input className="pos-input" style={{ width: 250 }} value={config.name} onChange={e = aria-label="Input field"> set('name', e.target.value)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    <input className="pos-input" style={{ width: 250 }} value={config.name} onChange={e => set('name', e.target.value)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                 </SettingRow>
                             </div>
                             <div className="pos-card">
                                 <h3 className="pos-section-title">Menu Settings</h3>
                                 <SettingRow label="Menu" desc="Select the menu to use for this configuration">
-                                    <select className="pos-input pos-select" style={{ width: 250 }} value={config.menu} onChange={e = aria-label="Input field"> set('menu', e.target.value)} aria-label="Menu"> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    <select className="pos-input pos-select" style={{ width: 250 }} value={config.menu} onChange={e => set('menu', e.target.value)} aria-label="Menu"> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                         <option>Default Menu</option><option>Lunch Menu</option><option>Dinner Menu</option><option>Bar Menu</option>
                                     </select>
                                 </SettingRow>
@@ -345,7 +345,7 @@ const POSConfigSettings: React.FC = () => {
                                 {config.orderMode === 'table-service' && (
                                     <>
                                         <SettingRow label="Floor Plan" desc="Select from available floor plans">
-                                            <select className="pos-input pos-select" style={{ width: 200 }} value={config.selectedFloorPlan} onChange={e = aria-label="Input field"> set('selectedFloorPlan', e.target.value)} aria-label="Floor plan"> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                            <select className="pos-input pos-select" style={{ width: 200 }} value={config.selectedFloorPlan} onChange={e => set('selectedFloorPlan', e.target.value)} aria-label="Floor plan"> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                 {config.floorPlans.map(f => <option key={f}>{f}</option>)}
                                             </select>
                                         </SettingRow>
@@ -361,13 +361,13 @@ const POSConfigSettings: React.FC = () => {
                                 )}
 
                                 <SettingRow label="Default order profile for direct sales">
-                                    <select className="pos-input pos-select" style={{ width: 180 }} value={config.defaultOrderProfile} onChange={e = aria-label="Input field"> set('defaultOrderProfile', e.target.value)} aria-label="Default order profile"> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    <select className="pos-input pos-select" style={{ width: 180 }} value={config.defaultOrderProfile} onChange={e => set('defaultOrderProfile', e.target.value)} aria-label="Default order profile"> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                         <option>Dine-In</option><option>Takeaway</option><option>Delivery</option>
                                     </select>
                                 </SettingRow>
 
                                 <SettingRow label="Order number reset at" desc="Set the last order number before count resets">
-                                    <input type="number" className="pos-input" style={{ width: 100 }} value={config.orderNumberReset} onChange={e = aria-label="Input field"> set('orderNumberReset', parseInt(e.target.value) || 0)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                    <input type="number" className="pos-input" style={{ width: 100 }} value={config.orderNumberReset} onChange={e => set('orderNumberReset', parseInt(e.target.value) || 0)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                 </SettingRow>
 
                                 <SettingRow label="First course numbering">
@@ -400,13 +400,13 @@ const POSConfigSettings: React.FC = () => {
                                     <>
                                         <SettingRow label="Max time between orders">
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                                <input type="number" className="pos-input" style={{ width: 80 }} value={config.groupMaxTimeBetween} onChange={e = aria-label="Input field"> set('groupMaxTimeBetween', parseInt(e.target.value) || 0)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                <input type="number" className="pos-input" style={{ width: 80 }} value={config.groupMaxTimeBetween} onChange={e => set('groupMaxTimeBetween', parseInt(e.target.value) || 0)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                 <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>min</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                             </div>
                                         </SettingRow>
                                         <SettingRow label="Max time since first order">
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                                <input type="number" className="pos-input" style={{ width: 80 }} value={config.groupMaxTimeSinceFirst} onChange={e = aria-label="Input field"> set('groupMaxTimeSinceFirst', parseInt(e.target.value) || 0)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                <input type="number" className="pos-input" style={{ width: 80 }} value={config.groupMaxTimeSinceFirst} onChange={e => set('groupMaxTimeSinceFirst', parseInt(e.target.value) || 0)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                 <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>min</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                             </div>
                                         </SettingRow>
@@ -507,7 +507,7 @@ const POSConfigSettings: React.FC = () => {
                                                         {config.payTipValues.map((v, idx) => (
                                                             <input aria-label="Input" key={idx} type="number" className="pos-input" style={{ width: 70 }} /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                                 value={v}
-                                                                onChange={e = aria-label="Input field"> { const vals = [...config.payTipValues] as [number, number, number]; vals[idx] = parseInt(e.target.value) || 0; set('payTipValues', vals); }}
+                                                                onChange={e => { const vals = [...config.payTipValues] as [number, number, number]; vals[idx] = parseInt(e.target.value) || 0; set('payTipValues', vals); }}
                                                             />
                                                         ))}
                                                         <span style={{ fontSize: 12, color: 'var(--text-secondary)', alignSelf: 'center' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
@@ -520,7 +520,7 @@ const POSConfigSettings: React.FC = () => {
                                                     <SettingRow label="Dynamic threshold" desc="Show percentages when total is above this amount">
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                             <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>€</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                                            <input type="number" className="pos-input" style={{ width: 80 }} value={config.payDynamicThreshold} onChange={e = aria-label="Input field"> set('payDynamicThreshold', parseInt(e.target.value) || 0)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                            <input type="number" className="pos-input" style={{ width: 80 }} value={config.payDynamicThreshold} onChange={e => set('payDynamicThreshold', parseInt(e.target.value) || 0)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                         </div>
                                                     </SettingRow>
                                                 )}
@@ -692,11 +692,11 @@ const POSConfigSettings: React.FC = () => {
                                 </p>
                                 {config.stockTransfers.map((transfer, idx) => (
                                     <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                        <select className="pos-input pos-select" style={{ flex: 1 }} value={transfer.from} onChange={e = aria-label="Input field"> setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, from: e.target.value } : t) }))} aria-label="From stock"> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                        <select className="pos-input pos-select" style={{ flex: 1 }} value={transfer.from} onChange={e => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, from: e.target.value } : t) }))} aria-label="From stock"> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                             <option>Main Stock</option><option>Bar Stock</option><option>Kitchen Stock</option>
                                         </select>
                                         <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>→</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                        <select className="pos-input pos-select" style={{ flex: 1 }} value={transfer.to} onChange={e = aria-label="Input field"> setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, to: e.target.value } : t) }))} aria-label="To stock"> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                        <select className="pos-input pos-select" style={{ flex: 1 }} value={transfer.to} onChange={e => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, to: e.target.value } : t) }))} aria-label="To stock"> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                             <option>Main Stock</option><option>Bar Stock</option><option>Kitchen Stock</option>
                                         </select>
                                         <button className="pos-btn pos-btn--outline" style={{ padding: '6px 10px' }} onClick={() => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.filter((_, i) => i !== idx) }))}> /* keep-inline */ /* keep-inline */ /* keep-inline */

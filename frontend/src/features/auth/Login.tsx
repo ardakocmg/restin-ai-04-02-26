@@ -424,7 +424,7 @@ export default function Login() {
                             <input aria-label="Input"
                                 type="text"
                                 value={totpCode}
-                                onChange={(e) = aria-label="Input field"> setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                 className="w-full text-center text-2xl tracking-widest py-4 rounded-xl bg-black/40 text-foreground border border-border"
                                 placeholder="••••••"
                                 data-testid="mfa-code-input"

@@ -1889,7 +1889,7 @@ export default function HiveDashboard() {
                                     <div className="grid grid-cols-2 gap-2">
                                         <select aria-label="Input"
                                             value={newTaskUrgency}
-                                            onChange={e = aria-label="Input field"> setNewTaskUrgency(e.target.value as MicroTask['urgency'])}
+                                            onChange={e => setNewTaskUrgency(e.target.value as MicroTask['urgency'])}
                                             className="bg-secondary/60 border border-border/50 rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                             title="Task urgency level"
                                         >
@@ -1900,7 +1900,7 @@ export default function HiveDashboard() {
                                         </select>
                                         <select aria-label="Input"
                                             value={newTaskAssignee}
-                                            onChange={e = aria-label="Input field"> setNewTaskAssignee(e.target.value)}
+                                            onChange={e => setNewTaskAssignee(e.target.value)}
                                             className="bg-secondary/60 border border-border/50 rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                             title="Assign task to staff"
                                         >
@@ -1922,7 +1922,7 @@ export default function HiveDashboard() {
                                         />
                                         <select aria-label="Input"
                                             value={newTaskRecurrence}
-                                            onChange={e = aria-label="Input field"> setNewTaskRecurrence(e.target.value as MicroTask['recurrence'])}
+                                            onChange={e => setNewTaskRecurrence(e.target.value as MicroTask['recurrence'])}
                                             className="bg-secondary/60 border border-border/50 rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                             title="Task recurrence schedule"
                                         >
@@ -2391,7 +2391,7 @@ export default function HiveDashboard() {
                                 max="2.0"
                                 step="0.1"
                                 value={ttsRate}
-                                onChange={e = aria-label="Input field"> setTtsRate(parseFloat(e.target.value))}
+                                onChange={e => setTtsRate(parseFloat(e.target.value))}
                                 className="w-full h-1.5 bg-secondary rounded-full appearance-none cursor-pointer accent-blue-500"
                                 title="TTS speech rate"
                             />
@@ -2410,7 +2410,7 @@ export default function HiveDashboard() {
                             </label>
                             <select aria-label="Input"
                                 value={ttsVoiceName}
-                                onChange={e = aria-label="Input field"> setTtsVoiceName(e.target.value)}
+                                onChange={e => setTtsVoiceName(e.target.value)}
                                 className="w-full bg-card border border-border rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                 title="Select TTS voice"
                             >
@@ -2453,7 +2453,7 @@ export default function HiveDashboard() {
                             </label>
                             <select aria-label="Input"
                                 value={recognitionLang}
-                                onChange={e = aria-label="Input field"> setRecognitionLang(e.target.value)}
+                                onChange={e => setRecognitionLang(e.target.value)}
                                 className="w-full bg-card border border-border rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                 title="Select speech recognition language"
                             >

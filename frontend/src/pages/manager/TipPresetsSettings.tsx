@@ -176,7 +176,7 @@ export default function TipPresetsSettings() {
                                     <input aria-label="Input"
                                         type="number"
                                         value={val}
-                                        onChange={(e) = aria-label="Input field"> updatePercentOption(i, e.target.value)}
+                                        onChange={(e) => updatePercentOption(i, e.target.value)}
                                         className="w-full h-12 bg-card/50 border border-border rounded-xl text-foreground text-center text-lg font-bold focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
                                         aria-label={`Tip percentage option ${i + 1}`}
                                     />
@@ -198,7 +198,7 @@ export default function TipPresetsSettings() {
                                     <input aria-label="Input"
                                         type="number"
                                         value={(val / 100).toFixed(2)}
-                                        onChange={(e) = aria-label="Input field"> updateFixedOption(i, Math.round(parseFloat(e.target.value) * 100))}
+                                        onChange={(e) => updateFixedOption(i, Math.round(parseFloat(e.target.value) * 100))}
                                         step="0.50"
                                         className="w-full h-12 bg-card/50 border border-border rounded-xl text-foreground text-center text-lg font-bold pl-8 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
                                         aria-label={`Fixed tip amount option ${i + 1}`}

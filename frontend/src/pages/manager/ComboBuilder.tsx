@@ -307,7 +307,7 @@ export default function ComboBuilder() {
                                             <input aria-label="Input"
                                                 autoFocus
                                                 value={selectedCombo.name}
-                                                onChange={(e) = aria-label="Input field"> updateComboField('name', e.target.value)}
+                                                onChange={(e) => updateComboField('name', e.target.value)}
                                                 className="bg-background border border-border rounded-lg px-3 py-1.5 text-foreground text-lg font-bold w-full outline-none focus:border-emerald-500"
                                                 onKeyDown={(e) => e.key === 'Enter' && setEditingName(false)}
                                                 aria-label="Combo name"
@@ -322,7 +322,7 @@ export default function ComboBuilder() {
                                     )}
                                     <input aria-label="Input"
                                         value={selectedCombo.description}
-                                        onChange={(e) = aria-label="Input field"> updateComboField('description', e.target.value)}
+                                        onChange={(e) => updateComboField('description', e.target.value)}
                                         placeholder="Add a description..."
                                         className="bg-transparent border-none text-xs text-muted-foreground mt-1 w-full outline-none placeholder:text-zinc-700"
                                     />
@@ -335,7 +335,7 @@ export default function ComboBuilder() {
                                             <input aria-label="Input"
                                                 type="number"
                                                 value={(selectedCombo.price_cents / 100).toFixed(2)}
-                                                onChange={(e) = aria-label="Input field"> updateComboField('price_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
+                                                onChange={(e) => updateComboField('price_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
                                                 step="0.50"
                                                 className="w-24 h-9 bg-background border border-border rounded-lg text-foreground font-bold text-sm text-right pr-2 pl-6 outline-none focus:border-emerald-500"
                                                 aria-label="Base price"
@@ -378,7 +378,7 @@ export default function ComboBuilder() {
                                             <div className="flex-1">
                                                 <input aria-label="Input"
                                                     value={group.name}
-                                                    onChange={(e) = aria-label="Input field"> updateGroup(group.id, 'name', e.target.value)}
+                                                    onChange={(e) => updateGroup(group.id, 'name', e.target.value)}
                                                     onClick={(e) => e.stopPropagation()}
                                                     className="bg-transparent border-none text-sm font-bold text-foreground outline-none w-full"
                                                     aria-label="Group name"
@@ -392,7 +392,7 @@ export default function ComboBuilder() {
                                                 <input aria-label="Input"
                                                     type="number"
                                                     value={group.min_select}
-                                                    onChange={(e) = aria-label="Input field"> updateGroup(group.id, 'min_select', parseInt(e.target.value) || 0)}
+                                                    onChange={(e) => updateGroup(group.id, 'min_select', parseInt(e.target.value) || 0)}
                                                     className="w-12 h-7 bg-background border border-border rounded-lg text-foreground text-xs text-center outline-none"
                                                     min={0}
                                                     aria-label="Minimum selections"
@@ -401,7 +401,7 @@ export default function ComboBuilder() {
                                                 <input aria-label="Input"
                                                     type="number"
                                                     value={group.max_select}
-                                                    onChange={(e) = aria-label="Input field"> updateGroup(group.id, 'max_select', parseInt(e.target.value) || 1)}
+                                                    onChange={(e) => updateGroup(group.id, 'max_select', parseInt(e.target.value) || 1)}
                                                     className="w-12 h-7 bg-background border border-border rounded-lg text-foreground text-xs text-center outline-none"
                                                     min={1}
                                                     aria-label="Maximum selections"
@@ -439,7 +439,7 @@ export default function ComboBuilder() {
                                                         </button>
                                                         <input aria-label="Input"
                                                             value={item.name}
-                                                            onChange={(e) = aria-label="Input field"> updateItemInGroup(group.id, ii, 'name', e.target.value)}
+                                                            onChange={(e) => updateItemInGroup(group.id, ii, 'name', e.target.value)}
                                                             className="flex-1 bg-transparent border-none text-sm text-foreground outline-none"
                                                             placeholder="Item name"
                                                         />
@@ -448,7 +448,7 @@ export default function ComboBuilder() {
                                                             <input aria-label="Input"
                                                                 type="number"
                                                                 value={(item.price_delta_cents / 100).toFixed(2)}
-                                                                onChange={(e) = aria-label="Input field"> updateItemInGroup(group.id, ii, 'price_delta_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
+                                                                onChange={(e) => updateItemInGroup(group.id, ii, 'price_delta_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
                                                                 step="0.50"
                                                                 className="w-16 h-7 bg-card border border-border rounded-lg text-foreground text-xs text-right pr-1 outline-none"
                                                                 aria-label="Price delta"

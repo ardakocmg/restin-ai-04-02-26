@@ -123,7 +123,7 @@ export default function CustomFieldsPage() {
                 <Label>Type</Label>
                 <select aria-label="Input"
                   value={newField.type}
-                  onChange={(e) = aria-label="Input field"> setNewField({ ...newField, type: e.target.value })}
+                  onChange={(e) => setNewField({ ...newField, type: e.target.value })}
                   className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
                 >
                   {FIELD_TYPES.map(t => (
@@ -149,7 +149,7 @@ export default function CustomFieldsPage() {
                 <input aria-label="Input"
                   type="checkbox"
                   checked={newField.required}
-                  onChange={(e) = aria-label="Input field"> setNewField({ ...newField, required: e.target.checked })}
+                  onChange={(e) => setNewField({ ...newField, required: e.target.checked })}
                   className="rounded"
                 />
                 Required field
@@ -205,7 +205,7 @@ export default function CustomFieldsPage() {
                       variant="ghost"
                       size="icon" aria-label="Action"
                       className="opacity-0 group-hover:opacity-100 text-destructive"
-                      onClick={() = aria-label="Action"> handleDelete(field.id)}
+                      onClick={() => handleDelete(field.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

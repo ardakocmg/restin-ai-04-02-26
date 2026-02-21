@@ -47,8 +47,8 @@ export default function DetailDrawer({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent 
-        side="right" 
+      <SheetContent
+        side="right"
         className={`${widthClasses[width]} p-0 flex flex-col`}
       >
         {/* Header */}
@@ -155,7 +155,7 @@ export function InfoRow({ label, value, copyable = false }) {
             size="icon" aria-label="Action"
             className="h-6 w-6"
             onClick={handleCopy}
-           aria-label="Action">
+          >
             <ExternalLink className="h-3 w-3" />
           </Button>
         )}

@@ -398,7 +398,7 @@ export default function IntegrationsHub() {
                           variant="ghost"
                           size="icon" aria-label="Action"
                           className="h-8 w-8"
-                          onClick={() = aria-label="Action"> setShowSecrets({
+                          onClick={() => setShowSecrets({
                             ...showSecrets,
                             [field.key]: !showSecrets[field.key]
                           })}
@@ -412,7 +412,7 @@ export default function IntegrationsHub() {
                           variant="ghost"
                           size="icon" aria-label="Action"
                           className="h-8 w-8"
-                          onClick={() = aria-label="Action"> copyToClipboard(configData[field.key])}
+                          onClick={() => copyToClipboard(configData[field.key])}
                         >
                           <Copy className="h-4 w-4" />
                         </Button>

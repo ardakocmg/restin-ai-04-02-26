@@ -147,7 +147,7 @@ export default function SettingsSetupPage() {
                 <Label>SSC Class</Label>
                 <select aria-label="Input"
                   value={settings.ssc_class}
-                  onChange={(e) = aria-label="Input field"> updateField('ssc_class', e.target.value)}
+                  onChange={(e) => updateField('ssc_class', e.target.value)}
                   className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
                 >
                   <option value="1">Class 1 — Employed</option>
@@ -191,7 +191,7 @@ export default function SettingsSetupPage() {
                 <input aria-label="Input"
                   type="checkbox"
                   checked={settings[key]}
-                  onChange={(e) = aria-label="Input field"> updateField(key, e.target.checked)}
+                  onChange={(e) => updateField(key, e.target.checked)}
                   className="w-5 h-5 rounded"
                 />
               </label>

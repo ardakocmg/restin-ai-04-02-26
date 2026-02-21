@@ -716,7 +716,7 @@ export default function POSDashboard() {
                             // Nested Receipt Details View
                             <div className="space-y-4">
                                 <div className="flex items-center gap-4 border-b border-border pb-4">
-                                    <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> setSelectedReceipt(null)}>
+                                    <Button variant="ghost" size="icon" onClick={() => setSelectedReceipt(null)}>
                                         <ChevronLeft className="h-5 w-5" />
                                     </Button>
                                     <div>

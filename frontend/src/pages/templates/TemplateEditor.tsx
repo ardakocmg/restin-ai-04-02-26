@@ -480,7 +480,7 @@ export default function TemplateEditor() {
                     type="text"
                     className="ts-input"
                     value={templateName}
-                    onChange={e = aria-label="Input field"> setTemplateName(e.target.value)}
+                    onChange={e => setTemplateName(e.target.value)}
                     placeholder={t('Template name...')}
                     title={t('Template name')}
                     style={{ width: 200, background: 'transparent', border: 'none', fontWeight: 600, fontSize: 13 }} /* keep-inline */ /* keep-inline */ /* keep-inline */

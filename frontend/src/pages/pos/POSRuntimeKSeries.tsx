@@ -713,7 +713,7 @@ export default function POSRuntimeKSeries() {
                             ref={searchInputRef}
                             className="ks-search-input"
                             value={searchQuery}
-                            onChange={(e) = aria-label="Input field"> setSearchQuery(e.target.value)}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Search menu items..."
                             autoFocus
                         />

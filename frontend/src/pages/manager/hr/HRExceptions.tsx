@@ -39,7 +39,7 @@ export default function HRExceptions() {
                             <Button
                                 variant="outline"
                                 size="icon" aria-label="Action"
-                                onClick={() = aria-label="Action"> navigate('/manager/hr/summary')}
+                                onClick={() => navigate('/manager/hr/summary')}
                                 className="bg-card border-border rounded-xl"
                             >
                                 <ChevronLeft className="w-5 h-5 text-muted-foreground" />

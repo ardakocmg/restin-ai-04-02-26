@@ -321,7 +321,7 @@ export default function NutritionalCalculator() {
                                                 />
                                                 <span className="text-xs text-muted-foreground">{ri.unit}</span>
                                             </div>
-                                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() = aria-label="Action"> removeIngredient(idx)}>
+                                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => removeIngredient(idx)}>
                                                 <Trash2 className="h-3.5 w-3.5 text-red-400" />
                                             </Button>
                                         </div>

@@ -131,6 +131,8 @@ export default function RecipeManagement() {
         description: '',
         category: 'main',
         servings: 1,
+        prep_time_minutes: 0,
+        cook_time_minutes: 0,
         ingredients: [],
         instructions: []
       });
@@ -329,7 +331,7 @@ export default function RecipeManagement() {
                       €{ing.total_cost?.toFixed(2)}
                     </div>
                     <div className="col-span-1">
-                      <button onClick={() => handleRemoveIngredient(idx)} className="text-muted-foreground hover:text-red-500">
+                      <button onClick={() => handleRemoveIngredient(idx)} aria-label="Remove ingredient" className="text-muted-foreground hover:text-red-500">
                         <Trash2 className="w-3 h-3" />
                       </button>
                     </div>

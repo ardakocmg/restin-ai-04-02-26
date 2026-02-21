@@ -553,7 +553,7 @@ export default function Users() {
                   />
                   <Button type="button" variant="ghost" size="icon" aria-label="Action"
                     className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground"
-                    onClick={() = aria-label="Action"> setPwShowValue(!pwShowValue)}>
+                    onClick={() => setPwShowValue(!pwShowValue)}>
                     {pwShowValue ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                   </Button>
                 </div>

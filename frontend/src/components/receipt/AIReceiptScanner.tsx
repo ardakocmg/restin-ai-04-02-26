@@ -106,7 +106,7 @@ const isFileSupported = (file: File): boolean => {
 /** Helper to create File objects without TS7009 constructor errors */
 const createFile = (parts: BlobPart[], name: string, opts: FilePropertyBag): File => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const F = File as unknown;
+    const F = File as any;
     return new F(parts, name, opts) as File;
 };
 
@@ -201,7 +201,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
     const [analysisStep, setAnalysisStep] = useState(0);
     const [result, setResult] = useState<AIScanResult | null>(null);
     const [editedName, setEditedName] = useState('');
-    const [inputMethod, setInputMethod] = useState<Input aria-label="Input field"Method>('file');
+    const [inputMethod, setInputMethod] = useState<InputMethod>('file');
     const [urlInput, setUrlInput] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
     const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -345,7 +345,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
     if (!open) return null;
 
     /* ── Input Method Label ── */
-    const methodLabels: Record<Input aria-label="Input field"Method, string> = {
+    const methodLabels: Record<InputMethod, string> = {
         file: 'File Upload',
         clipboard: 'Clipboard Paste',
         camera: 'Camera Capture',
@@ -397,7 +397,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                 onDrop={handleDrop}
                                 onClick={() => fileInputRef.current?.click()}
                             >
-                                <input ref={fileInputRef} type="file" accept={ACCEPT_STRING} className="hidden" onChange={handleInputChange}  aria-label="Input field" />
+                                <input ref={fileInputRef} type="file" accept={ACCEPT_STRING} className="hidden" onChange={handleInputChange} aria-label="Input field" />
 
                                 <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-violet-500/20 to-blue-500/20 border border-white/5 flex items-center justify-center">
                                     <Upload className="w-7 h-7 text-violet-400" />
@@ -429,7 +429,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                     onClick={() => cameraInputRef.current?.click()}
                                     className="flex flex-col items-center gap-2 p-4 rounded-xl border border-white/5 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-white/10 transition-all"
                                 >
-                                    <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleCameraCapture}  aria-label="Input field" />
+                                    <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleCameraCapture} aria-label="Input field" />
                                     <Camera className="w-5 h-5 text-cyan-400" />
                                     <span className="text-xs text-zinc-400">Camera</span>
                                     <span className="text-[9px] text-zinc-600">Take photo</span>
@@ -493,7 +493,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                     <div className="flex-1 space-y-2">
                                         <input aria-label="Input"
                                             value={urlInput}
-                                            onChange={(e) = aria-label="Input field"> setUrlInput(e.target.value)}
+                                            onChange={(e) => setUrlInput(e.target.value)}
                                             placeholder="https://example.com/receipt.pdf or any receipt page URL"
                                             className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50"
                                             onKeyDown={(e) => e.key === 'Enter' && handleUrlSubmit()}
@@ -669,7 +669,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                         <label className="text-xs text-muted-foreground mb-1 block">Template Name</label>
                                         <input aria-label="Input"
                                             value={editedName}
-                                            onChange={(e) = aria-label="Input field"> setEditedName(e.target.value)}
+                                            onChange={(e) => setEditedName(e.target.value)}
                                             className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50"
                                         />
                                     </div>

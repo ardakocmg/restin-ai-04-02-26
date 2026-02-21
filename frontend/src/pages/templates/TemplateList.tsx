@@ -145,7 +145,7 @@ export default function TemplateList() {
 
                 <select aria-label="Input"
                     value={filterStatus}
-                    onChange={e = aria-label="Input field"> setFilterStatus(e.target.value)}
+                    onChange={e => setFilterStatus(e.target.value)}
                     className="px-3 py-2.5 rounded-xl bg-card border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-violet-500/40 appearance-none cursor-pointer"
                     title={t('Filter by status')}
                 >
@@ -157,7 +157,7 @@ export default function TemplateList() {
 
                 <select aria-label="Input"
                     value={filterType}
-                    onChange={e = aria-label="Input field"> setFilterType(e.target.value)}
+                    onChange={e => setFilterType(e.target.value)}
                     className="px-3 py-2.5 rounded-xl bg-card border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-violet-500/40 appearance-none cursor-pointer"
                     title={t('Filter by type')}
                 >

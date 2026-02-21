@@ -417,7 +417,7 @@ export default function AICopilot() {
                                     <label className="text-[10px] font-medium text-muted-foreground">Provider</label>
                                     <select aria-label="Input"
                                         value={aiConfig.provider}
-                                        onChange={e = aria-label="Input field"> setAiConfig(c => ({ ...c, provider: e.target.value }))}
+                                        onChange={e => setAiConfig(c => ({ ...c, provider: e.target.value }))}
                                         className="w-full mt-1 bg-muted border border-border rounded-md px-2 py-1.5 text-xs text-foreground"
                                     >
                                         <option value="google">Google Gemini</option>
@@ -428,7 +428,7 @@ export default function AICopilot() {
                                     <label className="text-[10px] font-medium text-muted-foreground">Model</label>
                                     <select aria-label="Input"
                                         value={aiConfig.model}
-                                        onChange={e = aria-label="Input field"> setAiConfig(c => ({ ...c, model: e.target.value }))}
+                                        onChange={e => setAiConfig(c => ({ ...c, model: e.target.value }))}
                                         className="w-full mt-1 bg-muted border border-border rounded-md px-2 py-1.5 text-xs text-foreground"
                                     >
                                         {aiConfig.provider === 'google' ? (
@@ -451,7 +451,7 @@ export default function AICopilot() {
                                     <input aria-label="Input"
                                         type="password"
                                         value={aiConfig.api_key}
-                                        onChange={e = aria-label="Input field"> setAiConfig(c => ({ ...c, api_key: e.target.value }))}
+                                        onChange={e => setAiConfig(c => ({ ...c, api_key: e.target.value }))}
                                         placeholder={aiConfig.api_key_masked || 'API anahtarı...'}
                                         className="w-full mt-1 bg-muted border border-border rounded-md px-2 py-1.5 text-xs text-foreground"
                                     />
@@ -597,7 +597,7 @@ export default function AICopilot() {
                         <textarea aria-label="Input"
                             ref={inputRef}
                             value={input}
-                            onChange={e = aria-label="Input field"> setInput(e.target.value)}
+                            onChange={e => setInput(e.target.value)}
                             onKeyDown={handleKeyDown}
                             placeholder="Bir soru sorun... (örn: 'Bugünkü satışlar nedir?')"
                             rows={1}

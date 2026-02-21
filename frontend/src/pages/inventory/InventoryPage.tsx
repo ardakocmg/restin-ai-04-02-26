@@ -108,7 +108,7 @@ export default function InventoryPage() {
             <label className="text-sm font-medium text-foreground mb-2 block">Status</label>
             <select aria-label="Input"
               value={filters.status || ''}
-              onChange={(e) = aria-label="Input field"> setFilters({ ...filters, status: e.target.value })}
+              onChange={(e) => setFilters({ ...filters, status: e.target.value })}
               className="w-full p-2 border rounded"
             >
               <option value="">All</option>
@@ -132,7 +132,7 @@ export default function InventoryPage() {
             <input aria-label="Input"
               type="checkbox"
               checked={filters.min_stock_only || false}
-              onChange={(e) = aria-label="Input field"> setFilters({ ...filters, min_stock_only: e.target.checked })}
+              onChange={(e) => setFilters({ ...filters, min_stock_only: e.target.checked })}
               className="h-5 w-5 mt-2"
             />
           </div>

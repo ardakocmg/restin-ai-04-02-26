@@ -24,7 +24,7 @@ export default function FilterPanel({
           <input aria-label="Input"
             type="checkbox"
             checked={isOpen}
-            onChange={(e) = aria-label="Input field"> e.stopPropagation()}
+            onChange={(e) => e.stopPropagation()}
             className="h-4 w-4 rounded border-gray-300"
           />
           <span>Filters</span>
@@ -46,7 +46,7 @@ export default function FilterPanel({
                   <input aria-label="Input"
                     type="checkbox"
                     checked={sectionStates[section.key] || false}
-                    onChange={() = aria-label="Input field"> onSectionToggle(section.key)}
+                    onChange={() => onSectionToggle(section.key)}
                     className="h-4 w-4 rounded border-gray-300"
                   />
                   <label className="text-sm font-medium text-slate-700">{section.label}</label>

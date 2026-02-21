@@ -437,7 +437,7 @@ export default function OrderAnywhereDashboard() {
                             <input aria-label="Input"
                                 type="number"
                                 value={config.estimated_prep_minutes}
-                                onChange={(e) = aria-label="Input field"> updateConfig('estimated_prep_minutes', parseInt(e.target.value) || 0)}
+                                onChange={(e) => updateConfig('estimated_prep_minutes', parseInt(e.target.value) || 0)}
                                 title="Estimated prep time in minutes"
                                 className="w-full h-10 bg-background border border-border rounded-lg text-foreground font-bold text-center outline-none focus:border-emerald-500"
                             />
@@ -450,7 +450,7 @@ export default function OrderAnywhereDashboard() {
                             <input aria-label="Input"
                                 type="number"
                                 value={(config.min_order_cents / 100).toFixed(2)}
-                                onChange={(e) = aria-label="Input field"> updateConfig('min_order_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
+                                onChange={(e) => updateConfig('min_order_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
                                 step="0.50"
                                 title="Minimum order amount"
                                 className="w-full h-10 bg-background border border-border rounded-lg text-foreground font-bold text-center outline-none focus:border-emerald-500"
@@ -463,7 +463,7 @@ export default function OrderAnywhereDashboard() {
                         <label className="text-[9px] font-black uppercase text-muted-foreground block mb-2">Welcome Message</label>
                         <input aria-label="Input"
                             value={config.custom_welcome_message}
-                            onChange={(e) = aria-label="Input field"> updateConfig('custom_welcome_message', e.target.value)}
+                            onChange={(e) => updateConfig('custom_welcome_message', e.target.value)}
                             placeholder="Welcome! Scan to order."
                             className="w-full h-10 bg-background border border-border rounded-lg text-foreground px-3 outline-none focus:border-emerald-500 text-sm"
                         />

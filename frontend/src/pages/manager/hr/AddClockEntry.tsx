@@ -232,7 +232,7 @@ export default function AddClockEntry() {
                 <Button
                     variant="ghost"
                     size="icon" aria-label="Action"
-                    onClick={() = aria-label="Action"> navigate('/manager/hr/clocking')}
+                    onClick={() => navigate('/manager/hr/clocking')}
                     className="text-muted-foreground hover:text-foreground hover:bg-white/5"
                     title="Back to Clocking Data"
                 >
@@ -268,7 +268,7 @@ export default function AddClockEntry() {
                                 <div className="relative">
                                     <select aria-label="Input"
                                         value={selectedEmployeeId}
-                                        onChange={(e) = aria-label="Input field"> setSelectedEmployeeId(e.target.value)}
+                                        onChange={(e) => setSelectedEmployeeId(e.target.value)}
                                         title="Select Employee"
                                         className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-sm text-secondary-foreground appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 outline-none transition-all"
                                     >
@@ -378,7 +378,7 @@ export default function AddClockEntry() {
                             </label>
                             <textarea aria-label="Input"
                                 value={reason}
-                                onChange={(e) = aria-label="Input field"> setReason(e.target.value)}
+                                onChange={(e) => setReason(e.target.value)}
                                 placeholder="e.g. Forgot to clock in, system was down, working remotely..."
                                 rows={3}
                                 className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-sm text-secondary-foreground placeholder:text-muted-foreground resize-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 outline-none transition-all"

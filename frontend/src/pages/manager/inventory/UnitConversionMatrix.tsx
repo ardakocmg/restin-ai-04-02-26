@@ -210,7 +210,7 @@ export default function UnitConversionMatrix() {
                                 </Select>
                             </div>
                             <Button variant="ghost" size="icon" aria-label="Action" className="h-12 w-12"
-                                onClick={() = aria-label="Action"> { setFromUnit(toUnit); setToUnit(fromUnit); }}>
+                                onClick={() => { setFromUnit(toUnit); setToUnit(fromUnit); }}>
                                 <ArrowRightLeft className="h-5 w-5" />
                             </Button>
                             <div className="flex-1">
@@ -313,7 +313,7 @@ export default function UnitConversionMatrix() {
                                         <ArrowRightLeft className="h-3 w-3 text-muted-foreground" />
                                         <span className="font-medium">{conv.factor} {conv.toUnit}</span>
                                     </div>
-                                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() = aria-label="Action"> removeCustom(conv.id)}>
+                                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => removeCustom(conv.id)}>
                                         <Trash2 className="h-3.5 w-3.5 text-red-400" />
                                     </Button>
                                 </div>

@@ -121,7 +121,7 @@ export default function ReservationModal({ open, onOpenChange, venueId, onCreate
                                 className="w-full bg-card border border-border rounded-md p-2 text-sm focus:outline-none focus:border-red-500/50"
                                 rows={3}
                                 value={formData.notes}
-                                onChange={e = aria-label="Input field"> setFormData({ ...formData, notes: e.target.value })}
+                                onChange={e => setFormData({ ...formData, notes: e.target.value })}
                                 placeholder="VIP, Allergy, etc..."
                             />
                         </div>

@@ -798,7 +798,7 @@ export default function HeyRin() {
                                         type="text"
                                         className="rin-text-input"
                                         value={textInput}
-                                        onChange={e = aria-label="Input field"> setTextInput(e.target.value)}
+                                        onChange={e => setTextInput(e.target.value)}
                                         placeholder="Ask Rin anything..."
                                     />
                                     <button type="submit" className="rin-send-btn" disabled={!textInput.trim()}

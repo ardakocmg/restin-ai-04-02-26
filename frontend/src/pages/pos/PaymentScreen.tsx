@@ -648,7 +648,7 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                                     <input aria-label="Input"
                                                         style={s.equalSplitInput}
                                                         value={equalSplitCount}
-                                                        onChange={e = aria-label="Input field"> setEqualSplitCount(Math.max(2, parseInt(e.target.value) || 2))}
+                                                        onChange={e => setEqualSplitCount(Math.max(2, parseInt(e.target.value) || 2))}
                                                         type="number"
                                                         min={2}
                                                     />

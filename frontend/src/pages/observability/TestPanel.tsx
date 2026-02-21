@@ -129,7 +129,7 @@ export default function TestPanel() {
                   minHeight: '120px'
                 }}
                 value={requestBody}
-                onChange={(e) = aria-label="Input field"> setRequestBody(e.target.value)}
+                onChange={(e) => setRequestBody(e.target.value)}
                 data-testid="testpanel-body-textarea"
               />
             </div>

@@ -890,7 +890,7 @@ export default function SupplierManagement() {
                                     <Input aria-label="Role" placeholder="Role" value={c.role} onChange={e => updateContact(i, 'role', e.target.value)} />
                                     <Input aria-label="Phone" placeholder="Phone" value={c.phone} onChange={e => updateContact(i, 'phone', e.target.value)} />
                                     <Input aria-label="Email" placeholder="Email" value={c.email} onChange={e => updateContact(i, 'email', e.target.value)} />
-                                    <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> removeContact(i)}>
+                                    <Button variant="ghost" size="icon" onClick={() => removeContact(i)}>
                                         <X className="h-4 w-4 text-red-400" />
                                     </Button>
                                 </div>
@@ -917,7 +917,7 @@ export default function SupplierManagement() {
                                             <SelectItem value="expired">Expired</SelectItem>
                                         </SelectContent>
                                     </Select>
-                                    <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> removeCert(i)}>
+                                    <Button variant="ghost" size="icon" onClick={() => removeCert(i)}>
                                         <X className="h-4 w-4 text-red-400" />
                                     </Button>
                                 </div>
@@ -942,7 +942,7 @@ export default function SupplierManagement() {
                                     </Select>
                                     <Input aria-label="Input field" type="time" value={s.cutoffTime} onChange={e => updateSchedule(i, 'cutoffTime', e.target.value)} />
                                     <Input aria-label="Lead days" type="number" placeholder="Lead days" value={s.leadTimeDays} onChange={e => updateSchedule(i, 'leadTimeDays', Number(e.target.value))} />
-                                    <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> removeSchedule(i)}>
+                                    <Button variant="ghost" size="icon" onClick={() => removeSchedule(i)}>
                                         <X className="h-4 w-4 text-red-400" />
                                     </Button>
                                 </div>

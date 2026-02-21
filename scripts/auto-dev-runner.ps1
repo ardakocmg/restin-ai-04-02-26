@@ -112,12 +112,12 @@ function Test-ServersAlive {
     $beAlive = $true
 
     if (-not $BackendOnly) {
-        if ($script:feProcess -eq $null -or $script:feProcess.HasExited) {
+        if ($null -eq $script:feProcess -or $script:feProcess.HasExited) {
             $feAlive = $false
         }
     }
     if (-not $FrontendOnly) {
-        if ($script:beProcess -eq $null -or $script:beProcess.HasExited) {
+        if ($null -eq $script:beProcess -or $script:beProcess.HasExited) {
             $beAlive = $false
         }
     }

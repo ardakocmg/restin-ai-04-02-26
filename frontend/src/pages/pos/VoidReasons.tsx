@@ -98,15 +98,15 @@ const VoidReasons: React.FC = () => {
                         <button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Reason *</label>
-                        <input className="pos-input" value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Customer Changed Mind" /></div>
+                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Customer Changed Mind" /></div>
                     <div className="pos-form-group"><label className="pos-form-label">Category</label>
-                        <select className="pos-select" value={editing.category} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, category: e.target.value as VoidReason['category'] } : null)} aria-label="Category">
+                        <select className="pos-select" value={editing.category} onChange={e => setEditing(p => p ? { ...p, category: e.target.value as VoidReason['category'] } : null)} aria-label="Category">
                             <option value="item">Item Level</option><option value="order">Order Level</option><option value="both">Both</option>
                         </select></div>
                     <div className="pos-flex pos-gap-16 pos-mb-16 pos-flex--wrap">
                         {([['requiresManager', 'Requires manager approval'], ['requiresNote', 'Requires note'], ['isActive', 'Active']] as const).map(([key, label]) =>
                             <label key={key} className="pos-toggle-label">
-                                <input type="checkbox" checked={editing[key]} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
+                                <input type="checkbox" checked={editing[key]} onChange={() => setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
                         )}
                     </div>
                     <div className="pos-modal-footer">

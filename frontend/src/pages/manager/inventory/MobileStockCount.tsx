@@ -340,7 +340,7 @@ export default function MobileStockCount() {
                                             variant="outline"
                                             size="icon" aria-label="Action"
                                             className="h-9 w-9 border-white/10"
-                                            onClick={() = aria-label="Action"> decrementCount(item._id)}
+                                            onClick={() => decrementCount(item._id)}
                                         >
                                             <Minus className="h-4 w-4" />
                                         </Button>
@@ -357,7 +357,7 @@ export default function MobileStockCount() {
                                             variant="outline"
                                             size="icon" aria-label="Action"
                                             className="h-9 w-9 border-white/10"
-                                            onClick={() = aria-label="Action"> incrementCount(item._id)}
+                                            onClick={() => incrementCount(item._id)}
                                         >
                                             <Plus className="h-4 w-4" />
                                         </Button>

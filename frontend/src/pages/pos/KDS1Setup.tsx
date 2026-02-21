@@ -296,7 +296,7 @@ const KDS1Setup: React.FC = () => {
                         </div>
                         <select aria-label="Input"
                             value={config.printSettings.printingProfile}
-                            onChange={e = aria-label="Input field"> setConfig(prev => ({ ...prev, printSettings: { ...prev.printSettings, printingProfile: e.target.value } }))}
+                            onChange={e => setConfig(prev => ({ ...prev, printSettings: { ...prev.printSettings, printingProfile: e.target.value } }))}
                             style={{ padding: '6px 12px', background: 'var(--bg-secondary, #09090b)', border: '1px solid var(--border-primary, #27272a)', borderRadius: 6, color: 'var(--text-primary, #fafafa)', fontSize: 13 }} /* keep-inline */ /* keep-inline */ /* keep-inline */
                             aria-label="Printing profile"
                         >

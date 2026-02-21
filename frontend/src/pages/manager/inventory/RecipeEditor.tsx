@@ -500,7 +500,7 @@ export default function RecipeEditor() {
                                                     />
                                                 </td>
                                                 <td className="py-2">
-                                                    <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100" onClick={() = aria-label="Action"> removeIngredient(idx)}>
+                                                    <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100" onClick={() => removeIngredient(idx)}>
                                                         <Trash2 className="h-4 w-4 text-red-500" />
                                                     </Button>
                                                 </td>
@@ -934,7 +934,7 @@ export default function RecipeEditor() {
                                             variant="destructive"
                                             size="icon" aria-label="Action"
                                             className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                                            onClick={() = aria-label="Action"> updateField('images', form.images.filter((_, i) => i !== idx))}
+                                            onClick={() => updateField('images', form.images.filter((_, i) => i !== idx))}
                                         >
                                             <X className="h-3 w-3" />
                                         </Button>

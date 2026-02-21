@@ -938,7 +938,7 @@ export default function RolesPermissions() {
                                     <input aria-label="Input"
                                         type="text"
                                         value={newRoleName}
-                                        onChange={e = aria-label="Input field"> setNewRoleName(e.target.value)}
+                                        onChange={e => setNewRoleName(e.target.value)}
                                         placeholder="e.g. Barista, Sommelier..."
                                         className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:border-indigo-500 placeholder-zinc-600"
                                         autoFocus
@@ -948,7 +948,7 @@ export default function RolesPermissions() {
                                     <label className="block text-xs font-medium text-muted-foreground mb-1.5">Category</label>
                                     <select aria-label="Input"
                                         value={newRoleCategory}
-                                        onChange={e = aria-label="Input field"> setNewRoleCategory(e.target.value)}
+                                        onChange={e => setNewRoleCategory(e.target.value)}
                                         className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:border-indigo-500"
                                     >
                                         {ROLE_CATEGORIES.filter(c => c !== "Super Admin").map(c => <option key={c} value={c}>{c}</option>)}
@@ -982,7 +982,7 @@ export default function RolesPermissions() {
                                         <label className="block text-xs font-medium text-muted-foreground mb-1.5">Clone Permissions From (optional)</label>
                                         <select aria-label="Input"
                                             value={cloneFrom}
-                                            onChange={e = aria-label="Input field"> setCloneFrom(e.target.value)}
+                                            onChange={e => setCloneFrom(e.target.value)}
                                             className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:border-indigo-500"
                                         >
                                             <option value="">Start from scratch</option>

@@ -402,7 +402,7 @@ export default function POSThemeBuilder() {
                         <input aria-label="Input"
                             type="text"
                             value={themeName}
-                            onChange={(e) = aria-label="Input field"> setThemeName(e.target.value)}
+                            onChange={(e) => setThemeName(e.target.value)}
                             className="bg-transparent text-sm font-semibold text-foreground border-none outline-none focus:bg-secondary rounded px-2 py-1 min-w-[200px]"
                             placeholder="Theme Name..."
                         />

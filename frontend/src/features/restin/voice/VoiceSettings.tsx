@@ -632,7 +632,7 @@ export default function VoiceSettings() {
                                         <div className="flex items-center gap-2">
                                             <span className="text-xs text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-1 rounded">{doc.status || 'Indexed'}</span>
                                             <Button size="icon" aria-label="Action" variant="ghost"
-                                                onClick={() = aria-label="Action"> deleteMutation.mutate(doc.id)}
+                                                onClick={() => deleteMutation.mutate(doc.id)}
                                                 className="h-7 w-7 text-muted-foreground hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <Trash2 className="w-3 h-3" />
                                             </Button>

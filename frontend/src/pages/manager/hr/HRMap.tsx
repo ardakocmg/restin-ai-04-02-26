@@ -58,7 +58,7 @@ export default function HRMap() {
                         <Button
                             variant="outline"
                             size="icon" aria-label="Action"
-                            onClick={() = aria-label="Action"> navigate('/manager/hr/summary')}
+                            onClick={() => navigate('/manager/hr/summary')}
                             className="bg-black/40 backdrop-blur-md border-border rounded-xl w-12 h-12"
                         >
                             <ChevronLeft className="w-5 h-5" />

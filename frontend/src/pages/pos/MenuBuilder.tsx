@@ -538,7 +538,7 @@ const MenuBuilder: React.FC = () => {
 
                         <div style={{ marginBottom: 12 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                             <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                            <input style={ip} value={editingButton.item.name} onChange={e = aria-label="Input field"> setEditingButton(prev => prev ? { ...prev, item: { ...prev.item, name: e.target.value } } : null)} />
+                            <input style={ip} value={editingButton.item.name} onChange={e => setEditingButton(prev => prev ? { ...prev, item: { ...prev.item, name: e.target.value } } : null)} />
                         </div>
 
                         <div style={{ marginBottom: 12 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
@@ -556,7 +556,7 @@ const MenuBuilder: React.FC = () => {
                         {editingButton.item.type === 'item' && (
                             <div style={{ marginBottom: 12 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Price (€)</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <input type="number" step="0.01" style={{ ...ip, width: 120 }} value={editingButton.item.price} onChange={e = aria-label="Input field"> setEditingButton(prev => prev ? { ...prev, item: { ...prev.item, price: parseFloat(e.target.value) || 0 } } : null)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                <input type="number" step="0.01" style={{ ...ip, width: 120 }} value={editingButton.item.price} onChange={e => setEditingButton(prev => prev ? { ...prev, item: { ...prev.item, price: parseFloat(e.target.value) || 0 } } : null)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                             </div>
                         )}
 

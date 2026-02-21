@@ -196,7 +196,7 @@ export default function RecipeManagementComplete() {
                     <Button
                       size="icon" aria-label="Action"
                       variant="outline"
-                      onClick={() = aria-label="Action"> setComponents(prev => prev.filter((_, i) => i !== idx))}
+                      onClick={() => setComponents(prev => prev.filter((_, i) => i !== idx))}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

@@ -336,7 +336,7 @@ export default function ErrorInbox() {
           className="w-full p-2 rounded-lg text-xs font-mono"
           style={{ backgroundColor: '#09090B', color: '#F8FAFC', border: '1px solid rgba(255,255,255,0.05)' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
           value={typeof value === 'string' ? value : JSON.stringify(value, null, 2)}
-          onChange={(e) = aria-label="Input field"> onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value)}
           data-testid={`retry - field - ${field.path} `}
         />
       );
