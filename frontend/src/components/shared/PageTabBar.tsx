@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * RoleRoute — Route-level role + auth-elevation guard
  *

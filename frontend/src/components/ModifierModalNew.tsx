@@ -1,25 +1,54 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { X, Plus, Minus, Check } from 'lucide-react';
 
+interface ModifierOption {
+  id: string;
+  name: string;
+  price_adjustment: number;
+}
+
+interface ModifierGroup {
+  id: string;
+  name: string;
+  required?: boolean;
+  multiple?: boolean;
+  options: ModifierOption[];
+}
+
+interface MenuItem {
+  id: string;
+  name: string;
+  price?: number;
+  [key: string]: unknown;
+}
+
+interface SelectedModifierItem {
+  group_id: string;
+  group_name: string;
+  option_id: string;
+  option_name: string;
+  price_adjustment: number;
+}
+
+interface ModifierModalProps {
+  item: MenuItem;
+  modifierGroups?: ModifierGroup[];
+  onAdd: (item: MenuItem & { quantity: number; modifiers: SelectedModifierItem[]; special_instructions: string; total: number }) => void;
+  onClose: () => void;
+}
+
 /**
  * ModifierModal - Dark Theme Modifier Selection Modal
- * 
- * @param {Object} props
- * @param {Object} props.item - Menu item object
- * @param {Array} props.modifierGroups - Modifier groups with options
- * @param {Function} props.onAdd - Callback when add to order clicked
- * @param {Function} props.onClose - Callback to close modal
  */
-export default function ModifierModal({ item, modifierGroups = [], onAdd, onClose }) {
+export default function ModifierModal({ item, modifierGroups = [], onAdd, onClose }: ModifierModalProps) {
   const [quantity, setQuantity] = useState(1);
-  const [selectedModifiers, setSelectedModifiers] = useState({});
+  const [selectedModifiers, setSelectedModifiers] = useState<Record<string, string[]>>({});
   const [specialInstructions, setSpecialInstructions] = useState('');
 
-  const handleModifierToggle = (groupId, optionId, isMultiple) => {
+  const handleModifierToggle = (groupId: string, optionId: string, isMultiple: boolean) => {
     setSelectedModifiers(prev => {
       const newSelection = { ...prev };
-      
+
       if (isMultiple) {
         // Checkbox behavior
         if (!newSelection[groupId]) {
@@ -34,14 +63,14 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
         // Radio behavior
         newSelection[groupId] = [optionId];
       }
-      
+
       return newSelection;
     });
   };
 
-  const calculateTotal = () => {
+  const calculateTotal = (): number => {
     let total = (item.price || 0) * quantity;
-    
+
     modifierGroups.forEach(group => {
       const selected = selectedModifiers[group.id] || [];
       selected.forEach(optionId => {
@@ -51,12 +80,12 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
         }
       });
     });
-    
+
     return total;
   };
 
   const handleAddToOrder = () => {
-    const modifiersArray = [];
+    const modifiersArray: SelectedModifierItem[] = [];
     modifierGroups.forEach(group => {
       const selected = selectedModifiers[group.id] || [];
       selected.forEach(optionId => {
@@ -72,7 +101,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
         }
       });
     });
-    
+
     onAdd({
       ...item,
       quantity,
@@ -85,7 +114,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/70 backdrop-blur-md"
         onClick={onClose}
       />
@@ -128,20 +157,19 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
                   </span>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 {group.options.map((option) => {
                   const isSelected = (selectedModifiers[group.id] || []).includes(option.id);
-                  
+
                   return (
                     <button
                       key={option.id}
                       onClick={() => handleModifierToggle(group.id, option.id, group.multiple)}
-                      className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all duration-200 ${
-                        isSelected
+                      className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all duration-200 ${isSelected
                           ? 'bg-red-950/30 border-red-500'
                           : 'bg-card/50 border-border hover:border-red-500/50'
-                      }`}
+                        }`}
                       style={
                         isSelected
                           ? { boxShadow: '0 0 16px rgba(229, 57, 53, 0.3)' }
@@ -149,12 +177,11 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
                       }
                     >
                       <div className="flex items-center gap-3">
-                        <div 
-                          className={`w-5 h-5 rounded flex items-center justify-center border-2 ${
-                            isSelected
+                        <div
+                          className={`w-5 h-5 rounded flex items-center justify-center border-2 ${isSelected
                               ? 'bg-red-500 border-red-500'
                               : 'border-white/30'
-                          }`}
+                            }`}
                         >
                           {isSelected && <Check className="w-3 h-3 text-foreground" />}
                         </div>

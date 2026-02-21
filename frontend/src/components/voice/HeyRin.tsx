@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
@@ -596,7 +595,6 @@ export default function HeyRin() {
                     drag
                     dragMomentum={false}
                     dragElastic={0.1}
-                    dragHandle=".rin-header"
                     style={{ touchAction: "none" }}
                 >
                     {/* Header */}

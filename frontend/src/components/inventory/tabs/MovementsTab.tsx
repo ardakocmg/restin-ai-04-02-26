@@ -1,11 +1,24 @@
-// @ts-nocheck
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowDown, ArrowUp, RefreshCw, AlertCircle } from 'lucide-react';
 
-export default function MovementsTab({ movements = [] }) {
-  const getActionIcon = (action) => {
+type MovementAction = 'IN' | 'OUT' | 'ADJUST' | 'WASTE';
+
+interface Movement {
+  action: MovementAction;
+  quantity: number;
+  reason?: string;
+  lot_number?: string;
+  created_at: string;
+}
+
+interface MovementsTabProps {
+  movements?: Movement[];
+}
+
+export default function MovementsTab({ movements = [] }: MovementsTabProps) {
+  const getActionIcon = (action: MovementAction) => {
     switch (action) {
       case 'IN': return <ArrowUp className="h-4 w-4 text-green-600" />;
       case 'OUT': return <ArrowDown className="h-4 w-4 text-red-600" />;
@@ -15,7 +28,7 @@ export default function MovementsTab({ movements = [] }) {
     }
   };
 
-  const getActionColor = (action) => {
+  const getActionColor = (action: MovementAction) => {
     switch (action) {
       case 'IN': return 'bg-green-100 text-green-700';
       case 'OUT': return 'bg-red-100 text-red-700';

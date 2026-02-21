@@ -1,26 +1,37 @@
-// @ts-nocheck
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '../ui/card';
 import { cn } from '../../lib/utils';
 import { Users, Timer, Receipt } from 'lucide-react';
 
-export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }) {
-    const containerRef = useRef(null);
-    const [draggingId, setDraggingId] = useState(null);
-    const [localTables, setLocalTables] = useState(tables);
+interface TableData {
+    id: string;
+    name: string;
+    status: 'FREE' | 'OCCUPIED' | 'BILL_PRINTED' | 'RESERVED';
+    shape?: 'CIRCLE' | 'RECTANGLE';
+    position?: { x: number; y: number };
+    width?: number;
+    height?: number;
+    seats?: number;
+    active_orders?: unknown[];
+}
+
+interface FloorPlanWidgetProps {
+    tables: TableData[];
+    onTableSelect: (table: TableData) => void;
+    onTableMove?: (tableId: string, position: { x: number; y: number }) => void;
+}
+
+export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }: FloorPlanWidgetProps) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [draggingId, setDraggingId] = useState<string | null>(null);
+    const [localTables, setLocalTables] = useState<TableData[]>(tables);
     const [offset, setOffset] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
         setLocalTables(tables);
     }, [tables]);
 
-    const handleDragStart = (e, table) => {
-        // Only allow editing mode drag if we implement an "Edit Layout" toggle. 
-        // For now, assuming fixed layout unless specific "Design Mode" requested.
-        // But user asked for "Visual Floor Plan", usually implies using it to SELECT tables.
-        // If user implies "Floor Plan Editor", that's admin side. This is POS Runtime.
-        // So usually tables are fixed in POS Runtime.
-        // I will implement "Drag" only if `onTableMove` is provided (Editor Mode).
+    const handleDragStart = (e: React.MouseEvent<HTMLDivElement>, table: TableData) => {
         if (!onTableMove) return;
 
         setDraggingId(table.id);
@@ -31,11 +42,11 @@ export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }) 
         });
     };
 
-    const handleDragEnd = (e) => {
+    const handleDragEnd = () => {
         setDraggingId(null);
     };
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (draggingId && onTableMove && containerRef.current) {
             const containerRect = containerRef.current.getBoundingClientRect();
             const x = e.clientX - containerRect.left - offset.x;
@@ -49,7 +60,7 @@ export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }) 
         }
     };
 
-    const getStatusColor = (status) => {
+    const getStatusColor = (status: string) => {
         switch (status) {
             case 'OCCUPIED': return 'bg-red-500/20 border-red-500 text-red-500 hover:bg-red-500/30';
             case 'BILL_PRINTED': return 'bg-yellow-500/20 border-yellow-500 text-yellow-500 hover:bg-yellow-500/30';
@@ -72,7 +83,7 @@ export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }) 
             />
 
             {localTables.map(table => {
-                const x = table.position?.x || (parseInt(table.id) * 100) % 800 + 50; // Fallback positions
+                const x = table.position?.x || (parseInt(table.id) * 100) % 800 + 50;
                 const y = table.position?.y || Math.floor((parseInt(table.id) * 100) / 800) * 100 + 50;
 
                 return (
@@ -81,13 +92,13 @@ export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }) 
                         className={cn(
                             "absolute cursor-pointer transition-colors duration-200 backdrop-blur-sm border-2 rounded-xl flex flex-col items-center justify-center shadow-lg select-none",
                             getStatusColor(table.status),
-                            table.shape === 'CIRCLE' ? 'rounded-full' : 'rounded-lg' // Support shapes
+                            table.shape === 'CIRCLE' ? 'rounded-full' : 'rounded-lg'
                         )}
                         style={{
                             left: x,
                             top: y,
-                            width: table.width || 120, // Default width
-                            height: table.height || 120, // Default height
+                            width: table.width || 120,
+                            height: table.height || 120,
                             zIndex: draggingId === table.id ? 50 : 1
                         }}
                         onMouseDown={(e) => handleDragStart(e, table)}

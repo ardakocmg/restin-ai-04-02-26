@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * PermissionGate — Declarative role-based UI gating
  * Wraps content that should only be visible to users with sufficient role.
@@ -22,6 +21,7 @@ import { ReactNode } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { ShieldOff } from 'lucide-react';
 import { logger } from '../../lib/logger';
+import { ROLE_HIERARCHY, hasRoleAccess } from '../../lib/roles';
 
 type RoleLevel = 'OWNER' | 'MANAGER' | 'STAFF' | 'PRODUCT_OWNER';
 
@@ -35,8 +35,6 @@ interface PermissionGateProps {
     /** If true, renders nothing (instead of "Access Denied") when unauthorized */
     silent?: boolean;
 }
-
-import { ROLE_HIERARCHY, hasRoleAccess } from '../../lib/roles';
 
 export default function PermissionGate({
     requiredRole,

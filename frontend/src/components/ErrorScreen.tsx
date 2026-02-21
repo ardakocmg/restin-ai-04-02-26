@@ -1,9 +1,13 @@
-// @ts-nocheck
 import React from "react";
 import { useUISettings } from "../context/UISettingsContext";
 import { useAuth } from "../context/AuthContext";
 
-export default function ErrorScreen({ error, onRetry }) {
+interface ErrorScreenProps {
+  error?: Error | string | null;
+  onRetry?: () => void;
+}
+
+export default function ErrorScreen({ error, onRetry }: ErrorScreenProps) {
   const { debugMode, errorCopy } = useUISettings();
   const { user } = useAuth();
 
@@ -12,8 +16,8 @@ export default function ErrorScreen({ error, onRetry }) {
 
   const title = errorCopy.genericTitle;
   let body = errorCopy.staffBody;
-  
-  if (role === "kitchen" || role === "head_chef" || role === "expo") {
+  const roleStr = String(role);
+  if (roleStr === "kitchen" || roleStr === "head_chef" || roleStr === "expo") {
     body = errorCopy.kitchenBody;
   }
   if (isAdmin) {
@@ -54,7 +58,7 @@ export default function ErrorScreen({ error, onRetry }) {
           <details className="mt-4 text-xs text-muted-foreground">
             <summary className="cursor-pointer hover:text-foreground">Error details (Admin Only)</summary>
             <pre className="mt-2 whitespace-pre-wrap bg-secondary p-3 rounded">
-              {String(error?.stack || error?.message || error)}
+              {String(error instanceof Error ? (error.stack || error.message) : (error || 'Unknown error'))}
             </pre>
           </details>
         )}

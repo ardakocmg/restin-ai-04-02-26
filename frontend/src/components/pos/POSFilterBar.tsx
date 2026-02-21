@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -6,14 +5,18 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, isSameDay } from 'date-fns';
 import { Calendar as CalendarIcon, Clock, Settings, CalendarClock, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { usePOSFilters } from '@/context/POSFilterContext';
+import { usePOSFilters, type ShiftType } from '@/context/POSFilterContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-export default function POSFilterBar({ onSettingsClick }) {
+interface POSFilterBarProps {
+    onSettingsClick?: () => void;
+}
+
+export default function POSFilterBar({ onSettingsClick }: POSFilterBarProps) {
     const { filters, updateFilters } = usePOSFilters();
 
-    const handleQuickSelect = (type) => {
+    const handleQuickSelect = (type: string) => {
         const today = new Date();
         let range = { from: today, to: today };
 
@@ -31,15 +34,15 @@ export default function POSFilterBar({ onSettingsClick }) {
         updateFilters({ dateRange: range, activeShift: null });
     };
 
-    const applyShift = (shift) => {
-        const shifts = {
+    const applyShift = (shift: ShiftType) => {
+        const shifts: Record<string, [number, number]> = {
             breakfast: [9, 12],
             lunch: [12, 16],
             dinner: [19, 23]
         };
         updateFilters({
             activeShift: filters.activeShift === shift ? null : shift,
-            timeRange: shifts[shift] || [0, 23]
+            timeRange: (shift ? shifts[shift] : undefined) || [0, 23] as [number, number]
         });
     };
 
@@ -63,7 +66,7 @@ export default function POSFilterBar({ onSettingsClick }) {
                     {['Breakfast', 'Lunch', 'Dinner'].map((shift) => (
                         <button
                             key={shift}
-                            onClick={() => applyShift(shift.toLowerCase())}
+                            onClick={() => applyShift(shift.toLowerCase() as ShiftType)}
                             className={cn(
                                 "px-4 py-1.5 text-xs font-semibold rounded-md transition-all",
                                 filters.activeShift === shift.toLowerCase()

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,12 +23,18 @@ const EU_ALLERGENS = [
     { key: 'sulphites', label: 'Sulphur Dioxide', icon: '🟣' },
 ];
 
-export default function AllergensTab({ data, sku, onSave }) {
+interface AllergensTabProps {
+    data?: Record<string, unknown>;
+    sku?: { allergens?: string[];[key: string]: unknown };
+    onSave?: (updates: { allergens: string[] }) => void;
+}
+
+export default function AllergensTab({ data: _data, sku, onSave }: AllergensTabProps) {
     const existingAllergens = sku?.allergens || [];
-    const [allergens, setAllergens] = useState(existingAllergens);
+    const [allergens, setAllergens] = useState<string[]>(existingAllergens);
     const [hasChanges, setHasChanges] = useState(false);
 
-    const toggleAllergen = (key) => {
+    const toggleAllergen = (key: string) => {
         setAllergens(prev => {
             const next = prev.includes(key) ? prev.filter(a => a !== key) : [...prev, key];
             setHasChanges(true);

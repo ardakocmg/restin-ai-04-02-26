@@ -1,27 +1,61 @@
-// @ts-nocheck
 /**
  * V3: Permissioned Table Component
  * Server-authoritative column visibility - frontend only renders what backend allows
  */
 import { useState, useEffect } from "react";
 import api from "../lib/api";
+import { logger } from "../lib/logger";
 import { toast } from "sonner";
-import { Badge } from "./ui/badge";
-import { Loader2, AlertTriangle, ShieldOff } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, ShieldOff, AlertTriangle } from "lucide-react";
 
-export default function PermissionedTable({ 
-  venueId, 
-  tableKey, 
-  dataEndpoint, 
+interface TableColumn {
+  key: string;
+  label: string;
+  type?: string;
+}
+
+interface TableSchema {
+  columns: TableColumn[];
+  currency?: string;
+}
+
+interface TableRow {
+  id?: string;
+  [key: string]: unknown;
+}
+
+interface TableMeta {
+  count?: number;
+  [key: string]: unknown;
+}
+
+interface SortConfig {
+  key: string | null;
+  direction: string;
+}
+
+interface PermissionedTableProps {
+  venueId: string;
+  tableKey: string;
+  dataEndpoint: string;
+  onRowClick?: (row: TableRow) => void;
+  className?: string;
+}
+
+export default function PermissionedTable({
+  venueId,
+  tableKey,
+  dataEndpoint,
   onRowClick,
-  className = "" 
-}) {
+  className = ""
+}: PermissionedTableProps) {
   const [loading, setLoading] = useState(true);
   const [forbidden, setForbidden] = useState(false);
-  const [schema, setSchema] = useState(null);
-  const [rows, setRows] = useState([]);
-  const [meta, setMeta] = useState({});
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const [schema, setSchema] = useState<TableSchema | null>(null);
+  const [rows, setRows] = useState<TableRow[]>([]);
+  const [meta, setMeta] = useState<TableMeta>({});
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "asc" });
 
   useEffect(() => {
     loadData();
@@ -30,7 +64,7 @@ export default function PermissionedTable({
   const loadData = async () => {
     setLoading(true);
     setForbidden(false);
-    
+
     try {
       // Step 1: Fetch schema (server decides what columns are allowed)
       const schemaRes = await api.get(`/venues/${venueId}/ui/table-schema?table=${tableKey}`);
@@ -40,10 +74,12 @@ export default function PermissionedTable({
       const dataRes = await api.get(dataEndpoint);
       setRows(dataRes.data.rows || []);
       setMeta(dataRes.data.meta || {});
-    } catch (error: any) {
-      console.error("PermissionedTable error:", error);
-      
-      if (error.response?.status === 403) {
+    } catch (err: unknown) {
+      const error = err as Record<string, unknown>;
+      logger.error("PermissionedTable error:", error);
+
+      const response = error.response as Record<string, unknown> | undefined;
+      if (response?.status === 403) {
         setForbidden(true);
       } else {
         toast.error("Failed to load data");
@@ -53,7 +89,7 @@ export default function PermissionedTable({
     }
   };
 
-  const handleSort = (columnKey) => {
+  const handleSort = (columnKey: string) => {
     let direction = "asc";
     if (sortConfig.key === columnKey && sortConfig.direction === "asc") {
       direction = "desc";
@@ -63,36 +99,36 @@ export default function PermissionedTable({
 
   const sortedRows = [...rows].sort((a, b) => {
     if (!sortConfig.key) return 0;
-    
+
     const aVal = a[sortConfig.key];
     const bVal = b[sortConfig.key];
-    
+
     if (aVal === bVal) return 0;
     if (aVal == null) return 1;
     if (bVal == null) return -1;
-    
+
     const comparison = aVal > bVal ? 1 : -1;
     return sortConfig.direction === "asc" ? comparison : -comparison;
   });
 
-  const formatValue = (value, type, currency = "EUR") => {
+  const formatValue = (value: unknown, type?: string, currency = "EUR"): React.ReactNode => {
     if (value == null || value === "") return "-";
-    
+
     switch (type) {
       case "money":
-        return `${currency === "EUR" ? "€" : "$"}${parseFloat(value).toFixed(2)}`;
+        return `${currency === "EUR" ? "€" : "$"}${parseFloat(String(value)).toFixed(2)}`;
       case "number":
-        return parseFloat(value).toFixed(0);
+        return parseFloat(String(value)).toFixed(0);
       case "datetime":
-        return new Date(value).toLocaleString();
+        return new Date(String(value)).toLocaleString();
       case "badge":
         return (
           <Badge className="bg-zinc-700 text-foreground border-zinc-600">
-            {value}
+            {String(value)}
           </Badge>
         );
       default:
-        return value;
+        return String(value);
     }
   };
 
@@ -172,7 +208,7 @@ export default function PermissionedTable({
           </tbody>
         </table>
       </div>
-      
+
       {/* Footer */}
       <div className="px-4 py-3 bg-secondary/50 border-t border-border text-xs text-muted-foreground">
         Showing {rows.length} {rows.length === 1 ? "row" : "rows"}

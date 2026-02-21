@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -17,12 +16,18 @@ const NUTRITION_FIELDS = [
     { key: 'salt', label: 'Salt', unit: 'g', group: 'salt' },
 ];
 
-export default function NutritionTab({ data, sku, onSave }) {
-    const existingNutrition = sku?.nutrition || {};
-    const [nutrition, setNutrition] = useState(existingNutrition);
+interface NutritionTabProps {
+    data?: Record<string, unknown>;
+    sku?: { nutrition?: Record<string, number | null>;[key: string]: unknown };
+    onSave?: (updates: { nutrition: Record<string, number | null> }) => void;
+}
+
+export default function NutritionTab({ data: _data, sku, onSave }: NutritionTabProps) {
+    const existingNutrition: Record<string, number | null> = (sku?.nutrition as Record<string, number | null>) || {};
+    const [nutrition, setNutrition] = useState<Record<string, number | null>>(existingNutrition);
     const [hasChanges, setHasChanges] = useState(false);
 
-    const handleChange = (key, value) => {
+    const handleChange = (key: string, value: string) => {
         setNutrition(prev => ({
             ...prev,
             [key]: value === '' ? null : parseFloat(value)
@@ -37,7 +42,7 @@ export default function NutritionTab({ data, sku, onSave }) {
         }
     };
 
-    const hasAnyValues = Object.values(nutrition).some(v => v != null && v !== '');
+    const hasAnyValues = Object.values(nutrition).some(v => v != null);
 
     return (
         <div className="space-y-4">

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
 import { Button } from "./ui/button";
@@ -7,11 +6,49 @@ import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { ScrollArea } from "./ui/scroll-area";
 import api from "../lib/api";
+import { logger } from "../lib/logger";
 import { Loader2 } from "lucide-react";
 
-export default function ModifierDialog({ item, open, onClose, onConfirm }) {
-  const [modifierGroups, setModifierGroups] = useState([]);
-  const [selections, setSelections] = useState({});
+interface ModifierOption {
+  id: string;
+  name: string;
+  price_adjustment: number;
+  is_default?: boolean;
+}
+
+interface ModifierGroup {
+  id: string;
+  name: string;
+  selection_type: 'single' | 'multiple';
+  required?: boolean;
+  options: ModifierOption[];
+}
+
+interface MenuItem {
+  id: string;
+  name: string;
+  price?: number;
+  [key: string]: unknown;
+}
+
+interface SelectedModifier {
+  group_id: string;
+  group_name: string;
+  option_id: string;
+  name: string;
+  price_adjustment: number;
+}
+
+interface ModifierDialogProps {
+  item: MenuItem | null;
+  open: boolean;
+  onClose: () => void;
+  onConfirm: (item: Record<string, unknown> & { modifiers: unknown[]; final_price: number }) => void;
+}
+
+export default function ModifierDialog({ item, open, onClose, onConfirm }: ModifierDialogProps) {
+  const [modifierGroups, setModifierGroups] = useState<ModifierGroup[]>([]);
+  const [selections, setSelections] = useState<Record<string, string | string[]>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,12 +60,12 @@ export default function ModifierDialog({ item, open, onClose, onConfirm }) {
   const loadModifiers = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/menu/items/${item.id}/modifiers`);
+      const response = await api.get(`/menu/items/${item!.id}/modifiers`);
       setModifierGroups(response.data);
-      
+
       // Set default selections
-      const defaults = {};
-      response.data.forEach(group => {
+      const defaults: Record<string, string | string[]> = {};
+      response.data.forEach((group: ModifierGroup) => {
         if (group.selection_type === 'single') {
           const defaultOption = group.options.find(opt => opt.is_default);
           if (defaultOption) {
@@ -39,19 +76,19 @@ export default function ModifierDialog({ item, open, onClose, onConfirm }) {
         }
       });
       setSelections(defaults);
-    } catch (error: any) {
-      console.error('Failed to load modifiers:', error);
+    } catch (err: unknown) {
+      logger.error('Failed to load modifiers:', err as Record<string, unknown>);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSingleSelect = (groupId, optionId) => {
+  const handleSingleSelect = (groupId: string, optionId: string) => {
     setSelections({ ...selections, [groupId]: optionId });
   };
 
-  const handleMultiSelect = (groupId, optionId, checked) => {
-    const current = selections[groupId] || [];
+  const handleMultiSelect = (groupId: string, optionId: string, checked: boolean | string) => {
+    const current = (selections[groupId] || []) as string[];
     if (checked) {
       setSelections({ ...selections, [groupId]: [...current, optionId] });
     } else {
@@ -59,16 +96,16 @@ export default function ModifierDialog({ item, open, onClose, onConfirm }) {
     }
   };
 
-  const calculateTotal = () => {
+  const calculateTotal = (): number => {
     if (!item) return 0;
     let adjustment = 0;
     modifierGroups.forEach(group => {
       if (group.selection_type === 'single') {
-        const optionId = selections[group.id];
+        const optionId = selections[group.id] as string;
         const option = group.options.find(opt => opt.id === optionId);
         if (option) adjustment += option.price_adjustment;
       } else {
-        const optionIds = selections[group.id] || [];
+        const optionIds = (selections[group.id] || []) as string[];
         optionIds.forEach(id => {
           const option = group.options.find(opt => opt.id === id);
           if (option) adjustment += option.price_adjustment;
@@ -79,10 +116,10 @@ export default function ModifierDialog({ item, open, onClose, onConfirm }) {
   };
 
   const handleConfirm = () => {
-    const selectedModifiers = [];
+    const selectedModifiers: SelectedModifier[] = [];
     modifierGroups.forEach(group => {
       if (group.selection_type === 'single') {
-        const optionId = selections[group.id];
+        const optionId = selections[group.id] as string;
         const option = group.options.find(opt => opt.id === optionId);
         if (option) {
           selectedModifiers.push({
@@ -94,7 +131,7 @@ export default function ModifierDialog({ item, open, onClose, onConfirm }) {
           });
         }
       } else {
-        const optionIds = selections[group.id] || [];
+        const optionIds = (selections[group.id] || []) as string[];
         optionIds.forEach(id => {
           const option = group.options.find(opt => opt.id === id);
           if (option) {
@@ -109,7 +146,7 @@ export default function ModifierDialog({ item, open, onClose, onConfirm }) {
         });
       }
     });
-    
+
     onConfirm({
       ...item,
       modifiers: selectedModifiers,
@@ -146,10 +183,10 @@ export default function ModifierDialog({ item, open, onClose, onConfirm }) {
                     {group.name}
                     {group.required && <span className="text-red-400 ml-1">*</span>}
                   </Label>
-                  
+
                   {group.selection_type === 'single' ? (
                     <RadioGroup
-                      value={selections[group.id]}
+                      value={selections[group.id] as string}
                       onValueChange={(value) => handleSingleSelect(group.id, value)}
                     >
                       <div className="space-y-2">

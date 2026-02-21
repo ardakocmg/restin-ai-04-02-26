@@ -1,20 +1,29 @@
-// @ts-nocheck
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { Button } from './ui/button';
+import { logger } from '../lib/logger';
 
-class ErrorBoundary extends React.Component {
-  constructor(props) {
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error, errorInfo) {
-    console.error('ErrorBoundary caught:', error, errorInfo);
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+    logger.error('ErrorBoundary caught:', { error: error.message, componentStack: errorInfo.componentStack });
   }
 
   render() {
@@ -36,7 +45,7 @@ class ErrorBoundary extends React.Component {
               </Button>
               <Button
                 onClick={() => {
-                  this.setState({ hasError: false });
+                  this.setState({ hasError: false, error: null });
                   window.history.back();
                 }}
                 variant="outline"
@@ -46,7 +55,7 @@ class ErrorBoundary extends React.Component {
               </Button>
               <div className="flex gap-3">
                 <Button
-                  onClick={() => this.setState({ hasError: false })}
+                  onClick={() => this.setState({ hasError: false, error: null })}
                   variant="outline"
                   className="flex-1 border-border text-secondary-foreground hover:bg-secondary hover:text-foreground py-3 text-sm"
                 >

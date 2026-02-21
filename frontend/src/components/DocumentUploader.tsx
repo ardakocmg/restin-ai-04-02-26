@@ -1,27 +1,34 @@
-// @ts-nocheck
 /**
  * Shared Document Uploader Component
  * Reusable across all modules
  */
 import { useState } from "react";
-import DocumentService from "../services/DocumentService";
+import DocumentService, { type DocumentModule } from "../services/DocumentService";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Upload, Loader2, FileText, X } from "lucide-react";
+import { logger } from "../lib/logger";
 
-export default function DocumentUploader({ 
-  venueId, 
-  module, 
+interface DocumentUploaderProps {
+  venueId: string;
+  module: DocumentModule;
+  onUploadComplete?: (document: unknown) => void;
+  className?: string;
+}
+
+export default function DocumentUploader({
+  venueId,
+  module,
   onUploadComplete,
-  className = "" 
-}) {
+  className = ""
+}: DocumentUploaderProps) {
   const [loading, setLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleFileSelect = (e) => {
-    const file = e.target.files[0];
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
-    
+
     // Validate file type
     const allowedTypes = [
       "application/pdf",
@@ -30,18 +37,18 @@ export default function DocumentUploader({
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ];
-    
+
     if (!allowedTypes.includes(file.type)) {
       toast.error("Unsupported file type. Please upload PDF, Image, or Office document.");
       return;
     }
-    
+
     setSelectedFile(file);
   };
 
   const handleUpload = async () => {
     if (!selectedFile) return;
-    
+
     setLoading(true);
     try {
       const result = await DocumentService.upload({
@@ -49,16 +56,20 @@ export default function DocumentUploader({
         module,
         file: selectedFile
       });
-      
+
       toast.success("Document uploaded successfully");
       setSelectedFile(null);
-      
+
       if (onUploadComplete) {
         onUploadComplete(result.document);
       }
-    } catch (error: any) {
-      console.error("Upload failed:", error);
-      toast.error(error.response?.data?.detail?.message || "Upload failed");
+    } catch (err: unknown) {
+      const error = err as Record<string, unknown>;
+      logger.error("Upload failed:", error);
+      const response = error.response as Record<string, unknown> | undefined;
+      const data = response?.data as Record<string, unknown> | undefined;
+      const detail = data?.detail as Record<string, unknown> | undefined;
+      toast.error((detail?.message as string) || "Upload failed");
     } finally {
       setLoading(false);
     }

@@ -136,7 +136,7 @@ export interface POSLayoutProps {
     onLoadCategoryItems: (categoryId: string) => void;
     onSelectTable: (table: POSTable) => void;
     onAddItemToOrder: (item: POSMenuItem) => void;
-    onConfirmItemWithModifiers: (item: POSMenuItem, modifiers: unknown[]) => void;
+    onConfirmItemWithModifiers: (item: POSMenuItem & { modifiers: unknown[]; final_price: number }) => void;
     onUpdateItemQuantity: (index: number, delta: number) => void;
     onRemoveItem: (index: number) => void;
     onSendOrder: () => void;

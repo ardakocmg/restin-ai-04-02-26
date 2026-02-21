@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import {
   Table,
@@ -31,21 +30,49 @@ import {
   SelectValue,
 } from '../ui/select';
 
+interface DataListColumn {
+  key: string;
+  label: string;
+  sortable?: boolean;
+  className?: string;
+  cellClassName?: string;
+  render?: (value: unknown, item: DataListItem) => React.ReactNode;
+}
+
+interface DataListItem {
+  id?: string;
+  [key: string]: unknown;
+}
+
+interface PaginationState {
+  page: number;
+  pageSize: number;
+  total: number;
+}
+
+interface SortState {
+  key: string | null;
+  direction: string | null;
+}
+
+interface DataListProps {
+  columns?: DataListColumn[];
+  data?: DataListItem[];
+  loading?: boolean;
+  pagination?: PaginationState;
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (size: number) => void;
+  onSort?: (key: string, direction: string | null) => void;
+  onRowClick?: (item: DataListItem) => void;
+  density?: 'comfortable' | 'compact';
+  emptyMessage?: string;
+  cardRender?: (item: DataListItem) => React.ReactNode;
+  selectedIds?: string[];
+  onSelect?: (ids: string[]) => void;
+}
+
 /**
  * DataList - Responsive table/cards component with server-side pagination and sorting
- * 
- * Props:
- * - columns: Array of { key, label, sortable, render? }
- * - data: Array of items
- * - loading: boolean
- * - pagination: { page, pageSize, total }
- * - onPageChange: (page) => void
- * - onPageSizeChange: (size) => void
- * - onSort: (key, direction) => void
- * - onRowClick: (item) => void
- * - density: 'comfortable' | 'compact' (user preference)
- * - emptyMessage: string
- * - cardRender: (item) => React.Node (for mobile card view)
  */
 export default function DataList({
   columns = [],
@@ -61,14 +88,14 @@ export default function DataList({
   cardRender,
   selectedIds = [],
   onSelect
-}) {
-  const [viewMode, setViewMode] = useState('table'); // 'table' or 'cards'
-  const [sortState, setSortState] = useState({ key: null, direction: null });
+}: DataListProps) {
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
+  const [sortState, setSortState] = useState<SortState>({ key: null, direction: null });
 
-  const handleSort = (key) => {
+  const handleSort = (key: string) => {
     if (!onSort) return;
 
-    let newDirection = 'asc';
+    let newDirection: string | null = 'asc';
     if (sortState.key === key) {
       if (sortState.direction === 'asc') newDirection = 'desc';
       else if (sortState.direction === 'desc') newDirection = null;
@@ -78,7 +105,7 @@ export default function DataList({
     onSort(key, newDirection);
   };
 
-  const getSortIcon = (key) => {
+  const getSortIcon = (key: string) => {
     if (sortState.key !== key) return <ArrowUpDown className="h-4 w-4" />;
     if (sortState.direction === 'asc') return <ArrowUp className="h-4 w-4" />;
     if (sortState.direction === 'desc') return <ArrowDown className="h-4 w-4" />;
@@ -245,7 +272,7 @@ export default function DataList({
                   <TableCell key={column.key} className={column.cellClassName}>
                     {column.render
                       ? column.render(item[column.key], item)
-                      : item[column.key]}
+                      : item[column.key] as React.ReactNode}
                   </TableCell>
                 ))}
               </TableRow>

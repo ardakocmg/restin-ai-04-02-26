@@ -1,9 +1,9 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import api from '../../../lib/api';
 import { toast } from 'sonner';
-import { Plus, Trash2, Search, Building2, Code, FileText, Loader2 } from 'lucide-react';
+import { logger } from '../../../lib/logger';
+import { Plus, Trash2, Search, Building2, Code, FileText, Loader2, type LucideIcon } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import {
@@ -29,9 +29,23 @@ import {
  * @param {string} description - Helper text
  * @param {string} icon - Lucide icon name (optional)
  */
-export default function GenericSetupPage({ title, type, description, icon: Icon = Building2 }) {
-    const { user } = useAuth();
-    const [items, setItems] = useState([]);
+interface DictionaryItem {
+    id: string;
+    name?: string;
+    code?: string;
+    description?: string;
+}
+
+interface GenericSetupPageProps {
+    title: string;
+    type: string;
+    description: string;
+    icon?: LucideIcon;
+}
+
+export default function GenericSetupPage({ title, type, description, icon: Icon = Building2 }: GenericSetupPageProps) {
+    const { user: _user } = useAuth();
+    const [items, setItems] = useState<DictionaryItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
     const [isAddOpen, setIsAddOpen] = useState(false);
@@ -52,15 +66,16 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
                 params: { venue_id: venueId }
             });
             setItems(response.data || []);
-        } catch (error: any) {
-            console.error(`Failed to load ${type}:`, error);
+        } catch (err: unknown) {
+            const error = err as Record<string, unknown>;
+            logger.error(`Failed to load ${type}:`, error);
             toast.error(`Failed to load ${title}`);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleCreate = async (e) => {
+    const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             setSubmitting(true);
@@ -75,15 +90,18 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
             setIsAddOpen(false);
             setFormData({ name: "", code: "", description: "" });
             loadData();
-        } catch (error: any) {
-            console.error("Create failed:", error);
-            toast.error(error.response?.data?.detail || "Failed to create item");
+        } catch (err: unknown) {
+            const error = err as Record<string, unknown>;
+            logger.error("Create failed:", error);
+            const response = error.response as Record<string, unknown> | undefined;
+            const data = response?.data as Record<string, unknown> | undefined;
+            toast.error((data?.detail as string) || "Failed to create item");
         } finally {
             setSubmitting(false);
         }
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this item?")) return;
 
         try {
@@ -93,8 +111,8 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
             });
             toast.success("Item deleted");
             loadData();
-        } catch (error: any) {
-            console.error("Delete failed:", error);
+        } catch (err: unknown) {
+            logger.error("Delete failed:", err as Record<string, unknown>);
             toast.error("Failed to delete item");
         }
     };
