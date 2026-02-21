@@ -18,8 +18,8 @@ import api from '../../../lib/api';
  * Toggle POS into a self-service guest-facing kiosk mode.
  */
 export default function KioskModePage() {
-    const { currentVenue } = useVenue();
-    const venueId = currentVenue?.id || localStorage.getItem('currentVenueId') || 'default';
+    const { activeVenue } = useVenue();
+    const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
 
     const [config, setConfig] = useState({

@@ -49,7 +49,7 @@ export default function ShiftsPage() {
   const [loading, setLoading] = useState(true);
   const [shifts, setShifts] = useState([]);
 
-  const venueId = user?.venueId || user?.venue_id;
+  const venueId = user?.venueId ;
   const access = getAccess('shifts');
 
   useEffect(() => {

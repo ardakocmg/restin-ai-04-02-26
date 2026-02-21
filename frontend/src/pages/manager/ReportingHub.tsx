@@ -31,7 +31,7 @@ export default function ReportingHub() {
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<ReportResult | null>(null);
 
-  const venueId = user?.venueId || user?.venue_id;
+  const venueId = user?.venueId ;
 
   useEffect(() => {
     loadReportDefs();

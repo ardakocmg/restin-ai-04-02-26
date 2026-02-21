@@ -16,7 +16,7 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function ExpenseManagement() {
   const { user, isManager, isOwner } = useAuth();
-  useAuditLog('EXPENSE_MGMT_VIEWED', { resource: 'expense-management' });
+  const { logAction } = useAuditLog();
   const [claims, setClaims] = useState([]);
   const [loading, setLoading] = useState(true);
 

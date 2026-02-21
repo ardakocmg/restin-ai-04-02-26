@@ -18,7 +18,7 @@ const CHANGE_TYPES = ['Added', 'Changed', 'Fixed', 'Removed'];
 
 export default function UpdatesPage() {
   const { user } = useAuth();
-  useAuditLog('UPDATES_VIEWED', { resource: 'updates-page' });
+  const { logAction } = useAuditLog();
   const [changes, setChanges] = useState([]);
   const [releases, setReleases] = useState([]);
   const [loadingChanges, setLoadingChanges] = useState(true);

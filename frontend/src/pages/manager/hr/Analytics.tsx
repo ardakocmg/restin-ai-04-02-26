@@ -22,7 +22,7 @@ export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [analytics, setAnalytics] = useState(null);
   
-  const venueId = user?.venueId || user?.venue_id;
+  const venueId = user?.venueId ;
   const access = getAccess('analytics');
 
   useEffect(() => {

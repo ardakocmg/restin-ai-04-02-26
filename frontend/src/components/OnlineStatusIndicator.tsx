@@ -30,7 +30,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
     resilienceManager.init();
 
     // Subscribe to resilience status
-    const unsubscribe = resilienceManager.onStatusChange((newStatus) => {
+    const unsubscribe = resilienceManager.onStatusChange((newStatus: any) => {
       setStatus(newStatus);
     });
 

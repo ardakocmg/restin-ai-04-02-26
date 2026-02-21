@@ -15,7 +15,7 @@ export default function FinanceDashboard() {
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState(null);
 
-  const venueId = user?.venueId || user?.venue_id || localStorage.getItem('restin_venue');
+  const venueId = user?.venueId  || localStorage.getItem('restin_venue');
 
   useEffect(() => {
     loadSummary();

@@ -16,7 +16,7 @@ import PermissionGate from '@/components/shared/PermissionGate';
 import { useAuditLog } from '@/hooks/useAuditLog';
 export default function AccountingMalta() {
   const { activeVenue } = useVenue();
-  useAuditLog('ACCOUNTING_BRIDGE_VIEWED', { resource: 'accounting-malta' });
+  const { logAction } = useAuditLog();
   const [loading, setLoading] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [target, setTarget] = useState('xero');

@@ -14,7 +14,7 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function PerformanceManagement() {
   const { user, isManager, isOwner } = useAuth();
-  useAuditLog('PERFORMANCE_MGMT_VIEWED', { resource: 'performance-management' });
+  const { logAction } = useAuditLog();
   const [view, setView] = useState('goals');
   const [goals, setGoals] = useState([]);
   const [reviews, setReviews] = useState([]);

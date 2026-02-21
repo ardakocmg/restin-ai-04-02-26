@@ -37,7 +37,7 @@ export default function VenueSwitcherDropdown() {
 
   const handleVenueSwitch = (targetVenue) => {
     if (targetVenue.id === venue?.id) return;
-    
+
     const currentModule = module || 'admin';
     switchVenue(targetVenue.slug, currentModule);
   };
@@ -55,7 +55,7 @@ export default function VenueSwitcherDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuLabel>
-          {group.name}
+          {group.name as string}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {loading ? (

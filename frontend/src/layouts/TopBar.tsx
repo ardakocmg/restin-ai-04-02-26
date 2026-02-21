@@ -38,7 +38,7 @@ export default function TopBar({ onMenuToggle, user }) {
     e.preventDefault();
     if (searchQuery.trim()) {
       // Implement search functionality
-      logger.info('Search:', searchQuery);
+      logger.info('Search:', { query: searchQuery });
     }
   };
 

@@ -34,7 +34,7 @@ function CreatePinDialog({ doorId, isOpen, onClose, onSuccess }: { doorId: strin
         }
         setLoading(true);
         try {
-            const resp = await accessControlAPI.createPin(doorId, name, parseInt(code), getVenueId());
+            const resp = await accessControlAPI.createPin(getVenueId(), doorId, name, parseInt(code), undefined, undefined);
             if (resp.status === 200) {
                 toast.success('PIN created successfully');
                 onSuccess();

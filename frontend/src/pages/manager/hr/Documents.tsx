@@ -26,7 +26,7 @@ export default function Documents() {
   const [loading, setLoading] = useState(true);
   const [documents, setDocuments] = useState([]);
 
-  const venueId = user?.venueId || user?.venue_id;
+  const venueId = user?.venueId ;
   const access = getAccess('documents');
 
   useEffect(() => {

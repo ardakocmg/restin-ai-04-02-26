@@ -7,7 +7,6 @@ import {
     Clock,
     Map,
     AlertCircle,
-    Devices,
     PlusCircle,
     FileText,
     BarChart3,

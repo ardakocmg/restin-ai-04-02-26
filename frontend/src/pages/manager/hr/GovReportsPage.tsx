@@ -22,7 +22,7 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function GovReportsPage() {
     const { user, isManager, isOwner } = useAuth();
-    useAuditLog('GOV_REPORTS_VIEWED', { resource: 'gov-reports' });
+    const { logAction } = useAuditLog();
     const [year, setYear] = useState('2026');
     const [loading, setLoading] = useState(false);
     const [fs7Data, setFs7Data] = useState(null);

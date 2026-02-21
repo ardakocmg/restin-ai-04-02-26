@@ -18,8 +18,8 @@ import api from '../../../lib/api';
  * Short training videos attached to recipes for staff onboarding.
  */
 export default function RecipeVideoBites() {
-    const { currentVenue } = useVenue();
-    const venueId = currentVenue?.id || localStorage.getItem('currentVenueId') || 'default';
+    const { activeVenue } = useVenue();
+    const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
     const [search, setSearch] = useState('');
     const [selectedRecipe, setSelectedRecipe] = useState(null);

@@ -22,9 +22,9 @@ import { useAuditLog } from '../../../hooks/useAuditLog';
  * Customer Data Platform flywheel with taste tags, visit frequency, churn risk.
  */
 export default function GuestProfiles() {
-    const { currentVenue } = useVenue();
+    const { activeVenue } = useVenue();
     const { user, isManager, isOwner } = useAuth();
-    const venueId = currentVenue?.id || localStorage.getItem('currentVenueId') || 'default';
+    const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
     const [search, setSearch] = useState('');
     const [selectedGuest, setSelectedGuest] = useState(null);

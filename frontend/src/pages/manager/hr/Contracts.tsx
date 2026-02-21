@@ -32,7 +32,7 @@ export default function Contracts() {
   const [loading, setLoading] = useState(true);
   const [contracts, setContracts] = useState([]);
 
-  const venueId = user?.venueId || user?.venue_id;
+  const venueId = user?.venueId ;
   const access = getAccess('contracts');
 
   useEffect(() => {

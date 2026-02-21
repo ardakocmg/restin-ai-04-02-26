@@ -12,7 +12,15 @@ import { cn } from '@/lib/utils';
  * Props `title`, `description`, and `actions` are kept in the signature
  * for backward compatibility but are no longer rendered.
  */
-export default function PageContainer({ children, className = '', title, description, actions }) {
+interface PageContainerProps {
+  children: React.ReactNode;
+  className?: string;
+  title?: string;
+  description?: string;
+  actions?: React.ReactNode;
+}
+
+export default function PageContainer({ children, className = '', title, description, actions }: PageContainerProps) {
   return (
     <div className={cn('min-h-screen bg-background', className)}>
       {/* Page Content — no header, actions moved to breadcrumb bar */}

@@ -17,8 +17,8 @@ import api from '../../../lib/api';
  * Waste tracking, carbon footprint estimation, sustainability dashboard.
  */
 export default function CarbonFootprint() {
-    const { currentVenue } = useVenue();
-    const venueId = currentVenue?.id || localStorage.getItem('currentVenueId') || 'default';
+    const { activeVenue } = useVenue();
+    const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const [period, setPeriod] = useState('week');
 
     const { data: wasteData = [], isLoading: loadingWaste } = useQuery({

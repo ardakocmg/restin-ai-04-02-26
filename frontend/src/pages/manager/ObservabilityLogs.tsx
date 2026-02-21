@@ -47,7 +47,7 @@ export default function ObservabilityLogs() {
   });
   const [searchCodeQuery, setSearchCodeQuery] = useState('');
 
-  const venueId = user?.venueId || user?.venue_id;
+  const venueId = user?.venueId ;
 
   useEffect(() => {
     loadData();

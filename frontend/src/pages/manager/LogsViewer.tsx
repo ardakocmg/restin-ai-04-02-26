@@ -25,7 +25,7 @@ export default function LogsViewer() {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ level: '', code: '', q: '' });
   
-  const venueId = user?.venueId || user?.venue_id;
+  const venueId = user?.venueId ;
 
   useEffect(() => {
     loadLogs();

@@ -39,7 +39,7 @@ export default function StudioDashboard() {
         },
         onSuccess: () => {
             toast.success("Asset Generated!", { description: "Cost: €0.04 (Billed to Account)" });
-            queryClient.invalidateQueries(['studio-assets']);
+            queryClient.invalidateQueries({ queryKey: ['studio-assets'] });
         },
         onError: () => toast.error("Generation Failed")
     });
@@ -51,7 +51,7 @@ export default function StudioDashboard() {
             return api.post(`/studio/seed?venue_id=${activeVenueId}`);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(['studio-assets']);
+            queryClient.invalidateQueries({ queryKey: ['studio-assets'] });
             toast.success('Studio demo data seeded!');
         },
     });

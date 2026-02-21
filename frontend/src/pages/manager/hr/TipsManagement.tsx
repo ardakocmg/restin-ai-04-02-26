@@ -32,7 +32,7 @@ export default function TipsManagement() {
   const [loading, setLoading] = useState(true);
   const [tipsPools, setTipsPools] = useState([]);
 
-  const venueId = user?.venueId || user?.venue_id;
+  const venueId = user?.venueId ;
   const access = getAccess('tips');
 
   useEffect(() => {

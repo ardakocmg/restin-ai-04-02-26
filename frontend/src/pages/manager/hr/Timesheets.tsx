@@ -34,7 +34,7 @@ export default function TimesheetsPage() {
   const [loading, setLoading] = useState(true);
   const [timesheets, setTimesheets] = useState([]);
 
-  const venueId = user?.venueId || user?.venue_id;
+  const venueId = user?.venueId ;
   const access = getAccess('timesheets');
 
   useEffect(() => {

@@ -68,7 +68,7 @@ interface GuestDrawerProps {
 export default function GuestDrawer({ open, onOpenChange, guestId }: GuestDrawerProps) {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState<GuestData | null>(null);
-    useAuditLog('GUEST_DRAWER_VIEWED', { resource: 'guest-drawer', guestId });
+    const { logAction } = useAuditLog();
 
     useEffect(() => {
         if (open && guestId) {

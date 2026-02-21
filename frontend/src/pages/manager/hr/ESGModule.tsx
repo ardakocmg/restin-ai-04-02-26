@@ -12,7 +12,7 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function ESGModule() {
   const { user, isManager, isOwner } = useAuth();
-  useAuditLog('ESG_VIEWED', { resource: 'esg-module' });
+  const { logAction } = useAuditLog();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 

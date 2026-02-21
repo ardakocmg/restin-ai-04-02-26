@@ -19,8 +19,8 @@ import api from '../../../lib/api';
  * Localhost bridge for raw ESC/POS printing (No PDF dialogs).
  */
 export default function PrintPreviewPage() {
-    const { currentVenue } = useVenue();
-    const venueId = currentVenue?.id || localStorage.getItem('currentVenueId') || 'default';
+    const { activeVenue } = useVenue();
+    const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
 
     const [bridgeHost, setBridgeHost] = useState('localhost');

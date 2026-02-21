@@ -57,7 +57,7 @@ export default function RadarDashboard() {
             toast.info("Initializing Grounding Scan...");
             return await radarService.scanMarket(activeVenueId || 'default', region, "Mediterranean");
         },
-        onSuccess: (data) => toast.success("Scan Started", { description: data.message }),
+        onSuccess: (data) => toast.success("Scan Started", { description: (data as any).message || 'Scan initiated' }),
         onError: () => toast.error("Scan Failed")
     });
 

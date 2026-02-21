@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import Sidebar from './Sidebar';
+import Sidebar from './NewSidebar';
 import TopBar from './TopBar';
 import MobileNav from './MobileNav';
 import { Sheet, SheetContent } from '@/components/ui/sheet';

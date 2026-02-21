@@ -32,8 +32,8 @@ const COLLECTIONS = [
  * Full venue data export with collection selector and download history.
  */
 export default function DataExportPage() {
-    const { currentVenue } = useVenue();
-    const venueId = currentVenue?.id || localStorage.getItem('currentVenueId') || 'default';
+    const { activeVenue } = useVenue();
+    const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
 
     const { data: history = [], isLoading: loadingHistory } = useQuery({
