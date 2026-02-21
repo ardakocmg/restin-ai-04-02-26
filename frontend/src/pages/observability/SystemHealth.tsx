@@ -1,5 +1,5 @@
 import { logger } from '@/lib/logger';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useVenue } from '../../context/VenueContext';
 
@@ -7,13 +7,13 @@ import api from '../../lib/api';
 
 import PageContainer from '../../layouts/PageContainer';
 
-import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 
 import { Badge } from '../../components/ui/badge';
 
 import { Button } from '../../components/ui/button';
 
-import { Activity,AlertTriangle,CheckCircle2,Database,RefreshCw } from 'lucide-react';
+import { Activity, AlertTriangle, CheckCircle2, Database, RefreshCw } from 'lucide-react';
 
 export default function SystemHealth() {
   const { activeVenue } = useVenue();
@@ -55,7 +55,11 @@ export default function SystemHealth() {
         </Button>
       }
     >
-      {health && (
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        </div>
+      ) : health && (
         <>
           <div className="mb-6 bg-card/40 p-6 rounded-xl border border-border backdrop-blur-sm">
             <div className="flex items-center gap-4">

@@ -1,19 +1,19 @@
 import { logger } from '@/lib/logger';
-import { Building2,ChevronDown,ChevronUp,ExternalLink,Loader2,MapPin,Package,Plus,Settings,Table2,Upload } from "lucide-react";
-import { useEffect,useState } from "react";
+import { Building2, ChevronDown, ChevronUp, ExternalLink, Loader2, MapPin, Package, Plus, Settings, Table2, Upload } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "../../components/ui/button";
-import { Card,CardContent,CardHeader,CardTitle } from "../../components/ui/card";
-import { Dialog,DialogContent,DialogHeader,DialogTitle,DialogTrigger } from "../../components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../../components/ui/dialog";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "../../components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import { Switch } from "../../components/ui/switch";
-import { Tabs,TabsContent,TabsList,TabsTrigger } from "../../components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { useAuth } from "../../context/AuthContext";
 import { useVenue } from "../../context/VenueContext";
-import api,{ documentAPI,venueAPI } from "../../lib/api";
+import api, { documentAPI, venueAPI } from "../../lib/api";
 import { cn } from "../../lib/utils";
 
 // ── Interfaces ─────────────────────────────────────────────────────
@@ -179,6 +179,14 @@ export default function VenueSettings() {
       setUploading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
 
   if (!activeVenue) {
     return (
@@ -670,7 +678,13 @@ export default function VenueSettings() {
                           {isActive && (
                             <Switch
                               checked={isEnabled}
-                              onCheckedChange={() => { }}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setVenueModules(prev => [...prev, module.id]);
+                                } else {
+                                  setVenueModules(prev => prev.filter(m => m !== module.id));
+                                }
+                              }}
                               className="data-[state=checked]:bg-red-600"
                             />
                           )}
