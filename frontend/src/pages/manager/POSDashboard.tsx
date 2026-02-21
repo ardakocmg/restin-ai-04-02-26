@@ -271,7 +271,7 @@ export default function POSDashboard() {
 
     return (
         <PermissionGate requiredRole="MANAGER">
-            <div className="p-6 bg-slate-50 dark:bg-black min-h-screen space-y-6">
+            <div className="p-6 bg-background dark:bg-black min-h-screen space-y-6">
                 {/* Header & Controls */}
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
@@ -280,14 +280,14 @@ export default function POSDashboard() {
                             <Play className="h-4 w-4" />
                             Launch POS
                         </a>
-                        <a href="/manager/pos-themes" className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                        <a href="/manager/pos-themes" className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                             <Palette className="h-4 w-4" />
                             Themes
                         </a>
 
                         <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
                             <DialogTrigger asChild>
-                                <Button variant="outline" size="sm" className="h-8 gap-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200">
+                                <Button variant="outline" size="sm" className="h-8 gap-2 border-border bg-background text-foreground">
                                     <Settings className="h-3.5 w-3.5" />
                                     Settings
                                 </Button>
@@ -308,8 +308,8 @@ export default function POSDashboard() {
                                                     className={cn(
                                                         "flex-1 p-3 rounded-md border cursor-pointer transition-all flex items-center justify-center gap-2 capitalize text-sm font-medium",
                                                         visibleMetrics[metric]
-                                                            ? "bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-300"
-                                                            : "bg-slate-50 border-slate-200 text-slate-500 dark:bg-slate-900 dark:border-slate-800"
+                                                            ? "bg-blue-50 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-300"
+                                                            : "bg-slate-50 border-border text-muted-foreground dark:bg-slate-900 dark:border-slate-800"
                                                     )}
                                                 >
                                                     {visibleMetrics[metric] && <Check className="h-3 w-3" />}
@@ -358,7 +358,7 @@ export default function POSDashboard() {
                                         <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Shift Presets</Label>
                                         <div className="space-y-2">
                                             {Object.entries(shifts).map(([key, shift]) => (
-                                                <div key={key} className="flex items-center gap-2 p-2 rounded-md border dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+                                                <div key={key} className="flex items-center gap-2 p-2 rounded-md border dark:border-slate-800 bg-background/50">
                                                     <div className="flex items-center gap-3 flex-1">
                                                         <Checkbox
                                                             id={`shift-${key}`}
@@ -370,7 +370,7 @@ export default function POSDashboard() {
                                                             <div className="flex items-center gap-2 mt-1">
                                                                 <Input
                                                                     type="number"
-                                                                    className="h-6 w-16 text-xs bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                                                                    className="h-6 w-16 text-xs bg-card border-border"
                                                                     value={shift.start}
                                                                     onChange={(e) => setShifts(prev => ({ ...prev, [key]: { ...prev[key], start: Number(e.target.value) } }))}
                                                                     disabled={!shift.enabled}
@@ -378,7 +378,7 @@ export default function POSDashboard() {
                                                                 <span className="text-xs text-muted-foreground">to</span>
                                                                 <Input
                                                                     type="number"
-                                                                    className="h-6 w-16 text-xs bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                                                                    className="h-6 w-16 text-xs bg-card border-border"
                                                                     value={shift.end}
                                                                     onChange={(e) => setShifts(prev => ({ ...prev, [key]: { ...prev[key], end: Number(e.target.value) } }))}
                                                                     disabled={!shift.enabled}
@@ -394,7 +394,7 @@ export default function POSDashboard() {
                                     {/* Event Settings */}
                                     <div className="space-y-3">
                                         <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Event Settings</Label>
-                                        <div className="flex items-center gap-2 p-2 rounded-md border dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+                                        <div className="flex items-center gap-2 p-2 rounded-md border dark:border-slate-800 bg-background/50">
                                             <div className="flex items-center gap-3 flex-1">
                                                 <Checkbox
                                                     id="event-enabled"
@@ -406,7 +406,7 @@ export default function POSDashboard() {
                                                     <div className="flex items-center gap-2 mt-1">
                                                         <Input
                                                             type="time"
-                                                            className="h-6 w-24 text-xs bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                                                            className="h-6 w-24 text-xs bg-card border-border"
                                                             value={eventTime.start}
                                                             onChange={(e) => setEventTime(prev => ({ ...prev, start: e.target.value }))}
                                                             disabled={!eventTime.enabled}
@@ -414,7 +414,7 @@ export default function POSDashboard() {
                                                         <span className="text-xs text-muted-foreground">to</span>
                                                         <Input
                                                             type="time"
-                                                            className="h-6 w-24 text-xs bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                                                            className="h-6 w-24 text-xs bg-card border-border"
                                                             value={eventTime.start}
                                                             onChange={(e) => setEventTime(prev => ({ ...prev, end: e.target.value }))}
                                                             disabled={!eventTime.enabled}
@@ -437,7 +437,7 @@ export default function POSDashboard() {
                                                         "flex-1 py-2 text-xs font-medium transition-colors hover:bg-slate-50 dark:hover:bg-slate-900",
                                                         closingDays[day]
                                                             ? "bg-slate-100 text-foreground dark:bg-slate-800 dark:text-slate-100"
-                                                            : "bg-white text-slate-500 dark:bg-black"
+                                                            : "bg-white text-muted-foreground dark:bg-black"
                                                     )}
                                                 >
                                                     {day}
@@ -449,7 +449,7 @@ export default function POSDashboard() {
                                     {/* Tax Settings */}
                                     <div className="space-y-3">
                                         <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Show all values as</Label>
-                                        <div className="flex bg-slate-100 dark:bg-slate-900 p-1 rounded-md">
+                                        <div className="flex bg-muted p-1 rounded-md">
                                             <button
                                                 onClick={() => setTaxInclusive(true)}
                                                 className={cn(
@@ -487,7 +487,7 @@ export default function POSDashboard() {
                 </div>
 
                 {/* Main Chart Card */}
-                <Card className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+                <Card className="bg-background border-border">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <div className="space-y-1">
                             <CardTitle className="text-base text-foreground dark:text-slate-50">
@@ -502,7 +502,7 @@ export default function POSDashboard() {
                                             className={cn(
                                                 "text-xs px-2 py-1 rounded transition-colors capitalize border",
                                                 activeMetric === metric
-                                                    ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
+                                                    ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"
                                                     : "text-slate-500 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800"
                                             )}
                                         >
@@ -591,13 +591,13 @@ export default function POSDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {visibleMetrics.revenue && (
                         <Card
-                            className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 cursor-pointer hover:border-blue-500/50 hover:shadow-lg transition-all"
+                            className="bg-background border-border cursor-pointer hover:border-blue-500/50 hover:shadow-lg transition-all"
                             onClick={() => setDetailMetric('revenue')}
                         >
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                                        <p className="text-sm font-medium text-muted-foreground flex items-center gap-1">
                                             Revenue <ArrowUpRight className="h-3 w-3 opacity-50" />
                                         </p>
                                         <h3 className="text-2xl font-bold text-foreground dark:text-slate-50 mt-1">
@@ -632,13 +632,13 @@ export default function POSDashboard() {
 
                     {visibleMetrics.receipts && (
                         <Card
-                            className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 cursor-pointer hover:border-green-500/50 hover:shadow-lg transition-all"
+                            className="bg-background border-border cursor-pointer hover:border-green-500/50 hover:shadow-lg transition-all"
                             onClick={() => setDetailMetric('receipts')}
                         >
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                                        <p className="text-sm font-medium text-muted-foreground flex items-center gap-1">
                                             Receipts <ArrowUpRight className="h-3 w-3 opacity-50" />
                                         </p>
                                         <h3 className="text-2xl font-bold text-foreground dark:text-slate-50 mt-1">{totalReceipts}</h3>
@@ -671,13 +671,13 @@ export default function POSDashboard() {
 
                     {visibleMetrics.customers && (
                         <Card
-                            className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 cursor-pointer hover:border-orange-500/50 hover:shadow-lg transition-all"
+                            className="bg-background border-border cursor-pointer hover:border-orange-500/50 hover:shadow-lg transition-all"
                             onClick={() => setDetailMetric('customers')}
                         >
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                                        <p className="text-sm font-medium text-muted-foreground flex items-center gap-1">
                                             Customers <ArrowUpRight className="h-3 w-3 opacity-50" />
                                         </p>
                                         <h3 className="text-2xl font-bold text-foreground dark:text-slate-50 mt-1">{totalCustomers}</h3>
@@ -712,11 +712,11 @@ export default function POSDashboard() {
 
                 {/* Drill Down Dialog */}
                 <Dialog open={!!detailMetric} onOpenChange={(open) => !open && setDetailMetric(null)}>
-                    <DialogContent className="sm:max-w-[800px] bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 max-h-[80vh] overflow-y-auto">
+                    <DialogContent className="sm:max-w-[800px] bg-background border-border max-h-[80vh] overflow-y-auto">
                         {selectedReceipt ? (
                             // Nested Receipt Details View
                             <div className="space-y-4">
-                                <div className="flex items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+                                <div className="flex items-center gap-4 border-b border-border pb-4">
                                     <Button variant="ghost" size="icon" onClick={() => setSelectedReceipt(null)}>
                                         <ChevronLeft className="h-5 w-5" />
                                     </Button>
@@ -726,9 +726,9 @@ export default function POSDashboard() {
                                     </div>
                                 </div>
 
-                                <div className="rounded-md border border-slate-200 dark:border-slate-800 overflow-hidden">
+                                <div className="rounded-md border border-border overflow-hidden">
                                     <table className="w-full text-sm text-left">
-                                        <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 font-medium">
+                                        <thead className="bg-card/50 text-muted-foreground font-medium">
                                             <tr>
                                                 <th className="px-4 py-3">Item Name</th>
                                                 <th className="px-4 py-3 text-right">Qty</th>
@@ -736,7 +736,7 @@ export default function POSDashboard() {
                                                 <th className="px-4 py-3 text-right">Total</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                                        <tbody className="divide-y divide-border">
                                             {selectedReceipt.lineItems.map((item, idx) => (
                                                 <tr key={idx}>
                                                     <td className="px-4 py-3 font-medium">{item.name}</td>
@@ -745,7 +745,7 @@ export default function POSDashboard() {
                                                     <td className="px-4 py-3 text-right font-semibold">€{(item.qty * item.price).toFixed(2)}</td>
                                                 </tr>
                                             ))}
-                                            <tr className="bg-slate-50 dark:bg-slate-900 font-bold">
+                                            <tr className="bg-background font-bold">
                                                 <td colSpan={3} className="px-4 py-3 text-right">Total Amount</td>
                                                 <td className="px-4 py-3 text-right">€{selectedReceipt.amount.toFixed(2)}</td>
                                             </tr>
@@ -775,9 +775,9 @@ export default function POSDashboard() {
                                     </DialogTitle>
                                 </DialogHeader>
                                 <div className="py-2">
-                                    <div className="rounded-md border border-slate-200 dark:border-slate-800 overflow-hidden">
+                                    <div className="rounded-md border border-border overflow-hidden">
                                         <table className="w-full text-sm text-left">
-                                            <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 font-medium border-b border-slate-200 dark:border-slate-800">
+                                            <thead className="bg-card/50 text-muted-foreground font-medium border-b border-border">
                                                 <tr>
                                                     {detailMetric === 'revenue' && (
                                                         <>
@@ -826,7 +826,7 @@ export default function POSDashboard() {
                                                     )}
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                                            <tbody className="divide-y divide-border">
                                                 {processedDetailData.map((row, i) => (
                                                     <tr
                                                         key={i}
@@ -839,23 +839,23 @@ export default function POSDashboard() {
                                                         {detailMetric === 'revenue' && (
                                                             <>
                                                                 <td className="px-4 py-3 font-medium text-foreground dark:text-slate-200">{row.label}</td>
-                                                                <td className="px-4 py-3 text-right text-slate-600 dark:text-slate-400">{row.count}</td>
+                                                                <td className="px-4 py-3 text-right text-muted-foreground">{row.count}</td>
                                                                 <td className="px-4 py-3 text-right text-foreground dark:text-slate-200">€{calculateValue(row.value, true).toFixed(2)}</td>
                                                             </>
                                                         )}
                                                         {detailMetric === 'receipts' && (
                                                             <>
                                                                 <td className="px-4 py-3 font-medium text-blue-600 dark:text-blue-400 dark:text-blue-400 hover:underline">{row.id}</td>
-                                                                <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{row.time}</td>
-                                                                <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{row.staff}</td>
-                                                                <td className="px-4 py-3 text-right text-slate-600 dark:text-slate-400">{row.items}</td>
+                                                                <td className="px-4 py-3 text-muted-foreground">{row.time}</td>
+                                                                <td className="px-4 py-3 text-muted-foreground">{row.staff}</td>
+                                                                <td className="px-4 py-3 text-right text-muted-foreground">{row.items}</td>
                                                                 <td className="px-4 py-3 text-right text-foreground dark:text-slate-200">€{calculateValue(row.amount, true).toFixed(2)}</td>
                                                             </>
                                                         )}
                                                         {detailMetric === 'customers' && (
                                                             <>
                                                                 <td className="px-4 py-3 font-medium text-foreground dark:text-slate-200">{row.time}</td>
-                                                                <td className="px-4 py-3 text-right text-slate-600 dark:text-slate-400">{row.occupancy}%</td>
+                                                                <td className="px-4 py-3 text-right text-muted-foreground">{row.occupancy}%</td>
                                                                 <td className="px-4 py-3 text-right text-foreground dark:text-slate-200">{row.count}</td>
                                                             </>
                                                         )}

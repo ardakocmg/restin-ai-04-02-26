@@ -522,7 +522,7 @@ export default function Users() {
                         {emp.role || emp.occupation} • {emp.email || 'No email'}
                       </p>
                     </div>
-                    <UserCheck className="h-4 w-4 text-zinc-700 group-hover:text-blue-400 transition-colors" />
+                    <UserCheck className="h-4 w-4 text-foreground group-hover:text-blue-400 transition-colors" />
                   </button>
                 ))
               )}

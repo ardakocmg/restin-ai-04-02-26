@@ -84,7 +84,7 @@ export default function Contracts() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground dark:text-slate-50 mb-2">Contracts</h1>
-            <p className="text-slate-600 dark:text-slate-400">Employment contracts and agreements</p>
+            <p className="text-muted-foreground">Employment contracts and agreements</p>
           </div>
           <Button className="bg-indigo-500 hover:bg-indigo-600">
             <Plus className="w-4 h-4 mr-2" />
@@ -99,7 +99,7 @@ export default function Contracts() {
         ) : (
           <div className="space-y-4">
             {contracts.map((contract) => (
-              <div key={contract.id} className="bg-white dark:bg-slate-900 rounded-lg p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div key={contract.id} className="bg-background rounded-lg p-6 border border-border shadow-sm">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <p className="text-sm text-muted-foreground">{contract.display_id}</p>

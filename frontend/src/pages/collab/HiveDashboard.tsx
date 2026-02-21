@@ -889,7 +889,7 @@ export default function HiveDashboard() {
                     {/* Offline */}
                     {onlineStaff.filter(s => s.status === 'offline').length > 0 && (
                         <>
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-700 mt-4 mb-2 flex items-center gap-1.5">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground mt-4 mb-2 flex items-center gap-1.5">
                                 <span className="h-2 w-2 rounded-full bg-zinc-700" />
                                 Offline — {onlineStaff.filter(s => s.status === 'offline').length}
                             </p>
@@ -2318,9 +2318,9 @@ export default function HiveDashboard() {
                         <AnimatePresence>
                             {callLog.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-10 text-center">
-                                    <PhoneCall className="h-8 w-8 text-zinc-700 mb-2" />
+                                    <PhoneCall className="h-8 w-8 text-foreground mb-2" />
                                     <p className="text-xs text-muted-foreground">No calls yet</p>
-                                    <p className="text-[10px] text-zinc-700 mt-1">PTT transmissions will appear here with transcripts</p>
+                                    <p className="text-[10px] text-foreground mt-1">PTT transmissions will appear here with transcripts</p>
                                 </div>
                             ) : (
                                 callLog.map(entry => (
@@ -2535,9 +2535,9 @@ export default function HiveDashboard() {
                         <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2">
                             {threadReplies.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-8 text-center">
-                                    <Reply className="h-8 w-8 text-zinc-700 mb-2" />
+                                    <Reply className="h-8 w-8 text-foreground mb-2" />
                                     <p className="text-xs text-muted-foreground">No replies yet</p>
-                                    <p className="text-[10px] text-zinc-700 mt-0.5">Click Reply on a message to start a thread</p>
+                                    <p className="text-[10px] text-foreground mt-0.5">Click Reply on a message to start a thread</p>
                                 </div>
                             ) : (
                                 threadReplies.map(reply => (

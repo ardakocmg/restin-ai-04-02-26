@@ -46,7 +46,7 @@ export default function ExitTemplate({ data }) {
             {/* Employee Details */}
             <div className="grid grid-cols-2 gap-8 mb-12">
                 <div className="space-y-3">
-                    <h3 className="text-muted-foreground font-bold uppercase text-[10px] border-b border-zinc-100 pb-1">Personel Details</h3>
+                    <h3 className="text-muted-foreground font-bold uppercase text-[10px] border-b border-border pb-1">Personel Details</h3>
                     <div className="grid grid-cols-[100px_1fr] flex-none">
                         <span className="font-bold">Full Name:</span> <span>{employeeName}</span>
                         <span className="font-bold">Employee ID:</span> <span>{employeeId}</span>
@@ -54,7 +54,7 @@ export default function ExitTemplate({ data }) {
                     </div>
                 </div>
                 <div className="space-y-3">
-                    <h3 className="text-muted-foreground font-bold uppercase text-[10px] border-b border-zinc-100 pb-1">Exit Information</h3>
+                    <h3 className="text-muted-foreground font-bold uppercase text-[10px] border-b border-border pb-1">Exit Information</h3>
                     <div className="grid grid-cols-[100px_1fr]">
                         <span className="font-bold">Last Day:</span> <span>{exitDate}</span>
                         <span className="font-bold">Exit Reason:</span> <span>{reason}</span>
@@ -69,26 +69,26 @@ export default function ExitTemplate({ data }) {
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="bg-zinc-50 text-[10px] font-bold uppercase">
-                            <th className="border border-zinc-200 p-3 text-left">Description</th>
-                            <th className="border border-zinc-200 p-3 text-right">Amount / Balance</th>
+                            <th className="border border-border p-3 text-left">Description</th>
+                            <th className="border border-border p-3 text-right">Amount / Balance</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td className="border border-zinc-200 p-3 font-medium">Final Month's Net Salary</td>
-                            <td className="border border-zinc-200 p-3 text-right font-mono">€ {finalWage}</td>
+                            <td className="border border-border p-3 font-medium">Final Month's Net Salary</td>
+                            <td className="border border-border p-3 text-right font-mono">€ {finalWage}</td>
                         </tr>
                         <tr>
-                            <td className="border border-zinc-200 p-3 font-medium">Accumulated Leave Entitlement</td>
-                            <td className="border border-zinc-200 p-3 text-right font-mono text-blue-600">{leaveBalance}</td>
+                            <td className="border border-border p-3 font-medium">Accumulated Leave Entitlement</td>
+                            <td className="border border-border p-3 text-right font-mono text-blue-600">{leaveBalance}</td>
                         </tr>
                         <tr>
-                            <td className="border border-zinc-200 p-3 font-medium">Notice Period Pay (if applicable)</td>
-                            <td className="border border-zinc-200 p-3 text-right font-mono">€ 0.00</td>
+                            <td className="border border-border p-3 font-medium">Notice Period Pay (if applicable)</td>
+                            <td className="border border-border p-3 text-right font-mono">€ 0.00</td>
                         </tr>
                         <tr className="bg-zinc-50 font-bold">
-                            <td className="border border-zinc-200 p-3 uppercase">Total Settlement Status</td>
-                            <td className="border border-zinc-200 p-3 text-right text-orange-600 italic">{settlementStatus}</td>
+                            <td className="border border-border p-3 uppercase">Total Settlement Status</td>
+                            <td className="border border-border p-3 text-right text-orange-600 dark:text-orange-400 italic">{settlementStatus}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -106,25 +106,25 @@ export default function ExitTemplate({ data }) {
             {/* Signature Section */}
             <div className="flex justify-between items-end mt-auto pt-12">
                 <div className="w-64">
-                    <div className="border-b-2 border-zinc-200 mb-2 h-16"></div>
+                    <div className="border-b-2 border-border mb-2 h-16"></div>
                     <div className="text-[10px] font-bold uppercase">{employeeName}</div>
                     <div className="text-[10px] text-muted-foreground">Employee Signature</div>
                 </div>
                 <div className="text-center px-8 pb-4">
-                    <div className="w-16 h-16 rounded-full border-2 border-zinc-100 flex items-center justify-center grayscale opacity-30">
+                    <div className="w-16 h-16 rounded-full border-2 border-border flex items-center justify-center grayscale opacity-30">
                         <span className="text-[8px] font-black tracking-tighter uppercase">OFFICIAL SEAL</span>
                     </div>
                 </div>
                 <div className="w-64 text-right">
                     <div className="mb-2 italic text-2xl" style={{ fontFamily: 'cursive' }}>JPortelli</div>
-                    <div className="border-b-2 border-zinc-200 mb-2"></div>
+                    <div className="border-b-2 border-border mb-2"></div>
                     <div className="text-[10px] font-bold uppercase">{displayHR}</div>
                     <div className="text-[10px] !text-[#9ca3af]">HR Manager</div>
                 </div>
             </div>
 
             {/* Print Footer */}
-            <div className="mt-8 pt-4 border-t border-zinc-100 flex justify-between items-center text-[8px] text-muted-foreground uppercase tracking-widest">
+            <div className="mt-8 pt-4 border-t border-border flex justify-between items-center text-[8px] text-muted-foreground uppercase tracking-widest">
                 <span>Document ID: RESTIN-EXIT-{Math.random().toString(36).substring(7).toUpperCase()}</span>
                 <span>Generated on {new Date().toLocaleDateString('en-GB')} at {new Date().toLocaleTimeString('en-GB')}</span>
             </div>

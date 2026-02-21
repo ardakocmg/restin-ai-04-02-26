@@ -302,7 +302,7 @@ export default function SetupWizard() {
                                     <div className={cn(
                                         "w-10 h-10 rounded-full flex items-center justify-center transition-all",
                                         isCompleted ? "bg-emerald-500 text-foreground" :
-                                            isActive ? "bg-emerald-500/10 text-emerald-500 ring-2 ring-emerald-500" :
+                                            isActive ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ring-2 ring-emerald-500" :
                                                 "bg-muted text-muted-foreground"
                                     )}>
                                         {isCompleted ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}

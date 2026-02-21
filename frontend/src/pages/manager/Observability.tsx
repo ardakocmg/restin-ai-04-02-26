@@ -170,7 +170,7 @@ export default function Observability() {
             <Wifi className="w-4 h-4 text-green-500" />
             Network & Device Connectivity
           </h3>
-          <Badge variant="outline" className="text-[10px] bg-green-500/5 text-green-500 border-green-500/20 uppercase font-black tracking-widest">
+          <Badge variant="outline" className="text-[10px] bg-green-500/5 text-green-600 dark:text-green-400 border-green-500/20 uppercase font-black tracking-widest">
             {devices.filter(d => d.status === 'online').length + infraStatus.length} Active Nodes
           </Badge>
         </div>

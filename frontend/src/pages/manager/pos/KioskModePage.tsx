@@ -237,7 +237,7 @@ export default function KioskModePage() {
                                         className={cn(
                                             "px-3 py-1.5 rounded text-sm capitalize border transition-all",
                                             config.theme === t
-                                                ? "border-cyan-500 text-cyan-500 bg-cyan-500/5"
+                                                ? "border-cyan-500 text-cyan-600 dark:text-cyan-400 bg-cyan-500/5"
                                                 : "border-border text-muted-foreground"
                                         )}
                                     >
@@ -256,7 +256,7 @@ export default function KioskModePage() {
                                         className={cn(
                                             "px-3 py-1.5 rounded text-sm uppercase border transition-all",
                                             config.font_size === s
-                                                ? "border-cyan-500 text-cyan-500 bg-cyan-500/5"
+                                                ? "border-cyan-500 text-cyan-600 dark:text-cyan-400 bg-cyan-500/5"
                                                 : "border-border text-muted-foreground"
                                         )}
                                     >

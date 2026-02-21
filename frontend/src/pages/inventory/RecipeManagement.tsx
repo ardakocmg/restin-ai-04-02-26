@@ -207,7 +207,7 @@ export default function RecipeManagement() {
 
         {recipes.length === 0 && (
           <div className="col-span-full flex flex-col items-center justify-center py-20 bg-card/30 rounded-2xl border border-dashed border-border">
-            <ChefHat className="w-16 h-16 text-zinc-700 mb-4" />
+            <ChefHat className="w-16 h-16 text-foreground mb-4" />
             <h3 className="text-xl font-bold text-muted-foreground">No Recipes Found</h3>
             <p className="text-muted-foreground mb-6">Start by creating your first engineered recipe</p>
             <Button variant="outline" onClick={() => setShowCreateModal(true)}>Create Recipe</Button>

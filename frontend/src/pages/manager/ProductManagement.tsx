@@ -110,7 +110,7 @@ export default function ProductManagement() {
                                                 <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">{cat.count} Items Active</p>
                                             </div>
                                         </div>
-                                        <CheckCircle2 className="h-5 w-5 text-zinc-800 group-hover:text-green-500 transition-all" />
+                                        <CheckCircle2 className="h-5 w-5 text-foreground group-hover:text-green-500 transition-all" />
                                     </div>
                                 </CardContent>
                             </Card>

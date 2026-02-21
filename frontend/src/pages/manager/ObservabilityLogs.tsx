@@ -17,10 +17,10 @@ import { Loader2, Search, AlertTriangle, Info, Shield, CheckCircle, Copy, FileTe
 import { safeArray, safeString } from '../../lib/safe';
 
 const LEVEL_COLORS: Record<string, string> = {
-  ERROR: 'bg-red-100 text-red-700 border-red-200',
+  ERROR: 'bg-red-100 text-red-700 dark:text-red-400 border-red-200',
   WARN: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  INFO: 'bg-blue-100 text-blue-700 border-blue-200',
-  AUDIT: 'bg-green-100 text-green-700 border-green-200',
+  INFO: 'bg-blue-100 text-blue-700 dark:text-blue-400 border-blue-200',
+  AUDIT: 'bg-green-100 text-green-700 dark:text-green-400 border-green-200',
   SECURITY: 'bg-purple-100 text-purple-700 border-purple-200'
 };
 
@@ -185,7 +185,7 @@ export default function ObservabilityLogs() {
             {/* Logs Table */}
             {loading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-12 h-12 text-red-500 animate-spin" />
+                <Loader2 className="w-12 h-12 text-red-600 dark:text-red-400 animate-spin" />
               </div>
             ) : (
               <div className="bg-card rounded-lg overflow-hidden">

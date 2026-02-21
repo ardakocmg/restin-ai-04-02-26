@@ -49,7 +49,7 @@ export default function PayrollMaltaPage() {
             ) : (
               <div className="space-y-2">
                 {payruns.map(pr => (
-                  <div key={pr.id} className="p-3 bg-slate-50 rounded flex items-center justify-between">
+                  <div key={pr.id} className="p-3 bg-background rounded flex items-center justify-between">
                     <div>
                       <span className="font-medium">{pr.display_id}</span>
                       <p className="text-sm text-slate-600">{pr.period}</p>

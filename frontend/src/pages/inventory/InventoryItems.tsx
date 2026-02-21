@@ -38,7 +38,7 @@ function InventoryItems() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-4xl font-bold text-foreground">Inventory Items</h1>
@@ -53,7 +53,7 @@ function InventoryItems() {
           placeholder="Search items..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+          className="w-full px-4 py-3 border border-border rounded-lg"
         />
       </div>
 

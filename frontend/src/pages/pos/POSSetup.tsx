@@ -167,7 +167,7 @@ export default function POSSetup() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-red-500 animate-spin" />
+        <Loader2 className="w-12 h-12 text-red-600 dark:text-red-400 animate-spin" />
       </div>
     );
   }

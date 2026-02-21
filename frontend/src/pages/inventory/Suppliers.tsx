@@ -31,7 +31,7 @@ function Suppliers() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-4xl font-bold text-foreground">Suppliers</h1>
@@ -44,17 +44,17 @@ function Suppliers() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {suppliers.map((supplier) => (
-          <div key={supplier.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition cursor-pointer">
+          <div key={supplier.id} className="bg-white rounded-xl shadow-sm border border-border p-6 hover:shadow-md transition cursor-pointer">
             <div className="flex items-start gap-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
+              <div className="p-3 bg-blue-100 dark:bg-blue-950/20 rounded-lg">
                 <Building2 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-foreground mb-1">{supplier.name}</h3>
-                <p className="text-sm text-gray-500 mb-3">{supplier.code || 'No code'}</p>
+                <p className="text-sm text-muted-foreground mb-3">{supplier.code || 'No code'}</p>
 
                 {supplier.email && (
-                  <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                     <Mail className="w-4 h-4" />
                     {supplier.email}
                   </div>
@@ -84,7 +84,7 @@ function Suppliers() {
 
         {suppliers.length === 0 && (
           <div className="col-span-full text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-300">
-            <Building2 className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+            <Building2 className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
             <p className="text-gray-600">No suppliers added yet</p>
           </div>
         )}

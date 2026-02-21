@@ -99,7 +99,7 @@ export default function AccountingMalta() {
                 </Select>
               </div>
 
-              <div className="p-4 bg-yellow-900/10 border border-yellow-900/30 rounded text-xs text-yellow-500 flex gap-2">
+              <div className="p-4 bg-yellow-900/10 border border-yellow-900/30 rounded text-xs text-yellow-600 dark:text-yellow-400 flex gap-2">
                 <AlertCircle className="w-4 h-4" />
                 <div>
                   Ensure all invoices and daily sales are finalized before exporting to prevent Journal entry mismatches.
@@ -148,7 +148,7 @@ export default function AccountingMalta() {
                         <TableCell>{row.type}</TableCell>
                         <TableCell>{row.period}</TableCell>
                         <TableCell>
-                          <span className="inline-flex items-center gap-1 text-green-500 text-xs font-bold px-2 py-1 bg-green-900/20 rounded-full">
+                          <span className="inline-flex items-center gap-1 text-green-600 dark:text-green-400 text-xs font-bold px-2 py-1 bg-green-900/20 rounded-full">
                             <CheckCircle2 className="w-3 h-3" /> {row.status}
                           </span>
                         </TableCell>

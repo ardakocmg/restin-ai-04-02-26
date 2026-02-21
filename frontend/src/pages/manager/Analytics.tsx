@@ -71,7 +71,7 @@ export default function AnalyticsPage() {
           ) : (
             <div className="space-y-2">
               {dashboards.map(d => (
-                <div key={d.id} className="p-3 bg-slate-50 rounded">
+                <div key={d.id} className="p-3 bg-background rounded">
                   {d.name}
                 </div>
               ))}

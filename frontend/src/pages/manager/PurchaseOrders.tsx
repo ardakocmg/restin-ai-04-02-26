@@ -39,7 +39,7 @@ export default function PurchaseOrdersPage() {
       'SENT': 'bg-purple-900/30 text-purple-400 border-purple-800',
       'PARTIAL_RECEIVED': 'bg-orange-900/30 text-orange-400 border-orange-800',
       'RECEIVED_CLOSED': 'bg-card text-muted-foreground border-border decoration-line-through',
-      'CANCELLED': 'bg-red-900/30 text-red-500 border-red-800'
+      'CANCELLED': 'bg-red-900/30 text-red-600 dark:text-red-400 border-red-800'
     };
     return colors[status] || 'bg-slate-100 text-slate-700';
   };

@@ -318,7 +318,7 @@ export default function MarketingLanding() {
       `}</style>
 
       {isPreview && (
-        <div className="fixed top-0 left-0 w-full z-50 text-center py-2 text-[10px] font-black uppercase tracking-widest bg-red-50 border-b border-red-200 text-red-600" data-testid="marketing-preview-banner">
+        <div className="fixed top-0 left-0 w-full z-50 text-center py-2 text-[10px] font-black uppercase tracking-widest bg-red-50 dark:bg-red-950/20 border-b border-red-200 dark:border-red-800 text-red-600" data-testid="marketing-preview-banner">
           Preview Mode · Staged Changes Pending Approval
         </div>
       )}
@@ -346,16 +346,16 @@ export default function MarketingLanding() {
               { label: 'Roadmap', href: '#roadmap' },
             ].map(item => (
               <a key={item.label} href={item.href}
-                className="px-4 py-2 rounded-full text-xs font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all"
+                className="px-4 py-2 rounded-full text-xs font-semibold text-muted-foreground hover:text-gray-900 hover:bg-gray-100 transition-all"
               >{item.label}</a>
             ))}
-            <div className="h-4 w-[1px] bg-gray-200 mx-2" />
-            <a href="/modules" className="px-4 py-2 rounded-full text-xs font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all">Module Catalog</a>
-            <a href="/technic" className="px-4 py-2 rounded-full text-xs font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all">Technical Hub</a>
+            <div className="h-4 w-[1px] bg-muted mx-2" />
+            <a href="/modules" className="px-4 py-2 rounded-full text-xs font-semibold text-muted-foreground hover:text-gray-900 hover:bg-gray-100 transition-all">Module Catalog</a>
+            <a href="/technic" className="px-4 py-2 rounded-full text-xs font-semibold text-muted-foreground hover:text-gray-900 hover:bg-gray-100 transition-all">Technical Hub</a>
           </nav>
 
           <div className="flex items-center gap-3">
-            <a href="/login?mode=pin" className="px-4 py-2 rounded-full text-xs font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all border border-gray-200" data-testid="marketing-cta-login">
+            <a href="/login?mode=pin" className="px-4 py-2 rounded-full text-xs font-semibold text-muted-foreground hover:text-gray-900 hover:bg-gray-100 transition-all border border-gray-200" data-testid="marketing-cta-login">
               Operator Login
             </a>
             <button className="premium-btn px-5 py-2.5 rounded-xl text-xs font-bold text-foreground" data-testid="marketing-cta-primary">
@@ -380,7 +380,7 @@ export default function MarketingLanding() {
                 OPERATE EVERY VENUE WITH TOTAL CONTROL, EVEN WHEN THE CLOUD DISAPPEARS.
               </h1>
 
-              <p className="text-lg text-gray-500 max-w-2xl leading-relaxed font-light" data-testid="marketing-hero-subtitle">
+              <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed font-light" data-testid="marketing-hero-subtitle">
                 {hero.subtitle}
               </p>
 
@@ -388,7 +388,7 @@ export default function MarketingLanding() {
                 <button className="premium-btn px-6 py-3.5 rounded-xl font-bold text-foreground" data-testid="marketing-hero-cta-primary">
                   Request a live walkthrough
                 </button>
-                <a href="/technic" className="px-6 py-3.5 rounded-xl border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300 transition-all inline-flex items-center gap-2 font-semibold" data-testid="marketing-hero-cta-secondary">
+                <a href="/technic" className="px-6 py-3.5 rounded-xl border border-border text-muted-foreground hover:text-gray-900 hover:border-gray-300 transition-all inline-flex items-center gap-2 font-semibold" data-testid="marketing-hero-cta-secondary">
                   View technical blueprint
                   <span className="text-xs">→</span>
                 </a>
@@ -398,7 +398,7 @@ export default function MarketingLanding() {
                 {(hero.metrics || defaultContent.hero.metrics).map(metric => (
                   <div key={metric.key} className="light-card p-5" data-testid={`marketing-stat-${metric.key}`}>
                     <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{metric.value}</div>
-                    <div className="text-xs text-gray-400 mt-1 font-medium">{metric.label}</div>
+                    <div className="text-xs text-muted-foreground mt-1 font-medium">{metric.label}</div>
                   </div>
                 ))}
               </div>
@@ -437,8 +437,8 @@ export default function MarketingLanding() {
             {features.map(feature => (
               <div key={feature.key} className="light-card p-6" data-testid={`marketing-feature-${feature.key}`}>
                 <div className="feature-icon mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{feature.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{feature.description}</p>
+                <h3 className="text-lg font-bold text-foreground mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{feature.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -452,7 +452,7 @@ export default function MarketingLanding() {
               <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-modules-title">Modules built to scale</h2>
               <p className="text-gray-500 mt-3 max-w-xl">Every module is designed as a microservice with shared observability and offline sync.</p>
             </div>
-            <a href="/modules" className="hidden lg:flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-500 hover:text-gray-900 hover:border-gray-300 transition-all">
+            <a href="/modules" className="hidden lg:flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border text-sm text-muted-foreground hover:text-gray-900 hover:border-gray-300 transition-all">
               View full catalog <span>→</span>
             </a>
           </div>
@@ -462,17 +462,17 @@ export default function MarketingLanding() {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-base font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{mod.title}</h3>
                   {mod.status === 'coming_soon' ? (
-                    <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-50 text-amber-600 border border-amber-200">Coming Soon</span>
+                    <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 border border-amber-200">Coming Soon</span>
                   ) : (
-                    <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-200">Active</span>
+                    <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200">Active</span>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 mb-4 leading-relaxed">{mod.description}</p>
+                <p className="text-xs text-muted-foreground mb-4 leading-relaxed">{mod.description}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {(mod.capabilities || []).map(cap => (
                     <span key={cap} className={`px-2 py-0.5 rounded text-[9px] font-semibold border ${mod.status === 'active'
-                      ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
-                      : 'text-amber-700 bg-amber-50 border-amber-200'
+                      ? 'text-emerald-700 bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200'
+                      : 'text-amber-700 bg-amber-50 dark:bg-amber-950/20 border-amber-200'
                       }`}>{cap}</span>
                   ))}
                 </div>
@@ -496,13 +496,13 @@ export default function MarketingLanding() {
                     <span className="popular-badge">Most Popular</span>
                   </div>
                 )}
-                <div className="text-xs text-gray-400 mb-2 font-medium" data-testid={`pricing-tagline-${plan.key}`}>{plan.tagline}</div>
+                <div className="text-xs text-muted-foreground mb-2 font-medium" data-testid={`pricing-tagline-${plan.key}`}>{plan.tagline}</div>
                 <h3 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid={`pricing-name-${plan.key}`}>{plan.name}</h3>
                 <div className="mt-4 flex items-end gap-2" data-testid={`pricing-price-${plan.key}`}>
                   <span className="text-5xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{plan.price}</span>
-                  <span className="text-sm text-gray-400 mb-1">{plan.period}</span>
+                  <span className="text-sm text-muted-foreground mb-1">{plan.period}</span>
                 </div>
-                <div className="text-[10px] text-gray-400 mt-1 font-semibold" data-testid={`pricing-yearly-${plan.key}`}>{plan.yearly}</div>
+                <div className="text-[10px] text-muted-foreground mt-1 font-semibold" data-testid={`pricing-yearly-${plan.key}`}>{plan.yearly}</div>
 
                 <ul className="mt-6 space-y-3" data-testid={`pricing-highlights-${plan.key}`}>
                   {plan.highlights.map(item => (
@@ -514,10 +514,10 @@ export default function MarketingLanding() {
                 </ul>
 
                 <div className="mt-5 pt-4 border-t border-gray-100">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2" data-testid={`pricing-future-title-${plan.key}`}>Future-ready additions</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2" data-testid={`pricing-future-title-${plan.key}`}>Future-ready additions</div>
                   <ul className="space-y-1.5" data-testid={`pricing-future-${plan.key}`}>
                     {plan.future.map(item => (
-                      <li key={item} className="text-xs text-gray-400 flex items-start gap-2">
+                      <li key={item} className="text-xs text-muted-foreground flex items-start gap-2">
                         <span className="text-amber-400 mt-0.5">◇</span>
                         {item}
                       </li>
@@ -527,7 +527,7 @@ export default function MarketingLanding() {
 
                 <button className={`mt-6 w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-95 ${plan.popular
                   ? 'premium-btn text-foreground'
-                  : 'bg-gray-50 border border-gray-200 text-gray-900 hover:bg-gray-100'
+                  : 'bg-gray-50 border border-border text-foreground hover:bg-gray-100'
                   }`} data-testid={`pricing-cta-${plan.key}`}>
                   Choose {plan.name}
                 </button>
@@ -549,9 +549,9 @@ export default function MarketingLanding() {
             <div className="light-card p-6" data-testid="roadmap-list">
               <div className="space-y-4">
                 {roadmapList.map((item, i) => (
-                  <div key={i} className="relative pl-6 border-l-2 border-gray-200 group/item">
-                    <div className="absolute -left-1.5 top-1.5 w-2.5 h-2.5 rounded-full bg-white border-2 border-gray-300 group-hover/item:border-red-500 group-hover/item:bg-red-50 transition-colors" />
-                    <p className="text-sm text-gray-600 group-hover/item:text-gray-900 transition-colors font-medium">{item}</p>
+                  <div key={i} className="relative pl-6 border-l-2 border-border group/item">
+                    <div className="absolute -left-1.5 top-1.5 w-2.5 h-2.5 rounded-full bg-white border-2 border-border group-hover/item:border-red-500 group-hover/item:bg-red-50 transition-colors" />
+                    <p className="text-sm text-muted-foreground group-hover/item:text-gray-900 transition-colors font-medium">{item}</p>
                   </div>
                 ))}
               </div>
@@ -581,7 +581,7 @@ export default function MarketingLanding() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 px-6 lg:px-12 py-10 bg-gray-50" data-testid="marketing-footer">
+      <footer className="border-t border-border px-6 lg:px-12 py-10 bg-gray-50" data-testid="marketing-footer">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-6 text-sm text-gray-500">
           <div className="font-medium">© 2026 restin.ai — All rights reserved.</div>
           <div className="flex flex-wrap gap-6">

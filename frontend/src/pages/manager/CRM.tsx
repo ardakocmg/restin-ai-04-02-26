@@ -143,7 +143,7 @@ export default function CRMPage() {
           </div>
         ) : guests.length === 0 ? (
           <div className="py-20 text-center bg-background border border-border rounded-2xl">
-            <Users className="w-12 h-12 text-zinc-800 mx-auto mb-4" />
+            <Users className="w-12 h-12 text-foreground mx-auto mb-4" />
             <h3 className="text-foreground font-black uppercase italic tracking-tighter text-xl">No Guests Found</h3>
             <p className="text-muted-foreground font-bold uppercase text-[11px]">Expand your search or clear filters</p>
           </div>
@@ -199,7 +199,7 @@ export default function CRMPage() {
                       <Clock className="w-3 h-3" />
                       {guest.last_visit || guest.visit_summary?.last_visit ? `Last seen ${new Date(guest.last_visit || guest.visit_summary?.last_visit || '').toLocaleDateString()}` : 'New Guest'}
                     </div>
-                    <ChevronRight className="w-4 h-4 text-zinc-700 group-hover:text-foreground transition-all group-hover:translate-x-1" />
+                    <ChevronRight className="w-4 h-4 text-foreground group-hover:text-foreground transition-all group-hover:translate-x-1" />
                   </div>
                 </CardContent>
               </Card>

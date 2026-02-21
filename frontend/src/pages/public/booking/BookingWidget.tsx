@@ -178,7 +178,7 @@ export default function BookingWidget() {
 
     const renderStep4 = () => (
         <div className="text-center py-8 space-y-4">
-            <div className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto">
+            <div className="w-16 h-16 bg-green-500/20 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle className="w-8 h-8" />
             </div>
             <div>

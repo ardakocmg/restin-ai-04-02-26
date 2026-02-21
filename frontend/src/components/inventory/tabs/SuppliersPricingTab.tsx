@@ -74,13 +74,13 @@ export default function SuppliersPricingTab({ data = [], sku }) {
         <>
           {preferred && (
             <div>
-              <h3 className="text-sm font-medium text-slate-700 mb-2">Preferred Supplier</h3>
+              <h3 className="text-sm font-medium text-foreground mb-2">Preferred Supplier</h3>
               <SupplierCard supplierData={preferred} isPreferred={true} />
             </div>
           )}
           {others.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-slate-700 mb-2">Alternative Suppliers</h3>
+              <h3 className="text-sm font-medium text-foreground mb-2">Alternative Suppliers</h3>
               <div className="space-y-3">
                 {others.map((s, idx) => (
                   <SupplierCard key={idx} supplierData={s} isPreferred={false} />

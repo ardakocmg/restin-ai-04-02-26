@@ -103,7 +103,7 @@ export default function DeliveryAggregators() {
                     <CardTitle className="text-lg">{conn.connector_key}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-slate-600 mb-3">
+                    <p className="text-sm text-muted-foreground mb-3">
                       {Object.values(conn.supports).filter(v => v).length} capabilities
                     </p>
                     <Button variant="outline" size="sm" className="w-full">
@@ -132,7 +132,7 @@ export default function DeliveryAggregators() {
               ) : (
                 <div className="space-y-2">
                   {deliveryOrders.slice(0, 10).map((order) => (
-                    <div key={order.id} className="p-4 bg-slate-50 rounded border">
+                    <div key={order.id} className="p-4 bg-background rounded border">
                       <div className="flex items-center justify-between mb-2">
                         <div>
                           <span className="font-medium text-foreground">{order.display_id}</span>
@@ -166,7 +166,7 @@ export default function DeliveryAggregators() {
               ) : (
                 <div className="space-y-2">
                   {menuMappings.slice(0, 10).map((mapping, idx) => (
-                    <div key={idx} className="p-3 bg-slate-50 rounded flex items-center justify-between">
+                    <div key={idx} className="p-3 bg-background rounded flex items-center justify-between">
                       <div>
                         <span className="text-sm font-medium">{mapping.sku_id?.substring(0, 8)}</span>
                         <Badge variant="outline" className="ml-2 text-xs">{mapping.connector_key}</Badge>

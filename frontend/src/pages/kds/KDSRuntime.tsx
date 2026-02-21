@@ -175,7 +175,7 @@ function KDSRuntime() {
               key={status}
               onClick={() => setFilter(status)}
               className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${filter === status
-                ? "bg-red-500/10 text-red-500 border border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
+                ? "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
                 : "bg-card text-muted-foreground border border-border hover:bg-secondary hover:text-foreground"
                 }`}
             >
@@ -276,7 +276,7 @@ function KDSRuntime() {
       {/* Empty State */}
       {filteredTickets.length === 0 && (
         <div className="text-center py-20">
-          <ChefHat className="w-20 h-20 mx-auto text-gray-600 mb-4" />
+          <ChefHat className="w-20 h-20 mx-auto text-muted-foreground mb-4" />
           <p className="text-2xl font-medium text-gray-400">No orders in {filter} status</p>
         </div>
       )}

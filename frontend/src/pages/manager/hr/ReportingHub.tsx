@@ -18,10 +18,10 @@ export default function ReportingHub() {
   const navigate = useNavigate();
 
   return (
-    <div className="p-6 bg-slate-50 dark:bg-slate-900 min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-foreground dark:text-slate-50">Reporting</h1>
-        <p className="text-slate-600 dark:text-slate-400 mt-1">HR Analytics & Reports</p>
+        <p className="text-muted-foreground mt-1">HR Analytics & Reports</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
@@ -34,7 +34,7 @@ export default function ReportingHub() {
               onClick={() => navigate(report.path)}
             >
               <CardContent className="p-6 flex flex-col items-center text-center">
-                <Icon className="h-12 w-12 text-blue-500 mb-3" />
+                <Icon className="h-12 w-12 text-blue-600 dark:text-blue-400 mb-3" />
                 <h3 className="font-semibold text-foreground dark:text-slate-50 text-sm">{report.title}</h3>
               </CardContent>
             </Card>

@@ -164,7 +164,7 @@ export default function ReservationModal({ open, onOpenChange, venueId, onCreate
                                             disabled={!s.available}
                                             onClick={() => setFormData({ ...formData, time: s.time })}
                                             className={`text-[10px] p-2 rounded border transition-all ${!s.available
-                                                ? 'bg-background border-border text-zinc-800 cursor-not-allowed'
+                                                ? 'bg-background border-border text-foreground cursor-not-allowed'
                                                 : formData.time === s.time
                                                     ? 'bg-red-600 border-red-600 text-foreground font-black'
                                                     : 'bg-card border-border text-muted-foreground hover:border-red-500/50'

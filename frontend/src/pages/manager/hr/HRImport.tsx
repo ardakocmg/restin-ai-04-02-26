@@ -168,7 +168,7 @@ export default function HRImport() {
                                     <Download className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
                                     <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest group-hover:text-blue-300">Download {importType === 'clocking' ? 'Clocking' : 'Employee'} Template</span>
                                 </div>
-                                <Button variant="link" className="p-0 h-auto text-[10px] font-black uppercase text-blue-500 tracking-tighter">
+                                <Button variant="link" className="p-0 h-auto text-[10px] font-black uppercase text-blue-600 dark:text-blue-400 tracking-tighter">
                                     README_IMPORT_GUIDE.PDF
                                 </Button>
                             </div>
@@ -180,7 +180,7 @@ export default function HRImport() {
                     <div className="space-y-6 scale-in-center">
                         <Card className="bg-card/30 border-blue-500/20">
                             <CardContent className="p-12 flex flex-col items-center text-center space-y-6">
-                                <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20 text-green-500 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+                                <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20 text-green-600 dark:text-green-400 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
                                     <CheckCircle2 className="w-10 h-10" />
                                 </div>
                                 <div className="space-y-2">
@@ -196,7 +196,7 @@ export default function HRImport() {
                                     </div>
                                     <div className="bg-background p-4 rounded-xl border border-border text-left">
                                         <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1">New Records</p>
-                                        <p className="text-2xl font-black text-blue-500 leading-none">12</p>
+                                        <p className="text-2xl font-black text-blue-600 dark:text-blue-400 leading-none">12</p>
                                     </div>
                                 </div>
                             </CardContent>

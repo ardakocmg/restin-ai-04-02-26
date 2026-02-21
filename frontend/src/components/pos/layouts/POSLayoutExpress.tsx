@@ -202,7 +202,7 @@ export default function POSLayoutExpress({
                   h-10 rounded-xl flex items-center gap-1.5 px-3 whitespace-nowrap shrink-0
                   transition-all duration-150 text-sm font-medium
                   ${isActive
-                                        ? 'bg-white text-zinc-900 shadow-lg shadow-white/10'
+                                        ? 'bg-white text-foreground shadow-lg shadow-white/10'
                                         : 'bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-secondary-foreground'
                                     }
                 `}

@@ -79,7 +79,7 @@ export default function WebBuilder() {
                 <Card className="bg-card/40 border-border/50 p-6 flex-1 flex flex-col backdrop-blur-xl">
                     <div className="flex items-center justify-between mb-8">
                         <h2 className="text-xl font-black text-foreground italic tracking-tighter">WEB ARCHITECT</h2>
-                        <div className="bg-emerald-500/20 text-emerald-500 text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest border border-emerald-500/20">Synced</div>
+                        <div className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest border border-emerald-500/20">Synced</div>
                     </div>
 
                     <div className="flex p-1 bg-background/50 rounded-xl mb-6">
@@ -179,7 +179,7 @@ export default function WebBuilder() {
                         <section className="p-12 space-y-8">
                             <div className="flex items-baseline justify-between border-b border-border pb-4">
                                 <h3 className="text-2xl font-black text-foreground italic">Signature Dishes</h3>
-                                <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">Live from POS</span>
+                                <span className="text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest">Live from POS</span>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

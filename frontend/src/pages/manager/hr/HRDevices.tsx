@@ -101,7 +101,7 @@ export default function HRDevices() {
                                             <div>
                                                 <div className="flex items-center gap-3">
                                                     <h3 className="text-lg font-black text-foreground uppercase tracking-tighter leading-none">{device.name}</h3>
-                                                    <Badge variant="outline" className={`text-[9px] font-black uppercase ${device.status === 'Online' ? 'border-green-500/50 text-green-500 bg-green-500/5' : 'border-red-500/50 text-red-500 bg-red-500/5'}`}>
+                                                    <Badge variant="outline" className={`text-[9px] font-black uppercase ${device.status === 'Online' ? 'border-green-500/50 text-green-600 dark:text-green-400 bg-green-500/5' : 'border-red-500/50 text-red-600 dark:text-red-400 bg-red-500/5'}`}>
                                                         {device.status}
                                                     </Badge>
                                                 </div>
@@ -160,7 +160,7 @@ export default function HRDevices() {
                                             <span>•</span>
                                             <span>Uptime: 247d 12h 4m</span>
                                         </div>
-                                        <span className="text-[9px] font-bold text-blue-500 uppercase tracking-widest flex items-center gap-1">
+                                        <span className="text-[9px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest flex items-center gap-1">
                                             <CheckCircle2 className="w-3 h-3" />
                                             Synchronized
                                         </span>

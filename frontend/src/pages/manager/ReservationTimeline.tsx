@@ -75,7 +75,7 @@ export default function ReservationTimeline() {
                         <Button variant="outline" size="sm" onClick={() => setViewDate(addDays(viewDate, -1))}>
                             <ChevronLeft className="w-4 h-4" />
                         </Button>
-                        <div className="px-4 py-2 bg-zinc-100 dark:bg-card border border-zinc-200 dark:border-border rounded-md text-xs font-black uppercase text-zinc-900 dark:text-foreground">
+                        <div className="px-4 py-2 bg-muted dark:bg-card border border-border dark:border-border rounded-md text-xs font-black uppercase text-foreground dark:text-foreground">
                             {format(viewDate, 'EEEE, MMM do')}
                         </div>
                         <Button variant="outline" size="sm" onClick={() => setViewDate(addDays(viewDate, 1))}>
@@ -101,11 +101,11 @@ export default function ReservationTimeline() {
                         })().map((s, i) => {
                             const Icon = s.icon;
                             return (
-                                <Card key={i} className="bg-white dark:bg-background border-zinc-200 dark:border-border shadow-xl">
+                                <Card key={i} className="bg-white dark:bg-background border-border dark:border-border shadow-xl">
                                     <CardContent className="p-4 flex items-center justify-between">
                                         <div>
                                             <p className="text-[10px] font-black text-muted-foreground dark:text-muted-foreground uppercase tracking-widest">{s.label}</p>
-                                            <p className="text-2xl font-black text-zinc-900 dark:text-foreground">{s.value}</p>
+                                            <p className="text-2xl font-black text-foreground dark:text-foreground">{s.value}</p>
                                         </div>
                                         <Icon className={`w-8 h-8 ${s.color} opacity-20`} />
                                     </CardContent>
@@ -115,14 +115,14 @@ export default function ReservationTimeline() {
                     </div>
 
                     {/* Timeline Grid */}
-                    <Card className="bg-white dark:bg-background border-zinc-200 dark:border-border shadow-2xl overflow-hidden">
+                    <Card className="bg-white dark:bg-background border-border dark:border-border shadow-2xl overflow-hidden">
                         <CardContent className="p-0 overflow-x-auto">
                             <div className="min-w-[1200px]">
                                 {/* Header */}
-                                <div className="flex bg-zinc-100 dark:bg-card border-b border-zinc-200 dark:border-border">
-                                    <div className="w-48 p-4 border-r border-zinc-200 dark:border-border text-[10px] font-black text-muted-foreground uppercase">Table / Section</div>
+                                <div className="flex bg-muted dark:bg-card border-b border-border dark:border-border">
+                                    <div className="w-48 p-4 border-r border-border dark:border-border text-[10px] font-black text-muted-foreground uppercase">Table / Section</div>
                                     {hours.map(h => (
-                                        <div key={h} className="flex-1 p-4 text-center border-r border-zinc-200 dark:border-border text-xs font-black text-zinc-700 dark:text-foreground">{h}</div>
+                                        <div key={h} className="flex-1 p-4 text-center border-r border-border dark:border-border text-xs font-black text-foreground dark:text-foreground">{h}</div>
                                     ))}
                                 </div>
 
@@ -133,9 +133,9 @@ export default function ReservationTimeline() {
                                     <div className="p-12 text-center text-muted-foreground italic font-bold">No operational data for this date</div>
                                 ) : (
                                     reservations.map((res, idx) => (
-                                        <div key={res.id || idx} className="flex border-b border-zinc-200 dark:border-border hover:bg-zinc-50 dark:hover:bg-white/[0.02] group">
-                                            <div className="w-48 p-4 border-r border-zinc-200 dark:border-border flex flex-col">
-                                                <span className="text-xs font-bold text-zinc-900 dark:text-foreground uppercase">{res.table_id || `Table ${idx + 1}`}</span>
+                                        <div key={res.id || idx} className="flex border-b border-border dark:border-border hover:bg-zinc-50 dark:hover:bg-white/[0.02] group">
+                                            <div className="w-48 p-4 border-r border-border dark:border-border flex flex-col">
+                                                <span className="text-xs font-bold text-foreground dark:text-foreground uppercase">{res.table_id || `Table ${idx + 1}`}</span>
                                                 <span className="text-[10px] text-muted-foreground font-medium">{res.guest_count} Pax | {res.channel}</span>
                                             </div>
                                             <div className="flex-1 relative h-16 flex">
@@ -155,7 +155,7 @@ export default function ReservationTimeline() {
 
                                                 {/* Grid markings */}
                                                 {hours.map(h => (
-                                                    <div key={h} className="flex-1 border-r border-zinc-200 dark:border-border opacity-20"></div>
+                                                    <div key={h} className="flex-1 border-r border-border dark:border-border opacity-20"></div>
                                                 ))}
                                             </div>
                                         </div>

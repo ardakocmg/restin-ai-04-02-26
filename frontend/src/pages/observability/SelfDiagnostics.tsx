@@ -33,9 +33,9 @@ export default function SelfDiagnostics() {
   };
 
   const getStatusIcon = (status) => {
-    if (status === 'OK') return <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto" />;
-    if (status === 'WARN') return <AlertTriangle className="h-16 w-16 text-red-500 mx-auto" />;
-    return <XCircle className="h-16 w-16 text-red-500 mx-auto" />;
+    if (status === 'OK') return <CheckCircle2 className="h-16 w-16 text-green-600 dark:text-green-400 mx-auto" />;
+    if (status === 'WARN') return <AlertTriangle className="h-16 w-16 text-red-600 dark:text-red-400 mx-auto" />;
+    return <XCircle className="h-16 w-16 text-red-600 dark:text-red-400 mx-auto" />;
   };
 
   const getStatusBadge = (status) => {
@@ -90,7 +90,7 @@ export default function SelfDiagnostics() {
               <CardContent>
                 <div className="space-y-3">
                   {report.failed_checks.map((check, idx) => (
-                    <div key={idx} className="p-4 bg-slate-50 rounded border">
+                    <div key={idx} className="p-4 bg-background rounded border">
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-medium text-foreground">{check.check}</span>
                         {getStatusBadge(check.status)}

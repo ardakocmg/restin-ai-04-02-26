@@ -35,19 +35,19 @@ export default function SkillsPassDocument({ data, view = 'certificate' }) {
 
                 <div className="space-y-8 mb-16">
                     <div>
-                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Issue Date</div>
+                        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Issue Date</div>
                         <div className="text-lg font-bold">{issuanceDate}</div>
                     </div>
                     <div>
-                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Recipient</div>
+                        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Recipient</div>
                         <div className="text-lg font-bold">{fullName}</div>
                     </div>
                     <div>
-                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Issuer</div>
+                        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Issuer</div>
                         <div className="text-lg font-bold">{issuer}</div>
                     </div>
                     <div>
-                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Issuer Information</div>
+                        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Issuer Information</div>
                         <div className="text-xs break-all max-w-md mx-auto">Public Key: {publicKey}</div>
                         <div className="text-blue-600 underline text-xs mt-1">certificates.skillspass.org.mt</div>
                     </div>
@@ -89,7 +89,7 @@ export default function SkillsPassDocument({ data, view = 'certificate' }) {
                         </div>
                         <div className="text-left">
                             <div className="text-6xl font-black tracking-tighter leading-none mb-1">Skills Pass</div>
-                            <div className="text-3xl font-bold text-orange-600 tracking-tight leading-none">Tourism & Hospitality</div>
+                            <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 tracking-tight leading-none">Tourism & Hospitality</div>
                         </div>
                     </div>
                 </div>
@@ -99,22 +99,22 @@ export default function SkillsPassDocument({ data, view = 'certificate' }) {
 
                     <div className="space-y-6">
                         <div>
-                            <div className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Full Name</div>
+                            <div className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-1">Full Name</div>
                             <div className="text-3xl font-bold uppercase">{fullName}</div>
                         </div>
 
                         <div>
-                            <div className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Candidate Number</div>
+                            <div className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-1">Candidate Number</div>
                             <div className="text-2xl font-bold">{candidateNumber}</div>
                         </div>
 
                         <div>
-                            <div className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Job Family</div>
+                            <div className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-1">Job Family</div>
                             <div className="text-xl font-bold">{jobFamily}</div>
                         </div>
 
                         <div>
-                            <div className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Level</div>
+                            <div className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-1">Level</div>
                             <div className="text-2xl font-black tracking-widest">{level}</div>
                         </div>
                     </div>
@@ -127,7 +127,7 @@ export default function SkillsPassDocument({ data, view = 'certificate' }) {
 
                     {/* Signature Section */}
                     <div className="flex flex-col items-center pt-8">
-                        <div className="mb-2 italic text-3xl font-serif text-gray-800 tracking-wider">
+                        <div className="mb-2 italic text-3xl font-serif text-foreground tracking-wider">
                             {/* Placeholder for Signature Image */}
                             <span style={{ fontFamily: 'cursive' }}>{issuerName}</span>
                         </div>
@@ -138,7 +138,7 @@ export default function SkillsPassDocument({ data, view = 'certificate' }) {
                     </div>
 
                     <div className="pt-6">
-                        <div className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Issuance Date</div>
+                        <div className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-1">Issuance Date</div>
                         <div className="text-lg font-bold">{issuanceDate}</div>
                     </div>
 

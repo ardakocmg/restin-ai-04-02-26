@@ -167,7 +167,7 @@ export default function ModifierDialog({ item, open, onClose, onConfirm }: Modif
 
         {loading ? (
           <div className="py-12 text-center">
-            <Loader2 className="w-8 h-8 text-red-500 animate-spin mx-auto" />
+            <Loader2 className="w-8 h-8 text-red-600 dark:text-red-400 animate-spin mx-auto" />
           </div>
         ) : modifierGroups.length === 0 ? (
           <div className="py-8 text-center text-muted-foreground">

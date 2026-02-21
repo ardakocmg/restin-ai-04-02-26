@@ -144,7 +144,7 @@ export default function KDSSetup() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 text-green-500 animate-spin mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 text-green-600 dark:text-green-400 animate-spin mx-auto mb-4" />
           <p className="text-foreground text-lg">{t('common.loading')}</p>
         </div>
       </div>

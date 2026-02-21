@@ -112,9 +112,9 @@ function StatusBadge({ status }: { status: string }) {
 // ── Order Type Badge (Gap 13) ──────────────────────────────────────
 function OrderTypeBadge({ type }: { type: string }) {
   if (type === 'internal') {
-    return <Badge variant="outline" className="text-xs text-purple-500 border-purple-400 gap-1"><ChefHat className="h-3 w-3" /> Internal</Badge>;
+    return <Badge variant="outline" className="text-xs text-purple-600 dark:text-purple-400 border-purple-400 gap-1"><ChefHat className="h-3 w-3" /> Internal</Badge>;
   }
-  return <Badge variant="outline" className="text-xs text-blue-500 border-blue-400 gap-1"><Truck className="h-3 w-3" /> Transfer</Badge>;
+  return <Badge variant="outline" className="text-xs text-blue-600 dark:text-blue-400 border-blue-400 gap-1"><Truck className="h-3 w-3" /> Transfer</Badge>;
 }
 
 export default function StockTransfersComplete() {
@@ -301,7 +301,7 @@ export default function StockTransfersComplete() {
     {
       key: 'priority', label: 'Priority', size: 80,
       render: (row: TransferData) => {
-        if (row.priority === 'urgent') return <Badge variant="outline" className="text-xs text-red-500 border-red-400"><AlertTriangle className="h-3 w-3 mr-1" /> Urgent</Badge>;
+        if (row.priority === 'urgent') return <Badge variant="outline" className="text-xs text-red-600 dark:text-red-400 border-red-400"><AlertTriangle className="h-3 w-3 mr-1" /> Urgent</Badge>;
         return <span className="text-xs text-muted-foreground">Normal</span>;
       },
     },
@@ -335,7 +335,7 @@ export default function StockTransfersComplete() {
             <Plus className="h-4 w-4 mr-2" />New Transfer
           </Button>
           {/* Gap 13: Internal Order button */}
-          <Button size="sm" variant="outline" className="border-purple-400 text-purple-500 hover:bg-purple-500/10" onClick={() => { setFormData(prev => ({ ...prev, order_type: 'internal' })); setShowCreate(true); }}>
+          <Button size="sm" variant="outline" className="border-purple-400 text-purple-600 dark:text-purple-400 hover:bg-purple-500/10" onClick={() => { setFormData(prev => ({ ...prev, order_type: 'internal' })); setShowCreate(true); }}>
             <ChefHat className="h-4 w-4 mr-2" />Internal Order
           </Button>
         </div>

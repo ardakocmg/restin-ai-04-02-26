@@ -51,17 +51,17 @@ function KDSStations() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-6">
+      <div className="min-h-screen bg-background p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-          <div className="h-32 bg-gray-200 rounded"></div>
+          <div className="h-8 bg-muted rounded w-1/4"></div>
+          <div className="h-32 bg-muted rounded"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
@@ -82,7 +82,7 @@ function KDSStations() {
         {stations.map((station) => (
           <div
             key={station.id}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition cursor-pointer"
+            className="bg-white rounded-xl shadow-sm border border-border p-6 hover:shadow-md transition cursor-pointer"
             onClick={() => navigate(`/manager/kds/stations/${station.station_key}`)}
           >
             <div className="flex items-start justify-between mb-4">
@@ -105,7 +105,7 @@ function KDSStations() {
                 className={`p-2 rounded-lg transition ${
                   station.enabled
                     ? 'bg-green-100 text-green-600 dark:text-green-400 hover:bg-green-200'
-                    : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+                    : 'bg-gray-100 text-muted-foreground hover:bg-gray-200'
                 }`}
               >
                 {station.enabled ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
@@ -120,7 +120,7 @@ function KDSStations() {
                   {station.routing_rules.map((rule, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded"
+                      className="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 rounded"
                     >
                       {rule.type}: {rule.values.join(', ')}
                     </span>
@@ -132,13 +132,13 @@ function KDSStations() {
             </div>
 
             {/* Quick Actions */}
-            <div className="mt-4 pt-4 border-t border-gray-100 flex gap-2">
+            <div className="mt-4 pt-4 border-t border-border flex gap-2">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate(`/kds/runtime/${station.station_key}`);
                 }}
-                className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 rounded-lg hover:bg-blue-100 transition"
+                className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/20 rounded-lg hover:bg-blue-100 transition"
               >
                 Open Display
               </button>
@@ -147,7 +147,7 @@ function KDSStations() {
                   e.stopPropagation();
                   navigate(`/manager/kds/stations/${station.station_key}`);
                 }}
-                className="p-2 text-gray-600 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                className="p-2 text-muted-foreground bg-background rounded-lg hover:bg-gray-100 transition"
               >
                 <Settings className="w-4 h-4" />
               </button>
@@ -159,7 +159,7 @@ function KDSStations() {
         {stations.length === 0 && (
           <div className="col-span-full">
             <div className="text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-300">
-              <Monitor className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+              <Monitor className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium text-foreground mb-2">No stations configured</h3>
               <p className="text-gray-500 mb-4">Get started by creating your first KDS station</p>
               <button

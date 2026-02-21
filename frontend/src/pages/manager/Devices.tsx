@@ -299,7 +299,7 @@ export default function Devices() {
                             </div>
                             <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">Signal Strength</div>
                             <div className="text-2xl font-black text-foreground">94%</div>
-                            <div className="mt-2 text-[10px] text-emerald-500 font-bold flex items-center gap-1">
+                            <div className="mt-2 text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
                                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                 Excellent Connection
                             </div>

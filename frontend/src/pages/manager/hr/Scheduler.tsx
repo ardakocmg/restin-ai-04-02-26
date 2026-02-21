@@ -514,7 +514,7 @@ export default function Scheduler() {
                             </div>
                           ) : (
                             <div className="w-full h-full hover:bg-white/5 rounded-md transition-colors cursor-crosshair flex items-center justify-center group/add">
-                              <Plus className="h-4 w-4 text-zinc-700 group-hover/add:text-muted-foreground transition-colors" />
+                              <Plus className="h-4 w-4 text-foreground group-hover/add:text-muted-foreground transition-colors" />
                             </div>
                           )}
                         </td>

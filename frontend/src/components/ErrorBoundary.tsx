@@ -31,7 +31,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
           <div className="bg-card border border-border rounded-lg p-8 max-w-md text-center">
-            <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+            <AlertTriangle className="w-16 h-16 text-red-600 dark:text-red-400 mx-auto mb-4" />
             <h1 className="text-foreground text-2xl font-bold mb-2">Something went wrong</h1>
             <p className="text-secondary-foreground mb-6">
               Please refresh the page. If this persists, contact your manager.

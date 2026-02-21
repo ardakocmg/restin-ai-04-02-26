@@ -44,7 +44,7 @@ export default function AutomationsPage() {
           ) : (
             <div className="space-y-3">
               {flows.map(flow => (
-                <div key={flow.id} className="p-4 bg-slate-50 rounded border">
+                <div key={flow.id} className="p-4 bg-background rounded border">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-medium text-slate-900">{flow.name}</span>
                     <Badge variant={flow.status === 'ACTIVE' ? 'default' : 'secondary'}>

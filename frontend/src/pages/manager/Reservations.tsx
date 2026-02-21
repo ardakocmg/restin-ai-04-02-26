@@ -101,7 +101,7 @@ export default function Reservations() {
         <Card className="bg-background border-border shadow-xl border-b-2" style={{ borderBottomColor: '#3b82f6' }}>
           <CardContent className="p-4">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Top Channel</p>
-            <p className="text-sm font-black text-blue-500 uppercase mt-1 truncate">
+            <p className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase mt-1 truncate">
               {Object.keys(analytics?.channel_distribution || {})[0] || 'N/A'}
             </p>
           </CardContent>
@@ -156,7 +156,7 @@ export default function Reservations() {
                   <div className="flex gap-1">
                     {row.status === 'confirmed' && (
                       <Button
-                        variant="ghost" size="icon" className="h-7 w-7 text-green-500 hover:bg-green-500/10"
+                        variant="ghost" size="icon" className="h-7 w-7 text-green-600 dark:text-green-400 hover:bg-green-500/10"
                         onClick={() => updateStatus(row.id, 'seated')}
                       >
                         <Users className="h-3 w-3" />
@@ -164,7 +164,7 @@ export default function Reservations() {
                     )}
                     {row.status === 'seated' && (
                       <Button
-                        variant="ghost" size="icon" className="h-7 w-7 text-blue-500 hover:bg-blue-500/10"
+                        variant="ghost" size="icon" className="h-7 w-7 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10"
                         onClick={() => updateStatus(row.id, 'completed')}
                       >
                         <Calendar className="h-3 w-3" />
@@ -172,7 +172,7 @@ export default function Reservations() {
                     )}
                     {['pending', 'confirmed'].includes(row.status) && (
                       <Button
-                        variant="ghost" size="icon" className="h-7 w-7 text-red-500 hover:bg-red-500/10"
+                        variant="ghost" size="icon" className="h-7 w-7 text-red-600 dark:text-red-400 hover:bg-red-500/10"
                         onClick={() => updateStatus(row.id, 'no_show')}
                       >
                         <ShieldAlert className="h-3 w-3" />

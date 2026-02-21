@@ -200,7 +200,7 @@ export default function StudioDashboard() {
                         ))}
 
                         {/* Empty State / Add New */}
-                        <button className="h-full border-2 border-dashed border-zinc-900 rounded-[inherit] flex flex-col items-center justify-center p-8 text-zinc-800 hover:text-muted-foreground hover:border-border transition-all group">
+                        <button className="h-full border-2 border-dashed border-zinc-900 rounded-[inherit] flex flex-col items-center justify-center p-8 text-foreground hover:text-muted-foreground hover:border-border transition-all group">
                             <div className="w-16 h-16 rounded-full bg-card/50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                                 <Wand2 size={32} />
                             </div>

@@ -119,7 +119,7 @@ function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground'
 function StatusBadge({ status }: { status: Supplier['status'] }) {
     const config = {
         active: { label: 'Active', className: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' },
-        inactive: { label: 'Inactive', className: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/30' },
+        inactive: { label: 'Inactive', className: 'bg-zinc-500/10 text-muted-foreground border-zinc-500/30' },
         on_hold: { label: 'On Hold', className: 'bg-amber-500/10 text-amber-400 border-amber-500/30' },
         blocked: { label: 'Blocked', className: 'bg-red-500/10 text-red-400 border-red-500/30' },
     }[status];

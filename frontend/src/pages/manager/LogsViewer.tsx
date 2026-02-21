@@ -13,10 +13,10 @@ import { RefreshCw, Search } from 'lucide-react';
 import { logger } from '@/lib/logger';
 
 const LEVEL_COLORS = {
-  ERROR: 'bg-red-100 text-red-700 border-red-200',
+  ERROR: 'bg-red-100 text-red-700 dark:text-red-400 border-red-200',
   WARN: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  INFO: 'bg-blue-100 text-blue-700 border-blue-200',
-  AUDIT: 'bg-green-100 text-green-700 border-green-200',
+  INFO: 'bg-blue-100 text-blue-700 dark:text-blue-400 border-blue-200',
+  AUDIT: 'bg-green-100 text-green-700 dark:text-green-400 border-green-200',
   SECURITY: 'bg-purple-100 text-purple-700 border-purple-200'
 };
 
@@ -118,7 +118,7 @@ export default function LogsViewer() {
               <p className="text-center py-8 text-gray-500">No logs found</p>
             ) : (
               logs.map((log, idx) => (
-                <div key={log.id || idx} className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                <div key={log.id || idx} className="p-3 border border-border rounded-lg hover:bg-gray-50">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
@@ -128,7 +128,7 @@ export default function LogsViewer() {
                         <span className="text-xs font-mono text-gray-500">{log.code}</span>
                       </div>
                       <p className="text-sm text-gray-900">{log.message}</p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-muted-foreground mt-1">
                         {new Date(log.ts).toLocaleString()} • {log.user_display_id || 'System'}
                       </p>
                     </div>

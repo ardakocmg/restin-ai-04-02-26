@@ -22,7 +22,7 @@ export default function AuditTab({ entries = [] }) {
                     User: {entry.user_id?.substring(0, 8)}
                   </p>
                   {entry.payload && Object.keys(entry.payload).length > 0 && (
-                    <pre className="text-xs text-slate-600 mt-2 bg-slate-50 p-2 rounded">
+                    <pre className="text-xs text-muted-foreground mt-2 bg-background p-2 rounded">
                       {JSON.stringify(entry.payload, null, 2)}
                     </pre>
                   )}

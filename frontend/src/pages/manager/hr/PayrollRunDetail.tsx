@@ -107,7 +107,7 @@ export default function PayrollRunDetail() {
                         <Button variant="outline" onClick={() => navigate('/manager/hr/payroll')}>
                             <ArrowLeft className="mr-2 h-4 w-4" /> Back
                         </Button>
-                        <Button variant="outline" className="border-green-500/20 text-green-500 hover:bg-green-500/10">
+                        <Button variant="outline" className="border-green-500/20 text-green-600 dark:text-green-400 hover:bg-green-500/10">
                             <CheckCircle2 className="mr-2 h-4 w-4" /> Validate
                         </Button>
                         <Button className="bg-blue-600 hover:bg-blue-500">

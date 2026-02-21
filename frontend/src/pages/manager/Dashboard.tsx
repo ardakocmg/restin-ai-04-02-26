@@ -339,7 +339,7 @@ export default function Dashboard() {
                       tabIndex={0}
                       onClick={handleLowStockClick}
                     >
-                      <Package className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
+                      <Package className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-foreground">Low Stock Alert</p>
                         <p className="text-xs mt-1 text-secondary-foreground">
@@ -358,7 +358,7 @@ export default function Dashboard() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-3" />
+                    <CheckCircle2 className="h-12 w-12 text-green-600 dark:text-green-400 mx-auto mb-3" />
                     <p className="text-sm text-muted-foreground">No active alerts</p>
                   </div>
                 )}

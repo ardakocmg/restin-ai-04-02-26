@@ -123,7 +123,7 @@ export default function HRMap() {
                                             {m.loc}
                                         </span>
                                     </div>
-                                    <span className="text-[8px] font-black text-green-500 bg-green-500/10 px-2 py-0.5 rounded uppercase">Live</span>
+                                    <span className="text-[8px] font-black text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-0.5 rounded uppercase">Live</span>
                                 </div>
                                 <div className="flex items-center justify-between text-[9px] font-bold">
                                     <span className="text-muted-foreground">{m.time}</span>

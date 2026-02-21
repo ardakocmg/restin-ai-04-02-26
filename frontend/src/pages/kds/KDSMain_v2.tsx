@@ -158,7 +158,7 @@ export default function KDSMain() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-green-500 animate-spin" />
+        <Loader2 className="w-12 h-12 text-green-600 dark:text-green-400 animate-spin" />
       </div>
     );
   }
@@ -206,7 +206,7 @@ export default function KDSMain() {
       <div className="pt-20 pb-20 px-4">
         {flattenedItems.length === 0 ? (
           <div className="text-center py-20">
-            <CheckCircle className="w-16 h-16 mx-auto text-green-500 mb-4" />
+            <CheckCircle className="w-16 h-16 mx-auto text-green-600 dark:text-green-400 mb-4" />
             <p className="text-xl text-foreground mb-2">All Caught Up!</p>
             <p className="text-muted-foreground">No pending items</p>
           </div>

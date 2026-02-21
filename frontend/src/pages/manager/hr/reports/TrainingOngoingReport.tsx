@@ -37,10 +37,10 @@ export default function TrainingOngoingReport() {
 
   const getStatusConfig = (status) => {
     const map = {
-      on_track: { label: 'On Track', className: 'bg-green-500/10 text-green-500 border-green-500/20', icon: CheckCircle2 },
-      at_risk: { label: 'At Risk', className: 'bg-amber-500/10 text-amber-500 border-amber-500/20', icon: AlertTriangle },
-      completed: { label: 'Completed', className: 'bg-blue-500/10 text-blue-500 border-blue-500/20', icon: CheckCircle2 },
-      overdue: { label: 'Overdue', className: 'bg-red-500/10 text-red-500 border-red-500/20', icon: AlertTriangle },
+      on_track: { label: 'On Track', className: 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20', icon: CheckCircle2 },
+      at_risk: { label: 'At Risk', className: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20', icon: AlertTriangle },
+      completed: { label: 'Completed', className: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20', icon: CheckCircle2 },
+      overdue: { label: 'Overdue', className: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20', icon: AlertTriangle },
     };
     return map[status] || map.on_track;
   };

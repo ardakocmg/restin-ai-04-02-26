@@ -84,7 +84,7 @@ export default function TipsManagement() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground dark:text-slate-50 mb-2">Tips Management</h1>
-            <p className="text-slate-600 dark:text-slate-400">Track and allocate tips to staff</p>
+            <p className="text-muted-foreground">Track and allocate tips to staff</p>
           </div>
           <Button className="bg-indigo-500 hover:bg-indigo-600">
             <Plus className="w-4 h-4 mr-2" />
@@ -99,7 +99,7 @@ export default function TipsManagement() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {tipsPools.map((pool) => (
-              <div key={pool.id} className="bg-white dark:bg-slate-900 rounded-lg p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div key={pool.id} className="bg-background rounded-lg p-6 border border-border shadow-sm">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <p className="text-sm text-muted-foreground">{pool.display_id}</p>

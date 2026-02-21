@@ -209,7 +209,7 @@ export default function CarbonFootprint() {
 
             {/* Credits */}
             <Card className="p-4 bg-card border-border flex items-start gap-3">
-                <Leaf className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <Leaf className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
                 <div className="text-xs text-muted-foreground">
                     <strong className="text-foreground">Carbon Estimates:</strong> CO₂ calculations use WRAP food waste emission factors
                     (~2.5 kg CO₂e per kg food waste). Water impact estimated using Water Footprint Network data.

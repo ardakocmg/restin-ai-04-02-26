@@ -134,7 +134,7 @@ export default function FinanceProviderSettings() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="p-4 bg-blue-50 rounded-lg">
+            <div className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
               <p className="text-sm font-medium text-blue-900 mb-2">Vendor-Agnostic Design</p>
               <p className="text-xs text-blue-700">
                 This integration works with ANY Malta-compliant payroll/accounting system.
@@ -143,15 +143,15 @@ export default function FinanceProviderSettings() {
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+              <div className="flex items-center justify-between p-2 bg-background rounded">
                 <span className="text-sm">Mode:</span>
                 <Badge variant="outline">{settings.mode}</Badge>
               </div>
-              <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+              <div className="flex items-center justify-between p-2 bg-background rounded">
                 <span className="text-sm">Provider:</span>
                 <span className="text-sm font-medium">{settings.provider_label}</span>
               </div>
-              <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+              <div className="flex items-center justify-between p-2 bg-background rounded">
                 <span className="text-sm">Status:</span>
                 <Badge variant={settings.enabled ? 'default' : 'secondary'}>
                   {settings.enabled ? 'ACTIVE' : 'INACTIVE'}

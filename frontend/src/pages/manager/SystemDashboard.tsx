@@ -97,11 +97,11 @@ export default function SystemDashboard() {
 
                         <div className="flex items-center gap-3">
                             <div className="flex items-center gap-2 bg-zinc-900 border border-white/10 rounded-lg p-1">
-                                <Button variant="ghost" size="sm" className="h-8 text-zinc-400 hover:text-white">
+                                <Button variant="ghost" size="sm" className="h-8 text-muted-foreground hover:text-white">
                                     Today
                                 </Button>
                                 <div className="h-4 w-[1px] bg-white/10" />
-                                <Button variant="ghost" size="sm" className="h-8 text-zinc-400 hover:text-white">
+                                <Button variant="ghost" size="sm" className="h-8 text-muted-foreground hover:text-white">
                                     Yesterday
                                 </Button>
                                 <div className="h-4 w-[1px] bg-white/10" />
@@ -111,7 +111,7 @@ export default function SystemDashboard() {
                                 </Button>
                             </div>
 
-                            <div className="flex items-center gap-2 text-sm text-zinc-400 px-3 py-1 bg-zinc-900 rounded-full border border-white/5">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground px-3 py-1 bg-zinc-900 rounded-full border border-white/5">
                                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                                 <span className="hidden md:inline">System Operational</span>
                             </div>
@@ -125,27 +125,27 @@ export default function SystemDashboard() {
                                 <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">Today's Revenue</div>
                                 <div className="text-2xl font-bold text-white">€{(stats?.revenue || 0).toFixed(2)}</div>
                             </div>
-                            <DollarSign className="w-8 h-8 text-green-500 opacity-50 group-hover:opacity-100 transition-opacity" />
+                            <DollarSign className="w-8 h-8 text-green-600 dark:text-green-400 opacity-50 group-hover:opacity-100 transition-opacity" />
                         </div>
                         <div onClick={() => window.location.href = '/kds'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-blue-500/50 transition-colors group">
                             <div>
                                 <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">Active Orders</div>
                                 <div className="text-2xl font-bold text-white">{stats?.activeOrders || 0}</div>
                             </div>
-                            <Users className="w-8 h-8 text-blue-500 opacity-50 group-hover:opacity-100 transition-opacity" />
+                            <Users className="w-8 h-8 text-blue-600 dark:text-blue-400 opacity-50 group-hover:opacity-100 transition-opacity" />
                         </div>
                         <div onClick={() => window.location.href = '/manager/devices'} className="bg-zinc-900 border border-white/10 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:border-indigo-500/50 transition-colors group">
                             <div>
                                 <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">Online Devices</div>
                                 <div className="text-2xl font-bold text-white">{stats?.onlineDevices || 0}</div>
                             </div>
-                            <Wifi className="w-8 h-8 text-indigo-500 opacity-50 group-hover:opacity-100 transition-opacity" />
+                            <Wifi className="w-8 h-8 text-indigo-600 dark:text-indigo-400 opacity-50 group-hover:opacity-100 transition-opacity" />
                         </div>
                         <div>
                             <div className="text-zinc-500 text-sm group-hover:text-white transition-colors">System Health</div>
                             <div className="text-2xl font-bold text-green-400">GOOD</div>
                         </div>
-                        <ShieldAlert className="w-8 h-8 text-green-500 opacity-50 group-hover:opacity-100 transition-opacity" />
+                        <ShieldAlert className="w-8 h-8 text-green-600 dark:text-green-400 opacity-50 group-hover:opacity-100 transition-opacity" />
                     </div>
                 </div>
 
@@ -209,7 +209,7 @@ export default function SystemDashboard() {
                         <ScrollArea className="flex-1 p-4">
                             <div className="space-y-4">
                                 {logs.length === 0 ? (
-                                    <p className="text-center text-zinc-500 text-sm py-4">No audit events yet</p>
+                                    <p className="text-center text-muted-foreground text-sm py-4">No audit events yet</p>
                                 ) : logs.map((log, i) => (
                                     <div key={log.id || i} className="flex gap-3 items-start">
                                         <div className={`mt-1 w-2 h-2 rounded-full ${(log.action || '').includes('ERROR') ? 'bg-red-500' : 'bg-blue-500'}`} />
@@ -219,7 +219,7 @@ export default function SystemDashboard() {
                                                 <span className="text-zinc-500 text-xs font-normal">by {typeof log.user === 'object' ? (log.user_name || log.user?.name || JSON.stringify(log.user)) : (log.user_name || log.user || 'System')}</span>
                                             </div>
                                             <div className="text-xs text-zinc-400">{typeof log.details === 'object' ? JSON.stringify(log.details) : (log.details || '')}</div>
-                                            <div className="text-[10px] text-zinc-600 mt-1">{log.time ? format(log.time, 'HH:mm:ss') : ''}</div>
+                                            <div className="text-[10px] text-muted-foreground mt-1">{log.time ? format(log.time, 'HH:mm:ss') : ''}</div>
                                         </div>
                                     </div>
                                 ))}

@@ -204,7 +204,7 @@ export default function ComboBuilder() {
         return (
             <PageContainer title="Combo Builder" description="Loading..." actions={undefined}>
                 <div className="flex items-center justify-center min-h-[40vh]">
-                    <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400 animate-spin" />
                 </div>
             </PageContainer>
         );
@@ -243,7 +243,7 @@ export default function ComboBuilder() {
                     </h3>
                     {combos.length === 0 ? (
                         <div className="p-8 bg-card/50 border border-border rounded-2xl text-center">
-                            <Utensils className="w-10 h-10 text-zinc-700 mx-auto mb-3" />
+                            <Utensils className="w-10 h-10 text-foreground mx-auto mb-3" />
                             <p className="text-sm text-muted-foreground">No combos yet</p>
                             <p className="text-xs text-muted-foreground mt-1">Create one or seed demo data</p>
                         </div>
@@ -294,7 +294,7 @@ export default function ComboBuilder() {
                     {!selectedCombo ? (
                         <div className="flex items-center justify-center min-h-[40vh] bg-card/30 border border-dashed border-border rounded-2xl">
                             <div className="text-center">
-                                <Package className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
+                                <Package className="w-12 h-12 text-foreground mx-auto mb-3" />
                                 <p className="text-sm text-muted-foreground">Select a combo to edit</p>
                             </div>
                         </div>

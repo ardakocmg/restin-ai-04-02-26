@@ -112,7 +112,7 @@ export default function GuestDrawer({ open, onOpenChange, guestId }: GuestDrawer
                                             {data.profile.first_name} {data.profile.last_name}
                                         </h2>
                                         {data.profile.tags.includes('VIP') && (
-                                            <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+                                            <Star className="w-6 h-6 text-yellow-600 dark:text-yellow-400 fill-yellow-500" />
                                         )}
                                     </div>
                                     <div className="flex gap-2">
@@ -174,7 +174,7 @@ export default function GuestDrawer({ open, onOpenChange, guestId }: GuestDrawer
                                     <div className="flex flex-wrap gap-2">
                                         {data.history.favorite_items?.map((item: FavoriteItem, i: number) => (
                                             <Badge key={i} className="bg-card border-border text-secondary-foreground py-1.5 px-3">
-                                                {item.name} <span className="ml-2 text-red-500 font-black">x{item.count}</span>
+                                                {item.name} <span className="ml-2 text-red-600 dark:text-red-400 font-black">x{item.count}</span>
                                             </Badge>
                                         ))}
                                     </div>
@@ -186,7 +186,7 @@ export default function GuestDrawer({ open, onOpenChange, guestId }: GuestDrawer
                                     <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Manual Tags</h4>
                                     <div className="flex flex-wrap gap-2 p-4 rounded-xl bg-card border border-border">
                                         {data.profile.tags.map((tag: string) => (
-                                            <Badge key={tag} className="bg-red-600/20 text-red-500 border-red-500/30 uppercase text-[9px] font-black">
+                                            <Badge key={tag} className="bg-red-600/20 text-red-600 dark:text-red-400 border-red-500/30 uppercase text-[9px] font-black">
                                                 {tag}
                                             </Badge>
                                         ))}

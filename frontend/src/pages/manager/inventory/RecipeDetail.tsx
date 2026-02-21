@@ -24,7 +24,7 @@ import { fmt, demoRecipe, EU_ALLERGENS } from './recipeDetailTypes';
 function InfoField({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
     return (
         <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
-            <Icon className="h-5 w-5 text-amber-500 mt-0.5 shrink-0" />
+            <Icon className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
             <div className="min-w-0">
                 <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">{label}</p>
                 <p className="text-sm font-medium truncate">{value || '—'}</p>
@@ -454,7 +454,7 @@ export default function RecipeDetail() {
                             <div className="flex items-center justify-between">
                                 <CardTitle className="text-base">Allergen Declaration</CardTitle>
                                 <div className="flex gap-2">
-                                    <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20">Partially Unapproved</Badge>
+                                    <Badge variant="outline" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20">Partially Unapproved</Badge>
                                     <Button variant="outline" size="sm" onClick={() => window.print()}>
                                         <Printer className="h-4 w-4 mr-2" />Print Label
                                     </Button>
@@ -484,7 +484,7 @@ export default function RecipeDetail() {
                             <CardHeader className="pb-3 flex flex-row items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <CardTitle className="text-base">Nutrition Facts</CardTitle>
-                                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">Auto-Calculated</Badge>
+                                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px]">Auto-Calculated</Badge>
                                 </div>
                                 <Button variant="outline" size="sm" onClick={() => toast.success('Nutrition recalculated from ingredient database')}>
                                     <RefreshCw className="h-3.5 w-3.5 mr-1" />Recalculate
@@ -613,7 +613,7 @@ export default function RecipeDetail() {
                             <CardContent>
                                 <div className="flex flex-wrap gap-2">
                                     {(recipe.ecolabels?.length ?? 0) > 0 ? recipe.ecolabels?.map((label, i) => (
-                                        <Badge key={i} variant="outline" className="bg-green-500/10 text-green-600 border-green-500/20">{label}</Badge>
+                                        <Badge key={i} variant="outline" className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20">{label}</Badge>
                                     )) : <p className="text-sm text-muted-foreground">No eco labels assigned</p>}
                                 </div>
                             </CardContent>

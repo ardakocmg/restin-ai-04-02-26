@@ -147,7 +147,7 @@ export default function ZonePalette({ layoutType, zones, onAddZone }: ZonePalett
 
                                 {/* Status badges */}
                                 {maxReached ? (
-                                    <span className="flex-shrink-0 flex items-center gap-1 text-[10px] text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                                    <span className="flex-shrink-0 flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
                                         <Check className="h-2.5 w-2.5" />
                                         Added
                                     </span>

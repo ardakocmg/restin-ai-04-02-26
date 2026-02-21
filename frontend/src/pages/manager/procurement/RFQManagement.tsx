@@ -167,7 +167,7 @@ export default function RFQManagement() {
                         {rfq.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-slate-400 mb-3">{rfq.description}</p>
+                    <p className="text-sm text-muted-foreground mb-3">{rfq.description}</p>
                     <div className="flex items-center gap-4 text-sm text-slate-400">
                       <span>RFQ #{rfq.rfq_number}</span>
                       <span>•</span>

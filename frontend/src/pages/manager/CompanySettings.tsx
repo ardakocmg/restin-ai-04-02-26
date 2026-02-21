@@ -327,7 +327,7 @@ export default function CompanySettings() {
                                     { key: 'seats', label: 'Capacity' },
                                     {
                                         key: 'status', label: 'Status', render: (row) => (
-                                            <Badge variant={row.status === 'available' ? 'default' : 'secondary'} className={cn(row.status === 'available' ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "")}>
+                                            <Badge variant={row.status === 'available' ? 'default' : 'secondary'} className={cn(row.status === 'available' ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : "")}>
                                                 {row.status}
                                             </Badge>
                                         )

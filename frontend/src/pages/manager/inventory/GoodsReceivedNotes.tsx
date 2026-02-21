@@ -350,7 +350,7 @@ export default function GoodsReceivedNotes() {
         {
             key: 'lots_tracked', label: 'Lots', size: 70,
             render: (row: GRNData) => row.lots_tracked > 0
-                ? <Badge variant="outline" className="text-xs text-blue-500 border-blue-400 gap-1"><QrCode className="h-3 w-3" /> {row.lots_tracked}</Badge>
+                ? <Badge variant="outline" className="text-xs text-blue-600 dark:text-blue-400 border-blue-400 gap-1"><QrCode className="h-3 w-3" /> {row.lots_tracked}</Badge>
                 : <span className="text-xs text-muted-foreground">—</span>,
         },
         {
@@ -483,7 +483,7 @@ export default function GoodsReceivedNotes() {
                                                 {/* Qty variance indicator */}
                                                 {item.ordered_qty && item.received_qty && parseFloat(item.ordered_qty) !== parseFloat(item.received_qty) && (
                                                     <div className="flex items-end pb-0.5">
-                                                        <Badge variant="outline" className="text-xs text-red-500 border-red-400">
+                                                        <Badge variant="outline" className="text-xs text-red-600 dark:text-red-400 border-red-400">
                                                             Δ {(parseFloat(item.received_qty) - parseFloat(item.ordered_qty)).toFixed(1)}
                                                         </Badge>
                                                     </div>
@@ -491,7 +491,7 @@ export default function GoodsReceivedNotes() {
                                                 {/* Price variance indicator */}
                                                 {item.po_price && item.unit_price && parseFloat(item.po_price) !== parseFloat(item.unit_price) && (
                                                     <div className="flex items-end pb-0.5">
-                                                        <Badge variant="outline" className="text-xs text-amber-500 border-amber-400">
+                                                        <Badge variant="outline" className="text-xs text-amber-600 dark:text-amber-400 border-amber-400">
                                                             €Δ {(parseFloat(item.unit_price) - parseFloat(item.po_price)).toFixed(2)}
                                                         </Badge>
                                                     </div>
@@ -622,7 +622,7 @@ export default function GoodsReceivedNotes() {
                                 <Button variant="outline" size="sm" className="gap-1">
                                     <Search className="h-3.5 w-3.5" /> Forward Trace (Lot → Recipes → Orders)
                                 </Button>
-                                <Button variant="outline" size="sm" className="gap-1 text-red-500 border-red-400 hover:bg-red-950/20">
+                                <Button variant="outline" size="sm" className="gap-1 text-red-600 dark:text-red-400 border-red-400 hover:bg-red-950/20">
                                     <Shield className="h-3.5 w-3.5" /> Recall Alert
                                 </Button>
                             </div>

@@ -160,7 +160,7 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
     const h = template.sizeH * scale * 2.5;
 
     return (
-        <div className="bg-white rounded border border-zinc-300 overflow-hidden relative" style={{ width: w, height: h }}>
+        <div className="bg-white rounded border border-border overflow-hidden relative" style={{ width: w, height: h }}>
             {template.fields.map(field => {
                 const fx = field.x * scale * 2.5;
                 const fy = field.y * scale * 2.5;
@@ -184,7 +184,7 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
                 }
                 if (field.type === 'qr') {
                     return (
-                        <div key={field.id} className="absolute border border-zinc-300 flex items-center justify-center" style={{ left: fx, top: fy, width: fw, height: fh }}>
+                        <div key={field.id} className="absolute border border-border flex items-center justify-center" style={{ left: fx, top: fy, width: fw, height: fh }}>
                             <div className="grid grid-cols-5 grid-rows-5 gap-px w-3/4 h-3/4">
                                 {Array.from({ length: 25 }).map((_, i) => (
                                     <div key={i} className={Math.random() > 0.4 ? 'bg-zinc-900' : 'bg-white'} />
@@ -204,7 +204,7 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
                 }
                 if (field.type === 'logo') {
                     return (
-                        <div key={field.id} className="absolute bg-zinc-100 border border-zinc-200 rounded flex items-center justify-center" style={{ left: fx, top: fy, width: fw, height: fh }}>
+                        <div key={field.id} className="absolute bg-muted border border-border rounded flex items-center justify-center" style={{ left: fx, top: fy, width: fw, height: fh }}>
                             <span className="text-zinc-400" style={{ fontSize: fs * 0.6 }}>LOGO</span>
                         </div>
                     );
@@ -213,7 +213,7 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
                 return (
                     <div
                         key={field.id}
-                        className="absolute text-zinc-900 leading-tight overflow-hidden"
+                        className="absolute text-foreground leading-tight overflow-hidden"
                         style={{
                             left: fx, top: fy, width: fw, height: fh,
                             fontSize: fs,
@@ -468,7 +468,7 @@ export default function LabelDesigner() {
                         <DialogDescription>{previewTemplate?.sizeW}×{previewTemplate?.sizeH} {previewTemplate?.sizeUnit}</DialogDescription>
                     </DialogHeader>
                     {previewTemplate && (
-                        <div className="flex justify-center py-6 bg-zinc-100 rounded-lg">
+                        <div className="flex justify-center py-6 bg-muted rounded-lg">
                             <LabelPreview template={previewTemplate} scale={1.2} />
                         </div>
                     )}

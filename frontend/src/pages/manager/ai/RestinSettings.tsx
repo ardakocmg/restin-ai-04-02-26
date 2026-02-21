@@ -554,7 +554,7 @@ export default function RestinSettings() {
 
             {editConfig.active_theme === 'theme-tech' && (
                 <div className="p-3 flex items-start gap-3 bg-card border border-border rounded-md">
-                    <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                    <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                     <div>
                         <p className="text-sm text-secondary-foreground">Tech Theme Preview Active</p>
                         <p className="text-xs text-muted-foreground mt-1">

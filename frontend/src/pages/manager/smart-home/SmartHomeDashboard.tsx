@@ -419,7 +419,7 @@ function DeviceCard({ device, index, onControl }: {
                 <div className="px-5 pb-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-mono text-zinc-700 uppercase">{device.type}</span>
+                            <span className="text-[10px] font-mono text-foreground uppercase">{device.type}</span>
                             {device.provider && (
                                 <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded ${device.provider === 'tuya'
                                     ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20'

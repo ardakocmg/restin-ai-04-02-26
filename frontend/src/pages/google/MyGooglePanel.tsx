@@ -508,7 +508,7 @@ export default function MyGooglePanel(): React.ReactElement {
                         </svg>
                     </div>
                     <div>
-                        <h1 className="text-xl font-black text-zinc-900 dark:text-foreground tracking-tight uppercase">My Google</h1>
+                        <h1 className="text-xl font-black text-foreground dark:text-foreground tracking-tight uppercase">My Google</h1>
                         <p className="text-xs text-muted-foreground">Connect your personal Google account</p>
                     </div>
                 </div>
@@ -702,7 +702,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                         <div className="flex items-center gap-3 mt-1.5">
                                             <span className="text-[10px] text-muted-foreground flex items-center gap-1"><Clock className="h-3 w-3" /> {formatTime(ev.start_time)} – {formatTime(ev.end_time)}</span>
                                             {ev.location && <span className="text-[10px] text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" /> {ev.location}</span>}
-                                            <span className="text-[10px] text-zinc-700 bg-secondary/60 px-1.5 py-0.5 rounded">{ev.calendar_name}</span>
+                                            <span className="text-[10px] text-foreground bg-secondary/60 px-1.5 py-0.5 rounded">{ev.calendar_name}</span>
                                         </div>
                                     </div>
                                     <button onClick={() => handleDeleteEvent(ev.id)} className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-red-400 transition-all">
@@ -733,7 +733,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                         {file.shared_with.length > 0 && (
                                             <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded flex items-center gap-1"><Users className="h-2.5 w-2.5" /> {file.shared_with.length}</span>
                                         )}
-                                        <ChevronRight className="h-4 w-4 text-zinc-700 group-hover:text-muted-foreground transition-colors" />
+                                        <ChevronRight className="h-4 w-4 text-foreground group-hover:text-muted-foreground transition-colors" />
                                     </div>
                                 ))}
                             </div>
@@ -770,7 +770,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                         <div className="text-xs text-muted-foreground truncate mt-0.5">{msg.snippet}</div>
                                         <div className="flex items-center gap-2 mt-1.5">
                                             {msg.has_attachment && <Paperclip className="h-3 w-3 text-muted-foreground" />}
-                                            {msg.labels.includes('important') && <span className="text-[9px] font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded">IMPORTANT</span>}
+                                            {msg.labels.includes('important') && <span className="text-[9px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded">IMPORTANT</span>}
                                         </div>
                                     </div>
                                     <div className="flex flex-col items-center gap-1 flex-shrink-0 mt-1">
@@ -820,7 +820,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                                     </a>
                                                 )}
                                             </div>
-                                            {c.notes && <div className="text-[10px] text-zinc-700 mt-1 italic">{c.notes}</div>}
+                                            {c.notes && <div className="text-[10px] text-foreground mt-1 italic">{c.notes}</div>}
                                         </div>
                                     </div>
                                 ))}
@@ -865,7 +865,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                         <div className={cn("text-sm font-bold", task.completed ? "text-muted-foreground line-through" : "text-foreground")}>{task.title}</div>
                                         {task.notes && <div className="text-xs text-muted-foreground mt-0.5">{task.notes}</div>}
                                         <div className="flex items-center gap-3 mt-1.5">
-                                            <span className="text-[10px] text-zinc-700 bg-secondary/60 px-1.5 py-0.5 rounded">{task.task_list}</span>
+                                            <span className="text-[10px] text-foreground bg-secondary/60 px-1.5 py-0.5 rounded">{task.task_list}</span>
                                             <span className={cn("text-[10px] font-bold uppercase", priorityColor(task.priority))}>{task.priority}</span>
                                             {task.due_date && (
                                                 <span className="text-[10px] text-muted-foreground flex items-center gap-1"><Clock className="h-2.5 w-2.5" /> {formatDate(task.due_date)}</span>
@@ -892,7 +892,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                     <div key={photo.id} className="group relative bg-secondary/50 border border-border rounded-xl overflow-hidden hover:border-border transition-all aspect-[4/3]">
                                         {/* Placeholder since mock has no real images */}
                                         <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900 p-4">
-                                            <Image className="h-8 w-8 text-zinc-700 mb-2" />
+                                            <Image className="h-8 w-8 text-foreground mb-2" />
                                             <span className="text-xs font-medium text-muted-foreground text-center leading-tight">{photo.name}</span>
                                         </div>
                                         {/* Overlay on hover */}
@@ -933,7 +933,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                                 {sheet.shared && <span className="ml-2 text-blue-400">· Shared</span>}
                                             </div>
                                         </div>
-                                        <ExternalLink className="h-4 w-4 text-zinc-700 group-hover:text-green-400 transition-colors" />
+                                        <ExternalLink className="h-4 w-4 text-foreground group-hover:text-green-400 transition-colors" />
                                     </div>
                                 ))}
                             </div>

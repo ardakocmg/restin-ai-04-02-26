@@ -75,7 +75,7 @@ export default function InvoiceList() {
                         <h3 className="text-lg font-semibold text-slate-50">{invoice.invoice_number}</h3>
                         <Badge className={getStatusColor(invoice.status)}>{invoice.status}</Badge>
                       </div>
-                      <p className="text-sm text-slate-400 mb-3">{invoice.supplier_name}</p>
+                      <p className="text-sm text-muted-foreground mb-3">{invoice.supplier_name}</p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
                           <p className="text-slate-400">Total Amount</p>

@@ -93,7 +93,7 @@ export default function RadarDashboard() {
                 <div className="flex items-center gap-4 bg-card/30 p-2 rounded-2xl border border-border/50 backdrop-blur-md">
                     <div className="px-4 py-2 border-r border-border">
                         <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Targets Tracked</p>
-                        <p className="text-lg font-black text-emerald-500 italic leading-none">{competitors.length}</p>
+                        <p className="text-lg font-black text-emerald-600 dark:text-emerald-400 italic leading-none">{competitors.length}</p>
                     </div>
                     <div className="px-4 py-2">
                         <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Index Updated</p>
@@ -290,7 +290,7 @@ export default function RadarDashboard() {
                     <div className="text-center py-8 text-muted-foreground">
                         <ShieldAlert size={32} className="mx-auto mb-2 opacity-50" />
                         <p className="text-sm font-bold">No allergens detected in menu</p>
-                        <p className="text-xs text-zinc-700 mt-1">Add ingredients to menu items to enable scanning</p>
+                        <p className="text-xs text-foreground mt-1">Add ingredients to menu items to enable scanning</p>
                     </div>
                 )}
             </Card>

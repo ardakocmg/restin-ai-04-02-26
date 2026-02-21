@@ -310,7 +310,7 @@ export default function WorkspaceSettings() {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     {config?.sso_enabled ? (
-                                        <span className="flex items-center gap-1.5 text-sm font-medium text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                                        <span className="flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
                                             <CheckCircle2 className="w-3.5 h-3.5" /> Active
                                         </span>
                                     ) : (

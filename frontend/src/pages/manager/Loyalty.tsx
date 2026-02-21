@@ -135,7 +135,7 @@ export default function LoyaltyPage() {
                                             <div>
                                                 <Badge variant="outline" className={`${tier.color} text-[10px] uppercase`}>{tier.name}</Badge>
                                             </div>
-                                            <div className="flex items-center gap-1 font-mono text-yellow-500 font-bold">
+                                            <div className="flex items-center gap-1 font-mono text-yellow-600 dark:text-yellow-400 font-bold">
                                                 <Star className="w-3 h-3" /> {acc.points.toLocaleString()}
                                             </div>
                                             <div className="text-right font-mono text-muted-foreground">

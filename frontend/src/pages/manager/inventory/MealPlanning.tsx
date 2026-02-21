@@ -246,7 +246,7 @@ export default function MealPlanning() {
                                                 className="w-full py-1 text-[10px] text-muted-foreground hover:text-primary border border-dashed border-border/50 hover:border-primary/30 rounded transition-all flex items-center justify-center gap-1">
                                                 <Plus className="h-2.5 w-2.5" /> Add
                                             </button>
-                                            {overBudget && <p className="text-[9px] text-red-500 text-center">€{slotCost.toFixed(2)} — over budget</p>}
+                                            {overBudget && <p className="text-[9px] text-red-600 dark:text-red-400 text-center">€{slotCost.toFixed(2)} — over budget</p>}
                                         </CardContent>
                                     </Card>
                                 );

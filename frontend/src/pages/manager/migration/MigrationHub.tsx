@@ -501,7 +501,7 @@ const MigrationHub = () => {
                                                     <AlertCircle className="w-6 h-6" />
                                                 </div>
                                                 <div>
-                                                    <h3 className="font-bold text-red-500 text-lg mb-1">Column Mapping Error</h3>
+                                                    <h3 className="font-bold text-red-600 dark:text-red-400 text-lg mb-1">Column Mapping Error</h3>
                                                     <p className="text-secondary-foreground text-sm font-mono break-all">{previewData.error}</p>
                                                     <p className="text-muted-foreground text-xs mt-3 bg-background p-2 rounded border border-red-900/20">
                                                         Tip: Ensure your file has a 'Name', 'Item Name', or 'Description' column.
@@ -674,10 +674,10 @@ const MigrationHub = () => {
                                                     <span className="text-blue-500">🔗</span> Smart Column Mapping
                                                 </h3>
                                                 <div className="flex items-center gap-2">
-                                                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">
+                                                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px]">
                                                         {mappings.filter(m => m.is_mapped || m.confidence === 'high').length} mapped
                                                     </Badge>
-                                                    <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20 text-[10px]">
+                                                    <Badge variant="outline" className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20 text-[10px]">
                                                         {previewData.meta.detected_type || 'Auto-Detected'}
                                                     </Badge>
                                                 </div>
@@ -929,7 +929,7 @@ const MigrationHub = () => {
                                                                                     </div>
                                                                                     <div className="h-6 w-px bg-secondary" />
                                                                                     <div className="flex flex-col">
-                                                                                        <span className="text-[10px] text-amber-500 uppercase font-black mb-1">Incoming Change</span>
+                                                                                        <span className="text-[10px] text-amber-600 dark:text-amber-400 uppercase font-black mb-1">Incoming Change</span>
                                                                                         <span className="font-mono text-amber-400 text-sm font-bold">€{d.newPrice}</span>
                                                                                     </div>
                                                                                 </div>

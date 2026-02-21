@@ -532,7 +532,7 @@ export default function ManualClocking() {
                             <div className="max-h-[400px] overflow-auto">
                                 {activeSessions.length === 0 ? (
                                     <div className="p-8 text-center">
-                                        <WifiOff className="h-8 w-8 text-zinc-700 mx-auto mb-2" />
+                                        <WifiOff className="h-8 w-8 text-foreground mx-auto mb-2" />
                                         <p className="text-xs text-muted-foreground font-medium">{t('No active sessions')}</p>
                                     </div>
                                 ) : (

@@ -380,7 +380,7 @@ export default function POSThemeBuilder() {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-screen bg-background">
-                <Loader2 className="h-8 w-8 text-teal-500 animate-spin" />
+                <Loader2 className="h-8 w-8 text-teal-600 dark:text-teal-400 animate-spin" />
             </div>
         );
     }

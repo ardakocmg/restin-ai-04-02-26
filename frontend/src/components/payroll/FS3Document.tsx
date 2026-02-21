@@ -17,13 +17,13 @@ export default function FS3Document({ fs3Data, venue = null }) {
     const displayLogo = venue?.branding?.logo_url || null;
     const primaryColor = venue?.branding?.primary_color || "#000000";
 
-    const rowStyle = "border-b border-gray-300 py-1 flex justify-between items-center";
-    const labelStyle = "text-[10px] font-medium text-gray-700 uppercase";
+    const rowStyle = "border-b border-border py-1 flex justify-between items-center";
+    const labelStyle = "text-[10px] font-medium text-foreground uppercase";
     const valueStyle = "text-[12px] font-bold text-black font-mono";
     const sectionTitleStyle = "bg-gray-800 text-foreground px-2 py-0.5 text-[11px] font-bold uppercase mb-2";
 
     return (
-        <div id="fs3-to-export" className="fs3-document !bg-white !text-black p-6 max-w-[210mm] mx-auto border border-gray-200 shadow-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
+        <div id="fs3-to-export" className="fs3-document !bg-white !text-black p-6 max-w-[210mm] mx-auto border border-border shadow-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
 
             {/* Top Header */}
             <div className="flex justify-between items-start mb-4 border-b-2 border-black pb-2">
@@ -36,7 +36,7 @@ export default function FS3Document({ fs3Data, venue = null }) {
                 </div>
                 <div className="text-right">
                     <div className="text-[10px] font-bold uppercase">{payee.surname}</div>
-                    <div className="text-[8px] text-gray-500 italic">Restin.ai Payroll</div>
+                    <div className="text-[8px] text-muted-foreground italic">Restin.ai Payroll</div>
                 </div>
             </div>
 
@@ -86,14 +86,14 @@ export default function FS3Document({ fs3Data, venue = null }) {
                     </div>
                     <div className="space-y-2">
                         <div className="flex gap-2 items-center">
-                            <span className="text-[9px] font-bold bg-gray-200 px-1">A2</span>
+                            <span className="text-[9px] font-bold bg-muted px-1">A2</span>
                             <div className="flex-1">
                                 <div className="text-[8px] uppercase">Payee's ID Card / IT Reg. No.</div>
                                 <div className="border border-black p-1 text-center font-bold text-sm">{payee.idNumber}</div>
                             </div>
                         </div>
                         <div className="flex gap-2 items-center">
-                            <span className="text-[9px] font-bold bg-gray-200 px-1">A3</span>
+                            <span className="text-[9px] font-bold bg-muted px-1">A3</span>
                             <div className="flex-1">
                                 <div className="text-[8px] uppercase">Payee's Social Security No.</div>
                                 <div className="border border-black p-1 text-center font-bold text-sm">{payee.ssNumber}</div>
@@ -135,7 +135,7 @@ export default function FS3Document({ fs3Data, venue = null }) {
                             ].map(item => (
                                 <div key={item.code} className="flex justify-between items-center text-[10px]">
                                     <span className="flex-1">{item.label}</span>
-                                    <span className="w-10 text-center font-bold bg-gray-100 mr-2">{item.code}</span>
+                                    <span className="w-10 text-center font-bold bg-muted mr-2">{item.code}</span>
                                     <span className="w-20 border border-black px-1 text-right font-mono">{item.value.toFixed(0)}</span>
                                 </div>
                             ))}
@@ -152,8 +152,8 @@ export default function FS3Document({ fs3Data, venue = null }) {
                                 </div>
                                 <div className="flex flex-col justify-end">
                                     <div className="flex justify-between items-start text-[8px] leading-tight">
-                                        <span className="uppercase text-gray-500 mr-1">Non Taxable Car Cash Allowance (50% of Allowance up to a maximum of € 1170)</span>
-                                        <span className="font-bold bg-gray-100 px-1">C8</span>
+                                        <span className="uppercase text-muted-foreground mr-1">Non Taxable Car Cash Allowance (50% of Allowance up to a maximum of € 1170)</span>
+                                        <span className="font-bold bg-muted px-1">C8</span>
                                         <span className="w-16 border border-black px-1 text-right">{emoluments.c8 || 0}</span>
                                     </div>
                                 </div>
@@ -180,7 +180,7 @@ export default function FS3Document({ fs3Data, venue = null }) {
                             ].map(item => (
                                 <div key={item.code} className="flex justify-between items-center text-[10px]">
                                     <span className="flex-1">{item.label}</span>
-                                    <span className="w-10 text-center font-bold bg-gray-100 mr-2">{item.code}</span>
+                                    <span className="w-10 text-center font-bold bg-muted mr-2">{item.code}</span>
                                     <span className="w-20 border border-black px-1 text-right font-mono">{item.value.toFixed(0)}</span>
                                 </div>
                             ))}
@@ -199,7 +199,7 @@ export default function FS3Document({ fs3Data, venue = null }) {
                     <table className="w-full text-[10px] border-collapse border border-gray-300">
                         <thead>
                             <tr className="bg-gray-100 text-center font-bold">
-                                <td colSpan={3} className="border border-gray-300 py-1">Basic Weekly Wage</td>
+                                <td colSpan={3} className="border border-border py-1">Basic Weekly Wage</td>
                                 <td colSpan={3} className="border border-gray-300">Social Security Contributions</td>
                                 <td className="border border-gray-300">Maternity Fund</td>
                                 <td colSpan={3} className="border border-gray-300">Weeks without pay</td>
@@ -210,7 +210,7 @@ export default function FS3Document({ fs3Data, venue = null }) {
                                 <td className="border border-gray-300">Category</td>
                                 <td className="border border-gray-300">Payee €</td>
                                 <td className="border border-gray-300">Payer €</td>
-                                <td className="border border-gray-300 font-bold bg-gray-200">Total SSC €</td>
+                                <td className="border border-border font-bold bg-gray-200">Total SSC €</td>
                                 <td className="border border-gray-300">Payer €</td>
                                 <td className="border border-gray-300">From</td>
                                 <td className="border border-gray-300">To</td>
@@ -220,24 +220,24 @@ export default function FS3Document({ fs3Data, venue = null }) {
                         <tbody>
                             {sscTable.map((row, idx) => (
                                 <tr key={idx} className="text-right font-mono">
-                                    <td className="border border-gray-300 pr-1">{row.wage.toFixed(2)}</td>
-                                    <td className="border border-gray-300 pr-1">{row.number.toFixed(2)}</td>
-                                    <td className="border border-gray-300 text-center font-sans">{row.category}</td>
-                                    <td className="border border-gray-300 pr-1">{row.payee.toFixed(2)}</td>
-                                    <td className="border border-gray-300 pr-1">{row.payer.toFixed(2)}</td>
-                                    <td className="border border-gray-300 pr-1 bg-gray-50">{row.total.toFixed(2)}</td>
-                                    <td className="border border-gray-300 pr-1">{row.maternity.toFixed(2)}</td>
+                                    <td className="border border-border pr-1">{row.wage.toFixed(2)}</td>
+                                    <td className="border border-border pr-1">{row.number.toFixed(2)}</td>
+                                    <td className="border border-border text-center font-sans">{row.category}</td>
+                                    <td className="border border-border pr-1">{row.payee.toFixed(2)}</td>
+                                    <td className="border border-border pr-1">{row.payer.toFixed(2)}</td>
+                                    <td className="border border-border pr-1 bg-gray-50">{row.total.toFixed(2)}</td>
+                                    <td className="border border-border pr-1">{row.maternity.toFixed(2)}</td>
                                     <td className="border border-gray-300"></td>
                                     <td className="border border-gray-300"></td>
                                     <td className="border border-gray-300"></td>
                                 </tr>
                             ))}
                             <tr className="font-bold bg-gray-100">
-                                <td colSpan={3} className="border border-gray-300 text-right pr-2 uppercase font-sans">Total</td>
-                                <td className="border border-gray-300 text-right pr-1 font-mono">0.00</td>
-                                <td className="border border-gray-300 text-right pr-1 font-mono">0.00</td>
-                                <td className="border border-gray-300 text-right pr-1 font-mono bg-gray-200">0.00</td>
-                                <td className="border border-gray-300 text-right pr-1 font-mono">25.40</td>
+                                <td colSpan={3} className="border border-border text-right pr-2 uppercase font-sans">Total</td>
+                                <td className="border border-border text-right pr-1 font-mono">0.00</td>
+                                <td className="border border-border text-right pr-1 font-mono">0.00</td>
+                                <td className="border border-border text-right pr-1 font-mono bg-gray-200">0.00</td>
+                                <td className="border border-border text-right pr-1 font-mono">25.40</td>
                                 <td colSpan={3} className="border-none text-left bg-white text-black font-sans px-2">E1</td>
                             </tr>
                         </tbody>
@@ -247,7 +247,7 @@ export default function FS3Document({ fs3Data, venue = null }) {
                 {/* SECTION F: Payer Information */}
                 <div className="col-span-12 mt-6 border-t-2 border-black pt-4 mb-4">
                     <div className="grid grid-cols-12 gap-8">
-                        <div className="col-span-8 border border-gray-300 p-2">
+                        <div className="col-span-8 border border-border p-2">
                             <div className={sectionTitleStyle}>F  Payer Information</div>
                             <div className="text-[10px] space-y-1">
                                 <div className="flex gap-4">
@@ -276,14 +276,14 @@ export default function FS3Document({ fs3Data, venue = null }) {
                         </div>
                         <div className="col-span-4 space-y-4">
                             <div className="flex gap-2 items-center">
-                                <span className="text-[9px] font-bold bg-gray-200 px-1">F1</span>
+                                <span className="text-[9px] font-bold bg-muted px-1">F1</span>
                                 <div className="flex-1">
                                     <div className="text-[8px] uppercase">Payer P.E. Number</div>
                                     <div className="border border-black p-1 text-center font-bold text-sm tracking-widest">{displayPayerPE}</div>
                                 </div>
                             </div>
                             <div className="flex gap-2 items-center">
-                                <span className="text-[9px] font-bold bg-gray-200 px-1">F2</span>
+                                <span className="text-[9px] font-bold bg-muted px-1">F2</span>
                                 <div className="flex-1">
                                     <div className="text-[8px] uppercase">Date</div>
                                     <div className="border border-black p-1 text-center font-bold text-sm">{new Date().toLocaleDateString('en-GB')}</div>
@@ -295,9 +295,9 @@ export default function FS3Document({ fs3Data, venue = null }) {
             </div>
 
             {/* Footer Logo */}
-            <div className="mt-8 pt-4 border-t border-gray-300 flex items-center gap-2">
-                <div className="text-sm font-black text-gray-800 tracking-tighter">RESTIN.AI</div>
-                <div className="text-[9px] text-gray-400 uppercase tracking-widest">Payroll Services</div>
+            <div className="mt-8 pt-4 border-t border-border flex items-center gap-2">
+                <div className="text-sm font-black text-foreground tracking-tighter">RESTIN.AI</div>
+                <div className="text-[9px] text-muted-foreground uppercase tracking-widest">Payroll Services</div>
             </div>
         </div>
     );

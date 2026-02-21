@@ -223,7 +223,7 @@ export default function GuestOrderPage() {
         return (
             <div className="min-h-screen bg-background flex items-center justify-center px-6">
                 <div className="text-center max-w-md">
-                    <UtensilsCrossed className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
+                    <UtensilsCrossed className="w-16 h-16 text-foreground mx-auto mb-4" />
                     <h1 className="text-xl font-bold text-foreground mb-2">Online ordering unavailable</h1>
                     <p className="text-sm text-muted-foreground">{error}</p>
                 </div>
@@ -355,7 +355,7 @@ export default function GuestOrderPage() {
                 <div className="p-4 space-y-3">
                     {filteredProducts.length === 0 && (
                         <div className="text-center py-12">
-                            <ChefHat className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
+                            <ChefHat className="w-12 h-12 text-foreground mx-auto mb-3" />
                             <p className="text-sm text-muted-foreground">No items found</p>
                         </div>
                     )}

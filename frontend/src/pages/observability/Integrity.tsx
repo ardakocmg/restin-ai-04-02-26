@@ -109,7 +109,7 @@ export default function IntegrityPage() {
           <CardContent>
             <div className="space-y-2">
               {runs.slice(0, 5).map(run => (
-                <div key={run.run_id} className="p-3 bg-slate-50 rounded flex items-center justify-between">
+                <div key={run.run_id} className="p-3 bg-background rounded flex items-center justify-between">
                   <div>
                     <span className="text-sm font-medium">{run.run_id.substring(0, 8)}</span>
                     <p className="text-xs text-slate-600">{new Date(run.started_at).toLocaleString()}</p>
@@ -136,7 +136,7 @@ export default function IntegrityPage() {
                 </div>
               ) : (
                 openFindings.slice(0, 5).map(f => (
-                  <div key={f.finding_id} className="p-3 bg-orange-50 rounded border border-orange-200">
+                  <div key={f.finding_id} className="p-3 bg-orange-50 dark:bg-orange-950/20 rounded border border-orange-200">
                     <div className="flex items-center justify-between mb-1">
                       <Badge variant="outline" className="text-orange-700">{f.severity}</Badge>
                       <span className="text-xs text-slate-600">{f.check_key}</span>

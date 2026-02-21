@@ -404,7 +404,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                 </div>
 
                                 <h3 className="text-lg font-semibold text-white mb-1">Drop any file here</h3>
-                                <p className="text-sm text-zinc-500 mb-4">
+                                <p className="text-sm text-muted-foreground mb-4">
                                     or click to browse • <span className="text-violet-400">Ctrl+V</span> to paste from clipboard
                                 </p>
 
@@ -503,7 +503,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                                 className="bg-violet-600 hover:bg-violet-700 h-7 text-xs">
                                                 <Sparkles className="w-3 h-3 mr-1" /> Analyze URL
                                             </Button>
-                                            <span className="text-[10px] text-zinc-600 self-center">
+                                            <span className="text-[10px] text-muted-foreground self-center">
                                                 Supports: Receipt pages • PDF links • Image URLs • API endpoints
                                             </span>
                                         </div>
@@ -516,7 +516,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                 <p className="text-[11px] text-zinc-600">
                                     🎯 Works with: Customer receipts • Fiscal invoices • Kitchen tickets • Reports • Delivery dockets • Gift receipts • Any POS printout
                                 </p>
-                                <p className="text-[10px] text-zinc-700 mt-1">
+                                <p className="text-[10px] text-foreground mt-1">
                                     Powered by Gemini Vision AI — Supports 25+ file formats across 5 categories
                                 </p>
                             </div>
@@ -540,9 +540,9 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                                     <>
                                                         <Icon className="w-10 h-10 mb-2" style={{ color: info.color }} />
                                                         <span className="text-xs font-bold" style={{ color: info.color }}>{info.label}</span>
-                                                        <span className="text-[10px] text-zinc-500 mt-1 text-center truncate max-w-full">{uploadedFile.name}</span>
-                                                        <span className="text-[9px] text-zinc-600 mt-0.5">{(uploadedFile.size / 1024).toFixed(0)} KB</span>
-                                                        <Badge className="mt-2 text-[8px] bg-zinc-800 text-zinc-400 border-white/5">
+                                                        <span className="text-[10px] text-muted-foreground mt-1 text-center truncate max-w-full">{uploadedFile.name}</span>
+                                                        <span className="text-[9px] text-muted-foreground mt-0.5">{(uploadedFile.size / 1024).toFixed(0)} KB</span>
+                                                        <Badge className="mt-2 text-[8px] bg-zinc-800 text-muted-foreground border-white/5">
                                                             {info.category}
                                                         </Badge>
                                                     </>
@@ -554,7 +554,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                         <div className="flex flex-col items-center justify-center py-10 px-4">
                                             <Globe className="w-10 h-10 mb-2 text-violet-400" />
                                             <span className="text-xs font-bold text-violet-400">URL</span>
-                                            <span className="text-[10px] text-zinc-500 mt-1 text-center truncate max-w-full">{urlInput || 'Web import'}</span>
+                                            <span className="text-[10px] text-muted-foreground mt-1 text-center truncate max-w-full">{urlInput || 'Web import'}</span>
                                         </div>
                                     )}
                                 </div>
@@ -647,7 +647,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                                     <>
                                                         <Icon className="w-12 h-12 mb-3" style={{ color: info.color }} />
                                                         <span className="text-sm font-bold" style={{ color: info.color }}>{info.label}</span>
-                                                        <span className="text-xs text-zinc-500 mt-1">{uploadedFile.name}</span>
+                                                        <span className="text-xs text-muted-foreground mt-1">{uploadedFile.name}</span>
                                                         <span className="text-[10px] text-zinc-600">{(uploadedFile.size / 1024).toFixed(0)} KB • {info.category}</span>
                                                     </>
                                                 );
@@ -657,7 +657,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                         <div className="rounded-lg border border-white/10 bg-zinc-900 flex flex-col items-center justify-center py-12">
                                             <Globe className="w-12 h-12 mb-3 text-violet-400" />
                                             <span className="text-sm font-bold text-violet-400">URL Import</span>
-                                            <span className="text-xs text-zinc-500 mt-1 max-w-xs truncate">{urlInput}</span>
+                                            <span className="text-xs text-muted-foreground mt-1 max-w-xs truncate">{urlInput}</span>
                                         </div>
                                     )}
                                 </div>
@@ -666,7 +666,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                 <div className="space-y-3">
                                     {/* Template name */}
                                     <div>
-                                        <label className="text-xs text-zinc-500 mb-1 block">Template Name</label>
+                                        <label className="text-xs text-muted-foreground mb-1 block">Template Name</label>
                                         <input
                                             value={editedName}
                                             onChange={(e) => setEditedName(e.target.value)}
@@ -676,7 +676,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
 
                                     {/* Detected type */}
                                     <div>
-                                        <label className="text-xs text-zinc-500 mb-1 block">Detected Type</label>
+                                        <label className="text-xs text-muted-foreground mb-1 block">Detected Type</label>
                                         <Badge style={{ background: `${TYPE_META[result.detectedType].color}20`, color: TYPE_META[result.detectedType].color }}>
                                             {TYPE_META[result.detectedType].label}
                                         </Badge>
@@ -684,7 +684,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
 
                                     {/* Extracted fields */}
                                     <div>
-                                        <label className="text-xs text-zinc-500 mb-2 block">Extracted Fields</label>
+                                        <label className="text-xs text-muted-foreground mb-2 block">Extracted Fields</label>
                                         <div className="space-y-1.5 text-xs">
                                             {result.template.headerLine1 && (
                                                 <div className="flex items-center gap-2">
@@ -739,10 +739,10 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                 <AlertTriangle className="w-6 h-6 text-red-400" />
                             </div>
                             <h3 className="text-lg font-semibold text-white mb-2">Analysis Failed</h3>
-                            <p className="text-sm text-zinc-500 mb-2">
+                            <p className="text-sm text-muted-foreground mb-2">
                                 Could not analyze this file. Please make sure it contains receipt data.
                             </p>
-                            <p className="text-xs text-zinc-600 mb-6">
+                            <p className="text-xs text-muted-foreground mb-6">
                                 Supported: {FORMAT_GROUPS.map(g => g.label).join(' • ')} (25+ formats)
                             </p>
                             <Button variant="outline" onClick={reset} className="text-zinc-400 border-white/10">

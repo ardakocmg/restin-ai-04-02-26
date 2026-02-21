@@ -295,7 +295,7 @@ export default function RestinControlTower() {
                             <div className="flex-1 space-y-6">
                                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full">
                                     <Target className="h-4 w-4 text-red-500" />
-                                    <span className="text-[10px] font-black text-red-500 uppercase tracking-[0.2em]">Deep Intelligence Activated</span>
+                                    <span className="text-[10px] font-black text-red-600 dark:text-red-400 uppercase tracking-[0.2em]">Deep Intelligence Activated</span>
                                 </div>
                                 <h2 className="text-5xl font-black text-foreground italic tracking-tighter leading-none">
                                     MARKET <br /> <span className="text-red-600">GROUNDING</span>

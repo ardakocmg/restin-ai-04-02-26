@@ -44,7 +44,7 @@ export default function ConnectorsPage() {
           ) : (
             <div className="space-y-3">
               {connectors.map(conn => (
-                <div key={conn.id} className="p-4 bg-slate-50 rounded border flex items-center justify-between">
+                <div key={conn.id} className="p-4 bg-background rounded border flex items-center justify-between">
                   <div>
                     <span className="font-medium text-slate-900">{conn.name}</span>
                     <p className="text-sm text-slate-600">{conn.type}</p>

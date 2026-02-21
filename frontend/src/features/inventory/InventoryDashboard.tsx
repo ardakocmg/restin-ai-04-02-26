@@ -773,7 +773,7 @@ export default function InventoryDashboard() {
                             Accounting Integration
                             <div className="ml-auto flex gap-2">
                                 <Badge variant={accountingStatus === 'connected' ? 'default' : 'outline'}
-                                    className={accountingStatus === 'connected' ? 'bg-green-500/20 text-green-600 border-green-500/30' : ''}>
+                                    className={accountingStatus === 'connected' ? 'bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30' : ''}>
                                     {accountingStatus === 'connected' ? '✅ Connected' : accountingStatus === 'syncing' ? '🔄 Syncing...' : '⚠️ Not Connected'}
                                 </Badge>
                             </div>

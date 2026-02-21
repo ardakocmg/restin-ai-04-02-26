@@ -77,7 +77,7 @@ export default function DataExportPage() {
 
             {/* Big Export Button */}
             <Card className="p-8 bg-gradient-to-br from-blue-500/5 to-purple-500/5 border-blue-500/20 text-center">
-                <FileArchive className="w-16 h-16 text-blue-500 mx-auto mb-4" />
+                <FileArchive className="w-16 h-16 text-blue-600 dark:text-blue-400 mx-auto mb-4" />
                 <h2 className="text-xl font-bold text-foreground">Export Everything</h2>
                 <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
                     Download a complete JSON export of all your venue data.

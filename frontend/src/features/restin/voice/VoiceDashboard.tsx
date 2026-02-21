@@ -181,7 +181,7 @@ export default function VoiceDashboard() {
                                     Active Line: {config?.phone_number || '+356 2100 0001'}
                                 </span>
                                 <div className="w-1 h-1 rounded-full bg-zinc-700"></div>
-                                <span className="text-xs font-bold text-emerald-500 uppercase tracking-widest">
+                                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
                                     {config?.status === 'active' ? 'Cloud Sync Active' : 'Setup Required'}
                                 </span>
                             </div>
@@ -396,7 +396,7 @@ export default function VoiceDashboard() {
                                         <span className="text-xs font-bold text-muted-foreground truncate">{doc.filename}</span>
                                     </div>
                                     {doc.status === 'indexed' && (
-                                        <span className="text-[10px] font-bold text-green-500 bg-green-500/10 px-2 py-0.5 rounded">Indexed</span>
+                                        <span className="text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-0.5 rounded">Indexed</span>
                                     )}
                                 </div>
                             ))}

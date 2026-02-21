@@ -100,12 +100,12 @@ const MOVEMENT_COLUMNS = [
         key: 'type', label: 'Type', sortable: true,
         render: (row: StockMovement) => {
             const colors: Record<string, string> = {
-                'Purchase': 'bg-green-500/10 text-green-500 border-green-500/20',
-                'Transfer In': 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-                'Transfer Out': 'bg-orange-500/10 text-orange-500 border-orange-500/20',
-                'Adjustment': 'bg-purple-500/10 text-purple-500 border-purple-500/20',
-                'Waste': 'bg-red-500/10 text-red-500 border-red-500/20',
-                'Production': 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20',
+                'Purchase': 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20',
+                'Transfer In': 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
+                'Transfer Out': 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20',
+                'Adjustment': 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20',
+                'Waste': 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20',
+                'Production': 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20',
             };
             return <Badge variant="outline" className={colors[row.type] || ''}>{row.type}</Badge>;
         }
@@ -170,13 +170,13 @@ const WASTE_COLUMNS = [
         key: 'reason', label: 'Reason', sortable: true,
         render: (row: WasteEntry) => {
             const colors: Record<string, string> = {
-                'Expired': 'bg-red-500/10 text-red-500 border-red-500/20',
-                'Spoiled': 'bg-orange-500/10 text-orange-500 border-orange-500/20',
-                'Over-production': 'bg-amber-500/10 text-amber-500 border-amber-500/20',
-                'Preparation Trim': 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-                'Dropped': 'bg-purple-500/10 text-purple-500 border-purple-500/20',
+                'Expired': 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20',
+                'Spoiled': 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20',
+                'Over-production': 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+                'Preparation Trim': 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
+                'Dropped': 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20',
                 'Quality Issue': 'bg-pink-500/10 text-pink-500 border-pink-500/20',
-                'Customer Return': 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20',
+                'Customer Return': 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20',
             };
             return <Badge variant="outline" className={colors[row.reason] || ''}>{row.reason}</Badge>;
         }

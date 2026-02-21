@@ -36,7 +36,7 @@ export default function ESGModule() {
 
   return (
     <PermissionGate requiredRole="OWNER">
-      <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
+      <div className="p-6 space-y-6 bg-background min-h-screen">
         <h1 className="text-3xl font-bold text-foreground">ESG Metrics</h1>
         <p className="text-slate-600">Environmental, Social & Governance</p>
 
@@ -71,11 +71,11 @@ export default function ESGModule() {
             <CardHeader><CardTitle>Training & Development</CardTitle></CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex justify-between items-center p-4 bg-blue-50 rounded">
+                <div className="flex justify-between items-center p-4 bg-blue-50 dark:bg-blue-950/20 rounded">
                   <span className="text-slate-700">Training Hours per Employee</span>
                   <span className="text-xl font-bold text-blue-600 dark:text-blue-400">{data.training_hours_per_employee}h</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-yellow-50 rounded">
+                <div className="flex justify-between items-center p-4 bg-yellow-50 dark:bg-yellow-950/20 rounded">
                   <span className="text-slate-700">Safety Incidents</span>
                   <span className="text-xl font-bold text-yellow-600">{data.safety_incidents}</span>
                 </div>
@@ -87,15 +87,15 @@ export default function ESGModule() {
             <CardHeader><CardTitle>Carbon Footprint</CardTitle></CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex justify-between items-center p-4 bg-green-50 rounded">
+                <div className="flex justify-between items-center p-4 bg-green-50 dark:bg-green-950/20 rounded">
                   <span className="text-slate-700">Total CO2 (tons)</span>
                   <span className="text-xl font-bold text-green-600 dark:text-green-400">{data.carbon_footprint.total_co2}</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-green-50 rounded">
+                <div className="flex justify-between items-center p-4 bg-green-50 dark:bg-green-950/20 rounded">
                   <span className="text-slate-700">Per Employee</span>
                   <span className="text-xl font-bold text-green-600 dark:text-green-400">{data.carbon_footprint.per_employee}</span>
                 </div>
-                <div className="flex justify-between items-center p-4 bg-emerald-50 rounded">
+                <div className="flex justify-between items-center p-4 bg-emerald-50 dark:bg-emerald-950/20 rounded">
                   <span className="text-slate-700">Reduction Target</span>
                   <span className="text-xl font-bold text-emerald-600">{data.carbon_footprint.reduction_target}%</span>
                 </div>

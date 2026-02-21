@@ -73,7 +73,7 @@ export default function AuditTrail() {
         title="HR Audit Trail"
         description="Audit-first ledger for HR configuration and workflows"
       >
-        <Card className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-sm" data-testid="hr-audit-trail-card">
+        <Card className="border border-border bg-background shadow-sm" data-testid="hr-audit-trail-card">
           <CardContent className="p-4">
             <DataTable
               columns={columns}

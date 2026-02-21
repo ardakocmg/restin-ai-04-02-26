@@ -185,7 +185,7 @@ export default function FeatureFlagAdmin() {
                                             <div className="font-medium text-foreground flex items-center gap-2">
                                                 {meta.label}
                                                 {isCoreModule && (
-                                                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 font-semibold">
+                                                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold">
                                                         CORE
                                                     </span>
                                                 )}
@@ -217,7 +217,7 @@ export default function FeatureFlagAdmin() {
             {/* Warning */}
             {hasChanges && (
                 <Card className="p-4 bg-amber-500/5 border-amber-500/20 flex items-center gap-3">
-                    <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0" />
+                    <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
                     <div className="text-sm text-foreground">
                         You have unsaved changes. Disabling modules will hide them from staff immediately.
                     </div>

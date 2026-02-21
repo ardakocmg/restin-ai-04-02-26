@@ -41,9 +41,9 @@ export default function TrainingStartingReport() {
 
   const getTypeBadge = (type) => {
     const colors = {
-      Compliance: 'bg-red-500/10 text-red-500 border-red-500/20',
-      Operations: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-      Skills: 'bg-green-500/10 text-green-500 border-green-500/20',
+      Compliance: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20',
+      Operations: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
+      Skills: 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20',
     };
     return colors[type] || 'bg-muted text-muted-foreground';
   };

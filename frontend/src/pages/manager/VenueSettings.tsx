@@ -194,13 +194,13 @@ export default function VenueSettings() {
     <div className="space-y-8 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-heading font-bold text-zinc-900 dark:text-foreground">Venue Settings</h1>
+          <h1 className="text-3xl font-heading font-bold text-foreground dark:text-foreground">Venue Settings</h1>
           <p className="text-muted-foreground dark:text-muted-foreground mt-1">{activeVenue.name}</p>
         </div>
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
-        <div className="mb-8 p-1 bg-zinc-100 dark:bg-card/50 border border-zinc-200 dark:border-border rounded-xl inline-flex h-12">
+        <div className="mb-8 p-1 bg-muted dark:bg-card/50 border border-border dark:border-border rounded-xl inline-flex h-12">
           <TabsList className="bg-transparent border-none p-0 flex gap-2 h-full">
             <TabsTrigger value="general" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-foreground data-[state=active]:shadow-md px-6 h-full rounded-lg text-muted-foreground dark:text-muted-foreground">General</TabsTrigger>
             <TabsTrigger value="branding" className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-red-600 data-[state=active]:text-foreground data-[state=active]:shadow-md px-6 h-full rounded-lg text-muted-foreground dark:text-muted-foreground">Branding</TabsTrigger>
@@ -212,7 +212,7 @@ export default function VenueSettings() {
 
         {/* General Settings */}
         <TabsContent value="general">
-          <Card className="bg-white dark:bg-card/50 border-zinc-200 dark:border-border">
+          <Card className="bg-white dark:bg-card/50 border-border dark:border-border">
             <CardHeader>
               <CardTitle className="text-zinc-900 dark:text-foreground font-heading flex items-center gap-2">
                 <Settings className="w-5 h-5 text-muted-foreground dark:text-muted-foreground" />
@@ -227,7 +227,7 @@ export default function VenueSettings() {
                     data-testid="venue-name-input"
                     value={venueForm.name || ""}
                     onChange={(e) => setVenueForm({ ...venueForm, name: e.target.value })}
-                    className="bg-zinc-50 dark:bg-background border-zinc-200 dark:border-border text-zinc-900 dark:text-foreground font-bold h-14 focus:ring-red-500/50 text-lg"
+                    className="bg-zinc-50 dark:bg-background border-border dark:border-border text-foreground dark:text-foreground font-bold h-14 focus:ring-red-500/50 text-lg"
                     disabled={!isManager()}
                   />
                 </div>
@@ -250,8 +250,8 @@ export default function VenueSettings() {
                 </div>
               </div>
 
-              <div className="border-t border-zinc-200 dark:border-border pt-6">
-                <h3 className="text-lg font-heading text-zinc-900 dark:text-foreground mb-4">Course Pacing</h3>
+              <div className="border-t border-border dark:border-border pt-6">
+                <h3 className="text-lg font-heading text-foreground dark:text-foreground mb-4">Course Pacing</h3>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-zinc-900 dark:text-foreground">Enable Course Pacing</p>
@@ -272,15 +272,15 @@ export default function VenueSettings() {
                       type="number"
                       value={venueForm.pacing_interval_minutes || 15}
                       onChange={(e) => setVenueForm({ ...venueForm, pacing_interval_minutes: parseInt(e.target.value) })}
-                      className="bg-zinc-50 dark:bg-secondary border-zinc-200 dark:border-border text-zinc-900 dark:text-foreground w-32"
+                      className="bg-zinc-50 dark:bg-secondary border-border dark:border-border text-foreground dark:text-foreground w-32"
                       disabled={!isManager()}
                     />
                   </div>
                 )}
               </div>
 
-              <div className="border-t border-zinc-200 dark:border-border pt-6">
-                <h3 className="text-lg font-heading text-zinc-900 dark:text-foreground mb-4">Review Policy</h3>
+              <div className="border-t border-border dark:border-border pt-6">
+                <h3 className="text-lg font-heading text-foreground dark:text-foreground mb-4">Review Policy</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="text-secondary-foreground">Low Risk Threshold (0-100)</Label>
@@ -291,7 +291,7 @@ export default function VenueSettings() {
                       max="100"
                       value={venueForm.review_policy_low_threshold || 30}
                       onChange={(e) => setVenueForm({ ...venueForm, review_policy_low_threshold: parseInt(e.target.value) })}
-                      className="bg-zinc-50 dark:bg-secondary border-zinc-200 dark:border-border text-zinc-900 dark:text-foreground"
+                      className="bg-zinc-50 dark:bg-secondary border-border dark:border-border text-foreground dark:text-foreground"
                       disabled={!isManager()}
                     />
                     <p className="text-xs text-muted-foreground">Review QR visible for scores 0-{venueForm.review_policy_low_threshold || 30}</p>
@@ -305,7 +305,7 @@ export default function VenueSettings() {
                       max="100"
                       value={venueForm.review_policy_medium_threshold || 60}
                       onChange={(e) => setVenueForm({ ...venueForm, review_policy_medium_threshold: parseInt(e.target.value) })}
-                      className="bg-zinc-50 dark:bg-secondary border-zinc-200 dark:border-border text-zinc-900 dark:text-foreground"
+                      className="bg-zinc-50 dark:bg-secondary border-border dark:border-border text-foreground dark:text-foreground"
                       disabled={!isManager()}
                     />
                     <p className="text-xs text-muted-foreground">Manager override for scores {(venueForm.review_policy_low_threshold || 30) + 1}-{venueForm.review_policy_medium_threshold || 60}</p>
@@ -314,8 +314,8 @@ export default function VenueSettings() {
               </div>
 
               {/* Legal Entity Link */}
-              <div className="border-t border-zinc-200 dark:border-border pt-6">
-                <h3 className="text-lg font-heading text-zinc-900 dark:text-foreground mb-4 flex items-center gap-2">
+              <div className="border-t border-border dark:border-border pt-6">
+                <h3 className="text-lg font-heading text-foreground dark:text-foreground mb-4 flex items-center gap-2">
                   <Building2 className="w-5 h-5 text-violet-400" />
                   Legal Entity
                 </h3>
@@ -325,7 +325,7 @@ export default function VenueSettings() {
                     onValueChange={(v) => setVenueForm({ ...venueForm, legal_entity_id: v === "none" ? "" : v })}
                     disabled={!isManager()}
                   >
-                    <SelectTrigger className="bg-zinc-50 dark:bg-background border-zinc-200 dark:border-border text-zinc-900 dark:text-foreground h-12">
+                    <SelectTrigger className="bg-zinc-50 dark:bg-background border-border dark:border-border text-foreground dark:text-foreground h-12">
                       <SelectValue placeholder="Select a legal entity..." />
                     </SelectTrigger>
                     <SelectContent className="bg-card border-border">
@@ -508,7 +508,7 @@ export default function VenueSettings() {
                   <div
                     key={zone.id}
                     data-testid={`zone-${zone.id}`}
-                    className="p-4 rounded-lg bg-zinc-50 dark:bg-secondary/50 border border-zinc-200 dark:border-border"
+                    className="p-4 rounded-lg bg-background dark:bg-secondary/50 border border-border dark:border-border"
                   >
                     <h4 className="text-zinc-900 dark:text-foreground font-medium">{zone.name}</h4>
                     <p className="text-muted-foreground text-sm capitalize">{zone.type}</p>
@@ -524,7 +524,7 @@ export default function VenueSettings() {
 
         {/* Tables */}
         <TabsContent value="tables">
-          <Card className="bg-white dark:bg-card/50 border-zinc-200 dark:border-border">
+          <Card className="bg-white dark:bg-card/50 border-border dark:border-border">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-zinc-900 dark:text-foreground font-heading flex items-center gap-2">
                 <Table2 className="w-5 h-5" />
@@ -621,7 +621,7 @@ export default function VenueSettings() {
         </TabsContent>
         {/* Modules */}
         <TabsContent value="modules">
-          <Card className="bg-white dark:bg-background border-zinc-200 dark:border-border shadow-2xl overflow-hidden">
+          <Card className="bg-white dark:bg-background border-border dark:border-border shadow-2xl overflow-hidden">
             <CardHeader className="border-b border-border bg-card/50 p-6">
               <CardTitle className="text-sm font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-2">
                 <Package className="w-4 h-4 text-red-500" />
@@ -683,13 +683,13 @@ export default function VenueSettings() {
                       </div>
 
                       {isExpanded && (
-                        <div className="px-6 pb-6 pt-0 bg-zinc-50 dark:bg-card/30">
-                          <div className="pl-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 border-t border-zinc-200 dark:border-border">
-                            <div className="p-4 rounded-xl bg-white dark:bg-background border border-zinc-200 dark:border-border">
+                        <div className="px-6 pb-6 pt-0 bg-background dark:bg-card/30">
+                          <div className="pl-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 border-t border-border dark:border-border">
+                            <div className="p-4 rounded-xl bg-white dark:bg-background border border-border dark:border-border">
                               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Configuration</p>
-                              <p className="text-xs font-bold text-zinc-900 dark:text-foreground uppercase tracking-tight">Advanced Settings</p>
+                              <p className="text-xs font-bold text-foreground dark:text-foreground uppercase tracking-tight">Advanced Settings</p>
                             </div>
-                            <div className="p-4 rounded-xl bg-white dark:bg-background border border-zinc-200 dark:border-border">
+                            <div className="p-4 rounded-xl bg-white dark:bg-background border border-border dark:border-border">
                               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Status</p>
                               <p className="text-xs font-bold text-green-600 dark:text-green-500 uppercase tracking-tight">System Ready</p>
                             </div>

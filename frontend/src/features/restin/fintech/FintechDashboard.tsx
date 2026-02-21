@@ -242,7 +242,7 @@ const FintechDashboard: React.FC = () => {
                                     <div className="text-right flex items-center gap-6">
                                         <div>
                                             <div className="text-lg font-black text-foreground">{formatCents(tr.total_cents)}</div>
-                                            <Badge className={tr.status === 'completed' ? 'bg-green-500/10 text-green-500 border-none px-2 py-0 h-4 text-[9px] font-black' : 'bg-amber-500/10 text-amber-500 border-none px-2 py-0 h-4 text-[9px] font-black'}>
+                                            <Badge className={tr.status === 'completed' ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-none px-2 py-0 h-4 text-[9px] font-black' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-none px-2 py-0 h-4 text-[9px] font-black'}>
                                                 {tr.status?.toUpperCase()}
                                             </Badge>
                                         </div>

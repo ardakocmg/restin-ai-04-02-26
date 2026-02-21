@@ -536,7 +536,7 @@ export default function POSRuntime() {
               <span className="text-foreground group-hover:text-foreground font-bold text-center leading-tight">
                 {item.name}
               </span>
-              <span className="text-lg font-bold text-red-500 group-hover:text-red-400 mt-auto">
+              <span className="text-lg font-bold text-red-600 dark:text-red-400 group-hover:text-red-400 mt-auto">
                 €{safeNumber(item.price, 0).toFixed(2)}
               </span>
             </button>

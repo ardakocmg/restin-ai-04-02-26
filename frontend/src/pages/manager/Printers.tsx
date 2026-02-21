@@ -610,7 +610,7 @@ export default function Printers() {
 
                                 {/* Right Column - Receipt Preview */},
                                 <div className="bg-white rounded-lg p-4 h-fit">
-                                    <div className="text-center border-b border-zinc-300 pb-2 mb-2">
+                                    <div className="text-center border-b border-border pb-2 mb-2">
                                         <p className="text-xs text-muted-foreground">T-3</p>
                                         <p className="text-lg font-black text-foreground">{selectedTemplate.titleText}</p>
                                         <p className="text-xs text-muted-foreground">#4</p>
@@ -620,7 +620,7 @@ export default function Printers() {
                                         <p className="text-xs text-muted-foreground">John Doe</p>
                                     </div>
                                     <div className="space-y-1 text-xs">
-                                        <div className="flex justify-between border-b border-zinc-200 pb-1">
+                                        <div className="flex justify-between border-b border-border pb-1">
                                             <span className="font-bold text-foreground">#Item</span>
                                             <span className="font-bold text-foreground">Cst. #</span>
                                         </div>

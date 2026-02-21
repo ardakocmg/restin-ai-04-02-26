@@ -73,7 +73,7 @@ export default function InventoryPage() {
 
     if (balance < 0) return { label: 'Negative', color: 'destructive', icon: AlertTriangle };
     if (balance <= minStock) return { label: 'Low Stock', color: 'outline', icon: TrendingDown, className: 'text-orange-600 dark:text-orange-400 border-orange-600' };
-    return { label: 'OK', color: 'outline', icon: CheckCircle2, className: 'bg-green-50 text-green-700 border-green-200' };
+    return { label: 'OK', color: 'outline', icon: CheckCircle2, className: 'bg-green-50 text-green-700 dark:text-green-400 border-green-200' };
   };
 
   return (
@@ -105,7 +105,7 @@ export default function InventoryPage() {
       <div className="flex items-center gap-3 p-4 rounded-lg bg-card border mb-4">
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="text-sm font-medium text-slate-700 mb-2 block">Status</label>
+            <label className="text-sm font-medium text-foreground mb-2 block">Status</label>
             <select
               value={filters.status || ''}
               onChange={(e) => setFilters({ ...filters, status: e.target.value })}
@@ -118,7 +118,7 @@ export default function InventoryPage() {
             </select>
           </div>
           <div>
-            <label className="text-sm font-medium text-slate-700 mb-2 block">Category</label>
+            <label className="text-sm font-medium text-foreground mb-2 block">Category</label>
             <input
               type="text"
               placeholder="Filter by category"
@@ -128,7 +128,7 @@ export default function InventoryPage() {
             />
           </div>
           <div>
-            <label className="text-sm font-medium text-slate-700 mb-2 block">Min Stock Only</label>
+            <label className="text-sm font-medium text-foreground mb-2 block">Min Stock Only</label>
             <input
               type="checkbox"
               checked={filters.min_stock_only || false}

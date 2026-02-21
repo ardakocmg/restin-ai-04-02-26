@@ -331,7 +331,7 @@ export default function NewTopBar(): React.ReactElement {
         <div className="flex items-center gap-3 px-1 py-1 rounded-full bg-secondary border border-border hover:border-primary/20 transition-all">
           <div className="flex items-center gap-2 pl-3">
             {isSafeMode ? (
-              <ShieldAlert className="h-3.5 w-3.5 text-red-500 animate-pulse" />
+              <ShieldAlert className="h-3.5 w-3.5 text-red-600 dark:text-red-400 animate-pulse" />
             ) : (
               <ShieldCheck className="h-3.5 w-3.5 text-green-500" />
             )}
@@ -452,9 +452,9 @@ export default function NewTopBar(): React.ReactElement {
               <div className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mb-2 px-1">{t('topbar.systemHealth')}</div>
               <div className={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-widest border border-transparent transition-colors",
-                systemStatus === 'healthy' && "bg-green-500/5 text-green-500 border-green-500/10",
-                systemStatus === 'degraded' && "bg-yellow-500/5 text-yellow-500 border-yellow-500/10",
-                systemStatus === 'offline' && "bg-red-500/5 text-red-500 border-red-500/10"
+                systemStatus === 'healthy' && "bg-green-500/5 text-green-600 dark:text-green-400 border-green-500/10",
+                systemStatus === 'degraded' && "bg-yellow-500/5 text-yellow-600 dark:text-yellow-400 border-yellow-500/10",
+                systemStatus === 'offline' && "bg-red-500/5 text-red-600 dark:text-red-400 border-red-500/10"
               )}>
                 <span className={cn(
                   "inline-block w-2 h-2 rounded-full",

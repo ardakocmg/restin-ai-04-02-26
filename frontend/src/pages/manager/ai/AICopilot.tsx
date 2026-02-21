@@ -310,7 +310,7 @@ export default function AICopilot() {
                         <div>
                             <h1 className="text-sm font-bold text-foreground flex items-center gap-2">
                                 <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-red-600 bg-clip-text text-transparent font-extrabold">Hey Rin</span>
-                                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-medium">
+                                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium">
                                     LOCAL
                                 </span>
                                 {aiConfig.external_ai_enabled && (

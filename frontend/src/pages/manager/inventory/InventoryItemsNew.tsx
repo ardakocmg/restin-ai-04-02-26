@@ -290,7 +290,7 @@ const ALL_COLUMNS = [
         );
       }
       return (
-        <span className="text-xs font-medium text-green-500 flex items-center gap-0.5">
+        <span className="text-xs font-medium text-green-600 dark:text-green-400 flex items-center gap-0.5">
           <TrendingDown className="h-3 w-3" /> -{absChange}%
         </span>
       );

@@ -62,10 +62,10 @@ export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }: 
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case 'OCCUPIED': return 'bg-red-500/20 border-red-500 text-red-500 hover:bg-red-500/30';
-            case 'BILL_PRINTED': return 'bg-yellow-500/20 border-yellow-500 text-yellow-500 hover:bg-yellow-500/30';
-            case 'RESERVED': return 'bg-blue-500/20 border-blue-500 text-blue-500 hover:bg-blue-500/30';
-            default: return 'bg-green-500/20 border-green-500 text-green-500 hover:bg-green-500/30';
+            case 'OCCUPIED': return 'bg-red-500/20 border-red-500 text-red-600 dark:text-red-400 hover:bg-red-500/30';
+            case 'BILL_PRINTED': return 'bg-yellow-500/20 border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500/30';
+            case 'RESERVED': return 'bg-blue-500/20 border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-500/30';
+            default: return 'bg-green-500/20 border-green-500 text-green-600 dark:text-green-400 hover:bg-green-500/30';
         }
     };
 

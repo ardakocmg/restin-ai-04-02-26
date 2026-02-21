@@ -67,7 +67,7 @@ const AREAS = ['Kitchen', 'Walk-in Fridge', 'Walk-in Freezer', 'Dry Store', 'Pre
 /* ──────────────────────────── Helper Components ─────────────────── */
 function StatusBadge({ status }: { status: TaskStatus }) {
     const c = {
-        pending: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/30',
+        pending: 'bg-zinc-500/10 text-muted-foreground border-zinc-500/30',
         in_progress: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
         completed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
         overdue: 'bg-red-500/10 text-red-400 border-red-500/30',

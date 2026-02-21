@@ -19,8 +19,8 @@ interface ReportResult {
 const CATEGORY_COLORS: Record<string, string> = {
   CRM: 'bg-purple-100 text-purple-700 border-purple-200',
   OPS: 'bg-orange-100 text-orange-700 border-orange-200',
-  FINANCE: 'bg-green-100 text-green-700 border-green-200',
-  HR: 'bg-blue-100 text-blue-700 border-blue-200'
+  FINANCE: 'bg-green-100 text-green-700 dark:text-green-400 border-green-200',
+  HR: 'bg-blue-100 text-blue-700 dark:text-blue-400 border-blue-200'
 };
 
 export default function ReportingHub() {
@@ -122,7 +122,7 @@ export default function ReportingHub() {
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm text-zinc-900 dark:text-foreground">{report.name}</h4>
+                        <h4 className="font-medium text-sm text-foreground dark:text-foreground">{report.name}</h4>
                         <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1">{report.description}</p>
                       </div>
                       <Badge className={`${CATEGORY_COLORS[report.category]} dark:bg-opacity-20`}>
@@ -145,7 +145,7 @@ export default function ReportingHub() {
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm text-zinc-900 dark:text-foreground">{report.name}</h4>
+                        <h4 className="font-medium text-sm text-foreground dark:text-foreground">{report.name}</h4>
                         <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1">{report.description}</p>
                       </div>
                       <Badge className={`${CATEGORY_COLORS[report.category]} dark:bg-opacity-20`}>
@@ -184,7 +184,7 @@ export default function ReportingHub() {
                 <div className="text-sm text-gray-600">
                   <strong>Rows:</strong> {result?.rows?.length || 0}
                 </div>
-                <pre className="bg-zinc-50 dark:bg-card p-4 rounded-lg overflow-auto text-xs text-zinc-900 dark:text-foreground border border-zinc-200 dark:border-border">
+                <pre className="bg-zinc-50 dark:bg-card p-4 rounded-lg overflow-auto text-xs text-foreground dark:text-foreground border border-border dark:border-border">
                   {JSON.stringify(result, null, 2)}
                 </pre>
               </div>

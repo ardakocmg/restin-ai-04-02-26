@@ -136,7 +136,7 @@ export default function PermissionedTable({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-red-600 dark:text-red-400 animate-spin" />
       </div>
     );
   }
@@ -156,7 +156,7 @@ export default function PermissionedTable({
   if (!schema || !schema.columns) {
     return (
       <div className="text-center py-12 px-4">
-        <AlertTriangle className="w-16 h-16 mx-auto text-yellow-500 mb-4" />
+        <AlertTriangle className="w-16 h-16 mx-auto text-yellow-600 dark:text-yellow-400 mb-4" />
         <p className="text-xl text-muted-foreground">Configuration Error</p>
       </div>
     );

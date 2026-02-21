@@ -363,10 +363,10 @@ export default function ClockingData() {
                         {/* Actions */}
                         <td className="p-3 text-center">
                           <div className="flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Button variant="ghost" size="icon" className="h-7 w-7 text-blue-500 hover:bg-blue-500/10 rounded-lg" title="Edit">
+                            <Button variant="ghost" size="icon" className="h-7 w-7 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10 rounded-lg" title="Edit">
                               <Edit className="h-3 w-3" />
                             </Button>
-                            <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500 hover:bg-red-500/10 rounded-lg" title="Delete">
+                            <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600 dark:text-red-400 hover:bg-red-500/10 rounded-lg" title="Delete">
                               <Trash className="h-3 w-3" />
                             </Button>
                           </div>

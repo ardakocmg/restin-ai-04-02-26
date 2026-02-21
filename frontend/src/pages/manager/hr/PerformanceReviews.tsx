@@ -79,7 +79,7 @@ export default function PerformanceReviews() {
 
   return (
     <PermissionGate requiredRole="MANAGER">
-      <div className="p-6 bg-slate-50 dark:bg-slate-900 min-h-screen">
+      <div className="p-6 bg-background min-h-screen">
         <h1 className="text-2xl font-bold text-foreground dark:text-slate-50 mb-6">Performance Management / Reviews</h1>
 
         {/* Summary Section */}
@@ -109,7 +109,7 @@ export default function PerformanceReviews() {
                 {statusData.map((item: StatusDataEntry, idx: number) => (
                   <div key={idx} className="flex items-center gap-2 text-sm">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-                    <span className="text-slate-700 dark:text-slate-300">{item.name}</span>
+                    <span className="text-foreground">{item.name}</span>
                   </div>
                 ))}
               </div>
@@ -121,19 +121,19 @@ export default function PerformanceReviews() {
             <CardContent className="p-6 flex items-center justify-around">
               <div className="text-center">
                 <p className="text-4xl font-bold text-orange-500">28</p>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Reviews in View</p>
+                <p className="text-sm text-muted-foreground mt-1">Reviews in View</p>
               </div>
-              <div className="h-16 w-px bg-slate-300 dark:bg-slate-700" />
+              <div className="h-16 w-px bg-secondary dark:bg-slate-700" />
               <div className="text-center">
                 <p className="text-4xl font-bold text-orange-500">28</p>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Total Reviews</p>
+                <p className="text-sm text-muted-foreground mt-1">Total Reviews</p>
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Tabs */}
-        <div className="bg-white dark:bg-slate-800 rounded-t-lg border-b dark:border-slate-700">
+        <div className="bg-card rounded-t-lg border-b dark:border-slate-700">
           <div className="flex gap-4 px-6">
             {['Reviews', 'Participating', 'My Team', 'All Reviews'].map((tab) => (
               <button
@@ -141,7 +141,7 @@ export default function PerformanceReviews() {
                 onClick={() => setActiveTab(tab.toLowerCase().replace(' ', '-'))}
                 className={`py-3 px-4 border-b-2 transition-colors ${activeTab === tab.toLowerCase().replace(' ', '-')
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400 dark:text-blue-400'
-                  : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-foreground dark:hover:text-slate-200'
+                  : 'border-transparent text-muted-foreground hover:text-foreground dark:hover:text-slate-200'
                   }`}
               >
                 {tab}
@@ -174,7 +174,7 @@ export default function PerformanceReviews() {
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100 dark:bg-slate-800">
+                <thead className="bg-muted">
                   <tr>
                     <th className="p-3 text-left text-sm font-semibold text-foreground dark:text-slate-50">Name & Surname</th>
                     <th className="p-3 text-left text-sm font-semibold text-foreground dark:text-slate-50">Manager</th>
@@ -193,27 +193,27 @@ export default function PerformanceReviews() {
                     <tr key={review.id} className="border-b dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">
                       <td className="p-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
-                            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+                          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                            <span className="text-xs font-semibold text-muted-foreground">
                               {review.employee_code}
                             </span>
                           </div>
                           <div>
                             <p className="font-medium text-foreground dark:text-slate-50">{review.employee_name}</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">{review.employee_code}</p>
+                            <p className="text-xs text-muted-foreground">{review.employee_code}</p>
                           </div>
                         </div>
                       </td>
                       <td className="p-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
-                            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+                          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                            <span className="text-xs font-semibold text-muted-foreground">
                               {review.manager_code}
                             </span>
                           </div>
                           <div>
                             <p className="font-medium text-foreground dark:text-slate-50">{review.manager_name}</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">{review.manager_code}</p>
+                            <p className="text-xs text-muted-foreground">{review.manager_code}</p>
                           </div>
                         </div>
                       </td>
@@ -255,8 +255,8 @@ export default function PerformanceReviews() {
                           <button className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center hover:bg-blue-200 dark:hover:bg-blue-800">
                             <span className="text-blue-600 dark:text-blue-400 dark:text-blue-300">👁</span>
                           </button>
-                          <button className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600">
-                            <span className="text-slate-600 dark:text-slate-300">📄</span>
+                          <button className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600">
+                            <span className="text-muted-foreground">📄</span>
                           </button>
                         </div>
                       </td>

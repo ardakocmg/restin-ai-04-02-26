@@ -33,7 +33,7 @@ function ModifierModal({ menuItem, onClose, onConfirm }) {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+        <div className="p-6 border-b border-border flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-foreground">{menuItem.name}</h2>
             <p className="text-gray-600">Customize your order</p>
@@ -93,17 +93,17 @@ function ModifierModal({ menuItem, onClose, onConfirm }) {
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
               placeholder="Add cooking instructions..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none"
+              className="w-full px-4 py-3 border border-border rounded-lg resize-none"
               rows={3}
             />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-gray-200 flex gap-3">
+        <div className="p-6 border-t border-border flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-6 py-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold"
+            className="flex-1 px-6 py-4 bg-muted text-foreground rounded-lg hover:bg-gray-200 font-semibold"
           >
             Cancel
           </button>

@@ -306,7 +306,7 @@ export default function TipPresetsSettings() {
                                 </button>
                             )}
                         </div>
-                        <p className="text-center text-[10px] text-zinc-700 mt-4">
+                        <p className="text-center text-[10px] text-foreground mt-4">
                             Showing on: {(config?.show_on || []).join(', ') || 'None'}
                         </p>
                     </div>

@@ -88,7 +88,7 @@ export default function KDSPerformance() {
           <div className="flex justify-between items-start">
             <div>
               <p className="text-muted-foreground text-sm font-medium">Delayed Orders</p>
-              <h3 className="text-2xl font-bold text-red-500 mt-1">{data.metrics.delayed_orders}</h3>
+              <h3 className="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">{data.metrics.delayed_orders}</h3>
             </div>
             <div className="p-3 bg-red-500/10 rounded-xl">
               <AlertCircle className="w-6 h-6 text-red-500" />

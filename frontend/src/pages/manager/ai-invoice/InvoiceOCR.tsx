@@ -64,7 +64,7 @@ export default function InvoiceOCR() {
                   <span className="text-blue-400 hover:text-blue-300">Choose file</span>
                   <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
                 </label>
-                <p className="text-sm text-slate-400 mt-2">PNG, JPG, WEBP</p>
+                <p className="text-sm text-muted-foreground mt-2">PNG, JPG, WEBP</p>
               </div>
               {processing && (
                 <div className="flex items-center justify-center gap-2 text-blue-400">

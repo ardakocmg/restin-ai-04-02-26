@@ -72,12 +72,12 @@ export default function AdvancedObservability() {
               ) : (
                 <div className="space-y-2">
                   {slowQueries.slice(0, 10).map((q, idx) => (
-                    <div key={idx} className="p-3 bg-slate-50 rounded border">
+                    <div key={idx} className="p-3 bg-background rounded border">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium">{q.service_name}.{q.operation}</span>
                         <span className="text-sm text-orange-600 dark:text-orange-400 font-bold">{q.duration_ms.toFixed(0)}ms</span>
                       </div>
-                      <p className="text-xs text-slate-600 mt-1">{new Date(q.created_at).toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{new Date(q.created_at).toLocaleString()}</p>
                     </div>
                   ))}
                 </div>
@@ -99,7 +99,7 @@ export default function AdvancedObservability() {
                 {Array.from(new Set(dataVolume.map(d => d.collection))).map(collection => {
                   const latest = dataVolume.filter(d => d.collection === collection).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
                   return latest ? (
-                    <div key={collection} className="p-3 bg-slate-50 rounded flex items-center justify-between">
+                    <div key={collection} className="p-3 bg-background rounded flex items-center justify-between">
                       <span className="text-sm font-medium">{collection}</span>
                       <div className="text-right">
                         <p className="text-sm font-bold">{latest.doc_count.toLocaleString()} docs</p>
@@ -127,7 +127,7 @@ export default function AdvancedObservability() {
               ) : (
                 <div className="space-y-2">
                   {readModelHealth.map((rm, idx) => (
-                    <div key={idx} className="p-3 bg-slate-50 rounded flex items-center justify-between">
+                    <div key={idx} className="p-3 bg-background rounded flex items-center justify-between">
                       <span className="text-sm font-medium">{rm.read_model}</span>
                       <span className="text-sm text-slate-600">Lag: {rm.lag_seconds}s</span>
                     </div>

@@ -100,7 +100,7 @@ function StockCount() {
     : items;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -139,15 +139,15 @@ function StockCount() {
             placeholder="Search items by name or SKU..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg"
+            className="w-full pl-12 pr-4 py-3 border border-border rounded-lg"
           />
         </div>
       </div>
 
       {!count ? (
         <div className="text-center py-20 bg-white rounded-xl border-2 border-dashed border-gray-300">
-          <ClipboardList className="w-20 h-20 mx-auto text-gray-400 mb-4" />
-          <p className="text-xl text-gray-600 mb-2">No active count</p>
+          <ClipboardList className="w-20 h-20 mx-auto text-muted-foreground mb-4" />
+          <p className="text-xl text-muted-foreground mb-2">No active count</p>
           <p className="text-gray-400">Start a new stock count to begin</p>
         </div>
       ) : (
@@ -176,7 +176,7 @@ function StockCount() {
                         step="0.01"
                         value={countLines[item.id] || ''}
                         onChange={(e) => setCountLines({ ...countLines, [item.id]: e.target.value })}
-                        className="w-32 px-3 py-2 border border-gray-300 rounded-lg"
+                        className="w-32 px-3 py-2 border border-border rounded-lg"
                         placeholder="0.00"
                       />
                     </td>

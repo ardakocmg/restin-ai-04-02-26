@@ -306,7 +306,7 @@ export default function IntegrationsHub() {
                           </div>
                           <div className="flex flex-col items-end gap-2">
                             {isConfigured ? (
-                              <Badge className="bg-green-100 text-green-700 border-green-300">
+                              <Badge className="bg-green-100 text-green-700 dark:text-green-400 border-green-300">
                                 <CheckCircle2 className="h-3 w-3 mr-1" />
                                 Configured
                               </Badge>

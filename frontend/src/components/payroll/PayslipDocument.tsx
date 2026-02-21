@@ -23,7 +23,7 @@ export default function PayslipDocument({ payslipData }) {
     } = payslipData;
 
     return (
-        <div id="payslip-to-export" className="payslip-document !bg-white !text-black p-10 max-w-[210mm] mx-auto border border-gray-100 shadow-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
+        <div id="payslip-to-export" className="payslip-document !bg-white !text-black p-10 max-w-[210mm] mx-auto border border-border shadow-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
             {/* Header Section */}
             <div className="flex justify-between items-start mb-10 pb-2 border-b-2 border-gray-300">
                 {/* Logo / Title Area */}
@@ -65,11 +65,11 @@ export default function PayslipDocument({ payslipData }) {
                 {/* Left Information Column */}
                 <div className="space-y-4 text-[13px]">
                     <div className="grid grid-cols-[100px_1fr] items-start">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Name</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">Name</span>
                         <span className="font-bold">{employee.name} ({employee.id_number || employee.id})</span>
                     </div>
                     <div className="grid grid-cols-[100px_1fr] items-start">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Address</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">Address</span>
                         <div className="flex flex-col">
                             <span>{employee.address?.line1 || '23,'}</span>
                             <span>{employee.address?.line2 || 'Triq In-Noxagha,'}</span>
@@ -77,23 +77,23 @@ export default function PayslipDocument({ payslipData }) {
                         </div>
                     </div>
                     <div className="grid grid-cols-[100px_1fr] items-center">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">ID No.</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">ID No.</span>
                         <span className="font-medium">{employee.id_number || '0307741A'}</span>
                     </div>
                     <div className="grid grid-cols-[100px_1fr] items-center mt-4">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Department</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">Department</span>
                         <span className="uppercase">{employee.department || 'OTHER'}</span>
                     </div>
                     <div className="grid grid-cols-[100px_1fr] items-center">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Unit</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">Unit</span>
                         <span>{employee.unit || '-'}</span>
                     </div>
                     <div className="grid grid-cols-[100px_1fr] items-center">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Occupation</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">Occupation</span>
                         <span className="uppercase font-medium">{employee.occupation || 'IN HOUSE STRATEGIST'}</span>
                     </div>
                     <div className="grid grid-cols-[100px_1fr] items-center">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Roll(s)</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">Roll(s)</span>
                         <span className="font-medium">{employee.occupation_roll || 'Dec 25 (2025-5/12)'}</span>
                     </div>
                 </div>
@@ -101,28 +101,28 @@ export default function PayslipDocument({ payslipData }) {
                 {/* Right Information Column */}
                 <div className="space-y-4 text-[13px]">
                     <div className="grid grid-cols-[100px_1fr] items-center">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">SS No.</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">SS No.</span>
                         <span className="font-medium">{employee.ss_number || ''}</span>
                     </div>
                     <div className="grid grid-cols-[100px_1fr] items-center mt-[104px]">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Section</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">Section</span>
                         <span>{employee.section || ''}</span>
                     </div>
                     <div className="grid grid-cols-[100px_1fr] items-center">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Grade</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">Grade</span>
                         <span>{employee.grade || ''}</span>
                     </div>
                     <div className="grid grid-cols-[100px_1fr] items-center">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Pay Date</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">Pay Date</span>
                         <span className="font-medium">{period.pay_date}</span>
                     </div>
                     <div className="grid grid-cols-[100px_1fr] items-center">
-                        <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Roll Period</span>
+                        <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">Roll Period</span>
                         <span className="font-medium">{period.start} - {period.end}</span>
                     </div>
                     {employmentDate && (
                         <div className="grid grid-cols-[100px_1fr] items-center">
-                            <span className="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Employment</span>
+                            <span className="font-bold text-muted-foreground uppercase text-[10px] tracking-wider">Employment</span>
                             <span className="font-medium">{employmentDate}</span>
                         </div>
                     )}
@@ -196,7 +196,7 @@ export default function PayslipDocument({ payslipData }) {
 
                     <div>
                         <div className="text-sm font-bold mb-3 pb-1 border-b border-gray-400 uppercase tracking-tighter">Leave Type</div>
-                        <div className="text-xs text-gray-400 font-medium italic">{leaveType || '-'}</div>
+                        <div className="text-xs text-muted-foreground font-medium italic">{leaveType || '-'}</div>
                     </div>
                 </div>
 
@@ -211,8 +211,8 @@ export default function PayslipDocument({ payslipData }) {
                                 <div className="text-md font-bold">{basicSalary.amount.toFixed(2)}</div>
                             </div>
                         </div>
-                        <div className="text-[11px] text-gray-600 font-medium -mt-1">Salary</div>
-                        <div className="text-center py-4 bg-gray-50 border border-gray-200 rounded-lg shadow-inner">
+                        <div className="text-[11px] text-muted-foreground font-medium -mt-1">Salary</div>
+                        <div className="text-center py-4 bg-background border border-border rounded-lg shadow-inner">
                             <div className="text-4xl font-black tracking-tighter">{basicSalary.hours.toFixed(2)}</div>
                             <div className="text-[10px] uppercase font-black tracking-widest text-gray-400">Hours Processed</div>
                         </div>
@@ -220,8 +220,8 @@ export default function PayslipDocument({ payslipData }) {
 
                     {/* Adjustment Section */}
                     <div className="space-y-3">
-                        <div className="text-[11px] font-bold uppercase text-gray-500 tracking-wider">Adjustment</div>
-                        <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3">
+                        <div className="text-[11px] font-bold uppercase text-muted-foreground tracking-wider">Adjustment</div>
+                        <div className="p-4 bg-background border border-border rounded-lg space-y-3">
                             <div className="flex justify-between items-start">
                                 <div className="flex flex-col">
                                     <span className="text-xs font-bold text-gray-800">Government Bonus</span>
@@ -233,7 +233,7 @@ export default function PayslipDocument({ payslipData }) {
                     </div>
 
                     {/* Totals Section */}
-                    <div className="pt-4 border-t-2 border-dashed border-gray-200 space-y-4">
+                    <div className="pt-4 border-t-2 border-dashed border-border space-y-4">
                         <div className="flex justify-between items-center px-1">
                             <span className="text-sm font-black uppercase">Gross Total</span>
                             <span className="text-lg font-black">{grossTotal.toFixed(2)}</span>
@@ -244,10 +244,10 @@ export default function PayslipDocument({ payslipData }) {
                                 <span className="font-bold text-gray-600">Tax ({tax.type || 'Part Time Special Rate'})</span>
                                 <span className="font-bold">{tax.amount.toFixed(2)}</span>
                             </div>
-                            <div className="text-[9px] text-gray-400 italic font-medium tracking-tight">Tax Rate)</div>
+                            <div className="text-[9px] text-muted-foreground italic font-medium tracking-tight">Tax Rate)</div>
                         </div>
 
-                        <div className="flex justify-between text-xs px-1 border-b border-gray-100 pb-2">
+                        <div className="flex justify-between text-xs px-1 border-b border-border pb-2">
                             <span className="font-bold text-gray-600">Social Security</span>
                             <span className="font-bold">{socialSecurity.toFixed(2)}</span>
                         </div>
@@ -255,7 +255,7 @@ export default function PayslipDocument({ payslipData }) {
                         {/* Net Pay Box - High Impact */}
                         <div className="relative group overflow-hidden">
                             <div className="absolute inset-0 bg-card rounded-xl transform transition-transform group-hover:scale-105" />
-                            <div className="relative bg-zinc-100 p-6 rounded-xl border-2 border-black flex justify-between items-center shadow-lg">
+                            <div className="relative bg-muted p-6 rounded-xl border-2 border-black flex justify-between items-center shadow-lg">
                                 <span className="text-xl font-black uppercase text-black tracking-tighter">Net</span>
                                 <div className="flex items-baseline gap-1">
                                     <span className="text-lg font-bold text-muted-foreground">€</span>
@@ -270,8 +270,8 @@ export default function PayslipDocument({ payslipData }) {
             {/* Remarks Section */}
             {(remarks || true) && (
                 <div className="mt-8 pt-4 border-t border-gray-200">
-                    <div className="text-[11px] font-bold uppercase text-gray-500 mb-2 tracking-wider">Remarks</div>
-                    <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-xs leading-relaxed text-gray-700 whitespace-pre-wrap">
+                    <div className="text-[11px] font-bold uppercase text-muted-foreground mb-2 tracking-wider">Remarks</div>
+                    <div className="p-4 bg-background border border-border rounded-lg text-xs leading-relaxed text-foreground whitespace-pre-wrap">
                         {remarks || `SKILLS PASS - Should you fail your third attempt for the Skills Pass, the portal will automatically block you for a period of 3 months before you can try again so kindly start your skills pass process as soon as possible so you have sufficient time to complete the necessary attempts considering the three month suspension period after the third failure.\n\nADVANCES - Any request for a salary advance is to be submitted via email to the HR Department on hr@marvingauci.com. The HR Department will then seek authorization to issue the advance. Requests must reach the HR Department three working days before the funds are needed. Note that Saturdays and Sundays are not counted as working days. No requests will be accepted two days prior to the end of the month and five days after the first of the month. Advances should only be requested in case of emergencies. These requests should not become a regular monthly occurrence and should only be made in situation of extreme need.`}
                     </div>
                 </div>

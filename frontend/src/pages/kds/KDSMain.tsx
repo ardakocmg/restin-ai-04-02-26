@@ -186,7 +186,7 @@ export default function KDSMain() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-green-500 animate-spin" />
+        <Loader2 className="w-12 h-12 text-green-600 dark:text-green-400 animate-spin" />
       </div>
     );
   }
@@ -213,7 +213,7 @@ export default function KDSMain() {
               key={station}
               onClick={() => setStationFilter(station)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${stationFilter === station
-                ? "bg-red-500/10 text-red-500 border border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
+                ? "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
                 : "bg-card text-muted-foreground border border-border hover:bg-secondary hover:text-foreground"
                 }`}
             >
@@ -239,7 +239,7 @@ export default function KDSMain() {
       <div className="pt-20 pb-20 px-4">
         {flattenedItems.length === 0 ? (
           <div className="text-center py-20">
-            <CheckCircle className="w-16 h-16 mx-auto text-green-500 mb-4 drop-shadow-[0_0_15px_rgba(74,222,128,0.3)]" />
+            <CheckCircle className="w-16 h-16 mx-auto text-green-600 dark:text-green-400 mb-4 drop-shadow-[0_0_15px_rgba(74,222,128,0.3)]" />
             <p className="text-xl text-foreground mb-2">All Caught Up!</p>
             <p className="text-muted-foreground">No pending items</p>
           </div>

@@ -110,7 +110,7 @@ export default function UserAccess() {
                 actions={
                     <div className="flex gap-2">
                         {user?.status === 'archived' ? (
-                            <Button variant="outline" className="border-emerald-500 text-emerald-500 hover:bg-emerald-500/10" onClick={() => handleArchiveUser(false)}>
+                            <Button variant="outline" className="border-emerald-500 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10" onClick={() => handleArchiveUser(false)}>
                                 <RotateCcw className="w-4 h-4 mr-2" />
                                 Restore User
                             </Button>

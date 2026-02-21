@@ -45,7 +45,7 @@ export default function ForecastingCosts() {
 
   return (
     <PermissionGate requiredRole="MANAGER">
-      <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
+      <div className="p-6 space-y-6 bg-background min-h-screen">
         <h1 className="text-3xl font-bold text-foreground">Forecasting Costs</h1>
 
         <div className="grid gap-4 md:grid-cols-3">

@@ -631,7 +631,7 @@ export default function VoiceSettings() {
                                             <span className="text-sm text-secondary-foreground">{doc.filename}</span>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <span className="text-xs text-green-500 bg-green-500/10 px-2 py-1 rounded">{doc.status || 'Indexed'}</span>
+                                            <span className="text-xs text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-1 rounded">{doc.status || 'Indexed'}</span>
                                             <Button size="icon" variant="ghost"
                                                 onClick={() => deleteMutation.mutate(doc.id)}
                                                 className="h-7 w-7 text-muted-foreground hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">

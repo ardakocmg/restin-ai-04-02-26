@@ -87,7 +87,7 @@ const ConditionalRuleRow: React.FC<{
             </SelectContent>
         </Select>
 
-        <Button variant="ghost" size="sm" onClick={onDelete} className="h-7 w-7 p-0 text-zinc-600 hover:text-red-400">
+        <Button variant="ghost" size="sm" onClick={onDelete} className="h-7 w-7 p-0 text-muted-foreground hover:text-red-400">
             <Trash2 className="w-3 h-3" />
         </Button>
     </div>
@@ -181,7 +181,7 @@ export const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) =>
     return (
         <div className="space-y-1.5">
             <div className="flex items-center justify-between mb-3">
-                <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     Receipt Blocks
                 </div>
                 <span className="text-[10px] text-zinc-600">
@@ -213,7 +213,7 @@ export const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) =>
                     >
                         {/* Block Row */}
                         <div className="flex items-center gap-2 px-3 py-2.5 cursor-grab active:cursor-grabbing">
-                            <GripVertical className="w-3.5 h-3.5 text-zinc-600 flex-shrink-0" />
+                            <GripVertical className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
 
                             <span className="text-base flex-shrink-0">{block.icon}</span>
 
@@ -235,7 +235,7 @@ export const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) =>
                             <Switch checked={block.enabled} onCheckedChange={() => toggleBlock(block.id)} />
 
                             {/* Expand */}
-                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-zinc-600 hover:text-white"
+                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-muted-foreground hover:text-white"
                                 onClick={(e) => { e.stopPropagation(); setExpandedBlock(isExpanded ? null : block.id); }}>
                                 {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
                             </Button>
@@ -253,7 +253,7 @@ export const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) =>
                                 {/* Conditional Rules */}
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-xs text-zinc-500 flex items-center gap-1">
+                                        <span className="text-xs text-muted-foreground flex items-center gap-1">
                                             <Zap className="w-3 h-3 text-amber-400" /> Conditional Rules
                                         </span>
                                         <Button variant="ghost" size="sm" className="h-6 text-[10px] text-amber-400 hover:text-amber-300"
@@ -263,7 +263,7 @@ export const BlockEditor: React.FC<BlockEditorProps> = ({ blocks, onChange }) =>
                                     </div>
 
                                     {block.conditions.length === 0 ? (
-                                        <p className="text-[11px] text-zinc-600 italic">
+                                        <p className="text-[11px] text-muted-foreground italic">
                                             No conditions — block always shows. Add a rule to make it dynamic.
                                         </p>
                                     ) : (

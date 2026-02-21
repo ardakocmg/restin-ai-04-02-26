@@ -311,7 +311,7 @@ export default function POSLayoutPro({
                         w-full min-h-14 rounded-xl flex flex-col items-center justify-center gap-0.5 p-1.5
                         transition-all duration-200 border-2
                         ${isActive
-                                                    ? 'bg-white text-zinc-900 border-white shadow-lg shadow-white/10'
+                                                    ? 'bg-white text-foreground border-white shadow-lg shadow-white/10'
                                                     : 'bg-transparent text-muted-foreground border-transparent hover:bg-secondary hover:text-secondary-foreground'
                                                 }
                       `}

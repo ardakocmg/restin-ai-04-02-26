@@ -550,7 +550,7 @@ export default function AIProvidersTab() {
             {Object.keys(usage.by_provider).length === 0 && shadow_learning.total_logs === 0 && (
                 <Card className="bg-card/60 border-border border-dashed">
                     <CardContent className="p-8 text-center">
-                        <BarChart3 className="w-10 h-10 mx-auto text-zinc-700 mb-3" />
+                        <BarChart3 className="w-10 h-10 mx-auto text-foreground mb-3" />
                         <h3 className="text-sm font-medium text-muted-foreground">No Usage Data Yet</h3>
                         <p className="text-xs text-muted-foreground mt-1">
                             Start using AI features to see analytics and shadow learning insights

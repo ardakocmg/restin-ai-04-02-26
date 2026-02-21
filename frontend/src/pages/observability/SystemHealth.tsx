@@ -77,7 +77,7 @@ export default function SystemHealth() {
               </CardHeader>
               <CardContent className="space-y-2">
                 {Object.entries(health.hard || {}).map(([key, value]) => (
-                  <div key={key} className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                  <div key={key} className="flex items-center justify-between p-2 bg-background rounded">
                     <span className="text-sm font-medium">{key}</span>
                     <Badge variant={value === 'OK' ? 'outline' : 'destructive'}>
                       {value as string}
@@ -96,7 +96,7 @@ export default function SystemHealth() {
               </CardHeader>
               <CardContent className="space-y-2">
                 {Object.entries(health.soft || {}).map(([key, metric]: [string, any]) => (
-                  <div key={key} className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                  <div key={key} className="flex items-center justify-between p-2 bg-background rounded">
                     <div>
                       <span className="text-sm font-medium">{key}</span>
                       <p className="text-xs text-slate-600">{metric.value}</p>

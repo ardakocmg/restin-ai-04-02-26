@@ -82,7 +82,7 @@ function DeviceManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
@@ -100,7 +100,7 @@ function DeviceManagement() {
 
       {/* Active Pairing Codes */}
       {pairingCodes.length > 0 && (
-        <div className="mb-8 bg-blue-50 border border-blue-200 rounded-xl p-6">
+        <div className="mb-8 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
           <h2 className="text-xl font-bold text-blue-900 mb-4">Active Pairing Codes</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {pairingCodes.map((code) => (
@@ -132,7 +132,7 @@ function DeviceManagement() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-foreground">{device.name}</h3>
-                  <div className="text-sm text-gray-500 flex items-center gap-2">
+                  <div className="text-sm text-muted-foreground flex items-center gap-2">
                     <span className="font-medium text-gray-700">{device.model || 'Unknown Model'}</span>
                     <span>•</span>
                     <span>{device.os || 'Unknown OS'}</span>
@@ -140,7 +140,7 @@ function DeviceManagement() {
                     <span>{device.browser || 'Unknown Browser'}</span>
                   </div>
                   {device.ip_address ? (
-                    <p className="text-xs text-gray-400 font-mono mt-1">IP: {device.ip_address}</p>
+                    <p className="text-xs text-muted-foreground font-mono mt-1">IP: {device.ip_address}</p>
                   ) : (
                     <p className="text-xs text-red-300 font-mono mt-1">IP: Not Captured</p>
                   )}
@@ -164,8 +164,8 @@ function DeviceManagement() {
                 <button
                   onClick={() => trustDevice(device.id, !device.trusted)}
                   className={`px-4 py-2 rounded-lg font-medium transition ${device.trusted
-                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                    : 'bg-red-100 text-red-700 hover:bg-red-200'
+                    ? 'bg-green-100 text-green-700 dark:text-green-400 hover:bg-green-200'
+                    : 'bg-red-100 text-red-700 dark:text-red-400 hover:bg-red-200'
                     }`}
                 >
                   {device.trusted ? 'Trusted' : 'Untrusted'}
@@ -176,7 +176,7 @@ function DeviceManagement() {
 
           {devices.length === 0 && (
             <div className="p-12 text-center">
-              <Monitor className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+              <Monitor className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
               <p className="text-gray-600">No devices registered yet</p>
             </div>
           )}

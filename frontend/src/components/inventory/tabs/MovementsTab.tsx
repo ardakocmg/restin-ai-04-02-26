@@ -66,7 +66,7 @@ export default function MovementsTab({ movements = [] }: MovementsTabProps) {
                     </div>
                     <p className="text-sm text-slate-700">{mov.reason || 'No reason'}</p>
                     {mov.lot_number && (
-                      <p className="text-xs text-slate-500 mt-1">Lot: {mov.lot_number}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Lot: {mov.lot_number}</p>
                     )}
                   </div>
                 </div>

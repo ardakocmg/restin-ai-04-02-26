@@ -47,7 +47,7 @@ export default function TopBar({ onMenuToggle, user }) {
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-30 h-16 border-b border-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="flex h-full items-center justify-between px-4 gap-4">
         {/* Mobile Menu Button */}
         <Button
@@ -68,7 +68,7 @@ export default function TopBar({ onMenuToggle, user }) {
               placeholder="Search orders, items, staff..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-9 bg-gray-50 border-gray-200 focus:bg-white"
+              className="pl-10 h-9 bg-background border-border focus:bg-white"
               autoComplete="off"
             />
           </div>
@@ -90,7 +90,7 @@ export default function TopBar({ onMenuToggle, user }) {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="gap-2 px-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-blue-100 text-blue-600 text-xs font-medium">
+                  <AvatarFallback className="bg-blue-100 text-blue-600 dark:text-blue-400 text-xs font-medium">
                     {getInitials(user?.name)}
                   </AvatarFallback>
                 </Avatar>

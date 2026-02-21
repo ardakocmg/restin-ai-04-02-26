@@ -455,7 +455,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
                                     <span className="text-sm font-bold text-foreground">{log.user_name}</span>
-                                    <span className="text-[10px] text-zinc-700 bg-secondary px-1.5 py-0.5 rounded">{log.venue_name}</span>
+                                    <span className="text-[10px] text-foreground bg-secondary px-1.5 py-0.5 rounded">{log.venue_name}</span>
                                 </div>
                                 <div className="text-xs text-muted-foreground truncate mt-0.5">
                                     {log.sync_type} · {log.direction === 'push' ? '↑' : '↓'} · {log.details}

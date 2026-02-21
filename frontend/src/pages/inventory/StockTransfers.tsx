@@ -123,7 +123,7 @@ export default function StockTransfers() {
       <div className="space-y-4">
         {transfers.length === 0 ? (
           <div className="text-center py-20 bg-card/50 rounded-xl border border-dashed border-border">
-            <Package className="w-12 h-12 text-zinc-700 mx-auto mb-4" />
+            <Package className="w-12 h-12 text-foreground mx-auto mb-4" />
             <h3 className="text-lg font-bold text-muted-foreground">No Recent Transfers</h3>
             <p className="text-muted-foreground">Transfers will appear here after you create them.</p>
           </div>
@@ -140,7 +140,7 @@ export default function StockTransfers() {
                 </div>
               </div>
               <div className="text-right">
-                <span className="block font-bold text-red-500 text-lg">{t.quantity}</span>
+                <span className="block font-bold text-red-600 dark:text-red-400 text-lg">{t.quantity}</span>
                 <span className="text-xs text-muted-foreground">{t.date}</span>
               </div>
             </div>

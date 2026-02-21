@@ -113,14 +113,14 @@ export default function TrustDashboard() {
           </CardHeader>
           <CardContent>
             {riskFindings.length === 0 ? (
-              <div className="text-center py-8 text-slate-500 flex flex-col items-center gap-2">
+              <div className="text-center py-8 text-muted-foreground flex flex-col items-center gap-2">
                 <CheckCircle2 className="h-12 w-12 text-green-500" />
                 <p>No risk findings. Enable Trust Risk Engine in venue settings.</p>
               </div>
             ) : (
               <div className="space-y-2">
                 {riskFindings.slice(0, 5).map(f => (
-                  <div key={f.finding_id} className="p-3 bg-slate-50 rounded border">
+                  <div key={f.finding_id} className="p-3 bg-background rounded border">
                     <div className="flex items-center justify-between mb-1">
                       <Badge variant={f.severity === 'CRITICAL' ? 'destructive' : 'outline'}>
                         {f.severity}
@@ -148,7 +148,7 @@ export default function TrustDashboard() {
             ) : (
               <div className="space-y-2">
                 {killSwitches.map(s => (
-                  <div key={s.key} className="p-3 bg-slate-50 rounded flex items-center justify-between">
+                  <div key={s.key} className="p-3 bg-background rounded flex items-center justify-between">
                     <span className="text-sm font-medium">{s.key}</span>
                     <Badge variant={s.enabled ? 'default' : 'destructive'}>
                       {s.enabled ? 'ENABLED' : 'DISABLED'}

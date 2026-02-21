@@ -139,7 +139,7 @@ export default function TablesideConfig() {
         return (
             <PageContainer title="Tableside Ordering" description="Loading..." actions={undefined}>
                 <div className="flex items-center justify-center min-h-[40vh]">
-                    <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-red-600 dark:text-red-400 animate-spin" />
                 </div>
             </PageContainer>
         );
@@ -259,7 +259,7 @@ export default function TablesideConfig() {
                     {/* Existing Assignments */}
                     {assignments.length === 0 ? (
                         <div className="p-12 bg-card/30 border border-dashed border-border rounded-2xl text-center">
-                            <Users className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
+                            <Users className="w-12 h-12 text-foreground mx-auto mb-3" />
                             <p className="text-sm text-muted-foreground">No server assignments yet</p>
                             <p className="text-xs text-muted-foreground mt-1">Assign tables to servers for tableside ordering</p>
                         </div>
@@ -315,7 +315,7 @@ export default function TablesideConfig() {
                         </div>
                         {myTables.length === 0 ? (
                             <div className="p-8 bg-background/50 border border-dashed border-border rounded-xl text-center">
-                                <Table2 className="w-8 h-8 text-zinc-700 mx-auto mb-2" />
+                                <Table2 className="w-8 h-8 text-foreground mx-auto mb-2" />
                                 <p className="text-xs text-muted-foreground">No tables assigned to you</p>
                             </div>
                         ) : (

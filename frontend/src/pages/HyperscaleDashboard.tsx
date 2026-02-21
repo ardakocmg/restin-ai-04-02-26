@@ -128,13 +128,13 @@ const HyperscaleDashboard: React.FC = () => {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
                                     <h4 className="text-slate-300 font-medium mb-1">Ne Anlama Geliyor?</h4>
-                                    <p className="text-sm text-slate-400 leading-relaxed">{selectedMetric.description}</p>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">{selectedMetric.description}</p>
                                 </div>
                                 <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
                                     <h4 className="text-slate-300 font-medium mb-2">Sistem Etki Alanı (Blast Radius)</h4>
                                     <ul className="space-y-2">
                                         {selectedMetric.impact.map((imp: string, i: number) => (
-                                            <li key={i} className="text-sm text-slate-400 flex items-start gap-2">
+                                            <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 shrink-0" />
                                                 {imp}
                                             </li>
@@ -190,7 +190,7 @@ const HyperscaleDashboard: React.FC = () => {
                 <div className="flex flex-wrap gap-4">
                     <div className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-lg flex items-center gap-3">
                         <div className="text-right">
-                            <div className="text-xs text-slate-500 uppercase tracking-wider font-semibold">System IQ</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">System IQ</div>
                             <div className="text-lg font-bold text-indigo-400">100 / 100</div>
                         </div>
                         <div className="w-10 h-10 rounded-full border-2 border-indigo-500/30 flex items-center justify-center">
@@ -199,7 +199,7 @@ const HyperscaleDashboard: React.FC = () => {
                     </div>
                     <div className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-lg flex items-center gap-3">
                         <div className="text-right">
-                            <div className="text-xs text-slate-500 uppercase tracking-wider font-semibold">Resilience</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Resilience</div>
                             <div className="text-lg font-bold text-emerald-400">99.99%</div>
                         </div>
                         <div className="w-10 h-10 rounded-full border-2 border-emerald-500/30 flex items-center justify-center">
@@ -400,15 +400,15 @@ const HyperscaleDashboard: React.FC = () => {
                             </h2>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <div className="p-4 bg-slate-950 rounded-lg border border-slate-800">
-                                    <div className="text-sm text-slate-400 mb-1">Charge Success Rate</div>
+                                    <div className="text-sm text-muted-foreground mb-1">Charge Success Rate</div>
                                     <div className="text-2xl font-bold text-emerald-400">99.98%</div>
                                 </div>
                                 <div className="p-4 bg-slate-950 rounded-lg border border-slate-800">
-                                    <div className="text-sm text-slate-400 mb-1">Double-Charge Prob.</div>
+                                    <div className="text-sm text-muted-foreground mb-1">Double-Charge Prob.</div>
                                     <div className="text-2xl font-bold text-emerald-400">0.00%</div>
                                 </div>
                                 <div className="p-4 bg-slate-950 rounded-lg border border-slate-800">
-                                    <div className="text-sm text-slate-400 mb-1">Reconciliation Delay</div>
+                                    <div className="text-sm text-muted-foreground mb-1">Reconciliation Delay</div>
                                     <div className="text-2xl font-bold text-yellow-400">10m</div>
                                 </div>
                                 <div className="p-4 bg-red-950/20 rounded-lg border border-red-500/30">
@@ -417,7 +417,7 @@ const HyperscaleDashboard: React.FC = () => {
                                 </div>
                             </div>
 
-                            <h3 className="text-md font-semibold text-slate-300 mt-8 mb-4">Cost Efficiency Mapping</h3>
+                            <h3 className="text-md font-semibold text-muted-foreground mt-8 mb-4">Cost Efficiency Mapping</h3>
                             <ResponsiveContainer width="100%" height={150}>
                                 <LineChart data={costData}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />

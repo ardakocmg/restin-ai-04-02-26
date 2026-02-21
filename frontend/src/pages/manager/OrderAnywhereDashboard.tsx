@@ -127,7 +127,7 @@ export default function OrderAnywhereDashboard() {
         return (
             <PageContainer title="Order Anywhere" description="Loading..." actions={undefined}>
                 <div className="flex items-center justify-center min-h-[40vh]">
-                    <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400 animate-spin" />
                 </div>
             </PageContainer>
         );
@@ -295,7 +295,7 @@ export default function OrderAnywhereDashboard() {
                 <div className="space-y-3">
                     {orders.length === 0 ? (
                         <div className="p-12 bg-card/30 border border-dashed border-border rounded-2xl text-center">
-                            <ShoppingBag className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
+                            <ShoppingBag className="w-12 h-12 text-foreground mx-auto mb-3" />
                             <p className="text-sm text-muted-foreground">No orders yet</p>
                             <p className="text-xs text-muted-foreground mt-1">Orders will appear here when guests order via QR</p>
                         </div>

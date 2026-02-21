@@ -272,7 +272,7 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
 
     return (
         <div className="flex flex-col items-center">
-            <div className="text-xs text-zinc-500 mb-2 flex items-center gap-1.5">
+            <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1.5">
                 <Printer className="w-3 h-3" /> {t.paperWidth} Preview
                 {t.blocks && <Badge className="text-[8px] px-1 py-0 bg-violet-500/10 text-violet-400 border-violet-500/20 ml-1">Block Mode</Badge>}
             </div>
@@ -432,7 +432,7 @@ export default function ReceiptTemplates() {
                                 </Badge>
                             )}
                         </h1>
-                        <p className="text-sm text-zinc-500 mt-1">Build, scan, and manage all receipt templates with AI assistance</p>
+                        <p className="text-sm text-muted-foreground mt-1">Build, scan, and manage all receipt templates with AI assistance</p>
                     </div>
                     <div className="flex items-center gap-2">
                         {/* AI Scanner */}
@@ -517,21 +517,21 @@ export default function ReceiptTemplates() {
                                             </div>
 
                                             <div className="flex flex-wrap gap-1.5 mb-3">
-                                                {t.showLogo && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">Logo</span>}
-                                                {t.showTax && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">Tax</span>}
-                                                {t.showTipLine && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">Tip</span>}
+                                                {t.showLogo && <span className="text-[10px] text-muted-foreground bg-zinc-800 px-1.5 py-0.5 rounded">Logo</span>}
+                                                {t.showTax && <span className="text-[10px] text-muted-foreground bg-zinc-800 px-1.5 py-0.5 rounded">Tax</span>}
+                                                {t.showTipLine && <span className="text-[10px] text-muted-foreground bg-zinc-800 px-1.5 py-0.5 rounded">Tip</span>}
                                                 {t.qrCodeUrl && <span className="text-[10px] text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded">QR</span>}
-                                                {t.showBarcode && <span className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">Barcode</span>}
+                                                {t.showBarcode && <span className="text-[10px] text-muted-foreground bg-zinc-800 px-1.5 py-0.5 rounded">Barcode</span>}
                                                 {t.invoicePrefix && <span className="text-[10px] text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded">{t.invoicePrefix}</span>}
                                                 {hasBlocks && <span className="text-[10px] text-violet-400 bg-violet-500/10 px-1.5 py-0.5 rounded">⚡ Smart</span>}
                                             </div>
 
                                             <div className="flex gap-2 mt-1">
-                                                <Button variant="ghost" size="sm" className="h-7 text-xs flex-1 text-zinc-400 hover:text-white"
+                                                <Button variant="ghost" size="sm" className="h-7 text-xs flex-1 text-muted-foreground hover:text-white"
                                                     onClick={(e) => { e.stopPropagation(); setEditing({ ...t }); }}>
                                                     <SlidersHorizontal className="w-3 h-3 mr-1" /> Edit
                                                 </Button>
-                                                <Button variant="ghost" size="sm" className="h-7 text-xs text-zinc-400 hover:text-white"
+                                                <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-white"
                                                     onClick={(e) => { e.stopPropagation(); setSelectedPreview(t); }}>
                                                     <Eye className="w-3 h-3 mr-1" /> Preview
                                                 </Button>
@@ -543,7 +543,7 @@ export default function ReceiptTemplates() {
 
                             {filtered.length === 0 && (
                                 <div className="col-span-full text-center py-16">
-                                    <FileText className="w-12 h-12 mx-auto text-zinc-600 mb-3" />
+                                    <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
                                     <p className="text-zinc-500 mb-4">No templates of this type</p>
                                     <Button onClick={handleNew} variant="outline" size="sm">
                                         <Plus className="w-4 h-4 mr-2" /> Create One
@@ -558,7 +558,7 @@ export default function ReceiptTemplates() {
                         <div className="sticky top-6">
                             <Card className="border-white/5 bg-zinc-900/50 backdrop-blur-xl">
                                 <CardContent className="pt-5 pb-6">
-                                    <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                    <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
                                         <Eye className="w-3.5 h-3.5" /> Live Preview
                                     </div>
                                     {selectedPreview ? (
@@ -639,7 +639,7 @@ export default function ReceiptTemplates() {
                                     <>
                                         {/* Header */}
                                         <div>
-                                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Header</div>
+                                            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Header</div>
                                             <div className="space-y-2">
                                                 {(['headerLine1', 'headerLine2', 'headerLine3'] as const).map((key, i) => (
                                                     <Input key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
@@ -650,7 +650,7 @@ export default function ReceiptTemplates() {
 
                                         {/* Fields */}
                                         <div>
-                                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Fields</div>
+                                            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Fields</div>
                                             <div className="bg-zinc-900/50 rounded-lg border border-white/5 divide-y divide-white/5">
                                                 {([
                                                     ['showLogo', 'Show Logo'], ['showDateTime', 'Date & Time'], ['showServer', 'Server Name'],
@@ -669,7 +669,7 @@ export default function ReceiptTemplates() {
 
                                         {/* Footer */}
                                         <div>
-                                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Footer</div>
+                                            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Footer</div>
                                             <div className="space-y-2">
                                                 {(['footerLine1', 'footerLine2', 'footerLine3'] as const).map((key, i) => (
                                                     <Input key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
@@ -680,7 +680,7 @@ export default function ReceiptTemplates() {
 
                                         {/* QR & Invoice */}
                                         <div>
-                                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">QR Code & Invoice</div>
+                                            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">QR Code & Invoice</div>
                                             <div className="space-y-3">
                                                 <div className="space-y-1.5">
                                                     <Label className="text-zinc-400 text-xs">QR Code URL</Label>
@@ -702,7 +702,7 @@ export default function ReceiptTemplates() {
 
                                         {/* Promo & Allergen */}
                                         <div>
-                                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Promo & Notices</div>
+                                            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Promo & Notices</div>
                                             <div className="space-y-2">
                                                 <div className="space-y-1.5">
                                                     <Label className="text-zinc-400 text-xs">Promo Banner Text</Label>
@@ -726,7 +726,7 @@ export default function ReceiptTemplates() {
 
                                 {/* Paper Settings (always visible) */}
                                 <div>
-                                    <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Paper Settings</div>
+                                    <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Paper Settings</div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-1.5">
                                             <Label className="text-zinc-400 text-xs">Paper Width</Label>

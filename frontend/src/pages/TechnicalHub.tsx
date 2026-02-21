@@ -35,7 +35,7 @@ const GlassCard = ({ children, className = "", title, icon: Icon, tag }) => (
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             {Icon && (
-              <div className="w-10 h-10 rounded-xl bg-red-600/10 border border-red-600/20 flex items-center justify-center text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
+              <div className="w-10 h-10 rounded-xl bg-red-600/10 border border-red-600/20 flex items-center justify-center text-red-600 dark:text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
                 <Icon size={20} />
               </div>
             )}
@@ -386,7 +386,7 @@ export default function TechnicalHub() {
         <section id="technical-content" className="mb-24">
           <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-16 items-start">
             <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black tracking-widest uppercase">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-[10px] font-black tracking-widest uppercase">
                 <Zap size={12} />
                 {hero.tag}
               </div>
@@ -413,11 +413,11 @@ export default function TechnicalHub() {
               <div className="absolute top-0 right-0 p-8 opacity-10 scale-150 rotate-12 transition-transform group-hover:rotate-0 duration-700">
                 <Shield className="w-32 h-32 text-red-600 dark:text-red-400" />
               </div>
-              <h4 className="text-xs font-black uppercase tracking-[0.3em] text-red-500 mb-6">Core Assurances</h4>
+              <h4 className="text-xs font-black uppercase tracking-[0.3em] text-red-600 dark:text-red-400 mb-6">Core Assurances</h4>
               <ul className="space-y-6">
                 {(hero.assurances || defaultContent.hero.assurances).map((item, i) => (
                   <li key={i} className="flex gap-4 group/item">
-                    <div className="w-6 h-6 rounded-lg bg-red-600/10 border border-red-600/20 flex items-center justify-center text-red-500 shrink-0 group-hover/item:scale-110 transition-transform">
+                    <div className="w-6 h-6 rounded-lg bg-red-600/10 border border-red-600/20 flex items-center justify-center text-red-600 dark:text-red-400 shrink-0 group-hover/item:scale-110 transition-transform">
                       <Zap size={12} fill="currentColor" />
                     </div>
                     <span className="text-sm font-medium text-secondary-foreground leading-snug">{item}</span>
@@ -523,7 +523,7 @@ export default function TechnicalHub() {
             <div className="grid grid-cols-2 gap-6 mt-6">
               {microservices.map((service) => (
                 <div key={service.key} className="p-4 rounded-xl bg-white/[0.02] border border-border">
-                  <h5 className="text-[10px] font-black uppercase tracking-widest text-red-500 mb-3">{service.title}</h5>
+                  <h5 className="text-[10px] font-black uppercase tracking-widest text-red-600 dark:text-red-400 mb-3">{service.title}</h5>
                   <ul className="space-y-2">
                     {service.items.map(item => (
                       <li key={item} className="text-[10px] font-medium text-muted-foreground flex items-center gap-2">

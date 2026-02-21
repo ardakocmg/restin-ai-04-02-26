@@ -414,7 +414,7 @@ export default function RecipeEditor() {
 
             {/* ── Recipe Name (always visible) ── */}
             <div className="mb-6">
-                <Label className="text-xs uppercase tracking-wider text-amber-500 font-medium mb-1 block">Recipe Name</Label>
+                <Label className="text-xs uppercase tracking-wider text-amber-600 dark:text-amber-400 font-medium mb-1 block">Recipe Name</Label>
                 <Input
                     value={form.recipe_name}
                     onChange={e => updateField('recipe_name', e.target.value)}

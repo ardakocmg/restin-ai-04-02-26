@@ -83,7 +83,7 @@ function WasteLog() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-4xl font-bold text-foreground">Waste Log</h1>
@@ -99,15 +99,15 @@ function WasteLog() {
 
       {/* Waste Entry Form */}
       {showForm && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="bg-white rounded-xl shadow-sm border border-border p-6 mb-6">
           <h2 className="text-xl font-bold text-foreground mb-4">New Waste Entry</h2>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Item</label>
+              <label className="block text-sm font-medium text-foreground mb-2">Item</label>
               <select
                 value={formData.item_id}
                 onChange={(e) => setFormData({ ...formData, item_id: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 border border-border rounded-lg"
               >
                 <option value="">Select item...</option>
                 {items.map(item => (
@@ -117,23 +117,23 @@ function WasteLog() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+              <label className="block text-sm font-medium text-foreground mb-2">Quantity</label>
               <input
                 type="number"
                 step="0.01"
                 value={formData.qty}
                 onChange={(e) => setFormData({ ...formData, qty: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 border border-border rounded-lg"
                 placeholder="0.00"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Reason</label>
+              <label className="block text-sm font-medium text-foreground mb-2">Reason</label>
               <select
                 value={formData.reason}
                 onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 border border-border rounded-lg"
               >
                 <option value="SPOILAGE">Spoilage</option>
                 <option value="PREP_WASTE">Prep Waste</option>
@@ -143,12 +143,12 @@ function WasteLog() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+              <label className="block text-sm font-medium text-foreground mb-2">Notes</label>
               <input
                 type="text"
                 value={formData.notes || ''}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 border border-border rounded-lg"
                 placeholder="Optional notes..."
               />
             </div>
@@ -157,7 +157,7 @@ function WasteLog() {
           <div className="flex gap-3 mt-6">
             <button
               onClick={() => setShowForm(false)}
-              className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium"
+              className="px-6 py-2 bg-muted text-foreground rounded-lg hover:bg-gray-200 font-medium"
             >
               Cancel
             </button>
@@ -189,7 +189,7 @@ function WasteLog() {
                     {entry.qty} {entry.unit} - {entry.reason}
                   </p>
                   {entry.notes && (
-                    <p className="text-xs text-gray-500 italic">{entry.notes}</p>
+                    <p className="text-xs text-muted-foreground italic">{entry.notes}</p>
                   )}
                 </div>
               </div>

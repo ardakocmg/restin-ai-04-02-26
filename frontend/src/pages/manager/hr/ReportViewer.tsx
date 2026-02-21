@@ -48,7 +48,7 @@ export default function ReportViewer() {
     if (loading) return (
         <div className="flex items-center justify-center min-h-screen bg-[#0A0A0B]">
             <div className="flex flex-col items-center gap-4">
-                <RefreshCw className="h-8 w-8 text-blue-500 animate-spin" />
+                <RefreshCw className="h-8 w-8 text-blue-600 dark:text-blue-400 animate-spin" />
                 <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest">Generating {reportSlug.replace('-', ' ')}...</p>
             </div>
         </div>
@@ -103,7 +103,7 @@ export default function ReportViewer() {
                 />
 
                 <div className="flex items-center justify-between pt-6 border-t border-border">
-                    <p className="text-[9px] text-zinc-700 font-bold uppercase tracking-widest italic">
+                    <p className="text-[9px] text-foreground font-bold uppercase tracking-widest italic">
                         This report is a point-in-time snapshot. Data may reflect pending synchronizations.
                     </p>
                 </div>

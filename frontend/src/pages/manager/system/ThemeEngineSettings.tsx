@@ -222,21 +222,21 @@ export default function ThemeEngineSettings() {
                                         onClick={() => enabled && handleThemeChange('theme-standard')}
                                     >
                                         {/* Mockup Windows */}
-                                        <div className="h-32 mb-5 bg-zinc-100 dark:bg-zinc-950 rounded-lg border border-zinc-200 dark:border-zinc-800 p-3 overflow-hidden flex flex-col gap-2 relative">
+                                        <div className="h-32 mb-5 bg-muted dark:bg-zinc-950 rounded-lg border border-border p-3 overflow-hidden flex flex-col gap-2 relative">
                                             {/* Header */}
                                             <div className="h-4 w-1/3 bg-blue-500 rounded"></div>
                                             {/* Content */}
                                             <div className="flex-1 flex gap-2">
                                                 {/* Sidebar */}
-                                                <div className="w-1/4 bg-white dark:bg-zinc-900 rounded shadow-sm border border-zinc-200 dark:border-zinc-800 flex flex-col gap-1 p-1">
-                                                    <div className="h-2 w-full bg-zinc-200 dark:bg-zinc-800 rounded"></div>
-                                                    <div className="h-2 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded"></div>
+                                                <div className="w-1/4 bg-background rounded shadow-sm border border-border flex flex-col gap-1 p-1">
+                                                    <div className="h-2 w-full bg-muted rounded"></div>
+                                                    <div className="h-2 w-3/4 bg-muted rounded"></div>
                                                     <div className="h-2 w-1/2 bg-blue-500/20 rounded mt-auto"></div>
                                                 </div>
                                                 {/* Main Area */}
-                                                <div className="flex-1 bg-white dark:bg-zinc-900 rounded shadow-sm border border-zinc-200 dark:border-zinc-800 p-2">
-                                                    <div className="h-10 w-full bg-zinc-50 dark:bg-zinc-950 rounded border border-zinc-100 dark:border-zinc-800 mb-2"></div>
-                                                    <div className="h-3 w-1/2 bg-zinc-200 dark:bg-zinc-800 rounded"></div>
+                                                <div className="flex-1 bg-background rounded shadow-sm border border-border p-2">
+                                                    <div className="h-10 w-full bg-background rounded border border-border mb-2"></div>
+                                                    <div className="h-3 w-1/2 bg-muted rounded"></div>
                                                 </div>
                                             </div>
                                         </div>

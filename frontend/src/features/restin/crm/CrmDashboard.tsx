@@ -232,9 +232,9 @@ const CrmDashboard: React.FC = () => {
                                             <div className="font-bold flex items-center gap-2 text-foreground">
                                                 {c.name}
                                                 <Badge className={
-                                                    c.risk === 'HIGH' ? 'bg-red-500/10 text-red-500 border-none px-2 py-0 h-5 text-[9px] font-black' :
-                                                        c.risk === 'MEDIUM' ? 'bg-amber-500/10 text-amber-500 border-none px-2 py-0 h-5 text-[9px] font-black' :
-                                                            'bg-green-500/10 text-green-500 border-none px-2 py-0 h-5 text-[9px] font-black'
+                                                    c.risk === 'HIGH' ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-none px-2 py-0 h-5 text-[9px] font-black' :
+                                                        c.risk === 'MEDIUM' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-none px-2 py-0 h-5 text-[9px] font-black' :
+                                                            'bg-green-500/10 text-green-600 dark:text-green-400 border-none px-2 py-0 h-5 text-[9px] font-black'
                                                 }>
                                                     {c.risk || 'LOW'} RISK
                                                 </Badge>
@@ -284,7 +284,7 @@ const CrmDashboard: React.FC = () => {
                             <Button
                                 onClick={() => boomerangMutation.mutate()}
                                 disabled={boomerangMutation.isPending}
-                                className="w-full bg-white text-blue-600 hover:bg-blue-50 font-black border-none h-12 text-xs tracking-widest uppercase gap-2"
+                                className="w-full bg-white text-blue-600 dark:text-blue-400 hover:bg-blue-50 font-black border-none h-12 text-xs tracking-widest uppercase gap-2"
                             >
                                 {boomerangMutation.isPending ? (
                                     <><Loader2 className="w-4 h-4 animate-spin" /> Generating Messages...</>

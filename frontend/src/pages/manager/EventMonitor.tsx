@@ -98,7 +98,7 @@ export default function EventMonitorPage() {
       </div>
 
       {type === 'dlq' && event.final_error && (
-        <div className="mt-2 p-2 bg-red-100 rounded text-xs text-red-800">
+        <div className="mt-2 p-2 bg-red-100 dark:bg-red-950/20 rounded text-xs text-red-800">
           <strong>Error:</strong> {event.final_error.substring(0, 150)}
         </div>
       )}
@@ -123,7 +123,7 @@ export default function EventMonitorPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-600">Pending Events</p>
-                <p className="text-3xl font-bold text-slate-900 mt-1">
+                <p className="text-3xl font-bold text-foreground mt-1">
                   {outboxEvents.filter(e => e.status === 'PENDING').length}
                 </p>
               </div>
@@ -137,7 +137,7 @@ export default function EventMonitorPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-600">Completed Today</p>
-                <p className="text-3xl font-bold text-green-600 mt-1">
+                <p className="text-3xl font-bold text-green-600 dark:text-green-400 mt-1">
                   {completedEvents.length}
                 </p>
               </div>
@@ -151,7 +151,7 @@ export default function EventMonitorPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-600">Failed Events</p>
-                <p className="text-3xl font-bold text-red-600 mt-1">
+                <p className="text-3xl font-bold text-red-600 dark:text-red-400 mt-1">
                   {dlqEvents.length}
                 </p>
               </div>

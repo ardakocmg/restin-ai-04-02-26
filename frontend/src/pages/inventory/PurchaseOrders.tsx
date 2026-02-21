@@ -47,7 +47,7 @@ function PurchaseOrders() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-4xl font-bold text-foreground">Purchase Orders</h1>
@@ -60,7 +60,7 @@ function PurchaseOrders() {
 
       <div className="grid grid-cols-1 gap-4">
         {pos.map((po) => (
-          <div key={po.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition cursor-pointer">
+          <div key={po.id} className="bg-white rounded-xl shadow-sm border border-border p-6 hover:shadow-md transition cursor-pointer">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -92,8 +92,8 @@ function PurchaseOrders() {
         ))}
 
         {pos.length === 0 && (
-          <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
-            <FileText className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+          <div className="bg-white rounded-xl border-2 border-dashed border-border p-12 text-center">
+            <FileText className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
             <p className="text-gray-600">No purchase orders yet</p>
           </div>
         )}

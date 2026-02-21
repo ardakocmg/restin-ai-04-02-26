@@ -98,7 +98,7 @@ export default function MicroservicesPage() {
                 <span className="text-sm font-medium text-slate-700">Outbox Events</span>
               </div>
               <p className="text-2xl font-bold text-slate-900">{outboxEvents.length}</p>
-              <p className="text-xs text-slate-600 mt-1">Pending processing</p>
+              <p className="text-xs text-muted-foreground mt-1">Pending processing</p>
             </div>
             <div className="bg-red-50 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
@@ -106,7 +106,7 @@ export default function MicroservicesPage() {
                 <span className="text-sm font-medium text-slate-700">Failed Events</span>
               </div>
               <p className="text-2xl font-bold text-slate-900">{dlqEvents.length}</p>
-              <p className="text-xs text-slate-600 mt-1">Dead letter queue</p>
+              <p className="text-xs text-muted-foreground mt-1">Dead letter queue</p>
             </div>
             <div className="bg-green-50 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
@@ -114,7 +114,7 @@ export default function MicroservicesPage() {
                 <span className="text-sm font-medium text-slate-700">Active Services</span>
               </div>
               <p className="text-2xl font-bold text-slate-900">{services.length}</p>
-              <p className="text-xs text-slate-600 mt-1">Microservices running</p>
+              <p className="text-xs text-muted-foreground mt-1">Microservices running</p>
             </div>
           </div>
         </CardContent>
@@ -139,7 +139,7 @@ export default function MicroservicesPage() {
               <div className="space-y-3">
                 {/* Capabilities */}
                 <div>
-                  <p className="text-sm font-medium text-slate-700 mb-2">Capabilities:</p>
+                  <p className="text-sm font-medium text-foreground mb-2">Capabilities:</p>
                   <div className="flex flex-wrap gap-1">
                     {service.capabilities?.map((cap) => (
                       <Badge key={cap} variant="secondary" className="text-xs">
@@ -151,7 +151,7 @@ export default function MicroservicesPage() {
 
                 {/* Subscribed Events */}
                 <div>
-                  <p className="text-sm font-medium text-slate-700 mb-2">Subscribed Events:</p>
+                  <p className="text-sm font-medium text-foreground mb-2">Subscribed Events:</p>
                   <div className="flex flex-wrap gap-1">
                     {service.subscribed_events?.map((event) => (
                       <Badge key={event} variant="outline" className="text-xs">
@@ -168,7 +168,7 @@ export default function MicroservicesPage() {
                     <span>Registered:</span>
                     <span>{new Date(service.registered_at).toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between text-xs text-slate-600 mt-1">
+                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
                     <span>Last Heartbeat:</span>
                     <span>{new Date(service.last_heartbeat).toLocaleString()}</span>
                   </div>
@@ -199,7 +199,7 @@ export default function MicroservicesPage() {
                 </div>
               ) : (
                 outboxEvents.map((event) => (
-                  <div key={event.id} className="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                  <div key={event.id} className="p-3 bg-background rounded-lg border border-slate-200">
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm font-medium text-slate-900">{event.event_type}</span>
                       <Badge variant={event.status === 'PENDING' ? 'default' : 'secondary'} className="text-xs">
@@ -208,7 +208,7 @@ export default function MicroservicesPage() {
                     </div>
                     <p className="text-xs text-slate-600">Published: {new Date(event.published_at).toLocaleTimeString()}</p>
                     {event.retry_count > 0 && (
-                      <p className="text-xs text-orange-600 mt-1">Retries: {event.retry_count}</p>
+                      <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">Retries: {event.retry_count}</p>
                     )}
                   </div>
                 ))
@@ -235,7 +235,7 @@ export default function MicroservicesPage() {
                 </div>
               ) : (
                 dlqEvents.map((event) => (
-                  <div key={event.id} className="p-3 bg-red-50 rounded-lg border border-red-200">
+                  <div key={event.id} className="p-3 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-200">
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm font-medium text-slate-900">{event.event_type}</span>
                       <Badge variant="destructive" className="text-xs">
@@ -243,7 +243,7 @@ export default function MicroservicesPage() {
                       </Badge>
                     </div>
                     <p className="text-xs text-slate-600">Moved to DLQ: {new Date(event.moved_to_dlq_at).toLocaleTimeString()}</p>
-                    <p className="text-xs text-red-600 mt-1">Error: {event.final_error?.substring(0, 100)}</p>
+                    <p className="text-xs text-red-600 dark:text-red-400 mt-1">Error: {event.final_error?.substring(0, 100)}</p>
                   </div>
                 ))
               )}

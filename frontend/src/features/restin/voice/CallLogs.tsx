@@ -83,11 +83,11 @@ export default function CallLogs() {
 
     const getStatusBadge = (status: string) => {
         const map: Record<string, string> = {
-            'BOOKED': 'bg-green-500/10 text-green-500 border-green-500/20',
-            'Inquiry': 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-            'Escalated': 'bg-red-500/10 text-red-500 border-red-500/20',
+            'BOOKED': 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20',
+            'Inquiry': 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
+            'Escalated': 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20',
         };
-        return map[status] || 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20';
+        return map[status] || 'bg-zinc-500/10 text-muted-foreground border-zinc-500/20';
     };
 
     const getSentimentIcon = (sentiment: string) => {

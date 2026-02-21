@@ -42,19 +42,19 @@ export default function OverviewTab({ data, onRefresh }) {
                   Negative Stock
                 </Badge>
               ) : isLow ? (
-                <Badge variant="outline" className="flex items-center gap-1 w-fit text-orange-600 border-orange-600">
+                <Badge variant="outline" className="flex items-center gap-1 w-fit text-orange-600 dark:text-orange-400 border-orange-600">
                   <TrendingDown className="h-3 w-3" />
                   Low Stock
                 </Badge>
               ) : (
-                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                <Badge variant="outline" className="bg-green-50 text-green-700 dark:text-green-400 border-green-200">
                   OK
                 </Badge>
               )}
             </div>
           </div>
 
-          <div className="p-4 bg-slate-50 rounded-lg border">
+          <div className="p-4 bg-background rounded-lg border">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-600">On-Hand Balance</p>
@@ -64,7 +64,7 @@ export default function OverviewTab({ data, onRefresh }) {
               </div>
               <div className="text-right">
                 <p className="text-sm text-slate-600">Min Stock</p>
-                <p className="text-xl font-medium text-slate-700 mt-1">
+                <p className="text-xl font-medium text-foreground mt-1">
                   {minStock.toFixed(2)} {sku.unit}
                 </p>
               </div>
@@ -73,7 +73,7 @@ export default function OverviewTab({ data, onRefresh }) {
 
           {sku.tags && sku.tags.length > 0 && (
             <div>
-              <p className="text-sm text-slate-600 mb-2">Tags</p>
+              <p className="text-sm text-muted-foreground mb-2">Tags</p>
               <div className="flex flex-wrap gap-1">
                 {sku.tags.map((tag, idx) => (
                   <Badge key={idx} variant="secondary">{tag}</Badge>

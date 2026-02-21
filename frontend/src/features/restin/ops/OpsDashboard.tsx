@@ -268,8 +268,8 @@ const OpsDashboard: React.FC = () => {
                                 <div className="flex-1 text-xs text-muted-foreground leading-tight group-hover:text-secondary-foreground transition-colors">
                                     {log.event}
                                 </div>
-                                {log.severity === 'warning' && <AlertCircle className="w-3 h-3 text-red-500 flex-shrink-0" />}
-                                {log.severity === 'info' && <CheckCircle2 className="w-3 h-3 text-green-500 flex-shrink-0" />}
+                                {log.severity === 'warning' && <AlertCircle className="w-3 h-3 text-red-600 dark:text-red-400 flex-shrink-0" />}
+                                {log.severity === 'info' && <CheckCircle2 className="w-3 h-3 text-green-600 dark:text-green-400 flex-shrink-0" />}
                             </div>
                         ))}
                         <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground mt-4 border border-border border-dashed hover:bg-secondary h-10 transition-all">
@@ -286,7 +286,7 @@ const OpsDashboard: React.FC = () => {
                         <AlertTriangle className="w-5 h-5 text-amber-500" />
                         Labor Cost Alerts
                         {laborAlerts.length > 0 && (
-                            <Badge className="bg-amber-500/10 text-amber-500 border-none ml-2 text-[10px] font-black">
+                            <Badge className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-none ml-2 text-[10px] font-black">
                                 {laborAlerts.length} Active
                             </Badge>
                         )}
@@ -295,7 +295,7 @@ const OpsDashboard: React.FC = () => {
                 <CardContent>
                     {laborAlerts.length === 0 ? (
                         <div className="text-center py-6 text-muted-foreground">
-                            <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-500 opacity-50" />
+                            <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-600 dark:text-green-400 opacity-50" />
                             <p className="text-sm font-bold">All labor metrics within threshold</p>
                             <p className="text-xs mt-1 text-muted-foreground">Current: {metrics?.labor_percentage || 0}% — Target: ≤28%</p>
                         </div>

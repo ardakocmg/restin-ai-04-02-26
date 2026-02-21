@@ -303,11 +303,11 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ open, onClose,
 
                                             {/* Mini feature list */}
                                             <div className="flex flex-wrap gap-1 mb-3">
-                                                {template.showTipLine && <span className="text-[9px] text-zinc-600 bg-zinc-800 px-1 py-0.5 rounded">Tip</span>}
-                                                {template.showTax && <span className="text-[9px] text-zinc-600 bg-zinc-800 px-1 py-0.5 rounded">Tax</span>}
+                                                {template.showTipLine && <span className="text-[9px] text-muted-foreground bg-zinc-800 px-1 py-0.5 rounded">Tip</span>}
+                                                {template.showTax && <span className="text-[9px] text-muted-foreground bg-zinc-800 px-1 py-0.5 rounded">Tax</span>}
                                                 {template.qrCodeUrl && <span className="text-[9px] text-cyan-400 bg-cyan-500/10 px-1 py-0.5 rounded">QR</span>}
-                                                {template.showBarcode && <span className="text-[9px] text-zinc-600 bg-zinc-800 px-1 py-0.5 rounded">Barcode</span>}
-                                                {template.showCourseHeaders && <span className="text-[9px] text-zinc-600 bg-zinc-800 px-1 py-0.5 rounded">Courses</span>}
+                                                {template.showBarcode && <span className="text-[9px] text-muted-foreground bg-zinc-800 px-1 py-0.5 rounded">Barcode</span>}
+                                                {template.showCourseHeaders && <span className="text-[9px] text-muted-foreground bg-zinc-800 px-1 py-0.5 rounded">Courses</span>}
                                             </div>
 
                                             <div className="flex gap-2">
@@ -315,7 +315,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ open, onClose,
                                                     onClick={() => { onInstall({ ...template, id: crypto.randomUUID() }); }}>
                                                     <Download className="w-3 h-3 mr-1" /> Install
                                                 </Button>
-                                                <Button variant="outline" size="sm" className="h-7 text-xs text-zinc-400 border-white/10"
+                                                <Button variant="outline" size="sm" className="h-7 text-xs text-muted-foreground border-white/10"
                                                     onClick={() => onPreview(template)}>
                                                     <Eye className="w-3 h-3" />
                                                 </Button>
@@ -329,7 +329,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ open, onClose,
 
                     {filtered.length === 0 && (
                         <div className="text-center py-12">
-                            <Search className="w-10 h-10 mx-auto text-zinc-600 mb-3" />
+                            <Search className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
                             <p className="text-zinc-500">No templates match your search</p>
                         </div>
                     )}

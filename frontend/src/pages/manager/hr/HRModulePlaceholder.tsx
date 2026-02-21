@@ -49,7 +49,7 @@ export default function HRModulePlaceholder() {
                     </Button>
                 </div>
 
-                <div className="pt-12 flex items-center gap-2 text-[9px] text-zinc-700 font-bold uppercase tracking-[0.3em]">
+                <div className="pt-12 flex items-center gap-2 text-[9px] text-foreground font-bold uppercase tracking-[0.3em]">
                     <span>HR Parity</span>
                     <ChevronRight className="h-2 w-2" />
                     <span>Module v1.0</span>

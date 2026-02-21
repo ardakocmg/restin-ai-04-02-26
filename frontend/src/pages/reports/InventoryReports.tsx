@@ -79,7 +79,7 @@ export default function InventoryReports() {
             <Package className="w-5 h-5 text-green-500" />
             <span className="text-xs" style={{ color: '#71717A' }}>Total</span>
           </div>
-          <div className="text-3xl font-bold text-green-500 mb-1">{metrics.total_items}</div>
+          <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">{metrics.total_items}</div>
           <div className="text-sm" style={{ color: '#A1A1AA' }}>Items in Stock</div>
         </div>
 
@@ -88,7 +88,7 @@ export default function InventoryReports() {
             <AlertTriangle className="w-5 h-5 text-red-500" />
             <span className="text-xs" style={{ color: '#71717A' }}>Alert</span>
           </div>
-          <div className="text-3xl font-bold text-red-500 mb-1">{lowStockItems.length}</div>
+          <div className="text-3xl font-bold text-red-600 dark:text-red-400 mb-1">{lowStockItems.length}</div>
           <div className="text-sm" style={{ color: '#A1A1AA' }}>Low Stock Items</div>
         </div>
 
@@ -97,7 +97,7 @@ export default function InventoryReports() {
             <TrendingDown className="w-5 h-5 text-yellow-500" />
             <span className="text-xs" style={{ color: '#71717A' }}>This Month</span>
           </div>
-          <div className="text-3xl font-bold text-yellow-500 mb-1">€{metrics.waste_cost_week}</div>
+          <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mb-1">€{metrics.waste_cost_week}</div>
           <div className="text-sm" style={{ color: '#A1A1AA' }}>Waste Cost</div>
         </div>
 
@@ -106,7 +106,7 @@ export default function InventoryReports() {
             <DollarSign className="w-5 h-5 text-blue-500" />
             <span className="text-xs" style={{ color: '#71717A' }}>Value</span>
           </div>
-          <div className="text-3xl font-bold text-blue-500 mb-1">€{(metrics.inventory_value || 0).toLocaleString()}</div>
+          <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">€{(metrics.inventory_value || 0).toLocaleString()}</div>
           <div className="text-sm" style={{ color: '#A1A1AA' }}>Total Inventory</div>
         </div>
       </div>

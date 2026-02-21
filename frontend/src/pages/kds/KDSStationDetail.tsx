@@ -89,12 +89,12 @@ function KDSStationDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       {/* Header */}
       <div className="mb-6">
         <button
           onClick={() => navigate('/manager/kds/stations')}
-          className="flex items-center gap-2 text-gray-600 hover:text-foreground mb-4"
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Stations
@@ -104,7 +104,7 @@ function KDSStationDetail() {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6">
+      <div className="bg-white rounded-xl shadow-sm border border-border mb-6">
         <div className="flex border-b border-gray-200">
           {['routing', 'summary', 'status', 'theme', 'wait-times'].map((tab) => (
             <button
@@ -128,7 +128,7 @@ function KDSStationDetail() {
               <p className="text-sm text-gray-600">Define which items appear on this station</p>
               <div className="space-y-2">
                 {station.routing_rules?.map((rule, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <div key={idx} className="flex items-center gap-3 p-3 bg-background rounded-lg">
                     <span className="font-medium">{rule.type}:</span>
                     <span className="text-gray-600">{rule.values.join(', ')}</span>
                   </div>
@@ -207,7 +207,7 @@ function KDSStationDetail() {
                       onClick={() => updateSettings({ theme })}
                       className={`px-6 py-3 rounded-lg font-medium transition ${settings.theme === theme
                         ? 'bg-blue-600 text-foreground'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        : 'bg-gray-100 text-muted-foreground hover:bg-gray-200'
                         }`}
                     >
                       {theme}
@@ -225,7 +225,7 @@ function KDSStationDetail() {
                       onClick={() => updateSettings({ layout })}
                       className={`px-6 py-3 rounded-lg font-medium transition ${settings.layout === layout
                         ? 'bg-blue-600 text-foreground'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        : 'bg-gray-100 text-muted-foreground hover:bg-gray-200'
                         }`}
                     >
                       {layout.replace('_', ' ')}
@@ -243,7 +243,7 @@ function KDSStationDetail() {
                       onClick={() => updateSettings({ time_format: format })}
                       className={`px-6 py-3 rounded-lg font-medium transition ${settings.time_format === format
                         ? 'bg-blue-600 text-foreground'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        : 'bg-gray-100 text-muted-foreground hover:bg-gray-200'
                         }`}
                     >
                       {format}
@@ -274,7 +274,7 @@ function KDSStationDetail() {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Delayed After (minutes)
                   </label>
                   <input
@@ -288,12 +288,12 @@ function KDSStationDetail() {
                         }
                       });
                     }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    className="w-full px-4 py-2 border border-border rounded-lg"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Late After (minutes)
                   </label>
                   <input
@@ -307,7 +307,7 @@ function KDSStationDetail() {
                         }
                       });
                     }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    className="w-full px-4 py-2 border border-border rounded-lg"
                   />
                 </div>
               </div>
@@ -317,7 +317,7 @@ function KDSStationDetail() {
       </div>
 
       {/* Danger Zone */}
-      <div className="bg-white rounded-xl shadow-sm border border-red-200 p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-red-200 dark:border-red-800 p-6">
         <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-4">Danger Zone</h3>
         <button
           onClick={resetStation}
@@ -326,7 +326,7 @@ function KDSStationDetail() {
           <Trash2 className="w-5 h-5" />
           Reset Station
         </button>
-        <p className="text-sm text-gray-600 mt-2">This will complete all active tickets</p>
+        <p className="text-sm text-muted-foreground mt-2">This will complete all active tickets</p>
       </div>
     </div>
   );

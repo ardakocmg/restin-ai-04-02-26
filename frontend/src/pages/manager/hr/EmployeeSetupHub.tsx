@@ -28,10 +28,10 @@ export default function EmployeeSetupHub() {
   const navigate = useNavigate();
 
   return (
-    <div className="p-6 bg-slate-50 dark:bg-slate-900 min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-foreground dark:text-slate-50">Employee Setup</h1>
-        <p className="text-slate-600 dark:text-slate-400 mt-1">Configure employee data and organizational structure</p>
+        <p className="text-muted-foreground mt-1">Configure employee data and organizational structure</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">

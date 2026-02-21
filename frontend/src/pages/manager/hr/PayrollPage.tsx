@@ -411,7 +411,7 @@ export default function PayrollPage() {
                             </div>
                             <div className="px-4 py-2 border-r border-border">
                                 <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block mb-1">SSC Projection</Label>
-                                <span className="text-lg font-black text-emerald-500 font-mono italic">€{totalNIAccumulated.toLocaleString()}</span>
+                                <span className="text-lg font-black text-emerald-600 dark:text-emerald-400 font-mono italic">€{totalNIAccumulated.toLocaleString()}</span>
                             </div>
                             <div className="pl-4">
                                 <Button
@@ -573,15 +573,15 @@ export default function PayrollPage() {
                                                                 <DropdownMenuLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Compliance & Exports</DropdownMenuLabel>
                                                                 <DropdownMenuSeparator className="bg-secondary" />
                                                                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); downloadSEPA(run); }} className="gap-2">
-                                                                    <div className="h-6 w-6 rounded bg-blue-500/10 flex items-center justify-center text-blue-500 font-black text-[9px]">XML</div>
+                                                                    <div className="h-6 w-6 rounded bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400 font-black text-[9px]">XML</div>
                                                                     <span className="text-xs font-bold">SEPA Bank File</span>
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); downloadFS5(run); }} className="gap-2">
-                                                                    <div className="h-6 w-6 rounded bg-amber-500/10 flex items-center justify-center text-amber-500 font-black text-[9px]">FS5</div>
+                                                                    <div className="h-6 w-6 rounded bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400 font-black text-[9px]">FS5</div>
                                                                     <span className="text-xs font-bold">FS5 Return Data</span>
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); downloadPayslipPack(run); }} className="gap-2">
-                                                                    <div className="h-6 w-6 rounded bg-emerald-500/10 flex items-center justify-center text-emerald-500 font-black text-[9px]">PDF</div>
+                                                                    <div className="h-6 w-6 rounded bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-black text-[9px]">PDF</div>
                                                                     <span className="text-xs font-bold">Payslip Bundle</span>
                                                                 </DropdownMenuItem>
                                                             </DropdownMenuContent>
@@ -613,7 +613,7 @@ export default function PayrollPage() {
                                     <CardContent className="p-6">
                                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">YTD Total Payroll</p>
                                         <h3 className="text-3xl font-black text-foreground font-mono">€{costMetrics.ytd_total.toLocaleString()}</h3>
-                                        <p className="text-[10px] text-emerald-500 font-bold mt-2 flex items-center gap-1"><TrendingUp className="h-3 w-3" /> Across {runs.length} cycles</p>
+                                        <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold mt-2 flex items-center gap-1"><TrendingUp className="h-3 w-3" /> Across {runs.length} cycles</p>
                                     </CardContent>
                                 </Card>
                                 <Card className="bg-black/40 border-border shadow-2xl">
@@ -819,7 +819,7 @@ export default function PayrollPage() {
                         <DialogContent className="max-w-2xl bg-[#09090b] border-border text-foreground">
                             <DialogHeader>
                                 <DialogTitle className="text-xl font-black uppercase tracking-tighter flex items-center gap-3">
-                                    <Users className="h-6 w-6 text-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]" />
+                                    <Users className="h-6 w-6 text-emerald-600 dark:text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.3)]" />
                                     Active Payroll Personnel
                                 </DialogTitle>
                                 <DialogDescription className="text-muted-foreground text-xs font-bold uppercase tracking-widest">
@@ -857,7 +857,7 @@ export default function PayrollPage() {
                                             <div className="flex items-center gap-4">
                                                 <div className="text-right hidden md:block">
                                                     <div className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Status</div>
-                                                    <Badge className="bg-emerald-500/10 text-emerald-500 border-none uppercase text-[8px] tracking-tighter h-4">Verified</Badge>
+                                                    <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-none uppercase text-[8px] tracking-tighter h-4">Verified</Badge>
                                                 </div>
                                                 <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
                                                     <ChevronDown className="h-4 w-4 -rotate-90" />
@@ -866,7 +866,7 @@ export default function PayrollPage() {
                                         </div>
                                     )) : (
                                         <div className="text-center py-12">
-                                            <Users className="h-12 w-12 text-zinc-800 mx-auto mb-4" />
+                                            <Users className="h-12 w-12 text-foreground mx-auto mb-4" />
                                             <p className="text-muted-foreground text-sm italic">No personnel matches your search.</p>
                                         </div>
                                     )}
@@ -931,7 +931,7 @@ export default function PayrollPage() {
                                             <div className="h-8 w-8 rounded-lg bg-card border border-border flex items-center justify-center text-[10px] font-black">{emp.name?.substring(0, 2).toUpperCase()}</div>
                                             <div className="text-xs font-bold">{emp.name}</div>
                                         </div>
-                                        <Badge className="bg-blue-500/10 text-blue-500 border-none uppercase text-[8px]">Scheduled</Badge>
+                                        <Badge className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border-none uppercase text-[8px]">Scheduled</Badge>
                                     </div>
                                 ))}
                             </div>

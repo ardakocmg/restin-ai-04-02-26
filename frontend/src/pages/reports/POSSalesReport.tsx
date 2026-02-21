@@ -249,7 +249,7 @@ export default function POSSalesReport() {
                 <FileDown className="mr-2 h-5 w-5" />
                 Export as CSV
               </Button>
-              <Button variant="outline" onClick={() => exportToPdf('report-content')} className="w-full h-12 border-emerald-600/50 text-emerald-500 hover:bg-emerald-500/10 font-bold rounded-xl transition-all uppercase tracking-widest">
+              <Button variant="outline" onClick={() => exportToPdf('report-content')} className="w-full h-12 border-emerald-600/50 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 font-bold rounded-xl transition-all uppercase tracking-widest">
                 <Download className="mr-2 h-5 w-5" />
                 Export as PDF
               </Button>
@@ -340,13 +340,13 @@ export default function POSSalesReport() {
                             <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">VIVAWALLET</p>
                           </TableCell>
                           <TableCell className="text-right text-foreground text-xs py-4 font-bold">1,003.00</TableCell>
-                          <TableCell className="text-right text-emerald-500 text-xs py-4 font-bold">0.00</TableCell>
+                          <TableCell className="text-right text-emerald-600 dark:text-emerald-400 text-xs py-4 font-bold">0.00</TableCell>
                           <TableCell className="text-right text-secondary-foreground text-xs py-4 font-bold">4</TableCell>
                         </TableRow>
                         <TableRow className="bg-background/60 font-black border-t-2 border-border">
                           <TableCell className="text-xs text-secondary-foreground py-4 uppercase tracking-widest">Total</TableCell>
                           <TableCell className="text-right text-foreground text-xs py-4">1,003.00</TableCell>
-                          <TableCell className="text-right text-emerald-500 text-xs py-4">0.00</TableCell>
+                          <TableCell className="text-right text-emerald-600 dark:text-emerald-400 text-xs py-4">0.00</TableCell>
                           <TableCell className="text-right text-secondary-foreground text-xs py-4">4</TableCell>
                         </TableRow>
                       </TableBody>
@@ -485,7 +485,7 @@ export default function POSSalesReport() {
             <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-2xl">
               <div className="px-6 py-4 bg-secondary/20 border-b border-border flex items-center justify-between">
                 <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Revenue Summary</h3>
-                <Badge variant="outline" className="text-[10px] border-emerald-500/20 text-emerald-500 bg-emerald-500/5 uppercase font-black">Accuracy: 100%</Badge>
+                <Badge variant="outline" className="text-[10px] border-emerald-500/20 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 uppercase font-black">Accuracy: 100%</Badge>
               </div>
               <Table>
                 <TableHeader>
@@ -504,7 +504,7 @@ export default function POSSalesReport() {
                     <TableCell className="text-right text-secondary-foreground text-xs py-4 font-bold">{formatCurrency(data.service_charges)}</TableCell>
                   </TableRow>
                   <TableRow className="bg-background/40 border-t-2 border-border">
-                    <TableCell className="text-xs text-red-500 font-black py-5 uppercase tracking-widest">Total Revenue (Tax Incl.)</TableCell>
+                    <TableCell className="text-xs text-red-600 dark:text-red-400 font-black py-5 uppercase tracking-widest">Total Revenue (Tax Incl.)</TableCell>
                     <TableCell className="text-right text-foreground text-sm py-5 font-black">{formatCurrency(data.total_revenue)}</TableCell>
                   </TableRow>
                 </TableBody>
@@ -561,7 +561,7 @@ export default function POSSalesReport() {
                         {row.provider && <p className="text-[8px] font-black text-red-500/80 uppercase tracking-widest pl-4">{row.provider}</p>}
                       </TableCell>
                       <TableCell className="text-right text-secondary-foreground text-xs py-3 font-bold">{formatCurrency(row.amount)}</TableCell>
-                      <TableCell className="text-right text-emerald-500 text-xs py-3 font-black">{formatCurrency(row.tips)}</TableCell>
+                      <TableCell className="text-right text-emerald-600 dark:text-emerald-400 text-xs py-3 font-black">{formatCurrency(row.tips)}</TableCell>
                       <TableCell className="text-right text-foreground text-xs py-3 font-black">{formatCurrency(row.total)}</TableCell>
                     </TableRow>
                   ))}
@@ -595,7 +595,7 @@ export default function POSSalesReport() {
                   <TableRow className="bg-background/40 border-t-2 border-border">
                     <TableCell className="text-xs text-muted-foreground py-4 font-bold italic">Total Discounts Applied</TableCell>
                     <TableCell className="text-right text-muted-foreground text-xs py-4 font-medium">-</TableCell>
-                    <TableCell className="text-right text-red-500 text-xs py-4 font-black">-{formatCurrency(data.total_discounts)}</TableCell>
+                    <TableCell className="text-right text-red-600 dark:text-red-400 text-xs py-4 font-black">-{formatCurrency(data.total_discounts)}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>

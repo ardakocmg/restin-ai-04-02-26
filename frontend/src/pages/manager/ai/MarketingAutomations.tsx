@@ -207,7 +207,7 @@ export default function MarketingAutomations() {
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 border-b border-zinc-200 dark:border-border">
+            <div className="flex gap-1 border-b border-border dark:border-border">
                 {(['campaigns', 'templates', 'analytics'] as const).map(tab => (
                     <button key={tab} onClick={() => setActiveTab(tab)}
                         className={cn(
@@ -313,7 +313,7 @@ export default function MarketingAutomations() {
                                         )}
                                         <span className={cn(
                                             'px-2 py-0.5 rounded-full text-xs font-medium',
-                                            c.status === 'sent' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                                            c.status === 'sent' ? 'bg-green-100 text-green-700 dark:text-green-400 dark:bg-green-900/30 dark:text-green-400' :
                                                 c.status === 'scheduled' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
                                                     'bg-zinc-100 text-muted-foreground dark:bg-secondary dark:text-muted-foreground'
                                         )}>
@@ -349,7 +349,7 @@ export default function MarketingAutomations() {
                                 <div className="flex items-center gap-2 mb-2">
                                     {typeIcon(tmpl.type)}
                                     <h3 className="font-medium text-sm">{tmpl.name}</h3>
-                                    <span className="text-xs px-2 py-0.5 rounded bg-zinc-100 dark:bg-secondary capitalize">{tmpl.type}</span>
+                                    <span className="text-xs px-2 py-0.5 rounded bg-muted dark:bg-secondary capitalize">{tmpl.type}</span>
                                 </div>
                                 {tmpl.subject && <p className="text-xs text-muted-foreground mb-1"><strong>{t('Subject')}:</strong> {tmpl.subject}</p>}
                                 <p className="text-xs text-muted-foreground dark:text-muted-foreground line-clamp-2">{tmpl.body}</p>

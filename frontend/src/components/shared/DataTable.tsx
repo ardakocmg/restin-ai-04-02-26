@@ -599,7 +599,7 @@ export default function DataTable<TData, TValue>({
                     {table && table.getAllLeafColumns ? table.getAllLeafColumns().map((column) => (
                       <div key={column.id} className="flex items-center justify-between gap-2 py-1 rounded-lg px-2 hover:bg-white/[0.03] transition-all group">
                         <div className="flex items-center gap-2 min-w-0">
-                          <GripVertical className="h-3.5 w-3.5 text-zinc-700 group-hover:text-muted-foreground cursor-grab shrink-0 transition-colors" />
+                          <GripVertical className="h-3.5 w-3.5 text-foreground group-hover:text-muted-foreground cursor-grab shrink-0 transition-colors" />
                           <Checkbox
                             checked={column.getIsVisible()}
                             onCheckedChange={(value) => column.toggleVisibility(!!value)}

@@ -460,7 +460,7 @@ export default function EmployeeDetailPage() {
   if (loading) return (
     <div className="flex items-center justify-center min-h-screen bg-[#0A0A0B]">
       <div className="animate-pulse flex flex-col items-center gap-4">
-        <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
+        <Loader2 className="h-10 w-10 text-blue-600 dark:text-blue-400 animate-spin" />
         <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">Retrieving Personnel File...</p>
       </div>
     </div>
@@ -735,7 +735,7 @@ export default function EmployeeDetailPage() {
               >
                 {documents.length === 0 ? (
                   <div className="text-center py-12 border border-dashed border-border rounded-2xl">
-                    <FileText className="h-10 w-10 mx-auto text-zinc-700 mb-3" />
+                    <FileText className="h-10 w-10 mx-auto text-foreground mb-3" />
                     <p className="text-muted-foreground font-medium">No documents on file</p>
                     <p className="text-muted-foreground text-xs mt-1">Upload contracts, certificates, or other files</p>
                   </div>
@@ -794,7 +794,7 @@ export default function EmployeeDetailPage() {
               <Section title="Leave Requests" icon={Clock}>
                 {leaveRequests.length === 0 ? (
                   <div className="text-center py-8 border border-dashed border-border rounded-2xl">
-                    <Calendar className="h-8 w-8 mx-auto text-zinc-700 mb-2" />
+                    <Calendar className="h-8 w-8 mx-auto text-foreground mb-2" />
                     <p className="text-muted-foreground text-sm">No leave requests found</p>
                   </div>
                 ) : (
@@ -851,7 +851,7 @@ export default function EmployeeDetailPage() {
               <Section title="Payroll History" icon={History}>
                 {payrollRuns.length === 0 ? (
                   <div className="text-center py-8 border border-dashed border-border rounded-2xl">
-                    <CreditCard className="h-8 w-8 mx-auto text-zinc-700 mb-2" />
+                    <CreditCard className="h-8 w-8 mx-auto text-foreground mb-2" />
                     <p className="text-muted-foreground text-sm">No payroll runs found</p>
                   </div>
                 ) : (
@@ -1076,7 +1076,7 @@ export default function EmployeeDetailPage() {
 
               <Section title="Login History" icon={History}>
                 <div className="text-center py-8 border border-dashed border-border rounded-2xl">
-                  <History className="h-8 w-8 mx-auto text-zinc-700 mb-2" />
+                  <History className="h-8 w-8 mx-auto text-foreground mb-2" />
                   <p className="text-muted-foreground text-sm">Login history will be available once audit logging is enabled</p>
                 </div>
               </Section>
@@ -1106,7 +1106,7 @@ export default function EmployeeDetailPage() {
                   {/* Notes List */}
                   {notes.length === 0 ? (
                     <div className="text-center py-8 border border-dashed border-border rounded-2xl">
-                      <StickyNote className="h-8 w-8 mx-auto text-zinc-700 mb-2" />
+                      <StickyNote className="h-8 w-8 mx-auto text-foreground mb-2" />
                       <p className="text-muted-foreground text-sm">No admin notes yet</p>
                     </div>
                   ) : (
