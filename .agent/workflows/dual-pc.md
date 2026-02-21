@@ -94,6 +94,24 @@ To minimize conflicts, split work domains:
 | POS | `frontend/src/pages/pos/*` | Lock via worklock |
 | Config/Scripts | `*.ps1`, `.agent/*` | PC1 only |
 
+### Rule 8: AUTO-PULL WATCHER (PC2)
+
+Run the auto-pull watcher on PC2 so it automatically syncs when PC1 pushes:
+// turbo
+
+```powershell
+.\scripts\git-auto-pull.ps1              # Poll every 30s (default)
+.\scripts\git-auto-pull.ps1 -Interval 15 # Poll every 15s
+.\scripts\git-auto-pull.ps1 -Once        # Single check
+```
+
+The watcher will:
+
+- Fetch from origin every N seconds
+- Auto-pull when new commits are detected
+- Stash local changes before pulling, restore after
+- Play a beep sound to notify you of updates
+
 ## CODE QUALITY RULES (Both PCs Must Follow)
 
 ### No Inline Styles
