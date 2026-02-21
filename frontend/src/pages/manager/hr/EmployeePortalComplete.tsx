@@ -686,7 +686,7 @@ export default function EmployeePortalComplete() {
             <div className="space-y-4 pt-2">
               <div>
                 <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1.5">Leave Type</label>
-                <select
+                <select aria-label="Input"
                   className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                   defaultValue={leaveRequestType === 'sick' ? 'sick' : 'vacation'}
                   aria-label="Leave type"
@@ -726,7 +726,7 @@ export default function EmployeePortalComplete() {
               </div>
               <div>
                 <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1.5">Notes</label>
-                <textarea
+                <textarea aria-label="Input"
                   className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50 min-h-20 resize-none"
                   placeholder={leaveRequestType === 'sick' ? 'Brief description of illness...' : 'Reason for leave request...'}
                 />

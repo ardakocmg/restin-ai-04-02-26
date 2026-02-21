@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logger } from '@/lib/logger';
@@ -434,7 +433,7 @@ function PermissionTreeGroup({ group, expanded, onToggle }) {
                                 </div>
 
                                 <div className="flex items-center gap-2 ml-4 shrink-0">
-                                    <select className="bg-background border border-border rounded px-2 py-1 text-[11px] text-muted-foreground focus:outline-none focus:border-indigo-500/50 w-[120px]">
+                                    <select className="bg-background border border-border rounded px-2 py-1 text-[11px] text-muted-foreground focus:outline-none focus:border-indigo-500/50 w-[120px]" aria-label="Input field">
                                         <option value="own_branch">This Branch Only</option>
                                         <option value="own_shift">Own Shift Only</option>
                                         <option value="own_section">Own Section Only</option>
@@ -442,20 +441,20 @@ function PermissionTreeGroup({ group, expanded, onToggle }) {
                                     </select>
 
                                     {/* Per-Permission Auth Method Selector */}
-                                    <select
+                                    <select aria-label="Input"
                                         defaultValue={perm.auth || 'pin'}
                                         className={`rounded px-2 py-1 text-[11px] font-semibold focus:outline-none focus:ring-1 w-[100px] border ${perm.auth === '2fa' ? 'bg-red-500/10 border-red-500/30 text-red-300 focus:ring-red-500/50' :
                                             perm.auth === 'password' ? 'bg-blue-500/10 border-blue-500/30 text-blue-300 focus:ring-blue-500/50' :
                                                 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300 focus:ring-emerald-500/50'
                                             }`}
-                                    >
+                                     aria-label="Input field">
                                         <option value="pin">🟢 PIN</option>
                                         <option value="password">🔵 Password</option>
                                         <option value="2fa">🔴 2FA</option>
                                     </select>
 
                                     <label className="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" className="sr-only peer" defaultChecked={perm.risk !== "CRITICAL"} />
+                                        <input type="checkbox" className="sr-only peer" defaultChecked={perm.risk !== "CRITICAL"}  aria-label="Input field" />
                                         <div className="w-9 h-5 bg-zinc-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
                                     </label>
                                 </div>
@@ -660,7 +659,7 @@ export default function RolesPermissions() {
                         <p className="text-[11px] text-muted-foreground mt-1">{roles.length} roles · {totalPerms} permissions · {permissionGroups.length} groups</p>
                         <div className="mt-3 relative">
                             <Search className="w-4 h-4 absolute left-3 top-2.5 text-muted-foreground" />
-                            <input
+                            <input aria-label="Input"
                                 type="text"
                                 placeholder="Search roles..."
                                 value={roleSearch}
@@ -890,7 +889,7 @@ export default function RolesPermissions() {
                                 <div className="flex items-center gap-3">
                                     <div className="relative">
                                         <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-muted-foreground" />
-                                        <input
+                                        <input aria-label="Input"
                                             type="text"
                                             placeholder="Filter permissions..."
                                             value={searchTerm}
@@ -936,10 +935,10 @@ export default function RolesPermissions() {
                             <div className="p-5 space-y-4">
                                 <div>
                                     <label className="block text-xs font-medium text-muted-foreground mb-1.5">Role Name</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={newRoleName}
-                                        onChange={e => setNewRoleName(e.target.value)}
+                                        onChange={e = aria-label="Input field"> setNewRoleName(e.target.value)}
                                         placeholder="e.g. Barista, Sommelier..."
                                         className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:border-indigo-500 placeholder-zinc-600"
                                         autoFocus
@@ -947,9 +946,9 @@ export default function RolesPermissions() {
                                 </div>
                                 <div>
                                     <label className="block text-xs font-medium text-muted-foreground mb-1.5">Category</label>
-                                    <select
+                                    <select aria-label="Input"
                                         value={newRoleCategory}
-                                        onChange={e => setNewRoleCategory(e.target.value)}
+                                        onChange={e = aria-label="Input field"> setNewRoleCategory(e.target.value)}
                                         className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:border-indigo-500"
                                     >
                                         {ROLE_CATEGORIES.filter(c => c !== "Super Admin").map(c => <option key={c} value={c}>{c}</option>)}
@@ -981,9 +980,9 @@ export default function RolesPermissions() {
                                 {!cloneFrom && (
                                     <div>
                                         <label className="block text-xs font-medium text-muted-foreground mb-1.5">Clone Permissions From (optional)</label>
-                                        <select
+                                        <select aria-label="Input"
                                             value={cloneFrom}
-                                            onChange={e => setCloneFrom(e.target.value)}
+                                            onChange={e = aria-label="Input field"> setCloneFrom(e.target.value)}
                                             className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:border-indigo-500"
                                         >
                                             <option value="">Start from scratch</option>

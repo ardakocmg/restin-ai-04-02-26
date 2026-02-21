@@ -876,4 +876,575 @@
     background: rgba(59, 130, 246, 0.1);
     color: #3B82F6;
     font-weight: 600;
+}/* ═══════════════════════════════════════════════════════════════════
+   STYLES — POSRuntimeEnhanced Extracted
+   ═══════════════════════════════════════════════════════════════════ */
+.pos-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: #000;
+  color: #fff;
+  font-family: -apple-system;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.pos-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #111;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.pos-loading-logo {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.pos-loading-text {
+  color: #888;
+  font-size: 16px;
+}
+
+.pos-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  min-height: 52px;
+  background-color: #111;
+  border-bottom: 1px solid #222;
+  padding: 0 16px;
+}
+
+.pos-top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pos-top-bar-center {
+  display: flex;
+  align-items: center;
+}
+
+.pos-top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pos-top-bar-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.pos-top-bar-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 10px;
+}
+
+.pos-top-bar-label {
+  font-size: 9px;
+  color: #777;
+  font-weight: 600;
+  letter-spacing: 0.5;
+}
+
+.pos-done-text {
+  font-size: 16px;
+  color: #E05A33;
+  font-weight: 600;
+}
+
+.pos-main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.pos-left-sidebar {
+  width: 54px;
+  min-width: 54px;
+  background-color: #111;
+  border-right: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 8px;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.pos-tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 2px;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.pos-tool-icon-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px dotted #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pos-tool-label {
+  font-size: 6px;
+  color: #555;
+  font-weight: 600;
+  letter-spacing: 0.3;
+  text-transform: uppercase;
+}
+
+.pos-item-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(6;
+  grid-template-rows: repeat(4;
+  gap: 1px;
+  padding: 1px;
+  overflow-y: auto;
+  background-color: #000;
+  position: relative;
+}
+
+.pos-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 10px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  border: none;
+  text-align: left;
+  transition: opacity 0.15s;
+}
+
+.pos-tile-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  webkit-line-clamp: 2px;
+  webkit-box-orient: vertical;
+}
+
+.pos-tile-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto;
+}
+
+.pos-tile-code {
+  font-size: 11px;
+  color: rgba(255;
+  font-weight: 500;
+}
+
+.pos-tile-price {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.pos-right-panel {
+  width: 280px;
+  min-width: 280px;
+  background-color: #111;
+  border-left: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+}
+
+.pos-order-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px 6px;
+  border-bottom: 1px solid #333;
+}
+
+.pos-order-actions {
+  font-size: 12px;
+  color: #888;
+}
+
+.pos-order-table-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pos-order-timestamp {
+  font-size: 10px;
+  color: #666;
+}
+
+.pos-sort-tabs {
+  display: flex;
+  border-bottom: 1px solid #333;
+}
+
+.pos-sort-tab {
+  flex: 1;
+  padding: 6px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.pos-table-header-bar {
+  background-color: #2A9D8F;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pos-order-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 12px;
+}
+
+.pos-empty-order {
+  text-align: center;
+  color: #666;
+  padding: 40px;
+  font-size: 13px;
+}
+
+.pos-seat-header {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  padding: 12px 0 4px;
+  border-top: 1px solid #333;
+  margin-top: 4px;
+}
+
+.pos-course-header {
+  font-size: 11px;
+  color: #888;
+  padding: 6px 0 4px;
+  font-weight: 600;
+}
+
+.pos-order-item-row {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid #222;
+}
+
+.pos-order-item-qty {
+  width: 20px;
+  font-size: 13px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.pos-order-item-name {
+  flex: 1;
+  font-size: 13px;
+  color: #fff;
+}
+
+.pos-order-item-price {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.pos-tax-section {
+  border-top: 1px solid #333;
+  padding: 8px 12px;
+}
+
+.pos-tax-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.pos-tax-row {
+  font-size: 12px;
+  color: #888;
+}
+
+.pos-order-bottom {
+  border-top: 1px solid #333;
+}
+
+.pos-order-bottom-tabs {
+  display: flex;
+  border-bottom: 1px solid #333;
+}
+
+.pos-order-bottom-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #999;
+  border: none;
+  cursor: pointer;
+}
+
+.pos-seat-buttons {
+  display: flex;
+  gap: 2px;
+  padding: 6px 8px;
+}
+
+.pos-seat-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pos-seat-add-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px dashed #555;
+  background: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pos-total-due {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid #333;
+}
+
+.pos-total-due-label {
+  font-size: 11px;
+  color: #888;
+}
+
+.pos-total-due-amount {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.pos-bottom-bar {
+  height: 64px;
+  min-height: 64px;
+  background-color: #111;
+  border-top: 1px solid #222;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.pos-bottom-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.pos-bottom-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background: none;
+  border: 1px solid #333;
+  color: #888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.pos-customer-add-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.pos-customer-add-label {
+  font-size: 7px;
+  color: #888;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.pos-server-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0 12px;
+}
+
+.pos-server-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #E05A33;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pos-server-name-label {
+  font-size: 9px;
+  color: #888;
+  font-weight: 600;
+}
+
+.pos-category-tabs {
+  display: flex;
+  flex: 1;
+  gap: 2px;
+  justify-content: center;
+}
+
+.pos-category-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  min-width: 90px;
+}
+
+.pos-category-tab-label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pos-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.pos-payment-modal {
+  background-color: #222;
+  border-radius: 12px;
+  padding: 32px;
+  min-width: 360px;
+  text-align: center;
+}
+
+.pos-payment-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.pos-payment-total {
+  font-size: 28px;
+  font-weight: 800;
+  color: #2A9D8F;
+  margin-bottom: 24px;
+}
+
+.pos-payment-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.pos-pay-btn {
+  padding: 14px 32px;
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pos-pay-close-btn {
+  background: none;
+  border: 1px solid #555;
+  border-radius: 8px;
+  padding: 10px 24px;
+  color: #888;
+  cursor: pointer;
+  font-size: 14px;
 }

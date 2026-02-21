@@ -5,7 +5,7 @@
 export function useStaffService() {
     return {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        staff: [] as any[],
+        staff: [] as unknown[],
         loading: false,
         error: null as string | null,
         fetchStaff: async () => { },

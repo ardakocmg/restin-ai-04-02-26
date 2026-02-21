@@ -193,7 +193,7 @@ const CrmDashboard: React.FC = () => {
                         <div className="flex gap-2">
                             <div className="relative">
                                 <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                                <input
+                                <input aria-label="Input"
                                     className="bg-secondary border-none rounded-lg pl-9 pr-4 py-1.5 text-sm text-secondary-foreground outline-none focus:ring-1 ring-blue-500 w-48"
                                     placeholder="Search guests..."
                                     value={searchQuery}
@@ -251,10 +251,10 @@ const CrmDashboard: React.FC = () => {
                                             <div className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">LTV</div>
                                         </div>
                                         <div className="flex gap-1">
-                                            <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-secondary">
+                                            <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-secondary" aria-label="Action">
                                                 <MessageSquare className="w-4 h-4" />
                                             </Button>
-                                            <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-secondary">
+                                            <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-secondary" aria-label="Action">
                                                 <ArrowUpRight className="w-4 h-4" />
                                             </Button>
                                         </div>

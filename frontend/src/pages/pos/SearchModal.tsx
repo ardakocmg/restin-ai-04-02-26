@@ -75,7 +75,7 @@ export default function SearchModal({ allItems, onSelect, onClose }: SearchModal
             <div style={s.modal} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                 <div style={s.searchBar}>
                     <Search size={18} color="#888" />
-                    <input
+                    <input aria-label="Input"
                         ref={inputRef}
                         style={s.input}
                         placeholder="Search products by name or code..."

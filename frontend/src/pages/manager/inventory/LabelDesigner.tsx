@@ -160,7 +160,7 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
     const h = template.sizeH * scale * 2.5;
 
     return (
-        <div className="bg-white rounded border border-border overflow-hidden relative" style={{ width: w, height: h }}>
+        <div className="bg-white rounded border border-border overflow-hidden relative" style={{ width: w, height: h }}> /* keep-inline */ /* keep-inline */
             {template.fields.map(field => {
                 const fx = field.x * scale * 2.5;
                 const fy = field.y * scale * 2.5;
@@ -197,7 +197,7 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
                     return (
                         <div key={field.id} className="absolute flex flex-wrap gap-0.5 items-start" style={{ left: fx, top: fy, width: fw, height: fh }}>
                             {ALLERGEN_ICONS.slice(0, 6).map(a => (
-                                <span key={a.code} style={{ fontSize: fs * 0.8 }}>{a.emoji}</span>
+                                <span key={a.code} style={{ fontSize: fs * 0.8 }}>{a.emoji}</span> /* keep-inline */ /* keep-inline */
                             ))}
                         </div>
                     );
@@ -205,7 +205,7 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
                 if (field.type === 'logo') {
                     return (
                         <div key={field.id} className="absolute bg-muted border border-border rounded flex items-center justify-center" style={{ left: fx, top: fy, width: fw, height: fh }}>
-                            <span className="text-zinc-400" style={{ fontSize: fs * 0.6 }}>LOGO</span>
+                            <span className="text-zinc-400" style={{ fontSize: fs * 0.6 }}>LOGO</span> /* keep-inline */ /* keep-inline */
                         </div>
                     );
                 }
@@ -214,7 +214,7 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
                     <div
                         key={field.id}
                         className="absolute text-foreground leading-tight overflow-hidden"
-                        style={{
+                        style={{ /* keep-inline */ /* keep-inline */
                             left: fx, top: fy, width: fw, height: fh,
                             fontSize: fs,
                             fontWeight: field.fontWeight ?? 'normal',

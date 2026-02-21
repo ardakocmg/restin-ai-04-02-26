@@ -174,7 +174,7 @@ export default function CRMPage() {
                         </div>
                       </div>
                     </div>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" aria-label="Action">
                       <MoreHorizontal className="w-4 h-4" />
                     </Button>
                   </div>

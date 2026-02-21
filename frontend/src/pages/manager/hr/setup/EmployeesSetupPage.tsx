@@ -108,9 +108,9 @@ export default function EmployeesSetupPage() {
               </div>
               <div>
                 <Label>Role</Label>
-                <select
+                <select aria-label="Input"
                   value={newEmployee.role}
-                  onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })}
+                  onChange={(e) = aria-label="Input field"> setNewEmployee({ ...newEmployee, role: e.target.value })}
                   className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
                 >
                   <option value="staff">Staff</option>

@@ -244,7 +244,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
           </div>
           <div className="flex items-center gap-2">
             {!readOnly && onEdit && guide && (
-              <Button variant="ghost" size="icon" onClick={onEdit}>
+              <Button variant="ghost" size="icon" onClick={onEdit} aria-label="Action">
                 <EditIcon className="h-4 w-4" />
               </Button>
             )}

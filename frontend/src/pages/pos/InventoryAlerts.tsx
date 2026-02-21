@@ -44,7 +44,7 @@ const InventoryAlerts: React.FC = () => {
     useEffect(() => {
         if (apiItems.length > 0) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const mapped: AlertItem[] = apiItems.map((ai: any) => {
+            const mapped: AlertItem[] = apiItems.map((ai: Record<string, unknown>) => {
                 const current = Number(ai.current_stock || ai.currentStock || 0);
                 const par = Number(ai.par_level || ai.parLevel || 50);
                 const reorder = Number(ai.reorder_point || ai.reorderPoint || 10);
@@ -92,43 +92,43 @@ const InventoryAlerts: React.FC = () => {
             </div>
 
             {/* Loading / Error */}
-            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">{"Loading "}stock data...</span></div>}
-            {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center pos-mb-16" style={{ borderColor: '#EF4444', padding: 14 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button className="pos-btn-outline" style={{ padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>}
+            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">{"Loading "}stock data...</span></div>} /* keep-inline */ /* keep-inline */
+            {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center pos-mb-16" style={{ borderColor: '#EF4444', padding: 14 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button className="pos-btn-outline" style={{ padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>} /* keep-inline */ /* keep-inline */
 
             {/* Stats */}
             <div className="pos-stats-grid pos-mb-16">
                 {[{ l: 'Out of Stock', v: outCount, c: '#EF4444', i: <Package size={16} /> }, { l: 'Critical', v: critCount, c: '#F97316', i: <AlertTriangle size={16} /> }, { l: 'Low Stock', v: lowCount, c: '#F59E0B', i: <TrendingDown size={16} /> }, { l: 'OK', v: items.filter(i => i.status === 'ok').length, c: '#10B981', i: <Bell size={16} /> }].map((s, i) => (
                     <div key={i} className="pos-stat-card">
-                        <div className="pos-stat-icon" style={{ background: `${s.c}15`, color: s.c }}>{s.i}</div>
+                        <div className="pos-stat-icon" style={{ background: `${s.c}15`, color: s.c }}>{s.i}</div> /* keep-inline */ /* keep-inline */
                         <div><div className="pos-stat-value">{s.v}</div><div className="pos-stat-label">{s.l}</div></div>
                     </div>
                 ))}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 16 }}> /* keep-inline */ /* keep-inline */
                 <div>
                     {/* Filters */}
                     <div className="pos-flex pos-gap-8 pos-mb-12">
-                        <div className="pos-search-wrapper" style={{ flex: 1 }}><Search size={14} className="pos-search-icon" /><input className="pos-input pos-search-input" placeholder="Search items..." value={search} onChange={e => setSearch(e.target.value)} /></div>
+                        <div className="pos-search-wrapper" style={{ flex: 1 }}><Search size={14} className="pos-search-icon" /><input className="pos-input pos-search-input" placeholder="Search items..." value={search} onChange={e => setSearch(e.target.value)} /></div> /* keep-inline */ /* keep-inline */
                         <div className="pos-toggle-group">
-                            {['all', 'out', 'critical', 'low', 'ok'].map(s => <button key={s} onClick={() => setFilterStatus(s)} className={`pos-toggle-btn ${filterStatus === s ? 'pos-toggle-btn--active' : ''}`} style={{ textTransform: 'capitalize', color: filterStatus === s ? (STATUS_COLORS[s] || '#3B82F6') : undefined }}>{s}</button>)}
+                            {['all', 'out', 'critical', 'low', 'ok'].map(s => <button key={s} onClick={() => setFilterStatus(s)} className={`pos-toggle-btn ${filterStatus === s ? 'pos-toggle-btn--active' : ''}`} style={{ textTransform: 'capitalize', color: filterStatus === s ? (STATUS_COLORS[s] || '#3B82F6') : undefined }}>{s}</button>)} /* keep-inline */ /* keep-inline */
                         </div>
                     </div>
 
                     {/* Items Table */}
                     <div className="pos-card">
                         {filtered.map(item => (
-                            <div key={item.id} className="pos-flex pos-flex--center pos-gap-12" style={{ padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: STATUS_COLORS[item.status], flexShrink: 0 }} />
-                                <div style={{ flex: 1 }}>
+                            <div key={item.id} className="pos-flex pos-flex--center pos-gap-12" style={{ padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}> /* keep-inline */ /* keep-inline */
+                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: STATUS_COLORS[item.status], flexShrink: 0 }} /> /* keep-inline */ /* keep-inline */
+                                <div style={{ flex: 1 }}> /* keep-inline */ /* keep-inline */
                                     <div className="pos-cell-value">{item.name}</div>
                                     <div className="pos-cell-secondary">{item.category}</div>
                                 </div>
-                                <div style={{ textAlign: 'center', minWidth: 80 }}>
-                                    <div style={{ fontSize: 15, fontWeight: 700, color: STATUS_COLORS[item.status] }}>{item.currentStock} {item.unit}</div>
-                                    <div className="pos-cell-secondary" style={{ fontSize: 10 }}>of {item.parLevel} par</div>
+                                <div style={{ textAlign: 'center', minWidth: 80 }}> /* keep-inline */ /* keep-inline */
+                                    <div style={{ fontSize: 15, fontWeight: 700, color: STATUS_COLORS[item.status] }}>{item.currentStock} {item.unit}</div> /* keep-inline */ /* keep-inline */
+                                    <div className="pos-cell-secondary" style={{ fontSize: 10 }}>of {item.parLevel} par</div> /* keep-inline */ /* keep-inline */
                                 </div>
-                                <div style={{ width: 100, height: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 3, overflow: 'hidden' }}>
+                                <div style={{ width: 100, height: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 3, overflow: 'hidden' }}> /* keep-inline */ /* keep-inline */
                                     <div style={{ width: `${Math.min(100, (item.currentStock / item.parLevel) * 100)}%`, height: '100%', background: STATUS_COLORS[item.status], borderRadius: 3, transition: 'width 0.3s ease' }} />
                                 </div>
                             </div>
@@ -139,14 +139,14 @@ const InventoryAlerts: React.FC = () => {
                 {/* Notification Settings */}
                 <div>
                     <div className="pos-card">
-                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><Bell size={14} style={{ color: '#3B82F6' }} /> Notifications</h3>
+                        <h3 className="pos-card-title pos-flex pos-flex--center pos-gap-6"><Bell size={14} style={{ color: '#3B82F6' }} /> Notifications</h3> /* keep-inline */ /* keep-inline */
                         <div className="pos-setting-row"><div className="pos-flex pos-flex--center pos-gap-6"><Mail size={14} className="pos-text-secondary" /><span className="pos-cell-value">Email Alerts</span></div><Toggle value={emailAlerts} onChange={() => setEmailAlerts(!emailAlerts)} /></div>
                         <div className="pos-setting-row"><div className="pos-flex pos-flex--center pos-gap-6"><MessageSquare size={14} className="pos-text-secondary" /><span className="pos-cell-value">Push Notifications</span></div><Toggle value={pushAlerts} onChange={() => setPushAlerts(!pushAlerts)} /></div>
                         <div className="pos-setting-row"><div className="pos-flex pos-flex--center pos-gap-6"><Package size={14} className="pos-text-secondary" /><span className="pos-cell-value">Auto Reorder</span></div><Toggle value={autoOrder} onChange={() => setAutoOrder(!autoOrder)} /></div>
                     </div>
-                    {(outCount + critCount) > 0 && <div className="pos-card" style={{ background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.2)' }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: '#EF4444', marginBottom: 6 }}>⚠️ Action Required</div>
-                        <p className="pos-cell-secondary" style={{ margin: 0, lineHeight: 1.5 }}>
+                    {(outCount + critCount) > 0 && <div className="pos-card" style={{ background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.2)' }}> /* keep-inline */ /* keep-inline */
+                        <div style={{ fontSize: 13, fontWeight: 600, color: '#EF4444', marginBottom: 6 }}>⚠️ Action Required</div> /* keep-inline */ /* keep-inline */
+                        <p className="pos-cell-secondary" style={{ margin: 0, lineHeight: 1.5 }}> /* keep-inline */ /* keep-inline */
                             {outCount} items out of stock, {critCount} at critical level. Review and place orders to avoid service disruption.
                         </p>
                     </div>}

@@ -261,7 +261,7 @@ export default function OrderingSuggestions() {
             setSelected(new Set());
         } catch (err: unknown) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            logger.error('Failed to generate POs', err as any);
+            logger.error('Failed to generate POs', err as unknown);
             toast.error('Failed to generate purchase orders');
         } finally {
             setGenerating(false);

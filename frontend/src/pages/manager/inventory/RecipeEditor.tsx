@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { logger } from '@/lib/logger';
@@ -403,7 +402,7 @@ export default function RecipeEditor() {
         >
             {/* ── Header ── */}
             <div className="flex items-center gap-3 mb-4">
-                <Button variant="ghost" size="icon" onClick={handleBack}>
+                <Button variant="ghost" size="icon" onClick={handleBack} aria-label="Action">
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <h1 className="text-lg font-semibold text-muted-foreground">
@@ -501,7 +500,7 @@ export default function RecipeEditor() {
                                                     />
                                                 </td>
                                                 <td className="py-2">
-                                                    <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100" onClick={() => removeIngredient(idx)}>
+                                                    <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100" onClick={() = aria-label="Action"> removeIngredient(idx)}>
                                                         <Trash2 className="h-4 w-4 text-red-500" />
                                                     </Button>
                                                 </td>
@@ -933,9 +932,9 @@ export default function RecipeEditor() {
                                         <img src={img} alt={`Recipe image ${idx + 1}`} className="aspect-square object-cover rounded-lg" />
                                         <Button
                                             variant="destructive"
-                                            size="icon"
+                                            size="icon" aria-label="Action"
                                             className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                                            onClick={() => updateField('images', form.images.filter((_, i) => i !== idx))}
+                                            onClick={() = aria-label="Action"> updateField('images', form.images.filter((_, i) => i !== idx))}
                                         >
                                             <X className="h-3 w-3" />
                                         </Button>

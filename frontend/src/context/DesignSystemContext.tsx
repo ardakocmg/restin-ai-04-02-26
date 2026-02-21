@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * DesignSystemContext - Comprehensive Design System
  * @module context/DesignSystemContext

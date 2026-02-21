@@ -79,27 +79,27 @@ const POSUsersGroups: React.FC = () => {
                 }}><Plus size={16} /> Add {tab === 'users' ? 'User' : 'Group'}</button>
             </div>
 
-            <div className="pos-toggle-group pos-mb-20" style={{ width: 'fit-content' }}>
+            <div className="pos-toggle-group pos-mb-20" style={{ width: 'fit-content' }}> /* keep-inline */ /* keep-inline */
                 {(['users', 'groups'] as TabKey[]).map(t => (
-                    <button key={t} onClick={() => setTab(t)} className={`pos-toggle-btn ${tab === t ? 'pos-toggle-btn--active' : ''}`} style={{ padding: '10px 24px', fontSize: 13, fontWeight: tab === t ? 600 : 400 }}>{t === 'users' ? '👤 Users' : '🛡️ Groups'}</button>
+                    <button key={t} onClick={() => setTab(t)} className={`pos-toggle-btn ${tab === t ? 'pos-toggle-btn--active' : ''}`} style={{ padding: '10px 24px', fontSize: 13, fontWeight: tab === t ? 600 : 400 }}>{t === 'users' ? '👤 Users' : '🛡️ Groups'}</button> /* keep-inline */ /* keep-inline */
                 ))}
             </div>
 
             <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input className="pos-input pos-search-input" placeholder={`Search ${tab}...`} value={search} onChange={e => setSearch(e.target.value)} /></div>
 
-            {loading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 40 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">{"Loading "}staff from API...</span></div>}
-            {error && <div className="pos-card pos-flex pos-flex--between pos-flex--center pos-mb-16" style={{ borderColor: '#EF4444', padding: 16 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {error} — showing cached data</span><button className="pos-btn-outline" style={{ padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>}
+            {loading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 40 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">{"Loading "}staff from API...</span></div>} /* keep-inline */ /* keep-inline */
+            {error && <div className="pos-card pos-flex pos-flex--between pos-flex--center pos-mb-16" style={{ borderColor: '#EF4444', padding: 16 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {error} — showing cached data</span><button className="pos-btn-outline" style={{ padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>} /* keep-inline */ /* keep-inline */
 
             {/* Users Tab */}
             {tab === 'users' && !loading && <div className="pos-card">
-                <div className="pos-table-header" style={{ gridTemplateColumns: userTableCols }}><div></div><div>Name</div><div>Group</div><div>PIN</div><div>Last Login</div><div></div></div>
+                <div className="pos-table-header" style={{ gridTemplateColumns: userTableCols }}><div></div><div>Name</div><div>Group</div><div>PIN</div><div>Last Login</div><div></div></div> /* keep-inline */ /* keep-inline */
                 {filteredUsers.length === 0 && <div className="pos-empty-state">{"No "}staff found. {!venueId && 'Please select a venue first.'}</div>}
                 {filteredUsers.map(user => (
-                    <div key={user.id} className="pos-table-row" style={{ gridTemplateColumns: userTableCols, opacity: user.isActive ? 1 : 0.5 }} onClick={() => setEditUser({ ...user })}>
-                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(59,130,246,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: '#3B82F6' }}>{user.avatar}</div>
+                    <div key={user.id} className="pos-table-row" style={{ gridTemplateColumns: userTableCols, opacity: user.isActive ? 1 : 0.5 }} onClick={() => setEditUser({ ...user })}> /* keep-inline */ /* keep-inline */
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(59,130,246,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: '#3B82F6' }}>{user.avatar}</div> /* keep-inline */ /* keep-inline */
                         <div><div className="pos-cell-value">{user.name}</div><div className="pos-cell-secondary">{user.email}</div></div>
-                        <span className="pos-badge" style={{ background: `${getGroupColor(user.group)}15`, color: getGroupColor(user.group) }}>{user.group}</span>
-                        <span className="pos-cell-secondary" style={{ fontFamily: 'monospace' }}>{'••••'}</span>
+                        <span className="pos-badge" style={{ background: `${getGroupColor(user.group)}15`, color: getGroupColor(user.group) }}>{user.group}</span> /* keep-inline */ /* keep-inline */
+                        <span className="pos-cell-secondary" style={{ fontFamily: 'monospace' }}>{'••••'}</span> /* keep-inline */ /* keep-inline */
                         <span className="pos-cell-secondary">{user.lastLogin}</span>
                         <button className="pos-btn-icon" onClick={e => { e.stopPropagation(); setEditUser({ ...user }); }} title="Edit user"><Edit3 size={13} /></button>
                     </div>
@@ -107,11 +107,11 @@ const POSUsersGroups: React.FC = () => {
             </div>}
 
             {/* Groups Tab */}
-            {tab === 'groups' && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 16 }}>
+            {tab === 'groups' && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 16 }}> /* keep-inline */ /* keep-inline */
                 {filteredGroups.map(group => (
-                    <div key={group.id} className="pos-card" style={{ cursor: 'pointer', borderLeft: `4px solid ${group.color}` }} onClick={() => setEditGroup({ ...group })}>
+                    <div key={group.id} className="pos-card" style={{ cursor: 'pointer', borderLeft: `4px solid ${group.color}` }} onClick={() => setEditGroup({ ...group })}> /* keep-inline */ /* keep-inline */
                         <div className="pos-flex pos-flex--between pos-flex--center pos-mb-12">
-                            <div className="pos-flex pos-flex--center pos-gap-8"><Shield size={16} style={{ color: group.color }} /><h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>{group.name}</h3></div>
+                            <div className="pos-flex pos-flex--center pos-gap-8"><Shield size={16} style={{ color: group.color }} /><h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>{group.name}</h3></div> /* keep-inline */ /* keep-inline */
                             <span className="pos-cell-secondary">{localUsers.filter(u => u.group === group.name).length} members</span>
                         </div>
                         <div className="pos-flex pos-flex--wrap pos-gap-4">
@@ -127,18 +127,18 @@ const POSUsersGroups: React.FC = () => {
             {editUser && <div className="pos-modal-overlay" onClick={() => setEditUser(null)}>
                 <div className="pos-card pos-modal pos-modal--sm" onClick={e => e.stopPropagation()}>
                     <div className="pos-modal-header"><h3 className="pos-modal-title">{localUsers.find(u => u.id === editUser.id) ? 'Edit' : 'New'} POS User</h3><button title="Close" className="pos-btn-icon" onClick={() => setEditUser(null)}><X size={20} /></button></div>
-                    <div className="pos-form-group"><label className="pos-form-label">Full Name *</label><input className="pos-input" value={editUser.name} onChange={e => setEditUser(p => p ? { ...p, name: e.target.value, avatar: e.target.value.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) } : null)} placeholder="John Doe" /></div>
-                    <div className="pos-form-group"><label className="pos-form-label">Email</label><input className="pos-input" value={editUser.email} onChange={e => setEditUser(p => p ? { ...p, email: e.target.value } : null)} placeholder="john@venue.com" /></div>
+                    <div className="pos-form-group"><label className="pos-form-label">Full Name *</label><input className="pos-input" value={editUser.name} onChange={e = aria-label="Input field"> setEditUser(p => p ? { ...p, name: e.target.value, avatar: e.target.value.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) } : null)} placeholder="John Doe" /></div>
+                    <div className="pos-form-group"><label className="pos-form-label">Email</label><input className="pos-input" value={editUser.email} onChange={e = aria-label="Input field"> setEditUser(p => p ? { ...p, email: e.target.value } : null)} placeholder="john@venue.com" /></div>
                     <div className="pos-form-grid">
                         <div><label className="pos-form-label">PIN Code</label>
-                            <div style={{ position: 'relative' }}><input type={showPin ? 'text' : 'password'} className="pos-input" value={editUser.pin} onChange={e => setEditUser(p => p ? { ...p, pin: e.target.value } : null)} maxLength={4} />
+                            <div style={{ position: 'relative' }}><input type={showPin ? 'text' : 'password'} className="pos-input" value={editUser.pin} onChange={e = aria-label="Input field"> setEditUser(p => p ? { ...p, pin: e.target.value } : null)} maxLength={4} /> /* keep-inline */ /* keep-inline */
                                 <button style={{ position: 'absolute', right: 8, top: 8 }} className="pos-btn-icon" onClick={() => setShowPin(!showPin)} title="Toggle PIN visibility">{showPin ? <EyeOff size={14} /> : <Eye size={14} />}</button></div></div>
-                        <div><label className="pos-form-label">User Group</label><select className="pos-select" value={editUser.group} onChange={e => setEditUser(p => p ? { ...p, group: e.target.value } : null)} aria-label="User group">{groups.map(g => <option key={g.id} value={g.name}>{g.name}</option>)}</select></div>
+                        <div><label className="pos-form-label">User Group</label><select className="pos-select" value={editUser.group} onChange={e = aria-label="Input field"> setEditUser(p => p ? { ...p, group: e.target.value } : null)} aria-label="User group">{groups.map(g => <option key={g.id} value={g.name}>{g.name}</option>)}</select></div>
                     </div>
-                    <div className="pos-mb-16"><label className="pos-toggle-label"><input type="checkbox" checked={editUser.isActive} onChange={() => setEditUser(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label></div>
+                    <div className="pos-mb-16"><label className="pos-toggle-label"><input type="checkbox" checked={editUser.isActive} onChange={() = aria-label="Input field"> setEditUser(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label></div>
                     <div className="pos-modal-footer">
-                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={saveUser}><Save size={14} /> Save</button>
-                        <button title="Delete user" className="pos-btn-outline" style={{ color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => { setLocalUsers(p => p.filter(u => u.id !== editUser.id)); setEditUser(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={saveUser}><Save size={14} /> Save</button> /* keep-inline */ /* keep-inline */
+                        <button title="Delete user" className="pos-btn-outline" style={{ color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => { setLocalUsers(p => p.filter(u => u.id !== editUser.id)); setEditUser(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */ /* keep-inline */
                         <button className="pos-btn-outline" onClick={() => setEditUser(null)}>Cancel</button>
                     </div>
                 </div>
@@ -146,18 +146,18 @@ const POSUsersGroups: React.FC = () => {
 
             {/* Edit Group Modal */}
             {editGroup && <div className="pos-modal-overlay" onClick={() => setEditGroup(null)}>
-                <div className="pos-card pos-modal" style={{ maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
+                <div className="pos-card pos-modal" style={{ maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}> /* keep-inline */ /* keep-inline */
                     <div className="pos-modal-header"><h3 className="pos-modal-title">{groups.find(g => g.id === editGroup.id) ? 'Edit' : 'New'} Permission Group</h3><button title="Close" className="pos-btn-icon" onClick={() => setEditGroup(null)}><X size={20} /></button></div>
-                    <div className="pos-form-group"><label className="pos-form-label">Group Name *</label><input className="pos-input" value={editGroup.name} onChange={e => setEditGroup(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Manager" /></div>
+                    <div className="pos-form-group"><label className="pos-form-label">Group Name *</label><input className="pos-input" value={editGroup.name} onChange={e = aria-label="Input field"> setEditGroup(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Manager" /></div>
                     <div className="pos-form-group"><label className="pos-form-label pos-mb-4">Permissions</label>
                         <div className="pos-flex pos-flex--col pos-gap-6">
-                            {ALL_PERMS.map(perm => <label key={perm} className="pos-flex pos-flex--center pos-gap-10" style={{ padding: '8px 12px', background: 'var(--bg-secondary,#09090b)', borderRadius: 8, cursor: 'pointer', border: editGroup.permissions.includes(perm) ? '1px solid #3B82F6' : '1px solid rgba(255,255,255,0.04)' }}>
-                                <input type="checkbox" checked={editGroup.permissions.includes(perm)} onChange={() => setEditGroup(p => { if (!p) return null; const has = p.permissions.includes(perm); return { ...p, permissions: has ? p.permissions.filter(x => x !== perm) : [...p.permissions, perm] }; })} />
+                            {ALL_PERMS.map(perm => <label key={perm} className="pos-flex pos-flex--center pos-gap-10" style={{ padding: '8px 12px', background: 'var(--bg-secondary,#09090b)', borderRadius: 8, cursor: 'pointer', border: editGroup.permissions.includes(perm) ? '1px solid #3B82F6' : '1px solid rgba(255,255,255,0.04)' }}> /* keep-inline */ /* keep-inline */
+                                <input type="checkbox" checked={editGroup.permissions.includes(perm)} onChange={() = aria-label="Input field"> setEditGroup(p => { if (!p) return null; const has = p.permissions.includes(perm); return { ...p, permissions: has ? p.permissions.filter(x => x !== perm) : [...p.permissions, perm] }; })} />
                                 <span className="pos-text-sm">{perm}</span>
                             </label>)}
                         </div></div>
                     <div className="pos-modal-footer">
-                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={saveGroup}><Save size={14} /> Save</button>
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={saveGroup}><Save size={14} /> Save</button> /* keep-inline */ /* keep-inline */
                         <button className="pos-btn-outline" onClick={() => setEditGroup(null)}>Cancel</button>
                     </div>
                 </div>

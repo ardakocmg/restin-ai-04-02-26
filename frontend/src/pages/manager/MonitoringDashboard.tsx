@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Activity, Database, Server, Wifi, CheckCircle, AlertCircle, RefreshCw, Loader2 } from 'lucide-react';

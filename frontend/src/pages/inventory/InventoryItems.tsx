@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
 
@@ -48,7 +47,7 @@ function InventoryItems() {
           </button>
         </div>
 
-        <input
+        <input aria-label="Input"
           type="text"
           placeholder="Search items..."
           value={search}

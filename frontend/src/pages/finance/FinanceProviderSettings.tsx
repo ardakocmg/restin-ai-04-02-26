@@ -99,9 +99,9 @@ export default function FinanceProviderSettings() {
 
             <div>
               <Label>Integration Mode</Label>
-              <select
+              <select aria-label="Input"
                 value={settings.mode || 'EXPORT_ONLY'}
-                onChange={(e) => setSettings({ ...settings, mode: e.target.value })}
+                onChange={(e) = aria-label="Input field"> setSettings({ ...settings, mode: e.target.value })}
                 className="w-full p-2 border rounded"
               >
                 <option value="EXPORT_ONLY">Export Only (File-based)</option>

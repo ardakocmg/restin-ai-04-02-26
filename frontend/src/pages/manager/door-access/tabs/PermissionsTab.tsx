@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
 import api from '@/lib/api';
@@ -86,7 +85,7 @@ export default function PermissionsTab() {
                     <div className="grid grid-cols-5 gap-3 items-end">
                         <div className="col-span-2">
                             <label className="text-xs text-muted-foreground mb-1 block">Door</label>
-                            <select
+                            <select aria-label="Input"
                                 title="Select door"
                                 className="w-full bg-card border border-border text-secondary-foreground rounded px-3 py-2 text-sm"
                                 value={newPerm.door_id}
@@ -98,7 +97,7 @@ export default function PermissionsTab() {
                         </div>
                         <div>
                             <label className="text-xs text-muted-foreground mb-1 block">Role</label>
-                            <select
+                            <select aria-label="Input"
                                 title="Select role"
                                 className="w-full bg-card border border-border text-secondary-foreground rounded px-3 py-2 text-sm"
                                 value={newPerm.role_id}

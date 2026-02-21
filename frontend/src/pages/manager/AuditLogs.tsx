@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useVenue } from '../../context/VenueContext';
 import { useAuth } from '../../context/AuthContext';

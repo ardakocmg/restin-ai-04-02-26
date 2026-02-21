@@ -93,18 +93,18 @@ declare module "@/components/ui/calendar" {
         mode?: "single" | "range" | "multiple";
         selected?: Date | Date[] | { from?: Date; to?: Date };
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        onSelect?: (date: any) => void;
+        onSelect?: (date: Record<string, unknown>) => void;
         disabled?: (date: Date) => boolean;
         initialFocus?: boolean;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        [key: string]: any;
+        [key: string]: Record<string, unknown>;
     }>;
 }
 
 declare module "@/components/ui/carousel" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    export const Carousel: React.FC<{ className?: string; children?: React.ReactNode;[key: string]: any }>;
+    export const Carousel: React.FC<{ className?: string; children?: React.ReactNode;[key: string]: Record<string, unknown> }>;
     export const CarouselContent: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode } & RefAttributes<HTMLDivElement>
     >;
@@ -134,7 +134,7 @@ declare module "@/components/ui/command" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
     export const Command: ForwardRefExoticComponent<
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        { className?: string; children?: React.ReactNode;[key: string]: any } & RefAttributes<HTMLDivElement>
+        { className?: string; children?: React.ReactNode;[key: string]: Record<string, unknown> } & RefAttributes<HTMLDivElement>
     >;
     export const CommandInput: ForwardRefExoticComponent<
         { className?: string; placeholder?: string; value?: string; onValueChange?: (v: string) => void } & RefAttributes<HTMLInputElement>
@@ -173,7 +173,7 @@ declare module "@/components/ui/context-menu" {
 declare module "@/components/ui/drawer" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    export const Drawer: React.FC<{ children?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void;[key: string]: any }>;
+    export const Drawer: React.FC<{ children?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void;[key: string]: Record<string, unknown> }>;
     export const DrawerTrigger: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; asChild?: boolean } & RefAttributes<HTMLButtonElement>
     >;
@@ -196,9 +196,9 @@ declare module "@/components/ui/drawer" {
 declare module "@/components/ui/form" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    export const Form: React.FC<{ children?: React.ReactNode;[key: string]: any }>;
+    export const Form: React.FC<{ children?: React.ReactNode;[key: string]: Record<string, unknown> }>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    export const FormField: React.FC<{ children?: React.ReactNode; control?: any; name: string; render: (field: any) => React.ReactNode }>;
+    export const FormField: React.FC<{ children?: React.ReactNode; control?: Record<string, unknown>; name: string; render: (field: Record<string, unknown>) => React.ReactNode }>;
     export const FormItem: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode } & RefAttributes<HTMLDivElement>
     >;
@@ -309,12 +309,12 @@ declare module "@/components/ui/separator" {
 declare module "@/components/ui/skeleton" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    export const Skeleton: React.FC<{ className?: string;[key: string]: any }>;
+    export const Skeleton: React.FC<{ className?: string;[key: string]: Record<string, unknown> }>;
 }
 
 declare module "@/components/ui/sonner" {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    export const Toaster: React.FC<{ [key: string]: any }>;
+    export const Toaster: React.FC<{ [key: string]: Record<string, unknown> }>;
 }
 
 declare module "@/components/ui/textarea" {
@@ -335,7 +335,7 @@ declare module "@/components/ui/toggle-group" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
     export const ToggleGroup: ForwardRefExoticComponent<
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        { className?: string; children?: React.ReactNode; type?: "single" | "multiple"; value?: string | string[]; onValueChange?: (v: any) => void; variant?: string; size?: string } & RefAttributes<HTMLDivElement>
+        { className?: string; children?: React.ReactNode; type?: "single" | "multiple"; value?: string | string[]; onValueChange?: (v: Record<string, unknown>) => void; variant?: string; size?: string } & RefAttributes<HTMLDivElement>
     >;
     export const ToggleGroupItem: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; value: string } & RefAttributes<HTMLButtonElement>

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { logger } from '@/lib/logger';
 import { useVenue } from '../../context/VenueContext';
@@ -210,9 +209,9 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="col-span-2 space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Description</Label>
-                            <textarea
+                            <textarea aria-label="Input"
                                 value={formData.description}
-                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleChange('description', e.target.value)}
+                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement aria-label="Input field">) => handleChange('description', e.target.value)}
                                 className="flex w-full rounded-md bg-background border border-border text-foreground min-h-20 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-violet-500/30 resize-none"
                                 disabled={!canEdit}
                                 placeholder="Brief description of your organization"

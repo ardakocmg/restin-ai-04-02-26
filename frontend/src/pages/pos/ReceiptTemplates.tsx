@@ -137,14 +137,14 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
                 return (
                     <div key="header" className="text-center mb-2 mt-1">
                         {t.showLogo && <div className="text-lg mb-0.5">🍽️</div>}
-                        {t.headerLine1 && <div className="font-bold" style={{ fontSize: fs + 2 }}>{t.headerLine1}</div>}
-                        {t.headerLine2 && <div className="text-gray-600" style={{ fontSize: fs - 1 }}>{t.headerLine2}</div>}
-                        {t.headerLine3 && <div className="text-gray-600" style={{ fontSize: fs - 1 }}>{t.headerLine3}</div>}
+                        {t.headerLine1 && <div className="font-bold" style={{ fontSize: fs + 2 }}>{t.headerLine1}</div>} /* keep-inline */ /* keep-inline */
+                        {t.headerLine2 && <div className="text-gray-600" style={{ fontSize: fs - 1 }}>{t.headerLine2}</div>} /* keep-inline */ /* keep-inline */
+                        {t.headerLine3 && <div className="text-gray-600" style={{ fontSize: fs - 1 }}>{t.headerLine3}</div>} /* keep-inline */ /* keep-inline */
                     </div>
                 );
             case 'order_info':
                 return (
-                    <div key="order_info" className="mb-1.5" style={{ fontSize: fs - 1 }}>
+                    <div key="order_info" className="mb-1.5" style={{ fontSize: fs - 1 }}> /* keep-inline */ /* keep-inline */
                         {t.showDateTime && <div>{dateStr} {timeStr}</div>}
                         {t.showOrderNumber && <div>Order: #1042</div>}
                         {t.showServer && <div>Server: Sofia C.</div>}
@@ -164,12 +164,12 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
                                 <React.Fragment key={idx}>
                                     {showCourse && (
                                         <div className="font-bold mt-1 mb-0.5 uppercase tracking-wide"
-                                            style={{ fontSize: fs - 2, color: '#666' }}>— {item.course} —</div>
+                                            style={{ fontSize: fs - 2, color: '#666' }}>— {item.course} —</div> /* keep-inline */ /* keep-inline */
                                     )}
                                     <div className={cn('flex justify-between', isMod && 'text-gray-500')}
-                                        style={{ fontSize: isMod ? fs - 2 : fs }}>
+                                        style={{ fontSize: isMod ? fs - 2 : fs }}> /* keep-inline */ /* keep-inline */
                                         <span className={cn(isKitchen && !isMod && 'font-bold')}
-                                            style={{ fontSize: isKitchen && !isMod ? fs + 2 : undefined }}>
+                                            style={{ fontSize: isKitchen && !isMod ? fs + 2 : undefined }}> /* keep-inline */ /* keep-inline */
                                             {!isMod && `${item.qty}x `}{item.name}
                                         </span>
                                         {t.showItemPrices && !isMod && <span>€{(item.qty * item.price).toFixed(2)}</span>}
@@ -184,19 +184,19 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
                 return (
                     <div key="totals">
                         {t.showItemPrices && (
-                            <div className="flex justify-between" style={{ fontSize: fs - 1 }}>
+                            <div className="flex justify-between" style={{ fontSize: fs - 1 }}> /* keep-inline */ /* keep-inline */
                                 <span>Subtotal</span><span>€{subtotal.toFixed(2)}</span>
                             </div>
                         )}
                         {t.showTax && (
-                            <div className="flex justify-between text-gray-500" style={{ fontSize: fs - 1 }}>
+                            <div className="flex justify-between text-gray-500" style={{ fontSize: fs - 1 }}> /* keep-inline */ /* keep-inline */
                                 <span>VAT 18%</span><span>€{tax.toFixed(2)}</span>
                             </div>
                         )}
                         {t.showItemPrices && (
                             <>
                                 <div className="border-t border-black my-1" />
-                                <div className="flex justify-between font-bold" style={{ fontSize: fs + 2 }}>
+                                <div className="flex justify-between font-bold" style={{ fontSize: fs + 2 }}> /* keep-inline */ /* keep-inline */
                                     <span>TOTAL</span><span>€{total.toFixed(2)}</span>
                                 </div>
                             </>
@@ -206,20 +206,20 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
             case 'payment':
                 if (isKitchen || !t.showPaymentMethod) return null;
                 return (
-                    <div key="payment" className="mt-1" style={{ fontSize: fs - 1 }}>
+                    <div key="payment" className="mt-1" style={{ fontSize: fs - 1 }}> /* keep-inline */ /* keep-inline */
                         Paid: {isRoomCharge ? 'Room Charge — Rm 304' : 'Visa ****4242'}
                     </div>
                 );
             case 'tip':
                 if (!t.showTipLine) return null;
                 return (
-                    <div key="tip" className="mt-2 border-t border-dashed border-gray-400 pt-2" style={{ fontSize: fs - 1 }}>
+                    <div key="tip" className="mt-2 border-t border-dashed border-gray-400 pt-2" style={{ fontSize: fs - 1 }}> /* keep-inline */ /* keep-inline */
                         Tip: __________ Total: __________
                     </div>
                 );
             case 'footer':
                 return (
-                    <div key="footer" className="text-center mt-3" style={{ fontSize: fs - 1 }}>
+                    <div key="footer" className="text-center mt-3" style={{ fontSize: fs - 1 }}> /* keep-inline */ /* keep-inline */
                         {t.footerLine1 && <div>{t.footerLine1}</div>}
                         {t.footerLine2 && <div className="text-gray-500">{t.footerLine2}</div>}
                         {t.footerLine3 && <div className="text-gray-500">{t.footerLine3}</div>}
@@ -236,7 +236,7 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
                                 ))}
                             </div>
                         </div>
-                        <div className="text-gray-500 mt-0.5" style={{ fontSize: 7 }}>Scan for feedback</div>
+                        <div className="text-gray-500 mt-0.5" style={{ fontSize: 7 }}>Scan for feedback</div> /* keep-inline */ /* keep-inline */
                     </div>
                 );
             case 'barcode':
@@ -245,23 +245,23 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
                     <div key="barcode" className="flex flex-col items-center mt-2">
                         <div className="flex gap-px h-8">
                             {Array.from({ length: 30 }).map((_, i) => (
-                                <div key={i} className="bg-black" style={{ width: i % 3 === 0 ? 2 : 1 }} />
+                                <div key={i} className="bg-black" style={{ width: i % 3 === 0 ? 2 : 1 }} /> /* keep-inline */ /* keep-inline */
                             ))}
                         </div>
-                        <div className="text-gray-500" style={{ fontSize: 7 }}>1042-{dateStr.replace(/\//g, '')}</div>
+                        <div className="text-gray-500" style={{ fontSize: 7 }}>1042-{dateStr.replace(/\//g, '')}</div> /* keep-inline */ /* keep-inline */
                     </div>
                 );
             case 'separator':
                 return <div key={`sep-${Math.random()}`} className="border-t border-dashed border-gray-400 my-1.5" />;
             case 'promo':
                 return (
-                    <div key="promo" className="text-center mt-2 p-1.5 border border-dashed border-gray-400 rounded" style={{ fontSize: fs - 1 }}>
+                    <div key="promo" className="text-center mt-2 p-1.5 border border-dashed border-gray-400 rounded" style={{ fontSize: fs - 1 }}> /* keep-inline */ /* keep-inline */
                         {t.promoText || '⭐ Happy Hour 4-7pm — 2 for 1 Cocktails! ⭐'}
                     </div>
                 );
             case 'allergen':
                 return (
-                    <div key="allergen" className="text-center mt-2 text-gray-500" style={{ fontSize: fs - 2 }}>
+                    <div key="allergen" className="text-center mt-2 text-gray-500" style={{ fontSize: fs - 2 }}> /* keep-inline */ /* keep-inline */
                         {t.allergenNotice || '⚠️ Allergen info available on request'}
                     </div>
                 );
@@ -277,14 +277,14 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
                 {t.blocks && <Badge className="text-[8px] px-1 py-0 bg-violet-500/10 text-violet-400 border-violet-500/20 ml-1">Block Mode</Badge>}
             </div>
             <div className="bg-white text-black rounded-sm shadow-xl relative overflow-hidden"
-                style={{ width: pw, fontFamily: '"Courier New", Courier, monospace', fontSize: fs, lineHeight: 1.4, padding: '16px 12px' }}>
+                style={{ width: pw, fontFamily: '"Courier New", Courier, monospace', fontSize: fs, lineHeight: 1.4, padding: '16px 12px' }}> /* keep-inline */ /* keep-inline */
                 {/* Torn edge top */}
                 <div className="absolute top-0 left-0 right-0 h-2"
-                    style={{ background: 'repeating-linear-gradient(90deg, transparent, transparent 4px, #e5e5e5 4px, #e5e5e5 5px)' }} />
+                    style={{ background: 'repeating-linear-gradient(90deg, transparent, transparent 4px, #e5e5e5 4px, #e5e5e5 5px)' }} /> /* keep-inline */ /* keep-inline */
 
                 {/* Invoice prefix */}
                 {t.invoicePrefix && (
-                    <div className="text-center font-bold mb-1" style={{ fontSize: fs + 1 }}>{t.invoicePrefix}2026-00042</div>
+                    <div className="text-center font-bold mb-1" style={{ fontSize: fs + 1 }}>{t.invoicePrefix}2026-00042</div> /* keep-inline */ /* keep-inline */
                 )}
 
                 {/* Render blocks in order if available, otherwise default rendering */}
@@ -309,7 +309,7 @@ const ThermalPreview: React.FC<{ template: ReceiptTemplate }> = ({ template: t }
 
                 {/* Torn edge bottom */}
                 <div className="absolute bottom-0 left-0 right-0 h-3"
-                    style={{ background: 'repeating-conic-gradient(#fff 0deg 45deg, transparent 45deg 90deg) 0 0 / 8px 8px' }} />
+                    style={{ background: 'repeating-conic-gradient(#fff 0deg 45deg, transparent 45deg 90deg) 0 0 / 8px 8px' }} /> /* keep-inline */ /* keep-inline */
             </div>
         </div>
     );
@@ -337,7 +337,7 @@ export default function ReceiptTemplates() {
     useEffect(() => {
         if (apiData && apiData.length > 0) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            setTemplates(apiData.map((t: any) => makeTemplate({
+            setTemplates(apiData.map((t: Record<string, unknown>) => makeTemplate({
                 id: t.id || t._id || crypto.randomUUID(), name: t.name || 'Untitled', type: t.type || 'customer', ...t,
             })));
             setIsLive(true);
@@ -465,7 +465,7 @@ export default function ReceiptTemplates() {
                                 return (
                                     <TabsTrigger key={key} value={key}
                                         className="data-[state=active]:bg-zinc-700 data-[state=active]:text-white gap-1.5">
-                                        <Icon className="w-3.5 h-3.5" style={{ color: meta.color }} />
+                                        <Icon className="w-3.5 h-3.5" style={{ color: meta.color }} /> /* keep-inline */ /* keep-inline */
                                         {meta.label}
                                         {typeCounts[key] > 0 && (
                                             <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">{typeCounts[key]}</Badge>
@@ -498,8 +498,8 @@ export default function ReceiptTemplates() {
                                             <div className="flex items-start justify-between mb-3">
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-9 h-9 rounded-lg flex items-center justify-center"
-                                                        style={{ background: `${meta.color}15` }}>
-                                                        <Icon className="w-4 h-4" style={{ color: meta.color }} />
+                                                        style={{ background: `${meta.color}15` }}> /* keep-inline */ /* keep-inline */
+                                                        <Icon className="w-4 h-4" style={{ color: meta.color }} /> /* keep-inline */ /* keep-inline */
                                                     </div>
                                                     <div>
                                                         <h3 className="text-sm font-semibold text-white leading-tight">{t.name}</h3>

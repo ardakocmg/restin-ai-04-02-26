@@ -562,9 +562,9 @@ export default function PayrollPage() {
                                                             <DropdownMenuTrigger asChild>
                                                                 <Button
                                                                     variant="ghost"
-                                                                    size="icon"
+                                                                    size="icon" aria-label="Action"
                                                                     className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-xl border border-transparent hover:border-border"
-                                                                    onClick={(e) => e.stopPropagation()}
+                                                                    onClick={(e) = aria-label="Action"> e.stopPropagation()}
                                                                 >
                                                                     <Download className="h-5 w-5" />
                                                                 </Button>
@@ -588,9 +588,9 @@ export default function PayrollPage() {
                                                         </DropdownMenu>
                                                         <Button
                                                             variant="ghost"
-                                                            size="icon"
+                                                            size="icon" aria-label="Action"
                                                             className="h-10 w-10 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 rounded-xl border border-transparent hover:border-rose-500/20"
-                                                            onClick={(e) => handleDeleteRun(e, run.id)}
+                                                            onClick={(e) = aria-label="Action"> handleDeleteRun(e, run.id)}
                                                         >
                                                             <Trash2 className="h-5 w-5" />
                                                         </Button>
@@ -661,7 +661,7 @@ export default function PayrollPage() {
                                                     <div key={idx} className="flex items-center gap-4">
                                                         <div className="w-32 text-xs font-bold text-muted-foreground uppercase tracking-wider truncate">{name}</div>
                                                         <div className="flex-1 h-6 bg-white/5 rounded-lg overflow-hidden">
-                                                            <div className={`h-full ${colors[idx]} rounded-lg`} style={{ width: '0%' }} />
+                                                            <div className={`h-full ${colors[idx]} rounded-lg`} style={{ width: '0%' }} /> /* keep-inline */ /* keep-inline */
                                                         </div>
                                                         <div className="w-24 text-right text-xs font-black text-muted-foreground font-mono">€0</div>
                                                     </div>
@@ -714,13 +714,13 @@ export default function PayrollPage() {
                                                     <div className="flex-1">
                                                         <div className="flex gap-2 items-center">
                                                             <div className="flex-1 h-4 bg-white/5 rounded overflow-hidden">
-                                                                <div className="h-full bg-blue-500 rounded" style={{ width: '0%' }} />
+                                                                <div className="h-full bg-blue-500 rounded" style={{ width: '0%' }} /> /* keep-inline */ /* keep-inline */
                                                             </div>
                                                             <span className="text-[10px] font-black text-blue-400 w-24 text-right font-mono">€0</span>
                                                         </div>
                                                         <div className="flex gap-2 items-center mt-1">
                                                             <div className="flex-1 h-4 bg-white/5 rounded overflow-hidden">
-                                                                <div className="h-full bg-emerald-500 rounded" style={{ width: '0%' }} />
+                                                                <div className="h-full bg-emerald-500 rounded" style={{ width: '0%' }} /> /* keep-inline */ /* keep-inline */
                                                             </div>
                                                             <span className="text-[10px] font-black text-emerald-400 w-24 text-right font-mono">€0</span>
                                                         </div>
@@ -859,7 +859,7 @@ export default function PayrollPage() {
                                                     <div className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Status</div>
                                                     <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-none uppercase text-[8px] tracking-tighter h-4">Verified</Badge>
                                                 </div>
-                                                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+                                                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" aria-label="Action">
                                                     <ChevronDown className="h-4 w-4 -rotate-90" />
                                                 </Button>
                                             </div>

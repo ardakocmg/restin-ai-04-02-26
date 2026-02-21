@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MENU_ITEMS, DOMAINS, getDomainForGroup, type MenuItem } from '@/lib/searchRegistry';

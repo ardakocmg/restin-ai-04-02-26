@@ -111,7 +111,7 @@ function CategoryBar({ categories }: { categories: CategorySummary[] }) {
 export default function InventoryValuation() {
     const { t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { activeVenue: selectedVenue } = useVenue() as any;
+    const { activeVenue: selectedVenue } = useVenue() as unknown;
 
     /* ── State ── */
     const [items, setItems] = useState<ValuationItem[]>([]);

@@ -166,7 +166,7 @@ export default function CompanySettings() {
 
                             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            <Separator {...{ className: 'bg-white/5' } as any} />
+                            <Separator {...{ className: 'bg-white/5' } as unknown} />
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">

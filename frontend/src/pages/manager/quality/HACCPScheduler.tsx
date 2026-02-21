@@ -87,7 +87,7 @@ function PriorityDot({ priority }: { priority: HACCPTask['priority'] }) {
 export default function HACCPScheduler() {
     const { t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { activeVenue: selectedVenue } = useVenue() as any;
+    const { activeVenue: selectedVenue } = useVenue() as unknown;
 
     const [tasks, setTasks] = useState<HACCPTask[]>([]);
     const [loading, setLoading] = useState(false);
@@ -322,7 +322,7 @@ export default function HACCPScheduler() {
                                             )}
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="h-7 w-7">
+                                                    <Button variant="ghost" size="icon" className="h-7 w-7" aria-label="Action">
                                                         <MoreHorizontal className="h-4 w-4" />
                                                     </Button>
                                                 </DropdownMenuTrigger>

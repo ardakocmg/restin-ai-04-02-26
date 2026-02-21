@@ -1,4 +1,3 @@
-// @ts-nocheck
 import api from '../../lib/api';
 import { Ingredient, StockAdjustment } from '../../types';
 import { initDB } from '../../lib/db';

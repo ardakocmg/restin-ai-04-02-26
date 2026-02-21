@@ -351,12 +351,12 @@ export default function ApprovalSettings() {
                         className="pl-12 space-y-2"
                     >
                         <label className="text-xs text-muted-foreground">{t('Tolerance (minutes)')}</label>
-                        <input
+                        <input aria-label="Input"
                             type="number"
                             min={0}
                             max={120}
                             value={settings.manual_clocking.shift_mismatch_tolerance_minutes}
-                            onChange={e => updateClocking('shift_mismatch_tolerance_minutes', parseInt(e.target.value) || 15)}
+                            onChange={e = aria-label="Input field"> updateClocking('shift_mismatch_tolerance_minutes', parseInt(e.target.value) || 15)}
                             title="Tolerance minutes"
                             className="w-24 px-3 py-2 bg-muted rounded-lg border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />

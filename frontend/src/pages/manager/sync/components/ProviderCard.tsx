@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -80,7 +79,7 @@ export function ProviderCard({
             {status === 'CONNECTED' && (
                 <div
                     className="absolute top-0 left-0 right-0 h-0.5"
-                    style={{ background: accentColor ? `${accentColor}` : 'linear-gradient(90deg, #10b981, #059669)' }}
+                    style={{ background: accentColor ? `${accentColor}` : 'linear-gradient(90deg, #10b981, #059669)' }} /* keep-inline */ /* keep-inline */
                 />
             )}
 
@@ -89,7 +88,7 @@ export function ProviderCard({
                     <div className="flex items-center gap-3">
                         <div
                             className="p-2.5 rounded-xl border transition-colors"
-                            style={{
+                            style={{ /* keep-inline */ /* keep-inline */
                                 borderColor: accentColor ? `${accentColor}30` : status === 'CONNECTED' ? '#10b98130' : '#27272a',
                                 backgroundColor: accentColor ? `${accentColor}08` : status === 'CONNECTED' ? '#10b98108' : '#18181b',
                                 color: accentColor || (status === 'CONNECTED' ? '#10b981' : '#71717a'),

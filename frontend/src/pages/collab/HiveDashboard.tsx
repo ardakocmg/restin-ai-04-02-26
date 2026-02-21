@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1888,9 +1887,9 @@ export default function HiveDashboard() {
 
                                     {/* Urgency + Assignee */}
                                     <div className="grid grid-cols-2 gap-2">
-                                        <select
+                                        <select aria-label="Input"
                                             value={newTaskUrgency}
-                                            onChange={e => setNewTaskUrgency(e.target.value as MicroTask['urgency'])}
+                                            onChange={e = aria-label="Input field"> setNewTaskUrgency(e.target.value as MicroTask['urgency'])}
                                             className="bg-secondary/60 border border-border/50 rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                             title="Task urgency level"
                                         >
@@ -1899,9 +1898,9 @@ export default function HiveDashboard() {
                                             <option value="HIGH">🔴 High</option>
                                             <option value="CRITICAL">🚨 Critical</option>
                                         </select>
-                                        <select
+                                        <select aria-label="Input"
                                             value={newTaskAssignee}
-                                            onChange={e => setNewTaskAssignee(e.target.value)}
+                                            onChange={e = aria-label="Input field"> setNewTaskAssignee(e.target.value)}
                                             className="bg-secondary/60 border border-border/50 rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                             title="Assign task to staff"
                                         >
@@ -1921,9 +1920,9 @@ export default function HiveDashboard() {
                                             onChange={e => setNewTaskDeadline(e.target.value)}
                                             className="bg-secondary/60 border-border/50 text-secondary-foreground h-8 text-xs rounded-lg"
                                         />
-                                        <select
+                                        <select aria-label="Input"
                                             value={newTaskRecurrence}
-                                            onChange={e => setNewTaskRecurrence(e.target.value as MicroTask['recurrence'])}
+                                            onChange={e = aria-label="Input field"> setNewTaskRecurrence(e.target.value as MicroTask['recurrence'])}
                                             className="bg-secondary/60 border border-border/50 rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                             title="Task recurrence schedule"
                                         >
@@ -2386,13 +2385,13 @@ export default function HiveDashboard() {
                                 </label>
                                 <span className="text-xs font-mono text-muted-foreground">{ttsRate.toFixed(1)}x</span>
                             </div>
-                            <input
+                            <input aria-label="Input"
                                 type="range"
                                 min="0.5"
                                 max="2.0"
                                 step="0.1"
                                 value={ttsRate}
-                                onChange={e => setTtsRate(parseFloat(e.target.value))}
+                                onChange={e = aria-label="Input field"> setTtsRate(parseFloat(e.target.value))}
                                 className="w-full h-1.5 bg-secondary rounded-full appearance-none cursor-pointer accent-blue-500"
                                 title="TTS speech rate"
                             />
@@ -2409,9 +2408,9 @@ export default function HiveDashboard() {
                                 <Volume2 className="h-3.5 w-3.5 text-purple-400" />
                                 TTS Voice
                             </label>
-                            <select
+                            <select aria-label="Input"
                                 value={ttsVoiceName}
-                                onChange={e => setTtsVoiceName(e.target.value)}
+                                onChange={e = aria-label="Input field"> setTtsVoiceName(e.target.value)}
                                 className="w-full bg-card border border-border rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                 title="Select TTS voice"
                             >
@@ -2452,9 +2451,9 @@ export default function HiveDashboard() {
                                 <Globe className="h-3.5 w-3.5 text-emerald-400" />
                                 Recognition Language
                             </label>
-                            <select
+                            <select aria-label="Input"
                                 value={recognitionLang}
-                                onChange={e => setRecognitionLang(e.target.value)}
+                                onChange={e = aria-label="Input field"> setRecognitionLang(e.target.value)}
                                 className="w-full bg-card border border-border rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                 title="Select speech recognition language"
                             >

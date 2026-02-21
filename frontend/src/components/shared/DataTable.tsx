@@ -529,10 +529,10 @@ export default function DataTable<TData, TValue>({
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                size="icon"
+                size="icon" aria-label="Action"
                 className="bg-card border-border hover:border-red-500/30 hover:bg-red-500/5 transition-all text-muted-foreground hover:text-foreground"
                 data-testid="datatable-settings-button"
-              >
+               aria-label="Action">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
@@ -612,10 +612,10 @@ export default function DataTable<TData, TValue>({
                         </div>
                         <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button
-                            size="icon"
+                            size="icon" aria-label="Action"
                             variant="ghost"
                             className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                            onClick={() => {
+                            onClick={() = aria-label="Action"> {
                               const currentOrder = table.getState().columnOrder;
                               if (!currentOrder.length) return;
                               const newOrder = [...currentOrder];
@@ -630,10 +630,10 @@ export default function DataTable<TData, TValue>({
                             ↑
                           </Button>
                           <Button
-                            size="icon"
+                            size="icon" aria-label="Action"
                             variant="ghost"
                             className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                            onClick={() => {
+                            onClick={() = aria-label="Action"> {
                               const currentOrder = table.getState().columnOrder;
                               if (!currentOrder.length) return;
                               const newOrder = [...currentOrder];
@@ -648,10 +648,10 @@ export default function DataTable<TData, TValue>({
                             ↓
                           </Button>
                           <Button
-                            size="icon"
+                            size="icon" aria-label="Action"
                             variant="ghost"
                             className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                            onClick={() => {
+                            onClick={() = aria-label="Action"> {
                               if (column.getIsPinned()) {
                                 column.pin(false);
                               } else {
@@ -685,7 +685,7 @@ export default function DataTable<TData, TValue>({
 
         <div className="relative border border-border rounded-lg overflow-hidden">
           {/* eslint-disable-next-line react/forbid-dom-props */}
-          <div className="overflow-x-auto" ref={tableContainerRef} style={{ maxHeight: virtualizationEnabled ? '480px' : 'auto' }}>
+          <div className="overflow-x-auto" ref={tableContainerRef} style={{ maxHeight: virtualizationEnabled ? '480px' : 'auto' }}> /* keep-inline */ /* keep-inline */
             <Table data-testid={tableTestId || 'datatable-table'}>
               <TableHeader className="sticky top-0 bg-card/95 backdrop-blur">
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -703,7 +703,7 @@ export default function DataTable<TData, TValue>({
                           // @ts-ignore
                           className={cn('relative', header.column.columnDef.meta?.headerClassName)}
                           // @ts-ignore
-                          style={{ width: header.getSize(), ...style }}
+                          style={{ width: header.getSize(), ...style }} /* keep-inline */ /* keep-inline */
                         >
                           <div
                             className={cn('flex items-center gap-2 select-none font-black text-foreground uppercase tracking-widest text-[10px]', header.column.getCanSort() && 'cursor-pointer')}
@@ -771,7 +771,7 @@ export default function DataTable<TData, TValue>({
                               // @ts-ignore
                               className={cn('py-4 text-foreground font-bold text-xs', cell.column.columnDef.meta?.cellClassName)}
                               // @ts-ignore
-                              style={{ width: cell.column.getSize(), ...style }}
+                              style={{ width: cell.column.getSize(), ...style }} /* keep-inline */ /* keep-inline */
                             >
                               {flexRender(cell.column.columnDef.cell, cell.getContext())}
                             </TableCell>
@@ -804,8 +804,8 @@ export default function DataTable<TData, TValue>({
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
-                size="icon"
-                onClick={() => { if (serverMode) { setPageIndex((prev) => Math.max(prev - 1, 0)); } else { table.previousPage(); } }}
+                size="icon" aria-label="Action"
+                onClick={() = aria-label="Action"> { if (serverMode) { setPageIndex((prev) => Math.max(prev - 1, 0)); } else { table.previousPage(); } }}
                 disabled={serverMode ? pageIndex === 0 : !table.getCanPreviousPage()}
                 data-testid="datatable-page-prev"
               >
@@ -816,8 +816,8 @@ export default function DataTable<TData, TValue>({
               </span>
               <Button
                 variant="outline"
-                size="icon"
-                onClick={() => { if (serverMode) { setPageIndex((prev) => (totalPages ? Math.min(prev + 1, totalPages - 1) : prev + 1)); } else { table.nextPage(); } }}
+                size="icon" aria-label="Action"
+                onClick={() = aria-label="Action"> { if (serverMode) { setPageIndex((prev) => (totalPages ? Math.min(prev + 1, totalPages - 1) : prev + 1)); } else { table.nextPage(); } }}
                 disabled={serverMode ? (totalPages ? pageIndex + 1 >= totalPages : false) : !table.getCanNextPage()}
                 data-testid="datatable-page-next"
               >

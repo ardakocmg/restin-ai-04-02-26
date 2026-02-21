@@ -134,7 +134,7 @@ function StockCount() {
 
         <div className="relative">
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
+          <input aria-label="Input"
             type="text"
             placeholder="Search items by name or SKU..."
             value={search}
@@ -171,11 +171,11 @@ function StockCount() {
                     <td className="px-6 py-4 font-medium text-foreground">{item.name}</td>
                     <td className="px-6 py-4 text-sm text-gray-600">{item.current_stock?.toFixed(2)}</td>
                     <td className="px-6 py-4">
-                      <input
+                      <input aria-label="Input"
                         type="number"
                         step="0.01"
                         value={countLines[item.id] || ''}
-                        onChange={(e) => setCountLines({ ...countLines, [item.id]: e.target.value })}
+                        onChange={(e) = aria-label="Input field"> setCountLines({ ...countLines, [item.id]: e.target.value })}
                         className="w-32 px-3 py-2 border border-border rounded-lg"
                         placeholder="0.00"
                       />

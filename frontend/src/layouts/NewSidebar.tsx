@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -213,7 +212,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
           )}
         </button>
         {!collapsed && (
-          <Button variant="ghost" size="icon" onClick={onToggle} className="text-muted-foreground hover:text-foreground h-8 w-8 hover:bg-secondary">
+          <Button variant="ghost" size="icon" onClick={onToggle} className="text-muted-foreground hover:text-foreground h-8 w-8 hover:bg-secondary" aria-label="Action">
             <ChevronLeft className="h-4 w-4" />
           </Button>
         )}
@@ -224,7 +223,7 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
         <div className="px-4 py-3 border-b border-border">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
+            <input aria-label="Input"
               type="search"
               placeholder="Search..."
               value={searchTerm}
@@ -505,10 +504,10 @@ export default function NewSidebar({ collapsed, onToggle, onTertiaryToggle }: Si
         {collapsed ? (
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Action"
             onClick={onToggle}
             className="w-full h-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary"
-          >
+           aria-label="Action">
             <ChevronRight className="h-5 w-5" />
           </Button>
         ) : (

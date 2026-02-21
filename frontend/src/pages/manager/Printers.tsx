@@ -298,7 +298,7 @@ export default function Printers() {
                                     <CardContent className="pt-6 flex flex-col items-center gap-3">
                                         <div className="w-16 h-20 bg-emerald-600 rounded-lg flex items-center justify-center relative overflow-hidden">
                                             <div className="absolute inset-0 bg-gradient-to-b from-emerald-500 to-emerald-700" />
-                                            <div className="absolute bottom-0 w-full h-3 bg-emerald-800" style={{
+                                            <div className="absolute bottom-0 w-full h-3 bg-emerald-800" style={{ /* keep-inline */ /* keep-inline */
                                                 clipPath: 'polygon(0 0, 10% 100%, 20% 0, 30% 100%, 40% 0, 50% 100%, 60% 0, 70% 100%, 80% 0, 90% 100%, 100% 0, 100% 100%, 0 100%)'
                                             }} />
                                             <FileText className="w-8 h-8 text-foreground relative z-10" />

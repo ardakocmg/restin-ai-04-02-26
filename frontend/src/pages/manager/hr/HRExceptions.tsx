@@ -38,8 +38,8 @@ export default function HRExceptions() {
                         <div className="flex items-center gap-4 mb-2">
                             <Button
                                 variant="outline"
-                                size="icon"
-                                onClick={() => navigate('/manager/hr/summary')}
+                                size="icon" aria-label="Action"
+                                onClick={() = aria-label="Action"> navigate('/manager/hr/summary')}
                                 className="bg-card border-border rounded-xl"
                             >
                                 <ChevronLeft className="w-5 h-5 text-muted-foreground" />
@@ -118,7 +118,7 @@ export default function HRExceptions() {
                                                     Resolve
                                                     <ArrowRight className="w-3 h-3" />
                                                 </Button>
-                                                <Button variant="outline" size="icon" className="h-10 w-10 border-border bg-card hover:bg-secondary rounded-xl">
+                                                <Button variant="outline" size="icon" className="h-10 w-10 border-border bg-card hover:bg-secondary rounded-xl" aria-label="Action">
                                                     <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
                                                 </Button>
                                             </div>

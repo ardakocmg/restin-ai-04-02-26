@@ -755,13 +755,13 @@ export default function EmployeeDetailPage() {
                           </div>
                         </div>
                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                          <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground" aria-label="Action">
                             <Eye className="h-3.5 w-3.5" />
                           </Button>
-                          <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                          <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground" aria-label="Action">
                             <Download className="h-3.5 w-3.5" />
                           </Button>
-                          <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-rose-400">
+                          <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-rose-400" aria-label="Action">
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </div>
@@ -932,7 +932,7 @@ export default function EmployeeDetailPage() {
                                   className="bg-background border-border text-secondary-foreground pr-10"
                                   placeholder="••••••••"
                                 />
-                                <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => setPwShowCurrent(!pwShowCurrent)}>
+                                <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() = aria-label="Action"> setPwShowCurrent(!pwShowCurrent)}>
                                   {pwShowCurrent ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                                 </Button>
                               </div>
@@ -948,7 +948,7 @@ export default function EmployeeDetailPage() {
                                 className="bg-background border-border text-secondary-foreground pr-10"
                                 placeholder="Min. 6 chars"
                               />
-                              <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => setPwShowNew(!pwShowNew)}>
+                              <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() = aria-label="Action"> setPwShowNew(!pwShowNew)}>
                                 {pwShowNew ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                               </Button>
                             </div>

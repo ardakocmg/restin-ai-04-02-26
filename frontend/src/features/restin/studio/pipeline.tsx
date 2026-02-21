@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AiServiceFactory } from '../../../lib/ai/google';
 import { BillingBroker } from '../../billing/broker';
 import { logger } from '../../../lib/logger';

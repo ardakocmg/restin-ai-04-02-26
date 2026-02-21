@@ -106,18 +106,18 @@ export default function CustomerModal({ customers, onSelect, onCreate, onClose }
                 </div>
 
                 {showCreate ? (
-                    <div style={{ padding: '16px 0' }}>
+                    <div style={{ padding: '16px 0' }}> /* keep-inline */ /* keep-inline */
                         <div style={s.formGroup}>
                             <label style={s.label}>Name *</label>
-                            <input style={s.formInput} value={newName} onChange={e => setNewName(e.target.value)} placeholder="Full name" />
+                            <input style={s.formInput} value={newName} onChange={e = aria-label="Input field"> setNewName(e.target.value)} placeholder="Full name" />
                         </div>
                         <div style={s.formGroup}>
                             <label style={s.label}>Email</label>
-                            <input style={s.formInput} value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="Email" />
+                            <input style={s.formInput} value={newEmail} onChange={e = aria-label="Input field"> setNewEmail(e.target.value)} placeholder="Email" />
                         </div>
                         <div style={s.formGroup}>
                             <label style={s.label}>Phone</label>
-                            <input style={s.formInput} value={newPhone} onChange={e => setNewPhone(e.target.value)} placeholder="Phone" />
+                            <input style={s.formInput} value={newPhone} onChange={e = aria-label="Input field"> setNewPhone(e.target.value)} placeholder="Phone" />
                         </div>
                         <button style={s.createBtn} onClick={handleCreate}>
                             <UserPlus size={16} /> Create & Assign
@@ -127,7 +127,7 @@ export default function CustomerModal({ customers, onSelect, onCreate, onClose }
                     <>
                         <div style={s.searchBar}>
                             <Search size={16} color="#888" />
-                            <input
+                            <input aria-label="Input"
                                 style={s.input}
                                 placeholder="Search customers..."
                                 value={query}

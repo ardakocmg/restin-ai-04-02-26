@@ -25,7 +25,7 @@ import { toast } from 'sonner';
 
 // ── KPI Stat Card ──────────────────────────────────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: { icon: any; label: any; value: any; subtext?: any; color?: string }) {
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: { icon: Record<string, unknown>; label: Record<string, unknown>; value: Record<string, unknown>; subtext?: Record<string, unknown>; color?: string }) {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 flex items-center gap-4">

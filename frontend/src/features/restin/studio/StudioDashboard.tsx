@@ -62,7 +62,7 @@ export default function StudioDashboard() {
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <div className="relative flex-1 max-w-2xl">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-                    <input
+                    <input aria-label="Input"
                         type="text"
                         placeholder="Search generated assets, prompts, or recipes..."
                         className="w-full bg-card/50 border border-border rounded-2xl py-4 pl-12 pr-6 text-foreground text-lg font-medium focus:outline-none focus:ring-2 focus:ring-red-500/50 backdrop-blur-md transition-all"
@@ -187,10 +187,10 @@ export default function StudioDashboard() {
                                     <div className="flex items-center justify-between mt-4">
                                         <span className="text-[10px] font-black text-muted-foreground">{new Date(asset.created_at || Date.now()).toLocaleDateString()}</span>
                                         <div className="flex gap-2">
-                                            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-white/5">
+                                            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-white/5" aria-label="Action">
                                                 <RefreshCw size={14} />
                                             </Button>
-                                            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-white/5">
+                                            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-white/5" aria-label="Action">
                                                 <Download size={14} />
                                             </Button>
                                         </div>

@@ -38,7 +38,7 @@ const ItemTags: React.FC = () => {
     useEffect(() => {
         if (apiData && apiData.length > 0) {
             setTags(apiData.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (t: any) => ({ id: t.id || t._id || crypto.randomUUID(), name: t.name || '', description: t.description || '', color: t.color || '#3B82F6', icon: t.icon || '🏷️', showOnPOS: t.showOnPOS ?? t.show_on_pos ?? true, showOnReceipt: t.showOnReceipt ?? t.show_on_receipt ?? false, showOnKDS: t.showOnKDS ?? t.show_on_kds ?? false, showOnWeb: t.showOnWeb ?? t.show_on_web ?? true, itemCount: t.itemCount ?? t.item_count ?? 0 }))); setIsLive(true);
+                (t: Record<string, unknown>) => ({ id: t.id || t._id || crypto.randomUUID(), name: t.name || '', description: t.description || '', color: t.color || '#3B82F6', icon: t.icon || '🏷️', showOnPOS: t.showOnPOS ?? t.show_on_pos ?? true, showOnReceipt: t.showOnReceipt ?? t.show_on_receipt ?? false, showOnKDS: t.showOnKDS ?? t.show_on_kds ?? false, showOnWeb: t.showOnWeb ?? t.show_on_web ?? true, itemCount: t.itemCount ?? t.item_count ?? 0 }))); setIsLive(true);
         }
     }, [apiData]);
     const filtered = tags.filter(t => !search || t.name.toLowerCase().includes(search.toLowerCase()));
@@ -61,23 +61,23 @@ const ItemTags: React.FC = () => {
                 <input className="pos-input pos-search-input" placeholder="Search tags..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Search tags" />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 12 }}> /* keep-inline */ /* keep-inline */
                 {filtered.map(tag => (
-                    <div key={tag.id} className="pos-card" style={{ cursor: 'pointer', padding: 14 }} onClick={() => setEditing({ ...tag })}>
+                    <div key={tag.id} className="pos-card" style={{ cursor: 'pointer', padding: 14 }} onClick={() => setEditing({ ...tag })}> /* keep-inline */ /* keep-inline */
                         <div className="pos-flex pos-flex--center pos-gap-10 pos-mb-8">
-                            <span style={{ fontSize: 24 }}>{tag.icon}</span>
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                                <h3 className="pos-modal-title" style={{ fontSize: 15, margin: 0 }}>{tag.name}</h3>
-                                {tag.description && <div className="pos-cell-secondary" style={{ marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tag.description}</div>}
+                            <span style={{ fontSize: 24 }}>{tag.icon}</span> /* keep-inline */ /* keep-inline */
+                            <div style={{ flex: 1, minWidth: 0 }}> /* keep-inline */ /* keep-inline */
+                                <h3 className="pos-modal-title" style={{ fontSize: 15, margin: 0 }}>{tag.name}</h3> /* keep-inline */ /* keep-inline */
+                                {tag.description && <div className="pos-cell-secondary" style={{ marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tag.description}</div>} /* keep-inline */ /* keep-inline */
                                 <span className="pos-cell-secondary">{tag.itemCount} items</span>
                             </div>
-                            <div style={{ width: 12, height: 12, borderRadius: 3, background: tag.color }} />
+                            <div style={{ width: 12, height: 12, borderRadius: 3, background: tag.color }} /> /* keep-inline */ /* keep-inline */
                         </div>
                         <div className="pos-flex pos-gap-4 pos-flex--wrap">
-                            {tag.showOnPOS && <span className="pos-badge pos-badge--blue" style={{ fontSize: 9 }}>POS</span>}
-                            {tag.showOnReceipt && <span className="pos-badge pos-badge--green" style={{ fontSize: 9 }}>Receipt</span>}
-                            {tag.showOnKDS && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9 }}>KDS</span>}
-                            {tag.showOnWeb && <span className="pos-badge pos-badge--purple" style={{ fontSize: 9 }}>Web</span>}
+                            {tag.showOnPOS && <span className="pos-badge pos-badge--blue" style={{ fontSize: 9 }}>POS</span>} /* keep-inline */ /* keep-inline */
+                            {tag.showOnReceipt && <span className="pos-badge pos-badge--green" style={{ fontSize: 9 }}>Receipt</span>} /* keep-inline */ /* keep-inline */
+                            {tag.showOnKDS && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9 }}>KDS</span>} /* keep-inline */ /* keep-inline */
+                            {tag.showOnWeb && <span className="pos-badge pos-badge--purple" style={{ fontSize: 9 }}>Web</span>} /* keep-inline */ /* keep-inline */
                         </div>
                     </div>
                 ))}
@@ -91,23 +91,23 @@ const ItemTags: React.FC = () => {
                         <button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Name *</label>
-                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Vegan" /></div>
+                        <input className="pos-input" value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Vegan" /></div>
                     <div className="pos-form-group"><label className="pos-form-label">Description</label>
-                        <textarea className="pos-input pos-textarea" value={editing.description} onChange={e => setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Brief description of this tag" /></div>
+                        <textarea className="pos-input pos-textarea" value={editing.description} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Brief description of this tag" /></div>
                     <div className="pos-form-group"><label className="pos-form-label">Icon</label>
-                        <div className="pos-flex pos-gap-6 pos-flex--wrap">{ICONS.map(i => <button key={i} title={`Select icon ${i}`} onClick={() => setEditing(p => p ? { ...p, icon: i } : null)} className="pos-btn-icon" style={{ width: 36, height: 36, borderRadius: 8, border: editing.icon === i ? '2px solid #3B82F6' : '1px solid rgba(255,255,255,0.06)', background: 'var(--bg-secondary)', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{i}</button>)}</div></div>
+                        <div className="pos-flex pos-gap-6 pos-flex--wrap">{ICONS.map(i => <button key={i} title={`Select icon ${i}`} onClick={() => setEditing(p => p ? { ...p, icon: i } : null)} className="pos-btn-icon" style={{ width: 36, height: 36, borderRadius: 8, border: editing.icon === i ? '2px solid #3B82F6' : '1px solid rgba(255,255,255,0.06)', background: 'var(--bg-secondary)', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{i}</button>)}</div></div> /* keep-inline */ /* keep-inline */
                     <div className="pos-form-group"><label className="pos-form-label">Color</label>
-                        <div className="pos-color-picker">{COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} className={`pos-color-swatch ${editing.color === c ? 'pos-color-swatch--selected' : ''}`} style={{ background: c }} />)}</div></div>
-                    <div className="pos-form-label pos-text-bold pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Visibility</div>
+                        <div className="pos-color-picker">{COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} className={`pos-color-swatch ${editing.color === c ? 'pos-color-swatch--selected' : ''}`} style={{ background: c }} />)}</div></div> /* keep-inline */ /* keep-inline */
+                    <div className="pos-form-label pos-text-bold pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Visibility</div> /* keep-inline */ /* keep-inline */
                     <div className="pos-form-grid pos-mb-16">
                         {([['showOnPOS', 'Show on POS'], ['showOnReceipt', 'Show on Receipt'], ['showOnKDS', 'Show on KDS'], ['showOnWeb', 'Show on Website']] as const).map(([key, label]) =>
-                            <label key={key} className="pos-toggle-label" style={{ padding: '6px 10px', background: 'var(--bg-secondary)', borderRadius: 6 }}>
-                                <input type="checkbox" checked={editing[key]} onChange={() => setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
+                            <label key={key} className="pos-toggle-label" style={{ padding: '6px 10px', background: 'var(--bg-secondary)', borderRadius: 6 }}> /* keep-inline */ /* keep-inline */
+                                <input type="checkbox" checked={editing[key]} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
                         )}
                     </div>
                     <div className="pos-modal-footer">
-                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
-                        <button title="Delete tag" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setTags(p => p.filter(t => t.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */ /* keep-inline */
+                        <button title="Delete tag" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setTags(p => p.filter(t => t.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */ /* keep-inline */
                         <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>

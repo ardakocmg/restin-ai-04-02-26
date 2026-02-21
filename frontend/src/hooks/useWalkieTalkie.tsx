@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Push-to-Talk Walkie Talkie Hook — WebRTC Audio + Transcription
  * Rule #40 & #51: Native PTT Voice Mesh

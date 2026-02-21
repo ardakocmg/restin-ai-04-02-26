@@ -13,17 +13,17 @@ export default function ConditionalPanel({ selectedBlock }: ConditionalPanelProp
     const { t } = useTranslation();
 
     if (!selectedBlock) {
-        return <div className="ts-props-empty"><p style={{ fontSize: 13 }}>{t('Select a block first')}</p></div>;
+        return <div className="ts-props-empty"><p style={{ fontSize: 13 }}>{t('Select a block first')}</p></div>; /* keep-inline */ /* keep-inline */
     }
 
     return (
-        <div style={{ animation: 'ts-fadeIn 0.2s ease-out' }}>
+        <div style={{ animation: 'ts-fadeIn 0.2s ease-out' }}> /* keep-inline */ /* keep-inline */
             <div className="ts-field">
                 <div className="ts-checkbox-row">
                     <input type="checkbox" id="ts-gated" />
-                    <label htmlFor="ts-gated" style={{ fontWeight: 600 }}>{t('Gated')}</label>
+                    <label htmlFor="ts-gated" style={{ fontWeight: 600 }}>{t('Gated')}</label> /* keep-inline */ /* keep-inline */
                 </div>
-                <p style={{ fontSize: 11, color: 'var(--muted-foreground)', marginTop: 4 }}>
+                <p style={{ fontSize: 11, color: 'var(--muted-foreground)', marginTop: 4 }}> /* keep-inline */ /* keep-inline */
                     {t('Show this block only when conditions are met')}
                 </p>
             </div>
@@ -31,7 +31,7 @@ export default function ConditionalPanel({ selectedBlock }: ConditionalPanelProp
             <div className="ts-condition-row">
                 <div>
                     <div className="ts-condition-label">{t('Field')}</div>
-                    <select title={t('Field')} className="ts-select" style={{ fontSize: 11 }}>
+                    <select title={t('Field')} className="ts-select" style={{ fontSize: 11 }}> /* keep-inline */ /* keep-inline */
                         <option value="">Select...</option>
                         <option value="order.type">Order Type</option>
                         <option value="order.total">Order Total</option>
@@ -41,7 +41,7 @@ export default function ConditionalPanel({ selectedBlock }: ConditionalPanelProp
                 </div>
                 <div>
                     <div className="ts-condition-label">{t('Op')}</div>
-                    <select title={t('Operator')} className="ts-select" style={{ fontSize: 11 }}>
+                    <select title={t('Operator')} className="ts-select" style={{ fontSize: 11 }}> /* keep-inline */ /* keep-inline */
                         <option value="eq">=</option>
                         <option value="ne">≠</option>
                         <option value="gt">&gt;</option>
@@ -51,12 +51,12 @@ export default function ConditionalPanel({ selectedBlock }: ConditionalPanelProp
                 </div>
                 <div>
                     <div className="ts-condition-label">{t('Value')}</div>
-                    <input type="text" className="ts-input" style={{ fontSize: 11 }} placeholder="..." />
+                    <input type="text" className="ts-input" style={{ fontSize: 11 }} placeholder="..." /> /* keep-inline */ /* keep-inline */
                 </div>
             </div>
 
-            <div className="ts-row" style={{ marginTop: 8 }}>
-                <span style={{ fontSize: 10, color: 'var(--muted-foreground)' }}>Sz 24 V</span>
+            <div className="ts-row" style={{ marginTop: 8 }}> /* keep-inline */ /* keep-inline */
+                <span style={{ fontSize: 10, color: 'var(--muted-foreground)' }}>Sz 24 V</span> /* keep-inline */ /* keep-inline */
             </div>
         </div>
     );

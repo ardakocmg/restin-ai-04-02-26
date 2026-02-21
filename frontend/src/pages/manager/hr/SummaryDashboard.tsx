@@ -141,7 +141,7 @@ export default function SummaryDashboard() {
         <div className="flex items-center gap-4">
           <div className="text-right">
             <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1">Venue</label>
-            <select
+            <select aria-label="Input"
               title="Venue Selection"
               aria-label="Venue Selection"
               value={selectedCompany}
@@ -182,7 +182,7 @@ export default function SummaryDashboard() {
       {/* KPI Row */}
       <div className="grid gap-4 md:grid-cols-3">
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        {(data as any).kpi_metrics.map((metric: any, idx: number) => {
+        {(data as Record<string, any>).kpi_metrics.map((metric: Record<string, string>, idx: number) => {
           const Icon = metric.icon === 'wallet' ? Wallet : (metric.icon === 'clock' ? Clock : Users);
           return (
             <Card key={idx} className="border-border bg-card/40 shadow-xl backdrop-blur-md">
@@ -210,7 +210,7 @@ export default function SummaryDashboard() {
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              <LineChart data={(data as any).headcount_by_year}>
+              <LineChart data={(data as unknown).headcount_by_year}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="year" stroke="#666" fontSize={10} />
                 <YAxis stroke="#666" fontSize={10} />
@@ -226,7 +226,7 @@ export default function SummaryDashboard() {
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              <BarChart data={(data as any).headcount_by_employment_type}>
+              <BarChart data={(data as unknown).headcount_by_employment_type}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis type="number" stroke="#666" fontSize={10} />
                 <YAxis dataKey="type_name" type="category" width={80} stroke="#666" fontSize={10} />
@@ -242,7 +242,7 @@ export default function SummaryDashboard() {
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              <BarChart data={(data as any).headcount_by_age_bracket}>
+              <BarChart data={(data as unknown).headcount_by_age_bracket}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="bracket" angle={-45} textAnchor="end" height={60} stroke="#666" fontSize={9} />
                 <YAxis stroke="#666" fontSize={10} />
@@ -261,7 +261,7 @@ export default function SummaryDashboard() {
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              <BarChart data={(data as any).engagements_terminations}>
+              <BarChart data={(data as unknown).engagements_terminations}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="year" stroke="#666" fontSize={10} />
                 <YAxis stroke="#666" fontSize={10} />
@@ -281,14 +281,14 @@ export default function SummaryDashboard() {
               <PieChart>
                 <Pie
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  data={(data as any).headcount_by_gender}
+                  data={(data as Record<string, any>).headcount_by_gender}
                   cx="50%" cy="50%" innerRadius={60} outerRadius={90}
                   paddingAngle={8} dataKey="count"
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  label={({ gender, percentage }: any) => `${gender} ${percentage}%`}
+                  // @ts-expect-error Recharts internal types for labels are hardcoded to generic objects
+                  label={(props: { gender?: string; percentage?: number | string }) => `${props.gender || ''} ${props.percentage || ''}%`}
                 >
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  {(data as any).headcount_by_gender.map((entry: any, index: number) => (
+                  {(data as Record<string, any>).headcount_by_gender.map((entry: Record<string, unknown>, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

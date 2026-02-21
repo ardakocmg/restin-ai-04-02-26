@@ -161,7 +161,7 @@ export default function POSLayoutRestin({
                 <div className="p-4 border-b border-border shrink-0 flex items-center bg-card/50">
                     <div className="relative flex-1 max-w-md">
                         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                        <input
+                        <input aria-label="Input"
                             type="text"
                             placeholder="Arama..."
                             value={searchQuery || ''}

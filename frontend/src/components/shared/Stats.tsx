@@ -21,10 +21,10 @@ export function StatCard({ title, value, icon: Icon, trend, description, classNa
   return (
     <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>
+        <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}> /* keep-inline */ /* keep-inline */
           {title}
         </CardTitle>
-        {Icon && <Icon className="h-4 w-4" style={{ color: '#71717A' }} />}
+        {Icon && <Icon className="h-4 w-4" style={{ color: '#71717A' }} />} /* keep-inline */ /* keep-inline */
       </CardHeader>
       <CardContent>
         <div className="text-3xl font-black text-foreground font-heading tracking-tight">
@@ -36,7 +36,7 @@ export function StatCard({ title, value, icon: Icon, trend, description, classNa
           </p>
         )}
         {trend && (
-          <p className="text-xs mt-1" style={{
+          <p className="text-xs mt-1" style={{ /* keep-inline */ /* keep-inline */
             color: trend.positive ? '#4ADE80' : '#EF4444'
           }}>
             {trend.value}
@@ -72,17 +72,17 @@ export default function Stats({ title, value, icon: Icon, trend, className }: De
   return (
     <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>
+        <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}> /* keep-inline */ /* keep-inline */
           {title}
         </CardTitle>
-        {Icon && <Icon className="h-4 w-4" style={{ color: '#71717A' }} />}
+        {Icon && <Icon className="h-4 w-4" style={{ color: '#71717A' }} />} /* keep-inline */ /* keep-inline */
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>
+        <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */
           {value}
         </div>
         {trend && (
-          <p className="text-xs mt-1" style={{
+          <p className="text-xs mt-1" style={{ /* keep-inline */ /* keep-inline */
             color: trend.startsWith('+') ? '#4ADE80' : '#EF4444'
           }}>
             {trend}

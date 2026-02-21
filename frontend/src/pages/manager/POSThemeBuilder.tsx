@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * POSThemeBuilder — Premium drag-and-drop theme builder page
  * 
@@ -400,10 +399,10 @@ export default function POSThemeBuilder() {
 
                     <div className="flex items-center gap-2">
                         <Palette className="h-4 w-4 text-teal-400" />
-                        <input
+                        <input aria-label="Input"
                             type="text"
                             value={themeName}
-                            onChange={(e) => setThemeName(e.target.value)}
+                            onChange={(e) = aria-label="Input field"> setThemeName(e.target.value)}
                             className="bg-transparent text-sm font-semibold text-foreground border-none outline-none focus:bg-secondary rounded px-2 py-1 min-w-[200px]"
                             placeholder="Theme Name..."
                         />

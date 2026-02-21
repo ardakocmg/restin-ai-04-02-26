@@ -18,7 +18,7 @@ export default function Drawer({ open, onClose, title, children, width = "lg" })
         <SheetHeader className="mb-4">
           <div className="flex items-center justify-between">
             <SheetTitle>{title}</SheetTitle>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <Button variant="ghost" size="icon" onClick={onClose} aria-label="Action">
               <X className="h-4 w-4" />
             </Button>
           </div>

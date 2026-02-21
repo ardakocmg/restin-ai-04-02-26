@@ -318,6 +318,34 @@ const s: Record<string, React.CSSProperties> = {
 
 **Rule:** NEVER add `@ts-nocheck` or `@ts-ignore`. If a file has TS errors, FIX them — do not suppress the checker. `@ts-expect-error` is allowed only with a mandatory comment explaining the reason.
 
+### 14g. Safe Alternatives to `any`
+
+Replacing `: any` with `: unknown` blindly will break compilation if you try to access properties (e.g., `obj.id`). To write safe, compilable code without `any`:
+
+1. **For objects with dynamic keys:** use `Record<string, unknown>` or `Record<string, any>` (if strictly necessary for third-party libs, but prefer `unknown`).
+2. **For API responses / untyped JSON:** cast through `unknown` safely:
+
+   ```tsx
+   // ❌ FORBIDDEN
+   const data: any = await res.json();
+   console.log(data.id);
+
+   // ✅ REQUIRED - Define an interface
+   interface ApiResponse { id: string; }
+   const data = (await res.json()) as ApiResponse;
+   console.log(data.id);
+   ```
+
+3. **If you MUST use `unknown`:** you must narrow the type before accessing properties:
+
+   ```tsx
+   function process(data: unknown) {
+       if (typeof data === 'object' && data !== null && 'id' in data) {
+           console.log((data as {id: string}).id);
+       }
+   }
+   ```
+
 ---
 
 ## Rule 15: NO HARDCODED COLORS IN TSX 🎨

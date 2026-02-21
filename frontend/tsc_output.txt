@@ -1,0 +1,6 @@
+src/pages/manager/hr/SummaryDashboard.tsx(186,31): error TS2339: Property 'icon' does not exist on type 'unknown'.
+src/pages/manager/hr/SummaryDashboard.tsx(186,68): error TS2339: Property 'icon' does not exist on type 'unknown'.
+src/pages/manager/hr/SummaryDashboard.tsx(192,114): error TS2339: Property 'label' does not exist on type 'unknown'.
+src/pages/manager/hr/SummaryDashboard.tsx(193,113): error TS2339: Property 'value' does not exist on type 'unknown'.
+src/pages/manager/hr/SummaryDashboard.tsx(288,29): error TS2339: Property 'gender' does not exist on type '{}'.
+src/pages/manager/hr/SummaryDashboard.tsx(288,37): error TS2339: Property 'percentage' does not exist on type '{}'.

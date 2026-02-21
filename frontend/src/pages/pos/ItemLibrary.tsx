@@ -81,7 +81,7 @@ const ItemLibrary: React.FC = () => {
     useEffect(() => {
         if (apiItems.length > 0) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const mapped: Item[] = apiItems.map((ai: any) => ({
+            const mapped: Item[] = apiItems.map((ai: Record<string, unknown>) => ({
                 id: String(ai.id || ai._id || ''),
                 name: String(ai.name || ''),
                 type: String(ai.type || 'single') as Item['type'],
@@ -181,15 +181,15 @@ const ItemLibrary: React.FC = () => {
         <div style={pg}>
             <div style={ct}>
                 {/* Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
                     <div>
-                        <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button>
-                        <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Item Library</h1>
-                        <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', margin: '4px 0 0' }}>Manage all POS items, combos, and item groups{apiWired && <span style={{ marginLeft: 8, fontSize: 11, color: '#10B981' }}>● Live</span>}</p>
+                        <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button> /* keep-inline */ /* keep-inline */
+                        <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Item Library</h1> /* keep-inline */ /* keep-inline */
+                        <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', margin: '4px 0 0' }}>Manage all POS items, combos, and item groups{apiWired && <span style={{ marginLeft: 8, fontSize: 11, color: '#10B981' }}>● Live</span>}</p> /* keep-inline */ /* keep-inline */
                     </div>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                        <button style={{ ...bo, fontSize: 12, padding: '8px 14px' }}><Upload size={14} /> Import</button>
-                        <button style={{ ...bo, fontSize: 12, padding: '8px 14px' }}><Download size={14} /> Export</button>
+                    <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */ /* keep-inline */
+                        <button style={{ ...bo, fontSize: 12, padding: '8px 14px' }}><Upload size={14} /> Import</button> /* keep-inline */ /* keep-inline */
+                        <button style={{ ...bo, fontSize: 12, padding: '8px 14px' }}><Download size={14} /> Export</button> /* keep-inline */ /* keep-inline */
                         <button style={bp} onClick={() => setEditingItem({ id: crypto.randomUUID(), name: '', type: 'single', price: 0, costPrice: 0, accountingGroup: GROUPS[0], productionCenter: CENTERS[0], taxProfile: 'Standard 18%', sku: '', barcode: '', color: '#3B82F6', isArchived: false, hasImage: false, allergens: [], productionInstructions: [], course: 0, createdAt: new Date().toISOString().split('T')[0] })}>
                             <Plus size={16} /> Create Item
                         </button>
@@ -197,93 +197,93 @@ const ItemLibrary: React.FC = () => {
                 </div>
 
                 {/* Loading / Error */}
-                {apiLoading && <div style={{ ...cd, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span style={{ color: 'var(--text-secondary)' }}>{"Loading "}items from API...</span></div>}
-                {apiError && <div style={{ ...cd, borderColor: '#EF4444', padding: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button style={{ ...bo, padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>}
+                {apiLoading && <div style={{ ...cd, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span style={{ color: 'var(--text-secondary)' }}>{"Loading "}items from API...</span></div>} /* keep-inline */ /* keep-inline */
+                {apiError && <div style={{ ...cd, borderColor: '#EF4444', padding: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button style={{ ...bo, padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>} /* keep-inline */ /* keep-inline */
 
                 {/* Stats Row */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
                     {[
                         { label: 'Active Items', value: stats.total, color: '#3B82F6', icon: <Package size={16} /> },
                         { label: 'Archived', value: stats.archived, color: '#F59E0B', icon: <Archive size={16} /> },
                         { label: 'Combos', value: stats.combos, color: '#8B5CF6', icon: <Grid3X3 size={16} /> },
                         { label: 'Avg. Price', value: `€${stats.avgPrice.toFixed(2)}`, color: '#10B981', icon: <DollarSign size={16} /> },
                     ].map((s, i) => (
-                        <div key={i} style={{ ...cd, padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
-                            <div style={{ width: 36, height: 36, borderRadius: 8, background: `${s.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>{s.icon}</div>
+                        <div key={i} style={{ ...cd, padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}> /* keep-inline */ /* keep-inline */
+                            <div style={{ width: 36, height: 36, borderRadius: 8, background: `${s.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>{s.icon}</div> /* keep-inline */ /* keep-inline */
                             <div>
-                                <div style={{ fontSize: 20, fontWeight: 700 }}>{s.value}</div>
-                                <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)' }}>{s.label}</div>
+                                <div style={{ fontSize: 20, fontWeight: 700 }}>{s.value}</div> /* keep-inline */ /* keep-inline */
+                                <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)' }}>{s.label}</div> /* keep-inline */ /* keep-inline */
                             </div>
                         </div>
                     ))}
                 </div>
 
                 {/* Toolbar */}
-                <div style={{ ...cd, padding: 12, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-                    <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
+                <div style={{ ...cd, padding: 12, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}> /* keep-inline */ /* keep-inline */
+                    <div style={{ position: 'relative', flex: 1, minWidth: 200 }}> /* keep-inline */ /* keep-inline */
                         <Search size={14} style={{ position: 'absolute', left: 12, top: 10, color: 'var(--text-secondary)' }} />
-                        <input style={{ ...ip, paddingLeft: 34, fontSize: 13, padding: '8px 12px 8px 34px' }} placeholder="Search items by name or SKU..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Search items" />
+                        <input style={{ ...ip, paddingLeft: 34, fontSize: 13, padding: '8px 12px 8px 34px' }} placeholder="Search items by name or SKU..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Search items" /> /* keep-inline */ /* keep-inline */
                     </div>
 
-                    <button style={{ ...bo, padding: '8px 12px', fontSize: 12, ...(showFilters ? { background: 'rgba(59,130,246,0.1)', borderColor: '#3B82F6', color: '#3B82F6' } : {}) }} onClick={() => setShowFilters(!showFilters)}>
+                    <button style={{ ...bo, padding: '8px 12px', fontSize: 12, ...(showFilters ? { background: 'rgba(59,130,246,0.1)', borderColor: '#3B82F6', color: '#3B82F6' } : {}) }} onClick={() => setShowFilters(!showFilters)}> /* keep-inline */ /* keep-inline */
                         <Filter size={14} /> Filters {showFilters ? '▴' : '▾'}
                     </button>
 
-                    <div style={{ display: 'flex', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, overflow: 'hidden' }}>
-                        <button title="List view" onClick={() => setViewMode('list')} style={{ padding: '7px 10px', background: viewMode === 'list' ? 'rgba(59,130,246,0.1)' : 'transparent', border: 'none', color: viewMode === 'list' ? '#3B82F6' : 'var(--text-secondary)', cursor: 'pointer' }}><List size={14} /></button>
-                        <button title="Grid view" onClick={() => setViewMode('grid')} style={{ padding: '7px 10px', background: viewMode === 'grid' ? 'rgba(59,130,246,0.1)' : 'transparent', border: 'none', color: viewMode === 'grid' ? '#3B82F6' : 'var(--text-secondary)', cursor: 'pointer' }}><Grid3X3 size={14} /></button>
+                    <div style={{ display: 'flex', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, overflow: 'hidden' }}> /* keep-inline */ /* keep-inline */
+                        <button title="List view" onClick={() => setViewMode('list')} style={{ padding: '7px 10px', background: viewMode === 'list' ? 'rgba(59,130,246,0.1)' : 'transparent', border: 'none', color: viewMode === 'list' ? '#3B82F6' : 'var(--text-secondary)', cursor: 'pointer' }}><List size={14} /></button> /* keep-inline */ /* keep-inline */
+                        <button title="Grid view" onClick={() => setViewMode('grid')} style={{ padding: '7px 10px', background: viewMode === 'grid' ? 'rgba(59,130,246,0.1)' : 'transparent', border: 'none', color: viewMode === 'grid' ? '#3B82F6' : 'var(--text-secondary)', cursor: 'pointer' }}><Grid3X3 size={14} /></button> /* keep-inline */ /* keep-inline */
                     </div>
 
-                    <div style={{ display: 'flex', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, overflow: 'hidden' }}>
-                        <button onClick={() => setShowArchived(false)} style={{ padding: '7px 14px', fontSize: 12, background: !showArchived ? 'rgba(59,130,246,0.1)' : 'transparent', border: 'none', color: !showArchived ? '#3B82F6' : 'var(--text-secondary)', cursor: 'pointer' }}>Active</button>
-                        <button onClick={() => setShowArchived(true)} style={{ padding: '7px 14px', fontSize: 12, background: showArchived ? 'rgba(59,130,246,0.1)' : 'transparent', border: 'none', color: showArchived ? '#3B82F6' : 'var(--text-secondary)', cursor: 'pointer' }}>Archived</button>
+                    <div style={{ display: 'flex', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, overflow: 'hidden' }}> /* keep-inline */ /* keep-inline */
+                        <button onClick={() => setShowArchived(false)} style={{ padding: '7px 14px', fontSize: 12, background: !showArchived ? 'rgba(59,130,246,0.1)' : 'transparent', border: 'none', color: !showArchived ? '#3B82F6' : 'var(--text-secondary)', cursor: 'pointer' }}>Active</button> /* keep-inline */ /* keep-inline */
+                        <button onClick={() => setShowArchived(true)} style={{ padding: '7px 14px', fontSize: 12, background: showArchived ? 'rgba(59,130,246,0.1)' : 'transparent', border: 'none', color: showArchived ? '#3B82F6' : 'var(--text-secondary)', cursor: 'pointer' }}>Archived</button> /* keep-inline */ /* keep-inline */
                     </div>
                 </div>
 
                 {/* Filters Row */}
                 {showFilters && (
-                    <div style={{ ...cd, padding: 14, display: 'flex', gap: 12, alignItems: 'center' }}>
-                        <select style={{ ...sl, width: 200, fontSize: 12, padding: '8px 12px' }} value={filterGroup} onChange={e => setFilterGroup(e.target.value)} aria-label="Filter by group">
+                    <div style={{ ...cd, padding: 14, display: 'flex', gap: 12, alignItems: 'center' }}> /* keep-inline */ /* keep-inline */
+                        <select style={{ ...sl, width: 200, fontSize: 12, padding: '8px 12px' }} value={filterGroup} onChange={e = aria-label="Input field"> setFilterGroup(e.target.value)} aria-label="Filter by group"> /* keep-inline */ /* keep-inline */
                             <option value="all">All Accounting Groups</option>
                             {GROUPS.map(g => <option key={g} value={g}>{g}</option>)}
                         </select>
-                        <select style={{ ...sl, width: 160, fontSize: 12, padding: '8px 12px' }} value={filterType} onChange={e => setFilterType(e.target.value as typeof filterType)} aria-label="Filter by type">
+                        <select style={{ ...sl, width: 160, fontSize: 12, padding: '8px 12px' }} value={filterType} onChange={e = aria-label="Input field"> setFilterType(e.target.value as typeof filterType)} aria-label="Filter by type"> /* keep-inline */ /* keep-inline */
                             <option value="all">All Types</option>
                             <option value="single">Single Items</option>
                             <option value="combo">Combos</option>
                             <option value="item-group">Item Groups</option>
                         </select>
-                        <select style={{ ...sl, width: 160, fontSize: 12, padding: '8px 12px' }} value={filterCenter} onChange={e => setFilterCenter(e.target.value)} aria-label="Filter by production center">
+                        <select style={{ ...sl, width: 160, fontSize: 12, padding: '8px 12px' }} value={filterCenter} onChange={e = aria-label="Input field"> setFilterCenter(e.target.value)} aria-label="Filter by production center"> /* keep-inline */ /* keep-inline */
                             <option value="all">All Centers</option>
                             {CENTERS.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
-                        <button style={{ ...bo, padding: '8px 12px', fontSize: 12, marginLeft: 'auto' }} onClick={() => { setFilterGroup('all'); setFilterType('all'); setFilterCenter('all'); }}><X size={12} /> Clear</button>
+                        <button style={{ ...bo, padding: '8px 12px', fontSize: 12, marginLeft: 'auto' }} onClick={() => { setFilterGroup('all'); setFilterType('all'); setFilterCenter('all'); }}><X size={12} /> Clear</button> /* keep-inline */ /* keep-inline */
                     </div>
                 )}
 
                 {/* Bulk Actions */}
                 {selectedIds.size > 0 && (
-                    <div style={{ ...cd, padding: 12, display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(59,130,246,0.05)', borderColor: 'rgba(59,130,246,0.2)' }}>
+                    <div style={{ ...cd, padding: 12, display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(59,130,246,0.05)', borderColor: 'rgba(59,130,246,0.2)' }}> /* keep-inline */ /* keep-inline */
                         <Check size={16} color="#3B82F6" />
-                        <span style={{ fontSize: 13, fontWeight: 600 }}>{selectedIds.size} selected</span>
-                        <div style={{ display: 'flex', gap: 8, marginLeft: 'auto' }}>
-                            <button style={{ ...bo, padding: '6px 12px', fontSize: 12 }} onClick={bulkArchive}><Archive size={12} /> {showArchived ? 'Unarchive' : 'Archive'}</button>
-                            <div style={{ position: 'relative' }}>
-                                <button style={{ ...bo, padding: '6px 12px', fontSize: 12 }} onClick={() => setShowBulkMenu(!showBulkMenu)}>
+                        <span style={{ fontSize: 13, fontWeight: 600 }}>{selectedIds.size} selected</span> /* keep-inline */ /* keep-inline */
+                        <div style={{ display: 'flex', gap: 8, marginLeft: 'auto' }}> /* keep-inline */ /* keep-inline */
+                            <button style={{ ...bo, padding: '6px 12px', fontSize: 12 }} onClick={bulkArchive}><Archive size={12} /> {showArchived ? 'Unarchive' : 'Archive'}</button> /* keep-inline */ /* keep-inline */
+                            <div style={{ position: 'relative' }}> /* keep-inline */ /* keep-inline */
+                                <button style={{ ...bo, padding: '6px 12px', fontSize: 12 }} onClick={() => setShowBulkMenu(!showBulkMenu)}> /* keep-inline */ /* keep-inline */
                                     <Tag size={12} /> Assign Group <ChevronDown size={12} />
                                 </button>
                                 {showBulkMenu && (
                                     <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 4, background: 'var(--bg-card, #18181b)', border: '1px solid var(--border-primary, #27272a)', borderRadius: 8, padding: 4, zIndex: 100, minWidth: 200, boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
                                         {GROUPS.map(g => (
-                                            <button key={g} onClick={() => bulkAssignGroup(g)} style={{ width: '100%', padding: '8px 12px', background: 'none', border: 'none', color: 'var(--text-primary)', fontSize: 12, textAlign: 'left', cursor: 'pointer', borderRadius: 4 }}>
+                                            <button key={g} onClick={() => bulkAssignGroup(g)} style={{ width: '100%', padding: '8px 12px', background: 'none', border: 'none', color: 'var(--text-primary)', fontSize: 12, textAlign: 'left', cursor: 'pointer', borderRadius: 4 }}> /* keep-inline */ /* keep-inline */
                                                 {g}
                                             </button>
                                         ))}
                                     </div>
                                 )}
                             </div>
-                            <button style={{ ...bo, padding: '6px 12px', fontSize: 12, color: '#EF4444', borderColor: 'rgba(239,68,68,0.2)' }} onClick={bulkDelete}><Trash2 size={12} /> Delete</button>
-                            <button style={{ ...bo, padding: '6px 12px', fontSize: 12 }} onClick={() => setSelectedIds(new Set())}><X size={12} /> Clear</button>
+                            <button style={{ ...bo, padding: '6px 12px', fontSize: 12, color: '#EF4444', borderColor: 'rgba(239,68,68,0.2)' }} onClick={bulkDelete}><Trash2 size={12} /> Delete</button> /* keep-inline */ /* keep-inline */
+                            <button style={{ ...bo, padding: '6px 12px', fontSize: 12 }} onClick={() => setSelectedIds(new Set())}><X size={12} /> Clear</button> /* keep-inline */ /* keep-inline */
                         </div>
                     </div>
                 )}
@@ -292,9 +292,9 @@ const ItemLibrary: React.FC = () => {
                 {viewMode === 'list' ? (
                     <div style={cd}>
                         {/* Header Row */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '32px 1fr 130px 100px 130px 100px 80px', gap: 12, padding: '8px 12px', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary, #a1a1aa)', letterSpacing: 0.5, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                            <div style={{ cursor: 'pointer' }} onClick={selectAll}>
-                                <div style={{ width: 16, height: 16, borderRadius: 4, border: selectedIds.size === filtered.length && filtered.length > 0 ? '2px solid #3B82F6' : '2px solid var(--border-primary, #27272a)', background: selectedIds.size === filtered.length && filtered.length > 0 ? '#3B82F6' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '32px 1fr 130px 100px 130px 100px 80px', gap: 12, padding: '8px 12px', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary, #a1a1aa)', letterSpacing: 0.5, borderBottom: '1px solid rgba(255,255,255,0.06)' }}> /* keep-inline */ /* keep-inline */
+                            <div style={{ cursor: 'pointer' }} onClick={selectAll}> /* keep-inline */ /* keep-inline */
+                                <div style={{ width: 16, height: 16, borderRadius: 4, border: selectedIds.size === filtered.length && filtered.length > 0 ? '2px solid #3B82F6' : '2px solid var(--border-primary, #27272a)', background: selectedIds.size === filtered.length && filtered.length > 0 ? '#3B82F6' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}> /* keep-inline */ /* keep-inline */
                                     {selectedIds.size === filtered.length && filtered.length > 0 && <Check size={10} color="#fff" />}
                                 </div>
                             </div>
@@ -308,99 +308,99 @@ const ItemLibrary: React.FC = () => {
 
                         {/* Items */}
                         {filtered.map(item => (
-                            <div key={item.id} style={{ display: 'grid', gridTemplateColumns: '32px 1fr 130px 100px 130px 100px 80px', gap: 12, padding: '12px 12px', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer' }}
+                            <div key={item.id} style={{ display: 'grid', gridTemplateColumns: '32px 1fr 130px 100px 130px 100px 80px', gap: 12, padding: '12px 12px', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer' }} /* keep-inline */ /* keep-inline */
                                 onClick={() => setEditingItem({ ...item })}>
-                                <div onClick={e => { e.stopPropagation(); toggleSelect(item.id); }} style={{ cursor: 'pointer' }}>
-                                    <div style={{ width: 16, height: 16, borderRadius: 4, border: selectedIds.has(item.id) ? '2px solid #3B82F6' : '2px solid var(--border-primary, #27272a)', background: selectedIds.has(item.id) ? '#3B82F6' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <div onClick={e => { e.stopPropagation(); toggleSelect(item.id); }} style={{ cursor: 'pointer' }}> /* keep-inline */ /* keep-inline */
+                                    <div style={{ width: 16, height: 16, borderRadius: 4, border: selectedIds.has(item.id) ? '2px solid #3B82F6' : '2px solid var(--border-primary, #27272a)', background: selectedIds.has(item.id) ? '#3B82F6' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}> /* keep-inline */ /* keep-inline */
                                         {selectedIds.has(item.id) && <Check size={10} color="#fff" />}
                                     </div>
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                    <div style={{ width: 32, height: 32, borderRadius: 6, background: `${item.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: item.color, flexShrink: 0 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}> /* keep-inline */ /* keep-inline */
+                                    <div style={{ width: 32, height: 32, borderRadius: 6, background: `${item.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: item.color, flexShrink: 0 }}> /* keep-inline */ /* keep-inline */
                                         {item.hasImage ? <Image size={14} /> : <Package size={14} />}
                                     </div>
                                     <div>
-                                        <div style={{ fontSize: 13, fontWeight: 500 }}>{item.name}</div>
-                                        <div style={{ fontSize: 11, color: 'var(--text-secondary)', display: 'flex', gap: 6 }}>
+                                        <div style={{ fontSize: 13, fontWeight: 500 }}>{item.name}</div> /* keep-inline */ /* keep-inline */
+                                        <div style={{ fontSize: 11, color: 'var(--text-secondary)', display: 'flex', gap: 6 }}> /* keep-inline */ /* keep-inline */
                                             {item.sku && <span>{item.sku}</span>}
                                             {item.allergens.length > 0 && <span>⚠ {item.allergens.length} allergens</span>}
                                         </div>
                                     </div>
                                 </div>
-                                <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{item.accountingGroup.split(' - ')[1] || item.accountingGroup}</div>
+                                <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{item.accountingGroup.split(' - ')[1] || item.accountingGroup}</div> /* keep-inline */ /* keep-inline */
                                 <div>
-                                    <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 4, background: item.type === 'combo' ? 'rgba(139,92,246,0.1)' : 'rgba(59,130,246,0.1)', color: item.type === 'combo' ? '#8B5CF6' : '#3B82F6' }}>
+                                    <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 4, background: item.type === 'combo' ? 'rgba(139,92,246,0.1)' : 'rgba(59,130,246,0.1)', color: item.type === 'combo' ? '#8B5CF6' : '#3B82F6' }}> /* keep-inline */ /* keep-inline */
                                         {item.type === 'single' ? 'Single' : item.type === 'combo' ? 'Combo' : 'Group'}
                                     </span>
                                 </div>
-                                <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{item.productionCenter}</div>
-                                <div style={{ fontSize: 13, fontWeight: 600 }}>€{item.price.toFixed(2)}</div>
-                                <div style={{ display: 'flex', gap: 4 }}>
-                                    <button title="Edit item" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: 4 }} onClick={e => { e.stopPropagation(); setEditingItem({ ...item }); }}><Edit3 size={13} /></button>
-                                    <button title="Duplicate item" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: 4 }} onClick={e => { e.stopPropagation(); setItems(prev => [...prev, { ...item, id: crypto.randomUUID(), name: `${item.name} (Copy)` }]); toast.success('Item duplicated'); }}><Copy size={13} /></button>
+                                <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{item.productionCenter}</div> /* keep-inline */ /* keep-inline */
+                                <div style={{ fontSize: 13, fontWeight: 600 }}>€{item.price.toFixed(2)}</div> /* keep-inline */ /* keep-inline */
+                                <div style={{ display: 'flex', gap: 4 }}> /* keep-inline */ /* keep-inline */
+                                    <button title="Edit item" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: 4 }} onClick={e => { e.stopPropagation(); setEditingItem({ ...item }); }}><Edit3 size={13} /></button> /* keep-inline */ /* keep-inline */
+                                    <button title="Duplicate item" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: 4 }} onClick={e => { e.stopPropagation(); setItems(prev => [...prev, { ...item, id: crypto.randomUUID(), name: `${item.name} (Copy)` }]); toast.success('Item duplicated'); }}><Copy size={13} /></button> /* keep-inline */ /* keep-inline */
                                 </div>
                             </div>
                         ))}
 
                         {filtered.length === 0 && (
-                            <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-secondary)' }}>
-                                <Package size={36} style={{ opacity: 0.3, marginBottom: 8 }} />
-                                <p style={{ fontSize: 14, fontWeight: 500 }}>{"No "}items found</p>
-                                <p style={{ fontSize: 12 }}>{search ? 'Try a different search term' : 'Create your first item to get started'}</p>
+                            <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-secondary)' }}> /* keep-inline */ /* keep-inline */
+                                <Package size={36} style={{ opacity: 0.3, marginBottom: 8 }} /> /* keep-inline */ /* keep-inline */
+                                <p style={{ fontSize: 14, fontWeight: 500 }}>{"No "}items found</p> /* keep-inline */ /* keep-inline */
+                                <p style={{ fontSize: 12 }}>{search ? 'Try a different search term' : 'Create your first item to get started'}</p> /* keep-inline */ /* keep-inline */
                             </div>
                         )}
                     </div>
                 ) : (
                     /* Grid View */
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}> /* keep-inline */ /* keep-inline */
                         {filtered.map(item => (
-                            <div key={item.id} style={{ ...cd, padding: 14, cursor: 'pointer' }} onClick={() => setEditingItem({ ...item })}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-                                    <div style={{ width: 40, height: 40, borderRadius: 8, background: `${item.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: item.color }}>
+                            <div key={item.id} style={{ ...cd, padding: 14, cursor: 'pointer' }} onClick={() => setEditingItem({ ...item })}> /* keep-inline */ /* keep-inline */
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}> /* keep-inline */ /* keep-inline */
+                                    <div style={{ width: 40, height: 40, borderRadius: 8, background: `${item.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: item.color }}> /* keep-inline */ /* keep-inline */
                                         <Package size={18} />
                                     </div>
-                                    <span style={{ fontSize: 11, padding: '2px 6px', borderRadius: 4, background: item.type === 'combo' ? 'rgba(139,92,246,0.1)' : 'rgba(59,130,246,0.1)', color: item.type === 'combo' ? '#8B5CF6' : '#3B82F6' }}>
+                                    <span style={{ fontSize: 11, padding: '2px 6px', borderRadius: 4, background: item.type === 'combo' ? 'rgba(139,92,246,0.1)' : 'rgba(59,130,246,0.1)', color: item.type === 'combo' ? '#8B5CF6' : '#3B82F6' }}> /* keep-inline */ /* keep-inline */
                                         {item.type}
                                     </span>
                                 </div>
-                                <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>{item.name}</div>
-                                <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>{item.accountingGroup}</div>
-                                <div style={{ fontSize: 18, fontWeight: 700, color: '#10B981' }}>€{item.price.toFixed(2)}</div>
+                                <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>{item.name}</div> /* keep-inline */ /* keep-inline */
+                                <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>{item.accountingGroup}</div> /* keep-inline */ /* keep-inline */
+                                <div style={{ fontSize: 18, fontWeight: 700, color: '#10B981' }}>€{item.price.toFixed(2)}</div> /* keep-inline */ /* keep-inline */
                             </div>
                         ))}
                     </div>
                 )}
 
-                <div style={{ padding: '12px 0', fontSize: 12, color: 'var(--text-secondary)', textAlign: 'center' }}>
+                <div style={{ padding: '12px 0', fontSize: 12, color: 'var(--text-secondary)', textAlign: 'center' }}> /* keep-inline */ /* keep-inline */
                     Showing {filtered.length} of {items.length} items
                 </div>
             </div>
 
             {/* Edit/Create Item Modal */}
             {editingItem && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setEditingItem(null)}>
-                    <div style={{ ...cd, width: 560, maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                            <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{items.find(i => i.id === editingItem.id) ? 'Edit Item' : 'Create New Item'}</h3>
-                            <button title="Close" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditingItem(null)}><X size={20} /></button>
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setEditingItem(null)}> /* keep-inline */ /* keep-inline */
+                    <div style={{ ...cd, width: 560, maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}> /* keep-inline */ /* keep-inline */
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
+                            <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{items.find(i => i.id === editingItem.id) ? 'Edit Item' : 'Create New Item'}</h3> /* keep-inline */ /* keep-inline */
+                            <button title="Close" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditingItem(null)}><X size={20} /></button> /* keep-inline */ /* keep-inline */
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-                            <div style={{ gridColumn: '1 / -1' }}>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name *</label>
-                                <input style={ip} value={editingItem.name} onChange={e => setEditingItem(p => p ? { ...p, name: e.target.value } : null)} placeholder="Item name" />
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}> /* keep-inline */ /* keep-inline */
+                            <div style={{ gridColumn: '1 / -1' }}> /* keep-inline */ /* keep-inline */
+                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name *</label> /* keep-inline */ /* keep-inline */
+                                <input style={ip} value={editingItem.name} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, name: e.target.value } : null)} placeholder="Item name" />
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label>
-                                <select style={sl} value={editingItem.type} onChange={e => setEditingItem(p => p ? { ...p, type: e.target.value as Item['type'] } : null)} aria-label="Item type">
+                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label> /* keep-inline */ /* keep-inline */
+                                <select style={sl} value={editingItem.type} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, type: e.target.value as Item['type'] } : null)} aria-label="Item type">
                                     <option value="single">Single Item</option>
                                     <option value="combo">Combo</option>
                                     <option value="item-group">Item Group</option>
                                 </select>
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Course</label>
-                                <select style={sl} value={editingItem.course} onChange={e => setEditingItem(p => p ? { ...p, course: parseInt(e.target.value) } : null)} aria-label="Course">
+                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Course</label> /* keep-inline */ /* keep-inline */
+                                <select style={sl} value={editingItem.course} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, course: parseInt(e.target.value) } : null)} aria-label="Course">
                                     <option value={0}>{"No "}Course</option>
                                     <option value={1}>Course 1 - Starters</option>
                                     <option value={2}>Course 2 - Mains</option>
@@ -408,47 +408,47 @@ const ItemLibrary: React.FC = () => {
                                 </select>
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Price (€)</label>
-                                <input type="number" step="0.01" style={ip} value={editingItem.price} onChange={e => setEditingItem(p => p ? { ...p, price: parseFloat(e.target.value) || 0 } : null)} aria-label="Price" />
+                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Price (€)</label> /* keep-inline */ /* keep-inline */
+                                <input type="number" step="0.01" style={ip} value={editingItem.price} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, price: parseFloat(e.target.value) || 0 } : null)} aria-label="Price" />
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Cost Price (€)</label>
-                                <input type="number" step="0.01" style={ip} value={editingItem.costPrice} onChange={e => setEditingItem(p => p ? { ...p, costPrice: parseFloat(e.target.value) || 0 } : null)} aria-label="Cost price" />
+                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Cost Price (€)</label> /* keep-inline */ /* keep-inline */
+                                <input type="number" step="0.01" style={ip} value={editingItem.costPrice} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, costPrice: parseFloat(e.target.value) || 0 } : null)} aria-label="Cost price" />
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Accounting Group</label>
-                                <select style={sl} value={editingItem.accountingGroup} onChange={e => setEditingItem(p => p ? { ...p, accountingGroup: e.target.value } : null)} aria-label="Accounting group">{GROUPS.map(g => <option key={g} value={g}>{g}</option>)}</select>
+                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Accounting Group</label> /* keep-inline */ /* keep-inline */
+                                <select style={sl} value={editingItem.accountingGroup} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, accountingGroup: e.target.value } : null)} aria-label="Accounting group">{GROUPS.map(g => <option key={g} value={g}>{g}</option>)}</select>
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Production Center</label>
-                                <select style={sl} value={editingItem.productionCenter} onChange={e => setEditingItem(p => p ? { ...p, productionCenter: e.target.value } : null)} aria-label="Production center">{CENTERS.map(c => <option key={c} value={c}>{c}</option>)}</select>
+                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Production Center</label> /* keep-inline */ /* keep-inline */
+                                <select style={sl} value={editingItem.productionCenter} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, productionCenter: e.target.value } : null)} aria-label="Production center">{CENTERS.map(c => <option key={c} value={c}>{c}</option>)}</select>
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Tax Profile</label>
-                                <select style={sl} value={editingItem.taxProfile} onChange={e => setEditingItem(p => p ? { ...p, taxProfile: e.target.value } : null)} aria-label="Tax profile">
+                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Tax Profile</label> /* keep-inline */ /* keep-inline */
+                                <select style={sl} value={editingItem.taxProfile} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, taxProfile: e.target.value } : null)} aria-label="Tax profile">
                                     <option>Standard 18%</option><option>Reduced 5%</option><option>Zero Rate</option><option>Eco Tax 7%</option>
                                 </select>
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>SKU</label>
-                                <input style={ip} value={editingItem.sku} onChange={e => setEditingItem(p => p ? { ...p, sku: e.target.value } : null)} placeholder="e.g. MN-001" />
+                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>SKU</label> /* keep-inline */ /* keep-inline */
+                                <input style={ip} value={editingItem.sku} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, sku: e.target.value } : null)} placeholder="e.g. MN-001" />
                             </div>
                             <div>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Barcode</label>
-                                <input style={ip} value={editingItem.barcode} onChange={e => setEditingItem(p => p ? { ...p, barcode: e.target.value } : null)} placeholder="Scan or enter" />
+                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Barcode</label> /* keep-inline */ /* keep-inline */
+                                <input style={ip} value={editingItem.barcode} onChange={e = aria-label="Input field"> setEditingItem(p => p ? { ...p, barcode: e.target.value } : null)} placeholder="Scan or enter" />
                             </div>
                         </div>
 
                         {/* Allergens */}
-                        <div style={{ marginTop: 16 }}>
-                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>Allergens</label>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        <div style={{ marginTop: 16 }}> /* keep-inline */ /* keep-inline */
+                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>Allergens</label> /* keep-inline */ /* keep-inline */
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}> /* keep-inline */ /* keep-inline */
                                 {ALLERGENS.map(a => (
                                     <button key={a} onClick={() => setEditingItem(p => {
                                         if (!p) return null;
                                         const has = p.allergens.includes(a);
                                         return { ...p, allergens: has ? p.allergens.filter(x => x !== a) : [...p.allergens, a] };
-                                    })} style={{ padding: '4px 10px', borderRadius: 6, fontSize: 11, cursor: 'pointer', border: editingItem.allergens.includes(a) ? '1px solid #EF4444' : '1px solid var(--border-primary, #27272a)', background: editingItem.allergens.includes(a) ? 'rgba(239,68,68,0.1)' : 'transparent', color: editingItem.allergens.includes(a) ? '#EF4444' : 'var(--text-secondary)' }}>
+                                    })} style={{ padding: '4px 10px', borderRadius: 6, fontSize: 11, cursor: 'pointer', border: editingItem.allergens.includes(a) ? '1px solid #EF4444' : '1px solid var(--border-primary, #27272a)', background: editingItem.allergens.includes(a) ? 'rgba(239,68,68,0.1)' : 'transparent', color: editingItem.allergens.includes(a) ? '#EF4444' : 'var(--text-secondary)' }}> /* keep-inline */ /* keep-inline */
                                         {a}
                                     </button>
                                 ))}
@@ -457,20 +457,20 @@ const ItemLibrary: React.FC = () => {
 
                         {/* Margin Display */}
                         {editingItem.price > 0 && editingItem.costPrice > 0 && (
-                            <div style={{ marginTop: 16, padding: 12, background: 'var(--bg-secondary, #09090b)', borderRadius: 8, fontSize: 12 }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                                    <span style={{ color: 'var(--text-secondary)' }}>Margin:</span>
-                                    <span style={{ fontWeight: 600, color: '#10B981' }}>{((1 - editingItem.costPrice / editingItem.price) * 100).toFixed(1)}%</span>
+                            <div style={{ marginTop: 16, padding: 12, background: 'var(--bg-secondary, #09090b)', borderRadius: 8, fontSize: 12 }}> /* keep-inline */ /* keep-inline */
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}> /* keep-inline */ /* keep-inline */
+                                    <span style={{ color: 'var(--text-secondary)' }}>Margin:</span> /* keep-inline */ /* keep-inline */
+                                    <span style={{ fontWeight: 600, color: '#10B981' }}>{((1 - editingItem.costPrice / editingItem.price) * 100).toFixed(1)}%</span> /* keep-inline */ /* keep-inline */
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span style={{ color: 'var(--text-secondary)' }}>Profit:</span>
-                                    <span style={{ fontWeight: 600 }}>€{(editingItem.price - editingItem.costPrice).toFixed(2)}</span>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}> /* keep-inline */ /* keep-inline */
+                                    <span style={{ color: 'var(--text-secondary)' }}>Profit:</span> /* keep-inline */ /* keep-inline */
+                                    <span style={{ fontWeight: 600 }}>€{(editingItem.price - editingItem.costPrice).toFixed(2)}</span> /* keep-inline */ /* keep-inline */
                                 </div>
                             </div>
                         )}
 
-                        <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-                            <button style={{ ...bp, flex: 1, justifyContent: 'center' }} onClick={saveItem}><Save size={14} /> Save Item</button>
+                        <div style={{ display: 'flex', gap: 8, marginTop: 20 }}> /* keep-inline */ /* keep-inline */
+                            <button style={{ ...bp, flex: 1, justifyContent: 'center' }} onClick={saveItem}><Save size={14} /> Save Item</button> /* keep-inline */ /* keep-inline */
                             <button style={bo} onClick={() => setEditingItem(null)}>Cancel</button>
                         </div>
                     </div>

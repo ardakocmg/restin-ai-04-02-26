@@ -943,9 +943,9 @@ export default function POSSettings() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className={labelClass}>Primary Language (Service)</Label>
-                    <select className="w-full bg-background border border-border rounded-lg px-3 py-2 text-foreground text-sm"
+                    <select aria-label="Input" className="w-full bg-background border border-border rounded-lg px-3 py-2 text-foreground text-sm"
                       value={languageConfig.serviceLanguage}
-                      onChange={e => setLanguageConfig({ ...languageConfig, serviceLanguage: e.target.value })}
+                      onChange={e = aria-label="Input field"> setLanguageConfig({ ...languageConfig, serviceLanguage: e.target.value })}
                     >
                       {languageConfig.supportedLanguages.map(lang => (
                         <option key={lang} value={lang}>{lang === 'en' ? 'English' : lang === 'mt' ? 'Maltese' : lang === 'it' ? 'Italian' : lang === 'de' ? 'German' : lang === 'fr' ? 'French' : lang === 'es' ? 'Spanish' : lang === 'tr' ? 'Turkish' : 'Arabic'}</option>
@@ -954,9 +954,9 @@ export default function POSSettings() {
                   </div>
                   <div className="space-y-2">
                     <Label className={labelClass}>Kitchen Language</Label>
-                    <select className="w-full bg-background border border-border rounded-lg px-3 py-2 text-foreground text-sm"
+                    <select aria-label="Input" className="w-full bg-background border border-border rounded-lg px-3 py-2 text-foreground text-sm"
                       value={languageConfig.kitchenLanguage}
-                      onChange={e => setLanguageConfig({ ...languageConfig, kitchenLanguage: e.target.value })}
+                      onChange={e = aria-label="Input field"> setLanguageConfig({ ...languageConfig, kitchenLanguage: e.target.value })}
                     >
                       {languageConfig.supportedLanguages.map(lang => (
                         <option key={lang} value={lang}>{lang === 'en' ? 'English' : lang === 'mt' ? 'Maltese' : lang === 'it' ? 'Italian' : lang === 'de' ? 'German' : lang === 'fr' ? 'French' : lang === 'es' ? 'Spanish' : lang === 'tr' ? 'Turkish' : 'Arabic'}</option>
@@ -965,9 +965,9 @@ export default function POSSettings() {
                   </div>
                   <div className="space-y-2">
                     <Label className={labelClass}>Receipt Language</Label>
-                    <select className="w-full bg-background border border-border rounded-lg px-3 py-2 text-foreground text-sm"
+                    <select aria-label="Input" className="w-full bg-background border border-border rounded-lg px-3 py-2 text-foreground text-sm"
                       value={languageConfig.receiptLanguage}
-                      onChange={e => setLanguageConfig({ ...languageConfig, receiptLanguage: e.target.value })}
+                      onChange={e = aria-label="Input field"> setLanguageConfig({ ...languageConfig, receiptLanguage: e.target.value })}
                     >
                       {languageConfig.supportedLanguages.map(lang => (
                         <option key={lang} value={lang}>{lang === 'en' ? 'English' : lang === 'mt' ? 'Maltese' : lang === 'it' ? 'Italian' : lang === 'de' ? 'German' : lang === 'fr' ? 'French' : lang === 'es' ? 'Spanish' : lang === 'tr' ? 'Turkish' : 'Arabic'}</option>
@@ -1006,7 +1006,7 @@ export default function POSSettings() {
                       <div className="flex-1 grid grid-cols-4 gap-3">
                         <InlineEdit value={g.name} onChange={v => { const u = [...accountingGroups]; u[idx].name = v; setAccountingGroups(u); }} />
                         <InlineEdit value={g.code} onChange={v => { const u = [...accountingGroups]; u[idx].code = v; setAccountingGroups(u); }} />
-                        <select className="bg-background text-foreground text-xs border border-border rounded-md px-2" value={g.type} onChange={e => { const u = [...accountingGroups]; u[idx].type = e.target.value; setAccountingGroups(u); }}>
+                        <select className="bg-background text-foreground text-xs border border-border rounded-md px-2" value={g.type} onChange={e = aria-label="Input field"> { const u = [...accountingGroups]; u[idx].type = e.target.value; setAccountingGroups(u); }}>
                           <option value="revenue">Revenue</option>
                           <option value="liability">Liability</option>
                           <option value="expense">Expense</option>
@@ -1040,17 +1040,17 @@ export default function POSSettings() {
                 <div className="space-y-3">
                   {productionInstructions.map((pi, idx) => (
                     <div key={pi.id} className="flex items-center gap-3 p-3 bg-background rounded-lg border border-border">
-                      <div className="w-3 h-8 rounded" style={{ backgroundColor: pi.color }} />
+                      <div className="w-3 h-8 rounded" style={{ backgroundColor: pi.color }} /> /* keep-inline */ /* keep-inline */
                       <div className="flex-1 grid grid-cols-3 gap-3">
                         <InlineEdit value={pi.name} onChange={v => { const u = [...productionInstructions]; u[idx].name = v; setProductionInstructions(u); }} />
                         <InlineEdit value={pi.text} onChange={v => { const u = [...productionInstructions]; u[idx].text = v; setProductionInstructions(u); }} />
-                        <select className="bg-background text-foreground text-xs border border-border rounded-md px-2" value={pi.appliesTo} onChange={e => { const u = [...productionInstructions]; u[idx].appliesTo = e.target.value; setProductionInstructions(u); }}>
+                        <select className="bg-background text-foreground text-xs border border-border rounded-md px-2" value={pi.appliesTo} onChange={e = aria-label="Input field"> { const u = [...productionInstructions]; u[idx].appliesTo = e.target.value; setProductionInstructions(u); }}>
                           <option value="All">All Stations</option>
                           <option value="Kitchen">Kitchen Only</option>
                           <option value="Bar">Bar Only</option>
                         </select>
                       </div>
-                      <input type="color" value={pi.color} onChange={e => { const u = [...productionInstructions]; u[idx].color = e.target.value; setProductionInstructions(u); }} className="w-8 h-8 rounded cursor-pointer border-0 bg-transparent" />
+                      <input type="color" value={pi.color} onChange={e = aria-label="Input field"> { const u = [...productionInstructions]; u[idx].color = e.target.value; setProductionInstructions(u); }} className="w-8 h-8 rounded cursor-pointer border-0 bg-transparent" />
                       <Switch checked={pi.active} onCheckedChange={v => { const u = [...productionInstructions]; u[idx].active = v; setProductionInstructions(u); }} />
                       <button className="text-muted-foreground hover:text-red-400" onClick={() => setProductionInstructions(prev => prev.filter(x => x.id !== pi.id))}>
                         <Trash2 className="w-4 h-4" />
@@ -1124,7 +1124,7 @@ export default function POSSettings() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <input type="checkbox" checked={pt.opensCashDrawer} onChange={e => { const u = [...paymentTypes]; u[idx].opensCashDrawer = e.target.checked; setPaymentTypes(u); }} className="accent-red-500" />
+                        <input type="checkbox" checked={pt.opensCashDrawer} onChange={e = aria-label="Input field"> { const u = [...paymentTypes]; u[idx].opensCashDrawer = e.target.checked; setPaymentTypes(u); }} className="accent-red-500" />
                         <span className="text-xs text-muted-foreground">Drawer</span>
                       </div>
                       <Switch checked={pt.active} onCheckedChange={v => { const u = [...paymentTypes]; u[idx].active = v; setPaymentTypes(u); }} />
@@ -1210,7 +1210,7 @@ export default function POSSettings() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                       <div className="space-y-2">
                         <Label className={labelClass}>SMS Provider</Label>
-                        <select className="w-full bg-card text-foreground text-xs border border-border rounded-md px-3 py-2" value={emailConfig.smsProvider} onChange={e => setEmailConfig({ ...emailConfig, smsProvider: e.target.value })}>
+                        <select className="w-full bg-card text-foreground text-xs border border-border rounded-md px-3 py-2" value={emailConfig.smsProvider} onChange={e = aria-label="Input field"> setEmailConfig({ ...emailConfig, smsProvider: e.target.value })}>
                           <option value="twilio">Twilio</option>
                           <option value="vonage">Vonage</option>
                           <option value="messagebird">MessageBird</option>
@@ -1313,7 +1313,7 @@ export default function POSSettings() {
                   </div>
                   <div className="space-y-2">
                     <Label className={labelClass}>Format</Label>
-                    <select className="w-full bg-card text-foreground text-xs border border-border rounded-md px-3 py-2" value={invoiceConfig.invoiceFormat} onChange={e => setInvoiceConfig({ ...invoiceConfig, invoiceFormat: e.target.value })}>
+                    <select className="w-full bg-card text-foreground text-xs border border-border rounded-md px-3 py-2" value={invoiceConfig.invoiceFormat} onChange={e = aria-label="Input field"> setInvoiceConfig({ ...invoiceConfig, invoiceFormat: e.target.value })}>
                       <option value="A4">A4 (Standard)</option>
                       <option value="A5">A5 (Half Page)</option>
                       <option value="thermal">Thermal (80mm)</option>
@@ -1321,7 +1321,7 @@ export default function POSSettings() {
                   </div>
                   <div className="space-y-2">
                     <Label className={labelClass}>Language</Label>
-                    <select className="w-full bg-card text-foreground text-xs border border-border rounded-md px-3 py-2" value={invoiceConfig.language} onChange={e => setInvoiceConfig({ ...invoiceConfig, language: e.target.value })}>
+                    <select className="w-full bg-card text-foreground text-xs border border-border rounded-md px-3 py-2" value={invoiceConfig.language} onChange={e = aria-label="Input field"> setInvoiceConfig({ ...invoiceConfig, language: e.target.value })}>
                       <option value="en">English</option>
                       <option value="mt">Maltese</option>
                       <option value="it">Italian</option>

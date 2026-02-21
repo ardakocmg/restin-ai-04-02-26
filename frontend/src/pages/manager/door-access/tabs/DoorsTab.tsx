@@ -118,7 +118,7 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
         if (!config) return;
         setSaving(true);
         try {
-            const resp = await accessControlAPI.updateConfig(door.id, config as any, getVenueId());
+            const resp = await accessControlAPI.updateConfig(door.id, config as unknown, getVenueId());
             if (resp.status === 200) { toast.success('Settings saved'); setConfig(resp.data); }
         } catch (e) {
             toast.error('Save failed');

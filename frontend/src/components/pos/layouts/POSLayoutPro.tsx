@@ -349,7 +349,7 @@ export default function POSLayoutPro({
                             {/* Search Input */}
                             <div className="relative flex-1 max-w-sm">
                                 <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                                <input
+                                <input aria-label="Input"
                                     type="text"
                                     placeholder="Search menu..."
                                     value={searchQuery || ''}

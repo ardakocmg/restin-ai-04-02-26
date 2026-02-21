@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { logger } from '@/lib/logger';
 
@@ -407,7 +406,7 @@ const MigrationHub = () => {
                                                 </p>
                                             </div>
 
-                                            <input
+                                            <input aria-label="Input"
                                                 type="file"
                                                 id="migration-upload"
                                                 accept=".csv,.json,.xlsx,.xls"
@@ -433,9 +432,9 @@ const MigrationHub = () => {
                                             <FolderOpen className="w-3.5 h-3.5" /> Load Saved Template
                                         </label>
                                         <div className="flex gap-2">
-                                            <select
+                                            <select aria-label="Input"
                                                 value={selectedTemplate?.id || ''}
-                                                onChange={(e) => {
+                                                onChange={(e) = aria-label="Input field"> {
                                                     const tpl = importTemplates.find(t => t.id === e.target.value);
                                                     if (tpl) handleLoadTemplate(tpl);
                                                     else setSelectedTemplate(null);
@@ -686,7 +685,7 @@ const MigrationHub = () => {
                                             <div className="flex items-center gap-4 mb-4">
                                                 <div className="relative flex-1">
                                                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                                                    <input
+                                                    <input aria-label="Input"
                                                         type="text"
                                                         placeholder="Filter mappings..."
                                                         className="w-full bg-background border border-input rounded-lg pl-9 pr-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none"
@@ -1018,10 +1017,10 @@ const MigrationHub = () => {
                                         </Button>
                                     ) : (
                                         <div className="flex items-center gap-2">
-                                            <input
+                                            <input aria-label="Input"
                                                 type="text"
                                                 value={templateName}
-                                                onChange={(e) => setTemplateName(e.target.value)}
+                                                onChange={(e) = aria-label="Input field"> setTemplateName(e.target.value)}
                                                 placeholder="Template name..."
                                                 className="bg-input border border-border rounded px-2 py-1 text-xs text-foreground w-40 focus:ring-1 focus:ring-primary outline-none"
                                                 onKeyDown={(e) => e.key === 'Enter' && handleSaveTemplate()}

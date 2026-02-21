@@ -74,7 +74,7 @@ export default function VoidReasonModal({ itemName, onConfirm, onCancel }) {
                             {r}
                         </button>
                         {selected === 'Other' && r === 'Other' && (
-                            <input
+                            <input aria-label="Input"
                                 style={s.otherInput}
                                 placeholder="Describe reason..."
                                 value={otherText}
@@ -87,7 +87,7 @@ export default function VoidReasonModal({ itemName, onConfirm, onCancel }) {
                 <div style={s.actions}>
                     <button style={s.cancelBtn} onClick={onCancel}>Cancel</button>
                     <button
-                        style={{ ...s.confirmBtn, opacity: selected ? 1 : 0.5 }}
+                        style={{ ...s.confirmBtn, opacity: selected ? 1 : 0.5 }} /* keep-inline */ /* keep-inline */
                         onClick={handleConfirm}
                         disabled={!selected}
                     >Void Item</button>

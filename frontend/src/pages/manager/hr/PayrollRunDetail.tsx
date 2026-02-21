@@ -206,7 +206,7 @@ export default function PayrollRunDetail() {
                                             <td className="px-6 py-4 text-center">
                                                 <Button
                                                     variant="ghost"
-                                                    size="icon"
+                                                    size="icon" aria-label="Action"
                                                     className="h-8 w-8 hover:bg-secondary/80 rounded-lg"
                                                     title="Download Payslip PDF"
                                                     onClick={(e) => {

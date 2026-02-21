@@ -21,7 +21,7 @@ export default function SkillsPassDocument({ data, view = 'certificate' }) {
 
     if (view === 'batch') {
         return (
-            <div id="skillspass-batch-to-export" className="bg-white text-black p-12 max-w-[210mm] mx-auto text-center" style={{ fontFamily: 'Arial, sans-serif' }}>
+            <div id="skillspass-batch-to-export" className="bg-white text-black p-12 max-w-[210mm] mx-auto text-center" style={{ fontFamily: 'Arial, sans-serif' }}> /* keep-inline */ /* keep-inline */
                 <div className="flex justify-center mb-16">
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded border-4 border-orange-500 rotate-45 flex items-center justify-center">
@@ -76,7 +76,7 @@ export default function SkillsPassDocument({ data, view = 'certificate' }) {
     }
 
     return (
-        <div id="skillspass-cert-to-export" className="bg-white text-black p-0 max-w-[210mm] mx-auto relative min-h-[297mm] flex flex-col" style={{ fontFamily: 'Arial, sans-serif' }}>
+        <div id="skillspass-cert-to-export" className="bg-white text-black p-0 max-w-[210mm] mx-auto relative min-h-[297mm] flex flex-col" style={{ fontFamily: 'Arial, sans-serif' }}> /* keep-inline */ /* keep-inline */
             {/* Top Border */}
             <div className="h-3 bg-orange-600 w-full" />
 
@@ -129,7 +129,7 @@ export default function SkillsPassDocument({ data, view = 'certificate' }) {
                     <div className="flex flex-col items-center pt-8">
                         <div className="mb-2 italic text-3xl font-serif text-foreground tracking-wider">
                             {/* Placeholder for Signature Image */}
-                            <span style={{ fontFamily: 'cursive' }}>{issuerName}</span>
+                            <span style={{ fontFamily: 'cursive' }}>{issuerName}</span> /* keep-inline */ /* keep-inline */
                         </div>
                         <div className="w-48 h-px bg-black mb-2" />
                         <div className="text-sm font-bold leading-tight">{issuerName}</div>

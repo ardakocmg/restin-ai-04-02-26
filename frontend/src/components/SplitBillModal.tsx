@@ -116,7 +116,7 @@ export default function SplitBillModal({ order, items, onClose, onSplit }) {
 
                             {/* Middle Actions */}
                             <div className="flex flex-col justify-center gap-2">
-                                <Button variant="ghost" size="icon" onClick={moveAll}>
+                                <Button variant="ghost" size="icon" onClick={moveAll} aria-label="Action">
                                     <ArrowLeftRight className="w-4 h-4" />
                                 </Button>
                             </div>

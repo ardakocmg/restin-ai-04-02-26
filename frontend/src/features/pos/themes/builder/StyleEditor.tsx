@@ -64,17 +64,17 @@ function ColorInput({
             <label className="text-xs text-muted-foreground truncate flex-1">{label}</label>
             <div className="flex items-center gap-2 flex-shrink-0">
                 <div className="relative">
-                    <input
+                    <input aria-label="Input"
                         type="color"
                         value={value}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={(e) = aria-label="Input field"> onChange(e.target.value)}
                         className="w-7 h-7 rounded-md border border-border cursor-pointer bg-transparent"
                     />
                 </div>
-                <input
+                <input aria-label="Input"
                     type="text"
                     value={value}
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={(e) = aria-label="Input field"> onChange(e.target.value)}
                     className="w-20 text-xs px-2 py-1 rounded bg-card border border-border text-secondary-foreground font-mono"
                 />
             </div>
@@ -119,9 +119,9 @@ function ConfigFieldInput({
             return (
                 <div className="flex items-center justify-between gap-2">
                     <label className="text-xs text-muted-foreground truncate flex-1">{field.label}</label>
-                    <select
+                    <select aria-label="Input"
                         value={String(value ?? field.defaultValue)}
-                        onChange={(e) => onChange(field.key, e.target.value)}
+                        onChange={(e) = aria-label="Input field"> onChange(field.key, e.target.value)}
                         className="text-xs px-2 py-1 rounded bg-card border border-border text-secondary-foreground flex-shrink-0"
                     >
                         {field.options?.map((opt) => (
@@ -142,10 +142,10 @@ function ConfigFieldInput({
             return (
                 <div className="flex items-center justify-between gap-2">
                     <label className="text-xs text-muted-foreground">{field.label}</label>
-                    <input
+                    <input aria-label="Input"
                         type="number"
                         value={Number(value ?? field.defaultValue)}
-                        onChange={(e) => onChange(field.key, Number(e.target.value))}
+                        onChange={(e) = aria-label="Input field"> onChange(field.key, Number(e.target.value))}
                         className="w-16 text-xs px-2 py-1 rounded bg-card border border-border text-secondary-foreground text-center"
                     />
                 </div>
@@ -154,10 +154,10 @@ function ConfigFieldInput({
             return (
                 <div className="flex items-center justify-between gap-2">
                     <label className="text-xs text-muted-foreground">{field.label}</label>
-                    <input
+                    <input aria-label="Input"
                         type="text"
                         value={String(value ?? field.defaultValue ?? '')}
-                        onChange={(e) => onChange(field.key, e.target.value)}
+                        onChange={(e) = aria-label="Input field"> onChange(field.key, e.target.value)}
                         className="flex-1 max-w-[140px] text-xs px-2 py-1 rounded bg-card border border-border text-secondary-foreground"
                     />
                 </div>
@@ -238,9 +238,9 @@ export default function StyleEditor({
                     <div className="space-y-2.5 pl-6">
                         <div className="flex items-center justify-between gap-2">
                             <label className="text-xs text-muted-foreground">Font Family</label>
-                            <select
+                            <select aria-label="Input"
                                 value={styles.fontFamily}
-                                onChange={(e) => updateStyle('fontFamily', e.target.value)}
+                                onChange={(e) = aria-label="Input field"> updateStyle('fontFamily', e.target.value)}
                                 className="text-xs px-2 py-1 rounded bg-card border border-border text-secondary-foreground max-w-40"
                             >
                                 {FONT_OPTIONS.map((f) => (
@@ -267,12 +267,12 @@ export default function StyleEditor({
                         <div className="flex items-center justify-between gap-2">
                             <label className="text-xs text-muted-foreground">Tile Radius</label>
                             <div className="flex items-center gap-2">
-                                <input
+                                <input aria-label="Input"
                                     type="range"
                                     min={0}
                                     max={24}
                                     value={styles.tileRadius}
-                                    onChange={(e) => updateStyle('tileRadius', Number(e.target.value))}
+                                    onChange={(e) = aria-label="Input field"> updateStyle('tileRadius', Number(e.target.value))}
                                     className="w-20 accent-teal-500"
                                 />
                                 <span className="text-xs text-muted-foreground w-8 text-right">{styles.tileRadius}px</span>

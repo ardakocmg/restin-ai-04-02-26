@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
@@ -238,7 +237,7 @@ export default function NewTopBar(): React.ReactElement {
       <form onSubmit={handleSearch} className="flex-1 max-w-2xl relative">
         <div className="relative group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-red-500 transition-colors z-10 duration-300" />
-          <input
+          <input aria-label="Input"
             ref={searchInputRef}
             type="search"
             placeholder="Search pages, modules, features..."
@@ -360,7 +359,7 @@ export default function NewTopBar(): React.ReactElement {
         {/* Theme Toggle */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors" aria-label="Action">
               {mode === 'dark' ? <Moon className="h-5 w-5" /> :
                 mode === 'light' ? <Sun className="h-5 w-5" /> :
                   <Monitor className="h-5 w-5" />}
@@ -388,7 +387,7 @@ export default function NewTopBar(): React.ReactElement {
         <div className="w-px h-8 bg-border"></div>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-secondary relative">
+        <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-secondary relative" aria-label="Action">
           <Bell className="h-5 w-5" />
           {notifTotal > 0 && (
             <span className="absolute top-1 right-1 w-5 h-5 bg-red-500 rounded-full border-2 border-background flex items-center justify-center">

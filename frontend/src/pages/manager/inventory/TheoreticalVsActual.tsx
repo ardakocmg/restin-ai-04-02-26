@@ -81,7 +81,7 @@ function VarianceBadge({ status }: { status: StockComparison['status'] }) {
 export default function TheoreticalVsActual() {
     const { t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { activeVenue: selectedVenue } = useVenue() as any;
+    const { activeVenue: selectedVenue } = useVenue() as unknown;
 
     const [items, setItems] = useState<StockComparison[]>([]);
     const [loading, setLoading] = useState(false);

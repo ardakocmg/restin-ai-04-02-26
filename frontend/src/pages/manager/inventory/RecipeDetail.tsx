@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { logger } from '@/lib/logger';
@@ -186,7 +185,7 @@ export default function RecipeDetail() {
         >
             {/* ── Header ── */}
             <div className="flex items-start gap-4 mb-6">
-                <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+                <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> navigate(-1)}>
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <div className="h-16 w-16 rounded-lg bg-muted flex items-center justify-center shrink-0">
@@ -919,7 +918,7 @@ export default function RecipeDetail() {
                                             {recipe.principal_image === img && (
                                                 <Badge className="absolute bottom-2 left-2 bg-green-500 text-foreground text-[10px]">Principal</Badge>
                                             )}
-                                            <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() => handleImageDelete(i)}>
+                                            <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={() = aria-label="Action"> handleImageDelete(i)}>
                                                 <Trash2 className="h-3 w-3" />
                                             </Button>
                                         </div>
