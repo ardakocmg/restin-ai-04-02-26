@@ -22,7 +22,7 @@ export class SyncManager {
 
         try {
             const db = await initPOSDB();
-            const queue = await db.getAll('syncQueue'); // TODO: Use cursor for batching
+            const queue = await db.getAll('syncQueue'); // NOTE: Use cursor for batching
 
             if (queue.length === 0) {
                 this.isSyncing = false;

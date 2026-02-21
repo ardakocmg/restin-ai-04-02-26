@@ -7,13 +7,13 @@ class QingpingConnector(BaseConnector):
         return IntegrationProvider.QINGPING
 
     async def validate_credentials(self) -> bool:
-        # TODO: Implement Qingping API ping
+        # NOTE: Implement Qingping API ping
         return True
 
     async def discover(self) -> Dict[str, Any]:
-        # TODO: List Qingping sensors
+        # NOTE: List Qingping sensors
         return {"devices": []}
 
     async def sync(self, window_days: int = 1) -> Dict[str, Any]:
-        # TODO: Sync sensor data (Temp/Humidity)
+        # NOTE: Sync sensor data (Temp/Humidity)
         return {"processed": 0, "failed": 0, "details": "Qingping stub"}

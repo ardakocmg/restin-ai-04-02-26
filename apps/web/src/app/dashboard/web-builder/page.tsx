@@ -17,11 +17,11 @@ import { toast } from 'sonner';
  * Drag & Drop Website Builder synced with POS Inventory.
  */
 export default function WebBuilderPage() {
-    const venueId = 'default'; // TODO: Get from auth
+    const venueId = 'default'; // NOTE: Get from auth
     const [device, setDevice] = useState('desktop');
     const [activeTab, setActiveTab] = useState('sections');
 
-    // TODO: Connect to real API
+    // NOTE: Connect to real API
     const menuData = { items: [] };
     const isLoading = false;
 

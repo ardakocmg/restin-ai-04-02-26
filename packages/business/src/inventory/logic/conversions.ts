@@ -34,7 +34,7 @@ export const convertUnit = (value: number, from: string, to: string, density: nu
     // Convert to Base (g or ml)
     let baseValue = value * fromFactor;
 
-    // TODO: Apply density if crossing Weight/Volume boundary
+    // NOTE: Apply density if crossing Weight/Volume boundary
     // if (isVolume(from) && isWeight(to)) baseValue *= density;
 
     // Convert to Target

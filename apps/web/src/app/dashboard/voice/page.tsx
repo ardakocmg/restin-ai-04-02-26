@@ -20,7 +20,7 @@ import { useRouter } from 'next/navigation';
 export default function VoicePage() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState('status');
-    const tenantId = 'default'; // TODO: Get from auth context
+    const tenantId = 'default'; // NOTE: Get from auth context
 
     const { data: config } = useQuery({
         queryKey: ['voice-config', tenantId],

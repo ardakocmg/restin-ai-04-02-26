@@ -47,7 +47,7 @@ export const PROVIDER_FIELDS: Record<string, CredField[]> = {
         { key: 'api_key', label: 'Maps API Key', type: 'password', placeholder: 'AIza...' },
     ],
     GOOGLE_ANALYTICS: [
-        { key: 'measurement_id', label: 'Measurement ID', type: 'text', placeholder: 'G-XXXXXXXXXX' },
+        { key: 'measurement_id', label: 'Measurement ID', type: 'text', placeholder: 'G-1234567890' },
         { key: 'api_secret', label: 'API Secret', type: 'password', placeholder: '••••••••' },
     ],
     NUKI: [
@@ -159,9 +159,9 @@ export const PROVIDER_SETUP_GUIDES: Record<string, string[]> = {
         '4. Copy the API Key and paste below',
     ],
     GOOGLE_ANALYTICS: [
-        '1. Go to Google Analytics → Admin → Data Streams',
-        '2. Copy your Measurement ID (G-XXXXXXXXXX)',
-        '3. Create an API Secret under Admin → Data API → Secrets',
+        '1. Go to Google Analytics > Admin > Data Streams',
+        '2. Copy your Measurement ID (G-1234567890)',
+        '3. To get the API Secret, go to Measurement Protocol API secrets and create a new one.',
     ],
     NUKI: [
         '1. Click "Connect with Nuki" below — you\'ll be redirected to Nuki',

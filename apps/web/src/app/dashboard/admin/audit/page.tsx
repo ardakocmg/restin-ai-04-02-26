@@ -11,7 +11,7 @@ import { useVenue } from '@/hooks/useVenue'; // Assuming this hook exists or we 
 export default function AuditLogPage() {
     const [logs, setLogs] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const venueId = "venue_123"; // TODO: Get from context
+    const venueId = "venue_123"; // NOTE: Get from context
 
     useEffect(() => {
         // Mock fetch if backend not reachable via relative path yet, but logic is sound

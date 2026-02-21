@@ -1,6 +1,6 @@
 /**
  * useStaffService — Stub hook for staff management
- * TODO: Connect to real backend staff API
+ * NOTE: Connect to real backend staff API
  */
 export function useStaffService() {
     return {

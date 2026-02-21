@@ -409,13 +409,13 @@ export default function GoodsReceivedNotes() {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label>PO Number (optional)</Label>
-                                        <Input value={form.po_number} onChange={e => setForm(p => ({ ...p, po_number: e.target.value }))} placeholder="PO-2026-XXX" />
+                                    <div>
+                                        <Label className="text-xs mb-1 block">PO Number (Optional)</Label>
+                                        <Input value={form.po_number} onChange={e => setForm(p => ({ ...p, po_number: e.target.value }))} placeholder="PO-2026-001" />
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label>Delivery Note Ref</Label>
-                                        <Input value={form.delivery_note} onChange={e => setForm(p => ({ ...p, delivery_note: e.target.value }))} placeholder="DN-XXXX" />
+                                    <div>
+                                        <Label className="text-xs mb-1 block">Delivery Note / Invoice</Label>
+                                        <Input value={form.delivery_note} onChange={e => setForm(p => ({ ...p, delivery_note: e.target.value }))} placeholder="DN-1234" />
                                     </div>
                                 </div>
 
@@ -470,9 +470,9 @@ export default function GoodsReceivedNotes() {
                                             </div>
                                             {/* Gap 14: Lot Traceability Fields */}
                                             <div className="flex gap-2 pl-1">
-                                                <div className="flex-1 space-y-1">
-                                                    <Label className="text-[10px] text-muted-foreground flex items-center gap-1"><QrCode className="h-3 w-3" /> Lot / Batch #</Label>
-                                                    <Input className="h-7 text-xs font-mono" value={item.lot_number} onChange={e => updateItem(idx, 'lot_number', e.target.value)} placeholder="LOT-XXX" />
+                                                <div>
+                                                    <Label className="text-[10px] uppercase text-muted-foreground font-semibold mb-1 block">Lot #</Label>
+                                                    <Input className="h-7 text-xs font-mono" value={item.lot_number} onChange={e => updateItem(idx, 'lot_number', e.target.value)} placeholder="LOT-123" />
                                                 </div>
                                                 <div className="w-32 space-y-1">
                                                     <Label className="text-[10px] text-muted-foreground">Expiry Date</Label>

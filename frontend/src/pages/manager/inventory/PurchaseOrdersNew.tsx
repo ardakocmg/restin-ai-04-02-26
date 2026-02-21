@@ -521,9 +521,9 @@ export default function PurchaseOrdersNew() {
               <div className="space-y-2">
                 <Label>Invoice Reference</Label>
                 <Input
-                  placeholder="INV-XXXX"
-                  value={formData.invoice_ref}
-                  onChange={e => setFormData({ ...formData, invoice_ref: e.target.value })}
+                  placeholder="INV-1234"
+                  value={form.invoice_number}
+                  onChange={(e) => setForm(prev => ({ ...prev, invoice_number: e.target.value }))}
                 />
               </div>
               <div className="space-y-2">

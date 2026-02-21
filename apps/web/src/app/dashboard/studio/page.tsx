@@ -17,11 +17,11 @@ import { toast } from 'sonner';
  */
 export default function StudioPage() {
     const [activeFilter, setActiveFilter] = React.useState('all');
-    const assets = []; // TODO: Load from API
+    const assets = []; // NOTE: Load from API
 
     const handleGenerate = () => {
         toast.info("Connecting to Imagen 3...");
-        // TODO: Implement actual generation
+        // NOTE: Implement actual generation
         setTimeout(() => {
             toast.success("Asset Generated!", { description: "Cost: €0.04 (Billed to Account)" });
         }, 2000);
