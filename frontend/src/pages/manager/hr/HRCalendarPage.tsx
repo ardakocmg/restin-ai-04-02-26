@@ -57,7 +57,7 @@ export default function HRCalendarPage() {
             setEvents(evRes.data || []);
             const upData = upRes.data;
             setUpcoming(upData?.alerts || upData || []);
-        } catch (e) { logger.error('Failed to fetch calendar events:', e); }
+        } catch (e) { logger.error('Failed to fetch calendar events:', { error: String(e) }); }
         setLoading(false);
     }, [venueId, month, year]);
 
@@ -69,7 +69,7 @@ export default function HRCalendarPage() {
             setShowNewEvent(false);
             setNewEvent({ title: '', date: '', event_type: 'custom', description: '' });
             fetchEvents();
-        } catch (e) { logger.error('Failed to create event:', e); }
+        } catch (e) { logger.error('Failed to create event:', { error: String(e) }); }
     };
 
     const prevMonth = () => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); };
@@ -91,46 +91,46 @@ export default function HRCalendarPage() {
     /* No full-page spinner — calendar renders immediately */
 
     return (
-        <div style={{ padding: '24px 32px', maxWidth: 1400, margin: '0 auto' }}> /* keep-inline */
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}> /* keep-inline */
+        <div className="px-8 py-6 max-w-[1400px] mx-auto">
+            <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h1 style={{ fontSize: 28, fontWeight: 700, color: '#f1f5f9', margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}> /* keep-inline */
-                        <Calendar size={28} style={{ color: '#6366f1' }} /> HR Calendar /* keep-inline */
+                    <h1 className="text-[28px] font-bold text-slate-100 m-0 flex items-center gap-2.5">
+                        <Calendar size={28} className="text-indigo-400" /> HR Calendar
                     </h1>
-                    <p style={{ color: '#64748b', marginTop: 4 }}>Birthdays, anniversaries, probation expiry & custom events</p> /* keep-inline */
+                    <p className="text-slate-500 mt-1">Birthdays, anniversaries, probation expiry & custom events</p>
                 </div>
-                <button onClick={() => setShowNewEvent(true)} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#6366f1', color: '#fff', cursor: 'pointer', fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}> /* keep-inline */
+                <button onClick={() => setShowNewEvent(true)} className="px-4 py-2 rounded-lg border-none bg-indigo-500 text-white cursor-pointer font-semibold text-[13px] flex items-center gap-1.5">
                     <Plus size={16} /> Add Event
                 </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24 }}> /* keep-inline */
+            <div className="grid grid-cols-[1fr_320px] gap-6">
                 {/* Calendar Grid */}
-                <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 20 }}> /* keep-inline */
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}> /* keep-inline */
-                        <button onClick={prevMonth} style={{ background: '#1e293b', border: 'none', borderRadius: 8, padding: '6px 12px', color: '#94a3b8', cursor: 'pointer' }}><ChevronLeft size={18} /></button> /* keep-inline */
-                        <h3 style={{ color: '#f1f5f9', fontSize: 18, fontWeight: 600, margin: 0 }}>{monthNames[month]} {year}</h3> /* keep-inline */
-                        <button onClick={nextMonth} style={{ background: '#1e293b', border: 'none', borderRadius: 8, padding: '6px 12px', color: '#94a3b8', cursor: 'pointer' }}><ChevronRight size={18} /></button> /* keep-inline */
+                <div className="bg-slate-950 border border-slate-800 rounded-xl p-5">
+                    <div className="flex justify-between items-center mb-4">
+                        <button onClick={prevMonth} className="bg-slate-800 border-none rounded-lg px-3 py-1.5 text-slate-400 cursor-pointer" aria-label="Previous month"><ChevronLeft size={18} /></button>
+                        <h3 className="text-slate-100 text-lg font-semibold m-0">{monthNames[month]} {year}</h3>
+                        <button onClick={nextMonth} className="bg-slate-800 border-none rounded-lg px-3 py-1.5 text-slate-400 cursor-pointer" aria-label="Next month"><ChevronRight size={18} /></button>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, marginBottom: 4 }}> /* keep-inline */
+                    <div className="grid grid-cols-7 gap-0.5 mb-1">
                         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
-                            <div key={d} style={{ textAlign: 'center', padding: 8, color: '#64748b', fontSize: 12, fontWeight: 600 }}>{d}</div> /* keep-inline */
+                            <div key={d} className="text-center p-2 text-slate-500 text-xs font-semibold">{d}</div>
                         ))}
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2 }}> /* keep-inline */
+                    <div className="grid grid-cols-7 gap-0.5">
                         {calendarDays.map((day, i) => {
                             const dayEvents = getEventsForDay(day);
                             const isToday = day && new Date().getDate() === day && new Date().getMonth() === month && new Date().getFullYear() === year;
                             return (
-                                <div key={i} style={{ background: isToday ? '#1e293b' : day ? '#0f172a' : 'transparent', border: isToday ? '2px solid #6366f1' : '1px solid #1e293b22', borderRadius: 8, minHeight: 70, padding: 6 }}> /* keep-inline */
+                                <div key={i} className={`rounded-lg min-h-[70px] p-1.5 ${isToday ? 'bg-slate-800 border-2 border-indigo-500' : day ? 'bg-slate-950 border border-slate-800/20' : 'bg-transparent border border-transparent'}`}>
                                     {day && (
                                         <>
-                                            <div style={{ color: isToday ? '#6366f1' : '#94a3b8', fontSize: 13, fontWeight: isToday ? 700 : 400 }}>{day}</div> /* keep-inline */
+                                            <div className={`text-[13px] ${isToday ? 'text-indigo-400 font-bold' : 'text-slate-400'}`}>{day}</div>
                                             {dayEvents.slice(0, 2).map((ev, j) => {
                                                 const color = EVENT_COLORS[ev.event_type] || '#6366f1';
-                                                return <div key={j} style={{ background: color + '22', color, fontSize: 10, padding: '2px 4px', borderRadius: 4, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ev.title || ev.employee_name}</div>; /* keep-inline */
+                                                return <div key={j} className="text-[10px] px-1 py-0.5 rounded mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis" style={{ background: color + '22', color }}>{ev.title || ev.employee_name}</div>; // keep-inline
                                             })}
-                                            {dayEvents.length > 2 && <div style={{ color: '#64748b', fontSize: 10, marginTop: 2 }}>+{dayEvents.length - 2} more</div>} /* keep-inline */
+                                            {dayEvents.length > 2 && <div className="text-slate-500 text-[10px] mt-0.5">+{dayEvents.length - 2} more</div>}
                                         </>
                                     )}
                                 </div>
@@ -140,31 +140,31 @@ export default function HRCalendarPage() {
                 </div>
 
                 {/* Upcoming Events Sidebar */}
-                <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 20 }}> /* keep-inline */
-                    <h3 style={{ color: '#f1f5f9', fontSize: 16, fontWeight: 600, marginBottom: 16, margin: '0 0 16px' }}>Upcoming (30 days)</h3> /* keep-inline */
+                <div className="bg-slate-950 border border-slate-800 rounded-xl p-5">
+                    <h3 className="text-slate-100 text-base font-semibold mb-4 mt-0">Upcoming (30 days)</h3>
                     {upcoming.length === 0 ? (
-                        <p style={{ color: '#64748b', fontSize: 13, textAlign: 'center', padding: 20 }}>{"No "}upcoming events</p> /* keep-inline */
+                        <p className="text-slate-500 text-[13px] text-center p-5">{"No "}upcoming events</p>
                     ) : upcoming.map((ev, i) => {
                         const Icon = EVENT_ICONS[ev.type] || Calendar;
                         const color = EVENT_COLORS[ev.type] || '#6366f1';
                         return (
-                            <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 0', borderBottom: '1px solid #1e293b' }}> /* keep-inline */
-                                <div style={{ width: 36, height: 36, borderRadius: 8, background: color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}> /* keep-inline */
-                                    <Icon size={18} style={{ color }} /> /* keep-inline */
+                            <div key={i} className="flex gap-3 py-2.5 border-b border-slate-800">
+                                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: color + '22' }}> {/* keep-inline */}
+                                    <Icon size={18} style={{ color }} /> {/* keep-inline */}
                                 </div>
-                                <div style={{ flex: 1, minWidth: 0 }}> /* keep-inline */
-                                    <div style={{ color: '#f1f5f9', fontSize: 13, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ev.employee || ev.title}</div> /* keep-inline */
-                                    <div style={{ color: '#64748b', fontSize: 12 }}>{ev.date} • {ev.type?.replace('_', ' ')}</div> /* keep-inline */
+                                <div className="flex-1 min-w-0">
+                                    <div className="text-slate-100 text-[13px] font-medium whitespace-nowrap overflow-hidden text-ellipsis">{ev.employee || ev.title}</div>
+                                    <div className="text-slate-500 text-xs">{ev.date} • {ev.type?.replace('_', ' ')}</div>
                                 </div>
                             </div>
                         );
                     })}
-                    <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid #1e293b' }}> /* keep-inline */
-                        <h4 style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600, marginBottom: 8, margin: '0 0 8px' }}>Event Types</h4> /* keep-inline */
+                    <div className="mt-5 pt-4 border-t border-slate-800">
+                        <h4 className="text-slate-400 text-xs font-semibold mb-2 mt-0">Event Types</h4>
                         {(Object.entries(EVENT_COLORS) as [EventType, string][]).map(([type, color]) => (
-                            <div key={type} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}> /* keep-inline */
-                                <div style={{ width: 10, height: 10, borderRadius: 3, background: color }} /> /* keep-inline */
-                                <span style={{ color: '#94a3b8', fontSize: 12, textTransform: 'capitalize' }}>{type.replace('_', ' ')}</span> /* keep-inline */
+                            <div key={type} className="flex items-center gap-2 mb-1">
+                                <div className="w-2.5 h-2.5 rounded-sm" style={{ background: color }} /> {/* keep-inline */}
+                                <span className="text-slate-400 text-xs capitalize">{type.replace('_', ' ')}</span>
                             </div>
                         ))}
                     </div>
@@ -173,19 +173,19 @@ export default function HRCalendarPage() {
 
             {/* New Event Modal */}
             {showNewEvent && (
-                <div style={{ position: 'fixed', inset: 0, background: '#00000080', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}> /* keep-inline */
-                    <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 16, padding: 32, width: 440 }}> /* keep-inline */
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
-                            <h2 style={{ color: '#f1f5f9', fontSize: 20, fontWeight: 600, margin: 0 }}>Add Custom Event</h2> /* keep-inline */
-                            <button onClick={() => setShowNewEvent(false)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={20} /></button> /* keep-inline */
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000]">
+                    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-8 w-[440px]">
+                        <div className="flex justify-between items-center mb-5">
+                            <h2 className="text-slate-100 text-xl font-semibold m-0">Add Custom Event</h2>
+                            <button onClick={() => setShowNewEvent(false)} className="bg-transparent border-none text-slate-500 cursor-pointer" aria-label="Close"><X size={20} /></button>
                         </div>
                         {[{ f: 'title' as const, t: 'text' }, { f: 'date' as const, t: 'date' }, { f: 'description' as const, t: 'text' }].map(({ f, t }) => (
-                            <div key={f} style={{ marginBottom: 16 }}> /* keep-inline */
-                                <label style={{ color: '#94a3b8', fontSize: 13, display: 'block', marginBottom: 6, textTransform: 'capitalize' }}>{f}</label> /* keep-inline */
-                                <input type={t} value={newEvent[f]} onChange={e => setNewEvent(p => ({ ...p, [f]: e.target.value }))} style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', borderRadius: 8, padding: '10px 12px', color: '#f1f5f9', fontSize: 14 }} /> /* keep-inline */
+                            <div key={f} className="mb-4">
+                                <label className="text-slate-400 text-[13px] block mb-1.5 capitalize">{f}</label>
+                                <input type={t} value={newEvent[f]} onChange={e => setNewEvent(p => ({ ...p, [f]: e.target.value }))} aria-label={f} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm" />
                             </div>
                         ))}
-                        <button onClick={createEvent} style={{ width: '100%', padding: '12px', borderRadius: 8, border: 'none', background: '#6366f1', color: '#fff', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Create Event</button> /* keep-inline */
+                        <button onClick={createEvent} className="w-full py-3 rounded-lg border-none bg-indigo-500 text-white font-semibold text-sm cursor-pointer">Create Event</button>
                     </div>
                 </div>
             )}

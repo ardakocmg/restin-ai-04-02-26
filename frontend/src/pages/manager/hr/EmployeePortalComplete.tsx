@@ -323,13 +323,13 @@ export default function EmployeePortalComplete() {
 
                 {/* Navigation */}
                 <div className="flex items-center justify-between mb-4">
-                  <button onClick={() => setCurrentMonth(m => m > 0 ? m - 1 : 11)} className="p-1.5 hover:bg-secondary rounded-lg transition-colors">
+                  <button onClick={() => setCurrentMonth(m => m > 0 ? m - 1 : 11)} className="p-1.5 hover:bg-secondary rounded-lg transition-colors" aria-label="Previous month">
                     <ChevronLeft className="h-4 w-4 text-muted-foreground" />
                   </button>
                   <div className="text-sm font-semibold text-secondary-foreground">
                     {new Date(currentYear, currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                   </div>
-                  <button onClick={() => setCurrentMonth(m => m < 11 ? m + 1 : 0)} className="p-1.5 hover:bg-secondary rounded-lg transition-colors">
+                  <button onClick={() => setCurrentMonth(m => m < 11 ? m + 1 : 0)} className="p-1.5 hover:bg-secondary rounded-lg transition-colors" aria-label="Next month">
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </button>
                 </div>
@@ -689,6 +689,7 @@ export default function EmployeePortalComplete() {
                 <select
                   className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                   defaultValue={leaveRequestType === 'sick' ? 'sick' : 'vacation'}
+                  aria-label="Leave type"
                 >
                   {leaveRequestType === 'sick' ? (
                     <>
@@ -708,11 +709,11 @@ export default function EmployeePortalComplete() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1.5">Start Date</label>
-                  <input type="date" className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
+                  <input type="date" aria-label="Start date" className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1.5">End Date</label>
-                  <input type="date" className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
+                  <input type="date" aria-label="End date" className="w-full bg-background border border-border rounded-lg px-3 py-2.5 text-sm text-secondary-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
                 </div>
               </div>
               <div>

@@ -59,7 +59,7 @@ export default function OnboardingChecklists() {
             ]);
             setTemplates(tRes.data || []);
             setActiveChecklists(aRes.data || []);
-        } catch (e) { logger.error('Failed to fetch checklists:', e); }
+        } catch (e) { logger.error('Failed to fetch checklists:', { error: String(e) }); }
         setLoading(false);
     }, [venueId]);
 
@@ -72,14 +72,14 @@ export default function OnboardingChecklists() {
             setShowNewTemplate(false);
             setNewTemplate({ name: '', template_type: 'onboarding', items: [{ title: '', assignee_role: 'hr', due_days_offset: 0 }] });
             fetchData();
-        } catch (e) { logger.error('Failed to create template:', e); }
+        } catch (e) { logger.error('Failed to create template:', { error: String(e) }); }
     };
 
     const completeTask = async (checklistId: string, taskId: string) => {
         try {
             await api.put(`/venues/${venueId}/hr/checklists/${checklistId}/tasks/${taskId}/complete`);
             fetchData();
-        } catch (e) { logger.error('Failed to complete task:', e); }
+        } catch (e) { logger.error('Failed to complete task:', { error: String(e) }); }
     };
 
     const addItem = () => setNewTemplate(p => ({ ...p, items: [...p.items, { title: '', assignee_role: 'hr', due_days_offset: 0 }] }));
@@ -89,60 +89,60 @@ export default function OnboardingChecklists() {
     /* No full-page spinner — page renders immediately with 0s */
 
     return (
-        <div style={{ padding: '24px 32px', maxWidth: 1400, margin: '0 auto' }}> /* keep-inline */
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}> /* keep-inline */
+        <div className="px-8 py-6 max-w-[1400px] mx-auto">
+            <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h1 style={{ fontSize: 28, fontWeight: 700, color: '#f1f5f9', margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}> /* keep-inline */
-                        <ClipboardList size={28} style={{ color: '#6366f1' }} /> Onboarding & Task Checklists /* keep-inline */
+                    <h1 className="text-[28px] font-bold text-slate-100 m-0 flex items-center gap-2.5">
+                        <ClipboardList size={28} className="text-indigo-400" /> Onboarding & Task Checklists
                     </h1>
-                    <p style={{ color: '#64748b', marginTop: 4 }}>Manage onboarding, offboarding & custom task templates</p> /* keep-inline */
+                    <p className="text-slate-500 mt-1">Manage onboarding, offboarding & custom task templates</p>
                 </div>
-                <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
+                <div className="flex gap-2">
                     {(['templates', 'active'] as const).map(v => (
-                        <button key={v} onClick={() => setView(v)} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: view === v ? '#6366f1' : '#1e293b', color: view === v ? '#fff' : '#94a3b8', cursor: 'pointer', fontWeight: 500, fontSize: 13, textTransform: 'capitalize' }}>{v}</button> /* keep-inline */
+                        <button key={v} onClick={() => setView(v)} className={`px-4 py-2 rounded-lg border-none cursor-pointer font-medium text-[13px] capitalize ${view === v ? 'bg-indigo-500 text-white' : 'bg-slate-800 text-slate-400'}`}>{v}</button>
                     ))}
-                    <button onClick={() => setShowNewTemplate(true)} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#22c55e', color: '#fff', cursor: 'pointer', fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}> /* keep-inline */
+                    <button onClick={() => setShowNewTemplate(true)} className="px-4 py-2 rounded-lg border-none bg-green-500 text-white cursor-pointer font-semibold text-[13px] flex items-center gap-1.5">
                         <Plus size={16} /> New Template
                     </button>
                 </div>
             </div>
 
             {/* Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}> /* keep-inline */
+            <div className="grid grid-cols-3 gap-4 mb-6">
                 {[
-                    { label: 'Templates', value: templates.length, color: '#6366f1', icon: ClipboardList },
-                    { label: 'Active Checklists', value: activeChecklists.length, color: '#3b82f6', icon: Users },
-                    { label: 'Completed', value: activeChecklists.filter(c => c.progress === 100 || c.status === 'completed').length, color: '#22c55e', icon: CheckCircle },
+                    { label: 'Templates', value: templates.length, color: 'text-indigo-400', icon: ClipboardList },
+                    { label: 'Active Checklists', value: activeChecklists.length, color: 'text-blue-400', icon: Users },
+                    { label: 'Completed', value: activeChecklists.filter(c => c.progress === 100 || c.status === 'completed').length, color: 'text-green-400', icon: CheckCircle },
                 ].map((s, i) => (
-                    <div key={i} style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 20 }}> /* keep-inline */
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}> /* keep-inline */
-                            <span style={{ color: '#64748b', fontSize: 13 }}>{s.label}</span> /* keep-inline */
-                            <s.icon size={18} style={{ color: s.color }} /> /* keep-inline */
+                    <div key={i} className="bg-slate-950 border border-slate-800 rounded-xl p-5">
+                        <div className="flex justify-between">
+                            <span className="text-slate-500 text-[13px]">{s.label}</span>
+                            <s.icon size={18} className={s.color} />
                         </div>
-                        <div style={{ fontSize: 32, fontWeight: 700, color: '#f1f5f9', marginTop: 8 }}>{s.value}</div> /* keep-inline */
+                        <div className="text-[32px] font-bold text-slate-100 mt-2">{s.value}</div>
                     </div>
                 ))}
             </div>
 
             {/* Templates List */}
             {view === 'templates' && (
-                <div style={{ display: 'grid', gap: 12 }}> /* keep-inline */
+                <div className="grid gap-3">
                     {templates.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: 60, color: '#64748b', background: '#0f172a', borderRadius: 12, border: '1px solid #1e293b' }}> /* keep-inline */
-                            <ClipboardList size={48} style={{ opacity: 0.3, marginBottom: 16 }} /> /* keep-inline */
+                        <div className="text-center p-[60px] text-slate-500 bg-slate-950 rounded-xl border border-slate-800">
+                            <ClipboardList size={48} className="opacity-30 mb-4" />
                             <p>{"No "}templates yet. Create your first onboarding checklist.</p>
                         </div>
                     ) : templates.map(t => (
-                        <div key={t.id} style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 20 }}> /* keep-inline */
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> /* keep-inline */
+                        <div key={t.id} className="bg-slate-950 border border-slate-800 rounded-xl p-5">
+                            <div className="flex justify-between items-center">
                                 <div>
-                                    <h3 style={{ color: '#f1f5f9', fontSize: 18, fontWeight: 600, margin: 0 }}>{t.name}</h3> /* keep-inline */
-                                    <div style={{ display: 'flex', gap: 12, marginTop: 6, color: '#94a3b8', fontSize: 13 }}> /* keep-inline */
-                                        <span style={{ background: '#6366f122', color: '#6366f1', padding: '2px 10px', borderRadius: 12, fontSize: 12 }}>{t.template_type}</span> /* keep-inline */
+                                    <h3 className="text-slate-100 text-lg font-semibold m-0">{t.name}</h3>
+                                    <div className="flex gap-3 mt-1.5 text-slate-400 text-[13px]">
+                                        <span className="bg-indigo-500/10 text-indigo-400 px-2.5 py-0.5 rounded-xl text-xs">{t.template_type}</span>
                                         <span>{t.items?.length || 0} tasks</span>
                                     </div>
                                 </div>
-                                <ChevronRight size={18} style={{ color: '#64748b' }} /> /* keep-inline */
+                                <ChevronRight size={18} className="text-slate-500" />
                             </div>
                         </div>
                     ))}
@@ -151,27 +151,27 @@ export default function OnboardingChecklists() {
 
             {/* Active Checklists */}
             {view === 'active' && (
-                <div style={{ display: 'grid', gap: 12 }}> /* keep-inline */
+                <div className="grid gap-3">
                     {activeChecklists.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: 60, color: '#64748b', background: '#0f172a', borderRadius: 12, border: '1px solid #1e293b' }}> /* keep-inline */
-                            <Users size={48} style={{ opacity: 0.3, marginBottom: 16 }} /> /* keep-inline */
+                        <div className="text-center p-[60px] text-slate-500 bg-slate-950 rounded-xl border border-slate-800">
+                            <Users size={48} className="opacity-30 mb-4" />
                             <p>{"No "}active checklists. Activate a template for an employee.</p>
                         </div>
                     ) : activeChecklists.map(c => (
-                        <div key={c.id} style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 20 }}> /* keep-inline */
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}> /* keep-inline */
-                                <h3 style={{ color: '#f1f5f9', fontSize: 16, fontWeight: 600, margin: 0 }}>{c.employee_name || 'Employee'} — {c.template_name || 'Checklist'}</h3> /* keep-inline */
-                                <span style={{ color: c.progress === 100 ? '#22c55e' : '#f59e0b', fontWeight: 600 }}>{c.progress || 0}%</span> /* keep-inline */
+                        <div key={c.id} className="bg-slate-950 border border-slate-800 rounded-xl p-5">
+                            <div className="flex justify-between items-center mb-3">
+                                <h3 className="text-slate-100 text-base font-semibold m-0">{c.employee_name || 'Employee'} — {c.template_name || 'Checklist'}</h3>
+                                <span className={`font-semibold ${c.progress === 100 ? 'text-green-400' : 'text-amber-400'}`}>{c.progress || 0}%</span>
                             </div>
-                            <div style={{ height: 6, background: '#1e293b', borderRadius: 3, marginBottom: 12 }}> /* keep-inline */
-                                <div style={{ height: '100%', background: c.progress === 100 ? '#22c55e' : '#6366f1', borderRadius: 3, width: `${c.progress || 0}%`, transition: 'width 0.3s' }} />
+                            <div className="h-1.5 bg-slate-800 rounded-sm mb-3">
+                                <div className={`h-full rounded-sm transition-[width] duration-300 ${c.progress === 100 ? 'bg-green-400' : 'bg-indigo-500'}`} style={{ width: `${c.progress || 0}%` }} /> {/* keep-inline */}
                             </div>
                             {(c.tasks || []).map((task) => (
-                                <div key={task.id} onClick={() => !task.completed && completeTask(c.id, task.id)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: '1px solid #1e293b22', cursor: task.completed ? 'default' : 'pointer' }}> /* keep-inline */
-                                    <div style={{ width: 20, height: 20, borderRadius: 4, background: task.completed ? '#22c55e' : '#1e293b', border: task.completed ? 'none' : '2px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}> /* keep-inline */
-                                        {task.completed && <Check size={14} style={{ color: '#fff' }} />} /* keep-inline */
+                                <div key={task.id} onClick={() => !task.completed && completeTask(c.id, task.id)} className={`flex items-center gap-2.5 py-2 border-b border-slate-800/20 ${task.completed ? 'cursor-default' : 'cursor-pointer'}`}>
+                                    <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 ${task.completed ? 'bg-green-500 border-none' : 'bg-slate-800 border-2 border-slate-700'}`}>
+                                        {task.completed && <Check size={14} className="text-white" />}
                                     </div>
-                                    <span style={{ color: task.completed ? '#64748b' : '#f1f5f9', fontSize: 14, textDecoration: task.completed ? 'line-through' : 'none' }}>{task.title}</span> /* keep-inline */
+                                    <span className={`text-sm ${task.completed ? 'text-slate-500 line-through' : 'text-slate-100'}`}>{task.title}</span>
                                 </div>
                             ))}
                         </div>
@@ -181,34 +181,34 @@ export default function OnboardingChecklists() {
 
             {/* New Template Modal */}
             {showNewTemplate && (
-                <div style={{ position: 'fixed', inset: 0, background: '#00000080', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}> /* keep-inline */
-                    <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 16, padding: 32, width: 540, maxHeight: '80vh', overflow: 'auto' }}> /* keep-inline */
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
-                            <h2 style={{ color: '#f1f5f9', fontSize: 20, fontWeight: 600, margin: 0 }}>New Checklist Template</h2> /* keep-inline */
-                            <button onClick={() => setShowNewTemplate(false)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={20} /></button> /* keep-inline */
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000]">
+                    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-8 w-[540px] max-h-[80vh] overflow-auto">
+                        <div className="flex justify-between items-center mb-5">
+                            <h2 className="text-slate-100 text-xl font-semibold m-0">New Checklist Template</h2>
+                            <button onClick={() => setShowNewTemplate(false)} className="bg-transparent border-none text-slate-500 cursor-pointer" aria-label="Close"><X size={20} /></button>
                         </div>
-                        <div style={{ marginBottom: 16 }}> /* keep-inline */
-                            <label style={{ color: '#94a3b8', fontSize: 13, display: 'block', marginBottom: 6 }}>Template Name</label> /* keep-inline */
-                            <input value={newTemplate.name} onChange={e => setNewTemplate(p => ({ ...p, name: e.target.value }))} style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', borderRadius: 8, padding: '10px 12px', color: '#f1f5f9', fontSize: 14 }} /> /* keep-inline */
+                        <div className="mb-4">
+                            <label className="text-slate-400 text-[13px] block mb-1.5">Template Name</label>
+                            <input value={newTemplate.name} onChange={e => setNewTemplate(p => ({ ...p, name: e.target.value }))} aria-label="Template name" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm" />
                         </div>
-                        <div style={{ marginBottom: 16 }}> /* keep-inline */
-                            <label style={{ color: '#94a3b8', fontSize: 13, display: 'block', marginBottom: 6 }}>Type</label> /* keep-inline */
-                            <select value={newTemplate.template_type} onChange={e => setNewTemplate(p => ({ ...p, template_type: e.target.value }))} style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', borderRadius: 8, padding: '10px 12px', color: '#f1f5f9', fontSize: 14 }}> /* keep-inline */
+                        <div className="mb-4">
+                            <label className="text-slate-400 text-[13px] block mb-1.5">Type</label>
+                            <select value={newTemplate.template_type} onChange={e => setNewTemplate(p => ({ ...p, template_type: e.target.value }))} aria-label="Template type" className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm">
                                 <option value="onboarding">Onboarding</option>
                                 <option value="offboarding">Offboarding</option>
                                 <option value="probation_review">Probation Review</option>
                                 <option value="contract_renewal">Contract Renewal</option>
                             </select>
                         </div>
-                        <label style={{ color: '#94a3b8', fontSize: 13, display: 'block', marginBottom: 8 }}>Tasks</label> /* keep-inline */
+                        <label className="text-slate-400 text-[13px] block mb-2">Tasks</label>
                         {newTemplate.items.map((item, i) => (
-                            <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8 }}> /* keep-inline */
-                                <input value={item.title} onChange={e => updateItem(i, 'title', e.target.value)} placeholder="Task title" style={{ flex: 1, background: '#1e293b', border: '1px solid #334155', borderRadius: 8, padding: '8px 10px', color: '#f1f5f9', fontSize: 13 }} /> /* keep-inline */
-                                <button onClick={() => removeItem(i)} style={{ background: '#ef444422', border: 'none', borderRadius: 8, padding: '6px 10px', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={14} /></button> /* keep-inline */
+                            <div key={i} className="flex gap-2 mb-2">
+                                <input value={item.title} onChange={e => updateItem(i, 'title', e.target.value)} placeholder="Task title" className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-2 text-slate-100 text-[13px]" />
+                                <button onClick={() => removeItem(i)} className="bg-red-500/10 border-none rounded-lg px-2.5 py-1.5 text-red-400 cursor-pointer" aria-label="Remove task"><Trash2 size={14} /></button>
                             </div>
                         ))}
-                        <button onClick={addItem} style={{ width: '100%', padding: '8px', borderRadius: 8, border: '1px dashed #334155', background: 'transparent', color: '#94a3b8', cursor: 'pointer', fontSize: 13, marginBottom: 16 }}>+ Add Task</button> /* keep-inline */
-                        <button onClick={createTemplate} style={{ width: '100%', padding: '12px', borderRadius: 8, border: 'none', background: '#6366f1', color: '#fff', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Create Template</button> /* keep-inline */
+                        <button onClick={addItem} className="w-full py-2 rounded-lg border border-dashed border-slate-700 bg-transparent text-slate-400 cursor-pointer text-[13px] mb-4">+ Add Task</button>
+                        <button onClick={createTemplate} className="w-full py-3 rounded-lg border-none bg-indigo-500 text-white font-semibold text-sm cursor-pointer">Create Template</button>
                     </div>
                 </div>
             )}

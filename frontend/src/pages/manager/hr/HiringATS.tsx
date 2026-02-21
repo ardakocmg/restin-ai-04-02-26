@@ -5,7 +5,7 @@ import { logger } from '@/lib/logger';
 import { Briefcase, Plus, Users, ChevronRight, Search, Filter, BarChart2, ExternalLink, Eye, Calendar, CheckCircle, Clock, X } from 'lucide-react';
 
 const PIPELINE_STAGES = ['Applied', 'Screening', 'Interview', 'Offer', 'Hired', 'Rejected'] as const;
-const STAGE_COLORS: Record<string, string> = { Applied: '#6366f1', Screening: '#f59e0b', Interview: '#3b82f6', Offer: '#10b981', Hired: '#22c55e', Rejected: '#ef4444' };
+const STAGE_COLORS: Record<string, string> = { Applied: 'text-indigo-400', Screening: 'text-amber-400', Interview: 'text-blue-400', Offer: 'text-emerald-400', Hired: 'text-green-400', Rejected: 'text-red-400' };
 
 interface JobPosting {
     id: string;
@@ -89,20 +89,20 @@ export default function HiringATS() {
     /* No full-page spinner — page renders immediately with 0s */
 
     return (
-        <div style={{ padding: '24px 32px', maxWidth: 1400, margin: '0 auto' }}> /* keep-inline */
+        <div className="px-8 py-6 max-w-[1400px] mx-auto">
             {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}> /* keep-inline */
+            <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h1 style={{ fontSize: 28, fontWeight: 700, color: '#f1f5f9', margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}> /* keep-inline */
-                        <Briefcase size={28} style={{ color: '#6366f1' }} /> Hiring & Recruitment /* keep-inline */
+                    <h1 className="text-[28px] font-bold text-slate-100 m-0 flex items-center gap-2.5">
+                        <Briefcase size={28} className="text-indigo-400" /> Hiring & Recruitment
                     </h1>
-                    <p style={{ color: '#64748b', marginTop: 4 }}>Applicant Tracking System — manage job postings, candidates & pipeline</p> /* keep-inline */
+                    <p className="text-slate-500 mt-1">Applicant Tracking System — manage job postings, candidates & pipeline</p>
                 </div>
-                <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
+                <div className="flex gap-2">
                     {(['jobs', 'pipeline', 'analytics'] as const).map(v => (
-                        <button key={v} onClick={() => setView(v)} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: view === v ? '#6366f1' : '#1e293b', color: view === v ? '#fff' : '#94a3b8', cursor: 'pointer', fontWeight: 500, fontSize: 13, textTransform: 'capitalize' }}>{v}</button> /* keep-inline */
+                        <button key={v} onClick={() => setView(v)} className={`px-4 py-2 rounded-lg border-none cursor-pointer font-medium text-[13px] capitalize ${view === v ? 'bg-indigo-500 text-white' : 'bg-slate-800 text-slate-400'}`}>{v}</button>
                     ))}
-                    <button onClick={() => setShowNewJob(true)} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#22c55e', color: '#fff', cursor: 'pointer', fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}> /* keep-inline */
+                    <button onClick={() => setShowNewJob(true)} className="px-4 py-2 rounded-lg border-none bg-green-500 text-white cursor-pointer font-semibold text-[13px] flex items-center gap-1.5">
                         <Plus size={16} /> New Job
                     </button>
                 </div>
@@ -110,19 +110,19 @@ export default function HiringATS() {
 
             {/* Analytics Cards */}
             {analytics && view !== 'pipeline' && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}> /* keep-inline */
+                <div className="grid grid-cols-4 gap-4 mb-6">
                     {[
-                        { label: 'Open Positions', value: analytics.open_positions || 0, color: '#6366f1', icon: Briefcase },
-                        { label: 'Total Candidates', value: analytics.total_candidates || 0, color: '#3b82f6', icon: Users },
-                        { label: 'In Pipeline', value: analytics.in_pipeline || 0, color: '#f59e0b', icon: Filter },
-                        { label: 'Hired This Month', value: analytics.hired_this_month || 0, color: '#22c55e', icon: CheckCircle },
+                        { label: 'Open Positions', value: analytics.open_positions || 0, color: 'text-indigo-400', icon: Briefcase },
+                        { label: 'Total Candidates', value: analytics.total_candidates || 0, color: 'text-blue-400', icon: Users },
+                        { label: 'In Pipeline', value: analytics.in_pipeline || 0, color: 'text-amber-400', icon: Filter },
+                        { label: 'Hired This Month', value: analytics.hired_this_month || 0, color: 'text-green-400', icon: CheckCircle },
                     ].map((stat, i) => (
-                        <div key={i} style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 20 }}> /* keep-inline */
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> /* keep-inline */
-                                <span style={{ color: '#64748b', fontSize: 13 }}>{stat.label}</span> /* keep-inline */
-                                <stat.icon size={18} style={{ color: stat.color }} /> /* keep-inline */
+                        <div key={i} className="bg-slate-950 border border-slate-800 rounded-xl p-5">
+                            <div className="flex justify-between items-center">
+                                <span className="text-slate-500 text-[13px]">{stat.label}</span>
+                                <stat.icon size={18} className={stat.color} />
                             </div>
-                            <div style={{ fontSize: 32, fontWeight: 700, color: '#f1f5f9', marginTop: 8 }}>{stat.value}</div> /* keep-inline */
+                            <div className="text-[32px] font-bold text-slate-100 mt-2">{stat.value}</div>
                         </div>
                     ))}
                 </div>
@@ -130,24 +130,24 @@ export default function HiringATS() {
 
             {/* Jobs List */}
             {view === 'jobs' && (
-                <div style={{ display: 'grid', gap: 12 }}> /* keep-inline */
+                <div className="grid gap-3">
                     {jobs.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: 60, color: '#64748b', background: '#0f172a', borderRadius: 12, border: '1px solid #1e293b' }}> /* keep-inline */
-                            <Briefcase size={48} style={{ opacity: 0.3, marginBottom: 16 }} /> /* keep-inline */
-                            <p style={{ fontSize: 16 }}>{"No "}job postings yet. Click "New Job" to create your first posting.</p> /* keep-inline */
+                        <div className="text-center py-[60px] px-[60px] text-slate-500 bg-slate-950 rounded-xl border border-slate-800">
+                            <Briefcase size={48} className="opacity-30 mb-4" />
+                            <p className="text-base">{"No "}job postings yet. Click "New Job" to create your first posting.</p>
                         </div>
                     ) : jobs.map(job => (
-                        <div key={job.id} style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', transition: 'border-color 0.2s' }} onClick={() => fetchCandidates(job.id)} onMouseOver={e => (e.currentTarget.style.borderColor = '#6366f1')} onMouseOut={e => (e.currentTarget.style.borderColor = '#1e293b')}> /* keep-inline */
+                        <div key={job.id} className="bg-slate-950 border border-slate-800 rounded-xl p-5 flex justify-between items-center cursor-pointer transition-colors hover:border-indigo-500" onClick={() => fetchCandidates(job.id)}>
                             <div>
-                                <h3 style={{ color: '#f1f5f9', fontSize: 18, fontWeight: 600, margin: 0 }}>{job.title}</h3> /* keep-inline */
-                                <div style={{ display: 'flex', gap: 16, marginTop: 6, color: '#94a3b8', fontSize: 13 }}> /* keep-inline */
+                                <h3 className="text-slate-100 text-lg font-semibold m-0">{job.title}</h3>
+                                <div className="flex gap-4 mt-1.5 text-slate-400 text-[13px]">
                                     <span>{job.department}</span><span>•</span><span>{job.location}</span><span>•</span><span>{job.employment_type}</span>
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}> /* keep-inline */
-                                <span style={{ background: job.status === 'open' ? '#16a34a22' : '#ef444422', color: job.status === 'open' ? '#22c55e' : '#ef4444', padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600 }}>{job.status?.toUpperCase()}</span> /* keep-inline */
-                                <span style={{ color: '#64748b', fontSize: 13 }}>{job.candidates_count || 0} candidates</span> /* keep-inline */
-                                <ChevronRight size={18} style={{ color: '#64748b' }} /> /* keep-inline */
+                            <div className="flex items-center gap-4">
+                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${job.status === 'open' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>{job.status?.toUpperCase()}</span>
+                                <span className="text-slate-500 text-[13px]">{job.candidates_count || 0} candidates</span>
+                                <ChevronRight size={18} className="text-slate-500" />
                             </div>
                         </div>
                     ))}
@@ -156,19 +156,19 @@ export default function HiringATS() {
 
             {/* Pipeline View */}
             {view === 'pipeline' && (
-                <div style={{ display: 'grid', gridTemplateColumns: `repeat(${PIPELINE_STAGES.length}, 1fr)`, gap: 12, overflowX: 'auto' }}> /* keep-inline */
+                <div className={`grid grid-cols-${PIPELINE_STAGES.length} gap-3 overflow-x-auto`}>
                     {PIPELINE_STAGES.map(stage => (
-                        <div key={stage} style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 16, minHeight: 300 }}> /* keep-inline */
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}> /* keep-inline */
-                                <h4 style={{ color: STAGE_COLORS[stage], fontSize: 14, fontWeight: 600, margin: 0 }}>{stage}</h4> /* keep-inline */
-                                <span style={{ background: '#1e293b', color: '#94a3b8', padding: '2px 8px', borderRadius: 10, fontSize: 12 }}> /* keep-inline */
+                        <div key={stage} className="bg-slate-950 border border-slate-800 rounded-xl p-4 min-h-[300px]">
+                            <div className="flex justify-between items-center mb-3">
+                                <h4 className={`${STAGE_COLORS[stage]} text-sm font-semibold m-0`}>{stage}</h4>
+                                <span className="bg-slate-800 text-slate-400 px-2 py-0.5 rounded-[10px] text-xs">
                                     {candidates.filter(c => c.stage === stage.toLowerCase()).length}
                                 </span>
                             </div>
                             {candidates.filter(c => c.stage === stage.toLowerCase()).map(c => (
-                                <div key={c.id} style={{ background: '#1e293b', borderRadius: 8, padding: 12, marginBottom: 8 }}> /* keep-inline */
-                                    <div style={{ color: '#f1f5f9', fontSize: 14, fontWeight: 500 }}>{c.candidate_name}</div> /* keep-inline */
-                                    <div style={{ color: '#64748b', fontSize: 12, marginTop: 4 }}>{c.candidate_email}</div> /* keep-inline */
+                                <div key={c.id} className="bg-slate-800 rounded-lg p-3 mb-2">
+                                    <div className="text-slate-100 text-sm font-medium">{c.candidate_name}</div>
+                                    <div className="text-slate-500 text-xs mt-1">{c.candidate_email}</div>
                                 </div>
                             ))}
                         </div>
@@ -178,17 +178,17 @@ export default function HiringATS() {
 
             {/* Analytics View */}
             {view === 'analytics' && analytics && (
-                <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 24 }}> /* keep-inline */
-                    <h3 style={{ color: '#f1f5f9', fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Pipeline Analytics</h3> /* keep-inline */
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}> /* keep-inline */
+                <div className="bg-slate-950 border border-slate-800 rounded-xl p-6">
+                    <h3 className="text-slate-100 text-lg font-semibold mb-4">Pipeline Analytics</h3>
+                    <div className="grid grid-cols-3 gap-4">
                         {(analytics.pipeline_stages || []).map((stage, i) => (
-                            <div key={i} style={{ background: '#1e293b', borderRadius: 8, padding: 16 }}> /* keep-inline */
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}> /* keep-inline */
-                                    <span style={{ color: '#94a3b8', fontSize: 13 }}>{stage.stage}</span> /* keep-inline */
-                                    <span style={{ color: '#f1f5f9', fontWeight: 700 }}>{stage.count}</span> /* keep-inline */
+                            <div key={i} className="bg-slate-800 rounded-lg p-4">
+                                <div className="flex justify-between items-center mb-2">
+                                    <span className="text-slate-400 text-[13px]">{stage.stage}</span>
+                                    <span className="text-slate-100 font-bold">{stage.count}</span>
                                 </div>
-                                <div style={{ height: 6, background: '#0f172a', borderRadius: 3 }}> /* keep-inline */
-                                    <div style={{ height: '100%', background: '#6366f1', borderRadius: 3, width: `${Math.min((stage.count / (analytics.total_candidates || 1)) * 100, 100)}%` }} />
+                                <div className="h-1.5 bg-slate-950 rounded-sm">
+                                    <div className="h-full bg-indigo-500 rounded-sm" style={{ width: `${Math.min((stage.count / (analytics.total_candidates || 1)) * 100, 100)}%` }} /> {/* keep-inline */}
                                 </div>
                             </div>
                         ))}
@@ -198,23 +198,25 @@ export default function HiringATS() {
 
             {/* New Job Modal */}
             {showNewJob && (
-                <div style={{ position: 'fixed', inset: 0, background: '#00000080', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}> /* keep-inline */
-                    <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 16, padding: 32, width: 500 }}> /* keep-inline */
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
-                            <h2 style={{ color: '#f1f5f9', fontSize: 20, fontWeight: 600, margin: 0 }}>Create Job Posting</h2> /* keep-inline */
-                            <button onClick={() => setShowNewJob(false)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={20} /></button> /* keep-inline */
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000]">
+                    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-8 w-[500px]">
+                        <div className="flex justify-between items-center mb-5">
+                            <h2 className="text-slate-100 text-xl font-semibold m-0">Create Job Posting</h2>
+                            <button onClick={() => setShowNewJob(false)} className="bg-transparent border-none text-slate-500 cursor-pointer" aria-label="Close">
+                                <X size={20} />
+                            </button>
                         </div>
                         {(['title', 'department', 'location', 'description'] as const).map(field => (
-                            <div key={field} style={{ marginBottom: 16 }}> /* keep-inline */
-                                <label style={{ color: '#94a3b8', fontSize: 13, display: 'block', marginBottom: 6, textTransform: 'capitalize' }}>{field}</label> /* keep-inline */
+                            <div key={field} className="mb-4">
+                                <label className="text-slate-400 text-[13px] block mb-1.5 capitalize">{field}</label>
                                 {field === 'description' ? (
-                                    <textarea value={newJob[field]} onChange={e => setNewJob(p => ({ ...p, [field]: e.target.value }))} style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', borderRadius: 8, padding: '10px 12px', color: '#f1f5f9', fontSize: 14, minHeight: 80, resize: 'vertical' }} /> /* keep-inline */
+                                    <textarea value={newJob[field]} onChange={e => setNewJob(p => ({ ...p, [field]: e.target.value }))} aria-label={field} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm min-h-[80px] resize-y" />
                                 ) : (
-                                    <input value={newJob[field]} onChange={e => setNewJob(p => ({ ...p, [field]: e.target.value }))} style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', borderRadius: 8, padding: '10px 12px', color: '#f1f5f9', fontSize: 14 }} /> /* keep-inline */
+                                    <input value={newJob[field]} onChange={e => setNewJob(p => ({ ...p, [field]: e.target.value }))} aria-label={field} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-slate-100 text-sm" />
                                 )}
                             </div>
                         ))}
-                        <button onClick={createJob} style={{ width: '100%', padding: '12px', borderRadius: 8, border: 'none', background: '#6366f1', color: '#fff', fontWeight: 600, fontSize: 14, cursor: 'pointer', marginTop: 8 }}>Create Job Posting</button> /* keep-inline */
+                        <button onClick={createJob} className="w-full py-3 rounded-lg border-none bg-indigo-500 text-white font-semibold text-sm cursor-pointer mt-2">Create Job Posting</button>
                     </div>
                 </div>
             )}
