@@ -590,7 +590,7 @@ export default function Scheduler() {
           contextMenu.visible && (
             <div
               className="fixed z-50 bg-[#18181b] border border-border rounded-lg shadow-2xl p-1 min-w-[180px] animate-in fade-in zoom-in-95 duration-100"
-              style={{ top: contextMenu.y, left: contextMenu.x }}
+              style={{ top: contextMenu.y, left: contextMenu.x }} // keep-inline
             >
               <div className="bg-card/50 p-2 rounded-md mb-1 border-b border-border">
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{contextMenu.cell?.employee}</p>

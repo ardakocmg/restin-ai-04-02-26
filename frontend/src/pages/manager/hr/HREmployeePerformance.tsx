@@ -165,6 +165,7 @@ export default function HREmployeePerformance() {
                         <button
                             onClick={() => navigate('/manager/hr/analytics')}
                             className="p-2 rounded-lg bg-card/60 border border-border hover:bg-white/5 transition-all"
+                            aria-label="Back to analytics"
                         >
                             <ArrowLeft className="h-4 w-4 text-muted-foreground" />
                         </button>
