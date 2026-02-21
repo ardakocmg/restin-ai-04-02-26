@@ -96,7 +96,7 @@ function ZoneCard({
                     !zone.visible && "opacity-40",
                     isDragOver && "border-teal-400 bg-teal-500/5"
                 )}
-                style={{ /* keep-inline */ /* keep-inline */
+                style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
                     backgroundColor: styles.tileBg + '40',
                     borderRadius: `${styles.tileRadius}px`,
                 }}
@@ -140,7 +140,7 @@ function ZoneCard({
                         initial={{ opacity: 0.8 }}
                         animate={{ opacity: [0.8, 0.3, 0.8] }}
                         transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-                        style={{ borderRadius: `${styles.tileRadius}px` }} /* keep-inline */ /* keep-inline */
+                        style={{ borderRadius: `${styles.tileRadius}px` }} /* keep-inline */ /* keep-inline */ /* keep-inline */
                     />
                 )}
             </div>
@@ -391,21 +391,21 @@ export default function BuilderCanvas({
             <div
                 ref={canvasRef}
                 className="flex-1 rounded-xl border border-border overflow-hidden flex flex-col"
-                style={{ /* keep-inline */ /* keep-inline */
+                style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
                     backgroundColor: styles.rootBg,
                     fontFamily: styles.fontFamily,
                 }}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Top row */}
-                <div style={{ backgroundColor: styles.topBarBg }}> /* keep-inline */ /* keep-inline */
+                <div style={{ backgroundColor: styles.topBarBg }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     {renderDropArea('top', topZones)}
                 </div>
 
                 {/* Middle row: left | divider | center | divider | right */}
                 <div className="flex flex-1 min-h-[300px]">
                     <div
-                        style={{ /* keep-inline */ /* keep-inline */
+                        style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
                             backgroundColor: styles.sidebarBg,
                             width: `${leftPanelWidth}px`,
                             minWidth: '80px',
@@ -418,14 +418,14 @@ export default function BuilderCanvas({
 
                     <ResizeDivider panel="left" />
 
-                    <div className="flex-1" style={{ backgroundColor: styles.rootBg }}> /* keep-inline */ /* keep-inline */
+                    <div className="flex-1" style={{ backgroundColor: styles.rootBg }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         {renderDropArea('center', centerZones)}
                     </div>
 
                     <ResizeDivider panel="right" />
 
                     <div
-                        style={{ /* keep-inline */ /* keep-inline */
+                        style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
                             backgroundColor: styles.orderPanelBg,
                             width: `${rightPanelWidth}px`,
                             minWidth: '80px',
@@ -438,7 +438,7 @@ export default function BuilderCanvas({
                 </div>
 
                 {/* Bottom row */}
-                <div style={{ backgroundColor: styles.topBarBg }}> /* keep-inline */ /* keep-inline */
+                <div style={{ backgroundColor: styles.topBarBg }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     {renderDropArea('bottom', bottomZones)}
                 </div>
             </div>

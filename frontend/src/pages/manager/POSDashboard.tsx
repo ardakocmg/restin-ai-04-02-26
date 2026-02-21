@@ -253,7 +253,7 @@ export default function POSDashboard() {
                     <p className="text-slate-300 text-sm mb-2">{label}</p>
                     {payload.map((entry, index) => (
                         <div key={index} className="flex items-center gap-2 text-sm">
-                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} /> /* keep-inline */ /* keep-inline */
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                             <span className="text-slate-400 capitalize">{entry.name}:</span>
                             <span className="font-semibold text-slate-100">
                                 {entry.name === 'revenue'
@@ -513,7 +513,7 @@ export default function POSDashboard() {
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="h-[400px] w-full mt-4" style={{ minHeight: '400px', minWidth: 0 }}> /* keep-inline */ /* keep-inline */
+                        <div className="h-[400px] w-full mt-4" style={{ minHeight: '400px', minWidth: 0 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={400}>
                                 <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                                     <defs>

@@ -210,7 +210,7 @@ export default function ThemeEngineSettings() {
                                 </div>
 
                                 {/* Visual Theme Selection Cards */}
-                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4 opacity-100 transition-opacity" style={{ opacity: enabled ? 1 : 0.5 }}> /* keep-inline */ /* keep-inline */
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4 opacity-100 transition-opacity" style={{ opacity: enabled ? 1 : 0.5 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
 
                                     {/* STANDARD ENTERPRISE THEME */}
                                     <div
@@ -411,20 +411,20 @@ export default function ThemeEngineSettings() {
                                             {/* Color Preview */}
                                             <div className="space-y-2">
                                                 <div className="flex gap-2">
-                                                    <div className="h-10 flex-1 rounded" style={{ backgroundColor: theme.primary }} title="Primary" /> /* keep-inline */ /* keep-inline */
-                                                    <div className="h-10 flex-1 rounded" style={{ backgroundColor: theme.accent }} title="Accent" /> /* keep-inline */ /* keep-inline */
+                                                    <div className="h-10 flex-1 rounded" style={{ backgroundColor: theme.primary }} title="Primary" /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                    <div className="h-10 flex-1 rounded" style={{ backgroundColor: theme.accent }} title="Accent" /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                 </div>
                                                 <div className="flex gap-2">
-                                                    <div className="h-4 flex-1 rounded" style={{ backgroundColor: theme.success }} title="Success" /> /* keep-inline */ /* keep-inline */
-                                                    <div className="h-4 flex-1 rounded" style={{ backgroundColor: theme.warning }} title="Warning" /> /* keep-inline */ /* keep-inline */
-                                                    <div className="h-4 flex-1 rounded" style={{ backgroundColor: theme.danger }} title="Danger" /> /* keep-inline */ /* keep-inline */
+                                                    <div className="h-4 flex-1 rounded" style={{ backgroundColor: theme.success }} title="Success" /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                    <div className="h-4 flex-1 rounded" style={{ backgroundColor: theme.warning }} title="Warning" /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                    <div className="h-4 flex-1 rounded" style={{ backgroundColor: theme.danger }} title="Danger" /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                 </div>
                                             </div>
 
                                             <Button
                                                 className="w-full mt-5 font-bold"
                                                 size="sm"
-                                                style={{ backgroundColor: theme.primary, color: '#ffffff' }} /* keep-inline */ /* keep-inline */
+                                                style={{ backgroundColor: theme.primary, color: '#ffffff' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                 onClick={(e) => { e.stopPropagation(); previewColorTheme(theme); }}
                                             >
                                                 Preview Palette
@@ -480,23 +480,23 @@ export default function ThemeEngineSettings() {
                                     {/* Live Preview UI */}
                                     <div className="flex flex-col h-full">
                                         <Label className="mb-3 block text-foreground">Live Application Preview</Label>
-                                        <div className="flex-1 border-2 rounded-xl p-6 bg-background space-y-6" style={{ borderColor: customThemeObj.primary }}> /* keep-inline */ /* keep-inline */
+                                        <div className="flex-1 border-2 rounded-xl p-6 bg-background space-y-6" style={{ borderColor: customThemeObj.primary }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                             <div className="space-y-2">
-                                                <h3 className="text-lg font-bold" style={{ color: customThemeObj.primary }}>Mock Header</h3> /* keep-inline */ /* keep-inline */
+                                                <h3 className="text-lg font-bold" style={{ color: customThemeObj.primary }}>Mock Header</h3> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                 <p className="text-sm text-muted-foreground">This validates text contrasts and borders.</p>
                                             </div>
 
-                                            <Button className="w-full" style={{ backgroundColor: customThemeObj.primary, color: '#ffffff' }}> /* keep-inline */ /* keep-inline */
+                                            <Button className="w-full" style={{ backgroundColor: customThemeObj.primary, color: '#ffffff' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                 Primary Action
                                             </Button>
 
                                             <div className="flex flex-wrap gap-2">
-                                                <Badge style={{ backgroundColor: customThemeObj.success, color: '#ffffff' }}>{"Success"} Node</Badge> /* keep-inline */ /* keep-inline */
-                                                <Badge style={{ backgroundColor: customThemeObj.warning, color: '#ffffff' }}>Warning Flag</Badge> /* keep-inline */ /* keep-inline */
-                                                <Badge style={{ backgroundColor: customThemeObj.danger, color: '#ffffff' }}>{"Error "}Alert</Badge> /* keep-inline */ /* keep-inline */
+                                                <Badge style={{ backgroundColor: customThemeObj.success, color: '#ffffff' }}>{"Success"} Node</Badge> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                <Badge style={{ backgroundColor: customThemeObj.warning, color: '#ffffff' }}>Warning Flag</Badge> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                <Badge style={{ backgroundColor: customThemeObj.danger, color: '#ffffff' }}>{"Error "}Alert</Badge> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                             </div>
 
-                                            <div className="p-4 rounded-xl font-medium" style={{ backgroundColor: customThemeObj.primaryLight || `${customThemeObj.primary}15`, color: customThemeObj.primary }}> /* keep-inline */ /* keep-inline */
+                                            <div className="p-4 rounded-xl font-medium" style={{ backgroundColor: customThemeObj.primaryLight || `${customThemeObj.primary}15`, color: customThemeObj.primary }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                 Active Sidebar Navigation Item
                                             </div>
                                         </div>
@@ -505,7 +505,7 @@ export default function ThemeEngineSettings() {
                                             <Button onClick={() => previewColorTheme(customThemeObj)} variant="outline" className="flex-1 border-border">
                                                 Preview Live
                                             </Button>
-                                            <Button onClick={handleCustomSave} className="flex-1" style={{ backgroundColor: customThemeObj.primary, color: '#ffffff' }}> /* keep-inline */ /* keep-inline */
+                                            <Button onClick={handleCustomSave} className="flex-1" style={{ backgroundColor: customThemeObj.primary, color: '#ffffff' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                 Deploy Custom Palette
                                             </Button>
                                         </div>

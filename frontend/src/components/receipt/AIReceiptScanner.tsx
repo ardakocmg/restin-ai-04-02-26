@@ -538,8 +538,8 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                                 const Icon = info.icon;
                                                 return (
                                                     <>
-                                                        <Icon className="w-10 h-10 mb-2" style={{ color: info.color }} /> /* keep-inline */ /* keep-inline */
-                                                        <span className="text-xs font-bold" style={{ color: info.color }}>{info.label}</span> /* keep-inline */ /* keep-inline */
+                                                        <Icon className="w-10 h-10 mb-2" style={{ color: info.color }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                        <span className="text-xs font-bold" style={{ color: info.color }}>{info.label}</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                         <span className="text-[10px] text-muted-foreground mt-1 text-center truncate max-w-full">{uploadedFile.name}</span>
                                                         <span className="text-[9px] text-muted-foreground mt-0.5">{(uploadedFile.size / 1024).toFixed(0)} KB</span>
                                                         <Badge className="mt-2 text-[8px] bg-zinc-800 text-muted-foreground border-white/5">
@@ -645,8 +645,8 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                                 const Icon = info.icon;
                                                 return (
                                                     <>
-                                                        <Icon className="w-12 h-12 mb-3" style={{ color: info.color }} /> /* keep-inline */ /* keep-inline */
-                                                        <span className="text-sm font-bold" style={{ color: info.color }}>{info.label}</span> /* keep-inline */ /* keep-inline */
+                                                        <Icon className="w-12 h-12 mb-3" style={{ color: info.color }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                                        <span className="text-sm font-bold" style={{ color: info.color }}>{info.label}</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                         <span className="text-xs text-muted-foreground mt-1">{uploadedFile.name}</span>
                                                         <span className="text-[10px] text-zinc-600">{(uploadedFile.size / 1024).toFixed(0)} KB • {info.category}</span>
                                                     </>
@@ -677,7 +677,7 @@ export const AIReceiptScanner: React.FC<AIReceiptScannerProps> = ({ open, onClos
                                     {/* Detected type */}
                                     <div>
                                         <label className="text-xs text-muted-foreground mb-1 block">Detected Type</label>
-                                        <Badge style={{ background: `${TYPE_META[result.detectedType].color}20`, color: TYPE_META[result.detectedType].color }}> /* keep-inline */ /* keep-inline */
+                                        <Badge style={{ background: `${TYPE_META[result.detectedType].color}20`, color: TYPE_META[result.detectedType].color }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                             {TYPE_META[result.detectedType].label}
                                         </Badge>
                                     </div>

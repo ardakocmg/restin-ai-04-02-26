@@ -333,7 +333,7 @@ export default function MarketingLanding() {
               </div>
             </div>
             <div>
-              <div className="text-lg font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>restin.ai</div> /* keep-inline */ /* keep-inline */
+              <div className="text-lg font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>restin.ai</div> /* keep-inline */ /* keep-inline */ /* keep-inline */
               <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Enterprise Restaurant OS</div>
             </div>
           </div>
@@ -376,7 +376,7 @@ export default function MarketingLanding() {
                 {hero.tag}
               </div>
 
-              <h1 className="text-5xl lg:text-7xl font-bold leading-[1.08] tracking-tighter text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-hero-title"> /* keep-inline */ /* keep-inline */
+              <h1 className="text-5xl lg:text-7xl font-bold leading-[1.08] tracking-tighter text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-hero-title"> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 OPERATE EVERY VENUE WITH TOTAL CONTROL, EVEN WHEN THE CLOUD DISAPPEARS.
               </h1>
 
@@ -397,7 +397,7 @@ export default function MarketingLanding() {
               <div className="grid grid-cols-3 gap-4" data-testid="marketing-hero-metrics">
                 {(hero.metrics || defaultContent.hero.metrics).map(metric => (
                   <div key={metric.key} className="light-card p-5" data-testid={`marketing-stat-${metric.key}`}>
-                    <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{metric.value}</div> /* keep-inline */ /* keep-inline */
+                    <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{metric.value}</div> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     <div className="text-xs text-muted-foreground mt-1 font-medium">{metric.label}</div>
                   </div>
                 ))}
@@ -430,14 +430,14 @@ export default function MarketingLanding() {
         <section id="features" className="pb-24 scroll-mt-20" data-testid="marketing-features-section">
           <div className="text-center mb-12">
             <div className="tag-pill mx-auto mb-4">Why restin.ai</div>
-            <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Built different, by design</h2> /* keep-inline */ /* keep-inline */
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Built different, by design</h2> /* keep-inline */ /* keep-inline */ /* keep-inline */
             <p className="text-gray-500 mt-3 max-w-2xl mx-auto">Every architectural decision serves one goal: keep your restaurants running perfectly, no matter what.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map(feature => (
               <div key={feature.key} className="light-card p-6" data-testid={`marketing-feature-${feature.key}`}>
                 <div className="feature-icon mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-bold text-foreground mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{feature.title}</h3> /* keep-inline */ /* keep-inline */
+                <h3 className="text-lg font-bold text-foreground mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{feature.title}</h3> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
               </div>
             ))}
@@ -449,7 +449,7 @@ export default function MarketingLanding() {
           <div className="flex items-center justify-between mb-12">
             <div>
               <div className="tag-pill mb-4">22+ Active Modules</div>
-              <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-modules-title">Modules built to scale</h2> /* keep-inline */ /* keep-inline */
+              <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-modules-title">Modules built to scale</h2> /* keep-inline */ /* keep-inline */ /* keep-inline */
               <p className="text-gray-500 mt-3 max-w-xl">Every module is designed as a microservice with shared observability and offline sync.</p>
             </div>
             <a href="/modules" className="hidden lg:flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border text-sm text-muted-foreground hover:text-gray-900 hover:border-gray-300 transition-all">
@@ -460,7 +460,7 @@ export default function MarketingLanding() {
             {modulesList.map(mod => (
               <div key={mod.key} className={`light-card p-6 ${mod.status === 'coming_soon' ? 'opacity-70' : ''}`} data-testid={`marketing-module-${mod.key}`}>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-base font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{mod.title}</h3> /* keep-inline */ /* keep-inline */
+                  <h3 className="text-base font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{mod.title}</h3> /* keep-inline */ /* keep-inline */ /* keep-inline */
                   {mod.status === 'coming_soon' ? (
                     <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 border border-amber-200">Coming Soon</span>
                   ) : (
@@ -485,7 +485,7 @@ export default function MarketingLanding() {
         <section id="pricing" className="pb-24 scroll-mt-20" data-testid="marketing-pricing-section">
           <div className="text-center mb-12">
             <div className="tag-pill mx-auto mb-4">Simple Pricing</div>
-            <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="pricing-title">Pricing aligned to EU market averages</h2> /* keep-inline */ /* keep-inline */
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="pricing-title">Pricing aligned to EU market averages</h2> /* keep-inline */ /* keep-inline */ /* keep-inline */
             <p className="text-gray-500 mt-3 max-w-2xl mx-auto" data-testid="pricing-subtitle">Transparent packages with future-ready upgrades built in. No hidden fees.</p>
           </div>
           <div className="grid lg:grid-cols-3 gap-6">
@@ -497,9 +497,9 @@ export default function MarketingLanding() {
                   </div>
                 )}
                 <div className="text-xs text-muted-foreground mb-2 font-medium" data-testid={`pricing-tagline-${plan.key}`}>{plan.tagline}</div>
-                <h3 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid={`pricing-name-${plan.key}`}>{plan.name}</h3> /* keep-inline */ /* keep-inline */
+                <h3 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid={`pricing-name-${plan.key}`}>{plan.name}</h3> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 <div className="mt-4 flex items-end gap-2" data-testid={`pricing-price-${plan.key}`}>
-                  <span className="text-5xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{plan.price}</span> /* keep-inline */ /* keep-inline */
+                  <span className="text-5xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>{plan.price}</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
                   <span className="text-sm text-muted-foreground mb-1">{plan.period}</span>
                 </div>
                 <div className="text-[10px] text-muted-foreground mt-1 font-semibold" data-testid={`pricing-yearly-${plan.key}`}>{plan.yearly}</div>
@@ -541,7 +541,7 @@ export default function MarketingLanding() {
           <div className="grid lg:grid-cols-[1fr_1.2fr] gap-12 items-start">
             <div>
               <div className="tag-pill mb-4">Always Evolving</div>
-              <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="roadmap-title">Future roadmap</h2> /* keep-inline */ /* keep-inline */
+              <h2 className="text-4xl font-bold tracking-tight text-gray-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="roadmap-title">Future roadmap</h2> /* keep-inline */ /* keep-inline */ /* keep-inline */
               <p className="text-gray-500 mt-3 leading-relaxed" data-testid="roadmap-subtitle">
                 Everything below is already planned and in active development — you keep the same contract tier. No surprise upsells.
               </p>
@@ -564,7 +564,7 @@ export default function MarketingLanding() {
           <div className="relative">
             <div className="relative p-12 rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl">
               <div>
-                <h2 className="text-4xl font-bold tracking-tight text-foreground" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-final-cta-title">{cta.title}</h2> /* keep-inline */ /* keep-inline */
+                <h2 className="text-4xl font-bold tracking-tight text-foreground" style={{ fontFamily: 'Space Grotesk, sans-serif' }} data-testid="marketing-final-cta-title">{cta.title}</h2> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 <p className="text-gray-300 mt-2 text-lg" data-testid="marketing-final-cta-subtitle">{cta.subtitle}</p>
               </div>
               <div className="flex gap-4 shrink-0">

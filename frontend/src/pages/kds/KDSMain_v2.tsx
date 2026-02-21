@@ -280,7 +280,7 @@ function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onD
   return (
     <div
       className="bg-card rounded-lg overflow-hidden border-l-4 transition-all hover:shadow-lg"
-      style={{ borderLeftColor: statusColor }} /* keep-inline */ /* keep-inline */
+      style={{ borderLeftColor: statusColor }} /* keep-inline */ /* keep-inline */ /* keep-inline */
     >
       {/* Card Header */}
       <div className="p-4 border-b border-border">
@@ -422,7 +422,7 @@ function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onD
       {/* Status Badge */}
       <div
         className="px-4 py-2 text-center text-foreground font-bold text-sm"
-        style={{ backgroundColor: statusColor }} /* keep-inline */ /* keep-inline */
+        style={{ backgroundColor: statusColor }} /* keep-inline */ /* keep-inline */ /* keep-inline */
       >
         {item.status}
       </div>

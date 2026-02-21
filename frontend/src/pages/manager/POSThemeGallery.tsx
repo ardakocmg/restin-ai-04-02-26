@@ -560,7 +560,7 @@ export default function POSThemeGallery() {
                                                         <div
                                                             key={i}
                                                             className="w-8 h-8 rounded-md border border-border"
-                                                            style={{ backgroundColor: color }} /* keep-inline */ /* keep-inline */
+                                                            style={{ backgroundColor: color }} /* keep-inline */ /* keep-inline */ /* keep-inline */
                                                             title={color}
                                                         />
                                                     ))}

@@ -125,7 +125,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
         <div className="sticky top-0 z-10 bg-card border-b border-border p-6">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h2 className="text-2xl font-heading mb-1" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */
+              <h2 className="text-2xl font-heading mb-1" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 {item.name}
               </h2>
               <p className="text-lg font-bold text-red-500">
@@ -135,7 +135,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
             <button
               onClick={onClose}
               className="p-2 rounded-lg hover:bg-white/5 transition-colors"
-              style={{ color: '#71717A' }} /* keep-inline */ /* keep-inline */
+              style={{ color: '#71717A' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
             >
               <X className="w-6 h-6" />
             </button>
@@ -148,7 +148,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
           {modifierGroups.map((group) => (
             <div key={group.id} className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */
+                <h3 className="font-semibold" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                   {group.name}
                 </h3>
                 {group.required && (
@@ -185,7 +185,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
                         >
                           {isSelected && <Check className="w-3 h-3 text-foreground" />}
                         </div>
-                        <span style={{ color: isSelected ? '#F5F5F7' : '#D4D4D8' }}> /* keep-inline */ /* keep-inline */
+                        <span style={{ color: isSelected ? '#F5F5F7' : '#D4D4D8' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                           {option.name}
                         </span>
                       </div>
@@ -203,7 +203,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
 
           {/* Special Instructions */}
           <div className="space-y-2">
-            <label className="block font-semibold" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */
+            <label className="block font-semibold" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
               Special Instructions
             </label>
             <textarea aria-label="Input"
@@ -212,7 +212,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
               placeholder="e.g., No onions, extra sauce..."
               rows={3}
               className="w-full input-dark rounded-xl p-3 text-sm"
-              style={{ /* keep-inline */ /* keep-inline */
+              style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
                 backgroundColor: '#18181B',
                 borderColor: 'rgba(255, 255, 255, 0.1)',
                 color: '#F5F5F7'
@@ -225,23 +225,23 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
         <div className="sticky bottom-0 z-10 bg-card border-t border-border p-6">
           {/* Quantity Selector */}
           <div className="flex items-center justify-between mb-4">
-            <span className="font-semibold" style={{ color: '#F5F5F7' }}>Quantity</span> /* keep-inline */ /* keep-inline */
+            <span className="font-semibold" style={{ color: '#F5F5F7' }}>Quantity</span> /* keep-inline */ /* keep-inline */ /* keep-inline */
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className="w-10 h-10 rounded-lg bg-secondary hover:bg-secondary/80 border border-border flex items-center justify-center transition-colors"
                 disabled={quantity <= 1}
               >
-                <Minus className="w-4 h-4" style={{ color: '#D4D4D8' }} /> /* keep-inline */ /* keep-inline */
+                <Minus className="w-4 h-4" style={{ color: '#D4D4D8' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
               </button>
-              <span className="text-xl font-bold w-12 text-center" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */
+              <span className="text-xl font-bold w-12 text-center" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 {quantity}
               </span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
                 className="w-10 h-10 rounded-lg bg-secondary hover:bg-secondary/80 border border-border flex items-center justify-center transition-colors"
               >
-                <Plus className="w-4 h-4" style={{ color: '#D4D4D8' }} /> /* keep-inline */ /* keep-inline */
+                <Plus className="w-4 h-4" style={{ color: '#D4D4D8' }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
               </button>
             </div>
           </div>
