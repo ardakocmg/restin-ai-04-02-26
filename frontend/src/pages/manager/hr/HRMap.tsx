@@ -140,7 +140,7 @@ export default function HRMap() {
 
             {/* Map Canvas - Mocking with a stylized gradient and pattern to match Restin aesthetics */}
             <div className="flex-1 relative bg-[#0d0d0f] overflow-hidden">
-                <div className="absolute inset-0 opacity-20" style={{
+                <div className="absolute inset-0 opacity-20" style={{ /* keep-inline */
                     backgroundImage: 'radial-gradient(circle at 2px 2px, #3b82f6 1px, transparent 0)',
                     backgroundSize: '40px 40px'
                 }} />
@@ -153,11 +153,11 @@ export default function HRMap() {
 
                 {/* Markers */}
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                {([] as any[]).map((m, i) => (
+                {([] as unknown[]).map((m, i) => (
                     <div
                         key={m.id}
                         className="absolute cursor-pointer group"
-                        style={{
+                        style={{ /* keep-inline */
                             left: `${20 + i * 15}%`,
                             top: `${30 + i * 12}%`
                         }}

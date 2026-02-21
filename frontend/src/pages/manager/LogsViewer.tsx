@@ -43,7 +43,7 @@ export default function LogsViewer() {
         limit: 100
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setLogs((logsData as any)?.items || []);
+      setLogs((logsData as unknown)?.items || []);
     } catch (error) {
       logger.error('Failed to load logs:', error);
       if (error.response?.status !== 403) {

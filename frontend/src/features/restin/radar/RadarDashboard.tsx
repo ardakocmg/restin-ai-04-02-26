@@ -58,7 +58,7 @@ export default function RadarDashboard() {
             return await radarService.scanMarket(activeVenueId || 'default', region, "Mediterranean");
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        onSuccess: (data) => toast.success("Scan Started", { description: (data as any).message || 'Scan initiated' }),
+        onSuccess: (data) => toast.success("Scan Started", { description: (data as unknown).message || 'Scan initiated' }),
         onError: () => toast.error("Scan Failed")
     });
 

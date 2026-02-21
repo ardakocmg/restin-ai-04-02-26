@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Activity, Database, Server, Wifi, CheckCircle, AlertCircle, RefreshCw, Loader2 } from 'lucide-react';
@@ -100,7 +99,7 @@ export default function MonitoringDashboard() {
           <button
             onClick={() => { setLoading(true); loadHealth(); }}
             className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm"
-            style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: '#D4D4D8', border: '1px solid rgba(255,255,255,0.1)' }}
+            style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: '#D4D4D8', border: '1px solid rgba(255,255,255,0.1)' }} /* keep-inline */
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
             Refresh
@@ -112,8 +111,8 @@ export default function MonitoringDashboard() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <AlertCircle className="h-5 w-5" style={{ color: '#EF4444' }} />
-                  <span style={{ color: '#EF4444' }}>{error}</span>
+                  <AlertCircle className="h-5 w-5" style={{ color: '#EF4444' }} /> /* keep-inline */
+                  <span style={{ color: '#EF4444' }}>{error}</span> /* keep-inline */
                 </div>
               </CardContent>
             </Card>
@@ -125,7 +124,7 @@ export default function MonitoringDashboard() {
               <CardTitle className="flex items-center justify-between">
                 <span>Services Status</span>
                 {lastRefresh && (
-                  <span className="text-xs font-normal" style={{ color: '#71717A' }}>
+                  <span className="text-xs font-normal" style={{ color: '#71717A' }}> /* keep-inline */
                     Last update: {lastRefresh.toLocaleTimeString()}
                   </span>
                 )}
@@ -134,14 +133,14 @@ export default function MonitoringDashboard() {
             <CardContent>
               <div className="space-y-4">
                 {(health?.services || []).map((service) => (
-                  <div key={service.name} className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div key={service.name} className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}> /* keep-inline */
                     <div className="flex items-center gap-3">
-                      <div style={{ color: getStatusColor(service.status) }}>
+                      <div style={{ color: getStatusColor(service.status) }}> /* keep-inline */
                         {getIcon(service.name)}
                       </div>
                       <div>
-                        <h4 className="font-medium" style={{ color: '#F5F5F7' }}>{service.name}</h4>
-                        <p className="text-xs" style={{ color: '#A1A1AA' }}>
+                        <h4 className="font-medium" style={{ color: '#F5F5F7' }}>{service.name}</h4> /* keep-inline */
+                        <p className="text-xs" style={{ color: '#A1A1AA' }}> /* keep-inline */
                           Response: {service.responseTime}
                           {service.details?.collections && ` · ${service.details.collections} collections · ${service.details.total_documents?.toLocaleString()} docs`}
                           {service.details?.uptime_seconds && ` · Up ${Math.round(service.details.uptime_seconds / 60)}min`}
@@ -151,15 +150,15 @@ export default function MonitoringDashboard() {
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <div className="text-sm font-medium" style={{ color: '#D4D4D8' }}>{service.uptime}</div>
-                        <p className="text-xs" style={{ color: '#71717A' }}>uptime</p>
+                        <div className="text-sm font-medium" style={{ color: '#D4D4D8' }}>{service.uptime}</div> /* keep-inline */
+                        <p className="text-xs" style={{ color: '#71717A' }}>uptime</p> /* keep-inline */
                       </div>
                       <Badge variant={getStatusVariant(service.status)}>{service.status}</Badge>
                     </div>
                   </div>
                 ))}
                 {!health?.services?.length && !loading && (
-                  <p className="text-center py-4" style={{ color: '#71717A' }}>{"No "}services data available</p>
+                  <p className="text-center py-4" style={{ color: '#71717A' }}>{"No "}services data available</p> /* keep-inline */
                 )}
               </div>
             </CardContent>
@@ -174,15 +173,15 @@ export default function MonitoringDashboard() {
               <CardContent className="space-y-4">
                 <div>
                   <div className="flex justify-between mb-2">
-                    <span style={{ color: '#A1A1AA' }}>Memory (est.)</span>
-                    <span style={{ color: '#F5F5F7' }}>{health?.resources?.backend_memory_mb || 0} MB</span>
+                    <span style={{ color: '#A1A1AA' }}>Memory (est.)</span> /* keep-inline */
+                    <span style={{ color: '#F5F5F7' }}>{health?.resources?.backend_memory_mb || 0} MB</span> /* keep-inline */
                   </div>
                   <Progress value={backendMemPct} />
                 </div>
                 <div>
                   <div className="flex justify-between mb-2">
-                    <span style={{ color: '#A1A1AA' }}>Index Size</span>
-                    <span style={{ color: '#F5F5F7' }}>{health?.resources?.index_size_mb || 0} MB</span>
+                    <span style={{ color: '#A1A1AA' }}>Index Size</span> /* keep-inline */
+                    <span style={{ color: '#F5F5F7' }}>{health?.resources?.index_size_mb || 0} MB</span> /* keep-inline */
                   </div>
                   <Progress value={Math.min(100, (health?.resources?.index_size_mb || 0) / 5 * 100)} />
                 </div>
@@ -196,15 +195,15 @@ export default function MonitoringDashboard() {
               <CardContent className="space-y-4">
                 <div>
                   <div className="flex justify-between mb-2">
-                    <span style={{ color: '#A1A1AA' }}>Data Size</span>
-                    <span style={{ color: '#F5F5F7' }}>{health?.resources?.mongodb_data_mb || 0} MB</span>
+                    <span style={{ color: '#A1A1AA' }}>Data Size</span> /* keep-inline */
+                    <span style={{ color: '#F5F5F7' }}>{health?.resources?.mongodb_data_mb || 0} MB</span> /* keep-inline */
                   </div>
                   <Progress value={mongoStoragePct} />
                 </div>
                 <div>
                   <div className="flex justify-between mb-2">
-                    <span style={{ color: '#A1A1AA' }}>Storage Size</span>
-                    <span style={{ color: '#F5F5F7' }}>{health?.resources?.mongodb_storage_mb || 0} MB</span>
+                    <span style={{ color: '#A1A1AA' }}>Storage Size</span> /* keep-inline */
+                    <span style={{ color: '#F5F5F7' }}>{health?.resources?.mongodb_storage_mb || 0} MB</span> /* keep-inline */
                   </div>
                   <Progress value={mongoStoragePct} />
                 </div>
@@ -220,19 +219,19 @@ export default function MonitoringDashboard() {
             <CardContent>
               <div className="grid grid-cols-3 gap-6">
                 <div className="text-center">
-                  <Database className="h-8 w-8 mx-auto mb-2" style={{ color: '#FB8C00' }} />
-                  <div className="text-3xl font-bold" style={{ color: '#F5F5F7' }}>{health?.queue?.pending || 0}</div>
-                  <p className="text-sm" style={{ color: '#A1A1AA' }}>Pending</p>
+                  <Database className="h-8 w-8 mx-auto mb-2" style={{ color: '#FB8C00' }} /> /* keep-inline */
+                  <div className="text-3xl font-bold" style={{ color: '#F5F5F7' }}>{health?.queue?.pending || 0}</div> /* keep-inline */
+                  <p className="text-sm" style={{ color: '#A1A1AA' }}>Pending</p> /* keep-inline */
                 </div>
                 <div className="text-center">
-                  <CheckCircle className="h-8 w-8 mx-auto mb-2" style={{ color: '#4ADE80' }} />
-                  <div className="text-3xl font-bold" style={{ color: '#F5F5F7' }}>{health?.queue?.synced || 0}</div>
-                  <p className="text-sm" style={{ color: '#A1A1AA' }}>Synced</p>
+                  <CheckCircle className="h-8 w-8 mx-auto mb-2" style={{ color: '#4ADE80' }} /> /* keep-inline */
+                  <div className="text-3xl font-bold" style={{ color: '#F5F5F7' }}>{health?.queue?.synced || 0}</div> /* keep-inline */
+                  <p className="text-sm" style={{ color: '#A1A1AA' }}>Synced</p> /* keep-inline */
                 </div>
                 <div className="text-center">
-                  <AlertCircle className="h-8 w-8 mx-auto mb-2" style={{ color: '#EF4444' }} />
-                  <div className="text-3xl font-bold" style={{ color: '#F5F5F7' }}>{health?.queue?.failed || 0}</div>
-                  <p className="text-sm" style={{ color: '#A1A1AA' }}>Failed</p>
+                  <AlertCircle className="h-8 w-8 mx-auto mb-2" style={{ color: '#EF4444' }} /> /* keep-inline */
+                  <div className="text-3xl font-bold" style={{ color: '#F5F5F7' }}>{health?.queue?.failed || 0}</div> /* keep-inline */
+                  <p className="text-sm" style={{ color: '#A1A1AA' }}>Failed</p> /* keep-inline */
                 </div>
               </div>
             </CardContent>

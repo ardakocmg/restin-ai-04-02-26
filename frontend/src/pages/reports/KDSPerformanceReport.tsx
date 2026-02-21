@@ -62,42 +62,42 @@ export default function KDSPerformanceReport() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Avg Ticket Time</CardTitle>
-              <Clock className="h-4 w-4" style={{ color: '#E53935' }} />
+              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Avg Ticket Time</CardTitle> /* keep-inline */
+              <Clock className="h-4 w-4" style={{ color: '#E53935' }} /> /* keep-inline */
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.avg_prep_time || '0m'}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>Current average</p>
+              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.avg_prep_time || '0m'}</div> /* keep-inline */
+              <p className="text-xs" style={{ color: '#71717A' }}>Current average</p> /* keep-inline */
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Total Tickets</CardTitle>
-              <Activity className="h-4 w-4" style={{ color: '#E53935' }} />
+              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Total Tickets</CardTitle> /* keep-inline */
+              <Activity className="h-4 w-4" style={{ color: '#E53935' }} /> /* keep-inline */
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.total_tickets || 0}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>Today</p>
+              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.total_tickets || 0}</div> /* keep-inline */
+              <p className="text-xs" style={{ color: '#71717A' }}>Today</p> /* keep-inline */
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Peak Time</CardTitle>
-              <TrendingUp className="h-4 w-4" style={{ color: '#E53935' }} />
+              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Peak Time</CardTitle> /* keep-inline */
+              <TrendingUp className="h-4 w-4" style={{ color: '#E53935' }} /> /* keep-inline */
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.peak_time || 'N/A'}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>{metrics?.peak_tickets || 0} tickets/hour</p>
+              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.peak_time || 'N/A'}</div> /* keep-inline */
+              <p className="text-xs" style={{ color: '#71717A' }}>{metrics?.peak_tickets || 0} tickets/hour</p> /* keep-inline */
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Delayed Orders</CardTitle>
-              <AlertCircle className="h-4 w-4" style={{ color: '#FB8C00' }} />
+              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Delayed Orders</CardTitle> /* keep-inline */
+              <AlertCircle className="h-4 w-4" style={{ color: '#FB8C00' }} /> /* keep-inline */
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#FB8C00' }}>{metrics?.delayed_orders || 0}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>{metrics?.delay_rate || 0}% of total</p>
+              <div className="text-2xl font-bold" style={{ color: '#FB8C00' }}>{metrics?.delayed_orders || 0}</div> /* keep-inline */
+              <p className="text-xs" style={{ color: '#71717A' }}>{metrics?.delay_rate || 0}% of total</p> /* keep-inline */
             </CardContent>
           </Card>
         </div>
@@ -133,14 +133,14 @@ export default function KDSPerformanceReport() {
                 { station: 'Salad', tickets: 0, avgTime: 0, status: 'good' },
                 { station: 'Dessert', tickets: 0, avgTime: 0, status: 'good' },
               ] : stationData).map((station) => (
-                <div key={station.station} className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div key={station.station} className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}> /* keep-inline */
                   <div className="flex-1">
-                    <h4 className="font-medium" style={{ color: '#F5F5F7' }}>{station.station}</h4>
-                    <p className="text-sm" style={{ color: '#A1A1AA' }}>{station.tickets} tickets completed</p>
+                    <h4 className="font-medium" style={{ color: '#F5F5F7' }}>{station.station}</h4> /* keep-inline */
+                    <p className="text-sm" style={{ color: '#A1A1AA' }}>{station.tickets} tickets completed</p> /* keep-inline */
                   </div>
                   <div className="text-right mr-4">
-                    <div className="text-lg font-bold" style={{ color: '#D4D4D8' }}>{station.avgTime} min</div>
-                    <p className="text-xs" style={{ color: '#71717A' }}>avg time</p>
+                    <div className="text-lg font-bold" style={{ color: '#D4D4D8' }}>{station.avgTime} min</div> /* keep-inline */
+                    <p className="text-xs" style={{ color: '#71717A' }}>avg time</p> /* keep-inline */
                   </div>
                   <Badge variant={station.status === 'good' ? 'default' : 'destructive'}>
                     {station.status === 'good' ? 'On Track' : 'Slow'}

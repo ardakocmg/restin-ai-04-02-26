@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useMemo } from 'react';
 import { useVenue } from '@/context/VenueContext';
 import PageContainer from '@/layouts/PageContainer';
@@ -200,7 +199,7 @@ export default function MealPlanning() {
 
             {/* Weekly Grid */}
             <div className="overflow-x-auto">
-                <div className="grid gap-2" style={{ gridTemplateColumns: `80px repeat(${DAYS.length}, 1fr)`, minWidth: '900px' }}>
+                <div className="grid gap-2" style={{ gridTemplateColumns: `80px repeat(${DAYS.length}, 1fr)`, minWidth: '900px' }}> /* keep-inline */
                     {/* Header */}
                     <div />
                     {DAYS.map(day => (

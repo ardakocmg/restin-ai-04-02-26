@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -561,7 +560,7 @@ export default function POSThemeGallery() {
                                                         <div
                                                             key={i}
                                                             className="w-8 h-8 rounded-md border border-border"
-                                                            style={{ backgroundColor: color }}
+                                                            style={{ backgroundColor: color }} /* keep-inline */
                                                             title={color}
                                                         />
                                                     ))}

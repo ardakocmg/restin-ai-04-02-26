@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Search, Plus, DollarSign, Info, Menu as MenuIcon,
@@ -692,9 +691,9 @@ export default function POSRuntimeEnhanced() {
   /* ─── Loading State ────────────────────────────────────────── */
   if (loading) {
     return (
-      <div style={styles.loadingContainer}>
-        <div style={styles.loadingLogo}>🔥</div>
-        <div style={styles.loadingText}>{"Loading "}POS...</div>
+      <div className="pos-loading-container">
+        <div className="pos-loading-logo">🔥</div>
+        <div className="pos-loading-text">{"Loading "}POS...</div>
       </div>
     );
   }
@@ -703,58 +702,58 @@ export default function POSRuntimeEnhanced() {
      RENDER — LIGHTSPEED L-SERIES LAYOUT
      ═══════════════════════════════════════════════════════════════ */
   return (
-    <div style={styles.root}>
+    <div className="pos-root">
 
       {/* Training Mode Banner */}
       {trainingMode && (
-        <div style={{ backgroundColor: '#F4A261', color: '#000', textAlign: 'center', padding: '6px 0', fontSize: 13, fontWeight: 700, letterSpacing: 1, position: 'relative', zIndex: 200 }}>
+        <div style={{ backgroundColor: '#F4A261', color: '#000', textAlign: 'center', padding: '6px 0', fontSize: 13, fontWeight: 700, letterSpacing: 1, position: 'relative', zIndex: 200 }}> /* keep-inline */
           ⚠️ TRAINING MODE — Orders will NOT be sent to kitchen or charged
-          <button style={{ marginLeft: 16, background: '#000', color: '#F4A261', border: 'none', borderRadius: 6, padding: '2px 12px', cursor: 'pointer', fontSize: 11, fontWeight: 700 }} onClick={() => setTrainingMode(false)}>EXIT TRAINING</button>
+          <button style={{ marginLeft: 16, background: '#000', color: '#F4A261', border: 'none', borderRadius: 6, padding: '2px 12px', cursor: 'pointer', fontSize: 11, fontWeight: 700 }} onClick={() => setTrainingMode(false)}>EXIT TRAINING</button> /* keep-inline */
         </div>
       )}
 
       {/* ═══ TOP BAR ════════════════════════════════════════════ */}
-      <div style={styles.topBar}>
-        <div style={styles.topBarLeft}>
-          <button style={styles.topBarBtn} onClick={() => { window.location.href = '/manager/pos-dashboard'; }}>
-            <span style={styles.doneText}>Done</span>
+      <div className="pos-top-bar">
+        <div className="pos-top-bar-left">
+          <button className="pos-top-bar-btn" onClick={() => { window.location.href = '/manager/pos-dashboard'; }}>
+            <span className="pos-done-text">Done</span>
           </button>
-          <button style={styles.topBarBtn} onClick={() => setShowSearchModal(true)} title="Search items (F1)">
+          <button className="pos-top-bar-btn" onClick={() => setShowSearchModal(true)} title="Search items (F1)">
             <Search size={20} color="#999" />
-            <span style={styles.topBarLabel}>SEARCH</span>
+            <span className="pos-top-bar-label">SEARCH</span>
           </button>
-          <button style={styles.topBarBtn} onClick={() => setShowPLU(true)} title="PLU Lookup (F2)">
-            <span style={{ ...styles.topBarLabel, fontSize: 11, fontWeight: 700 }}>PLU</span>
+          <button className="pos-top-bar-btn" onClick={() => setShowPLU(true)} title="PLU Lookup (F2)">
+            <span style={{ ...styles.topBarLabel, fontSize: 11, fontWeight: 700 }}>PLU</span> /* keep-inline */
           </button>
         </div>
-        <div style={styles.topBarCenter}>
-          <span style={{ fontSize: 28, color: '#E05A33' }}>🔥</span>
+        <div className="pos-top-bar-center">
+          <span style={{ fontSize: 28, color: '#E05A33' }}>🔥</span> /* keep-inline */
         </div>
-        <div style={styles.topBarRight}>
-          <button style={styles.topBarActionBtn} onClick={sendToBar} title="Send to Bar (F5)">
+        <div className="pos-top-bar-right">
+          <button className="pos-top-bar-action-btn" onClick={sendToBar} title="Send to Bar (F5)">
             <Send size={20} color="#999" />
-            <span style={styles.topBarLabel}>SEND-BAR</span>
+            <span className="pos-top-bar-label">SEND-BAR</span>
           </button>
-          <button style={styles.topBarActionBtn} onClick={sendToKitchen} title="Send to Kitchen (F4)">
+          <button className="pos-top-bar-action-btn" onClick={sendToKitchen} title="Send to Kitchen (F4)">
             <Send size={20} color="#999" />
-            <span style={styles.topBarLabel}>SEND-KITCHEN</span>
+            <span className="pos-top-bar-label">SEND-KITCHEN</span>
           </button>
-          <button style={styles.topBarActionBtn} onClick={() => setShowReceipt(true)} title="Receipt Preview (F6)">
+          <button className="pos-top-bar-action-btn" onClick={() => setShowReceipt(true)} title="Receipt Preview (F6)">
             <Printer size={20} color="#999" />
-            <span style={styles.topBarLabel}>RECEIPT</span>
+            <span className="pos-top-bar-label">RECEIPT</span>
           </button>
-          <button style={styles.topBarActionBtn} onClick={() => setShowPayment(true)} title="Payment (F7)">
+          <button className="pos-top-bar-action-btn" onClick={() => setShowPayment(true)} title="Payment (F7)">
             <CreditCard size={20} color="#999" />
-            <span style={styles.topBarLabel}>PAY</span>
+            <span className="pos-top-bar-label">PAY</span>
           </button>
         </div>
       </div>
 
       {/* ═══ MAIN CONTENT ═══════════════════════════════════════ */}
-      <div style={styles.mainContent}>
+      <div className="pos-main-content">
 
         {/* ─── LEFT SIDEBAR (4 Tools — L-Series match) ──────── */}
-        <div style={styles.leftSidebar}>
+        <div className="pos-left-sidebar">
           {[
             { key: 'quantity', icon: <Plus size={16} color="#777" />, label: 'QUANTITY' },
             { key: 'price', icon: <DollarSign size={16} color="#777" />, label: 'PRICE' },
@@ -763,26 +762,26 @@ export default function POSRuntimeEnhanced() {
           ].map(tool => (
             <button
               key={tool.key}
-              style={{
+              style={{ /* keep-inline */
                 ...styles.toolBtn,
                 backgroundColor: activeLeftTool === tool.key ? '#333' : 'transparent',
               }}
               onClick={() => handleToolClick(tool.key)}
             >
-              <div style={styles.toolIconCircle}>{tool.icon}</div>
-              <span style={styles.toolLabel}>{tool.label}</span>
+              <div className="pos-tool-icon-circle">{tool.icon}</div>
+              <span className="pos-tool-label">{tool.label}</span>
             </button>
           ))}
         </div>
 
         {/* ─── ITEM GRID ─────────────────────────────────────── */}
-        <div style={styles.itemGrid}>
+        <div className="pos-item-grid">
           {filteredItems.map((item, idx) => {
             const is86 = stock86Items.has(item.id);
             return itemGridView === 'list' ? (
               <button
                 key={item.id || idx}
-                style={{
+                style={{ /* keep-inline */
                   display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '8px 12px',
                   borderRadius: 4, border: 'none', cursor: 'pointer', textAlign: 'left',
                   backgroundColor: is86 ? '#222' : '#1a1a1a', opacity: is86 ? 0.5 : 1,
@@ -794,16 +793,16 @@ export default function POSRuntimeEnhanced() {
                   handleItemClick(item);
                 }}
               >
-                <div style={{ width: 8, height: '100%', minHeight: 28, borderRadius: 2, backgroundColor: tileColor, flexShrink: 0 }} />
-                <span style={{ flex: 1, fontSize: 13, fontWeight: 600 }}>{item.name}</span>
-                <span style={{ fontSize: 11, color: '#888', marginRight: 8 }}>{item.sku || item.code || `M${idx + 1}`}</span>
-                <span style={{ fontSize: 13, fontWeight: 700, color: '#F4A261' }}>{((item.sell_price || item.price || 0)).toFixed(2)}</span>
-                {is86 && <span style={{ fontSize: 10, fontWeight: 700, color: '#E05A33', marginLeft: 6 }}>86</span>}
+                <div style={{ width: 8, height: '100%', minHeight: 28, borderRadius: 2, backgroundColor: tileColor, flexShrink: 0 }} /> /* keep-inline */
+                <span style={{ flex: 1, fontSize: 13, fontWeight: 600 }}>{item.name}</span> /* keep-inline */
+                <span style={{ fontSize: 11, color: '#888', marginRight: 8 }}>{item.sku || item.code || `M${idx + 1}`}</span> /* keep-inline */
+                <span style={{ fontSize: 13, fontWeight: 700, color: '#F4A261' }}>{((item.sell_price || item.price || 0)).toFixed(2)}</span> /* keep-inline */
+                {is86 && <span style={{ fontSize: 10, fontWeight: 700, color: '#E05A33', marginLeft: 6 }}>86</span>} /* keep-inline */
               </button>
             ) : (
               <button
                 key={item.id || idx}
-                style={{
+                style={{ /* keep-inline */
                   ...styles.tile,
                   backgroundColor: is86 ? '#333' : tileColor,
                   opacity: is86 ? 0.5 : 1,
@@ -815,10 +814,10 @@ export default function POSRuntimeEnhanced() {
                   handleItemClick(item);
                 }}
               >
-                <div style={styles.tileName}>{item.name}</div>
-                <div style={styles.tileBottom}>
-                  <span style={styles.tileCode}>{item.sku || item.code || `M${idx + 1}`}</span>
-                  <span style={styles.tilePrice}>
+                <div className="pos-tile-name">{item.name}</div>
+                <div className="pos-tile-bottom">
+                  <span className="pos-tile-code">{item.sku || item.code || `M${idx + 1}`}</span>
+                  <span className="pos-tile-price">
                     {((item.sell_price || item.price || 0)).toFixed(2)}
                   </span>
                 </div>
@@ -829,25 +828,25 @@ export default function POSRuntimeEnhanced() {
         </div>
 
         {/* ─── RIGHT PANEL (Order) ──────────────────────────── */}
-        <div style={styles.rightPanel}>
+        <div className="pos-right-panel">
           {/* Header */}
-          <div style={styles.orderHeader}>
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 12 }} onClick={() => setShowActionsPanel(true)}>Actions ▾</button>
-            <span style={styles.orderTableName}>
+          <div className="pos-order-header">
+            <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 12 }} onClick={() => setShowActionsPanel(true)}>Actions ▾</button> /* keep-inline */
+            <span className="pos-order-table-name">
               {posMode === 'dine-in' ? tableLabel : posMode === 'takeout' ? `📦 Takeout #${(order?.order_number || '—')}` : `⚡ Counter #${(order?.order_number || '—')}`}
             </span>
-            <span style={styles.orderTimestamp}>{orderTimestamp}</span>
+            <span className="pos-order-timestamp">{orderTimestamp}</span>
           </div>
 
           {/* Sorting tabs */}
-          <div style={styles.sortTabs}>
+          <div className="pos-sort-tabs">
             {(posMode === 'dine-in'
               ? ['Time', 'Product', 'Seat', 'User', 'Course']
               : ['Time', 'Product', 'User']
             ).map(tab => (
               <button
                 key={tab}
-                style={{
+                style={{ /* keep-inline */
                   ...styles.sortTab,
                   backgroundColor: orderViewMode === tab ? '#2A9D8F' : 'transparent',
                   color: orderViewMode === tab ? '#fff' : '#888',
@@ -860,16 +859,16 @@ export default function POSRuntimeEnhanced() {
           </div>
 
           {/* Table header bar */}
-          <div style={styles.tableHeaderBar}>
+          <div className="pos-table-header-bar">
             {posMode === 'dine-in' ? 'Table' : posMode === 'takeout' ? '📦 Takeout Order' : '⚡ Counter Order'}
-            {posMode === 'dine-in' && covers > 0 && <span style={{ fontSize: 11, marginLeft: 8, opacity: 0.8 }}>· {covers} covers</span>}
-            {assignedCustomer && <span style={{ fontSize: 11, marginLeft: 8, opacity: 0.8 }}>· {assignedCustomer.name}</span>}
+            {posMode === 'dine-in' && covers > 0 && <span style={{ fontSize: 11, marginLeft: 8, opacity: 0.8 }}>· {covers} covers</span>} /* keep-inline */
+            {assignedCustomer && <span style={{ fontSize: 11, marginLeft: 8, opacity: 0.8 }}>· {assignedCustomer.name}</span>} /* keep-inline */
           </div>
 
           {/* Order items (Seat → Course grouping) */}
-          <div style={styles.orderItems}>
+          <div className="pos-order-items">
             {items.length === 0 ? (
-              <div style={styles.emptyOrder}>
+              <div className="pos-empty-order">
                 {posMode === 'dine-in' ? 'No items yet' : posMode === 'takeout' ? 'Add items to takeout order' : 'Tap items to add'}
               </div>
             ) : posMode !== 'dine-in' ? (
@@ -877,16 +876,16 @@ export default function POSRuntimeEnhanced() {
               items.map((item, idx) => (
                 <div
                   key={item.id || idx}
-                  style={styles.orderItemRow}
+                  className="pos-order-item-row"
                   onContextMenu={(e) => { e.preventDefault(); handleItemLongPress(item); }}
                   onClick={() => { if (activeLeftTool) handleItemWithTool(item); }}
                 >
-                  <span style={styles.orderItemQty}>{item.qty || 1}</span>
-                  <span style={styles.orderItemName}>
+                  <span className="pos-order-item-qty">{item.qty || 1}</span>
+                  <span className="pos-order-item-name">
                     {item.menu_item_name || item.name}
-                    {item.instructions && <span style={{ fontSize: 10, color: '#F4A261', display: 'block' }}>📝 {item.instructions}</span>}
+                    {item.instructions && <span style={{ fontSize: 10, color: '#F4A261', display: 'block' }}>📝 {item.instructions}</span>} /* keep-inline */
                   </span>
-                  <span style={styles.orderItemPrice}>
+                  <span className="pos-order-item-price">
                     {((item.unit_price || item.price || 0) * (item.qty || 1)).toFixed(2)}
                   </span>
                 </div>
@@ -894,29 +893,29 @@ export default function POSRuntimeEnhanced() {
             ) : (
               Object.entries(groupedItems).map(([seatNum, courses]) => (
                 <div key={seatNum}>
-                  <div style={styles.seatHeader}>Seat {seatNum}</div>
+                  <div className="pos-seat-header">Seat {seatNum}</div>
                   {Object.entries(courses).sort(([a], [b]) => a - b).map(([courseNum, courseItems]) => (
                     <div key={courseNum}>
-                      <div style={{ ...styles.courseHeader, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <span style={{ color: COURSE_COLORS[courseNum] || '#888' }}>Course {courseNum}</span>
+                      <div style={{ ...styles.courseHeader, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}> /* keep-inline */
+                        <span style={{ color: COURSE_COLORS[courseNum] || '#888' }}>Course {courseNum}</span> /* keep-inline */
                         <button
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 10, color: '#E05A33', fontWeight: 700 }}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 10, color: '#E05A33', fontWeight: 700 }} /* keep-inline */
                           onClick={() => fireCourse(parseInt(courseNum))}
                         >🔥 FIRE</button>
                       </div>
                       {courseItems.map((item, idx) => (
                         <div
                           key={item.id || idx}
-                          style={styles.orderItemRow}
+                          className="pos-order-item-row"
                           onContextMenu={(e) => { e.preventDefault(); handleItemLongPress(item); }}
                           onClick={() => { if (activeLeftTool) handleItemWithTool(item); }}
                         >
-                          <span style={styles.orderItemQty}>{item.qty || 1}</span>
-                          <span style={styles.orderItemName}>
+                          <span className="pos-order-item-qty">{item.qty || 1}</span>
+                          <span className="pos-order-item-name">
                             {item.menu_item_name || item.name}
-                            {item.instructions && <span style={{ fontSize: 10, color: '#F4A261', display: 'block' }}>📝 {item.instructions}</span>}
+                            {item.instructions && <span style={{ fontSize: 10, color: '#F4A261', display: 'block' }}>📝 {item.instructions}</span>} /* keep-inline */
                           </span>
-                          <span style={styles.orderItemPrice}>
+                          <span className="pos-order-item-price">
                             {((item.unit_price || item.price || 0) * (item.qty || 1)).toFixed(2)}
                           </span>
                         </div>
@@ -929,22 +928,22 @@ export default function POSRuntimeEnhanced() {
           </div>
 
           {/* Taxes & Payment */}
-          <div style={styles.taxSection}>
-            <div style={styles.taxLabel}>Taxes & Payment</div>
-            <div style={styles.taxRow}>
+          <div className="pos-tax-section">
+            <div className="pos-tax-label">Taxes & Payment</div>
+            <div className="pos-tax-row">
               <span>0.00%: 0.00 ({(orderTotal).toFixed(2)})</span>
             </div>
           </div>
 
           {/* Bottom controls */}
-          <div style={styles.orderBottom}>
+          <div className="pos-order-bottom">
             {posMode === 'dine-in' ? (
               /* Full dine-in controls: modifiers tab, table tab, seat buttons */
               <>
                 {/* L-Series: MODIFIERS + TABLE + Seat buttons — single combined row */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '6px 8px', borderTop: '1px solid #333' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '6px 8px', borderTop: '1px solid #333' }}> /* keep-inline */
                   <button
-                    style={{
+                    style={{ /* keep-inline */
                       display: 'flex', alignItems: 'center', gap: 4, padding: '6px 10px',
                       border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 10, fontWeight: 600,
                       backgroundColor: bottomPanelTab === 'MODIFIERS' ? '#333' : 'transparent',
@@ -956,7 +955,7 @@ export default function POSRuntimeEnhanced() {
                     <span>MODIFIERS</span>
                   </button>
                   <button
-                    style={{
+                    style={{ /* keep-inline */
                       display: 'flex', alignItems: 'center', gap: 4, padding: '6px 10px',
                       border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 10, fontWeight: 600,
                       backgroundColor: bottomPanelTab === 'TABLE' ? '#2A9D8F' : 'transparent',
@@ -967,11 +966,11 @@ export default function POSRuntimeEnhanced() {
                     <span>🪑</span>
                     <span>TABLE</span>
                   </button>
-                  <div style={{ width: 1, height: 20, backgroundColor: '#333', margin: '0 4px' }} />
+                  <div style={{ width: 1, height: 20, backgroundColor: '#333', margin: '0 4px' }} /> /* keep-inline */
                   {Array.from({ length: Math.max(seatCount, 3) }, (_, i) => i + 1).map(sn => (
                     <button
                       key={sn}
-                      style={{
+                      style={{ /* keep-inline */
                         ...styles.seatBtn,
                         width: 28, height: 28,
                         backgroundColor: currentSeat === sn ? '#2A9D8F' : '#333',
@@ -986,7 +985,7 @@ export default function POSRuntimeEnhanced() {
                     </button>
                   ))}
                   <button
-                    style={{ ...styles.seatAddBtn, width: 28, height: 28 }}
+                    style={{ ...styles.seatAddBtn, width: 28, height: 28 }} /* keep-inline */
                     onClick={() => {
                       const next = seatCount + 1;
                       setSeatCount(next);
@@ -997,45 +996,45 @@ export default function POSRuntimeEnhanced() {
               </>
             ) : (
               /* Takeout/Counter: simplified — no seats, just mode badge */
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: posMode === 'takeout' ? '#F4A261' : '#5B8DEF', textTransform: 'uppercase' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}> /* keep-inline */
+                <span style={{ fontSize: 11, fontWeight: 700, color: posMode === 'takeout' ? '#F4A261' : '#5B8DEF', textTransform: 'uppercase' }}> /* keep-inline */
                   {posMode === 'takeout' ? '📦 Takeout' : '⚡ Counter'}
                 </span>
-                <span style={{ fontSize: 10, color: '#666' }}>· No table / seats</span>
+                <span style={{ fontSize: 10, color: '#666' }}>· No table / seats</span> /* keep-inline */
               </div>
             )}
-            <div style={styles.totalDue}>
-              <span style={styles.totalDueLabel}>
+            <div className="pos-total-due">
+              <span className="pos-total-due-label">
                 {posMode === 'counter' ? 'Quick Pay:' : 'Total due:'}
               </span>
-              <span style={styles.totalDueAmount}>{(orderTotal).toFixed(2)}</span>
+              <span className="pos-total-due-amount">{(orderTotal).toFixed(2)}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* ═══ BOTTOM BAR ═════════════════════════════════════════ */}
-      <div style={styles.bottomBar}>
+      <div className="pos-bottom-bar">
         {/* Left: settings + customer */}
-        <div style={styles.bottomLeft}>
-          <button style={styles.bottomIconBtn}>⚙</button>
-          <button style={styles.bottomIconBtn} onClick={() => setShowOverview(true)} title="Floor Plan">☐</button>
-          <button style={styles.customerAddBtn} onClick={() => setShowCustomerModal(true)}>
+        <div className="pos-bottom-left">
+          <button className="pos-bottom-icon-btn">⚙</button>
+          <button className="pos-bottom-icon-btn" onClick={() => setShowOverview(true)} title="Floor Plan">☐</button>
+          <button className="pos-customer-add-btn" onClick={() => setShowCustomerModal(true)}>
             <UserPlus size={14} color={assignedCustomer ? '#2A9D8F' : '#999'} />
-            <span style={{ ...styles.customerAddLabel, color: assignedCustomer ? '#2A9D8F' : '#888' }}>
+            <span style={{ ...styles.customerAddLabel, color: assignedCustomer ? '#2A9D8F' : '#888' }}> /* keep-inline */
               {assignedCustomer ? assignedCustomer.name.split(' ')[0].toUpperCase() : 'CUSTOMER\nADD'}
             </span>
           </button>
         </div>
 
         {/* Server avatar */}
-        <div style={styles.serverSection}>
-          <div style={styles.serverAvatar}>{serverInitial}</div>
-          <span style={styles.serverNameLabel}>{serverName.split(' ')[0].toUpperCase()}</span>
+        <div className="pos-server-section">
+          <div className="pos-server-avatar">{serverInitial}</div>
+          <span className="pos-server-name-label">{serverName.split(' ')[0].toUpperCase()}</span>
         </div>
 
         {/* Category tabs */}
-        <div style={styles.categoryTabs}>
+        <div className="pos-category-tabs">
           {categories.map((cat) => {
             const meta = getCategoryMeta(cat.name);
             const isActive = selectedCategory === cat.id;
@@ -1043,14 +1042,14 @@ export default function POSRuntimeEnhanced() {
             return (
               <button
                 key={cat.id}
-                style={{
+                style={{ /* keep-inline */
                   ...styles.categoryTab,
                   backgroundColor: isActive ? '#2A9D8F' : '#000',
                 }}
                 onClick={() => loadCategoryItems(cat.id)}
               >
                 <CatIcon size={24} color={isActive ? '#fff' : '#888'} />
-                <span style={{
+                <span style={{ /* keep-inline */
                   ...styles.categoryTabLabel,
                   color: isActive ? '#fff' : '#888',
                 }}>{cat.name}</span>
@@ -1212,26 +1211,26 @@ export default function POSRuntimeEnhanced() {
 
       {/* Overview Panel — all open orders at a glance */}
       {showOverview && (
-        <div style={styles.modalOverlay} onClick={() => setShowOverview(false)}>
-          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 700, maxWidth: 900, maxHeight: '80vh', overflow: 'auto', border: '1px solid #333' }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-              <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>Overview — Open Orders</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div className="pos-modal-overlay" onClick={() => setShowOverview(false)}>
+          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 700, maxWidth: 900, maxHeight: '80vh', overflow: 'auto', border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}> /* keep-inline */
+              <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>Overview — Open Orders</span> /* keep-inline */
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
                 <button
                   onClick={() => setOverviewMode('grid')}
-                  style={{ padding: '4px 12px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, backgroundColor: overviewMode === 'grid' ? '#2A9D8F' : '#333', color: overviewMode === 'grid' ? '#fff' : '#888' }}
+                  style={{ padding: '4px 12px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, backgroundColor: overviewMode === 'grid' ? '#2A9D8F' : '#333', color: overviewMode === 'grid' ? '#fff' : '#888' }} /* keep-inline */
                 >Grid</button>
                 <button
                   onClick={() => setOverviewMode('floorplan')}
-                  style={{ padding: '4px 12px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, backgroundColor: overviewMode === 'floorplan' ? '#5B8DEF' : '#333', color: overviewMode === 'floorplan' ? '#fff' : '#888' }}
+                  style={{ padding: '4px 12px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, backgroundColor: overviewMode === 'floorplan' ? '#5B8DEF' : '#333', color: overviewMode === 'floorplan' ? '#fff' : '#888' }} /* keep-inline */
                 >Floor Plan</button>
-                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18, marginLeft: 8 }} onClick={() => setShowOverview(false)}>✕</button>
+                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18, marginLeft: 8 }} onClick={() => setShowOverview(false)}>✕</button> /* keep-inline */
               </div>
             </div>
 
             {/* Floor Plan View */}
             {overviewMode === 'floorplan' ? (
-              <div style={{ height: 500, borderRadius: 12, overflow: 'hidden' }}>
+              <div style={{ height: 500, borderRadius: 12, overflow: 'hidden' }}> /* keep-inline */
                 <FloorPlanWidget
                   tables={tables.map(t => ({
                     ...t,
@@ -1251,7 +1250,7 @@ export default function POSRuntimeEnhanced() {
                 />
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}> /* keep-inline */
                 {tables.length > 0 ? tables.map(t => {
                   const tStatus = t.status || (t.current_order_id ? 'occupied' : 'free');
                   const statusColor = tStatus === 'occupied' ? '#E05A33' : tStatus === 'reserved' ? '#5B8DEF' : '#2A9D8F';
@@ -1260,7 +1259,7 @@ export default function POSRuntimeEnhanced() {
                   return (
                     <div
                       key={t.id}
-                      style={{
+                      style={{ /* keep-inline */
                         backgroundColor: statusBg,
                         borderRadius: 12, padding: 16,
                         border: `2px solid ${statusColor}`,
@@ -1274,22 +1273,22 @@ export default function POSRuntimeEnhanced() {
                         else toast.info(`${t.name} — ${statusLabel}`);
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>{t.name || `Table ${t.number}`}</div>
-                        <span style={{ fontSize: 9, fontWeight: 700, color: statusColor, backgroundColor: `${statusColor}22`, padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase' }}>{statusLabel}</span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> /* keep-inline */
+                        <div style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>{t.name || `Table ${t.number}`}</div> /* keep-inline */
+                        <span style={{ fontSize: 9, fontWeight: 700, color: statusColor, backgroundColor: `${statusColor}22`, padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase' }}>{statusLabel}</span> /* keep-inline */
                       </div>
-                      <div style={{ fontSize: 11, color: '#888', marginTop: 6 }}>
+                      <div style={{ fontSize: 11, color: '#888', marginTop: 6 }}> /* keep-inline */
                         {tStatus === 'occupied' ? `${t.covers || '?'} covers · ${t.server_name || 'Server'}` : tStatus === 'reserved' ? 'Reserved' : 'Ready to seat'}
                       </div>
                       {tStatus === 'occupied' && (
-                        <div style={{ fontSize: 14, fontWeight: 700, color: '#F4A261', marginTop: 8 }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: '#F4A261', marginTop: 8 }}> /* keep-inline */
                           €{(t.order_total || 0).toFixed(2)}
                         </div>
                       )}
                     </div>
                   );
                 }) : (
-                  <div style={{ gridColumn: '1/-1', textAlign: 'center', color: '#666', padding: 40 }}>
+                  <div style={{ gridColumn: '1/-1', textAlign: 'center', color: '#666', padding: 40 }}> /* keep-inline */
                     No tables configured. Add tables in Manager → POS Settings → Tables.
                   </div>
                 )}
@@ -1304,39 +1303,39 @@ export default function POSRuntimeEnhanced() {
       {/* ═══ CASH REGISTER MODAL ═══════════════════════════════ */}
       {
         showCashRegister && (
-          <div style={styles.modalOverlay} onClick={() => setShowCashRegister(false)}>
-            <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 500, maxWidth: 600, border: '1px solid #333' }} onClick={e => e.stopPropagation()}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>💰 Cash Register</span>
-                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18 }} onClick={() => setShowCashRegister(false)}>✕</button>
+          <div className="pos-modal-overlay" onClick={() => setShowCashRegister(false)}>
+            <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 500, maxWidth: 600, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
+                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>💰 Cash Register</span> /* keep-inline */
+                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18 }} onClick={() => setShowCashRegister(false)}>✕</button> /* keep-inline */
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
-                <div style={{ backgroundColor: '#1a2a1a', borderRadius: 12, padding: 16, border: '1px solid #2A9D8F', textAlign: 'center' }}>
-                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>Opening Float</div>
-                  <div style={{ fontSize: 24, fontWeight: 700, color: '#2A9D8F' }}>€200.00</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}> /* keep-inline */
+                <div style={{ backgroundColor: '#1a2a1a', borderRadius: 12, padding: 16, border: '1px solid #2A9D8F', textAlign: 'center' }}> /* keep-inline */
+                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>Opening Float</div> /* keep-inline */
+                  <div style={{ fontSize: 24, fontWeight: 700, color: '#2A9D8F' }}>€200.00</div> /* keep-inline */
                 </div>
-                <div style={{ backgroundColor: '#1a1a2a', borderRadius: 12, padding: 16, border: '1px solid #5B8DEF', textAlign: 'center' }}>
-                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>Current Drawer</div>
-                  <div style={{ fontSize: 24, fontWeight: 700, color: '#5B8DEF' }}>€{(200 + orderTotal).toFixed(2)}</div>
+                <div style={{ backgroundColor: '#1a1a2a', borderRadius: 12, padding: 16, border: '1px solid #5B8DEF', textAlign: 'center' }}> /* keep-inline */
+                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>Current Drawer</div> /* keep-inline */
+                  <div style={{ fontSize: 24, fontWeight: 700, color: '#5B8DEF' }}>€{(200 + orderTotal).toFixed(2)}</div> /* keep-inline */
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 20 }}> /* keep-inline */
                 {[
                   { label: 'Cash In', icon: '📥', color: '#2A9D8F', action: () => toast.success('Cash In: enter amount in register') },
                   { label: 'Cash Out', icon: '📤', color: '#E07A5F', action: () => toast.success('Cash Out: enter amount from register') },
                   { label: 'Open Drawer', icon: '🗄️', color: '#F4A261', action: () => toast.success('Cash drawer opened') },
                   { label: 'Print X-Report', icon: '🧾', color: '#888', action: () => toast.success('X-Report sent to printer') },
                 ].map(btn => (
-                  <button key={btn.label} onClick={btn.action} style={{ backgroundColor: '#1a1a1a', border: `1px solid ${btn.color}40`, borderRadius: 10, padding: '14px 12px', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <button key={btn.label} onClick={btn.action} style={{ backgroundColor: '#1a1a1a', border: `1px solid ${btn.color}40`, borderRadius: 10, padding: '14px 12px', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
                     <span>{btn.icon}</span> {btn.label}
                   </button>
                 ))}
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                <button onClick={() => { toast.success('Register opened — shift started'); setShowCashRegister(false); }} style={{ backgroundColor: '#2A9D8F', border: 'none', borderRadius: 10, padding: 14, cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 700 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}> /* keep-inline */
+                <button onClick={() => { toast.success('Register opened — shift started'); setShowCashRegister(false); }} style={{ backgroundColor: '#2A9D8F', border: 'none', borderRadius: 10, padding: 14, cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 700 }}> /* keep-inline */
                   ▶ Open Register
                 </button>
-                <button onClick={() => { toast.success('Register closed — Z-Report generated'); setShowCashRegister(false); }} style={{ backgroundColor: '#E05A33', border: 'none', borderRadius: 10, padding: 14, cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 700 }}>
+                <button onClick={() => { toast.success('Register closed — Z-Report generated'); setShowCashRegister(false); }} style={{ backgroundColor: '#E05A33', border: 'none', borderRadius: 10, padding: 14, cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 700 }}> /* keep-inline */
                   ⏹ Close Register
                 </button>
               </div>
@@ -1348,56 +1347,56 @@ export default function POSRuntimeEnhanced() {
       {/* ═══ EMBEDDED REPORTS MODAL ═════════════════════════════ */}
       {
         showReports && (
-          <div style={styles.modalOverlay} onClick={() => setShowReports(false)}>
-            <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 600, maxWidth: 750, maxHeight: '80vh', overflow: 'auto', border: '1px solid #333' }} onClick={e => e.stopPropagation()}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>📊 Quick Reports</span>
-                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18 }} onClick={() => setShowReports(false)}>✕</button>
+          <div className="pos-modal-overlay" onClick={() => setShowReports(false)}>
+            <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 600, maxWidth: 750, maxHeight: '80vh', overflow: 'auto', border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
+                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>📊 Quick Reports</span> /* keep-inline */
+                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18 }} onClick={() => setShowReports(false)}>✕</button> /* keep-inline */
               </div>
 
               {/* Daily Summary Cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}> /* keep-inline */
                 {[
                   { label: 'Revenue', value: '€1,240.50', color: '#2A9D8F', icon: '💰' },
                   { label: 'Orders', value: '47', color: '#5B8DEF', icon: '🧾' },
                   { label: 'Avg Check', value: '€26.39', color: '#F4A261', icon: '📊' },
                   { label: 'Voids', value: '3', color: '#E05A33', icon: '🗑️' },
                 ].map(stat => (
-                  <div key={stat.label} style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 14, border: '1px solid #333', textAlign: 'center' }}>
-                    <div style={{ fontSize: 18, marginBottom: 4 }}>{stat.icon}</div>
-                    <div style={{ fontSize: 20, fontWeight: 700, color: stat.color }}>{stat.value}</div>
-                    <div style={{ fontSize: 10, color: '#888', marginTop: 2 }}>{stat.label}</div>
+                  <div key={stat.label} style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 14, border: '1px solid #333', textAlign: 'center' }}> /* keep-inline */
+                    <div style={{ fontSize: 18, marginBottom: 4 }}>{stat.icon}</div> /* keep-inline */
+                    <div style={{ fontSize: 20, fontWeight: 700, color: stat.color }}>{stat.value}</div> /* keep-inline */
+                    <div style={{ fontSize: 10, color: '#888', marginTop: 2 }}>{stat.label}</div> /* keep-inline */
                   </div>
                 ))}
               </div>
 
               {/* Payment Breakdown */}
-              <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 16, border: '1px solid #333', marginBottom: 16 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Payment Breakdown</div>
+              <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 16, border: '1px solid #333', marginBottom: 16 }}> /* keep-inline */
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Payment Breakdown</div> /* keep-inline */
                 {[
                   { method: 'Cash', amount: '€520.00', pct: '42%', bar: 42 },
                   { method: 'Card', amount: '€620.50', pct: '50%', bar: 50 },
                   { method: 'Other', amount: '€100.00', pct: '8%', bar: 8 },
                 ].map(p => (
-                  <div key={p.method} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                    <span style={{ fontSize: 12, color: '#888', minWidth: 50 }}>{p.method}</span>
-                    <div style={{ flex: 1, height: 8, backgroundColor: '#333', borderRadius: 4, overflow: 'hidden' }}>
+                  <div key={p.method} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}> /* keep-inline */
+                    <span style={{ fontSize: 12, color: '#888', minWidth: 50 }}>{p.method}</span> /* keep-inline */
+                    <div style={{ flex: 1, height: 8, backgroundColor: '#333', borderRadius: 4, overflow: 'hidden' }}> /* keep-inline */
                       <div style={{ width: `${p.bar}%`, height: '100%', backgroundColor: '#2A9D8F', borderRadius: 4 }} />
                     </div>
-                    <span style={{ fontSize: 12, color: '#fff', minWidth: 80, textAlign: 'right' }}>{p.amount}</span>
-                    <span style={{ fontSize: 10, color: '#888', minWidth: 30 }}>{p.pct}</span>
+                    <span style={{ fontSize: 12, color: '#fff', minWidth: 80, textAlign: 'right' }}>{p.amount}</span> /* keep-inline */
+                    <span style={{ fontSize: 10, color: '#888', minWidth: 30 }}>{p.pct}</span> /* keep-inline */
                   </div>
                 ))}
               </div>
 
               {/* Hourly Volume */}
-              <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 16, border: '1px solid #333' }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Hourly Volume</div>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 80 }}>
+              <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 16, border: '1px solid #333' }}> /* keep-inline */
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Hourly Volume</div> /* keep-inline */
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 80 }}> /* keep-inline */
                   {[2, 4, 8, 15, 22, 35, 45, 40, 30, 18, 12, 5].map((v, i) => (
-                    <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}> /* keep-inline */
                       <div style={{ width: '100%', height: `${(v / 45) * 70}px`, backgroundColor: v > 30 ? '#E05A33' : '#2A9D8F', borderRadius: '4px 4px 0 0', minHeight: 4 }} />
-                      <span style={{ fontSize: 8, color: '#666', marginTop: 2 }}>{10 + i}h</span>
+                      <span style={{ fontSize: 8, color: '#666', marginTop: 2 }}>{10 + i}h</span> /* keep-inline */
                     </div>
                   ))}
                 </div>
@@ -1408,25 +1407,25 @@ export default function POSRuntimeEnhanced() {
       }
       {
         showOpenItem && (
-          <div style={styles.modalOverlay} onClick={() => setShowOpenItem(false)}>
-            <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 24, minWidth: 360, border: '1px solid #333' }} onClick={e => e.stopPropagation()}>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 16, textAlign: 'center' }}>Open Item</div>
+          <div className="pos-modal-overlay" onClick={() => setShowOpenItem(false)}>
+            <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 24, minWidth: 360, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 16, textAlign: 'center' }}>Open Item</div> /* keep-inline */
               <input
-                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 12, boxSizing: 'border-box' }}
+                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 12, boxSizing: 'border-box' }} /* keep-inline */
                 placeholder="Item name"
                 value={openItemName}
                 onChange={e => setOpenItemName(e.target.value)}
                 autoFocus
               />
               <input
-                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 16, boxSizing: 'border-box' }}
+                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 16, boxSizing: 'border-box' }} /* keep-inline */
                 placeholder="Price (€)"
                 value={openItemPrice}
                 onChange={e => setOpenItemPrice(e.target.value.replace(/[^0-9.]/g, ''))}
               />
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: '1px solid #555', background: 'none', color: '#888', cursor: 'pointer', fontSize: 14 }} onClick={() => setShowOpenItem(false)}>Cancel</button>
-                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: 'none', backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer' }} onClick={handleAddOpenItem}>Add Item</button>
+              <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
+                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: '1px solid #555', background: 'none', color: '#888', cursor: 'pointer', fontSize: 14 }} onClick={() => setShowOpenItem(false)}>Cancel</button> /* keep-inline */
+                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: 'none', backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer' }} onClick={handleAddOpenItem}>Add Item</button> /* keep-inline */
               </div>
             </div>
           </div>
@@ -1436,20 +1435,20 @@ export default function POSRuntimeEnhanced() {
       {/* Note Input Dialog (Phase 3) */}
       {
         showNoteInput && (
-          <div style={styles.modalOverlay} onClick={() => { setShowNoteInput(null); setNoteText(''); }}>
-            <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 24, minWidth: 360, border: '1px solid #333' }} onClick={e => e.stopPropagation()}>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, textAlign: 'center' }}>Item Notes</div>
-              <div style={{ fontSize: 12, color: '#888', marginBottom: 16, textAlign: 'center' }}>{showNoteInput.menu_item_name || showNoteInput.name}</div>
+          <div className="pos-modal-overlay" onClick={() => { setShowNoteInput(null); setNoteText(''); }}>
+            <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 24, minWidth: 360, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, textAlign: 'center' }}>Item Notes</div> /* keep-inline */
+              <div style={{ fontSize: 12, color: '#888', marginBottom: 16, textAlign: 'center' }}>{showNoteInput.menu_item_name || showNoteInput.name}</div> /* keep-inline */
               <textarea
-                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 16, minHeight: 80, resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box' }}
+                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 16, minHeight: 80, resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box' }} /* keep-inline */
                 placeholder="Kitchen instructions..."
                 value={noteText}
                 onChange={e => setNoteText(e.target.value)}
                 autoFocus
               />
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: '1px solid #555', background: 'none', color: '#888', cursor: 'pointer', fontSize: 14 }} onClick={() => { setShowNoteInput(null); setNoteText(''); }}>Cancel</button>
-                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: 'none', backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer' }} onClick={saveItemNote}>{"Save "}Note</button>
+              <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
+                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: '1px solid #555', background: 'none', color: '#888', cursor: 'pointer', fontSize: 14 }} onClick={() => { setShowNoteInput(null); setNoteText(''); }}>Cancel</button> /* keep-inline */
+                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: 'none', backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer' }} onClick={saveItemNote}>{"Save "}Note</button> /* keep-inline */
               </div>
             </div>
           </div>
@@ -1470,29 +1469,29 @@ export default function POSRuntimeEnhanced() {
 
       {/* ═══ CASH REGISTER MODAL ═══════════════════════════════ */}
       {showCashRegister && (
-        <div style={styles.modalOverlay} onClick={() => setShowCashRegister(false)}>
-          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 500, maxWidth: 600, border: '1px solid #333' }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>💰 Cash Register</div>
-              <button style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: 20 }} onClick={() => setShowCashRegister(false)}>✕</button>
+        <div className="pos-modal-overlay" onClick={() => setShowCashRegister(false)}>
+          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 500, maxWidth: 600, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>💰 Cash Register</div> /* keep-inline */
+              <button style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: 20 }} onClick={() => setShowCashRegister(false)}>✕</button> /* keep-inline */
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}> /* keep-inline */
               {[{ label: 'Open Shift', icon: '🟢', color: '#2A9D8F' }, { label: 'Close Shift', icon: '🔴', color: '#E05A33' }, { label: 'Cash In', icon: '📥', color: '#5B8DEF' }, { label: 'Cash Out', icon: '📤', color: '#F4A261' }].map(a => (
-                <button key={a.label} onClick={() => toast.success(`${a.label} recorded`)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: 20, borderRadius: 12, border: `1px solid ${a.color}40`, backgroundColor: `${a.color}11`, cursor: 'pointer', color: '#fff' }}>
-                  <span style={{ fontSize: 28 }}>{a.icon}</span>
-                  <span style={{ fontSize: 13, fontWeight: 600 }}>{a.label}</span>
+                <button key={a.label} onClick={() => toast.success(`${a.label} recorded`)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: 20, borderRadius: 12, border: `1px solid ${a.color}40`, backgroundColor: `${a.color}11`, cursor: 'pointer', color: '#fff' }}> /* keep-inline */
+                  <span style={{ fontSize: 28 }}>{a.icon}</span> /* keep-inline */
+                  <span style={{ fontSize: 13, fontWeight: 600 }}>{a.label}</span> /* keep-inline */
                 </button>
               ))}
             </div>
-            <div style={{ padding: 16, backgroundColor: '#0a0a0a', borderRadius: 12, border: '1px solid #222' }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#888', marginBottom: 12 }}>SHIFT SUMMARY</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13 }}>
-                <div style={{ color: '#888' }}>Cash Sales</div><div style={{ color: '#4ade80', textAlign: 'right' }}>€0.00</div>
-                <div style={{ color: '#888' }}>Card Sales</div><div style={{ color: '#5B8DEF', textAlign: 'right' }}>€0.00</div>
-                <div style={{ color: '#888' }}>Cash In</div><div style={{ color: '#2A9D8F', textAlign: 'right' }}>€0.00</div>
-                <div style={{ color: '#888' }}>Cash Out</div><div style={{ color: '#E05A33', textAlign: 'right' }}>€0.00</div>
-                <div style={{ borderTop: '1px solid #333', paddingTop: 8, color: '#fff', fontWeight: 700 }}>Expected</div>
-                <div style={{ borderTop: '1px solid #333', paddingTop: 8, color: '#fff', fontWeight: 700, textAlign: 'right' }}>€0.00</div>
+            <div style={{ padding: 16, backgroundColor: '#0a0a0a', borderRadius: 12, border: '1px solid #222' }}> /* keep-inline */
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#888', marginBottom: 12 }}>SHIFT SUMMARY</div> /* keep-inline */
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13 }}> /* keep-inline */
+                <div style={{ color: '#888' }}>Cash Sales</div><div style={{ color: '#4ade80', textAlign: 'right' }}>€0.00</div> /* keep-inline */
+                <div style={{ color: '#888' }}>Card Sales</div><div style={{ color: '#5B8DEF', textAlign: 'right' }}>€0.00</div> /* keep-inline */
+                <div style={{ color: '#888' }}>Cash In</div><div style={{ color: '#2A9D8F', textAlign: 'right' }}>€0.00</div> /* keep-inline */
+                <div style={{ color: '#888' }}>Cash Out</div><div style={{ color: '#E05A33', textAlign: 'right' }}>€0.00</div> /* keep-inline */
+                <div style={{ borderTop: '1px solid #333', paddingTop: 8, color: '#fff', fontWeight: 700 }}>Expected</div> /* keep-inline */
+                <div style={{ borderTop: '1px solid #333', paddingTop: 8, color: '#fff', fontWeight: 700, textAlign: 'right' }}>€0.00</div> /* keep-inline */
               </div>
             </div>
           </div>
@@ -1501,29 +1500,29 @@ export default function POSRuntimeEnhanced() {
 
       {/* ═══ EMBEDDED REPORTS MODAL ═════════════════════════════ */}
       {showReports && (
-        <div style={styles.modalOverlay} onClick={() => setShowReports(false)}>
-          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 600, maxWidth: 700, border: '1px solid #333' }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>📊 Daily Report</div>
-              <button style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: 20 }} onClick={() => setShowReports(false)}>✕</button>
+        <div className="pos-modal-overlay" onClick={() => setShowReports(false)}>
+          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 600, maxWidth: 700, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>📊 Daily Report</div> /* keep-inline */
+              <button style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: 20 }} onClick={() => setShowReports(false)}>✕</button> /* keep-inline */
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 10, marginBottom: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 10, marginBottom: 20 }}> /* keep-inline */
               {[{ label: 'Total Sales', value: '€0.00', color: '#2A9D8F' }, { label: 'Orders', value: '0', color: '#5B8DEF' }, { label: 'Avg Ticket', value: '€0.00', color: '#F4A261' }, { label: 'Covers', value: '0', color: '#C77DBA' }].map(s => (
-                <div key={s.label} style={{ padding: 14, borderRadius: 10, backgroundColor: `${s.color}11`, border: `1px solid ${s.color}30`, textAlign: 'center' }}>
-                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>{s.label}</div>
-                  <div style={{ fontSize: 20, fontWeight: 800, color: s.color }}>{s.value}</div>
+                <div key={s.label} style={{ padding: 14, borderRadius: 10, backgroundColor: `${s.color}11`, border: `1px solid ${s.color}30`, textAlign: 'center' }}> /* keep-inline */
+                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>{s.label}</div> /* keep-inline */
+                  <div style={{ fontSize: 20, fontWeight: 800, color: s.color }}>{s.value}</div> /* keep-inline */
                 </div>
               ))}
             </div>
-            <div style={{ padding: 16, backgroundColor: '#0a0a0a', borderRadius: 12, border: '1px solid #222' }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#888', marginBottom: 12 }}>PAYMENT BREAKDOWN</div>
+            <div style={{ padding: 16, backgroundColor: '#0a0a0a', borderRadius: 12, border: '1px solid #222' }}> /* keep-inline */
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#888', marginBottom: 12 }}>PAYMENT BREAKDOWN</div> /* keep-inline */
               {[{ m: 'Cash', pct: 0, color: '#4ade80' }, { m: 'Card', pct: 0, color: '#5B8DEF' }, { m: 'Gift Card', pct: 0, color: '#C77DBA' }].map(p => (
-                <div key={p.m} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  <span style={{ width: 70, fontSize: 12, color: '#888' }}>{p.m}</span>
-                  <div style={{ flex: 1, height: 8, backgroundColor: '#222', borderRadius: 4, overflow: 'hidden' }}>
+                <div key={p.m} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}> /* keep-inline */
+                  <span style={{ width: 70, fontSize: 12, color: '#888' }}>{p.m}</span> /* keep-inline */
+                  <div style={{ flex: 1, height: 8, backgroundColor: '#222', borderRadius: 4, overflow: 'hidden' }}> /* keep-inline */
                     <div style={{ width: `${p.pct}%`, height: '100%', backgroundColor: p.color, borderRadius: 4 }} />
                   </div>
-                  <span style={{ width: 40, fontSize: 11, color: '#888', textAlign: 'right' }}>{p.pct}%</span>
+                  <span style={{ width: 40, fontSize: 11, color: '#888', textAlign: 'right' }}>{p.pct}%</span> /* keep-inline */
                 </div>
               ))}
             </div>
@@ -1537,246 +1536,3 @@ export default function POSRuntimeEnhanced() {
 /* ═══════════════════════════════════════════════════════════════════
    STYLES — Lightspeed L-Series Pixel-Perfect
    ═══════════════════════════════════════════════════════════════════ */
-const styles = {
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100vh',
-    width: '100vw',
-    backgroundColor: '#000',
-    color: '#fff',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    overflow: 'hidden',
-    position: 'fixed',
-    top: 0, left: 0,
-  },
-
-  /* ─── Loading ─────────────────────────────────────────────── */
-  loadingContainer: {
-    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-    height: '100vh', width: '100vw', backgroundColor: '#111', position: 'fixed', top: 0, left: 0,
-  },
-  loadingLogo: { fontSize: 48, marginBottom: 16 },
-  loadingText: { color: '#888', fontSize: 16 },
-
-  /* ─── Top Bar ─────────────────────────────────────────────── */
-  topBar: {
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    height: 52, minHeight: 52,
-    backgroundColor: '#111', borderBottom: '1px solid #222',
-    padding: '0 16px',
-  },
-  topBarLeft: { display: 'flex', alignItems: 'center', gap: 16 },
-  topBarCenter: { display: 'flex', alignItems: 'center' },
-  topBarRight: { display: 'flex', alignItems: 'center', gap: 4 },
-  topBarBtn: {
-    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
-    background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px',
-  },
-  topBarActionBtn: {
-    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
-    background: 'none', border: 'none', cursor: 'pointer', padding: '4px 10px',
-  },
-  topBarLabel: { fontSize: 9, color: '#777', fontWeight: 600, letterSpacing: 0.5 },
-  doneText: { fontSize: 16, color: '#E05A33', fontWeight: 600 },
-
-  /* ─── Main Content ────────────────────────────────────────── */
-  mainContent: {
-    display: 'flex', flex: 1, overflow: 'hidden',
-  },
-
-  /* ─── Left Sidebar ────────────────────────────────────────── */
-  leftSidebar: {
-    width: 54, minWidth: 54,
-    backgroundColor: '#111', borderRight: '1px solid #222',
-    display: 'flex', flexDirection: 'column', alignItems: 'center',
-    paddingTop: 8, gap: 2, overflowY: 'auto',
-  },
-  toolBtn: {
-    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
-    background: 'none', border: 'none', cursor: 'pointer',
-    padding: '8px 2px', width: '100%', borderRadius: 4,
-  },
-  toolIconCircle: {
-    width: 30, height: 30, borderRadius: '50%',
-    border: '1.5px dotted #666', display: 'flex', alignItems: 'center', justifyContent: 'center',
-  },
-  toolLabel: { fontSize: 6, color: '#555', fontWeight: 600, letterSpacing: 0.3, textTransform: 'uppercase' },
-
-  itemGrid: {
-    flex: 1, display: 'grid',
-    gridTemplateColumns: 'repeat(6, 1fr)',
-    gridTemplateRows: 'repeat(4, 1fr)',
-    gap: 1, padding: 1,
-    overflowY: 'auto',
-    backgroundColor: '#000',
-    position: 'relative',
-  },
-  tile: {
-    display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-    padding: '10px 10px 8px', borderRadius: 2, cursor: 'pointer',
-    border: 'none', textAlign: 'left',
-    transition: 'opacity 0.15s',
-  },
-  tileName: {
-    fontSize: 14, fontWeight: 600, color: '#fff', lineHeight: 1.25,
-    overflow: 'hidden', textOverflow: 'ellipsis',
-    display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-  },
-  tileBottom: {
-    display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-    marginTop: 'auto',
-  },
-  tileCode: { fontSize: 11, color: 'rgba(255,255,255,0.65)', fontWeight: 500 },
-  tilePrice: { fontSize: 13, color: '#fff', fontWeight: 700 },
-
-  /* ─── Right Panel ─────────────────────────────────────────── */
-  rightPanel: {
-    width: 280, minWidth: 280,
-    backgroundColor: '#111', borderLeft: '1px solid #222',
-    display: 'flex', flexDirection: 'column',
-  },
-  orderHeader: {
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    padding: '10px 12px 6px', borderBottom: '1px solid #333',
-  },
-  orderActions: { fontSize: 12, color: '#888' },
-  orderTableName: { fontSize: 14, fontWeight: 700, color: '#fff' },
-  orderTimestamp: { fontSize: 10, color: '#666' },
-
-  sortTabs: {
-    display: 'flex', borderBottom: '1px solid #333',
-  },
-  sortTab: {
-    flex: 1, padding: '6px 4px', fontSize: 11, fontWeight: 600,
-    border: 'none', cursor: 'pointer', textAlign: 'center',
-  },
-
-  tableHeaderBar: {
-    backgroundColor: '#2A9D8F', padding: '6px 12px',
-    fontSize: 13, fontWeight: 700, color: '#fff',
-  },
-
-  orderItems: {
-    flex: 1, overflowY: 'auto', padding: '0 12px',
-  },
-  emptyOrder: {
-    textAlign: 'center', color: '#666', padding: 40, fontSize: 13,
-  },
-  seatHeader: {
-    fontSize: 13, fontWeight: 700, color: '#fff', padding: '12px 0 4px',
-    borderTop: '1px solid #333', marginTop: 4,
-  },
-  courseHeader: {
-    fontSize: 11, color: '#888', padding: '6px 0 4px', fontWeight: 600,
-  },
-  orderItemRow: {
-    display: 'flex', alignItems: 'center', padding: '4px 0',
-    borderBottom: '1px solid #222',
-  },
-  orderItemQty: { width: 20, fontSize: 13, color: '#fff', fontWeight: 600 },
-  orderItemName: { flex: 1, fontSize: 13, color: '#fff' },
-  orderItemPrice: { fontSize: 13, color: '#fff', fontWeight: 600 },
-
-  /* ─── Tax Section ─────────────────────────────────────────── */
-  taxSection: {
-    borderTop: '1px solid #333', padding: '8px 12px',
-  },
-  taxLabel: { fontSize: 12, fontWeight: 700, color: '#fff', marginBottom: 4 },
-  taxRow: { fontSize: 12, color: '#888' },
-
-  /* ─── Order Bottom ────────────────────────────────────────── */
-  orderBottom: {
-    borderTop: '1px solid #333',
-  },
-  orderBottomTabs: {
-    display: 'flex', borderBottom: '1px solid #333',
-  },
-  orderBottomTab: {
-    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
-    padding: '8px 4px', fontSize: 10, fontWeight: 600, color: '#999',
-    border: 'none', cursor: 'pointer',
-  },
-  seatButtons: {
-    display: 'flex', gap: 2, padding: '6px 8px',
-  },
-  seatBtn: {
-    width: 32, height: 32, borderRadius: 4, border: 'none', cursor: 'pointer',
-    fontSize: 14, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center',
-  },
-  seatAddBtn: {
-    width: 32, height: 32, borderRadius: 4, border: '1px dashed #555',
-    background: 'none', color: '#888', cursor: 'pointer', fontSize: 16,
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-  },
-  totalDue: {
-    display: 'flex', justifyContent: 'flex-end', alignItems: 'baseline',
-    gap: 8, padding: '8px 12px',
-    borderTop: '1px solid #333',
-  },
-  totalDueLabel: { fontSize: 11, color: '#888' },
-  totalDueAmount: { fontSize: 24, fontWeight: 800, color: '#fff' },
-
-  /* ─── Bottom Bar ──────────────────────────────────────────── */
-  bottomBar: {
-    height: 64, minHeight: 64,
-    backgroundColor: '#111', borderTop: '1px solid #222',
-    display: 'flex', alignItems: 'center', padding: '0 8px',
-  },
-  bottomLeft: {
-    display: 'flex', alignItems: 'center', gap: 4, marginRight: 8,
-  },
-  bottomIconBtn: {
-    width: 36, height: 36, borderRadius: 4, background: 'none',
-    border: '1px solid #333', color: '#888', cursor: 'pointer',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
-  },
-  customerAddBtn: {
-    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
-    background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px',
-  },
-  customerAddLabel: {
-    fontSize: 7, color: '#888', fontWeight: 600, textAlign: 'center', lineHeight: 1.2,
-  },
-  serverSection: {
-    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
-    padding: '0 12px',
-  },
-  serverAvatar: {
-    width: 40, height: 40, borderRadius: '50%', backgroundColor: '#E05A33',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    fontSize: 18, fontWeight: 700, color: '#fff',
-  },
-  serverNameLabel: { fontSize: 9, color: '#888', fontWeight: 600 },
-
-  categoryTabs: {
-    display: 'flex', flex: 1, gap: 2, justifyContent: 'center',
-  },
-  categoryTab: {
-    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-    gap: 6, padding: '10px 24px', borderRadius: 8, border: 'none', cursor: 'pointer',
-    minWidth: 90,
-  },
-  categoryTabLabel: { fontSize: 12, fontWeight: 600 },
-
-  /* ─── Modals ──────────────────────────────────────────────── */
-  modalOverlay: {
-    position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
-  },
-  paymentModal: {
-    backgroundColor: '#222', borderRadius: 12, padding: 32,
-    minWidth: 360, textAlign: 'center',
-  },
-  paymentTitle: { fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 16 },
-  paymentTotal: { fontSize: 28, fontWeight: 800, color: '#2A9D8F', marginBottom: 24 },
-  paymentButtons: { display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 16 },
-  payBtn: {
-    padding: '14px 32px', borderRadius: 8, border: 'none', color: '#fff',
-    fontSize: 16, fontWeight: 700, cursor: 'pointer',
-  },
-  payCloseBtn: {
-    background: 'none', border: '1px solid #555', borderRadius: 8,
-    padding: '10px 24px', color: '#888', cursor: 'pointer', fontSize: 14,
-  },
-};

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * UISettingsContext - Debug mode and error copy settings
  * @module context/UISettingsContext

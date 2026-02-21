@@ -38,7 +38,7 @@ const Discounts: React.FC = () => {
     useEffect(() => {
         if (apiData && apiData.length > 0) {
             setDiscounts(apiData.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (d: any) => ({ id: d.id || d._id || crypto.randomUUID(), name: d.name || '', type: d.type || 'percentage', value: d.value ?? 0, isCustom: d.isCustom ?? d.is_custom ?? false, group: d.group || '', excludedAccountingGroups: d.excludedAccountingGroups ?? d.excluded_accounting_groups ?? [], qrEnabled: d.qrEnabled ?? d.qr_enabled ?? false, requiresReason: d.requiresReason ?? d.requires_reason ?? false, requiresManager: d.requiresManager ?? d.requires_manager ?? false, applicableTo: d.applicableTo ?? d.applicable_to ?? 'all', maxUsesPerDay: d.maxUsesPerDay ?? d.max_uses_per_day ?? 0, schedule: d.schedule || 'Always', isActive: d.isActive ?? d.is_active ?? true, usesToday: d.usesToday ?? d.uses_today ?? 0, sortOrder: d.sortOrder ?? d.sort_order ?? 0 }))); setIsLive(true);
+                (d: Record<string, unknown>) => ({ id: d.id || d._id || crypto.randomUUID(), name: d.name || '', type: d.type || 'percentage', value: d.value ?? 0, isCustom: d.isCustom ?? d.is_custom ?? false, group: d.group || '', excludedAccountingGroups: d.excludedAccountingGroups ?? d.excluded_accounting_groups ?? [], qrEnabled: d.qrEnabled ?? d.qr_enabled ?? false, requiresReason: d.requiresReason ?? d.requires_reason ?? false, requiresManager: d.requiresManager ?? d.requires_manager ?? false, applicableTo: d.applicableTo ?? d.applicable_to ?? 'all', maxUsesPerDay: d.maxUsesPerDay ?? d.max_uses_per_day ?? 0, schedule: d.schedule || 'Always', isActive: d.isActive ?? d.is_active ?? true, usesToday: d.usesToday ?? d.uses_today ?? 0, sortOrder: d.sortOrder ?? d.sort_order ?? 0 }))); setIsLive(true);
         }
     }, [apiData]);
     const filtered = discounts.filter(d => !search || d.name.toLowerCase().includes(search.toLowerCase()));
@@ -62,30 +62,30 @@ const Discounts: React.FC = () => {
             </div>
 
             <div className="pos-card">
-                <div className="pos-table-header" style={{ gridTemplateColumns: discountTableCols, gap: 10 }}>
+                <div className="pos-table-header" style={{ gridTemplateColumns: discountTableCols, gap: 10 }}> /* keep-inline */
                     <div>Discount</div><div>Value</div><div>Group</div><div>Applies To</div><div>Schedule</div><div>Uses</div><div></div>
                 </div>
                 {filtered.map(d => (
-                    <div key={d.id} className="pos-table-row" style={{ gridTemplateColumns: discountTableCols, gap: 10, opacity: d.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...d })}>
+                    <div key={d.id} className="pos-table-row" style={{ gridTemplateColumns: discountTableCols, gap: 10, opacity: d.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...d })}> /* keep-inline */
                         <div className="pos-flex pos-flex--center pos-gap-10">
                             <div className={`pos-stat-icon ${d.type === 'percentage' ? 'pos-stat-icon--blue' : 'pos-stat-icon--green'}`}>
                                 {d.type === 'percentage' ? <Percent size={16} /> : <DollarSign size={16} />}
                             </div>
                             <div>
                                 <div className="pos-cell-value">{d.name}</div>
-                                <div className="pos-flex pos-gap-4" style={{ marginTop: 2 }}>
-                                    {d.requiresManager && <span className="pos-badge pos-badge--red" style={{ fontSize: 9 }}>Manager</span>}
-                                    {d.requiresReason && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9 }}>Reason</span>}
-                                    {d.isCustom && <span className="pos-badge pos-badge--purple" style={{ fontSize: 9 }}>Custom</span>}
-                                    {d.qrEnabled && <span className="pos-badge" style={{ fontSize: 9, background: 'rgba(6,182,212,0.1)', color: '#06B6D4' }}>QR</span>}
+                                <div className="pos-flex pos-gap-4" style={{ marginTop: 2 }}> /* keep-inline */
+                                    {d.requiresManager && <span className="pos-badge pos-badge--red" style={{ fontSize: 9 }}>Manager</span>} /* keep-inline */
+                                    {d.requiresReason && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9 }}>Reason</span>} /* keep-inline */
+                                    {d.isCustom && <span className="pos-badge pos-badge--purple" style={{ fontSize: 9 }}>Custom</span>} /* keep-inline */
+                                    {d.qrEnabled && <span className="pos-badge" style={{ fontSize: 9, background: 'rgba(6,182,212,0.1)', color: '#06B6D4' }}>QR</span>} /* keep-inline */
                                 </div>
                             </div>
                         </div>
-                        <span style={{ fontSize: 16, fontWeight: 700, color: d.type === 'percentage' ? '#3B82F6' : '#10B981' }}>{d.type === 'percentage' ? `${d.value}%` : `€${d.value}`}</span>
+                        <span style={{ fontSize: 16, fontWeight: 700, color: d.type === 'percentage' ? '#3B82F6' : '#10B981' }}>{d.type === 'percentage' ? `${d.value}%` : `€${d.value}`}</span> /* keep-inline */
                         <span className="pos-cell-secondary">{d.group || '—'}</span>
-                        <span className="pos-cell-secondary" style={{ textTransform: 'capitalize' }}>{d.applicableTo}</span>
-                        <span className="pos-cell-secondary" style={{ fontSize: 10 }}>{d.schedule}</span>
-                        <span className="pos-cell-value">{d.usesToday}{d.maxUsesPerDay > 0 && <span className="pos-text-secondary" style={{ fontSize: 11 }}>/{d.maxUsesPerDay}</span>}</span>
+                        <span className="pos-cell-secondary" style={{ textTransform: 'capitalize' }}>{d.applicableTo}</span> /* keep-inline */
+                        <span className="pos-cell-secondary" style={{ fontSize: 10 }}>{d.schedule}</span> /* keep-inline */
+                        <span className="pos-cell-value">{d.usesToday}{d.maxUsesPerDay > 0 && <span className="pos-text-secondary" style={{ fontSize: 11 }}>/{d.maxUsesPerDay}</span>}</span> /* keep-inline */
                         <button className="pos-btn-icon" onClick={e => { e.stopPropagation(); setEditing({ ...d }); }}><Edit3 size={13} /></button>
                     </div>
                 ))}
@@ -98,7 +98,7 @@ const Discounts: React.FC = () => {
                         <h3 className="pos-modal-title">{discounts.find(d => d.id === editing.id) ? 'Edit' : 'New'} Discount</h3>
                         <button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
-                    <div className="pos-form-group"><label className="pos-form-label">Name * <span className="pos-text-secondary" style={{ fontSize: 10 }}>({editing.name.length}/25)</span></label>
+                    <div className="pos-form-group"><label className="pos-form-label">Name * <span className="pos-text-secondary" style={{ fontSize: 10 }}>({editing.name.length}/25)</span></label> /* keep-inline */
                         <input className="pos-input" maxLength={25} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Staff Discount" /></div>
                     <div className="pos-form-grid">
                         <div><label className="pos-form-label">Type</label>
@@ -119,11 +119,11 @@ const Discounts: React.FC = () => {
                             <input className="pos-input" value={editing.schedule} onChange={e => setEditing(p => p ? { ...p, schedule: e.target.value } : null)} placeholder="e.g. Always, Mon-Fri 16:00-18:00" /></div>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Sort Order</label>
-                        <input type="number" min={0} className="pos-input" style={{ width: 100 }} value={editing.sortOrder} onChange={e => setEditing(p => p ? { ...p, sortOrder: parseInt(e.target.value) || 0 } : null)} aria-label="Sort order" />
+                        <input type="number" min={0} className="pos-input" style={{ width: 100 }} value={editing.sortOrder} onChange={e => setEditing(p => p ? { ...p, sortOrder: parseInt(e.target.value) || 0 } : null)} aria-label="Sort order" /> /* keep-inline */
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Exclude Accounting Groups</label>
                         <div className="pos-flex pos-gap-8 pos-flex--wrap">
-                            {ACCOUNTING_GROUPS_LIST.map(ag => (<label key={ag} className="pos-toggle-label" style={{ fontSize: 11, color: editing.excludedAccountingGroups.includes(ag) ? '#EF4444' : undefined, padding: '4px 8px', borderRadius: 6, background: editing.excludedAccountingGroups.includes(ag) ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.03)', border: '1px solid ' + (editing.excludedAccountingGroups.includes(ag) ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.06)') }}>
+                            {ACCOUNTING_GROUPS_LIST.map(ag => (<label key={ag} className="pos-toggle-label" style={{ fontSize: 11, color: editing.excludedAccountingGroups.includes(ag) ? '#EF4444' : undefined, padding: '4px 8px', borderRadius: 6, background: editing.excludedAccountingGroups.includes(ag) ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.03)', border: '1px solid ' + (editing.excludedAccountingGroups.includes(ag) ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.06)') }}> /* keep-inline */
                                 <input type="checkbox" checked={editing.excludedAccountingGroups.includes(ag)} onChange={() => setEditing(p => { if (!p) return null; const ex = p.excludedAccountingGroups.includes(ag) ? p.excludedAccountingGroups.filter(x => x !== ag) : [...p.excludedAccountingGroups, ag]; return { ...p, excludedAccountingGroups: ex }; })} /> {ag}</label>))}
                         </div>
                     </div>
@@ -131,12 +131,12 @@ const Discounts: React.FC = () => {
                         {([['isCustom', 'Custom discount (POS user enters amount)'], ['qrEnabled', 'Enable QR code'], ['requiresReason', 'Requires reason'], ['requiresManager', 'Requires manager'], ['isActive', 'Active']] as const).map(([key, label]) =>
                             <label key={key} className="pos-toggle-label">
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                <input type="checkbox" checked={editing[key] as boolean} onChange={() => setEditing(p => p ? { ...p, [key]: !(p as any)[key] } : null)} /> {label}</label>
+                                <input type="checkbox" checked={editing[key] as boolean} onChange={() => setEditing(p => p ? { ...p, [key]: !(p as unknown)[key] } : null)} /> {label}</label>
                         )}
                     </div>
                     <div className="pos-modal-footer">
-                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
-                        <button title="Delete discount" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setDiscounts(p => p.filter(d => d.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */
+                        <button title="Delete discount" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setDiscounts(p => p.filter(d => d.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */
                         <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>

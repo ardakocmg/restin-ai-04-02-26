@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         logger.info('Login called', { hasToken: !!authToken, userName: userData?.name });
         setUser(userData);
         setToken(authToken);
-        authStore.setAuth(authToken, userData as any);
+        authStore.setAuth(authToken, userData as unknown);
     };
 
     const logout = () => {

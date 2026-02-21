@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import { Building2, Plus, Edit2, Trash2, Link2, ChevronRight, FileText, MapPin, Phone, Mail, Hash, AlertCircle, Check, X } from 'lucide-react';
 import { toast } from 'sonner';

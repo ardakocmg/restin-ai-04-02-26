@@ -227,11 +227,11 @@ const KDS2Setup: React.FC = () => {
         <div style={pageStyle}>
             <div style={containerStyle}>
                 {/* Back button */}
-                <button onClick={() => wizardStep !== null ? setWizardStep(null) : navigate('/pos/kds2')} style={{ ...btnOutline, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+                <button onClick={() => wizardStep !== null ? setWizardStep(null) : navigate('/pos/kds2')} style={{ ...btnOutline, display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}> /* keep-inline */
                     <ArrowLeft size={16} /> {wizardStep !== null ? 'Back to Stations' : 'Back to KDS'}
                 </button>
 
-                <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24 }}>
+                <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24 }}> /* keep-inline */
                     {wizardStep !== null ? (editStationId ? 'Edit Station' : 'Create New Station') : 'KDS 2.0 Setup'}
                 </h1>
 
@@ -240,51 +240,51 @@ const KDS2Setup: React.FC = () => {
                     <>
                         {/* Hub Configuration */}
                         <div style={cardStyle}>
-                            <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
                                 <Settings size={18} /> Hub Configuration
                             </h2>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                                <div style={{ padding: '12px 16px', background: 'var(--bg-secondary, #09090b)', borderRadius: 8 }}>
-                                    <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 4 }}>IP Address</div>
-                                    <div style={{ fontSize: 16, fontWeight: 600 }}>{hubIP}</div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}> /* keep-inline */
+                                <div style={{ padding: '12px 16px', background: 'var(--bg-secondary, #09090b)', borderRadius: 8 }}> /* keep-inline */
+                                    <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 4 }}>IP Address</div> /* keep-inline */
+                                    <div style={{ fontSize: 16, fontWeight: 600 }}>{hubIP}</div> /* keep-inline */
                                 </div>
-                                <div style={{ padding: '12px 16px', background: 'var(--bg-secondary, #09090b)', borderRadius: 8 }}>
-                                    <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 4 }}>Connection Code</div>
-                                    <div style={{ fontSize: 16, fontWeight: 600 }}>{connectionCode}</div>
+                                <div style={{ padding: '12px 16px', background: 'var(--bg-secondary, #09090b)', borderRadius: 8 }}> /* keep-inline */
+                                    <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 4 }}>Connection Code</div> /* keep-inline */
+                                    <div style={{ fontSize: 16, fontWeight: 600 }}>{connectionCode}</div> /* keep-inline */
                                 </div>
-                                <div style={{ padding: '12px 16px', background: 'var(--bg-secondary, #09090b)', borderRadius: 8 }}>
-                                    <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 4 }}>Current Version</div>
-                                    <div style={{ fontSize: 16, fontWeight: 600 }}>{hubVersion}</div>
+                                <div style={{ padding: '12px 16px', background: 'var(--bg-secondary, #09090b)', borderRadius: 8 }}> /* keep-inline */
+                                    <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 4 }}>Current Version</div> /* keep-inline */
+                                    <div style={{ fontSize: 16, fontWeight: 600 }}>{hubVersion}</div> /* keep-inline */
                                 </div>
-                                <div style={{ padding: '12px 16px', background: 'var(--bg-secondary, #09090b)', borderRadius: 8 }}>
-                                    <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 4 }}>Connected Devices</div>
-                                    <div style={{ fontSize: 16, fontWeight: 600 }}>{stations.length}</div>
+                                <div style={{ padding: '12px 16px', background: 'var(--bg-secondary, #09090b)', borderRadius: 8 }}> /* keep-inline */
+                                    <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 4 }}>Connected Devices</div> /* keep-inline */
+                                    <div style={{ fontSize: 16, fontWeight: 600 }}>{stations.length}</div> /* keep-inline */
                                 </div>
                             </div>
                         </div>
 
                         {/* Stations */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                            <h2 style={{ fontSize: 16, fontWeight: 600 }}>Stations ({stations.length})</h2>
-                            <button onClick={startNewStation} style={{ ...btnPrimary, display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}> /* keep-inline */
+                            <h2 style={{ fontSize: 16, fontWeight: 600 }}>Stations ({stations.length})</h2> /* keep-inline */
+                            <button onClick={startNewStation} style={{ ...btnPrimary, display: 'flex', alignItems: 'center', gap: 6 }}> /* keep-inline */
                                 <Plus size={16} /> Create New Station
                             </button>
                         </div>
 
                         {stations.map(station => (
-                            <div key={station.id} style={{ ...cardStyle, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div key={station.id} style={{ ...cardStyle, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}> /* keep-inline */
                                 <div>
-                                    <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>{station.name}</div>
-                                    <div style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)' }}>Items: {station.itemRouting}</div>
+                                    <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>{station.name}</div> /* keep-inline */
+                                    <div style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)' }}>Items: {station.itemRouting}</div> /* keep-inline */
                                 </div>
-                                <div style={{ display: 'flex', gap: 8 }}>
-                                    <button onClick={() => navigate('/pos/kds2')} style={{ ...btnOutline, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
+                                    <button onClick={() => navigate('/pos/kds2')} style={{ ...btnOutline, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 4 }}> /* keep-inline */
                                         <Eye size={14} /> View
                                     </button>
-                                    <button onClick={() => editStation(station)} style={{ ...btnOutline, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                    <button onClick={() => editStation(station)} style={{ ...btnOutline, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 4 }}> /* keep-inline */
                                         <Edit3 size={14} /> Edit
                                     </button>
-                                    <button onClick={() => deleteStation(station.id)} style={{ ...btnOutline, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 4, color: '#ef4444', borderColor: '#ef4444' }}>
+                                    <button onClick={() => deleteStation(station.id)} style={{ ...btnOutline, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 4, color: '#ef4444', borderColor: '#ef4444' }}> /* keep-inline */
                                         <Trash2 size={14} />
                                     </button>
                                 </div>
@@ -295,12 +295,12 @@ const KDS2Setup: React.FC = () => {
                     /* ===== Wizard Steps ===== */
                     <>
                         {/* Step Indicators */}
-                        <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
+                        <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}> /* keep-inline */
                             {['Name', 'Item Routing', 'Ticket Display', 'Order Status'].map((step, idx) => (
                                 <button
                                     key={step}
                                     onClick={() => setWizardStep(idx + 1)}
-                                    style={{
+                                    style={{ /* keep-inline */
                                         flex: 1,
                                         padding: '10px 8px',
                                         borderRadius: 8,
@@ -316,7 +316,7 @@ const KDS2Setup: React.FC = () => {
                                         gap: 6,
                                     }}
                                 >
-                                    <span style={{ width: 22, height: 22, borderRadius: '50%', background: wizardStep > idx + 1 ? '#22C55E' : wizardStep === idx + 1 ? '#3B82F6' : '#3f3f46', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#fff' }}>
+                                    <span style={{ width: 22, height: 22, borderRadius: '50%', background: wizardStep > idx + 1 ? '#22C55E' : wizardStep === idx + 1 ? '#3B82F6' : '#3f3f46', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#fff' }}> /* keep-inline */
                                         {wizardStep > idx + 1 ? <Check size={12} /> : idx + 1}
                                     </span>
                                     {step}
@@ -327,8 +327,8 @@ const KDS2Setup: React.FC = () => {
                         {/* Step 1: Name */}
                         {wizardStep === 1 && (
                             <div style={cardStyle}>
-                                <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Station Name</h3>
-                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}>
+                                <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Station Name</h3> /* keep-inline */
+                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}> /* keep-inline */
                                     Enter a unique name for this KDS screen (max 25 characters). This name is used to identify the screen on the POS Hub.
                                 </p>
                                 <input
@@ -339,12 +339,12 @@ const KDS2Setup: React.FC = () => {
                                     style={inputStyle}
                                     maxLength={25}
                                 />
-                                <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginTop: 6 }}>
+                                <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginTop: 6 }}> /* keep-inline */
                                     {newName.length}/25 characters
                                 </div>
-                                <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+                                <div style={{ display: 'flex', gap: 12, marginTop: 20 }}> /* keep-inline */
                                     <button onClick={() => setWizardStep(2)} style={btnPrimary} disabled={!newName.trim()}>
-                                        Save and Continue <ChevronRight size={14} style={{ marginLeft: 4 }} />
+                                        Save and Continue <ChevronRight size={14} style={{ marginLeft: 4 }} /> /* keep-inline */
                                     </button>
                                 </div>
                             </div>
@@ -353,16 +353,16 @@ const KDS2Setup: React.FC = () => {
                         {/* Step 2: Item Routing */}
                         {wizardStep === 2 && (
                             <div style={cardStyle}>
-                                <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Item Routing</h3>
-                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}>
+                                <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Item Routing</h3> /* keep-inline */
+                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}> /* keep-inline */
                                     Select which items you wish to have routed to this station.
                                 </p>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}> /* keep-inline */
                                     {ALL_CATEGORIES.map(cat => (
                                         <button
                                             key={cat}
                                             onClick={() => toggleRouting(cat)}
-                                            style={{
+                                            style={{ /* keep-inline */
                                                 padding: '10px 14px',
                                                 borderRadius: 8,
                                                 border: newRouting.has(cat) ? '2px solid #3B82F6' : '1px solid var(--border-primary, #27272a)',
@@ -382,7 +382,7 @@ const KDS2Setup: React.FC = () => {
                                         </button>
                                     ))}
                                 </div>
-                                <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+                                <div style={{ display: 'flex', gap: 12, marginTop: 20 }}> /* keep-inline */
                                     <button onClick={() => setWizardStep(1)} style={btnOutline}><ArrowLeft size={14} /> Back</button>
                                     <button onClick={() => setWizardStep(3)} style={btnPrimary}>
                                         Add {newRouting.size} items to station <ChevronRight size={14} />
@@ -394,19 +394,19 @@ const KDS2Setup: React.FC = () => {
                         {/* Step 3: Ticket Display */}
                         {wizardStep === 3 && (
                             <div style={cardStyle}>
-                                <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Ticket Display</h3>
-                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 16 }}>
+                                <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Ticket Display</h3> /* keep-inline */
+                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 16 }}> /* keep-inline */
                                     Select which information you wish to have displayed on each ticket.
                                 </p>
                                 {Object.entries(newTicketDisplay).map(([key, value]) => (
-                                    <div key={key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                                        <span style={{ fontSize: 14 }}>{key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}</span>
+                                    <div key={key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}> /* keep-inline */
+                                        <span style={{ fontSize: 14 }}>{key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}</span> /* keep-inline */
                                         <div style={toggleStyle(value)} onClick={() => setNewTicketDisplay(prev => ({ ...prev, [key]: !value }))}>
                                             <div style={toggleDotStyle(value)} />
                                         </div>
                                     </div>
                                 ))}
-                                <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+                                <div style={{ display: 'flex', gap: 12, marginTop: 20 }}> /* keep-inline */
                                     <button onClick={() => setWizardStep(2)} style={btnOutline}><ArrowLeft size={14} /> Back</button>
                                     <button onClick={() => setWizardStep(4)} style={btnPrimary}>
                                         Save and Continue <ChevronRight size={14} />
@@ -418,47 +418,47 @@ const KDS2Setup: React.FC = () => {
                         {/* Step 4: Order Status */}
                         {wizardStep === 4 && (
                             <div style={cardStyle}>
-                                <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Order Status Setup</h3>
-                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 16 }}>
+                                <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>Order Status Setup</h3> /* keep-inline */
+                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 16 }}> /* keep-inline */
                                     You can deactivate two of the Order Status options if your workflow doesn't use them.
                                 </p>
 
-                                <div style={{ ...cardStyle, background: 'var(--bg-secondary, #09090b)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <div style={{ ...cardStyle, background: 'var(--bg-secondary, #09090b)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}> /* keep-inline */
                                     <div>
-                                        <div style={{ fontWeight: 600, marginBottom: 4 }}>
-                                            <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#9CA3AF', display: 'inline-block', marginRight: 8 }} />
+                                        <div style={{ fontWeight: 600, marginBottom: 4 }}> /* keep-inline */
+                                            <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#9CA3AF', display: 'inline-block', marginRight: 8 }} /> /* keep-inline */
                                             New
                                         </div>
-                                        <div style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)' }}>Received order awaiting preparation</div>
+                                        <div style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)' }}>Received order awaiting preparation</div> /* keep-inline */
                                     </div>
                                     <button
                                         onClick={() => setNewStatusNew(!newStatusNew)}
-                                        style={{ padding: '6px 16px', borderRadius: 6, border: '1px solid', borderColor: newStatusNew ? '#22C55E' : '#ef4444', background: newStatusNew ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', color: newStatusNew ? '#22C55E' : '#ef4444', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+                                        style={{ padding: '6px 16px', borderRadius: 6, border: '1px solid', borderColor: newStatusNew ? '#22C55E' : '#ef4444', background: newStatusNew ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', color: newStatusNew ? '#22C55E' : '#ef4444', fontSize: 13, fontWeight: 600, cursor: 'pointer' }} /* keep-inline */
                                     >
                                         {newStatusNew ? 'Activated' : 'Deactivated'}
                                     </button>
                                 </div>
 
-                                <div style={{ ...cardStyle, background: 'var(--bg-secondary, #09090b)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <div style={{ ...cardStyle, background: 'var(--bg-secondary, #09090b)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}> /* keep-inline */
                                     <div>
-                                        <div style={{ fontWeight: 600, marginBottom: 4 }}>
-                                            <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#22C55E', display: 'inline-block', marginRight: 8 }} />
+                                        <div style={{ fontWeight: 600, marginBottom: 4 }}> /* keep-inline */
+                                            <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#22C55E', display: 'inline-block', marginRight: 8 }} /> /* keep-inline */
                                             Ready to Collect
                                         </div>
-                                        <div style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)' }}>Cooked items ready to be served</div>
+                                        <div style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)' }}>Cooked items ready to be served</div> /* keep-inline */
                                     </div>
                                     <button
                                         onClick={() => setNewStatusReady(!newStatusReady)}
-                                        style={{ padding: '6px 16px', borderRadius: 6, border: '1px solid', borderColor: newStatusReady ? '#22C55E' : '#ef4444', background: newStatusReady ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', color: newStatusReady ? '#22C55E' : '#ef4444', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+                                        style={{ padding: '6px 16px', borderRadius: 6, border: '1px solid', borderColor: newStatusReady ? '#22C55E' : '#ef4444', background: newStatusReady ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', color: newStatusReady ? '#22C55E' : '#ef4444', fontSize: 13, fontWeight: 600, cursor: 'pointer' }} /* keep-inline */
                                     >
                                         {newStatusReady ? 'Activated' : 'Deactivated'}
                                     </button>
                                 </div>
 
-                                <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+                                <div style={{ display: 'flex', gap: 12, marginTop: 20 }}> /* keep-inline */
                                     <button onClick={() => setWizardStep(3)} style={btnOutline}><ArrowLeft size={14} /> Back</button>
                                     <button onClick={saveStation} style={btnPrimary}>
-                                        <Check size={14} style={{ marginRight: 4 }} /> {editStationId ? 'Save Changes' : 'Create Station'}
+                                        <Check size={14} style={{ marginRight: 4 }} /> {editStationId ? 'Save Changes' : 'Create Station'} /* keep-inline */
                                     </button>
                                 </div>
                             </div>

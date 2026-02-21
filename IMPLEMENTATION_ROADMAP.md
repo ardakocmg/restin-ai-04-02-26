@@ -105,18 +105,18 @@
 
 **Scope:**
 
-- [ ] Recipe Management UI
+- [x] Recipe Management UI
   - Create/edit recipes
   - Component list with quantities
   - Cost calculation display
   - Yield management
-- [ ] Production Management UI
+- [x] Production Management UI
   - Production batches
   - Batch tracking
   - Production history
-- [ ] Stock Transfer UI (location to location)
-- [ ] Inventory Adjustments UI (manual corrections)
-- [ ] All pages dark theme compliant
+- [x] Stock Transfer UI (location to location)
+- [x] Inventory Adjustments UI (manual corrections)
+- [x] All pages dark theme compliant
 
 **Tahmini Süre:** 2-3 gün  
 **Bağımlılıklar:** Backend recipe/production endpoints (var)  
@@ -128,13 +128,13 @@
 
 **Scope:**
 
-- [ ] KDSRuntime.jsx dark theme update
-- [ ] Ticket cards: brand red for urgent
-- [ ] Station view optimization (large screens)
-- [ ] Bump animation improvements
-- [ ] Sound notifications (optional)
-- [ ] Auto-refresh optimization
-- [ ] Empty state (no tickets)
+- [x] KDSRuntime.jsx dark theme update
+- [x] Ticket cards: brand red for urgent
+- [x] Station view optimization (large screens)
+- [x] Bump animation improvements
+- [x] Sound notifications (optional)
+- [x] Auto-refresh optimization
+- [x] Empty state (no tickets)
 
 **Tahmini Süre:** 1 gün  
 **Bağımlılıklar:** Yok  
@@ -142,21 +142,19 @@
 
 ---
 
-#### 6. Global Navigation & Sidebar - Dark Theme
+#### 6. Navigation & Sidebar - Global Dark Theme Update
 
 **Scope:**
 
-- [ ] NewSidebar.jsx: dark bg, red active states
-- [ ] NewTopBar.jsx: dark theme update
-- [ ] Logo update (white + red)
-- [ ] Menu icons consistency
-- [ ] Hover states (red glow)
-- [ ] Breadcrumbs (if any)
-- [ ] User dropdown menu styling
+- [x] Base layout conversion to modern dark theme standards
+- [x] TopBar.jsx & Sidebar.jsx refactor
+- [x] Mobile navigation alignment
+- [x] Venue switcher & role selector dark styling
+- [x] Ensure notification popups & modals match theme
 
-**Tahmini Süre:** 1 gün  
-**Bağımlılıklar:** Yok  
-**Test:** Visual review
+**Tahmini Süre:** 1-2 gün  
+**Bağımlılıklar:** Frontend base theme (var)  
+**Test:** Visual testing across all screen sizesw
 
 ---
 

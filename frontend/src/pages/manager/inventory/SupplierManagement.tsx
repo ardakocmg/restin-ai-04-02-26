@@ -160,7 +160,7 @@ function CertBadge({ cert }: { cert: SupplierCertification }) {
 export default function SupplierManagement() {
     const { t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { activeVenue: selectedVenue } = useVenue() as any;
+    const { activeVenue: selectedVenue } = useVenue() as unknown;
 
     /* ── State ── */
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);

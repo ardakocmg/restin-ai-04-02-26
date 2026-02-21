@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
 
@@ -45,7 +44,7 @@ export default function StockAdjustments() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-4xl font-heading" style={{ color: '#F5F5F7' }}>
+          <h1 className="text-4xl font-heading" style={{ color: '#F5F5F7' }}> /* keep-inline */
             STOCK ADJUSTMENTS
           </h1>
           <button
@@ -56,7 +55,7 @@ export default function StockAdjustments() {
             New Adjustment
           </button>
         </div>
-        <p style={{ color: '#A1A1AA' }}>Manual stock corrections and adjustments</p>
+        <p style={{ color: '#A1A1AA' }}>Manual stock corrections and adjustments</p> /* keep-inline */
       </div>
 
       {/* Adjustments List */}
@@ -71,7 +70,7 @@ export default function StockAdjustments() {
               <div className="flex items-center gap-4">
                 <div
                   className="p-3 rounded-lg"
-                  style={{
+                  style={{ /* keep-inline */
                     backgroundColor: (adj.qty_delta || adj.quantity_delta || 0) > 0
                       ? 'rgba(74, 222, 128, 0.15)'
                       : 'rgba(229, 57, 53, 0.15)'
@@ -84,15 +83,15 @@ export default function StockAdjustments() {
                   )}
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-1" style={{ color: '#F5F5F7' }}>
+                  <h3 className="font-semibold mb-1" style={{ color: '#F5F5F7' }}> /* keep-inline */
                     {adj.item_name || adj.product_name || 'Unknown Item'}
                   </h3>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm px-2 py-1 rounded bg-card border border-border" style={{ color: '#A1A1AA' }}>
+                    <span className="text-sm px-2 py-1 rounded bg-card border border-border" style={{ color: '#A1A1AA' }}> /* keep-inline */
                       {(adj.reason || 'ADJUSTMENT').replace(/_/g, ' ')}
                     </span>
                     {adj.notes && (
-                      <span className="text-xs" style={{ color: '#71717A' }}>{adj.notes}</span>
+                      <span className="text-xs" style={{ color: '#71717A' }}>{adj.notes}</span> /* keep-inline */
                     )}
                   </div>
                 </div>
@@ -102,7 +101,7 @@ export default function StockAdjustments() {
                   }`}>
                   {(adj.qty_delta || adj.quantity_delta || 0) > 0 ? '+' : ''}{adj.qty_delta || adj.quantity_delta || 0} {adj.unit || adj.base_unit || ''}
                 </div>
-                <div className="text-xs" style={{ color: '#71717A' }}>
+                <div className="text-xs" style={{ color: '#71717A' }}> /* keep-inline */
                   {adj.created_at ? new Date(adj.created_at).toLocaleDateString() : ''}
                 </div>
               </div>

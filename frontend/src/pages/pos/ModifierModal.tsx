@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { X, Plus, Minus } from 'lucide-react';
 

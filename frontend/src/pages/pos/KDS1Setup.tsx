@@ -157,24 +157,24 @@ const KDS1Setup: React.FC = () => {
         <div style={pageStyle}>
             <div style={containerStyle}>
                 {/* Back */}
-                <button onClick={() => navigate('/pos/kds1')} style={{ ...btnOutline, marginBottom: 20 }}>
+                <button onClick={() => navigate('/pos/kds1')} style={{ ...btnOutline, marginBottom: 20 }}> /* keep-inline */
                     <ArrowLeft size={16} /> Back to KDS 1.0
                 </button>
 
-                <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24 }}>KDS 1.0 Setup</h1>
+                <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24 }}>KDS 1.0 Setup</h1> /* keep-inline */
 
                 {/* 1. Connection Code */}
                 <div style={cardStyle}>
-                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
                         <Monitor size={18} /> Connection Code
                     </h2>
-                    <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}>
+                    <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}> /* keep-inline */
                         This 4-digit code is used to connect a kitchen display device to your account.
                     </p>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                        <div style={{ display: 'flex', gap: 6 }}>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}> /* keep-inline */
+                        <div style={{ display: 'flex', gap: 6 }}> /* keep-inline */
                             {config.connectionCode.split('').map((digit, idx) => (
-                                <div key={idx} style={{
+                                <div key={idx} style={{ /* keep-inline */
                                     width: 48, height: 56, background: 'var(--bg-secondary, #09090b)',
                                     border: '1px solid var(--border-primary, #27272a)', borderRadius: 8,
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -182,7 +182,7 @@ const KDS1Setup: React.FC = () => {
                                 }}>{digit}</div>
                             ))}
                         </div>
-                        <button style={{ ...btnOutline, padding: '8px 14px' }} onClick={() => {
+                        <button style={{ ...btnOutline, padding: '8px 14px' }} onClick={() => { /* keep-inline */
                             const newCode = String(Math.floor(1000 + Math.random() * 9000));
                             setConfig(prev => ({ ...prev, connectionCode: newCode }));
                             toast.success('New connection code generated');
@@ -194,37 +194,37 @@ const KDS1Setup: React.FC = () => {
 
                 {/* 2. Mode Selection */}
                 <div style={cardStyle}>
-                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
                         <Settings size={18} /> Display Mode
                     </h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}> /* keep-inline */
                         <button
                             onClick={() => setConfig(prev => ({ ...prev, mode: 'receipt' }))}
-                            style={{
+                            style={{ /* keep-inline */
                                 padding: 16, borderRadius: 12, cursor: 'pointer',
                                 border: config.mode === 'receipt' ? '2px solid #3B82F6' : '1px solid var(--border-primary, #27272a)',
                                 background: config.mode === 'receipt' ? 'rgba(59,130,246,0.08)' : 'transparent',
                                 color: 'var(--text-primary, #fafafa)', textAlign: 'left',
                             }}
                         >
-                            <LayoutList size={24} style={{ marginBottom: 8, color: config.mode === 'receipt' ? '#3B82F6' : 'var(--text-secondary)' }} />
-                            <div style={{ fontWeight: 600, marginBottom: 4 }}>Receipt Mode</div>
-                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)' }}>
+                            <LayoutList size={24} style={{ marginBottom: 8, color: config.mode === 'receipt' ? '#3B82F6' : 'var(--text-secondary)' }} /> /* keep-inline */
+                            <div style={{ fontWeight: 600, marginBottom: 4 }}>Receipt Mode</div> /* keep-inline */
+                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)' }}> /* keep-inline */
                                 Each order appears as a separate tile that lists all items
                             </div>
                         </button>
                         <button
                             onClick={() => setConfig(prev => ({ ...prev, mode: 'production' }))}
-                            style={{
+                            style={{ /* keep-inline */
                                 padding: 16, borderRadius: 12, cursor: 'pointer',
                                 border: config.mode === 'production' ? '2px solid #8b5cf6' : '1px solid var(--border-primary, #27272a)',
                                 background: config.mode === 'production' ? 'rgba(139,92,246,0.08)' : 'transparent',
                                 color: 'var(--text-primary, #fafafa)', textAlign: 'left',
                             }}
                         >
-                            <Grid size={24} style={{ marginBottom: 8, color: config.mode === 'production' ? '#8b5cf6' : 'var(--text-secondary)' }} />
-                            <div style={{ fontWeight: 600, marginBottom: 4 }}>Production Mode</div>
-                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)' }}>
+                            <Grid size={24} style={{ marginBottom: 8, color: config.mode === 'production' ? '#8b5cf6' : 'var(--text-secondary)' }} /> /* keep-inline */
+                            <div style={{ fontWeight: 600, marginBottom: 4 }}>Production Mode</div> /* keep-inline */
+                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)' }}> /* keep-inline */
                                 Each item appears as a tile with total quantity for all pending orders
                             </div>
                         </button>
@@ -233,17 +233,17 @@ const KDS1Setup: React.FC = () => {
 
                 {/* 3. Filtering */}
                 <div style={cardStyle}>
-                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
                         <Filter size={18} /> Filtering
                     </h2>
-                    <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 16 }}>
+                    <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 16 }}> /* keep-inline */
                         Customize which types of orders appear on the KDS. Leave empty to show all.
                     </p>
 
                     {/* Accounting Groups */}
-                    <div style={{ marginBottom: 20 }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, color: 'var(--text-secondary, #a1a1aa)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Accounting Groups</div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    <div style={{ marginBottom: 20 }}> /* keep-inline */
+                        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, color: 'var(--text-secondary, #a1a1aa)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Accounting Groups</div> /* keep-inline */
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}> /* keep-inline */
                             {ALL_ACCOUNTING_GROUPS.map(g => (
                                 <button key={g} style={chipStyle(config.filters.accountingGroups.includes(g))} onClick={() => toggleFilter('accountingGroups', g)}>{g}</button>
                             ))}
@@ -251,9 +251,9 @@ const KDS1Setup: React.FC = () => {
                     </div>
 
                     {/* Order Profiles */}
-                    <div style={{ marginBottom: 20 }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, color: 'var(--text-secondary, #a1a1aa)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Order Profiles</div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    <div style={{ marginBottom: 20 }}> /* keep-inline */
+                        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, color: 'var(--text-secondary, #a1a1aa)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Order Profiles</div> /* keep-inline */
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}> /* keep-inline */
                             {ALL_ORDER_PROFILES.map(p => (
                                 <button key={p} style={chipStyle(config.filters.orderProfiles.includes(p))} onClick={() => toggleFilter('orderProfiles', p)}>{p}</button>
                             ))}
@@ -261,9 +261,9 @@ const KDS1Setup: React.FC = () => {
                     </div>
 
                     {/* Production Centers */}
-                    <div style={{ marginBottom: 20 }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, color: 'var(--text-secondary, #a1a1aa)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Production Centers</div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    <div style={{ marginBottom: 20 }}> /* keep-inline */
+                        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, color: 'var(--text-secondary, #a1a1aa)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Production Centers</div> /* keep-inline */
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}> /* keep-inline */
                             {ALL_PRODUCTION_CENTERS.map(c => (
                                 <button key={c} style={chipStyle(config.filters.productionCenters.includes(c))} onClick={() => toggleFilter('productionCenters', c)}>{c}</button>
                             ))}
@@ -272,8 +272,8 @@ const KDS1Setup: React.FC = () => {
 
                     {/* Tags */}
                     <div>
-                        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, color: 'var(--text-secondary, #a1a1aa)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Tags</div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, color: 'var(--text-secondary, #a1a1aa)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Tags</div> /* keep-inline */
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}> /* keep-inline */
                             {ALL_TAGS.map(t => (
                                 <button key={t} style={chipStyle(config.filters.tags.includes(t))} onClick={() => toggleFilter('tags', t)}>{t}</button>
                             ))}
@@ -283,21 +283,21 @@ const KDS1Setup: React.FC = () => {
 
                 {/* 4. Print Settings */}
                 <div style={cardStyle}>
-                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
                         <Printer size={18} /> Print Settings
                     </h2>
 
                     <div style={toggleRow}>
                         <div>
-                            <div style={{ fontWeight: 500 }}>Printing Profile</div>
-                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginTop: 2 }}>
+                            <div style={{ fontWeight: 500 }}>Printing Profile</div> /* keep-inline */
+                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginTop: 2 }}> /* keep-inline */
                                 Select a printing profile for customer receipts
                             </div>
                         </div>
                         <select
                             value={config.printSettings.printingProfile}
                             onChange={e => setConfig(prev => ({ ...prev, printSettings: { ...prev.printSettings, printingProfile: e.target.value } }))}
-                            style={{ padding: '6px 12px', background: 'var(--bg-secondary, #09090b)', border: '1px solid var(--border-primary, #27272a)', borderRadius: 6, color: 'var(--text-primary, #fafafa)', fontSize: 13 }}
+                            style={{ padding: '6px 12px', background: 'var(--bg-secondary, #09090b)', border: '1px solid var(--border-primary, #27272a)', borderRadius: 6, color: 'var(--text-primary, #fafafa)', fontSize: 13 }} /* keep-inline */
                             aria-label="Printing profile"
                         >
                             {ALL_PRINTING_PROFILES.map(p => <option key={p} value={p}>{p}</option>)}
@@ -306,8 +306,8 @@ const KDS1Setup: React.FC = () => {
 
                     <div style={toggleRow}>
                         <div>
-                            <div style={{ fontWeight: 500 }}>Print chit when order is ready</div>
-                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginTop: 2 }}>
+                            <div style={{ fontWeight: 500 }}>Print chit when order is ready</div> /* keep-inline */
+                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginTop: 2 }}> /* keep-inline */
                                 Print a draft receipt when delivery/pickup order is marked ready
                             </div>
                         </div>
@@ -321,8 +321,8 @@ const KDS1Setup: React.FC = () => {
 
                     <div style={toggleRow}>
                         <div>
-                            <div style={{ fontWeight: 500 }}>Print chit when removed from KDS</div>
-                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginTop: 2 }}>
+                            <div style={{ fontWeight: 500 }}>Print chit when removed from KDS</div> /* keep-inline */
+                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)', marginTop: 2 }}> /* keep-inline */
                                 Print a chit when an item or order is removed from the screen
                             </div>
                         </div>

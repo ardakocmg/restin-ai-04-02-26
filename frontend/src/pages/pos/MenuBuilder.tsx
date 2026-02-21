@@ -236,30 +236,30 @@ const MenuBuilder: React.FC = () => {
         return (
             <div style={pg}>
                 <div style={ct}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}> /* keep-inline */
                         <div>
-                            <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 12, padding: '8px 16px', fontSize: 13 }}><ArrowLeft size={14} /> Back</button>
-                            <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Menus</h1>
-                            <p style={{ fontSize: 14, color: 'var(--text-secondary, #a1a1aa)', margin: '4px 0 0' }}>Create and manage POS menus for your restaurant</p>
+                            <button onClick={() => navigate(-1)} style={{ ...bo, marginBottom: 12, padding: '8px 16px', fontSize: 13 }}><ArrowLeft size={14} /> Back</button> /* keep-inline */
+                            <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Menus</h1> /* keep-inline */
+                            <p style={{ fontSize: 14, color: 'var(--text-secondary, #a1a1aa)', margin: '4px 0 0' }}>Create and manage POS menus for your restaurant</p> /* keep-inline */
                         </div>
                         <button style={bp} onClick={() => setShowNewMenu(true)}><Plus size={16} /> Create Menu</button>
                     </div>
 
                     {/* Search */}
-                    <div style={{ position: 'relative', marginBottom: 20 }}>
+                    <div style={{ position: 'relative', marginBottom: 20 }}> /* keep-inline */
                         <Search size={16} style={{ position: 'absolute', left: 14, top: 12, color: 'var(--text-secondary, #a1a1aa)' }} />
-                        <input style={{ ...ip, paddingLeft: 38 }} placeholder="Search menus..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
+                        <input style={{ ...ip, paddingLeft: 38 }} placeholder="Search menus..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} /> /* keep-inline */
                     </div>
 
                     {/* New Menu Modal */}
                     {showNewMenu && (
                         <div style={cd}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                                <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Create New Menu</h3>
-                                <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setShowNewMenu(false)}><X size={18} /></button>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}> /* keep-inline */
+                                <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Create New Menu</h3> /* keep-inline */
+                                <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setShowNewMenu(false)}><X size={18} /></button> /* keep-inline */
                             </div>
-                            <input style={{ ...ip, marginBottom: 12 }} placeholder="Menu name..." value={newMenuName} onChange={e => setNewMenuName(e.target.value)} autoFocus onKeyDown={e => e.key === 'Enter' && createMenu()} />
-                            <div style={{ display: 'flex', gap: 8 }}>
+                            <input style={{ ...ip, marginBottom: 12 }} placeholder="Menu name..." value={newMenuName} onChange={e => setNewMenuName(e.target.value)} autoFocus onKeyDown={e => e.key === 'Enter' && createMenu()} /> /* keep-inline */
+                            <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
                                 <button style={bp} onClick={createMenu}><Plus size={14} /> Create</button>
                                 <button style={bo} onClick={() => setShowNewMenu(false)}>Cancel</button>
                             </div>
@@ -267,51 +267,51 @@ const MenuBuilder: React.FC = () => {
                     )}
 
                     {/* Menu Cards */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340, 1fr))', gap: 16 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340, 1fr))', gap: 16 }}> /* keep-inline */
                         {filteredMenus.map(menu => (
-                            <div key={menu.id} style={{ ...cd, cursor: 'pointer', transition: 'border-color 0.2s' }}
+                            <div key={menu.id} style={{ ...cd, cursor: 'pointer', transition: 'border-color 0.2s' }} /* keep-inline */
                                 onClick={() => { setSelectedMenuId(menu.id); setSelectedScreenId(menu.mainScreens[0]?.id || null); }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}> /* keep-inline */
                                     <div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}> /* keep-inline */
                                             <MenuIcon size={18} color="#3B82F6" />
-                                            <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>{menu.name}</h3>
+                                            <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>{menu.name}</h3> /* keep-inline */
                                         </div>
-                                        {menu.description && <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', margin: '4px 0 0' }}>{menu.description}</p>}
+                                        {menu.description && <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', margin: '4px 0 0' }}>{menu.description}</p>} /* keep-inline */
                                     </div>
-                                    <span style={{ padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 600, background: menu.isActive ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', color: menu.isActive ? '#10B981' : '#EF4444' }}>
+                                    <span style={{ padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 600, background: menu.isActive ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', color: menu.isActive ? '#10B981' : '#EF4444' }}> /* keep-inline */
                                         {menu.isActive ? 'Active' : 'Inactive'}
                                     </span>
                                 </div>
 
-                                <div style={{ display: 'flex', gap: 16, marginTop: 16, fontSize: 13, color: 'var(--text-secondary, #a1a1aa)' }}>
-                                    <span><Layout size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />{menu.mainScreens.length} screens</span>
-                                    <span><Grid3X3 size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />{menu.mainScreens.reduce((a, s) => a + s.buttons.filter(b => b !== null).length, 0)} items</span>
+                                <div style={{ display: 'flex', gap: 16, marginTop: 16, fontSize: 13, color: 'var(--text-secondary, #a1a1aa)' }}> /* keep-inline */
+                                    <span><Layout size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />{menu.mainScreens.length} screens</span> /* keep-inline */
+                                    <span><Grid3X3 size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />{menu.mainScreens.reduce((a, s) => a + s.buttons.filter(b => b !== null).length, 0)} items</span> /* keep-inline */
                                 </div>
 
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12 }}>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12 }}> /* keep-inline */
                                     {menu.mainScreens.slice(0, 5).map(screen => (
-                                        <span key={screen.id} style={{ padding: '3px 8px', borderRadius: 4, fontSize: 11, background: `${screen.color}20`, color: screen.color, border: `1px solid ${screen.color}30` }}>
+                                        <span key={screen.id} style={{ padding: '3px 8px', borderRadius: 4, fontSize: 11, background: `${screen.color}20`, color: screen.color, border: `1px solid ${screen.color}30` }}> /* keep-inline */
                                             {screen.name}
                                         </span>
                                     ))}
-                                    {menu.mainScreens.length > 5 && <span style={{ padding: '3px 8px', fontSize: 11, color: 'var(--text-secondary)' }}>+{menu.mainScreens.length - 5} more</span>}
+                                    {menu.mainScreens.length > 5 && <span style={{ padding: '3px 8px', fontSize: 11, color: 'var(--text-secondary)' }}>+{menu.mainScreens.length - 5} more</span>} /* keep-inline */
                                 </div>
 
-                                <div style={{ display: 'flex', gap: 8, marginTop: 14, borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 12 }}>
-                                    <button style={{ ...bo, padding: '6px 12px', fontSize: 12, flex: 1 }} onClick={e => { e.stopPropagation(); duplicateMenu(menu); }}><Copy size={12} /> Duplicate</button>
-                                    <button style={{ ...bo, padding: '6px 12px', fontSize: 12, flex: 1 }} onClick={e => { e.stopPropagation(); setSelectedMenuId(menu.id); }}><Eye size={12} /> Edit</button>
-                                    <button style={{ ...bo, padding: '6px 12px', fontSize: 12, color: '#EF4444', borderColor: 'rgba(239,68,68,0.2)' }} onClick={e => { e.stopPropagation(); deleteMenu(menu.id); }}><Trash2 size={12} /></button>
+                                <div style={{ display: 'flex', gap: 8, marginTop: 14, borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 12 }}> /* keep-inline */
+                                    <button style={{ ...bo, padding: '6px 12px', fontSize: 12, flex: 1 }} onClick={e => { e.stopPropagation(); duplicateMenu(menu); }}><Copy size={12} /> Duplicate</button> /* keep-inline */
+                                    <button style={{ ...bo, padding: '6px 12px', fontSize: 12, flex: 1 }} onClick={e => { e.stopPropagation(); setSelectedMenuId(menu.id); }}><Eye size={12} /> Edit</button> /* keep-inline */
+                                    <button style={{ ...bo, padding: '6px 12px', fontSize: 12, color: '#EF4444', borderColor: 'rgba(239,68,68,0.2)' }} onClick={e => { e.stopPropagation(); deleteMenu(menu.id); }}><Trash2 size={12} /></button> /* keep-inline */
                                 </div>
                             </div>
                         ))}
                     </div>
 
                     {filteredMenus.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-secondary, #a1a1aa)' }}>
-                            <MenuIcon size={48} style={{ marginBottom: 12, opacity: 0.3 }} />
-                            <p style={{ fontSize: 16, fontWeight: 500 }}>{"No "}menus found</p>
-                            <p style={{ fontSize: 13 }}>Create your first POS menu to get started</p>
+                        <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-secondary, #a1a1aa)' }}> /* keep-inline */
+                            <MenuIcon size={48} style={{ marginBottom: 12, opacity: 0.3 }} /> /* keep-inline */
+                            <p style={{ fontSize: 16, fontWeight: 500 }}>{"No "}menus found</p> /* keep-inline */
+                            <p style={{ fontSize: 13 }}>Create your first POS menu to get started</p> /* keep-inline */
                         </div>
                     )}
                 </div>
@@ -322,43 +322,43 @@ const MenuBuilder: React.FC = () => {
     /* ===== RENDER: Menu Editor (menu selected) ===== */
     return (
         <div style={pg}>
-            <div style={{ ...ct, display: 'flex', gap: 20 }}>
+            <div style={{ ...ct, display: 'flex', gap: 20 }}> /* keep-inline */
                 {/* Left: Screen List */}
-                <div style={{ width: 240, flexShrink: 0 }}>
-                    <button onClick={() => { setSelectedMenuId(null); setSelectedScreenId(null); }} style={{ ...bo, width: '100%', marginBottom: 12, padding: '8px 14px', fontSize: 13 }}>
+                <div style={{ width: 240, flexShrink: 0 }}> /* keep-inline */
+                    <button onClick={() => { setSelectedMenuId(null); setSelectedScreenId(null); }} style={{ ...bo, width: '100%', marginBottom: 12, padding: '8px 14px', fontSize: 13 }}> /* keep-inline */
                         <ArrowLeft size={14} /> All Menus
                     </button>
 
-                    <div style={{ ...cd, padding: 12 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                            <h3 style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>{selectedMenu?.name}</h3>
-                            <button style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: 12, fontWeight: 500 }}
+                    <div style={{ ...cd, padding: 12 }}> /* keep-inline */
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}> /* keep-inline */
+                            <h3 style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>{selectedMenu?.name}</h3> /* keep-inline */
+                            <button style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: 12, fontWeight: 500 }} /* keep-inline */
                                 onClick={() => toast.success('Menu saved')}>
                                 <Save size={12} /> Save
                             </button>
                         </div>
 
-                        <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary, #a1a1aa)', marginBottom: 8, letterSpacing: 0.5 }}>
+                        <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary, #a1a1aa)', marginBottom: 8, letterSpacing: 0.5 }}> /* keep-inline */
                             Main Screens
                         </div>
 
                         {selectedMenu?.mainScreens.map(screen => (
                             <div key={screen.id}
                                 onClick={() => setSelectedScreenId(screen.id)}
-                                style={{
+                                style={{ /* keep-inline */
                                     display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', borderRadius: 8,
                                     cursor: 'pointer', marginBottom: 4, fontSize: 13,
                                     background: selectedScreenId === screen.id ? 'rgba(59,130,246,0.1)' : 'transparent',
                                     color: selectedScreenId === screen.id ? '#3B82F6' : 'var(--text-primary, #fafafa)',
                                     fontWeight: selectedScreenId === screen.id ? 600 : 400,
                                 }}>
-                                <GripVertical size={12} style={{ opacity: 0.3 }} />
-                                <div style={{ width: 12, height: 12, borderRadius: 3, background: screen.color, flexShrink: 0 }} />
-                                <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{screen.name}</span>
-                                <span style={{ fontSize: 11, color: 'var(--text-secondary)', flexShrink: 0 }}>
+                                <GripVertical size={12} style={{ opacity: 0.3 }} /> /* keep-inline */
+                                <div style={{ width: 12, height: 12, borderRadius: 3, background: screen.color, flexShrink: 0 }} /> /* keep-inline */
+                                <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{screen.name}</span> /* keep-inline */
+                                <span style={{ fontSize: 11, color: 'var(--text-secondary)', flexShrink: 0 }}> /* keep-inline */
                                     {screen.buttons.filter(b => b !== null).length}
                                 </span>
-                                <button style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', padding: 2, flexShrink: 0 }}
+                                <button style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', padding: 2, flexShrink: 0 }} /* keep-inline */
                                     onClick={e => { e.stopPropagation(); deleteScreen(screen.id); }}>
                                     <Trash2 size={12} />
                                 </button>
@@ -366,21 +366,21 @@ const MenuBuilder: React.FC = () => {
                         ))}
 
                         {showNewScreen ? (
-                            <div style={{ padding: 8, background: 'var(--bg-secondary, #09090b)', borderRadius: 8, marginTop: 8 }}>
-                                <input style={{ ...ip, fontSize: 12, marginBottom: 6, padding: '6px 10px' }} placeholder="Screen name..." value={newScreenName} onChange={e => setNewScreenName(e.target.value)} autoFocus />
-                                <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 6 }}>
+                            <div style={{ padding: 8, background: 'var(--bg-secondary, #09090b)', borderRadius: 8, marginTop: 8 }}> /* keep-inline */
+                                <input style={{ ...ip, fontSize: 12, marginBottom: 6, padding: '6px 10px' }} placeholder="Screen name..." value={newScreenName} onChange={e => setNewScreenName(e.target.value)} autoFocus /> /* keep-inline */
+                                <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 6 }}> /* keep-inline */
                                     {COLORS.slice(0, 8).map(c => (
                                         <div key={c} onClick={() => setNewScreenColor(c)}
-                                            style={{ width: 20, height: 20, borderRadius: 4, background: c, cursor: 'pointer', border: newScreenColor === c ? '2px solid #fff' : '2px solid transparent' }} />
+                                            style={{ width: 20, height: 20, borderRadius: 4, background: c, cursor: 'pointer', border: newScreenColor === c ? '2px solid #fff' : '2px solid transparent' }} /> /* keep-inline */
                                     ))}
                                 </div>
-                                <div style={{ display: 'flex', gap: 6 }}>
-                                    <button style={{ ...bp, padding: '4px 10px', fontSize: 11 }} onClick={addScreen}>Add</button>
-                                    <button style={{ ...bo, padding: '4px 10px', fontSize: 11 }} onClick={() => setShowNewScreen(false)}>Cancel</button>
+                                <div style={{ display: 'flex', gap: 6 }}> /* keep-inline */
+                                    <button style={{ ...bp, padding: '4px 10px', fontSize: 11 }} onClick={addScreen}>Add</button> /* keep-inline */
+                                    <button style={{ ...bo, padding: '4px 10px', fontSize: 11 }} onClick={() => setShowNewScreen(false)}>Cancel</button> /* keep-inline */
                                 </div>
                             </div>
                         ) : (
-                            <button style={{ ...bo, width: '100%', fontSize: 12, padding: '8px 12px', marginTop: 8, justifyContent: 'center' }}
+                            <button style={{ ...bo, width: '100%', fontSize: 12, padding: '8px 12px', marginTop: 8, justifyContent: 'center' }} /* keep-inline */
                                 onClick={() => setShowNewScreen(true)}>
                                 <Plus size={12} /> Add Screen
                             </button>
@@ -388,52 +388,52 @@ const MenuBuilder: React.FC = () => {
                     </div>
 
                     {/* Menu Properties */}
-                    <div style={{ ...cd, padding: 12, marginTop: 8 }}>
-                        <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary, #a1a1aa)', marginBottom: 8, letterSpacing: 0.5 }}>Properties</div>
-                        <div style={{ fontSize: 12, marginBottom: 6 }}>
-                            <span style={{ color: 'var(--text-secondary)' }}>Status:</span>{' '}
-                            <span style={{ color: selectedMenu?.isActive ? '#10B981' : '#EF4444' }}>{selectedMenu?.isActive ? 'Active' : 'Inactive'}</span>
+                    <div style={{ ...cd, padding: 12, marginTop: 8 }}> /* keep-inline */
+                        <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-secondary, #a1a1aa)', marginBottom: 8, letterSpacing: 0.5 }}>Properties</div> /* keep-inline */
+                        <div style={{ fontSize: 12, marginBottom: 6 }}> /* keep-inline */
+                            <span style={{ color: 'var(--text-secondary)' }}>Status:</span>{' '} /* keep-inline */
+                            <span style={{ color: selectedMenu?.isActive ? '#10B981' : '#EF4444' }}>{selectedMenu?.isActive ? 'Active' : 'Inactive'}</span> /* keep-inline */
                         </div>
-                        <div style={{ fontSize: 12, marginBottom: 6 }}>
-                            <span style={{ color: 'var(--text-secondary)' }}>Screens:</span> {selectedMenu?.mainScreens.length}
+                        <div style={{ fontSize: 12, marginBottom: 6 }}> /* keep-inline */
+                            <span style={{ color: 'var(--text-secondary)' }}>Screens:</span> {selectedMenu?.mainScreens.length} /* keep-inline */
                         </div>
-                        <div style={{ fontSize: 12 }}>
-                            <span style={{ color: 'var(--text-secondary)' }}>Total Items:</span> {selectedMenu?.mainScreens.reduce((a, s) => a + s.buttons.filter(b => b !== null).length, 0)}
+                        <div style={{ fontSize: 12 }}> /* keep-inline */
+                            <span style={{ color: 'var(--text-secondary)' }}>Total Items:</span> {selectedMenu?.mainScreens.reduce((a, s) => a + s.buttons.filter(b => b !== null).length, 0)} /* keep-inline */
                         </div>
                     </div>
                 </div>
 
                 {/* Right: Button Grid Editor */}
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1 }}> /* keep-inline */
                     {selectedScreen ? (
                         <>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                    <div style={{ width: 16, height: 16, borderRadius: 4, background: selectedScreen.color }} />
-                                    <h2 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>{selectedScreen.name}</h2>
-                                    <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}> /* keep-inline */
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}> /* keep-inline */
+                                    <div style={{ width: 16, height: 16, borderRadius: 4, background: selectedScreen.color }} /> /* keep-inline */
+                                    <h2 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>{selectedScreen.name}</h2> /* keep-inline */
+                                    <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}> /* keep-inline */
                                         ({selectedScreen.gridCols}×{selectedScreen.gridRows} grid — {selectedScreen.buttons.filter(b => b !== null).length} items)
                                     </span>
                                 </div>
-                                <div style={{ display: 'flex', gap: 8 }}>
-                                    <button style={{ ...bo, padding: '8px 14px', fontSize: 12 }} onClick={() => addItemToGrid(selectedScreen.id)}>
+                                <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
+                                    <button style={{ ...bo, padding: '8px 14px', fontSize: 12 }} onClick={() => addItemToGrid(selectedScreen.id)}> /* keep-inline */
                                         <Plus size={14} /> Add Item
                                     </button>
-                                    <button style={{ ...bp, padding: '8px 14px', fontSize: 12 }} onClick={() => toast.success('Screen saved')}>
+                                    <button style={{ ...bp, padding: '8px 14px', fontSize: 12 }} onClick={() => toast.success('Screen saved')}> /* keep-inline */
                                         <Save size={14} /> Save
                                     </button>
                                 </div>
                             </div>
 
                             {/* Grid */}
-                            <div style={{ ...cd, padding: 16 }}>
-                                <div style={{ display: 'grid', gridTemplateColumns: `repeat(${selectedScreen.gridCols}, 1fr)`, gap: 8 }}>
+                            <div style={{ ...cd, padding: 16 }}> /* keep-inline */
+                                <div style={{ display: 'grid', gridTemplateColumns: `repeat(${selectedScreen.gridCols}, 1fr)`, gap: 8 }}> /* keep-inline */
                                     {selectedScreen.buttons.map((button, idx) => (
                                         <div key={idx}
                                             onClick={() => {
                                                 if (button) setEditingButton({ screenId: selectedScreen.id, index: idx, item: { ...button } });
                                             }}
-                                            style={{
+                                            style={{ /* keep-inline */
                                                 aspectRatio: '1.4', borderRadius: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                                                 cursor: 'pointer', transition: 'all 0.15s ease', position: 'relative',
                                                 background: button ? `${button.color}15` : 'var(--bg-secondary, #09090b)',
@@ -441,14 +441,14 @@ const MenuBuilder: React.FC = () => {
                                             }}>
                                             {button ? (
                                                 <>
-                                                    <span style={{ fontSize: 13, fontWeight: 600, color: button.color, textAlign: 'center', padding: '0 6px', lineHeight: 1.2 }}>
+                                                    <span style={{ fontSize: 13, fontWeight: 600, color: button.color, textAlign: 'center', padding: '0 6px', lineHeight: 1.2 }}> /* keep-inline */
                                                         {button.name}
                                                     </span>
                                                     {button.type === 'item' && button.price > 0 && (
-                                                        <span style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>€{button.price.toFixed(2)}</span>
+                                                        <span style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>€{button.price.toFixed(2)}</span> /* keep-inline */
                                                     )}
                                                     {button.type === 'sub-screen' && (
-                                                        <span style={{ fontSize: 10, color: button.color, marginTop: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
+                                                        <span style={{ fontSize: 10, color: button.color, marginTop: 4, display: 'flex', alignItems: 'center', gap: 2 }}> /* keep-inline */
                                                             <ChevronRight size={10} /> Sub-screen
                                                         </span>
                                                     )}
@@ -458,7 +458,7 @@ const MenuBuilder: React.FC = () => {
                                                     </button>
                                                 </>
                                             ) : (
-                                                <Plus size={16} style={{ opacity: 0.2 }} />
+                                                <Plus size={16} style={{ opacity: 0.2 }} /> /* keep-inline */
                                             )}
                                         </div>
                                     ))}
@@ -466,10 +466,10 @@ const MenuBuilder: React.FC = () => {
                             </div>
 
                             {/* Grid Size Controls */}
-                            <div style={{ ...cd, padding: 14, display: 'flex', alignItems: 'center', gap: 16 }}>
-                                <span style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500 }}>Grid Size:</span>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                    <span style={{ fontSize: 12 }}>Cols</span>
+                            <div style={{ ...cd, padding: 14, display: 'flex', alignItems: 'center', gap: 16 }}> /* keep-inline */
+                                <span style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500 }}>Grid Size:</span> /* keep-inline */
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}> /* keep-inline */
+                                    <span style={{ fontSize: 12 }}>Cols</span> /* keep-inline */
                                     {[3, 4, 5, 6].map(n => (
                                         <button key={n} onClick={() => {
                                             setMenus(prev => prev.map(m => m.id === selectedMenuId ? {
@@ -481,13 +481,13 @@ const MenuBuilder: React.FC = () => {
                                                     return { ...s, gridCols: n, buttons: newButtons.slice(0, total) };
                                                 }),
                                             } : m));
-                                        }} style={{ ...bo, padding: '4px 10px', fontSize: 12, ...(selectedScreen.gridCols === n ? { background: 'rgba(59,130,246,0.1)', borderColor: '#3B82F6', color: '#3B82F6' } : {}) }}>
+                                        }} style={{ ...bo, padding: '4px 10px', fontSize: 12, ...(selectedScreen.gridCols === n ? { background: 'rgba(59,130,246,0.1)', borderColor: '#3B82F6', color: '#3B82F6' } : {}) }}> /* keep-inline */
                                             {n}
                                         </button>
                                     ))}
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                    <span style={{ fontSize: 12 }}>Rows</span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}> /* keep-inline */
+                                    <span style={{ fontSize: 12 }}>Rows</span> /* keep-inline */
                                     {[2, 3, 4, 5, 6].map(n => (
                                         <button key={n} onClick={() => {
                                             setMenus(prev => prev.map(m => m.id === selectedMenuId ? {
@@ -499,28 +499,28 @@ const MenuBuilder: React.FC = () => {
                                                     return { ...s, gridRows: n, buttons: newButtons.slice(0, total) };
                                                 }),
                                             } : m));
-                                        }} style={{ ...bo, padding: '4px 10px', fontSize: 12, ...(selectedScreen.gridRows === n ? { background: 'rgba(59,130,246,0.1)', borderColor: '#3B82F6', color: '#3B82F6' } : {}) }}>
+                                        }} style={{ ...bo, padding: '4px 10px', fontSize: 12, ...(selectedScreen.gridRows === n ? { background: 'rgba(59,130,246,0.1)', borderColor: '#3B82F6', color: '#3B82F6' } : {}) }}> /* keep-inline */
                                             {n}
                                         </button>
                                     ))}
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 'auto' }}>
-                                    <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Color:</span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 'auto' }}> /* keep-inline */
+                                    <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Color:</span> /* keep-inline */
                                     {COLORS.slice(0, 8).map(c => (
                                         <div key={c} onClick={() => {
                                             setMenus(prev => prev.map(m => m.id === selectedMenuId ? {
                                                 ...m, mainScreens: m.mainScreens.map(s => s.id === selectedScreen.id ? { ...s, color: c } : s),
                                             } : m));
-                                        }} style={{ width: 18, height: 18, borderRadius: 4, background: c, cursor: 'pointer', border: selectedScreen.color === c ? '2px solid #fff' : '2px solid transparent' }} />
+                                        }} style={{ width: 18, height: 18, borderRadius: 4, background: c, cursor: 'pointer', border: selectedScreen.color === c ? '2px solid #fff' : '2px solid transparent' }} /> /* keep-inline */
                                     ))}
                                 </div>
                             </div>
                         </>
                     ) : (
-                        <div style={{ textAlign: 'center', padding: 80, color: 'var(--text-secondary, #a1a1aa)' }}>
-                            <Grid3X3 size={48} style={{ marginBottom: 12, opacity: 0.3 }} />
-                            <p style={{ fontSize: 16, fontWeight: 500 }}>Select a main screen</p>
-                            <p style={{ fontSize: 13 }}>Choose a screen from the left panel to edit its button layout</p>
+                        <div style={{ textAlign: 'center', padding: 80, color: 'var(--text-secondary, #a1a1aa)' }}> /* keep-inline */
+                            <Grid3X3 size={48} style={{ marginBottom: 12, opacity: 0.3 }} /> /* keep-inline */
+                            <p style={{ fontSize: 16, fontWeight: 500 }}>Select a main screen</p> /* keep-inline */
+                            <p style={{ fontSize: 13 }}>Choose a screen from the left panel to edit its button layout</p> /* keep-inline */
                         </div>
                     )}
                 </div>
@@ -528,24 +528,24 @@ const MenuBuilder: React.FC = () => {
 
             {/* Edit Button Modal */}
             {editingButton && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} /* keep-inline */
                     onClick={() => setEditingButton(null)}>
-                    <div style={{ ...cd, width: 480, maxHeight: '80vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                            <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Edit Button</h3>
-                            <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditingButton(null)}><X size={18} /></button>
+                    <div style={{ ...cd, width: 480, maxHeight: '80vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}> /* keep-inline */
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}> /* keep-inline */
+                            <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Edit Button</h3> /* keep-inline */
+                            <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditingButton(null)}><X size={18} /></button> /* keep-inline */
                         </div>
 
-                        <div style={{ marginBottom: 12 }}>
-                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name</label>
+                        <div style={{ marginBottom: 12 }}> /* keep-inline */
+                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name</label> /* keep-inline */
                             <input style={ip} value={editingButton.item.name} onChange={e => setEditingButton(prev => prev ? { ...prev, item: { ...prev.item, name: e.target.value } } : null)} />
                         </div>
 
-                        <div style={{ marginBottom: 12 }}>
-                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label>
-                            <div style={{ display: 'flex', gap: 8 }}>
+                        <div style={{ marginBottom: 12 }}> /* keep-inline */
+                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label> /* keep-inline */
+                            <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
                                 {(['item', 'sub-screen', 'combo'] as const).map(t => (
-                                    <button key={t} style={{ ...bo, padding: '6px 14px', fontSize: 12, ...(editingButton.item.type === t ? { background: 'rgba(59,130,246,0.1)', borderColor: '#3B82F6', color: '#3B82F6' } : {}) }}
+                                    <button key={t} style={{ ...bo, padding: '6px 14px', fontSize: 12, ...(editingButton.item.type === t ? { background: 'rgba(59,130,246,0.1)', borderColor: '#3B82F6', color: '#3B82F6' } : {}) }} /* keep-inline */
                                         onClick={() => setEditingButton(prev => prev ? { ...prev, item: { ...prev.item, type: t } } : null)}>
                                         {t === 'item' ? 'Item' : t === 'sub-screen' ? 'Sub-screen' : 'Combo'}
                                     </button>
@@ -554,31 +554,31 @@ const MenuBuilder: React.FC = () => {
                         </div>
 
                         {editingButton.item.type === 'item' && (
-                            <div style={{ marginBottom: 12 }}>
-                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Price (€)</label>
-                                <input type="number" step="0.01" style={{ ...ip, width: 120 }} value={editingButton.item.price} onChange={e => setEditingButton(prev => prev ? { ...prev, item: { ...prev.item, price: parseFloat(e.target.value) || 0 } } : null)} />
+                            <div style={{ marginBottom: 12 }}> /* keep-inline */
+                                <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Price (€)</label> /* keep-inline */
+                                <input type="number" step="0.01" style={{ ...ip, width: 120 }} value={editingButton.item.price} onChange={e => setEditingButton(prev => prev ? { ...prev, item: { ...prev.item, price: parseFloat(e.target.value) || 0 } } : null)} /> /* keep-inline */
                             </div>
                         )}
 
-                        <div style={{ marginBottom: 16 }}>
-                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>Color</label>
-                            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        <div style={{ marginBottom: 16 }}> /* keep-inline */
+                            <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>Color</label> /* keep-inline */
+                            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}> /* keep-inline */
                                 {COLORS.map(c => (
                                     <div key={c} onClick={() => setEditingButton(prev => prev ? { ...prev, item: { ...prev.item, color: c } } : null)}
-                                        style={{ width: 28, height: 28, borderRadius: 6, background: c, cursor: 'pointer', border: editingButton.item.color === c ? '3px solid #fff' : '3px solid transparent' }} />
+                                        style={{ width: 28, height: 28, borderRadius: 6, background: c, cursor: 'pointer', border: editingButton.item.color === c ? '3px solid #fff' : '3px solid transparent' }} /> /* keep-inline */
                                 ))}
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', gap: 8 }}>
-                            <button style={{ ...bp, flex: 1, justifyContent: 'center' }} onClick={() => {
+                        <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
+                            <button style={{ ...bp, flex: 1, justifyContent: 'center' }} onClick={() => { /* keep-inline */
                                 updateButton(editingButton.screenId, editingButton.index, editingButton.item);
                                 setEditingButton(null);
                                 toast.success('Button updated');
                             }}>
                                 <Save size={14} /> Save
                             </button>
-                            <button style={{ ...bo, color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => {
+                            <button style={{ ...bo, color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => { /* keep-inline */
                                 updateButton(editingButton.screenId, editingButton.index, null);
                                 setEditingButton(null);
                                 toast.success('Button removed');

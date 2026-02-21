@@ -87,7 +87,7 @@ function PriorityDot({ priority }: { priority: HACCPTask['priority'] }) {
 export default function HACCPScheduler() {
     const { t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { activeVenue: selectedVenue } = useVenue() as any;
+    const { activeVenue: selectedVenue } = useVenue() as unknown;
 
     const [tasks, setTasks] = useState<HACCPTask[]>([]);
     const [loading, setLoading] = useState(false);

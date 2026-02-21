@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * useAuthElevation — Progressive Authentication Store
  *

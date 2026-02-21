@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * POSFilterContext - POS date/time/shift filtering
  * @module context/POSFilterContext

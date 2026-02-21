@@ -117,7 +117,7 @@ export default function POSSalesReport() {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleExportCsv = (data: any, name: string) => {
+  const handleExportCsv = (data: Record<string, unknown>, name: string) => {
     if (!data) {
       toast.error('No data to export');
       return;
@@ -403,7 +403,7 @@ export default function POSSalesReport() {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const renderSummaryReport = (data: any) => {
+  const renderSummaryReport = (data: Record<string, unknown>) => {
     if (!data) return null;
 
     return (

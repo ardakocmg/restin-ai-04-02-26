@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * ThemeContext - Venue-level theme customization
  * @module context/ThemeContext

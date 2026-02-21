@@ -235,7 +235,7 @@ const TABS: { key: TabKey; label: string; icon: React.ReactNode }[] = [
 /* ===== Toggle Component ===== */
 
 const Toggle: React.FC<{ value: boolean; onChange: () => void }> = ({ value, onChange }) => (
-    <div onClick={onChange} style={{ width: 44, height: 24, borderRadius: 12, background: value ? '#3B82F6' : '#3f3f46', cursor: 'pointer', position: 'relative', flexShrink: 0 }}>
+    <div onClick={onChange} style={{ width: 44, height: 24, borderRadius: 12, background: value ? '#3B82F6' : '#3f3f46', cursor: 'pointer', position: 'relative', flexShrink: 0 }}> /* keep-inline */
         <div style={{ position: 'absolute', top: 2, left: value ? 22 : 2, width: 20, height: 20, borderRadius: '50%', background: '#fff', transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
     </div>
 );
@@ -274,11 +274,11 @@ const POSConfigSettings: React.FC = () => {
             <div className="pos-container pos-container--sidebar">
                 {/* Sidebar */}
                 <div className="pos-sidebar">
-                    <button onClick={() => navigate('/pos/runtime')} className="pos-btn pos-btn--outline" style={{ width: '100%', marginBottom: 16 }}>
+                    <button onClick={() => navigate('/pos/runtime')} className="pos-btn pos-btn--outline" style={{ width: '100%', marginBottom: 16 }}> /* keep-inline */
                         <ArrowLeft size={16} /> Back to POS
                     </button>
 
-                    <div className="pos-card" style={{ padding: 8 }}>
+                    <div className="pos-card" style={{ padding: 8 }}> /* keep-inline */
                         {TABS.map(tab => (
                             <button
                                 key={tab.key}
@@ -291,18 +291,18 @@ const POSConfigSettings: React.FC = () => {
                     </div>
 
                     {/* Quick Actions */}
-                    <div className="pos-card" style={{ padding: 12, marginTop: 12 }}>
+                    <div className="pos-card" style={{ padding: 12, marginTop: 12 }}> /* keep-inline */
                         <div className="pos-section-title">Actions</div>
-                        <button className="pos-btn pos-btn--outline" style={{ width: '100%', fontSize: 12, padding: '8px 12px', marginBottom: 6 }}><Link size={12} /> View Linked Devices</button>
-                        <button className="pos-btn pos-btn--outline" style={{ width: '100%', fontSize: 12, padding: '8px 12px', marginBottom: 6 }}><Copy size={12} /> Duplicate Config</button>
+                        <button className="pos-btn pos-btn--outline" style={{ width: '100%', fontSize: 12, padding: '8px 12px', marginBottom: 6 }}><Link size={12} /> View Linked Devices</button> /* keep-inline */
+                        <button className="pos-btn pos-btn--outline" style={{ width: '100%', fontSize: 12, padding: '8px 12px', marginBottom: 6 }}><Copy size={12} /> Duplicate Config</button> /* keep-inline */
                     </div>
                 </div>
 
                 {/* Main Content */}
                 <div className="pos-main">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                        <h1 style={{ fontSize: 22, fontWeight: 700 }}>{TABS.find(t => t.key === activeTab)?.label}</h1>
-                        <div style={{ display: 'flex', gap: 12 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
+                        <h1 style={{ fontSize: 22, fontWeight: 700 }}>{TABS.find(t => t.key === activeTab)?.label}</h1> /* keep-inline */
+                        <div style={{ display: 'flex', gap: 12 }}> /* keep-inline */
                             <button className="pos-btn pos-btn--outline" onClick={() => setConfig(DEFAULT_CONFIG)}>Discard</button>
                             <button className="pos-btn pos-btn--primary" onClick={saveConfig}><Save size={16} /> Save</button>
                         </div>
@@ -314,13 +314,13 @@ const POSConfigSettings: React.FC = () => {
                             <div className="pos-card">
                                 <h3 className="pos-section-title">Configuration</h3>
                                 <SettingRow label="Configuration Name" desc="Name displayed in the Back Office">
-                                    <input className="pos-input" style={{ width: 250 }} value={config.name} onChange={e => set('name', e.target.value)} />
+                                    <input className="pos-input" style={{ width: 250 }} value={config.name} onChange={e => set('name', e.target.value)} /> /* keep-inline */
                                 </SettingRow>
                             </div>
                             <div className="pos-card">
                                 <h3 className="pos-section-title">Menu Settings</h3>
                                 <SettingRow label="Menu" desc="Select the menu to use for this configuration">
-                                    <select className="pos-input pos-select" style={{ width: 250 }} value={config.menu} onChange={e => set('menu', e.target.value)} aria-label="Menu">
+                                    <select className="pos-input pos-select" style={{ width: 250 }} value={config.menu} onChange={e => set('menu', e.target.value)} aria-label="Menu"> /* keep-inline */
                                         <option>Default Menu</option><option>Lunch Menu</option><option>Dinner Menu</option><option>Bar Menu</option>
                                     </select>
                                 </SettingRow>
@@ -333,7 +333,7 @@ const POSConfigSettings: React.FC = () => {
                         <>
                             <div className="pos-card">
                                 <h3 className="pos-section-title">Order Mode</h3>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}> /* keep-inline */
                                     <button onClick={() => set('orderMode', 'direct-sales')} className={`pos-radio-option${config.orderMode === 'direct-sales' ? ' pos-radio-option--active' : ''}`}>
                                         Direct Sales Only
                                     </button>
@@ -345,7 +345,7 @@ const POSConfigSettings: React.FC = () => {
                                 {config.orderMode === 'table-service' && (
                                     <>
                                         <SettingRow label="Floor Plan" desc="Select from available floor plans">
-                                            <select className="pos-input pos-select" style={{ width: 200 }} value={config.selectedFloorPlan} onChange={e => set('selectedFloorPlan', e.target.value)} aria-label="Floor plan">
+                                            <select className="pos-input pos-select" style={{ width: 200 }} value={config.selectedFloorPlan} onChange={e => set('selectedFloorPlan', e.target.value)} aria-label="Floor plan"> /* keep-inline */
                                                 {config.floorPlans.map(f => <option key={f}>{f}</option>)}
                                             </select>
                                         </SettingRow>
@@ -361,17 +361,17 @@ const POSConfigSettings: React.FC = () => {
                                 )}
 
                                 <SettingRow label="Default order profile for direct sales">
-                                    <select className="pos-input pos-select" style={{ width: 180 }} value={config.defaultOrderProfile} onChange={e => set('defaultOrderProfile', e.target.value)} aria-label="Default order profile">
+                                    <select className="pos-input pos-select" style={{ width: 180 }} value={config.defaultOrderProfile} onChange={e => set('defaultOrderProfile', e.target.value)} aria-label="Default order profile"> /* keep-inline */
                                         <option>Dine-In</option><option>Takeaway</option><option>Delivery</option>
                                     </select>
                                 </SettingRow>
 
                                 <SettingRow label="Order number reset at" desc="Set the last order number before count resets">
-                                    <input type="number" className="pos-input" style={{ width: 100 }} value={config.orderNumberReset} onChange={e => set('orderNumberReset', parseInt(e.target.value) || 0)} />
+                                    <input type="number" className="pos-input" style={{ width: 100 }} value={config.orderNumberReset} onChange={e => set('orderNumberReset', parseInt(e.target.value) || 0)} /> /* keep-inline */
                                 </SettingRow>
 
                                 <SettingRow label="First course numbering">
-                                    <div style={{ display: 'flex', gap: 8 }}>
+                                    <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
                                         <button className={`pos-radio-option${config.firstCourse === 'course-0' ? ' pos-radio-option--active' : ''}`} onClick={() => set('firstCourse', 'course-0')}>Course 0</button>
                                         <button className={`pos-radio-option${config.firstCourse === 'course-1' ? ' pos-radio-option--active' : ''}`} onClick={() => set('firstCourse', 'course-1')}>Course 1</button>
                                     </div>
@@ -399,15 +399,15 @@ const POSConfigSettings: React.FC = () => {
                                 {config.groupOrdering && (
                                     <>
                                         <SettingRow label="Max time between orders">
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                <input type="number" className="pos-input" style={{ width: 80 }} value={config.groupMaxTimeBetween} onChange={e => set('groupMaxTimeBetween', parseInt(e.target.value) || 0)} />
-                                                <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>min</span>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
+                                                <input type="number" className="pos-input" style={{ width: 80 }} value={config.groupMaxTimeBetween} onChange={e => set('groupMaxTimeBetween', parseInt(e.target.value) || 0)} /> /* keep-inline */
+                                                <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>min</span> /* keep-inline */
                                             </div>
                                         </SettingRow>
                                         <SettingRow label="Max time since first order">
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                <input type="number" className="pos-input" style={{ width: 80 }} value={config.groupMaxTimeSinceFirst} onChange={e => set('groupMaxTimeSinceFirst', parseInt(e.target.value) || 0)} />
-                                                <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>min</span>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
+                                                <input type="number" className="pos-input" style={{ width: 80 }} value={config.groupMaxTimeSinceFirst} onChange={e => set('groupMaxTimeSinceFirst', parseInt(e.target.value) || 0)} /> /* keep-inline */
+                                                <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>min</span> /* keep-inline */
                                             </div>
                                         </SettingRow>
                                     </>
@@ -481,21 +481,21 @@ const POSConfigSettings: React.FC = () => {
                                         {config.paySuggestedTips && (
                                             <>
                                                 <SettingRow label="Calculate tip on">
-                                                    <div style={{ display: 'flex', gap: 8 }}>
+                                                    <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
                                                         <button className={`pos-radio-option${config.payTipCalculation === 'before-tax' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipCalculation', 'before-tax')}>Before taxes</button>
                                                         <button className={`pos-radio-option${config.payTipCalculation === 'after-tax' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipCalculation', 'after-tax')}>After taxes</button>
                                                     </div>
                                                 </SettingRow>
 
                                                 <SettingRow label="Calculate tip on discounts">
-                                                    <div style={{ display: 'flex', gap: 8 }}>
+                                                    <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
                                                         <button className={`pos-radio-option${config.payTipDiscount === 'before-discount' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipDiscount', 'before-discount')}>Before discounts</button>
                                                         <button className={`pos-radio-option${config.payTipDiscount === 'after-discount' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipDiscount', 'after-discount')}>After discounts</button>
                                                     </div>
                                                 </SettingRow>
 
                                                 <SettingRow label="Suggestion type">
-                                                    <div style={{ display: 'flex', gap: 8 }}>
+                                                    <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
                                                         <button className={`pos-radio-option${config.payTipType === 'percentage' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipType', 'percentage')}>Percentage</button>
                                                         <button className={`pos-radio-option${config.payTipType === 'fixed' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipType', 'fixed')}>Fixed Amounts</button>
                                                         <button className={`pos-radio-option${config.payTipType === 'dynamic' ? ' pos-radio-option--active' : ''}`} onClick={() => set('payTipType', 'dynamic')}>Dynamic</button>
@@ -503,14 +503,14 @@ const POSConfigSettings: React.FC = () => {
                                                 </SettingRow>
 
                                                 <SettingRow label="Suggested values">
-                                                    <div style={{ display: 'flex', gap: 8 }}>
+                                                    <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
                                                         {config.payTipValues.map((v, idx) => (
-                                                            <input key={idx} type="number" className="pos-input" style={{ width: 70 }}
+                                                            <input key={idx} type="number" className="pos-input" style={{ width: 70 }} /* keep-inline */
                                                                 value={v}
                                                                 onChange={e => { const vals = [...config.payTipValues] as [number, number, number]; vals[idx] = parseInt(e.target.value) || 0; set('payTipValues', vals); }}
                                                             />
                                                         ))}
-                                                        <span style={{ fontSize: 12, color: 'var(--text-secondary)', alignSelf: 'center' }}>
+                                                        <span style={{ fontSize: 12, color: 'var(--text-secondary)', alignSelf: 'center' }}> /* keep-inline */
                                                             {config.payTipType === 'percentage' ? '%' : '€'}
                                                         </span>
                                                     </div>
@@ -518,9 +518,9 @@ const POSConfigSettings: React.FC = () => {
 
                                                 {config.payTipType === 'dynamic' && (
                                                     <SettingRow label="Dynamic threshold" desc="Show percentages when total is above this amount">
-                                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                            <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>€</span>
-                                                            <input type="number" className="pos-input" style={{ width: 80 }} value={config.payDynamicThreshold} onChange={e => set('payDynamicThreshold', parseInt(e.target.value) || 0)} />
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
+                                                            <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>€</span> /* keep-inline */
+                                                            <input type="number" className="pos-input" style={{ width: 80 }} value={config.payDynamicThreshold} onChange={e => set('payDynamicThreshold', parseInt(e.target.value) || 0)} /> /* keep-inline */
                                                         </div>
                                                     </SettingRow>
                                                 )}
@@ -590,7 +590,7 @@ const POSConfigSettings: React.FC = () => {
                                 <SettingRow label="Merge identical items with different production instructions" desc="Merge identical items must be enabled"><Toggle value={config.mergeIdenticalItems} onChange={() => toggle('mergeIdenticalItems')} /></SettingRow>
 
                                 <SettingRow label="After order is sent or paid">
-                                    <div style={{ display: 'flex', gap: 8 }}>
+                                    <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
                                         <button className={`pos-radio-option${config.afterSendAction === 'stay' ? ' pos-radio-option--active' : ''}`} onClick={() => set('afterSendAction', 'stay')}>Stay on current order</button>
                                         <button className={`pos-radio-option${config.afterSendAction === 'new-order' ? ' pos-radio-option--active' : ''}`} onClick={() => set('afterSendAction', 'new-order')}>Start new order</button>
                                         <button className={`pos-radio-option${config.afterSendAction === 'logout' ? ' pos-radio-option--active' : ''}`} onClick={() => set('afterSendAction', 'logout')}>Log user out</button>
@@ -604,7 +604,7 @@ const POSConfigSettings: React.FC = () => {
 
                                 {config.enableIdleMode && (
                                     <SettingRow label="Screen saver option">
-                                        <div style={{ display: 'flex', gap: 8 }}>
+                                        <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
                                             <button className={`pos-radio-option${config.idleScreenSaver === 'logo' ? ' pos-radio-option--active' : ''}`} onClick={() => set('idleScreenSaver', 'logo')}>Display logo</button>
                                             <button className={`pos-radio-option${config.idleScreenSaver === 'slideshow' ? ' pos-radio-option--active' : ''}`} onClick={() => set('idleScreenSaver', 'slideshow')}>Slideshow</button>
                                         </div>
@@ -625,23 +625,23 @@ const POSConfigSettings: React.FC = () => {
                         <>
                             <div className="pos-card">
                                 <h3 className="pos-section-title">Timed Events</h3>
-                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}>
+                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}> /* keep-inline */
                                     Create timed menu events that automatically change the active menu on your POS.
                                 </p>
                                 {config.timedEvents.map((event, idx) => (
-                                    <div key={idx} className="pos-card" style={{ background: 'var(--bg-secondary, #09090b)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <div key={idx} className="pos-card" style={{ background: 'var(--bg-secondary, #09090b)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}> /* keep-inline */
                                         <div>
-                                            <div style={{ fontWeight: 600 }}>{event.title}</div>
-                                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)' }}>
+                                            <div style={{ fontWeight: 600 }}>{event.title}</div> /* keep-inline */
+                                            <div style={{ fontSize: 12, color: 'var(--text-secondary, #a1a1aa)' }}> /* keep-inline */
                                                 {event.menu} • {event.allDay ? 'All day' : `${event.startTime} - ${event.endTime}`} • {event.days.join(', ')}
                                             </div>
                                         </div>
-                                        <button className="pos-btn pos-btn--outline" style={{ padding: '6px 10px' }} onClick={() => setConfig(p => ({ ...p, timedEvents: p.timedEvents.filter((_, i) => i !== idx) }))}>
+                                        <button className="pos-btn pos-btn--outline" style={{ padding: '6px 10px' }} onClick={() => setConfig(p => ({ ...p, timedEvents: p.timedEvents.filter((_, i) => i !== idx) }))}> /* keep-inline */
                                             <Trash2 size={14} />
                                         </button>
                                     </div>
                                 ))}
-                                <button className="pos-btn pos-btn--outline" style={{ fontSize: 13 }} onClick={() => {
+                                <button className="pos-btn pos-btn--outline" style={{ fontSize: 13 }} onClick={() => { /* keep-inline */
                                     setConfig(p => ({
                                         ...p,
                                         timedEvents: [...p.timedEvents, { title: 'New Event', menu: 'Default Menu', startDate: '2026-01-01', endDate: '', allDay: true, startTime: '', endTime: '', days: ['Every day'] }]
@@ -653,20 +653,20 @@ const POSConfigSettings: React.FC = () => {
 
                             <div className="pos-card">
                                 <h3 className="pos-section-title">Reporting Tags</h3>
-                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}>
+                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}> /* keep-inline */
                                     Create tags to filter sales reports by this POS configuration.
                                 </p>
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}> /* keep-inline */
                                     {config.reportTags.map((tag, idx) => (
-                                        <span key={idx} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 6, fontSize: 13, color: '#3B82F6' }}>
+                                        <span key={idx} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 6, fontSize: 13, color: '#3B82F6' }}> /* keep-inline */
                                             {tag}
-                                            <button style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', padding: 0 }} onClick={() => setConfig(p => ({ ...p, reportTags: p.reportTags.filter((_, i) => i !== idx) }))}>
+                                            <button style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', padding: 0 }} onClick={() => setConfig(p => ({ ...p, reportTags: p.reportTags.filter((_, i) => i !== idx) }))}> /* keep-inline */
                                                 <X size={12} />
                                             </button>
                                         </span>
                                     ))}
                                 </div>
-                                <button className="pos-btn pos-btn--outline" style={{ fontSize: 13 }} onClick={() => {
+                                <button className="pos-btn pos-btn--outline" style={{ fontSize: 13 }} onClick={() => { /* keep-inline */
                                     const name = prompt('Enter tag name:');
                                     if (name) setConfig(p => ({ ...p, reportTags: [...p.reportTags, name] }));
                                 }}>
@@ -677,7 +677,7 @@ const POSConfigSettings: React.FC = () => {
                             <div className="pos-card">
                                 <h3 className="pos-section-title">Shift Reports</h3>
                                 <SettingRow label="Shift report detail">
-                                    <div style={{ display: 'flex', gap: 8 }}>
+                                    <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
                                         <button className={`pos-radio-option${config.shiftReportDetail === 'total' ? ' pos-radio-option--active' : ''}`} onClick={() => set('shiftReportDetail', 'total')}>Total sales only</button>
                                         <button className={`pos-radio-option${config.shiftReportDetail === 'groups' ? ' pos-radio-option--active' : ''}`} onClick={() => set('shiftReportDetail', 'groups')}>+ Accounting groups</button>
                                         <button className={`pos-radio-option${config.shiftReportDetail === 'groups-items' ? ' pos-radio-option--active' : ''}`} onClick={() => set('shiftReportDetail', 'groups-items')}>+ Groups & items</button>
@@ -687,24 +687,24 @@ const POSConfigSettings: React.FC = () => {
 
                             <div className="pos-card">
                                 <h3 className="pos-section-title">Stock Transfer</h3>
-                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}>
+                                <p style={{ fontSize: 13, color: 'var(--text-secondary, #a1a1aa)', marginBottom: 12 }}> /* keep-inline */
                                     Add stock transfers for devices to pull stock from specific locations.
                                 </p>
                                 {config.stockTransfers.map((transfer, idx) => (
-                                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                                        <select className="pos-input pos-select" style={{ flex: 1 }} value={transfer.from} onChange={e => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, from: e.target.value } : t) }))} aria-label="From stock">
+                                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}> /* keep-inline */
+                                        <select className="pos-input pos-select" style={{ flex: 1 }} value={transfer.from} onChange={e => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, from: e.target.value } : t) }))} aria-label="From stock"> /* keep-inline */
                                             <option>Main Stock</option><option>Bar Stock</option><option>Kitchen Stock</option>
                                         </select>
-                                        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>→</span>
-                                        <select className="pos-input pos-select" style={{ flex: 1 }} value={transfer.to} onChange={e => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, to: e.target.value } : t) }))} aria-label="To stock">
+                                        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>→</span> /* keep-inline */
+                                        <select className="pos-input pos-select" style={{ flex: 1 }} value={transfer.to} onChange={e => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.map((t, i) => i === idx ? { ...t, to: e.target.value } : t) }))} aria-label="To stock"> /* keep-inline */
                                             <option>Main Stock</option><option>Bar Stock</option><option>Kitchen Stock</option>
                                         </select>
-                                        <button className="pos-btn pos-btn--outline" style={{ padding: '6px 10px' }} onClick={() => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.filter((_, i) => i !== idx) }))}>
+                                        <button className="pos-btn pos-btn--outline" style={{ padding: '6px 10px' }} onClick={() => setConfig(p => ({ ...p, stockTransfers: p.stockTransfers.filter((_, i) => i !== idx) }))}> /* keep-inline */
                                             <Trash2 size={14} />
                                         </button>
                                     </div>
                                 ))}
-                                <button className="pos-btn pos-btn--outline" style={{ fontSize: 13 }} onClick={() => setConfig(p => ({ ...p, stockTransfers: [...p.stockTransfers, { from: 'Main Stock', to: 'Bar Stock' }] }))}>
+                                <button className="pos-btn pos-btn--outline" style={{ fontSize: 13 }} onClick={() => setConfig(p => ({ ...p, stockTransfers: [...p.stockTransfers, { from: 'Main Stock', to: 'Bar Stock' }] }))}> /* keep-inline */
                                     <Plus size={14} /> Add Stock Transfer
                                 </button>
                             </div>

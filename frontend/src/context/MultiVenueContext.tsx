@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * MultiVenueContext - Multi-venue support and switching
  * @module context/MultiVenueContext

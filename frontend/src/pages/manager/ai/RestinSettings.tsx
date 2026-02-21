@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useMemo } from 'react';
 import {
     Brain, Bot, Phone, Wand2, Radar, Users, Shield, MapPin, Save,

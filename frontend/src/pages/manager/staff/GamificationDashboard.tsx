@@ -224,7 +224,7 @@ export default function GamificationDashboard() {
                                             </div>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
-                                                    <div className="h-full bg-amber-500 rounded-full" style={{ width: '0%' }} />
+                                                    <div className="h-full bg-amber-500 rounded-full" style={{ width: '0%' }} /> /* keep-inline */
                                                 </div>
                                                 <span className="text-[10px] text-muted-foreground whitespace-nowrap">0 XP</span>
                                             </div>
@@ -343,7 +343,7 @@ export default function GamificationDashboard() {
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
-                                                <div className="h-full bg-emerald-500 rounded-full" style={{ width: '0%' }} />
+                                                <div className="h-full bg-emerald-500 rounded-full" style={{ width: '0%' }} /> /* keep-inline */
                                             </div>
                                             <span className="text-[10px] text-muted-foreground">0/0</span>
                                         </div>

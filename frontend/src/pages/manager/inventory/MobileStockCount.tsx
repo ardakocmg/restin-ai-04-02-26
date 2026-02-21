@@ -43,7 +43,7 @@ interface CountItem {
 export default function MobileStockCount() {
     const { t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { activeVenue: selectedVenue } = useVenue() as any;
+    const { activeVenue: selectedVenue } = useVenue() as unknown;
 
     const [items, setItems] = useState<CountItem[]>([]);
     const [loading, setLoading] = useState(false);

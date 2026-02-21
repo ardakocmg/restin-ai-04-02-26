@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * POSThemeBuilder — Premium drag-and-drop theme builder page
  * 

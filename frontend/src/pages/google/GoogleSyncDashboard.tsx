@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * GoogleSyncDashboard — Organization-wide Google Sync Status & Management
  * @route /manager/google-sync

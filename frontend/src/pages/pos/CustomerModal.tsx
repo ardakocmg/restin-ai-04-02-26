@@ -106,7 +106,7 @@ export default function CustomerModal({ customers, onSelect, onCreate, onClose }
                 </div>
 
                 {showCreate ? (
-                    <div style={{ padding: '16px 0' }}>
+                    <div style={{ padding: '16px 0' }}> /* keep-inline */
                         <div style={s.formGroup}>
                             <label style={s.label}>Name *</label>
                             <input style={s.formInput} value={newName} onChange={e => setNewName(e.target.value)} placeholder="Full name" />

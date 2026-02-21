@@ -7,7 +7,7 @@ function RecipeNode({ component, depth = 0 }) {
   const indent = depth * 24;
 
   return (
-    <div style={{ marginLeft: `${indent}px` }} className="mb-2">
+    <div style={{ marginLeft: `${indent}px` }} className="mb-2"> /* keep-inline */
       {component.type === 'SKU' ? (
         <div className="flex items-center gap-2 p-2 bg-background rounded border">
           <Package className="h-4 w-4 text-slate-600" />

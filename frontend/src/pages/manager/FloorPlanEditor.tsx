@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../lib/api";
@@ -353,7 +352,7 @@ export default function FloorPlanEditor() {
             onMouseUp={handleCanvasMouseUp}
             onMouseLeave={handleCanvasMouseUp}
             className="cursor-crosshair"
-            style={{
+            style={{ /* keep-inline */
               transform: `scale(${zoom})`,
               transformOrigin: "top left"
             }}

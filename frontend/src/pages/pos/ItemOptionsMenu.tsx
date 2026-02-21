@@ -62,7 +62,7 @@ export default function ItemOptionsMenu({ item, onAction, onClose }) {
                     return (
                         <button
                             key={opt.key}
-                            style={{ ...s.option, ...(opt.danger ? s.danger : {}) }}
+                            style={{ ...s.option, ...(opt.danger ? s.danger : {}) }} /* keep-inline */
                             onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#333'; }}
                             onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                             onClick={() => onAction(opt.key, item)}

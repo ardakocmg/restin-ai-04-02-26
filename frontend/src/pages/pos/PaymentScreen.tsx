@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Payment Screen — Full payment flow with Lightspeed parity
  * Features: Cash, Card, Gift Card, Tab, Split (Equal/By Seat/Custom),
@@ -323,10 +322,10 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
     const renderSummaryItems = () => {
         if (splitWay === 'seat') {
             return seatNumbers.map(seat => (
-                <div key={seat} style={{ marginBottom: 12 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: '#2A9D8F', padding: '4px 0', borderBottom: '1px solid #222' }}>
+                <div key={seat} style={{ marginBottom: 12 }}> /* keep-inline */
+                    <div style={{ fontSize: 11, fontWeight: 700, color: '#2A9D8F', padding: '4px 0', borderBottom: '1px solid #222' }}> /* keep-inline */
                         Seat {seat} — €{seatGroups[seat].total.toFixed(2)}
-                        {paidSeats.has(seat) && <span style={{ marginLeft: 8, color: '#4ade80' }}>✓ PAID</span>}
+                        {paidSeats.has(seat) && <span style={{ marginLeft: 8, color: '#4ade80' }}>✓ PAID</span>} /* keep-inline */
                     </div>
                     {seatGroups[seat].items.map((item, idx) => (
                         <div key={item.id || idx} style={s.summaryItem}>
@@ -367,18 +366,18 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                     <div style={s.orderSummary}>
                         <div style={s.summaryHeader}>
                             Order Summary
-                            {splitWay === 'seat' && <span style={{ float: 'right', fontSize: 11, color: '#2A9D8F' }}>{seatNumbers.length} seats</span>}
+                            {splitWay === 'seat' && <span style={{ float: 'right', fontSize: 11, color: '#2A9D8F' }}>{seatNumbers.length} seats</span>} /* keep-inline */
                         </div>
                         <div style={s.summaryItems}>
                             {renderSummaryItems()}
                             {tipAmount > 0 && (
-                                <div style={{ ...s.summaryItem, color: '#4ade80' }}>
+                                <div style={{ ...s.summaryItem, color: '#4ade80' }}> /* keep-inline */
                                     <span>Tip ({tipPercent}%)</span>
                                     <span>€{tipAmount.toFixed(2)}</span>
                                 </div>
                             )}
                             {discountAmount > 0 && (
-                                <div style={{ ...s.summaryItem, color: '#E05A33' }}>
+                                <div style={{ ...s.summaryItem, color: '#E05A33' }}> /* keep-inline */
                                     <span>Discount</span>
                                     <span>-€{discountAmount.toFixed(2)}</span>
                                 </div>
@@ -407,7 +406,7 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                         return (
                                             <button
                                                 key={m.key}
-                                                style={{
+                                                style={{ /* keep-inline */
                                                     ...s.methodBtn,
                                                     borderColor: isActive ? m.color : '#333',
                                                     backgroundColor: isActive ? `${m.color}22` : '#1a1a1a',
@@ -415,7 +414,7 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                                 onClick={() => setSelectedMethod(m.key)}
                                             >
                                                 <Icon size={24} color={isActive ? m.color : '#888'} />
-                                                <span style={{ ...s.methodLabel, color: isActive ? m.color : '#fff' }}>
+                                                <span style={{ ...s.methodLabel, color: isActive ? m.color : '#fff' }}> /* keep-inline */
                                                     {m.label}
                                                 </span>
                                             </button>
@@ -445,11 +444,11 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
 
                                 {/* Gift Card: code entry + balance check */}
                                 {selectedMethod === 'GIFT_CARD' && (
-                                    <div style={{ marginBottom: 16, padding: 16, backgroundColor: '#1a1020', borderRadius: 12, border: '1px solid #C77DBA40' }}>
-                                        <div style={{ fontSize: 12, fontWeight: 700, color: '#C77DBA', marginBottom: 8 }}>🎁 Gift Card Redemption</div>
-                                        <div style={{ display: 'flex', gap: 8 }}>
+                                    <div style={{ marginBottom: 16, padding: 16, backgroundColor: '#1a1020', borderRadius: 12, border: '1px solid #C77DBA40' }}> /* keep-inline */
+                                        <div style={{ fontSize: 12, fontWeight: 700, color: '#C77DBA', marginBottom: 8 }}>🎁 Gift Card Redemption</div> /* keep-inline */
+                                        <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
                                             <input
-                                                style={{ ...s.customInput, flex: 1, marginBottom: 0 }}
+                                                style={{ ...s.customInput, flex: 1, marginBottom: 0 }} /* keep-inline */
                                                 placeholder="Enter gift card code…"
                                                 value={giftCardCode}
                                                 onChange={e => setGiftCardCode(e.target.value.toUpperCase())}
@@ -467,17 +466,17 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                                     }, 800);
                                                 }}
                                                 disabled={giftCardChecking || !giftCardCode}
-                                                style={{ padding: '8px 16px', borderRadius: 8, border: 'none', backgroundColor: '#C77DBA', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: giftCardChecking ? 0.5 : 1, whiteSpace: 'nowrap' }}
+                                                style={{ padding: '8px 16px', borderRadius: 8, border: 'none', backgroundColor: '#C77DBA', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: giftCardChecking ? 0.5 : 1, whiteSpace: 'nowrap' }} /* keep-inline */
                                             >
                                                 {giftCardChecking ? '…' : 'Check'}
                                             </button>
                                         </div>
                                         {giftCardBalance !== null && (
-                                            <div style={{ marginTop: 10, padding: 10, borderRadius: 8, backgroundColor: giftCardBalance > 0 ? '#1a2a1a' : '#2a1515', border: `1px solid ${giftCardBalance > 0 ? '#2A9D8F' : '#E05A33'}` }}>
+                                            <div style={{ marginTop: 10, padding: 10, borderRadius: 8, backgroundColor: giftCardBalance > 0 ? '#1a2a1a' : '#2a1515', border: `1px solid ${giftCardBalance > 0 ? '#2A9D8F' : '#E05A33'}` }}> /* keep-inline */
                                                 {giftCardBalance > 0 ? (
                                                     <>
-                                                        <div style={{ fontSize: 12, color: '#2A9D8F', fontWeight: 600 }}>✅ Card Found — Balance: €{giftCardBalance.toFixed(2)}</div>
-                                                        <div style={{ fontSize: 11, color: '#888', marginTop: 4 }}>
+                                                        <div style={{ fontSize: 12, color: '#2A9D8F', fontWeight: 600 }}>✅ Card Found — Balance: €{giftCardBalance.toFixed(2)}</div> /* keep-inline */
+                                                        <div style={{ fontSize: 11, color: '#888', marginTop: 4 }}> /* keep-inline */
                                                             {giftCardBalance >= finalTotal
                                                                 ? `Full order covered. Remaining: €${(giftCardBalance - finalTotal).toFixed(2)}`
                                                                 : `Partial: €${giftCardBalance.toFixed(2)} applied, remaining €${(finalTotal - giftCardBalance).toFixed(2)} to pay by other method`
@@ -485,7 +484,7 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                                         </div>
                                                     </>
                                                 ) : (
-                                                    <div style={{ fontSize: 12, color: '#E05A33', fontWeight: 600 }}>❌ Invalid card or zero balance</div>
+                                                    <div style={{ fontSize: 12, color: '#E05A33', fontWeight: 600 }}>❌ Invalid card or zero balance</div> /* keep-inline */
                                                 )}
                                             </div>
                                         )}
@@ -494,13 +493,13 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
 
                                 {/* Room Charge Panel */}
                                 {selectedMethod === 'ROOM_CHARGE' && (
-                                    <div style={{ marginBottom: 16, padding: 16, backgroundColor: '#1a1210', borderRadius: 12, border: '1px solid #C7463440' }}>
-                                        <div style={{ fontSize: 12, fontWeight: 700, color: '#C74634', marginBottom: 12 }}>🏨 Room Charge — Guest Lookup</div>
+                                    <div style={{ marginBottom: 16, padding: 16, backgroundColor: '#1a1210', borderRadius: 12, border: '1px solid #C7463440' }}> /* keep-inline */
+                                        <div style={{ fontSize: 12, fontWeight: 700, color: '#C74634', marginBottom: 12 }}>🏨 Room Charge — Guest Lookup</div> /* keep-inline */
 
                                         {/* Room number input */}
-                                        <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+                                        <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}> /* keep-inline */
                                             <input
-                                                style={{ ...s.customInput, flex: 1, marginBottom: 0 }}
+                                                style={{ ...s.customInput, flex: 1, marginBottom: 0 }} /* keep-inline */
                                                 placeholder="Room number (e.g. 101)"
                                                 value={rcRoomNumber}
                                                 onChange={e => setRcRoomNumber(e.target.value)}
@@ -510,25 +509,25 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                             <button
                                                 onClick={searchGuest}
                                                 disabled={rcSearching || !rcRoomNumber.trim()}
-                                                style={{ padding: '8px 16px', borderRadius: 8, border: 'none', backgroundColor: '#C74634', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: (rcSearching || !rcRoomNumber.trim()) ? 0.5 : 1, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 6 }}
+                                                style={{ padding: '8px 16px', borderRadius: 8, border: 'none', backgroundColor: '#C74634', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: (rcSearching || !rcRoomNumber.trim()) ? 0.5 : 1, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 6 }} /* keep-inline */
                                             >
-                                                {rcSearching ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <Search size={14} />}
+                                                {rcSearching ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <Search size={14} />} /* keep-inline */
                                                 {rcSearching ? 'Searching…' : 'Search'}
                                             </button>
                                         </div>
 
                                         {/* Error */}
                                         {rcError && (
-                                            <div style={{ marginBottom: 10, padding: 10, borderRadius: 8, backgroundColor: '#2a1515', border: '1px solid #E05A33', display: 'flex', alignItems: 'center', gap: 8 }}>
+                                            <div style={{ marginBottom: 10, padding: 10, borderRadius: 8, backgroundColor: '#2a1515', border: '1px solid #E05A33', display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
                                                 <AlertCircle size={16} color="#E05A33" />
-                                                <span style={{ fontSize: 12, color: '#E05A33', fontWeight: 600 }}>{rcError}</span>
+                                                <span style={{ fontSize: 12, color: '#E05A33', fontWeight: 600 }}>{rcError}</span> /* keep-inline */
                                             </div>
                                         )}
 
                                         {/* Guest results */}
                                         {rcGuests.length > 0 && (
-                                            <div style={{ marginBottom: 10 }}>
-                                                <div style={{ fontSize: 11, color: '#888', marginBottom: 6 }}>
+                                            <div style={{ marginBottom: 10 }}> /* keep-inline */
+                                                <div style={{ fontSize: 11, color: '#888', marginBottom: 6 }}> /* keep-inline */
                                                     {rcGuests.length} guest{rcGuests.length > 1 ? 's' : ''} found:
                                                 </div>
                                                 {rcGuests.map((g, i) => {
@@ -537,23 +536,23 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                                         <div
                                                             key={g.reservation_id || i}
                                                             onClick={() => setRcSelectedGuest(g)}
-                                                            style={{
+                                                            style={{ /* keep-inline */
                                                                 padding: '10px 12px', borderRadius: 8, marginBottom: 6, cursor: 'pointer',
                                                                 border: `2px solid ${isSelected ? '#C74634' : '#333'}`,
                                                                 backgroundColor: isSelected ? '#C7463422' : '#111',
                                                                 transition: 'all 0.15s',
                                                             }}
                                                         >
-                                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> /* keep-inline */
                                                                 <div>
-                                                                    <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>
+                                                                    <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}> /* keep-inline */
                                                                         {g.first_name} {g.last_name}
                                                                     </div>
-                                                                    <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
+                                                                    <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}> /* keep-inline */
                                                                         Room {g.room_number} · Res #{g.confirmation_number || g.reservation_id}
-                                                                        {g.vip_code && <span style={{ marginLeft: 6, color: '#F4A261' }}>⭐ VIP</span>}
+                                                                        {g.vip_code && <span style={{ marginLeft: 6, color: '#F4A261' }}>⭐ VIP</span>} /* keep-inline */
                                                                     </div>
-                                                                    <div style={{ fontSize: 10, color: '#666', marginTop: 2 }}>
+                                                                    <div style={{ fontSize: 10, color: '#666', marginTop: 2 }}> /* keep-inline */
                                                                         {g.arrival_date} → {g.departure_date}
                                                                     </div>
                                                                 </div>
@@ -567,10 +566,10 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
 
                                         {/* Success state */}
                                         {rcSuccess && (
-                                            <div style={{ padding: 16, borderRadius: 10, backgroundColor: '#1a2a1a', border: '1px solid #4ade80', textAlign: 'center' }}>
-                                                <CheckCircle size={32} color="#4ade80" style={{ marginBottom: 8 }} />
-                                                <div style={{ fontSize: 16, fontWeight: 700, color: '#4ade80' }}>Charged to Room {rcRoomNumber}</div>
-                                                <div style={{ fontSize: 12, color: '#888', marginTop: 4 }}>
+                                            <div style={{ padding: 16, borderRadius: 10, backgroundColor: '#1a2a1a', border: '1px solid #4ade80', textAlign: 'center' }}> /* keep-inline */
+                                                <CheckCircle size={32} color="#4ade80" style={{ marginBottom: 8 }} /> /* keep-inline */
+                                                <div style={{ fontSize: 16, fontWeight: 700, color: '#4ade80' }}>Charged to Room {rcRoomNumber}</div> /* keep-inline */
+                                                <div style={{ fontSize: 12, color: '#888', marginTop: 4 }}> /* keep-inline */
                                                     €{finalTotal.toFixed(2)} → {rcSelectedGuest?.first_name} {rcSelectedGuest?.last_name}
                                                 </div>
                                             </div>
@@ -578,14 +577,14 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
 
                                         {/* Charge summary */}
                                         {rcSelectedGuest && !rcSuccess && (
-                                            <div style={{ padding: 12, borderRadius: 8, backgroundColor: '#111', border: '1px solid #333', marginTop: 8 }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                                                    <span style={{ color: '#888' }}>Charge to:</span>
-                                                    <span style={{ color: '#fff', fontWeight: 700 }}>{rcSelectedGuest.first_name} {rcSelectedGuest.last_name} · Room {rcRoomNumber}</span>
+                                            <div style={{ padding: 12, borderRadius: 8, backgroundColor: '#111', border: '1px solid #333', marginTop: 8 }}> /* keep-inline */
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}> /* keep-inline */
+                                                    <span style={{ color: '#888' }}>Charge to:</span> /* keep-inline */
+                                                    <span style={{ color: '#fff', fontWeight: 700 }}>{rcSelectedGuest.first_name} {rcSelectedGuest.last_name} · Room {rcRoomNumber}</span> /* keep-inline */
                                                 </div>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginTop: 4 }}>
-                                                    <span style={{ color: '#888' }}>Amount:</span>
-                                                    <span style={{ color: '#C74634', fontWeight: 700 }}>€{finalTotal.toFixed(2)}</span>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginTop: 4 }}> /* keep-inline */
+                                                    <span style={{ color: '#888' }}>Amount:</span> /* keep-inline */
+                                                    <span style={{ color: '#C74634', fontWeight: 700 }}>€{finalTotal.toFixed(2)}</span> /* keep-inline */
                                                 </div>
                                             </div>
                                         )}
@@ -606,15 +605,15 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                             </button>
                                         ))}
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
-                                        <span style={{ fontSize: 11, color: '#888' }}>Custom:</span>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}> /* keep-inline */
+                                        <span style={{ fontSize: 11, color: '#888' }}>Custom:</span> /* keep-inline */
                                         <input
-                                            style={{ ...s.customInput, flex: 1, marginBottom: 0, fontSize: 14 }}
+                                            style={{ ...s.customInput, flex: 1, marginBottom: 0, fontSize: 14 }} /* keep-inline */
                                             placeholder="0.00"
                                             value={customTip}
                                             onChange={e => { setCustomTip(e.target.value.replace(/[^0-9.]/g, '')); setTipPercent(0); }}
                                         />
-                                        <span style={{ fontSize: 11, color: '#888' }}>€</span>
+                                        <span style={{ fontSize: 11, color: '#888' }}>€</span> /* keep-inline */
                                     </div>
                                 </div>
 
@@ -624,28 +623,28 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                         <div style={s.tipLabel}>SPLIT METHOD</div>
                                         <div style={s.splitGrid}>
                                             <button
-                                                style={{ ...s.splitBtn, ...(splitWay === 'equal' ? { backgroundColor: '#2A9D8F', borderColor: '#2A9D8F' } : {}) }}
+                                                style={{ ...s.splitBtn, ...(splitWay === 'equal' ? { backgroundColor: '#2A9D8F', borderColor: '#2A9D8F' } : {}) }} /* keep-inline */
                                                 onClick={() => setSplitWay('equal')}
                                             >Equal Split</button>
                                             <button
-                                                style={{ ...s.splitBtn, ...(splitWay === 'seat' ? { backgroundColor: '#2A9D8F', borderColor: '#2A9D8F' } : {}) }}
+                                                style={{ ...s.splitBtn, ...(splitWay === 'seat' ? { backgroundColor: '#2A9D8F', borderColor: '#2A9D8F' } : {}) }} /* keep-inline */
                                                 onClick={() => setSplitWay('seat')}
                                             >
-                                                <Users size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />
+                                                <Users size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} /> /* keep-inline */
                                                 By Seat
                                             </button>
                                             <button
-                                                style={{ ...s.splitBtn, ...(splitWay === 'custom' ? { backgroundColor: '#2A9D8F', borderColor: '#2A9D8F' } : {}) }}
+                                                style={{ ...s.splitBtn, ...(splitWay === 'custom' ? { backgroundColor: '#2A9D8F', borderColor: '#2A9D8F' } : {}) }} /* keep-inline */
                                                 onClick={() => setSplitWay('custom')}
                                             >Custom</button>
                                         </div>
 
                                         {/* Equal Split Details */}
                                         {splitWay === 'equal' && (
-                                            <div style={{ marginTop: 16 }}>
+                                            <div style={{ marginTop: 16 }}> /* keep-inline */
                                                 <div style={s.equalSplitRow}>
                                                     <span style={s.equalSplitLabel}>Split between</span>
-                                                    <button style={{ ...s.splitBtn, width: 36, flex: 'none', padding: '6px 0' }} onClick={() => setEqualSplitCount(Math.max(2, equalSplitCount - 1))}>−</button>
+                                                    <button style={{ ...s.splitBtn, width: 36, flex: 'none', padding: '6px 0' }} onClick={() => setEqualSplitCount(Math.max(2, equalSplitCount - 1))}>−</button> /* keep-inline */
                                                     <input
                                                         style={s.equalSplitInput}
                                                         value={equalSplitCount}
@@ -653,20 +652,20 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                                         type="number"
                                                         min={2}
                                                     />
-                                                    <button style={{ ...s.splitBtn, width: 36, flex: 'none', padding: '6px 0' }} onClick={() => setEqualSplitCount(equalSplitCount + 1)}>+</button>
+                                                    <button style={{ ...s.splitBtn, width: 36, flex: 'none', padding: '6px 0' }} onClick={() => setEqualSplitCount(equalSplitCount + 1)}>+</button> /* keep-inline */
                                                     <span style={s.equalSplitLabel}>guests</span>
                                                 </div>
-                                                <div style={{ textAlign: 'center', padding: '16px 0', backgroundColor: '#0a1a1a', borderRadius: 10, border: '1px solid #2A9D8F33' }}>
-                                                    <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>Each person pays</div>
+                                                <div style={{ textAlign: 'center', padding: '16px 0', backgroundColor: '#0a1a1a', borderRadius: 10, border: '1px solid #2A9D8F33' }}> /* keep-inline */
+                                                    <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>Each person pays</div> /* keep-inline */
                                                     <div style={s.equalSplitAmount}>€{perPersonAmount.toFixed(2)}</div>
-                                                    <div style={{ fontSize: 11, color: '#555', marginTop: 4 }}>€{finalTotal.toFixed(2)} ÷ {equalSplitCount} guests</div>
+                                                    <div style={{ fontSize: 11, color: '#555', marginTop: 4 }}>€{finalTotal.toFixed(2)} ÷ {equalSplitCount} guests</div> /* keep-inline */
                                                 </div>
                                             </div>
                                         )}
 
                                         {/* Split by Seat Details */}
                                         {splitWay === 'seat' && (
-                                            <div style={{ marginTop: 16 }}>
+                                            <div style={{ marginTop: 16 }}> /* keep-inline */
                                                 {seatNumbers.length > 1 ? seatNumbers.map(seat => (
                                                     <div key={seat} style={s.seatCard}>
                                                         <div style={s.seatHeader}>
@@ -688,7 +687,7 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                                         )}
                                                     </div>
                                                 )) : (
-                                                    <div style={{ textAlign: 'center', padding: 24, color: '#666', fontSize: 13 }}>
+                                                    <div style={{ textAlign: 'center', padding: 24, color: '#666', fontSize: 13 }}> /* keep-inline */
                                                         All items are on Seat 1. Assign items to different seats for per-seat billing.
                                                     </div>
                                                 )}
@@ -697,15 +696,15 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
 
                                         {/* Custom Split — input amount */}
                                         {splitWay === 'custom' && (
-                                            <div style={{ marginTop: 16 }}>
-                                                <div style={{ fontSize: 12, color: '#888', marginBottom: 8 }}>Enter amount for this payment:</div>
+                                            <div style={{ marginTop: 16 }}> /* keep-inline */
+                                                <div style={{ fontSize: 12, color: '#888', marginBottom: 8 }}>Enter amount for this payment:</div> /* keep-inline */
                                                 <input
                                                     style={s.customInput}
                                                     placeholder="0.00"
                                                     value={customAmount}
                                                     onChange={e => setCustomAmount(e.target.value.replace(/[^0-9.]/g, ''))}
                                                 />
-                                                <div style={{ fontSize: 12, color: '#555' }}>
+                                                <div style={{ fontSize: 12, color: '#555' }}> /* keep-inline */
                                                     Remaining: €{(finalTotal - (parseFloat(customAmount) || 0)).toFixed(2)}
                                                 </div>
                                             </div>
@@ -724,7 +723,7 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                 {/* Pay button */}
                                 {selectedMethod === 'ROOM_CHARGE' ? (
                                     <button
-                                        style={{
+                                        style={{ /* keep-inline */
                                             ...s.confirmBtn,
                                             backgroundColor: rcSelectedGuest && !rcPosting && !rcSuccess ? '#C74634' : '#333',
                                             opacity: rcSelectedGuest && !rcPosting && !rcSuccess ? 1 : 0.5,
@@ -737,7 +736,7 @@ export default function PaymentScreen({ order, items, orderTotal, onPay, onClose
                                     </button>
                                 ) : (
                                     <button
-                                        style={{
+                                        style={{ /* keep-inline */
                                             ...s.confirmBtn,
                                             opacity: selectedMethod ? 1 : 0.5,
                                             cursor: selectedMethod ? 'pointer' : 'not-allowed',

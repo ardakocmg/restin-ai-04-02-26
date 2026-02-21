@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * 📧 Marketing Automations Dashboard
  * Campaign management, templates, and analytics.

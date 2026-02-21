@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useCallback } from 'react';
 import PageContainer from '../../layouts/PageContainer';
 import { cn } from '../../lib/utils';

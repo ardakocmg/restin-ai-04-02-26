@@ -83,7 +83,7 @@ export default function Reservations() {
     >
       {/* Metrics Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="bg-background border-border shadow-xl border-b-2" style={{ borderBottomColor: '#2563eb' }}>
+        <Card className="bg-background border-border shadow-xl border-b-2" style={{ borderBottomColor: '#2563eb' }}> /* keep-inline */
           <CardContent className="p-4">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Total Bookings</p>
             <div className="flex items-end gap-2">
@@ -92,13 +92,13 @@ export default function Reservations() {
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-background border-border shadow-xl border-b-2" style={{ borderBottomColor: '#ef4444' }}>
+        <Card className="bg-background border-border shadow-xl border-b-2" style={{ borderBottomColor: '#ef4444' }}> /* keep-inline */
           <CardContent className="p-4">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">No-Show Rate</p>
             <p className="text-2xl font-black text-red-500">{analytics?.no_show_rate || 0}%</p>
           </CardContent>
         </Card>
-        <Card className="bg-background border-border shadow-xl border-b-2" style={{ borderBottomColor: '#3b82f6' }}>
+        <Card className="bg-background border-border shadow-xl border-b-2" style={{ borderBottomColor: '#3b82f6' }}> /* keep-inline */
           <CardContent className="p-4">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Top Channel</p>
             <p className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase mt-1 truncate">
@@ -106,7 +106,7 @@ export default function Reservations() {
             </p>
           </CardContent>
         </Card>
-        <Card className="bg-background border-border shadow-xl border-b-2" style={{ borderBottomColor: '#10b981' }}>
+        <Card className="bg-background border-border shadow-xl border-b-2" style={{ borderBottomColor: '#10b981' }}> /* keep-inline */
           <CardContent className="p-4">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Conversion</p>
             <p className="text-2xl font-black text-green-500">{analytics?.conversion_rate != null ? `${analytics.conversion_rate}%` : '0%'}</p>

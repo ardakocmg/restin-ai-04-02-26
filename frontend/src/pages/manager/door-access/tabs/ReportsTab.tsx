@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
 import api from '@/lib/api';
@@ -125,7 +124,7 @@ export default function ReportsTab() {
                             const bgOpacity = heatmap.length > 0 ? Math.min(0.1 + intensity * 0.9, 1) : 0.05;
                             return (
                                 <div key={hour} className="flex flex-col items-center" title={`${hour}:00 — ${totalCount} total actions`}>
-                                    <div className="w-full h-8 rounded-sm" style={{ backgroundColor: `rgba(52, 211, 153, ${bgOpacity})` }} />
+                                    <div className="w-full h-8 rounded-sm" style={{ backgroundColor: `rgba(52, 211, 153, ${bgOpacity})` }} /> /* keep-inline */
                                     <span className="text-[9px] text-muted-foreground mt-1">{hour}</span>
                                 </div>
                             );

@@ -59,7 +59,7 @@ const ComboMeals: React.FC = () => {
     useEffect(() => {
         if (apiCombos.length > 0) {
             const mapped: Combo[] = apiCombos.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (ac: any) => ({
+                (ac: Record<string, unknown>) => ({
                     id: String(ac.id || ac._id || ''),
                     name: String(ac.name || ''),
                     price: Number(ac.price || ac.sell_price || 0),
@@ -86,27 +86,27 @@ const ComboMeals: React.FC = () => {
                 <div>
                     <button onClick={() => navigate(-1)} className="pos-btn-outline pos-btn-back"><ArrowLeft size={14} /> Back</button>
                     <h1 className="pos-title">Combo Meals</h1>
-                    <p className="pos-subtitle">Bundle items into combos and meal deals with flexible pricing{apiWired && <span className="pos-badge--green" style={{ marginLeft: 8, fontSize: 11 }}>● Live</span>}</p>
+                    <p className="pos-subtitle">Bundle items into combos and meal deals with flexible pricing{apiWired && <span className="pos-badge--green" style={{ marginLeft: 8, fontSize: 11 }}>● Live</span>}</p> /* keep-inline */
                 </div>
                 <button className="pos-btn-primary" onClick={() => setEditing({ id: crypto.randomUUID(), name: '', price: 0, pricingType: 'fixed', steps: [], isActive: true, soldCount: 0 })}><Plus size={16} /> Create Combo</button>
             </div>
 
-            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">{"Loading "}combos...</span></div>}
-            {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center" style={{ borderColor: '#EF4444', padding: 14 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button className="pos-btn-outline pos-btn-back" onClick={() => refetch()}>Retry</button></div>}
+            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">{"Loading "}combos...</span></div>} /* keep-inline */
+            {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center" style={{ borderColor: '#EF4444', padding: 14 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button className="pos-btn-outline pos-btn-back" onClick={() => refetch()}>Retry</button></div>} /* keep-inline */
 
             <div className="pos-search-wrapper pos-mb-16">
                 <Search size={14} className="pos-search-icon" />
                 <input className="pos-input pos-search-input" placeholder="Search combos..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 16 }}> /* keep-inline */
                 {filtered.map(combo => (
-                    <div key={combo.id} className="pos-card" style={{ cursor: 'pointer', opacity: combo.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...combo })}>
-                        <div className="pos-flex pos-flex--between" style={{ alignItems: 'flex-start', marginBottom: 10 }}>
+                    <div key={combo.id} className="pos-card" style={{ cursor: 'pointer', opacity: combo.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...combo })}> /* keep-inline */
+                        <div className="pos-flex pos-flex--between" style={{ alignItems: 'flex-start', marginBottom: 10 }}> /* keep-inline */
                             <div className="pos-flex pos-flex--center pos-gap-10">
-                                <div className="pos-stat-icon pos-stat-icon--blue" style={{ width: 40, height: 40, borderRadius: 10 }}><Package size={18} /></div>
-                                <div><h3 className="pos-modal-title" style={{ fontSize: 16 }}>{combo.name}</h3>
-                                    <span className="pos-cell-secondary" style={{ fontSize: 11 }}>
+                                <div className="pos-stat-icon pos-stat-icon--blue" style={{ width: 40, height: 40, borderRadius: 10 }}><Package size={18} /></div> /* keep-inline */
+                                <div><h3 className="pos-modal-title" style={{ fontSize: 16 }}>{combo.name}</h3> /* keep-inline */
+                                    <span className="pos-cell-secondary" style={{ fontSize: 11 }}> /* keep-inline */
                                         {combo.pricingType === 'fixed' ? `€${combo.price.toFixed(2)}` : combo.pricingType === 'cheapest-free' ? 'Cheapest Free' : 'Sum of Items'}
                                     </span></div>
                             </div>
@@ -114,10 +114,10 @@ const ComboMeals: React.FC = () => {
                         </div>
                         <div className="pos-flex pos-flex--col pos-gap-4">
                             {combo.steps.map((step, i) => (
-                                <div key={step.id} className="pos-flex pos-flex--center pos-gap-6" style={{ padding: '6px 10px', background: 'var(--bg-secondary,#09090b)', borderRadius: 6, fontSize: 12 }}>
-                                    <span className="pos-badge pos-badge--blue" style={{ width: 18, height: 18, borderRadius: 4, fontSize: 10, fontWeight: 700, padding: 0, justifyContent: 'center' }}>{i + 1}</span>
-                                    <span className="pos-text-secondary" style={{ flex: 1 }}>{step.name}</span>
-                                    <span className="pos-text-secondary" style={{ fontSize: 10 }}>{step.options.length} options</span>
+                                <div key={step.id} className="pos-flex pos-flex--center pos-gap-6" style={{ padding: '6px 10px', background: 'var(--bg-secondary,#09090b)', borderRadius: 6, fontSize: 12 }}> /* keep-inline */
+                                    <span className="pos-badge pos-badge--blue" style={{ width: 18, height: 18, borderRadius: 4, fontSize: 10, fontWeight: 700, padding: 0, justifyContent: 'center' }}>{i + 1}</span> /* keep-inline */
+                                    <span className="pos-text-secondary" style={{ flex: 1 }}>{step.name}</span> /* keep-inline */
+                                    <span className="pos-text-secondary" style={{ fontSize: 10 }}>{step.options.length} options</span> /* keep-inline */
                                 </div>
                             ))}
                         </div>
@@ -127,7 +127,7 @@ const ComboMeals: React.FC = () => {
         </div>
 
             {editing && <div className="pos-modal-overlay" onClick={() => setEditing(null)}>
-                <div className="pos-card pos-modal" style={{ maxHeight: '85vh', overflow: 'auto', width: 520 }} onClick={e => e.stopPropagation()}>
+                <div className="pos-card pos-modal" style={{ maxHeight: '85vh', overflow: 'auto', width: 520 }} onClick={e => e.stopPropagation()}> /* keep-inline */
                     <div className="pos-modal-header">
                         <h3 className="pos-modal-title">{combos.find(c => c.id === editing.id) ? 'Edit' : 'New'} Combo</h3>
                         <button className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
@@ -144,28 +144,28 @@ const ComboMeals: React.FC = () => {
                     </div>
                     <div className="pos-form-group">
                         <div className="pos-flex pos-flex--between pos-flex--center pos-mb-8">
-                            <label className="pos-form-label pos-text-bold" style={{ textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 0 }}>Steps ({editing.steps.length})</label>
-                            <button className="pos-btn-outline" style={{ padding: '4px 12px', fontSize: 11 }} onClick={addStep}><Plus size={12} /> Add Step</button>
+                            <label className="pos-form-label pos-text-bold" style={{ textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 0 }}>Steps ({editing.steps.length})</label> /* keep-inline */
+                            <button className="pos-btn-outline" style={{ padding: '4px 12px', fontSize: 11 }} onClick={addStep}><Plus size={12} /> Add Step</button> /* keep-inline */
                         </div>
                         {editing.steps.map((step, i) => (
-                            <div key={step.id} className="pos-card" style={{ background: 'var(--bg-secondary,#09090b)', padding: 12, marginBottom: 8 }}>
+                            <div key={step.id} className="pos-card" style={{ background: 'var(--bg-secondary,#09090b)', padding: 12, marginBottom: 8 }}> /* keep-inline */
                                 <div className="pos-flex pos-gap-8 pos-flex--center pos-mb-8">
-                                    <span className="pos-badge pos-badge--blue" style={{ width: 22, height: 22, borderRadius: 4, fontSize: 11, fontWeight: 700, padding: 0, justifyContent: 'center', flexShrink: 0 }}>{i + 1}</span>
-                                    <input className="pos-input" style={{ flex: 1, padding: '6px 10px', fontSize: 12 }} value={step.name} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], name: e.target.value }; setEditing({ ...editing, steps: s }); }} placeholder="Step name" aria-label="Step name" />
-                                    <label className="pos-toggle-label" style={{ fontSize: 10, flexShrink: 0 }}>
+                                    <span className="pos-badge pos-badge--blue" style={{ width: 22, height: 22, borderRadius: 4, fontSize: 11, fontWeight: 700, padding: 0, justifyContent: 'center', flexShrink: 0 }}>{i + 1}</span> /* keep-inline */
+                                    <input className="pos-input" style={{ flex: 1, padding: '6px 10px', fontSize: 12 }} value={step.name} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], name: e.target.value }; setEditing({ ...editing, steps: s }); }} placeholder="Step name" aria-label="Step name" /> /* keep-inline */
+                                    <label className="pos-toggle-label" style={{ fontSize: 10, flexShrink: 0 }}> /* keep-inline */
                                         <input type="checkbox" checked={step.required} onChange={() => { const s = [...editing.steps]; s[i] = { ...s[i], required: !s[i].required }; setEditing({ ...editing, steps: s }); }} /> Req
                                     </label>
-                                    <button title="Remove step" className="pos-btn-icon pos-btn-icon--danger" style={{ flexShrink: 0 }} onClick={() => setEditing({ ...editing, steps: editing.steps.filter((_, j) => j !== i) })}><X size={14} /></button>
+                                    <button title="Remove step" className="pos-btn-icon pos-btn-icon--danger" style={{ flexShrink: 0 }} onClick={() => setEditing({ ...editing, steps: editing.steps.filter((_, j) => j !== i) })}><X size={14} /></button> /* keep-inline */
                                 </div>
-                                <textarea className="pos-input pos-textarea" style={{ height: 50, fontSize: 11 }} value={step.options.join('\n')} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], options: e.target.value.split('\n').filter(Boolean) }; setEditing({ ...editing, steps: s }); }} placeholder="One option per line" aria-label="Step options" />
+                                <textarea className="pos-input pos-textarea" style={{ height: 50, fontSize: 11 }} value={step.options.join('\n')} onChange={e => { const s = [...editing.steps]; s[i] = { ...s[i], options: e.target.value.split('\n').filter(Boolean) }; setEditing({ ...editing, steps: s }); }} placeholder="One option per line" aria-label="Step options" /> /* keep-inline */
                             </div>
                         ))}
                     </div>
                     <div className="pos-mb-16"><label className="pos-toggle-label">
                         <input type="checkbox" checked={editing.isActive} onChange={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label></div>
                     <div className="pos-modal-footer">
-                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button>
-                        <button title="Delete combo" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setCombos(p => p.filter(c => c.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button>
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */
+                        <button title="Delete combo" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setCombos(p => p.filter(c => c.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */
                         <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>
