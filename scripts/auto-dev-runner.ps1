@@ -25,7 +25,7 @@ $host.UI.RawUI.WindowTitle = "Restin.AI Auto Dev Runner ($PCName)"
 
 $FrontendDir = Join-Path $repoRoot "frontend"
 $BackendDir = Join-Path $repoRoot "backend"
-$PkgHashFile = Join-Path $repoRoot ".agent" "pkg-hash-$($PCName.ToLower()).txt"
+$PkgHashFile = Join-Path (Join-Path $repoRoot ".agent") "pkg-hash-$($PCName.ToLower()).txt"
 
 # Ensure .agent dir
 $agentDir = Join-Path $repoRoot ".agent"
