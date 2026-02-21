@@ -108,6 +108,8 @@ const DialogDescription = React.forwardRef<
 ))
 DialogDescription.displayName = DialogPrimitive.Description.displayName
 
+type DialogProps = React.ComponentProps<typeof DialogPrimitive.Root>
+
 export {
     Dialog,
     DialogPortal,
@@ -119,4 +121,5 @@ export {
     DialogFooter,
     DialogTitle,
     DialogDescription,
+    type DialogProps,
 }
