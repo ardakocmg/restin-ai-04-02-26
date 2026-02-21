@@ -1,25 +1,25 @@
 import {
-Cake,ChefHat,
-CreditCard,
-DollarSign,
-Globe,
-Info,Menu as MenuIcon,
-Percent,
-Plus,
-Printer,
-Search,
-Send,
-ShoppingBag,
-UserPlus,
-UtensilsCrossed,
-Wine
+  Cake, ChefHat,
+  CreditCard,
+  DollarSign,
+  Globe,
+  Info, Menu as MenuIcon,
+  Percent,
+  Plus,
+  Printer,
+  Search,
+  Send,
+  ShoppingBag,
+  UserPlus,
+  UtensilsCrossed,
+  Wine
 } from 'lucide-react';
-import { useEffect,useMemo,useRef,useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import FloorPlanWidget from '../../components/pos/FloorPlanWidget';
 import TableMergeModal from '../../components/pos/TableMergeModal';
 import { useAuth } from '../../context/AuthContext';
-import api,{ menuAPI,venueAPI } from '../../lib/api';
+import api, { menuAPI, venueAPI } from '../../lib/api';
 import { logger } from '../../lib/logger';
 import ActionsPanel from './ActionsPanel';
 import { broadcastToCustomerDisplay } from './CustomerFacingDisplay';
@@ -132,7 +132,7 @@ export default function POSRuntimeEnhanced() {
 
   // Server info
   // @ts-ignore
-  const serverName = user?.name || user?.full_name || 'Server';
+  const serverName = String(user?.name || user?.full_name || 'Server');
   const serverInitial = serverName.charAt(0).toUpperCase();
 
   // Clock
@@ -820,7 +820,8 @@ export default function POSRuntimeEnhanced() {
                   }`}
                 style={{ /* keep-inline */
                   backgroundColor: is86 ? '#333' : tileColor,
-                 /* keep-inline */ }} /* keep-inline */ /* keep-inline */
+                  /* keep-inline */
+}} /* keep-inline */ /* keep-inline */
                 onClick={() => {
                   if (is86) { toast.error('Item is 86 (out of stock)'); return; }
                   if (activeLeftTool) { handleItemWithTool(item); return; }
@@ -966,7 +967,8 @@ export default function POSRuntimeEnhanced() {
                       border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 10, fontWeight: 600,
                       backgroundColor: bottomPanelTab === 'TABLE' ? '#2A9D8F' : 'transparent',
                       color: bottomPanelTab === 'TABLE' ? '#fff' : '#999',
-                     /* keep-inline */ }} /* keep-inline */ /* keep-inline */
+                      /* keep-inline */
+}} /* keep-inline */ /* keep-inline */
                     onClick={() => setBottomPanelTab('TABLE')}
                   >
                     <span>🪑</span>
@@ -1292,7 +1294,8 @@ export default function POSRuntimeEnhanced() {
                           border: `2px solid ${statusColor}`,
                           cursor: 'pointer',
                           transition: 'transform 0.1s',
-                         /* keep-inline */ }}
+                          /* keep-inline */
+}}
                         onClick={() => {
                           setSelectedTable(t);
                           setShowOverview(false);
