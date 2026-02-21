@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import React, { useEffect, useState } from 'react';
 import { logger } from '@/lib/logger';
 
@@ -15,7 +15,10 @@ import { Loader2 } from 'lucide-react';
 export default function PayslipTemplate() {
     const { runId, employeeCode } = useParams();
     const { user, isManager, isOwner } = useAuth();
-    useAuditLog('PAYSLIP_TEMPLATE_VIEWED', { resource: 'payslip-template', runId, employeeCode });
+    const { logAction } = useAuditLog();
+    useEffect(() => {
+        logAction('PAYSLIP_TEMPLATE_VIEWED', 'payslip-template');
+    }, []);
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -31,8 +34,8 @@ export default function PayslipTemplate() {
                 if (payslip) {
                     setData({ run, payslip });
                 }
-            } catch (error) {
-                logger.error("Failed to load payslip", error);
+            } catch (error: unknown) {
+                logger.error("Failed to load payslip", { error: String(error) });
             } finally {
                 setLoading(false);
             }

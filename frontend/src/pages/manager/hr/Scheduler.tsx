@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import React, { useState, useEffect, useRef } from 'react';
 import { logger } from '@/lib/logger';
 import PermissionGate from '@/components/shared/PermissionGate';
@@ -45,16 +45,65 @@ import {
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
 
+/* ── Types ────────────────────────────────────────── */
+interface SchedulerCell {
+  cell_type: string;
+  start_time?: string;
+  end_time?: string;
+  role?: string;
+  employee?: string;
+  day?: string;
+}
+
+interface SchedulerRow {
+  employee_name: string;
+  occupation: string;
+  cost_centre: string;
+  basic_hrs_overtime?: string;
+  cost_eur?: number;
+  [key: string]: unknown;
+}
+
+interface SchedulerData {
+  week_start: string;
+  week_end: string;
+  rows: SchedulerRow[];
+}
+
+interface ContextMenuState {
+  visible: boolean;
+  x: number;
+  y: number;
+  cell: (SchedulerCell & { employee: string; day: string }) | null;
+}
+
+interface SortConfig {
+  key: string;
+  direction: 'asc' | 'desc';
+}
+
+interface ColumnFilters {
+  employee_name: string;
+  occupation: string;
+  cost_centre: string;
+  vendor: string;
+}
+
 export default function Scheduler() {
   const { user, isManager, isOwner } = useAuth();
-  useAuditLog('SCHEDULER_VIEWED', { resource: 'scheduler' });
-  const [data, setData] = useState(null);
+  const { logAction } = useAuditLog();
+
+  useEffect(() => {
+    logAction('SCHEDULER_VIEWED', 'scheduler');
+  }, []);
+
+  const [data, setData] = useState<SchedulerData | null>(null);
   const [loading, setLoading] = useState(true);
   const [weekStart, setWeekStart] = useState('2026-01-26');
   const [groupBy, setGroupBy] = useState('none'); // 'cost_centre', 'occupation', 'none'
-  const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, cell: null });
-  const [sortConfig, setSortConfig] = useState({ key: 'employee_name', direction: 'asc' });
-  const [filters, setFilters] = useState({
+  const [contextMenu, setContextMenu] = useState<ContextMenuState>({ visible: false, x: 0, y: 0, cell: null });
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'employee_name', direction: 'asc' });
+  const [filters, setFilters] = useState<ColumnFilters>({
     employee_name: '',
     occupation: '',
     cost_centre: '',
@@ -77,8 +126,8 @@ export default function Scheduler() {
       const numDays = viewType === 'month' ? 28 : 7;
       const response = await api.get(`scheduler/data?week_start=${weekStart}&num_days=${numDays}`);
       setData(response.data);
-    } catch (error) {
-      logger.error('Failed to fetch scheduler data:', error);
+    } catch (error: unknown) {
+      logger.error('Failed to fetch scheduler data:', { error: String(error) });
       toast.error("Failed to load scheduler data");
     } finally {
       setLoading(false);
@@ -97,15 +146,15 @@ export default function Scheduler() {
     return keys;
   }, [data]);
 
-  const handleSort = (key) => {
-    let direction = 'asc';
+  const handleSort = (key: string) => {
+    let direction: 'asc' | 'desc' = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
       direction = 'desc';
     }
     setSortConfig({ key, direction });
   };
 
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = (key: keyof ColumnFilters, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
@@ -138,11 +187,12 @@ export default function Scheduler() {
     }
 
     // Apply column filters
-    Object.keys(filters).forEach(key => {
+    (Object.keys(filters) as Array<keyof ColumnFilters>).forEach(key => {
       if (filters[key]) {
-        result = result.filter(row =>
-          row[key]?.toString().toLowerCase().includes(filters[key].toLowerCase())
-        );
+        result = result.filter(row => {
+          const val = row[key];
+          return val?.toString().toLowerCase().includes(filters[key].toLowerCase());
+        });
       }
     });
 
@@ -150,10 +200,10 @@ export default function Scheduler() {
     if (timeRange !== 'all') {
       result = result.filter(row => {
         return dayKeys.some(day => {
-          const cell = row[day];
+          const cell = row[day] as SchedulerCell | undefined;
           if (!cell || cell.cell_type !== 'WORK_SHIFT') return false;
 
-          const startHr = parseInt(cell.start_time.split(':')[0]);
+          const startHr = parseInt((cell.start_time || '0').split(':')[0]);
           if (timeRange === 'morning') return startHr >= 6 && startHr < 14;
           if (timeRange === 'afternoon') return startHr >= 14 && startHr < 22;
           if (timeRange === 'night') return startHr >= 22 || startHr < 6;
@@ -170,7 +220,7 @@ export default function Scheduler() {
 
         // Special handling for numeric-ish strings
         if (sortConfig.key === 'basic_hrs_overtime') {
-          const parseHrs = (s) => parseFloat(s?.toString().split('h')[0]) || 0;
+          const parseHrs = (s: unknown) => parseFloat(String(s ?? '').split('h')[0]) || 0;
           aValue = parseHrs(aValue);
           bValue = parseHrs(bValue);
         }
@@ -191,7 +241,7 @@ export default function Scheduler() {
   }, [data, filters, sortConfig, timeRange, globalSearch]);
 
   // Color mapping
-  const getCellStyles = (cell) => {
+  const getCellStyles = (cell: SchedulerCell | undefined) => {
     if (!cell) return 'bg-white/5 hover:bg-white/10';
 
     if (cell.cell_type === 'OFF_DAY') {
@@ -203,7 +253,7 @@ export default function Scheduler() {
     return 'bg-white/5';
   };
 
-  const handleRightClick = (e, cell, employee, day) => {
+  const handleRightClick = (e: React.MouseEvent, cell: SchedulerCell | undefined, employee: string, day: string) => {
     e.preventDefault();
     if (!cell) return;
     setContextMenu({
@@ -214,7 +264,7 @@ export default function Scheduler() {
     });
   };
 
-  const handleAction = (action) => {
+  const handleAction = (action: string) => {
     if (!contextMenu.cell) return;
     toast.success(`${action} shift for ${contextMenu.cell.employee}`);
     setContextMenu({ ...contextMenu, visible: false });
@@ -385,7 +435,7 @@ export default function Scheduler() {
                           type="text"
                           placeholder="Filter..."
                           value={filters.employee_name}
-                          onChange={(e) => handleFilterChange('employee_name', e.target.value)}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFilterChange('employee_name', e.target.value)}
                           className="w-full bg-black/30 border border-border rounded px-6 py-1 text-[9px] text-secondary-foreground placeholder:text-zinc-700 outline-none focus:border-blue-500/50"
                         />
                       </div>
@@ -405,7 +455,7 @@ export default function Scheduler() {
                         type="text"
                         placeholder="Filter..."
                         value={filters.occupation}
-                        onChange={(e) => handleFilterChange('occupation', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFilterChange('occupation', e.target.value)}
                         className="w-full bg-black/30 border border-border rounded px-2 py-1 text-[9px] text-secondary-foreground placeholder:text-zinc-700 outline-none focus:border-blue-500/50"
                       />
                     </div>
@@ -424,7 +474,7 @@ export default function Scheduler() {
                         type="text"
                         placeholder="Filter..."
                         value={filters.cost_centre}
-                        onChange={(e) => handleFilterChange('cost_centre', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFilterChange('cost_centre', e.target.value)}
                         className="w-full bg-black/30 border border-border rounded px-2 py-1 text-[9px] text-secondary-foreground placeholder:text-zinc-700 outline-none focus:border-blue-500/50"
                       />
                     </div>
@@ -473,22 +523,22 @@ export default function Scheduler() {
                   <tr key={idx} className="border-b border-border hover:bg-white/[0.02] group transition-colors">
                     {/* Employee Column */}
                     <td className="p-3 text-left sticky left-0 bg-[#0A0A0B] group-hover:bg-[#121214] transition-colors z-10 border-r border-border shadow-[4px_0_12px_-2px_rgba(0,0,0,0.5)] cursor-pointer hover:bg-white/5"
-                      onClick={() => handleFilterChange('employee_name', row.employee_name)}>
+                      onClick={() => handleFilterChange('employee_name', String(row.employee_name))}>
                       <div className="flex flex-col">
                         <div className="text-xs font-bold text-secondary-foreground group-hover:text-blue-400 transition-colors">{row.employee_name}</div>
                         <div className="text-[9px] font-medium text-muted-foreground uppercase tracking-wider hidden">ID: {idx + 100}</div>
                       </div>
                     </td>
-                    <td className="p-3 text-left border-r border-border cursor-pointer hover:bg-white/5 group/cell whitespace-nowrap" onClick={() => handleFilterChange('occupation', row.occupation)}>
+                    <td className="p-3 text-left border-r border-border cursor-pointer hover:bg-white/5 group/cell whitespace-nowrap" onClick={() => handleFilterChange('occupation', String(row.occupation))}>
                       <span className="text-[10px] font-medium text-muted-foreground group-hover/cell:text-blue-400 transition-colors">{row.occupation}</span>
                     </td>
-                    <td className="p-3 text-left border-r border-border cursor-pointer hover:bg-white/5 group/cell whitespace-nowrap" onClick={() => handleFilterChange('cost_centre', row.cost_centre)}>
+                    <td className="p-3 text-left border-r border-border cursor-pointer hover:bg-white/5 group/cell whitespace-nowrap" onClick={() => handleFilterChange('cost_centre', String(row.cost_centre))}>
                       <span className="text-[10px] font-medium text-muted-foreground group-hover/cell:text-blue-400 transition-colors">{row.cost_centre}</span>
                     </td>
 
                     {/* Days Columns */}
                     {dayKeys.map(day => {
-                      const cell = row[day];
+                      const cell = row[day] as SchedulerCell | undefined;
                       return (
                         <td
                           key={day}
@@ -543,8 +593,8 @@ export default function Scheduler() {
               style={{ top: contextMenu.y, left: contextMenu.x }}
             >
               <div className="bg-card/50 p-2 rounded-md mb-1 border-b border-border">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{contextMenu.cell.employee}</p>
-                <p className="text-xs font-bold text-foreground">{contextMenu.cell.day.toUpperCase()}</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{contextMenu.cell?.employee}</p>
+                <p className="text-xs font-bold text-foreground">{contextMenu.cell?.day?.toUpperCase()}</p>
               </div>
               <Button variant="ghost" onClick={() => handleAction('Edit')} className="w-full justify-start h-8 text-xs font-medium text-secondary-foreground hover:text-foreground hover:bg-white/10">
                 <Edit className="h-3.5 w-3.5 mr-2" />

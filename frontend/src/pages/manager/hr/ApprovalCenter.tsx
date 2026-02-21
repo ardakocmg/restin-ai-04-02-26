@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
@@ -126,7 +126,7 @@ export default function ApprovalCenter() {
             setRequests(Array.isArray(reqRes.data) ? reqRes.data : []);
             if (statsRes.data) setStats(statsRes.data);
         } catch (err: unknown) {
-            logger.error('Failed to fetch approvals', err as Record<string, unknown>);
+            logger.error('Failed to fetch approvals', { error: String(err) });
         } finally {
             setLoading(false);
         }

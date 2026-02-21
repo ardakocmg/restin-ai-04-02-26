@@ -1,9 +1,10 @@
-// @ts-nocheck
+
 /**
  * HREmployeePerformance.jsx — Deep Drill-Down per Employee
  * POS Performance | KDS Performance | System Usage | Comparisons
  */
 import React, { useState, useEffect, useMemo } from 'react';
+import PageContainer from '@/layouts/PageContainer';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useVenue } from '@/context/VenueContext';
 import PermissionGate from '@/components/shared/PermissionGate';
@@ -35,14 +36,14 @@ const TABS = [
     { id: 'system', label: 'System Usage', icon: Layers },
 ];
 
-function getDateRange(days) {
+function getDateRange(days: number): { from: string; to: string } {
     const end = new Date();
     const start = new Date();
     start.setDate(end.getDate() - (days || 30));
     return { from: start.toISOString(), to: end.toISOString() };
 }
 
-function ChangeIndicator({ value, label }) {
+function ChangeIndicator({ value, label }: { value: number | null | undefined; label?: string }) {
     if (value === 0 || value === null || value === undefined)
         return <span className="flex items-center gap-1 text-muted-foreground text-sm"><Minus className="h-3 w-3" /> No change{label ? ` (${label})` : ''}</span>;
     if (value > 0)
@@ -50,8 +51,8 @@ function ChangeIndicator({ value, label }) {
     return <span className="flex items-center gap-1 text-red-400 text-sm font-bold"><ArrowDownRight className="h-3 w-3" /> {value}%{label ? ` ${label}` : ''}</span>;
 }
 
-function StatCard({ label, value, icon: Icon, subtitle, accent = 'blue' }) {
-    const accents = { blue: 'text-blue-400', purple: 'text-purple-400', emerald: 'text-emerald-400', amber: 'text-amber-400', cyan: 'text-cyan-400' };
+function StatCard({ label, value, icon: Icon, subtitle, accent = 'blue' }: { label: string; value: string | number; icon?: React.ComponentType<{ className?: string }>; subtitle?: string; accent?: string }) {
+    const accents: Record<string, string> = { blue: 'text-blue-400', purple: 'text-purple-400', emerald: 'text-emerald-400', amber: 'text-amber-400', cyan: 'text-cyan-400' };
     return (
         <Card className="border-border bg-card/60 backdrop-blur-xl">
             <CardContent className="p-5">
@@ -70,7 +71,7 @@ function StatCard({ label, value, icon: Icon, subtitle, accent = 'blue' }) {
     );
 }
 
-function DeltaCard({ label, current, previous, unit = '' }) {
+function DeltaCard({ label, current, previous, unit = '' }: { label: string; current: number; previous: number; unit?: string }) {
     const change = previous === 0 ? (current > 0 ? 100 : 0) : Math.round(((current - previous) / previous) * 100 * 10) / 10;
     return (
         <Card className="border-border bg-card/40">
@@ -97,10 +98,10 @@ export default function HREmployeePerformance() {
 
     const [activeTab, setActiveTab] = useState('pos');
     const [datePreset, setDatePreset] = useState('30d');
-    const [employee, setEmployee] = useState(null);
-    const [posData, setPosData] = useState(null);
-    const [kdsData, setKdsData] = useState(null);
-    const [systemData, setSystemData] = useState(null);
+    const [employee, setEmployee] = useState<{ name: string; department?: string; role?: string } | null>(null);
+    const [posData, setPosData] = useState<Record<string, unknown> | null>(null);
+    const [kdsData, setKdsData] = useState<Record<string, unknown> | null>(null);
+    const [systemData, setSystemData] = useState<Record<string, unknown> | null>(null);
     const [loading, setLoading] = useState(true);
 
     const dateRange = useMemo(() => {
@@ -139,8 +140,8 @@ export default function HREmployeePerformance() {
                         if (emp) setEmployee({ name: emp.employee_name, department: emp.department, role: emp.role });
                     }
                 }
-            } catch (err) {
-                logger.error('Failed to fetch employee performance:', err);
+            } catch (err: unknown) {
+                logger.error('Failed to fetch employee performance:', { error: String(err) });
             } finally {
                 setLoading(false);
             }
@@ -148,9 +149,9 @@ export default function HREmployeePerformance() {
         fetchAll();
     }, [venueId, employeeId, dateRange]);
 
-    const posEmp = posData?.employees?.[0] || {};
-    const kdsEmp = kdsData?.employees?.[0] || {};
-    const sysEmp = systemData?.employees?.[0] || {};
+    const posEmp: Record<string, unknown> = (posData as Record<string, unknown> & { employees?: Record<string, unknown>[] })?.employees?.[0] || {};
+    const kdsEmp: Record<string, unknown> = (kdsData as Record<string, unknown> & { employees?: Record<string, unknown>[] })?.employees?.[0] || {};
+    const sysEmp: Record<string, unknown> = (systemData as Record<string, unknown> & { employees?: Record<string, unknown>[] })?.employees?.[0] || {};
 
     return (
         <PermissionGate requiredRole="MANAGER">
@@ -219,14 +220,14 @@ export default function HREmployeePerformance() {
                         {activeTab === 'pos' && (
                             <div className="space-y-6">
                                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                                    <StatCard label="Orders Taken" value={posEmp.total_orders || 0} icon={ShoppingCart} accent="blue" />
-                                    <StatCard label="Revenue Generated" value={`€${(posEmp.total_revenue || 0).toLocaleString()}`} icon={Euro} accent="emerald" />
-                                    <StatCard label="Avg Ticket" value={`€${posEmp.avg_ticket || 0}`} icon={TrendingUp} accent="purple" />
-                                    <StatCard label="Items Sold" value={posEmp.total_items_sold || 0} icon={Activity} accent="amber" />
+                                    <StatCard label="Orders Taken" value={Number(posEmp.total_orders) || 0} icon={ShoppingCart} accent="blue" />
+                                    <StatCard label="Revenue Generated" value={`€${(Number(posEmp.total_revenue) || 0).toLocaleString()}`} icon={Euro} accent="emerald" />
+                                    <StatCard label="Avg Ticket" value={`€${Number(posEmp.avg_ticket) || 0}`} icon={TrendingUp} accent="purple" />
+                                    <StatCard label="Items Sold" value={Number(posEmp.total_items_sold) || 0} icon={Activity} accent="amber" />
                                 </div>
                                 <div className="grid gap-4 md:grid-cols-2">
-                                    <DeltaCard label="Orders vs Previous Period" current={posEmp.total_orders || 0} previous={Math.round((posEmp.total_orders || 0) * 100 / Math.max(100 + (posEmp.orders_change_pct || 0), 1))} />
-                                    <DeltaCard label="Revenue vs Previous Period" current={posEmp.total_revenue || 0} previous={Math.round((posEmp.total_revenue || 0) * 100 / Math.max(100 + (posEmp.revenue_change_pct || 0), 1))} unit="€" />
+                                    <DeltaCard label="Orders vs Previous Period" current={Number(posEmp.total_orders) || 0} previous={Math.round((Number(posEmp.total_orders) || 0) * 100 / Math.max(100 + (Number(posEmp.orders_change_pct) || 0), 1))} />
+                                    <DeltaCard label="Revenue vs Previous Period" current={Number(posEmp.total_revenue) || 0} previous={Math.round((Number(posEmp.total_revenue) || 0) * 100 / Math.max(100 + (Number(posEmp.revenue_change_pct) || 0), 1))} unit="€" />
                                 </div>
                                 <Card className="border-border bg-card/40 p-5">
                                     <div className="flex items-center gap-3 mb-4">
@@ -234,19 +235,19 @@ export default function HREmployeePerformance() {
                                         <span className="text-sm font-bold text-foreground">Performance vs Team Average</span>
                                     </div>
                                     <div className="flex items-center gap-4">
-                                        <ChangeIndicator value={posEmp.vs_team_avg_orders} label="orders vs team avg" />
+                                        <ChangeIndicator value={Number(posEmp.vs_team_avg_orders) || null} label="orders vs team avg" />
                                     </div>
                                 </Card>
                                 {/* Daily chart from full POS data */}
-                                {posData?.daily_trend?.length > 0 && (
+                                {(posData as Record<string, unknown> & { daily_trend?: unknown[] })?.daily_trend && (posData as Record<string, unknown> & { daily_trend?: unknown[] }).daily_trend!.length > 0 && (
                                     <Card className="border-border bg-card/40">
                                         <CardHeader><CardTitle className="text-sm font-bold flex items-center gap-2"><Activity className="h-4 w-4 text-blue-400" />Daily Orders Trend</CardTitle></CardHeader>
                                         <CardContent>
                                             <div className="h-60">
                                                 <ResponsiveContainer width="100%" height="100%">
-                                                    <AreaChart data={posData.daily_trend}>
+                                                    <AreaChart data={(posData as Record<string, unknown> & { daily_trend?: Record<string, unknown>[] }).daily_trend}>
                                                         <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
-                                                        <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 11 }} tickFormatter={(d) => d.slice(5)} />
+                                                        <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 11 }} tickFormatter={(d: string) => d.slice(5)} />
                                                         <YAxis tick={{ fill: '#71717a', fontSize: 11 }} />
                                                         <Tooltip contentStyle={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }} />
                                                         <Area type="monotone" dataKey="orders" stroke="#3b82f6" fill="#3b82f680" strokeWidth={2} />
@@ -263,23 +264,23 @@ export default function HREmployeePerformance() {
                         {activeTab === 'kds' && (
                             <div className="space-y-6">
                                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                                    <StatCard label="Tickets Completed" value={kdsEmp.tickets_completed || 0} icon={Flame} accent="purple" />
-                                    <StatCard label="Avg Prep Time" value={`${kdsEmp.avg_completion_min || 0}m`} icon={Timer} accent="amber" />
-                                    <StatCard label="Items/Hour" value={kdsEmp.items_per_hour || 0} icon={ChefHat} accent="cyan" />
-                                    <StatCard label="On-Time Rate" value={`${kdsEmp.on_time_rate || 0}%`} icon={Clock} accent="emerald" />
+                                    <StatCard label="Tickets Completed" value={Number(kdsEmp.tickets_completed) || 0} icon={Flame} accent="purple" />
+                                    <StatCard label="Avg Prep Time" value={`${Number(kdsEmp.avg_completion_min) || 0}m`} icon={Timer} accent="amber" />
+                                    <StatCard label="Items/Hour" value={Number(kdsEmp.items_per_hour) || 0} icon={ChefHat} accent="cyan" />
+                                    <StatCard label="On-Time Rate" value={`${Number(kdsEmp.on_time_rate) || 0}%`} icon={Clock} accent="emerald" />
                                 </div>
                                 <div className="grid gap-4 md:grid-cols-3">
                                     <Card className="border-border bg-card/40 p-5">
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">vs Team Average</p>
                                         {kdsEmp.vs_team_avg_sec !== null ? (
-                                            <p className={`text-lg font-black ${kdsEmp.vs_team_avg_sec < 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                                                {kdsEmp.vs_team_avg_sec > 0 ? '+' : ''}{kdsEmp.vs_team_avg_sec}s
+                                            <p className={`text-lg font-black ${Number(kdsEmp.vs_team_avg_sec) < 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                {Number(kdsEmp.vs_team_avg_sec) > 0 ? '+' : ''}{Number(kdsEmp.vs_team_avg_sec)}s
                                             </p>
                                         ) : <p className="text-muted-foreground">{"No "}data</p>}
-                                        <p className="text-xs text-muted-foreground mt-1">{kdsEmp.vs_team_avg_sec < 0 ? 'Faster than average' : 'Slower than average'}</p>
+                                        <p className="text-xs text-muted-foreground mt-1">{Number(kdsEmp.vs_team_avg_sec) < 0 ? 'Faster than average' : 'Slower than average'}</p>
                                     </Card>
-                                    <DeltaCard label="Speed vs Previous" current={kdsEmp.avg_completion_sec || 0} previous={Math.round((kdsEmp.avg_completion_sec || 0) * 100 / Math.max(100 + (kdsEmp.speed_change_pct || 0), 1))} unit="s" />
-                                    <DeltaCard label="Volume vs Previous" current={kdsEmp.tickets_completed || 0} previous={Math.round((kdsEmp.tickets_completed || 0) * 100 / Math.max(100 + (kdsEmp.volume_change_pct || 0), 1))} />
+                                    <DeltaCard label="Speed vs Previous" current={Number(kdsEmp.avg_completion_sec) || 0} previous={Math.round((Number(kdsEmp.avg_completion_sec) || 0) * 100 / Math.max(100 + (Number(kdsEmp.speed_change_pct) || 0), 1))} unit="s" />
+                                    <DeltaCard label="Volume vs Previous" current={Number(kdsEmp.tickets_completed) || 0} previous={Math.round((Number(kdsEmp.tickets_completed) || 0) * 100 / Math.max(100 + (Number(kdsEmp.volume_change_pct) || 0), 1))} />
                                 </div>
                             </div>
                         )}
@@ -288,31 +289,31 @@ export default function HREmployeePerformance() {
                         {activeTab === 'system' && (
                             <div className="space-y-6">
                                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-                                    <StatCard label="Orders Taken" value={sysEmp.orders_taken || 0} icon={ShoppingCart} accent="blue" />
-                                    <StatCard label="Recipes Created" value={sysEmp.recipes_created || 0} icon={BookOpen} accent="purple" />
-                                    <StatCard label="Shifts Worked" value={sysEmp.total_shifts || 0} icon={Clock} accent="cyan" />
-                                    <StatCard label="Hours Worked" value={`${sysEmp.total_hours_worked || 0}h`} icon={Timer} accent="amber" />
-                                    <StatCard label="System Actions" value={sysEmp.total_system_actions || 0} icon={Layers} accent="emerald" />
+                                    <StatCard label="Orders Taken" value={Number(sysEmp.orders_taken) || 0} icon={ShoppingCart} accent="blue" />
+                                    <StatCard label="Recipes Created" value={Number(sysEmp.recipes_created) || 0} icon={BookOpen} accent="purple" />
+                                    <StatCard label="Shifts Worked" value={Number(sysEmp.total_shifts) || 0} icon={Clock} accent="cyan" />
+                                    <StatCard label="Hours Worked" value={`${Number(sysEmp.total_hours_worked) || 0}h`} icon={Timer} accent="amber" />
+                                    <StatCard label="System Actions" value={Number(sysEmp.total_system_actions) || 0} icon={Layers} accent="emerald" />
                                 </div>
                                 <div className="grid gap-4 md:grid-cols-3">
                                     <Card className="border-border bg-card/40 p-5">
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Attendance Rate</p>
-                                        <p className="text-2xl font-black text-foreground">{sysEmp.attendance_rate || 0}%</p>
+                                        <p className="text-2xl font-black text-foreground">{Number(sysEmp.attendance_rate) || 0}%</p>
                                         <Badge
-                                            variant={sysEmp.attendance_rate >= 90 ? 'success' : sysEmp.attendance_rate >= 70 ? 'warning' : 'destructive'}
-                                            className="mt-2 text-xs"
+                                            variant={Number(sysEmp.attendance_rate) >= 90 ? 'outline' : 'destructive'}
+                                            className={`mt-2 text-xs ${Number(sysEmp.attendance_rate) >= 90 ? 'border-emerald-500 text-emerald-400' : Number(sysEmp.attendance_rate) >= 70 ? 'border-yellow-500 text-yellow-400' : ''}`}
                                         >
-                                            {sysEmp.attendance_rate >= 90 ? 'Excellent' : sysEmp.attendance_rate >= 70 ? 'Average' : 'Needs Improvement'}
+                                            {Number(sysEmp.attendance_rate) >= 90 ? 'Excellent' : Number(sysEmp.attendance_rate) >= 70 ? 'Average' : 'Needs Improvement'}
                                         </Badge>
                                     </Card>
                                     <Card className="border-border bg-card/40 p-5">
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Late Arrivals</p>
-                                        <p className="text-2xl font-black text-red-400">{sysEmp.late_arrivals || 0}</p>
-                                        <p className="text-xs text-muted-foreground mt-1">out of {sysEmp.total_shifts || 0} shifts</p>
+                                        <p className="text-2xl font-black text-red-400">{Number(sysEmp.late_arrivals) || 0}</p>
+                                        <p className="text-xs text-muted-foreground mt-1">out of {Number(sysEmp.total_shifts) || 0} shifts</p>
                                     </Card>
                                     <Card className="border-border bg-card/40 p-5">
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Features Used</p>
-                                        <p className="text-2xl font-black text-cyan-400">{sysEmp.features_used_count || 0}</p>
+                                        <p className="text-2xl font-black text-cyan-400">{Number(sysEmp.features_used_count) || 0}</p>
                                         <p className="text-xs text-muted-foreground mt-1">unique system features</p>
                                     </Card>
                                 </div>

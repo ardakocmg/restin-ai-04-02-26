@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
 
@@ -31,7 +31,10 @@ export default function PayrollRunDetail() {
     const { runId } = useParams();
     const navigate = useNavigate();
     const { user, isManager, isOwner } = useAuth();
-    useAuditLog('PAYROLL_RUN_VIEWED', { resource: 'payroll-run-detail', runId });
+    const { logAction } = useAuditLog();
+    useEffect(() => {
+        logAction('PAYROLL_RUN_VIEWED', 'payroll-run-detail');
+    }, []);
     const [run, setRun] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -43,15 +46,15 @@ export default function PayrollRunDetail() {
         try {
             const response = await api.get(`/hr/payroll/runs/${runId}`);
             setRun(response.data);
-        } catch (error) {
-            logger.error("Failed to fetch run details", error);
+        } catch (error: unknown) {
+            logger.error("Failed to fetch run details", { error: String(error) });
             toast.error("Could not load payroll run details");
         } finally {
             setLoading(false);
         }
     };
 
-    const handleDownloadPayslip = async (employeeId) => {
+    const handleDownloadPayslip = async (employeeId: string) => {
         const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull'; // Should use context or fallback
         try {
             toast.info("Generating PDF...");
@@ -69,8 +72,8 @@ export default function PayrollRunDetail() {
             link.remove();
 
             toast.success("Payslip downloaded");
-        } catch (error) {
-            logger.error("Failed to download payslip", error);
+        } catch (error: unknown) {
+            logger.error("Failed to download payslip", { error: String(error) });
             toast.error("Failed to generate PDF");
         }
     };

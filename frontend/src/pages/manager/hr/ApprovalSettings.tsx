@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
@@ -110,7 +110,7 @@ export default function ApprovalSettings() {
                 : Array.isArray(employeesRes.data?.data) ? employeesRes.data.data : [];
             setEmployees(empList);
         } catch (err: unknown) {
-            logger.error('Failed to fetch approval settings', err as Record<string, unknown>);
+            logger.error('Failed to fetch approval settings', { error: String(err) });
         } finally {
             setLoading(false);
         }

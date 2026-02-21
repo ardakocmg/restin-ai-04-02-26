@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
 
@@ -30,7 +30,10 @@ export default function PayslipViewer() {
     const navigate = useNavigate();
     const { activeVenue } = useVenue();
     const { user, isManager, isOwner } = useAuth();
-    useAuditLog('PAYSLIP_VIEWED', { resource: 'payslip-viewer', employeeId, period });
+    const { logAction } = useAuditLog();
+    useEffect(() => {
+        logAction('PAYSLIP_VIEWED', 'payslip-viewer');
+    }, []);
     const [payslipData, setPayslipData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
@@ -57,8 +60,8 @@ export default function PayslipViewer() {
                 if (Array.isArray(payslips) && payslips.length > 0) {
                     setPayslipData(payslips[0]);
                 }
-            } catch (fallbackErr) {
-                logger.error('Failed to load payslip:', fallbackErr);
+            } catch (fallbackErr: unknown) {
+                logger.error('Failed to load payslip:', { error: String(fallbackErr) });
             }
         } finally {
             setLoading(false);
@@ -92,8 +95,8 @@ export default function PayslipViewer() {
                 venue_id: activeVenue?.id
             });
             toast.success('Payslip email sent successfully to employee!');
-        } catch (error) {
-            logger.error('Failed to send email:', error);
+        } catch (error: unknown) {
+            logger.error('Failed to send email:', { error: String(error) });
             toast.error('Failed to send email. Please try again.');
         } finally {
             setSending(false);

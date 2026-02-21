@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -190,7 +190,7 @@ export default function ManualClocking() {
                 } catch { setEmployees([]); }
             }
         } catch (err: unknown) {
-            logger.error('Failed to fetch clocking data', err as Record<string, unknown>);
+            logger.error('Failed to fetch clocking data', { error: String(err) });
         } finally {
             setLoading(false);
         }

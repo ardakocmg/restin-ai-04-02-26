@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import React, { useState, useEffect } from 'react';
 import { logger } from '@/lib/logger';
 import { useAuth } from '@/context/AuthContext';
@@ -21,7 +21,10 @@ import api from '@/lib/api';
 import { toast } from 'sonner';
 
 export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
-    useAuditLog('LEAVE_REQUEST_VIEWED', { resource: 'leave-request-modal' });
+    const { logAction } = useAuditLog();
+    useEffect(() => {
+        logAction('LEAVE_REQUEST_VIEWED', 'leave-request-modal');
+    }, []);
     const [leaveTypes, setLeaveTypes] = useState([]);
     const [formData, setFormData] = useState({
         leave_type_id: '',
@@ -42,13 +45,13 @@ export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
         try {
             const res = await api.get('/hr/leave/types');
             setLeaveTypes(res.data);
-        } catch (error) {
-            logger.error("Failed to fetch leave types", error);
+        } catch (error: unknown) {
+            logger.error("Failed to fetch leave types", { error: String(error) });
             toast.error("Could not load leave types");
         }
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
@@ -57,7 +60,7 @@ export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
             // In real app, this should check shift patterns
             const start = new Date(formData.start_date);
             const end = new Date(formData.end_date);
-            const days = (end - start) / (1000 * 60 * 60 * 24) + 1;
+            const days = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24) + 1;
             const estimatedHours = days * 8; // Default 8h day
 
             await api.post('/hr/leave/request', {
@@ -69,8 +72,8 @@ export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
             onSuccess();
             onOpenChange(false);
             setFormData({ leave_type_id: '', start_date: '', end_date: '', hours: 8, reason: '' });
-        } catch (error) {
-            logger.error(error);
+        } catch (error: unknown) {
+            logger.error('Leave request failed:', { error: String(error) });
             toast.error("Failed to submit request");
         } finally {
             setLoading(false);
