@@ -44,8 +44,8 @@ export default function GovReportsPage() {
             // We need a list of runs to show FS5s for. Assuming /runs endpoint exists or we filter
             const runsRes = await api.get(`/venues/${venueId}/hr/payroll/runs`); // Assuming this exists
             setRuns(runsRes.data.filter(r => r.period_end.endsWith(year))); // Filter client side for now
-        } catch (error) {
-            logger.error("Failed to load report data", error);
+        } catch (error: unknown) {
+            logger.error("Failed to load report data", { error: String(error) });
             // Fallback for demo if backend empty
             setFs7Data(null);
         } finally {
@@ -53,7 +53,7 @@ export default function GovReportsPage() {
         }
     }
 
-    const handleDownload = async (reportType, id = null) => {
+    const handleDownload = async (reportType: string, id: string | null = null) => {
         toast.info(`Generating ${reportType}...`);
         try {
             let endpoint = '';
@@ -83,8 +83,8 @@ export default function GovReportsPage() {
             link.remove();
 
             toast.success(`${reportType} downloaded successfully`);
-        } catch (e) {
-            logger.error(e);
+        } catch (e: unknown) {
+            logger.error('Download failed:', { error: String(e) });
             toast.error("Download failed");
         }
     };

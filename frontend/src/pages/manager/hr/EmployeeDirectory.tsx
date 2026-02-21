@@ -71,7 +71,11 @@ export default function EmployeeDirectory() {
   });
 
   const venueId = activeVenue?.id;
-  useAuditLog('EMPLOYEE_DIRECTORY_VIEWED', { resource: 'employee-directory' });
+  const { logAction } = useAuditLog();
+
+  useEffect(() => {
+    logAction('EMPLOYEE_DIRECTORY_VIEWED', 'employee-directory');
+  }, []);
 
   useEffect(() => {
     if (venueId) loadEmployees();

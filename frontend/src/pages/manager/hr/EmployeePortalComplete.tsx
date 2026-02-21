@@ -83,7 +83,10 @@ const getInitials = (name) => name?.split(' ').map(n => n[0]).join('') || '??';
 
 export default function EmployeePortalComplete() {
   const navigate = useNavigate();
-  useAuditLog('EMPLOYEE_PORTAL_VIEWED', { resource: 'employee-portal' });
+  const { logAction } = useAuditLog();
+  useEffect(() => {
+    logAction('EMPLOYEE_PORTAL_VIEWED', 'employee-portal');
+  }, []);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());

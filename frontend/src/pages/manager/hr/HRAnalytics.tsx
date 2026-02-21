@@ -41,14 +41,14 @@ const DATE_PRESETS = [
 const CHART_COLORS = ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#6366f1'];
 
 // ── Helpers ──────────────────────────────────────────────────
-function getDateRange(days) {
+function getDateRange(days: number) {
   const end = new Date();
   const start = new Date();
   start.setDate(end.getDate() - (days || 30));
   return { from: start.toISOString(), to: end.toISOString() };
 }
 
-function ChangeIndicator({ value }) {
+function ChangeIndicator({ value }: { value: number | null | undefined }) {
   if (value === 0 || value === null || value === undefined) return <Minus className="h-3 w-3 text-muted-foreground" />;
   if (value > 0) return (
     <span className="flex items-center gap-0.5 text-emerald-400 text-xs font-bold">
@@ -62,7 +62,7 @@ function ChangeIndicator({ value }) {
   );
 }
 
-function KpiCard({ label, value, icon: Icon, change, subtitle }) {
+function KpiCard({ label, value, icon: Icon, change, subtitle }: { label: string; value: string | number; icon?: React.ComponentType<{ className?: string }>; change?: number | null; subtitle?: string }) {
   return (
     <Card className="border-border bg-card/60 backdrop-blur-xl hover:bg-card/80 transition-all duration-300">
       <CardContent className="p-5">
@@ -84,7 +84,7 @@ function KpiCard({ label, value, icon: Icon, change, subtitle }) {
   );
 }
 
-function DataTable({ columns, data, onRowClick }) {
+function DataTable({ columns, data, onRowClick }: { columns: { key: string; header: string; render?: (value: unknown, row: Record<string, unknown>) => React.ReactNode }[]; data: Record<string, unknown>[]; onRowClick?: (row: Record<string, unknown>) => void }) {
   if (!data || data.length === 0) {
     return <p className="text-muted-foreground text-sm p-4 text-center">{"No "}data for this period</p>;
   }
@@ -109,7 +109,7 @@ function DataTable({ columns, data, onRowClick }) {
             >
               {columns.map((col, ci) => (
                 <td key={ci} className="py-3 px-3 text-secondary-foreground">
-                  {col.render ? col.render(row[col.key], row) : row[col.key]}
+                  {col.render ? col.render(row[col.key], row) : String(row[col.key] ?? '')}
                 </td>
               ))}
             </tr>
@@ -121,9 +121,9 @@ function DataTable({ columns, data, onRowClick }) {
 }
 
 // ── Tab Content Components ───────────────────────────────────
-function OverviewTab({ data }) {
+function OverviewTab({ data }: { data: Record<string, unknown> | null }) {
   if (!data) return null;
-  const kpis = data.kpis || [];
+  const kpis = (data as Record<string, unknown[]>).kpis || [];
   const iconMap = {
     'shopping-cart': ShoppingCart, 'flame': Flame, 'timer': Timer,
     'euro': Euro, 'book-open': BookOpen, 'users': Users, 'clock': Clock,
@@ -131,31 +131,34 @@ function OverviewTab({ data }) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {kpis.map((kpi, i) => (
-          <KpiCard
-            key={i}
-            label={kpi.label}
-            value={typeof kpi.value === 'number' ? kpi.value.toLocaleString() : kpi.value}
-            icon={iconMap[kpi.icon] || Activity}
-            change={kpi.change_pct}
-          />
-        ))}
+        {kpis.map((kpiRaw, i) => {
+          const kpi = kpiRaw as Record<string, unknown>;
+          return (
+            <KpiCard
+              key={i}
+              label={String(kpi.label ?? '')}
+              value={typeof kpi.value === 'number' ? kpi.value.toLocaleString() : String(kpi.value ?? '')}
+              icon={iconMap[kpi.icon as string] || Activity}
+              change={kpi.change_pct as number | null | undefined}
+            />
+          );
+        })}
       </div>
     </div>
   );
 }
 
-function PosTab({ data, onEmployeeClick }) {
+function PosTab({ data, onEmployeeClick }: { data: Record<string, unknown> | null; onEmployeeClick?: (id: string) => void }) {
   if (!data) return null;
-  const { summary = {}, employees = [], daily_trend = [] } = data;
+  const { summary = {} as Record<string, unknown>, employees = [] as Record<string, unknown>[], daily_trend = [] as Record<string, unknown>[] } = data as { summary?: Record<string, unknown>; employees?: Record<string, unknown>[]; daily_trend?: Record<string, unknown>[] };
   return (
     <div className="space-y-6">
       {/* Summary KPIs */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Total Orders" value={summary.total_orders?.toLocaleString() || 0} icon={ShoppingCart} />
-        <KpiCard label="Total Revenue" value={`€${(summary.total_revenue || 0).toLocaleString()}`} icon={Euro} />
-        <KpiCard label="Avg Ticket" value={`€${summary.avg_ticket || 0}`} icon={BarChart3} />
-        <KpiCard label="Active Staff" value={summary.active_staff || 0} icon={Users} subtitle={`${summary.avg_orders_per_staff || 0} orders/staff`} />
+        <KpiCard label="Total Orders" value={Number(summary.total_orders ?? 0).toLocaleString()} icon={ShoppingCart} />
+        <KpiCard label="Total Revenue" value={`€${Number(summary.total_revenue ?? 0).toLocaleString()}`} icon={Euro} />
+        <KpiCard label="Avg Ticket" value={`€${Number(summary.avg_ticket ?? 0)}`} icon={BarChart3} />
+        <KpiCard label="Active Staff" value={Number(summary.active_staff ?? 0)} icon={Users} subtitle={`${Number(summary.avg_orders_per_staff ?? 0)} orders/staff`} />
       </div>
 
       {/* Daily Trend Chart */}
@@ -189,15 +192,15 @@ function PosTab({ data, onEmployeeClick }) {
         <CardHeader><CardTitle className="text-sm font-bold">POS Leaderboard</CardTitle></CardHeader>
         <CardContent className="p-0">
           <DataTable
-            onRowClick={(row) => onEmployeeClick?.(row.employee_id)}
+            onRowClick={(row) => onEmployeeClick?.(String(row.employee_id ?? ''))}
             columns={[
               { key: 'employee_name', header: 'Employee' },
               { key: 'department', header: 'Department' },
-              { key: 'total_orders', header: 'Orders', render: (v) => <span className="font-bold text-foreground">{v}</span> },
-              { key: 'total_revenue', header: 'Revenue', render: (v) => <span>€{v?.toLocaleString()}</span> },
-              { key: 'avg_ticket', header: 'Avg Ticket', render: (v) => <span>€{v}</span> },
-              { key: 'orders_change_pct', header: 'vs Prev', render: (v) => <ChangeIndicator value={v} /> },
-              { key: 'vs_team_avg_orders', header: 'vs Team', render: (v) => <ChangeIndicator value={v} /> },
+              { key: 'total_orders', header: 'Orders', render: (v) => <span className="font-bold text-foreground">{String(v ?? '')}</span> },
+              { key: 'total_revenue', header: 'Revenue', render: (v) => <span>€{Number(v ?? 0).toLocaleString()}</span> },
+              { key: 'avg_ticket', header: 'Avg Ticket', render: (v) => <span>€{String(v ?? 0)}</span> },
+              { key: 'orders_change_pct', header: 'vs Prev', render: (v) => <ChangeIndicator value={v as number | null} /> },
+              { key: 'vs_team_avg_orders', header: 'vs Team', render: (v) => <ChangeIndicator value={v as number | null} /> },
             ]}
             data={employees}
           />
@@ -207,16 +210,16 @@ function PosTab({ data, onEmployeeClick }) {
   );
 }
 
-function KdsTab({ data, onEmployeeClick }) {
+function KdsTab({ data, onEmployeeClick }: { data: Record<string, unknown> | null; onEmployeeClick?: (id: string) => void }) {
   if (!data) return null;
-  const { summary = {}, employees = [], hourly_distribution = [] } = data;
+  const { summary = {} as Record<string, unknown>, employees = [] as Record<string, unknown>[], hourly_distribution = [] as Record<string, unknown>[] } = data as { summary?: Record<string, unknown>; employees?: Record<string, unknown>[]; hourly_distribution?: Record<string, unknown>[] };
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Total Tickets" value={summary.total_tickets?.toLocaleString() || 0} icon={Flame} />
-        <KpiCard label="Avg Prep Time" value={`${summary.team_avg_completion_min || 0}m`} icon={Timer} />
-        <KpiCard label="Kitchen Staff" value={summary.active_kitchen_staff || 0} icon={ChefHat} />
-        <KpiCard label="Avg Tickets/Staff" value={summary.avg_tickets_per_staff || 0} icon={BarChart3} />
+        <KpiCard label="Total Tickets" value={Number(summary.total_tickets ?? 0).toLocaleString()} icon={Flame} />
+        <KpiCard label="Avg Prep Time" value={`${Number(summary.team_avg_completion_min ?? 0)}m`} icon={Timer} />
+        <KpiCard label="Kitchen Staff" value={Number(summary.active_kitchen_staff ?? 0)} icon={ChefHat} />
+        <KpiCard label="Avg Tickets/Staff" value={Number(summary.avg_tickets_per_staff ?? 0)} icon={BarChart3} />
       </div>
 
       {/* Hourly Distribution */}
@@ -244,23 +247,25 @@ function KdsTab({ data, onEmployeeClick }) {
         <CardHeader><CardTitle className="text-sm font-bold">KDS Performance Ranking</CardTitle></CardHeader>
         <CardContent className="p-0">
           <DataTable
-            onRowClick={(row) => onEmployeeClick?.(row.employee_id)}
+            onRowClick={(row) => onEmployeeClick?.(String(row.employee_id ?? ''))}
             columns={[
               { key: 'employee_name', header: 'Employee' },
-              { key: 'tickets_completed', header: 'Completed', render: (v) => <span className="font-bold text-foreground">{v}</span> },
-              { key: 'avg_completion_min', header: 'Avg Time', render: (v) => <span>{v}m</span> },
-              { key: 'items_per_hour', header: 'Items/Hr', render: (v) => <span className="font-semibold">{v}</span> },
+              { key: 'tickets_completed', header: 'Completed', render: (v) => <span className="font-bold text-foreground">{String(v ?? '')}</span> },
+              { key: 'avg_completion_min', header: 'Avg Time', render: (v) => <span>{String(v ?? '')}m</span> },
+              { key: 'items_per_hour', header: 'Items/Hr', render: (v) => <span className="font-semibold">{String(v ?? '')}</span> },
               {
-                key: 'on_time_rate', header: 'On-Time', render: (v) => (
-                  <Badge variant={v >= 90 ? 'success' : v >= 70 ? 'warning' : 'destructive'} className="text-xs">{v}%</Badge>
-                )
+                key: 'on_time_rate', header: 'On-Time', render: (v) => {
+                  const n = Number(v ?? 0);
+                  return <Badge variant={n >= 90 ? 'outline' : 'destructive'} className={`text-xs ${n >= 90 ? 'border-emerald-500 text-emerald-400' : n >= 70 ? 'border-yellow-500 text-yellow-400' : ''}`}>{n}%</Badge>;
+                }
               },
               {
-                key: 'vs_team_avg_sec', header: 'vs Team Avg', render: (v) => (
-                  v !== null ? <span className={v < 0 ? 'text-emerald-400' : 'text-red-400'}>{v > 0 ? '+' : ''}{v}s</span> : <span className="text-muted-foreground">—</span>
-                )
+                key: 'vs_team_avg_sec', header: 'vs Team Avg', render: (v) => {
+                  const n = v as number | null;
+                  return n !== null ? <span className={n < 0 ? 'text-emerald-400' : 'text-red-400'}>{n > 0 ? '+' : ''}{n}s</span> : <span className="text-muted-foreground">—</span>;
+                }
               },
-              { key: 'volume_change_pct', header: 'vs Prev', render: (v) => <ChangeIndicator value={v} /> },
+              { key: 'volume_change_pct', header: 'vs Prev', render: (v) => <ChangeIndicator value={v as number | null} /> },
             ]}
             data={employees}
           />
@@ -270,17 +275,17 @@ function KdsTab({ data, onEmployeeClick }) {
   );
 }
 
-function SystemTab({ data, onEmployeeClick }) {
+function SystemTab({ data, onEmployeeClick }: { data: Record<string, unknown> | null; onEmployeeClick?: (id: string) => void }) {
   if (!data) return null;
-  const { summary = {}, employees = [] } = data;
+  const { summary = {} as Record<string, unknown>, employees = [] as Record<string, unknown>[] } = data as { summary?: Record<string, unknown>; employees?: Record<string, unknown>[] };
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-        <KpiCard label="Recipes Created" value={summary.total_recipes_created || 0} icon={BookOpen} />
-        <KpiCard label="Orders Taken" value={summary.total_orders_taken || 0} icon={ShoppingCart} />
-        <KpiCard label="Hours Worked" value={`${summary.total_hours_worked || 0}h`} icon={Clock} />
-        <KpiCard label="System Actions" value={summary.total_system_actions || 0} icon={Layers} />
-        <KpiCard label="Active Employees" value={summary.active_employees || 0} icon={Users} />
+        <KpiCard label="Recipes Created" value={Number(summary.total_recipes_created ?? 0)} icon={BookOpen} />
+        <KpiCard label="Orders Taken" value={Number(summary.total_orders_taken ?? 0)} icon={ShoppingCart} />
+        <KpiCard label="Hours Worked" value={`${Number(summary.total_hours_worked ?? 0)}h`} icon={Clock} />
+        <KpiCard label="System Actions" value={Number(summary.total_system_actions ?? 0)} icon={Layers} />
+        <KpiCard label="Active Employees" value={Number(summary.active_employees ?? 0)} icon={Users} />
       </div>
 
       {/* Pie Chart: Orders vs Recipes vs Actions */}
@@ -293,7 +298,7 @@ function SystemTab({ data, onEmployeeClick }) {
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={employees.slice(0, 8).map(e => ({ name: e.employee_name, value: e.orders_taken + e.total_system_actions }))}
+                      data={employees.slice(0, 8).map(e => ({ name: String((e as Record<string, unknown>).employee_name ?? ''), value: Number((e as Record<string, unknown>).orders_taken ?? 0) + Number((e as Record<string, unknown>).total_system_actions ?? 0) }))}
                       cx="50%" cy="50%" innerRadius={50} outerRadius={100}
                       paddingAngle={2} dataKey="value"
                     >
@@ -332,18 +337,19 @@ function SystemTab({ data, onEmployeeClick }) {
         <CardHeader><CardTitle className="text-sm font-bold">Employee System Usage</CardTitle></CardHeader>
         <CardContent className="p-0">
           <DataTable
-            onRowClick={(row) => onEmployeeClick?.(row.employee_id)}
+            onRowClick={(row) => onEmployeeClick?.(String(row.employee_id ?? ''))}
             columns={[
               { key: 'employee_name', header: 'Employee' },
               { key: 'role', header: 'Role' },
-              { key: 'orders_taken', header: 'Orders', render: (v) => <span className="font-bold text-foreground">{v}</span> },
-              { key: 'recipes_created', header: 'Recipes', render: (v) => v > 0 ? <span className="text-emerald-400 font-bold">{v}</span> : <span className="text-muted-foreground">0</span> },
+              { key: 'orders_taken', header: 'Orders', render: (v) => <span className="font-bold text-foreground">{String(v ?? '')}</span> },
+              { key: 'recipes_created', header: 'Recipes', render: (v) => { const n = Number(v ?? 0); return n > 0 ? <span className="text-emerald-400 font-bold">{n}</span> : <span className="text-muted-foreground">0</span>; } },
               { key: 'total_shifts', header: 'Shifts' },
-              { key: 'total_hours_worked', header: 'Hours', render: (v) => <span>{v}h</span> },
+              { key: 'total_hours_worked', header: 'Hours', render: (v) => <span>{String(v ?? '')}h</span> },
               {
-                key: 'attendance_rate', header: 'Attendance', render: (v) => (
-                  <Badge variant={v >= 90 ? 'success' : v >= 70 ? 'warning' : 'destructive'} className="text-xs">{v}%</Badge>
-                )
+                key: 'attendance_rate', header: 'Attendance', render: (v) => {
+                  const n = Number(v ?? 0);
+                  return <Badge variant={n >= 90 ? 'outline' : 'destructive'} className={`text-xs ${n >= 90 ? 'border-emerald-500 text-emerald-400' : n >= 70 ? 'border-yellow-500 text-yellow-400' : ''}`}>{n}%</Badge>;
+                }
               },
               { key: 'total_system_actions', header: 'Actions' },
               { key: 'features_used_count', header: 'Features' },
@@ -363,10 +369,10 @@ export default function HRAnalytics() {
 
   const [activeTab, setActiveTab] = useState('overview');
   const [datePreset, setDatePreset] = useState('30d');
-  const [overviewData, setOverviewData] = useState(null);
-  const [posData, setPosData] = useState(null);
-  const [kdsData, setKdsData] = useState(null);
-  const [systemData, setSystemData] = useState(null);
+  const [overviewData, setOverviewData] = useState<Record<string, unknown> | null>(null);
+  const [posData, setPosData] = useState<Record<string, unknown> | null>(null);
+  const [kdsData, setKdsData] = useState<Record<string, unknown> | null>(null);
+  const [systemData, setSystemData] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
 
   const dateRange = useMemo(() => {

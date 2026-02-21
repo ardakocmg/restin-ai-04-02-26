@@ -26,7 +26,7 @@ export default function Documents() {
   const [loading, setLoading] = useState(true);
   const [documents, setDocuments] = useState([]);
 
-  const venueId = user?.venueId ;
+  const venueId = user?.venueId;
   const access = getAccess('documents');
 
   useEffect(() => {
@@ -38,9 +38,11 @@ export default function Documents() {
     try {
       const response = await api.get(`/hr/documents?venue_id=${venueId}`);
       setDocuments(response.data);
-    } catch (error) {
-      logger.error("Failed to load documents:", error);
-      if (error.response?.status !== 403) {
+    } catch (error: unknown) {
+      logger.error("Failed to load documents:", { error: String(error) });
+      const isAxiosError = error instanceof Error && 'response' in error;
+      const status = isAxiosError ? (error as { response?: { status?: number } }).response?.status : undefined;
+      if (status !== 403) {
         toast.error("Failed to load documents");
       }
     } finally {
@@ -62,7 +64,7 @@ export default function Documents() {
     );
   }
 
-  const isExpiringSoon = (expiryDate) => {
+  const isExpiringSoon = (expiryDate: string | null | undefined) => {
     if (!expiryDate) return false;
     const expiry = new Date(expiryDate);
     const thirtyDays = new Date();
