@@ -7,12 +7,18 @@ Cost: $0. No API keys needed for Groq, OpenRouter, Cloudflare, HuggingFace.
 Usage:
   POST /api/ai/providers/seed-free
 """
+import sys
+import os
+import logging
+from datetime import datetime, timezone
+
+# Add the backend root directory to sys.path to resolve internal imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from fastapi import APIRouter, Depends
 from core.database import get_database
 from core.dependencies import get_current_user
 from services.ai_config_resolver import DEFAULT_SYSTEM_CONFIG
-from datetime import datetime, timezone
-import logging
 
 logger = logging.getLogger(__name__)
 

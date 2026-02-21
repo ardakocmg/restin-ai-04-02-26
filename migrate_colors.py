@@ -178,7 +178,7 @@ def process_file(filepath):
     for pattern, replacement in PAIR_REPLACEMENTS.items():
         new_content = re.sub(pattern, replacement, content)
         if new_content != content:
-            diff = len(re.findall(pattern, content))
+            diff = int(len(re.findall(pattern, content)))
             changes += diff
             content = new_content
     
@@ -186,7 +186,7 @@ def process_file(filepath):
     for pattern, replacement in SINGLE_REPLACEMENTS.items():
         new_content = re.sub(pattern, replacement, content)
         if new_content != content:
-            diff = len(re.findall(pattern, content))
+            diff = int(len(re.findall(pattern, content)))
             changes += diff
             content = new_content
     
@@ -194,7 +194,7 @@ def process_file(filepath):
     for pattern, replacement in STATUS_DARK_PAIRS.items():
         new_content = re.sub(pattern, replacement, content)
         if new_content != content:
-            diff = len(re.findall(pattern, content))
+            diff = int(len(re.findall(pattern, content)))
             changes += diff
             content = new_content
     
@@ -202,11 +202,11 @@ def process_file(filepath):
         with open(filepath, 'w', encoding='utf-8', newline='') as f:
             f.write(content)
     
-    return changes
+    return int(changes)
 
 # Run migration
-total_changes = 0
-files_changed = 0
+total_changes = int(0)
+files_changed = int(0)
 
 for ext in EXTENSIONS:
     for filepath in glob.glob(os.path.join(SRC, "**", ext), recursive=True):

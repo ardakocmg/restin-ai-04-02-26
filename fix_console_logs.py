@@ -27,7 +27,7 @@ def process_file(filepath):
         if import_match:
             last_import = import_match[-1]
             insert_pos = last_import.end()
-            new_content = new_content[:insert_pos] + logger_import + new_content[insert_pos:]
+            new_content = "".join([new_content[:insert_pos], logger_import, new_content[insert_pos:]])
         else:
             new_content = logger_import + new_content
 
