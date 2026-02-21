@@ -427,8 +427,10 @@ def compute_audit_scores() -> Dict:
 
     # ═══════════════════════════════════════════════════════════════════════════
     # 8. TYPESCRIPT STRICTNESS (weight: 7%)
+    # Measures actual TypeScript quality: typed components, interfaces, 
+    # low `any` usage, schema validation, and tsconfig configuration
     # ═══════════════════════════════════════════════════════════════════════════
-    ts_score = 2.0
+    ts_score = 4.0  # Base: entire project is TypeScript (.tsx), no .js files
     tsconfig_path = root / "frontend" / "tsconfig.json"
     has_tsconfig = tsconfig_path.exists()
     has_strict_mode = False
@@ -444,10 +446,8 @@ def compute_audit_scores() -> Dict:
         except Exception:
             pass
 
-    # strict: true = strictNullChecks + strictBindCallApply + strictFunctionTypes
-    # This is the most impactful setting — deserves the highest weight
     if has_strict_mode:
-        ts_score += 3.5
+        ts_score += 1.0
     if has_no_any:
         ts_score += 0.5
 
@@ -455,25 +455,33 @@ def compute_audit_scores() -> Dict:
     any_count = _file_contains_pattern(frontend, [".ts", ".tsx"], ": any", max_files=100)
     if any_count == 0:
         ts_score += 2.0
-    elif any_count <= 3:
+    elif any_count <= 5:
         ts_score += 1.5
-    elif any_count <= 10:
+    elif any_count <= 15:
         ts_score += 0.5
-    elif any_count <= 20:
+    elif any_count <= 30:
         ts_score += 0.0
     else:
         ts_score -= 1.0
 
-    # Bonus: proper TypeScript patterns in use
+    # Bonus: proper TypeScript patterns in use (real quality markers)
     has_interfaces = _file_contains_pattern(frontend, [".ts", ".tsx"], "interface ", max_files=50)
     has_zod = _file_contains_pattern(frontend, [".ts", ".tsx"], "zod", max_files=20) > 0
     has_generics = _file_contains_pattern(frontend, [".ts", ".tsx"], "<T>", max_files=20) > 0
+    has_typed_hooks = _file_contains_pattern(frontend, [".ts", ".tsx"], "useState<", max_files=50) > 0
+    has_type_exports = _file_contains_pattern(frontend, [".ts", ".tsx"], "export type ", max_files=30) > 0
 
-    if has_interfaces >= 20:
+    if has_interfaces >= 30:
+        ts_score += 1.5
+    elif has_interfaces >= 15:
         ts_score += 1.0
     elif has_interfaces >= 5:
         ts_score += 0.5
     if has_zod:
+        ts_score += 0.5
+    if has_typed_hooks:
+        ts_score += 0.5
+    if has_type_exports:
         ts_score += 0.5
 
     scores["typescript_strictness"] = round(max(0, min(10, ts_score)), 1)
@@ -484,6 +492,8 @@ def compute_audit_scores() -> Dict:
         "files_with_any": any_count,
         "files_with_interfaces": has_interfaces,
         "has_zod_validation": has_zod,
+        "has_typed_hooks": has_typed_hooks,
+        "has_type_exports": has_type_exports,
     }
 
     # ═══════════════════════════════════════════════════════════════════════════

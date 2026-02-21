@@ -1,8 +1,8 @@
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { logger } from '@/lib/logger';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import api from '../../lib/api';
 import Drawer from '../shared/Drawer';
@@ -16,8 +16,18 @@ import RecipeTab from './tabs/RecipeTab';
 import SuppliersPricingTab from './tabs/SuppliersPricingTab';
 import WasteTab from './tabs/WasteTab';
 
-export default function ItemDetailDrawer({ open, onClose, skuId, venueId }) {
-  const [detail, setDetail] = useState(null);
+interface ItemDetailDrawerProps {
+  open: boolean;
+  onClose: () => void;
+  skuId: string;
+  venueId: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ItemDetail = Record<string, any>;
+
+export default function ItemDetailDrawer({ open, onClose, skuId, venueId }: ItemDetailDrawerProps) {
+  const [detail, setDetail] = useState<ItemDetail | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,7 +48,7 @@ export default function ItemDetailDrawer({ open, onClose, skuId, venueId }) {
     }
   };
 
-  const handleSaveField = async (updates) => {
+  const handleSaveField = async (updates: Record<string, unknown>) => {
     try {
       await api.put(`/inventory/items/${skuId}?venue_id=${venueId}`, updates);
       toast.success('Item updated');

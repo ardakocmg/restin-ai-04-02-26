@@ -1,8 +1,9 @@
 import { Badge } from '@/components/ui/badge';
-import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card';
-import { Building2,Euro,Star } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Building2, Euro, Star } from 'lucide-react';
 
-export default function SuppliersPricingTab({ data = [], sku }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function SuppliersPricingTab({ data = [], sku }: { data?: any[]; sku?: any }) {
   const preferred = data.find(s => s.is_preferred);
   const others = data.filter(s => !s.is_preferred);
 

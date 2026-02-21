@@ -1,8 +1,8 @@
 import { Timer } from 'lucide-react';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function CountdownTimer({ targetTime, createdAt: _createdAt }) {
-  const [timeLeft, setTimeLeft] = useState(null);
+export default function CountdownTimer({ targetTime, createdAt: _createdAt }: { targetTime: string; createdAt?: string }) {
+  const [timeLeft, setTimeLeft] = useState<string | null>(null);
   const [overtime, setOvertime] = useState(false);
 
   useEffect(() => {
@@ -34,13 +34,14 @@ export default function CountdownTimer({ targetTime, createdAt: _createdAt }) {
   if (!timeLeft) return null;
 
   return (
-    <div 
+    <div
       className="flex items-center gap-1 px-2 py-1 rounded-lg font-mono text-xs font-bold"
       style={{ /* keep-inline */
         backgroundColor: overtime ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',
         color: overtime ? '#FCA5A5' : '#93C5FD',
         border: overtime ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(59, 130, 246, 0.3)'
-       /* keep-inline */ }} /* keep-inline */ /* keep-inline */
+        /* keep-inline */
+}} /* keep-inline */ /* keep-inline */
     >
       <Timer className="h-3 w-3" />
       {timeLeft}
@@ -48,7 +49,7 @@ export default function CountdownTimer({ targetTime, createdAt: _createdAt }) {
   );
 }
 
-export function formatTime(isoString) {
+export function formatTime(isoString: string | null | undefined) {
   if (!isoString) return '--:--';
   const date = new Date(isoString);
   return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });

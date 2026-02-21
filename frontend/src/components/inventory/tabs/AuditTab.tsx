@@ -1,7 +1,8 @@
 import { Badge } from '@/components/ui/badge';
-import { Card,CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
-export default function AuditTab({ entries = [] }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function AuditTab({ entries = [] }: { entries?: any[] }) {
   return (
     <div className="space-y-3">
       {entries.length === 0 ? (

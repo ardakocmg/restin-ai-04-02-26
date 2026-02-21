@@ -1,6 +1,7 @@
-import { Card,CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
-export default function ProductionTab({ batches = [] }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function ProductionTab({ batches = [] }: { batches?: any[] }) {
   return (
     <div className="space-y-3">
       {batches.length === 0 ? (
