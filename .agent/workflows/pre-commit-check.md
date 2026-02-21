@@ -50,6 +50,17 @@ cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-St
 
 **Rule:** Files with 4+ `<button>` tags are candidates for nesting. Use `<span role="button" tabIndex={0}>` for interactive elements inside buttons.
 
+### 3.5. @ts-nocheck Ban (ZERO TOLERANCE)
+
+// turbo
+`@ts-nocheck` is BANNED. Every file must pass strict TS checking:
+
+```
+cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-String -Path "src\**\*.tsx","src\**\*.ts" -Pattern "@ts-nocheck" -Recurse | Select-Object -First 20 | Format-Table LineNumber, Path -AutoSize
+```
+
+**Rule:** ZERO `@ts-nocheck` allowed. If a file has TS errors, FIX them — do not suppress the checker. Removing `@ts-nocheck` is mandatory before commit.
+
 ### 4. `any` Type Usage
 
 // turbo
@@ -60,6 +71,17 @@ cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-St
 ```
 
 **Rule:** Replace `any` with proper types. Use `unknown` + type guards if needed.
+
+### 4.5. `error: any` in Catch Blocks (ZERO TOLERANCE)
+
+// turbo
+Catch blocks MUST use `error: unknown`, never `error: any`:
+
+```
+cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-String -Path "src\**\*.tsx","src\**\*.ts" -Pattern "catch\s*\(\s*\w+\s*:\s*any" -Recurse | Select-Object -First 20 | Format-Table LineNumber, Path -AutoSize
+```
+
+**Rule:** ZERO `error: any` allowed. Use `catch (error: unknown)` and narrow with `error instanceof Error` or `error as Error`.
 
 ### 5. Console.log Detection
 
@@ -207,7 +229,9 @@ cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-St
 | 🔴 | TS Compilation | **Block commit** |
 | 🔴 | Chunk Load Errors | **Block commit** |
 | 🔴 | Button Nesting | **Block commit** |
+| 🔴 | `@ts-nocheck` Ban | **Block commit** |
 | 🔴 | `any` Usage | **Block commit** |
+| 🔴 | `error: any` Ban | **Block commit** |
 | 🔴 | Console.log | **Block commit** |
 | 🔴 | Missing Route Mount | **Block commit** |
 | 🔴 | Hardcoded Strings | Flag for review |
