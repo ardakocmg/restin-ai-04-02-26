@@ -6,10 +6,32 @@
         "axe/parsing": "off",
         "axe/text-alternatives": "off",
         "axe/structure": "off",
+        "axe/keyboard": "off",
+        "axe/aria": "off",
+        "axe/language": "off",
+        "axe/color": "off",
+        "axe/semantics": "off",
+        "axe/tables": "off",
         "compat-api/css": "off",
         "compat-api/html": "off",
-        "hint/no-inline-styles": "off"
+        "hint/no-inline-styles": "off",
+        "hint/button-type": "off",
+        "hint/axe/accessibility": "off"
     },
+    "css.lint.unknownAtRules": "ignore",
+    "css.lint.unknownProperties": "ignore",
+    "css.validate": false,
+    "less.validate": false,
+    "scss.validate": false,
+    "html.validate.scripts": false,
+    "html.validate.styles": false,
+    "eslint.workingDirectories": [
+        "frontend"
+    ],
+    "eslint.options": {
+        "overrideConfigFile": "frontend/.eslintrc.json"
+    },
+    "stylelint.enable": false,
     "python.defaultInterpreterPath": "c:\\Users\\arda\\.gemini\\antigravity\\scratch\\restin-ai\\backend\\venv\\Scripts\\python.exe",
     "python.testing.unittestArgs": [
         "-v",

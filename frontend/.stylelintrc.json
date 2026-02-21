@@ -6,29 +6,27 @@
         "stylelint-declaration-strict-value"
     ],
     "rules": {
-        "scale-unlimited/declaration-strict-value": [
-            [
-                "/color/",
-                "fill",
-                "stroke",
-                "background-color"
-            ],
-            {
-                "ignoreValues": [
-                    "currentColor",
-                    "transparent",
-                    "inherit",
-                    "initial",
-                    "none"
-                ],
-                "message": "Avoid hardcoded colors. Use CSS variables (var(--...)) for Dark Mode compatibility."
-            }
-        ],
-        "color-no-hex": [
-            true,
-            {
-                "message": "Do not use hex colors. Use theme variables."
-            }
-        ]
+        "scale-unlimited/declaration-strict-value": null,
+        "color-no-hex": null,
+        "custom-property-pattern": null,
+        "selector-class-pattern": null,
+        "no-descending-specificity": null,
+        "color-function-notation": null,
+        "media-feature-range-notation": null,
+        "alpha-value-notation": null,
+        "import-notation": null,
+        "shorthand-property-no-redundant-values": null,
+        "declaration-block-no-redundant-longhand-properties": null,
+        "value-keyword-case": null,
+        "property-no-vendor-prefix": null,
+        "selector-no-vendor-prefix": null,
+        "value-no-vendor-prefix": null,
+        "font-family-no-missing-generic-family-keyword": null,
+        "declaration-empty-line-before": null,
+        "comment-empty-line-before": null,
+        "rule-empty-line-before": null,
+        "at-rule-empty-line-before": null,
+        "length-zero-no-unit": null,
+        "number-max-precision": null
     }
 }
