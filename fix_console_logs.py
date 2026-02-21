@@ -26,7 +26,7 @@ def process_file(filepath):
         import_match = list(re.finditer(r'^import .*;\n', new_content, flags=re.MULTILINE))
         if import_match:
             last_import = import_match[-1]
-            insert_pos = last_import.end()
+            insert_pos = int(last_import.end())
             new_content = "".join([new_content[:insert_pos], logger_import, new_content[insert_pos:]])
         else:
             new_content = logger_import + new_content
@@ -36,7 +36,7 @@ def process_file(filepath):
     
     return True
 
-changed_count = 0
+changed_count = int(0)
 for root, _, files in os.walk(frontend_dir):
     for file in files:
         if file.endswith(('.ts', '.tsx')):
