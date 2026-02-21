@@ -332,3 +332,30 @@ className="pos-card"
 - `--text-*` (primary, secondary, muted)
 - `--border-*` (primary, secondary)
 - `--accent-*` (primary, success, warning, danger)
+
+---
+
+## Rule 16: NO INLINE STYLES IN TSX 🚫
+
+`style={{}}` is BANNED in JSX. All visual styling must use Tailwind CSS classes.
+
+```tsx
+// ❌ FORBIDDEN — inline style with hardcoded values
+<div style={{ padding: '24px 32px', fontSize: 28, color: '#f1f5f9' }}>
+
+// ✅ REQUIRED — Tailwind classes
+<div className="p-6 px-8 text-3xl text-slate-100">
+
+// ✅ EXCEPTION — dynamic runtime values (mark with // keep-inline)
+<div style={{ width: `${percent}%` }}> {/* keep-inline */}
+<div style={{ top: contextMenu.y, left: contextMenu.x }}> {/* keep-inline */}
+```
+
+**Rules:**
+
+- NEVER use `style={{}}` for padding, margin, font-size, color, border, display, gap
+- Use Tailwind's arbitrary value syntax for dynamic colors: `className="bg-[#6366f1]"` not `style={{ backgroundColor: '#6366f1' }}`
+- **Only exception**: Values computed at runtime that CANNOT be expressed as Tailwind classes
+- Mark all legitimate exceptions with `// keep-inline` comment
+- ESLint custom rule `restin-guardrails/no-inline-styles` enforces this automatically
+- Pre-commit check 8.6 scans for violations
