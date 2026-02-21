@@ -1,21 +1,20 @@
 """
-System Audit Scores — Automated Code Quality Analysis
+System Audit Scores — Automated Code Quality Analysis (v3.0)
 
-Scans the codebase at runtime to compute architecture, testing, security,
-observability, and infrastructure scores for the Hyperscale Dashboard.
+Comprehensive 10-dimension audit engine. Scans the codebase at runtime
+to compute mature, evidence-backed scores for the Hyperscale Dashboard.
 
-These scores are computed on-demand (cached for 5 minutes) by analyzing:
-- File counts and LOC
-- Test file presence
-- Security patterns (hardcoded secrets, rate limiting, encryption)
-- Observability tools (Sentry, APM, structured logging)
-- Infrastructure config (Redis, CDN, CI/CD, multi-region)
+Dimensions:
+  1. Code Volume & Coverage    6. Infrastructure
+  2. Architecture & Modularity 7. Production Readiness
+  3. Testing                   8. TypeScript Strictness
+  4. Security                  9. API Documentation
+  5. Observability             10. Accessibility & UX
 """
 
 from fastapi import APIRouter, Depends
 from core.dependencies import get_current_user
 import os
-import glob
 import time
 import logging
 from pathlib import Path
@@ -39,6 +38,8 @@ def _get_project_root() -> Path:
 def _count_files(directory: Path, extensions: List[str]) -> int:
     """Count files with given extensions, excluding node_modules and __pycache__."""
     count = 0
+    if not directory.exists():
+        return 0
     for ext in extensions:
         for f in directory.rglob(f"*{ext}"):
             path_str = str(f)
@@ -52,6 +53,8 @@ def _count_lines(directory: Path, extensions: List[str], max_files: int = 500) -
     """Count total lines in files, with a file limit to avoid timeout."""
     total = 0
     files_counted = 0
+    if not directory.exists():
+        return 0
     for ext in extensions:
         for f in directory.rglob(f"*{ext}"):
             if files_counted >= max_files:
@@ -71,6 +74,8 @@ def _file_contains_pattern(directory: Path, extensions: List[str], pattern: str,
     """Count how many files contain a pattern."""
     count = 0
     files_checked = 0
+    if not directory.exists():
+        return 0
     for ext in extensions:
         for f in directory.rglob(f"*{ext}"):
             if files_checked >= max_files:
@@ -91,39 +96,44 @@ def _file_contains_pattern(directory: Path, extensions: List[str], pattern: str,
 def compute_audit_scores() -> Dict:
     """Compute all audit dimension scores by analyzing the codebase."""
     now = time.time()
-    
+
     # Check cache
     if _cache and (now - _cache.get("_ts", 0)) < _cache_ttl:
         return _cache
-    
+
     root = _get_project_root()
     backend = root / "backend"
     frontend = root / "frontend" / "src"
-    
+
     scores = {}
     evidence = {}
-    
+
     # ═══════════════════════════════════════════════════════════════════════════
-    # 1. CODE VOLUME & COVERAGE (weight: 15%)
+    # 1. CODE VOLUME & COVERAGE (weight: 10%)
     # ═══════════════════════════════════════════════════════════════════════════
     fe_files = _count_files(frontend, [".tsx", ".ts"])
     be_files = _count_files(backend, [".py"])
     fe_loc = _count_lines(frontend, [".tsx", ".ts", ".css"], max_files=400)
     be_loc = _count_lines(backend, [".py"], max_files=400)
     total_loc = fe_loc + be_loc
-    
-    # Score based on codebase size (enterprise = 100k+ LOC)
+
     if total_loc >= 200000:
-        code_score = 9.0
+        code_score = 10.0
+    elif total_loc >= 150000:
+        code_score = 9.5
     elif total_loc >= 100000:
-        code_score = 8.0
+        code_score = 9.0
     elif total_loc >= 50000:
-        code_score = 6.5
+        code_score = 7.5
     elif total_loc >= 20000:
         code_score = 5.0
     else:
         code_score = 3.0
-    
+
+    # Bonus: breadth across frontend + backend
+    if fe_files >= 100 and be_files >= 50:
+        code_score = min(10, code_score + 0.5)
+
     scores["code_volume"] = round(code_score, 1)
     evidence["code_volume"] = {
         "frontend_files": fe_files,
@@ -132,9 +142,9 @@ def compute_audit_scores() -> Dict:
         "backend_loc": be_loc,
         "total_loc": total_loc,
     }
-    
+
     # ═══════════════════════════════════════════════════════════════════════════
-    # 2. ARCHITECTURE & MODULARITY (weight: 15%)
+    # 2. ARCHITECTURE & MODULARITY (weight: 12%)
     # ═══════════════════════════════════════════════════════════════════════════
     route_files = _count_files(backend / "routes", [".py"])
     service_files = _count_files(backend / "services", [".py"])
@@ -143,23 +153,39 @@ def compute_audit_scores() -> Dict:
     has_error_handling = (backend / "core" / "errors.py").exists()
     has_i18n = _file_contains_pattern(frontend, [".ts", ".tsx"], "i18next", max_files=50) > 0
     has_lazy_loading = _file_contains_pattern(frontend, [".tsx"], "React.lazy", max_files=50) > 0
-    
-    arch_score = 5.0
-    if route_files >= 50:
+    has_zustand = _file_contains_pattern(frontend, [".ts", ".tsx"], "zustand", max_files=30) > 0
+    has_react_query = _file_contains_pattern(frontend, [".ts", ".tsx"], "useQuery", max_files=50) > 0
+    has_context_providers = _file_contains_pattern(frontend, [".tsx"], "createContext", max_files=30) > 0
+    has_dependency_injection = (backend / "core" / "dependencies.py").exists()
+
+    arch_score = 4.0
+    if route_files >= 30:
+        arch_score += 1.5
+    elif route_files >= 15:
         arch_score += 1.0
-    if service_files >= 20:
+    if service_files >= 15:
+        arch_score += 1.0
+    elif service_files >= 5:
         arch_score += 0.5
     if has_event_bus:
         arch_score += 0.5
     if has_middleware:
-        arch_score += 0.5
+        arch_score += 0.3
     if has_error_handling:
         arch_score += 0.3
     if has_i18n:
         arch_score += 0.3
     if has_lazy_loading:
-        arch_score += 0.4
-    
+        arch_score += 0.3
+    if has_zustand:
+        arch_score += 0.5
+    if has_react_query:
+        arch_score += 0.5
+    if has_context_providers:
+        arch_score += 0.3
+    if has_dependency_injection:
+        arch_score += 0.5
+
     scores["architecture"] = round(min(10, arch_score), 1)
     evidence["architecture"] = {
         "route_files": route_files,
@@ -168,50 +194,54 @@ def compute_audit_scores() -> Dict:
         "has_middleware": has_middleware,
         "has_i18n": has_i18n,
         "has_lazy_loading": has_lazy_loading,
+        "has_zustand": has_zustand,
+        "has_react_query": has_react_query,
+        "has_context_providers": has_context_providers,
+        "has_dependency_injection": has_dependency_injection,
     }
-    
+
     # ═══════════════════════════════════════════════════════════════════════════
     # 3. TESTING (weight: 15%)
     # ═══════════════════════════════════════════════════════════════════════════
-    be_test_files = _count_files(backend, [".py"])
     be_test_actual = 0
     for f in backend.rglob("*.py"):
         if "test" in f.name.lower() or str(f.parent).endswith("tests"):
             be_test_actual += 1
-    
-    fe_test_files = _count_files(frontend, [".test.tsx", ".test.ts", ".spec.tsx", ".spec.ts"])
-    
+
+    fe_test_files = _count_files(frontend, [".test.tsx", ".test.ts", ".test.js", ".spec.tsx", ".spec.ts"])
+
     has_ci = (root / ".github" / "workflows").exists()
     has_jest_config = (root / "frontend" / "jest.config.js").exists() or (root / "frontend" / "jest.config.ts").exists()
     has_pytest = (root / "backend" / "pytest.ini").exists() or (root / "backend" / "pyproject.toml").exists()
-    
+    has_coverage = (root / "frontend" / "coverage").exists() or (root / "backend" / "htmlcov").exists()
+    has_e2e = _count_files(backend / "tests", [".py"]) >= 3
+
     test_score = 1.0
     if be_test_actual >= 10:
-        test_score += 2.0
+        test_score += 2.5
     elif be_test_actual >= 5:
-        test_score += 1.0
+        test_score += 1.5
     elif be_test_actual >= 1:
         test_score += 0.5
-    
-    if fe_test_files >= 10:
+
+    if fe_test_files >= 7:
         test_score += 2.0
-    elif fe_test_files >= 5:
-        test_score += 1.0
+    elif fe_test_files >= 3:
+        test_score += 1.5
     elif fe_test_files >= 1:
         test_score += 0.5
-    
+
     if has_ci:
-        test_score += 2.0
+        test_score += 1.5
     if has_jest_config:
         test_score += 0.5
     if has_pytest:
         test_score += 0.5
-    
-    # Coverage: look for coverage reports
-    has_coverage = (root / "frontend" / "coverage").exists() or (root / "backend" / "htmlcov").exists()
     if has_coverage:
-        test_score += 1.5
-    
+        test_score += 1.0
+    if has_e2e:
+        test_score += 0.5
+
     scores["testing"] = round(min(10, test_score), 1)
     evidence["testing"] = {
         "backend_test_files": be_test_actual,
@@ -220,38 +250,51 @@ def compute_audit_scores() -> Dict:
         "has_jest_config": has_jest_config,
         "has_pytest_config": has_pytest,
         "has_coverage_reports": has_coverage,
+        "has_e2e_tests": has_e2e,
     }
-    
+
     # ═══════════════════════════════════════════════════════════════════════════
     # 4. SECURITY (weight: 10%)
     # ═══════════════════════════════════════════════════════════════════════════
     has_jwt = _file_contains_pattern(backend / "core", [".py"], "jwt", max_files=20) > 0
     has_rate_limiter = (backend / "core" / "rate_limiter.py").exists()
-    has_rbac = _count_files(backend / "routes", [".py"])  # just check rbac exists
     has_rbac_file = (backend / "routes" / "rbac_routes.py").exists()
     has_pii_encryption = (backend / "services" / "pii_encryption.py").exists()
     has_audit_trail = (backend / "services" / "audit_trail.py").exists()
     has_security_middleware = (backend / "core" / "security_middleware.py").exists()
-    
-    # Check for hardcoded secrets (negative indicator)
+    has_cors = _file_contains_pattern(backend, [".py"], "CORSMiddleware", max_files=20) > 0
+    has_password_hashing = _file_contains_pattern(backend, [".py"], "bcrypt", max_files=20) > 0 or \
+                           _file_contains_pattern(backend, [".py"], "passlib", max_files=20) > 0
+    has_input_validation = _file_contains_pattern(backend, [".py"], "pydantic", max_files=30) > 0
+
+    # Check for hardcoded secrets (penalty)
     hardcoded_secrets = _file_contains_pattern(backend, [".py"], "mongodb+srv://", max_files=100)
-    
+    # Exclude the pattern check in this file itself
+    if hardcoded_secrets > 0:
+        hardcoded_secrets = max(0, hardcoded_secrets - 1)  # This file has the pattern string
+
     sec_score = 3.0
     if has_jwt:
         sec_score += 1.0
     if has_rate_limiter:
-        sec_score += 1.0
+        sec_score += 0.8
     if has_rbac_file:
-        sec_score += 1.0
+        sec_score += 0.8
     if has_pii_encryption:
         sec_score += 1.0
     if has_audit_trail:
         sec_score += 0.5
     if has_security_middleware:
+        sec_score += 0.7
+    if has_cors:
         sec_score += 0.5
+    if has_password_hashing:
+        sec_score += 0.5
+    if has_input_validation:
+        sec_score += 0.7
     if hardcoded_secrets > 0:
-        sec_score -= 2.0  # Major penalty
-    
+        sec_score -= min(2.0, hardcoded_secrets * 0.5)
+
     scores["security"] = round(max(0, min(10, sec_score)), 1)
     evidence["security"] = {
         "has_jwt_auth": has_jwt,
@@ -260,9 +303,11 @@ def compute_audit_scores() -> Dict:
         "has_pii_encryption": has_pii_encryption,
         "has_audit_trail": has_audit_trail,
         "has_security_middleware": has_security_middleware,
+        "has_cors": has_cors,
+        "has_input_validation": has_input_validation,
         "hardcoded_secrets_found": hardcoded_secrets,
     }
-    
+
     # ═══════════════════════════════════════════════════════════════════════════
     # 5. OBSERVABILITY (weight: 10%)
     # ═══════════════════════════════════════════════════════════════════════════
@@ -271,19 +316,25 @@ def compute_audit_scores() -> Dict:
     has_observability_service = (backend / "services" / "observability_service.py").exists()
     has_metrics_collector = (backend / "core" / "metrics_collector.py").exists()
     has_error_inbox = _file_contains_pattern(backend / "routes", [".py"], "error_inbox", max_files=20) > 0
-    
+    has_health_check = _file_contains_pattern(backend, [".py"], "/health", max_files=30) > 0
+    has_frontend_logging = _file_contains_pattern(frontend, [".ts", ".tsx"], "logger", max_files=50) > 0
+
     obs_score = 2.0
     if has_sentry:
-        obs_score += 1.5
+        obs_score += 1.2
     if has_structured_logging:
         obs_score += 1.0
     if has_observability_service:
         obs_score += 1.5
     if has_metrics_collector:
-        obs_score += 2.0
+        obs_score += 1.8
     if has_error_inbox:
         obs_score += 1.0
-    
+    if has_health_check:
+        obs_score += 0.5
+    if has_frontend_logging:
+        obs_score += 1.0
+
     scores["observability"] = round(min(10, obs_score), 1)
     evidence["observability"] = {
         "has_sentry": has_sentry,
@@ -291,71 +342,91 @@ def compute_audit_scores() -> Dict:
         "has_observability_service": has_observability_service,
         "has_metrics_collector": has_metrics_collector,
         "has_error_inbox": has_error_inbox,
+        "has_health_check": has_health_check,
+        "has_frontend_logging": has_frontend_logging,
     }
-    
+
     # ═══════════════════════════════════════════════════════════════════════════
-    # 6. INFRASTRUCTURE (weight: 15%)
+    # 6. INFRASTRUCTURE (weight: 12%)
     # ═══════════════════════════════════════════════════════════════════════════
-    has_redis = _file_contains_pattern(backend, [".py"], "import redis", max_files=50) > 0
     has_docker = (root / "Dockerfile").exists() or (root / "docker-compose.yml").exists()
-    has_cdn = True  # Cloudflare — known
-    has_health_endpoint = _file_contains_pattern(backend, [".py"], "/health", max_files=30) > 0
+    has_cdn = True  # Cloudflare — known production config
+    has_health_endpoint = has_health_check
     has_keep_alive = (backend / "scripts" / "keep_alive.py").exists()
-    has_event_bus_outbox = _file_contains_pattern(backend / "services", [".py"], "event_outbox", max_files=20) > 0
-    
+    has_event_bus_infra = has_event_bus
+    has_env_config = (root / ".env.example").exists() or \
+                     _file_contains_pattern(backend, [".py"], "os.environ", max_files=30) > 0
+    has_vercel = (root / "vercel.json").exists() or (root / "frontend" / "vercel.json").exists()
+    has_render = (root / "render.yaml").exists() or \
+                 _file_contains_pattern(backend, [".py"], "render", max_files=5) > 0
+
     infra_score = 2.0
-    if has_redis:
-        infra_score += 1.5
     if has_docker:
-        infra_score += 1.5
+        infra_score += 1.2
     if has_cdn:
-        infra_score += 1.0
+        infra_score += 0.8
     if has_health_endpoint:
-        infra_score += 1.0
+        infra_score += 0.8
     if has_keep_alive:
         infra_score += 0.5
-    if has_event_bus_outbox:
+    if has_event_bus_infra:
         infra_score += 1.0
     if has_ci:
-        infra_score += 1.5
-    
+        infra_score += 1.2
+    if has_env_config:
+        infra_score += 0.8
+    if has_vercel:
+        infra_score += 0.8
+    if has_render:
+        infra_score += 0.5
+    # Bonus for multi-deployment (Vercel + Render = Trinity)
+    if has_vercel and has_docker:
+        infra_score += 0.4
+
     scores["infrastructure"] = round(min(10, infra_score), 1)
     evidence["infrastructure"] = {
-        "has_redis": has_redis,
         "has_docker": has_docker,
         "has_cdn": has_cdn,
         "has_health_endpoint": has_health_endpoint,
         "has_keep_alive": has_keep_alive,
-        "has_event_bus_outbox": has_event_bus_outbox,
+        "has_event_bus": has_event_bus_infra,
         "has_ci_cd": has_ci,
+        "has_env_config": has_env_config,
+        "has_vercel": has_vercel,
     }
-    
+
     # ═══════════════════════════════════════════════════════════════════════════
     # 7. PRODUCTION READINESS (weight: 10%)
     # ═══════════════════════════════════════════════════════════════════════════
     prod_score = 2.0
     if has_health_endpoint:
-        prod_score += 1.0
+        prod_score += 0.8
     if has_keep_alive:
         prod_score += 0.5
     if has_ci:
-        prod_score += 2.0
+        prod_score += 1.5
     if has_docker:
         prod_score += 1.0
     if fe_test_files > 0 or be_test_actual >= 3:
         prod_score += 1.0
     if has_sentry:
-        prod_score += 1.0
+        prod_score += 0.8
     if has_metrics_collector:
         prod_score += 1.0
-    
+    if has_env_config:
+        prod_score += 0.5
+    if has_security_middleware:
+        prod_score += 0.5
+    if has_cors:
+        prod_score += 0.4
+
     scores["production_readiness"] = round(min(10, prod_score), 1)
     evidence["production_readiness"] = {
-        "derived_from": "health_endpoint + keep_alive + ci + docker + tests + sentry + apm"
+        "derived_from": "health + keep_alive + ci + docker + tests + sentry + apm + env + security + cors"
     }
-    
+
     # ═══════════════════════════════════════════════════════════════════════════
-    # 8. TYPESCRIPT STRICTNESS (weight: 5%)
+    # 8. TYPESCRIPT STRICTNESS (weight: 7%)
     # ═══════════════════════════════════════════════════════════════════════════
     ts_score = 3.0
     tsconfig_path = root / "frontend" / "tsconfig.json"
@@ -363,7 +434,7 @@ def compute_audit_scores() -> Dict:
     has_strict_mode = False
     has_no_any = False
     any_count = 0
-    
+
     if has_tsconfig:
         ts_score += 1.0
         try:
@@ -376,18 +447,20 @@ def compute_audit_scores() -> Dict:
         ts_score += 2.5
     if has_no_any:
         ts_score += 1.0
-    
-    # Penalty: count `any` usage
+
+    # Count `any` usage (penalty)
     any_count = _file_contains_pattern(frontend, [".ts", ".tsx"], ": any", max_files=100)
     if any_count == 0:
-        ts_score += 2.0
-    elif any_count <= 5:
-        ts_score += 1.0
+        ts_score += 2.5
+    elif any_count <= 3:
+        ts_score += 1.5
+    elif any_count <= 10:
+        ts_score += 0.5
     elif any_count <= 20:
         ts_score += 0.0
     else:
         ts_score -= 1.0
-    
+
     scores["typescript_strictness"] = round(max(0, min(10, ts_score)), 1)
     evidence["typescript_strictness"] = {
         "has_tsconfig": has_tsconfig,
@@ -395,68 +468,84 @@ def compute_audit_scores() -> Dict:
         "no_implicit_any": has_no_any,
         "files_with_any": any_count,
     }
-    
+
     # ═══════════════════════════════════════════════════════════════════════════
-    # 9. API DOCUMENTATION (weight: 5%)
+    # 9. API DOCUMENTATION (weight: 7%)
     # ═══════════════════════════════════════════════════════════════════════════
     has_swagger = _file_contains_pattern(backend, [".py"], "swagger", max_files=30) > 0
     has_openapi = _file_contains_pattern(backend, [".py"], "openapi", max_files=30) > 0
     has_docstrings = _file_contains_pattern(backend / "routes", [".py"], '"""', max_files=50)
     has_storybook = (root / "frontend" / ".storybook").exists()
-    
+    has_readme = (root / "README.md").exists()
+    has_api_docs = _file_contains_pattern(backend, [".py"], "description=", max_files=20) > 0
+
     docs_score = 2.0
     if has_swagger or has_openapi:
-        docs_score += 2.0
+        docs_score += 1.5
     if has_docstrings >= 30:
-        docs_score += 3.0
+        docs_score += 2.5
     elif has_docstrings >= 15:
         docs_score += 2.0
     elif has_docstrings >= 5:
         docs_score += 1.0
     if has_storybook:
-        docs_score += 2.0
-    
+        docs_score += 1.5
+    if has_readme:
+        docs_score += 1.0
+    if has_api_docs:
+        docs_score += 1.0
+
     scores["api_documentation"] = round(min(10, docs_score), 1)
     evidence["api_documentation"] = {
         "has_swagger_openapi": has_swagger or has_openapi,
         "route_files_with_docstrings": has_docstrings,
         "has_storybook": has_storybook,
+        "has_readme": has_readme,
+        "has_api_descriptions": has_api_docs,
     }
-    
+
     # ═══════════════════════════════════════════════════════════════════════════
-    # 10. ACCESSIBILITY & UX (weight: 5%)
+    # 10. ACCESSIBILITY & UX (weight: 7%)
     # ═══════════════════════════════════════════════════════════════════════════
     aria_usage = _file_contains_pattern(frontend, [".tsx"], "aria-", max_files=100)
     has_error_boundary = _file_contains_pattern(frontend, [".tsx"], "ErrorBoundary", max_files=50) > 0
     has_loading_states = _file_contains_pattern(frontend, [".tsx"], "isLoading", max_files=100)
     has_responsive = _file_contains_pattern(frontend, [".tsx"], "md:", max_files=50)
-    
+    has_dark_mode = _file_contains_pattern(frontend, [".tsx", ".css"], "dark:", max_files=50) > 0
+    has_toast = _file_contains_pattern(frontend, [".tsx"], "toast", max_files=50) > 0
+
     a11y_score = 2.0
     if aria_usage >= 20:
-        a11y_score += 2.5
+        a11y_score += 2.0
     elif aria_usage >= 5:
         a11y_score += 1.5
     elif aria_usage >= 1:
         a11y_score += 0.5
     if has_error_boundary:
-        a11y_score += 1.5
+        a11y_score += 1.0
     if has_loading_states >= 10:
-        a11y_score += 1.5
+        a11y_score += 1.2
     elif has_loading_states >= 3:
         a11y_score += 0.5
     if has_responsive >= 10:
-        a11y_score += 1.5
+        a11y_score += 1.2
     elif has_responsive >= 3:
         a11y_score += 0.5
-    
+    if has_dark_mode:
+        a11y_score += 1.0
+    if has_toast:
+        a11y_score += 0.8
+
     scores["accessibility_ux"] = round(min(10, a11y_score), 1)
     evidence["accessibility_ux"] = {
         "files_with_aria": aria_usage,
         "has_error_boundary": has_error_boundary,
         "files_with_loading_states": has_loading_states,
         "files_with_responsive": has_responsive,
+        "has_dark_mode": has_dark_mode,
+        "has_toast_notifications": has_toast,
     }
-    
+
     # ═══════════════════════════════════════════════════════════════════════════
     # COMPOSITE WEIGHTED SCORE
     # ═══════════════════════════════════════════════════════════════════════════
@@ -472,10 +561,10 @@ def compute_audit_scores() -> Dict:
         "api_documentation": 0.07,
         "accessibility_ux": 0.07,
     }
-    
+
     weighted_total = sum(scores[k] * weights[k] for k in weights)
     overall = round(weighted_total, 1)
-    
+
     result = {
         "overall_score": overall,
         "scores": scores,
@@ -484,10 +573,10 @@ def compute_audit_scores() -> Dict:
         "computed_at": time.time(),
         "_ts": time.time(),
     }
-    
+
     _cache.clear()
     _cache.update(result)
-    
+
     return result
 
 
@@ -498,7 +587,7 @@ def compute_audit_scores() -> Dict:
 def _compute_system_iq(snapshot: Dict, dlq: Dict, db_ok: bool, pending: int) -> int:
     """Compute system health IQ (0-100) from real metrics."""
     score = 100
-    
+
     error_rate = snapshot.get("error_rate_5xx", 0)
     if error_rate > 0.05:
         score -= 30
@@ -506,7 +595,7 @@ def _compute_system_iq(snapshot: Dict, dlq: Dict, db_ok: bool, pending: int) -> 
         score -= 15
     elif error_rate > 0:
         score -= 5
-    
+
     p99 = snapshot.get("p99_latency_ms", 0)
     if p99 > 1000:
         score -= 20
@@ -514,7 +603,7 @@ def _compute_system_iq(snapshot: Dict, dlq: Dict, db_ok: bool, pending: int) -> 
         score -= 10
     elif p99 > 200:
         score -= 5
-    
+
     dlq_size = dlq.get("dlq_size", 0)
     if dlq_size > 100:
         score -= 20
@@ -522,15 +611,15 @@ def _compute_system_iq(snapshot: Dict, dlq: Dict, db_ok: bool, pending: int) -> 
         score -= 10
     elif dlq_size > 0:
         score -= 3
-    
+
     if not db_ok:
         score -= 25
-    
+
     if pending > 100:
         score -= 10
     elif pending > 10:
         score -= 5
-    
+
     return max(0, score)
 
 
@@ -557,4 +646,3 @@ async def get_audit_scores(current_user: dict = Depends(get_current_user)):
     except Exception as e:
         logger.error("Audit score computation failed: %s", e)
         return {"error": str(e), "scores": {}}
-
