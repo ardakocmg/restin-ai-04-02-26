@@ -53,7 +53,7 @@ def analyze():
                 # hardcoded strings
                 stats["hardcoded_strings"] += len(re.findall(r">(No |Error |Loading |Are you sure|Delete |Save |Cancel |Submit |Success)", content))
                 # missing alt
-                stats["img_no_alt"] += len(re.findall(r"<img[^>]*(?<!alt=)[^>]*/>", content))
+                stats["img_no_alt"] += len(re.findall(r"<img(?![^>]*\balt=)[^>]*>", content))
 
     print("--- 16-POINT PRE-COMMIT ANALYSIS ---")
     for key, val in stats.items():
