@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Edge Gateway Client - Frontend connection to venue Edge Gateway
  * @module services/EdgeGatewayClient

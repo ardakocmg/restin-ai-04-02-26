@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Hardware Bridge Service — ESC/POS Printing with Failover
  * Rule #30 & #64: Raw printing without PDF dialogs

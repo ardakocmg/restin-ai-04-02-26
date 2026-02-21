@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * SystemService - Version Management (Server-Authoritative)
  * @module services/SystemService
@@ -33,7 +32,7 @@ class SystemService {
             localStorage.setItem('restin_system_version', JSON.stringify(this.cachedVersion));
 
             return this.cachedVersion as VersionInfo;
-        } catch (error: any) {
+        } catch (error: unknown) {
             logger.error('[SystemService] Failed to fetch version', { error });
 
             // Fallback to cache

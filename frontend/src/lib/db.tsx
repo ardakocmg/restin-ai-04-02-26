@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { openDB, DBSchema } from 'idb';
 import { Payslip, InventoryItem, Order } from '../types';
 

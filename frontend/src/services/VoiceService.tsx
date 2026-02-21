@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Voice Service - Speech recognition using Web Speech API
  * @module services/VoiceService
@@ -101,7 +100,7 @@ class VoiceService {
 
             try {
                 this.recognition.start();
-            } catch (error: any) {
+            } catch (error: unknown) {
                 this.isListening = false;
                 reject(error);
             }

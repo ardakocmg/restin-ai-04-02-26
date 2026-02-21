@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Smart Copy Utility for AI Messages
  * Strips markdown formatting and preserves table structure for clean clipboard output.

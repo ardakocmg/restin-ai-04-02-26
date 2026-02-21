@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * OfflineQueueManager - Replay logic for offline queue
  * @module services/OfflineQueueManager
@@ -102,7 +101,7 @@ class OfflineQueueManager {
                     if (item.id !== undefined) {
                         await this.storage.removeFromQueue(item.id);
                     }
-                } catch (error: any) {
+                } catch (error: unknown) {
                     const err = error as Error;
                     logger.error('Failed to replay item', { itemId: item.id, error: err.message });
 

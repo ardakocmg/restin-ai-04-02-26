@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Device Mesh Client - P2P mesh network for device resilience
  * @module services/DeviceMesh

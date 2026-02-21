@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * ♿ WCAG 2.2 Accessibility Utilities — Rule 46
  * Screen reader support, colorblind safety, focus management.

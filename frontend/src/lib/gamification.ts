@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Gamification Engine — XP & Level System
  * Rule #38: Staff Leaderboards, Quests, and Daily Goals

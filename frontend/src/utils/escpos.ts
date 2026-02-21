@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * ESC/POS Command Builder
  * Generates raw byte arrays for standard thermal printers (Epson/Star)
@@ -7,7 +6,7 @@
 const ESC = 0x1B;
 const GS = 0x1D;
 
-export const PrinterCommands = {
+export const PrinterCommands: Record<string, number[]> = {
     INIT: [ESC, 0x40],
     CUT_FULL: [GS, 0x56, 0x00],
     CUT_PARTIAL: [GS, 0x56, 0x01],
@@ -27,18 +26,23 @@ export const PrinterCommands = {
     TXT_ALIGN_RT: [ESC, 0x61, 0x02],
 };
 
+type TextAlign = 'left' | 'center' | 'right';
+type TextStyle = 'bold' | 'normal' | 'title';
+
 export class ReceiptBuilder {
+    private buffer: number[];
+
     constructor() {
         this.buffer = [];
         this.add(PrinterCommands.INIT);
     }
 
-    add(commands) {
+    add(commands: number[]): this {
         this.buffer.push(...commands);
         return this;
     }
 
-    text(text, encoding = 'utf-8') {
+    text(text: string, _encoding: string = 'utf-8'): this {
         // Basic text encoder
         const encoder = new TextEncoder();
         // For real ESC/POS, sometimes we need Codepage 437 or 1252.
@@ -48,13 +52,13 @@ export class ReceiptBuilder {
         return this;
     }
 
-    textLine(text) {
+    textLine(text: string): this {
         this.text(text);
         this.buffer.push(0x0A); // Newline
         return this;
     }
 
-    align(align) {
+    align(align: TextAlign): this {
         switch (align) {
             case 'center': this.add(PrinterCommands.TXT_ALIGN_CT); break;
             case 'right': this.add(PrinterCommands.TXT_ALIGN_RT); break;
@@ -63,19 +67,19 @@ export class ReceiptBuilder {
         return this;
     }
 
-    style(style) {
+    style(style: TextStyle): this {
         if (style === 'bold') this.add(PrinterCommands.TXT_BOLD_ON);
         if (style === 'normal') this.add(PrinterCommands.TXT_NORMAL);
         if (style === 'title') this.add(PrinterCommands.TXT_2HEIGHT);
         return this;
     }
 
-    feed(lines = 1) {
+    feed(lines: number = 1): this {
         for (let i = 0; i < lines; i++) this.buffer.push(0x0A);
         return this;
     }
 
-    cut() {
+    cut(): this {
         this.feed(3);
         this.add(PrinterCommands.CUT_PARTIAL);
         return this;
@@ -84,7 +88,7 @@ export class ReceiptBuilder {
     /**
      * Returns the raw Uint8Array for the printer
      */
-    encode() {
+    encode(): Uint8Array {
         return new Uint8Array(this.buffer);
     }
 }

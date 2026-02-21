@@ -1,5 +1,4 @@
-// @ts-nocheck
-import axios from "axios";
+import axios, { type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
 import authStore from "./AuthStore";
 import { logger } from "./logger";
 
@@ -28,7 +27,7 @@ const api = axios.create({
 })();
 
 // Add auth token to requests
-api.interceptors.request.use((config) => {
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = authStore.getToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -46,31 +45,37 @@ api.interceptors.request.use((config) => {
 
 // Handle 401 with request queue (prevents duplicate refreshes)
 let isRefreshing = false;
-let requestQueue = [];
 
-function processQueue(error, newToken = null) {
+interface QueueItem {
+  resolve: (value: string | PromiseLike<string>) => void;
+  reject: (reason: unknown) => void;
+}
+
+let requestQueue: QueueItem[] = [];
+
+function processQueue(error: unknown, newToken: string | null = null): void {
   requestQueue.forEach(promise => {
     if (error) {
       promise.reject(error);
     } else {
-      promise.resolve(newToken);
+      promise.resolve(newToken as string);
     }
   });
   requestQueue = [];
 }
 
-async function refreshToken() {
+async function refreshToken(): Promise<string> {
   const token = authStore.getToken();
   if (!token) throw new Error('No token to refresh');
 
-  const response = await axios.post(
+  const response: AxiosResponse = await axios.post(
     `${BACKEND_BASE}/api/auth/refresh`,
     {},
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
-  const newToken = response.data.accessToken;
-  const user = response.data.user;
+  const newToken: string = response.data.accessToken;
+  const user: Record<string, unknown> = response.data.user;
 
   authStore.setAuth(newToken, user);
 
@@ -78,23 +83,24 @@ async function refreshToken() {
 }
 
 api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  (response: AxiosResponse) => response,
+  async (error: unknown) => {
+    const axiosError = error as { config: InternalAxiosRequestConfig & { __retried?: boolean }; response?: { status: number } };
+    const originalRequest = axiosError.config;
 
-    if (error.response?.status === 401 && !originalRequest.__retried) {
+    if (axiosError.response?.status === 401 && !originalRequest.__retried) {
       originalRequest.__retried = true;
 
       // If refresh already in progress, queue this request
       if (isRefreshing) {
         try {
-          const newToken = await new Promise((resolve, reject) => {
+          const newToken: string = await new Promise<string>((resolve, reject) => {
             requestQueue.push({ resolve, reject });
           });
 
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           return api(originalRequest);
-        } catch (err: any) {
+        } catch (err: unknown) {
           return Promise.reject(err);
         }
       }
@@ -112,7 +118,7 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
 
-      } catch (refreshError: any) {
+      } catch (refreshError: unknown) {
         processQueue(refreshError, null);
 
         // Dispatch event for AuthExpiredModal (NO auto-redirect)
@@ -132,13 +138,13 @@ api.interceptors.response.use(
 // Auth APIs
 export const authAPI = {
   // New PIN-first login - Using direct axios call to avoid baseURL issues
-  loginWithPin: (pin, app, deviceId, stationId = null) => {
+  loginWithPin: (pin: string, app: string, deviceId: string | null, stationId: string | null = null): Promise<AxiosResponse> => {
     const backendUrl = BACKEND_BASE;
     const url = `${backendUrl}/api/auth/login/pin?pin=${pin}&app=${app}${deviceId ? `&deviceId=${deviceId}` : ''}${stationId ? `&stationId=${stationId}` : ''}`;
     return axios.post(url, null, { timeout: 8000 });
   },
   // Credentials login (email, username, or employee ID + password)
-  loginWithCredentials: ({ identifier, password, target, deviceId }) => {
+  loginWithCredentials: ({ identifier, password, target, deviceId }: { identifier: string; password: string; target: string; deviceId: string | null }): Promise<AxiosResponse> => {
     const backendUrl = BACKEND_BASE;
     return axios.post(`${backendUrl}/api/auth/login/credentials`, {
       identifier,
@@ -148,40 +154,40 @@ export const authAPI = {
     });
   },
   // Legacy venue-based login (kept for backwards compatibility)
-  login: (venueId, pin, deviceId) =>
+  login: (venueId: string, pin: string, deviceId: string | null): Promise<AxiosResponse> =>
     axios.post(`${API}/auth/login?venue_id=${venueId}&pin=${pin}${deviceId ? `&device_id=${deviceId}` : ''}`),
-  verifyMFA: (userId, totpCode, deviceId) =>
+  verifyMFA: (userId: string, totpCode: string, deviceId: string | null): Promise<AxiosResponse> =>
     axios.post(`${API}/auth/verify-mfa?user_id=${userId}&totp_code=${totpCode}${deviceId ? `&device_id=${deviceId}` : ''}`),
-  setupMFA: () => api.post("/auth/setup-mfa"),
-  enableMFA: (totpCode) => api.post(`/auth/enable-mfa?totp_code=${totpCode}`),
+  setupMFA: (): Promise<AxiosResponse> => api.post("/auth/setup-mfa"),
+  enableMFA: (totpCode: string): Promise<AxiosResponse> => api.post(`/auth/enable-mfa?totp_code=${totpCode}`),
   // Super Owner first-run setup
-  checkSetupRequired: () => {
+  checkSetupRequired: (): Promise<AxiosResponse> => {
     const backendUrl = BACKEND_BASE;
     return axios.get(`${backendUrl}/api/auth/setup/status`);
   },
-  setupSuperOwner: (data) => {
+  setupSuperOwner: (data: Record<string, unknown>): Promise<AxiosResponse> => {
     const backendUrl = BACKEND_BASE;
     return axios.post(`${backendUrl}/api/auth/setup`, data);
   },
   // Progressive Auth Elevation — verify password or TOTP to unlock sensitive areas
-  elevateAuth: (body) => api.post('/auth/elevate', body),
+  elevateAuth: (body: Record<string, unknown>): Promise<AxiosResponse> => api.post('/auth/elevate', body),
 };
 
 // Venue APIs
 export const venueAPI = {
-  list: () => api.get("/venues"),
-  get: (id) => api.get(`/venues/${id}`),
-  create: (data) => api.post("/venues", data),
-  update: (id, data) => api.put(`/venues/${id}`, data),
-  getZones: (venueId) => api.get(`/venues/${venueId}/zones`),
-  createZone: (data) => api.post("/zones", data),
-  getTables: (venueId) => api.get(`/venues/${venueId}/tables`),
-  createTable: (data) => api.post("/tables", data),
-  updateTable: (tableId, data) => api.put(`/tables/${tableId}`, data),
-  deleteTable: (tableId) => api.delete(`/tables/${tableId}`),
-  getStats: (venueId) => api.get(`/venues/${venueId}/stats`),
-  getOrders: (venueId, status, tableId) => {
-    const params = [];
+  list: (): Promise<AxiosResponse> => api.get("/venues"),
+  get: (id: string): Promise<AxiosResponse> => api.get(`/venues/${id}`),
+  create: (data: Record<string, unknown>): Promise<AxiosResponse> => api.post("/venues", data),
+  update: (id: string, data: Record<string, unknown>): Promise<AxiosResponse> => api.put(`/venues/${id}`, data),
+  getZones: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/zones`),
+  createZone: (data: Record<string, unknown>): Promise<AxiosResponse> => api.post("/zones", data),
+  getTables: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/tables`),
+  createTable: (data: Record<string, unknown>): Promise<AxiosResponse> => api.post("/tables", data),
+  updateTable: (tableId: string, data: Record<string, unknown>): Promise<AxiosResponse> => api.put(`/tables/${tableId}`, data),
+  deleteTable: (tableId: string): Promise<AxiosResponse> => api.delete(`/tables/${tableId}`),
+  getStats: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/stats`),
+  getOrders: (venueId: string, status?: string, tableId?: string): Promise<AxiosResponse> => {
+    const params: string[] = [];
     if (status) params.push(`status=${status}`);
     if (tableId) params.push(`table_id=${tableId}`);
     const query = params.length > 0 ? `?${params.join('&')}` : '';
@@ -191,120 +197,120 @@ export const venueAPI = {
 
 // User APIs
 export const userAPI = {
-  list: (venueId) => api.get(`/venues/${venueId}/users`),
-  create: (data) => api.post("/users", data)
+  list: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/users`),
+  create: (data: Record<string, unknown>): Promise<AxiosResponse> => api.post("/users", data)
 };
 
 // Public content APIs
 export const publicContentAPI = {
-  getCurrent: (type) => api.get("/public-content/current", { params: { type } }),
-  listVersions: (type) => api.get("/public-content/versions", { params: { type } }),
-  createVersion: (payload) => api.post("/public-content", payload),
-  updateVersion: (id, payload) => api.patch(`/public-content/${id}`, payload),
-  approveVersion: (id) => api.post(`/public-content/${id}/approve`),
-  previewVersion: (id) => api.get(`/public-content/preview/${id}`),
-  syncModules: () => api.post('/public-content/sync-modules')
+  getCurrent: (type: string): Promise<AxiosResponse> => api.get("/public-content/current", { params: { type } }),
+  listVersions: (type: string): Promise<AxiosResponse> => api.get("/public-content/versions", { params: { type } }),
+  createVersion: (payload: Record<string, unknown>): Promise<AxiosResponse> => api.post("/public-content", payload),
+  updateVersion: (id: string, payload: Record<string, unknown>): Promise<AxiosResponse> => api.patch(`/public-content/${id}`, payload),
+  approveVersion: (id: string): Promise<AxiosResponse> => api.post(`/public-content/${id}/approve`),
+  previewVersion: (id: string): Promise<AxiosResponse> => api.get(`/public-content/preview/${id}`),
+  syncModules: (): Promise<AxiosResponse> => api.post('/public-content/sync-modules')
 };
 
 // Table preferences
 export const tablePreferencesAPI = {
-  get: (tableId, venueId) => api.get('/table-preferences', { params: { table_id: tableId, venue_id: venueId } }),
-  upsert: (payload) => api.post('/table-preferences', payload)
+  get: (tableId: string, venueId: string): Promise<AxiosResponse> => api.get('/table-preferences', { params: { table_id: tableId, venue_id: venueId } }),
+  upsert: (payload: Record<string, unknown>): Promise<AxiosResponse> => api.post('/table-preferences', payload)
 };
 
 export const tablePresetsAPI = {
-  list: (tableId, venueId) => api.get('/table-presets', { params: { table_id: tableId, venue_id: venueId } }),
-  create: (payload) => api.post('/table-presets', payload),
-  remove: (id) => api.delete(`/table-presets/${id}`)
+  list: (tableId: string, venueId: string): Promise<AxiosResponse> => api.get('/table-presets', { params: { table_id: tableId, venue_id: venueId } }),
+  create: (payload: Record<string, unknown>): Promise<AxiosResponse> => api.post('/table-presets', payload),
+  remove: (id: string): Promise<AxiosResponse> => api.delete(`/table-presets/${id}`)
 };
 
 export const hrFeatureFlagsAPI = {
-  get: (venueId) => api.get('/hr/feature-flags', { params: { venue_id: venueId } }),
-  update: (payload) => api.post('/hr/feature-flags', payload)
+  get: (venueId: string): Promise<AxiosResponse> => api.get('/hr/feature-flags', { params: { venue_id: venueId } }),
+  update: (payload: Record<string, unknown>): Promise<AxiosResponse> => api.post('/hr/feature-flags', payload)
 };
 
 export const hrAuditAPI = {
-  list: (venueId, page = 1, pageSize = 50) => api.get('/hr/audit-logs', { params: { venue_id: venueId, page, page_size: pageSize } })
+  list: (venueId: string, page = 1, pageSize = 50): Promise<AxiosResponse> => api.get('/hr/audit-logs', { params: { venue_id: venueId, page, page_size: pageSize } })
 };
 
 export const updatesAPI = {
-  listChanges: (published = false) => api.get('/updates/changes', { params: { published } }),
-  createChange: (payload) => api.post('/updates/changes', payload),
-  publish: () => api.post('/updates/publish'),
-  listReleases: (view = 'user') => api.get('/updates/releases', { params: { view } })
+  listChanges: (published = false): Promise<AxiosResponse> => api.get('/updates/changes', { params: { published } }),
+  createChange: (payload: Record<string, unknown>): Promise<AxiosResponse> => api.post('/updates/changes', payload),
+  publish: (): Promise<AxiosResponse> => api.post('/updates/publish'),
+  listReleases: (view = 'user'): Promise<AxiosResponse> => api.get('/updates/releases', { params: { view } })
 };
 
 // Menu APIs
 export const menuAPI = {
   // Menus
-  listMenus: (venueId) => api.get(`/venues/${venueId}/menus`),
-  getActiveMenu: (venueId) => api.get(`/venues/${venueId}/menus/active`),
-  createMenu: (data) => api.post("/menus", data),
-  updateMenu: (menuId, data) => api.put(`/menus/${menuId}`, data),
+  listMenus: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/menus`),
+  getActiveMenu: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/menus/active`),
+  createMenu: (data: Record<string, unknown>): Promise<AxiosResponse> => api.post("/menus", data),
+  updateMenu: (menuId: string, data: Record<string, unknown>): Promise<AxiosResponse> => api.put(`/menus/${menuId}`, data),
 
   // Categories
-  getCategories: (venueId, menuId) =>
+  getCategories: (venueId: string, menuId?: string): Promise<AxiosResponse> =>
     api.get(`/venues/${venueId}/menu/categories${menuId ? `?menu_id=${menuId}` : ''}`),
-  createCategory: (data) => api.post("/menu/categories", data),
-  updateCategory: (categoryId, data) => api.put(`/menu/categories/${categoryId}`, data),
-  deleteCategory: (categoryId) => api.delete(`/menu/categories/${categoryId}`),
+  createCategory: (data: Record<string, unknown>): Promise<AxiosResponse> => api.post("/menu/categories", data),
+  updateCategory: (categoryId: string, data: Record<string, unknown>): Promise<AxiosResponse> => api.put(`/menu/categories/${categoryId}`, data),
+  deleteCategory: (categoryId: string): Promise<AxiosResponse> => api.delete(`/menu/categories/${categoryId}`),
 
   // Items
-  getItems: (venueId, categoryId, menuId, includeInactive) => {
-    const params = [];
+  getItems: (venueId: string, categoryId?: string, menuId?: string, includeInactive?: boolean): Promise<AxiosResponse> => {
+    const params: string[] = [];
     if (categoryId) params.push(`category_id=${categoryId}`);
     if (menuId) params.push(`menu_id=${menuId}`);
     if (includeInactive) params.push(`include_inactive=true`);
     return api.get(`/venues/${venueId}/menu/items${params.length ? `?${params.join('&')}` : ''}`);
   },
-  getItem: (itemId) => api.get(`/menu/items/${itemId}`),
-  createItem: (data) => api.post("/menu/items", data),
-  updateItem: (itemId, data) => api.put(`/menu/items/${itemId}`, data),
-  deleteItem: (itemId) => api.delete(`/menu/items/${itemId}`)
+  getItem: (itemId: string): Promise<AxiosResponse> => api.get(`/menu/items/${itemId}`),
+  createItem: (data: Record<string, unknown>): Promise<AxiosResponse> => api.post("/menu/items", data),
+  updateItem: (itemId: string, data: Record<string, unknown>): Promise<AxiosResponse> => api.put(`/menu/items/${itemId}`, data),
+  deleteItem: (itemId: string): Promise<AxiosResponse> => api.delete(`/menu/items/${itemId}`)
 };
 
 // Order APIs
 export const orderAPI = {
-  list: (venueId, status, tableId) => {
+  list: (venueId: string, status?: string, tableId?: string): Promise<AxiosResponse> => {
     let url = `/venues/${venueId}/orders`;
-    const params = [];
+    const params: string[] = [];
     if (status) params.push(`status=${status}`);
     if (tableId) params.push(`table_id=${tableId}`);
     if (params.length) url += `?${params.join('&')}`;
     return api.get(url);
   },
-  get: (orderId) => api.get(`/orders/${orderId}`),
-  create: (data) => api.post("/orders", data),
-  addItem: (orderId, data) => api.post(`/orders/${orderId}/items`, data),
-  send: (orderId) => api.post(`/orders/${orderId}/send`),
-  transfer: (orderId, newTableId) => api.post(`/orders/${orderId}/transfer?new_table_id=${newTableId}`),
-  split: (orderId, seatNumbers) => api.post(`/orders/${orderId}/split`, { seat_numbers: seatNumbers }),
-  merge: (orderId, mergeOrderId) => api.post(`/orders/${orderId}/merge?merge_order_id=${mergeOrderId}`),
-  close: (orderId) => api.post(`/orders/${orderId}/close`),
-  offlineSync: (orders) => api.post("/orders/offline-sync", orders),
-  getReviewStatus: (orderId) => api.get(`/orders/${orderId}/review-status`),
-  overrideReview: (orderId, reason) => api.post(`/orders/${orderId}/override-review?reason=${encodeURIComponent(reason)}`)
+  get: (orderId: string): Promise<AxiosResponse> => api.get(`/orders/${orderId}`),
+  create: (data: Record<string, unknown>): Promise<AxiosResponse> => api.post("/orders", data),
+  addItem: (orderId: string, data: Record<string, unknown>): Promise<AxiosResponse> => api.post(`/orders/${orderId}/items`, data),
+  send: (orderId: string): Promise<AxiosResponse> => api.post(`/orders/${orderId}/send`),
+  transfer: (orderId: string, newTableId: string): Promise<AxiosResponse> => api.post(`/orders/${orderId}/transfer?new_table_id=${newTableId}`),
+  split: (orderId: string, seatNumbers: number[]): Promise<AxiosResponse> => api.post(`/orders/${orderId}/split`, { seat_numbers: seatNumbers }),
+  merge: (orderId: string, mergeOrderId: string): Promise<AxiosResponse> => api.post(`/orders/${orderId}/merge?merge_order_id=${mergeOrderId}`),
+  close: (orderId: string): Promise<AxiosResponse> => api.post(`/orders/${orderId}/close`),
+  offlineSync: (orders: Record<string, unknown>[]): Promise<AxiosResponse> => api.post("/orders/offline-sync", orders),
+  getReviewStatus: (orderId: string): Promise<AxiosResponse> => api.get(`/orders/${orderId}/review-status`),
+  overrideReview: (orderId: string, reason: string): Promise<AxiosResponse> => api.post(`/orders/${orderId}/override-review?reason=${encodeURIComponent(reason)}`)
 };
 
 // KDS APIs
 export const kdsAPI = {
-  getTickets: (venueId, prepArea, status) => {
+  getTickets: (venueId: string, prepArea?: string, status?: string): Promise<AxiosResponse> => {
     let url = `/venues/${venueId}/kds/tickets`;
-    const params = [];
+    const params: string[] = [];
     if (prepArea) params.push(`prep_area=${prepArea}`);
     if (status) params.push(`status=${status}`);
     if (params.length) url += `?${params.join('&')}`;
     return api.get(url);
   },
-  startTicket: (ticketId) => api.post(`/kds/tickets/${ticketId}/start`),
-  readyTicket: (ticketId) => api.post(`/kds/tickets/${ticketId}/ready`)
+  startTicket: (ticketId: string): Promise<AxiosResponse> => api.post(`/kds/tickets/${ticketId}/start`),
+  readyTicket: (ticketId: string): Promise<AxiosResponse> => api.post(`/kds/tickets/${ticketId}/ready`)
 };
 
 // Inventory APIs
 export const inventoryAPI = {
-  list: (venueId) => api.get(`/venues/${venueId}/inventory`),
-  createItem: (data) => api.post("/inventory/items", data),
-  addLedgerEntry: (itemId, action, quantity, reason, lotNumber, expiryDate, poId) => {
+  list: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/inventory`),
+  createItem: (data: Record<string, unknown>): Promise<AxiosResponse> => api.post("/inventory/items", data),
+  addLedgerEntry: (itemId: string, action: string, quantity: number, reason?: string, lotNumber?: string, expiryDate?: string, poId?: string): Promise<AxiosResponse> => {
     let url = `/inventory/ledger?item_id=${itemId}&action=${action}&quantity=${quantity}`;
     if (reason) url += `&reason=${encodeURIComponent(reason)}`;
     if (lotNumber) url += `&lot_number=${lotNumber}`;
@@ -312,125 +318,125 @@ export const inventoryAPI = {
     if (poId) url += `&po_id=${poId}`;
     return api.post(url);
   },
-  getLedger: (venueId, itemId) =>
+  getLedger: (venueId: string, itemId?: string): Promise<AxiosResponse> =>
     api.get(`/venues/${venueId}/inventory/ledger${itemId ? `?item_id=${itemId}` : ''}`),
-  getVariance: (venueId) => api.get(`/venues/${venueId}/inventory/variance`)
+  getVariance: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/inventory/variance`)
 };
 
 // Procurement APIs
 export const procurementAPI = {
-  listPOs: (venueId) => api.get(`/venues/${venueId}/purchase-orders`),
-  createPO: (data) => api.post("/purchase-orders", data),
-  receiveDelivery: (poId, items) => api.post(`/purchase-orders/${poId}/receive`, items)
+  listPOs: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/purchase-orders`),
+  createPO: (data: Record<string, unknown>): Promise<AxiosResponse> => api.post("/purchase-orders", data),
+  receiveDelivery: (poId: string, items: Record<string, unknown>[]): Promise<AxiosResponse> => api.post(`/purchase-orders/${poId}/receive`, items)
 };
 
 // Document APIs
 export const documentAPI = {
-  list: (venueId) => api.get(`/venues/${venueId}/documents`),
-  upload: (venueId, file) => {
+  list: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/documents`),
+  upload: (venueId: string, file: File): Promise<AxiosResponse> => {
     const formData = new FormData();
     formData.append("file", file);
     return api.post(`/documents/upload?venue_id=${venueId}`, formData, {
       headers: { "Content-Type": "multipart/form-data" }
     });
   },
-  get: (docId) => api.get(`/documents/${docId}`),
-  approve: (docId) => api.post(`/documents/${docId}/approve`)
+  get: (docId: string): Promise<AxiosResponse> => api.get(`/documents/${docId}`),
+  approve: (docId: string): Promise<AxiosResponse> => api.post(`/documents/${docId}/approve`)
 };
 
 // Review Risk APIs
 export const reviewAPI = {
-  getDashboard: (venueId) => api.get(`/venues/${venueId}/review-risk`)
+  getDashboard: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/review-risk`)
 };
 
 // Audit Log APIs
 export const auditAPI = {
-  list: (venueId, resourceType, action, limit) => {
+  list: (venueId: string, resourceType?: string, action?: string, limit?: number): Promise<AxiosResponse> => {
     let url = `/venues/${venueId}/audit-logs`;
-    const params = [];
+    const params: string[] = [];
     if (resourceType) params.push(`resource_type=${resourceType}`);
     if (action) params.push(`action=${action}`);
     if (limit) params.push(`limit=${limit}`);
     if (params.length) url += `?${params.join('&')}`;
     return api.get(url);
   },
-  export: (venueId) => api.get(`/venues/${venueId}/audit-logs/export`)
+  export: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/audit-logs/export`)
 };
 
 // Device APIs
 export const deviceAPI = {
-  bind: (data) => {
+  bind: (data: Record<string, unknown>): Promise<AxiosResponse> => {
     return api.post(`/devices/bind`, data);
   },
-  getBinding: (deviceId) => api.get(`/devices/${deviceId}/binding`)
+  getBinding: (deviceId: string): Promise<AxiosResponse> => api.get(`/devices/${deviceId}/binding`)
 };
 
 // Print APIs
 export const printAPI = {
-  list: (venueId, status) =>
+  list: (venueId: string, status?: string): Promise<AxiosResponse> =>
     api.get(`/venues/${venueId}/print-jobs${status ? `?status=${status}` : ''}`),
-  complete: (jobId) => api.post(`/print-jobs/${jobId}/complete`)
+  complete: (jobId: string): Promise<AxiosResponse> => api.post(`/print-jobs/${jobId}/complete`)
 };
 
 // Shift Management APIs
 export const shiftAPI = {
-  create: (venueId, shiftData) => api.post(`/venues/${venueId}/shifts`, shiftData),
-  list: (venueId, userId, date) => {
+  create: (venueId: string, shiftData: Record<string, unknown>): Promise<AxiosResponse> => api.post(`/venues/${venueId}/shifts`, shiftData),
+  list: (venueId: string, userId?: string, date?: string): Promise<AxiosResponse> => {
     let url = `/venues/${venueId}/shifts`;
-    const params = [];
+    const params: string[] = [];
     if (userId) params.push(`user_id=${userId}`);
     if (date) params.push(`date=${date}`);
     if (params.length) url += `?${params.join('&')}`;
     return api.get(url);
   },
-  getActive: (venueId) => api.get(`/venues/${venueId}/shifts/active`),
-  getCurrent: (userId) => api.get(`/users/${userId}/current-shift`),
-  checkIn: (venueId, shiftId) => api.post(`/venues/${venueId}/shifts/${shiftId}/check-in`),
-  checkOut: (venueId, shiftId) => api.post(`/venues/${venueId}/shifts/${shiftId}/check-out`)
+  getActive: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/shifts/active`),
+  getCurrent: (userId: string): Promise<AxiosResponse> => api.get(`/users/${userId}/current-shift`),
+  checkIn: (venueId: string, shiftId: string): Promise<AxiosResponse> => api.post(`/venues/${venueId}/shifts/${shiftId}/check-in`),
+  checkOut: (venueId: string, shiftId: string): Promise<AxiosResponse> => api.post(`/venues/${venueId}/shifts/${shiftId}/check-out`)
 };
 
 // Manager Override APIs
 export const managerOverrideAPI = {
-  grant: (venueId, userId, reason, durationHours = 4) =>
+  grant: (venueId: string, userId: string, reason: string, durationHours = 4): Promise<AxiosResponse> =>
     api.post(`/venues/${venueId}/manager-override?user_id=${userId}&reason=${encodeURIComponent(reason)}&duration_hours=${durationHours}`),
-  check: (venueId, userId) => api.get(`/venues/${venueId}/manager-override/${userId}`),
-  list: (venueId) => api.get(`/venues/${venueId}/manager-override`)
+  check: (venueId: string, userId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/manager-override/${userId}`),
+  list: (venueId: string): Promise<AxiosResponse> => api.get(`/venues/${venueId}/manager-override`)
 };
 
 // Access Control (Nuki) APIs
 export const accessControlAPI = {
   // Core
-  listDoors: (venueId) => api.get(`/access-control/doors?venue_id=${venueId}`),
-  sync: (venueId) => api.post(`/access-control/doors/sync?venue_id=${venueId}`),
-  renameDoor: (doorId, name, venueId) => api.post(`/access-control/doors/${doorId}/rename?venue_id=${venueId}`, { display_name: name }),
+  listDoors: (venueId: string): Promise<AxiosResponse> => api.get(`/access-control/doors?venue_id=${venueId}`),
+  sync: (venueId: string): Promise<AxiosResponse> => api.post(`/access-control/doors/sync?venue_id=${venueId}`),
+  renameDoor: (doorId: string, name: string, venueId: string): Promise<AxiosResponse> => api.post(`/access-control/doors/${doorId}/rename?venue_id=${venueId}`, { display_name: name }),
 
   // Actions
-  unlock: (doorId, venueId, userId) => api.post(`/access-control/doors/${doorId}/unlock?venue_id=${venueId}&user_id=${userId}`),
-  lock: (doorId, venueId, userId) => api.post(`/access-control/doors/${doorId}/lock?venue_id=${venueId}&user_id=${userId}`),
-  unlatch: (doorId, venueId, userId) => api.post(`/access-control/doors/${doorId}/unlatch?venue_id=${venueId}&user_id=${userId}`),
+  unlock: (doorId: string, venueId: string, userId: string): Promise<AxiosResponse> => api.post(`/access-control/doors/${doorId}/unlock?venue_id=${venueId}&user_id=${userId}`),
+  lock: (doorId: string, venueId: string, userId: string): Promise<AxiosResponse> => api.post(`/access-control/doors/${doorId}/lock?venue_id=${venueId}&user_id=${userId}`),
+  unlatch: (doorId: string, venueId: string, userId: string): Promise<AxiosResponse> => api.post(`/access-control/doors/${doorId}/unlatch?venue_id=${venueId}&user_id=${userId}`),
 
   // Config (New)
-  getConfig: (doorId, venueId) => api.get(`/access-control/doors/${doorId}/config?venue_id=${venueId}`),
-  updateConfig: (doorId, config, venueId) => api.post(`/access-control/doors/${doorId}/config?venue_id=${venueId}`, config),
+  getConfig: (doorId: string, venueId: string): Promise<AxiosResponse> => api.get(`/access-control/doors/${doorId}/config?venue_id=${venueId}`),
+  updateConfig: (doorId: string, config: Record<string, unknown>, venueId: string): Promise<AxiosResponse> => api.post(`/access-control/doors/${doorId}/config?venue_id=${venueId}`, config),
 
   // Logs (New)
-  getAuditLogs: (venueId, limit = 100) => api.get(`/access-control/audit-logs?venue_id=${venueId}&limit=${limit}`),
-  getNativeLogs: (doorId, venueId, limit = 50) => api.get(`/access-control/doors/${doorId}/native-logs?venue_id=${venueId}&limit=${limit}`),
-  syncLogs: (doorId, venueId) => api.post(`/access-control/doors/${doorId}/sync-logs?venue_id=${venueId}`),
+  getAuditLogs: (venueId: string, limit = 100): Promise<AxiosResponse> => api.get(`/access-control/audit-logs?venue_id=${venueId}&limit=${limit}`),
+  getNativeLogs: (doorId: string, venueId: string, limit = 50): Promise<AxiosResponse> => api.get(`/access-control/doors/${doorId}/native-logs?venue_id=${venueId}&limit=${limit}`),
+  syncLogs: (doorId: string, venueId: string): Promise<AxiosResponse> => api.post(`/access-control/doors/${doorId}/sync-logs?venue_id=${venueId}`),
 
   // Auth (New)
-  listAuths: (doorId, venueId) => api.get(`/access-control/doors/${doorId}/auths?venue_id=${venueId}`),
-  createAuth: (doorId, name, venueId) => api.post(`/access-control/doors/${doorId}/auths?venue_id=${venueId}`, { name }),
-  deleteAuth: (doorId, authId, venueId) => api.delete(`/access-control/doors/${doorId}/auths/${authId}?venue_id=${venueId}`),
-  revokeAuth: (id, venueId) => api.delete(`/access-control/keypad/pins/${id}?venue_id=${venueId}`), // Keep for legacy if needed
+  listAuths: (doorId: string, venueId: string): Promise<AxiosResponse> => api.get(`/access-control/doors/${doorId}/auths?venue_id=${venueId}`),
+  createAuth: (doorId: string, name: string, venueId: string): Promise<AxiosResponse> => api.post(`/access-control/doors/${doorId}/auths?venue_id=${venueId}`, { name }),
+  deleteAuth: (doorId: string, authId: string, venueId: string): Promise<AxiosResponse> => api.delete(`/access-control/doors/${doorId}/auths/${authId}?venue_id=${venueId}`),
+  revokeAuth: (id: string, venueId: string): Promise<AxiosResponse> => api.delete(`/access-control/keypad/pins/${id}?venue_id=${venueId}`), // Keep for legacy if needed
 
   // Keypad
-  listPins: (venueId, doorId) => api.get(`/access-control/keypad/pins?venue_id=${venueId}${doorId ? `&door_id=${doorId}` : ''}`),
-  createPin: (venueId, doorId, name, code, validFrom, validUntil) =>
+  listPins: (venueId: string, doorId?: string): Promise<AxiosResponse> => api.get(`/access-control/keypad/pins?venue_id=${venueId}${doorId ? `&door_id=${doorId}` : ''}`),
+  createPin: (venueId: string, doorId: string, name: string, code: string, validFrom: string | null, validUntil: string | null): Promise<AxiosResponse> =>
     api.post(`/access-control/keypad/pins?venue_id=${venueId}`, {
       door_id: doorId, name, code: parseInt(code), valid_from: validFrom, valid_until: validUntil
     }),
-  revokePin: (pinId) => api.delete(`/access-control/keypad/pins/${pinId}`)
+  revokePin: (pinId: string): Promise<AxiosResponse> => api.delete(`/access-control/keypad/pins/${pinId}`)
 };
 
 export default api;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Search Service - Global search for KDS/POS/Admin
  * @module services/SearchService
@@ -55,7 +54,7 @@ class SearchService {
             this.lastQuery[context] = q;
 
             return response.data;
-        } catch (error: any) {
+        } catch (error: unknown) {
             logger.warn('[Search] API failed, using local fallback', { error });
             return this.localFallback(q, context);
         }
