@@ -116,7 +116,8 @@ export default function POSSalesReport() {
     }
   };
 
-  const handleExportCsv = (data, name) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleExportCsv = (data: any, name: string) => {
     if (!data) {
       toast.error('No data to export');
       return;
@@ -125,11 +126,11 @@ export default function POSSalesReport() {
     toast.success('CSV exported successfully');
   };
 
-  const formatCurrency = (amount) => {
+  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-MT', { style: 'currency', currency: 'EUR' }).format(amount || 0);
   };
 
-  const Section = ({ title, children }) => (
+  const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <div className="mb-8">
       <h2 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-4 px-1">{title}</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -138,7 +139,7 @@ export default function POSSalesReport() {
     </div>
   );
 
-  const Tile = ({ title, icon: Icon, onClick, highlight = false }) => (
+  const Tile = ({ title, icon: Icon, onClick, highlight = false }: { title: string; icon: React.ComponentType<{ className?: string }>; onClick: () => void; highlight?: boolean }) => (
     <div
       onClick={onClick}
       className={`
@@ -401,7 +402,8 @@ export default function POSSalesReport() {
     );
   };
 
-  const renderSummaryReport = (data) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const renderSummaryReport = (data: any) => {
     if (!data) return null;
 
     return (
@@ -605,7 +607,7 @@ export default function POSSalesReport() {
   };
 
   const renderHubTiles = (isBottom = false) => {
-    const categories = [...new Set(reportTypes.map(t => t.category))];
+    const categories = Array.from(new Set(reportTypes.map(t => t.category)));
     return (
       <div className={cn("animate-in fade-in zoom-in-95 duration-500", isBottom && "mt-12 pt-12 border-t border-border")}>
         {isBottom && (
@@ -685,14 +687,14 @@ export default function POSSalesReport() {
 
         {loading ? (
           <div className="h-[500px] flex flex-col items-center justify-center">
-            <LoadingSpinner text={`Sourcing ${reportInfo?.label}...`} />
+            <LoadingSpinner text={`Sourcing ${reportInfo?.label}...`} className="" />
             <p className="text-[10px] text-muted-foreground uppercase font-black tracking-[0.3em] mt-8 animate-pulse">Aggregating Cloud Data</p>
           </div>
         ) : (
           <div className="animate-in fade-in slide-in-from-top-4 duration-500">
             {activeReport === 'summary' || activeReport === 'revenue' ? renderSummaryReport(salesData) :
               activeReport === 'product' || activeReport === 'category' ? renderProductReport() :
-                activeReport === 'user' ? renderUserReport() :
+                activeReport === 'user' ? <div className="text-center p-12 text-muted-foreground">User report coming soon</div> :
                   <div className="flex flex-col items-center justify-center p-24 text-center text-muted-foreground bg-card/20 rounded-3xl border-2 border-border/50 border-dashed">
                     <div className="h-20 w-20 bg-secondary rounded-3xl flex items-center justify-center mb-6 opacity-30">
                       {reportInfo?.icon && <reportInfo.icon className="h-10 w-10" />}
@@ -713,9 +715,9 @@ export default function POSSalesReport() {
   };
 
   return (
-    <PageContainer title="POS Command Center" description="Premium analytics & operational reporting for Restin POS">
+    <PageContainer title="POS Command Center" description="Premium analytics & operational reporting for Restin POS" actions={null}>
       <div className="space-y-8 pb-12">
-        <POSFilterBar />
+        <POSFilterBar onSettingsClick={() => { }} />
         <div className="min-h-[700px]">
           {renderContent()}
         </div>

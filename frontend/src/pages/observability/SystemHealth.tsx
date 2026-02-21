@@ -17,7 +17,8 @@ import { Activity, Database, AlertTriangle, CheckCircle2, RefreshCw } from 'luci
 
 export default function SystemHealth() {
   const { activeVenue } = useVenue();
-  const [health, setHealth] = useState(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [health, setHealth] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function SystemHealth() {
     }
   };
 
-  const getOverallBadge = (overall) => {
+  const getOverallBadge = (overall: string) => {
     if (overall === 'OK') return <Badge className="bg-green-100 text-green-700"><CheckCircle2 className="h-3 w-3 mr-1" />OK</Badge>;
     if (overall === 'DEGRADED') return <Badge className="bg-orange-100 text-orange-700"><AlertTriangle className="h-3 w-3 mr-1" />DEGRADED</Badge>;
     return <Badge variant="destructive"><AlertTriangle className="h-3 w-3 mr-1" />DOWN</Badge>;
@@ -79,7 +80,7 @@ export default function SystemHealth() {
                   <div key={key} className="flex items-center justify-between p-2 bg-slate-50 rounded">
                     <span className="text-sm font-medium">{key}</span>
                     <Badge variant={value === 'OK' ? 'outline' : 'destructive'}>
-                      {value}
+                      {value as string}
                     </Badge>
                   </div>
                 ))}
@@ -94,7 +95,7 @@ export default function SystemHealth() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                {Object.entries(health.soft || {}).map(([key, metric]) => (
+                {Object.entries(health.soft || {}).map(([key, metric]: [string, any]) => (
                   <div key={key} className="flex items-center justify-between p-2 bg-slate-50 rounded">
                     <div>
                       <span className="text-sm font-medium">{key}</span>

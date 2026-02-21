@@ -32,8 +32,8 @@ const MODULE_META = {
  * Toggle HR modules on/off per venue. Wires to GET/POST /hr/feature-flags.
  */
 export default function FeatureFlagAdmin() {
-    const { currentVenue } = useVenue();
-    const venueId = currentVenue?.id || localStorage.getItem('currentVenueId') || 'default';
+    const { activeVenue } = useVenue();
+    const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
     const [localFlags, setLocalFlags] = useState(null);
     const [hasChanges, setHasChanges] = useState(false);
@@ -43,13 +43,15 @@ export default function FeatureFlagAdmin() {
         queryFn: async () => {
             const { data } = await api.get(`/hr/feature-flags?venue_id=${venueId}`);
             return data;
-        },
-        onSuccess: (data) => {
-            if (!localFlags) {
-                setLocalFlags(data.flags || []);
-            }
         }
     });
+
+    // Sync localFlags from fetched data
+    React.useEffect(() => {
+        if (flagsData && !localFlags) {
+            setLocalFlags((flagsData as Record<string, unknown>).flags as typeof localFlags ?? []);
+        }
+    }, [flagsData]);
 
     const saveMutation = useMutation({
         mutationFn: async () => {
@@ -61,14 +63,14 @@ export default function FeatureFlagAdmin() {
         onSuccess: () => {
             toast.success('Feature flags saved successfully');
             setHasChanges(false);
-            queryClient.invalidateQueries(['feature-flags']);
+            queryClient.invalidateQueries({ queryKey: ['feature-flags'] });
         },
         onError: () => toast.error('Failed to save feature flags')
     });
 
-    const flags = localFlags || flagsData?.flags || [];
+    const flags = localFlags || (flagsData as Record<string, unknown>)?.flags as typeof localFlags || [];
 
-    const toggleFlag = (moduleKey) => {
+    const toggleFlag = (moduleKey: string) => {
         const updated = flags.map(f =>
             f.module_key === moduleKey ? { ...f, enabled: !f.enabled } : f
         );
@@ -114,11 +116,11 @@ export default function FeatureFlagAdmin() {
                     </Button>
                     <Button
                         size="sm"
-                        disabled={!hasChanges || saveMutation.isLoading}
+                        disabled={!hasChanges || saveMutation.isPending}
                         onClick={() => saveMutation.mutate()}
                         className="bg-emerald-600 hover:bg-emerald-700 text-foreground"
                     >
-                        {saveMutation.isLoading ? (
+                        {saveMutation.isPending ? (
                             <Loader2 className="w-4 h-4 animate-spin mr-1" />
                         ) : (
                             <Save className="w-4 h-4 mr-1" />

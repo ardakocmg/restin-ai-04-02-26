@@ -199,10 +199,10 @@ export default function FS3Document({ fs3Data, venue = null }) {
                     <table className="w-full text-[10px] border-collapse border border-gray-300">
                         <thead>
                             <tr className="bg-gray-100 text-center font-bold">
-                                <td colSpan="3" className="border border-gray-300 py-1">Basic Weekly Wage</td>
-                                <td colSpan="3" className="border border-gray-300">Social Security Contributions</td>
+                                <td colSpan={3} className="border border-gray-300 py-1">Basic Weekly Wage</td>
+                                <td colSpan={3} className="border border-gray-300">Social Security Contributions</td>
                                 <td className="border border-gray-300">Maternity Fund</td>
-                                <td colSpan="3" className="border border-gray-300">Weeks without pay</td>
+                                <td colSpan={3} className="border border-gray-300">Weeks without pay</td>
                             </tr>
                             <tr className="text-[8px] text-center uppercase">
                                 <td className="border border-gray-300">€</td>
@@ -233,12 +233,12 @@ export default function FS3Document({ fs3Data, venue = null }) {
                                 </tr>
                             ))}
                             <tr className="font-bold bg-gray-100">
-                                <td colSpan="3" className="border border-gray-300 text-right pr-2 uppercase font-sans">Total</td>
+                                <td colSpan={3} className="border border-gray-300 text-right pr-2 uppercase font-sans">Total</td>
                                 <td className="border border-gray-300 text-right pr-1 font-mono">0.00</td>
                                 <td className="border border-gray-300 text-right pr-1 font-mono">0.00</td>
                                 <td className="border border-gray-300 text-right pr-1 font-mono bg-gray-200">0.00</td>
                                 <td className="border border-gray-300 text-right pr-1 font-mono">25.40</td>
-                                <td colSpan="3" className="border-none text-left bg-white text-black font-sans px-2">E1</td>
+                                <td colSpan={3} className="border-none text-left bg-white text-black font-sans px-2">E1</td>
                             </tr>
                         </tbody>
                     </table>

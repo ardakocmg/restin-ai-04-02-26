@@ -9,7 +9,6 @@ import PageContainer from '../../layouts/PageContainer';
 
 import SearchBar from '../../components/shared/SearchBar';
 
-import FilterBar from '../../components/shared/FilterBar';
 
 import ItemDetailDrawer from '../../components/inventory/ItemDetailDrawer';
 
@@ -19,7 +18,7 @@ import { Badge } from '../../components/ui/badge';
 
 import { Button } from '../../components/ui/button';
 
-import { 
+import {
   Package, AlertTriangle, TrendingDown, CheckCircle2,
   Plus, RefreshCw
 } from 'lucide-react';
@@ -29,7 +28,8 @@ export default function InventoryPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useState({});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [filters, setFilters] = useState<Record<string, any>>({});
   const [selectedItem, setSelectedItem] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -60,12 +60,14 @@ export default function InventoryPage() {
     }
   };
 
-  const handleItemClick = (item) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleItemClick = (item: any) => {
     setSelectedItem(item);
     setDrawerOpen(true);
   };
 
-  const getStockStatus = (item) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const getStockStatus = (item: any) => {
     const balance = item.quantity || 0;
     const minStock = item.min_stock || item.min_quantity || 0;
 
@@ -93,18 +95,20 @@ export default function InventoryPage() {
     >
       <div className="mb-4">
         <SearchBar
-          onSearch={setSearchQuery}
+          value={searchQuery}
+          onChange={setSearchQuery}
           placeholder="Search items by name, SKU, or category..."
+          className=""
         />
       </div>
 
-      <FilterBar filters={filters} onFilterChange={setFilters}>
+      <div className="flex items-center gap-3 p-4 rounded-lg bg-card border mb-4">
         <div className="grid grid-cols-3 gap-4">
           <div>
             <label className="text-sm font-medium text-slate-700 mb-2 block">Status</label>
             <select
               value={filters.status || ''}
-              onChange={(e) => setFilters({...filters, status: e.target.value})}
+              onChange={(e) => setFilters({ ...filters, status: e.target.value })}
               className="w-full p-2 border rounded"
             >
               <option value="">All</option>
@@ -119,7 +123,7 @@ export default function InventoryPage() {
               type="text"
               placeholder="Filter by category"
               value={filters.category || ''}
-              onChange={(e) => setFilters({...filters, category: e.target.value})}
+              onChange={(e) => setFilters({ ...filters, category: e.target.value })}
               className="w-full p-2 border rounded"
             />
           </div>
@@ -128,12 +132,12 @@ export default function InventoryPage() {
             <input
               type="checkbox"
               checked={filters.min_stock_only || false}
-              onChange={(e) => setFilters({...filters, min_stock_only: e.target.checked})}
+              onChange={(e) => setFilters({ ...filters, min_stock_only: e.target.checked })}
               className="h-5 w-5 mt-2"
             />
           </div>
         </div>
-      </FilterBar>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {loading ? (
@@ -145,7 +149,7 @@ export default function InventoryPage() {
             No items found
           </div>
         ) : (
-          items.map((item) => {
+          items.map((item: any) => {
             const status = getStockStatus(item);
             const StatusIcon = status.icon;
 
@@ -161,7 +165,7 @@ export default function InventoryPage() {
                       <Package className="h-5 w-5 text-slate-600" />
                       <span className="font-medium text-foreground">{item.name}</span>
                     </div>
-                    <Badge variant={status.color} className={status.className}>
+                    <Badge variant={status.color as any} className={status.className}>
                       <StatusIcon className="h-3 w-3 mr-1" />
                       {status.label}
                     </Badge>

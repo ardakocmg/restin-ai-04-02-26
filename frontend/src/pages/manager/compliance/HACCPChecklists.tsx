@@ -21,9 +21,9 @@ import { useAuditLog } from '../../../hooks/useAuditLog';
  * Template builder + daily log viewer with compliance scoring.
  */
 export default function HACCPChecklists() {
-    const { currentVenue } = useVenue();
+    const { activeVenue } = useVenue();
     const { user, isManager, isOwner } = useAuth();
-    const venueId = currentVenue?.id || localStorage.getItem('currentVenueId') || 'default';
+    const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
     const [activeTab, setActiveTab] = useState('templates');
     const [expandedLog, setExpandedLog] = useState(null);
@@ -56,8 +56,8 @@ export default function HACCPChecklists() {
         mutationFn: () => api.post(`/haccp/seed?venue_id=${venueId}`),
         onSuccess: () => {
             toast.success('HACCP demo data seeded');
-            queryClient.invalidateQueries(['haccp-templates']);
-            queryClient.invalidateQueries(['haccp-logs']);
+            queryClient.invalidateQueries({ queryKey: ['haccp-templates'] });
+            queryClient.invalidateQueries({ queryKey: ['haccp-logs'] });
         },
         onError: () => toast.error('Failed to seed HACCP data')
     });
@@ -95,9 +95,9 @@ export default function HACCPChecklists() {
                         <Button
                             variant="outline" size="sm"
                             onClick={() => seedMutation.mutate()}
-                            disabled={seedMutation.isLoading}
+                            disabled={seedMutation.isPending}
                         >
-                            {seedMutation.isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Database className="w-4 h-4 mr-1" />}
+                            {seedMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Database className="w-4 h-4 mr-1" />}
                             Seed Demo
                         </Button>
                     </div>

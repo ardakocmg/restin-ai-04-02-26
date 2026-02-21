@@ -68,7 +68,8 @@ export default function CompanySettings() {
         websiteUrl: 'www.caviarandbull.com'
     });
 
-    const [venueForm, setVenueForm] = useState({});
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [venueForm, setVenueForm] = useState<Record<string, any>>({});
 
     useEffect(() => {
         if (activeVenue?.id) {
@@ -93,7 +94,7 @@ export default function CompanySettings() {
         }
     };
 
-    const handleInputChange = (field, value) => {
+    const handleInputChange = (field: string, value: string) => {
         setFormData(prev => ({
             ...prev,
             [field]: value
@@ -163,7 +164,8 @@ export default function CompanySettings() {
                                 </div>
                             </div>
 
-                            <Separator className="bg-white/5" />
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            <Separator {...{ className: 'bg-white/5' } as any} />
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
