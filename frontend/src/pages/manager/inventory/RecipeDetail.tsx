@@ -290,8 +290,8 @@ export default function RecipeDetail() {
                                                 </div>
                                             </div>
                                             <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition flex gap-1">
-                                                <Button variant="ghost" size="sm" className="h-7 w-7 p-0"><ImageIcon className="h-3.5 w-3.5" /></Button>
-                                                <Button variant="ghost" size="sm" className="h-7 w-7 p-0"><X className="h-3.5 w-3.5 text-red-400" /></Button>
+                                                <Button variant="ghost" size="sm" aria-label="Action" className="h-7 w-7 p-0"><ImageIcon className="h-3.5 w-3.5" /></Button>
+                                                <Button variant="ghost" size="sm" aria-label="Action" className="h-7 w-7 p-0"><X className="h-3.5 w-3.5 text-red-400" /></Button>
                                             </div>
                                         </div>
                                     ))}

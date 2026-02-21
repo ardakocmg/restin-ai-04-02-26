@@ -225,7 +225,7 @@ export default function MarketingAutomations() {
                 <Card className="border-purple-500/30 bg-purple-50/50 dark:bg-purple-950/20">
                     <CardHeader><CardTitle className="text-sm">{t('Create New Campaign')}</CardTitle></CardHeader>
                     <CardContent className="space-y-3">
-                        <Input placeholder={t('Campaign name')} value={newCampaign.name} onChange={e => setNewCampaign(p => ({ ...p, name: e.target.value }))} />
+                        <Input aria-label="Input field" placeholder={t('Campaign name')} value={newCampaign.name} onChange={e => setNewCampaign(p => ({ ...p, name: e.target.value }))} />
                         <div className="flex gap-2">
                             <select title="Campaign type" className="flex-1 rounded-md border px-3 py-2 text-sm bg-white dark:bg-card dark:border-border"
                                 value={newCampaign.type} onChange={e => setNewCampaign(p => ({ ...p, type: e.target.value }))}>
@@ -241,7 +241,7 @@ export default function MarketingAutomations() {
                                 <option value="new">New Guests</option>
                             </select>
                         </div>
-                        <Input placeholder={t('Subject line')} value={newCampaign.subject} onChange={e => setNewCampaign(p => ({ ...p, subject: e.target.value }))} />
+                        <Input aria-label="Input field" placeholder={t('Subject line')} value={newCampaign.subject} onChange={e => setNewCampaign(p => ({ ...p, subject: e.target.value }))} />
                         <textarea aria-label="Input" className="w-full rounded-md border px-3 py-2 text-sm min-h-20 bg-white dark:bg-card dark:border-border"
                             placeholder={t('Message body')} value={newCampaign.body} onChange={e => setNewCampaign(p => ({ ...p, body: e.target.value }))} />
                         <div className="flex gap-2 justify-end">

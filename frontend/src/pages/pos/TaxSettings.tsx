@@ -66,7 +66,7 @@ const TaxSettings: React.FC = () => {
             <div className="pos-toggle-group pos-mb-20" style={{ width: 'fit-content' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 {(['rates', 'profiles'] as TabKey[]).map(tab => (<button key={tab} onClick={() => setActiveTab(tab)} className={`pos-toggle-btn ${activeTab === tab ? 'pos-toggle-btn--active' : ''}`} style={{ padding: '10px 24px', fontSize: 13, fontWeight: activeTab === tab ? 600 : 400 }}>{tab === 'rates' ? '📊 Tax Rates' : '📋 Tax Profiles'}</button>))} /* keep-inline */ /* keep-inline */ /* keep-inline */
             </div>
-            <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input className="pos-input pos-search-input" placeholder={`Search ${activeTab}...`} value={search} onChange={e => setSearch(e.target.value)} /></div>
+            <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input aria-label="Input field" className="pos-input pos-search-input" placeholder={`Search ${activeTab}...`} value={search} onChange={e => setSearch(e.target.value)} /></div>
 
             {activeTab === 'rates' && <div className="pos-card">
                 <div className="pos-table-header" style={{ gridTemplateColumns: rateTableCols }}><div>Name</div><div>Rate</div><div>Default</div><div>Accounting Ref</div><div>Status</div><div>Actions</div></div> /* keep-inline */ /* keep-inline */ /* keep-inline */

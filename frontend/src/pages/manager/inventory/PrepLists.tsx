@@ -234,24 +234,24 @@ export default function PrepLists() {
                     <div className="flex flex-wrap items-center gap-2 mb-4">
                         <div className="relative flex-1 max-w-xs">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input className="pl-9 h-8 text-xs" placeholder="Search recipes..." value={search} onChange={e => setSearch(e.target.value)} />
+                            <Input aria-label="Search recipes..." className="pl-9 h-8 text-xs" placeholder="Search recipes..." value={search} onChange={e => setSearch(e.target.value)} />
                         </div>
-                        <Select value={stationFilter} onValueChange={setStationFilter}>
-                            <SelectTrigger className="w-36 h-8 text-xs"><SelectValue /></SelectTrigger>
+                        <Select aria-label="Select option" value={stationFilter} onValueChange={setStationFilter}>
+                            <SelectTrigger aria-label="Select option" className="w-36 h-8 text-xs"><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">All Stations</SelectItem>
                                 {Object.entries(STATIONS).map(([k, v]) => <SelectItem key={k} value={k}>{v.label}</SelectItem>)}
                             </SelectContent>
                         </Select>
-                        <Select value={staffFilter} onValueChange={setStaffFilter}>
-                            <SelectTrigger className="w-36 h-8 text-xs"><SelectValue /></SelectTrigger>
+                        <Select aria-label="Select option" value={staffFilter} onValueChange={setStaffFilter}>
+                            <SelectTrigger aria-label="Select option" className="w-36 h-8 text-xs"><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">All Staff</SelectItem>
                                 {STAFF.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                             </SelectContent>
                         </Select>
-                        <Select value={statusFilter} onValueChange={setStatusFilter}>
-                            <SelectTrigger className="w-32 h-8 text-xs"><SelectValue /></SelectTrigger>
+                        <Select aria-label="Select option" value={statusFilter} onValueChange={setStatusFilter}>
+                            <SelectTrigger aria-label="Select option" className="w-32 h-8 text-xs"><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">All Status</SelectItem>
                                 <SelectItem value="pending">Pending</SelectItem>

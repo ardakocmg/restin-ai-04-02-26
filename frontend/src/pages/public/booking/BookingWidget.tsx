@@ -101,7 +101,7 @@ export default function BookingWidget() {
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label className="text-muted-foreground">Date</Label>
-                    <Input
+                    <Input aria-label="Input field"
                         type="date"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
@@ -110,8 +110,8 @@ export default function BookingWidget() {
                 </div>
                 <div className="space-y-2">
                     <Label className="text-muted-foreground">Guests</Label>
-                    <Select value={String(guests)} onValueChange={setGuests}>
-                        <SelectTrigger className="bg-secondary border-border text-foreground">
+                    <Select aria-label="Select option" value={String(guests)} onValueChange={setGuests}>
+                        <SelectTrigger aria-label="Select option" className="bg-secondary border-border text-foreground">
                             <SelectValue placeholder="2 Guests" />
                         </SelectTrigger>
                         <SelectContent className="bg-secondary border-border text-foreground">
@@ -159,12 +159,12 @@ export default function BookingWidget() {
             <div className="space-y-2">
                 <Label>Details</Label>
                 <div className="grid grid-cols-2 gap-2">
-                    <Input placeholder="First Name" className="bg-secondary border-border" value={guestDetails.first_name} onChange={e => setGuestDetails({ ...guestDetails, first_name: e.target.value })} />
-                    <Input placeholder="Last Name" className="bg-secondary border-border" value={guestDetails.last_name} onChange={e => setGuestDetails({ ...guestDetails, last_name: e.target.value })} />
+                    <Input aria-label="First Name" placeholder="First Name" className="bg-secondary border-border" value={guestDetails.first_name} onChange={e => setGuestDetails({ ...guestDetails, first_name: e.target.value })} />
+                    <Input aria-label="Last Name" placeholder="Last Name" className="bg-secondary border-border" value={guestDetails.last_name} onChange={e => setGuestDetails({ ...guestDetails, last_name: e.target.value })} />
                 </div>
-                <Input placeholder="Email" className="bg-secondary border-border" value={guestDetails.email} onChange={e => setGuestDetails({ ...guestDetails, email: e.target.value })} />
-                <Input placeholder="Phone" className="bg-secondary border-border" value={guestDetails.phone} onChange={e => setGuestDetails({ ...guestDetails, phone: e.target.value })} />
-                <Input placeholder="Special Requests (Optional)" className="bg-secondary border-border" value={guestDetails.notes} onChange={e => setGuestDetails({ ...guestDetails, notes: e.target.value })} />
+                <Input aria-label="Email" placeholder="Email" className="bg-secondary border-border" value={guestDetails.email} onChange={e => setGuestDetails({ ...guestDetails, email: e.target.value })} />
+                <Input aria-label="Phone" placeholder="Phone" className="bg-secondary border-border" value={guestDetails.phone} onChange={e => setGuestDetails({ ...guestDetails, phone: e.target.value })} />
+                <Input aria-label="Special Requests (Optional)" placeholder="Special Requests (Optional)" className="bg-secondary border-border" value={guestDetails.notes} onChange={e => setGuestDetails({ ...guestDetails, notes: e.target.value })} />
             </div>
 
             <div className="flex gap-2 mt-4">

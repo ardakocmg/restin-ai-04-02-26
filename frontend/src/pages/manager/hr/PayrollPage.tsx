@@ -269,7 +269,7 @@ export default function PayrollPage() {
                             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Personnel / Employee</label>
                             <div className="relative group">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-blue-500 transition-colors" />
-                                <Input
+                                <Input aria-label="Search employees by name or ID..."
                                     placeholder="Search employees by name or ID..."
                                     className="pl-10 bg-black border-border focus:border-blue-500/50"
                                     value={searchTerm}
@@ -830,7 +830,7 @@ export default function PayrollPage() {
                             {/* Search in Drill-down */}
                             <div className="relative mt-4">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input
+                                <Input aria-label="Search personnel..."
                                     placeholder="Search personnel..."
                                     className="bg-white/5 border-border pl-10 text-xs h-10 rounded-xl"
                                     value={searchTerm}
@@ -916,7 +916,7 @@ export default function PayrollPage() {
 
                             <div className="relative mt-6">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input
+                                <Input aria-label="Filter upcoming personnel..."
                                     placeholder="Filter upcoming personnel..."
                                     className="bg-white/5 border-border pl-10 text-xs h-10 rounded-xl"
                                     value={nextRunSearch}
@@ -962,7 +962,7 @@ export default function PayrollPage() {
 
                             <div className="relative mt-6">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input
+                                <Input aria-label="Search audited records..."
                                     placeholder="Search audited records..."
                                     className="bg-white/5 border-border pl-10 text-xs h-10 rounded-xl"
                                     value={grossSearch}

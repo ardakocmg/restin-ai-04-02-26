@@ -590,13 +590,13 @@ export default function ReceiptTemplates() {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <Label className="text-zinc-400 text-xs">Template Name</Label>
-                                        <Input value={editing.name} onChange={e => updateField('name', e.target.value)}
+                                        <Input aria-label="Input field" value={editing.name} onChange={e => updateField('name', e.target.value)}
                                             className="bg-zinc-900 border-white/10 text-white" />
                                     </div>
                                     <div className="space-y-2">
                                         <Label className="text-zinc-400 text-xs">Type</Label>
-                                        <Select value={editing.type} onValueChange={v => updateField('type', v)}>
-                                            <SelectTrigger className="bg-zinc-900 border-white/10 text-white"><SelectValue /></SelectTrigger>
+                                        <Select aria-label="Select option" value={editing.type} onValueChange={v => updateField('type', v)}>
+                                            <SelectTrigger aria-label="Select option" className="bg-zinc-900 border-white/10 text-white"><SelectValue /></SelectTrigger>
                                             <SelectContent>
                                                 {Object.entries(TYPE_META).map(([k, m]) => (
                                                     <SelectItem key={k} value={k}>{m.label}</SelectItem>
@@ -642,7 +642,7 @@ export default function ReceiptTemplates() {
                                             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Header</div>
                                             <div className="space-y-2">
                                                 {(['headerLine1', 'headerLine2', 'headerLine3'] as const).map((key, i) => (
-                                                    <Input key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
+                                                    <Input aria-label="Input field" key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
                                                         placeholder={`Header line ${i + 1}`} className="bg-zinc-900 border-white/10 text-white text-sm" />
                                                 ))}
                                             </div>
@@ -672,7 +672,7 @@ export default function ReceiptTemplates() {
                                             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Footer</div>
                                             <div className="space-y-2">
                                                 {(['footerLine1', 'footerLine2', 'footerLine3'] as const).map((key, i) => (
-                                                    <Input key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
+                                                    <Input aria-label="Input field" key={key} value={editing[key]} onChange={e => updateField(key, e.target.value)}
                                                         placeholder={`Footer line ${i + 1}`} className="bg-zinc-900 border-white/10 text-white text-sm" />
                                                 ))}
                                             </div>
@@ -684,7 +684,7 @@ export default function ReceiptTemplates() {
                                             <div className="space-y-3">
                                                 <div className="space-y-1.5">
                                                     <Label className="text-zinc-400 text-xs">QR Code URL</Label>
-                                                    <Input value={editing.qrCodeUrl} onChange={e => updateField('qrCodeUrl', e.target.value)}
+                                                    <Input aria-label="Input field" value={editing.qrCodeUrl} onChange={e => updateField('qrCodeUrl', e.target.value)}
                                                         placeholder="https://restin.ai/feedback" className="bg-zinc-900 border-white/10 text-white text-sm" />
                                                 </div>
                                                 <label className="flex items-center gap-2 text-sm">
@@ -693,7 +693,7 @@ export default function ReceiptTemplates() {
                                                 </label>
                                                 <div className="space-y-1.5">
                                                     <Label className="text-zinc-400 text-xs">Invoice Prefix</Label>
-                                                    <Input value={editing.invoicePrefix} onChange={e => updateField('invoicePrefix', e.target.value)}
+                                                    <Input aria-label="Input field" value={editing.invoicePrefix} onChange={e => updateField('invoicePrefix', e.target.value)}
                                                         placeholder="e.g. INV-" maxLength={10}
                                                         className="bg-zinc-900 border-white/10 text-white text-sm" />
                                                 </div>
@@ -706,12 +706,12 @@ export default function ReceiptTemplates() {
                                             <div className="space-y-2">
                                                 <div className="space-y-1.5">
                                                     <Label className="text-zinc-400 text-xs">Promo Banner Text</Label>
-                                                    <Input value={editing.promoText || ''} onChange={e => updateField('promoText' as keyof ReceiptTemplate, e.target.value)}
+                                                    <Input aria-label="Input field" value={editing.promoText || ''} onChange={e => updateField('promoText' as keyof ReceiptTemplate, e.target.value)}
                                                         placeholder="e.g. Happy Hour 4-7pm — 2 for 1!" className="bg-zinc-900 border-white/10 text-white text-sm" />
                                                 </div>
                                                 <div className="space-y-1.5">
                                                     <Label className="text-zinc-400 text-xs">Allergen Notice</Label>
-                                                    <Input value={editing.allergenNotice || ''} onChange={e => updateField('allergenNotice' as keyof ReceiptTemplate, e.target.value)}
+                                                    <Input aria-label="Input field" value={editing.allergenNotice || ''} onChange={e => updateField('allergenNotice' as keyof ReceiptTemplate, e.target.value)}
                                                         placeholder="⚠️ Allergen info available on request" className="bg-zinc-900 border-white/10 text-white text-sm" />
                                                 </div>
                                             </div>
@@ -730,8 +730,8 @@ export default function ReceiptTemplates() {
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-1.5">
                                             <Label className="text-zinc-400 text-xs">Paper Width</Label>
-                                            <Select value={editing.paperWidth} onValueChange={v => updateField('paperWidth', v)}>
-                                                <SelectTrigger className="bg-zinc-900 border-white/10 text-white"><SelectValue /></SelectTrigger>
+                                            <Select aria-label="Select option" value={editing.paperWidth} onValueChange={v => updateField('paperWidth', v)}>
+                                                <SelectTrigger aria-label="Select option" className="bg-zinc-900 border-white/10 text-white"><SelectValue /></SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="58mm">58mm</SelectItem>
                                                     <SelectItem value="80mm">80mm</SelectItem>
@@ -740,8 +740,8 @@ export default function ReceiptTemplates() {
                                         </div>
                                         <div className="space-y-1.5">
                                             <Label className="text-zinc-400 text-xs">Font Size</Label>
-                                            <Select value={editing.fontSize} onValueChange={v => updateField('fontSize', v)}>
-                                                <SelectTrigger className="bg-zinc-900 border-white/10 text-white"><SelectValue /></SelectTrigger>
+                                            <Select aria-label="Select option" value={editing.fontSize} onValueChange={v => updateField('fontSize', v)}>
+                                                <SelectTrigger aria-label="Select option" className="bg-zinc-900 border-white/10 text-white"><SelectValue /></SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="small">Small</SelectItem>
                                                     <SelectItem value="medium">Medium</SelectItem>
@@ -762,7 +762,7 @@ export default function ReceiptTemplates() {
                                         <Copy className="w-4 h-4 mr-1" /> Copy
                                     </Button>
                                     <Button variant="outline" onClick={handleDelete}
-                                        className="text-red-400 border-red-500/30 hover:bg-red-500/10">
+                                        aria-label="Action" className="text-red-400 border-red-500/30 hover:bg-red-500/10">
                                         <Trash2 className="w-4 h-4" />
                                     </Button>
                                 </div>

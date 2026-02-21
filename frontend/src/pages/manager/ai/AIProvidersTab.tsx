@@ -222,8 +222,8 @@ export default function AIProvidersTab() {
                         <Badge className="bg-emerald-500/20 text-emerald-300 border-0 ml-1">{summary.providers_connected} Connected</Badge>
                     </h2>
                     <div className="flex items-center gap-2">
-                        <Select value={days} onValueChange={setDays}>
-                            <SelectTrigger className="w-[100px] h-8 bg-card border-border">
+                        <Select aria-label="Select option" value={days} onValueChange={setDays}>
+                            <SelectTrigger aria-label="Select option" className="w-[100px] h-8 bg-card border-border">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -233,7 +233,7 @@ export default function AIProvidersTab() {
                                 <SelectItem value="90">90 days</SelectItem>
                             </SelectContent>
                         </Select>
-                        <Button variant="outline" size="sm" className="h-8" onClick={fetchDashboard}>
+                        <Button variant="outline" size="sm" aria-label="Action" className="h-8" onClick={fetchDashboard}>
                             <RefreshCw className="w-3.5 h-3.5" />
                         </Button>
                     </div>

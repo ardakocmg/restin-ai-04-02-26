@@ -157,8 +157,8 @@ export default function StockTransfers() {
           <div className="space-y-4 py-4">
             <div>
               <label className="text-xs uppercase font-bold text-muted-foreground">Item</label>
-              <Select onValueChange={(val) => setFormData({ ...formData, item_id: val })}>
-                <SelectTrigger className="bg-card border-border"><SelectValue placeholder="Select Item to Transfer" /></SelectTrigger>
+              <Select aria-label="Select option" onValueChange={(val) => setFormData({ ...formData, item_id: val })}>
+                <SelectTrigger aria-label="Select option" className="bg-card border-border"><SelectValue placeholder="Select Item to Transfer" /></SelectTrigger>
                 <SelectContent className="bg-card border-border text-secondary-foreground">
                   {items.map(item => (
                     <SelectItem key={item.id} value={item.id}>
@@ -171,8 +171,8 @@ export default function StockTransfers() {
 
             <div>
               <label className="text-xs uppercase font-bold text-muted-foreground">Destination Venue</label>
-              <Select onValueChange={(val) => setFormData({ ...formData, to_venue_id: val })}>
-                <SelectTrigger className="bg-card border-border"><SelectValue placeholder="Select Destination" /></SelectTrigger>
+              <Select aria-label="Select option" onValueChange={(val) => setFormData({ ...formData, to_venue_id: val })}>
+                <SelectTrigger aria-label="Select option" className="bg-card border-border"><SelectValue placeholder="Select Destination" /></SelectTrigger>
                 <SelectContent className="bg-card border-border text-secondary-foreground">
                   {venues.filter(v => v.id !== venueId).map(v => (
                     <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
@@ -183,7 +183,7 @@ export default function StockTransfers() {
 
             <div>
               <label className="text-xs uppercase font-bold text-muted-foreground">Quantity</label>
-              <Input
+              <Input aria-label="Input field"
                 type="number"
                 value={formData.quantity}
                 onChange={(e) => setFormData({ ...formData, quantity: Number(e.target.value) })}
@@ -193,7 +193,7 @@ export default function StockTransfers() {
 
             <div>
               <label className="text-xs uppercase font-bold text-muted-foreground">Reason / Note</label>
-              <Input
+              <Input aria-label="Input field"
                 value={formData.reason}
                 onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
                 className="bg-card border-border"

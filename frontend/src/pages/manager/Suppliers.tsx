@@ -296,7 +296,7 @@ export default function SuppliersPage() {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>Supplier Name *</Label>
-              <Input
+              <Input aria-label="Input field"
                 value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g. Premium Foods Ltd"
@@ -305,7 +305,7 @@ export default function SuppliersPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Email</Label>
-                <Input
+                <Input aria-label="Input field"
                   type="email"
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
@@ -314,7 +314,7 @@ export default function SuppliersPage() {
               </div>
               <div className="space-y-2">
                 <Label>Phone</Label>
-                <Input
+                <Input aria-label="Input field"
                   value={formData.phone}
                   onChange={e => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="+356 1234 5678"
@@ -323,7 +323,7 @@ export default function SuppliersPage() {
             </div>
             <div className="space-y-2">
               <Label>Address</Label>
-              <Input
+              <Input aria-label="Input field"
                 value={formData.address}
                 onChange={e => setFormData({ ...formData, address: e.target.value })}
                 placeholder="123 Warehouse St, Malta"
@@ -332,7 +332,7 @@ export default function SuppliersPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Lead Time (days)</Label>
-                <Input
+                <Input aria-label="Input field"
                   type="number"
                   value={formData.lead_time_days}
                   onChange={e => setFormData({ ...formData, lead_time_days: e.target.value })}
@@ -340,7 +340,7 @@ export default function SuppliersPage() {
               </div>
               <div className="space-y-2">
                 <Label>Payment Terms (days)</Label>
-                <Input
+                <Input aria-label="Input field"
                   type="number"
                   value={formData.payment_terms_days}
                   onChange={e => setFormData({ ...formData, payment_terms_days: e.target.value })}
@@ -349,7 +349,7 @@ export default function SuppliersPage() {
             </div>
             <div className="space-y-2">
               <Label>Notes</Label>
-              <Input
+              <Input aria-label="Input field"
                 value={formData.notes}
                 onChange={e => setFormData({ ...formData, notes: e.target.value })}
                 placeholder="Internal notes about this supplier..."

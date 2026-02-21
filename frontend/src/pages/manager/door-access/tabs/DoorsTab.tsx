@@ -62,11 +62,11 @@ function CreatePinDialog({ doorId, isOpen, onClose, onSuccess }: { doorId: strin
                 <div className="space-y-4 py-4">
                     <div className="space-y-2">
                         <Label>Name</Label>
-                        <Input placeholder="e.g. Guest Access" value={name} onChange={(e) => setName(e.target.value)} className="bg-card border-border text-secondary-foreground" />
+                        <Input aria-label="e.g. Guest Access" placeholder="e.g. Guest Access" value={name} onChange={(e) => setName(e.target.value)} className="bg-card border-border text-secondary-foreground" />
                     </div>
                     <div className="space-y-2">
                         <Label>Code (6 digits)</Label>
-                        <Input placeholder="123456" value={code} maxLength={6} onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))} className="bg-card border-border text-secondary-foreground font-mono tracking-widest text-center text-lg" />
+                        <Input aria-label="123456" placeholder="123456" value={code} maxLength={6} onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))} className="bg-card border-border text-secondary-foreground font-mono tracking-widest text-center text-lg" />
                     </div>
                     <Button onClick={handleSubmit} disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-700 text-foreground">
                         {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
@@ -373,7 +373,7 @@ export default function DoorsTab() {
                                             <div className="flex-1">
                                                 {editingId === door.id ? (
                                                     <div className="flex items-center gap-2">
-                                                        <Input value={editName} onChange={(e) => setEditName(e.target.value)} className="bg-card border-border text-secondary-foreground h-8 text-sm" autoFocus onKeyDown={(e) => e.key === 'Enter' && renameDoor(door.id)} />
+                                                        <Input aria-label="Input field" value={editName} onChange={(e) => setEditName(e.target.value)} className="bg-card border-border text-secondary-foreground h-8 text-sm" autoFocus onKeyDown={(e) => e.key === 'Enter' && renameDoor(door.id)} />
                                                         <Button size="sm" variant="ghost" onClick={() => renameDoor(door.id)} className="text-emerald-400 h-8 w-8 p-0"><Check className="h-4 w-4" /></Button>
                                                         <Button size="sm" variant="ghost" onClick={() => setEditingId(null)} className="text-muted-foreground h-8 w-8 p-0"><X className="h-4 w-4" /></Button>
                                                     </div>

@@ -126,11 +126,11 @@ export default function ManualSalesEntry() {
                     <div className="flex flex-wrap items-center gap-2 mb-4">
                         <div className="relative flex-1 max-w-xs">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input className="pl-9 h-8 text-xs" placeholder="Search items..." value={search} onChange={e => setSearch(e.target.value)} />
+                            <Input aria-label="Search items..." className="pl-9 h-8 text-xs" placeholder="Search items..." value={search} onChange={e => setSearch(e.target.value)} />
                         </div>
-                        <Input type="date" className="w-40 h-8 text-xs" value={dateFilter} onChange={e => setDateFilter(e.target.value)} />
-                        <Select value={outletFilter} onValueChange={setOutletFilter}>
-                            <SelectTrigger className="w-40 h-8 text-xs"><SelectValue /></SelectTrigger>
+                        <Input aria-label="Input field" type="date" className="w-40 h-8 text-xs" value={dateFilter} onChange={e => setDateFilter(e.target.value)} />
+                        <Select aria-label="Select option" value={outletFilter} onValueChange={setOutletFilter}>
+                            <SelectTrigger aria-label="Select option" className="w-40 h-8 text-xs"><SelectValue /></SelectTrigger>
                             <SelectContent><SelectItem value="all">All Outlets</SelectItem>{OUTLETS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
                         </Select>
                     </div>
@@ -181,10 +181,10 @@ export default function ManualSalesEntry() {
             <Dialog open={addOpen} onOpenChange={setAddOpen}><DialogContent className="max-w-sm">
                 <DialogHeader><DialogTitle>Register Manual Sale</DialogTitle><DialogDescription>Add a sale for food cost calculations</DialogDescription></DialogHeader>
                 <div className="space-y-3">
-                    <div><Label className="text-xs">Date</Label><Input type="date" value={addDate} onChange={e => setAddDate(e.target.value)} /></div>
-                    <div><Label className="text-xs">Menu Item</Label><Select value={selectedItem} onValueChange={setSelectedItem}><SelectTrigger className="text-xs"><SelectValue placeholder="Select item..." /></SelectTrigger><SelectContent>{MENU_ITEMS.map(m => <SelectItem key={m._id} value={m._id}>{m.name} — €{m.sellingPrice.toFixed(2)}</SelectItem>)}</SelectContent></Select></div>
-                    <div><Label className="text-xs">Quantity</Label><Input type="number" value={qty} onChange={e => setQty(Math.max(1, Number(e.target.value)))} className="w-24" /></div>
-                    <div><Label className="text-xs">Outlet</Label><Select value={addOutlet} onValueChange={setAddOutlet}><SelectTrigger className="text-xs"><SelectValue /></SelectTrigger><SelectContent>{OUTLETS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select></div>
+                    <div><Label className="text-xs">Date</Label><Input aria-label="Input field" type="date" value={addDate} onChange={e => setAddDate(e.target.value)} /></div>
+                    <div><Label className="text-xs">Menu Item</Label><Select aria-label="Select option" value={selectedItem} onValueChange={setSelectedItem}><SelectTrigger aria-label="Select option" className="text-xs"><SelectValue placeholder="Select item..." /></SelectTrigger><SelectContent>{MENU_ITEMS.map(m => <SelectItem key={m._id} value={m._id}>{m.name} — €{m.sellingPrice.toFixed(2)}</SelectItem>)}</SelectContent></Select></div>
+                    <div><Label className="text-xs">Quantity</Label><Input aria-label="Input field" type="number" value={qty} onChange={e => setQty(Math.max(1, Number(e.target.value)))} className="w-24" /></div>
+                    <div><Label className="text-xs">Outlet</Label><Select aria-label="Select option" value={addOutlet} onValueChange={setAddOutlet}><SelectTrigger aria-label="Select option" className="text-xs"><SelectValue /></SelectTrigger><SelectContent>{OUTLETS.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select></div>
                     {selectedItem && (() => {
                         const item = MENU_ITEMS.find(m => m._id === selectedItem); if (!item) return null; const rev = qty * item.sellingPrice; const cogs = qty * item.foodCost; return (
                             <div className="p-3 bg-zinc-800/50 rounded-lg border border-white/5 text-xs">

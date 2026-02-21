@@ -92,7 +92,7 @@ const AllergenManager: React.FC = () => {
 
             <div className="pos-search-wrapper pos-mb-16">
                 <Search size={14} className="pos-search-icon" />
-                <input className="pos-input pos-search-input" placeholder="Search allergens..." value={search} onChange={e => setSearch(e.target.value)} />
+                <input aria-label="Search allergens..." className="pos-input pos-search-input" placeholder="Search allergens..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 12 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */

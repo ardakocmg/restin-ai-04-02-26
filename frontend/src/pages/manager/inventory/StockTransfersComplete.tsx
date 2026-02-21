@@ -397,8 +397,8 @@ export default function StockTransfersComplete() {
 
             <div className="space-y-2">
               <Label>{formData.order_type === 'internal' ? 'Central Kitchen' : 'Destination'}</Label>
-              <Select value={formData.destination_venue_id} onValueChange={v => setFormData({ ...formData, destination_venue_id: v })}>
-                <SelectTrigger><SelectValue placeholder={formData.order_type === 'internal' ? 'Select central kitchen...' : 'Select destination venue...'} /></SelectTrigger>
+              <Select aria-label="Select option" value={formData.destination_venue_id} onValueChange={v => setFormData({ ...formData, destination_venue_id: v })}>
+                <SelectTrigger aria-label="Select option"><SelectValue placeholder={formData.order_type === 'internal' ? 'Select central kitchen...' : 'Select destination venue...'} /></SelectTrigger>
                 <SelectContent>
                   {venues.map((v: VenueItem) => <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>)}
                   {venues.length === 0 && <SelectItem value="none" disabled>{"No "}other venues available</SelectItem>}
@@ -411,8 +411,8 @@ export default function StockTransfersComplete() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label>Priority</Label>
-                  <Select value={formData.priority} onValueChange={v => setFormData(p => ({ ...p, priority: v }))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                  <Select aria-label="Select option" value={formData.priority} onValueChange={v => setFormData(p => ({ ...p, priority: v }))}>
+                    <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="normal">Normal</SelectItem>
                       <SelectItem value="urgent">🔴 Urgent</SelectItem>
@@ -421,7 +421,7 @@ export default function StockTransfersComplete() {
                 </div>
                 <div className="space-y-2">
                   <Label>Needed By</Label>
-                  <Input type="datetime-local" value={formData.needed_by} onChange={e => setFormData(p => ({ ...p, needed_by: e.target.value }))} />
+                  <Input aria-label="Input field" type="datetime-local" value={formData.needed_by} onChange={e => setFormData(p => ({ ...p, needed_by: e.target.value }))} />
                 </div>
               </div>
             )}
@@ -431,15 +431,15 @@ export default function StockTransfersComplete() {
               {formData.items.map((item, idx) => (
                 <div key={idx} className="grid grid-cols-5 gap-2">
                   <div className="col-span-3">
-                    <Select value={item.item_id} onValueChange={v => updateTransferItem(idx, 'item_id', v)}>
-                      <SelectTrigger><SelectValue placeholder="Select item..." /></SelectTrigger>
+                    <Select aria-label="Select option" value={item.item_id} onValueChange={v => updateTransferItem(idx, 'item_id', v)}>
+                      <SelectTrigger aria-label="Select option"><SelectValue placeholder="Select item..." /></SelectTrigger>
                       <SelectContent className="max-h-60">
                         {items.map((i: InventoryItem) => <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>)}
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="col-span-2">
-                    <Input type="number" step="0.01" placeholder="Qty" value={item.quantity} onChange={e => updateTransferItem(idx, 'quantity', e.target.value)} />
+                    <Input aria-label="Qty" type="number" step="0.01" placeholder="Qty" value={item.quantity} onChange={e => updateTransferItem(idx, 'quantity', e.target.value)} />
                   </div>
                 </div>
               ))}
@@ -450,7 +450,7 @@ export default function StockTransfersComplete() {
 
             <div className="space-y-2">
               <Label>Notes (optional)</Label>
-              <Input value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} placeholder="Transfer notes..." />
+              <Input aria-label="Input field" value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} placeholder="Transfer notes..." />
             </div>
           </div>
 

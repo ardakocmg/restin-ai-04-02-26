@@ -364,7 +364,7 @@ export default function Users() {
         <div className="flex items-center gap-4 bg-card/40 p-2 rounded-2xl border border-border backdrop-blur-md">
           <div className="relative flex-1 max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
+            <Input aria-label="Search by name, email, role..."
               placeholder="Search by name, email, role..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
@@ -421,7 +421,7 @@ export default function Users() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Name</Label>
-                  <Input
+                  <Input aria-label="Input field"
                     value={newUser.name}
                     onChange={e => setNewUser({ ...newUser, name: e.target.value })}
                     className="bg-background border-border text-secondary-foreground"
@@ -430,7 +430,7 @@ export default function Users() {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Email</Label>
-                  <Input
+                  <Input aria-label="Input field"
                     type="email"
                     value={newUser.email}
                     onChange={e => setNewUser({ ...newUser, email: e.target.value })}
@@ -442,8 +442,8 @@ export default function Users() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Role</Label>
-                  <Select value={newUser.role} onValueChange={val => setNewUser({ ...newUser, role: val })}>
-                    <SelectTrigger className="bg-background border-border text-secondary-foreground">
+                  <Select aria-label="Select option" value={newUser.role} onValueChange={val => setNewUser({ ...newUser, role: val })}>
+                    <SelectTrigger aria-label="Select option" className="bg-background border-border text-secondary-foreground">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-card border-border">
@@ -457,7 +457,7 @@ export default function Users() {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">4-Digit PIN</Label>
-                  <Input
+                  <Input aria-label="Input field"
                     type="password"
                     maxLength={4}
                     value={newUser.pin}
@@ -490,7 +490,7 @@ export default function Users() {
             </DialogHeader>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
+              <Input aria-label="Search employees..."
                 placeholder="Search employees..."
                 value={linkSearch}
                 onChange={e => setLinkSearch(e.target.value)}
@@ -544,7 +544,7 @@ export default function Users() {
               <div className="space-y-2">
                 <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">New Password</Label>
                 <div className="relative">
-                  <Input
+                  <Input aria-label="Input field"
                     type={pwShowValue ? 'text' : 'password'}
                     value={pwValue}
                     onChange={e => setPwValue(e.target.value)}
@@ -560,7 +560,7 @@ export default function Users() {
               </div>
               <div className="space-y-2">
                 <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Confirm Password</Label>
-                <Input
+                <Input aria-label="Input field"
                   type="password"
                   value={pwConfirmValue}
                   onChange={e => setPwConfirmValue(e.target.value)}

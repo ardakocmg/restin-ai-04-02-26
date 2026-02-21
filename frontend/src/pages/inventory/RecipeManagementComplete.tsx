@@ -126,7 +126,7 @@ export default function RecipeManagementComplete() {
           <div className="space-y-4">
             <div>
               <label style={{ color: '#D4D4D8' }}>Recipe Name</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-              <Input
+              <Input aria-label="Input field"
                 value={editingRecipe?.name || ''}
                 onChange={(e) => setEditingRecipe(prev => ({ ...prev, name: e.target.value }))}
                 placeholder="Enter recipe name"
@@ -136,7 +136,7 @@ export default function RecipeManagementComplete() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label style={{ color: '#D4D4D8' }}>Yield Quantity</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                <Input
+                <Input aria-label="Input field"
                   type="number"
                   value={editingRecipe?.yield_quantity || ''}
                   onChange={(e) => setEditingRecipe(prev => ({ ...prev, yield_quantity: parseFloat(e.target.value) }))}
@@ -144,7 +144,7 @@ export default function RecipeManagementComplete() {
               </div>
               <div>
                 <label style={{ color: '#D4D4D8' }}>Yield Unit</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                <Input
+                <Input aria-label="Input field"
                   value={editingRecipe?.yield_unit || ''}
                   onChange={(e) => setEditingRecipe(prev => ({ ...prev, yield_unit: e.target.value }))}
                   placeholder="kg, portions, etc."
@@ -162,7 +162,7 @@ export default function RecipeManagementComplete() {
               <div className="space-y-2">
                 {components.map((comp, idx) => (
                   <div key={idx} className="flex items-center gap-2">
-                    <Input
+                    <Input aria-label="Item ID"
                       placeholder="Item ID"
                       value={comp.item_id}
                       onChange={(e) => {
@@ -172,7 +172,7 @@ export default function RecipeManagementComplete() {
                       }}
                       className="flex-1"
                     />
-                    <Input
+                    <Input aria-label="Qty"
                       type="number"
                       placeholder="Qty"
                       value={comp.quantity}
@@ -183,7 +183,7 @@ export default function RecipeManagementComplete() {
                       }}
                       className="w-24"
                     />
-                    <Input
+                    <Input aria-label="Unit"
                       placeholder="Unit"
                       value={comp.unit}
                       onChange={(e) => {

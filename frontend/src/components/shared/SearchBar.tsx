@@ -10,7 +10,7 @@ export default function SearchBar({ value, onChange, placeholder = 'Search...', 
         className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4"
         style={{ color: '#71717A' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
       />
-      <Input
+      <Input aria-label="Input field"
         type="search"
         placeholder={placeholder}
         value={value}

@@ -248,7 +248,7 @@ const MenuBuilder: React.FC = () => {
                     {/* Search */}
                     <div style={{ position: 'relative', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         <Search size={16} style={{ position: 'absolute', left: 14, top: 12, color: 'var(--text-secondary, #a1a1aa)' }} />
-                        <input style={{ ...ip, paddingLeft: 38 }} placeholder="Search menus..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <input aria-label="Search menus..." style={{ ...ip, paddingLeft: 38 }} placeholder="Search menus..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     </div>
 
                     {/* New Menu Modal */}
@@ -258,7 +258,7 @@ const MenuBuilder: React.FC = () => {
                                 <h3 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Create New Menu</h3> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                 <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setShowNewMenu(false)}><X size={18} /></button> /* keep-inline */ /* keep-inline */ /* keep-inline */
                             </div>
-                            <input style={{ ...ip, marginBottom: 12 }} placeholder="Menu name..." value={newMenuName} onChange={e => setNewMenuName(e.target.value)} autoFocus onKeyDown={e => e.key === 'Enter' && createMenu()} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                            <input aria-label="Menu name..." style={{ ...ip, marginBottom: 12 }} placeholder="Menu name..." value={newMenuName} onChange={e => setNewMenuName(e.target.value)} autoFocus onKeyDown={e => e.key === 'Enter' && createMenu()} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                             <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                 <button style={bp} onClick={createMenu}><Plus size={14} /> Create</button>
                                 <button style={bo} onClick={() => setShowNewMenu(false)}>Cancel</button>
@@ -367,7 +367,7 @@ const MenuBuilder: React.FC = () => {
 
                         {showNewScreen ? (
                             <div style={{ padding: 8, background: 'var(--bg-secondary, #09090b)', borderRadius: 8, marginTop: 8 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
-                                <input style={{ ...ip, fontSize: 12, marginBottom: 6, padding: '6px 10px' }} placeholder="Screen name..." value={newScreenName} onChange={e => setNewScreenName(e.target.value)} autoFocus /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                                <input aria-label="Screen name..." style={{ ...ip, fontSize: 12, marginBottom: 6, padding: '6px 10px' }} placeholder="Screen name..." value={newScreenName} onChange={e => setNewScreenName(e.target.value)} autoFocus /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                 <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 6 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                     {COLORS.slice(0, 8).map(c => (
                                         <div key={c} onClick={() => setNewScreenColor(c)}

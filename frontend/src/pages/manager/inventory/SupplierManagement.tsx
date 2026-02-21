@@ -474,15 +474,15 @@ export default function SupplierManagement() {
             <div className="flex flex-wrap items-center gap-3 mb-4">
                 <div className="relative flex-1 min-w-[200px] max-w-sm">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
+                    <Input aria-label="Search suppliers..."
                         className="pl-9 bg-zinc-900/50 border-white/10"
                         placeholder="Search suppliers..."
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                     />
                 </div>
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="w-[160px] bg-zinc-900/50 border-white/10">
+                <Select aria-label="Select option" value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger aria-label="Select option" className="w-[160px] bg-zinc-900/50 border-white/10">
                         <Filter className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                         <SelectValue placeholder="Category" />
                     </SelectTrigger>
@@ -491,8 +491,8 @@ export default function SupplierManagement() {
                         {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                     </SelectContent>
                 </Select>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-[140px] bg-zinc-900/50 border-white/10">
+                <Select aria-label="Select option" value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger aria-label="Select option" className="w-[140px] bg-zinc-900/50 border-white/10">
                         <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -783,16 +783,16 @@ export default function SupplierManagement() {
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <Label>Supplier Name *</Label>
-                                <Input value={form.name || ''} onChange={e => updateForm('name', e.target.value)} placeholder="Fresh Fields Produce" />
+                                <Input aria-label="Input field" value={form.name || ''} onChange={e => updateForm('name', e.target.value)} placeholder="Fresh Fields Produce" />
                             </div>
                             <div>
                                 <Label>Supplier Code</Label>
-                                <Input value={form.code || ''} onChange={e => updateForm('code', e.target.value)} placeholder="FFP-001" />
+                                <Input aria-label="Input field" value={form.code || ''} onChange={e => updateForm('code', e.target.value)} placeholder="FFP-001" />
                             </div>
                             <div>
                                 <Label>Category</Label>
-                                <Select value={form.category || 'Produce'} onValueChange={v => updateForm('category', v)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                <Select aria-label="Select option" value={form.category || 'Produce'} onValueChange={v => updateForm('category', v)}>
+                                    <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                                     </SelectContent>
@@ -800,8 +800,8 @@ export default function SupplierManagement() {
                             </div>
                             <div>
                                 <Label>Status</Label>
-                                <Select value={form.status || 'active'} onValueChange={v => updateForm('status', v)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                <Select aria-label="Select option" value={form.status || 'active'} onValueChange={v => updateForm('status', v)}>
+                                    <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="active">Active</SelectItem>
                                         <SelectItem value="inactive">Inactive</SelectItem>
@@ -816,19 +816,19 @@ export default function SupplierManagement() {
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <Label>Email</Label>
-                                <Input value={form.email || ''} onChange={e => updateForm('email', e.target.value)} placeholder="orders@supplier.com" />
+                                <Input aria-label="Input field" value={form.email || ''} onChange={e => updateForm('email', e.target.value)} placeholder="orders@supplier.com" />
                             </div>
                             <div>
                                 <Label>Phone</Label>
-                                <Input value={form.phone || ''} onChange={e => updateForm('phone', e.target.value)} placeholder="+356 2123 4567" />
+                                <Input aria-label="Input field" value={form.phone || ''} onChange={e => updateForm('phone', e.target.value)} placeholder="+356 2123 4567" />
                             </div>
                             <div>
                                 <Label>Website</Label>
-                                <Input value={form.website || ''} onChange={e => updateForm('website', e.target.value)} placeholder="supplier.mt" />
+                                <Input aria-label="Input field" value={form.website || ''} onChange={e => updateForm('website', e.target.value)} placeholder="supplier.mt" />
                             </div>
                             <div>
                                 <Label>Tax ID</Label>
-                                <Input value={form.taxId || ''} onChange={e => updateForm('taxId', e.target.value)} placeholder="MT12345678" />
+                                <Input aria-label="Input field" value={form.taxId || ''} onChange={e => updateForm('taxId', e.target.value)} placeholder="MT12345678" />
                             </div>
                         </div>
 
@@ -836,15 +836,15 @@ export default function SupplierManagement() {
                         <div className="grid grid-cols-3 gap-4">
                             <div>
                                 <Label>Address</Label>
-                                <Input value={form.address || ''} onChange={e => updateForm('address', e.target.value)} />
+                                <Input aria-label="Input field" value={form.address || ''} onChange={e => updateForm('address', e.target.value)} />
                             </div>
                             <div>
                                 <Label>City</Label>
-                                <Input value={form.city || ''} onChange={e => updateForm('city', e.target.value)} />
+                                <Input aria-label="Input field" value={form.city || ''} onChange={e => updateForm('city', e.target.value)} />
                             </div>
                             <div>
                                 <Label>Country</Label>
-                                <Input value={form.country || ''} onChange={e => updateForm('country', e.target.value)} />
+                                <Input aria-label="Input field" value={form.country || ''} onChange={e => updateForm('country', e.target.value)} />
                             </div>
                         </div>
 
@@ -852,8 +852,8 @@ export default function SupplierManagement() {
                         <div className="grid grid-cols-3 gap-4">
                             <div>
                                 <Label>Payment Terms</Label>
-                                <Select value={form.paymentTerms || 'Net 30'} onValueChange={v => updateForm('paymentTerms', v)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                <Select aria-label="Select option" value={form.paymentTerms || 'Net 30'} onValueChange={v => updateForm('paymentTerms', v)}>
+                                    <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         {PAYMENT_TERMS.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
                                     </SelectContent>
@@ -861,12 +861,12 @@ export default function SupplierManagement() {
                             </div>
                             <div>
                                 <Label>Min Order (€)</Label>
-                                <Input type="number" value={form.minOrderValue || 0} onChange={e => updateForm('minOrderValue', Number(e.target.value))} />
+                                <Input aria-label="Input field" type="number" value={form.minOrderValue || 0} onChange={e => updateForm('minOrderValue', Number(e.target.value))} />
                             </div>
                             <div>
                                 <Label>Currency</Label>
-                                <Select value={form.currency || 'EUR'} onValueChange={v => updateForm('currency', v)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                <Select aria-label="Select option" value={form.currency || 'EUR'} onValueChange={v => updateForm('currency', v)}>
+                                    <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="EUR">EUR</SelectItem>
                                         <SelectItem value="USD">USD</SelectItem>
@@ -886,10 +886,10 @@ export default function SupplierManagement() {
                             </div>
                             {(form.contacts || []).map((c, i) => (
                                 <div key={i} className="grid grid-cols-5 gap-2 mb-2">
-                                    <Input placeholder="Name" value={c.name} onChange={e => updateContact(i, 'name', e.target.value)} />
-                                    <Input placeholder="Role" value={c.role} onChange={e => updateContact(i, 'role', e.target.value)} />
-                                    <Input placeholder="Phone" value={c.phone} onChange={e => updateContact(i, 'phone', e.target.value)} />
-                                    <Input placeholder="Email" value={c.email} onChange={e => updateContact(i, 'email', e.target.value)} />
+                                    <Input aria-label="Name" placeholder="Name" value={c.name} onChange={e => updateContact(i, 'name', e.target.value)} />
+                                    <Input aria-label="Role" placeholder="Role" value={c.role} onChange={e => updateContact(i, 'role', e.target.value)} />
+                                    <Input aria-label="Phone" placeholder="Phone" value={c.phone} onChange={e => updateContact(i, 'phone', e.target.value)} />
+                                    <Input aria-label="Email" placeholder="Email" value={c.email} onChange={e => updateContact(i, 'email', e.target.value)} />
                                     <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> removeContact(i)}>
                                         <X className="h-4 w-4 text-red-400" />
                                     </Button>
@@ -907,10 +907,10 @@ export default function SupplierManagement() {
                             </div>
                             {(form.certifications || []).map((c, i) => (
                                 <div key={i} className="grid grid-cols-4 gap-2 mb-2">
-                                    <Input placeholder="Cert name (e.g. ISO 22000)" value={c.name} onChange={e => updateCert(i, 'name', e.target.value)} />
-                                    <Input type="date" value={c.expiry} onChange={e => updateCert(i, 'expiry', e.target.value)} />
-                                    <Select value={c.status} onValueChange={v => updateCert(i, 'status', v)}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <Input aria-label="Cert name (e.g. ISO 22000)" placeholder="Cert name (e.g. ISO 22000)" value={c.name} onChange={e => updateCert(i, 'name', e.target.value)} />
+                                    <Input aria-label="Input field" type="date" value={c.expiry} onChange={e => updateCert(i, 'expiry', e.target.value)} />
+                                    <Select aria-label="Select option" value={c.status} onValueChange={v => updateCert(i, 'status', v)}>
+                                        <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="valid">Valid</SelectItem>
                                             <SelectItem value="expiring">Expiring</SelectItem>
@@ -934,14 +934,14 @@ export default function SupplierManagement() {
                             </div>
                             {(form.deliverySchedule || []).map((s, i) => (
                                 <div key={i} className="grid grid-cols-4 gap-2 mb-2">
-                                    <Select value={s.day} onValueChange={v => updateSchedule(i, 'day', v)}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <Select aria-label="Select option" value={s.day} onValueChange={v => updateSchedule(i, 'day', v)}>
+                                        <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                         <SelectContent>
                                             {DAYS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
                                         </SelectContent>
                                     </Select>
-                                    <Input type="time" value={s.cutoffTime} onChange={e => updateSchedule(i, 'cutoffTime', e.target.value)} />
-                                    <Input type="number" placeholder="Lead days" value={s.leadTimeDays} onChange={e => updateSchedule(i, 'leadTimeDays', Number(e.target.value))} />
+                                    <Input aria-label="Input field" type="time" value={s.cutoffTime} onChange={e => updateSchedule(i, 'cutoffTime', e.target.value)} />
+                                    <Input aria-label="Lead days" type="number" placeholder="Lead days" value={s.leadTimeDays} onChange={e => updateSchedule(i, 'leadTimeDays', Number(e.target.value))} />
                                     <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> removeSchedule(i)}>
                                         <X className="h-4 w-4 text-red-400" />
                                     </Button>
@@ -952,7 +952,7 @@ export default function SupplierManagement() {
                         {/* Notes */}
                         <div>
                             <Label>Notes</Label>
-                            <Textarea value={form.notes || ''} onChange={e => updateForm('notes', e.target.value)} rows={3} />
+                            <Textarea aria-label="Input field" value={form.notes || ''} onChange={e => updateForm('notes', e.target.value)} rows={3} />
                         </div>
                     </div>
 

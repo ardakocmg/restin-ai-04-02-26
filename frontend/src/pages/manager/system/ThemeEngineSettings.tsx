@@ -441,7 +441,7 @@ export default function ThemeEngineSettings() {
                                     <div className="space-y-4">
                                         <div>
                                             <Label>Palette Name</Label>
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 value={customThemeObj.name}
                                                 onChange={(e) => setCustomThemeObj({ ...customThemeObj, name: e.target.value })}
                                                 placeholder="My Brand Theme"
@@ -459,14 +459,14 @@ export default function ThemeEngineSettings() {
                                             <div key={field.key}>
                                                 <Label>{field.label}</Label>
                                                 <div className="flex gap-2 mt-1">
-                                                    <Input
+                                                    <Input aria-label="Input field"
                                                         type="color"
                                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                                         value={(customThemeObj as unknown)[field.key]}
                                                         onChange={(e) => setCustomThemeObj({ ...customThemeObj, [field.key]: e.target.value })}
                                                         className="w-16 h-10 p-1 cursor-pointer bg-secondary"
                                                     />
-                                                    <Input
+                                                    <Input aria-label="Input field"
                                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                                         value={(customThemeObj as unknown)[field.key]}
                                                         onChange={(e) => setCustomThemeObj({ ...customThemeObj, [field.key]: e.target.value })}

@@ -646,7 +646,7 @@ export default function WorkspaceSettings() {
                                 <p className="text-sm font-medium">{replyDialog.review.author_name}</p>
                                 <p className="text-sm text-muted-foreground">{replyDialog.review.text}</p>
                             </div>
-                            <Input
+                            <Input aria-label="Write your reply..."
                                 placeholder="Write your reply..."
                                 value={replyDialog.text}
                                 onChange={(e) => setReplyDialog({ ...replyDialog, text: e.target.value })}

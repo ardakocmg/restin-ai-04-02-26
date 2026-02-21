@@ -250,7 +250,7 @@ export default function EmployeeDirectory() {
           <div className="flex items-center gap-4 bg-card/40 p-2 rounded-2xl border border-border backdrop-blur-md">
             <div className="relative flex-1 max-w-xs">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
+              <Input aria-label="Search by name, email, ID..."
                 placeholder="Search by name, email, ID..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
@@ -307,7 +307,7 @@ export default function EmployeeDirectory() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">First Name</Label>
-                    <Input
+                    <Input aria-label="Input field"
                       value={newEmployee.first_name}
                       onChange={e => setNewEmployee({ ...newEmployee, first_name: e.target.value })}
                       className="bg-background border-border text-secondary-foreground"
@@ -316,7 +316,7 @@ export default function EmployeeDirectory() {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Last Name</Label>
-                    <Input
+                    <Input aria-label="Input field"
                       value={newEmployee.last_name}
                       onChange={e => setNewEmployee({ ...newEmployee, last_name: e.target.value })}
                       className="bg-background border-border text-secondary-foreground"
@@ -326,7 +326,7 @@ export default function EmployeeDirectory() {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Email</Label>
-                  <Input
+                  <Input aria-label="Input field"
                     type="email"
                     value={newEmployee.email}
                     onChange={e => setNewEmployee({ ...newEmployee, email: e.target.value })}
@@ -337,8 +337,8 @@ export default function EmployeeDirectory() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Role</Label>
-                    <Select value={newEmployee.role} onValueChange={val => setNewEmployee({ ...newEmployee, role: val })}>
-                      <SelectTrigger className="bg-background border-border text-secondary-foreground">
+                    <Select aria-label="Select option" value={newEmployee.role} onValueChange={val => setNewEmployee({ ...newEmployee, role: val })}>
+                      <SelectTrigger aria-label="Select option" className="bg-background border-border text-secondary-foreground">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-card border-border">
@@ -353,7 +353,7 @@ export default function EmployeeDirectory() {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Start Date</Label>
-                    <Input
+                    <Input aria-label="Input field"
                       type="date"
                       value={newEmployee.start_date}
                       onChange={e => setNewEmployee({ ...newEmployee, start_date: e.target.value })}

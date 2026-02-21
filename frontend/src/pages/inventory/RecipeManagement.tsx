@@ -226,7 +226,7 @@ export default function RecipeManagement() {
             <div className="space-y-4">
               <div>
                 <label className="text-xs uppercase font-bold text-muted-foreground">Recipe Name</label>
-                <Input
+                <Input aria-label="Input field"
                   value={formData.recipe_name}
                   onChange={(e) => setFormData({ ...formData, recipe_name: e.target.value })}
                   className="bg-card border-border focus:ring-red-500/20"
@@ -237,11 +237,11 @@ export default function RecipeManagement() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs uppercase font-bold text-muted-foreground">Category</label>
-                  <Select
+                  <Select aria-label="Select option"
                     value={formData.category}
                     onValueChange={(val) => setFormData({ ...formData, category: val })}
                   >
-                    <SelectTrigger className="bg-card border-border">
+                    <SelectTrigger aria-label="Select option" className="bg-card border-border">
                       <SelectValue placeholder="Category" />
                     </SelectTrigger>
                     <SelectContent className="bg-card border-border text-secondary-foreground">
@@ -255,7 +255,7 @@ export default function RecipeManagement() {
                 </div>
                 <div>
                   <label className="text-xs uppercase font-bold text-muted-foreground">Servings (Yield)</label>
-                  <Input
+                  <Input aria-label="Input field"
                     type="number"
                     value={formData.servings}
                     onChange={(e) => setFormData({ ...formData, servings: parseFloat(e.target.value) })}
@@ -267,7 +267,7 @@ export default function RecipeManagement() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs uppercase font-bold text-muted-foreground">Prep (m)</label>
-                  <Input
+                  <Input aria-label="Input field"
                     type="number"
                     value={formData.prep_time_minutes}
                     onChange={(e) => setFormData({ ...formData, prep_time_minutes: parseInt(e.target.value) })}
@@ -276,7 +276,7 @@ export default function RecipeManagement() {
                 </div>
                 <div>
                   <label className="text-xs uppercase font-bold text-muted-foreground">Cook (m)</label>
-                  <Input
+                  <Input aria-label="Input field"
                     type="number"
                     value={formData.cook_time_minutes}
                     onChange={(e) => setFormData({ ...formData, cook_time_minutes: parseInt(e.target.value) })}
@@ -302,11 +302,11 @@ export default function RecipeManagement() {
                 {formData.ingredients.map((ing, idx) => (
                   <div key={idx} className="grid grid-cols-12 gap-2 items-center bg-black/20 p-2 rounded-lg border border-border">
                     <div className="col-span-12 md:col-span-5">
-                      <Select
+                      <Select aria-label="Select option"
                         value={ing.item_id}
                         onValueChange={(val) => handleIngredientChange(idx, 'item_id', val)}
                       >
-                        <SelectTrigger className="h-8 text-xs bg-transparent border-transparent hover:bg-white/5">
+                        <SelectTrigger aria-label="Select option" className="h-8 text-xs bg-transparent border-transparent hover:bg-white/5">
                           <SelectValue placeholder="Select Item" />
                         </SelectTrigger>
                         <SelectContent className="bg-card border-border text-secondary-foreground">
@@ -317,7 +317,7 @@ export default function RecipeManagement() {
                       </Select>
                     </div>
                     <div className="col-span-3">
-                      <Input
+                      <Input aria-label="Qty"
                         type="number"
                         placeholder="Qty"
                         value={ing.quantity}

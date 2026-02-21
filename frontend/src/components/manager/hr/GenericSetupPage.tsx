@@ -152,7 +152,7 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
             {/* Filter */}
             <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
+                <Input aria-label="Search..."
                     placeholder="Search..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -220,7 +220,7 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
                     <form onSubmit={handleCreate} className="space-y-4 pt-4">
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-muted-foreground">Name <span className="text-red-500">*</span></label>
-                            <Input
+                            <Input aria-label="Input field"
                                 required
                                 value={formData.name}
                                 onChange={e => setFormData({ ...formData, name: e.target.value })}
@@ -231,7 +231,7 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-muted-foreground">Code</label>
-                                <Input
+                                <Input aria-label="Input field"
                                     value={formData.code}
                                     onChange={e => setFormData({ ...formData, code: e.target.value })}
                                     placeholder="Optional (e.g. KIT-01)"
@@ -240,7 +240,7 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-muted-foreground">Description</label>
-                                <Input
+                                <Input aria-label="Input field"
                                     value={formData.description}
                                     onChange={e => setFormData({ ...formData, description: e.target.value })}
                                     placeholder="Optional details"

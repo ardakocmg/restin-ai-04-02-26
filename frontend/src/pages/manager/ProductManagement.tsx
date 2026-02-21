@@ -127,7 +127,7 @@ export default function ProductManagement() {
                                 </div>
                                 <div className="relative w-64">
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                    <Input
+                                    <Input aria-label="Search Catalog..."
                                         placeholder="Search Catalog..."
                                         className="pl-10 bg-card border-border"
                                         value={searchTerm}

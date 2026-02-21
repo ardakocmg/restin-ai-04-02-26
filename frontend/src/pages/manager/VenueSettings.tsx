@@ -223,7 +223,7 @@ export default function VenueSettings() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div className="space-y-4">
                   <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-2 block">Venue Name</Label>
-                  <Input
+                  <Input aria-label="Venue Name Input"
                     data-testid="venue-name-input"
                     value={venueForm.name || ""}
                     onChange={(e) => setVenueForm({ ...venueForm, name: e.target.value })}
@@ -233,12 +233,12 @@ export default function VenueSettings() {
                 </div>
                 <div className="space-y-4">
                   <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-2 block">Venue Type</Label>
-                  <Select
+                  <Select aria-label="Select option"
                     value={venueForm.type || ""}
                     onValueChange={(v) => setVenueForm({ ...venueForm, type: v })}
                     disabled={!isManager()}
                   >
-                    <SelectTrigger data-testid="venue-type-select" className="bg-background border-border text-foreground font-bold h-14 text-lg">
+                    <SelectTrigger aria-label="Venue Type Select" data-testid="venue-type-select" className="bg-background border-border text-foreground font-bold h-14 text-lg">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-card border-border shadow-2xl">
@@ -267,7 +267,7 @@ export default function VenueSettings() {
                 {venueForm.pacing_enabled && (
                   <div className="mt-4 space-y-2">
                     <Label className="text-secondary-foreground">Pacing Interval (minutes)</Label>
-                    <Input
+                    <Input aria-label="Pacing Interval Input"
                       data-testid="pacing-interval-input"
                       type="number"
                       value={venueForm.pacing_interval_minutes || 15}
@@ -284,7 +284,7 @@ export default function VenueSettings() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="text-secondary-foreground">Low Risk Threshold (0-100)</Label>
-                    <Input
+                    <Input aria-label="Low Threshold Input"
                       data-testid="low-threshold-input"
                       type="number"
                       min="0"
@@ -298,7 +298,7 @@ export default function VenueSettings() {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-secondary-foreground">Medium Risk Threshold (0-100)</Label>
-                    <Input
+                    <Input aria-label="Medium Threshold Input"
                       data-testid="medium-threshold-input"
                       type="number"
                       min="0"
@@ -320,12 +320,12 @@ export default function VenueSettings() {
                   Legal Entity
                 </h3>
                 <div className="space-y-3">
-                  <Select
+                  <Select aria-label="Select option"
                     value={venueForm.legal_entity_id || ""}
                     onValueChange={(v) => setVenueForm({ ...venueForm, legal_entity_id: v === "none" ? "" : v })}
                     disabled={!isManager()}
                   >
-                    <SelectTrigger className="bg-zinc-50 dark:bg-background border-border dark:border-border text-foreground dark:text-foreground h-12">
+                    <SelectTrigger aria-label="Select option" className="bg-zinc-50 dark:bg-background border-border dark:border-border text-foreground dark:text-foreground h-12">
                       <SelectValue placeholder="Select a legal entity..." />
                     </SelectTrigger>
                     <SelectContent className="bg-card border-border">
@@ -373,7 +373,7 @@ export default function VenueSettings() {
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Establishment Logo</Label>
                 <div className="flex gap-4 items-start">
                   <div className="flex-1 space-y-2">
-                    <Input
+                    <Input aria-label="Input field"
                       value={venueForm.branding?.logo_url || ""}
                       onChange={(e) => setVenueForm({ ...venueForm, branding: { ...(venueForm.branding || {}), logo_url: e.target.value } })}
                       className="bg-background border-border text-foreground"
@@ -418,13 +418,13 @@ export default function VenueSettings() {
               <div className="space-y-4">
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Document Accent Color</Label>
                 <div className="flex gap-3">
-                  <Input
+                  <Input aria-label="Input field"
                     type="color"
                     value={venueForm.branding?.primary_color || "#dc2626"}
                     onChange={(e) => setVenueForm({ ...venueForm, branding: { ...(venueForm.branding || {}), primary_color: e.target.value } })}
                     className="bg-background border-border w-12 h-10 p-1"
                   />
-                  <Input
+                  <Input aria-label="Input field"
                     value={venueForm.branding?.primary_color || "#dc2626"}
                     onChange={(e) => setVenueForm({ ...venueForm, branding: { ...(venueForm.branding || {}), primary_color: e.target.value } })}
                     className="bg-background border-border text-foreground font-mono"
@@ -467,7 +467,7 @@ export default function VenueSettings() {
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label className="text-secondary-foreground">Zone Name</Label>
-                        <Input
+                        <Input aria-label="New Zone Name"
                           data-testid="new-zone-name"
                           value={newZone.name}
                           onChange={(e) => setNewZone({ ...newZone, name: e.target.value })}
@@ -477,8 +477,8 @@ export default function VenueSettings() {
                       </div>
                       <div className="space-y-2">
                         <Label className="text-secondary-foreground">Type</Label>
-                        <Select value={newZone.type} onValueChange={(v) => setNewZone({ ...newZone, type: v })}>
-                          <SelectTrigger data-testid="new-zone-type" className="bg-secondary border-border text-foreground">
+                        <Select aria-label="Select option" value={newZone.type} onValueChange={(v) => setNewZone({ ...newZone, type: v })}>
+                          <SelectTrigger aria-label="New Zone Type" data-testid="new-zone-type" className="bg-secondary border-border text-foreground">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="bg-card border-border">
@@ -545,8 +545,8 @@ export default function VenueSettings() {
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label className="text-secondary-foreground">Zone</Label>
-                        <Select value={newTable.zone_id} onValueChange={(v) => setNewTable({ ...newTable, zone_id: v })}>
-                          <SelectTrigger data-testid="new-table-zone" className="bg-secondary border-border text-foreground">
+                        <Select aria-label="Select option" value={newTable.zone_id} onValueChange={(v) => setNewTable({ ...newTable, zone_id: v })}>
+                          <SelectTrigger aria-label="New Table Zone" data-testid="new-table-zone" className="bg-secondary border-border text-foreground">
                             <SelectValue placeholder="Select zone" />
                           </SelectTrigger>
                           <SelectContent className="bg-card border-border">
@@ -558,7 +558,7 @@ export default function VenueSettings() {
                       </div>
                       <div className="space-y-2">
                         <Label className="text-secondary-foreground">Table Name</Label>
-                        <Input
+                        <Input aria-label="New Table Name"
                           data-testid="new-table-name"
                           value={newTable.name}
                           onChange={(e) => setNewTable({ ...newTable, name: e.target.value })}
@@ -568,7 +568,7 @@ export default function VenueSettings() {
                       </div>
                       <div className="space-y-2">
                         <Label className="text-secondary-foreground">Seats</Label>
-                        <Input
+                        <Input aria-label="New Table Seats"
                           data-testid="new-table-seats"
                           type="number"
                           value={newTable.seats}

@@ -780,7 +780,7 @@ export default function HiveDashboard() {
                 <div className="px-3 py-2.5">
                     <div className="relative">
                         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                        <Input
+                        <Input aria-label="Search messages..."
                             placeholder="Search messages..."
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
@@ -1096,14 +1096,14 @@ export default function HiveDashboard() {
                                     <X className="h-3.5 w-3.5" />
                                 </button>
                             </div>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={pollQuestion}
                                 onChange={e => setPollQuestion(e.target.value)}
                                 placeholder="Poll question..."
                                 className="bg-secondary border-border text-secondary-foreground text-sm h-8"
                             />
                             {pollOptions.map((opt, i) => (
-                                <Input
+                                <Input aria-label="Input field"
                                     key={i}
                                     value={opt}
                                     onChange={e => {
@@ -1292,7 +1292,7 @@ export default function HiveDashboard() {
                                                     </div>
                                                 ) : editingId === msg.id ? (
                                                     <div className="flex gap-2 mt-1">
-                                                        <Input
+                                                        <Input aria-label="Input field"
                                                             value={editText}
                                                             onChange={e => setEditText(e.target.value)}
                                                             onKeyDown={e => { if (e.key === 'Enter') handleSaveEdit(msg.id); if (e.key === 'Escape') setEditingId(null); }}
@@ -1741,7 +1741,7 @@ export default function HiveDashboard() {
                             </AnimatePresence>
                         </div>
 
-                        <Input
+                        <Input aria-label="Input field"
                             ref={inputRef}
                             placeholder={`Message #${activeChannelData?.name || 'channel'}... (use / for shortcuts, # for orders, @ for tables)`}
                             value={messageInput}
@@ -1801,7 +1801,7 @@ export default function HiveDashboard() {
                         )}
                         <Button
                             size="sm"
-                            className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-foreground px-5 h-10 rounded-xl shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 transition-all duration-200 disabled:opacity-40 disabled:shadow-none"
+                            aria-label="Action" className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-foreground px-5 h-10 rounded-xl shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 transition-all duration-200 disabled:opacity-40 disabled:shadow-none"
                             onClick={handleSend}
                             disabled={!messageInput.trim()}
                         >
@@ -1878,7 +1878,7 @@ export default function HiveDashboard() {
                                     )}
 
                                     {/* Task Title */}
-                                    <Input
+                                    <Input aria-label="Task title..."
                                         placeholder="Task title..."
                                         value={newTaskTitle}
                                         onChange={e => setNewTaskTitle(e.target.value)}
@@ -1914,7 +1914,7 @@ export default function HiveDashboard() {
 
                                     {/* Deadline + Recurrence */}
                                     <div className="grid grid-cols-2 gap-2">
-                                        <Input
+                                        <Input aria-label="Deadline (HH:MM)"
                                             placeholder="Deadline (HH:MM)"
                                             value={newTaskDeadline}
                                             onChange={e => setNewTaskDeadline(e.target.value)}
@@ -2308,7 +2308,7 @@ export default function HiveDashboard() {
                         {/* Search call log */}
                         <div className="relative">
                             <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
-                            <Input
+                            <Input aria-label="Search transcripts..."
                                 placeholder="Search transcripts..."
                                 className="bg-card border-border text-secondary-foreground placeholder:text-muted-foreground pl-7 h-7 text-[11px]"
                             />
@@ -2583,7 +2583,7 @@ export default function HiveDashboard() {
                         {/* Thread Reply Input */}
                         <div className="p-3 border-t border-border/50 bg-background">
                             <div className="flex gap-2">
-                                <Input
+                                <Input aria-label="Reply in thread..."
                                     placeholder="Reply in thread..."
                                     value={replyingTo?.id === threadViewMsg.id ? messageInput : ''}
                                     onChange={e => {

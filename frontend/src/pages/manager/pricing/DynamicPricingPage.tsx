@@ -136,7 +136,7 @@ export default function DynamicPricingPage() {
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="text-xs text-muted-foreground block mb-1">Name</label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={newBook.name}
                                 onChange={(e) => setNewBook({ ...newBook, name: e.target.value })}
                                 placeholder="e.g., Friday Happy Hour"
@@ -169,7 +169,7 @@ export default function DynamicPricingPage() {
                         </div>
                         <div>
                             <label className="text-xs text-muted-foreground block mb-1">Value</label>
-                            <Input
+                            <Input aria-label="Input field"
                                 type="number"
                                 value={newBook.modifier_value}
                                 onChange={(e) => setNewBook({ ...newBook, modifier_value: parseFloat(e.target.value) })}

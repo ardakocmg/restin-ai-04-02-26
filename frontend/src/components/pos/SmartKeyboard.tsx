@@ -108,7 +108,7 @@ export default function SmartKeyboard({
                             {value && (
                                 <button
                                     onClick={handleClear}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 rounded-sm transition-colors"
+                                    aria-label="Action" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 rounded-sm transition-colors"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -156,7 +156,7 @@ export default function SmartKeyboard({
                             {rowIndex === 2 && (
                                 <button
                                     onClick={handleDelete}
-                                    className="h-14 md:h-16 px-6 rounded-xl font-bold bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all shadow-md active:scale-95 flex items-center justify-center border border-destructive/20 ml-2"
+                                    aria-label="Action" className="h-14 md:h-16 px-6 rounded-xl font-bold bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all shadow-md active:scale-95 flex items-center justify-center border border-destructive/20 ml-2"
                                 >
                                     <Delete className="w-6 h-6" />
                                 </button>

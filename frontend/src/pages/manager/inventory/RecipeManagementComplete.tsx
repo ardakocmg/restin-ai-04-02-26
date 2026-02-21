@@ -831,7 +831,7 @@ export default function RecipeManagement() {
         {/* Search (leftmost) */}
         <div className="relative flex-1 min-w-40 max-w-xs">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-          <Input
+          <Input aria-label="Search recipes..."
             placeholder="Search recipes..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -1160,8 +1160,8 @@ export default function RecipeManagement() {
 
                 {/* Product Type */}
                 <RecipeFilterSection title="Product Type">
-                  <Select value={recipeSidebarFilters.productType} onValueChange={v => updateRecipeSidebarFilter('productType', v)}>
-                    <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <Select aria-label="Select option" value={recipeSidebarFilters.productType} onValueChange={v => updateRecipeSidebarFilter('productType', v)}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-xs"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">📋 All Types</SelectItem>
                       <SelectItem value="finished">✅ Finished Product</SelectItem>
@@ -1172,8 +1172,8 @@ export default function RecipeManagement() {
 
                 {/* Cuisine */}
                 <RecipeFilterSection title="Cuisine">
-                  <Select value={recipeSidebarFilters.cuisine} onValueChange={v => updateRecipeSidebarFilter('cuisine', v)}>
-                    <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <Select aria-label="Select option" value={recipeSidebarFilters.cuisine} onValueChange={v => updateRecipeSidebarFilter('cuisine', v)}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-xs"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">🌍 All Cuisines</SelectItem>
                       {CUISINE_OPTIONS.map(c => <SelectItem key={c} value={c}>🍽️ {c}</SelectItem>)}
@@ -1196,8 +1196,8 @@ export default function RecipeManagement() {
 
                 {/* Dish Type */}
                 <RecipeFilterSection title="Dish Type">
-                  <Select value={recipeSidebarFilters.dishType} onValueChange={v => updateRecipeSidebarFilter('dishType', v)}>
-                    <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <Select aria-label="Select option" value={recipeSidebarFilters.dishType} onValueChange={v => updateRecipeSidebarFilter('dishType', v)}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-xs"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">🍽️ All Types</SelectItem>
                       <SelectItem value="starter">🥗 Starter</SelectItem>
@@ -1212,8 +1212,8 @@ export default function RecipeManagement() {
 
                 {/* Difficulty */}
                 <RecipeFilterSection title="Difficulty">
-                  <Select value={recipeSidebarFilters.difficulty} onValueChange={v => updateRecipeSidebarFilter('difficulty', v)}>
-                    <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <Select aria-label="Select option" value={recipeSidebarFilters.difficulty} onValueChange={v => updateRecipeSidebarFilter('difficulty', v)}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-xs"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">📊 All</SelectItem>
                       <SelectItem value="easy">🟢 Easy</SelectItem>
@@ -1239,8 +1239,8 @@ export default function RecipeManagement() {
 
                 {/* Stage */}
                 <RecipeFilterSection title="Stage">
-                  <Select value={recipeSidebarFilters.stage} onValueChange={v => updateRecipeSidebarFilter('stage', v)}>
-                    <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <Select aria-label="Select option" value={recipeSidebarFilters.stage} onValueChange={v => updateRecipeSidebarFilter('stage', v)}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-xs"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">📋 All Stages</SelectItem>
                       <SelectItem value="development">🛠️ Development</SelectItem>
@@ -1252,8 +1252,8 @@ export default function RecipeManagement() {
 
                 {/* Approved */}
                 <RecipeFilterSection title="Approved Status">
-                  <Select value={recipeSidebarFilters.approved} onValueChange={v => updateRecipeSidebarFilter('approved', v)}>
-                    <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <Select aria-label="Select option" value={recipeSidebarFilters.approved} onValueChange={v => updateRecipeSidebarFilter('approved', v)}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-xs"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">📋 All</SelectItem>
                       <SelectItem value="approved">✅ Approved</SelectItem>
@@ -1708,7 +1708,7 @@ export default function RecipeManagement() {
             {/* Input Area */}
             {aiImportMode === 'url' && (
               <div className="space-y-2">
-                <Input
+                <Input aria-label="https://www.allrecipes.com/recipe/..."
                   placeholder="https://www.allrecipes.com/recipe/..."
                   value={aiImportInput}
                   onChange={(e) => setAiImportInput(e.target.value)}
@@ -1723,7 +1723,7 @@ export default function RecipeManagement() {
                 <p className="text-xs text-muted-foreground">
                   {aiImportMode === 'photo' ? 'Drop a photo of a recipe card here' : 'Drop a PDF menu or recipe book'}
                 </p>
-                <input id="ai-import-file" type="file" className="hidden"
+                <input aria-label="Ai Import File" id="ai-import-file" type="file" className="hidden"
                   accept={aiImportMode === 'photo' ? 'image/*' : '.pdf'}
                   onChange={(e) => setAiImportInput(e.target.files?.[0]?.name || '')} />
                 {aiImportInput && (
@@ -1775,7 +1775,7 @@ export default function RecipeManagement() {
               onClick={() => document.getElementById('media-upload-input')?.click()}>
               <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
               <p className="text-xs text-muted-foreground">Drag & drop or click to upload photos/videos</p>
-              <input id="media-upload-input" type="file" className="hidden" multiple accept="image/*,video/*" />
+              <input aria-label="Media Upload Input" id="media-upload-input" type="file" className="hidden" multiple accept="image/*,video/*" />
             </div>
 
             {/* Demo Media Grid */}

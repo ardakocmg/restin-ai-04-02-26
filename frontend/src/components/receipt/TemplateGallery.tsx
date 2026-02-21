@@ -232,7 +232,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ open, onClose,
                             <p className="text-xs text-zinc-500">{totalTemplates} curated templates across {GALLERY.length} industries</p>
                         </div>
                     </div>
-                    <Button variant="ghost" size="sm" onClick={onClose} className="text-zinc-500 hover:text-white">
+                    <Button variant="ghost" size="sm" onClick={onClose} aria-label="Action" className="text-zinc-500 hover:text-white">
                         <X className="w-4 h-4" />
                     </Button>
                 </div>
@@ -242,7 +242,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ open, onClose,
                     <div className="flex gap-3 mb-3">
                         <div className="relative flex-1">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                            <Input
+                            <Input aria-label="Input field"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search templates..."

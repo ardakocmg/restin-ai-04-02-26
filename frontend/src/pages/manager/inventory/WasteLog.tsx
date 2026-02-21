@@ -381,8 +381,8 @@ export default function WasteLog() {
               <>
                 <div className="space-y-2">
                   <Label>Item</Label>
-                  <Select value={formData.item_id} onValueChange={v => setFormData({ ...formData, item_id: v })}>
-                    <SelectTrigger>
+                  <Select aria-label="Select option" value={formData.item_id} onValueChange={v => setFormData({ ...formData, item_id: v })}>
+                    <SelectTrigger aria-label="Select option">
                       <SelectValue placeholder="Select item..." />
                     </SelectTrigger>
                     <SelectContent className="max-h-60">
@@ -399,7 +399,7 @@ export default function WasteLog() {
                 </div>
                 <div className="space-y-2">
                   <Label>Quantity Lost ({selectedItem?.unit || 'Units'})</Label>
-                  <Input
+                  <Input aria-label="Input field"
                     type="number"
                     step="0.01"
                     value={formData.quantity}
@@ -412,8 +412,8 @@ export default function WasteLog() {
               <>
                 <div className="space-y-2">
                   <Label>Recipe</Label>
-                  <Select value={formData.recipe_id} onValueChange={v => setFormData({ ...formData, recipe_id: v })}>
-                    <SelectTrigger>
+                  <Select aria-label="Select option" value={formData.recipe_id} onValueChange={v => setFormData({ ...formData, recipe_id: v })}>
+                    <SelectTrigger aria-label="Select option">
                       <SelectValue placeholder="Select recipe..." />
                     </SelectTrigger>
                     <SelectContent className="max-h-60">
@@ -425,7 +425,7 @@ export default function WasteLog() {
                 </div>
                 <div className="space-y-2">
                   <Label>Portions Wasted</Label>
-                  <Input
+                  <Input aria-label="Input field"
                     type="number"
                     min="1"
                     value={formData.portions}
@@ -438,8 +438,8 @@ export default function WasteLog() {
 
             <div className="space-y-2">
               <Label>Reason</Label>
-              <Select value={formData.reason} onValueChange={v => setFormData({ ...formData, reason: v })}>
-                <SelectTrigger>
+              <Select aria-label="Select option" value={formData.reason} onValueChange={v => setFormData({ ...formData, reason: v })}>
+                <SelectTrigger aria-label="Select option">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

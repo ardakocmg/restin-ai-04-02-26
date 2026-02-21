@@ -102,8 +102,8 @@ export default function TestPanel() {
           <CardContent className="space-y-4">
             <div>
               <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 block">Method</label>
-              <Select value={method} onValueChange={setMethod}>
-                <SelectTrigger data-testid="testpanel-method-select">
+              <Select aria-label="Select option" value={method} onValueChange={setMethod}>
+                <SelectTrigger aria-label="Testpanel Method Select" data-testid="testpanel-method-select">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -116,7 +116,7 @@ export default function TestPanel() {
             </div>
             <div>
               <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 block">Path</label>
-              <Input value={path} onChange={(e) => setPath(e.target.value)} data-testid="testpanel-path-input" />
+              <Input aria-label="Input field" value={path} onChange={(e) => setPath(e.target.value)} data-testid="testpanel-path-input" />
             </div>
             <div>
               <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 block">Request Body (JSON)</label>

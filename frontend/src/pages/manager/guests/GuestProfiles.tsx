@@ -110,7 +110,7 @@ export default function GuestProfiles() {
 
                 {/* Search */}
                 <div className="flex gap-3">
-                    <Input
+                    <Input aria-label="Search guests by name or email..."
                         placeholder="Search guests by name or email..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}

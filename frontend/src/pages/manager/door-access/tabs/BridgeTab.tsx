@@ -97,11 +97,11 @@ export default function BridgeTab() {
                     <div className="grid grid-cols-4 gap-3 items-end">
                         <div className="col-span-2">
                             <label className="text-xs text-muted-foreground mb-1 block">Bridge IP Address</label>
-                            <Input placeholder="192.168.1.100" value={bridgeIp} onChange={(e) => setBridgeIp(e.target.value)} className="bg-card border-border text-secondary-foreground" />
+                            <Input aria-label="192.168.1.100" placeholder="192.168.1.100" value={bridgeIp} onChange={(e) => setBridgeIp(e.target.value)} className="bg-card border-border text-secondary-foreground" />
                         </div>
                         <div>
                             <label className="text-xs text-muted-foreground mb-1 block">Port</label>
-                            <Input placeholder="8080" value={bridgePort} onChange={(e) => setBridgePort(e.target.value)} className="bg-card border-border text-secondary-foreground" />
+                            <Input aria-label="8080" placeholder="8080" value={bridgePort} onChange={(e) => setBridgePort(e.target.value)} className="bg-card border-border text-secondary-foreground" />
                         </div>
                         <Button onClick={configureBridge} disabled={loading} className="bg-cyan-600 hover:bg-cyan-700 text-foreground">
                             {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-1" /> : <Router className="h-4 w-4 mr-1" />}

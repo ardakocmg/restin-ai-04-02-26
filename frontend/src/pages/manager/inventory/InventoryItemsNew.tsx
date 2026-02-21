@@ -879,8 +879,8 @@ export default function InventoryItemsNew() {
 
                 {/* Diet */}
                 <FilterSection title="Diet">
-                  <Select value={sidebarFilters.diet} onValueChange={(v) => updateFilter('diet', v)}>
-                    <SelectTrigger className="h-8 text-xs">
+                  <Select aria-label="Select option" value={sidebarFilters.diet} onValueChange={(v) => updateFilter('diet', v)}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -896,8 +896,8 @@ export default function InventoryItemsNew() {
 
                 {/* Verification */}
                 <FilterSection title="Allergen Verification">
-                  <Select value={sidebarFilters.verification} onValueChange={(v) => updateFilter('verification', v)}>
-                    <SelectTrigger className="h-8 text-xs">
+                  <Select aria-label="Select option" value={sidebarFilters.verification} onValueChange={(v) => updateFilter('verification', v)}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -911,8 +911,8 @@ export default function InventoryItemsNew() {
 
                 {/* Approved / Allowed */}
                 <FilterSection title="Approved Status">
-                  <Select value={sidebarFilters.approved} onValueChange={(v) => updateFilter('approved', v)}>
-                    <SelectTrigger className="h-8 text-xs">
+                  <Select aria-label="Select option" value={sidebarFilters.approved} onValueChange={(v) => updateFilter('approved', v)}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -925,8 +925,8 @@ export default function InventoryItemsNew() {
 
                 {/* Storage Type */}
                 <FilterSection title="Storage Type" defaultOpen={false}>
-                  <Select value={sidebarFilters.storageType} onValueChange={(v) => updateFilter('storageType', v)}>
-                    <SelectTrigger className="h-8 text-xs">
+                  <Select aria-label="Select option" value={sidebarFilters.storageType} onValueChange={(v) => updateFilter('storageType', v)}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -940,8 +940,8 @@ export default function InventoryItemsNew() {
 
                 {/* Stock Status */}
                 <FilterSection title="Stock Status">
-                  <Select value={sidebarFilters.status} onValueChange={(v) => updateFilter('status', v)}>
-                    <SelectTrigger className="h-8 text-xs">
+                  <Select aria-label="Select option" value={sidebarFilters.status} onValueChange={(v) => updateFilter('status', v)}>
+                    <SelectTrigger aria-label="Select option" className="h-8 text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

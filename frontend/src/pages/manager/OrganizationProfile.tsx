@@ -189,7 +189,7 @@ export default function OrganizationProfile() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Organization Name</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.organization_name}
                                 onChange={e => handleChange('organization_name', e.target.value)}
                                 className="bg-background border-border text-foreground h-12"
@@ -199,7 +199,7 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Display Name</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.display_name}
                                 onChange={e => handleChange('display_name', e.target.value)}
                                 className="bg-background border-border text-foreground h-12"
@@ -233,7 +233,7 @@ export default function OrganizationProfile() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Street Name</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.street_name}
                                 onChange={e => handleChange('street_name', e.target.value)}
                                 className="bg-background border-border text-foreground"
@@ -242,7 +242,7 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Number / Building</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.number}
                                 onChange={e => handleChange('number', e.target.value)}
                                 className="bg-background border-border text-foreground"
@@ -251,7 +251,7 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">City</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.city}
                                 onChange={e => handleChange('city', e.target.value)}
                                 className="bg-background border-border text-foreground"
@@ -260,7 +260,7 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Postal Code</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.postal_code}
                                 onChange={e => handleChange('postal_code', e.target.value)}
                                 className="bg-background border-border text-foreground"
@@ -269,7 +269,7 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Country</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.country}
                                 onChange={e => handleChange('country', e.target.value)}
                                 className="bg-background border-border text-foreground"
@@ -292,7 +292,7 @@ export default function OrganizationProfile() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Telephone</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.telephone}
                                 onChange={e => handleChange('telephone', e.target.value)}
                                 className="bg-background border-border text-foreground"
@@ -302,7 +302,7 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Fax</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.fax}
                                 onChange={e => handleChange('fax', e.target.value)}
                                 className="bg-background border-border text-foreground"
@@ -311,7 +311,7 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Contact Email</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 type="email"
                                 value={formData.contact_email}
                                 onChange={e => handleChange('contact_email', e.target.value)}
@@ -322,7 +322,7 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Website</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.website_url}
                                 onChange={e => handleChange('website_url', e.target.value)}
                                 className="bg-background border-border text-foreground"
@@ -346,12 +346,12 @@ export default function OrganizationProfile() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Currency</Label>
-                            <Select
+                            <Select aria-label="Select option"
                                 value={formData.currency}
                                 onValueChange={val => handleChange('currency', val)}
                                 disabled={!canEdit}
                             >
-                                <SelectTrigger className="bg-background border-border text-foreground h-12">
+                                <SelectTrigger aria-label="Select option" className="bg-background border-border text-foreground h-12">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="bg-card border-border">
@@ -363,7 +363,7 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">VAT Number</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 value={formData.vat_number}
                                 onChange={e => handleChange('vat_number', e.target.value)}
                                 className="bg-background border-border text-foreground"
@@ -373,12 +373,12 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Time Zone</Label>
-                            <Select
+                            <Select aria-label="Select option"
                                 value={formData.timezone}
                                 onValueChange={val => handleChange('timezone', val)}
                                 disabled={!canEdit}
                             >
-                                <SelectTrigger className="bg-background border-border text-foreground h-12">
+                                <SelectTrigger aria-label="Select option" className="bg-background border-border text-foreground h-12">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="bg-card border-border">
@@ -390,7 +390,7 @@ export default function OrganizationProfile() {
                         </div>
                         <div className="space-y-2">
                             <Label className="text-xs font-bold text-muted-foreground uppercase">Business Day Start</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 type="time"
                                 value={formData.opening_time}
                                 onChange={e => handleChange('opening_time', e.target.value)}

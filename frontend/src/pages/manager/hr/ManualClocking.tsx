@@ -422,7 +422,7 @@ export default function ManualClocking() {
                                     <div className="relative">
                                         <div className="relative">
                                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 placeholder={t('Search employee...')}
                                                 className="pl-9 bg-card/50 border-border text-xs h-10 focus:ring-1 focus:ring-violet-500/50"
                                                 value={empSearch}

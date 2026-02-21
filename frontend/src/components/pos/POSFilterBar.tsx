@@ -93,11 +93,11 @@ export default function POSFilterBar({ onSettingsClick }: POSFilterBarProps) {
                             <div className="grid grid-cols-2 gap-2">
                                 <div className="space-y-1">
                                     <Label className="text-[10px] uppercase text-muted-foreground">Start</Label>
-                                    <Input type="time" className="h-8 bg-card border-border text-xs" />
+                                    <Input aria-label="Input field" type="time" className="h-8 bg-card border-border text-xs" />
                                 </div>
                                 <div className="space-y-1">
                                     <Label className="text-[10px] uppercase text-muted-foreground">End</Label>
-                                    <Input type="time" className="h-8 bg-card border-border text-xs" />
+                                    <Input aria-label="Input field" type="time" className="h-8 bg-card border-border text-xs" />
                                 </div>
                             </div>
                             <Button className="w-full bg-red-600 hover:bg-red-700 text-foreground h-8 text-xs">Apply Event</Button>

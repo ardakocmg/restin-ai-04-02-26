@@ -292,8 +292,8 @@ export default function SalesMixAnalysis() {
 
                     {/* Filters */}
                     <div className="flex items-center gap-3 mb-4 flex-wrap">
-                        <Select value={dateRange} onValueChange={setDateRange}>
-                            <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+                        <Select aria-label="Select option" value={dateRange} onValueChange={setDateRange}>
+                            <SelectTrigger aria-label="Select option" className="w-36"><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="today">Today</SelectItem>
                                 <SelectItem value="this_week">This Week</SelectItem>
@@ -303,16 +303,16 @@ export default function SalesMixAnalysis() {
                             </SelectContent>
                         </Select>
 
-                        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                            <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+                        <Select aria-label="Select option" value={categoryFilter} onValueChange={setCategoryFilter}>
+                            <SelectTrigger aria-label="Select option" className="w-36"><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">All Categories</SelectItem>
                                 {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                             </SelectContent>
                         </Select>
 
-                        <Select value={sortBy} onValueChange={setSortBy}>
-                            <SelectTrigger className="w-36">
+                        <Select aria-label="Select option" value={sortBy} onValueChange={setSortBy}>
+                            <SelectTrigger aria-label="Select option" className="w-36">
                                 <ArrowUpDown className="h-3 w-3 mr-1" /><SelectValue />
                             </SelectTrigger>
                             <SelectContent>

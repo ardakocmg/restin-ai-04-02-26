@@ -97,7 +97,7 @@ export default function Guests() {
           <div className="space-y-4 py-4">
             <div>
               <Label>Name *</Label>
-              <Input
+              <Input aria-label="Input field"
                 value={newGuest.name}
                 onChange={(e) => setNewGuest({...newGuest, name: e.target.value})}
                 placeholder="Guest name"
@@ -105,7 +105,7 @@ export default function Guests() {
             </div>
             <div>
               <Label>Email</Label>
-              <Input
+              <Input aria-label="Input field"
                 type="email"
                 value={newGuest.email}
                 onChange={(e) => setNewGuest({...newGuest, email: e.target.value})}
@@ -114,7 +114,7 @@ export default function Guests() {
             </div>
             <div>
               <Label>Phone</Label>
-              <Input
+              <Input aria-label="Input field"
                 value={newGuest.phone}
                 onChange={(e) => setNewGuest({...newGuest, phone: e.target.value})}
                 placeholder="+356..."
@@ -122,7 +122,7 @@ export default function Guests() {
             </div>
             <div>
               <Label>Preferences</Label>
-              <Input
+              <Input aria-label="Input field"
                 value={newGuest.preferences}
                 onChange={(e) => setNewGuest({...newGuest, preferences: e.target.value})}
                 placeholder="Window seat, no salt..."

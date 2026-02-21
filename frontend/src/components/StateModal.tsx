@@ -194,7 +194,7 @@ export default function StateModal({
         {onClose && (
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+            aria-label="Action" className="absolute top-4 right-4 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
             style={{ color: '#9CA3AF' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
           >
             <XCircle className="w-6 h-6" />

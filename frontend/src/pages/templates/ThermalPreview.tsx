@@ -58,13 +58,13 @@ export default function ThermalPreview({ html, paperWidth = 576, onClose }: Ther
                         {t('Ruler')}
                     </button>
                     <div className="w-px h-5 bg-border mx-1" />
-                    <button onClick={zoomOut} className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-all">
+                    <button onClick={zoomOut} aria-label="Action" className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-all">
                         <ZoomOut className="w-4 h-4" />
                     </button>
-                    <button onClick={resetZoom} className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-all">
+                    <button onClick={resetZoom} aria-label="Action" className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-all">
                         <Maximize2 className="w-4 h-4" />
                     </button>
-                    <button onClick={zoomIn} className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-all">
+                    <button onClick={zoomIn} aria-label="Action" className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-all">
                         <ZoomIn className="w-4 h-4" />
                     </button>
                     {onClose && (

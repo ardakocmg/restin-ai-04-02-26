@@ -91,7 +91,7 @@ export default function NutritionTab({ data: _data, sku, onSave }: NutritionTabP
                                             {field.label}
                                         </td>
                                         <td className="px-4 py-2 text-right">
-                                            <Input
+                                            <Input aria-label="—"
                                                 type="number"
                                                 step="0.01"
                                                 min="0"

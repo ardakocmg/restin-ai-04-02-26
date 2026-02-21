@@ -124,7 +124,7 @@ const PaymentMethods: React.FC = () => {
                 {/* Search */}
                 <div className="pos-search-wrapper pos-mb-20">
                     <Search size={14} className="pos-search-icon" />
-                    <input className="pos-input pos-search-input" placeholder="Search payment methods..." value={search} onChange={e => setSearch(e.target.value)} />
+                    <input aria-label="Search payment methods..." className="pos-input pos-search-input" placeholder="Search payment methods..." value={search} onChange={e => setSearch(e.target.value)} />
                 </div>
 
                 {/* Active Methods */}
@@ -211,18 +211,18 @@ const PaymentMethods: React.FC = () => {
                         <div className="pos-form-grid">
                             <div className="col-span-full">
                                 <label className="pos-form-label">Name *</label>
-                                <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Visa" />
+                                <input aria-label="Input field" className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Visa" />
                             </div>
                             <div>
                                 <label className="pos-form-label">Type</label>
-                                <select className="pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as PaymentMethod['type'] } : null)} aria-label="Payment type">
+                                <select aria-label="Select option" className="pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as PaymentMethod['type'] } : null)} aria-label="Payment type">
                                     <option value="cash">Cash</option><option value="card">Card</option><option value="voucher">Voucher</option>
                                     <option value="mobile">Mobile Payment</option><option value="account">Account Charge</option><option value="other">Other</option>
                                 </select>
                             </div>
                             <div>
                                 <label className="pos-form-label">Accounting Reference</label>
-                                <input className="pos-input" value={editing.accountingRef} onChange={e => setEditing(p => p ? { ...p, accountingRef: e.target.value } : null)} placeholder="e.g. 1010" />
+                                <input aria-label="Input field" className="pos-input" value={editing.accountingRef} onChange={e => setEditing(p => p ? { ...p, accountingRef: e.target.value } : null)} placeholder="e.g. 1010" />
                             </div>
                         </div>
 

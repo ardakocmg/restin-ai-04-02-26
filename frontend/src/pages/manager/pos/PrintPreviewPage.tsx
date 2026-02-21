@@ -115,7 +115,7 @@ export default function PrintPreviewPage() {
                         <div className="flex gap-3 items-end">
                             <div className="flex-1">
                                 <label className="text-xs text-muted-foreground block mb-1">Host</label>
-                                <Input
+                                <Input aria-label="Input field"
                                     value={bridgeHost}
                                     onChange={(e) => setBridgeHost(e.target.value)}
                                     className="bg-background border-border text-foreground"
@@ -123,7 +123,7 @@ export default function PrintPreviewPage() {
                             </div>
                             <div className="w-24">
                                 <label className="text-xs text-muted-foreground block mb-1">Port</label>
-                                <Input
+                                <Input aria-label="Input field"
                                     value={bridgePort}
                                     onChange={(e) => setBridgePort(e.target.value)}
                                     className="bg-background border-border text-foreground"

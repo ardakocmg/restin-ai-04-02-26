@@ -193,7 +193,7 @@ export default function KDSMain() {
           <div className="text-xs text-muted-foreground">
             Last update: {lastUpdate.toLocaleTimeString()}
           </div>
-          <Button onClick={loadData} variant="ghost" size="sm">
+          <Button aria-label="Action" onClick={loadData} variant="ghost" size="sm">
             <RefreshCw className="w-4 h-4" />
           </Button>
           <Button onClick={() => navigate("/kds/setup")} variant="ghost" size="sm">

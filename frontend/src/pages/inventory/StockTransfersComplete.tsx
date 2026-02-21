@@ -114,11 +114,11 @@ export default function StockTransfersComplete() {
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="to_venue" className="text-right">To Venue</Label>
                 <div className="col-span-3">
-                  <Select
+                  <Select aria-label="Select option"
                     value={newTransfer.to_venue_id}
                     onValueChange={(val) => setNewTransfer({ ...newTransfer, to_venue_id: val })}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger aria-label="Select option">
                       <SelectValue placeholder="Select Destination" />
                     </SelectTrigger>
                     <SelectContent>
@@ -134,11 +134,11 @@ export default function StockTransfersComplete() {
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="item" className="text-right">Item</Label>
                 <div className="col-span-3">
-                  <Select
+                  <Select aria-label="Select option"
                     value={newTransfer.item_id}
                     onValueChange={(val) => setNewTransfer({ ...newTransfer, item_id: val })}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger aria-label="Select option">
                       <SelectValue placeholder="Select Item" />
                     </SelectTrigger>
                     <SelectContent>
@@ -153,7 +153,7 @@ export default function StockTransfersComplete() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="quantity" className="text-right">Quantity</Label>
-                <Input
+                <Input aria-label="Quantity"
                   id="quantity"
                   type="number"
                   value={newTransfer.quantity}
@@ -163,7 +163,7 @@ export default function StockTransfersComplete() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="reason" className="text-right">Reason</Label>
-                <Input
+                <Input aria-label="Reason"
                   id="reason"
                   value={newTransfer.reason}
                   onChange={(e) => setNewTransfer({ ...newTransfer, reason: e.target.value })}

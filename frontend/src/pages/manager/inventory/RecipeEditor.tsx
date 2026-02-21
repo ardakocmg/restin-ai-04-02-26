@@ -414,7 +414,7 @@ export default function RecipeEditor() {
             {/* ── Recipe Name (always visible) ── */}
             <div className="mb-6">
                 <Label className="text-xs uppercase tracking-wider text-amber-600 dark:text-amber-400 font-medium mb-1 block">Recipe Name</Label>
-                <Input
+                <Input aria-label="Input field"
                     value={form.recipe_name}
                     onChange={e => updateField('recipe_name', e.target.value)}
                     placeholder="Enter recipe name..."
@@ -468,7 +468,7 @@ export default function RecipeEditor() {
                                                 </td>
                                                 <td className="py-2 font-medium">{ing.name}</td>
                                                 <td className="py-2">
-                                                    <Input
+                                                    <Input aria-label="Input field"
                                                         type="number"
                                                         value={ing.net_qty || ''}
                                                         onChange={e => updateIngredient(idx, 'net_qty', parseFloat(e.target.value) || 0)}
@@ -477,13 +477,13 @@ export default function RecipeEditor() {
                                                     />
                                                 </td>
                                                 <td className="py-2">
-                                                    <Select value={ing.unit} onValueChange={v => updateIngredient(idx, 'unit', v)}>
-                                                        <SelectTrigger className="h-8 w-20"><SelectValue /></SelectTrigger>
+                                                    <Select aria-label="Select option" value={ing.unit} onValueChange={v => updateIngredient(idx, 'unit', v)}>
+                                                        <SelectTrigger aria-label="Select option" className="h-8 w-20"><SelectValue /></SelectTrigger>
                                                         <SelectContent>{UNITS.map(u => <SelectItem key={u} value={u}>{u}</SelectItem>)}</SelectContent>
                                                     </Select>
                                                 </td>
                                                 <td className="py-2">
-                                                    <Input
+                                                    <Input aria-label="Input field"
                                                         type="number"
                                                         value={ing.waste_pct || ''}
                                                         onChange={e => updateIngredient(idx, 'waste_pct', parseFloat(e.target.value) || 0)}
@@ -492,7 +492,7 @@ export default function RecipeEditor() {
                                                     />
                                                 </td>
                                                 <td className="py-2">
-                                                    <Input
+                                                    <Input aria-label="Input field"
                                                         value={ing.remarks}
                                                         onChange={e => updateIngredient(idx, 'remarks', e.target.value)}
                                                         className="h-8"
@@ -523,7 +523,7 @@ export default function RecipeEditor() {
                                     <div className="absolute top-full left-0 right-0 mt-1 bg-popover border rounded-lg shadow-lg z-50 p-2">
                                         <div className="flex items-center gap-2 p-2 border-b mb-2">
                                             <Search className="h-4 w-4 text-muted-foreground" />
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 value={ingredientSearch}
                                                 onChange={e => setIngredientSearch(e.target.value)}
                                                 placeholder="Search ingredients or recipes..."
@@ -559,7 +559,7 @@ export default function RecipeEditor() {
                     <Card>
                         <CardHeader className="pb-3"><CardTitle className="text-base">Preparations — Composition</CardTitle></CardHeader>
                         <CardContent>
-                            <Textarea
+                            <Textarea aria-label="Input field"
                                 value={form.composition}
                                 onChange={e => updateField('composition', e.target.value)}
                                 placeholder="Explain here how to compose this recipe..."
@@ -572,7 +572,7 @@ export default function RecipeEditor() {
                     <Card>
                         <CardHeader className="pb-3"><CardTitle className="text-base">Step by Step</CardTitle></CardHeader>
                         <CardContent>
-                            <Textarea
+                            <Textarea aria-label="Input field"
                                 value={form.steps}
                                 onChange={e => updateField('steps', e.target.value)}
                                 placeholder="Add step-by-step instructions..."
@@ -585,7 +585,7 @@ export default function RecipeEditor() {
                     <Card>
                         <CardHeader className="pb-3"><CardTitle className="text-base">Remarks</CardTitle></CardHeader>
                         <CardContent>
-                            <Textarea
+                            <Textarea aria-label="Input field"
                                 value={form.remarks}
                                 onChange={e => updateField('remarks', e.target.value)}
                                 placeholder="Add some remarks or information on this recipe here..."
@@ -602,25 +602,25 @@ export default function RecipeEditor() {
                         <CardContent>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <FormField icon={ChefHat} label="Product Type">
-                                    <Select value={form.product_type} onValueChange={v => updateField('product_type', v)}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <Select aria-label="Select option" value={form.product_type} onValueChange={v => updateField('product_type', v)}>
+                                        <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                         <SelectContent>
                                             {CLASSES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                                         </SelectContent>
                                     </Select>
                                 </FormField>
                                 <FormField label="Reference Nr.">
-                                    <Input value={form.reference_nr} onChange={e => updateField('reference_nr', e.target.value)} placeholder="RCP-00001" />
+                                    <Input aria-label="Input field" value={form.reference_nr} onChange={e => updateField('reference_nr', e.target.value)} placeholder="RCP-00001" />
                                 </FormField>
                                 <FormField icon={Clock} label="Shelf Life">
                                     <div className="flex gap-2">
-                                        <Input type="number" value={form.shelf_life_days || ''} onChange={e => updateField('shelf_life_days', parseInt(e.target.value) || 0)} placeholder="days" className="w-20" />
+                                        <Input aria-label="Input field" type="number" value={form.shelf_life_days || ''} onChange={e => updateField('shelf_life_days', parseInt(e.target.value) || 0)} placeholder="days" className="w-20" />
                                         <span className="self-center text-xs text-muted-foreground">days</span>
                                     </div>
                                 </FormField>
                                 <FormField label="Difficulty">
-                                    <Select value={String(form.difficulty)} onValueChange={v => updateField('difficulty', parseInt(v))}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <Select aria-label="Select option" value={String(form.difficulty)} onValueChange={v => updateField('difficulty', parseInt(v))}>
+                                        <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                         <SelectContent>{DIFFICULTIES.map(d => <SelectItem key={d} value={String(d)}>{d}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </FormField>
@@ -631,13 +631,13 @@ export default function RecipeEditor() {
                                     </div>
                                 </FormField>
                                 <FormField icon={Building2} label="Storage Conditions">
-                                    <Input value={form.storage_conditions} onChange={e => updateField('storage_conditions', e.target.value)} placeholder="Refrigerated 0-4°C" />
+                                    <Input aria-label="Input field" value={form.storage_conditions} onChange={e => updateField('storage_conditions', e.target.value)} placeholder="Refrigerated 0-4°C" />
                                 </FormField>
                                 <FormField label="Kitchen Utensils">
-                                    <Input value={form.kitchen_utensils} onChange={e => updateField('kitchen_utensils', e.target.value)} placeholder="Pan, Tongs, etc." />
+                                    <Input aria-label="Input field" value={form.kitchen_utensils} onChange={e => updateField('kitchen_utensils', e.target.value)} placeholder="Pan, Tongs, etc." />
                                 </FormField>
                                 <FormField label="URL">
-                                    <Input value={form.url} onChange={e => updateField('url', e.target.value)} placeholder="Product URL" />
+                                    <Input aria-label="Input field" value={form.url} onChange={e => updateField('url', e.target.value)} placeholder="Product URL" />
                                 </FormField>
                             </div>
                         </CardContent>
@@ -648,32 +648,32 @@ export default function RecipeEditor() {
                         <CardContent>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <FormField label="Category">
-                                    <Select value={form.category} onValueChange={v => updateField('category', v)}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <Select aria-label="Select option" value={form.category} onValueChange={v => updateField('category', v)}>
+                                        <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                         <SelectContent>{CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </FormField>
                                 <FormField label="Subcategory">
-                                    <Select value={form.subcategory} onValueChange={v => updateField('subcategory', v)}>
-                                        <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
+                                    <Select aria-label="Select option" value={form.subcategory} onValueChange={v => updateField('subcategory', v)}>
+                                        <SelectTrigger aria-label="Select option"><SelectValue placeholder="Select..." /></SelectTrigger>
                                         <SelectContent>{SUBCATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </FormField>
                                 <FormField label="Cuisine">
-                                    <Select value={form.cuisine} onValueChange={v => updateField('cuisine', v)}>
-                                        <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
+                                    <Select aria-label="Select option" value={form.cuisine} onValueChange={v => updateField('cuisine', v)}>
+                                        <SelectTrigger aria-label="Select option"><SelectValue placeholder="Select..." /></SelectTrigger>
                                         <SelectContent>{CUISINES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </FormField>
                                 <FormField label="Type">
-                                    <Select value={form.recipe_type} onValueChange={v => updateField('recipe_type', v)}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <Select aria-label="Select option" value={form.recipe_type} onValueChange={v => updateField('recipe_type', v)}>
+                                        <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                         <SelectContent>{TYPES.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </FormField>
                                 <FormField label="Stage">
-                                    <Select value={form.stage} onValueChange={v => updateField('stage', v)}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <Select aria-label="Select option" value={form.stage} onValueChange={v => updateField('stage', v)}>
+                                        <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                         <SelectContent>{STAGES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </FormField>
@@ -692,13 +692,13 @@ export default function RecipeEditor() {
                                     </div>
                                 </FormField>
                                 <FormField label="Class">
-                                    <Select value={form.product_class} onValueChange={v => updateField('product_class', v)}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <Select aria-label="Select option" value={form.product_class} onValueChange={v => updateField('product_class', v)}>
+                                        <SelectTrigger aria-label="Select option"><SelectValue /></SelectTrigger>
                                         <SelectContent>{CLASSES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </FormField>
                                 <FormField label="Description">
-                                    <Input value={form.description} onChange={e => updateField('description', e.target.value)} placeholder="Brief description..." />
+                                    <Input aria-label="Input field" value={form.description} onChange={e => updateField('description', e.target.value)} placeholder="Brief description..." />
                                 </FormField>
                             </div>
                         </CardContent>
@@ -712,10 +712,10 @@ export default function RecipeEditor() {
                         <CardContent className="space-y-4">
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <FormField icon={UtensilsCrossed} label="Portions">
-                                    <Input type="number" value={form.servings || ''} onChange={e => updateField('servings', parseInt(e.target.value) || 1)} />
+                                    <Input aria-label="Input field" type="number" value={form.servings || ''} onChange={e => updateField('servings', parseInt(e.target.value) || 1)} />
                                 </FormField>
                                 <FormField label="Yield %">
-                                    <Input type="number" value={form.yield_pct || ''} onChange={e => updateField('yield_pct', parseFloat(e.target.value) || 100)} />
+                                    <Input aria-label="Input field" type="number" value={form.yield_pct || ''} onChange={e => updateField('yield_pct', parseFloat(e.target.value) || 100)} />
                                 </FormField>
                             </div>
 
@@ -728,10 +728,10 @@ export default function RecipeEditor() {
                                 {form.manual_weight ? (
                                     <div className="grid grid-cols-2 gap-4">
                                         <FormField label="Weight (g)">
-                                            <Input type="number" value={form.portion_weight_g || ''} onChange={e => updateField('portion_weight_g', parseFloat(e.target.value) || 0)} />
+                                            <Input aria-label="Input field" type="number" value={form.portion_weight_g || ''} onChange={e => updateField('portion_weight_g', parseFloat(e.target.value) || 0)} />
                                         </FormField>
                                         <FormField label="Volume (ml)">
-                                            <Input type="number" value={form.portion_volume_ml || ''} onChange={e => updateField('portion_volume_ml', parseFloat(e.target.value) || 0)} />
+                                            <Input aria-label="Input field" type="number" value={form.portion_volume_ml || ''} onChange={e => updateField('portion_volume_ml', parseFloat(e.target.value) || 0)} />
                                         </FormField>
                                     </div>
                                 ) : (
@@ -746,7 +746,7 @@ export default function RecipeEditor() {
                     <Card>
                         <CardHeader className="pb-3"><CardTitle className="text-base">Remarks</CardTitle></CardHeader>
                         <CardContent>
-                            <Textarea value={form.remarks} onChange={e => updateField('remarks', e.target.value)} placeholder="Add remarks..." className="min-h-[100px]" />
+                            <Textarea aria-label="Input field" value={form.remarks} onChange={e => updateField('remarks', e.target.value)} placeholder="Add remarks..." className="min-h-[100px]" />
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -810,13 +810,13 @@ export default function RecipeEditor() {
                         <CardContent>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <FormField icon={Clock} label="Prep Time (min)">
-                                    <Input type="number" value={form.prep_time_min || ''} onChange={e => updateField('prep_time_min', parseInt(e.target.value) || 0)} />
+                                    <Input aria-label="Input field" type="number" value={form.prep_time_min || ''} onChange={e => updateField('prep_time_min', parseInt(e.target.value) || 0)} />
                                 </FormField>
                                 <FormField label="Cook Time (min)">
-                                    <Input type="number" value={form.cook_time_min || ''} onChange={e => updateField('cook_time_min', parseInt(e.target.value) || 0)} />
+                                    <Input aria-label="Input field" type="number" value={form.cook_time_min || ''} onChange={e => updateField('cook_time_min', parseInt(e.target.value) || 0)} />
                                 </FormField>
                                 <FormField label="Plate Time (min)">
-                                    <Input type="number" value={form.plate_time_min || ''} onChange={e => updateField('plate_time_min', parseInt(e.target.value) || 0)} />
+                                    <Input aria-label="Input field" type="number" value={form.plate_time_min || ''} onChange={e => updateField('plate_time_min', parseInt(e.target.value) || 0)} />
                                 </FormField>
                                 <div className="p-4 rounded-lg bg-green-500/5 border border-green-500/20">
                                     <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Total</p>
@@ -835,19 +835,19 @@ export default function RecipeEditor() {
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <FormField icon={DollarSign} label="Sell Price (Incl. Tax)">
                                     <div className="relative">
-                                        <Input type="number" value={form.sell_price || ''} onChange={e => updateField('sell_price', parseFloat(e.target.value) || 0)} className="pr-8" />
+                                        <Input aria-label="Input field" type="number" value={form.sell_price || ''} onChange={e => updateField('sell_price', parseFloat(e.target.value) || 0)} className="pr-8" />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">€</span>
                                     </div>
                                 </FormField>
                                 <FormField label="Tax Rate">
                                     <div className="relative">
-                                        <Input type="number" value={form.tax_pct || ''} onChange={e => updateField('tax_pct', parseFloat(e.target.value) || 0)} className="pr-8" />
+                                        <Input aria-label="Input field" type="number" value={form.tax_pct || ''} onChange={e => updateField('tax_pct', parseFloat(e.target.value) || 0)} className="pr-8" />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">%</span>
                                     </div>
                                 </FormField>
                                 <FormField label="Target Profit Margin">
                                     <div className="relative">
-                                        <Input type="number" value={form.target_margin || ''} onChange={e => updateField('target_margin', parseFloat(e.target.value) || 0)} className="pr-8" />
+                                        <Input aria-label="Input field" type="number" value={form.target_margin || ''} onChange={e => updateField('target_margin', parseFloat(e.target.value) || 0)} className="pr-8" />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">%</span>
                                     </div>
                                 </FormField>
@@ -947,7 +947,7 @@ export default function RecipeEditor() {
                     <Card>
                         <CardHeader className="pb-3"><CardTitle className="text-base">Remarks</CardTitle></CardHeader>
                         <CardContent>
-                            <Textarea value={form.remarks} onChange={e => updateField('remarks', e.target.value)} placeholder="Add remarks..." className="min-h-[100px]" />
+                            <Textarea aria-label="Input field" value={form.remarks} onChange={e => updateField('remarks', e.target.value)} placeholder="Add remarks..." className="min-h-[100px]" />
                         </CardContent>
                     </Card>
                 </TabsContent>

@@ -183,7 +183,7 @@ function EditableField({ label, value, field, onChange, type = 'text', disabled 
   return (
     <div className="space-y-1.5">
       <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{label}</Label>
-      <Input
+      <Input aria-label="Input field"
         type={type}
         value={value || ''}
         onChange={e => onChange(field, e.target.value)}
@@ -526,8 +526,8 @@ export default function EmployeeDetailPage() {
           <div className="bg-gradient-to-br from-blue-600/10 to-transparent border border-border rounded-3xl p-8 relative overflow-hidden backdrop-blur-3xl">
             {/* Status Badge */}
             <div className="absolute top-6 right-6">
-              <Select value={editForm.status} onValueChange={val => updateField('status', val)}>
-                <SelectTrigger className={`${statusCfg.color} border text-[10px] uppercase font-bold tracking-widest px-3 py-1 h-8 w-auto min-w-[120px]`}>
+              <Select aria-label="Select option" value={editForm.status} onValueChange={val => updateField('status', val)}>
+                <SelectTrigger aria-label="Select option" className={`${statusCfg.color} border text-[10px] uppercase font-bold tracking-widest px-3 py-1 h-8 w-auto min-w-[120px]`}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border">
@@ -636,8 +636,8 @@ export default function EmployeeDetailPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div className="space-y-1.5">
                     <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Role</Label>
-                    <Select value={editForm.role} onValueChange={val => updateField('role', val)}>
-                      <SelectTrigger className="bg-background border-border text-secondary-foreground h-10">
+                    <Select aria-label="Select option" value={editForm.role} onValueChange={val => updateField('role', val)}>
+                      <SelectTrigger aria-label="Select option" className="bg-background border-border text-secondary-foreground h-10">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-card border-border">
@@ -669,8 +669,8 @@ export default function EmployeeDetailPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div className="space-y-1.5">
                     <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">FSS Tax Status</Label>
-                    <Select value={editForm.fss_tax_status} onValueChange={val => updateField('fss_tax_status', val)}>
-                      <SelectTrigger className="bg-background border-border text-secondary-foreground h-10">
+                    <Select aria-label="Select option" value={editForm.fss_tax_status} onValueChange={val => updateField('fss_tax_status', val)}>
+                      <SelectTrigger aria-label="Select option" className="bg-background border-border text-secondary-foreground h-10">
                         <SelectValue placeholder="Select..." />
                       </SelectTrigger>
                       <SelectContent className="bg-card border-border">
@@ -682,8 +682,8 @@ export default function EmployeeDetailPage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">COLA Eligible</Label>
-                    <Select value={String(editForm.cola_eligible)} onValueChange={val => updateField('cola_eligible', val === 'true')}>
-                      <SelectTrigger className="bg-background border-border text-secondary-foreground h-10">
+                    <Select aria-label="Select option" value={String(editForm.cola_eligible)} onValueChange={val => updateField('cola_eligible', val === 'true')}>
+                      <SelectTrigger aria-label="Select option" className="bg-background border-border text-secondary-foreground h-10">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-card border-border">
@@ -699,7 +699,7 @@ export default function EmployeeDetailPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div className="space-y-1.5">
                     <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Gross Salary (€)</Label>
-                    <Input
+                    <Input aria-label="Input field"
                       type="number"
                       step="0.01"
                       value={(editForm.gross_salary_cents / 100).toFixed(2)}
@@ -709,7 +709,7 @@ export default function EmployeeDetailPage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Hourly Rate (€)</Label>
-                    <Input
+                    <Input aria-label="Input field"
                       type="number"
                       step="0.01"
                       value={(editForm.hourly_rate_cents / 100).toFixed(2)}
@@ -925,7 +925,7 @@ export default function EmployeeDetailPage() {
                             <div className="space-y-2">
                               <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Current Password</Label>
                               <div className="relative">
-                                <Input
+                                <Input aria-label="Input field"
                                   type={pwShowCurrent ? 'text' : 'password'}
                                   value={pwCurrent}
                                   onChange={e => setPwCurrent(e.target.value)}
@@ -941,7 +941,7 @@ export default function EmployeeDetailPage() {
                           <div className="space-y-2">
                             <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">New Password</Label>
                             <div className="relative">
-                              <Input
+                              <Input aria-label="Input field"
                                 type={pwShowNew ? 'text' : 'password'}
                                 value={pwNew}
                                 onChange={e => setPwNew(e.target.value)}
@@ -955,7 +955,7 @@ export default function EmployeeDetailPage() {
                           </div>
                           <div className="space-y-2">
                             <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Confirm Password</Label>
-                            <Input
+                            <Input aria-label="Input field"
                               type="password"
                               value={pwConfirm}
                               onChange={e => setPwConfirm(e.target.value)}
@@ -1088,7 +1088,7 @@ export default function EmployeeDetailPage() {
                 <div className="space-y-4">
                   {/* Add Note */}
                   <div className="flex gap-3">
-                    <Textarea
+                    <Textarea aria-label="Add an admin note about this employee..."
                       placeholder="Add an admin note about this employee..."
                       value={newNote}
                       onChange={e => setNewNote(e.target.value)}

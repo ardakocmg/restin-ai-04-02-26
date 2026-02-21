@@ -134,7 +134,7 @@ export default function ModifierModal({ item, modifierGroups = [], onAdd, onClos
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+              aria-label="Action" className="p-2 rounded-lg hover:bg-white/5 transition-colors"
               style={{ color: '#71717A' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
             >
               <X className="w-6 h-6" />

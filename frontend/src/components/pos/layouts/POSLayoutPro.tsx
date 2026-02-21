@@ -132,7 +132,7 @@ export default function POSLayoutPro({
                                 </div>
                                 <button
                                     onClick={onDeselectTable}
-                                    className="text-muted-foreground hover:text-secondary-foreground transition-colors"
+                                    aria-label="Action" className="text-muted-foreground hover:text-secondary-foreground transition-colors"
                                 >
                                     <X className="w-4 h-4" />
                                 </button>

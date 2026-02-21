@@ -478,8 +478,8 @@ export default function PurchaseOrdersNew() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Supplier *</Label>
-                <Select value={formData.supplier_id} onValueChange={v => setFormData({ ...formData, supplier_id: v })}>
-                  <SelectTrigger>
+                <Select aria-label="Select option" value={formData.supplier_id} onValueChange={v => setFormData({ ...formData, supplier_id: v })}>
+                  <SelectTrigger aria-label="Select option">
                     <SelectValue placeholder="Select supplier..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -494,7 +494,7 @@ export default function PurchaseOrdersNew() {
               </div>
               <div className="space-y-2">
                 <Label>Expected Delivery</Label>
-                <Input
+                <Input aria-label="Input field"
                   type="date"
                   value={formData.delivery_date}
                   onChange={e => setFormData({ ...formData, delivery_date: e.target.value })}
@@ -505,8 +505,8 @@ export default function PurchaseOrdersNew() {
             <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label>Delivery Time Slot</Label>
-                <Select value={formData.delivery_time} onValueChange={v => setFormData({ ...formData, delivery_time: v })}>
-                  <SelectTrigger>
+                <Select aria-label="Select option" value={formData.delivery_time} onValueChange={v => setFormData({ ...formData, delivery_time: v })}>
+                  <SelectTrigger aria-label="Select option">
                     <SelectValue placeholder="Any time" />
                   </SelectTrigger>
                   <SelectContent>
@@ -519,7 +519,7 @@ export default function PurchaseOrdersNew() {
               </div>
               <div className="space-y-2">
                 <Label>Invoice Reference</Label>
-                <Input
+                <Input aria-label="INV-1234"
                   placeholder="INV-1234"
                   value={form.invoice_number}
                   onChange={(e) => setForm(prev => ({ ...prev, invoice_number: e.target.value }))}
@@ -527,7 +527,7 @@ export default function PurchaseOrdersNew() {
               </div>
               <div className="space-y-2">
                 <Label>Delivery Notes</Label>
-                <Input
+                <Input aria-label="Back door, dock B..."
                   placeholder="Back door, dock B..."
                   value={formData.delivery_notes}
                   onChange={e => setFormData({ ...formData, delivery_notes: e.target.value })}
@@ -546,8 +546,8 @@ export default function PurchaseOrdersNew() {
                 {formData.items.map((item, idx) => (
                   <div key={idx} className="grid grid-cols-6 gap-2">
                     <div className="col-span-3">
-                      <Select value={item.item_id} onValueChange={v => updateItem(idx, 'item_id', v)}>
-                        <SelectTrigger>
+                      <Select aria-label="Select option" value={item.item_id} onValueChange={v => updateItem(idx, 'item_id', v)}>
+                        <SelectTrigger aria-label="Select option">
                           <SelectValue placeholder="Select item..." />
                         </SelectTrigger>
                         <SelectContent className="max-h-60">
@@ -558,7 +558,7 @@ export default function PurchaseOrdersNew() {
                       </Select>
                     </div>
                     <div className="col-span-1">
-                      <Input
+                      <Input aria-label="Qty"
                         type="number"
                         step="0.01"
                         placeholder="Qty"
@@ -567,7 +567,7 @@ export default function PurchaseOrdersNew() {
                       />
                     </div>
                     <div className="col-span-2">
-                      <Input
+                      <Input aria-label="Unit Cost €"
                         type="number"
                         step="0.01"
                         placeholder="Unit Cost €"
@@ -585,9 +585,9 @@ export default function PurchaseOrdersNew() {
           <div className="border-t border-border pt-3 mt-2 space-y-2">
             <p className="text-xs text-muted-foreground font-medium flex items-center gap-1"><Bookmark className="h-3 w-3" /> Save as Template</p>
             <div className="flex gap-2">
-              <Input placeholder="Template name..." value={templateName} onChange={(e) => setTemplateName(e.target.value)} className="flex-1" />
-              <Select value={templateSchedule} onValueChange={setTemplateSchedule}>
-                <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
+              <Input aria-label="Template name..." placeholder="Template name..." value={templateName} onChange={(e) => setTemplateName(e.target.value)} className="flex-1" />
+              <Select aria-label="Select option" value={templateSchedule} onValueChange={setTemplateSchedule}>
+                <SelectTrigger aria-label="Select option" className="w-32"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">One-time</SelectItem>
                   <SelectItem value="daily">Daily</SelectItem>

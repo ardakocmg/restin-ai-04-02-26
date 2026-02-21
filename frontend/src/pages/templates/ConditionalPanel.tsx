@@ -20,7 +20,7 @@ export default function ConditionalPanel({ selectedBlock }: ConditionalPanelProp
         <div style={{ animation: 'ts-fadeIn 0.2s ease-out' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
             <div className="ts-field">
                 <div className="ts-checkbox-row">
-                    <input type="checkbox" id="ts-gated" />
+                    <input aria-label="Ts Gated" type="checkbox" id="ts-gated" />
                     <label htmlFor="ts-gated" style={{ fontWeight: 600 }}>{t('Gated')}</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 </div>
                 <p style={{ fontSize: 11, color: 'var(--muted-foreground)', marginTop: 4 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
@@ -51,7 +51,7 @@ export default function ConditionalPanel({ selectedBlock }: ConditionalPanelProp
                 </div>
                 <div>
                     <div className="ts-condition-label">{t('Value')}</div>
-                    <input type="text" className="ts-input" style={{ fontSize: 11 }} placeholder="..." /> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                    <input aria-label="..." type="text" className="ts-input" style={{ fontSize: 11 }} placeholder="..." /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 </div>
             </div>
 

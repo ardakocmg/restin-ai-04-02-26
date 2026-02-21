@@ -37,7 +37,7 @@ function ModifierModal({ menuItem, onClose, onConfirm }) {
             <h2 className="text-2xl font-bold text-foreground">{menuItem.name}</h2>
             <p className="text-gray-600">Customize your order</p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
+          <button onClick={onClose} aria-label="Action" className="p-2 hover:bg-gray-100 rounded-lg">
             <X className="w-6 h-6" />
           </button>
         </div>

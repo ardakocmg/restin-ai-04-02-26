@@ -402,8 +402,8 @@ export default function GoodsReceivedNotes() {
                                 <div className="grid grid-cols-3 gap-4">
                                     <div className="space-y-2">
                                         <Label>Supplier</Label>
-                                        <Select value={form.supplier_id} onValueChange={v => setForm(p => ({ ...p, supplier_id: v }))}>
-                                            <SelectTrigger><SelectValue placeholder="Select supplier" /></SelectTrigger>
+                                        <Select aria-label="Select option" value={form.supplier_id} onValueChange={v => setForm(p => ({ ...p, supplier_id: v }))}>
+                                            <SelectTrigger aria-label="Select option"><SelectValue placeholder="Select supplier" /></SelectTrigger>
                                             <SelectContent>
                                                 {suppliers.map((s: SupplierItem) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
                                             </SelectContent>
@@ -411,11 +411,11 @@ export default function GoodsReceivedNotes() {
                                     </div>
                                     <div>
                                         <Label className="text-xs mb-1 block">PO Number (Optional)</Label>
-                                        <Input value={form.po_number} onChange={e => setForm(p => ({ ...p, po_number: e.target.value }))} placeholder="PO-2026-001" />
+                                        <Input aria-label="Input field" value={form.po_number} onChange={e => setForm(p => ({ ...p, po_number: e.target.value }))} placeholder="PO-2026-001" />
                                     </div>
                                     <div>
                                         <Label className="text-xs mb-1 block">Delivery Note / Invoice</Label>
-                                        <Input value={form.delivery_note} onChange={e => setForm(p => ({ ...p, delivery_note: e.target.value }))} placeholder="DN-1234" />
+                                        <Input aria-label="Input field" value={form.delivery_note} onChange={e => setForm(p => ({ ...p, delivery_note: e.target.value }))} placeholder="DN-1234" />
                                     </div>
                                 </div>
 
@@ -431,12 +431,12 @@ export default function GoodsReceivedNotes() {
                                             <div className="flex items-end gap-2">
                                                 <div className="flex-1 space-y-1">
                                                     <Label className="text-xs">Item</Label>
-                                                    <Select value={item.item_id} onValueChange={(v: string) => {
+                                                    <Select aria-label="Select option" value={item.item_id} onValueChange={(v: string) => {
                                                         const found = inventoryItems.find((i: InventoryItemData) => i.id === v);
                                                         updateItem(idx, 'item_id', v);
                                                         if (found) updateItem(idx, 'item_name', found.name);
                                                     }}>
-                                                        <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Select item" /></SelectTrigger>
+                                                        <SelectTrigger aria-label="Select option" className="h-8 text-xs"><SelectValue placeholder="Select item" /></SelectTrigger>
                                                         <SelectContent>
                                                             {inventoryItems.slice(0, 50).map((i: InventoryItemData) => <SelectItem key={i.id} value={i.id}>{i.name}</SelectItem>)}
                                                         </SelectContent>
@@ -444,23 +444,23 @@ export default function GoodsReceivedNotes() {
                                                 </div>
                                                 <div className="w-16 space-y-1">
                                                     <Label className="text-xs">Ordered</Label>
-                                                    <Input className="h-8 text-xs" type="number" value={item.ordered_qty} onChange={e => updateItem(idx, 'ordered_qty', e.target.value)} />
+                                                    <Input aria-label="Input field" className="h-8 text-xs" type="number" value={item.ordered_qty} onChange={e => updateItem(idx, 'ordered_qty', e.target.value)} />
                                                 </div>
                                                 <div className="w-16 space-y-1">
                                                     <Label className="text-xs">Received</Label>
-                                                    <Input className="h-8 text-xs" type="number" value={item.received_qty} onChange={e => updateItem(idx, 'received_qty', e.target.value)} />
+                                                    <Input aria-label="Input field" className="h-8 text-xs" type="number" value={item.received_qty} onChange={e => updateItem(idx, 'received_qty', e.target.value)} />
                                                 </div>
                                                 <div className="w-14 space-y-1">
                                                     <Label className="text-xs">Unit</Label>
-                                                    <Input className="h-8 text-xs" value={item.unit} onChange={e => updateItem(idx, 'unit', e.target.value)} />
+                                                    <Input aria-label="Input field" className="h-8 text-xs" value={item.unit} onChange={e => updateItem(idx, 'unit', e.target.value)} />
                                                 </div>
                                                 <div className="w-16 space-y-1">
                                                     <Label className="text-xs">PO €</Label>
-                                                    <Input className="h-8 text-xs" type="number" step="0.01" value={item.po_price} onChange={e => updateItem(idx, 'po_price', e.target.value)} />
+                                                    <Input aria-label="Input field" className="h-8 text-xs" type="number" step="0.01" value={item.po_price} onChange={e => updateItem(idx, 'po_price', e.target.value)} />
                                                 </div>
                                                 <div className="w-16 space-y-1">
                                                     <Label className="text-xs">Inv €</Label>
-                                                    <Input className="h-8 text-xs" type="number" step="0.01" value={item.unit_price} onChange={e => updateItem(idx, 'unit_price', e.target.value)} />
+                                                    <Input aria-label="Input field" className="h-8 text-xs" type="number" step="0.01" value={item.unit_price} onChange={e => updateItem(idx, 'unit_price', e.target.value)} />
                                                 </div>
                                                 {form.items.length > 1 && (
                                                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive" onClick={() => removeItem(idx)}>
@@ -472,15 +472,15 @@ export default function GoodsReceivedNotes() {
                                             <div className="flex gap-2 pl-1">
                                                 <div>
                                                     <Label className="text-[10px] uppercase text-muted-foreground font-semibold mb-1 block">Lot #</Label>
-                                                    <Input className="h-7 text-xs font-mono" value={item.lot_number} onChange={e => updateItem(idx, 'lot_number', e.target.value)} placeholder="LOT-123" />
+                                                    <Input aria-label="Input field" className="h-7 text-xs font-mono" value={item.lot_number} onChange={e => updateItem(idx, 'lot_number', e.target.value)} placeholder="LOT-123" />
                                                 </div>
                                                 <div className="w-32 space-y-1">
                                                     <Label className="text-[10px] text-muted-foreground">Expiry Date</Label>
-                                                    <Input className="h-7 text-xs" type="date" value={item.expiry_date} onChange={e => updateItem(idx, 'expiry_date', e.target.value)} />
+                                                    <Input aria-label="Input field" className="h-7 text-xs" type="date" value={item.expiry_date} onChange={e => updateItem(idx, 'expiry_date', e.target.value)} />
                                                 </div>
                                                 <div className="w-20 space-y-1">
                                                     <Label className="text-[10px] text-muted-foreground">Temp °C</Label>
-                                                    <Input className="h-7 text-xs" type="number" step="0.1" value={item.temperature} onChange={e => updateItem(idx, 'temperature', e.target.value)} placeholder="4.0" />
+                                                    <Input aria-label="Input field" className="h-7 text-xs" type="number" step="0.1" value={item.temperature} onChange={e => updateItem(idx, 'temperature', e.target.value)} placeholder="4.0" />
                                                 </div>
                                                 {/* Qty variance indicator */}
                                                 {item.ordered_qty && item.received_qty && parseFloat(item.ordered_qty) !== parseFloat(item.received_qty) && (

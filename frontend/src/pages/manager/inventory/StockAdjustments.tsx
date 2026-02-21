@@ -185,7 +185,7 @@ export default function StockAdjustments() {
         const numVal = parseFloat(val);
         const hasValue = val !== '' && !isNaN(numVal) && numVal !== 0;
         return (
-          <Input
+          <Input aria-label="0"
             type="number"
             step="0.01"
             placeholder="0"
@@ -216,7 +216,7 @@ export default function StockAdjustments() {
       label: 'Reason',
       size: 200,
       render: (row: InventoryItem) => (
-        <Input
+        <Input aria-label="e.g. Spillage, Received delivery..."
           placeholder="e.g. Spillage, Received delivery..."
           className="h-8 text-sm"
           value={adjustments[row.id]?.reason || ''}

@@ -326,10 +326,10 @@ export default function LabelDesigner() {
                     <div className="flex flex-wrap items-center gap-2 mb-4">
                         <div className="relative flex-1 max-w-xs">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input className="pl-9 h-8 text-xs" placeholder="Search templates..." value={search} onChange={e => setSearch(e.target.value)} />
+                            <Input aria-label="Search templates..." className="pl-9 h-8 text-xs" placeholder="Search templates..." value={search} onChange={e => setSearch(e.target.value)} />
                         </div>
-                        <Select value={selectedType} onValueChange={setSelectedType}>
-                            <SelectTrigger className="w-40 h-8 text-xs"><SelectValue /></SelectTrigger>
+                        <Select aria-label="Select option" value={selectedType} onValueChange={setSelectedType}>
+                            <SelectTrigger aria-label="Select option" className="w-40 h-8 text-xs"><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">All Types</SelectItem>
                                 {Object.entries(TYPE_CONFIG).map(([k, v]) => (
@@ -493,16 +493,16 @@ export default function LabelDesigner() {
                     <div className="space-y-3">
                         <div>
                             <Label className="text-xs">Item / Product Name</Label>
-                            <Input placeholder="e.g. Tomato Sauce (Batch B-2025-0220)" value={printItemName} onChange={e => setPrintItemName(e.target.value)} />
+                            <Input aria-label="e.g. Tomato Sauce (Batch B-2025-0220)" placeholder="e.g. Tomato Sauce (Batch B-2025-0220)" value={printItemName} onChange={e => setPrintItemName(e.target.value)} />
                         </div>
                         <div>
                             <Label className="text-xs">Quantity</Label>
-                            <Input type="number" value={printQuantity} onChange={e => setPrintQuantity(Math.max(1, Number(e.target.value)))} className="w-24" />
+                            <Input aria-label="Input field" type="number" value={printQuantity} onChange={e => setPrintQuantity(Math.max(1, Number(e.target.value)))} className="w-24" />
                         </div>
                         <div>
                             <Label className="text-xs">Printer</Label>
-                            <Select defaultValue="default">
-                                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                            <Select aria-label="Select option" defaultValue="default">
+                                <SelectTrigger aria-label="Select option" className="h-8 text-xs"><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="default">Kitchen Label Printer (Brother QL-820)</SelectItem>
                                     <SelectItem value="bar">Bar Label Printer (Dymo 450)</SelectItem>

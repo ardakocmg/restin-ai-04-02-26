@@ -366,7 +366,7 @@ export default function FloorPlanEditor() {
           <div className="flex items-center gap-4">
             <div>
               <label className="text-xs text-muted-foreground">Label</label>
-              <Input
+              <Input aria-label="Input field"
                 value={selectedObject.label}
                 onChange={(e) => {
                   const updated = { ...selectedObject, label: e.target.value };
@@ -378,7 +378,7 @@ export default function FloorPlanEditor() {
             </div>
             <div>
               <label className="text-xs text-muted-foreground">Seats</label>
-              <Input
+              <Input aria-label="Input field"
                 type="number"
                 value={selectedObject.meta_json?.seats || 4}
                 onChange={(e) => {
@@ -394,7 +394,7 @@ export default function FloorPlanEditor() {
             </div>
             <div>
               <label className="text-xs text-muted-foreground">X</label>
-              <Input
+              <Input aria-label="Input field"
                 type="number"
                 value={Math.round(selectedObject.x)}
                 onChange={(e) => {
@@ -407,7 +407,7 @@ export default function FloorPlanEditor() {
             </div>
             <div>
               <label className="text-xs text-muted-foreground">Y</label>
-              <Input
+              <Input aria-label="Input field"
                 type="number"
                 value={Math.round(selectedObject.y)}
                 onChange={(e) => {

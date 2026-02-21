@@ -232,7 +232,7 @@ export default function MobileStockCount() {
                             <div className="flex-1">
                                 <p className="text-sm font-medium mb-1">Barcode Scanner</p>
                                 <div className="flex gap-2">
-                                    <Input
+                                    <Input aria-label="Scan or type barcode..."
                                         className="bg-zinc-900/50 border-white/10"
                                         placeholder="Scan or type barcode..."
                                         value={barcodeInput}
@@ -279,10 +279,10 @@ export default function MobileStockCount() {
             <div className="flex flex-wrap items-center gap-3 mb-4">
                 <div className="relative flex-1 min-w-[200px] max-w-sm">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input className="pl-9 bg-zinc-900/50 border-white/10" placeholder="Search items, barcodes..." value={search} onChange={e => setSearch(e.target.value)} />
+                    <Input aria-label="Search items, barcodes..." className="pl-9 bg-zinc-900/50 border-white/10" placeholder="Search items, barcodes..." value={search} onChange={e => setSearch(e.target.value)} />
                 </div>
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger className="w-[160px] bg-zinc-900/50 border-white/10">
+                <Select aria-label="Select option" value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger aria-label="Select option" className="w-[160px] bg-zinc-900/50 border-white/10">
                         <Filter className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
                         <SelectValue placeholder="Category" />
                     </SelectTrigger>
@@ -345,7 +345,7 @@ export default function MobileStockCount() {
                                             <Minus className="h-4 w-4" />
                                         </Button>
 
-                                        <Input
+                                        <Input aria-label="—"
                                             type="number"
                                             className="w-16 h-9 text-center text-sm font-bold bg-zinc-800 border-white/10"
                                             value={item.countedQty ?? ''}

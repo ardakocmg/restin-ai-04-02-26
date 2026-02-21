@@ -118,11 +118,11 @@ export default function ProductionManagementComplete() {
                   Recipe
                 </Label>
                 <div className="col-span-3">
-                  <Select
+                  <Select aria-label="Select option"
                     value={newBatch.recipe_id}
                     onValueChange={(val) => setNewBatch({ ...newBatch, recipe_id: val })}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger aria-label="Select option">
                       <SelectValue placeholder="Select recipe" />
                     </SelectTrigger>
                     <SelectContent>
@@ -139,7 +139,7 @@ export default function ProductionManagementComplete() {
                 <Label htmlFor="quantity" className="text-right">
                   Quantity
                 </Label>
-                <Input
+                <Input aria-label="Quantity"
                   id="quantity"
                   type="number"
                   value={newBatch.planned_quantity}
@@ -151,7 +151,7 @@ export default function ProductionManagementComplete() {
                 <Label htmlFor="unit" className="text-right">
                   Unit
                 </Label>
-                <Input
+                <Input aria-label="Unit"
                   id="unit"
                   value={newBatch.unit}
                   onChange={(e) => setNewBatch({ ...newBatch, unit: e.target.value })}

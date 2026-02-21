@@ -145,8 +145,8 @@ export default function Devices() {
                                 key: 'defaultFloor',
                                 label: 'Default Floor',
                                 render: (row) => (
-                                    <Select defaultValue={row.defaultFloor || "Main Floor"}>
-                                        <SelectTrigger className="w-[140px] bg-background border-border h-8 text-xs">
+                                    <Select aria-label="Select option" defaultValue={row.defaultFloor || "Main Floor"}>
+                                        <SelectTrigger aria-label="Select option" className="w-[140px] bg-background border-border h-8 text-xs">
                                             <SelectValue placeholder="Select floor" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-card border-border">
@@ -210,17 +210,17 @@ export default function Devices() {
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Device Name</Label>
-                                    <Input defaultValue={device.name} className="bg-background border-border h-10 ring-offset-red-500 transition-all focus-visible:ring-red-500" />
+                                    <Input aria-label="Input field" defaultValue={device.name} className="bg-background border-border h-10 ring-offset-red-500 transition-all focus-visible:ring-red-500" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Device Prefix</Label>
-                                    <Input defaultValue={device.prefix} className="bg-background border-border h-10 ring-offset-red-500 focus-visible:ring-red-500" />
+                                    <Input aria-label="Input field" defaultValue={device.prefix} className="bg-background border-border h-10 ring-offset-red-500 focus-visible:ring-red-500" />
                                 </div>
                             </div>
                             <div className="space-y-2">
                                 <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Default Floor</Label>
-                                <Select defaultValue={device.defaultFloor}>
-                                    <SelectTrigger className="w-full bg-background border-border h-10">
+                                <Select aria-label="Select option" defaultValue={device.defaultFloor}>
+                                    <SelectTrigger aria-label="Select option" className="w-full bg-background border-border h-10">
                                         <SelectValue placeholder="Select floor" />
                                     </SelectTrigger>
                                     <SelectContent className="bg-card border-border">

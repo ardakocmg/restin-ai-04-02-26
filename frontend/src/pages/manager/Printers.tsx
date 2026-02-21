@@ -351,12 +351,12 @@ export default function Printers() {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <Label className="text-muted-foreground">Name</Label>
-                                        <Input defaultValue={selectedPrinter.name} className="bg-background border-border text-foreground" />
+                                        <Input aria-label="Input field" defaultValue={selectedPrinter.name} className="bg-background border-border text-foreground" />
                                     </div>
                                     <div className="space-y-2">
                                         <Label className="text-muted-foreground">Type</Label>
-                                        <Select defaultValue={selectedPrinter.type}>
-                                            <SelectTrigger className="bg-background border-border text-foreground">
+                                        <Select aria-label="Select option" defaultValue={selectedPrinter.type}>
+                                            <SelectTrigger aria-label="Select option" className="bg-background border-border text-foreground">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -370,17 +370,17 @@ export default function Printers() {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <Label className="text-muted-foreground">IP Address</Label>
-                                        <Input defaultValue={selectedPrinter.ip} className="bg-background border-border text-foreground" />
+                                        <Input aria-label="Input field" defaultValue={selectedPrinter.ip} className="bg-background border-border text-foreground" />
                                     </div>
                                     <div className="space-y-2">
                                         <Label className="text-muted-foreground">Port</Label>
-                                        <Input defaultValue={selectedPrinter.port} type="number" className="bg-background border-border text-foreground" />
+                                        <Input aria-label="Input field" defaultValue={selectedPrinter.port} type="number" className="bg-background border-border text-foreground" />
                                     </div>
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-muted-foreground">Printer Template</Label>
-                                    <Select defaultValue={selectedPrinter.template}>
-                                        <SelectTrigger className="bg-background border-border text-foreground">
+                                    <Select aria-label="Select option" defaultValue={selectedPrinter.template}>
+                                        <SelectTrigger aria-label="Select option" className="bg-background border-border text-foreground">
                                             <SelectValue placeholder="Select a template" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -412,7 +412,7 @@ export default function Printers() {
                                 <div className="space-y-4">
                                     <div>
                                         <Label className="text-muted-foreground text-xs">Name</Label>
-                                        <Input
+                                        <Input aria-label="Input field"
                                             value={selectedTemplate.name}
                                             onChange={(e) => handleUpdateTemplateField('name', e.target.value)}
                                             className="bg-background border-border text-foreground mt-1"
@@ -431,7 +431,7 @@ export default function Printers() {
 
                                     <div>
                                         <Label className="text-muted-foreground text-xs">Printer</Label>
-                                        <Input
+                                        <Input aria-label="Input field"
                                             value={selectedTemplate.printer}
                                             onChange={(e) => handleUpdateTemplateField('printer', e.target.value)}
                                             className="bg-background border-border text-foreground mt-1"
@@ -440,8 +440,8 @@ export default function Printers() {
 
                                     <div>
                                         <Label className="text-muted-foreground text-xs">Backup printer</Label>
-                                        <Select value={selectedTemplate.backupPrinter} onValueChange={(val) => handleUpdateTemplateField('backupPrinter', val)}>
-                                            <SelectTrigger className="bg-background border-border text-foreground mt-1">
+                                        <Select aria-label="Select option" value={selectedTemplate.backupPrinter} onValueChange={(val) => handleUpdateTemplateField('backupPrinter', val)}>
+                                            <SelectTrigger aria-label="Select option" className="bg-background border-border text-foreground mt-1">
                                                 <SelectValue placeholder="Select backup" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -455,7 +455,7 @@ export default function Printers() {
                                     <div>
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Logo Url</Label>
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 value={selectedTemplate.logoUrl || ''}
                                                 onChange={(e) => handleUpdateTemplateField('logoUrl', e.target.value)}
                                                 placeholder="https://..."
@@ -465,7 +465,7 @@ export default function Printers() {
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Bottom Logo Url</Label>
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 value={selectedTemplate.bottomLogoUrl || ''}
                                                 onChange={(e) => handleUpdateTemplateField('bottomLogoUrl', e.target.value)}
                                                 placeholder="https://..."
@@ -475,7 +475,7 @@ export default function Printers() {
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Title Text</Label>
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 value={selectedTemplate.titleText || ''}
                                                 onChange={(e) => handleUpdateTemplateField('titleText', e.target.value)}
                                                 className="bg-background border-border text-foreground mt-1"
@@ -484,7 +484,7 @@ export default function Printers() {
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Greeting Text</Label>
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 value={selectedTemplate.greetingText || ''}
                                                 onChange={(e) => handleUpdateTemplateField('greetingText', e.target.value)}
                                                 className="bg-background border-border text-foreground mt-1"
@@ -493,7 +493,7 @@ export default function Printers() {
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Promotion Text</Label>
-                                            <Input
+                                            <Input aria-label="Input field"
                                                 value={selectedTemplate.promotionText || ''}
                                                 onChange={(e) => handleUpdateTemplateField('promotionText', e.target.value)}
                                                 className="bg-background border-border text-foreground mt-1"
@@ -515,8 +515,8 @@ export default function Printers() {
                                     <div className="space-y-4">
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Font Name</Label>
-                                            <Select defaultValue="arial">
-                                                <SelectTrigger className="bg-background border-border text-foreground mt-1">
+                                            <Select aria-label="Select option" defaultValue="arial">
+                                                <SelectTrigger aria-label="Select option" className="bg-background border-border text-foreground mt-1">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -528,18 +528,18 @@ export default function Printers() {
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Font Size</Label>
-                                            <Input type="number" defaultValue="35" className="bg-background border-border text-foreground mt-1" />
+                                            <Input aria-label="Input field" type="number" defaultValue="35" className="bg-background border-border text-foreground mt-1" />
                                         </div>
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Times Printed</Label>
-                                            <Input type="number" defaultValue="1" className="bg-background border-border text-foreground mt-1" />
+                                            <Input aria-label="Input field" type="number" defaultValue="1" className="bg-background border-border text-foreground mt-1" />
                                         </div>
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Big Font Name</Label>
-                                            <Select defaultValue="arial-bold">
-                                                <SelectTrigger className="bg-background border-border text-foreground mt-1">
+                                            <Select aria-label="Select option" defaultValue="arial-bold">
+                                                <SelectTrigger aria-label="Select option" className="bg-background border-border text-foreground mt-1">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -551,13 +551,13 @@ export default function Printers() {
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Big Font Size</Label>
-                                            <Input type="number" defaultValue="50" className="bg-background border-border text-foreground mt-1" />
+                                            <Input aria-label="Input field" type="number" defaultValue="50" className="bg-background border-border text-foreground mt-1" />
                                         </div>
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Small Font Name</Label>
-                                            <Select defaultValue="arial">
-                                                <SelectTrigger className="bg-background border-border text-foreground mt-1">
+                                            <Select aria-label="Select option" defaultValue="arial">
+                                                <SelectTrigger aria-label="Select option" className="bg-background border-border text-foreground mt-1">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -568,17 +568,17 @@ export default function Printers() {
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Small Font Size</Label>
-                                            <Input type="number" defaultValue="30" className="bg-background border-border text-foreground mt-1" />
+                                            <Input aria-label="Input field" type="number" defaultValue="30" className="bg-background border-border text-foreground mt-1" />
                                         </div>
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Item number width</Label>
-                                            <Input type="number" defaultValue="0" className="bg-background border-border text-foreground mt-1" />
+                                            <Input aria-label="Input field" type="number" defaultValue="0" className="bg-background border-border text-foreground mt-1" />
                                         </div>
 
                                         <div>
                                             <Label className="text-muted-foreground text-xs">Price Width</Label>
-                                            <Input type="number" defaultValue="0" className="bg-background border-border text-foreground mt-1" />
+                                            <Input aria-label="Input field" type="number" defaultValue="0" className="bg-background border-border text-foreground mt-1" />
                                         </div>
 
                                         <div className="flex items-center gap-2">
@@ -679,7 +679,7 @@ export default function Printers() {
                         <div className="space-y-4">
                             <div>
                                 <Label className="text-muted-foreground">Drawer Name</Label>
-                                <Input
+                                <Input aria-label="Input field"
                                     value={newDrawerName}
                                     onChange={(e) => setNewDrawerName(e.target.value)}
                                     placeholder="Enter drawer name"

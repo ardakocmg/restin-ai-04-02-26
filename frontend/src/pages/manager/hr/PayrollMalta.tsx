@@ -121,16 +121,16 @@ export default function PayrollMalta() {
         description="FS3, FS5, and Pay Run Management (Malta Parity)"
       >
         <div className="flex gap-4 mb-6">
-          <Select value={year} onValueChange={setYear}>
-            <SelectTrigger className="w-32 bg-background border-border">
+          <Select aria-label="Select option" value={year} onValueChange={setYear}>
+            <SelectTrigger aria-label="Select option" className="w-32 bg-background border-border">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {[2024, 2025, 2026].map(y => <SelectItem key={y} value={y.toString()}>{y}</SelectItem>)}
             </SelectContent>
           </Select>
-          <Select value={month} onValueChange={setMonth}>
-            <SelectTrigger className="w-32 bg-background border-border">
+          <Select aria-label="Select option" value={month} onValueChange={setMonth}>
+            <SelectTrigger aria-label="Select option" className="w-32 bg-background border-border">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

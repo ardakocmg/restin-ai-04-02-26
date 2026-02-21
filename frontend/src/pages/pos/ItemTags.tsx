@@ -58,7 +58,7 @@ const ItemTags: React.FC = () => {
 
             <div className="pos-search-wrapper pos-mb-16">
                 <Search size={14} className="pos-search-icon" />
-                <input className="pos-input pos-search-input" placeholder="Search tags..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Search tags" />
+                <input aria-label="Search tags..." className="pos-input pos-search-input" placeholder="Search tags..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Search tags" />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 12 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */

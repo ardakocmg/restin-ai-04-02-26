@@ -83,14 +83,14 @@ export default function Operations() {
           </CardHeader>
           <CardContent className="p-6 space-y-6">
             <div className="flex gap-3">
-              <Input
+              <Input aria-label="Input field"
                 value={newItem}
                 onChange={(e) => setNewItem(e.target.value)}
                 placeholder="Item name (e.g., Bread Basket)..."
                 onKeyPress={(e) => e.key === 'Enter' && addComplimentaryItem()}
                 className="bg-card border-border text-foreground font-bold h-12 focus:ring-red-500/50"
               />
-              <Button onClick={addComplimentaryItem} className="h-12 w-12 bg-red-600 hover:bg-red-500 text-foreground border-none shadow-lg shadow-red-900/20">
+              <Button onClick={addComplimentaryItem} aria-label="Action" className="h-12 w-12 bg-red-600 hover:bg-red-500 text-foreground border-none shadow-lg shadow-red-900/20">
                 <Plus className="w-5 h-5" />
               </Button>
             </div>
@@ -140,7 +140,7 @@ export default function Operations() {
             </div>
             <div className="space-y-4 pt-4 border-t border-border">
               <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Low Stock Threshold</Label>
-              <Input
+              <Input aria-label="Input field"
                 type="number"
                 value={settings?.low_stock_threshold || 3}
                 onChange={(e) => setSettings({ ...settings, low_stock_threshold: parseInt(e.target.value) })}

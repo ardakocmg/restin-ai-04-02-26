@@ -198,12 +198,12 @@ export default function UnitConversionMatrix() {
                         <div className="flex items-end gap-3">
                             <div className="flex-1">
                                 <Label className="text-xs">Value</Label>
-                                <Input type="number" value={fromValue} onChange={e => setFromValue(Number(e.target.value))} className="text-lg font-bold h-12" />
+                                <Input aria-label="Input field" type="number" value={fromValue} onChange={e => setFromValue(Number(e.target.value))} className="text-lg font-bold h-12" />
                             </div>
                             <div className="flex-1">
                                 <Label className="text-xs">From</Label>
-                                <Select value={fromUnit} onValueChange={setFromUnit}>
-                                    <SelectTrigger className="h-12"><SelectValue /></SelectTrigger>
+                                <Select aria-label="Select option" value={fromUnit} onValueChange={setFromUnit}>
+                                    <SelectTrigger aria-label="Select option" className="h-12"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         {availableUnits.map(u => <SelectItem key={u} value={u}>{u}</SelectItem>)}
                                     </SelectContent>
@@ -215,8 +215,8 @@ export default function UnitConversionMatrix() {
                             </Button>
                             <div className="flex-1">
                                 <Label className="text-xs">To</Label>
-                                <Select value={toUnit} onValueChange={setToUnit}>
-                                    <SelectTrigger className="h-12"><SelectValue /></SelectTrigger>
+                                <Select aria-label="Select option" value={toUnit} onValueChange={setToUnit}>
+                                    <SelectTrigger aria-label="Select option" className="h-12"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         {availableUnits.map(u => <SelectItem key={u} value={u}>{u}</SelectItem>)}
                                     </SelectContent>
@@ -278,20 +278,20 @@ export default function UnitConversionMatrix() {
                             <div className="grid grid-cols-4 gap-2">
                                 <div>
                                     <Label className="text-[10px]">From Unit</Label>
-                                    <Input placeholder="e.g. case" value={newFrom} onChange={e => setNewFrom(e.target.value)} />
+                                    <Input aria-label="e.g. case" placeholder="e.g. case" value={newFrom} onChange={e => setNewFrom(e.target.value)} />
                                 </div>
                                 <div>
                                     <Label className="text-[10px]">To Unit</Label>
-                                    <Input placeholder="e.g. piece" value={newTo} onChange={e => setNewTo(e.target.value)} />
+                                    <Input aria-label="e.g. piece" placeholder="e.g. piece" value={newTo} onChange={e => setNewTo(e.target.value)} />
                                 </div>
                                 <div>
                                     <Label className="text-[10px]">Factor</Label>
-                                    <Input type="number" value={newFactor} onChange={e => setNewFactor(Number(e.target.value))} />
+                                    <Input aria-label="Input field" type="number" value={newFactor} onChange={e => setNewFactor(Number(e.target.value))} />
                                 </div>
                                 <div>
                                     <Label className="text-[10px]">Category</Label>
-                                    <Select value={newCategory} onValueChange={setNewCategory}>
-                                        <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+                                    <Select aria-label="Select option" value={newCategory} onValueChange={setNewCategory}>
+                                        <SelectTrigger aria-label="Select option" className="h-9"><SelectValue /></SelectTrigger>
                                         <SelectContent>
                                             {CATEGORIES.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}
                                         </SelectContent>

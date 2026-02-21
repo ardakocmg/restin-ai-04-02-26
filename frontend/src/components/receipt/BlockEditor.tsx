@@ -60,26 +60,26 @@ const ConditionalRuleRow: React.FC<{
     <div className="flex items-center gap-2 p-2 rounded-lg bg-zinc-900/50 border border-white/5">
         <Zap className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
 
-        <Select value={rule.field} onValueChange={v => onChange({ ...rule, field: v as ConditionField })}>
-            <SelectTrigger className="h-7 text-xs bg-zinc-800 border-white/5 w-28"><SelectValue /></SelectTrigger>
+        <Select aria-label="Select option" value={rule.field} onValueChange={v => onChange({ ...rule, field: v as ConditionField })}>
+            <SelectTrigger aria-label="Select option" className="h-7 text-xs bg-zinc-800 border-white/5 w-28"><SelectValue /></SelectTrigger>
             <SelectContent>
                 {CONDITION_FIELDS.map(f => <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>)}
             </SelectContent>
         </Select>
 
-        <Select value={rule.operator} onValueChange={v => onChange({ ...rule, operator: v as ConditionOperator })}>
-            <SelectTrigger className="h-7 text-xs bg-zinc-800 border-white/5 w-16"><SelectValue /></SelectTrigger>
+        <Select aria-label="Select option" value={rule.operator} onValueChange={v => onChange({ ...rule, operator: v as ConditionOperator })}>
+            <SelectTrigger aria-label="Select option" className="h-7 text-xs bg-zinc-800 border-white/5 w-16"><SelectValue /></SelectTrigger>
             <SelectContent>
                 {CONDITION_OPERATORS.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
             </SelectContent>
         </Select>
 
-        <Input value={rule.value} onChange={e => onChange({ ...rule, value: e.target.value })}
+        <Input aria-label="Input field" value={rule.value} onChange={e => onChange({ ...rule, value: e.target.value })}
             placeholder={VALUE_HINTS[rule.field] || 'Value'}
             className="h-7 text-xs bg-zinc-800 border-white/5 flex-1" />
 
-        <Select value={rule.action} onValueChange={v => onChange({ ...rule, action: v as ConditionalRule['action'] })}>
-            <SelectTrigger className="h-7 text-xs bg-zinc-800 border-white/5 w-20"><SelectValue /></SelectTrigger>
+        <Select aria-label="Select option" value={rule.action} onValueChange={v => onChange({ ...rule, action: v as ConditionalRule['action'] })}>
+            <SelectTrigger aria-label="Select option" className="h-7 text-xs bg-zinc-800 border-white/5 w-20"><SelectValue /></SelectTrigger>
             <SelectContent>
                 <SelectItem value="show">Show</SelectItem>
                 <SelectItem value="hide">Hide</SelectItem>
@@ -87,7 +87,7 @@ const ConditionalRuleRow: React.FC<{
             </SelectContent>
         </Select>
 
-        <Button variant="ghost" size="sm" onClick={onDelete} className="h-7 w-7 p-0 text-muted-foreground hover:text-red-400">
+        <Button variant="ghost" size="sm" onClick={onDelete} aria-label="Action" className="h-7 w-7 p-0 text-muted-foreground hover:text-red-400">
             <Trash2 className="w-3 h-3" />
         </Button>
     </div>

@@ -224,8 +224,8 @@ export default function ProductionManagement() {
           <div className="space-y-4 py-4">
             <div>
               <label className="text-xs uppercase font-bold text-muted-foreground">Recipe</label>
-              <Select onValueChange={(val) => setFormData({ ...formData, recipe_id: val })}>
-                <SelectTrigger className="bg-card border-border"><SelectValue placeholder="Select Recipe" /></SelectTrigger>
+              <Select aria-label="Select option" onValueChange={(val) => setFormData({ ...formData, recipe_id: val })}>
+                <SelectTrigger aria-label="Select option" className="bg-card border-border"><SelectValue placeholder="Select Recipe" /></SelectTrigger>
                 <SelectContent className="bg-card border-border text-secondary-foreground">
                   {recipes.map(r => (
                     <SelectItem key={r.id} value={r.id}>{r.recipe_name}</SelectItem>
@@ -235,7 +235,7 @@ export default function ProductionManagement() {
             </div>
             <div>
               <label className="text-xs uppercase font-bold text-muted-foreground">Multiplier (Batches)</label>
-              <Input
+              <Input aria-label="Input field"
                 type="number"
                 value={formData.quantity}
                 onChange={(e) => setFormData({ ...formData, quantity: parseFloat(e.target.value) })}
@@ -244,7 +244,7 @@ export default function ProductionManagement() {
             </div>
             <div>
               <label className="text-xs uppercase font-bold text-muted-foreground">Date</label>
-              <Input
+              <Input aria-label="Input field"
                 type="date"
                 value={formData.batch_date}
                 onChange={(e) => setFormData({ ...formData, batch_date: e.target.value })}

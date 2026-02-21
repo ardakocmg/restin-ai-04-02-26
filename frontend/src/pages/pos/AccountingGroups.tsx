@@ -147,7 +147,7 @@ const AccountingGroups: React.FC = () => {
                 <div className="ag-card ag-toolbar">
                     <div className="ag-search-wrapper">
                         <Search size={14} className="ag-search-icon" />
-                        <input className="ag-input ag-search-input" placeholder="Search groups..." value={search} onChange={e => setSearch(e.target.value)} />
+                        <input aria-label="Search groups..." className="ag-input ag-search-input" placeholder="Search groups..." value={search} onChange={e => setSearch(e.target.value)} />
                     </div>
                     <div className="ag-toggle-group">
                         <button onClick={() => setShowInactive(false)} className={`ag-toggle-btn ${!showInactive ? 'ag-toggle-btn--active' : 'ag-toggle-btn--inactive'}`}>Active ({groups.filter(g => g.isActive).length})</button>

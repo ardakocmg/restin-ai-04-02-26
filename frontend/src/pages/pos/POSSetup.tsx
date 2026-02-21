@@ -219,8 +219,8 @@ export default function POSSetup() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Venue</Label>
-                  <Select value={selectedVenue} onValueChange={handleVenueSelect}>
-                    <SelectTrigger className="bg-secondary border-border text-foreground">
+                  <Select aria-label="Select option" value={selectedVenue} onValueChange={handleVenueSelect}>
+                    <SelectTrigger aria-label="Select option" className="bg-secondary border-border text-foreground">
                       <SelectValue placeholder="Select Venue" />
                     </SelectTrigger>
                     <SelectContent className="bg-secondary border-border text-foreground">
@@ -233,8 +233,8 @@ export default function POSSetup() {
 
                 <div className="space-y-2">
                   <Label>Zone / Station</Label>
-                  <Select value={selectedZone} onValueChange={setSelectedZone} disabled={!selectedVenue}>
-                    <SelectTrigger className="bg-secondary border-border text-foreground">
+                  <Select aria-label="Select option" value={selectedZone} onValueChange={setSelectedZone} disabled={!selectedVenue}>
+                    <SelectTrigger aria-label="Select option" className="bg-secondary border-border text-foreground">
                       <SelectValue placeholder="Select Zone" />
                     </SelectTrigger>
                     <SelectContent className="bg-secondary border-border text-foreground">
@@ -247,7 +247,7 @@ export default function POSSetup() {
 
                 <div className="space-y-2 col-span-2">
                   <Label>Terminal Name (Optional)</Label>
-                  <Input
+                  <Input aria-label="Input field"
                     value={deviceName}
                     onChange={(e) => setDeviceName(e.target.value)}
                     placeholder="e.g. Bar Pos 1"
@@ -264,8 +264,8 @@ export default function POSSetup() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Connection Type</Label>
-                    <Select value={printerType} onValueChange={setPrinterType}>
-                      <SelectTrigger className="bg-secondary border-border text-foreground">
+                    <Select aria-label="Select option" value={printerType} onValueChange={setPrinterType}>
+                      <SelectTrigger aria-label="Select option" className="bg-secondary border-border text-foreground">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-secondary border-border text-foreground">
@@ -278,7 +278,7 @@ export default function POSSetup() {
                   {printerType === 'network' && (
                     <div className="space-y-2">
                       <Label>Printer IP Address</Label>
-                      <Input
+                      <Input aria-label="Input field"
                         value={printerIp}
                         onChange={(e) => setPrinterIp(e.target.value)}
                         placeholder="192.168.1.100"
@@ -293,7 +293,7 @@ export default function POSSetup() {
                 <h3 className="text-lg font-medium text-foreground border-b border-border pb-2">Kitchen Printer (Backup)</h3>
                 <div className="space-y-2">
                   <Label>Kitchen Printer IP</Label>
-                  <Input
+                  <Input aria-label="Input field"
                     value={kitchenPrinterIp}
                     onChange={(e) => setKitchenPrinterIp(e.target.value)}
                     placeholder="192.168.1.101"
@@ -317,7 +317,7 @@ export default function POSSetup() {
               {enableKds && (
                 <div className="space-y-2">
                   <Label>KDS Server URL</Label>
-                  <Input
+                  <Input aria-label="Input field"
                     value={kdsUrl}
                     onChange={(e) => setKdsUrl(e.target.value)}
                     placeholder="http://localhost:8000/kds"
@@ -339,7 +339,7 @@ export default function POSSetup() {
 
               <div className="space-y-2">
                 <Label>Payment Terminal IP (EFTPOS)</Label>
-                <Input
+                <Input aria-label="Input field"
                   value={terminalIp}
                   onChange={(e) => setTerminalIp(e.target.value)}
                   placeholder="192.168.1.200"

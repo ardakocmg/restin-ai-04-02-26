@@ -58,7 +58,7 @@ const Discounts: React.FC = () => {
 
             <div className="pos-search-wrapper pos-mb-16">
                 <Search size={14} className="pos-search-icon" />
-                <input className="pos-input pos-search-input" placeholder="Search discounts..." value={search} onChange={e => setSearch(e.target.value)} />
+                <input aria-label="Search discounts..." className="pos-input pos-search-input" placeholder="Search discounts..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
 
             <div className="pos-card">

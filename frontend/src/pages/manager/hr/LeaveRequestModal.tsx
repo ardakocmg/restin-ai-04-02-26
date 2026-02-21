@@ -90,12 +90,12 @@ export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
                 <form onSubmit={handleSubmit} className="space-y-4 mt-4">
                     <div className="space-y-2">
                         <Label>Leave Type</Label>
-                        <Select
+                        <Select aria-label="Select option"
                             value={formData.leave_type_id}
                             onValueChange={(val) => setFormData({ ...formData, leave_type_id: val })}
                             required
                         >
-                            <SelectTrigger className="bg-secondary border-border">
+                            <SelectTrigger aria-label="Select option" className="bg-secondary border-border">
                                 <SelectValue placeholder="Select type..." />
                             </SelectTrigger>
                             <SelectContent className="bg-secondary border-border">
@@ -114,7 +114,7 @@ export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label>Start Date</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 type="date"
                                 className="bg-secondary border-border"
                                 value={formData.start_date}
@@ -124,7 +124,7 @@ export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
                         </div>
                         <div className="space-y-2">
                             <Label>End Date</Label>
-                            <Input
+                            <Input aria-label="Input field"
                                 type="date"
                                 className="bg-secondary border-border"
                                 value={formData.end_date}
@@ -136,7 +136,7 @@ export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
 
                     <div className="space-y-2">
                         <Label>Reason (Optional)</Label>
-                        <Textarea
+                        <Textarea aria-label="e.g. Family vacation, Doctor's appointment..."
                             className="bg-secondary border-border"
                             placeholder="e.g. Family vacation, Doctor's appointment..."
                             value={formData.reason}

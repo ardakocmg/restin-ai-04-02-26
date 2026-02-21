@@ -471,7 +471,7 @@ const MigrationHub = () => {
                                 {mode === 'link' && (
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-muted-foreground">API Key / Token</label>
-                                        <input type="password" placeholder="Enter API Key" className="w-full bg-input border-border rounded-lg p-3 text-foreground focus:ring-2 focus:ring-primary outline-none" />
+                                        <input aria-label="Enter API Key" type="password" placeholder="Enter API Key" className="w-full bg-input border-border rounded-lg p-3 text-foreground focus:ring-2 focus:ring-primary outline-none" />
                                     </div>
                                 )}
                             </CardContent>
