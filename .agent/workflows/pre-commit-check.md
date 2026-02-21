@@ -136,6 +136,17 @@ cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-St
 
 **Rule:** NEVER use hardcoded color values (`#1a1a1a`, `rgb(0,0,0)`, etc.) in TSX/TS component files. All colors MUST reference CSS variables from the design system (`var(--bg-primary)`, `var(--text-secondary)`, `var(--border-primary)`, etc.) or use classes from shared CSS files (`pos-shared.css`, `index.css`). Exceptions: CSS files defining the variables themselves, keyframe animations, and gradients using existing vars.
 
+### 8.6. Inline Styles Ban (ZERO TOLERANCE)
+
+// turbo
+Detect `style={{}}` in TSX components — all styles must use Tailwind classes:
+
+```
+cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-String -Path "src\pages\**\*.tsx","src\components\**\*.tsx" -Pattern "style=\{\{" -Recurse | Where-Object { $_.Line -notmatch "width:\s*`|top:|left:|height:\s*`|transform:|// keep-inline" } | Select-Object -First 25 | Format-Table LineNumber, Path -AutoSize
+```
+
+**Rule:** NEVER use `style={{}}` for hardcoded values (padding, colors, font-size, margins). Use Tailwind CSS classes instead. **Only exception:** Dynamic runtime values that cannot be expressed as classes (e.g., `style={{ width:`${percent}%`}}`, `style={{ top: contextMenu.y }}`). Mark legitimate exceptions with `// keep-inline` comment.
+
 ---
 
 ## 🟡 IMPORTANT CHECKS (Should Pass)
@@ -237,6 +248,7 @@ cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-St
 | 🔴 | Hardcoded Strings | Flag for review |
 | 🔴 | Dark Mode Violations | Flag for review |
 | 🔴 | Hardcoded Colors | Flag for review |
+| 🔴 | Inline Styles | **Block commit** |
 | 🟡 | Empty Catch | Fix if new code |
 | 🟡 | Unused Imports | Clean up |
 | 🟡 | Duplicate Routes | Fix immediately |

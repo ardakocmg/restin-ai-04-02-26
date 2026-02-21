@@ -44,12 +44,48 @@ export default [
                                 }
                             };
                         }
+                    },
+                    "no-inline-styles": {
+                        meta: {
+                            type: "problem",
+                            docs: {
+                                description: "Disallow inline style={{}} on JSX elements. Use Tailwind classes instead.",
+                            },
+                        },
+                        create(context) {
+                            return {
+                                JSXAttribute(node) {
+                                    if (node.name.name !== "style") return;
+                                    const value = node.value;
+                                    if (!value || value.type !== "JSXExpressionContainer") return;
+                                    const expr = value.expression;
+                                    // Allow dynamic styles: style={{ top: variable }}, style={{ width: `${x}%` }}
+                                    if (expr.type === "ObjectExpression") {
+                                        const allDynamic = expr.properties.every(prop => {
+                                            if (prop.type !== "Property") return true;
+                                            const val = prop.value;
+                                            return val.type === "Identifier" ||
+                                                val.type === "MemberExpression" ||
+                                                val.type === "TemplateLiteral" ||
+                                                val.type === "ConditionalExpression" ||
+                                                val.type === "CallExpression";
+                                        });
+                                        if (allDynamic) return; // All values are dynamic, skip
+                                    }
+                                    context.report({
+                                        node,
+                                        message: "Inline style={{}} is forbidden. Use Tailwind CSS classes instead. For dynamic values (width %, position), add a // keep-inline comment.",
+                                    });
+                                }
+                            };
+                        }
                     }
                 }
             }
         },
         rules: {
             "restin-guardrails/no-hardcoded-colors": "warn",
+            "restin-guardrails/no-inline-styles": "warn",
             "react/prop-types": "off",
             "no-unused-vars": "warn",
             "no-undef": "error"

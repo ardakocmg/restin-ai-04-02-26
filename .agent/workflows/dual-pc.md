@@ -93,3 +93,14 @@ To minimize conflicts, split work domains:
 | App.tsx / Routes | `frontend/src/App.tsx`, `routes/*` | PC1 only |
 | POS | `frontend/src/pages/pos/*` | Lock via worklock |
 | Config/Scripts | `*.ps1`, `.agent/*` | PC1 only |
+
+## CODE QUALITY RULES (Both PCs Must Follow)
+
+### No Inline Styles
+
+- **NEVER** use `style={{}}` for hardcoded values (padding, colors, font-size, margins, borders)
+- **ALWAYS** use Tailwind CSS classes instead
+- **Only exception:** Dynamic runtime values (`style={{ width:`${percent}%`}}`, `style={{ top: contextMenu.y }}`)
+- Mark legitimate dynamic exceptions with `// keep-inline` comment
+- Use Tailwind arbitrary values for dynamic colors: `className="bg-[#6366f1]"` not `style={{ backgroundColor: '#6366f1' }}`
+- Run `/pre-commit-check` check 8.6 before committing
