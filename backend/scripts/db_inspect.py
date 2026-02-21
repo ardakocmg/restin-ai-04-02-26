@@ -8,7 +8,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 URI = os.getenv(
     "MONGO_URL",
-    "mongodb+srv://restinai:lTxLH4ncbKTocAwl@cluster0.5ndlsdd.mongodb.net/restin_v2?retryWrites=true&w=majority&appName=Cluster0",
+    os.environ.get("MONGODB_URI", "mongodb://localhost:27017/restin_v2"),
 )
 
 

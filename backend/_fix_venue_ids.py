@@ -1,8 +1,9 @@
+import os
 import asyncio
 from motor.motor_asyncio import AsyncIOMotorClient
 
 async def main():
-    c = AsyncIOMotorClient("mongodb+srv://restinai:lTxLH4ncbKTocAwl@cluster0.5ndlsdd.mongodb.net/restin_v2?retryWrites=true")
+    c = AsyncIOMotorClient(os.environ.get("MONGODB_URI", "mongodb://localhost:27017/restin_v2"))
     db = c["restin_v2"]
     
     OLD = "698cb644c83d21c46da0a91f"
