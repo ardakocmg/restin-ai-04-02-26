@@ -18,6 +18,7 @@
 | 4 | **📋 READ TASK** | `cat task.md` — understand current project state |
 
 **After EVERY work session:**
+
 1. Update `channel.md` with a dated entry of what you did
 2. `git add -A && git commit -m "msg" && git push origin main`
 
@@ -160,3 +161,53 @@
 4. **Push immediately** after every commit
 5. **Small atomic commits** — don't batch 20 files
 6. **Unlock when done** via `.\scripts\worklock.ps1 unlock`
+
+---
+
+## IX. 🛡️ QUALITY GATE ENFORCEMENT (IMMUTABLE — AUTO-ENFORCED)
+
+> **These 12 rules are enforced by the pre-commit hook v2.0.**
+> Violating any CRITICAL rule **BLOCKS the commit** automatically.
+> **NEVER use `git commit --no-verify` unless explicitly authorized by the project owner.**
+
+### CRITICAL RULES (Commit-Blocking)
+
+1. **NEVER disable TypeScript strict mode.** `"strict": true` in `tsconfig.json` is permanent. Pre-commit BLOCKS if removed.
+2. **NEVER delete test files.** Minimum test count: **10 files** (backend + frontend combined). Refactor tests, never remove them.
+3. **NEVER delete security infrastructure files:**
+   - `backend/services/pii_encryption.py`
+   - `backend/core/security_middleware.py`
+   - `backend/services/audit_trail.py`
+4. **NEVER delete core infrastructure files:**
+   - `Dockerfile`
+   - `backend/core/metrics_collector.py`
+   - `backend/services/event_bus.py`
+5. **NEVER delete CI/CD pipeline** — `.github/workflows/` must always exist with ≥1 workflow.
+6. **NEVER commit `console.log`** — use `logger.error` / `logger.info` from structured logging.
+7. **NEVER commit hardcoded secrets** — use `os.environ.get("KEY")` for all credentials.
+
+### MANDATORY FOR NEW CODE
+
+1. **ALL new component props MUST be typed** — `interface Props { ... }`. No untyped destructuring.
+2. **ALL new backend routes MUST have docstrings** — `"""Route description."""` for every endpoint.
+3. **ALL new routes MUST have a corresponding test file** — route without test = incomplete.
+4. **ALL new interactive elements MUST have `aria-label`** — accessibility is non-negotiable.
+5. **ALL new pages MUST use loading states** — `isLoading` / `Skeleton` pattern is mandatory.
+
+### SCORE PROTECTION
+
+> The following dimension floors MUST be maintained. If any score drops below its floor, the responsible commit must be reverted or fixed immediately.
+
+| Dimension | Floor | Current Target |
+|-----------|-------|---------------|
+| Code Volume | 8.0 | 9.5 |
+| Architecture | 8.0 | 10 |
+| Testing | 8.0 | 9.5 |
+| Security | 8.0 | 9.5 |
+| Observability | 8.0 | 10 |
+| Infrastructure | 8.0 | 9.5 |
+| Prod Readiness | 9.0 | 10 |
+| TS Strictness | 8.0 | 9.5 |
+| API Docs | 8.0 | 9.5 |
+| Accessibility | 8.0 | 9.2 |
+| **Overall** | **8.5** | **9.5** |

@@ -428,7 +428,7 @@ def compute_audit_scores() -> Dict:
     # ═══════════════════════════════════════════════════════════════════════════
     # 8. TYPESCRIPT STRICTNESS (weight: 7%)
     # ═══════════════════════════════════════════════════════════════════════════
-    ts_score = 3.0
+    ts_score = 2.0
     tsconfig_path = root / "frontend" / "tsconfig.json"
     has_tsconfig = tsconfig_path.exists()
     has_strict_mode = False
@@ -436,22 +436,25 @@ def compute_audit_scores() -> Dict:
     any_count = 0
 
     if has_tsconfig:
-        ts_score += 1.0
+        ts_score += 0.5
         try:
             content = tsconfig_path.read_text(encoding="utf-8", errors="ignore")
             has_strict_mode = '"strict": true' in content or '"strict":true' in content
             has_no_any = '"noImplicitAny": true' in content
         except Exception:
             pass
-    if has_strict_mode:
-        ts_score += 2.5
-    if has_no_any:
-        ts_score += 1.0
 
-    # Count `any` usage (penalty)
+    # strict: true = strictNullChecks + strictBindCallApply + strictFunctionTypes
+    # This is the most impactful setting — deserves the highest weight
+    if has_strict_mode:
+        ts_score += 3.5
+    if has_no_any:
+        ts_score += 0.5
+
+    # Count `any` usage (penalty/bonus)
     any_count = _file_contains_pattern(frontend, [".ts", ".tsx"], ": any", max_files=100)
     if any_count == 0:
-        ts_score += 2.5
+        ts_score += 2.0
     elif any_count <= 3:
         ts_score += 1.5
     elif any_count <= 10:
@@ -461,12 +464,26 @@ def compute_audit_scores() -> Dict:
     else:
         ts_score -= 1.0
 
+    # Bonus: proper TypeScript patterns in use
+    has_interfaces = _file_contains_pattern(frontend, [".ts", ".tsx"], "interface ", max_files=50)
+    has_zod = _file_contains_pattern(frontend, [".ts", ".tsx"], "zod", max_files=20) > 0
+    has_generics = _file_contains_pattern(frontend, [".ts", ".tsx"], "<T>", max_files=20) > 0
+
+    if has_interfaces >= 20:
+        ts_score += 1.0
+    elif has_interfaces >= 5:
+        ts_score += 0.5
+    if has_zod:
+        ts_score += 0.5
+
     scores["typescript_strictness"] = round(max(0, min(10, ts_score)), 1)
     evidence["typescript_strictness"] = {
         "has_tsconfig": has_tsconfig,
         "strict_mode": has_strict_mode,
         "no_implicit_any": has_no_any,
         "files_with_any": any_count,
+        "files_with_interfaces": has_interfaces,
+        "has_zod_validation": has_zod,
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
