@@ -142,6 +142,7 @@ export default function WebBuilder() {
                             <button
                                 key={d.id}
                                 onClick={() => setDevice(d.id)}
+                                title={`Switch to ${d.id} view`}
                                 className={cn(
                                     "p-2 rounded-lg transition-all",
                                     device === d.id ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-muted-foreground"

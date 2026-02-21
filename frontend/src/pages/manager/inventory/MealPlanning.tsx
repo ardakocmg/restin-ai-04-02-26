@@ -244,6 +244,7 @@ export default function MealPlanning() {
                                                         <span className="text-[10px] flex-1 truncate">{recipe.name}</span>
                                                         <span className="text-[9px] tabular-nums text-muted-foreground">€{recipe.cost.toFixed(2)}</span>
                                                         <button className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-opacity"
+                                                            title="Remove recipe"
                                                             onClick={() => removeRecipeFromSlot(day, meal, id)}>
                                                             <Trash2 className="h-2.5 w-2.5" />
                                                         </button>

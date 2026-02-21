@@ -66,7 +66,7 @@ const Courses: React.FC = () => {
                         <span className="pos-cell-secondary">{course.defaultDelay > 0 ? `${course.defaultDelay} min delay` : 'No delay'}</span>
                         <span className={`pos-badge ${course.autoFire ? 'pos-badge--green' : 'pos-badge--gray'}`}>{course.autoFire ? 'Yes' : 'Manual'}</span>
                         <span className="pos-cell-value">{course.itemCount}</span>
-                        <button className="pos-btn-icon" onClick={e => { e.stopPropagation(); setEditing({ ...course }); }}><Edit3 size={13} /></button>
+                        <button className="pos-btn-icon" title="Edit course" onClick={e => { e.stopPropagation(); setEditing({ ...course }); }}><Edit3 size={13} /></button>
                     </div>
                 ))}
             </div>

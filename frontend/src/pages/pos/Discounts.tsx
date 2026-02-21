@@ -88,7 +88,7 @@ const Discounts: React.FC = () => {
                         <span className="pos-cell-secondary capitalize">{d.applicableTo}</span>
                         <span className="pos-cell-secondary text-[10px]">{d.schedule}</span>
                         <span className="pos-cell-value">{d.usesToday}{d.maxUsesPerDay > 0 && <span className="pos-text-secondary text-[11px]">/{d.maxUsesPerDay}</span>}</span>
-                        <button className="pos-btn-icon" onClick={e => { e.stopPropagation(); setEditing({ ...d }); }}><Edit3 size={13} /></button>
+                        <button className="pos-btn-icon" title="Edit discount" onClick={e => { e.stopPropagation(); setEditing({ ...d }); }}><Edit3 size={13} /></button>
                     </div>
                 ))}
             </div>

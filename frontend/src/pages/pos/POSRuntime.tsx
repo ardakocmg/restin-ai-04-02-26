@@ -597,7 +597,7 @@ export default function POSRuntime() {
                         </div>
                       )}
                     </div>
-                    <button onClick={() => removeItem(index)} className="text-muted-foreground hover:text-red-400">
+                    <button onClick={() => removeItem(index)} className="text-muted-foreground hover:text-red-400" title="Remove item">
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>

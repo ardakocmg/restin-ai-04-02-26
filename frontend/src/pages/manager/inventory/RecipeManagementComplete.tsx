@@ -938,14 +938,15 @@ export default function RecipeManagement() {
           <select aria-label="Input"
             value={viewMode}
             onChange={(e) => setViewMode(e.target.value)}
-            
+
             className="appearance-none cursor-pointer h-8 pl-3 pr-8 rounded-lg text-[11px] font-bold border transition-all"
             style={{ /* keep-inline */
               backgroundColor: viewMode === 'active' ? 'rgba(16, 185, 129, 0.15)' : viewMode === 'archived' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(239, 68, 68, 0.15)',
               color: viewMode === 'active' ? '#34D399' : viewMode === 'archived' ? '#FBBF24' : '#F87171',
               borderColor: viewMode === 'active' ? 'rgba(16, 185, 129, 0.4)' : viewMode === 'archived' ? 'rgba(245, 158, 11, 0.4)' : 'rgba(239, 68, 68, 0.4)',
               outline: 'none',
-             /* keep-inline */ }} /* keep-inline */ /* keep-inline */
+              /* keep-inline */
+}} /* keep-inline */ /* keep-inline */
           >
             <option value="active" style={{ backgroundColor: '#18181b', color: '#e4e4e7'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Active ({stats.total_active || 0})</option>
             <option value="archived" style={{ backgroundColor: '#18181b', color: '#e4e4e7'  /* keep-inline */ }} /* keep-inline */ /* keep-inline */>Archived ({stats.total_archived || 0})</option>
@@ -1033,12 +1034,14 @@ export default function RecipeManagement() {
         <div className="flex rounded-md border border-border bg-card overflow-hidden">
           <button
             onClick={() => setDisplayMode('list')}
+            title="List view"
             className={`px-2 py-1.5 text-xs transition-colors ${displayMode === 'list' ? 'bg-emerald-600 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
           >
             <LayoutGrid className="w-3.5 h-3.5 rotate-0" />
           </button>
           <button
             onClick={() => setDisplayMode('grid')}
+            title="Grid view"
             className={`px-2 py-1.5 text-xs transition-colors ${displayMode === 'grid' ? 'bg-emerald-600 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
           >
             <LayoutGrid className="w-3.5 h-3.5" />
