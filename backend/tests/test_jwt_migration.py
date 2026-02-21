@@ -19,7 +19,7 @@ import time
 
 # ── Must set env BEFORE importing auth modules ─────────────────────
 # Use a test-only HS256 secret (>= 16 chars)
-os.environ["JWT_SECRET"] = "test-secret-key-12345678"
+os.environ["JWT_SECRET"] = "test-secret-key-restin-ai-32char!"
 os.environ["AUTH_JWT_SIGNING_MODE"] = "HS256_ONLY"
 os.environ["AUTH_JWT_ISSUER"] = "restin.ai"
 os.environ["AUTH_JWT_AUDIENCE"] = "restin.ai"
