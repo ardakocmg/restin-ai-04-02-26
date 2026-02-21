@@ -92,7 +92,7 @@ export default function PageTabBar(): React.ReactElement | null {
         return () => observer.disconnect();
     }, [measureTabs, siblingPages]);
 
-    const _handleAction = (action: BreadcrumbAction): void => {
+    const handleAction = (action: BreadcrumbAction): void => {
         if (action.href) {
             navigate(action.href);
         } else {

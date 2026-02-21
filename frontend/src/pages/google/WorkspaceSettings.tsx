@@ -97,7 +97,7 @@ interface AnalyticsSnapshot {
 // ── Component ────────────────────────────────────────────────────────────
 
 export default function WorkspaceSettings() {
-    const { t: _t } = useTranslation();
+    const { t } = useTranslation();
     const { user, isOwner } = useAuth();
     const venueId = user?.venueId || '';
 

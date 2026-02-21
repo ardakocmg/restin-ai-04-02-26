@@ -325,7 +325,7 @@ export default function POSSettings() {
     }
   };
 
-  const _handleUpdateVenue = async () => {
+  const handleUpdateVenue = async () => {
     try {
       await venueAPI.update(activeVenue?.id, venueForm);
       toast.success('Settings saved successfully');

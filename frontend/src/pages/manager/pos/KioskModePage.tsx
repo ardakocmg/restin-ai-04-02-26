@@ -29,7 +29,7 @@ import { cn } from '../../../lib/utils';
 export default function KioskModePage() {
     const { activeVenue } = useVenue();
     const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
-    const _queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
     const [config, setConfig] = useState({
         enabled: false,

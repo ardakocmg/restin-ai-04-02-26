@@ -32,7 +32,7 @@ const useSyncStatus = () => {
 
   useEffect(() => {
     const handleStatus = (_s, online) => setStatus(prev => ({ ...prev, isOnline: online }));
-    const _handleSync = (_s: string, _data: unknown) => setStatus(prev => ({ ...prev, isSyncing: _s !== 'sync_complete' }));
+    const handleSync = (_s: string, _data: unknown) => setStatus(prev => ({ ...prev, isSyncing: _s !== 'sync_complete' }));
 
     const unsub = SyncService.onStatusChange(handleStatus);
     return unsub;
@@ -42,7 +42,7 @@ const useSyncStatus = () => {
 
 export default function KDSMain() {
   const navigate = useNavigate();
-  const { t: _t } = useTranslation();
+  const { t } = useTranslation();
   const { user: _user, isAuthenticated, loading: authLoading } = useAuth();
   const { isOnline, isSyncing } = useSyncStatus();
   const [tickets, setTickets] = useState([]);

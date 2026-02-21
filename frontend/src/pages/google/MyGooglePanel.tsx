@@ -136,7 +136,7 @@ const SERVICE_META: Record<ServiceKey, { label: string; icon: React.ElementType;
 // ── Main Component ─────────────────────────────────────────────────────
 
 export default function MyGooglePanel(): React.ReactElement {
-    const { t: _t } = useTranslation();
+    const { t } = useTranslation();
 
     // Connection
     const [status, setStatus] = useState<GoogleStatus | null>(null);
@@ -417,7 +417,7 @@ export default function MyGooglePanel(): React.ReactElement {
         }
     };
 
-    const _handleDeleteFile = async (id: string) => {
+    const handleDeleteFile = async (id: string) => {
         try {
             await api.delete(`/google/personal/drive/files/${id}`);
             setFiles(prev => prev.filter(f => f.id !== id));

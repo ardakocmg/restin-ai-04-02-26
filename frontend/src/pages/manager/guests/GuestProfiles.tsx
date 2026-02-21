@@ -27,7 +27,7 @@ export default function GuestProfiles() {
     const { activeVenue } = useVenue();
     const { user, isManager, isOwner } = useAuth();
     const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
-    const _queryClient = useQueryClient();
+    const queryClient = useQueryClient();
     const [search, setSearch] = useState('');
     const [selectedGuest, setSelectedGuest] = useState(null);
     const { logAction } = useAuditLog();

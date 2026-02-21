@@ -114,7 +114,7 @@ export default function PhysicalTables() {
         }
     };
 
-    const _deleteTable = async (id) => {
+    const deleteTable = async (id) => {
         try {
             await api.delete(`/tables/${id}`);
             setTables(prev => prev.filter(t => t.id !== id));
@@ -127,7 +127,7 @@ export default function PhysicalTables() {
         }
     };
 
-    const _handleBackgroundUpload = (e) => {
+    const handleBackgroundUpload = (e) => {
         const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();

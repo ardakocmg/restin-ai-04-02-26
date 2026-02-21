@@ -106,7 +106,7 @@ export default function SuppliersPage() {
     }
   };
 
-  const _handleArchive = async (id) => {
+  const handleArchive = async (id) => {
     if (!window.confirm('Archive this supplier?')) return;
     try {
       await api.put(`/inventory/suppliers/${id}`, { is_active: false });

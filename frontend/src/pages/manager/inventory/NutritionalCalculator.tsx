@@ -134,7 +134,7 @@ function MacroRing({ protein, carbs, fat, size = 120 }: { protein: number; carbs
    ██  NUTRITIONAL CALCULATOR
    ═══════════════════════════════════════════════════════════════════ */
 export default function NutritionalCalculator() {
-    const { t: _t } = useTranslation();
+    const { t } = useTranslation();
 
     /* ── State ── */
     const [selectedRecipe, setSelectedRecipe] = useState(0);

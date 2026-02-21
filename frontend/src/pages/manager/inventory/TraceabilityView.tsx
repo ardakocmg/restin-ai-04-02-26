@@ -102,7 +102,7 @@ function AllergenBadge({ allergen }: { allergen: string }) {
    ██  TRACEABILITY VIEW
    ═══════════════════════════════════════════════════════════════════ */
 export default function TraceabilityView() {
-    const { t: _t } = useTranslation();
+    const { t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { activeVenue: selectedVenue } = useVenue() as/**/any;
 

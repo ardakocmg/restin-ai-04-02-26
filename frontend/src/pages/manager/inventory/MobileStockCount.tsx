@@ -53,7 +53,7 @@ interface CountItem {
    ██  MOBILE STOCK COUNT
    ═══════════════════════════════════════════════════════════════════ */
 export default function MobileStockCount() {
-    const { t: _t } = useTranslation();
+    const { t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { activeVenue: selectedVenue } = useVenue() as/**/any;
 

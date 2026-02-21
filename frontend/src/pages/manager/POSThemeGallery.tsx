@@ -211,7 +211,7 @@ function ThemePreview({ engine }: { engine: string }) {
 }
 
 export default function POSThemeGallery() {
-    const { t: _t } = useTranslation();
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [activeThemeId, setActiveThemeId] = useState<string>(getActiveTheme().id);
     const [selectedTheme, setSelectedTheme] = useState<POSThemeConfig | null>(null);

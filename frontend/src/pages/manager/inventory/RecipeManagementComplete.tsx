@@ -426,7 +426,7 @@ export default function RecipeManagement() {
     }
   };
 
-  const _addItemToRecipe = (inventoryItem) => {
+  const addItemToRecipe = (inventoryItem) => {
     setFormData(prev => ({
       ...prev,
       components: [
@@ -443,20 +443,20 @@ export default function RecipeManagement() {
     }));
   };
 
-  const _updateComponent = (index, field, value) => {
+  const updateComponent = (index, field, value) => {
     const updated = [...formData.components];
     updated[index][field] = value;
     updated[index].qty_base = parseFloat(updated[index].qty_base || 0);
     setFormData({ ...formData, components: updated });
   };
 
-  const _removeComponent = (index) => {
+  const removeComponent = (index) => {
     const updated = [...formData.components];
     updated.splice(index, 1);
     setFormData({ ...formData, components: updated });
   };
 
-  const _handleAction = async (action, recipeId) => {
+  const handleAction = async (action, recipeId) => {
     try {
       let res;
       const ids = [recipeId];

@@ -287,7 +287,7 @@ export default function POSRuntime() {
     setShowModifierDialog(false);
   };
 
-  const _updateItemQuantity = (index, delta) => {
+  const updateItemQuantity = (index, delta) => {
     const updated = [...orderItems];
     updated[index].quantity += delta;
 
