@@ -152,9 +152,9 @@ export default function UniversalSearchBar({
           🔎
         </div>
 
-        <input
+        <input aria-label="Input"
           value={q}
-          onChange={(e) => setQ(e.target.value)}
+          onChange={(e) = aria-label="Input field"> setQ(e.target.value)}
           onFocus={() => setOpen(true)}
           onBlur={() => {
             // small delay to allow click selection

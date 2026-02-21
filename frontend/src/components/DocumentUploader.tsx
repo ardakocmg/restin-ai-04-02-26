@@ -119,12 +119,12 @@ export default function DocumentUploader({
       ) : (
         <div>
           <label className="block">
-            <input
+            <input aria-label="Input"
               type="file"
               onChange={handleFileSelect}
               accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx"
               className="hidden"
-            />
+             aria-label="Input field" />
             <div className="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-red-500 transition-colors">
               <Upload className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-foreground mb-2">Click to select document</p>

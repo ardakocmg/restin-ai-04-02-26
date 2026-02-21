@@ -121,7 +121,7 @@ export default function TasksKanban() {
                     {filteredCards.filter(c => c.status === column.key).length}
                   </Badge>
                 </h3>
-                <Button variant="ghost" size="icon" className="h-6 w-6"><MoreHorizontal className="w-4 h-4 text-muted-foreground" /></Button>
+                <Button variant="ghost" size="icon" className="h-6 w-6" aria-label="Action"><MoreHorizontal className="w-4 h-4 text-muted-foreground" /></Button>
               </div>
 
               <div className="space-y-3 flex-1 overflow-y-auto pr-1">

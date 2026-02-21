@@ -65,10 +65,10 @@ export default function InventoryReports() {
     <div className="min-h-screen bg-background p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-heading mb-2" style={{ color: '#F5F5F7' }}> /* keep-inline */
+        <h1 className="text-4xl font-heading mb-2" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */
           INVENTORY ANALYTICS
         </h1>
-        <p style={{ color: '#A1A1AA' }}>Stock levels, waste trends, and cost analysis</p> /* keep-inline */
+        <p style={{ color: '#A1A1AA' }}>Stock levels, waste trends, and cost analysis</p> /* keep-inline */ /* keep-inline */
       </div>
 
       {/* Stat Cards */}
@@ -76,37 +76,37 @@ export default function InventoryReports() {
         <div className="stat-card-dark p-6 rounded-xl">
           <div className="flex items-center justify-between mb-2">
             <Package className="w-5 h-5 text-green-500" />
-            <span className="text-xs" style={{ color: '#71717A' }}>Total</span> /* keep-inline */
+            <span className="text-xs" style={{ color: '#71717A' }}>Total</span> /* keep-inline */ /* keep-inline */
           </div>
           <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">{metrics.total_items}</div>
-          <div className="text-sm" style={{ color: '#A1A1AA' }}>Items in Stock</div> /* keep-inline */
+          <div className="text-sm" style={{ color: '#A1A1AA' }}>Items in Stock</div> /* keep-inline */ /* keep-inline */
         </div>
 
         <div className="stat-card-danger p-6 rounded-xl">
           <div className="flex items-center justify-between mb-2">
             <AlertTriangle className="w-5 h-5 text-red-500" />
-            <span className="text-xs" style={{ color: '#71717A' }}>Alert</span> /* keep-inline */
+            <span className="text-xs" style={{ color: '#71717A' }}>Alert</span> /* keep-inline */ /* keep-inline */
           </div>
           <div className="text-3xl font-bold text-red-600 dark:text-red-400 mb-1">{lowStockItems.length}</div>
-          <div className="text-sm" style={{ color: '#A1A1AA' }}>Low Stock Items</div> /* keep-inline */
+          <div className="text-sm" style={{ color: '#A1A1AA' }}>Low Stock Items</div> /* keep-inline */ /* keep-inline */
         </div>
 
         <div className="stat-card-dark p-6 rounded-xl">
           <div className="flex items-center justify-between mb-2">
             <TrendingDown className="w-5 h-5 text-yellow-500" />
-            <span className="text-xs" style={{ color: '#71717A' }}>This Month</span> /* keep-inline */
+            <span className="text-xs" style={{ color: '#71717A' }}>This Month</span> /* keep-inline */ /* keep-inline */
           </div>
           <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mb-1">€{metrics.waste_cost_week}</div>
-          <div className="text-sm" style={{ color: '#A1A1AA' }}>Waste Cost</div> /* keep-inline */
+          <div className="text-sm" style={{ color: '#A1A1AA' }}>Waste Cost</div> /* keep-inline */ /* keep-inline */
         </div>
 
         <div className="stat-card-dark p-6 rounded-xl">
           <div className="flex items-center justify-between mb-2">
             <DollarSign className="w-5 h-5 text-blue-500" />
-            <span className="text-xs" style={{ color: '#71717A' }}>Value</span> /* keep-inline */
+            <span className="text-xs" style={{ color: '#71717A' }}>Value</span> /* keep-inline */ /* keep-inline */
           </div>
           <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">€{(metrics.inventory_value || 0).toLocaleString()}</div>
-          <div className="text-sm" style={{ color: '#A1A1AA' }}>Total Inventory</div> /* keep-inline */
+          <div className="text-sm" style={{ color: '#A1A1AA' }}>Total Inventory</div> /* keep-inline */ /* keep-inline */
         </div>
       </div>
 
@@ -114,7 +114,7 @@ export default function InventoryReports() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Waste Trend */}
         <div className="chart-container-dark">
-          <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Waste Trend</h3> /* keep-inline */
+          <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Waste Trend</h3> /* keep-inline */ /* keep-inline */
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={wasteTrend.length > 0 ? wasteTrend : [{ month: 'Jan', cost: 0 }, { month: 'Feb', cost: 0 }, { month: 'Mar', cost: 0 }, { month: 'Apr', cost: 0 }]}>
               <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
@@ -132,7 +132,7 @@ export default function InventoryReports() {
 
         {/* Cost Variance */}
         <div className="chart-container-dark">
-          <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Cost Variance</h3> /* keep-inline */
+          <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Cost Variance</h3> /* keep-inline */ /* keep-inline */
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={costVariance.length > 0 ? costVariance : [{ item: 'Category A', variance: 0 }, { item: 'Category B', variance: 0 }, { item: 'Category C', variance: 0 }]}>
               <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
@@ -150,24 +150,24 @@ export default function InventoryReports() {
 
       {/* Low Stock Alerts Table */}
       <div className="chart-container-dark">
-        <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Low Stock Alerts</h3> /* keep-inline */
+        <h3 className="text-xl font-heading mb-4" style={{ color: '#F5F5F7' }}>Low Stock Alerts</h3> /* keep-inline */ /* keep-inline */
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left py-3 px-4 text-sm font-semibold" style={{ color: '#D4D4D8' }}>Item</th> /* keep-inline */
-                <th className="text-left py-3 px-4 text-sm font-semibold" style={{ color: '#D4D4D8' }}>Current Stock</th> /* keep-inline */
-                <th className="text-left py-3 px-4 text-sm font-semibold" style={{ color: '#D4D4D8' }}>Reorder Level</th> /* keep-inline */
-                <th className="text-left py-3 px-4 text-sm font-semibold" style={{ color: '#D4D4D8' }}>Status</th> /* keep-inline */
+                <th className="text-left py-3 px-4 text-sm font-semibold" style={{ color: '#D4D4D8' }}>Item</th> /* keep-inline */ /* keep-inline */
+                <th className="text-left py-3 px-4 text-sm font-semibold" style={{ color: '#D4D4D8' }}>Current Stock</th> /* keep-inline */ /* keep-inline */
+                <th className="text-left py-3 px-4 text-sm font-semibold" style={{ color: '#D4D4D8' }}>Reorder Level</th> /* keep-inline */ /* keep-inline */
+                <th className="text-left py-3 px-4 text-sm font-semibold" style={{ color: '#D4D4D8' }}>Status</th> /* keep-inline */ /* keep-inline */
               </tr>
             </thead>
             <tbody>
               {lowStockItems.length === 0 ? (
                 Array.from({ length: 3 }).map((_, i) => (
                   <tr key={i} className="border-b border-border">
-                    <td className="py-3 px-4" style={{ color: '#F5F5F7' }}>—</td> /* keep-inline */
+                    <td className="py-3 px-4" style={{ color: '#F5F5F7' }}>—</td> /* keep-inline */ /* keep-inline */
                     <td className="py-3 px-4 text-muted-foreground">0</td>
-                    <td className="py-3 px-4" style={{ color: '#A1A1AA' }}>0</td> /* keep-inline */
+                    <td className="py-3 px-4" style={{ color: '#A1A1AA' }}>0</td> /* keep-inline */ /* keep-inline */
                     <td className="py-3 px-4">
                       <span className="px-3 py-1 rounded-full text-xs font-bold bg-zinc-800/30 text-muted-foreground border border-border">
                         OK
@@ -178,9 +178,9 @@ export default function InventoryReports() {
               ) : (
                 lowStockItems.map((item, idx) => (
                   <tr key={idx} className="border-b border-border hover:bg-secondary/50 transition-colors">
-                    <td className="py-3 px-4" style={{ color: '#F5F5F7' }}>{item.name}</td> /* keep-inline */
+                    <td className="py-3 px-4" style={{ color: '#F5F5F7' }}>{item.name}</td> /* keep-inline */ /* keep-inline */
                     <td className="py-3 px-4 text-red-400">{item.current_stock} {item.base_unit}</td>
-                    <td className="py-3 px-4" style={{ color: '#A1A1AA' }}>{item.reorder_level} {item.base_unit}</td> /* keep-inline */
+                    <td className="py-3 px-4" style={{ color: '#A1A1AA' }}>{item.reorder_level} {item.base_unit}</td> /* keep-inline */ /* keep-inline */
                     <td className="py-3 px-4">
                       <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-950/30 text-red-400 border border-red-500/30">
                         LOW

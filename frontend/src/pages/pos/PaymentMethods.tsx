@@ -128,31 +128,31 @@ const PaymentMethods: React.FC = () => {
                 </div>
 
                 {/* Active Methods */}
-                <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}> /* keep-inline */
+                <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}> /* keep-inline */ /* keep-inline */
                     Active Methods ({active.length})
                 </div>
                 <div className="pos-card">
                     {active.map(method => (
-                        <div key={method.id} className="pos-flex pos-flex--center pos-gap-14" style={{ padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer' }} /* keep-inline */
+                        <div key={method.id} className="pos-flex pos-flex--center pos-gap-14" style={{ padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer' }} /* keep-inline */ /* keep-inline */
                             onClick={() => setEditing({ ...method })}>
-                            <div style={{ width: 44, height: 44, borderRadius: 10, background: `${method.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: method.color, flexShrink: 0 }}> /* keep-inline */
+                            <div style={{ width: 44, height: 44, borderRadius: 10, background: `${method.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: method.color, flexShrink: 0 }}> /* keep-inline */ /* keep-inline */
                                 {ICONS[method.icon] || <CreditCard size={20} />}
                             </div>
-                            <div style={{ flex: 1 }}> /* keep-inline */
+                            <div style={{ flex: 1 }}> /* keep-inline */ /* keep-inline */
                                 <div className="pos-flex pos-flex--center pos-gap-8">
-                                    <span style={{ fontSize: 15, fontWeight: 600 }}>{method.name}</span> /* keep-inline */
-                                    {method.isDefault && <span className="pos-badge pos-badge--blue" style={{ fontSize: 10, fontWeight: 600 }}>DEFAULT</span>} /* keep-inline */
+                                    <span style={{ fontSize: 15, fontWeight: 600 }}>{method.name}</span> /* keep-inline */ /* keep-inline */
+                                    {method.isDefault && <span className="pos-badge pos-badge--blue" style={{ fontSize: 10, fontWeight: 600 }}>DEFAULT</span>} /* keep-inline */ /* keep-inline */
                                 </div>
-                                <div className="pos-cell-secondary pos-flex pos-gap-12" style={{ marginTop: 2 }}> /* keep-inline */
+                                <div className="pos-cell-secondary pos-flex pos-gap-12" style={{ marginTop: 2 }}> /* keep-inline */ /* keep-inline */
                                     <span>{method.type.charAt(0).toUpperCase() + method.type.slice(1)}</span>
                                     {method.accountingRef && <span>Ref: {method.accountingRef}</span>}
                                     {method.opensCashDrawer && <span>Opens Drawer</span>}
                                     {method.allowsTips && <span>Tips ✓</span>}
                                 </div>
                             </div>
-                            <div className="pos-flex pos-gap-6" style={{ flexShrink: 0 }}> /* keep-inline */
+                            <div className="pos-flex pos-gap-6" style={{ flexShrink: 0 }}> /* keep-inline */ /* keep-inline */
                                 {!method.isDefault && (
-                                    <button className="pos-btn-outline" style={{ padding: '4px 10px', fontSize: 11 }} onClick={e => { e.stopPropagation(); setDefault(method.id); }}> /* keep-inline */
+                                    <button className="pos-btn-outline" style={{ padding: '4px 10px', fontSize: 11 }} onClick={e => { e.stopPropagation(); setDefault(method.id); }}> /* keep-inline */ /* keep-inline */
                                         Set Default
                                     </button>
                                 )}
@@ -167,21 +167,21 @@ const PaymentMethods: React.FC = () => {
                 {/* Inactive Methods */}
                 {inactive.length > 0 && (
                     <>
-                        <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 24 }}> /* keep-inline */
+                        <div className="pos-text-sm pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 24 }}> /* keep-inline */ /* keep-inline */
                             Inactive Methods ({inactive.length})
                         </div>
                         <div className="pos-card">
                             {inactive.map(method => (
-                                <div key={method.id} className="pos-flex pos-flex--center pos-gap-14" style={{ padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer', opacity: 0.6 }} /* keep-inline */
+                                <div key={method.id} className="pos-flex pos-flex--center pos-gap-14" style={{ padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', cursor: 'pointer', opacity: 0.6 }} /* keep-inline */ /* keep-inline */
                                     onClick={() => setEditing({ ...method })}>
-                                    <div style={{ width: 40, height: 40, borderRadius: 8, background: `${method.color}10`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: method.color }}> /* keep-inline */
+                                    <div style={{ width: 40, height: 40, borderRadius: 8, background: `${method.color}10`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: method.color }}> /* keep-inline */ /* keep-inline */
                                         {ICONS[method.icon] || <CreditCard size={18} />}
                                     </div>
-                                    <div style={{ flex: 1 }}> /* keep-inline */
+                                    <div style={{ flex: 1 }}> /* keep-inline */ /* keep-inline */
                                         <span className="pos-cell-value">{method.name}</span>
                                         <div className="pos-cell-secondary">{method.type}</div>
                                     </div>
-                                    <button className="pos-btn-outline" style={{ padding: '4px 10px', fontSize: 11 }} onClick={e => { /* keep-inline */
+                                    <button className="pos-btn-outline" style={{ padding: '4px 10px', fontSize: 11 }} onClick={e => { /* keep-inline */ /* keep-inline */
                                         e.stopPropagation();
                                         setMethods(prev => prev.map(m => m.id === method.id ? { ...m, isActive: true } : m));
                                         toast.success(`${method.name} activated`);
@@ -198,7 +198,7 @@ const PaymentMethods: React.FC = () => {
             {/* Edit Modal */}
             {editing && (
                 <div className="pos-modal-overlay" onClick={() => setEditing(null)}>
-                    <div className="pos-card pos-modal" style={{ maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}> /* keep-inline */
+                    <div className="pos-card pos-modal" style={{ maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}> /* keep-inline */ /* keep-inline */
                         <div className="pos-modal-header">
                             <h3 className="pos-modal-title">
                                 {methods.find(m => m.id === editing.id) ? 'Edit' : 'New'} Payment Method
@@ -207,26 +207,26 @@ const PaymentMethods: React.FC = () => {
                         </div>
 
                         <div className="pos-form-grid">
-                            <div style={{ gridColumn: '1 / -1' }}> /* keep-inline */
+                            <div style={{ gridColumn: '1 / -1' }}> /* keep-inline */ /* keep-inline */
                                 <label className="pos-form-label">Name *</label>
-                                <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Visa" />
+                                <input className="pos-input" value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Visa" />
                             </div>
                             <div>
                                 <label className="pos-form-label">Type</label>
-                                <select className="pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as PaymentMethod['type'] } : null)} aria-label="Payment type">
+                                <select className="pos-select" value={editing.type} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, type: e.target.value as PaymentMethod['type'] } : null)} aria-label="Payment type">
                                     <option value="cash">Cash</option><option value="card">Card</option><option value="voucher">Voucher</option>
                                     <option value="mobile">Mobile Payment</option><option value="account">Account Charge</option><option value="other">Other</option>
                                 </select>
                             </div>
                             <div>
                                 <label className="pos-form-label">Accounting Reference</label>
-                                <input className="pos-input" value={editing.accountingRef} onChange={e => setEditing(p => p ? { ...p, accountingRef: e.target.value } : null)} placeholder="e.g. 1010" />
+                                <input className="pos-input" value={editing.accountingRef} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, accountingRef: e.target.value } : null)} placeholder="e.g. 1010" />
                             </div>
                         </div>
 
                         {/* Toggles */}
-                        <div className="pos-card pos-mb-16" style={{ background: 'var(--bg-secondary, #09090b)', padding: 16 }}> /* keep-inline */
-                            <div className="pos-text-xs pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Behavior</div> /* keep-inline */
+                        <div className="pos-card pos-mb-16" style={{ background: 'var(--bg-secondary, #09090b)', padding: 16 }}> /* keep-inline */ /* keep-inline */
+                            <div className="pos-text-xs pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Behavior</div> /* keep-inline */ /* keep-inline */
                             {[
                                 { key: 'opensCashDrawer', label: 'Opens cash drawer', desc: 'Trigger cash drawer to open on payment' },
                                 { key: 'requiresAmount', label: 'Requires entered amount', desc: 'Staff must enter the received amount' },
@@ -236,16 +236,16 @@ const PaymentMethods: React.FC = () => {
                                 { key: 'autoCloseOrder', label: 'Auto-close order', desc: 'Automatically close order after payment' },
                                 { key: 'isActive', label: 'Active', desc: 'Show this method on POS' },
                             ].map(({ key, label, desc }) => (
-                                <div key={key} className="pos-flex pos-flex--center pos-flex--between" style={{ padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}> /* keep-inline */
-                                    <div><div className="pos-cell-value">{label}</div>{desc && <div className="pos-cell-secondary" style={{ marginTop: 1 }}>{desc}</div>}</div> /* keep-inline */
+                                <div key={key} className="pos-flex pos-flex--center pos-flex--between" style={{ padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}> /* keep-inline */ /* keep-inline */
+                                    <div><div className="pos-cell-value">{label}</div>{desc && <div className="pos-cell-secondary" style={{ marginTop: 1 }}>{desc}</div>}</div> /* keep-inline */ /* keep-inline */
                                     <Toggle value={editing[key as keyof PaymentMethod] as boolean} onChange={() => setEditing(p => p ? { ...p, [key]: !(p[key as keyof PaymentMethod] as boolean) } : null)} />
                                 </div>
                             ))}
                         </div>
 
                         <div className="pos-modal-footer">
-                            <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */
-                            <button title="Delete method" className="pos-btn-outline" style={{ color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => { /* keep-inline */
+                            <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */ /* keep-inline */
+                            <button title="Delete method" className="pos-btn-outline" style={{ color: '#EF4444', borderColor: 'rgba(239,68,68,0.3)' }} onClick={() => { /* keep-inline */ /* keep-inline */
                                 setMethods(prev => prev.filter(m => m.id !== editing.id));
                                 setEditing(null);
                                 toast.success('Payment method deleted');

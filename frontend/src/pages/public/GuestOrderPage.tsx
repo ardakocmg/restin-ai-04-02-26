@@ -282,7 +282,7 @@ export default function GuestOrderPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background text-foreground max-w-lg mx-auto relative pb-20 guest-order-page" style={{ '--guest-primary': primaryColor } as React.CSSProperties}> /* keep-inline */
+        <div className="min-h-screen bg-background text-foreground max-w-lg mx-auto relative pb-20 guest-order-page" style={{ '--guest-primary': primaryColor } as React.CSSProperties}> /* keep-inline */ /* keep-inline */
             <Toaster theme="dark" position="top-center" />
 
             {/* Header */}
@@ -339,9 +339,9 @@ export default function GuestOrderPage() {
                 {view === 'browsing' && (
                     <div className="mt-2 relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <input
+                        <input aria-label="Input"
                             value={search}
-                            onChange={(e) => setSearch(e.target.value)}
+                            onChange={(e) = aria-label="Input field"> setSearch(e.target.value)}
                             placeholder="Search menu..."
                             className="w-full h-9 bg-card border border-border rounded-xl pl-9 pr-3 text-sm text-foreground outline-none focus:border-white/15"
                         />
@@ -437,16 +437,16 @@ export default function GuestOrderPage() {
 
                     {/* Table / Guest Info */}
                     {orderType === 'dine_in' && config?.require_table_number && (
-                        <input
+                        <input aria-label="Input"
                             value={tableInput}
-                            onChange={(e) => setTableInput(e.target.value)}
+                            onChange={(e) = aria-label="Input field"> setTableInput(e.target.value)}
                             placeholder="Table name / number"
                             className="w-full h-10 bg-card border border-border rounded-xl px-3 text-sm outline-none focus:border-white/15"
                         />
                     )}
-                    <input
+                    <input aria-label="Input"
                         value={guestName}
-                        onChange={(e) => setGuestName(e.target.value)}
+                        onChange={(e) = aria-label="Input field"> setGuestName(e.target.value)}
                         placeholder="Your name (optional)"
                         className="w-full h-10 bg-card border border-border rounded-xl px-3 text-sm outline-none focus:border-white/15"
                     />
@@ -504,9 +504,9 @@ export default function GuestOrderPage() {
                     )}
 
                     {/* Notes */}
-                    <textarea
+                    <textarea aria-label="Input"
                         value={guestNotes}
-                        onChange={(e) => setGuestNotes(e.target.value)}
+                        onChange={(e) = aria-label="Input field"> setGuestNotes(e.target.value)}
                         placeholder="Special notes or allergies..."
                         className="w-full h-20 bg-card border border-border rounded-xl px-3 py-2 text-sm outline-none focus:border-white/15 resize-none"
                     />

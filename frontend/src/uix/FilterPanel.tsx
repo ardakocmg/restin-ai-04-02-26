@@ -21,10 +21,10 @@ export default function FilterPanel({
           onClick={onToggle}
           className="gap-2"
         >
-          <input
+          <input aria-label="Input"
             type="checkbox"
             checked={isOpen}
-            onChange={(e) => e.stopPropagation()}
+            onChange={(e) = aria-label="Input field"> e.stopPropagation()}
             className="h-4 w-4 rounded border-gray-300"
           />
           <span>Filters</span>
@@ -43,10 +43,10 @@ export default function FilterPanel({
             {sections.map((section) => (
               <div key={section.key} className="mb-4 last:mb-0">
                 <div className="flex items-center gap-2 mb-2">
-                  <input
+                  <input aria-label="Input"
                     type="checkbox"
                     checked={sectionStates[section.key] || false}
-                    onChange={() => onSectionToggle(section.key)}
+                    onChange={() = aria-label="Input field"> onSectionToggle(section.key)}
                     className="h-4 w-4 rounded border-gray-300"
                   />
                   <label className="text-sm font-medium text-slate-700">{section.label}</label>

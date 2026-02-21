@@ -279,7 +279,7 @@ export default function IntegrationsHub() {
                     <Card
                       key={integration.key}
                       className="hover:shadow-lg transition-all cursor-pointer border-2"
-                      style={{ /* keep-inline */
+                      style={{ /* keep-inline */ /* keep-inline */
                         borderColor: isEnabled ? integration.color : 'transparent',
                         borderWidth: isEnabled ? '2px' : '1px'
                       }}
@@ -289,9 +289,9 @@ export default function IntegrationsHub() {
                           <div className="flex items-center gap-3">
                             <div
                               className="p-2 rounded-lg"
-                              style={{ backgroundColor: `${integration.color}20` }} /* keep-inline */
+                              style={{ backgroundColor: `${integration.color}20` }} /* keep-inline */ /* keep-inline */
                             >
-                              <Icon className="h-6 w-6" style={{ color: integration.color }} /> /* keep-inline */
+                              <Icon className="h-6 w-6" style={{ color: integration.color }} /> /* keep-inline */ /* keep-inline */
                             </div>
                             <div>
                               <CardTitle className="text-lg">{integration.name}</CardTitle>
@@ -396,9 +396,9 @@ export default function IntegrationsHub() {
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Action"
                           className="h-8 w-8"
-                          onClick={() => setShowSecrets({
+                          onClick={() = aria-label="Action"> setShowSecrets({
                             ...showSecrets,
                             [field.key]: !showSecrets[field.key]
                           })}
@@ -410,9 +410,9 @@ export default function IntegrationsHub() {
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Action"
                           className="h-8 w-8"
-                          onClick={() => copyToClipboard(configData[field.key])}
+                          onClick={() = aria-label="Action"> copyToClipboard(configData[field.key])}
                         >
                           <Copy className="h-4 w-4" />
                         </Button>

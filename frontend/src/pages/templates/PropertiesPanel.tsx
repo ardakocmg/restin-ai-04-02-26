@@ -19,7 +19,7 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
         return (
             <div className="ts-props-empty">
                 <Settings2 className="icon" />
-                <p style={{ fontSize: 13 }}>{t('Select a block to edit its properties')}</p> /* keep-inline */
+                <p style={{ fontSize: 13 }}>{t('Select a block to edit its properties')}</p> /* keep-inline */ /* keep-inline */
             </div>
         );
     }
@@ -36,11 +36,11 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
     const isTableType = ['items_list', 'grouped_items', 'table', 'discounts_charges', 'payment_summary'].includes(type);
 
     return (
-        <div style={{ animation: 'ts-fadeIn 0.2s ease-out' }}> /* keep-inline */
+        <div style={{ animation: 'ts-fadeIn 0.2s ease-out' }}> /* keep-inline */ /* keep-inline */
             {/* Block Type Chip */}
-            <div className="ts-row" style={{ marginBottom: 16, gap: 6 }}> /* keep-inline */
+            <div className="ts-row" style={{ marginBottom: 16, gap: 6 }}> /* keep-inline */ /* keep-inline */
                 <span className="ts-type-chip active-chip">{(selectedBlock.label as string) || type}</span>
-                <span className="ts-type-chip normal" style={{ marginLeft: 'auto' }}> /* keep-inline */
+                <span className="ts-type-chip normal" style={{ marginLeft: 'auto' }}> /* keep-inline */ /* keep-inline */
                     {isTextType ? 'Normal' : isTableType ? 'Data' : type}
                 </span>
             </div>
@@ -64,7 +64,7 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
             {/* Section selector */}
             <div className="ts-field">
                 <label className="ts-label" htmlFor="ts-section">{t('Section')}</label>
-                <select
+                <select aria-label="Input"
                     id="ts-section"
                     title={t('Section')}
                     className="ts-select"
@@ -82,7 +82,7 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                 <>
                     <div className="ts-field">
                         <label className="ts-label" htmlFor="ts-content">{t('Content')}</label>
-                        <textarea
+                        <textarea aria-label="Input"
                             id="ts-content"
                             className="ts-textarea"
                             rows={3}
@@ -94,7 +94,7 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                     <div className="ts-grid-2">
                         <div className="ts-field">
                             <label className="ts-label" htmlFor="ts-size">{t('Size')}</label>
-                            <input
+                            <input aria-label="Input"
                                 id="ts-size"
                                 type="number" min={6} max={48}
                                 className="ts-input"
@@ -104,7 +104,7 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                         </div>
                         <div className="ts-field">
                             <label className="ts-label" htmlFor="ts-align">{t('Alignment')}</label>
-                            <select
+                            <select aria-label="Input"
                                 id="ts-align"
                                 title={t('Alignment')}
                                 className="ts-select"
@@ -119,13 +119,13 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                     </div>
                     <div className="ts-field">
                         <label className="ts-label">{t('Style')}</label>
-                        <div className="ts-row" style={{ gap: 12 }}> /* keep-inline */
+                        <div className="ts-row" style={{ gap: 12 }}> /* keep-inline */ /* keep-inline */
                             {(['bold', 'italic', 'underline'] as const).map(s => (
-                                <label key={s} className="ts-checkbox-row" style={{ fontSize: 12 }}> /* keep-inline */
-                                    <input
+                                <label key={s} className="ts-checkbox-row" style={{ fontSize: 12 }}> /* keep-inline */ /* keep-inline */
+                                    <input aria-label="Input"
                                         type="checkbox"
                                         checked={Boolean(tp?.[s])}
-                                        onChange={e => updateProp(bid, 'text_props', s, e.target.checked)}
+                                        onChange={e = aria-label="Input field"> updateProp(bid, 'text_props', s, e.target.checked)}
                                     />
                                     {s.charAt(0).toUpperCase() + s.slice(1)}
                                 </label>
@@ -134,14 +134,14 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                     </div>
                     <div className="ts-field">
                         <label className="ts-label" htmlFor="ts-variable">{t('Variable')}</label>
-                        <input
+                        <input aria-label="Input"
                             id="ts-variable"
                             type="text"
                             className="ts-input"
                             value={(tp?.variable as string) || ''}
                             onChange={e => updateProp(bid, 'text_props', 'variable', e.target.value || null)}
                             placeholder="{{venue.name}}"
-                            style={{ fontFamily: 'monospace' }} /* keep-inline */
+                            style={{ fontFamily: 'monospace' }} /* keep-inline */ /* keep-inline */
                         />
                     </div>
                     {/* Advanced text options */}
@@ -171,19 +171,19 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                 <>
                     <div className="ts-field">
                         <label className="ts-label" htmlFor="ts-datasource">{t('Data Source')}</label>
-                        <input
+                        <input aria-label="Input"
                             id="ts-datasource"
                             type="text"
                             className="ts-input"
                             value={(tbp?.data_source as string) || ''}
                             onChange={e => updateProp(bid, 'table_props', 'data_source', e.target.value)}
                             placeholder="order.items"
-                            style={{ fontFamily: 'monospace' }} /* keep-inline */
+                            style={{ fontFamily: 'monospace' }} /* keep-inline */ /* keep-inline */
                         />
                     </div>
                     <div className="ts-field">
                         <label className="ts-label" htmlFor="ts-groupby">{t('Group by')}</label>
-                        <select
+                        <select aria-label="Input"
                             id="ts-groupby"
                             title={t('Group by')}
                             className="ts-select"
@@ -224,7 +224,7 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
             {type === 'divider' && (
                 <div className="ts-field">
                     <label className="ts-label" htmlFor="ts-div-style">{t('Style')}</label>
-                    <select
+                    <select aria-label="Input"
                         id="ts-div-style"
                         title={t('Divider style')}
                         className="ts-select"
@@ -244,7 +244,7 @@ export default function PropertiesPanel({ selectedBlock, updateProp, setBlocks }
                 <>
                     <div className="ts-field">
                         <label className="ts-label" htmlFor="ts-bc-src">{t('Data Source')}</label>
-                        <input id="ts-bc-src" type="text" className="ts-input" style={{ fontFamily: 'monospace' }} value={(bp?.data_source as string) || ''} onChange={e => updateProp(bid, 'barcode_props', 'data_source', e.target.value)} /> /* keep-inline */
+                        <input id="ts-bc-src" type="text" className="ts-input" style={{ fontFamily: 'monospace' }} value={(bp?.data_source as string) || ''} onChange={e => updateProp(bid, 'barcode_props', 'data_source', e.target.value)} /> /* keep-inline */ /* keep-inline */
                     </div>
                     <div className="ts-field">
                         <label className="ts-label" htmlFor="ts-bc-format">{t('Format')}</label>

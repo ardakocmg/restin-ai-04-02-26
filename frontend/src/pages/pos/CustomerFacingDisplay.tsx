@@ -93,7 +93,7 @@ export default function CustomerFacingDisplay() {
                     <>
                         <div style={styles.itemsList}>
                             {items.map((item, idx) => (
-                                <div key={item.id || idx} style={{ /* keep-inline */
+                                <div key={item.id || idx} style={{ /* keep-inline */ /* keep-inline */
                                     ...styles.itemRow,
                                     animation: Date.now() - lastUpdate < 500 && idx === items.length - 1
                                         ? 'slideIn 0.3s ease-out' : 'none',

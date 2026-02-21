@@ -188,7 +188,7 @@ export default function FloorplanEditor() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-4 gap-4" style={{ height: 'calc(100vh - 200px)' }}> /* keep-inline */
+                <div className="grid grid-cols-4 gap-4" style={{ height: 'calc(100vh - 200px)' }}> /* keep-inline */ /* keep-inline */
                     {/* Toolbar */}
                     <Card className="p-4 bg-card border-border space-y-4 overflow-y-auto">
                         <div>
@@ -275,7 +275,7 @@ export default function FloorplanEditor() {
                         <div
                             ref={canvasRef}
                             className="absolute inset-0"
-                            style={{ /* keep-inline */
+                            style={{ /* keep-inline */ /* keep-inline */
                                 backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px)',
                                 backgroundSize: `${20 * zoom}px ${20 * zoom}px`,
                             }}
@@ -307,7 +307,7 @@ export default function FloorplanEditor() {
                                                 ? "border-pink-500 shadow-lg shadow-pink-500/20 z-10"
                                                 : "border-zinc-600 hover:border-zinc-400"
                                         )}
-                                        style={{ /* keep-inline */
+                                        style={{ /* keep-inline */ /* keep-inline */
                                             left: table.x * zoom,
                                             top: table.y * zoom,
                                             width: table.width * zoom,
@@ -330,7 +330,7 @@ export default function FloorplanEditor() {
                                 <span>Low</span>
                                 <div className="flex gap-0.5">
                                     {['rgba(100,116,139,0.3)', 'rgba(34,197,94,0.4)', 'rgba(245,158,11,0.5)', 'rgba(239,68,68,0.6)'].map((c, i) => (
-                                        <div key={i} className="w-4 h-3 rounded-sm" style={{ backgroundColor: c }} /> /* keep-inline */
+                                        <div key={i} className="w-4 h-3 rounded-sm" style={{ backgroundColor: c }} /> /* keep-inline */ /* keep-inline */
                                     ))}
                                 </div>
                                 <span>High</span>

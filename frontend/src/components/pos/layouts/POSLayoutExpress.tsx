@@ -107,7 +107,7 @@ export default function POSLayoutExpress({
                         {/* Search Input */}
                         <div className="relative flex items-center">
                             <Search className="w-3.5 h-3.5 absolute left-2 text-muted-foreground" />
-                            <input
+                            <input aria-label="Input"
                                 type="text"
                                 placeholder="Search menu..."
                                 value={searchQuery || ''}

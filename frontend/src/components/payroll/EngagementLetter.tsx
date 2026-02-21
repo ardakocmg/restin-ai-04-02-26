@@ -36,7 +36,7 @@ export default function EngagementLetter({ data }) {
                 {displayLogo ? (
                     <img src={displayLogo} alt="Logo" className="max-h-20 object-contain mx-auto" />
                 ) : (
-                    <svg width="400" height="80" viewBox="0 0 400 80" style={{ color: primaryColor }}> /* keep-inline */
+                    <svg width="400" height="80" viewBox="0 0 400 80" style={{ color: primaryColor }}> /* keep-inline */ /* keep-inline */
                         <path d="M120 10 Q150 5, 180 30 T220 40" fill="none" stroke="currentColor" strokeWidth="1" />
                         <text x="10" y="45" fontSize="28" fontWeight="bold" fontFamily="Georgia, serif">
                             {displayBusiness.toUpperCase()}
@@ -207,7 +207,7 @@ export default function EngagementLetter({ data }) {
                 <div className="mt-12 space-y-12">
                     <div>
                         <p className="mb-1">Yours sincerely,</p>
-                        <div className="mb-2 italic text-2xl" style={{ fontFamily: 'cursive' }}>JPortelli</div> /* keep-inline */
+                        <div className="mb-2 italic text-2xl" style={{ fontFamily: 'cursive' }}>JPortelli</div> /* keep-inline */ /* keep-inline */
                         <div className="font-bold underline">{displayHR} – HR Manager</div>
                     </div>
 

@@ -278,13 +278,13 @@ export default function FloorPlanEditor() {
           </div>
 
           <div className="flex items-center gap-2">
-            <input
+            <input aria-label="Input"
               ref={fileInputRef}
               type="file"
               accept="image/*"
               className="hidden"
               onChange={handleImageUpload}
-            />
+             aria-label="Input field" />
             <Button
               variant="outline"
               onClick={() => fileInputRef.current?.click()}
@@ -352,7 +352,7 @@ export default function FloorPlanEditor() {
             onMouseUp={handleCanvasMouseUp}
             onMouseLeave={handleCanvasMouseUp}
             className="cursor-crosshair"
-            style={{ /* keep-inline */
+            style={{ /* keep-inline */ /* keep-inline */
               transform: `scale(${zoom})`,
               transformOrigin: "top left"
             }}

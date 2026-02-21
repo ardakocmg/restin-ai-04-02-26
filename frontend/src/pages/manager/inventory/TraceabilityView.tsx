@@ -57,8 +57,8 @@ function ChainNode({ label, icon: Icon, color, count, sublabel }: {
     return (
         <div className={cn('flex items-center gap-2 px-3 py-2 rounded-lg border transition-all hover:scale-105 cursor-default',
             `border-${color}/30 bg-${color}/5`
-        )} style={{ borderColor: `var(--${color})` }}> /* keep-inline */
-            <Icon className={cn('h-4 w-4 flex-shrink-0', `text-${color}`)} style={{ color: `var(--${color})` }} /> /* keep-inline */
+        )} style={{ borderColor: `var(--${color})` }}> /* keep-inline */ /* keep-inline */
+            <Icon className={cn('h-4 w-4 flex-shrink-0', `text-${color}`)} style={{ color: `var(--${color})` }} /> /* keep-inline */ /* keep-inline */
             <div className="min-w-0">
                 <p className="text-xs font-medium truncate">{label}</p>
                 {sublabel && <p className="text-[10px] text-muted-foreground">{sublabel}</p>}

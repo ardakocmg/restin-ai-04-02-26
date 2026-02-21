@@ -117,11 +117,11 @@ export default function ReservationModal({ open, onOpenChange, venueId, onCreate
                         </div>
                         <div className="space-y-1">
                             <Label className="text-[10px] uppercase font-bold text-muted-foreground">Notes</Label>
-                            <textarea
+                            <textarea aria-label="Input"
                                 className="w-full bg-card border border-border rounded-md p-2 text-sm focus:outline-none focus:border-red-500/50"
                                 rows={3}
                                 value={formData.notes}
-                                onChange={e => setFormData({ ...formData, notes: e.target.value })}
+                                onChange={e = aria-label="Input field"> setFormData({ ...formData, notes: e.target.value })}
                                 placeholder="VIP, Allergy, etc..."
                             />
                         </div>

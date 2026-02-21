@@ -52,10 +52,10 @@ export default function TopBar({ onMenuToggle, user }) {
         {/* Mobile Menu Button */}
         <Button
           variant="ghost"
-          size="icon"
+          size="icon" aria-label="Action"
           className="lg:hidden"
           onClick={onMenuToggle}
-        >
+         aria-label="Action">
           <Menu className="h-5 w-5" />
         </Button>
 
@@ -80,7 +80,7 @@ export default function TopBar({ onMenuToggle, user }) {
           <VenueSwitcher />
 
           {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative hidden sm:flex">
+          <Button variant="ghost" size="icon" className="relative hidden sm:flex" aria-label="Action">
             <Bell className="h-5 w-5" />
             <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />
           </Button>

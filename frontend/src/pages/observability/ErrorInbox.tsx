@@ -247,7 +247,7 @@ export default function ErrorInbox() {
     {
       key: 'display_id',
       label: 'Error ID',
-      render: (row: ErrorEntry) => <span className="font-bold font-heading tracking-tight" style={{ color: '#EF4444' }}>{row.display_id}</span> /* keep-inline */
+      render: (row: ErrorEntry) => <span className="font-bold font-heading tracking-tight" style={{ color: '#EF4444' }}>{row.display_id}</span> /* keep-inline */ /* keep-inline */
     },
     {
       key: 'domain',
@@ -272,7 +272,7 @@ export default function ErrorInbox() {
         { label: 'Critical', value: 'CRITICAL' }
       ],
       render: (row: ErrorEntry) => (
-        <Badge style={{ /* keep-inline */
+        <Badge style={{ /* keep-inline */ /* keep-inline */
           backgroundColor: `${getSeverityColor(row.severity)
             }20`, color: getSeverityColor(row.severity), border: `1px solid ${getSeverityColor(row.severity)} 40`
         }}>
@@ -293,7 +293,7 @@ export default function ErrorInbox() {
       ],
       render: (row: ErrorEntry) => {
         const colors: Record<string, string> = { OPEN: '#FB8C00', ACKED: '#3B82F6', RESOLVED: '#4ADE80', MUTED: '#71717A' };
-        return <Badge style={{ backgroundColor: `${colors[row.status]}20`, color: colors[row.status] }}>{row.status}</Badge>; /* keep-inline */
+        return <Badge style={{ backgroundColor: `${colors[row.status]}20`, color: colors[row.status] }}>{row.status}</Badge>; /* keep-inline */ /* keep-inline */
       }
     },
     { key: 'occurrence_count', label: 'Count', filterType: 'numberRange' },
@@ -332,11 +332,11 @@ export default function ErrorInbox() {
 
     if (field.type === 'object' || field.type === 'array') {
       return (
-        <textarea
+        <textarea aria-label="Input"
           className="w-full p-2 rounded-lg text-xs font-mono"
-          style={{ backgroundColor: '#09090B', color: '#F8FAFC', border: '1px solid rgba(255,255,255,0.05)' }} /* keep-inline */
+          style={{ backgroundColor: '#09090B', color: '#F8FAFC', border: '1px solid rgba(255,255,255,0.05)' }} /* keep-inline */ /* keep-inline */
           value={typeof value === 'string' ? value : JSON.stringify(value, null, 2)}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) = aria-label="Input field"> onChange(e.target.value)}
           data-testid={`retry - field - ${field.path} `}
         />
       );
@@ -409,7 +409,7 @@ export default function ErrorInbox() {
                 <Card>
                   <CardContent className="p-4 space-y-1" data-testid="error-inbox-detail-meta">
                     <div className="text-xs text-muted-foreground">Severity</div>
-                    <div className="text-sm font-semibold" style={{ color: getSeverityColor(selectedError.severity) }}>{selectedError.severity}</div> /* keep-inline */
+                    <div className="text-sm font-semibold" style={{ color: getSeverityColor(selectedError.severity) }}>{selectedError.severity}</div> /* keep-inline */ /* keep-inline */
                   </CardContent>
                 </Card>
                 <Card>
@@ -439,21 +439,21 @@ export default function ErrorInbox() {
 
               {/* Steps Timeline */}
               <div>
-                <h3 className="font-semibold mb-3" style={{ color: '#F5F5F7' }}>Steps Timeline</h3> /* keep-inline */
+                <h3 className="font-semibold mb-3" style={{ color: '#F5F5F7' }}>Steps Timeline</h3> /* keep-inline */ /* keep-inline */
                 <div className="space-y-2">
                   {selectedError.steps?.map((step: ErrorStep) => (
                     <div
                       key={step.step_id}
                       className="flex items-center gap-3 p-3 rounded-lg"
-                      style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)' }} /* keep-inline */
+                      style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)' }} /* keep-inline */ /* keep-inline */
                       data-testid={`error - inbox - step - ${step.step_id} `}
                     >
                       {step.status === 'SUCCESS' ? <CheckCircle className="h-5 w-5 text-green-500" /> :
                         step.status === 'FAILED' ? <XCircle className="h-5 w-5 text-red-500" /> :
                           <AlertTriangle className="h-5 w-5 text-yellow-500" />}
                       <div className="flex-1">
-                        <p style={{ color: '#F5F5F7' }}>{step.title}</p> /* keep-inline */
-                        <p className="text-xs" style={{ color: '#71717A' }}>{step.domain}</p> /* keep-inline */
+                        <p style={{ color: '#F5F5F7' }}>{step.title}</p> /* keep-inline */ /* keep-inline */
+                        <p className="text-xs" style={{ color: '#71717A' }}>{step.domain}</p> /* keep-inline */ /* keep-inline */
                       </div>
                       <Badge>{step.status}</Badge>
                     </div>

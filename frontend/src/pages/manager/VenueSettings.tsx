@@ -382,7 +382,7 @@ export default function VenueSettings() {
                     <p className="text-[10px] text-muted-foreground italic">Accepts direct URLs or uploaded files.</p>
                   </div>
                   <div className="relative">
-                    <input
+                    <input aria-label="Input"
                       type="file"
                       id="logo-upload"
                       className="hidden"

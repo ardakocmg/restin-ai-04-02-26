@@ -237,9 +237,9 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             {(activeTab === 'personnel' || activeTab === 'logs') && (
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <input
+                    <input aria-label="Input"
                         value={searchQuery}
-                        onChange={e => setSearchQuery(e.target.value)}
+                        onChange={e = aria-label="Input field"> setSearchQuery(e.target.value)}
                         placeholder={`Search ${activeTab}...`}
                         className="w-full bg-card/50 border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30"
                     />

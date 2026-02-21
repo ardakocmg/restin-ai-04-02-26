@@ -138,7 +138,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
       <button
         onClick={() => setShowDetails(!showDetails)}
         className="flex items-center gap-2 px-4 py-1.5 rounded-full transition-all duration-300 hover:scale-[1.02] active:scale-95 group"
-        style={{ /* keep-inline */
+        style={{ /* keep-inline */ /* keep-inline */
           background: 'rgba(23, 23, 23, 0.4)',
           backdropFilter: 'blur(12px)',
           border: `1px solid ${getStatusColor()}40`,
@@ -147,7 +147,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
       >
         <div
           className="w-2 h-2 rounded-full animate-pulse shadow-[0_0_8px_currentColor]"
-          style={{ backgroundColor: getStatusColor(), color: getStatusColor() }} /* keep-inline */
+          style={{ backgroundColor: getStatusColor(), color: getStatusColor() }} /* keep-inline */ /* keep-inline */
         />
         {getStatusIcon()}
         <span className="text-[11px] font-black uppercase tracking-widest text-foreground group-hover:text-foreground transition-colors">
@@ -156,7 +156,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
         {pendingCount > 0 && (
           <span
             className="px-2 py-0.5 rounded-full text-xs font-bold"
-            style={{ /* keep-inline */
+            style={{ /* keep-inline */ /* keep-inline */
               backgroundColor: 'rgba(229, 57, 53, 0.2)',
               color: '#E53935'
             }}
@@ -170,19 +170,19 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
       {showDetails && (
         <div
           className="absolute top-full mt-2 right-0 w-80 card-dark p-4 rounded-xl shadow-2xl"
-          style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }} /* keep-inline */
+          style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }} /* keep-inline */ /* keep-inline */
         >
-          <h3 className="font-heading text-sm mb-3" style={{ color: '#F5F5F7' }}> /* keep-inline */
+          <h3 className="font-heading text-sm mb-3" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */
             SYNC STATUS
           </h3>
 
           <div className="space-y-3">
             {/* Resilience Mode */}
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: '#A1A1AA' }}>Mode:</span> /* keep-inline */
+              <span className="text-sm" style={{ color: '#A1A1AA' }}>Mode:</span> /* keep-inline */ /* keep-inline */
               <div className="flex items-center gap-2">
                 {getStatusIcon()}
-                <span className="text-sm font-medium" style={{ color: getStatusColor() }}> /* keep-inline */
+                <span className="text-sm font-medium" style={{ color: getStatusColor() }}> /* keep-inline */ /* keep-inline */
                   {getStatusText()}
                 </span>
               </div>
@@ -190,7 +190,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
             {/* Cloud Status */}
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: '#A1A1AA' }}>Cloud:</span> /* keep-inline */
+              <span className="text-sm" style={{ color: '#A1A1AA' }}>Cloud:</span> /* keep-inline */ /* keep-inline */
               <div className="flex items-center gap-2">
                 {status.cloudReachable ? (
                   <>
@@ -208,7 +208,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
             {/* Edge Gateway Status */}
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: '#A1A1AA' }}>Edge Gateway:</span> /* keep-inline */
+              <span className="text-sm" style={{ color: '#A1A1AA' }}>Edge Gateway:</span> /* keep-inline */ /* keep-inline */
               <div className="flex items-center gap-2">
                 {status.edgeReachable ? (
                   <>
@@ -217,8 +217,8 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
                   </>
                 ) : (
                   <>
-                    <WifiOff className="w-4 h-4" style={{ color: '#71717A' }} /> /* keep-inline */
-                    <span className="text-sm" style={{ color: '#71717A' }}>Unavailable</span> /* keep-inline */
+                    <WifiOff className="w-4 h-4" style={{ color: '#71717A' }} /> /* keep-inline */ /* keep-inline */
+                    <span className="text-sm" style={{ color: '#71717A' }}>Unavailable</span> /* keep-inline */ /* keep-inline */
                   </>
                 )}
               </div>
@@ -226,8 +226,8 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
             {/* Pending Commands */}
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: '#A1A1AA' }}>Pending:</span> /* keep-inline */
-              <span className="text-sm font-bold" style={{ color: pendingCount > 0 ? '#E53935' : '#4ADE80' }}> /* keep-inline */
+              <span className="text-sm" style={{ color: '#A1A1AA' }}>Pending:</span> /* keep-inline */ /* keep-inline */
+              <span className="text-sm font-bold" style={{ color: pendingCount > 0 ? '#E53935' : '#4ADE80' }}> /* keep-inline */ /* keep-inline */
                 {pendingCount} commands
               </span>
             </div>
@@ -235,8 +235,8 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
             {/* Last Sync */}
             {lastSync && (
               <div className="flex items-center justify-between">
-                <span className="text-sm" style={{ color: '#A1A1AA' }}>Last Sync:</span> /* keep-inline */
-                <span className="text-xs" style={{ color: '#71717A' }}> /* keep-inline */
+                <span className="text-sm" style={{ color: '#A1A1AA' }}>Last Sync:</span> /* keep-inline */ /* keep-inline */
+                <span className="text-xs" style={{ color: '#71717A' }}> /* keep-inline */ /* keep-inline */
                   {new Date(lastSync).toLocaleTimeString()}
                 </span>
               </div>
@@ -255,24 +255,24 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
             {/* Mode Info */}
             {status.mode === 'edge' && (
-              <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)' }}> /* keep-inline */
-                <p className="text-xs" style={{ color: '#D4D4D8' }}> /* keep-inline */
+              <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)' }}> /* keep-inline */ /* keep-inline */
+                <p className="text-xs" style={{ color: '#D4D4D8' }}> /* keep-inline */ /* keep-inline */
                   Operating via Edge Gateway. Commands queued locally and synced via venue server.
                 </p>
               </div>
             )}
 
             {status.mode === 'mesh' && (
-              <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.3)' }}> /* keep-inline */
-                <p className="text-xs" style={{ color: '#D4D4D8' }}> /* keep-inline */
+              <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.3)' }}> /* keep-inline */ /* keep-inline */
+                <p className="text-xs" style={{ color: '#D4D4D8' }}> /* keep-inline */ /* keep-inline */
                   Device mesh active. Commands replicated across peer devices for redundancy.
                 </p>
               </div>
             )}
 
             {status.mode === 'device' && (
-              <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: 'rgba(229, 57, 53, 0.1)', border: '1px solid rgba(229, 57, 53, 0.3)' }}> /* keep-inline */
-                <p className="text-xs" style={{ color: '#D4D4D8' }}> /* keep-inline */
+              <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: 'rgba(229, 57, 53, 0.1)', border: '1px solid rgba(229, 57, 53, 0.3)' }}> /* keep-inline */ /* keep-inline */
+                <p className="text-xs" style={{ color: '#D4D4D8' }}> /* keep-inline */ /* keep-inline */
                   Full offline mode. All operations queued locally and will sync when connection restored.
                 </p>
               </div>

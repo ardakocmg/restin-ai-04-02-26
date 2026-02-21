@@ -47,60 +47,60 @@ const TableTracker: React.FC = () => {
 
     return (
         <div className="pos-page"><div className="pos-container pos-container--1200">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}> /* keep-inline */
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
                 <div>
-                    <button onClick={() => navigate(-1)} className="pos-btn pos-btn--outline" style={{ marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button> /* keep-inline */
-                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Table Tracker</h1> /* keep-inline */
-                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>Real-time table status and occupancy overview</p> /* keep-inline */
+                    <button onClick={() => navigate(-1)} className="pos-btn pos-btn--outline" style={{ marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button> /* keep-inline */ /* keep-inline */
+                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>Table Tracker</h1> /* keep-inline */ /* keep-inline */
+                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>Real-time table status and occupancy overview</p> /* keep-inline */ /* keep-inline */
                 </div>
                 <button className="pos-btn pos-btn--outline" onClick={() => { }}><RefreshCw size={14} /> Refresh</button>
             </div>
 
             {/* Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, marginBottom: 20 }}> /* keep-inline */
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
                 {[{ l: 'Occupied', v: `${occupied.length}/${tables.length}`, c: '#3B82F6', i: <Users size={16} /> }, { l: 'Available', v: available.toString(), c: '#10B981', i: <Eye size={16} /> }, { l: 'Guests', v: totalGuests.toString(), c: '#F59E0B', i: <Users size={16} /> }, { l: 'Revenue', v: `€${totalRevenue.toFixed(0)}`, c: '#8B5CF6', i: <DollarSign size={16} /> }].map((s, i) => (
-                    <div key={i} className="pos-card" style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}> /* keep-inline */
-                        <div style={{ width: 36, height: 36, borderRadius: 8, background: `${s.c}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.c }}>{s.i}</div> /* keep-inline */
-                        <div><div style={{ fontSize: 22, fontWeight: 700 }}>{s.v}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{s.l}</div></div> /* keep-inline */
+                    <div key={i} className="pos-card" style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}> /* keep-inline */ /* keep-inline */
+                        <div style={{ width: 36, height: 36, borderRadius: 8, background: `${s.c}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.c }}>{s.i}</div> /* keep-inline */ /* keep-inline */
+                        <div><div style={{ fontSize: 22, fontWeight: 700 }}>{s.v}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{s.l}</div></div> /* keep-inline */ /* keep-inline */
                     </div>
                 ))}
             </div>
 
             {/* Filters */}
-            <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}> /* keep-inline */
+            <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}> /* keep-inline */ /* keep-inline */
                 <div className="pos-tab-group">
                     <button onClick={() => setFilterFloor('all')} className={`pos-filter-btn${filterFloor === 'all' ? ' pos-filter-btn--active' : ''}`}>All Floors</button>
                     {floors.map(f => <button key={f} onClick={() => setFilterFloor(f)} className={`pos-filter-btn${filterFloor === f ? ' pos-filter-btn--active' : ''}`}>{f}</button>)}
                 </div>
                 <div className="pos-tab-group">
                     <button onClick={() => setFilterStatus('all')} className={`pos-filter-btn${filterStatus === 'all' ? ' pos-filter-btn--active' : ''}`}>All</button>
-                    {(Object.keys(STATUS_COLORS) as TableStatus[]).map(s => <button key={s} onClick={() => setFilterStatus(s)} style={{ padding: '6px 12px', borderRadius: 6, border: 'none', fontSize: 12, cursor: 'pointer', textTransform: 'capitalize', background: filterStatus === s ? STATUS_BG[s] : 'transparent', color: filterStatus === s ? STATUS_COLORS[s] : 'var(--text-secondary)' }}>{s}</button>)} /* keep-inline */
+                    {(Object.keys(STATUS_COLORS) as TableStatus[]).map(s => <button key={s} onClick={() => setFilterStatus(s)} style={{ padding: '6px 12px', borderRadius: 6, border: 'none', fontSize: 12, cursor: 'pointer', textTransform: 'capitalize', background: filterStatus === s ? STATUS_BG[s] : 'transparent', color: filterStatus === s ? STATUS_COLORS[s] : 'var(--text-secondary)' }}>{s}</button>)} /* keep-inline */ /* keep-inline */
                 </div>
             </div>
 
             {/* Table Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: 12 }}> /* keep-inline */
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: 12 }}> /* keep-inline */ /* keep-inline */
                 {filtered.map(table => (
-                    <div key={table.id} className="pos-card" style={{ padding: 14, borderLeft: `3px solid ${STATUS_COLORS[table.status]}`, cursor: 'pointer' }}> /* keep-inline */
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}> /* keep-inline */
-                            <span style={{ fontSize: 16, fontWeight: 700 }}>{table.name}</span> /* keep-inline */
-                            <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 3, background: STATUS_BG[table.status], color: STATUS_COLORS[table.status], textTransform: 'capitalize' }}>{table.status}</span> /* keep-inline */
+                    <div key={table.id} className="pos-card" style={{ padding: 14, borderLeft: `3px solid ${STATUS_COLORS[table.status]}`, cursor: 'pointer' }}> /* keep-inline */ /* keep-inline */
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}> /* keep-inline */ /* keep-inline */
+                            <span style={{ fontSize: 16, fontWeight: 700 }}>{table.name}</span> /* keep-inline */ /* keep-inline */
+                            <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 3, background: STATUS_BG[table.status], color: STATUS_COLORS[table.status], textTransform: 'capitalize' }}>{table.status}</span> /* keep-inline */ /* keep-inline */
                         </div>
                         {table.status === 'occupied' && <>
-                            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 2 }}><Users size={10} style={{ display: 'inline', marginRight: 4 }} />{table.guests} guests · {table.server}</div> /* keep-inline */
-                            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 2 }}><Clock size={10} style={{ display: 'inline', marginRight: 4 }} />Since {table.occupiedSince}</div> /* keep-inline */
-                            <div style={{ fontSize: 11, padding: '2px 6px', borderRadius: 3, background: 'rgba(59,130,246,0.1)', color: '#3B82F6', display: 'inline-block', marginBottom: 4 }}>{table.course}</div> /* keep-inline */
-                            <div style={{ fontSize: 16, fontWeight: 700, color: '#10B981' }}>€{table.orderTotal.toFixed(2)}</div> /* keep-inline */
+                            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 2 }}><Users size={10} style={{ display: 'inline', marginRight: 4 }} />{table.guests} guests · {table.server}</div> /* keep-inline */ /* keep-inline */
+                            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 2 }}><Clock size={10} style={{ display: 'inline', marginRight: 4 }} />Since {table.occupiedSince}</div> /* keep-inline */ /* keep-inline */
+                            <div style={{ fontSize: 11, padding: '2px 6px', borderRadius: 3, background: 'rgba(59,130,246,0.1)', color: '#3B82F6', display: 'inline-block', marginBottom: 4 }}>{table.course}</div> /* keep-inline */ /* keep-inline */
+                            <div style={{ fontSize: 16, fontWeight: 700, color: '#10B981' }}>€{table.orderTotal.toFixed(2)}</div> /* keep-inline */ /* keep-inline */
                         </>}
-                        {table.status === 'reserved' && <div style={{ fontSize: 12, color: '#F59E0B' }}>Reserved for {table.occupiedSince}</div>} /* keep-inline */
-                        {table.status === 'cleaning' && <div style={{ fontSize: 12, color: '#8B5CF6' }}>Being cleaned...</div>} /* keep-inline */
+                        {table.status === 'reserved' && <div style={{ fontSize: 12, color: '#F59E0B' }}>Reserved for {table.occupiedSince}</div>} /* keep-inline */ /* keep-inline */
+                        {table.status === 'cleaning' && <div style={{ fontSize: 12, color: '#8B5CF6' }}>Being cleaned...</div>} /* keep-inline */ /* keep-inline */
                     </div>
                 ))}
             </div>
 
             {/* Legend */}
-            <div style={{ display: 'flex', gap: 16, marginTop: 16, justifyContent: 'center', flexWrap: 'wrap' }}> /* keep-inline */
-                {(Object.entries(STATUS_COLORS)).map(([s, c]) => (<div key={s} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}><div style={{ width: 10, height: 10, borderRadius: 2, background: c }} /><span style={{ textTransform: 'capitalize' }}>{s}</span></div>))} /* keep-inline */
+            <div style={{ display: 'flex', gap: 16, marginTop: 16, justifyContent: 'center', flexWrap: 'wrap' }}> /* keep-inline */ /* keep-inline */
+                {(Object.entries(STATUS_COLORS)).map(([s, c]) => (<div key={s} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}><div style={{ width: 10, height: 10, borderRadius: 2, background: c }} /><span style={{ textTransform: 'capitalize' }}>{s}</span></div>))} /* keep-inline */ /* keep-inline */
             </div>
         </div></div>
     );

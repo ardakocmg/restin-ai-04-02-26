@@ -145,9 +145,9 @@ export default function SettingsSetupPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>SSC Class</Label>
-                <select
+                <select aria-label="Input"
                   value={settings.ssc_class}
-                  onChange={(e) => updateField('ssc_class', e.target.value)}
+                  onChange={(e) = aria-label="Input field"> updateField('ssc_class', e.target.value)}
                   className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
                 >
                   <option value="1">Class 1 — Employed</option>
@@ -188,10 +188,10 @@ export default function SettingsSetupPage() {
             ].map(({ key, label }) => (
               <label key={key} className="flex items-center justify-between p-3 rounded-lg border hover:bg-accent/50 transition cursor-pointer">
                 <span className="font-medium">{label}</span>
-                <input
+                <input aria-label="Input"
                   type="checkbox"
                   checked={settings[key]}
-                  onChange={(e) => updateField(key, e.target.checked)}
+                  onChange={(e) = aria-label="Input field"> updateField(key, e.target.checked)}
                   className="w-5 h-5 rounded"
                 />
               </label>

@@ -143,10 +143,10 @@ function KDSStationDetail() {
               <div className="grid grid-cols-2 gap-4">
                 {Object.entries(settings.ticket_summary || {}).map(([key, value]) => (
                   <label key={key} className="flex items-center gap-3">
-                    <input
+                    <input aria-label="Input"
                       type="checkbox"
                       checked={Boolean(value)}
-                      onChange={(e) => {
+                      onChange={(e) = aria-label="Input field"> {
                         const newSettings = {
                           ticket_summary: {
                             ...settings.ticket_summary,
@@ -171,11 +171,11 @@ function KDSStationDetail() {
               <div className="grid grid-cols-2 gap-4">
                 {Object.entries(settings.order_status_enabled || {}).map(([key, value]) => (
                   <label key={key} className="flex items-center gap-3">
-                    <input
+                    <input aria-label="Input"
                       type="checkbox"
                       checked={Boolean(value)}
                       disabled={['preparing', 'on_hold', 'completed'].includes(key)}
-                      onChange={(e) => {
+                      onChange={(e) = aria-label="Input field"> {
                         const newSettings = {
                           order_status_enabled: {
                             ...settings.order_status_enabled,
@@ -258,10 +258,10 @@ function KDSStationDetail() {
             <div className="space-y-6">
               <div>
                 <label className="flex items-center gap-3 mb-4">
-                  <input
+                  <input aria-label="Input"
                     type="checkbox"
                     checked={settings.wait_times?.enabled}
-                    onChange={(e) => {
+                    onChange={(e) = aria-label="Input field"> {
                       updateSettings({
                         wait_times: { ...settings.wait_times, enabled: e.target.checked }
                       });
@@ -277,10 +277,10 @@ function KDSStationDetail() {
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Delayed After (minutes)
                   </label>
-                  <input
+                  <input aria-label="Input"
                     type="number"
                     value={settings.wait_times?.delayed_after_min || 10}
-                    onChange={(e) => {
+                    onChange={(e) = aria-label="Input field"> {
                       updateSettings({
                         wait_times: {
                           ...settings.wait_times,
@@ -296,10 +296,10 @@ function KDSStationDetail() {
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Late After (minutes)
                   </label>
-                  <input
+                  <input aria-label="Input"
                     type="number"
                     value={settings.wait_times?.late_after_min || 20}
-                    onChange={(e) => {
+                    onChange={(e) = aria-label="Input field"> {
                       updateSettings({
                         wait_times: {
                           ...settings.wait_times,

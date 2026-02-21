@@ -62,30 +62,30 @@ const Discounts: React.FC = () => {
             </div>
 
             <div className="pos-card">
-                <div className="pos-table-header" style={{ gridTemplateColumns: discountTableCols, gap: 10 }}> /* keep-inline */
+                <div className="pos-table-header" style={{ gridTemplateColumns: discountTableCols, gap: 10 }}> /* keep-inline */ /* keep-inline */
                     <div>Discount</div><div>Value</div><div>Group</div><div>Applies To</div><div>Schedule</div><div>Uses</div><div></div>
                 </div>
                 {filtered.map(d => (
-                    <div key={d.id} className="pos-table-row" style={{ gridTemplateColumns: discountTableCols, gap: 10, opacity: d.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...d })}> /* keep-inline */
+                    <div key={d.id} className="pos-table-row" style={{ gridTemplateColumns: discountTableCols, gap: 10, opacity: d.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...d })}> /* keep-inline */ /* keep-inline */
                         <div className="pos-flex pos-flex--center pos-gap-10">
                             <div className={`pos-stat-icon ${d.type === 'percentage' ? 'pos-stat-icon--blue' : 'pos-stat-icon--green'}`}>
                                 {d.type === 'percentage' ? <Percent size={16} /> : <DollarSign size={16} />}
                             </div>
                             <div>
                                 <div className="pos-cell-value">{d.name}</div>
-                                <div className="pos-flex pos-gap-4" style={{ marginTop: 2 }}> /* keep-inline */
-                                    {d.requiresManager && <span className="pos-badge pos-badge--red" style={{ fontSize: 9 }}>Manager</span>} /* keep-inline */
-                                    {d.requiresReason && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9 }}>Reason</span>} /* keep-inline */
-                                    {d.isCustom && <span className="pos-badge pos-badge--purple" style={{ fontSize: 9 }}>Custom</span>} /* keep-inline */
-                                    {d.qrEnabled && <span className="pos-badge" style={{ fontSize: 9, background: 'rgba(6,182,212,0.1)', color: '#06B6D4' }}>QR</span>} /* keep-inline */
+                                <div className="pos-flex pos-gap-4" style={{ marginTop: 2 }}> /* keep-inline */ /* keep-inline */
+                                    {d.requiresManager && <span className="pos-badge pos-badge--red" style={{ fontSize: 9 }}>Manager</span>} /* keep-inline */ /* keep-inline */
+                                    {d.requiresReason && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9 }}>Reason</span>} /* keep-inline */ /* keep-inline */
+                                    {d.isCustom && <span className="pos-badge pos-badge--purple" style={{ fontSize: 9 }}>Custom</span>} /* keep-inline */ /* keep-inline */
+                                    {d.qrEnabled && <span className="pos-badge" style={{ fontSize: 9, background: 'rgba(6,182,212,0.1)', color: '#06B6D4' }}>QR</span>} /* keep-inline */ /* keep-inline */
                                 </div>
                             </div>
                         </div>
-                        <span style={{ fontSize: 16, fontWeight: 700, color: d.type === 'percentage' ? '#3B82F6' : '#10B981' }}>{d.type === 'percentage' ? `${d.value}%` : `€${d.value}`}</span> /* keep-inline */
+                        <span style={{ fontSize: 16, fontWeight: 700, color: d.type === 'percentage' ? '#3B82F6' : '#10B981' }}>{d.type === 'percentage' ? `${d.value}%` : `€${d.value}`}</span> /* keep-inline */ /* keep-inline */
                         <span className="pos-cell-secondary">{d.group || '—'}</span>
-                        <span className="pos-cell-secondary" style={{ textTransform: 'capitalize' }}>{d.applicableTo}</span> /* keep-inline */
-                        <span className="pos-cell-secondary" style={{ fontSize: 10 }}>{d.schedule}</span> /* keep-inline */
-                        <span className="pos-cell-value">{d.usesToday}{d.maxUsesPerDay > 0 && <span className="pos-text-secondary" style={{ fontSize: 11 }}>/{d.maxUsesPerDay}</span>}</span> /* keep-inline */
+                        <span className="pos-cell-secondary" style={{ textTransform: 'capitalize' }}>{d.applicableTo}</span> /* keep-inline */ /* keep-inline */
+                        <span className="pos-cell-secondary" style={{ fontSize: 10 }}>{d.schedule}</span> /* keep-inline */ /* keep-inline */
+                        <span className="pos-cell-value">{d.usesToday}{d.maxUsesPerDay > 0 && <span className="pos-text-secondary" style={{ fontSize: 11 }}>/{d.maxUsesPerDay}</span>}</span> /* keep-inline */ /* keep-inline */
                         <button className="pos-btn-icon" onClick={e => { e.stopPropagation(); setEditing({ ...d }); }}><Edit3 size={13} /></button>
                     </div>
                 ))}
@@ -98,45 +98,45 @@ const Discounts: React.FC = () => {
                         <h3 className="pos-modal-title">{discounts.find(d => d.id === editing.id) ? 'Edit' : 'New'} Discount</h3>
                         <button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
-                    <div className="pos-form-group"><label className="pos-form-label">Name * <span className="pos-text-secondary" style={{ fontSize: 10 }}>({editing.name.length}/25)</span></label> /* keep-inline */
-                        <input className="pos-input" maxLength={25} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Staff Discount" /></div>
+                    <div className="pos-form-group"><label className="pos-form-label">Name * <span className="pos-text-secondary" style={{ fontSize: 10 }}>({editing.name.length}/25)</span></label> /* keep-inline */ /* keep-inline */
+                        <input className="pos-input" maxLength={25} value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Staff Discount" /></div>
                     <div className="pos-form-grid">
                         <div><label className="pos-form-label">Type</label>
-                            <select className="pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as 'percentage' | 'fixed' } : null)} aria-label="Discount type"><option value="percentage">Percentage (%)</option><option value="fixed">Fixed Amount (€)</option></select></div>
+                            <select className="pos-select" value={editing.type} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, type: e.target.value as 'percentage' | 'fixed' } : null)} aria-label="Discount type"><option value="percentage">Percentage (%)</option><option value="fixed">Fixed Amount (€)</option></select></div>
                         <div><label className="pos-form-label">Value</label>
-                            <input type="number" step="0.01" className="pos-input" value={editing.value} onChange={e => setEditing(p => p ? { ...p, value: parseFloat(e.target.value) || 0 } : null)} aria-label="Discount value" /></div>
+                            <input type="number" step="0.01" className="pos-input" value={editing.value} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, value: parseFloat(e.target.value) || 0 } : null)} aria-label="Discount value" /></div>
                     </div>
                     <div className="pos-form-grid">
                         <div><label className="pos-form-label">Applies To</label>
-                            <select className="pos-select" value={editing.applicableTo} onChange={e => setEditing(p => p ? { ...p, applicableTo: e.target.value as Discount['applicableTo'] } : null)} aria-label="Applies to"><option value="all">All Items</option><option value="food">Food Only</option><option value="beverage">Beverages Only</option><option value="specific">Specific Items</option></select></div>
+                            <select className="pos-select" value={editing.applicableTo} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, applicableTo: e.target.value as Discount['applicableTo'] } : null)} aria-label="Applies to"><option value="all">All Items</option><option value="food">Food Only</option><option value="beverage">Beverages Only</option><option value="specific">Specific Items</option></select></div>
                         <div><label className="pos-form-label">Max Uses/Day (0=unlimited)</label>
-                            <input type="number" min={0} className="pos-input" value={editing.maxUsesPerDay} onChange={e => setEditing(p => p ? { ...p, maxUsesPerDay: parseInt(e.target.value) || 0 } : null)} aria-label="Max uses per day" /></div>
+                            <input type="number" min={0} className="pos-input" value={editing.maxUsesPerDay} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, maxUsesPerDay: parseInt(e.target.value) || 0 } : null)} aria-label="Max uses per day" /></div>
                     </div>
                     <div className="pos-form-grid">
                         <div><label className="pos-form-label">Discount Group</label>
-                            <select className="pos-select" value={editing.group} onChange={e => setEditing(p => p ? { ...p, group: e.target.value } : null)} aria-label="Discount group"><option value="">— None —</option>{DISCOUNT_GROUPS.map(g => <option key={g} value={g}>{g}</option>)}</select></div>
+                            <select className="pos-select" value={editing.group} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, group: e.target.value } : null)} aria-label="Discount group"><option value="">— None —</option>{DISCOUNT_GROUPS.map(g => <option key={g} value={g}>{g}</option>)}</select></div>
                         <div><label className="pos-form-label">Schedule</label>
-                            <input className="pos-input" value={editing.schedule} onChange={e => setEditing(p => p ? { ...p, schedule: e.target.value } : null)} placeholder="e.g. Always, Mon-Fri 16:00-18:00" /></div>
+                            <input className="pos-input" value={editing.schedule} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, schedule: e.target.value } : null)} placeholder="e.g. Always, Mon-Fri 16:00-18:00" /></div>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Sort Order</label>
-                        <input type="number" min={0} className="pos-input" style={{ width: 100 }} value={editing.sortOrder} onChange={e => setEditing(p => p ? { ...p, sortOrder: parseInt(e.target.value) || 0 } : null)} aria-label="Sort order" /> /* keep-inline */
+                        <input type="number" min={0} className="pos-input" style={{ width: 100 }} value={editing.sortOrder} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, sortOrder: parseInt(e.target.value) || 0 } : null)} aria-label="Sort order" /> /* keep-inline */ /* keep-inline */
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Exclude Accounting Groups</label>
                         <div className="pos-flex pos-gap-8 pos-flex--wrap">
-                            {ACCOUNTING_GROUPS_LIST.map(ag => (<label key={ag} className="pos-toggle-label" style={{ fontSize: 11, color: editing.excludedAccountingGroups.includes(ag) ? '#EF4444' : undefined, padding: '4px 8px', borderRadius: 6, background: editing.excludedAccountingGroups.includes(ag) ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.03)', border: '1px solid ' + (editing.excludedAccountingGroups.includes(ag) ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.06)') }}> /* keep-inline */
-                                <input type="checkbox" checked={editing.excludedAccountingGroups.includes(ag)} onChange={() => setEditing(p => { if (!p) return null; const ex = p.excludedAccountingGroups.includes(ag) ? p.excludedAccountingGroups.filter(x => x !== ag) : [...p.excludedAccountingGroups, ag]; return { ...p, excludedAccountingGroups: ex }; })} /> {ag}</label>))}
+                            {ACCOUNTING_GROUPS_LIST.map(ag => (<label key={ag} className="pos-toggle-label" style={{ fontSize: 11, color: editing.excludedAccountingGroups.includes(ag) ? '#EF4444' : undefined, padding: '4px 8px', borderRadius: 6, background: editing.excludedAccountingGroups.includes(ag) ? 'rgba(239,68,68,0.08)' : 'rgba(255,255,255,0.03)', border: '1px solid ' + (editing.excludedAccountingGroups.includes(ag) ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.06)') }}> /* keep-inline */ /* keep-inline */
+                                <input type="checkbox" checked={editing.excludedAccountingGroups.includes(ag)} onChange={() = aria-label="Input field"> setEditing(p => { if (!p) return null; const ex = p.excludedAccountingGroups.includes(ag) ? p.excludedAccountingGroups.filter(x => x !== ag) : [...p.excludedAccountingGroups, ag]; return { ...p, excludedAccountingGroups: ex }; })} /> {ag}</label>))}
                         </div>
                     </div>
                     <div className="pos-flex pos-gap-16 pos-mb-16 pos-flex--wrap">
                         {([['isCustom', 'Custom discount (POS user enters amount)'], ['qrEnabled', 'Enable QR code'], ['requiresReason', 'Requires reason'], ['requiresManager', 'Requires manager'], ['isActive', 'Active']] as const).map(([key, label]) =>
                             <label key={key} className="pos-toggle-label">
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                <input type="checkbox" checked={editing[key] as boolean} onChange={() => setEditing(p => p ? { ...p, [key]: !(p as unknown)[key] } : null)} /> {label}</label>
+                                <input type="checkbox" checked={editing[key] as boolean} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, [key]: !(p as unknown)[key] } : null)} /> {label}</label>
                         )}
                     </div>
                     <div className="pos-modal-footer">
-                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */
-                        <button title="Delete discount" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setDiscounts(p => p.filter(d => d.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */ /* keep-inline */
+                        <button title="Delete discount" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setDiscounts(p => p.filter(d => d.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */ /* keep-inline */
                         <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>

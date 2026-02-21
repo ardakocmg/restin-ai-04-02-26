@@ -320,9 +320,9 @@ export default function Scheduler() {
             <div className="flex items-center gap-2 bg-black/40 rounded-lg p-1 border border-border shadow-inner">
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Action"
                 className="h-7 w-7 hover:bg-white/10 rounded-md text-muted-foreground hover:text-foreground"
-                onClick={() => {
+                onClick={() = aria-label="Action"> {
                   const d = new Date(weekStart);
                   d.setDate(d.getDate() - (viewType === 'month' ? 28 : 7));
                   setWeekStart(d.toISOString().split('T')[0]);
@@ -336,9 +336,9 @@ export default function Scheduler() {
               </div>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Action"
                 className="h-7 w-7 hover:bg-white/10 rounded-md text-muted-foreground hover:text-foreground"
-                onClick={() => {
+                onClick={() = aria-label="Action"> {
                   const d = new Date(weekStart);
                   d.setDate(d.getDate() + (viewType === 'month' ? 28 : 7));
                   setWeekStart(d.toISOString().split('T')[0]);
@@ -353,7 +353,7 @@ export default function Scheduler() {
             {/* Global Search */}
             <div className="relative group w-72">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-blue-500 transition-colors" />
-              <input
+              <input aria-label="Input"
                 type="text"
                 placeholder="Search personnel, role, unit..."
                 value={globalSearch}
@@ -404,7 +404,7 @@ export default function Scheduler() {
               Create Shift
             </Button>
 
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors">
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors" aria-label="Action">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </div>
@@ -431,7 +431,7 @@ export default function Scheduler() {
                       </div>
                       <div className="relative">
                         <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-2.5 w-2.5 text-muted-foreground" />
-                        <input
+                        <input aria-label="Input"
                           type="text"
                           placeholder="Filter..."
                           value={filters.employee_name}
@@ -451,7 +451,7 @@ export default function Scheduler() {
                           <ArrowUpDown className="h-2.5 w-2.5 text-muted-foreground group-hover/sort:text-muted-foreground" />
                         )}
                       </div>
-                      <input
+                      <input aria-label="Input"
                         type="text"
                         placeholder="Filter..."
                         value={filters.occupation}
@@ -470,7 +470,7 @@ export default function Scheduler() {
                           <ArrowUpDown className="h-2.5 w-2.5 text-muted-foreground group-hover/sort:text-muted-foreground" />
                         )}
                       </div>
-                      <input
+                      <input aria-label="Input"
                         type="text"
                         placeholder="Filter..."
                         value={filters.cost_centre}

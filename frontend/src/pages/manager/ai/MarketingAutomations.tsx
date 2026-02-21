@@ -242,7 +242,7 @@ export default function MarketingAutomations() {
                             </select>
                         </div>
                         <Input placeholder={t('Subject line')} value={newCampaign.subject} onChange={e => setNewCampaign(p => ({ ...p, subject: e.target.value }))} />
-                        <textarea className="w-full rounded-md border px-3 py-2 text-sm min-h-20 bg-white dark:bg-card dark:border-border"
+                        <textarea aria-label="Input" className="w-full rounded-md border px-3 py-2 text-sm min-h-20 bg-white dark:bg-card dark:border-border"
                             placeholder={t('Message body')} value={newCampaign.body} onChange={e => setNewCampaign(p => ({ ...p, body: e.target.value }))} />
                         <div className="flex gap-2 justify-end">
                             <Button variant="outline" size="sm" onClick={() => setShowNewCampaign(false)}>{t('Cancel')}</Button>

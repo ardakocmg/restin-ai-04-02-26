@@ -66,19 +66,19 @@ export default function VisualContentEditor() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Title</label>
-                  <input
+                  <input aria-label="Input"
                     type="text"
                     value={content.title}
-                    onChange={(e) => setContent({ ...content, title: e.target.value })}
+                    onChange={(e) = aria-label="Input field"> setContent({ ...content, title: e.target.value })}
                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded focus:outline-none focus:border-blue-500"
                     placeholder="Enter title..."
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Content (Markdown)</label>
-                  <textarea
+                  <textarea aria-label="Input"
                     value={content.markdown_content}
-                    onChange={(e) => setContent({ ...content, markdown_content: e.target.value })}
+                    onChange={(e) = aria-label="Input field"> setContent({ ...content, markdown_content: e.target.value })}
                     rows={20}
                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded focus:outline-none focus:border-blue-500 font-mono text-sm"
                     placeholder="Write your content in markdown..."

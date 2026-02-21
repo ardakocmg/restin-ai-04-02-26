@@ -244,7 +244,7 @@ const OpsDashboard: React.FC = () => {
                                         <Button className="flex-1 bg-secondary hover:bg-secondary/80 h-8 text-[10px] font-black tracking-widest uppercase border-none text-secondary-foreground">
                                             {agg.status === 'online' ? t('restin.ops.pauseStream') : 'Go Live'}
                                         </Button>
-                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground" aria-label="Action">
                                             <ArrowUpRight className="w-4 h-4" />
                                         </Button>
                                     </div>

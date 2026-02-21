@@ -39,8 +39,8 @@ export default function HRDevices() {
                         <div className="flex items-center gap-4 mb-2">
                             <Button
                                 variant="outline"
-                                size="icon"
-                                onClick={() => navigate('/manager/hr/summary')}
+                                size="icon" aria-label="Action"
+                                onClick={() = aria-label="Action"> navigate('/manager/hr/summary')}
                                 className="bg-card border-border rounded-xl"
                             >
                                 <ChevronLeft className="w-5 h-5 text-muted-foreground" />

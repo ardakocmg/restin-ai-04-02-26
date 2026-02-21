@@ -81,7 +81,7 @@ function CustomTooltip({ active, payload, label, formatter }: CustomTooltipProps
             <p className="pulse-tooltip-label">{label}</p>
             {payload.map((p, i) => (
                 <div key={i} className="flex items-center gap-2 mt-1">
-                    <Circle className="w-2 h-2 fill-current pulse-tooltip-dot" style={{ '--dot-color': p.color } as React.CSSProperties} /> /* keep-inline */
+                    <Circle className="w-2 h-2 fill-current pulse-tooltip-dot" style={{ '--dot-color': p.color } as React.CSSProperties} /> /* keep-inline */ /* keep-inline */
                     <span className="pulse-tooltip-value">{fmt(p.value || 0)}</span>
                     <span className="pulse-tooltip-sub">{p.name}</span>
                 </div>
@@ -397,7 +397,7 @@ export default function PulseAnalytics() {
                         <div className="flex flex-wrap gap-3 mt-3 justify-center">
                             {revenueBreakdown.map((d, i) => (
                                 <div key={i} className="flex items-center gap-1.5">
-                                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }} /> /* keep-inline */
+                                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }} /> /* keep-inline */ /* keep-inline */
                                     <span className="text-[10px] text-muted-foreground font-bold">{d.name}</span>
                                     <span className="text-[10px] text-muted-foreground font-bold">€{Math.max(0, Math.round(d.value))}</span>
                                 </div>
@@ -545,7 +545,7 @@ export default function PulseAnalytics() {
                                             <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
                                                 <div
                                                     className="h-full bg-emerald-500 rounded-full transition-all duration-700 pulse-hourly-bar"
-                                                    style={{ '--bar-width': `${widthPct}%` } as React.CSSProperties} /* keep-inline */
+                                                    style={{ '--bar-width': `${widthPct}%` } as React.CSSProperties} /* keep-inline */ /* keep-inline */
                                                 />
                                             </div>
                                             <span className="text-[9px] text-muted-foreground font-bold">{loc.orders_today} orders</span>

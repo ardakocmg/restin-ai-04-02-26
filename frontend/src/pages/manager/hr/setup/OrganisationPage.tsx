@@ -110,7 +110,7 @@ export default function OrganisationPage() {
                     <CardTitle className="text-lg">{dept.name}</CardTitle>
                     <CardDescription>{dept.head || 'No head assigned'}</CardDescription>
                   </div>
-                  <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 text-destructive" onClick={() => removeDept(dept.id)}>
+                  <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 text-destructive" onClick={() = aria-label="Action"> removeDept(dept.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>

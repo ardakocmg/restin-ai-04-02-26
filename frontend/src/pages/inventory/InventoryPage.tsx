@@ -106,9 +106,9 @@ export default function InventoryPage() {
         <div className="grid grid-cols-3 gap-4">
           <div>
             <label className="text-sm font-medium text-foreground mb-2 block">Status</label>
-            <select
+            <select aria-label="Input"
               value={filters.status || ''}
-              onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+              onChange={(e) = aria-label="Input field"> setFilters({ ...filters, status: e.target.value })}
               className="w-full p-2 border rounded"
             >
               <option value="">All</option>
@@ -119,7 +119,7 @@ export default function InventoryPage() {
           </div>
           <div>
             <label className="text-sm font-medium text-foreground mb-2 block">Category</label>
-            <input
+            <input aria-label="Input"
               type="text"
               placeholder="Filter by category"
               value={filters.category || ''}
@@ -129,10 +129,10 @@ export default function InventoryPage() {
           </div>
           <div>
             <label className="text-sm font-medium text-foreground mb-2 block">Min Stock Only</label>
-            <input
+            <input aria-label="Input"
               type="checkbox"
               checked={filters.min_stock_only || false}
-              onChange={(e) => setFilters({ ...filters, min_stock_only: e.target.checked })}
+              onChange={(e) = aria-label="Input field"> setFilters({ ...filters, min_stock_only: e.target.checked })}
               className="h-5 w-5 mt-2"
             />
           </div>

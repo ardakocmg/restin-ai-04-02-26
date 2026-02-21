@@ -23,7 +23,7 @@ export default function FS3Document({ fs3Data, venue = null }) {
     const sectionTitleStyle = "bg-gray-800 text-foreground px-2 py-0.5 text-[11px] font-bold uppercase mb-2";
 
     return (
-        <div id="fs3-to-export" className="fs3-document !bg-white !text-black p-6 max-w-[210mm] mx-auto border border-border shadow-sm" style={{ fontFamily: 'Arial, sans-serif' }}> /* keep-inline */
+        <div id="fs3-to-export" className="fs3-document !bg-white !text-black p-6 max-w-[210mm] mx-auto border border-border shadow-sm" style={{ fontFamily: 'Arial, sans-serif' }}> /* keep-inline */ /* keep-inline */
 
             {/* Top Header */}
             <div className="flex justify-between items-start mb-4 border-b-2 border-black pb-2">

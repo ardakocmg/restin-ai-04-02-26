@@ -401,10 +401,10 @@ export default function ApprovalCenter() {
                                 <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1 block">{t('Requester')}</label>
                                 <div className="relative">
                                     <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={filters.requester}
-                                        onChange={e => setFilters(f => ({ ...f, requester: e.target.value }))}
+                                        onChange={e = aria-label="Input field"> setFilters(f => ({ ...f, requester: e.target.value }))}
                                         placeholder={t('Search name...')}
                                         className="w-full pl-8 pr-3 py-2 bg-muted rounded-lg border border-border text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                                     />
@@ -412,9 +412,9 @@ export default function ApprovalCenter() {
                             </div>
                             <div>
                                 <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1 block">{t('Type')}</label>
-                                <select
+                                <select aria-label="Input"
                                     value={filters.type}
-                                    onChange={e => setFilters(f => ({ ...f, type: e.target.value }))}
+                                    onChange={e = aria-label="Input field"> setFilters(f => ({ ...f, type: e.target.value }))}
                                     title="Filter by Type"
                                     className="w-full px-3 py-2 bg-muted rounded-lg border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
@@ -426,9 +426,9 @@ export default function ApprovalCenter() {
                             </div>
                             <div>
                                 <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1 block">{t('Status')}</label>
-                                <select
+                                <select aria-label="Input"
                                     value={filters.status}
-                                    onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
+                                    onChange={e = aria-label="Input field"> setFilters(f => ({ ...f, status: e.target.value }))}
                                     title="Filter by Status"
                                     className="w-full px-3 py-2 bg-muted rounded-lg border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
@@ -440,9 +440,9 @@ export default function ApprovalCenter() {
                             </div>
                             <div>
                                 <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1 block">{t('Priority')}</label>
-                                <select
+                                <select aria-label="Input"
                                     value={filters.priority}
-                                    onChange={e => setFilters(f => ({ ...f, priority: e.target.value }))}
+                                    onChange={e = aria-label="Input field"> setFilters(f => ({ ...f, priority: e.target.value }))}
                                     title="Filter by Priority"
                                     className="w-full px-3 py-2 bg-muted rounded-lg border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
@@ -454,10 +454,10 @@ export default function ApprovalCenter() {
                             </div>
                             <div>
                                 <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1 block">{t('Date')}</label>
-                                <input
+                                <input aria-label="Input"
                                     type="date"
                                     value={filters.date}
-                                    onChange={e => setFilters(f => ({ ...f, date: e.target.value }))}
+                                    onChange={e = aria-label="Input field"> setFilters(f => ({ ...f, date: e.target.value }))}
                                     title="Filter by Date"
                                     className="w-full px-3 py-2 bg-muted rounded-lg border border-border text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 />
@@ -655,9 +655,9 @@ export default function ApprovalCenter() {
                                 </div>
                             </div>
 
-                            <textarea
+                            <textarea aria-label="Input"
                                 value={rejectionReason}
-                                onChange={e => setRejectionReason(e.target.value)}
+                                onChange={e = aria-label="Input field"> setRejectionReason(e.target.value)}
                                 placeholder={t('Enter rejection reason...')}
                                 rows={4}
                                 className="w-full px-4 py-3 bg-muted rounded-xl border border-border text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50 resize-none"

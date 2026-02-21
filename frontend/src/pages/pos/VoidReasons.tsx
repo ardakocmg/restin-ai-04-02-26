@@ -47,7 +47,7 @@ const VoidReasons: React.FC = () => {
 
     const categoryBadge = (cat: string) => {
         const cls = cat === 'item' ? 'pos-badge--blue' : cat === 'order' ? 'pos-badge--red' : 'pos-badge--purple';
-        return <span className={`pos-badge ${cls}`} style={{ textTransform: 'capitalize' }}>{cat}</span>; /* keep-inline */
+        return <span className={`pos-badge ${cls}`} style={{ textTransform: 'capitalize' }}>{cat}</span>; /* keep-inline */ /* keep-inline */
     };
 
     return (
@@ -67,11 +67,11 @@ const VoidReasons: React.FC = () => {
             </div>
 
             <div className="pos-card">
-                <div className="pos-table-header" style={{ gridTemplateColumns: voidTableCols }}> /* keep-inline */
+                <div className="pos-table-header" style={{ gridTemplateColumns: voidTableCols }}> /* keep-inline */ /* keep-inline */
                     <div></div><div>Reason</div><div>Category</div><div>Controls</div><div>Status</div><div>Uses</div><div></div>
                 </div>
                 {filtered.map(r => (
-                    <div key={r.id} className="pos-table-row" style={{ gridTemplateColumns: voidTableCols, opacity: r.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...r })}> /* keep-inline */
+                    <div key={r.id} className="pos-table-row" style={{ gridTemplateColumns: voidTableCols, opacity: r.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...r })}> /* keep-inline */ /* keep-inline */
                         <GripVertical size={14} className="pos-icon-grab" />
                         <div className="pos-flex pos-flex--center pos-gap-8">
                             <AlertTriangle size={14} className="pos-cell-amber" />
@@ -79,8 +79,8 @@ const VoidReasons: React.FC = () => {
                         </div>
                         {categoryBadge(r.category)}
                         <div className="pos-flex pos-gap-4">
-                            {r.requiresManager && <span className="pos-badge pos-badge--red" style={{ fontSize: 9 }}>Mgr</span>} /* keep-inline */
-                            {r.requiresNote && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9 }}>Note</span>} /* keep-inline */
+                            {r.requiresManager && <span className="pos-badge pos-badge--red" style={{ fontSize: 9 }}>Mgr</span>} /* keep-inline */ /* keep-inline */
+                            {r.requiresNote && <span className="pos-badge pos-badge--amber" style={{ fontSize: 9 }}>Note</span>} /* keep-inline */ /* keep-inline */
                             {!r.requiresManager && !r.requiresNote && <span className="pos-text-secondary pos-text-xs">None</span>}
                         </div>
                         <span className={`pos-badge ${r.isActive ? 'pos-badge--green' : 'pos-badge--red'}`}>{r.isActive ? 'Active' : 'Inactive'}</span>
@@ -98,20 +98,20 @@ const VoidReasons: React.FC = () => {
                         <button title="Close" className="pos-btn-icon" onClick={() => setEditing(null)}><X size={20} /></button>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Reason *</label>
-                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Customer Changed Mind" /></div>
+                        <input className="pos-input" value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Customer Changed Mind" /></div>
                     <div className="pos-form-group"><label className="pos-form-label">Category</label>
-                        <select className="pos-select" value={editing.category} onChange={e => setEditing(p => p ? { ...p, category: e.target.value as VoidReason['category'] } : null)} aria-label="Category">
+                        <select className="pos-select" value={editing.category} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, category: e.target.value as VoidReason['category'] } : null)} aria-label="Category">
                             <option value="item">Item Level</option><option value="order">Order Level</option><option value="both">Both</option>
                         </select></div>
                     <div className="pos-flex pos-gap-16 pos-mb-16 pos-flex--wrap">
                         {([['requiresManager', 'Requires manager approval'], ['requiresNote', 'Requires note'], ['isActive', 'Active']] as const).map(([key, label]) =>
                             <label key={key} className="pos-toggle-label">
-                                <input type="checkbox" checked={editing[key]} onChange={() => setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
+                                <input type="checkbox" checked={editing[key]} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, [key]: !p[key] } : null)} /> {label}</label>
                         )}
                     </div>
                     <div className="pos-modal-footer">
-                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */
-                        <button title="Delete reason" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setReasons(p => p.filter(r => r.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */ /* keep-inline */
+                        <button title="Delete reason" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setReasons(p => p.filter(r => r.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */ /* keep-inline */
                         <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>

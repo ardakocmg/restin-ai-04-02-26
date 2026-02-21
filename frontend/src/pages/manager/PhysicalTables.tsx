@@ -394,12 +394,12 @@ export default function PhysicalTables() {
                                     {backgroundImages[selectedFloor] && (
                                         <div
                                             className="absolute inset-0 bg-cover bg-center opacity-30"
-                                            style={{ backgroundImage: `url(${backgroundImages[selectedFloor]})` }} /* keep-inline */
+                                            style={{ backgroundImage: `url(${backgroundImages[selectedFloor]})` }} /* keep-inline */ /* keep-inline */
                                         />
                                     )}
 
                                     {/* Visual Canvas Pattern */}
-                                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 0)', backgroundSize: '40px 40px' }} /> /* keep-inline */
+                                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 0)', backgroundSize: '40px 40px' }} /> /* keep-inline */ /* keep-inline */
 
                                     {/* Table Rendering */}
                                     {tables.filter(t => t.floor === selectedFloor && t.x !== 0).map(table => (
@@ -414,7 +414,7 @@ export default function PhysicalTables() {
                                                         "bg-secondary border-2 border-border",
                                                 selectedTable?.id === table.id && "ring-2 ring-red-500 ring-offset-2 ring-offset-zinc-950"
                                             )}
-                                            style={{ /* keep-inline */
+                                            style={{ /* keep-inline */ /* keep-inline */
                                                 width: table.capacity * 20 + 20,
                                                 height: table.capacity * 20 + 20,
                                                 left: table.x,

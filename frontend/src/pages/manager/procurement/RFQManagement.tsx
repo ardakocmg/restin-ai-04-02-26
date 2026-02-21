@@ -259,19 +259,19 @@ export default function RFQManagement() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">Title *</label>
-                    <input
+                    <input aria-label="Input"
                       type="text"
                       value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      onChange={(e) = aria-label="Input field"> setFormData({ ...formData, title: e.target.value })}
                       className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded focus:outline-none focus:border-blue-500"
                       placeholder="e.g., Q1 2026 Dairy Products"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Description</label>
-                    <textarea
+                    <textarea aria-label="Input"
                       value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      onChange={(e) = aria-label="Input field"> setFormData({ ...formData, description: e.target.value })}
                       rows={3}
                       className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded focus:outline-none focus:border-blue-500"
                       placeholder="Additional details..."
@@ -279,10 +279,10 @@ export default function RFQManagement() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Deadline</label>
-                    <input
+                    <input aria-label="Input"
                       type="date"
                       value={formData.deadline}
-                      onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                      onChange={(e) = aria-label="Input field"> setFormData({ ...formData, deadline: e.target.value })}
                       className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded focus:outline-none focus:border-blue-500"
                     />
                   </div>
@@ -300,10 +300,10 @@ export default function RFQManagement() {
                       {formData.items.map((item, idx) => (
                         <div key={idx} className="p-3 bg-slate-800 rounded space-y-2">
                           <div className="flex gap-2">
-                            <input
+                            <input aria-label="Input"
                               type="text"
                               value={item.item_name}
-                              onChange={(e) => updateItem(idx, 'item_name', e.target.value)}
+                              onChange={(e) = aria-label="Input field"> updateItem(idx, 'item_name', e.target.value)}
                               placeholder="Item name"
                               className="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded text-sm"
                             />
@@ -317,16 +317,16 @@ export default function RFQManagement() {
                             )}
                           </div>
                           <div className="flex gap-2">
-                            <input
+                            <input aria-label="Input"
                               type="number"
                               value={item.quantity}
-                              onChange={(e) => updateItem(idx, 'quantity', parseFloat(e.target.value))}
+                              onChange={(e) = aria-label="Input field"> updateItem(idx, 'quantity', parseFloat(e.target.value))}
                               placeholder="Qty"
                               className="w-24 px-3 py-2 bg-slate-900 border border-slate-700 rounded text-sm"
                             />
-                            <select
+                            <select aria-label="Input"
                               value={item.unit}
-                              onChange={(e) => updateItem(idx, 'unit', e.target.value)}
+                              onChange={(e) = aria-label="Input field"> updateItem(idx, 'unit', e.target.value)}
                               className="w-32 px-3 py-2 bg-slate-900 border border-slate-700 rounded text-sm"
                             >
                               <option value="kg">kg</option>
@@ -334,10 +334,10 @@ export default function RFQManagement() {
                               <option value="pcs">pcs</option>
                               <option value="box">box</option>
                             </select>
-                            <input
+                            <input aria-label="Input"
                               type="text"
                               value={item.specifications}
-                              onChange={(e) => updateItem(idx, 'specifications', e.target.value)}
+                              onChange={(e) = aria-label="Input field"> updateItem(idx, 'specifications', e.target.value)}
                               placeholder="Specifications (optional)"
                               className="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded text-sm"
                             />

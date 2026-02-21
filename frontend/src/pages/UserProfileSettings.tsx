@@ -641,9 +641,9 @@ export default function UserProfileSettings() {
                       <Input id="pw-current" type={pwShowCurrent ? 'text' : 'password'}
                         value={pwCurrent} onChange={e => setPwCurrent(e.target.value)}
                         placeholder="••••••••" />
-                      <Button type="button" variant="ghost" size="icon"
+                      <Button type="button" variant="ghost" size="icon" aria-label="Action"
                         className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-                        onClick={() => setPwShowCurrent(!pwShowCurrent)}>
+                        onClick={() = aria-label="Action"> setPwShowCurrent(!pwShowCurrent)}>
                         {pwShowCurrent ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                       </Button>
                     </div>
@@ -655,9 +655,9 @@ export default function UserProfileSettings() {
                     <Input id="pw-new" type={pwShowNew ? 'text' : 'password'}
                       value={pwNew} onChange={e => setPwNew(e.target.value)}
                       placeholder="Min. 8 characters" />
-                    <Button type="button" variant="ghost" size="icon"
+                    <Button type="button" variant="ghost" size="icon" aria-label="Action"
                       className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-                      onClick={() => setPwShowNew(!pwShowNew)}>
+                      onClick={() = aria-label="Action"> setPwShowNew(!pwShowNew)}>
                       {pwShowNew ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                     </Button>
                   </div>
@@ -668,9 +668,9 @@ export default function UserProfileSettings() {
                     <Input id="pw-confirm" type={pwShowConfirm ? 'text' : 'password'}
                       value={pwConfirm} onChange={e => setPwConfirm(e.target.value)}
                       placeholder="••••••••" />
-                    <Button type="button" variant="ghost" size="icon"
+                    <Button type="button" variant="ghost" size="icon" aria-label="Action"
                       className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-                      onClick={() => setPwShowConfirm(!pwShowConfirm)}>
+                      onClick={() = aria-label="Action"> setPwShowConfirm(!pwShowConfirm)}>
                       {pwShowConfirm ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                     </Button>
                   </div>

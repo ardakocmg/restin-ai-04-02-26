@@ -16,7 +16,7 @@ interface Device {
     status: DeviceStatus; lastSeen: string; location: string; firmware: string; isActive: boolean;
 }
 
-const TYPE_ICONS: Record<DeviceType, React.ReactNode> = { terminal: <Monitor size={18} />, printer: <Printer size={18} />, scanner: <span style={{ fontSize: 16 }}>📷</span>, drawer: <span style={{ fontSize: 16 }}>💰</span>, display: <Smartphone size={18} />, payment: <span style={{ fontSize: 16 }}>💳</span> }; /* keep-inline */
+const TYPE_ICONS: Record<DeviceType, React.ReactNode> = { terminal: <Monitor size={18} />, printer: <Printer size={18} />, scanner: <span style={{ fontSize: 16 }}>📷</span>, drawer: <span style={{ fontSize: 16 }}>💰</span>, display: <Smartphone size={18} />, payment: <span style={{ fontSize: 16 }}>💳</span> }; /* keep-inline */ /* keep-inline */
 const TYPE_COLORS: Record<DeviceType, string> = { terminal: '#3B82F6', printer: '#10B981', scanner: '#F59E0B', drawer: '#8B5CF6', display: '#EC4899', payment: '#06B6D4' };
 const STATUS_COLORS: Record<DeviceStatus, string> = { online: '#10B981', offline: '#71717a', error: '#EF4444' };
 
@@ -47,41 +47,41 @@ const POSDevices: React.FC = () => {
 
     return (
         <div className="pos-page"><div className="pos-container pos-container--1200">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}> /* keep-inline */
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
                 <div>
-                    <button onClick={() => navigate(-1)} className="pos-btn pos-btn--outline" style={{ marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button> /* keep-inline */
-                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>POS Devices</h1> /* keep-inline */
-                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>{online} online · {offline} offline · {devices.length} total</p> /* keep-inline */
+                    <button onClick={() => navigate(-1)} className="pos-btn pos-btn--outline" style={{ marginBottom: 8, padding: '6px 14px', fontSize: 12 }}><ArrowLeft size={14} /> Back</button> /* keep-inline */ /* keep-inline */
+                    <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>POS Devices</h1> /* keep-inline */ /* keep-inline */
+                    <p style={{ fontSize: 13, color: 'var(--text-secondary,#a1a1aa)', margin: '4px 0 0' }}>{online} online · {offline} offline · {devices.length} total</p> /* keep-inline */ /* keep-inline */
                 </div>
-                <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
+                <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */ /* keep-inline */
                     <button className="pos-btn pos-btn--outline" onClick={() => toast.info('Scanning network...')}><RefreshCw size={14} /> Scan</button>
                     <button className="pos-btn pos-btn--primary" onClick={() => setEditing({ id: crypto.randomUUID(), name: '', type: 'terminal', model: '', ipAddress: '', serialNumber: '', status: 'offline', lastSeen: 'Never', location: '', firmware: '', isActive: true })}><Plus size={16} /> Add Device</button>
                 </div>
             </div>
 
             {/* Filter Bar */}
-            <div className="pos-tab-group" style={{ marginBottom: 16, flexWrap: 'wrap' }}> /* keep-inline */
+            <div className="pos-tab-group" style={{ marginBottom: 16, flexWrap: 'wrap' }}> /* keep-inline */ /* keep-inline */
                 <button onClick={() => setFilterType('all')} className={`pos-filter-btn${filterType === 'all' ? ' pos-filter-btn--active' : ''}`}>All ({devices.length})</button>
-                {(['terminal', 'printer', 'scanner', 'drawer', 'display', 'payment'] as DeviceType[]).map(t => { const count = devices.filter(d => d.type === t).length; return count > 0 ? <button key={t} onClick={() => setFilterType(t)} style={{ padding: '6px 14px', borderRadius: 6, border: 'none', fontSize: 12, cursor: 'pointer', textTransform: 'capitalize', background: filterType === t ? `${TYPE_COLORS[t]}15` : 'transparent', color: filterType === t ? TYPE_COLORS[t] : 'var(--text-secondary)' }}>{t} ({count})</button> : null; })} /* keep-inline */
+                {(['terminal', 'printer', 'scanner', 'drawer', 'display', 'payment'] as DeviceType[]).map(t => { const count = devices.filter(d => d.type === t).length; return count > 0 ? <button key={t} onClick={() => setFilterType(t)} style={{ padding: '6px 14px', borderRadius: 6, border: 'none', fontSize: 12, cursor: 'pointer', textTransform: 'capitalize', background: filterType === t ? `${TYPE_COLORS[t]}15` : 'transparent', color: filterType === t ? TYPE_COLORS[t] : 'var(--text-secondary)' }}>{t} ({count})</button> : null; })} /* keep-inline */ /* keep-inline */
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: 12 }}> /* keep-inline */
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: 12 }}> /* keep-inline */ /* keep-inline */
                 {filtered.map(device => (
-                    <div key={device.id} className="pos-card" style={{ cursor: 'pointer', padding: 16, opacity: device.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...device })}> /* keep-inline */
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}> /* keep-inline */
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}> /* keep-inline */
-                                <div style={{ width: 40, height: 40, borderRadius: 10, background: `${TYPE_COLORS[device.type]}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: TYPE_COLORS[device.type] }}> /* keep-inline */
+                    <div key={device.id} className="pos-card" style={{ cursor: 'pointer', padding: 16, opacity: device.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...device })}> /* keep-inline */ /* keep-inline */
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}> /* keep-inline */ /* keep-inline */
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}> /* keep-inline */ /* keep-inline */
+                                <div style={{ width: 40, height: 40, borderRadius: 10, background: `${TYPE_COLORS[device.type]}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: TYPE_COLORS[device.type] }}> /* keep-inline */ /* keep-inline */
                                     {TYPE_ICONS[device.type]}
                                 </div>
-                                <div><div style={{ fontSize: 14, fontWeight: 600 }}>{device.name}</div> /* keep-inline */
-                                    <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{device.model}</div></div> /* keep-inline */
+                                <div><div style={{ fontSize: 14, fontWeight: 600 }}>{device.name}</div> /* keep-inline */ /* keep-inline */
+                                    <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{device.model}</div></div> /* keep-inline */ /* keep-inline */
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}> /* keep-inline */
-                                {device.status === 'online' ? <Wifi size={12} style={{ color: '#10B981' }} /> : <WifiOff size={12} style={{ color: STATUS_COLORS[device.status] }} />} /* keep-inline */
-                                <span style={{ fontSize: 10, color: STATUS_COLORS[device.status], textTransform: 'capitalize' }}>{device.status}</span> /* keep-inline */
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}> /* keep-inline */ /* keep-inline */
+                                {device.status === 'online' ? <Wifi size={12} style={{ color: '#10B981' }} /> : <WifiOff size={12} style={{ color: STATUS_COLORS[device.status] }} />} /* keep-inline */ /* keep-inline */
+                                <span style={{ fontSize: 10, color: STATUS_COLORS[device.status], textTransform: 'capitalize' }}>{device.status}</span> /* keep-inline */ /* keep-inline */
                             </div>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, fontSize: 11, color: 'var(--text-secondary)' }}> /* keep-inline */
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, fontSize: 11, color: 'var(--text-secondary)' }}> /* keep-inline */ /* keep-inline */
                             <div>📍 {device.location}</div>
                             <div>🔗 {device.ipAddress}</div>
                             <div>🕐 {device.lastSeen}</div>
@@ -92,39 +92,39 @@ const POSDevices: React.FC = () => {
             </div>
         </div>
 
-            {editing && <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setEditing(null)}> /* keep-inline */
-                <div className="pos-card" style={{ width: 480, maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}> /* keep-inline */
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
-                        <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{devices.find(d => d.id === editing.id) ? 'Edit' : 'New'} Device</h3> /* keep-inline */
-                        <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditing(null)}><X size={20} /></button> /* keep-inline */
+            {editing && <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setEditing(null)}> /* keep-inline */ /* keep-inline */
+                <div className="pos-card" style={{ width: 480, maxHeight: '85vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}> /* keep-inline */ /* keep-inline */
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
+                        <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{devices.find(d => d.id === editing.id) ? 'Edit' : 'New'} Device</h3> /* keep-inline */ /* keep-inline */
+                        <button style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} onClick={() => setEditing(null)}><X size={20} /></button> /* keep-inline */ /* keep-inline */
                     </div>
-                    <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name *</label> /* keep-inline */
-                        <input className="pos-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} /></div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}> /* keep-inline */
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label> /* keep-inline */
-                            <select className="pos-input pos-select" value={editing.type} onChange={e => setEditing(p => p ? { ...p, type: e.target.value as DeviceType } : null)} aria-label="Device type">
-                                {(['terminal', 'printer', 'scanner', 'drawer', 'display', 'payment'] as DeviceType[]).map(t => <option key={t} value={t} style={{ textTransform: 'capitalize' }}>{t}</option>)} /* keep-inline */
+                    <div style={{ marginBottom: 14 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Name *</label> /* keep-inline */ /* keep-inline */
+                        <input className="pos-input" value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} /></div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}> /* keep-inline */ /* keep-inline */
+                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Type</label> /* keep-inline */ /* keep-inline */
+                            <select className="pos-input pos-select" value={editing.type} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, type: e.target.value as DeviceType } : null)} aria-label="Device type">
+                                {(['terminal', 'printer', 'scanner', 'drawer', 'display', 'payment'] as DeviceType[]).map(t => <option key={t} value={t} style={{ textTransform: 'capitalize' }}>{t}</option>)} /* keep-inline */ /* keep-inline */
                             </select></div>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Model</label> /* keep-inline */
-                            <input className="pos-input" value={editing.model} onChange={e => setEditing(p => p ? { ...p, model: e.target.value } : null)} /></div>
+                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Model</label> /* keep-inline */ /* keep-inline */
+                            <input className="pos-input" value={editing.model} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, model: e.target.value } : null)} /></div>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}> /* keep-inline */
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>IP / Connection</label> /* keep-inline */
-                            <input className="pos-input" value={editing.ipAddress} onChange={e => setEditing(p => p ? { ...p, ipAddress: e.target.value } : null)} placeholder="192.168.1.x or USB" /></div>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Location</label> /* keep-inline */
-                            <input className="pos-input" value={editing.location} onChange={e => setEditing(p => p ? { ...p, location: e.target.value } : null)} /></div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}> /* keep-inline */ /* keep-inline */
+                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>IP / Connection</label> /* keep-inline */ /* keep-inline */
+                            <input className="pos-input" value={editing.ipAddress} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, ipAddress: e.target.value } : null)} placeholder="192.168.1.x or USB" /></div>
+                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Location</label> /* keep-inline */ /* keep-inline */
+                            <input className="pos-input" value={editing.location} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, location: e.target.value } : null)} /></div>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}> /* keep-inline */
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Serial Number</label> /* keep-inline */
-                            <input className="pos-input" value={editing.serialNumber} onChange={e => setEditing(p => p ? { ...p, serialNumber: e.target.value } : null)} /></div>
-                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Firmware</label> /* keep-inline */
-                            <input className="pos-input" value={editing.firmware} onChange={e => setEditing(p => p ? { ...p, firmware: e.target.value } : null)} /></div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}> /* keep-inline */ /* keep-inline */
+                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Serial Number</label> /* keep-inline */ /* keep-inline */
+                            <input className="pos-input" value={editing.serialNumber} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, serialNumber: e.target.value } : null)} /></div>
+                        <div><label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Firmware</label> /* keep-inline */ /* keep-inline */
+                            <input className="pos-input" value={editing.firmware} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, firmware: e.target.value } : null)} /></div>
                     </div>
-                    <div style={{ marginBottom: 16 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}> /* keep-inline */
-                        <input type="checkbox" checked={editing.isActive} onChange={() => setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label></div>
-                    <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
-                        <button className="pos-btn pos-btn--primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */
-                        <button className="pos-btn pos-btn--outline" style={{ color: '#EF4444' }} onClick={() => { setDevices(p => p.filter(d => d.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */
+                    <div style={{ marginBottom: 16 }}><label style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}> /* keep-inline */ /* keep-inline */
+                        <input type="checkbox" checked={editing.isActive} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label></div>
+                    <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */ /* keep-inline */
+                        <button className="pos-btn pos-btn--primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */ /* keep-inline */
+                        <button className="pos-btn pos-btn--outline" style={{ color: '#EF4444' }} onClick={() => { setDevices(p => p.filter(d => d.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */ /* keep-inline */
                         <button className="pos-btn pos-btn--outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>

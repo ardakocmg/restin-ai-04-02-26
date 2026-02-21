@@ -148,9 +148,9 @@ function KDSRuntime() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center " style={{ backgroundColor: '#0A0A0B' }}> /* keep-inline */
+      <div className="min-h-screen flex items-center justify-center " style={{ backgroundColor: '#0A0A0B' }}> /* keep-inline */ /* keep-inline */
         <div className="text-center\">
-          <div className="text-2xl font-bold " style={{ color: '#F5F5F7' }}>{"Loading "}KDS...</div> /* keep-inline */
+          <div className="text-2xl font-bold " style={{ color: '#F5F5F7' }}>{"Loading "}KDS...</div> /* keep-inline */ /* keep-inline */
         </div>
       </div>
     );
@@ -191,7 +191,7 @@ function KDSRuntime() {
             key={ticket.id}
             className={`rounded-xl p-4 shadow-lg transition-all bg-card/50 border border-border hover:border-border hover:shadow-2xl hover:scale-[1.01] ${ticket.wait_time?.visual_state === 'late' ? 'animate-pulse ring-1 ring-red-500/50' : ''
               }`}
-            style={{ /* keep-inline */
+            style={{ /* keep-inline */ /* keep-inline */
               borderLeft: ticket.wait_time?.visual_state === 'late' ? '4px solid #EF4444' :
                 ticket.wait_time?.visual_state === 'delayed' ? '4px solid #F97316' :
                   '4px solid rgba(255, 255, 255, 0.1)'
@@ -217,12 +217,12 @@ function KDSRuntime() {
 
             {/* Order Details */}
             {ticket.order_details && (
-              <div className="mb-3 pb-3 " style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}> /* keep-inline */
+              <div className="mb-3 pb-3 " style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}> /* keep-inline */ /* keep-inline */
                 <div className="flex items-center justify-between text-sm\">
-                  <span className="font-semibold " style={{ color: '#F5F5F7' }}>{ticket.order_details.table_name}</span> /* keep-inline */
-                  <span style={{ color: '#A1A1AA' }}>{ticket.order_details.server_name}</span> /* keep-inline */
+                  <span className="font-semibold " style={{ color: '#F5F5F7' }}>{ticket.order_details.table_name}</span> /* keep-inline */ /* keep-inline */
+                  <span style={{ color: '#A1A1AA' }}>{ticket.order_details.server_name}</span> /* keep-inline */ /* keep-inline */
                 </div>
-                <div className="text-xs mt-1 " style={{ color: '#71717A' }}> /* keep-inline */
+                <div className="text-xs mt-1 " style={{ color: '#71717A' }}> /* keep-inline */ /* keep-inline */
                   Covers: {ticket.order_details.guest_count}
                 </div>
               </div>
@@ -237,10 +237,10 @@ function KDSRuntime() {
                     <span className="text-sm text-gray-400">x{item.quantity}</span>
                   </div>
                   {item.notes && (
-                    <p className="text-xs mt-1" style={{ color: '#FDB86C' }}>{item.notes}</p> /* keep-inline */
+                    <p className="text-xs mt-1" style={{ color: '#FDB86C' }}>{item.notes}</p> /* keep-inline */ /* keep-inline */
                   )}
                   {item.modifiers && item.modifiers.length > 0 && (
-                    <div className="text-xs mt-1" style={{ color: '#A1A1AA' }}> /* keep-inline */
+                    <div className="text-xs mt-1" style={{ color: '#A1A1AA' }}> /* keep-inline */ /* keep-inline */
                       {item.modifiers.map(m => m?.name || 'Unknown').join(', ')}
                     </div>
                   )}

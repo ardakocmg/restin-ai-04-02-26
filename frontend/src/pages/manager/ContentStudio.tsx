@@ -462,15 +462,15 @@ export default function ContentStudio() {
           <CardContent className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <div className="text-xs text-muted-foreground mb-2">Approved Version</div>
-              <pre className="text-xs p-3 rounded-lg overflow-auto max-h-[360px]" style={{ backgroundColor: '#111114', color: '#E2E8F0' }} data-testid="content-studio-diff-approved"> /* keep-inline */
+              <pre className="text-xs p-3 rounded-lg overflow-auto max-h-[360px]" style={{ backgroundColor: '#111114', color: '#E2E8F0' }} data-testid="content-studio-diff-approved"> /* keep-inline */ /* keep-inline */
                 {approvedJson || 'No approved version yet.'}
               </pre>
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-2">Selected Version</div>
-              <pre className="text-xs p-3 rounded-lg overflow-auto max-h-[360px]" style={{ backgroundColor: '#111114', color: '#E2E8F0' }} data-testid="content-studio-diff-selected"> /* keep-inline */
+              <pre className="text-xs p-3 rounded-lg overflow-auto max-h-[360px]" style={{ backgroundColor: '#111114', color: '#E2E8F0' }} data-testid="content-studio-diff-selected"> /* keep-inline */ /* keep-inline */
                 {diffLines.map((item, idx) => (
-                  <div key={`${item.line}-${idx}`} style={{ backgroundColor: item.changed ? 'rgba(229,57,53,0.15)' : 'transparent' }}> /* keep-inline */
+                  <div key={`${item.line}-${idx}`} style={{ backgroundColor: item.changed ? 'rgba(229,57,53,0.15)' : 'transparent' }}> /* keep-inline */ /* keep-inline */
                     {item.line}
                   </div>
                 ))}

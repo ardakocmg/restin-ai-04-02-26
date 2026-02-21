@@ -246,7 +246,7 @@ const FintechDashboard: React.FC = () => {
                                                 {tr.status?.toUpperCase()}
                                             </Badge>
                                         </div>
-                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground group-hover:text-blue-500">
+                                        <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground group-hover:text-blue-500" aria-label="Action">
                                             <ArrowUpRight className="w-4 h-4" />
                                         </Button>
                                     </div>

@@ -300,30 +300,30 @@ export default function Users() {
         const isArchived = row.status === 'archived' || row.is_archived;
         return (
           <div className="flex gap-1">
-            <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground"
+            <Button size="icon" aria-label="Action" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground"
               title="Manage Access" onClick={(e) => { e.stopPropagation(); navigate(`/manager/users/${row.id}/access`); }}>
               <Shield className="h-3.5 w-3.5" />
             </Button>
-            <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-amber-400"
+            <Button size="icon" aria-label="Action" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-amber-400"
               title="Reset PIN" onClick={(e) => { e.stopPropagation(); handleResetPin(row.id, row.name); }}>
               <Key className="h-3.5 w-3.5" />
             </Button>
-            <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-violet-400"
+            <Button size="icon" aria-label="Action" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-violet-400"
               title="Set Password" onClick={(e) => { e.stopPropagation(); openSetPasswordDialog(row); }}>
               <Lock className="h-3.5 w-3.5" />
             </Button>
             {row.employee_id ? (
-              <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-rose-400"
+              <Button size="icon" aria-label="Action" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-rose-400"
                 title="Unlink Employee" onClick={(e) => { e.stopPropagation(); handleUnlinkEmployee(row.id); }}>
                 <Unlink className="h-3.5 w-3.5" />
               </Button>
             ) : (
-              <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-blue-400"
+              <Button size="icon" aria-label="Action" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-blue-400"
                 title="Link Employee" onClick={(e) => { e.stopPropagation(); openLinkDialog(row.id); }}>
                 <Link2 className="h-3.5 w-3.5" />
               </Button>
             )}
-            <Button size="icon" variant="ghost"
+            <Button size="icon" aria-label="Action" variant="ghost"
               className={`h-7 w-7 ${isArchived ? 'text-muted-foreground hover:text-emerald-400' : 'text-muted-foreground hover:text-rose-400'}`}
               title={isArchived ? 'Restore' : 'Archive'}
               onClick={(e) => { e.stopPropagation(); handleArchiveToggle(row.id, isArchived); }}>
@@ -551,9 +551,9 @@ export default function Users() {
                     className="bg-background border-border text-secondary-foreground pr-10"
                     placeholder="Min. 6 characters"
                   />
-                  <Button type="button" variant="ghost" size="icon"
+                  <Button type="button" variant="ghost" size="icon" aria-label="Action"
                     className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground hover:text-foreground"
-                    onClick={() => setPwShowValue(!pwShowValue)}>
+                    onClick={() = aria-label="Action"> setPwShowValue(!pwShowValue)}>
                     {pwShowValue ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                   </Button>
                 </div>

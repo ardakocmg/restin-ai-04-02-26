@@ -431,7 +431,7 @@ export default function ModulesCatalog() {
                             </div>
                         </div>
                         <div>
-                            <div className="text-lg font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Module Catalog</div> /* keep-inline */
+                            <div className="text-lg font-bold tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Module Catalog</div> /* keep-inline */ /* keep-inline */
                             <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
                                 {activeCount} active · {comingSoonCount} coming soon
                             </div>
@@ -492,7 +492,7 @@ export default function ModulesCatalog() {
                                         </div>
 
                                         {/* Title & Description */}
-                                        <h3 className="text-sm font-bold text-foreground mb-1.5" style={{ fontFamily: 'Space Grotesk, sans-serif' }}> /* keep-inline */
+                                        <h3 className="text-sm font-bold text-foreground mb-1.5" style={{ fontFamily: 'Space Grotesk, sans-serif' }}> /* keep-inline */ /* keep-inline */
                                             {mod.title}
                                         </h3>
                                         <p className="text-xs text-muted-foreground leading-relaxed mb-3">

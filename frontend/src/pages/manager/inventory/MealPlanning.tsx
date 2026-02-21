@@ -136,11 +136,11 @@ export default function MealPlanning() {
             {/* Controls */}
             <div className="flex items-center gap-3 mb-4 flex-wrap">
                 <div className="flex items-center gap-1">
-                    <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => setCurrentWeek(w => w - 1)}>
+                    <Button variant="outline" size="icon" className="h-8 w-8" onClick={() = aria-label="Action"> setCurrentWeek(w => w - 1)}>
                         <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <span className="text-sm font-bold px-3 min-w-20 text-center">{weekLabel}</span>
-                    <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => setCurrentWeek(w => w + 1)}>
+                    <Button variant="outline" size="icon" className="h-8 w-8" onClick={() = aria-label="Action"> setCurrentWeek(w => w + 1)}>
                         <ChevronRight className="h-4 w-4" />
                     </Button>
                 </div>
@@ -199,7 +199,7 @@ export default function MealPlanning() {
 
             {/* Weekly Grid */}
             <div className="overflow-x-auto">
-                <div className="grid gap-2" style={{ gridTemplateColumns: `80px repeat(${DAYS.length}, 1fr)`, minWidth: '900px' }}> /* keep-inline */
+                <div className="grid gap-2" style={{ gridTemplateColumns: `80px repeat(${DAYS.length}, 1fr)`, minWidth: '900px' }}> /* keep-inline */ /* keep-inline */
                     {/* Header */}
                     <div />
                     {DAYS.map(day => (

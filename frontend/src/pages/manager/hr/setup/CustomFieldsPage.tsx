@@ -121,9 +121,9 @@ export default function CustomFieldsPage() {
               </div>
               <div>
                 <Label>Type</Label>
-                <select
+                <select aria-label="Input"
                   value={newField.type}
-                  onChange={(e) => setNewField({ ...newField, type: e.target.value })}
+                  onChange={(e) = aria-label="Input field"> setNewField({ ...newField, type: e.target.value })}
                   className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
                 >
                   {FIELD_TYPES.map(t => (
@@ -146,10 +146,10 @@ export default function CustomFieldsPage() {
 
             <div className="flex items-center gap-4 mt-4">
               <label className="flex items-center gap-2 text-sm">
-                <input
+                <input aria-label="Input"
                   type="checkbox"
                   checked={newField.required}
-                  onChange={(e) => setNewField({ ...newField, required: e.target.checked })}
+                  onChange={(e) = aria-label="Input field"> setNewField({ ...newField, required: e.target.checked })}
                   className="rounded"
                 />
                 Required field
@@ -203,9 +203,9 @@ export default function CustomFieldsPage() {
                     )}
                     <Button
                       variant="ghost"
-                      size="icon"
+                      size="icon" aria-label="Action"
                       className="opacity-0 group-hover:opacity-100 text-destructive"
-                      onClick={() => handleDelete(field.id)}
+                      onClick={() = aria-label="Action"> handleDelete(field.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

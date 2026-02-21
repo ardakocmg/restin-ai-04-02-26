@@ -542,7 +542,7 @@ export default function SupplierManagement() {
                                     </div>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild onClick={e => e.stopPropagation()}>
-                                            <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100">
+                                            <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100" aria-label="Action">
                                                 <MoreHorizontal className="h-4 w-4" />
                                             </Button>
                                         </DropdownMenuTrigger>
@@ -890,7 +890,7 @@ export default function SupplierManagement() {
                                     <Input placeholder="Role" value={c.role} onChange={e => updateContact(i, 'role', e.target.value)} />
                                     <Input placeholder="Phone" value={c.phone} onChange={e => updateContact(i, 'phone', e.target.value)} />
                                     <Input placeholder="Email" value={c.email} onChange={e => updateContact(i, 'email', e.target.value)} />
-                                    <Button variant="ghost" size="icon" onClick={() => removeContact(i)}>
+                                    <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> removeContact(i)}>
                                         <X className="h-4 w-4 text-red-400" />
                                     </Button>
                                 </div>
@@ -917,7 +917,7 @@ export default function SupplierManagement() {
                                             <SelectItem value="expired">Expired</SelectItem>
                                         </SelectContent>
                                     </Select>
-                                    <Button variant="ghost" size="icon" onClick={() => removeCert(i)}>
+                                    <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> removeCert(i)}>
                                         <X className="h-4 w-4 text-red-400" />
                                     </Button>
                                 </div>
@@ -942,7 +942,7 @@ export default function SupplierManagement() {
                                     </Select>
                                     <Input type="time" value={s.cutoffTime} onChange={e => updateSchedule(i, 'cutoffTime', e.target.value)} />
                                     <Input type="number" placeholder="Lead days" value={s.leadTimeDays} onChange={e => updateSchedule(i, 'leadTimeDays', Number(e.target.value))} />
-                                    <Button variant="ghost" size="icon" onClick={() => removeSchedule(i)}>
+                                    <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> removeSchedule(i)}>
                                         <X className="h-4 w-4 text-red-400" />
                                     </Button>
                                 </div>

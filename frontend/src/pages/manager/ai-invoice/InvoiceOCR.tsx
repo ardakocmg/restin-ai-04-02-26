@@ -48,7 +48,7 @@ export default function InvoiceOCR() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Match to PO (Optional)</label>
-                <select
+                <select aria-label="Input"
                   title="Match to PO"
                   aria-label="Match to PO"
                   value={selectedPO}
@@ -62,7 +62,7 @@ export default function InvoiceOCR() {
                 <Upload className="h-12 w-12 mx-auto mb-4 text-slate-400" />
                 <label className="cursor-pointer">
                   <span className="text-blue-400 hover:text-blue-300">Choose file</span>
-                  <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+                  <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden"  aria-label="Input field" />
                 </label>
                 <p className="text-sm text-muted-foreground mt-2">PNG, JPG, WEBP</p>
               </div>

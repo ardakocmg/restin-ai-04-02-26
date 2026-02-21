@@ -398,7 +398,7 @@ export default function Login() {
             {/* Background Image */}
             <div
                 className="absolute inset-0 z-0 login-bg-image"
-                style={{ backgroundImage: `url(https://images.unsplash.com/photo-1709396759771-07c3644794c8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwzfHxyZXN0YXVyYW50JTIwa2l0Y2hlbiUyMGJ1c3klMjBjaGVmJTIwcGxhdGluZyUyMGZpbmUlMjBkaW5pbmclMjBkYXJrJTIwYXRtb3NwaGVyZXxlbnwwfHx8fDE3NjkxMjMyNTZ8MA&ixlib=rb-4.1.0&q=85)` }} /* keep-inline */
+                style={{ backgroundImage: `url(https://images.unsplash.com/photo-1709396759771-07c3644794c8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwzfHxyZXN0YXVyYW50JTIwa2l0Y2hlbiUyMGJ1c3klMjBjaGVmJTIwcGxhdGluZyUyMGZpbmUlMjBkaW5pbmclMjBkYXJrJTIwYXRtb3NwaGVyZXxlbnwwfHx8fDE3NjkxMjMyNTZ8MA&ixlib=rb-4.1.0&q=85)` }} /* keep-inline */ /* keep-inline */
             />
 
             {/* Dark overlay */}
@@ -409,22 +409,22 @@ export default function Login() {
                 <div className="w-full max-w-md space-y-8 rounded-2xl p-8 login-glass-card">
                     {/* Logo */}
                     <div className="text-center mb-12">
-                        <h1 className="text-6xl font-bold mb-2" style={{ color: '#F5F5F7' }}> /* keep-inline */
-                            RESTIN<span style={{ color: '#E53935' }}>.AI</span> /* keep-inline */
+                        <h1 className="text-6xl font-bold mb-2" style={{ color: '#F5F5F7' }}> /* keep-inline */ /* keep-inline */
+                            RESTIN<span style={{ color: '#E53935' }}>.AI</span> /* keep-inline */ /* keep-inline */
                         </h1>
-                        <p className="text-sm" style={{ color: '#A1A1AA' }}>ENTERPRISE HOSPITALITY OS</p> /* keep-inline */
+                        <p className="text-sm" style={{ color: '#A1A1AA' }}>ENTERPRISE HOSPITALITY OS</p> /* keep-inline */ /* keep-inline */
                     </div>
 
                     {mfaRequired ? (
                         <div className="space-y-6">
                             <div className="text-center">
-                                <h2 className="text-2xl font-bold mb-2" style={{ color: '#F5F5F7' }}>MFA VERIFICATION</h2> /* keep-inline */
-                                <p className="text-sm" style={{ color: '#A1A1AA' }}>Enter your 6-digit authenticator code</p> /* keep-inline */
+                                <h2 className="text-2xl font-bold mb-2" style={{ color: '#F5F5F7' }}>MFA VERIFICATION</h2> /* keep-inline */ /* keep-inline */
+                                <p className="text-sm" style={{ color: '#A1A1AA' }}>Enter your 6-digit authenticator code</p> /* keep-inline */ /* keep-inline */
                             </div>
-                            <input
+                            <input aria-label="Input"
                                 type="text"
                                 value={totpCode}
-                                onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                onChange={(e) = aria-label="Input field"> setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                 className="w-full text-center text-2xl tracking-widest py-4 rounded-xl bg-black/40 text-foreground border border-border"
                                 placeholder="••••••"
                                 data-testid="mfa-code-input"
@@ -500,8 +500,8 @@ export default function Login() {
                             {/* PIN Entry */}
                             <div className="text-center space-y-6">
                                 <div>
-                                    <h2 className="text-2xl font-bold mb-2" style={{ color: '#F5F5F7' }}>{t('auth.pin', 'ENTER PIN')}</h2> /* keep-inline */
-                                    <p className="text-sm" style={{ color: '#A1A1AA' }}>{t('validation.minLength', { count: 4 })}</p> /* keep-inline */
+                                    <h2 className="text-2xl font-bold mb-2" style={{ color: '#F5F5F7' }}>{t('auth.pin', 'ENTER PIN')}</h2> /* keep-inline */ /* keep-inline */
+                                    <p className="text-sm" style={{ color: '#A1A1AA' }}>{t('validation.minLength', { count: 4 })}</p> /* keep-inline */ /* keep-inline */
                                 </div>
 
                                 {/* PIN Boxes */}
@@ -525,7 +525,7 @@ export default function Login() {
                                                     data-testid={`login-pin-${String(btn).toLowerCase()}`}
                                                     className={`numpad-button rounded-xl font-bold transition-all touch-feedback ${btn === 'CLEAR' || btn === 'UNDO' ? 'col-span-1' : ''
                                                         }`}
-                                                    style={{ /* keep-inline */
+                                                    style={{ /* keep-inline */ /* keep-inline */
                                                         backgroundColor: btn === 'CLEAR' ? 'rgba(239, 68, 68, 0.15)' :
                                                             btn === 'UNDO' ? 'rgba(251, 140, 0, 0.15)' :
                                                                 'rgba(255, 255, 255, 0.05)',
@@ -546,15 +546,15 @@ export default function Login() {
                                 </div>
 
                                 {loading && (
-                                    <p className="text-sm" style={{ color: '#A1A1AA' }}>{t('common.loading')}</p> /* keep-inline */
+                                    <p className="text-sm" style={{ color: '#A1A1AA' }}>{t('common.loading')}</p> /* keep-inline */ /* keep-inline */
                                 )}
 
                                 {/* Toggle: PIN ↔ Credentials */}
-                                <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}> /* keep-inline */
+                                <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}> /* keep-inline */ /* keep-inline */
                                     <button
                                         onClick={() => setLoginMode(loginMode === 'pin' ? 'credentials' : 'pin')}
                                         className="w-full flex items-center justify-center gap-2 text-sm py-2 rounded-lg transition-all"
-                                        style={{ color: '#A1A1AA' }} /* keep-inline */
+                                        style={{ color: '#A1A1AA' }} /* keep-inline */ /* keep-inline */
                                         data-testid="login-mode-toggle"
                                     >
                                         {loginMode === 'pin' ? (
@@ -568,7 +568,7 @@ export default function Login() {
                                 {/* Credentials Form */}
                                 {loginMode === 'credentials' && (
                                     <div className="mt-4 space-y-3">
-                                        <input
+                                        <input aria-label="Input"
                                             type="email"
                                             placeholder="Email, username, or employee ID"
                                             value={credEmail}
@@ -576,7 +576,7 @@ export default function Login() {
                                             autoComplete="email"
                                             data-testid="login-email"
                                             className="w-full px-4 py-3 rounded-xl text-sm transition-all outline-none"
-                                            style={{ /* keep-inline */
+                                            style={{ /* keep-inline */ /* keep-inline */
                                                 backgroundColor: 'rgba(255,255,255,0.05)',
                                                 color: '#F5F5F7',
                                                 border: '2px solid rgba(255,255,255,0.1)',
@@ -584,7 +584,7 @@ export default function Login() {
                                             onFocus={e => e.target.style.borderColor = 'rgba(255,255,255,0.3)'}
                                             onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                                         />
-                                        <input
+                                        <input aria-label="Input"
                                             type="password"
                                             placeholder="Password"
                                             value={credPassword}
@@ -592,7 +592,7 @@ export default function Login() {
                                             autoComplete="current-password"
                                             data-testid="login-password"
                                             className="w-full px-4 py-3 rounded-xl text-sm transition-all outline-none"
-                                            style={{ /* keep-inline */
+                                            style={{ /* keep-inline */ /* keep-inline */
                                                 backgroundColor: 'rgba(255,255,255,0.05)',
                                                 color: '#F5F5F7',
                                                 border: '2px solid rgba(255,255,255,0.1)',
@@ -606,7 +606,7 @@ export default function Login() {
                                             disabled={loading || !credEmail || !credPassword}
                                             data-testid="login-credentials-submit"
                                             className="w-full py-3.5 rounded-xl font-bold text-sm transition-all"
-                                            style={{ /* keep-inline */
+                                            style={{ /* keep-inline */ /* keep-inline */
                                                 backgroundColor: (!credEmail || !credPassword) ? 'rgba(255,255,255,0.05)' : 'rgba(34, 197, 94, 0.2)',
                                                 color: (!credEmail || !credPassword) ? '#71717A' : '#22C55E',
                                                 border: (!credEmail || !credPassword) ? '2px solid rgba(255,255,255,0.05)' : '2px solid rgba(34, 197, 94, 0.3)',
@@ -619,13 +619,13 @@ export default function Login() {
 
                                 {/* Google SSO — visible when configured */}
                                 {googleClientId && (
-                                    <div className="mt-6 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}> /* keep-inline */
+                                    <div className="mt-6 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}> /* keep-inline */ /* keep-inline */
                                         <button
                                             onClick={handleGoogleLogin}
                                             disabled={googleLoading || loading}
                                             data-testid="google-sso-button"
                                             className="w-full flex items-center justify-center gap-3 px-6 py-3.5 rounded-xl font-medium transition-all"
-                                            style={{ /* keep-inline */
+                                            style={{ /* keep-inline */ /* keep-inline */
                                                 backgroundColor: 'rgba(255, 255, 255, 0.07)',
                                                 color: '#F5F5F7',
                                                 border: '2px solid rgba(255, 255, 255, 0.12)',
@@ -649,8 +649,8 @@ export default function Login() {
                 // Venue selection screen
                 <div className="space-y-6">
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold mb-2" style={{ color: '#F5F5F7' }}>SELECT VENUE</h2> /* keep-inline */
-                        <p className="text-sm" style={{ color: '#A1A1AA' }}>Choose your venue to continue</p> /* keep-inline */
+                        <h2 className="text-2xl font-bold mb-2" style={{ color: '#F5F5F7' }}>SELECT VENUE</h2> /* keep-inline */ /* keep-inline */
+                        <p className="text-sm" style={{ color: '#A1A1AA' }}>Choose your venue to continue</p> /* keep-inline */ /* keep-inline */
                     </div>
                     {/* Venue selection logic to be implemented based on allowedVenues */}
                     <div className="grid gap-3">

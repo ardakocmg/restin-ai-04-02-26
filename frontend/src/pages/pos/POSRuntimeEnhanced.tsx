@@ -706,9 +706,9 @@ export default function POSRuntimeEnhanced() {
 
       {/* Training Mode Banner */}
       {trainingMode && (
-        <div style={{ backgroundColor: '#F4A261', color: '#000', textAlign: 'center', padding: '6px 0', fontSize: 13, fontWeight: 700, letterSpacing: 1, position: 'relative', zIndex: 200 }}> /* keep-inline */
+        <div style={{ backgroundColor: '#F4A261', color: '#000', textAlign: 'center', padding: '6px 0', fontSize: 13, fontWeight: 700, letterSpacing: 1, position: 'relative', zIndex: 200 }}> /* keep-inline */ /* keep-inline */
           ⚠️ TRAINING MODE — Orders will NOT be sent to kitchen or charged
-          <button style={{ marginLeft: 16, background: '#000', color: '#F4A261', border: 'none', borderRadius: 6, padding: '2px 12px', cursor: 'pointer', fontSize: 11, fontWeight: 700 }} onClick={() => setTrainingMode(false)}>EXIT TRAINING</button> /* keep-inline */
+          <button style={{ marginLeft: 16, background: '#000', color: '#F4A261', border: 'none', borderRadius: 6, padding: '2px 12px', cursor: 'pointer', fontSize: 11, fontWeight: 700 }} onClick={() => setTrainingMode(false)}>EXIT TRAINING</button> /* keep-inline */ /* keep-inline */
         </div>
       )}
 
@@ -723,11 +723,11 @@ export default function POSRuntimeEnhanced() {
             <span className="pos-top-bar-label">SEARCH</span>
           </button>
           <button className="pos-top-bar-btn" onClick={() => setShowPLU(true)} title="PLU Lookup (F2)">
-            <span style={{ ...styles.topBarLabel, fontSize: 11, fontWeight: 700 }}>PLU</span> /* keep-inline */
+            <span style={{ ...styles.topBarLabel, fontSize: 11, fontWeight: 700 }}>PLU</span> /* keep-inline */ /* keep-inline */
           </button>
         </div>
         <div className="pos-top-bar-center">
-          <span style={{ fontSize: 28, color: '#E05A33' }}>🔥</span> /* keep-inline */
+          <span style={{ fontSize: 28, color: '#E05A33' }}>🔥</span> /* keep-inline */ /* keep-inline */
         </div>
         <div className="pos-top-bar-right">
           <button className="pos-top-bar-action-btn" onClick={sendToBar} title="Send to Bar (F5)">
@@ -762,7 +762,7 @@ export default function POSRuntimeEnhanced() {
           ].map(tool => (
             <button
               key={tool.key}
-              style={{ /* keep-inline */
+              style={{ /* keep-inline */ /* keep-inline */
                 ...styles.toolBtn,
                 backgroundColor: activeLeftTool === tool.key ? '#333' : 'transparent',
               }}
@@ -781,7 +781,7 @@ export default function POSRuntimeEnhanced() {
             return itemGridView === 'list' ? (
               <button
                 key={item.id || idx}
-                style={{ /* keep-inline */
+                style={{ /* keep-inline */ /* keep-inline */
                   display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '8px 12px',
                   borderRadius: 4, border: 'none', cursor: 'pointer', textAlign: 'left',
                   backgroundColor: is86 ? '#222' : '#1a1a1a', opacity: is86 ? 0.5 : 1,
@@ -793,16 +793,16 @@ export default function POSRuntimeEnhanced() {
                   handleItemClick(item);
                 }}
               >
-                <div style={{ width: 8, height: '100%', minHeight: 28, borderRadius: 2, backgroundColor: tileColor, flexShrink: 0 }} /> /* keep-inline */
-                <span style={{ flex: 1, fontSize: 13, fontWeight: 600 }}>{item.name}</span> /* keep-inline */
-                <span style={{ fontSize: 11, color: '#888', marginRight: 8 }}>{item.sku || item.code || `M${idx + 1}`}</span> /* keep-inline */
-                <span style={{ fontSize: 13, fontWeight: 700, color: '#F4A261' }}>{((item.sell_price || item.price || 0)).toFixed(2)}</span> /* keep-inline */
-                {is86 && <span style={{ fontSize: 10, fontWeight: 700, color: '#E05A33', marginLeft: 6 }}>86</span>} /* keep-inline */
+                <div style={{ width: 8, height: '100%', minHeight: 28, borderRadius: 2, backgroundColor: tileColor, flexShrink: 0 }} /> /* keep-inline */ /* keep-inline */
+                <span style={{ flex: 1, fontSize: 13, fontWeight: 600 }}>{item.name}</span> /* keep-inline */ /* keep-inline */
+                <span style={{ fontSize: 11, color: '#888', marginRight: 8 }}>{item.sku || item.code || `M${idx + 1}`}</span> /* keep-inline */ /* keep-inline */
+                <span style={{ fontSize: 13, fontWeight: 700, color: '#F4A261' }}>{((item.sell_price || item.price || 0)).toFixed(2)}</span> /* keep-inline */ /* keep-inline */
+                {is86 && <span style={{ fontSize: 10, fontWeight: 700, color: '#E05A33', marginLeft: 6 }}>86</span>} /* keep-inline */ /* keep-inline */
               </button>
             ) : (
               <button
                 key={item.id || idx}
-                style={{ /* keep-inline */
+                style={{ /* keep-inline */ /* keep-inline */
                   ...styles.tile,
                   backgroundColor: is86 ? '#333' : tileColor,
                   opacity: is86 ? 0.5 : 1,
@@ -831,7 +831,7 @@ export default function POSRuntimeEnhanced() {
         <div className="pos-right-panel">
           {/* Header */}
           <div className="pos-order-header">
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 12 }} onClick={() => setShowActionsPanel(true)}>Actions ▾</button> /* keep-inline */
+            <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 12 }} onClick={() => setShowActionsPanel(true)}>Actions ▾</button> /* keep-inline */ /* keep-inline */
             <span className="pos-order-table-name">
               {posMode === 'dine-in' ? tableLabel : posMode === 'takeout' ? `📦 Takeout #${(order?.order_number || '—')}` : `⚡ Counter #${(order?.order_number || '—')}`}
             </span>
@@ -846,7 +846,7 @@ export default function POSRuntimeEnhanced() {
             ).map(tab => (
               <button
                 key={tab}
-                style={{ /* keep-inline */
+                style={{ /* keep-inline */ /* keep-inline */
                   ...styles.sortTab,
                   backgroundColor: orderViewMode === tab ? '#2A9D8F' : 'transparent',
                   color: orderViewMode === tab ? '#fff' : '#888',
@@ -861,8 +861,8 @@ export default function POSRuntimeEnhanced() {
           {/* Table header bar */}
           <div className="pos-table-header-bar">
             {posMode === 'dine-in' ? 'Table' : posMode === 'takeout' ? '📦 Takeout Order' : '⚡ Counter Order'}
-            {posMode === 'dine-in' && covers > 0 && <span style={{ fontSize: 11, marginLeft: 8, opacity: 0.8 }}>· {covers} covers</span>} /* keep-inline */
-            {assignedCustomer && <span style={{ fontSize: 11, marginLeft: 8, opacity: 0.8 }}>· {assignedCustomer.name}</span>} /* keep-inline */
+            {posMode === 'dine-in' && covers > 0 && <span style={{ fontSize: 11, marginLeft: 8, opacity: 0.8 }}>· {covers} covers</span>} /* keep-inline */ /* keep-inline */
+            {assignedCustomer && <span style={{ fontSize: 11, marginLeft: 8, opacity: 0.8 }}>· {assignedCustomer.name}</span>} /* keep-inline */ /* keep-inline */
           </div>
 
           {/* Order items (Seat → Course grouping) */}
@@ -883,7 +883,7 @@ export default function POSRuntimeEnhanced() {
                   <span className="pos-order-item-qty">{item.qty || 1}</span>
                   <span className="pos-order-item-name">
                     {item.menu_item_name || item.name}
-                    {item.instructions && <span style={{ fontSize: 10, color: '#F4A261', display: 'block' }}>📝 {item.instructions}</span>} /* keep-inline */
+                    {item.instructions && <span style={{ fontSize: 10, color: '#F4A261', display: 'block' }}>📝 {item.instructions}</span>} /* keep-inline */ /* keep-inline */
                   </span>
                   <span className="pos-order-item-price">
                     {((item.unit_price || item.price || 0) * (item.qty || 1)).toFixed(2)}
@@ -896,10 +896,10 @@ export default function POSRuntimeEnhanced() {
                   <div className="pos-seat-header">Seat {seatNum}</div>
                   {Object.entries(courses).sort(([a], [b]) => a - b).map(([courseNum, courseItems]) => (
                     <div key={courseNum}>
-                      <div style={{ ...styles.courseHeader, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}> /* keep-inline */
-                        <span style={{ color: COURSE_COLORS[courseNum] || '#888' }}>Course {courseNum}</span> /* keep-inline */
+                      <div style={{ ...styles.courseHeader, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}> /* keep-inline */ /* keep-inline */
+                        <span style={{ color: COURSE_COLORS[courseNum] || '#888' }}>Course {courseNum}</span> /* keep-inline */ /* keep-inline */
                         <button
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 10, color: '#E05A33', fontWeight: 700 }} /* keep-inline */
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 10, color: '#E05A33', fontWeight: 700 }} /* keep-inline */ /* keep-inline */
                           onClick={() => fireCourse(parseInt(courseNum))}
                         >🔥 FIRE</button>
                       </div>
@@ -913,7 +913,7 @@ export default function POSRuntimeEnhanced() {
                           <span className="pos-order-item-qty">{item.qty || 1}</span>
                           <span className="pos-order-item-name">
                             {item.menu_item_name || item.name}
-                            {item.instructions && <span style={{ fontSize: 10, color: '#F4A261', display: 'block' }}>📝 {item.instructions}</span>} /* keep-inline */
+                            {item.instructions && <span style={{ fontSize: 10, color: '#F4A261', display: 'block' }}>📝 {item.instructions}</span>} /* keep-inline */ /* keep-inline */
                           </span>
                           <span className="pos-order-item-price">
                             {((item.unit_price || item.price || 0) * (item.qty || 1)).toFixed(2)}
@@ -941,9 +941,9 @@ export default function POSRuntimeEnhanced() {
               /* Full dine-in controls: modifiers tab, table tab, seat buttons */
               <>
                 {/* L-Series: MODIFIERS + TABLE + Seat buttons — single combined row */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '6px 8px', borderTop: '1px solid #333' }}> /* keep-inline */
+                <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '6px 8px', borderTop: '1px solid #333' }}> /* keep-inline */ /* keep-inline */
                   <button
-                    style={{ /* keep-inline */
+                    style={{ /* keep-inline */ /* keep-inline */
                       display: 'flex', alignItems: 'center', gap: 4, padding: '6px 10px',
                       border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 10, fontWeight: 600,
                       backgroundColor: bottomPanelTab === 'MODIFIERS' ? '#333' : 'transparent',
@@ -955,7 +955,7 @@ export default function POSRuntimeEnhanced() {
                     <span>MODIFIERS</span>
                   </button>
                   <button
-                    style={{ /* keep-inline */
+                    style={{ /* keep-inline */ /* keep-inline */
                       display: 'flex', alignItems: 'center', gap: 4, padding: '6px 10px',
                       border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 10, fontWeight: 600,
                       backgroundColor: bottomPanelTab === 'TABLE' ? '#2A9D8F' : 'transparent',
@@ -966,11 +966,11 @@ export default function POSRuntimeEnhanced() {
                     <span>🪑</span>
                     <span>TABLE</span>
                   </button>
-                  <div style={{ width: 1, height: 20, backgroundColor: '#333', margin: '0 4px' }} /> /* keep-inline */
+                  <div style={{ width: 1, height: 20, backgroundColor: '#333', margin: '0 4px' }} /> /* keep-inline */ /* keep-inline */
                   {Array.from({ length: Math.max(seatCount, 3) }, (_, i) => i + 1).map(sn => (
                     <button
                       key={sn}
-                      style={{ /* keep-inline */
+                      style={{ /* keep-inline */ /* keep-inline */
                         ...styles.seatBtn,
                         width: 28, height: 28,
                         backgroundColor: currentSeat === sn ? '#2A9D8F' : '#333',
@@ -985,7 +985,7 @@ export default function POSRuntimeEnhanced() {
                     </button>
                   ))}
                   <button
-                    style={{ ...styles.seatAddBtn, width: 28, height: 28 }} /* keep-inline */
+                    style={{ ...styles.seatAddBtn, width: 28, height: 28 }} /* keep-inline */ /* keep-inline */
                     onClick={() => {
                       const next = seatCount + 1;
                       setSeatCount(next);
@@ -996,11 +996,11 @@ export default function POSRuntimeEnhanced() {
               </>
             ) : (
               /* Takeout/Counter: simplified — no seats, just mode badge */
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}> /* keep-inline */
-                <span style={{ fontSize: 11, fontWeight: 700, color: posMode === 'takeout' ? '#F4A261' : '#5B8DEF', textTransform: 'uppercase' }}> /* keep-inline */
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px' }}> /* keep-inline */ /* keep-inline */
+                <span style={{ fontSize: 11, fontWeight: 700, color: posMode === 'takeout' ? '#F4A261' : '#5B8DEF', textTransform: 'uppercase' }}> /* keep-inline */ /* keep-inline */
                   {posMode === 'takeout' ? '📦 Takeout' : '⚡ Counter'}
                 </span>
-                <span style={{ fontSize: 10, color: '#666' }}>· No table / seats</span> /* keep-inline */
+                <span style={{ fontSize: 10, color: '#666' }}>· No table / seats</span> /* keep-inline */ /* keep-inline */
               </div>
             )}
             <div className="pos-total-due">
@@ -1021,7 +1021,7 @@ export default function POSRuntimeEnhanced() {
           <button className="pos-bottom-icon-btn" onClick={() => setShowOverview(true)} title="Floor Plan">☐</button>
           <button className="pos-customer-add-btn" onClick={() => setShowCustomerModal(true)}>
             <UserPlus size={14} color={assignedCustomer ? '#2A9D8F' : '#999'} />
-            <span style={{ ...styles.customerAddLabel, color: assignedCustomer ? '#2A9D8F' : '#888' }}> /* keep-inline */
+            <span style={{ ...styles.customerAddLabel, color: assignedCustomer ? '#2A9D8F' : '#888' }}> /* keep-inline */ /* keep-inline */
               {assignedCustomer ? assignedCustomer.name.split(' ')[0].toUpperCase() : 'CUSTOMER\nADD'}
             </span>
           </button>
@@ -1042,14 +1042,14 @@ export default function POSRuntimeEnhanced() {
             return (
               <button
                 key={cat.id}
-                style={{ /* keep-inline */
+                style={{ /* keep-inline */ /* keep-inline */
                   ...styles.categoryTab,
                   backgroundColor: isActive ? '#2A9D8F' : '#000',
                 }}
                 onClick={() => loadCategoryItems(cat.id)}
               >
                 <CatIcon size={24} color={isActive ? '#fff' : '#888'} />
-                <span style={{ /* keep-inline */
+                <span style={{ /* keep-inline */ /* keep-inline */
                   ...styles.categoryTabLabel,
                   color: isActive ? '#fff' : '#888',
                 }}>{cat.name}</span>
@@ -1212,25 +1212,25 @@ export default function POSRuntimeEnhanced() {
       {/* Overview Panel — all open orders at a glance */}
       {showOverview && (
         <div className="pos-modal-overlay" onClick={() => setShowOverview(false)}>
-          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 700, maxWidth: 900, maxHeight: '80vh', overflow: 'auto', border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}> /* keep-inline */
-              <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>Overview — Open Orders</span> /* keep-inline */
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
+          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 700, maxWidth: 900, maxHeight: '80vh', overflow: 'auto', border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */ /* keep-inline */
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
+              <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>Overview — Open Orders</span> /* keep-inline */ /* keep-inline */
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */ /* keep-inline */
                 <button
                   onClick={() => setOverviewMode('grid')}
-                  style={{ padding: '4px 12px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, backgroundColor: overviewMode === 'grid' ? '#2A9D8F' : '#333', color: overviewMode === 'grid' ? '#fff' : '#888' }} /* keep-inline */
+                  style={{ padding: '4px 12px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, backgroundColor: overviewMode === 'grid' ? '#2A9D8F' : '#333', color: overviewMode === 'grid' ? '#fff' : '#888' }} /* keep-inline */ /* keep-inline */
                 >Grid</button>
                 <button
                   onClick={() => setOverviewMode('floorplan')}
-                  style={{ padding: '4px 12px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, backgroundColor: overviewMode === 'floorplan' ? '#5B8DEF' : '#333', color: overviewMode === 'floorplan' ? '#fff' : '#888' }} /* keep-inline */
+                  style={{ padding: '4px 12px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, backgroundColor: overviewMode === 'floorplan' ? '#5B8DEF' : '#333', color: overviewMode === 'floorplan' ? '#fff' : '#888' }} /* keep-inline */ /* keep-inline */
                 >Floor Plan</button>
-                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18, marginLeft: 8 }} onClick={() => setShowOverview(false)}>✕</button> /* keep-inline */
+                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18, marginLeft: 8 }} onClick={() => setShowOverview(false)}>✕</button> /* keep-inline */ /* keep-inline */
               </div>
             </div>
 
             {/* Floor Plan View */}
             {overviewMode === 'floorplan' ? (
-              <div style={{ height: 500, borderRadius: 12, overflow: 'hidden' }}> /* keep-inline */
+              <div style={{ height: 500, borderRadius: 12, overflow: 'hidden' }}> /* keep-inline */ /* keep-inline */
                 <FloorPlanWidget
                   tables={tables.map(t => ({
                     ...t,
@@ -1250,7 +1250,7 @@ export default function POSRuntimeEnhanced() {
                 />
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}> /* keep-inline */
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}> /* keep-inline */ /* keep-inline */
                 {tables.length > 0 ? tables.map(t => {
                   const tStatus = t.status || (t.current_order_id ? 'occupied' : 'free');
                   const statusColor = tStatus === 'occupied' ? '#E05A33' : tStatus === 'reserved' ? '#5B8DEF' : '#2A9D8F';
@@ -1259,7 +1259,7 @@ export default function POSRuntimeEnhanced() {
                   return (
                     <div
                       key={t.id}
-                      style={{ /* keep-inline */
+                      style={{ /* keep-inline */ /* keep-inline */
                         backgroundColor: statusBg,
                         borderRadius: 12, padding: 16,
                         border: `2px solid ${statusColor}`,
@@ -1273,22 +1273,22 @@ export default function POSRuntimeEnhanced() {
                         else toast.info(`${t.name} — ${statusLabel}`);
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> /* keep-inline */
-                        <div style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>{t.name || `Table ${t.number}`}</div> /* keep-inline */
-                        <span style={{ fontSize: 9, fontWeight: 700, color: statusColor, backgroundColor: `${statusColor}22`, padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase' }}>{statusLabel}</span> /* keep-inline */
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> /* keep-inline */ /* keep-inline */
+                        <div style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>{t.name || `Table ${t.number}`}</div> /* keep-inline */ /* keep-inline */
+                        <span style={{ fontSize: 9, fontWeight: 700, color: statusColor, backgroundColor: `${statusColor}22`, padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase' }}>{statusLabel}</span> /* keep-inline */ /* keep-inline */
                       </div>
-                      <div style={{ fontSize: 11, color: '#888', marginTop: 6 }}> /* keep-inline */
+                      <div style={{ fontSize: 11, color: '#888', marginTop: 6 }}> /* keep-inline */ /* keep-inline */
                         {tStatus === 'occupied' ? `${t.covers || '?'} covers · ${t.server_name || 'Server'}` : tStatus === 'reserved' ? 'Reserved' : 'Ready to seat'}
                       </div>
                       {tStatus === 'occupied' && (
-                        <div style={{ fontSize: 14, fontWeight: 700, color: '#F4A261', marginTop: 8 }}> /* keep-inline */
+                        <div style={{ fontSize: 14, fontWeight: 700, color: '#F4A261', marginTop: 8 }}> /* keep-inline */ /* keep-inline */
                           €{(t.order_total || 0).toFixed(2)}
                         </div>
                       )}
                     </div>
                   );
                 }) : (
-                  <div style={{ gridColumn: '1/-1', textAlign: 'center', color: '#666', padding: 40 }}> /* keep-inline */
+                  <div style={{ gridColumn: '1/-1', textAlign: 'center', color: '#666', padding: 40 }}> /* keep-inline */ /* keep-inline */
                     No tables configured. Add tables in Manager → POS Settings → Tables.
                   </div>
                 )}
@@ -1304,38 +1304,38 @@ export default function POSRuntimeEnhanced() {
       {
         showCashRegister && (
           <div className="pos-modal-overlay" onClick={() => setShowCashRegister(false)}>
-            <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 500, maxWidth: 600, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
-                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>💰 Cash Register</span> /* keep-inline */
-                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18 }} onClick={() => setShowCashRegister(false)}>✕</button> /* keep-inline */
+            <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 500, maxWidth: 600, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */ /* keep-inline */
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
+                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>💰 Cash Register</span> /* keep-inline */ /* keep-inline */
+                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18 }} onClick={() => setShowCashRegister(false)}>✕</button> /* keep-inline */ /* keep-inline */
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}> /* keep-inline */
-                <div style={{ backgroundColor: '#1a2a1a', borderRadius: 12, padding: 16, border: '1px solid #2A9D8F', textAlign: 'center' }}> /* keep-inline */
-                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>Opening Float</div> /* keep-inline */
-                  <div style={{ fontSize: 24, fontWeight: 700, color: '#2A9D8F' }}>€200.00</div> /* keep-inline */
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
+                <div style={{ backgroundColor: '#1a2a1a', borderRadius: 12, padding: 16, border: '1px solid #2A9D8F', textAlign: 'center' }}> /* keep-inline */ /* keep-inline */
+                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>Opening Float</div> /* keep-inline */ /* keep-inline */
+                  <div style={{ fontSize: 24, fontWeight: 700, color: '#2A9D8F' }}>€200.00</div> /* keep-inline */ /* keep-inline */
                 </div>
-                <div style={{ backgroundColor: '#1a1a2a', borderRadius: 12, padding: 16, border: '1px solid #5B8DEF', textAlign: 'center' }}> /* keep-inline */
-                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>Current Drawer</div> /* keep-inline */
-                  <div style={{ fontSize: 24, fontWeight: 700, color: '#5B8DEF' }}>€{(200 + orderTotal).toFixed(2)}</div> /* keep-inline */
+                <div style={{ backgroundColor: '#1a1a2a', borderRadius: 12, padding: 16, border: '1px solid #5B8DEF', textAlign: 'center' }}> /* keep-inline */ /* keep-inline */
+                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>Current Drawer</div> /* keep-inline */ /* keep-inline */
+                  <div style={{ fontSize: 24, fontWeight: 700, color: '#5B8DEF' }}>€{(200 + orderTotal).toFixed(2)}</div> /* keep-inline */ /* keep-inline */
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 20 }}> /* keep-inline */
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
                 {[
                   { label: 'Cash In', icon: '📥', color: '#2A9D8F', action: () => toast.success('Cash In: enter amount in register') },
                   { label: 'Cash Out', icon: '📤', color: '#E07A5F', action: () => toast.success('Cash Out: enter amount from register') },
                   { label: 'Open Drawer', icon: '🗄️', color: '#F4A261', action: () => toast.success('Cash drawer opened') },
                   { label: 'Print X-Report', icon: '🧾', color: '#888', action: () => toast.success('X-Report sent to printer') },
                 ].map(btn => (
-                  <button key={btn.label} onClick={btn.action} style={{ backgroundColor: '#1a1a1a', border: `1px solid ${btn.color}40`, borderRadius: 10, padding: '14px 12px', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */
+                  <button key={btn.label} onClick={btn.action} style={{ backgroundColor: '#1a1a1a', border: `1px solid ${btn.color}40`, borderRadius: 10, padding: '14px 12px', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}> /* keep-inline */ /* keep-inline */
                     <span>{btn.icon}</span> {btn.label}
                   </button>
                 ))}
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}> /* keep-inline */
-                <button onClick={() => { toast.success('Register opened — shift started'); setShowCashRegister(false); }} style={{ backgroundColor: '#2A9D8F', border: 'none', borderRadius: 10, padding: 14, cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 700 }}> /* keep-inline */
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}> /* keep-inline */ /* keep-inline */
+                <button onClick={() => { toast.success('Register opened — shift started'); setShowCashRegister(false); }} style={{ backgroundColor: '#2A9D8F', border: 'none', borderRadius: 10, padding: 14, cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 700 }}> /* keep-inline */ /* keep-inline */
                   ▶ Open Register
                 </button>
-                <button onClick={() => { toast.success('Register closed — Z-Report generated'); setShowCashRegister(false); }} style={{ backgroundColor: '#E05A33', border: 'none', borderRadius: 10, padding: 14, cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 700 }}> /* keep-inline */
+                <button onClick={() => { toast.success('Register closed — Z-Report generated'); setShowCashRegister(false); }} style={{ backgroundColor: '#E05A33', border: 'none', borderRadius: 10, padding: 14, cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 700 }}> /* keep-inline */ /* keep-inline */
                   ⏹ Close Register
                 </button>
               </div>
@@ -1348,55 +1348,55 @@ export default function POSRuntimeEnhanced() {
       {
         showReports && (
           <div className="pos-modal-overlay" onClick={() => setShowReports(false)}>
-            <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 600, maxWidth: 750, maxHeight: '80vh', overflow: 'auto', border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
-                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>📊 Quick Reports</span> /* keep-inline */
-                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18 }} onClick={() => setShowReports(false)}>✕</button> /* keep-inline */
+            <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 600, maxWidth: 750, maxHeight: '80vh', overflow: 'auto', border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */ /* keep-inline */
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
+                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>📊 Quick Reports</span> /* keep-inline */ /* keep-inline */
+                <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888', fontSize: 18 }} onClick={() => setShowReports(false)}>✕</button> /* keep-inline */ /* keep-inline */
               </div>
 
               {/* Daily Summary Cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}> /* keep-inline */
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
                 {[
                   { label: 'Revenue', value: '€1,240.50', color: '#2A9D8F', icon: '💰' },
                   { label: 'Orders', value: '47', color: '#5B8DEF', icon: '🧾' },
                   { label: 'Avg Check', value: '€26.39', color: '#F4A261', icon: '📊' },
                   { label: 'Voids', value: '3', color: '#E05A33', icon: '🗑️' },
                 ].map(stat => (
-                  <div key={stat.label} style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 14, border: '1px solid #333', textAlign: 'center' }}> /* keep-inline */
-                    <div style={{ fontSize: 18, marginBottom: 4 }}>{stat.icon}</div> /* keep-inline */
-                    <div style={{ fontSize: 20, fontWeight: 700, color: stat.color }}>{stat.value}</div> /* keep-inline */
-                    <div style={{ fontSize: 10, color: '#888', marginTop: 2 }}>{stat.label}</div> /* keep-inline */
+                  <div key={stat.label} style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 14, border: '1px solid #333', textAlign: 'center' }}> /* keep-inline */ /* keep-inline */
+                    <div style={{ fontSize: 18, marginBottom: 4 }}>{stat.icon}</div> /* keep-inline */ /* keep-inline */
+                    <div style={{ fontSize: 20, fontWeight: 700, color: stat.color }}>{stat.value}</div> /* keep-inline */ /* keep-inline */
+                    <div style={{ fontSize: 10, color: '#888', marginTop: 2 }}>{stat.label}</div> /* keep-inline */ /* keep-inline */
                   </div>
                 ))}
               </div>
 
               {/* Payment Breakdown */}
-              <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 16, border: '1px solid #333', marginBottom: 16 }}> /* keep-inline */
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Payment Breakdown</div> /* keep-inline */
+              <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 16, border: '1px solid #333', marginBottom: 16 }}> /* keep-inline */ /* keep-inline */
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Payment Breakdown</div> /* keep-inline */ /* keep-inline */
                 {[
                   { method: 'Cash', amount: '€520.00', pct: '42%', bar: 42 },
                   { method: 'Card', amount: '€620.50', pct: '50%', bar: 50 },
                   { method: 'Other', amount: '€100.00', pct: '8%', bar: 8 },
                 ].map(p => (
-                  <div key={p.method} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}> /* keep-inline */
-                    <span style={{ fontSize: 12, color: '#888', minWidth: 50 }}>{p.method}</span> /* keep-inline */
-                    <div style={{ flex: 1, height: 8, backgroundColor: '#333', borderRadius: 4, overflow: 'hidden' }}> /* keep-inline */
+                  <div key={p.method} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}> /* keep-inline */ /* keep-inline */
+                    <span style={{ fontSize: 12, color: '#888', minWidth: 50 }}>{p.method}</span> /* keep-inline */ /* keep-inline */
+                    <div style={{ flex: 1, height: 8, backgroundColor: '#333', borderRadius: 4, overflow: 'hidden' }}> /* keep-inline */ /* keep-inline */
                       <div style={{ width: `${p.bar}%`, height: '100%', backgroundColor: '#2A9D8F', borderRadius: 4 }} />
                     </div>
-                    <span style={{ fontSize: 12, color: '#fff', minWidth: 80, textAlign: 'right' }}>{p.amount}</span> /* keep-inline */
-                    <span style={{ fontSize: 10, color: '#888', minWidth: 30 }}>{p.pct}</span> /* keep-inline */
+                    <span style={{ fontSize: 12, color: '#fff', minWidth: 80, textAlign: 'right' }}>{p.amount}</span> /* keep-inline */ /* keep-inline */
+                    <span style={{ fontSize: 10, color: '#888', minWidth: 30 }}>{p.pct}</span> /* keep-inline */ /* keep-inline */
                   </div>
                 ))}
               </div>
 
               {/* Hourly Volume */}
-              <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 16, border: '1px solid #333' }}> /* keep-inline */
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Hourly Volume</div> /* keep-inline */
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 80 }}> /* keep-inline */
+              <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 16, border: '1px solid #333' }}> /* keep-inline */ /* keep-inline */
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Hourly Volume</div> /* keep-inline */ /* keep-inline */
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 80 }}> /* keep-inline */ /* keep-inline */
                   {[2, 4, 8, 15, 22, 35, 45, 40, 30, 18, 12, 5].map((v, i) => (
-                    <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}> /* keep-inline */
+                    <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}> /* keep-inline */ /* keep-inline */
                       <div style={{ width: '100%', height: `${(v / 45) * 70}px`, backgroundColor: v > 30 ? '#E05A33' : '#2A9D8F', borderRadius: '4px 4px 0 0', minHeight: 4 }} />
-                      <span style={{ fontSize: 8, color: '#666', marginTop: 2 }}>{10 + i}h</span> /* keep-inline */
+                      <span style={{ fontSize: 8, color: '#666', marginTop: 2 }}>{10 + i}h</span> /* keep-inline */ /* keep-inline */
                     </div>
                   ))}
                 </div>
@@ -1408,24 +1408,24 @@ export default function POSRuntimeEnhanced() {
       {
         showOpenItem && (
           <div className="pos-modal-overlay" onClick={() => setShowOpenItem(false)}>
-            <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 24, minWidth: 360, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 16, textAlign: 'center' }}>Open Item</div> /* keep-inline */
-              <input
-                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 12, boxSizing: 'border-box' }} /* keep-inline */
+            <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 24, minWidth: 360, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */ /* keep-inline */
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 16, textAlign: 'center' }}>Open Item</div> /* keep-inline */ /* keep-inline */
+              <input aria-label="Input"
+                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 12, boxSizing: 'border-box' }} /* keep-inline */ /* keep-inline */
                 placeholder="Item name"
                 value={openItemName}
                 onChange={e => setOpenItemName(e.target.value)}
                 autoFocus
               />
-              <input
-                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 16, boxSizing: 'border-box' }} /* keep-inline */
+              <input aria-label="Input"
+                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 16, boxSizing: 'border-box' }} /* keep-inline */ /* keep-inline */
                 placeholder="Price (€)"
                 value={openItemPrice}
                 onChange={e => setOpenItemPrice(e.target.value.replace(/[^0-9.]/g, ''))}
               />
-              <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
-                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: '1px solid #555', background: 'none', color: '#888', cursor: 'pointer', fontSize: 14 }} onClick={() => setShowOpenItem(false)}>Cancel</button> /* keep-inline */
-                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: 'none', backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer' }} onClick={handleAddOpenItem}>Add Item</button> /* keep-inline */
+              <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */ /* keep-inline */
+                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: '1px solid #555', background: 'none', color: '#888', cursor: 'pointer', fontSize: 14 }} onClick={() => setShowOpenItem(false)}>Cancel</button> /* keep-inline */ /* keep-inline */
+                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: 'none', backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer' }} onClick={handleAddOpenItem}>Add Item</button> /* keep-inline */ /* keep-inline */
               </div>
             </div>
           </div>
@@ -1436,19 +1436,19 @@ export default function POSRuntimeEnhanced() {
       {
         showNoteInput && (
           <div className="pos-modal-overlay" onClick={() => { setShowNoteInput(null); setNoteText(''); }}>
-            <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 24, minWidth: 360, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, textAlign: 'center' }}>Item Notes</div> /* keep-inline */
-              <div style={{ fontSize: 12, color: '#888', marginBottom: 16, textAlign: 'center' }}>{showNoteInput.menu_item_name || showNoteInput.name}</div> /* keep-inline */
-              <textarea
-                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 16, minHeight: 80, resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box' }} /* keep-inline */
+            <div style={{ backgroundColor: '#1a1a1a', borderRadius: 12, padding: 24, minWidth: 360, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */ /* keep-inline */
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4, textAlign: 'center' }}>Item Notes</div> /* keep-inline */ /* keep-inline */
+              <div style={{ fontSize: 12, color: '#888', marginBottom: 16, textAlign: 'center' }}>{showNoteInput.menu_item_name || showNoteInput.name}</div> /* keep-inline */ /* keep-inline */
+              <textarea aria-label="Input"
+                style={{ width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none', marginBottom: 16, minHeight: 80, resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box' }} /* keep-inline */ /* keep-inline */
                 placeholder="Kitchen instructions..."
                 value={noteText}
                 onChange={e => setNoteText(e.target.value)}
                 autoFocus
               />
-              <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */
-                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: '1px solid #555', background: 'none', color: '#888', cursor: 'pointer', fontSize: 14 }} onClick={() => { setShowNoteInput(null); setNoteText(''); }}>Cancel</button> /* keep-inline */
-                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: 'none', backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer' }} onClick={saveItemNote}>{"Save "}Note</button> /* keep-inline */
+              <div style={{ display: 'flex', gap: 8 }}> /* keep-inline */ /* keep-inline */
+                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: '1px solid #555', background: 'none', color: '#888', cursor: 'pointer', fontSize: 14 }} onClick={() => { setShowNoteInput(null); setNoteText(''); }}>Cancel</button> /* keep-inline */ /* keep-inline */
+                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: 'none', backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer' }} onClick={saveItemNote}>{"Save "}Note</button> /* keep-inline */ /* keep-inline */
               </div>
             </div>
           </div>
@@ -1470,28 +1470,28 @@ export default function POSRuntimeEnhanced() {
       {/* ═══ CASH REGISTER MODAL ═══════════════════════════════ */}
       {showCashRegister && (
         <div className="pos-modal-overlay" onClick={() => setShowCashRegister(false)}>
-          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 500, maxWidth: 600, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
-              <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>💰 Cash Register</div> /* keep-inline */
-              <button style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: 20 }} onClick={() => setShowCashRegister(false)}>✕</button> /* keep-inline */
+          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 500, maxWidth: 600, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */ /* keep-inline */
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>💰 Cash Register</div> /* keep-inline */ /* keep-inline */
+              <button style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: 20 }} onClick={() => setShowCashRegister(false)}>✕</button> /* keep-inline */ /* keep-inline */
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}> /* keep-inline */
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
               {[{ label: 'Open Shift', icon: '🟢', color: '#2A9D8F' }, { label: 'Close Shift', icon: '🔴', color: '#E05A33' }, { label: 'Cash In', icon: '📥', color: '#5B8DEF' }, { label: 'Cash Out', icon: '📤', color: '#F4A261' }].map(a => (
-                <button key={a.label} onClick={() => toast.success(`${a.label} recorded`)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: 20, borderRadius: 12, border: `1px solid ${a.color}40`, backgroundColor: `${a.color}11`, cursor: 'pointer', color: '#fff' }}> /* keep-inline */
-                  <span style={{ fontSize: 28 }}>{a.icon}</span> /* keep-inline */
-                  <span style={{ fontSize: 13, fontWeight: 600 }}>{a.label}</span> /* keep-inline */
+                <button key={a.label} onClick={() => toast.success(`${a.label} recorded`)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: 20, borderRadius: 12, border: `1px solid ${a.color}40`, backgroundColor: `${a.color}11`, cursor: 'pointer', color: '#fff' }}> /* keep-inline */ /* keep-inline */
+                  <span style={{ fontSize: 28 }}>{a.icon}</span> /* keep-inline */ /* keep-inline */
+                  <span style={{ fontSize: 13, fontWeight: 600 }}>{a.label}</span> /* keep-inline */ /* keep-inline */
                 </button>
               ))}
             </div>
-            <div style={{ padding: 16, backgroundColor: '#0a0a0a', borderRadius: 12, border: '1px solid #222' }}> /* keep-inline */
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#888', marginBottom: 12 }}>SHIFT SUMMARY</div> /* keep-inline */
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13 }}> /* keep-inline */
-                <div style={{ color: '#888' }}>Cash Sales</div><div style={{ color: '#4ade80', textAlign: 'right' }}>€0.00</div> /* keep-inline */
-                <div style={{ color: '#888' }}>Card Sales</div><div style={{ color: '#5B8DEF', textAlign: 'right' }}>€0.00</div> /* keep-inline */
-                <div style={{ color: '#888' }}>Cash In</div><div style={{ color: '#2A9D8F', textAlign: 'right' }}>€0.00</div> /* keep-inline */
-                <div style={{ color: '#888' }}>Cash Out</div><div style={{ color: '#E05A33', textAlign: 'right' }}>€0.00</div> /* keep-inline */
-                <div style={{ borderTop: '1px solid #333', paddingTop: 8, color: '#fff', fontWeight: 700 }}>Expected</div> /* keep-inline */
-                <div style={{ borderTop: '1px solid #333', paddingTop: 8, color: '#fff', fontWeight: 700, textAlign: 'right' }}>€0.00</div> /* keep-inline */
+            <div style={{ padding: 16, backgroundColor: '#0a0a0a', borderRadius: 12, border: '1px solid #222' }}> /* keep-inline */ /* keep-inline */
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#888', marginBottom: 12 }}>SHIFT SUMMARY</div> /* keep-inline */ /* keep-inline */
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13 }}> /* keep-inline */ /* keep-inline */
+                <div style={{ color: '#888' }}>Cash Sales</div><div style={{ color: '#4ade80', textAlign: 'right' }}>€0.00</div> /* keep-inline */ /* keep-inline */
+                <div style={{ color: '#888' }}>Card Sales</div><div style={{ color: '#5B8DEF', textAlign: 'right' }}>€0.00</div> /* keep-inline */ /* keep-inline */
+                <div style={{ color: '#888' }}>Cash In</div><div style={{ color: '#2A9D8F', textAlign: 'right' }}>€0.00</div> /* keep-inline */ /* keep-inline */
+                <div style={{ color: '#888' }}>Cash Out</div><div style={{ color: '#E05A33', textAlign: 'right' }}>€0.00</div> /* keep-inline */ /* keep-inline */
+                <div style={{ borderTop: '1px solid #333', paddingTop: 8, color: '#fff', fontWeight: 700 }}>Expected</div> /* keep-inline */ /* keep-inline */
+                <div style={{ borderTop: '1px solid #333', paddingTop: 8, color: '#fff', fontWeight: 700, textAlign: 'right' }}>€0.00</div> /* keep-inline */ /* keep-inline */
               </div>
             </div>
           </div>
@@ -1501,28 +1501,28 @@ export default function POSRuntimeEnhanced() {
       {/* ═══ EMBEDDED REPORTS MODAL ═════════════════════════════ */}
       {showReports && (
         <div className="pos-modal-overlay" onClick={() => setShowReports(false)}>
-          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 600, maxWidth: 700, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */
-              <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>📊 Daily Report</div> /* keep-inline */
-              <button style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: 20 }} onClick={() => setShowReports(false)}>✕</button> /* keep-inline */
+          <div style={{ backgroundColor: '#111', borderRadius: 16, padding: 24, minWidth: 600, maxWidth: 700, border: '1px solid #333' }} onClick={e => e.stopPropagation()}> /* keep-inline */ /* keep-inline */
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#fff' }}>📊 Daily Report</div> /* keep-inline */ /* keep-inline */
+              <button style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: 20 }} onClick={() => setShowReports(false)}>✕</button> /* keep-inline */ /* keep-inline */
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 10, marginBottom: 20 }}> /* keep-inline */
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 10, marginBottom: 20 }}> /* keep-inline */ /* keep-inline */
               {[{ label: 'Total Sales', value: '€0.00', color: '#2A9D8F' }, { label: 'Orders', value: '0', color: '#5B8DEF' }, { label: 'Avg Ticket', value: '€0.00', color: '#F4A261' }, { label: 'Covers', value: '0', color: '#C77DBA' }].map(s => (
-                <div key={s.label} style={{ padding: 14, borderRadius: 10, backgroundColor: `${s.color}11`, border: `1px solid ${s.color}30`, textAlign: 'center' }}> /* keep-inline */
-                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>{s.label}</div> /* keep-inline */
-                  <div style={{ fontSize: 20, fontWeight: 800, color: s.color }}>{s.value}</div> /* keep-inline */
+                <div key={s.label} style={{ padding: 14, borderRadius: 10, backgroundColor: `${s.color}11`, border: `1px solid ${s.color}30`, textAlign: 'center' }}> /* keep-inline */ /* keep-inline */
+                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>{s.label}</div> /* keep-inline */ /* keep-inline */
+                  <div style={{ fontSize: 20, fontWeight: 800, color: s.color }}>{s.value}</div> /* keep-inline */ /* keep-inline */
                 </div>
               ))}
             </div>
-            <div style={{ padding: 16, backgroundColor: '#0a0a0a', borderRadius: 12, border: '1px solid #222' }}> /* keep-inline */
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#888', marginBottom: 12 }}>PAYMENT BREAKDOWN</div> /* keep-inline */
+            <div style={{ padding: 16, backgroundColor: '#0a0a0a', borderRadius: 12, border: '1px solid #222' }}> /* keep-inline */ /* keep-inline */
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#888', marginBottom: 12 }}>PAYMENT BREAKDOWN</div> /* keep-inline */ /* keep-inline */
               {[{ m: 'Cash', pct: 0, color: '#4ade80' }, { m: 'Card', pct: 0, color: '#5B8DEF' }, { m: 'Gift Card', pct: 0, color: '#C77DBA' }].map(p => (
-                <div key={p.m} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}> /* keep-inline */
-                  <span style={{ width: 70, fontSize: 12, color: '#888' }}>{p.m}</span> /* keep-inline */
-                  <div style={{ flex: 1, height: 8, backgroundColor: '#222', borderRadius: 4, overflow: 'hidden' }}> /* keep-inline */
+                <div key={p.m} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}> /* keep-inline */ /* keep-inline */
+                  <span style={{ width: 70, fontSize: 12, color: '#888' }}>{p.m}</span> /* keep-inline */ /* keep-inline */
+                  <div style={{ flex: 1, height: 8, backgroundColor: '#222', borderRadius: 4, overflow: 'hidden' }}> /* keep-inline */ /* keep-inline */
                     <div style={{ width: `${p.pct}%`, height: '100%', backgroundColor: p.color, borderRadius: 4 }} />
                   </div>
-                  <span style={{ width: 40, fontSize: 11, color: '#888', textAlign: 'right' }}>{p.pct}%</span> /* keep-inline */
+                  <span style={{ width: 40, fontSize: 11, color: '#888', textAlign: 'right' }}>{p.pct}%</span> /* keep-inline */ /* keep-inline */
                 </div>
               ))}
             </div>

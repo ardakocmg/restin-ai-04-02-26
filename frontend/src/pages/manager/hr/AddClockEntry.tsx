@@ -231,8 +231,8 @@ export default function AddClockEntry() {
             <div className="flex items-center gap-4 mb-8">
                 <Button
                     variant="ghost"
-                    size="icon"
-                    onClick={() => navigate('/manager/hr/clocking')}
+                    size="icon" aria-label="Action"
+                    onClick={() = aria-label="Action"> navigate('/manager/hr/clocking')}
                     className="text-muted-foreground hover:text-foreground hover:bg-white/5"
                     title="Back to Clocking Data"
                 >
@@ -266,9 +266,9 @@ export default function AddClockEntry() {
                                     Employee
                                 </label>
                                 <div className="relative">
-                                    <select
+                                    <select aria-label="Input"
                                         value={selectedEmployeeId}
-                                        onChange={(e) => setSelectedEmployeeId(e.target.value)}
+                                        onChange={(e) = aria-label="Input field"> setSelectedEmployeeId(e.target.value)}
                                         title="Select Employee"
                                         className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-sm text-secondary-foreground appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 outline-none transition-all"
                                     >
@@ -376,9 +376,9 @@ export default function AddClockEntry() {
                             <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                 Reason for Manual Entry
                             </label>
-                            <textarea
+                            <textarea aria-label="Input"
                                 value={reason}
-                                onChange={(e) => setReason(e.target.value)}
+                                onChange={(e) = aria-label="Input field"> setReason(e.target.value)}
                                 placeholder="e.g. Forgot to clock in, system was down, working remotely..."
                                 rows={3}
                                 className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-sm text-secondary-foreground placeholder:text-muted-foreground resize-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 outline-none transition-all"

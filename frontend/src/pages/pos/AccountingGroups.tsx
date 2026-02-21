@@ -165,7 +165,7 @@ const AccountingGroups: React.FC = () => {
                         <div key={group.id} className="ag-table-row" onClick={() => setEditing({ ...group })}>
                             <GripVertical size={14} className="ag-grip-icon" />
                             <div className="ag-name-cell">
-                                <div className="ag-color-dot" style={{ background: group.color }} /> /* keep-inline */
+                                <div className="ag-color-dot" style={{ background: group.color }} /> /* keep-inline */ /* keep-inline */
                                 <span className="ag-name-text">{group.name}</span>
                             </div>
                             <span className="ag-cell-secondary">{group.taxProfile}</span>
@@ -200,17 +200,17 @@ const AccountingGroups: React.FC = () => {
 
                         <div className="ag-form-group">
                             <label className="ag-form-label">Group Name *</label>
-                            <input className="ag-input" value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Food - Starters" />
+                            <input className="ag-input" value={editing.name} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, name: e.target.value } : null)} placeholder="e.g. Food - Starters" />
                         </div>
 
                         <div className="ag-form-grid">
                             <div>
                                 <label className="ag-form-label">Code</label>
-                                <input className="ag-input" value={editing.code} onChange={e => setEditing(p => p ? { ...p, code: e.target.value } : null)} placeholder="e.g. FST" maxLength={10} />
+                                <input className="ag-input" value={editing.code} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, code: e.target.value } : null)} placeholder="e.g. FST" maxLength={10} />
                             </div>
                             <div>
                                 <label className="ag-form-label">Category</label>
-                                <select className="ag-select" value={editing.category} onChange={e => setEditing(p => p ? { ...p, category: e.target.value } : null)} aria-label="Category">
+                                <select className="ag-select" value={editing.category} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, category: e.target.value } : null)} aria-label="Category">
                                     <option value="revenue">Revenue</option>
                                     <option value="cost">Cost</option>
                                     <option value="discount">Discount</option>
@@ -221,20 +221,20 @@ const AccountingGroups: React.FC = () => {
 
                         <div className="ag-form-group">
                             <label className="ag-form-label">Description</label>
-                            <textarea className="ag-input ag-textarea" value={editing.description} onChange={e => setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Brief description of this group" />
+                            <textarea className="ag-input ag-textarea" value={editing.description} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, description: e.target.value } : null)} placeholder="Brief description of this group" />
                         </div>
 
                         <div className="ag-form-grid">
                             <div>
                                 <label className="ag-form-label">Parent Group</label>
-                                <select className="ag-select" value={editing.parentGroup} onChange={e => setEditing(p => p ? { ...p, parentGroup: e.target.value } : null)} aria-label="Parent group">
+                                <select className="ag-select" value={editing.parentGroup} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, parentGroup: e.target.value } : null)} aria-label="Parent group">
                                     <option value="">— None (Top Level) —</option>
                                     {groups.filter(g => g.id !== editing.id).map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
                                 </select>
                             </div>
                             <div>
                                 <label className="ag-form-label">External Ref</label>
-                                <input className="ag-input" value={editing.externalRef} onChange={e => setEditing(p => p ? { ...p, externalRef: e.target.value } : null)} placeholder="e.g. ERP code" />
+                                <input className="ag-input" value={editing.externalRef} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, externalRef: e.target.value } : null)} placeholder="e.g. ERP code" />
                             </div>
                         </div>
 
@@ -244,7 +244,7 @@ const AccountingGroups: React.FC = () => {
                                 {COLORS.map(c => (
                                     <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)}
                                         className={`ag-color-swatch ${editing.color === c ? 'ag-color-swatch--selected' : ''}`}
-                                        style={{ background: c }} /> /* keep-inline */
+                                        style={{ background: c }} /> /* keep-inline */ /* keep-inline */
                                 ))}
                             </div>
                         </div>
@@ -252,17 +252,17 @@ const AccountingGroups: React.FC = () => {
                         <div className="ag-form-grid">
                             <div>
                                 <label className="ag-form-label">Tax Profile</label>
-                                <select className="ag-select" value={editing.taxProfile} onChange={e => setEditing(p => p ? { ...p, taxProfile: e.target.value } : null)} aria-label="Tax profile">{TAX_PROFILES.map(t => <option key={t}>{t}</option>)}</select>
+                                <select className="ag-select" value={editing.taxProfile} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, taxProfile: e.target.value } : null)} aria-label="Tax profile">{TAX_PROFILES.map(t => <option key={t}>{t}</option>)}</select>
                             </div>
                             <div>
                                 <label className="ag-form-label">Production Center</label>
-                                <select className="ag-select" value={editing.productionCenter} onChange={e => setEditing(p => p ? { ...p, productionCenter: e.target.value } : null)} aria-label="Production center">{PROD_CENTERS.map(c => <option key={c}>{c}</option>)}</select>
+                                <select className="ag-select" value={editing.productionCenter} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, productionCenter: e.target.value } : null)} aria-label="Production center">{PROD_CENTERS.map(c => <option key={c}>{c}</option>)}</select>
                             </div>
                         </div>
 
                         <div className="ag-form-group">
                             <label className="ag-form-label">Default Course</label>
-                            <select className="ag-select" value={editing.course} onChange={e => setEditing(p => p ? { ...p, course: parseInt(e.target.value) } : null)} aria-label="Course">
+                            <select className="ag-select" value={editing.course} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, course: parseInt(e.target.value) } : null)} aria-label="Course">
                                 <option value={0}>{"No "}Default Course</option>
                                 <option value={1}>Course 1 - Starters</option>
                                 <option value={2}>Course 2 - Mains</option>

@@ -371,7 +371,7 @@ export default function POSRuntimeKSeries() {
 
                     {/* Order Meta Row */}
                     <div className="ks-order-meta">
-                        <select
+                        <select aria-label="Input"
                             className="ks-meta-tag-select"
                             value={viewMode}
                             aria-label="Order view mode"
@@ -653,7 +653,7 @@ export default function POSRuntimeKSeries() {
 
                         <div className="ks-actions-section">
                             <div className="ks-actions-section-title">Tap to rename order</div>
-                            <input
+                            <input aria-label="Input"
                                 className="ks-actions-input"
                                 defaultValue={order.tableName || 'Order 1'}
                                 placeholder="Order name"
@@ -709,11 +709,11 @@ export default function POSRuntimeKSeries() {
             {showSearch && (
                 <div className="ks-search-overlay">
                     <div className="ks-search-header">
-                        <input
+                        <input aria-label="Input"
                             ref={searchInputRef}
                             className="ks-search-input"
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onChange={(e) = aria-label="Input field"> setSearchQuery(e.target.value)}
                             placeholder="Search menu items..."
                             autoFocus
                         />

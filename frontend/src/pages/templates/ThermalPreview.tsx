@@ -101,7 +101,7 @@ export default function ThermalPreview({ html, paperWidth = 576, onClose }: Ther
                     {/* Receipt paper */}
                     <div
                         className="bg-white shadow-2xl shadow-black/30 relative"
-                        style={{ /* keep-inline */
+                        style={{ /* keep-inline */ /* keep-inline */
                             width: `${paperWidth * zoom}px`,
                             minHeight: '400px',
                             transform: `scale(1)`,
@@ -113,14 +113,14 @@ export default function ThermalPreview({ html, paperWidth = 576, onClose }: Ther
                         {/* Top tear edge */}
                         <div
                             className="h-3 w-full opacity-30"
-                            style={{ /* keep-inline */
+                            style={{ /* keep-inline */ /* keep-inline */
                                 background: 'repeating-linear-gradient(90deg, transparent, transparent 4px, #e5e5e5 4px, #e5e5e5 8px)'
                             }}
                         />
 
                         {/* Content */}
                         <div
-                            style={{ /* keep-inline */
+                            style={{ /* keep-inline */ /* keep-inline */
                                 fontFamily: "'Courier New', 'Courier', monospace",
                                 fontSize: `${12 * zoom}px`,
                                 lineHeight: '1.4',
@@ -137,7 +137,7 @@ export default function ThermalPreview({ html, paperWidth = 576, onClose }: Ther
                         {/* Bottom tear edge */}
                         <div
                             className="h-3 w-full opacity-30"
-                            style={{ /* keep-inline */
+                            style={{ /* keep-inline */ /* keep-inline */
                                 background: 'repeating-linear-gradient(90deg, transparent, transparent 4px, #e5e5e5 4px, #e5e5e5 8px)'
                             }}
                         />
@@ -146,7 +146,7 @@ export default function ThermalPreview({ html, paperWidth = 576, onClose }: Ther
                     {/* Paper shadow */}
                     <div
                         className="absolute -bottom-2 left-2 right-2 h-4 rounded-b-xl opacity-20"
-                        style={{ /* keep-inline */
+                        style={{ /* keep-inline */ /* keep-inline */
                             background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, transparent 70%)'
                         }}
                     />

@@ -415,9 +415,9 @@ export default function AICopilot() {
                             <div className="grid grid-cols-3 gap-3">
                                 <div>
                                     <label className="text-[10px] font-medium text-muted-foreground">Provider</label>
-                                    <select
+                                    <select aria-label="Input"
                                         value={aiConfig.provider}
-                                        onChange={e => setAiConfig(c => ({ ...c, provider: e.target.value }))}
+                                        onChange={e = aria-label="Input field"> setAiConfig(c => ({ ...c, provider: e.target.value }))}
                                         className="w-full mt-1 bg-muted border border-border rounded-md px-2 py-1.5 text-xs text-foreground"
                                     >
                                         <option value="google">Google Gemini</option>
@@ -426,9 +426,9 @@ export default function AICopilot() {
                                 </div>
                                 <div>
                                     <label className="text-[10px] font-medium text-muted-foreground">Model</label>
-                                    <select
+                                    <select aria-label="Input"
                                         value={aiConfig.model}
-                                        onChange={e => setAiConfig(c => ({ ...c, model: e.target.value }))}
+                                        onChange={e = aria-label="Input field"> setAiConfig(c => ({ ...c, model: e.target.value }))}
                                         className="w-full mt-1 bg-muted border border-border rounded-md px-2 py-1.5 text-xs text-foreground"
                                     >
                                         {aiConfig.provider === 'google' ? (
@@ -448,10 +448,10 @@ export default function AICopilot() {
                                 </div>
                                 <div>
                                     <label className="text-[10px] font-medium text-muted-foreground">API Key</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="password"
                                         value={aiConfig.api_key}
-                                        onChange={e => setAiConfig(c => ({ ...c, api_key: e.target.value }))}
+                                        onChange={e = aria-label="Input field"> setAiConfig(c => ({ ...c, api_key: e.target.value }))}
                                         placeholder={aiConfig.api_key_masked || 'API anahtarı...'}
                                         className="w-full mt-1 bg-muted border border-border rounded-md px-2 py-1.5 text-xs text-foreground"
                                     />
@@ -594,15 +594,15 @@ export default function AICopilot() {
             <div className="flex-shrink-0 border-t border-border bg-card px-6 py-3">
                 <div className="flex items-end gap-3">
                     <div className="flex-1 relative">
-                        <textarea
+                        <textarea aria-label="Input"
                             ref={inputRef}
                             value={input}
-                            onChange={e => setInput(e.target.value)}
+                            onChange={e = aria-label="Input field"> setInput(e.target.value)}
                             onKeyDown={handleKeyDown}
                             placeholder="Bir soru sorun... (örn: 'Bugünkü satışlar nedir?')"
                             rows={1}
                             className="w-full bg-muted border border-border rounded-xl px-4 py-2.5 text-xs text-foreground placeholder-muted-foreground/50 resize-none focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
-                            style={{ minHeight: '40px', maxHeight: '120px' }} /* keep-inline */
+                            style={{ minHeight: '40px', maxHeight: '120px' }} /* keep-inline */ /* keep-inline */
                         />
                     </div>
                     <button

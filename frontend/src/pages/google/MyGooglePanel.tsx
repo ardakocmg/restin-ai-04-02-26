@@ -579,7 +579,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                             enabled ? "bg-white/10" : "bg-secondary"
                                         )}
                                     >
-                                        <Icon className="h-5 w-5" style={{ color: enabled ? meta.color : '#71717a' }} /> /* keep-inline */
+                                        <Icon className="h-5 w-5" style={{ color: enabled ? meta.color : '#71717a' }} /> /* keep-inline */ /* keep-inline */
                                     </div>
                                     <span className={cn("text-xs font-bold", enabled ? "text-foreground" : "text-muted-foreground")}>{meta.label}</span>
                                     <div className={cn(
@@ -650,7 +650,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                             : "text-muted-foreground hover:text-secondary-foreground hover:bg-white/5"
                                     )}
                                 >
-                                    <Icon className="h-3.5 w-3.5" style={{ color: active ? meta.color : undefined }} /> /* keep-inline */
+                                    <Icon className="h-3.5 w-3.5" style={{ color: active ? meta.color : undefined }} /> /* keep-inline */ /* keep-inline */
                                     {meta.label}
                                     {badge > 0 && (
                                         <span className="ml-1 px-1.5 py-0.5 text-[10px] font-black bg-red-500 text-foreground rounded-full leading-none">{badge}</span>
@@ -678,13 +678,13 @@ export default function MyGooglePanel(): React.ReactElement {
                             </div>
                             {showNewEvent && (
                                 <div className="bg-card/50 border border-border rounded-xl p-4 space-y-3 animate-in fade-in duration-200">
-                                    <input value={newEventTitle} onChange={e => setNewEventTitle(e.target.value)} placeholder="Event title" className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30" />
-                                    <textarea value={newEventDesc} onChange={e => setNewEventDesc(e.target.value)} placeholder="Description" rows={2} className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30 resize-none" />
+                                    <input value={newEventTitle} onChange={e = aria-label="Input field"> setNewEventTitle(e.target.value)} placeholder="Event title" className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30" />
+                                    <textarea value={newEventDesc} onChange={e = aria-label="Input field"> setNewEventDesc(e.target.value)} placeholder="Description" rows={2} className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30 resize-none" />
                                     <div className="grid grid-cols-2 gap-3">
-                                        <input type="datetime-local" value={newEventStart} onChange={e => setNewEventStart(e.target.value)} className="bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground outline-none focus:border-blue-500/30" />
-                                        <input type="datetime-local" value={newEventEnd} onChange={e => setNewEventEnd(e.target.value)} className="bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground outline-none focus:border-blue-500/30" />
+                                        <input type="datetime-local" value={newEventStart} onChange={e = aria-label="Input field"> setNewEventStart(e.target.value)} className="bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground outline-none focus:border-blue-500/30" />
+                                        <input type="datetime-local" value={newEventEnd} onChange={e = aria-label="Input field"> setNewEventEnd(e.target.value)} className="bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground outline-none focus:border-blue-500/30" />
                                     </div>
-                                    <input value={newEventLocation} onChange={e => setNewEventLocation(e.target.value)} placeholder="Location" className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30" />
+                                    <input value={newEventLocation} onChange={e = aria-label="Input field"> setNewEventLocation(e.target.value)} placeholder="Location" className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30" />
                                     <div className="flex gap-2 justify-end">
                                         <Button size="sm" variant="ghost" onClick={() => setShowNewEvent(false)} className="text-muted-foreground">Cancel</Button>
                                         <Button size="sm" onClick={handleCreateEvent} className="bg-blue-600 hover:bg-blue-500 text-foreground">Create</Button>
@@ -694,7 +694,7 @@ export default function MyGooglePanel(): React.ReactElement {
                             {events.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">{"No "}upcoming events</div>}
                             {events.map(ev => (
                                 <div key={ev.id} className="group flex items-start gap-3 p-3 bg-card/30 border border-border rounded-xl hover:border-border transition-all">
-                                    <div className="mt-1.5 h-3 w-3 rounded-full flex-shrink-0" style={{ backgroundColor: ev.color || '#4285f4' }} /> /* keep-inline */
+                                    <div className="mt-1.5 h-3 w-3 rounded-full flex-shrink-0" style={{ backgroundColor: ev.color || '#4285f4' }} /> /* keep-inline */ /* keep-inline */
                                     <div className="flex-1 min-w-0">
                                         <div className="text-sm font-bold text-foreground truncate">{ev.title}</div>
                                         {ev.description && <div className="text-xs text-muted-foreground truncate mt-0.5">{ev.description}</div>}
@@ -801,7 +801,7 @@ export default function MyGooglePanel(): React.ReactElement {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {contacts.map(c => (
                                     <div key={c.id} className="flex items-start gap-3 p-3 bg-card/30 border border-border rounded-xl hover:border-border transition-all">
-                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black text-foreground flex-shrink-0" style={{ backgroundColor: c.avatar_color }}> /* keep-inline */
+                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black text-foreground flex-shrink-0" style={{ backgroundColor: c.avatar_color }}> /* keep-inline */ /* keep-inline */
                                             {c.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -840,8 +840,8 @@ export default function MyGooglePanel(): React.ReactElement {
                             </div>
                             {showNewTask && (
                                 <div className="bg-card/50 border border-border rounded-xl p-4 space-y-3 animate-in fade-in duration-200">
-                                    <input value={newTaskTitle} onChange={e => setNewTaskTitle(e.target.value)} placeholder="Task title" className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30" />
-                                    <textarea value={newTaskNotes} onChange={e => setNewTaskNotes(e.target.value)} placeholder="Notes (optional)" rows={2} className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30 resize-none" />
+                                    <input value={newTaskTitle} onChange={e = aria-label="Input field"> setNewTaskTitle(e.target.value)} placeholder="Task title" className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30" />
+                                    <textarea value={newTaskNotes} onChange={e = aria-label="Input field"> setNewTaskNotes(e.target.value)} placeholder="Notes (optional)" rows={2} className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-blue-500/30 resize-none" />
                                     <div className="flex gap-2 justify-end">
                                         <Button size="sm" variant="ghost" onClick={() => setShowNewTask(false)} className="text-muted-foreground">Cancel</Button>
                                         <Button size="sm" onClick={handleCreateTask} className="bg-blue-600 hover:bg-blue-500 text-foreground">Create</Button>
@@ -1042,7 +1042,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                 return (
                                     <div key={item.key} className="flex items-center gap-4 py-2">
                                         <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center">
-                                            <Icon className="h-4 w-4" style={{ color: item.color }} /> /* keep-inline */
+                                            <Icon className="h-4 w-4" style={{ color: item.color }} /> /* keep-inline */ /* keep-inline */
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="text-sm font-bold text-foreground">{item.label}</div>

@@ -378,30 +378,30 @@ export default function WorkspaceSettings() {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="space-y-1.5">
                                             <label className="text-xs font-medium text-muted-foreground">Domain</label>
-                                            <input
+                                            <input aria-label="Input"
                                                 type="text"
                                                 value={newDomain}
-                                                onChange={(e) => setNewDomain(e.target.value)}
+                                                onChange={(e) = aria-label="Input field"> setNewDomain(e.target.value)}
                                                 placeholder="caviar-bull.com"
                                                 className="w-full px-3 py-2 rounded-md bg-background text-foreground border border-input text-sm focus:ring-1 focus:ring-ring"
                                             />
                                         </div>
                                         <div className="space-y-1.5">
                                             <label className="text-xs font-medium text-muted-foreground">Admin Email (Delegated)</label>
-                                            <input
+                                            <input aria-label="Input"
                                                 type="email"
                                                 value={newAdminEmail}
-                                                onChange={(e) => setNewAdminEmail(e.target.value)}
+                                                onChange={(e) = aria-label="Input field"> setNewAdminEmail(e.target.value)}
                                                 placeholder="admin@caviar-bull.com"
                                                 className="w-full px-3 py-2 rounded-md bg-background text-foreground border border-input text-sm focus:ring-1 focus:ring-ring"
                                             />
                                         </div>
                                         <div className="space-y-1.5">
                                             <label className="text-xs font-medium text-muted-foreground">Workspace Customer ID</label>
-                                            <input
+                                            <input aria-label="Input"
                                                 type="text"
                                                 value={newCustomerId}
-                                                onChange={(e) => setNewCustomerId(e.target.value)}
+                                                onChange={(e) = aria-label="Input field"> setNewCustomerId(e.target.value)}
                                                 placeholder="C0xxxxxxx"
                                                 className="w-full px-3 py-2 rounded-md bg-background text-foreground border border-input text-sm focus:ring-1 focus:ring-ring"
                                             />
@@ -435,10 +435,10 @@ export default function WorkspaceSettings() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <Button variant="ghost" size="icon" onClick={() => handleTestDomain(d.domain)} disabled={testingDomain === d.domain}>
+                                                <Button variant="ghost" size="icon" onClick={() = aria-label="Action"> handleTestDomain(d.domain)} disabled={testingDomain === d.domain}>
                                                     {testingDomain === d.domain ? <Loader2 className="w-4 h-4 animate-spin" /> : <TestTube className="w-4 h-4" />}
                                                 </Button>
-                                                <Button variant="ghost" size="icon" className="hover:text-destructive" onClick={() => handleRemoveDomain(d.domain)}>
+                                                <Button variant="ghost" size="icon" className="hover:text-destructive" onClick={() = aria-label="Action"> handleRemoveDomain(d.domain)}>
                                                     <Trash2 className="w-4 h-4" />
                                                 </Button>
                                             </div>

@@ -47,7 +47,7 @@ function InventoryItems() {
           </button>
         </div>
 
-        <input
+        <input aria-label="Input"
           type="text"
           placeholder="Search items..."
           value={search}

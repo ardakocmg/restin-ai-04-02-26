@@ -79,7 +79,7 @@ export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }: 
         >
             {/* Grid Background */}
             <div className="absolute inset-0 opacity-10 pointer-events-none"
-                style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} /* keep-inline */
+                style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} /* keep-inline */ /* keep-inline */
             />
 
             {localTables.map(table => {
@@ -94,7 +94,7 @@ export default function FloorPlanWidget({ tables, onTableSelect, onTableMove }: 
                             getStatusColor(table.status),
                             table.shape === 'CIRCLE' ? 'rounded-full' : 'rounded-lg'
                         )}
-                        style={{ /* keep-inline */
+                        style={{ /* keep-inline */ /* keep-inline */
                             left: x,
                             top: y,
                             width: table.width || 120,

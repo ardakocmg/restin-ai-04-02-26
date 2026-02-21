@@ -350,129 +350,129 @@ export default function LegalEntities() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="col-span-2">
                                     <label className="text-sm text-muted-foreground mb-1 block">Registered Name *</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={form.registered_name}
-                                        onChange={(e) => setForm({ ...form, registered_name: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, registered_name: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500/30"
                                         placeholder="e.g. MG Hospitality Ltd"
                                     />
                                 </div>
                                 <div>
                                     <label className="text-sm text-muted-foreground mb-1 block">Trading Name</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={form.trading_name}
-                                        onChange={(e) => setForm({ ...form, trading_name: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, trading_name: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Caviar & Bull"
                                     />
                                 </div>
                                 <div>
                                     <label className="text-sm text-muted-foreground mb-1 block">Registration # (Company)</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={form.registration_number}
-                                        onChange={(e) => setForm({ ...form, registration_number: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, registration_number: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. C56123"
                                     />
                                 </div>
                                 <div>
                                     <label className="text-sm text-muted-foreground mb-1 block">VAT Number</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={form.vat_number}
-                                        onChange={(e) => setForm({ ...form, vat_number: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, vat_number: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. MT15355214"
                                     />
                                 </div>
                                 <div>
                                     <label className="text-sm text-muted-foreground mb-1 block">PE Number</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={form.pe_number}
-                                        onChange={(e) => setForm({ ...form, pe_number: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, pe_number: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. 456398"
                                     />
                                 </div>
                                 <div className="col-span-2">
                                     <label className="text-sm text-muted-foreground mb-1 block">Registered Address</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={form.registered_address}
-                                        onChange={(e) => setForm({ ...form, registered_address: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, registered_address: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Triq ix-Xatt, St. George's Bay"
                                     />
                                 </div>
                                 <div>
                                     <label className="text-sm text-muted-foreground mb-1 block">City</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={form.city}
-                                        onChange={(e) => setForm({ ...form, city: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, city: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. STJ 3301"
                                     />
                                 </div>
                                 <div>
                                     <label className="text-sm text-muted-foreground mb-1 block">Country</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={form.country}
-                                        onChange={(e) => setForm({ ...form, country: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, country: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="Malta"
                                     />
                                 </div>
                                 <div>
                                     <label className="text-sm text-muted-foreground mb-1 block">HR Manager</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={form.hr_manager}
-                                        onChange={(e) => setForm({ ...form, hr_manager: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, hr_manager: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Jacqueline Portelli"
                                     />
                                 </div>
                                 <div>
                                     <label className="text-sm text-muted-foreground mb-1 block">Principal Payer</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="text"
                                         value={form.principal_payer}
-                                        onChange={(e) => setForm({ ...form, principal_payer: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, principal_payer: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="e.g. Marvin Gauci"
                                     />
                                 </div>
                                 <div>
                                     <label className="text-sm text-muted-foreground mb-1 block">Contact Email</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="email"
                                         value={form.contact_email}
-                                        onChange={(e) => setForm({ ...form, contact_email: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, contact_email: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="admin@company.com"
                                     />
                                 </div>
                                 <div>
                                     <label className="text-sm text-muted-foreground mb-1 block">Contact Phone</label>
-                                    <input
+                                    <input aria-label="Input"
                                         type="tel"
                                         value={form.contact_phone}
-                                        onChange={(e) => setForm({ ...form, contact_phone: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, contact_phone: e.target.value })}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none"
                                         placeholder="+356 2134 5678"
                                     />
                                 </div>
                                 <div className="col-span-2">
                                     <label className="text-sm text-muted-foreground mb-1 block">Notes</label>
-                                    <textarea
+                                    <textarea aria-label="Input"
                                         value={form.notes}
-                                        onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                                        onChange={(e) = aria-label="Input field"> setForm({ ...form, notes: e.target.value })}
                                         rows={3}
                                         className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground focus:border-violet-500 focus:outline-none resize-none"
                                         placeholder="Internal notes..."
