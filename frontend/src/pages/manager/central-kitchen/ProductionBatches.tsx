@@ -5,6 +5,7 @@ import { Badge } from '../../../components/ui/badge';
 import { Card,CardContent } from '../../../components/ui/card';
 import PageContainer from '../../../layouts/PageContainer';
 import api from '../../../lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function ProductionBatches() {
   const [batches, setBatches] = useState([]);
@@ -48,7 +49,7 @@ export default function ProductionBatches() {
   return (
     <PageContainer title="Production Batches" description="Manage central kitchen production runs" actions={<button onClick={() => setShowModal(true)} className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-foreground rounded-lg hover:bg-purple-700"><Plus className="h-4 w-4" />New Batch</button>}>
       <div className="space-y-4">
-        {loading ? <Card><CardContent className="p-8 text-center">Loading...</CardContent></Card> : batches.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">{"No "}production batches</CardContent></Card> : batches.map((batch) => (
+        {loading ? <LoadingSpinner variant="page" /> : batches.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">{"No "}production batches</CardContent></Card> : batches.map((batch) => (
           <Card key={batch.id} className="border-slate-700"><CardContent className="p-6"><div className="flex items-start justify-between"><div className="flex-1"><div className="flex items-center gap-3 mb-2"><Factory className="h-5 w-5 text-purple-400" /><h3 className="text-lg font-semibold text-slate-50">{batch.batch_number}</h3><Badge className={getStatusColor(batch.status)}>{batch.status}</Badge></div><div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm"><div><p className="text-slate-400">Date</p><p className="font-medium">{batch.batch_date}</p></div><div><p className="text-slate-400">Items</p><p className="font-medium">{batch.items?.length || 0}</p></div><div><p className="text-slate-400">Quality Check</p><p className="font-medium">{batch.quality_checked ? 'Passed' : 'Pending'}</p></div><div><p className="text-slate-400">Orders</p><p className="font-medium">{batch.internal_orders?.length || 0}</p></div></div></div></div></CardContent></Card>
         ))}
       </div>

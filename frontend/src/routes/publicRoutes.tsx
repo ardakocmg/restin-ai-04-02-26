@@ -9,6 +9,7 @@ import { Navigate,Route } from 'react-router-dom';
 import Login from '../features/auth/Login';
 import MarketingLanding from '../pages/MarketingLanding';
 import NotFound from '../pages/NotFound';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 // ─── Lazy Imports ───────────────────────────────────────────────────────────────
 const SetupWizard = React.lazy(() => import('../pages/SetupWizard'));
@@ -26,7 +27,7 @@ export const publicRoutes = (
         <Route path="/modules" element={<ModulesCatalog />} />
         <Route path="/login" element={<Login />} />
         <Route path="/setup" element={
-            <React.Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">Loading...</div>}>
+            <React.Suspense fallback={<LoadingSpinner variant="fullScreen" />}>
                 <SetupWizard />
             </React.Suspense>
         } />

@@ -8,6 +8,7 @@ import { Input } from '../../../../components/ui/input';
 import { Label } from '../../../../components/ui/label';
 import PageContainer from '../../../../layouts/PageContainer';
 import api from '../../../../lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 const FIELD_TYPES = [
   { value: 'text', label: 'Text', icon: Type },
@@ -82,7 +83,7 @@ export default function CustomFieldsPage() {
     return found ? found.icon : Type;
   };
 
-  if (loading) return <PageContainer title="Custom Fields"><div className="flex items-center justify-center h-64 text-muted-foreground">Loading...</div></PageContainer>;
+  if (loading) return <PageContainer title="Custom Fields"><LoadingSpinner variant="page" /></PageContainer>;
 
   return (
     <PageContainer

@@ -4,6 +4,7 @@ import { useEffect,useState } from 'react';
 import { Package,Plus,TrendingDown,TrendingUp } from 'lucide-react';
 
 import axios from 'axios';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -33,7 +34,7 @@ function InventoryItems() {
   };
 
   if (loading) {
-    return <div className="p-6">Loading...</div>;
+    return <LoadingSpinner variant="page" />;
   }
 
   return (

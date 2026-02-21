@@ -1,0 +1,126 @@
+/* ═══════════════════════════════════════════════
+   BrandedLoading — Restin.AI logo loading spinner
+   
+   Logo path: /logo192.png (centralized)
+   When the logo is updated, all spinners auto-update.
+   ═══════════════════════════════════════════════ */
+
+.branded-spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.branded-spinner-logo {
+  border-radius: 16px;
+  filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  transition: filter 0.3s ease;
+}
+
+/* Glow ring animation */
+.branded-spinner-ring {
+  position: relative;
+}
+
+.branded-spinner-ring::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 18px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    rgba(220, 38, 38, 0.6) 25%,
+    transparent 50%,
+    rgba(220, 38, 38, 0.4) 75%,
+    transparent 100%
+  );
+  animation: branded-ring-spin 1.5s linear infinite;
+  z-index: -1;
+}
+
+.branded-spinner-ring::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 17px;
+  background: var(--background, #09090b);
+  z-index: -1;
+}
+
+@keyframes branded-ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Sizes */
+.branded-spinner-sm .branded-spinner-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+}
+.branded-spinner-sm .branded-spinner-ring::before { border-radius: 8px; inset: -2px; }
+.branded-spinner-sm .branded-spinner-ring::after { border-radius: 7px; }
+
+.branded-spinner-default .branded-spinner-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+.branded-spinner-default .branded-spinner-ring::before { border-radius: 12px; }
+.branded-spinner-default .branded-spinner-ring::after { border-radius: 11px; }
+
+.branded-spinner-lg .branded-spinner-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+}
+.branded-spinner-lg .branded-spinner-ring::before { border-radius: 16px; }
+.branded-spinner-lg .branded-spinner-ring::after { border-radius: 15px; }
+
+.branded-spinner-xl .branded-spinner-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+}
+.branded-spinner-xl .branded-spinner-ring::before { border-radius: 20px; inset: -4px; }
+.branded-spinner-xl .branded-spinner-ring::after { border-radius: 19px; }
+
+/* Full-screen variant */
+.branded-spinner-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background, #09090b);
+}
+
+/* Page-level variant (within content area) */
+.branded-spinner-page {
+  min-height: 16rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Inline variant (within cards) */
+.branded-spinner-inline {
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Text styling */
+.branded-spinner-text {
+  font-size: 0.8125rem;
+  color: var(--muted-foreground, #a1a1aa);
+  font-weight: 500;
+  letter-spacing: 0.025em;
+}

@@ -5,6 +5,7 @@ import { Card,CardContent } from '../../../../components/ui/card';
 import { Input } from '../../../../components/ui/input';
 import PageContainer from '../../../../layouts/PageContainer';
 import api from '../../../../lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function TrainingStartingReport() {
   const [training, setTraining] = useState([]);
@@ -48,7 +49,7 @@ export default function TrainingStartingReport() {
     return colors[type] || 'bg-muted text-muted-foreground';
   };
 
-  if (loading) return <PageContainer title="Upcoming Training"><div className="flex items-center justify-center h-64 text-muted-foreground">Loading...</div></PageContainer>;
+  if (loading) return <PageContainer title="Upcoming Training"><LoadingSpinner variant="page" /></PageContainer>;
 
   return (
     <PageContainer title="Upcoming Training Sessions" description="Training programs scheduled to start soon">

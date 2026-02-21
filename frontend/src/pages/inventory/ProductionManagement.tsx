@@ -28,6 +28,7 @@ SelectValue,
 } from '../../components/ui/select';
 
 import { format } from 'date-fns';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -149,7 +150,7 @@ export default function ProductionManagement() {
     }
   };
 
-  if (loading) return <div className="p-6 text-foreground">Loading...</div>;
+  if (loading) return <LoadingSpinner variant="page" />;
 
   return (
     <div className="min-h-screen bg-background p-6 font-body text-secondary-foreground">

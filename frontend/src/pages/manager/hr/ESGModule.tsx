@@ -9,6 +9,7 @@ import { Award } from 'lucide-react';
 
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function ESGModule() {
   const { user, isManager, isOwner } = useAuth();
@@ -31,7 +32,7 @@ export default function ESGModule() {
     }
   };
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  if (loading) return <LoadingSpinner variant="page" />;
   if (!data) return <div className="p-8">{"No "}data available</div>;
 
   return (

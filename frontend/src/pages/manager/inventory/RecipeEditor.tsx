@@ -36,6 +36,7 @@ type LucideIcon
 import { useCallback,useEffect,useRef,useState } from 'react';
 import { useNavigate,useParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 // ── Types ──
 interface EditIngredient {
@@ -388,7 +389,7 @@ export default function RecipeEditor() {
     // ── Loading state ──
     if (loading) {
         return (
-            <PageContainer title="Loading..." description="" className="" actions={<></>}>
+            <PageContainer title="" description="" className="" actions={<></>}><LoadingSpinner variant="page" />
                 <div className="flex items-center justify-center h-64">
                     <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>

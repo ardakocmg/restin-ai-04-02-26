@@ -9,6 +9,7 @@ import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 import { Bar,BarChart,CartesianGrid,Line,LineChart,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 
 import api from '@/lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function SickLeaveAnalysis() {
   const { user, isManager, isOwner } = useAuth();
@@ -38,7 +39,7 @@ export default function SickLeaveAnalysis() {
     }
   };
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  if (loading) return <LoadingSpinner variant="page" />;
   if (!data) return <div className="p-8">{"No "}data available</div>;
 
   return (

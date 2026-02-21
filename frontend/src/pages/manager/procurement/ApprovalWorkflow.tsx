@@ -6,6 +6,7 @@ import { Badge } from '../../../components/ui/badge';
 import { Card,CardContent } from '../../../components/ui/card';
 import PageContainer from '../../../layouts/PageContainer';
 import api from '../../../lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function ApprovalWorkflow() {
   const [rules, setRules] = useState([]);
@@ -75,7 +76,7 @@ export default function ApprovalWorkflow() {
     >
       <div className="space-y-4">
         {loading ? (
-          <Card><CardContent className="p-8 text-center">Loading...</CardContent></Card>
+          <LoadingSpinner variant="page" />
         ) : rules.length === 0 ? (
           <Card><CardContent className="p-8 text-center text-slate-400">{"No "}approval rules configured</CardContent></Card>
         ) : (

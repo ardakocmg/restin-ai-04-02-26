@@ -5,6 +5,7 @@ import { Card,CardContent } from '../../../../components/ui/card';
 import { Input } from '../../../../components/ui/input';
 import PageContainer from '../../../../layouts/PageContainer';
 import api from '../../../../lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function TrainingOngoingReport() {
   const [training, setTraining] = useState([]);
@@ -53,7 +54,7 @@ export default function TrainingOngoingReport() {
   const atRiskCount = training.filter(t => t.status === 'at_risk').length;
   const avgProgress = training.length ? Math.round(training.reduce((s, t) => s + t.progress, 0) / training.length) : 0;
 
-  if (loading) return <PageContainer title="Ongoing Training"><div className="flex items-center justify-center h-64 text-muted-foreground">Loading...</div></PageContainer>;
+  if (loading) return <PageContainer title="Ongoing Training"><LoadingSpinner variant="page" /></PageContainer>;
 
   return (
     <PageContainer title="Ongoing Training" description="Monitor active training progress for all staff">

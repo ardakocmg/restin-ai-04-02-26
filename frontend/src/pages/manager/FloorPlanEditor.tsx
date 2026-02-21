@@ -14,6 +14,7 @@ import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import api from "../../lib/api";
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function FloorPlanEditor() {
   const { planId } = useParams();
@@ -253,7 +254,7 @@ export default function FloorPlanEditor() {
   };
 
   if (!plan) {
-    return <div className="p-8 text-foreground">Loading...</div>;
+    return <LoadingSpinner variant="page" />;
   }
 
   return (

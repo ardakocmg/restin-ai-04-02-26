@@ -41,6 +41,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import type { RecipeData } from './recipeDetailTypes';
 import { demoRecipe,EU_ALLERGENS,fmt } from './recipeDetailTypes';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 function InfoField({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
     return (
@@ -183,7 +184,7 @@ export default function RecipeDetail() {
 
     if (loading || !recipe) {
         return (
-            <PageContainer title="Loading..." description="" className="" actions={<></>}>
+            <PageContainer title="" description="" className="" actions={<></>}><LoadingSpinner variant="page" />
                 <div className="flex items-center justify-center h-64">
                     <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>

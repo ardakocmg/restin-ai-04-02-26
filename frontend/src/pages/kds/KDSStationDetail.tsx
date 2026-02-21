@@ -8,6 +8,7 @@ import { ArrowLeft,Trash2 } from 'lucide-react';
 import axios from 'axios';
 
 import { toast } from 'sonner';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -85,7 +86,7 @@ function KDSStationDetail() {
   };
 
   if (loading || !station || !settings) {
-    return <div className="p-6">Loading...</div>;
+    return <LoadingSpinner variant="page" />;
   }
 
   return (

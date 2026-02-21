@@ -5,6 +5,7 @@ import { Badge } from '../../../components/ui/badge';
 import { Card,CardContent } from '../../../components/ui/card';
 import PageContainer from '../../../layouts/PageContainer';
 import api from '../../../lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function QualityAudits() {
   const [audits, setAudits] = useState([]);
@@ -43,7 +44,7 @@ export default function QualityAudits() {
   return (
     <PageContainer title="Quality Audits" description="HACCP and safety audits" actions={<button onClick={() => setShowModal(true)} className="flex items-center gap-2 px-4 py-2 bg-yellow-600 text-foreground rounded-lg hover:bg-yellow-700"><Plus className="h-4 w-4" />New Audit</button>}>
       <div className="space-y-4">
-        {loading ? <Card><CardContent className="p-8 text-center">Loading...</CardContent></Card> : audits.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">{"No "}audits found</CardContent></Card> : audits.map((audit) => (
+        {loading ? <LoadingSpinner variant="page" /> : audits.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">{"No "}audits found</CardContent></Card> : audits.map((audit) => (
           <Card key={audit.id} className="border-slate-700"><CardContent className="p-6"><div className="flex items-start justify-between"><div className="flex-1"><div className="flex items-center gap-3 mb-2"><ShieldCheck className="h-5 w-5 text-yellow-400" /><h3 className="text-lg font-semibold text-slate-50">{audit.audit_type}</h3><Badge className="bg-blue-600/20 text-blue-100">Score: {audit.overall_score?.toFixed(0) || 0}%</Badge></div><div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm"><div><p className="text-slate-400">Date</p><p className="font-medium">{new Date(audit.audit_date).toLocaleDateString()}</p></div><div><p className="text-slate-400">Auditor</p><p className="font-medium">{audit.auditor_name}</p></div><div><p className="text-slate-400">Checklist Items</p><p className="font-medium">{audit.checklist?.length || 0}</p></div><div><p className="text-slate-400">Follow-up</p><p className="font-medium">{audit.follow_up_required ? 'Required' : 'None'}</p></div></div></div></div></CardContent></Card>
         ))}
       </div>

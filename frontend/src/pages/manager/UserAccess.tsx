@@ -30,6 +30,7 @@ import DataTable from '../../components/shared/DataTable';
 import PermissionGate from '../../components/shared/PermissionGate';
 import { useAuth } from '../../context/AuthContext';
 import { useAuditLog } from '../../hooks/useAuditLog';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function UserAccess() {
     const { userId } = useParams();
@@ -104,7 +105,7 @@ export default function UserAccess() {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <LoadingSpinner />;
 
     return (
         <PermissionGate requiredRole="OWNER">

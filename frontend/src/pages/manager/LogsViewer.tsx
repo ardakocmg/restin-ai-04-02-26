@@ -11,6 +11,7 @@ import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '../..
 import { useAuth } from '../../context/AuthContext';
 import PageContainer from '../../layouts/PageContainer';
 import LogService from '../../services/LogService';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 const LEVEL_COLORS = {
   ERROR: 'bg-red-100 text-red-700 dark:text-red-400 border-red-200',
@@ -114,7 +115,7 @@ export default function LogsViewer() {
         <CardContent className="pt-6">
           <div className="space-y-2">
             {loading ? (
-              <p className="text-center py-8 text-gray-500">Loading...</p>
+              <LoadingSpinner variant="page" />
             ) : logs.length === 0 ? (
               <p className="text-center py-8 text-gray-500">{"No "}logs found</p>
             ) : (

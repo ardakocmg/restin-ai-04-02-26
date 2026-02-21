@@ -11,6 +11,7 @@ import { useAuditLog } from '@/hooks/useAuditLog';
 import { CartesianGrid,Cell,Line,LineChart,Pie,PieChart,ResponsiveContainer,Tooltip,XAxis,YAxis } from 'recharts';
 
 import api from '@/lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 const COLORS = ['#EF4444', '#F59E0B', '#10B981'];
 
@@ -43,7 +44,7 @@ export default function TurnoverModule() {
     }
   };
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  if (loading) return <LoadingSpinner variant="page" />;
   if (!data) return <div className="p-8">{"No "}data available</div>;
 
   return (

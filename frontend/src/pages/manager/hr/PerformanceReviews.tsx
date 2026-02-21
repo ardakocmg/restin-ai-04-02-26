@@ -15,6 +15,7 @@ import { Filter,RotateCw,Search } from 'lucide-react';
 
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 const COLORS = ['#10B981', '#F59E0B', '#94A3B8', '#EF4444'];
 
@@ -76,7 +77,7 @@ export default function PerformanceReviews() {
     }
   };
 
-  if (loading) return <div className="p-8 text-slate-50">Loading...</div>;
+  if (loading) return <LoadingSpinner variant="page" />;
 
   return (
     <PermissionGate requiredRole="MANAGER">

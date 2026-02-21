@@ -1,7 +1,7 @@
 import { logger } from '@/lib/logger';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { ArrowRightLeft,Package } from 'lucide-react';
+import { ArrowRightLeft, Package } from 'lucide-react';
 
 import axios from 'axios';
 
@@ -12,20 +12,21 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 
 import {
-Dialog,
-DialogContent,
-DialogFooter,
-DialogHeader,
-DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from '../../components/ui/dialog';
 
 import {
-Select,
-SelectContent,
-SelectItem,
-SelectTrigger,
-SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '../../components/ui/select';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -105,7 +106,7 @@ export default function StockTransfers() {
     }
   };
 
-  if (loading) return <div className="p-6 text-foreground">Loading...</div>;
+  if (loading) return <LoadingSpinner variant="page" />;
 
   return (
     <div className="min-h-screen bg-background p-6 font-body text-secondary-foreground">

@@ -13,6 +13,7 @@ import { DollarSign,Plus,X } from 'lucide-react';
 
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function SFMAccounting() {
   const { user, isManager, isOwner } = useAuth();
@@ -106,7 +107,7 @@ export default function SFMAccounting() {
 
           {view === 'gl' && (
             <div className="space-y-4">
-              {loading ? <Card><CardContent className="p-8 text-center">Loading...</CardContent></Card> : accounts.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">{"No "}GL accounts</CardContent></Card> : accounts.map((acc) => (
+              {loading ? <LoadingSpinner variant="page" /> : accounts.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">{"No "}GL accounts</CardContent></Card> : accounts.map((acc) => (
                 <Card key={acc.id} className="border-slate-700"><CardContent className="p-6"><div className="flex items-start justify-between"><div className="flex-1"><div className="flex items-center gap-3 mb-2"><DollarSign className="h-5 w-5 text-green-400" /><h3 className="text-lg font-semibold text-slate-50">{acc.account_name}</h3><Badge className="bg-blue-600/20 text-blue-100">{acc.account_code}</Badge></div><div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm"><div><p className="text-slate-400">Type</p><p className="font-medium">{acc.account_type}</p></div><div><p className="text-slate-400">Balance</p><p className="font-medium text-green-400">${acc.balance}</p></div><div><p className="text-slate-400">Status</p><p className="font-medium">{acc.active ? 'Active' : 'Inactive'}</p></div></div></div></div></CardContent></Card>
               ))}
             </div>
@@ -114,7 +115,7 @@ export default function SFMAccounting() {
 
           {view === 'ledger' && (
             <div className="space-y-4">
-              {loading ? <Card><CardContent className="p-8 text-center">Loading...</CardContent></Card> : ledger.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">{"No "}ledger entries</CardContent></Card> : ledger.map((entry) => (
+              {loading ? <LoadingSpinner variant="page" /> : ledger.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">{"No "}ledger entries</CardContent></Card> : ledger.map((entry) => (
                 <Card key={entry.id} className="border-slate-700"><CardContent className="p-6"><div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm"><div><p className="text-slate-400">Date</p><p className="font-medium">{new Date(entry.entry_date).toLocaleDateString()}</p></div><div><p className="text-slate-400">Account</p><p className="font-medium">{entry.account_code}</p></div><div><p className="text-slate-400">Debit</p><p className="font-medium text-red-400">${entry.debit}</p></div><div><p className="text-slate-400">Credit</p><p className="font-medium text-green-400">${entry.credit}</p></div><div><p className="text-slate-400">Source</p><p className="font-medium">{entry.source}</p></div></div></CardContent></Card>
               ))}
             </div>
@@ -122,7 +123,7 @@ export default function SFMAccounting() {
 
           {view === 'vat' && (
             <div className="space-y-4">
-              {loading ? <Card><CardContent className="p-8 text-center">Loading...</CardContent></Card> : vat.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">{"No "}VAT returns</CardContent></Card> : vat.map((v) => (
+              {loading ? <LoadingSpinner variant="page" /> : vat.length === 0 ? <Card><CardContent className="p-8 text-center text-slate-400">{"No "}VAT returns</CardContent></Card> : vat.map((v) => (
                 <Card key={v.id} className="border-slate-700"><CardContent className="p-6"><div className="flex items-start justify-between"><div className="flex-1"><h3 className="text-lg font-semibold text-slate-50 mb-3">{v.period_start} - {v.period_end}</h3><div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm"><div><p className="text-slate-400">Total Sales</p><p className="font-medium text-green-400">${v.total_sales}</p></div><div><p className="text-slate-400">VAT on Sales</p><p className="font-medium">${v.vat_on_sales}</p></div><div><p className="text-slate-400">Total Purchases</p><p className="font-medium">${v.total_purchases}</p></div><div><p className="text-slate-400">VAT Payable</p><p className="font-medium text-red-400">${v.vat_payable}</p></div></div></div></div></CardContent></Card>
               ))}
             </div>

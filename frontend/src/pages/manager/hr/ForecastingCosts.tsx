@@ -11,6 +11,7 @@ import { CartesianGrid,Line,LineChart,ResponsiveContainer,Tooltip,XAxis,YAxis } 
 import { TrendingUp } from 'lucide-react';
 
 import api from '@/lib/api';
+import LoadingSpinner from '@/components/shared/LoadingSpinner';
 
 export default function ForecastingCosts() {
   const { user, isManager, isOwner } = useAuth();
@@ -40,7 +41,7 @@ export default function ForecastingCosts() {
     }
   };
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  if (loading) return <LoadingSpinner variant="page" />;
   if (!data) return <div className="p-8">{"No "}data available</div>;
 
   return (
