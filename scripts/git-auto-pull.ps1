@@ -63,7 +63,8 @@ function Invoke-AutoPull {
         # Play a beep to notify
         [console]::beep(800, 200)
         [console]::beep(1000, 150)
-    } else {
+    }
+    else {
         Write-Log "Pull failed! Manual intervention needed." "Red"
         Write-Log $pullResult "Red"
         [console]::beep(400, 500)
@@ -94,12 +95,27 @@ do {
         if ($behind -gt 0) {
             Write-Log "Remote is $behind commit(s) ahead — triggering auto-pull!" "Magenta"
             $ok = Invoke-AutoPull
-            if ($ok) { $pullCount++ }
+            if ($ok) {
+                $pullCount++
+                # Run post-pull health check
+                $healthScript = Join-Path $PSScriptRoot "health-check-post-pull.ps1"
+                if (Test-Path $healthScript) {
+                    Write-Log "Running post-pull health check..." "Cyan"
+                    & $healthScript
+                }
+                # Show pending tasks
+                $taskScript = Join-Path $PSScriptRoot "task-queue.ps1"
+                if (Test-Path $taskScript) {
+                    & $taskScript list
+                }
+            }
             Write-Log "Total auto-pulls this session: $pullCount" "DarkCyan"
-        } else {
+        }
+        else {
             Write-Log "Up to date with origin/main" "DarkGreen"
         }
-    } catch {
+    }
+    catch {
         Write-Log "Error checking remote: $_" "Red"
     }
 

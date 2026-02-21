@@ -13,7 +13,6 @@ If the file you want to edit is listed there, **DO NOT EDIT IT**.
 Instead, notify the user that the file is locked by the other PC.
 
 ```bash
-# Check worklock
 cat .worklock
 ```
 
@@ -86,7 +85,7 @@ git push origin main
 To minimize conflicts, split work domains:
 
 | Domain | Files | Preferred PC |
-|--------|-------|-------------|
+| ------ | ----- | ------------ |
 | Backend routes | `backend/routes/*.py` | Either (low conflict) |
 | Frontend pages | `frontend/src/pages/**` | Lock via worklock |
 | Layouts/Core | `frontend/src/layouts/*` | PC1 only |
@@ -94,10 +93,14 @@ To minimize conflicts, split work domains:
 | POS | `frontend/src/pages/pos/*` | Lock via worklock |
 | Config/Scripts | `*.ps1`, `.agent/*` | PC1 only |
 
-### Rule 8: AUTO-PULL WATCHER (PC2)
+---
 
-Run the auto-pull watcher on PC2 so it automatically syncs when PC1 pushes:
-// turbo
+## 🚀 COLLABORATION TOOLKIT
+
+### Tool 1: Auto-Pull Watcher (PC2 runs this)
+
+Polls remote every 30s, auto-pulls when new commits are detected.
+After successful pull: runs health check + shows task queue.
 
 ```powershell
 .\scripts\git-auto-pull.ps1              # Poll every 30s (default)
@@ -105,12 +108,71 @@ Run the auto-pull watcher on PC2 so it automatically syncs when PC1 pushes:
 .\scripts\git-auto-pull.ps1 -Once        # Single check
 ```
 
-The watcher will:
+### Tool 2: Auto-Lock Watcher
 
-- Fetch from origin every N seconds
-- Auto-pull when new commits are detected
-- Stash local changes before pulling, restore after
-- Play a beep sound to notify you of updates
+Watches modified files and auto-updates `.worklock`. No manual locking needed.
+
+```powershell
+.\scripts\auto-lock.ps1              # Poll every 10s (default)
+.\scripts\auto-lock.ps1 -Interval 5  # Poll every 5s
+```
+
+### Tool 3: Shared Task Queue
+
+Send tasks between PCs. Tasks are stored in `.agent/task-queue.json`.
+
+```powershell
+.\scripts\task-queue.ps1 add "Fix ModifierModalNew.tsx TS errors" -Priority high -To PC2
+.\scripts\task-queue.ps1 list          # Show all tasks
+.\scripts\task-queue.ps1 done 1234     # Mark task as done
+.\scripts\task-queue.ps1 clear         # Remove completed tasks
+```
+
+### Tool 4: Post-Pull Health Check
+
+Runs automatically after auto-pull. Checks TypeScript, lint, packages.
+Results written to `.agent/build-status-{pc}.json`.
+
+```powershell
+.\scripts\health-check-post-pull.ps1   # Run manually
+```
+
+### Tool 5: Activity Status Broadcaster
+
+Shows what each PC is doing in real-time. Status written to `.agent/status-{pc}.json`.
+
+```powershell
+.\scripts\activity-status.ps1             # Broadcast every 15s
+.\scripts\activity-status.ps1 -Interval 5 # Broadcast every 5s
+```
+
+### Tool 6: Domain Fence Enforcer
+
+Blocks commits that touch files outside your PC's assigned domain.
+
+```powershell
+.\scripts\domain-fence.ps1       # Check staged files (blocks violations)
+.\scripts\domain-fence.ps1 -Warn # Warn only, don't block
+```
+
+---
+
+## 🖥️ RECOMMENDED PC2 STARTUP
+
+Run these 3 scripts in separate terminals on PC2:
+
+```powershell
+# Terminal 1: Auto-pull watcher (syncs code from PC1)
+.\scripts\git-auto-pull.ps1
+
+# Terminal 2: Auto-lock (signals which files you're editing)
+.\scripts\auto-lock.ps1
+
+# Terminal 3: Activity status (broadcasts your status)
+.\scripts\activity-status.ps1
+```
+
+---
 
 ## CODE QUALITY RULES (Both PCs Must Follow)
 
