@@ -147,6 +147,28 @@ cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-St
 
 **Rule:** NEVER use `style={{}}` for hardcoded values (padding, colors, font-size, margins). Use Tailwind CSS classes instead. **Only exception:** Dynamic runtime values that cannot be expressed as classes (e.g., `style={{ width:`${percent}%`}}`, `style={{ top: contextMenu.y }}`). Mark legitimate exceptions with `// keep-inline` comment.
 
+### 8.7. Icon-Only Buttons Without aria-label (ZERO TOLERANCE)
+
+// turbo
+Buttons with only icon children MUST have `aria-label` or `title`:
+
+```
+cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-String -Path "src\pages\**\*.tsx","src\components\**\*.tsx" -Pattern 'size="icon"' -Recurse | ForEach-Object { $line = $_.LineNumber; $file = $_.Path; $content = Get-Content $file; $lineText = $content[$line-1]; if ($lineText -notmatch 'aria-label|title=') { Write-Host "${file}:${line}" } } | Select-Object -First 20
+```
+
+**Rule:** EVERY `<Button size="icon">` MUST have `aria-label="Description"` or `title="Description"`. Screen readers cannot read icon-only buttons without these attributes.
+
+### 8.8. Form Inputs Without Labels (ZERO TOLERANCE)
+
+// turbo
+All `<input>`, `<select>`, `<textarea>` must have accessible names:
+
+```
+cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-String -Path "src\pages\**\*.tsx","src\components\**\*.tsx" -Pattern "<(input|select|textarea)\s" -Recurse | ForEach-Object { $line = $_.LineNumber; $file = $_.Path; $content = Get-Content $file; $lineText = $content[$line-1]; if ($lineText -notmatch 'aria-label|placeholder|title=|id=') { Write-Host "${file}:${line}" } } | Select-Object -First 20
+```
+
+**Rule:** EVERY form element MUST have at least one of: `aria-label`, `placeholder`, `title`, or an associated `<label htmlFor>`.
+
 ---
 
 ## 🟡 IMPORTANT CHECKS (Should Pass)
@@ -249,6 +271,8 @@ cd c:\Users\MG Group\.gemini\antigravity\scratch\restin-ai\frontend && Select-St
 | 🔴 | Dark Mode Violations | Flag for review |
 | 🔴 | Hardcoded Colors | Flag for review |
 | 🔴 | Inline Styles | **Block commit** |
+| 🔴 | Icon-Only Buttons (a11y) | **Block commit** |
+| 🔴 | Form Labels (a11y) | **Block commit** |
 | 🟡 | Empty Catch | Fix if new code |
 | 🟡 | Unused Imports | Clean up |
 | 🟡 | Duplicate Routes | Fix immediately |

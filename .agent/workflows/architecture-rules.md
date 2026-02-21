@@ -359,3 +359,60 @@ className="pos-card"
 - Mark all legitimate exceptions with `// keep-inline` comment
 - ESLint custom rule `restin-guardrails/no-inline-styles` enforces this automatically
 - Pre-commit check 8.6 scans for violations
+
+---
+
+## Rule 17: ACCESSIBILITY — MANDATORY LABELS 🦮
+
+All interactive elements MUST have accessible text. Screen readers and automated linting require this.
+
+### 17a. Icon-Only Buttons MUST Have `aria-label`
+
+```tsx
+// ❌ FORBIDDEN — button has no text, screen reader says "button"
+<Button size="icon" onClick={handleClose}>
+    <X className="h-4 w-4" />
+</Button>
+
+// ✅ REQUIRED — add aria-label
+<Button size="icon" onClick={handleClose} aria-label="Close">
+    <X className="h-4 w-4" />
+</Button>
+
+// ✅ ALSO OK — use title attribute
+<Button size="icon" onClick={handleClose} title="Close">
+    <X className="h-4 w-4" />
+</Button>
+```
+
+### 17b. Form Inputs MUST Have Labels
+
+```tsx
+// ❌ FORBIDDEN — input with no label
+<input type="text" value={name} onChange={...} />
+
+// ✅ REQUIRED — use aria-label or <label>
+<input type="text" value={name} onChange={...} aria-label="Employee name" />
+
+// ✅ ALSO OK — wrap with <label>
+<label>
+    Employee Name
+    <input type="text" value={name} onChange={...} />
+</label>
+```
+
+### 17c. Select Elements MUST Have Accessible Names
+
+```tsx
+// ❌ FORBIDDEN — select with no name
+<select value={dept} onChange={...}>...</select>
+
+// ✅ REQUIRED
+<select value={dept} onChange={...} aria-label="Department">...</select>
+```
+
+**Rules:**
+
+- EVERY `<Button>` with only icon children MUST have `aria-label` or `title`
+- EVERY `<input>`, `<textarea>`, `<select>` MUST have `aria-label`, `placeholder`, `title`, or an associated `<label>`
+- Pre-commit check 16 and 8.7 scan for violations
