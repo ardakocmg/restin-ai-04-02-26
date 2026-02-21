@@ -303,6 +303,21 @@ const s: Record<string, React.CSSProperties> = {
 
 `npx tsc --noEmit` must exit with code 0. **Any TS error blocks commit.**
 
+### 14f. `@ts-nocheck` and `@ts-ignore` are BANNED
+
+```tsx
+// ❌ FORBIDDEN — suppresses ALL type checking
+// @ts-nocheck
+
+// ❌ FORBIDDEN — hides specific errors
+// @ts-ignore
+
+// ✅ OK (rare cases only) — must explain WHY
+// @ts-expect-error: Library X has broken types, see issue #123
+```
+
+**Rule:** NEVER add `@ts-nocheck` or `@ts-ignore`. If a file has TS errors, FIX them — do not suppress the checker. `@ts-expect-error` is allowed only with a mandatory comment explaining the reason.
+
 ---
 
 ## Rule 15: NO HARDCODED COLORS IN TSX 🎨
