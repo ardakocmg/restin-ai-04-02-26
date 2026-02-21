@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * HRAnalytics.jsx — Peak HR Analytics Dashboard
  * Tabs: Overview | POS Analytics | KDS Analytics | System Usage

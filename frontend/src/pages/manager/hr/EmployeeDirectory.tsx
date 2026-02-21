@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * People & Talent — Employee Directory
  * Connected to live API: /venues/{venue_id}/hr/employees
