@@ -65,8 +65,8 @@ export default function SystemHealthDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Cloud Status</CardTitle>
-                <Server className="h-4 w-4" style={{ color: '#E53935' }} />
+                <CardTitle className="text-sm font-medium text-zinc-400">Cloud Status</CardTitle>
+                <Server className="h-4 w-4 text-red-500" />
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2">
@@ -75,7 +75,7 @@ export default function SystemHealthDashboard() {
                   ) : (
                     <AlertCircle className="h-6 w-6 text-red-500" />
                   )}
-                  <span className="text-lg font-bold" style={{ color: '#F5F5F7' }}>
+                  <span className="text-lg font-bold text-zinc-100">
                     {resilienceStatus?.cloudReachable ? 'Online' : 'Offline'}
                   </span>
                 </div>
@@ -84,17 +84,17 @@ export default function SystemHealthDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Edge Gateway</CardTitle>
-                <Activity className="h-4 w-4" style={{ color: '#3B82F6' }} />
+                <CardTitle className="text-sm font-medium text-zinc-400">Edge Gateway</CardTitle>
+                <Activity className="h-4 w-4 text-blue-500" />
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2">
                   {resilienceStatus?.edgeReachable ? (
                     <CheckCircle className="h-6 w-6 text-blue-500" />
                   ) : (
-                    <AlertCircle className="h-6 w-6" style={{ color: '#71717A' }} />
+                    <AlertCircle className="h-6 w-6 text-zinc-500" />
                   )}
-                  <span className="text-lg font-bold" style={{ color: '#F5F5F7' }}>
+                  <span className="text-lg font-bold text-zinc-100">
                     {resilienceStatus?.edgeReachable ? 'Available' : 'Unavailable'}
                   </span>
                 </div>
@@ -103,12 +103,12 @@ export default function SystemHealthDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Device Mesh</CardTitle>
-                <Cpu className="h-4 w-4" style={{ color: '#A855F7' }} />
+                <CardTitle className="text-sm font-medium text-zinc-400">Device Mesh</CardTitle>
+                <Cpu className="h-4 w-4 text-purple-500" />
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold" style={{ color: '#F5F5F7' }}>
+                  <span className="text-lg font-bold text-zinc-100">
                     {meshStatus?.peerCount || 0} Peers
                   </span>
                 </div>
@@ -120,14 +120,14 @@ export default function SystemHealthDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Queue Status</CardTitle>
-                <Database className="h-4 w-4" style={{ color: '#E53935' }} />
+                <CardTitle className="text-sm font-medium text-zinc-400">Queue Status</CardTitle>
+                <Database className="h-4 w-4 text-red-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-lg font-bold" style={{ color: edgeHealth?.stats?.pending > 0 ? '#FB8C00' : '#4ADE80' }}>
+                <div className={`text-lg font-bold ${edgeHealth?.stats?.pending > 0 ? 'text-amber-500' : 'text-green-400'}`}>
                   {edgeHealth?.stats?.pending || 0} Pending
                 </div>
-                <p className="text-xs" style={{ color: '#71717A' }}>
+                <p className="text-xs text-zinc-500">
                   {edgeHealth?.stats?.synced || 0} synced
                 </p>
               </CardContent>
@@ -142,14 +142,13 @@ export default function SystemHealthDashboard() {
             <CardContent>
               <div className="flex items-center gap-4">
                 <div className="flex-1">
-                  <div className="text-3xl font-bold mb-2" style={{
-                    color: resilienceStatus?.mode === 'online' ? '#4ADE80' :
-                      resilienceStatus?.mode === 'edge' ? '#3B82F6' :
-                        resilienceStatus?.mode === 'mesh' ? '#A855F7' : '#E53935'
-                  }}>
+                  <div className={`text-3xl font-bold mb-2 ${resilienceStatus?.mode === 'online' ? 'text-green-400' :
+                      resilienceStatus?.mode === 'edge' ? 'text-blue-500' :
+                        resilienceStatus?.mode === 'mesh' ? 'text-purple-500' : 'text-red-500'
+                    }`}>
                     {resilienceStatus?.mode?.toUpperCase() || 'UNKNOWN'}
                   </div>
-                  <p className="text-sm" style={{ color: '#A1A1AA' }}>
+                  <p className="text-sm text-zinc-400">
                     {resilienceStatus?.mode === 'online' && 'Full cloud connectivity - all features available'}
                     {resilienceStatus?.mode === 'edge' && 'Venue gateway active - operating via edge server'}
                     {resilienceStatus?.mode === 'device' && 'Full offline mode - operations queued'}
@@ -157,14 +156,14 @@ export default function SystemHealthDashboard() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm" style={{ color: '#71717A' }}>Failover Chain</div>
+                  <div className="text-sm text-zinc-500">Failover Chain</div>
                   <div className="flex items-center gap-2 mt-2">
                     <Badge variant={resilienceStatus?.cloudReachable ? 'default' : 'outline'}>Cloud</Badge>
-                    <span style={{ color: '#71717A' }}>→</span>
+                    <span className="text-zinc-500">→</span>
                     <Badge variant={resilienceStatus?.edgeReachable ? 'default' : 'outline'}>Edge</Badge>
-                    <span style={{ color: '#71717A' }}>→</span>
+                    <span className="text-zinc-500">→</span>
                     <Badge variant="outline">Device</Badge>
-                    <span style={{ color: '#71717A' }}>→</span>
+                    <span className="text-zinc-500">→</span>
                     <Badge variant={meshStatus?.active ? 'default' : 'outline'}>Mesh</Badge>
                   </div>
                 </div>
@@ -181,16 +180,16 @@ export default function SystemHealthDashboard() {
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   <div>
-                    <div className="text-sm" style={{ color: '#A1A1AA' }}>Pending Commands</div>
-                    <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{edgeHealth.stats?.pending || 0}</div>
+                    <div className="text-sm text-zinc-400">Pending Commands</div>
+                    <div className="text-2xl font-bold text-zinc-100">{edgeHealth.stats?.pending || 0}</div>
                   </div>
                   <div>
-                    <div className="text-sm" style={{ color: '#A1A1AA' }}>Synced Commands</div>
-                    <div className="text-2xl font-bold" style={{ color: '#4ADE80' }}>{edgeHealth.stats?.synced || 0}</div>
+                    <div className="text-sm text-zinc-400">Synced Commands</div>
+                    <div className="text-2xl font-bold text-green-400">{edgeHealth.stats?.synced || 0}</div>
                   </div>
                   <div>
-                    <div className="text-sm" style={{ color: '#A1A1AA' }}>Failed Commands</div>
-                    <div className="text-2xl font-bold" style={{ color: '#EF4444' }}>{edgeHealth.stats?.failed || 0}</div>
+                    <div className="text-sm text-zinc-400">Failed Commands</div>
+                    <div className="text-2xl font-bold text-red-400">{edgeHealth.stats?.failed || 0}</div>
                   </div>
                 </div>
               </CardContent>
@@ -206,24 +205,24 @@ export default function SystemHealthDashboard() {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span style={{ color: '#A1A1AA' }}>Mesh Active:</span>
+                    <span className="text-zinc-400">Mesh Active:</span>
                     <Badge variant={meshStatus.connected ? 'default' : 'outline'}>
                       {meshStatus.connected ? 'Connected' : 'Disconnected'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span style={{ color: '#A1A1AA' }}>Device Role:</span>
+                    <span className="text-zinc-400">Device Role:</span>
                     <Badge variant={meshStatus.isHub ? 'default' : 'secondary'}>
                       {meshStatus.isHub ? 'Hub' : 'Peer'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span style={{ color: '#A1A1AA' }}>Connected Peers:</span>
-                    <span className="font-bold" style={{ color: '#F5F5F7' }}>{meshStatus.peerCount}</span>
+                    <span className="text-zinc-400">Connected Peers:</span>
+                    <span className="font-bold text-zinc-100">{meshStatus.peerCount}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span style={{ color: '#A1A1AA' }}>Election Score:</span>
-                    <span className="font-bold" style={{ color: '#F5F5F7' }}>{meshStatus.score || 0}</span>
+                    <span className="text-zinc-400">Election Score:</span>
+                    <span className="font-bold text-zinc-100">{meshStatus.score || 0}</span>
                   </div>
                 </div>
               </CardContent>
