@@ -20,12 +20,38 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
 
 $host.UI.RawUI.WindowTitle = "Restin.AI Git Auto-Pull Watcher"
+$SyncLogFile = Join-Path (Join-Path $repoRoot ".agent") "sync-log.txt"
+$agentDir = Join-Path $repoRoot ".agent"
+if (-not (Test-Path $agentDir)) { New-Item -ItemType Directory -Path $agentDir -Force | Out-Null }
 
 function Write-Log {
     param([string]$Message, [string]$Color = "White")
     $ts = Get-Date -Format "HH:mm:ss"
     Write-Host "[$ts] " -NoNewline -ForegroundColor DarkGray
     Write-Host $Message -ForegroundColor $Color
+}
+
+function Write-SyncLog {
+    param([string]$Message)
+    $ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    "[$ts] $Message" | Out-File -Append -Encoding UTF8 $SyncLogFile
+}
+
+function Show-Toast {
+    param([string]$Title, [string]$Message)
+    try {
+        Add-Type -AssemblyName System.Windows.Forms
+        $balloon = New-Object System.Windows.Forms.NotifyIcon
+        $balloon.Icon = [System.Drawing.SystemIcons]::Information
+        $balloon.BalloonTipIcon = "Info"
+        $balloon.BalloonTipTitle = $Title
+        $balloon.BalloonTipText = $Message
+        $balloon.Visible = $true
+        $balloon.ShowBalloonTip(5000)
+        Start-Sleep -Milliseconds 5500
+        $balloon.Dispose()
+    }
+    catch {}
 }
 
 function Test-UncommittedChanges {
@@ -59,9 +85,13 @@ function Invoke-AutoPull {
     }
 
     if ($success) {
+        $commitMsg = git log -1 --format="%s" 2>$null
         Write-Log "[OK] Pull successful! Codebase updated." "Green"
+        Write-Log "Latest: $commitMsg" "DarkCyan"
         [console]::beep(800, 200)
         [console]::beep(1000, 150)
+        Write-SyncLog "PULL OK: $commitMsg"
+        Show-Toast "Restin.AI Sync" "Code updated: $commitMsg"
     }
     else {
         Write-Log "[FAIL] Pull failed! Manual intervention needed." "Red"
