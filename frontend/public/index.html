@@ -47,8 +47,8 @@
   <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
 
   <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D9J5XXTVY6"></script>
-  <script>
+  <script data-cfasync="false" async src="https://www.googletagmanager.com/gtag/js?id=G-D9J5XXTVY6"></script>
+  <script data-cfasync="false">
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
@@ -60,6 +60,56 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
+
+  <!--
+    Cloudflare Rocket Loader Rescue:
+    If Rocket Loader intercepts CRA-injected scripts, this fallback
+    detects the blank page and force-loads the main bundle.
+  -->
+  <script data-cfasync="false">
+    (function() {
+      var timeout = setTimeout(function() {
+        var root = document.getElementById('root');
+        if (root && root.children.length === 0) {
+          // Rocket Loader blocked CRA scripts — find and re-inject them
+          var scripts = document.querySelectorAll('script[type*="-text/javascript"]');
+          scripts.forEach(function(s) {
+            var src = s.getAttribute('src') || s.getAttribute('data-src');
+            if (src && src.indexOf('/static/js/') !== -1) {
+              var ns = document.createElement('script');
+              ns.src = src;
+              ns.async = false;
+              document.body.appendChild(ns);
+            }
+          });
+          // Also check for inline scripts that were commented out
+          var comments = [];
+          var walker = document.createTreeWalker(document.head, NodeFilter.SHOW_COMMENT, null, false);
+          while (walker.nextNode()) { comments.push(walker.currentNode); }
+          walker = document.createTreeWalker(document.body, NodeFilter.SHOW_COMMENT, null, false);
+          while (walker.nextNode()) { comments.push(walker.currentNode); }
+          comments.forEach(function(c) {
+            var match = c.textContent && c.textContent.match(/src=["']([^"']*\/static\/js\/[^"']*)["']/);
+            if (match) {
+              var ns = document.createElement('script');
+              ns.src = match[1];
+              ns.async = false;
+              document.body.appendChild(ns);
+            }
+          });
+        }
+      }, 3000);
+      // Clear timeout if app loads normally
+      var observer = new MutationObserver(function() {
+        var root = document.getElementById('root');
+        if (root && root.children.length > 0) {
+          clearTimeout(timeout);
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.getElementById('root') || document.body, { childList: true, subtree: true });
+    })();
+  </script>
 </body>
 
 </html>
