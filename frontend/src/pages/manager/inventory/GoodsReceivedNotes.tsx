@@ -284,7 +284,7 @@ export default function GoodsReceivedNotes() {
             });
             loadAll();
         } catch (err: unknown) {
-            logger.error('Failed to create GRN', err);
+            logger.error('Failed to create GRN', err as any);
             toast.error('Failed to create GRN');
         } finally {
             setSaving(false);
@@ -297,7 +297,7 @@ export default function GoodsReceivedNotes() {
             toast.success('GRN posted to ledger');
             loadAll();
         } catch (err: unknown) {
-            logger.error('Failed to post GRN', err);
+            logger.error('Failed to post GRN', err as any);
             toast.error('Failed to post GRN');
         }
     };

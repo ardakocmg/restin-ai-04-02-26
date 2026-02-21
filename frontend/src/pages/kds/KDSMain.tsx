@@ -278,7 +278,7 @@ function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onD
       const interval = setInterval(() => {
         const started = new Date(item.started_at);
         const now = new Date();
-        const elapsedSeconds = Math.floor((now - started) / 1000);
+        const elapsedSeconds = Math.floor((now.getTime() - started.getTime()) / 1000);
         setElapsed(elapsedSeconds);
 
         const target = item.target_prep_seconds || 900;

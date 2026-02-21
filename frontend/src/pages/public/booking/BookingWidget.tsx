@@ -32,7 +32,7 @@ export default function BookingWidget() {
 
     // Query
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-    const [guests, setGuests] = useState(2);
+    const [guests, setGuests] = useState('2');
     const [slots, setSlots] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
 
@@ -76,7 +76,7 @@ export default function BookingWidget() {
 
             const payload = {
                 venue_id: venueId || 'vendor_001',
-                guest_count: parseInt(guests),
+                guest_count: Number(guests),
                 datetime_start: `${date}T${selectedSlot}:00`,
                 channel: channel,
                 guest: guestDetails,
@@ -110,7 +110,7 @@ export default function BookingWidget() {
                 </div>
                 <div className="space-y-2">
                     <Label className="text-muted-foreground">Guests</Label>
-                    <Select value={String(guests)} onValueChange={setGuests}>
+                    <Select value={guests} onValueChange={setGuests}>
                         <SelectTrigger className="bg-secondary border-border text-foreground">
                             <SelectValue placeholder="2 Guests" />
                         </SelectTrigger>

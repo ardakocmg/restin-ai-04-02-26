@@ -260,7 +260,7 @@ export default function OrderingSuggestions() {
             toast.success(`${poCount} purchase order(s) generated for ${selected.size} items`);
             setSelected(new Set());
         } catch (err: unknown) {
-            logger.error('Failed to generate POs', err);
+            logger.error('Failed to generate POs', err as any);
             toast.error('Failed to generate purchase orders');
         } finally {
             setGenerating(false);

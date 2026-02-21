@@ -58,7 +58,7 @@ export default function MicroservicesPage() {
   const getServiceStatusColor = (service) => {
     const now = new Date();
     const lastHeartbeat = new Date(service.last_heartbeat);
-    const diff = (now - lastHeartbeat) / 1000; // seconds
+    const diff = (now.getTime() - lastHeartbeat.getTime()) / 1000; // seconds
 
     if (diff < 30) return 'text-green-600';
     if (diff < 60) return 'text-yellow-600';

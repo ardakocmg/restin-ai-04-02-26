@@ -93,7 +93,7 @@ function AllergenBadge({ allergen }: { allergen: string }) {
    ═══════════════════════════════════════════════════════════════════ */
 export default function TraceabilityView() {
     const { t } = useTranslation();
-    const { selectedVenue } = useVenue();
+    const { activeVenue } = useVenue();
 
     const [items, setItems] = useState<TraceableItem[]>([]);
     const [loading, setLoading] = useState(false);
@@ -103,10 +103,10 @@ export default function TraceabilityView() {
     const [categoryFilter, setCategoryFilter] = useState('all');
 
     const loadData = useCallback(async () => {
-        if (!selectedVenue?._id) return;
+        if (!activeVenue?.id) return;
         setLoading(true);
         try {
-            const res = await api.get(`/api/inventory/traceability?venue_id=${selectedVenue._id}`);
+            const res = await api.get(`/api/inventory/traceability?venue_id=${activeVenue?.id}`);
             setItems(res.data?.items || []);
         } catch {
             logger.error('Failed to load traceability data');
@@ -114,7 +114,7 @@ export default function TraceabilityView() {
         } finally {
             setLoading(false);
         }
-    }, [selectedVenue?._id]);
+    }, [activeVenue?.id]);
 
     useEffect(() => { loadData(); }, [loadData]);
 

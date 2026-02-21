@@ -53,7 +53,7 @@ export default function DataExportPage() {
         onSuccess: (res) => {
             const job = res.data;
             toast.success(`Export complete — ${job.record_count?.toLocaleString()} records`);
-            queryClient.invalidateQueries(['export-history']);
+            queryClient.invalidateQueries({ queryKey: ['export-history'] });
         },
         onError: () => toast.error('Export failed — check your permissions')
     });
@@ -86,10 +86,10 @@ export default function DataExportPage() {
                 <Button
                     size="lg"
                     onClick={() => exportMutation.mutate()}
-                    disabled={exportMutation.isLoading}
+                    disabled={exportMutation.isPending}
                     className="mt-6 bg-blue-600 hover:bg-blue-700 text-foreground px-8"
                 >
-                    {exportMutation.isLoading ? (
+                    {exportMutation.isPending ? (
                         <>
                             <Loader2 className="w-5 h-5 animate-spin mr-2" />
                             Exporting...

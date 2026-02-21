@@ -48,9 +48,9 @@ export default function StockTransfersComplete() {
       setLoading(true);
       setLoading(true);
       const [transfersRes, locationsRes, inventoryRes] = await Promise.all([
-        api.get(`/venues/${user?.venue_id}/inventory/transfer`).catch(() => ({ data: [] })),
+        api.get(`/venues/${user?.venueId}/inventory/transfer`).catch(() => ({ data: [] })),
         api.get('/venues'),
-        api.get(`/venues/${user?.venue_id}/inventory`)
+        api.get(`/venues/${user?.venueId}/inventory`)
       ]);
       setTransfers(transfersRes.data || []);
       setLocations(locationsRes.data || []);
@@ -69,7 +69,7 @@ export default function StockTransfersComplete() {
     }
 
     try {
-      await api.post(`/venues/${user?.venue_id}/inventory/transfer`, {
+      await api.post(`/venues/${user?.venueId}/inventory/transfer`, {
         to_venue_id: newTransfer.to_venue_id,
         item_id: newTransfer.item_id,
         quantity: parseFloat(newTransfer.quantity),
@@ -122,7 +122,7 @@ export default function StockTransfersComplete() {
                       <SelectValue placeholder="Select Destination" />
                     </SelectTrigger>
                     <SelectContent>
-                      {locations.filter(l => l.id !== user?.venue_id).map(loc => (
+                      {locations.filter(l => l.id !== user?.venueId).map(loc => (
                         <SelectItem key={loc.id} value={loc.id}>
                           {loc.name}
                         </SelectItem>

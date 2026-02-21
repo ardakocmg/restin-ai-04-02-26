@@ -97,7 +97,7 @@ export default function AdvancedObservability() {
             <CardContent>
               <div className="space-y-2">
                 {Array.from(new Set(dataVolume.map(d => d.collection))).map(collection => {
-                  const latest = dataVolume.filter(d => d.collection === collection).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+                  const latest = dataVolume.filter(d => d.collection === collection).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
                   return latest ? (
                     <div key={collection} className="p-3 bg-slate-50 rounded flex items-center justify-between">
                       <span className="text-sm font-medium">{collection}</span>

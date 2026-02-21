@@ -132,8 +132,8 @@ export default function POSRuntimeKSeries() {
         try {
             setLoading(true);
             const [catRes, itemsRes] = await Promise.all([
-                menuAPI.getCategories(venueId!),
-                menuAPI.getItems(venueId!),
+                menuAPI.getCategories(venueId!, undefined),
+                menuAPI.getItems(venueId!, undefined, undefined, undefined),
             ]);
 
             const cats: Category[] = catRes.data || [];

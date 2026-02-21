@@ -13,8 +13,8 @@ export default function AccountingHub() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [canExport, setCanExport] = useState(false);
-  
-  const venueId = user?.venueId  || localStorage.getItem('restin_venue');
+
+  const venueId = user?.venueId || localStorage.getItem('restin_venue');
 
   useEffect(() => {
     checkPermissions();
@@ -60,8 +60,8 @@ export default function AccountingHub() {
               <PermissionedTable
                 venueId={venueId}
                 tableKey="accounting_journal"
-                title="Journal Entries"
-                emptyMessage="No accounting entries"
+                dataEndpoint={`/venues/${venueId}/accounting/journal`}
+                onRowClick={() => { }}
               />
             </TabsContent>
 

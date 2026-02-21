@@ -24,8 +24,8 @@ export default function LogsViewer() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ level: '', code: '', q: '' });
-  
-  const venueId = user?.venueId ;
+
+  const venueId = user?.venueId;
 
   useEffect(() => {
     loadLogs();
@@ -41,7 +41,7 @@ export default function LogsViewer() {
         q: filters.q || null,
         limit: 100
       });
-      setLogs(logsData.items || []);
+      setLogs((logsData as unknown as Record<string, unknown>).items as Array<Record<string, unknown>> || []);
     } catch (error: any) {
       console.error('Failed to load logs:', error);
       if (error.response?.status !== 403) {
@@ -69,7 +69,7 @@ export default function LogsViewer() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <Label className="text-sm font-medium mb-2">Level</Label>
-              <Select value={filters.level} onValueChange={(value) => setFilters({...filters, level: value})}>
+              <Select value={filters.level} onValueChange={(value) => setFilters({ ...filters, level: value })}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Levels" />
                 </SelectTrigger>
@@ -87,7 +87,7 @@ export default function LogsViewer() {
               <Label className="text-sm font-medium mb-2">Code</Label>
               <Input
                 value={filters.code}
-                onChange={(e) => setFilters({...filters, code: e.target.value})}
+                onChange={(e) => setFilters({ ...filters, code: e.target.value })}
                 placeholder="Error code..."
               />
             </div>
@@ -95,7 +95,7 @@ export default function LogsViewer() {
               <Label className="text-sm font-medium mb-2">Search</Label>
               <Input
                 value={filters.q}
-                onChange={(e) => setFilters({...filters, q: e.target.value})}
+                onChange={(e) => setFilters({ ...filters, q: e.target.value })}
                 placeholder="Search logs..."
               />
             </div>

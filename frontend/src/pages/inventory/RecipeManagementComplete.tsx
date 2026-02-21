@@ -40,8 +40,8 @@ export default function RecipeManagementComplete() {
   const loadRecipes = async () => {
     try {
       setLoading(true);
-      if (!user?.venue_id) return;
-      const response = await api.get(`/venues/${user.venue_id}/recipes/engineered`);
+      if (!user?.venueId) return;
+      const response = await api.get(`/venues/${user.venueId}/recipes/engineered`);
       setRecipes(response.data.items || []);
     } catch (error: any) {
       logger.error('Failed to load recipes:', error);
@@ -61,14 +61,14 @@ export default function RecipeManagementComplete() {
       const recipeData = {
         recipe_name: editingRecipe.name,
         ingredients: components,
-        venue_id: user?.venue_id
+        venue_id: user?.venueId
       };
 
       if (editingRecipe?.id) {
-        await api.put(`/venues/${user.venue_id}/recipes/engineered/${editingRecipe.id}`, recipeData);
+        await api.put(`/venues/${user.venueId}/recipes/engineered/${editingRecipe.id}`, recipeData);
         toast.success('Recipe updated');
       } else {
-        await api.post(`/venues/${user.venue_id}/recipes/engineered`, recipeData);
+        await api.post(`/venues/${user.venueId}/recipes/engineered`, recipeData);
         toast.success('Recipe created');
       }
 
@@ -88,7 +88,7 @@ export default function RecipeManagementComplete() {
     { key: 'components', label: 'Components', render: (row) => row.components?.length || 0 },
   ];
 
-  if (loading) return <LoadingSpinner fullScreen />;
+  if (loading) return <LoadingSpinner fullScreen className="" />;
 
   return (
     <PageContainer

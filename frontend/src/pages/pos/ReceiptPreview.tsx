@@ -195,7 +195,7 @@ export default function ReceiptPreview({ order, items, orderTotal, venueInfo, on
     );
 }
 
-const s = {
+const s: Record<string, React.CSSProperties> = {
     overlay: {
         position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1200,

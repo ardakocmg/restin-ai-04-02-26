@@ -15,7 +15,7 @@ export default function FinanceDashboard() {
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState(null);
 
-  const venueId = user?.venueId  || localStorage.getItem('restin_venue');
+  const venueId = user?.venueId || localStorage.getItem('restin_venue');
 
   useEffect(() => {
     loadSummary();
@@ -97,8 +97,8 @@ export default function FinanceDashboard() {
               <PermissionedTable
                 venueId={venueId}
                 tableKey="orders_open"
-                title="Open Orders"
-                emptyMessage="No open orders"
+                dataEndpoint={`/venues/${venueId}/orders?status=open`}
+                onRowClick={() => { }}
               />
             </TabsContent>
 
@@ -106,8 +106,8 @@ export default function FinanceDashboard() {
               <PermissionedTable
                 venueId={venueId}
                 tableKey="checks_closed"
-                title="Closed Checks"
-                emptyMessage="No closed checks"
+                dataEndpoint={`/venues/${venueId}/orders?status=closed`}
+                onRowClick={() => { }}
               />
             </TabsContent>
           </CardContent>

@@ -16,7 +16,8 @@ function WasteLog() {
   const [formData, setFormData] = useState({
     item_id: '',
     qty: '',
-    reason: 'SPOILAGE'
+    reason: 'SPOILAGE',
+    notes: ''
   });
   const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
 
@@ -74,7 +75,7 @@ function WasteLog() {
 
       toast.success('Waste logged successfully');
       setShowForm(false);
-      setFormData({ item_id: '', qty: '', reason: 'SPOILAGE' });
+      setFormData({ item_id: '', qty: '', reason: 'SPOILAGE', notes: '' });
       fetchWaste();
     } catch (error: any) {
       logger.error('Error logging waste:', error);

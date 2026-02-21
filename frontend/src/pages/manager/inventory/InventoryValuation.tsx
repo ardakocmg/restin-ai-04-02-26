@@ -110,7 +110,7 @@ function CategoryBar({ categories }: { categories: CategorySummary[] }) {
    ═══════════════════════════════════════════════════════════════════ */
 export default function InventoryValuation() {
     const { t } = useTranslation();
-    const { selectedVenue } = useVenue();
+    const { activeVenue } = useVenue();
 
     /* ── State ── */
     const [items, setItems] = useState<ValuationItem[]>([]);
@@ -123,10 +123,10 @@ export default function InventoryValuation() {
 
     /* ── Load ── */
     const loadData = useCallback(async () => {
-        if (!selectedVenue?._id) return;
+        if (!activeVenue?.id) return;
         setLoading(true);
         try {
-            const res = await api.get(`/api/inventory/valuation?venue_id=${selectedVenue._id}`);
+            const res = await api.get(`/api/inventory/valuation?venue_id=${activeVenue?.id}`);
             setItems(res.data?.items || []);
         } catch {
             logger.error('Failed to load valuation data');
@@ -134,7 +134,7 @@ export default function InventoryValuation() {
         } finally {
             setLoading(false);
         }
-    }, [selectedVenue?._id]);
+    }, [activeVenue?.id]);
 
     useEffect(() => { loadData(); }, [loadData]);
 

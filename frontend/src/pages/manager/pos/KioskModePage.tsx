@@ -80,10 +80,10 @@ export default function KioskModePage() {
                 </div>
                 <Button
                     onClick={() => saveMutation.mutate()}
-                    disabled={saveMutation.isLoading}
+                    disabled={saveMutation.isPending}
                     className="bg-cyan-600 hover:bg-cyan-700 text-foreground"
                 >
-                    {saveMutation.isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Save className="w-4 h-4 mr-1" />}
+                    {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Save className="w-4 h-4 mr-1" />}
                     Save Config
                 </Button>
             </div>

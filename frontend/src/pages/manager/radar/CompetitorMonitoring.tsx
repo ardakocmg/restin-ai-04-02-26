@@ -43,8 +43,8 @@ export default function CompetitorMonitoring() {
         mutationFn: () => api.post(`/radar/scan?venue_id=${venueId}`),
         onSuccess: (res) => {
             toast.success(`Market scan complete — ${res.data?.insights_generated || 0} new insights`);
-            queryClient.invalidateQueries(['radar-competitors']);
-            queryClient.invalidateQueries(['radar-insights']);
+            queryClient.invalidateQueries({ queryKey: ['radar-competitors'] });
+            queryClient.invalidateQueries({ queryKey: ['radar-insights'] });
         },
         onError: () => toast.error('Scan failed')
     });

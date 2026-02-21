@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageContainer from '../../../layouts/PageContainer';
 import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
@@ -22,7 +22,7 @@ export default function VarianceAnalysis() {
     }
   };
 
-  useState(() => {
+  useEffect(() => {
     fetchVariances();
   }, []);
 

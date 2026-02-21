@@ -123,7 +123,7 @@ export default function EngagementLetter({ data }) {
                 <table className="w-full border-collapse border border-gray-400">
                     <tbody>
                         <tr>
-                            <td className="p-2 text-[9px] italic" colSpan="2">
+                            <td className="p-2 text-[9px] italic" colSpan={2}>
                                 Notwithstanding anything contained in this agreement to the contrary... an addition to any other remedies provided for in this Agreement... a penalty for mere default of the obligations... amounting to ten thousand Euro (Eur10,000)...
                             </td>
                         </tr>

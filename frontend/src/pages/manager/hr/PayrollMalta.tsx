@@ -96,7 +96,7 @@ export default function PayrollMalta() {
       const res = await api.get(
         `/payroll-mt/run/${runId}/payslip/${employeeId}/pdf`,
         {
-          venue_id: activeVenue.id,
+          params: { venue_id: activeVenue.id },
           responseType: 'blob'
         }
       );

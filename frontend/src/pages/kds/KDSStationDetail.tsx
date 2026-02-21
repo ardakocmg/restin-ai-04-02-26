@@ -111,8 +111,8 @@ function KDSStationDetail() {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-6 py-4 font-medium capitalize transition ${activeTab === tab
-                  ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600'
-                  : 'text-gray-600 hover:text-foreground'
+                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600'
+                : 'text-gray-600 hover:text-foreground'
                 }`}
             >
               {tab.replace('-', ' ')}
@@ -145,7 +145,7 @@ function KDSStationDetail() {
                   <label key={key} className="flex items-center gap-3">
                     <input
                       type="checkbox"
-                      checked={value}
+                      checked={value as boolean}
                       onChange={(e) => {
                         const newSettings = {
                           ticket_summary: {
@@ -173,7 +173,7 @@ function KDSStationDetail() {
                   <label key={key} className="flex items-center gap-3">
                     <input
                       type="checkbox"
-                      checked={value}
+                      checked={value as boolean}
                       disabled={['preparing', 'on_hold', 'completed'].includes(key)}
                       onChange={(e) => {
                         const newSettings = {
@@ -206,8 +206,8 @@ function KDSStationDetail() {
                       key={theme}
                       onClick={() => updateSettings({ theme })}
                       className={`px-6 py-3 rounded-lg font-medium transition ${settings.theme === theme
-                          ? 'bg-blue-600 text-foreground'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-blue-600 text-foreground'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                     >
                       {theme}
@@ -224,8 +224,8 @@ function KDSStationDetail() {
                       key={layout}
                       onClick={() => updateSettings({ layout })}
                       className={`px-6 py-3 rounded-lg font-medium transition ${settings.layout === layout
-                          ? 'bg-blue-600 text-foreground'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-blue-600 text-foreground'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                     >
                       {layout.replace('_', ' ')}
@@ -242,8 +242,8 @@ function KDSStationDetail() {
                       key={format}
                       onClick={() => updateSettings({ time_format: format })}
                       className={`px-6 py-3 rounded-lg font-medium transition ${settings.time_format === format
-                          ? 'bg-blue-600 text-foreground'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-blue-600 text-foreground'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                     >
                       {format}

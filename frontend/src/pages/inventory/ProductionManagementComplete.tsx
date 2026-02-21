@@ -48,8 +48,8 @@ export default function ProductionManagementComplete() {
     try {
       setLoading(true);
       const [batchesRes, recipesRes] = await Promise.all([
-        api.get(`/inventory/production-batches?venue_id=${user?.venue_id}`),
-        api.get(`/venues/${user?.venue_id}/recipes/engineered?active=true`)
+        api.get(`/inventory/production-batches?venue_id=${user?.venueId}`),
+        api.get(`/venues/${user?.venueId}/recipes/engineered?active=true`)
       ]);
       setBatches(batchesRes.data || []);
       setRecipes(recipesRes.data || []);
@@ -68,7 +68,7 @@ export default function ProductionManagementComplete() {
 
     try {
       await api.post('/inventory/production-batches', {
-        venue_id: user?.venue_id,
+        venue_id: user?.venueId,
         recipe_id: newBatch.recipe_id,
         batch_number: `BATCH-${Date.now()}`,
         planned_quantity: parseFloat(newBatch.planned_quantity),
@@ -94,7 +94,7 @@ export default function ProductionManagementComplete() {
     { key: 'produced_at', label: 'Produced', render: (row) => new Date(row.produced_at).toLocaleDateString() },
   ];
 
-  if (loading) return <LoadingSpinner fullScreen />;
+  if (loading) return <LoadingSpinner fullScreen className="" />;
 
   return (
     <PageContainer

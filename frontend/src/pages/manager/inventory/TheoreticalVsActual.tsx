@@ -80,7 +80,7 @@ function VarianceBadge({ status }: { status: StockComparison['status'] }) {
    ═══════════════════════════════════════════════════════════════════ */
 export default function TheoreticalVsActual() {
     const { t } = useTranslation();
-    const { selectedVenue } = useVenue();
+    const { activeVenue } = useVenue();
 
     const [items, setItems] = useState<StockComparison[]>([]);
     const [loading, setLoading] = useState(false);
@@ -89,10 +89,10 @@ export default function TheoreticalVsActual() {
     const [categoryFilter, setCategoryFilter] = useState('all');
 
     const loadData = useCallback(async () => {
-        if (!selectedVenue?._id) return;
+        if (!activeVenue?.id) return;
         setLoading(true);
         try {
-            const res = await api.get(`/api/inventory/theo-vs-actual?venue_id=${selectedVenue._id}`);
+            const res = await api.get(`/api/inventory/theo-vs-actual?venue_id=${activeVenue?.id}`);
             setItems(res.data?.items || []);
         } catch {
             logger.error('Failed to load theoretical vs actual data');
@@ -100,7 +100,7 @@ export default function TheoreticalVsActual() {
         } finally {
             setLoading(false);
         }
-    }, [selectedVenue?._id]);
+    }, [activeVenue?.id]);
 
     useEffect(() => { loadData(); }, [loadData]);
 

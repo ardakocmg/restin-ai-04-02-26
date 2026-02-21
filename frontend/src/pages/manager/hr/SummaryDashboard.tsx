@@ -274,7 +274,7 @@ export default function SummaryDashboard() {
                   data={data.headcount_by_gender}
                   cx="50%" cy="50%" innerRadius={60} outerRadius={90}
                   paddingAngle={8} dataKey="count"
-                  label={({ gender, percentage }) => `${gender} ${percentage}%`}
+                  label={(props: any) => `${props.gender} ${props.percentage}%`}
                 >
                   {data.headcount_by_gender.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

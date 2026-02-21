@@ -24,7 +24,7 @@ import {
 import { toast } from 'sonner';
 
 // ── KPI Stat Card ──────────────────────────────────────────────────
-function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }) {
+function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: { icon: any; label: any; value: any; subtext?: any; color?: string }) {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 flex items-center gap-4">

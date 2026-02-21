@@ -186,7 +186,7 @@ export default function StockTransfers() {
               <Input
                 type="number"
                 value={formData.quantity}
-                onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, quantity: Number(e.target.value) })}
                 className="bg-card border-border"
               />
             </div>

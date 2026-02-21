@@ -43,7 +43,7 @@ export default function PrintPreviewPage() {
         mutationFn: () => api.post(`/printers/discover?venue_id=${venueId}`),
         onSuccess: (res) => {
             toast.success(`Found ${res.data?.found || 0} printers via mDNS`);
-            queryClient.invalidateQueries(['printers']);
+            queryClient.invalidateQueries({ queryKey: ['printers'] });
         },
         onError: () => toast.error('Discovery failed — is the Edge Bridge running?')
     });
@@ -97,9 +97,9 @@ export default function PrintPreviewPage() {
                 <Button
                     variant="outline" size="sm"
                     onClick={() => discoverMutation.mutate()}
-                    disabled={discoverMutation.isLoading}
+                    disabled={discoverMutation.isPending}
                 >
-                    {discoverMutation.isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <RefreshCw className="w-4 h-4 mr-1" />}
+                    {discoverMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <RefreshCw className="w-4 h-4 mr-1" />}
                     Auto-Discover (mDNS)
                 </Button>
             </div>

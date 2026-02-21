@@ -42,7 +42,7 @@ interface CountItem {
    ═══════════════════════════════════════════════════════════════════ */
 export default function MobileStockCount() {
     const { t } = useTranslation();
-    const { selectedVenue } = useVenue();
+    const { activeVenue } = useVenue();
 
     const [items, setItems] = useState<CountItem[]>([]);
     const [loading, setLoading] = useState(false);
@@ -66,10 +66,10 @@ export default function MobileStockCount() {
     }, []);
 
     const loadData = useCallback(async () => {
-        if (!selectedVenue?._id) return;
+        if (!activeVenue?.id) return;
         setLoading(true);
         try {
-            const res = await api.get(`/api/inventory/stock-count/items?venue_id=${selectedVenue._id}`);
+            const res = await api.get(`/api/inventory/stock-count/items?venue_id=${activeVenue?.id}`);
             setItems(res.data?.items || []);
         } catch {
             logger.error('Failed to load stock count items');
@@ -77,7 +77,7 @@ export default function MobileStockCount() {
         } finally {
             setLoading(false);
         }
-    }, [selectedVenue?._id]);
+    }, [activeVenue?.id]);
 
     useEffect(() => { loadData(); }, [loadData]);
 
@@ -162,7 +162,7 @@ export default function MobileStockCount() {
         try {
             const counted = items.filter(i => i.status === 'counted');
             await api.post('/api/inventory/stock-count/sync', {
-                venue_id: selectedVenue?._id,
+                venue_id: activeVenue?.id,
                 counts: counted.map(i => ({ _id: i._id, countedQty: i.countedQty })),
             });
             setPendingSyncs(0);

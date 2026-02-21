@@ -18,7 +18,7 @@ export default function InvoiceOCR() {
     try {
       const reader = new FileReader();
       reader.onload = async (event) => {
-        const base64 = event.target.result.split(',')[1];
+        const base64 = (event.target?.result as string)?.split(',')[1];
         const venueId = localStorage.getItem('currentVenueId');
 
         const response = await api.post(`/venues/${venueId}/invoices/ocr`, {

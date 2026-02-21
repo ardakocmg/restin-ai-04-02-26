@@ -60,7 +60,7 @@ interface Venue {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { activeVenue } = useVenue() as { activeVenue: Venue | null };
+  const { activeVenue } = useVenue() as unknown as { activeVenue: Venue | null };
   const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -86,7 +86,7 @@ export default function Dashboard() {
       setLoading(true);
       const [statsRes, ordersRes] = await Promise.all([
         venueAPI.getStats(activeVenue.id),
-        venueAPI.getOrders(activeVenue.id).catch(() => ({ data: [] }))
+        venueAPI.getOrders(activeVenue.id, undefined, undefined).catch(() => ({ data: [] }))
       ]);
 
       setStats(statsRes.data);

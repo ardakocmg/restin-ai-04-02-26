@@ -152,7 +152,7 @@ export default function HRMap() {
                 </svg>
 
                 {/* Markers */}
-                {mockMarkers.map((m, i) => (
+                {markers.map((m: any, i: number) => (
                     <div
                         key={m.id}
                         className="absolute cursor-pointer group"
@@ -191,7 +191,7 @@ export default function HRMap() {
                 </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
                 .custom-scrollbar::-webkit-scrollbar {
                     width: 4px;
                 }

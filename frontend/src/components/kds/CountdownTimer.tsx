@@ -9,7 +9,7 @@ export default function CountdownTimer({ targetTime, createdAt }) {
     const calculateTimeLeft = () => {
       const now = new Date();
       const target = new Date(targetTime);
-      const diff = target - now;
+      const diff = target.getTime() - now.getTime();
 
       if (diff <= 0) {
         setOvertime(true);
@@ -34,7 +34,7 @@ export default function CountdownTimer({ targetTime, createdAt }) {
   if (!timeLeft) return null;
 
   return (
-    <div 
+    <div
       className="flex items-center gap-1 px-2 py-1 rounded-lg font-mono text-xs font-bold"
       style={{
         backgroundColor: overtime ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',

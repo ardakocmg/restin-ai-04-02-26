@@ -179,8 +179,8 @@ export default function KDSMain() {
               key={station}
               onClick={() => setStationFilter(station)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${stationFilter === station
-                  ? "bg-red-500 text-foreground"
-                  : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                ? "bg-red-500 text-foreground"
+                : "bg-secondary text-muted-foreground hover:bg-secondary/80"
                 }`}
             >
               {station.toUpperCase()}
@@ -229,7 +229,7 @@ export default function KDSMain() {
 
       {/* Bottom Navigation */}
       <div className="md:hidden">
-        <BottomNav mode="kds" />
+        <BottomNav mode="kds" onFilterChange={setStationFilter} />
       </div>
     </div>
   );
@@ -245,7 +245,7 @@ function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onD
       const interval = setInterval(() => {
         const started = new Date(item.started_at);
         const now = new Date();
-        const elapsedSeconds = Math.floor((now - started) / 1000);
+        const elapsedSeconds = Math.floor((now.getTime() - started.getTime()) / 1000);
         setElapsed(elapsedSeconds);
 
         const target = item.target_prep_seconds || 900;

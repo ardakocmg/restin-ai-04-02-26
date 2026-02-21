@@ -48,7 +48,7 @@ export default function EmploymentDatesReport() {
             {employees.map(emp => {
               const start = emp.start_date ? new Date(emp.start_date) : null;
               const probation = start ? new Date(start.getTime() + (180 * 24 * 60 * 60 * 1000)) : null; // +6 Months Mock
-              const tenure = start ? Math.floor((new Date() - start) / (1000 * 60 * 60 * 24 * 365)) + ' Years' : '-';
+              const tenure = start ? Math.floor((new Date().getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 365)) + ' Years' : '-';
 
               return (
                 <TableRow key={emp.id} className="border-border">
