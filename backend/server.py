@@ -107,6 +107,7 @@ from routes.automations import create_automations_router
 from routes.connectors import create_connectors_router
 from routes.voice_routes import router as voice_router
 from routes.hyperscale_routes import router as hyperscale_router
+from routes.audit_scores_routes import router as audit_scores_router
 from routes.media_routes import router as media_router
 from routes.radar_routes import router as radar_router
 from routes.ops_routes import create_ops_router
@@ -725,6 +726,7 @@ api_main.include_router(ai_copilot_router)  # AI Copilot
 from routes.restin_settings_routes import router as restin_settings_router
 api_main.include_router(restin_settings_router)  # Restin AI Module Settings
 api_main.include_router(hyperscale_router)  # Hyperscale Dashboard APM
+api_main.include_router(audit_scores_router)  # Automated System Audit
 
 # Group-level integration overview (cross-venue matrix)
 from routes.group_integrations import create_group_integrations_router

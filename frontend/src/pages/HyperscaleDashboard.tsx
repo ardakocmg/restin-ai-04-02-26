@@ -33,10 +33,18 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-// ─── Real API Fetcher ─────────────────────────────────────────────────────────
+// ─── Real API Fetchers ────────────────────────────────────────────────────────
 const fetchHyperscaleMetrics = async () => {
     const token = localStorage.getItem('token');
     const { data } = await axios.get('/api/system/hyperscale-metrics', {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+};
+
+const fetchAuditScores = async () => {
+    const token = localStorage.getItem('token');
+    const { data } = await axios.get('/api/system/audit-scores', {
         headers: { Authorization: `Bearer ${token}` },
     });
     return data;
@@ -84,6 +92,14 @@ interface HyperscaleData {
     collection_stats: Record<string, number>;
     system_iq: number;
     resilience_score: number;
+}
+
+interface AuditData {
+    overall_score: number;
+    scores: Record<string, number>;
+    evidence: Record<string, Record<string, unknown>>;
+    weights: Record<string, string>;
+    computed_at: number;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -226,7 +242,7 @@ const DrilldownModal: React.FC<{ metric: DrilldownData | null; onClose: () => vo
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 const HyperscaleDashboard: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<'executive' | 'engineering' | 'financial'>('executive');
+    const [activeTab, setActiveTab] = useState<'executive' | 'engineering' | 'financial' | 'audit'>('executive');
     const [selectedMetric, setSelectedMetric] = useState<DrilldownData | null>(null);
 
     // Real API polling every 5 seconds
@@ -235,6 +251,14 @@ const HyperscaleDashboard: React.FC = () => {
         queryFn: fetchHyperscaleMetrics,
         refetchInterval: 5000,
         staleTime: 3000,
+    });
+
+    // Audit scores (cached, refetch every 5 min)
+    const { data: auditData } = useQuery<AuditData>({
+        queryKey: ['audit-scores'],
+        queryFn: fetchAuditScores,
+        refetchInterval: 300000,
+        staleTime: 120000,
     });
 
     const handleMetricClick = (d: DrilldownData) => setSelectedMetric(d);
@@ -315,8 +339,8 @@ const HyperscaleDashboard: React.FC = () => {
             </div>
 
             {/* Tabs */}
-            <div className="flex space-x-1 bg-slate-900/50 p-1 rounded-xl w-full max-w-md mb-8 border border-slate-800">
-                {(['executive', 'engineering', 'financial'] as const).map(tab => (
+            <div className="flex space-x-1 bg-slate-900/50 p-1 rounded-xl w-full max-w-lg mb-8 border border-slate-800">
+                {(['executive', 'engineering', 'financial', 'audit'] as const).map(tab => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
@@ -325,7 +349,7 @@ const HyperscaleDashboard: React.FC = () => {
                             : 'text-slate-400 hover:text-white hover:bg-slate-800'
                             }`}
                     >
-                        {tab}
+                        {tab === 'audit' ? '🔬 Audit' : tab}
                     </button>
                 ))}
             </div>
@@ -511,8 +535,8 @@ const HyperscaleDashboard: React.FC = () => {
                                     <div className="flex justify-between items-center p-3 bg-slate-950 rounded-lg border border-slate-800">
                                         <span className="text-slate-400">EventBus Status</span>
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold border ${metrics.event_bus_status === 'HEALTHY'
-                                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                                                : 'bg-red-500/10 text-red-400 border-red-500/20'
+                                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                            : 'bg-red-500/10 text-red-400 border-red-500/20'
                                             }`}>
                                             {metrics.event_bus_status}
                                         </span>
@@ -586,6 +610,94 @@ const HyperscaleDashboard: React.FC = () => {
                         </div>
                     )}
 
+                    {/* Audit Tab */}
+                    {activeTab === 'audit' && auditData && (
+                        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                                    <Shield className="w-5 h-5 text-indigo-500" />
+                                    Automated System Audit — Codebase Analysis
+                                </h2>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-slate-500 text-xs">Auto-scanned • 5 min cache</span>
+                                    <div className={`text-3xl font-bold ${auditData.overall_score >= 7 ? 'text-emerald-400' :
+                                            auditData.overall_score >= 5 ? 'text-yellow-400' : 'text-red-400'
+                                        }`}>
+                                        {auditData.overall_score.toFixed(1)}
+                                        <span className="text-sm text-slate-500 font-normal">/10</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Dimension Cards */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                                {Object.entries(auditData.scores).map(([key, score]) => {
+                                    const weight = auditData.weights[key] || '';
+                                    const evidence = auditData.evidence[key] || {};
+                                    const label = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                                    const barWidth = Math.min(100, score * 10);
+                                    const barColor = score >= 7 ? 'bg-emerald-500' : score >= 5 ? 'bg-yellow-500' : 'bg-red-500';
+
+                                    return (
+                                        <div key={key} className="bg-slate-950 border border-slate-800 rounded-lg p-4">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <h3 className="text-white font-medium text-sm">{label}</h3>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xs text-slate-500">{weight}</span>
+                                                    <span className={`font-bold text-lg ${score >= 7 ? 'text-emerald-400' : score >= 5 ? 'text-yellow-400' : 'text-red-400'
+                                                        }`}>{score.toFixed(1)}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Score Bar */}
+                                            <div className="h-2 bg-slate-800 rounded-full overflow-hidden mb-3">
+                                                <div className={`h-full ${barColor} rounded-full transition-all duration-500`} style={{ width: `${barWidth}%` }} />
+                                            </div>
+
+                                            {/* Evidence */}
+                                            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                                                {Object.entries(evidence).filter(([k]) => k !== 'derived_from').slice(0, 6).map(([k, v]) => (
+                                                    <div key={k} className="flex justify-between text-xs">
+                                                        <span className="text-slate-500 truncate">{k.replace(/_/g, ' ')}</span>
+                                                        <span className={`font-mono ${v === true ? 'text-emerald-400' :
+                                                                v === false ? 'text-red-400' :
+                                                                    typeof v === 'number' && v > 0 ? 'text-blue-400' : 'text-slate-400'
+                                                            }`}>
+                                                            {v === true ? '✓' : v === false ? '✗' : String(v)}
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Summary Bar Chart */}
+                            <div className="h-64">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={Object.entries(auditData.scores).map(([k, v]) => ({
+                                        name: k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+                                        score: v,
+                                    }))}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+                                        <XAxis dataKey="name" stroke="#64748b" fontSize={11} tickLine={false} angle={-20} textAnchor="end" height={60} />
+                                        <YAxis stroke="#64748b" fontSize={12} domain={[0, 10]} tickLine={false} axisLine={false} />
+                                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }} />
+                                        <Bar dataKey="score" fill="#818cf8" radius={[6, 6, 0, 0]} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'audit' && !auditData && (
+                        <div className="bg-slate-900 border border-slate-800 rounded-xl p-12 text-center">
+                            <div className="w-10 h-10 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                            <p className="text-slate-400">Running codebase analysis...</p>
+                        </div>
+                    )}
+
                 </div>
 
                 {/* Right Column - Status & Alerts */}
@@ -600,8 +712,8 @@ const HyperscaleDashboard: React.FC = () => {
                             <div className="flex justify-between items-center p-3 bg-slate-950 rounded-lg border border-slate-800">
                                 <span className="text-slate-400">Database</span>
                                 <span className={`px-3 py-1 rounded-full text-xs font-bold border ${metrics.db_connection_ok
-                                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                                        : 'bg-red-500/10 text-red-400 border-red-500/20'
+                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                    : 'bg-red-500/10 text-red-400 border-red-500/20'
                                     }`}>
                                     {metrics.db_connection_ok ? 'CONNECTED' : 'DOWN'}
                                 </span>
@@ -609,8 +721,8 @@ const HyperscaleDashboard: React.FC = () => {
                             <div className="flex justify-between items-center p-3 bg-slate-950 rounded-lg border border-slate-800">
                                 <span className="text-slate-400">Redis Cache</span>
                                 <span className={`px-3 py-1 rounded-full text-xs font-bold border ${metrics.has_redis
-                                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                                        : 'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                    : 'bg-slate-500/10 text-slate-400 border-slate-500/20'
                                     }`}>
                                     {metrics.has_redis ? 'ACTIVE' : 'NOT CONFIGURED'}
                                 </span>
@@ -618,8 +730,8 @@ const HyperscaleDashboard: React.FC = () => {
                             <div className="flex justify-between items-center p-3 bg-slate-950 rounded-lg border border-slate-800">
                                 <span className="text-slate-400">CDN</span>
                                 <span className={`px-3 py-1 rounded-full text-xs font-bold border ${metrics.has_cdn
-                                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                                        : 'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                    : 'bg-slate-500/10 text-slate-400 border-slate-500/20'
                                     }`}>
                                     {metrics.has_cdn ? 'CLOUDFLARE' : 'NONE'}
                                 </span>
@@ -627,8 +739,8 @@ const HyperscaleDashboard: React.FC = () => {
                             <div className="flex justify-between items-center p-3 bg-slate-950 rounded-lg border border-slate-800">
                                 <span className="text-slate-400">DLQ Status</span>
                                 <span className={`px-3 py-1 rounded-full text-xs font-bold border ${metrics.dlq_status === 'HEALTHY'
-                                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                                        : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                    : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
                                     }`}>
                                     {metrics.dlq_status}
                                 </span>
