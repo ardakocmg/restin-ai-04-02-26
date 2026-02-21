@@ -248,7 +248,7 @@ export default function InsightsHub() {
                                     const segments = OUTLETS.map((o, i) => { const pct = (o.revenue / totalRev) * 100; const start = cumPct; cumPct += pct; return { color: colors[i], start, end: cumPct }; });
                                     const gradient = segments.map(s => `${s.color} ${s.start}% ${s.end}%`).join(', ');
                                     return (<>
-                                        <div className="w-full h-full rounded-full" style={{ background: `conic-gradient(${gradient})` }} /> /* keep-inline */ /* keep-inline */
+                                        <div className="w-full h-full rounded-full" style={{ background: `conic-gradient(${gradient})` }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                         <div className="absolute inset-4 bg-zinc-900 rounded-full flex items-center justify-center">
                                             <span className="text-xs font-bold">€{(totalRev / 1000).toFixed(0)}k</span>
                                         </div>

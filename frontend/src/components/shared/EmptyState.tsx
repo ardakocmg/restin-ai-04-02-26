@@ -23,7 +23,7 @@ export default function EmptyState({
   return (
     <div
       className={cn('flex flex-col items-center justify-center py-16 px-4 animate-in fade-in zoom-in-95 duration-300', className)}
-      style={{ minHeight: '300px' }} /* keep-inline */ /* keep-inline */
+      style={{ minHeight: '300px' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
     >
       <div className="p-4 bg-card/50 rounded-full border border-border mb-4 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
         <Icon className="w-12 h-12 text-muted-foreground drop-shadow-md" />

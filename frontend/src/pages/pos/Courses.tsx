@@ -55,13 +55,13 @@ const Courses: React.FC = () => {
             </div>
 
             <div className="pos-card">
-                <div className="pos-table-header" style={{ gridTemplateColumns: courseTableCols }}> /* keep-inline */ /* keep-inline */
+                <div className="pos-table-header" style={{ gridTemplateColumns: courseTableCols }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     <div></div><div>#</div><div>Course</div><div>Delay</div><div>Auto Fire</div><div>Items</div><div></div>
                 </div>
                 {courses.sort((a, b) => a.sortOrder - b.sortOrder).map(course => (
-                    <div key={course.id} className="pos-table-row" style={{ gridTemplateColumns: courseTableCols, opacity: course.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...course })}> /* keep-inline */ /* keep-inline */
+                    <div key={course.id} className="pos-table-row" style={{ gridTemplateColumns: courseTableCols, opacity: course.isActive ? 1 : 0.5 }} onClick={() => setEditing({ ...course })}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         <GripVertical size={14} className="pos-icon-grab" />
-                        <div className="pos-stat-icon" style={{ width: 28, height: 28, borderRadius: 6, background: course.color, fontSize: 12, fontWeight: 700, color: '#fff' }}>{course.sortOrder}</div> /* keep-inline */ /* keep-inline */
+                        <div className="pos-stat-icon" style={{ width: 28, height: 28, borderRadius: 6, background: course.color, fontSize: 12, fontWeight: 700, color: '#fff' }}>{course.sortOrder}</div> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         <span className="pos-cell-value">{course.name}</span>
                         <span className="pos-cell-secondary">{course.defaultDelay > 0 ? `${course.defaultDelay} min delay` : 'No delay'}</span>
                         <span className={`pos-badge ${course.autoFire ? 'pos-badge--green' : 'pos-badge--gray'}`}>{course.autoFire ? 'Yes' : 'Manual'}</span>
@@ -71,9 +71,9 @@ const Courses: React.FC = () => {
                 ))}
             </div>
 
-            <div className="pos-card" style={{ background: 'rgba(59,130,246,0.04)', borderColor: 'rgba(59,130,246,0.2)' }}> /* keep-inline */ /* keep-inline */
-                <div className="pos-text-sm pos-text-bold pos-mb-8" style={{ color: '#3B82F6' }}>💡 Course Flow</div> /* keep-inline */ /* keep-inline */
-                <p className="pos-cell-secondary pos-mb-0" style={{ lineHeight: 1.6 }}> /* keep-inline */ /* keep-inline */
+            <div className="pos-card" style={{ background: 'rgba(59,130,246,0.04)', borderColor: 'rgba(59,130,246,0.2)' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                <div className="pos-text-sm pos-text-bold pos-mb-8" style={{ color: '#3B82F6' }}>💡 Course Flow</div> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                <p className="pos-cell-secondary pos-mb-0" style={{ lineHeight: 1.6 }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     Courses are fired to the kitchen in sequence. Items in Course 1 fire immediately ("Auto Fire"), while later courses wait for the server to manually fire them or use default delays. This ensures soup arrives before mains, and desserts after.
                 </p>
             </div>
@@ -94,14 +94,14 @@ const Courses: React.FC = () => {
                             <input type="number" min={0} className="pos-input" value={editing.defaultDelay} onChange={e = aria-label="Input field"> setEditing(p => p ? { ...p, defaultDelay: parseInt(e.target.value) || 0 } : null)} aria-label="Default delay minutes" /></div>
                     </div>
                     <div className="pos-form-group"><label className="pos-form-label">Color</label>
-                        <div className="pos-color-picker">{COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} className={`pos-color-swatch ${editing.color === c ? 'pos-color-swatch--selected' : ''}`} style={{ background: c }} />)}</div></div> /* keep-inline */ /* keep-inline */
+                        <div className="pos-color-picker">{COLORS.map(c => <div key={c} onClick={() => setEditing(p => p ? { ...p, color: c } : null)} className={`pos-color-swatch ${editing.color === c ? 'pos-color-swatch--selected' : ''}`} style={{ background: c }} />)}</div></div> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     <div className="pos-flex pos-gap-16 pos-mb-16">
                         <label className="pos-toggle-label"><input type="checkbox" checked={editing.autoFire} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, autoFire: !p.autoFire } : null)} /> Auto Fire</label>
                         <label className="pos-toggle-label"><input type="checkbox" checked={editing.isActive} onChange={() = aria-label="Input field"> setEditing(p => p ? { ...p, isActive: !p.isActive } : null)} /> Active</label>
                     </div>
                     <div className="pos-modal-footer">
-                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */ /* keep-inline */
-                        <button title="Delete course" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setCourses(p => p.filter(c => c.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */ /* keep-inline */
+                        <button className="pos-btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={save}><Save size={14} /> Save</button> /* keep-inline */ /* keep-inline */ /* keep-inline */
+                        <button title="Delete course" className="pos-btn-outline" style={{ color: '#EF4444' }} onClick={() => { setCourses(p => p.filter(c => c.id !== editing.id)); setEditing(null); toast.success('Deleted'); }}><Trash2 size={14} /></button> /* keep-inline */ /* keep-inline */ /* keep-inline */
                         <button className="pos-btn-outline" onClick={() => setEditing(null)}>Cancel</button>
                     </div>
                 </div>

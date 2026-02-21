@@ -72,7 +72,7 @@ function StatCard({ label, value, icon: Icon, gradient, delay }: { label: string
             className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-card/60 backdrop-blur-xl p-6"
         >
             {/* eslint-disable-next-line react/forbid-dom-props */}
-            <div className="absolute inset-0 opacity-[0.03]" style={{ background: `linear-gradient(135deg, ${gradient})` }} /> /* keep-inline */ /* keep-inline */
+            <div className="absolute inset-0 opacity-[0.03]" style={{ background: `linear-gradient(135deg, ${gradient})` }} /> /* keep-inline */ /* keep-inline */ /* keep-inline */
             <div className="relative flex items-center gap-4">
                 <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg`}>
                     <Icon className="h-6 w-6 text-foreground" />
@@ -324,7 +324,7 @@ function DeviceCard({ device, index, onControl }: {
             {device.online && (
                 <div
                     className="absolute -inset-0.5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
-                    style={{ background: `radial-gradient(circle, ${cfg.glow}, transparent 70%)` }} /* keep-inline */ /* keep-inline */
+                    style={{ background: `radial-gradient(circle, ${cfg.glow}, transparent 70%)` }} /* keep-inline */ /* keep-inline */ /* keep-inline */
                 />
             )}
 

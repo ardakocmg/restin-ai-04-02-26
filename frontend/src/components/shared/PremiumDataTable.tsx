@@ -586,7 +586,7 @@ export default function PremiumDataTable<TData>({
                     'relative overflow-auto rounded-xl border border-border/30 bg-card/30 backdrop-blur-sm',
                     stickyHeader && 'max-h-[var(--table-height)]'
                 )}
-                style={{ '--table-height': maxHeight } as React.CSSProperties} /* keep-inline */ /* keep-inline */
+                style={{ '--table-height': maxHeight } as React.CSSProperties} /* keep-inline */ /* keep-inline */ /* keep-inline */
             >
                 {/* Loading Overlay */}
                 {loading && (
@@ -649,7 +649,7 @@ export default function PremiumDataTable<TData>({
                                                 compactMode ? 'py-2' : 'py-3',
                                                 header.column.columnDef.size && `w-[${header.column.columnDef.size}px]`
                                             )}
-                                            style={{ width: header.column.columnDef.size }} /* keep-inline */ /* keep-inline */
+                                            style={{ width: header.column.columnDef.size }} /* keep-inline */ /* keep-inline */ /* keep-inline */
                                         >
                                             {header.isPlaceholder
                                                 ? null
@@ -682,7 +682,7 @@ export default function PremiumDataTable<TData>({
                                             onRowClick && 'cursor-pointer',
                                             row.getIsSelected() && 'bg-primary/10'
                                         )}
-                                        style={{ /* keep-inline */ /* keep-inline */
+                                        style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
                                             position: 'absolute',
                                             top: 0,
                                             left: 0,
@@ -698,7 +698,7 @@ export default function PremiumDataTable<TData>({
                                                     'px-4 text-sm overflow-hidden',
                                                     compactMode ? 'py-1.5' : 'py-4'
                                                 )}
-                                                style={{ width: cell.column.columnDef.size }} /* keep-inline */ /* keep-inline */
+                                                style={{ width: cell.column.columnDef.size }} /* keep-inline */ /* keep-inline */ /* keep-inline */
                                             >
                                                 <div className="line-clamp-2">
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

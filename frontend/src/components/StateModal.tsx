@@ -112,28 +112,28 @@ export default function StateModal({
       {/* Modal Card - PIN Screen Style */}
       <div
         className="relative z-10 w-full max-w-md card-dark p-8 rounded-2xl animate-slide-up"
-        style={{ /* keep-inline */ /* keep-inline */
+        style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
           boxShadow: `0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px ${colors.border}`
         }}
       >
         {/* Icon */}
         <div
           className="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center"
-          style={{ /* keep-inline */ /* keep-inline */
+          style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
             backgroundColor: colors.glow,
             boxShadow: `0 0 24px ${colors.glow}`
           }}
         >
           <Icon
             className="w-10 h-10"
-            style={{ color: colors.icon }} /* keep-inline */ /* keep-inline */
+            style={{ color: colors.icon }} /* keep-inline */ /* keep-inline */ /* keep-inline */
           />
         </div>
 
         {/* Title */}
         <h2
           className="text-2xl font-heading text-center mb-3"
-          style={{ color: '#F5F5F7' }} /* keep-inline */ /* keep-inline */
+          style={{ color: '#F5F5F7' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
         >
           {title}
         </h2>
@@ -141,7 +141,7 @@ export default function StateModal({
         {/* Message */}
         <p
           className="text-center mb-6 leading-relaxed"
-          style={{ color: '#D4D4D8', fontSize: '15px' }} /* keep-inline */ /* keep-inline */
+          style={{ color: '#D4D4D8', fontSize: '15px' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
         >
           {message}
         </p>
@@ -150,7 +150,7 @@ export default function StateModal({
         {details && (
           <div
             className="mb-6 p-4 rounded-xl font-mono text-sm"
-            style={{ /* keep-inline */ /* keep-inline */
+            style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
               border: '1px solid rgba(255, 255, 255, 0.05)',
               color: '#A1A1AA'
@@ -195,7 +195,7 @@ export default function StateModal({
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-            style={{ color: '#9CA3AF' }} /* keep-inline */ /* keep-inline */
+            style={{ color: '#9CA3AF' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
           >
             <XCircle className="w-6 h-6" />
           </button>

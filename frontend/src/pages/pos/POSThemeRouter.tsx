@@ -32,14 +32,14 @@ export function setPOSTheme(theme: POSTheme): void {
 }
 
 const LoadingFallback = () => (
-    <div style={{ /* keep-inline */ /* keep-inline */
+    <div style={{ /* keep-inline */ /* keep-inline */ /* keep-inline */
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         height: '100vh', width: '100vw', backgroundColor: '#000', color: '#fff',
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     }}>
-        <div style={{ textAlign: 'center' }}> /* keep-inline */ /* keep-inline */
-            <div style={{ fontSize: 48, marginBottom: 16 }}>🔥</div> /* keep-inline */ /* keep-inline */
-            <div style={{ color: '#888', fontSize: 16 }}>{"Loading "}POS...</div> /* keep-inline */ /* keep-inline */
+        <div style={{ textAlign: 'center' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
+            <div style={{ fontSize: 48, marginBottom: 16 }}>🔥</div> /* keep-inline */ /* keep-inline */ /* keep-inline */
+            <div style={{ color: '#888', fontSize: 16 }}>{"Loading "}POS...</div> /* keep-inline */ /* keep-inline */ /* keep-inline */
         </div>
     </div>
 );

@@ -125,7 +125,7 @@ export default function RecipeManagementComplete() {
 
           <div className="space-y-4">
             <div>
-              <label style={{ color: '#D4D4D8' }}>Recipe Name</label> /* keep-inline */ /* keep-inline */
+              <label style={{ color: '#D4D4D8' }}>Recipe Name</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
               <Input
                 value={editingRecipe?.name || ''}
                 onChange={(e) => setEditingRecipe(prev => ({ ...prev, name: e.target.value }))}
@@ -135,7 +135,7 @@ export default function RecipeManagementComplete() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label style={{ color: '#D4D4D8' }}>Yield Quantity</label> /* keep-inline */ /* keep-inline */
+                <label style={{ color: '#D4D4D8' }}>Yield Quantity</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 <Input
                   type="number"
                   value={editingRecipe?.yield_quantity || ''}
@@ -143,7 +143,7 @@ export default function RecipeManagementComplete() {
                 />
               </div>
               <div>
-                <label style={{ color: '#D4D4D8' }}>Yield Unit</label> /* keep-inline */ /* keep-inline */
+                <label style={{ color: '#D4D4D8' }}>Yield Unit</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 <Input
                   value={editingRecipe?.yield_unit || ''}
                   onChange={(e) => setEditingRecipe(prev => ({ ...prev, yield_unit: e.target.value }))}
@@ -154,7 +154,7 @@ export default function RecipeManagementComplete() {
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label style={{ color: '#D4D4D8' }}>Components</label> /* keep-inline */ /* keep-inline */
+                <label style={{ color: '#D4D4D8' }}>Components</label> /* keep-inline */ /* keep-inline */ /* keep-inline */
                 <Button size="sm" onClick={() => setComponents(prev => [...prev, { item_id: '', quantity: 1, unit: 'kg' }])}>
                   <Plus className="h-4 w-4" />
                 </Button>

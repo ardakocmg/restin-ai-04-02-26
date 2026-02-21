@@ -116,7 +116,7 @@ export default function ExitTemplate({ data }) {
                     </div>
                 </div>
                 <div className="w-64 text-right">
-                    <div className="mb-2 italic text-2xl" style={{ fontFamily: 'cursive' }}>JPortelli</div> /* keep-inline */ /* keep-inline */
+                    <div className="mb-2 italic text-2xl" style={{ fontFamily: 'cursive' }}>JPortelli</div> /* keep-inline */ /* keep-inline */ /* keep-inline */
                     <div className="border-b-2 border-border mb-2"></div>
                     <div className="text-[10px] font-bold uppercase">{displayHR}</div>
                     <div className="text-[10px] !text-[#9ca3af]">HR Manager</div>

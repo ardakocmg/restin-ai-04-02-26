@@ -602,7 +602,7 @@ export default function AICopilot() {
                             placeholder="Bir soru sorun... (örn: 'Bugünkü satışlar nedir?')"
                             rows={1}
                             className="w-full bg-muted border border-border rounded-xl px-4 py-2.5 text-xs text-foreground placeholder-muted-foreground/50 resize-none focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none"
-                            style={{ minHeight: '40px', maxHeight: '120px' }} /* keep-inline */ /* keep-inline */
+                            style={{ minHeight: '40px', maxHeight: '120px' }} /* keep-inline */ /* keep-inline */ /* keep-inline */
                         />
                     </div>
                     <button

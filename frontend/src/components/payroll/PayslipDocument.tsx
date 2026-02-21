@@ -23,7 +23,7 @@ export default function PayslipDocument({ payslipData }) {
     } = payslipData;
 
     return (
-        <div id="payslip-to-export" className="payslip-document !bg-white !text-black p-10 max-w-[210mm] mx-auto border border-border shadow-sm" style={{ fontFamily: 'Arial, sans-serif' }}> /* keep-inline */ /* keep-inline */
+        <div id="payslip-to-export" className="payslip-document !bg-white !text-black p-10 max-w-[210mm] mx-auto border border-border shadow-sm" style={{ fontFamily: 'Arial, sans-serif' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
             {/* Header Section */}
             <div className="flex justify-between items-start mb-10 pb-2 border-b-2 border-gray-300">
                 {/* Logo / Title Area */}
@@ -36,10 +36,10 @@ export default function PayslipDocument({ payslipData }) {
                             <path d="M70,25 L85,15 M70,35 L85,45" stroke="black" strokeWidth="2" />
                         </svg>
                         <div className="flex flex-col">
-                            <h1 className="text-2xl font-bold tracking-tighter leading-none" style={{ fontFamily: 'Georgia, serif' }}> /* keep-inline */ /* keep-inline */
+                            <h1 className="text-2xl font-bold tracking-tighter leading-none" style={{ fontFamily: 'Georgia, serif' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                 CAVIAR & BULL
                             </h1>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-800" style={{ fontFamily: 'Arial, sans-serif' }}> /* keep-inline */ /* keep-inline */
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-800" style={{ fontFamily: 'Arial, sans-serif' }}> /* keep-inline */ /* keep-inline */ /* keep-inline */
                                 MALTA
                             </span>
                         </div>
