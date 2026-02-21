@@ -4,6 +4,8 @@
     "to":  "PC2",
     "from":  "DESKTOP-NSRR142",
     "priority":  "high",
-    "status":  "pending",
-    "task":  "Test task from PC1"
+    "status":  "done",
+    "task":  "Test task from PC1",
+    "completedBy":  "DESKTOP-NSRR142",
+    "completedAt":  "2026-02-21 05:26"
 }
