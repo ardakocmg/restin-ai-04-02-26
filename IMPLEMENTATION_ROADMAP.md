@@ -1,4 +1,5 @@
 # RESTIN.AI - Implementation Roadmap & Backlog
+
 **Son Güncelleme:** 27 Ocak 2026  
 **Mevcut Durum:** KDS/POS/Inventory Bulk Implementation + Emergent Dark Theme Completed
 
@@ -7,6 +8,7 @@
 ## 📊 Mevcut Durum Özeti
 
 ### ✅ Tamamlanan Major Features (Bu Session)
+
 1. **Stock Count & Waste Management Sistemi**
    - Backend: Start count, submit lines, complete count, log waste
    - Frontend: StockCount.jsx, WasteLog.jsx tam fonksiyonel
@@ -33,6 +35,7 @@
    - Toast notifications Emergent stilinde
 
 ### ⚠️ Bilinen Sorunlar (Minor)
+
 - POS-KDS integration bazen gecikmeli çalışabiliyor (event timing)
 - Stock count 0 variance için gereksiz ledger entry oluşturuyor (optimizasyon yapıldı ama test edilmeli)
 
@@ -40,63 +43,57 @@
 
 ## 🎯 Öncelikli Görevler (Priority Order)
 
-### 🔴 P0 - CRITICAL (Hemen Yapılmalı)
+### 🔴 P0 - CRITICAL (Hemen Yapılmalı) - ✅ TAMAMLANDI
 
 #### 1. POS UI/UX Polish - Tablet-First Interface
+
 **Neden kritik:** POS operasyonlar için temel kullanıcı deneyimi  
 **Scope:**
-- [ ] POSRuntime.jsx responsive design (iPad split-view, 1024px+)
-- [ ] Modifier modal implementation (eklentiler, seçenekler)
-- [ ] Split/Merge/Transfer UI (görsel flow)
-- [ ] Touch-optimized buttons (min 44x44px)
-- [ ] Keyboard shortcuts (hız için)
-- [ ] Order item void/modification UI
-- [ ] Dark theme uyumluluğu
-- [ ] Loading states ve skeleton screens
 
-**Tahmini Süre:** 2-3 gün  
+- [x] POSRuntime.jsx responsive design (iPad split-view, 1024px+)
+- [x] Modifier modal implementation (eklentiler, seçenekler)
+- [x] Split/Merge/Transfer UI (görsel flow)
+- [x] Touch-optimized buttons (min 44x44px)
+- [x] Keyboard shortcuts (hız için)
+- [x] Order item void/modification UI
+- [x] Dark theme uyumluluğu
+- [x] Loading states ve skeleton screens
+
+**Tahmini Süre:** Tamamlandı  
 **Bağımlılıklar:** Yok  
 **Test:** Frontend testing subagent
 
 ---
 
 #### 2. Reporting Dashboards - KDS, POS, Inventory
+
 **Neden kritik:** Operasyonel insight ve decision making  
 **Scope:**
-- [ ] KDS Performance Dashboard
-  - Ticket throughput (avg time, peak times)
-  - Station utilization heatmap
-  - Item prep time analysis
-  - Wait time trends
-- [ ] POS Sales Dashboard
-  - Revenue by hour/day/week
-  - Top selling items chart
-  - Payment method breakdown
-  - Server performance metrics
-- [ ] Inventory Dashboard
-  - Stock level alerts (low stock items)
-  - Waste trend analysis
-  - Cost variance reports
-  - Supplier performance
 
-**Tahmini Süre:** 3-4 gün  
+- [x] KDS Performance Dashboard
+- [x] POS Sales Dashboard
+- [x] Inventory Dashboard
+
+**Tahmini Süre:** Tamamlandı  
 **Bağımlılıklar:** Backend reporting endpoints (zaten var)  
 **Test:** Frontend testing + data validation
 
 ---
 
 #### 3. Admin Dashboard - Dark Theme Refresh
+
 **Neden kritik:** İlk giriş noktası, brand consistency  
 **Scope:**
-- [ ] Dashboard kartları: card-dark style
-- [ ] Stat cards: brand red accent
-- [ ] Charts: dark theme colors
-- [ ] Empty states: StateModal style
-- [ ] Loading skeletons: brand red shimmer
-- [ ] Responsive layout check
-- [ ] Icon colors: white/red consistency
 
-**Tahmini Süre:** 1 gün  
+- [x] Dashboard kartları: card-dark style
+- [x] Stat cards: brand red accent
+- [x] Charts: dark theme colors
+- [x] Empty states: StateModal style
+- [x] Loading skeletons: brand red shimmer
+- [x] Responsive layout check
+- [x] Icon colors: white/red consistency
+
+**Tahmini Süre:** Tamamlandı  
 **Bağımlılıklar:** Yok  
 **Test:** Screenshot review
 
@@ -105,7 +102,9 @@
 ### 🟡 P1 - HIGH (Önümüzdeki 1-2 Hafta)
 
 #### 4. Inventory Frontend Completion
+
 **Scope:**
+
 - [ ] Recipe Management UI
   - Create/edit recipes
   - Component list with quantities
@@ -126,7 +125,9 @@
 ---
 
 #### 5. KDS Runtime - Dark Theme & UX Polish
+
 **Scope:**
+
 - [ ] KDSRuntime.jsx dark theme update
 - [ ] Ticket cards: brand red for urgent
 - [ ] Station view optimization (large screens)
@@ -142,7 +143,9 @@
 ---
 
 #### 6. Global Navigation & Sidebar - Dark Theme
+
 **Scope:**
+
 - [ ] NewSidebar.jsx: dark bg, red active states
 - [ ] NewTopBar.jsx: dark theme update
 - [ ] Logo update (white + red)
@@ -158,7 +161,9 @@
 ---
 
 #### 7. Empty States Standardization
+
 **Scope:**
+
 - [ ] Tüm empty list/table states
 - [ ] StateModal component kullanımı
 - [ ] Consistent iconography
@@ -177,8 +182,10 @@
 ---
 
 #### 8. Print Job Implementation
+
 **Neden önemli:** Operasyonel gereklilik (mutfak fişleri, hesaplar)  
 **Scope:**
+
 - [ ] Print job backend logic (zaten var mı?)
 - [ ] Print preview modal (web view)
 - [ ] Browser print API integration
@@ -195,7 +202,9 @@
 ### 🟢 P2 - MEDIUM (Önümüzdeki 2-4 Hafta)
 
 #### 9. End-to-End Integration Testing
+
 **Scope:**
+
 - [ ] POS order → KDS ticket creation
 - [ ] POS item add → Inventory depletion (recipe-based)
 - [ ] Stock count complete → Inventory update
@@ -210,8 +219,10 @@
 ---
 
 #### 10. Granular Permission Enforcement
+
 **Neden önemli:** Security & role-based access  
 **Scope:**
+
 - [ ] Backend: Permission checks on all endpoints
   - INV_VIEW, INV_EDIT, PO_APPROVE, etc.
 - [ ] Frontend: Conditional rendering by permissions
@@ -226,7 +237,9 @@
 ---
 
 #### 11. Responsive Design - Full Compliance
+
 **Scope:**
+
 - [ ] Mobile layout (320px - 768px)
 - [ ] Tablet layout (768px - 1024px)
 - [ ] Desktop layout (1024px+)
@@ -242,8 +255,10 @@
 ---
 
 #### 12. Offline Queue & Sync
+
 **Neden önemli:** POS reliability  
 **Scope:**
+
 - [ ] IndexedDB integration
 - [ ] Offline order queue
 - [ ] Sync on reconnection
@@ -258,7 +273,9 @@
 ---
 
 #### 13. Bill Split by Item
+
 **Scope:**
+
 - [ ] Backend: Split order logic by items
 - [ ] Frontend: Item selection UI for splits
 - [ ] Payment allocation
@@ -272,7 +289,9 @@
 ---
 
 #### 14. Table Merge Functionality
+
 **Scope:**
+
 - [ ] Backend: Merge table logic
 - [ ] Frontend: Table selection UI for merge
 - [ ] Order consolidation
@@ -288,48 +307,56 @@
 ### 🔵 P3 - LOW / NICE-TO-HAVE (Backlog)
 
 #### 15. Menu Item Modifiers System
+
 - [ ] Modifier groups (size, extras, cooking level)
 - [ ] Nested modifiers
 - [ ] Price adjustments
 - [ ] UI: Modifier selection modal
 
 #### 16. Receipt Generation & Templates
+
 - [ ] Receipt template engine
 - [ ] Customizable fields
 - [ ] Logo upload
 - [ ] Multi-language support
 
 #### 17. Daily Closeout Reports
+
 - [ ] Sales summary report
 - [ ] Payment reconciliation
 - [ ] Cash drawer close
 - [ ] Z-report generation
 
 #### 18. OCR Integration (Document Processing)
+
 - [ ] Invoice OCR
 - [ ] Menu scanning
 - [ ] Receipt scanning
 - [ ] Data extraction
 
 #### 19. Allergen Tracking
+
 - [ ] Allergen database
 - [ ] Menu item allergen tags
 - [ ] Customer allergen preferences
 - [ ] Warning system
 
 #### 20. Staff Scheduling
+
 - [ ] Shift templates
 - [ ] Schedule builder
 - [ ] Conflict detection
 - [ ] Staff notifications
 
 #### 21. Advanced Analytics & AI
+
 - [ ] Demand forecasting
 - [ ] Inventory optimization
 - [ ] Dynamic pricing suggestions
 - [ ] Customer behavior analysis
 
 #### 22. Payment Gateway Integration
+
 - [ ] Stripe integration
 - [ ] Apple Pay / Google Pay
 - [ ] Split payment (multiple cards)
@@ -340,7 +367,9 @@
 ## 🧪 Testing Strategy
 
 ### Testing Subagent Usage Guide
+
 **Backend Testing:**
+
 ```
 - Yeni API endpoint: curl test
 - Major flow: deep_testing_backend_v2
@@ -348,6 +377,7 @@
 ```
 
 **Frontend Testing:**
+
 ```
 - UI changes: auto_frontend_testing_agent
 - Multi-component: screenshot tool
@@ -355,6 +385,7 @@
 ```
 
 ### Test Coverage Targets
+
 - Backend API: 85%+ (critical paths)
 - Frontend: Visual regression + E2E
 - Integration: All major flows
@@ -364,6 +395,7 @@
 ## 📁 Refactoring Needs
 
 ### Code Organization (Sonra Yapılacak)
+
 1. **Backend Structure**
    - [ ] API routes: `/app/backend/routes/` cleanup
    - [ ] Models: `/app/backend/models/` consolidation
@@ -386,6 +418,7 @@
 ## 🎨 Design System Completion
 
 ### Emergent Theme - Remaining Work
+
 1. **Components Needing Dark Theme**
    - [ ] Forms & Inputs (all input fields)
    - [ ] Modals & Dialogs
@@ -412,6 +445,7 @@
 ## 🔐 Security & Performance
 
 ### Security Todos
+
 - [ ] CSRF token implementation
 - [ ] Rate limiting on auth endpoints
 - [ ] SQL injection prevention (N/A - MongoDB)
@@ -420,6 +454,7 @@
 - [ ] Secret rotation strategy
 
 ### Performance Todos
+
 - [ ] React.memo optimization
 - [ ] Lazy loading routes
 - [ ] Image optimization
@@ -443,6 +478,7 @@
 ## 🚀 Deployment Preparation
 
 ### Pre-Production Checklist
+
 - [ ] Environment variables audit
 - [ ] Database migration strategy
 - [ ] Backup & restore procedures
@@ -458,21 +494,25 @@
 ## 💡 Önerilen Yaklaşım
 
 ### İlk 1 Hafta (Sprint 1)
+
 1. **P0 Görevler 1-3:** POS UI Polish, Reporting Dashboards, Admin Dark Theme
 2. **Test & Review:** Frontend testing subagent ile validation
 3. **User Feedback:** Stakeholder demo
 
 ### 2. Hafta (Sprint 2)
+
 1. **P1 Görevler 4-7:** Inventory completion, KDS polish, Navigation, Empty states
 2. **Integration Testing:** E2E flow validation
 3. **Bug Fixes:** Testing'den gelen issue'lar
 
 ### 3-4. Hafta (Sprint 3-4)
+
 1. **P1 Görevler 8+:** Print, Permissions, Responsive
 2. **P2 Görevler:** Integration testing, Offline, Bill split
 3. **Polish:** Animation, UX refinement
 
 ### Ongoing
+
 - **P3 Backlog:** Feature request priority'ye göre
 - **Refactoring:** Code quality improvement
 - **Documentation:** Incremental updates
@@ -482,7 +522,9 @@
 ## 📞 Stakeholder Communication
 
 ### Demo Hazırlığı
+
 **Hangi özellikleri gösterelim:**
+
 1. ✅ PIN login (dark theme)
 2. ✅ Stock Count flow (start → count → complete)
 3. ✅ Waste logging
@@ -491,6 +533,7 @@
 6. ⏳ Inventory lists (basic)
 
 **Eksiklikler (açıkça söylenecek):**
+
 - Modifier system yok (P3)
 - Print preview dummy
 - Reports data görselleştirmesi minimal
@@ -501,6 +544,7 @@
 ## 🎯 Success Metrics
 
 ### Teknik Metrikler
+
 - Test coverage: 80%+ backend, 70%+ frontend
 - Page load time: <2s
 - API response time: <500ms (p95)
@@ -508,6 +552,7 @@
 - Dark theme coverage: 95%+ pages
 
 ### Kullanıcı Metrikleri
+
 - PIN login success rate: 98%+
 - POS order completion time: <30s avg
 - KDS ticket bump time: <5s avg
