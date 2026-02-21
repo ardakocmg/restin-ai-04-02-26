@@ -16,28 +16,28 @@ const REASONS = [
 
 const s: Record<string, React.CSSProperties> = {
     overlay: {
-        position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)',
+        position: 'fixed' as const, inset: 0, backgroundColor: 'rgba(0,0,0,0.7)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1200,
     },
     modal: {
         backgroundColor: '#1a1a1a', borderRadius: 12, padding: 24, minWidth: 360,
         border: '1px solid #333',
     },
-    title: { fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 16, textAlign: 'center' },
+    title: { fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 16, textAlign: 'center' as const },
     reasonBtn: {
         width: '100%', padding: '12px 16px', borderRadius: 8, border: 'none',
-        backgroundColor: '#222', color: '#fff', fontSize: 14, textAlign: 'left',
+        backgroundColor: '#222', color: '#fff', fontSize: 14, textAlign: 'left' as const,
         cursor: 'pointer', marginBottom: 6,
     },
     reasonBtnActive: {
         width: '100%', padding: '12px 16px', borderRadius: 8, border: 'none',
-        backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, textAlign: 'left',
+        backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, textAlign: 'left' as const,
         cursor: 'pointer', marginBottom: 6, fontWeight: 700,
     },
     otherInput: {
         width: '100%', backgroundColor: '#000', border: '1px solid #333', borderRadius: 8,
         padding: '10px 12px', color: '#fff', fontSize: 14, outline: 'none',
-        marginTop: 4, marginBottom: 6, boxSizing: 'border-box',
+        marginTop: 4, marginBottom: 6, boxSizing: 'border-box' as const,
     },
     actions: { display: 'flex', gap: 8, marginTop: 16 },
     cancelBtn: {

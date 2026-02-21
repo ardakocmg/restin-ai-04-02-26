@@ -1,0 +1,2 @@
+src/pages/manager/hr/SummaryDashboard.tsx(341,5): error TS1005: ')' expected.
+src/pages/manager/hr/SummaryDashboard.tsx(342,3): error TS1109: Expression expected.

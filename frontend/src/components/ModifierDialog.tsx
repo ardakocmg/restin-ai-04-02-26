@@ -8,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { ScrollArea } from "./ui/scroll-area";
 import api from "../lib/api";
 import { Loader2 } from "lucide-react";
+import { logger } from '@/lib/logger';
 
 export default function ModifierDialog({ item, open, onClose, onConfirm }) {
   const [modifierGroups, setModifierGroups] = useState([]);
@@ -40,7 +41,7 @@ export default function ModifierDialog({ item, open, onClose, onConfirm }) {
       });
       setSelections(defaults);
     } catch (error: any) {
-      console.error('Failed to load modifiers:', error);
+      logger.error('Failed to load modifiers:', error);
     } finally {
       setLoading(false);
     }

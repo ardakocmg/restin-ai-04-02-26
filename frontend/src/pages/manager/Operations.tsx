@@ -11,6 +11,7 @@ import { Label } from '../../components/ui/label';
 import { Switch } from '../../components/ui/switch';
 import { Badge } from '../../components/ui/badge';
 import { Save, Plus, X } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function Operations() {
   const { activeVenue } = useVenue();
@@ -33,7 +34,7 @@ export default function Operations() {
       setSettings(ops);
       setComplimentaryItems(ops.complimentary_items || []);
     } catch (error: any) {
-      console.error('Failed to load settings:', error);
+      logger.error('Failed to load settings:', error);
     } finally {
       setLoading(false);
     }

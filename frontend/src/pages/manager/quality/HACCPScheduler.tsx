@@ -86,7 +86,7 @@ function PriorityDot({ priority }: { priority: HACCPTask['priority'] }) {
    ═══════════════════════════════════════════════════════════════════ */
 export default function HACCPScheduler() {
     const { t } = useTranslation();
-    const { activeVenue } = useVenue();
+    const { activeVenue: selectedVenue } = useVenue() as any;
 
     const [tasks, setTasks] = useState<HACCPTask[]>([]);
     const [loading, setLoading] = useState(false);
@@ -104,10 +104,10 @@ export default function HACCPScheduler() {
     const [form, setForm] = useState<Partial<HACCPTask>>(emptyForm);
 
     const loadData = useCallback(async () => {
-        if (!activeVenue?.id) return;
+        if (!selectedVenue?._id) return;
         setLoading(true);
         try {
-            const res = await api.get(`/api/quality/haccp-tasks?venue_id=${activeVenue?.id}`);
+            const res = await api.get(`/api/quality/haccp-tasks?venue_id=${selectedVenue._id}`);
             setTasks(res.data?.tasks || []);
         } catch {
             logger.error('Failed to load HACCP tasks');
@@ -115,7 +115,7 @@ export default function HACCPScheduler() {
         } finally {
             setLoading(false);
         }
-    }, [activeVenue?.id]);
+    }, [selectedVenue?._id]);
 
     useEffect(() => { loadData(); }, [loadData]);
 
@@ -162,10 +162,10 @@ export default function HACCPScheduler() {
         if (!form.title?.trim()) { toast.error('Task title is required'); return; }
         try {
             if (editingTask) {
-                await api.put(`/api/quality/haccp-tasks/${editingTask._id}`, { ...form, venue_id: activeVenue?.id });
+                await api.put(`/api/quality/haccp-tasks/${editingTask._id}`, { ...form, venue_id: selectedVenue?._id });
                 toast.success('Task updated');
             } else {
-                await api.post('/api/quality/haccp-tasks', { ...form, venue_id: activeVenue?.id });
+                await api.post('/api/quality/haccp-tasks', { ...form, venue_id: selectedVenue?._id });
                 toast.success('Task created');
             }
             setDialogOpen(false); setEditingTask(null); setForm(emptyForm); loadData();

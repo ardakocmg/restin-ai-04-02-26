@@ -36,7 +36,7 @@ export default function DataExportPage() {
     const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
 
-    const { data: history = [], isLoading: loadingHistory } = useQuery({
+    const { data: history = [], isPending: loadingHistory } = useQuery({
         queryKey: ['export-history', venueId],
         queryFn: async () => {
             try {

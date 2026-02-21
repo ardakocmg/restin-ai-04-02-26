@@ -8,6 +8,7 @@ import DocumentService from "../services/DocumentService";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Upload, Loader2, FileText, X } from "lucide-react";
+import { logger } from '@/lib/logger';
 
 export default function DocumentUploader({ 
   venueId, 
@@ -57,7 +58,7 @@ export default function DocumentUploader({
         onUploadComplete(result.document);
       }
     } catch (error: any) {
-      console.error("Upload failed:", error);
+      logger.error("Upload failed:", error);
       toast.error(error.response?.data?.detail?.message || "Upload failed");
     } finally {
       setLoading(false);

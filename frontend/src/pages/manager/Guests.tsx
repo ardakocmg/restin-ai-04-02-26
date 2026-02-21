@@ -11,6 +11,7 @@ import { Label } from '../../components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';
 import { Badge } from '../../components/ui/badge';
 import { Plus, UserPlus } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function Guests() {
   const { activeVenue } = useVenue();
@@ -30,7 +31,7 @@ export default function Guests() {
       const response = await api.get(`/venues/${activeVenue.id}/guests`);
       setGuests(response.data);
     } catch (error: any) {
-      console.error('Failed to load guests:', error);
+      logger.error('Failed to load guests:', error);
     } finally {
       setLoading(false);
     }

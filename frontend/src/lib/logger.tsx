@@ -1,6 +1,6 @@
 /**
  * Centralized Logger Utility
- * Rule #8: Structured logging only. No console.log.
+ * Rule #8: Structured logging only. No logger.log.
  * 
  * Usage:
  * import { logger } from '@/lib/logger';
@@ -52,19 +52,19 @@ class Logger {
         switch (entry.level) {
             case 'debug':
                 // eslint-disable-next-line no-console
-                console.debug(`${prefix} ${entry.message}${contextStr}`);
+                logger.debug(`${prefix} ${entry.message}${contextStr}`);
                 break;
             case 'info':
                 // eslint-disable-next-line no-console
-                console.info(`${prefix} ${entry.message}${contextStr}`);
+                logger.info(`${prefix} ${entry.message}${contextStr}`);
                 break;
             case 'warn':
                 // eslint-disable-next-line no-console
-                console.warn(`${prefix} ${entry.message}${contextStr}`);
+                logger.warn(`${prefix} ${entry.message}${contextStr}`);
                 break;
             case 'error':
                 // eslint-disable-next-line no-console
-                console.error(`${prefix} ${entry.message}${contextStr}`);
+                logger.error(`${prefix} ${entry.message}${contextStr}`);
                 break;
         }
 

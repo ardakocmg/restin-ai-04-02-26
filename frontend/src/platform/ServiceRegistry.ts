@@ -1,14 +1,17 @@
+import { logger } from '@/lib/logger';
 // @ts-nocheck
 // Singleton Service Registry
 class ServiceRegistry {
+  private services: Map<string, any> = new Map();
+  private initialized: Set<string> = new Set();
   constructor() {
     this.services = new Map();
-    this.initialized = new Set();
+
   }
 
   register(name, service) {
     if (this.services.has(name)) {
-      console.warn(`Service '${name}' already registered, overwriting`);
+      logger.warn(`Service '${name}' already registered, overwriting`);
     }
     this.services.set(name, service);
   }
@@ -23,7 +26,7 @@ class ServiceRegistry {
 
   async init(name) {
     if (this.initialized.has(name)) return;
-    
+
     const service = this.get(name);
     if (service.init && typeof service.init === 'function') {
       await service.init();
@@ -32,7 +35,7 @@ class ServiceRegistry {
   }
 
   async initAll() {
-    for (const [name, service] of this.services) {
+    for (const [name, service] of Array.from(this.services.entries())) {
       await this.init(name);
     }
   }

@@ -36,6 +36,7 @@ from services.email_service_events import email_service
 from services.notification_service_events import notification_service
 from services.payment_service_events import payment_service
 from services.payroll_service_events import payroll_service
+from services.reconciliation_service import ReconciliationService
 
 # Import event handlers to register them
 import services.accounting_mt.journal_service
@@ -258,7 +259,7 @@ app.add_middleware(RequestIDMiddleware)
 app.middleware("http")(subdomain_middleware)
 
 # 3. Idempotency (prevents duplicates)
-# app.add_middleware(IdempotencyMiddleware)
+app.add_middleware(IdempotencyMiddleware)
 
 # 4. Rate Limiting
 app.add_middleware(RateLimitMiddleware, requests_per_minute=2000)
@@ -273,6 +274,8 @@ dev_origins = [
     "http://localhost:8000", "http://127.0.0.1:8000",
     "http://localhost:3001", "http://127.0.0.1:3001",
     "http://192.168.31.243:3000", "http://192.168.31.243:8000",
+    "http://192.168.31.10:3000", "http://192.168.31.10:8000",
+    "http://192.168.31.10:3001", "http://192.168.31.10:8001",
     # Production origins
     "https://restin.ai", "https://www.restin.ai",
     "http://restin.ai", "http://www.restin.ai",

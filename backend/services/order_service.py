@@ -74,77 +74,104 @@ async def process_send_order(
         prep_groups = await _group_items_by_prep_area(db, items, round_seq)
         _step_log(request, "ROUTED", {"groups": len(prep_groups)})
         
-        # Step 5: Create KDS tickets
-        ticket_ids = []
-        if do_kds:
-            ticket_ids = await _create_kds_tickets(
-                db, prep_groups, venue_id, order_id, table_id, table_name, 
-                round_seq, round_label, settings, now
+        # Determine if we can use transactions
+        client = getattr(db, 'client', None)
+        has_transactions = hasattr(client, 'start_session')
+        
+        if has_transactions:
+            async with await client.start_session() as session:
+                async with session.start_transaction():
+                    return await _commit_order_send(
+                        db, order_id, request, do_print, do_kds, do_stock, client_send_id, current_user,
+                        items, pending_items, venue_id, settings, now, round_seq, round_label,
+                        table_id, table_name, prep_groups, session
+                    )
+        else:
+            return await _commit_order_send(
+                db, order_id, request, do_print, do_kds, do_stock, client_send_id, current_user,
+                items, pending_items, venue_id, settings, now, round_seq, round_label,
+                table_id, table_name, prep_groups, None
             )
-            _step_log(request, "KDS_CREATED", {"count": len(ticket_ids)})
-        else:
-            _step_log(request, "KDS_SKIPPED")
-        
-        # Step 6: Create print jobs
-        print_job_ids = []
-        if do_print:
-            print_job_ids = await _create_print_jobs(
-                db, prep_groups, venue_id, order_id, table_name, round_label, round_seq, now
-            )
-            _step_log(request, "PRINT_CREATED", {"count": len(print_job_ids)})
-        else:
-            _step_log(request, "PRINT_SKIPPED")
-        
-        # Step 7: Stock deduction (if enabled)
-        if do_stock:
-            await _deduct_stock(db, pending_items, venue_id, order_id, current_user["id"])
-            _step_log(request, "STOCK_DEDUCTED")
-        else:
-            _step_log(request, "STOCK_SKIPPED")
-        
-        # Step 8: Update order
-        send_round_record = {
-            "round_no": round_seq,
-            "sent_at": now,
-            "do_print": do_print,
-            "do_kds": do_kds,
-            "do_stock": do_stock,
-            "ticket_ids": ticket_ids,
-            "print_job_ids": print_job_ids,
-            "client_send_id": client_send_id
-        }
-        
-        update_doc = {
-            "$set": {
-                "items": items,
-                "send_round_seq": round_seq,
-                "status": "sent"
-            },
-            "$push": {"send_rounds": send_round_record},
-            "$addToSet": {"send_client_ids": client_send_id} if client_send_id else {}
-        }
-        
-        if not client_send_id:
-            del update_doc["$addToSet"]
-        
-        await db.orders.update_one({"id": order_id}, update_doc)
-        
-        _step_log(request, "SUCCESS", {"round": round_seq})
-        
-        return True, {
-            "ok": True,
-            "code": "SEND_SUCCESS",
-            "order_id": order_id,
-            "round_no": round_seq,
-            "created_tickets": ticket_ids,
-            "created_print_jobs": print_job_ids,
-            "stock_deducted": do_stock,
-            "request_id": _rid(request)
-        }
-        
+            
     except Exception as e:
         logger.error(f"Send order failed: {e}", exc_info=True)
         return False, {"code": "SEND_FAILED", "message": f"Send order failed: {str(e)}"}
+
+async def _commit_order_send(
+    db, order_id, request, do_print, do_kds, do_stock, client_send_id, current_user,
+    items, pending_items, venue_id, settings, now, round_seq, round_label,
+    table_id, table_name, prep_groups, session
+):
+    # Step 5: Create KDS tickets
+    ticket_ids = []
+    if do_kds:
+        ticket_ids = await _create_kds_tickets(
+            db, prep_groups, venue_id, order_id, table_id, table_name, 
+            round_seq, round_label, settings, now, session
+        )
+        _step_log(request, "KDS_CREATED", {"count": len(ticket_ids)})
+    else:
+        _step_log(request, "KDS_SKIPPED")
+    
+    # Step 6: Create print jobs
+    print_job_ids = []
+    if do_print:
+        print_job_ids = await _create_print_jobs(
+            db, prep_groups, venue_id, order_id, table_name, round_label, round_seq, now, session
+        )
+        _step_log(request, "PRINT_CREATED", {"count": len(print_job_ids)})
+    else:
+        _step_log(request, "PRINT_SKIPPED")
+    
+    # Step 7: Stock deduction (if enabled)
+    if do_stock:
+        await _deduct_stock(db, pending_items, venue_id, order_id, current_user["id"], session)
+        _step_log(request, "STOCK_DEDUCTED")
+    else:
+        _step_log(request, "STOCK_SKIPPED")
+    
+    # Step 8: Update order
+    send_round_record = {
+        "round_no": round_seq,
+        "sent_at": now,
+        "do_print": do_print,
+        "do_kds": do_kds,
+        "do_stock": do_stock,
+        "ticket_ids": ticket_ids,
+        "print_job_ids": print_job_ids,
+        "client_send_id": client_send_id
+    }
+    
+    update_doc = {
+        "$set": {
+            "items": items,
+            "send_round_seq": round_seq,
+            "status": "sent"
+        },
+        "$push": {"send_rounds": send_round_record},
+        "$addToSet": {"send_client_ids": client_send_id} if client_send_id else {}
+    }
+    
+    if not client_send_id:
+        del update_doc["$addToSet"]
+    
+    if session:
+        await db.orders.update_one({"id": order_id}, update_doc, session=session)
+    else:
+        await db.orders.update_one({"id": order_id}, update_doc)
+    
+    _step_log(request, "SUCCESS", {"round": round_seq})
+    
+    return True, {
+        "ok": True,
+        "code": "SEND_SUCCESS",
+        "order_id": order_id,
+        "round_no": round_seq,
+        "created_tickets": ticket_ids,
+        "created_print_jobs": print_job_ids,
+        "stock_deducted": do_stock,
+        "request_id": _rid(request)
+    }
 
 
 async def _group_items_by_prep_area(db, items: List[dict], round_seq: int) -> Dict[str, dict]:
@@ -199,7 +226,7 @@ async def _group_items_by_prep_area(db, items: List[dict], round_seq: int) -> Di
 async def _create_kds_tickets(
     db, prep_groups: dict, venue_id: str, order_id: str, 
     table_id: str, table_name: str, round_seq: int, 
-    round_label: str, settings: dict, now: str
+    round_label: str, settings: dict, now: str, session=None
 ) -> List[str]:
     """Create KDS tickets for each prep group"""
     ticket_ids = []
@@ -224,11 +251,16 @@ async def _create_kds_tickets(
         }
         
         try:
+            # ensure_ids performs find_one_and_update. We might skip session mapping here since it handles sequential IDs
             ticket_doc = await ensure_ids(db, "kds_ticket", ticket_doc, venue_id)
         except Exception as e:
             logger.warning(f"ensure_ids failed for kds_ticket: {e}")
         
-        await db.kds_tickets.insert_one(ticket_doc)
+        if session:
+            await db.kds_tickets.insert_one(ticket_doc, session=session)
+        else:
+            await db.kds_tickets.insert_one(ticket_doc)
+            
         ticket_ids.append(ticket_doc["id"])
     
     return ticket_ids
@@ -236,7 +268,7 @@ async def _create_kds_tickets(
 
 async def _create_print_jobs(
     db, prep_groups: dict, venue_id: str, order_id: str, 
-    table_name: str, round_label: str, round_seq: int, now: str
+    table_name: str, round_label: str, round_seq: int, now: str, session=None
 ) -> List[str]:
     """Create print jobs for each prep group"""
     print_job_ids = []
@@ -277,13 +309,18 @@ async def _create_print_jobs(
             "idempotency_key": f"{order_id}_{key}_{round_seq}_{now}",
             "created_at": now
         }
-        await db.print_jobs.insert_one(print_job_doc)
+        
+        if session:
+            await db.print_jobs.insert_one(print_job_doc, session=session)
+        else:
+            await db.print_jobs.insert_one(print_job_doc)
+            
         print_job_ids.append(print_job_doc["id"])
     
     return print_job_ids
 
 
-async def _deduct_stock(db, items: List[dict], venue_id: str, order_id: str, user_id: str):
+async def _deduct_stock(db, items: List[dict], venue_id: str, order_id: str, user_id: str, session=None):
     """
     Deduct stock for order items based on Recipes.
     If no recipe exists, checks simple Menu-Inventory links.
@@ -293,7 +330,10 @@ async def _deduct_stock(db, items: List[dict], venue_id: str, order_id: str, use
         qty_sold = item.get("quantity", 1)
         
         # 1. Try to find a Recipe
-        recipe = await db.recipes.find_one({"menu_item_id": menu_item_id, "venue_id": venue_id}, {"_id": 0})
+        if session:
+            recipe = await db.recipes.find_one({"menu_item_id": menu_item_id, "venue_id": venue_id}, {"_id": 0}, session=session)
+        else:
+            recipe = await db.recipes.find_one({"menu_item_id": menu_item_id, "venue_id": venue_id}, {"_id": 0})
         
         if recipe:
             # Deduct via Recipe Components
@@ -301,31 +341,54 @@ async def _deduct_stock(db, items: List[dict], venue_id: str, order_id: str, use
                 inv_item_id = comp.get("item_id")
                 deduct_qty = comp.get("qty", 0) * qty_sold
                 
-                await db.inventory_items.update_one(
-                    {"id": inv_item_id, "venue_id": venue_id},
-                    {"$inc": {"quantity": -deduct_qty}}
-                )
+                if session:
+                    await db.inventory_items.update_one(
+                        {"id": inv_item_id, "venue_id": venue_id},
+                        {"$inc": {"quantity": -deduct_qty}},
+                        session=session
+                    )
+                else:
+                    await db.inventory_items.update_one(
+                        {"id": inv_item_id, "venue_id": venue_id},
+                        {"$inc": {"quantity": -deduct_qty}}
+                    )
         else:
             # 2. Fallback: Check simple 1:1 links (menu_item_inventory)
-            links = await db.menu_item_inventory.find({"menu_item_id": menu_item_id}, {"_id": 0}).to_list(100)
+            if session:
+                cursor = db.menu_item_inventory.find({"menu_item_id": menu_item_id}, {"_id": 0}, session=session)
+            else:
+                cursor = db.menu_item_inventory.find({"menu_item_id": menu_item_id}, {"_id": 0})
+            links = await cursor.to_list(100)
+            
             for link in links:
                 inv_item_id = link.get("inventory_item_id")
                 deduct_qty = link.get("quantity", 1) * qty_sold
                 
-                await db.inventory_items.update_one(
-                    {"id": inv_item_id, "venue_id": venue_id},
-                    {"$inc": {"quantity": -deduct_qty}}
-                )
+                if session:
+                    await db.inventory_items.update_one(
+                        {"id": inv_item_id, "venue_id": venue_id},
+                        {"$inc": {"quantity": -deduct_qty}},
+                        session=session
+                    )
+                else:
+                    await db.inventory_items.update_one(
+                        {"id": inv_item_id, "venue_id": venue_id},
+                        {"$inc": {"quantity": -deduct_qty}}
+                    )
 
     # Log the stock deduction event
-    await db.inventory_transactions.insert_one({
+    inv_transaction = {
         "id": str(uuid.uuid4()),
         "venue_id": venue_id,
         "type": "SALES_DEDUCTION",
         "order_id": order_id,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "created_by": user_id
-    })
+    }
+    if session:
+        await db.inventory_transactions.insert_one(inv_transaction, session=session)
+    else:
+        await db.inventory_transactions.insert_one(inv_transaction)
 
 
 async def transfer_order_to_table(db, order_id: str, new_table_id: str, current_user: dict) -> Tuple[bool, Dict[str, Any]]:

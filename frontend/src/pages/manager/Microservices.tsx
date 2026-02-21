@@ -5,6 +5,7 @@ import PageContainer from '../../layouts/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
+import { logger } from '@/lib/logger';
 import {
   Activity, Server, AlertCircle, CheckCircle2,
   Clock, Zap, Database, RefreshCw, ChevronRight
@@ -49,7 +50,7 @@ export default function MicroservicesPage() {
       setOutboxEvents(outboxRes.data.events || []);
       setDlqEvents(dlqRes.data.events || []);
     } catch (error: any) {
-      console.error('Failed to load service data:', error);
+      logger.error('Failed to load service data:', error);
     } finally {
       setLoading(false);
     }

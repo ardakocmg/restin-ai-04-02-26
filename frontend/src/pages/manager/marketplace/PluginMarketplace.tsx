@@ -164,9 +164,7 @@ export default function PluginMarketplace() {
                             <div className="flex-1">
                                 <div className="flex items-center gap-2">
                                     <h3 className="font-semibold text-foreground">{plugin.name}</h3>
-                                    {plugin.verified && (
-                                        <Shield className="w-4 h-4 text-blue-500" aria-label="Verified" />
-                                    )}
+                                    <span title="Verified"><Shield className="w-4 h-4 text-blue-500" /></span>
                                 </div>
                                 <div className="text-xs text-muted-foreground mt-0.5">{plugin.author}</div>
                                 <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{plugin.desc}</p>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../lib/api';
+import { logger } from '@/lib/logger';
 
 export function useViewState(venueId, pageKey) {
   const [viewState, setViewState] = useState(null);
@@ -16,7 +17,7 @@ export function useViewState(venueId, pageKey) {
       const res = await api.get(`/uix/view-state?venue_id=${venueId}&page_key=${pageKey}`);
       setViewState(res.data?.data);
     } catch (error: any) {
-      console.error('Failed to load view state:', error);
+      logger.error('Failed to load view state:', error);
       // Use default
       setViewState({
         ui: { filters_open: true, filter_sections: {} },
@@ -34,7 +35,7 @@ export function useViewState(venueId, pageKey) {
         query
       });
     } catch (error: any) {
-      console.error('Failed to save view state:', error);
+      logger.error('Failed to save view state:', error);
     }
   };
 

@@ -10,6 +10,7 @@ import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Plus, Calendar, ShieldAlert, Users } from 'lucide-react';
 import ReservationModal from './ReservationModal';
+import { logger } from '@/lib/logger';
 
 const STATUS_COLORS = {
   confirmed: 'bg-blue-600/20 text-blue-400 border border-blue-500/30 font-black uppercase text-[10px]',
@@ -39,7 +40,7 @@ export default function Reservations() {
       const response = await api.get(`/venues/${activeVenue.id}/reservations`);
       setReservations(response.data);
     } catch (error: any) {
-      console.error('Failed to load reservations:', error);
+      logger.error('Failed to load reservations:', error);
     } finally {
       setLoading(false);
     }
@@ -49,7 +50,7 @@ export default function Reservations() {
     try {
       const res = await api.get(`/reservations/analytics/summary?venue_id=${activeVenue.id}`);
       setAnalytics(res.data);
-    } catch (e: any) { console.error(e); }
+    } catch (e: any) { logger.error(e); }
   };
 
   const updateStatus = async (id, status) => {

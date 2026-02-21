@@ -8,6 +8,7 @@ import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Plus, Edit, LayoutGrid } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function FloorPlans() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export default function FloorPlans() {
       const response = await api.get(`/venues/${activeVenue.id}/floor-plans`);
       setFloorPlans(response.data);
     } catch (error: any) {
-      console.error('Failed to load floor plans:', error);
+      logger.error('Failed to load floor plans:', error);
     } finally {
       setLoading(false);
     }

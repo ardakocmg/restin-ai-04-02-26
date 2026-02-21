@@ -1,11 +1,15 @@
+import { logger } from '@/lib/logger';
 // @ts-nocheck
 // AuthStore - Single Source of Truth for Authentication
 class AuthStore {
+  private TOKEN_KEY = 'auth_token';
+  private USER_KEY = 'auth_user';
+  private API_HOST_KEY = 'api_host';
+  private listeners = new Set<Function>();
   constructor() {
     this.TOKEN_KEY = 'restin_token';
     this.USER_KEY = 'restin_user';
     this.API_HOST_KEY = 'restin_api_host';
-    this.listeners = [];
   }
 
   getToken() {
@@ -14,7 +18,7 @@ class AuthStore {
 
   setToken(token) {
     if (!token) {
-      console.error('Attempted to set null/undefined token');
+      logger.error('Attempted to set null/undefined token');
       return;
     }
     localStorage.setItem(this.TOKEN_KEY, token);
@@ -34,7 +38,7 @@ class AuthStore {
 
   setUser(user) {
     if (!user) {
-      console.error('Attempted to set null/undefined user');
+      logger.error('Attempted to set null/undefined user');
       return;
     }
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
@@ -62,7 +66,7 @@ class AuthStore {
   checkApiHostChanged(currentHost) {
     const lastHost = this.getLastKnownApiHost();
     if (lastHost && lastHost !== currentHost) {
-      console.warn(`API host changed: ${lastHost} → ${currentHost}`);
+      logger.warn(`API host changed: ${lastHost} → ${currentHost}`);
       this.clearAuth();
       this.setLastKnownApiHost(currentHost);
       return true; // Changed
@@ -101,9 +105,9 @@ class AuthStore {
 
   // Subscribe to auth changes
   subscribe(callback) {
-    this.listeners.push(callback);
+    this.listeners.add(callback);
     return () => {
-      this.listeners = this.listeners.filter(cb => cb !== callback);
+      this.listeners.delete(callback);
     };
   }
 

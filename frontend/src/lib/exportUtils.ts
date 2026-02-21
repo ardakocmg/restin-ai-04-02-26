@@ -1,5 +1,6 @@
 import { toJpeg, toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
+import { logger } from '@/lib/logger';
 
 /**
  * Utility to export a DOM element to PDF or JPEG
@@ -8,7 +9,7 @@ import jsPDF from 'jspdf';
 export const exportToPdf = async (elementId, fileName = 'document.pdf') => {
     const element = document.getElementById(elementId);
     if (!element) {
-        console.error(`Element with id ${elementId} not found`);
+        logger.error(`Element with id ${elementId} not found`);
         return;
     }
 
@@ -27,14 +28,14 @@ export const exportToPdf = async (elementId, fileName = 'document.pdf') => {
         pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
         pdf.save(fileName);
     } catch (error: any) {
-        console.error('Error generating PDF:', error);
+        logger.error('Error generating PDF:', error);
     }
 };
 
 export const exportToJpeg = async (elementId, fileName = 'document.jpg') => {
     const element = document.getElementById(elementId);
     if (!element) {
-        console.error(`Element with id ${elementId} not found`);
+        logger.error(`Element with id ${elementId} not found`);
         return;
     }
 
@@ -50,13 +51,13 @@ export const exportToJpeg = async (elementId, fileName = 'document.jpg') => {
         link.href = dataUrl;
         link.click();
     } catch (error: any) {
-        console.error('Error generating JPEG:', error);
+        logger.error('Error generating JPEG:', error);
     }
 };
 
 export const exportToCsv = (data, fileName = 'export.csv') => {
     if (!data || !data.length) {
-        console.error('No data provided for CSV export');
+        logger.error('No data provided for CSV export');
         return;
     }
 

@@ -6,6 +6,7 @@ import DataTable from '../../components/shared/DataTable';
 import { Card, CardContent } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { AlertTriangle, TrendingUp } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 const RISK_COLORS = {
   low: 'bg-green-100 text-green-700',
@@ -29,7 +30,7 @@ export default function ReviewRisk() {
       const response = await api.get(`/venues/${activeVenue.id}/orders?risk=high`);
       setOrders(response.data || []);
     } catch (error: any) {
-      console.error('Failed to load risky orders:', error);
+      logger.error('Failed to load risky orders:', error);
     } finally {
       setLoading(false);
     }

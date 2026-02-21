@@ -12,16 +12,15 @@ import { cn } from '@/lib/utils';
  * Props `title`, `description`, and `actions` are kept in the signature
  * for backward compatibility but are no longer rendered.
  */
-export interface PageContainerProps {
+interface PageContainerProps {
+  subtitle?: string;
+  breadcrumb?: { label: string; href: string }[];
   children: React.ReactNode;
   className?: string;
   title?: string;
   description?: string;
-  subtitle?: string;
-  actions?: React.ReactNode;
   icon?: React.ReactNode;
-  breadcrumb?: Array<{ label: string; href?: string }>;
-  [key: string]: unknown; // Accept any extra props for backward compat
+  actions?: React.ReactNode;
 }
 
 export default function PageContainer({ children, className = '', title, description, actions }: PageContainerProps) {

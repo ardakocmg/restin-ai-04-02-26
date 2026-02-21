@@ -19,6 +19,7 @@ import {
   PauseCircle, AlertTriangle, Bell, Truck, Award, Wifi, WifiOff
 } from "lucide-react";
 import SyncService from '../../services/SyncService';
+import { logger } from '@/lib/logger';
 
 // Simulated hook for sync status
 const useSyncStatus = () => {
@@ -79,7 +80,7 @@ export default function KDSMain() {
       setTickets(response.data);
       setLastUpdate(new Date());
     } catch (error: any) {
-      console.error("Failed to load tickets:", error);
+      logger.error("Failed to load tickets:", error);
     } finally {
       setLoading(false);
     }
@@ -102,7 +103,7 @@ export default function KDSMain() {
       toast.success("Item started");
       await loadData();
     } catch (error: any) {
-      console.error("Failed to start item:", error);
+      logger.error("Failed to start item:", error);
       toast.error("Failed to start item");
     }
   };
@@ -113,7 +114,7 @@ export default function KDSMain() {
       toast.success("Item ready");
       await loadData();
     } catch (error: any) {
-      console.error("Failed to mark ready:", error);
+      logger.error("Failed to mark ready:", error);
       toast.error("Failed to mark ready");
     }
   };
@@ -127,7 +128,7 @@ export default function KDSMain() {
       toast.success("Item held");
       await loadData();
     } catch (error: any) {
-      console.error("Failed to hold item:", error);
+      logger.error("Failed to hold item:", error);
       toast.error("Failed to hold item");
     }
   };
@@ -138,7 +139,7 @@ export default function KDSMain() {
       toast.success("PASS approved");
       await loadData();
     } catch (error: any) {
-      console.error("Failed to approve:", error);
+      logger.error("Failed to approve:", error);
       toast.error("Failed to approve");
     }
   };
@@ -149,7 +150,7 @@ export default function KDSMain() {
       toast.success("Delivered to table");
       await loadData();
     } catch (error: any) {
-      console.error("Failed to deliver:", error);
+      logger.error("Failed to deliver:", error);
       toast.error(error.response?.data?.message || "Failed to deliver");
     }
   };
@@ -277,8 +278,8 @@ function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onD
     if (item.status === "PREPARING" && item.started_at) {
       const interval = setInterval(() => {
         const started = new Date(item.started_at);
-        const now = new Date();
-        const elapsedSeconds = Math.floor((now.getTime() - started.getTime()) / 1000);
+        const now = new Date().getTime();
+        const elapsedSeconds = Math.floor((now - started.getTime()) / 1000);
         setElapsed(elapsedSeconds);
 
         const target = item.target_prep_seconds || 900;

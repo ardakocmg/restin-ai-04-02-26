@@ -152,7 +152,7 @@ export default function HRMap() {
                 </svg>
 
                 {/* Markers */}
-                {markers.map((m: any, i: number) => (
+                {([] as any[]).map((m, i) => (
                     <div
                         key={m.id}
                         className="absolute cursor-pointer group"

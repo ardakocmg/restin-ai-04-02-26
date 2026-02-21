@@ -355,8 +355,6 @@ export default function SalesMixAnalysis() {
                     <DataTable
                         data={filtered}
                         columns={COLUMNS}
-                        enableGlobalSearch
-                        emptyMessage="0 items"
                     />
                 </>
             )}

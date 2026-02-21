@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Plus, Trash2, Search, Building2, Code, FileText, Loader2 } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
+import { logger } from '@/lib/logger';
 import {
     Dialog,
     DialogContent,
@@ -53,7 +54,7 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
             });
             setItems(response.data || []);
         } catch (error: any) {
-            console.error(`Failed to load ${type}:`, error);
+            logger.error(`Failed to load ${type}:`, error);
             toast.error(`Failed to load ${title}`);
         } finally {
             setLoading(false);
@@ -76,7 +77,7 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
             setFormData({ name: "", code: "", description: "" });
             loadData();
         } catch (error: any) {
-            console.error("Create failed:", error);
+            logger.error("Create failed:", error);
             toast.error(error.response?.data?.detail || "Failed to create item");
         } finally {
             setSubmitting(false);
@@ -94,7 +95,7 @@ export default function GenericSetupPage({ title, type, description, icon: Icon 
             toast.success("Item deleted");
             loadData();
         } catch (error: any) {
-            console.error("Delete failed:", error);
+            logger.error("Delete failed:", error);
             toast.error("Failed to delete item");
         }
     };

@@ -16,7 +16,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/ai/providers", tags=["AI Provider Setup"])
+router = APIRouter(prefix="/ai/seed", tags=["AI Provider Setup"])
 
 
 # Free providers that need NO API key (or have free tier with key)
@@ -94,8 +94,8 @@ async def seed_free_model_config(current_user: dict = Depends(get_current_user))
     db = get_database()
     now = datetime.now(timezone.utc).isoformat()
     user_id = current_user.get("id", "system")
-    results = {"system": False, "venues": [], "provider_info": FREE_PROVIDER_INFO}
-
+    venues_seeded_list = []
+    system_seeded = False
     # 1. Seed system-level config (applies to ALL venues via cascade)
     await db.ai_model_configs.update_one(
         {"level": "system", "level_id": ""},
@@ -109,7 +109,7 @@ async def seed_free_model_config(current_user: dict = Depends(get_current_user))
         },
         upsert=True,
     )
-    results["system"] = True
+    system_seeded = True
     logger.info("AI system config seeded with free models by %s", user_id)
 
     # 2. Find all existing venues and seed venue-level configs
@@ -138,16 +138,16 @@ async def seed_free_model_config(current_user: dict = Depends(get_current_user))
             {"$set": venue_config, "$setOnInsert": {"created_at": now}},
             upsert=True,
         )
-        results["venues"].append({"id": venue_id, "name": venue.get("name", ""), "status": "seeded"})
+        venues_seeded_list.append({"id": venue_id, "name": venue.get("name", ""), "status": "seeded"})
 
-    logger.info("AI config seeded for %d venues (free models only)", len(results["venues"]))
+    logger.info("AI config seeded for %d venues (free models only)", len(venues_seeded_list))
 
     return {
         "status": "success",
-        "message": f"Seeded system config + {len(results['venues'])} venues with FREE models ($0 cost)",
+        "message": f"Seeded system config + {len(venues_seeded_list)} venues with FREE models ($0 cost)",
         "system_config_applied": True,
-        "venues_seeded": len(results["venues"]),
-        "venues": results["venues"],
+        "venues_seeded": len(venues_seeded_list),
+        "venues": venues_seeded_list,
         "free_providers": list(FREE_PROVIDER_INFO.keys()),
         "how_to_connect": {
             provider: {

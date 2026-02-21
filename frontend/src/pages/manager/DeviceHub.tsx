@@ -8,6 +8,7 @@ import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Plus, Monitor } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 const TYPE_COLORS = {
   pos: 'bg-orange-100 text-orange-700',
@@ -37,7 +38,7 @@ export default function DeviceHub() {
       const response = await api.get(`/venues/${activeVenue.id}/devices`);
       setDevices(response.data);
     } catch (error: any) {
-      console.error('Failed to load devices:', error);
+      logger.error('Failed to load devices:', error);
     } finally {
       setLoading(false);
     }

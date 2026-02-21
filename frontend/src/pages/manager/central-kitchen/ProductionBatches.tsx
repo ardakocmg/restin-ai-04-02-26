@@ -4,6 +4,7 @@ import { Card, CardContent } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { Plus, Factory, X } from 'lucide-react';
 import api from '../../../lib/api';
+import { logger } from '@/lib/logger';
 
 export default function ProductionBatches() {
   const [batches, setBatches] = useState([]);
@@ -21,7 +22,7 @@ export default function ProductionBatches() {
       const response = await api.get(`/venues/${venueId}/production/batches`);
       setBatches(response.data || []);
     } catch (error: any) {
-      console.error('Failed to fetch batches:', error);
+      logger.error('Failed to fetch batches:', error);
       setBatches([]);
     } finally {
       setLoading(false);
@@ -35,7 +36,7 @@ export default function ProductionBatches() {
       setShowModal(false);
       fetchBatches();
     } catch (error: any) {
-      console.error('Failed to create batch:', error);
+      logger.error('Failed to create batch:', error);
     }
   };
 

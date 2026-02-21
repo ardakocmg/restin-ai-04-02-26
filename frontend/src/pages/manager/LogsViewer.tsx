@@ -10,6 +10,7 @@ import { Label } from '../../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { Badge } from '../../components/ui/badge';
 import { RefreshCw, Search } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 const LEVEL_COLORS = {
   ERROR: 'bg-red-100 text-red-700 border-red-200',
@@ -41,9 +42,9 @@ export default function LogsViewer() {
         q: filters.q || null,
         limit: 100
       });
-      setLogs((logsData as unknown as Record<string, unknown>).items as Array<Record<string, unknown>> || []);
+      setLogs((logsData as any)?.items || []);
     } catch (error: any) {
-      console.error('Failed to load logs:', error);
+      logger.error('Failed to load logs:', error);
       if (error.response?.status !== 403) {
         toast.error('Failed to load logs');
       }

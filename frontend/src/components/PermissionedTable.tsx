@@ -8,13 +8,20 @@ import api from "../lib/api";
 import { toast } from "sonner";
 import { Badge } from "./ui/badge";
 import { Loader2, AlertTriangle, ShieldOff } from "lucide-react";
+import { logger } from '@/lib/logger';
 
-export default function PermissionedTable({ 
-  venueId, 
-  tableKey, 
-  dataEndpoint, 
+export default function PermissionedTable({
+  venueId,
+  tableKey,
+  dataEndpoint,
   onRowClick,
-  className = "" 
+  className = ""
+}: {
+  venueId: string;
+  tableKey: string;
+  dataEndpoint?: string;
+  onRowClick?: (row: any) => void;
+  className?: string;
 }) {
   const [loading, setLoading] = useState(true);
   const [forbidden, setForbidden] = useState(false);
@@ -30,19 +37,24 @@ export default function PermissionedTable({
   const loadData = async () => {
     setLoading(true);
     setForbidden(false);
-    
+
     try {
       // Step 1: Fetch schema (server decides what columns are allowed)
       const schemaRes = await api.get(`/venues/${venueId}/ui/table-schema?table=${tableKey}`);
       setSchema(schemaRes.data);
 
-      // Step 2: Fetch data
-      const dataRes = await api.get(dataEndpoint);
-      setRows(dataRes.data.rows || []);
-      setMeta(dataRes.data.meta || {});
+      // Step 2: Fetch data if endpoint provided
+      if (dataEndpoint) {
+        const dataRes = await api.get(dataEndpoint);
+        setRows(dataRes.data.rows || []);
+        setMeta(dataRes.data.meta || {});
+      } else {
+        setRows([]);
+        setMeta({});
+      }
     } catch (error: any) {
-      console.error("PermissionedTable error:", error);
-      
+      logger.error("PermissionedTable error:", error);
+
       if (error.response?.status === 403) {
         setForbidden(true);
       } else {
@@ -63,21 +75,21 @@ export default function PermissionedTable({
 
   const sortedRows = [...rows].sort((a, b) => {
     if (!sortConfig.key) return 0;
-    
+
     const aVal = a[sortConfig.key];
     const bVal = b[sortConfig.key];
-    
+
     if (aVal === bVal) return 0;
     if (aVal == null) return 1;
     if (bVal == null) return -1;
-    
+
     const comparison = aVal > bVal ? 1 : -1;
     return sortConfig.direction === "asc" ? comparison : -comparison;
   });
 
   const formatValue = (value, type, currency = "EUR") => {
     if (value == null || value === "") return "-";
-    
+
     switch (type) {
       case "money":
         return `${currency === "EUR" ? "€" : "$"}${parseFloat(value).toFixed(2)}`;
@@ -172,7 +184,7 @@ export default function PermissionedTable({
           </tbody>
         </table>
       </div>
-      
+
       {/* Footer */}
       <div className="px-4 py-3 bg-secondary/50 border-t border-border text-xs text-muted-foreground">
         Showing {rows.length} {rows.length === 1 ? "row" : "rows"}

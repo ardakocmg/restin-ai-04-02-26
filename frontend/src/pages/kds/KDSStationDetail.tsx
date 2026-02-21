@@ -145,7 +145,7 @@ function KDSStationDetail() {
                   <label key={key} className="flex items-center gap-3">
                     <input
                       type="checkbox"
-                      checked={value as boolean}
+                      checked={Boolean(value)}
                       onChange={(e) => {
                         const newSettings = {
                           ticket_summary: {
@@ -173,7 +173,7 @@ function KDSStationDetail() {
                   <label key={key} className="flex items-center gap-3">
                     <input
                       type="checkbox"
-                      checked={value as boolean}
+                      checked={Boolean(value)}
                       disabled={['preparing', 'on_hold', 'completed'].includes(key)}
                       onChange={(e) => {
                         const newSettings = {

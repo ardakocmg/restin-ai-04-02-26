@@ -5,6 +5,7 @@ import { Badge } from '../../../components/ui/badge';
 import { Plus, X, Settings } from 'lucide-react';
 import api from '../../../lib/api';
 import { toast } from 'sonner';
+import { logger } from '@/lib/logger';
 
 export default function AutoOrderRules() {
   const [rules, setRules] = useState([]);
@@ -28,7 +29,7 @@ export default function AutoOrderRules() {
       const response = await api.get(`/venues/${venueId}/procurement/auto-order-rules`);
       setRules(response.data || []);
     } catch (error: any) {
-      console.error('Failed to fetch rules:', error);
+      logger.error('Failed to fetch rules:', error);
       setRules([]);
     } finally {
       setLoading(false);
@@ -42,7 +43,7 @@ export default function AutoOrderRules() {
       setShowModal(false);
       fetchRules();
     } catch (error: any) {
-      console.error('Failed to create rule:', error);
+      logger.error('Failed to create rule:', error);
       toast.error('Failed to create auto-order rule');
     }
   };
