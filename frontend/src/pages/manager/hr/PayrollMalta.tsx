@@ -17,7 +17,7 @@ import api from '../../../lib/api';
 import { logger } from '@/lib/logger';
 export default function PayrollMalta() {
   const { activeVenue } = useVenue();
-  const { user, isOwner: _isOwner, isManager: _isManager } = useAuth();
+  const { user, isOwner, isManager } = useAuth();
   const navigate = useNavigate();
   const { logAction } = useAuditLog();
 

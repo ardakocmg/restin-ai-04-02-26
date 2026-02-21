@@ -15,8 +15,9 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 
 export default function SFMAccounting() {
-  const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+  const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
+  useEffect(() => { logAction('SFM_ACCOUNTING_VIEWED', 'sfm_accounting'); }, []);
   const [view, setView] = useState('gl');
   const [accounts, setAccounts] = useState([]);
   const [ledger, setLedger] = useState([]);

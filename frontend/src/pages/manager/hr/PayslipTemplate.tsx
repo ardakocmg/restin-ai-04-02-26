@@ -14,7 +14,7 @@ import { Loader2 } from 'lucide-react';
 
 export default function PayslipTemplate() {
     const { runId, employeeCode } = useParams();
-    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+    const { user, isManager, isOwner } = useAuth();
     const { logAction } = useAuditLog();
     useEffect(() => {
         logAction('PAYSLIP_TEMPLATE_VIEWED', 'payslip-template');

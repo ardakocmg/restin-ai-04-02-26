@@ -31,7 +31,7 @@ import { radarService } from './radar-service';
  */
 export default function RadarDashboard() {
     const { activeVenueId } = useVenue();
-    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+    const { user, isManager, isOwner } = useAuth();
     const [region, _setRegion] = useState('Valletta');
 
     // Fetch Insights

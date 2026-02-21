@@ -13,8 +13,9 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 
 export default function PerformanceManagement() {
-  const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+  const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
+  useEffect(() => { logAction('PERFORMANCE_MANAGEMENT_VIEWED', 'performance_management'); }, []);
   const [view, setView] = useState('goals');
   const [goals, setGoals] = useState([]);
   const [reviews, setReviews] = useState([]);

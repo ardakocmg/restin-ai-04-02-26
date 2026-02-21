@@ -31,7 +31,7 @@ import { toast } from 'sonner';
 export default function PayrollRunDetail() {
     const { runId } = useParams();
     const navigate = useNavigate();
-    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+    const { user, isManager, isOwner } = useAuth();
     const { logAction } = useAuditLog();
     useEffect(() => {
         logAction('PAYROLL_RUN_VIEWED', 'payroll-run-detail');

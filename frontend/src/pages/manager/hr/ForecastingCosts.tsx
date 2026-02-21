@@ -13,7 +13,7 @@ import { TrendingUp } from 'lucide-react';
 import api from '@/lib/api';
 
 export default function ForecastingCosts() {
-  const { user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+  const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);

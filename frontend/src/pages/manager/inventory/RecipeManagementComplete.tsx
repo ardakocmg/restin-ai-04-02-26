@@ -76,7 +76,7 @@ function RecipeCheckboxFilter({ options, selected, onChange, maxVisible = 6 }) {
 
 export default function RecipeManagement() {
   const { activeVenue } = useVenue();
-  const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+  const { user, isManager, isOwner } = useAuth();
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
   const [items, setItems] = useState([]); // Inventory Items to pick from

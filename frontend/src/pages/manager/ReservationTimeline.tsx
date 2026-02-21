@@ -22,7 +22,7 @@ import { addDays,addHours,format,startOfDay } from 'date-fns';
 
 export default function ReservationTimeline() {
     const { activeVenue } = useVenue();
-    const { user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+    const { user, isManager, isOwner } = useAuth();
     const [viewDate, setViewDate] = useState(new Date());
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(true);

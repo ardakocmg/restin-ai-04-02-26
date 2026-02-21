@@ -31,7 +31,7 @@ import { studioService } from './studio-service';
  */
 export default function StudioDashboard() {
     const { activeVenueId } = useVenue();
-    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+    const { user, isManager, isOwner } = useAuth();
     const queryClient = useQueryClient();
     const [activeFilter, setActiveFilter] = useState('all');
 

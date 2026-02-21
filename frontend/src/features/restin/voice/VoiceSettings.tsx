@@ -359,7 +359,7 @@ function VapiConfigPanel({ venueId }: { venueId: string }) {
 /* ========== Main Settings Page ========== */
 export default function VoiceSettings() {
     const { activeVenueId } = useVenue();
-    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+    const { user, isManager, isOwner } = useAuth();
     const queryClient = useQueryClient();
     const fileInputRef = useRef(null);
     const navigate = useNavigate();

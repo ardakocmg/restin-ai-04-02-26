@@ -42,7 +42,7 @@ interface SectionItem {
 
 export default function WebBuilder() {
     const { activeVenueId } = useVenue();
-    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+    const { user, isManager, isOwner } = useAuth();
     const venueId = activeVenueId;
 
     const [device, setDevice] = useState<string>('desktop');

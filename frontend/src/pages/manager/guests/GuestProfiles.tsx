@@ -25,7 +25,7 @@ import { cn } from '../../../lib/utils';
  */
 export default function GuestProfiles() {
     const { activeVenue } = useVenue();
-    const { user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+    const { user, isManager, isOwner } = useAuth();
     const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const _queryClient = useQueryClient();
     const [search, setSearch] = useState('');

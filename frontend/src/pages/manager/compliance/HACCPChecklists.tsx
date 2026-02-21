@@ -28,7 +28,7 @@ import { cn } from '../../../lib/utils';
  */
 export default function HACCPChecklists() {
     const { activeVenue } = useVenue();
-    const { user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+    const { user, isManager, isOwner } = useAuth();
     const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
     const queryClient = useQueryClient();
     const [activeTab, setActiveTab] = useState('templates');

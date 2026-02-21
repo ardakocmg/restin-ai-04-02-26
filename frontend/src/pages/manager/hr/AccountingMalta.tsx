@@ -15,7 +15,8 @@ import { useAuditLog } from '@/hooks/useAuditLog';
 import { logger } from '@/lib/logger';
 export default function AccountingMalta() {
   const { activeVenue } = useVenue();
-  const { logAction: _logAction } = useAuditLog();
+  const { logAction } = useAuditLog();
+  useEffect(() => { logAction('ACCOUNTING_MALTA_VIEWED', 'accounting_malta'); }, []);
   const [loading, setLoading] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [target, setTarget] = useState('xero');

@@ -21,8 +21,8 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 
 export default function GovReportsPage() {
-    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
-    const { logAction: _logAction } = useAuditLog();
+    const { user, isManager, isOwner } = useAuth();
+    const { logAction } = useAuditLog();
     const [year, _setYear] = useState('2026');
     const [loading, setLoading] = useState(false);
     const [fs7Data, setFs7Data] = useState(null);
@@ -83,6 +83,7 @@ export default function GovReportsPage() {
             link.remove();
 
             toast.success(`${reportType} downloaded successfully`);
+            logAction('REPORT_DOWNLOADED', 'gov_report', reportType, { year });
         } catch (e: unknown) {
             logger.error('Download failed:', { error: String(e) });
             toast.error("Download failed");

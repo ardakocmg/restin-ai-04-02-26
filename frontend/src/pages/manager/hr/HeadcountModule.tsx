@@ -14,7 +14,7 @@ import api from '@/lib/api';
 
 export default function HeadcountModule() {
   const { activeVenueId: venueId } = useVenue();
-  const { user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+  const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);

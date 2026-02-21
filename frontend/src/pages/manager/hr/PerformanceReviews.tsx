@@ -43,8 +43,9 @@ interface StatusDataEntry {
 }
 
 export default function PerformanceReviews() {
-  const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+  const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
+  useEffect(() => { logAction('PERFORMANCE_REVIEWS_VIEWED', 'performance_reviews'); }, []);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all');

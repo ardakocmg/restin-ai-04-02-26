@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function ReservationModal({ open, onOpenChange, venueId, onCreated }) {
-    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+    const { user, isManager, isOwner } = useAuth();
     const { logAction } = useAuditLog();
     const [loading, setLoading] = useState(false);
     const [checking, setChecking] = useState(false);

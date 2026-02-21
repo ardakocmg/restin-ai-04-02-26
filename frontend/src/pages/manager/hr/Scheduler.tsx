@@ -83,7 +83,7 @@ interface ColumnFilters {
 }
 
 export default function Scheduler() {
-  const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+  const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
 
   useEffect(() => {
