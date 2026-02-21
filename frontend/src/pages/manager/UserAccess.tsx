@@ -68,7 +68,7 @@ export default function UserAccess() {
             // In real implementation we should have GET /users/{id}
             setUser({ id: userId, name: "User " + userId.substring(0, 4), status: "active" });
 
-        } catch (error: any) {
+        } catch (error) {
             logger.error("Failed to load access data:", error);
             toast.error("Failed to load user access data");
         } finally {
@@ -85,7 +85,7 @@ export default function UserAccess() {
             toast.success(shouldArchive ? 'User archived' : 'User restored');
             // Refresh user status logic here
             loadData();
-        } catch (error: any) {
+        } catch (error) {
             toast.error("Failed to change user status");
         }
     };
@@ -95,7 +95,7 @@ export default function UserAccess() {
             await api.post(`/manager/users/${userId}/context/reset`);
             toast.success("Active context reset");
             loadData();
-        } catch (error: any) {
+        } catch (error) {
             toast.error("Failed to reset context");
         }
     };

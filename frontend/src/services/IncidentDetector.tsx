@@ -89,7 +89,7 @@ class IncidentDetector {
                     });
                 }
             }
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Device health check failed', { error });
         }
     }
@@ -118,7 +118,7 @@ class IncidentDetector {
                     description: `${stuckJobs.length} print jobs pending for >10 minutes`
                 });
             }
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Printer queue check failed', { error });
         }
     }
@@ -148,7 +148,7 @@ class IncidentDetector {
                     description: `${lateTickets.length} tickets pending for >20 minutes`
                 });
             }
-        } catch (error: any) {
+        } catch (error) {
             logger.error('KDS backlog check failed', { error });
         }
     }
@@ -174,7 +174,7 @@ class IncidentDetector {
             setTimeout(() => {
                 this.deviceStates.delete(incidentKey);
             }, 30 * 60 * 1000);
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to create incident', { error });
         }
     }

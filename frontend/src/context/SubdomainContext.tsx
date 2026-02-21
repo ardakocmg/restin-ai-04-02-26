@@ -112,7 +112,7 @@ export function SubdomainProvider({ children }: SubdomainProviderProps): JSX.Ele
                 loading: false
             });
 
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to detect subdomain', { error });
             setContext(prev => ({ ...prev, loading: false }));
         }

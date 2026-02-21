@@ -22,7 +22,7 @@ export default function AutomationsPage() {
     try {
       const res = await api.get(`/automations/flows?venue_id=${activeVenue.id}`).catch(() => ({ data: { data: [] } }));
       setFlows(res.data?.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Automations error:', error);
     } finally {
       setLoading(false);

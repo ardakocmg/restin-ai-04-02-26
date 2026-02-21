@@ -123,7 +123,7 @@ class SyncService {
                         await offlineDB.logSync(command.id, 'SUCCESS', null);
                     }
                     successCount++;
-                } catch (error: any) {
+                } catch (error) {
                     const err = error as Error;
                     logger.error('Command replay failed', { requestId: command.request_id, error: err.message });
 
@@ -146,7 +146,7 @@ class SyncService {
             this.notifyListeners('sync_complete', { successCount, failCount });
 
             return { success: true, synced: successCount, failed: failCount };
-        } catch (error: any) {
+        } catch (error) {
             const err = error as Error;
             logger.error('Sync engine error', { error: err.message });
             return { success: false, error: err.message };

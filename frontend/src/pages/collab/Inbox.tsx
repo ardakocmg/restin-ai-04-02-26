@@ -31,7 +31,7 @@ export default function CollabInbox() {
     try {
       const res = await api.get(`/collab/inbox?venue_id=${activeVenue.id}&user_id=${user.id}`);
       setNotifications(res.data?.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Inbox error:', error);
     } finally {
       setLoading(false);
@@ -42,7 +42,7 @@ export default function CollabInbox() {
     try {
       await api.patch(`/collab/inbox/${notifId}/read`);
       setNotifications(prev => prev.map(n => n.id === notifId ? { ...n, status: 'READ' } : n));
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Mark read failed:', error);
     }
   };

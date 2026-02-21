@@ -55,7 +55,7 @@ export default function LoyaltyPage() {
             // Augment with mock data if empty
             const data = res.data?.data || [];
             setAccounts(data);
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Loyalty error:', error);
         } finally {
             setLoading(false);

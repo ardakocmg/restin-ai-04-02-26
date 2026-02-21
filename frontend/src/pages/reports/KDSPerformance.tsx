@@ -22,7 +22,7 @@ export default function KDSPerformance() {
     try {
       const res = await api.get('/kds/analytics', { params: { venue_id: activeVenue.id } });
       setData(res.data);
-    } catch (err: any) {
+    } catch (err) {
       logger.warn('KDS analytics API failed, using empty state');
       setData({
         metrics: { avg_prep_time: '0m 00s', throughput_per_hour: 0, active_stations: 0, delayed_orders: 0 },

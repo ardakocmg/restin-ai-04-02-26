@@ -22,7 +22,7 @@ export default function ConnectorsPage() {
     try {
       const res = await api.get(`/connectors?venue_id=${activeVenue.id}`).catch(() => ({ data: { data: [] } }));
       setConnectors(res.data?.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Connectors error:', error);
     } finally {
       setLoading(false);

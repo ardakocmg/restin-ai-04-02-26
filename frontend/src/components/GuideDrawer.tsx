@@ -64,7 +64,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
     try {
       const data = await GuideService.getGuideByEntity(entityType, entityId, guideKind);
       setGuide(data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load guide', { error, entityType, entityId });
       setGuide(null);
     } finally {

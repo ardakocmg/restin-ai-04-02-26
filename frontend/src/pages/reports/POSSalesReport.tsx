@@ -108,7 +108,7 @@ export default function POSSalesReport() {
 
       const response = await api.get('/reports/pos-sales', { params });
       setSalesData(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch POS report:', error);
       toast.error('Failed to load report data');
     } finally {

@@ -63,7 +63,7 @@ export default function StockTransfers() {
       setItems(itemsRes.data.items || []);
       setVenues(venuesRes.data.venues || []); // Adjust based on actual API response structure for venues
       // In a real implementation we would query the ledger
-    } catch (error: any) {
+    } catch (error) {
       logger.error(error);
       // toast.error('Failed to load data');
     } finally {
@@ -99,7 +99,7 @@ export default function StockTransfers() {
         date: new Date().toLocaleDateString()
       }, ...prev]);
 
-    } catch (error: any) {
+    } catch (error) {
       logger.error(error);
       toast.error(error.response?.data?.detail || 'Transfer failed');
     }

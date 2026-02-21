@@ -58,7 +58,7 @@ export default function BookingWidget() {
             });
             setSlots(res.data.slots);
             setStep(2);
-        } catch (error: any) {
+        } catch (error) {
             logger.error(error);
             toast.error("Could not find availability. Please try another date.");
         } finally {
@@ -87,7 +87,7 @@ export default function BookingWidget() {
             setConfirmedRes(res.data);
             setStep(4);
             toast.success("Reservation Confirmed!");
-        } catch (error: any) {
+        } catch (error) {
             logger.error(error);
             toast.error("Booking failed. Please try again.");
         } finally {

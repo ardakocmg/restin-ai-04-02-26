@@ -29,7 +29,7 @@ export default function PerformanceManagement() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/hr/goals`);
       setGoals(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch goals:', error);
     }
   };
@@ -39,7 +39,7 @@ export default function PerformanceManagement() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/hr/reviews`);
       setReviews(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch reviews:', error);
     }
   };

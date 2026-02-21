@@ -21,7 +21,7 @@ export default function InvoiceList() {
       const status = filter !== 'all' ? filter : undefined;
       const response = await api.get(`/venues/${venueId}/invoices/ai`, { params: { status } });
       setInvoices(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch invoices:', error);
       setInvoices([]);
     } finally {

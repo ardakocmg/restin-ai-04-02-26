@@ -43,7 +43,7 @@ export default function RecipeManagementComplete() {
       if (!user?.venueId) return;
       const response = await api.get(`/venues/${user.venueId}/recipes/engineered`);
       setRecipes(response.data.items || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load recipes:', error);
       toast.error('Failed to load recipes');
     } finally {
@@ -75,7 +75,7 @@ export default function RecipeManagementComplete() {
       setShowDialog(false);
       setEditingRecipe(null);
       loadRecipes();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to save recipe:', error);
       toast.error('Failed to save recipe');
     }

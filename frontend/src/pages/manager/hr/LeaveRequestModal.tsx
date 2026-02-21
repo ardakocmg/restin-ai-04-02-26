@@ -42,7 +42,7 @@ export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
         try {
             const res = await api.get('/hr/leave/types');
             setLeaveTypes(res.data);
-        } catch (error: any) {
+        } catch (error) {
             logger.error("Failed to fetch leave types", error);
             toast.error("Could not load leave types");
         }
@@ -69,7 +69,7 @@ export default function LeaveRequestModal({ open, onOpenChange, onSuccess }) {
             onSuccess();
             onOpenChange(false);
             setFormData({ leave_type_id: '', start_date: '', end_date: '', hours: 8, reason: '' });
-        } catch (error: any) {
+        } catch (error) {
             logger.error(error);
             toast.error("Failed to submit request");
         } finally {

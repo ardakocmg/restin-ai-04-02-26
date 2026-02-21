@@ -57,7 +57,7 @@ export default function HRCalendarPage() {
             setEvents(evRes.data || []);
             const upData = upRes.data;
             setUpcoming(upData?.alerts || upData || []);
-        } catch (e: any) { logger.error('Failed to fetch calendar events:', e); }
+        } catch (e) { logger.error('Failed to fetch calendar events:', e); }
         setLoading(false);
     }, [venueId, month, year]);
 
@@ -69,7 +69,7 @@ export default function HRCalendarPage() {
             setShowNewEvent(false);
             setNewEvent({ title: '', date: '', event_type: 'custom', description: '' });
             fetchEvents();
-        } catch (e: any) { logger.error('Failed to create event:', e); }
+        } catch (e) { logger.error('Failed to create event:', e); }
     };
 
     const prevMonth = () => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); };

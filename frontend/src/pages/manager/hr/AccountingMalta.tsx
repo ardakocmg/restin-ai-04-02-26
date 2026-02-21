@@ -31,7 +31,7 @@ export default function AccountingMalta() {
     try {
       const res = await api.get('/accounting/exports', { params: { venue_id: activeVenue.id } });
       setHistory(Array.isArray(res.data) ? res.data : res.data.exports || []);
-    } catch (err: any) {
+    } catch (err) {
       logger.warn('Failed to load accounting exports');
     } finally {
       setHistoryLoading(false);
@@ -49,7 +49,7 @@ export default function AccountingMalta() {
       toast.success(`${target.toUpperCase()} Export generated successfully`);
       // Reload history to show the new export
       loadHistory();
-    } catch (e: any) {
+    } catch (e) {
       logger.error(e);
       toast.error("Export failed");
     } finally {

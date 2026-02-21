@@ -84,7 +84,7 @@ class EdgeGatewayClient {
                 try {
                     const data = JSON.parse(event.data) as EdgeMessage;
                     this.handleMessage(data);
-                } catch (error: any) {
+                } catch (error) {
                     const err = error as Error;
                     logger.error('WebSocket message parse error', { error: err.message });
                 }
@@ -103,7 +103,7 @@ class EdgeGatewayClient {
                     this.connectWebSocket();
                 }, 5000);
             };
-        } catch (error: any) {
+        } catch (error) {
             const err = error as Error;
             logger.error('WebSocket connection failed', { error: err.message });
         }
@@ -207,7 +207,7 @@ class EdgeGatewayClient {
                 device_id: this.deviceId,
             });
             return response.data;
-        } catch (error: any) {
+        } catch (error) {
             const err = error as Error;
             logger.error('Failed to queue via Edge', { error: err.message });
             throw error;
@@ -227,7 +227,7 @@ class EdgeGatewayClient {
         try {
             const response = await axios.post(`${this.edgeUrl}/api/queue/sync`);
             return response.data;
-        } catch (error: any) {
+        } catch (error) {
             const err = error as Error;
             logger.error('Sync failed', { error: err.message });
             return null;

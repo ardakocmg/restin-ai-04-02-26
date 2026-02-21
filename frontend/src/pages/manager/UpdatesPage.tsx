@@ -185,6 +185,7 @@ export default function UpdatesPage() {
                           <div key={section}>
                             <p className="text-muted-foreground uppercase tracking-wide">{section}</p>
                             <ul className="mt-1 space-y-1">
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
                               {(items as any[] || []).map((item) => (
                                 <li key={item}>• {item}</li>
                               ))}

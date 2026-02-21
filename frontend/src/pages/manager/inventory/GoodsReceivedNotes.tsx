@@ -284,6 +284,7 @@ export default function GoodsReceivedNotes() {
             });
             loadAll();
         } catch (err: unknown) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             logger.error('Failed to create GRN', err as any);
             toast.error('Failed to create GRN');
         } finally {
@@ -297,6 +298,7 @@ export default function GoodsReceivedNotes() {
             toast.success('GRN posted to ledger');
             loadAll();
         } catch (err: unknown) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             logger.error('Failed to post GRN', err as any);
             toast.error('Failed to post GRN');
         }

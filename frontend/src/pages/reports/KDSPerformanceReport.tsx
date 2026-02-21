@@ -45,7 +45,7 @@ export default function KDSPerformanceReport() {
         avgTime: s.avg_time || 0,
         status: s.status || 'good'
       })));
-    } catch (err: any) {
+    } catch (err) {
       logger.warn('KDS analytics failed');
       setMetrics({ avg_prep_time: '0m', total_tickets: 0, peak_time: 'N/A', delayed_orders: 0, peak_tickets: 0, delay_rate: 0 });
     } finally {

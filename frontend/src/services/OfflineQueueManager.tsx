@@ -53,7 +53,7 @@ class OfflineQueueManager {
                 idempotencyKey
             });
             return idempotencyKey;
-        } catch (error: any) {
+        } catch (error) {
             const err = error as Error;
             logger.error('Failed to enqueue', { error: err.message });
             throw error;

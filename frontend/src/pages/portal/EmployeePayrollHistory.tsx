@@ -63,7 +63,7 @@ export default function EmployeePayrollHistory() {
             setSkillsPass(data.skills_pass?.[0] || null);
             setContracts(data.contracts || []);
             setExitDocs(data.exit_documents || []);
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to fetch employee documents:', error);
             setPayslips([]);
             setFs3s([]);

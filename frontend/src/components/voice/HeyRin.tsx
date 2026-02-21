@@ -446,6 +446,7 @@ export default function HeyRin() {
         const SR = (window as Record<string, any>).SpeechRecognition || (window as Record<string, any>).webkitSpeechRecognition;
         if (!SR) return;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const recognition = new (SR as { new(): any })();
         recognition.lang = lang;
         recognition.interimResults = true;

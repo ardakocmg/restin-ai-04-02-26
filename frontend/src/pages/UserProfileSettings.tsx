@@ -72,7 +72,7 @@ export default function UserProfileSettings() {
       await api.patch(`/users/${user.id}/profile`, profileForm);
       setMessage({ type: 'success', text: 'Profile updated successfully.' });
       clearMessage();
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Profile save failed', err);
       setMessage({ type: 'error', text: 'Failed to update profile.' });
       clearMessage();
@@ -120,7 +120,7 @@ export default function UserProfileSettings() {
         setMessage({ type: 'error', text: result.error || 'Failed to enable 2FA' });
         clearMessage();
       }
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Enable 2FA failed', err);
       setMessage({ type: 'error', text: 'Failed to start 2FA setup' });
       clearMessage();
@@ -139,7 +139,7 @@ export default function UserProfileSettings() {
         setMessage({ type: 'error', text: result.error || 'Invalid code' });
         clearMessage();
       }
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Verify 2FA failed', err);
     }
   };
@@ -154,7 +154,7 @@ export default function UserProfileSettings() {
         setMessage({ type: 'error', text: result.error || 'Failed to disable 2FA' });
         clearMessage();
       }
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Disable 2FA failed', err);
     }
   };
@@ -191,7 +191,7 @@ export default function UserProfileSettings() {
       setMessage({ type: 'success', text: 'PIN updated successfully.' });
       setPinForm({ currentPin: '', newPin: '', confirmPin: '' });
       clearMessage();
-    } catch (err: any) {
+    } catch (err) {
       logger.error('PIN change failed', err);
       setMessage({ type: 'error', text: err?.response?.data?.detail || 'Failed to change PIN.' });
       clearMessage();
@@ -218,7 +218,7 @@ export default function UserProfileSettings() {
       setPwCurrent(''); setPwNew(''); setPwConfirm('');
       await refreshSettings();
       clearMessage();
-    } catch (err: any) {
+    } catch (err) {
       const msg = err?.response?.data?.detail || 'Failed to set password.';
       setMessage({ type: 'error', text: msg }); clearMessage();
     } finally {
@@ -262,7 +262,7 @@ export default function UserProfileSettings() {
       setShifts(shiftsRes.data || []);
       setTips(tipsRes.data || []);
       setPayslips(docsData.filter(d => d.category === 'payslip'));
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load employee data:', error);
     } finally {
       setEmployeeLoading(false);

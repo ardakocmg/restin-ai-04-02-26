@@ -39,7 +39,7 @@ export default function Reservations() {
     try {
       const response = await api.get(`/venues/${activeVenue.id}/reservations`);
       setReservations(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load reservations:', error);
     } finally {
       setLoading(false);
@@ -50,7 +50,7 @@ export default function Reservations() {
     try {
       const res = await api.get(`/reservations/analytics/summary?venue_id=${activeVenue.id}`);
       setAnalytics(res.data);
-    } catch (e: any) { logger.error(e); }
+    } catch (e) { logger.error(e); }
   };
 
   const updateStatus = async (id, status) => {
@@ -59,7 +59,7 @@ export default function Reservations() {
       toast.success(`Reservation marked as ${status}`);
       loadReservations();
       loadAnalytics();
-    } catch (e: any) {
+    } catch (e) {
       toast.error("Failed to update status");
     }
   };

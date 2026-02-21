@@ -54,7 +54,7 @@ export default function BillingDashboard() {
         try {
             const res = await api.get(`/billing/current?venue_id=${venueId}`);
             setInvoice(res.data);
-        } catch (error: any) {
+        } catch (error) {
             logger.error("Failed to fetch billing", { error });
             // toast.error("Could not load billing data");
         } finally {
@@ -68,7 +68,7 @@ export default function BillingDashboard() {
             await api.post(`/billing/modules?venue_id=${venueId}&module=${key}&enabled=${enabled}`);
             toast.success(`${moduleName} ${enabled ? 'enabled' : 'disabled'}`);
             fetchBilling(); // Refresh estimates
-        } catch (error: any) {
+        } catch (error) {
             toast.error("Failed to update module");
         } finally {
             setToggling(null);

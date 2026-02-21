@@ -35,7 +35,7 @@ export default function TestPanel() {
       setRunsLoading(true);
       const response = await api.get('/observability/testpanel/runs', { params: { venue_id: venueId } });
       setRuns(response.data.runs || []);
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Failed to load test runs');
     } finally {
       setRunsLoading(false);
@@ -54,7 +54,7 @@ export default function TestPanel() {
       setSelectedRunId(response.data.run?.id || null);
       loadRuns();
       toast.success('Test executed');
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Test failed');
       setResult({
         display_id: 'ERROR',
@@ -86,7 +86,7 @@ export default function TestPanel() {
     if (!payload) return '';
     try {
       return JSON.stringify(payload, null, 2);
-    } catch (error: any) {
+    } catch (error) {
       return String(payload);
     }
   };

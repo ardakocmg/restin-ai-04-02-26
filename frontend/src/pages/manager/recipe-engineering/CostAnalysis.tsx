@@ -18,7 +18,7 @@ export default function CostAnalysis() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/recipes/engineered/analytics/profitability`);
       setAnalysis(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch analysis:', error);
       setAnalysis([]);
     } finally {

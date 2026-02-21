@@ -28,7 +28,7 @@ export default function AutoOrderRules() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/procurement/auto-order-rules`);
       setRules(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch rules:', error);
       setRules([]);
     } finally {
@@ -42,7 +42,7 @@ export default function AutoOrderRules() {
       await api.post(`/venues/${venueId}/procurement/auto-order-rules`, formData);
       setShowModal(false);
       fetchRules();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to create rule:', error);
       toast.error('Failed to create auto-order rule');
     }

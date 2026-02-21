@@ -23,7 +23,7 @@ export default function BridgeTab() {
         try {
             const resp = await api.get(`/access-control/bridge/health?venue_id=${getVenueId()}`);
             if (resp.status === 200) setHealth(resp.data);
-        } catch (e: any) {
+        } catch (e) {
             logger.error('Bridge health check failed', { error: String(e) });
         }
     };
@@ -42,7 +42,7 @@ export default function BridgeTab() {
             } else {
                 toast.error('Configuration failed');
             }
-        } catch (e: any) {
+        } catch (e) {
             toast.error('Bridge configuration error');
             logger.error('Bridge config failed', { error: String(e) });
         } finally {

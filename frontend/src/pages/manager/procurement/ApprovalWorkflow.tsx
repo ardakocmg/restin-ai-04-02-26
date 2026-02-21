@@ -28,7 +28,7 @@ export default function ApprovalWorkflow() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/procurement/approval-rules`);
       setRules(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch rules:', error);
       setRules([]);
     } finally {
@@ -43,7 +43,7 @@ export default function ApprovalWorkflow() {
       setShowModal(false);
       resetForm();
       fetchRules();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to create rule:', error);
       toast.error('Failed to create approval rule');
     }

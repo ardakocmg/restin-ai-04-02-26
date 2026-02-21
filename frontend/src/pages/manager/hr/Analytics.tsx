@@ -34,7 +34,7 @@ export default function AnalyticsPage() {
     try {
       const response = await api.get(`/hr/analytics?venue_id=${venueId}`);
       setAnalytics(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to load analytics:", error);
       if (error.response?.status !== 403) {
         toast.error("Failed to load analytics");

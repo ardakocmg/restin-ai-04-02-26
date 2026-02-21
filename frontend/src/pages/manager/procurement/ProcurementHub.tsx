@@ -27,7 +27,7 @@ export default function ProcurementHub() {
     try {
       const venueId = localStorage.getItem('currentVenueId');
       setStats({ rfqs: 12, pending: 3, approved: 8, suppliers: 24 });
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch stats:', error);
     } finally {
       setLoading(false);

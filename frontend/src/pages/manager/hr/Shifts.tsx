@@ -62,7 +62,7 @@ export default function ShiftsPage() {
       const response = await api.get(`/hr/shifts?venue_id=${venueId}`);
       const data = Array.isArray(response.data) ? response.data : (response.data?.shifts || []);
       setShifts(data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to load shifts:", error);
       if (error.response?.status !== 403) {
         toast.error("Failed to load shifts");
@@ -91,7 +91,7 @@ export default function ShiftsPage() {
       await api.post(`/hr/shifts/${shiftId}/clock-in`);
       toast.success("Clocked in");
       await loadShifts();
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Failed to clock in");
     }
   };
@@ -101,7 +101,7 @@ export default function ShiftsPage() {
       await api.post(`/hr/shifts/${shiftId}/clock-out`);
       toast.success("Clocked out");
       await loadShifts();
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Failed to clock out");
     }
   };

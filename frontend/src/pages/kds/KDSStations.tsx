@@ -28,7 +28,7 @@ function KDSStations() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setStations(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching stations:', error);
     } finally {
       setLoading(false);
@@ -44,7 +44,7 @@ function KDSStations() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       fetchStations();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error toggling station:', error);
     }
   };

@@ -71,7 +71,7 @@ export default function SystemDashboard() {
                 details: typeof log.meta === 'object' ? JSON.stringify(log.meta) : (log.details || log.message || ''),
                 time: log.created_at ? new Date(log.created_at) : new Date()
             })));
-        } catch (error: any) {
+        } catch (error) {
             logger.warn("Dashboard load failed, using defaults");
             setStats({ revenue: 0, activeOrders: 0, onlineDevices: 0, syncHealth: '100%' });
             setLogs([]);

@@ -38,7 +38,7 @@ export default function Documents() {
     try {
       const response = await api.get(`/hr/documents?venue_id=${venueId}`);
       setDocuments(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to load documents:", error);
       if (error.response?.status !== 403) {
         toast.error("Failed to load documents");

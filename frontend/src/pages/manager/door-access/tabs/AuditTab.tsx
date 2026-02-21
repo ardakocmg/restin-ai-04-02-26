@@ -19,7 +19,7 @@ export default function AuditTab() {
         try {
             const resp = await api.get(`/access-control/audit-logs?venue_id=${getVenueId()}&limit=200`);
             if (resp.status === 200) setEntries(resp.data);
-        } catch (e: any) {
+        } catch (e) {
             logger.error('Audit load failed', { error: String(e) });
         } finally { setLoading(false); }
     };

@@ -49,7 +49,7 @@ export default function MicroservicesPage() {
       setEventBusRunning(statusRes.data.event_bus_running || false);
       setOutboxEvents(outboxRes.data.events || []);
       setDlqEvents(dlqRes.data.events || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load service data:', error);
     } finally {
       setLoading(false);

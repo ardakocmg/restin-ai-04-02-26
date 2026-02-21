@@ -272,7 +272,7 @@ export default function InventoryDashboard() {
                     unit: String(i.unit || 'EA'),
                 }));
             setNegativeStockItems(negItems);
-        } catch (err: any) {
+        } catch (err) {
             logger.error('Dashboard load failed', { error: String(err) });
             // Use demo stats
             setStats({

@@ -26,7 +26,7 @@ export default function FloorPlans() {
     try {
       const response = await api.get(`/venues/${activeVenue.id}/floor-plans`);
       setFloorPlans(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load floor plans:', error);
     } finally {
       setLoading(false);

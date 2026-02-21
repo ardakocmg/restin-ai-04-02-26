@@ -14,7 +14,7 @@ export const POSService = {
             await axios.post(`${API_URL}/orders`, order);
             toast.success("Order send to Kitchen!");
             return true;
-        } catch (error: any) {
+        } catch (error) {
             logger.warn('API Offline, queuing order locally');
 
             // 2. Fallback to IndexedDB queue
@@ -34,7 +34,7 @@ export const POSService = {
         try {
             const response = await axios.get(`${API_URL}/orders?venue_id=${venueId}`);
             return response.data;
-        } catch (e: any) {
+        } catch (e) {
             logger.error('KDS Offline');
             return [];
         }
@@ -57,7 +57,7 @@ export const POSService = {
 
                 // Remove from queue on success
                 await db.delete('orders_queue', order.id);
-            } catch (e: any) {
+            } catch (e) {
                 logger.error('Sync failed for order', { orderId: order.id });
             }
         }

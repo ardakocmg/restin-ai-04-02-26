@@ -29,7 +29,7 @@ export default function ReviewRisk() {
     try {
       const response = await api.get(`/venues/${activeVenue.id}/orders?risk=high`);
       setOrders(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load risky orders:', error);
     } finally {
       setLoading(false);

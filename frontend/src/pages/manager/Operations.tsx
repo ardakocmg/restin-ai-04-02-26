@@ -33,7 +33,7 @@ export default function Operations() {
       const ops = response.data.settings?.ops || {};
       setSettings(ops);
       setComplimentaryItems(ops.complimentary_items || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load settings:', error);
     } finally {
       setLoading(false);
@@ -46,7 +46,7 @@ export default function Operations() {
         ops: { ...settings, complimentary_items: complimentaryItems }
       });
       toast.success('Settings saved');
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Failed to save settings');
     }
   };

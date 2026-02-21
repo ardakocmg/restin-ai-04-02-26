@@ -79,7 +79,7 @@ export default function ThemeEngineSettings() {
                     setLastUpdated(res.data.updated_at || null);
                     setUpdatedBy(res.data.updated_by || null);
                 }
-            } catch (error: any) {
+            } catch (error) {
                 logger.error("Failed to fetch theme engine status", error);
             } finally {
                 setEngineLoading(false);
@@ -126,7 +126,7 @@ export default function ThemeEngineSettings() {
                 setLastUpdated(res.data.updated_at || null);
                 setUpdatedBy(res.data.updated_by || null);
             }
-        } catch (error: any) {
+        } catch (error) {
             toast.error('Failed to save theme settings');
         } finally {
             setEngineSaving(false);
@@ -462,11 +462,13 @@ export default function ThemeEngineSettings() {
                                                 <div className="flex gap-2 mt-1">
                                                     <Input
                                                         type="color"
+                                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                                         value={(customThemeObj as any)[field.key]}
                                                         onChange={(e) => setCustomThemeObj({ ...customThemeObj, [field.key]: e.target.value })}
                                                         className="w-16 h-10 p-1 cursor-pointer bg-secondary"
                                                     />
                                                     <Input
+                                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                                         value={(customThemeObj as any)[field.key]}
                                                         onChange={(e) => setCustomThemeObj({ ...customThemeObj, [field.key]: e.target.value })}
                                                         className="bg-secondary font-mono"

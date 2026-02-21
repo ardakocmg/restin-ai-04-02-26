@@ -234,7 +234,7 @@ export default function MarketingLanding() {
           });
           setIsPreview(!!previewId);
         }
-      } catch (error: any) {
+      } catch (error) {
         logger.warn('Marketing content fallback used');
       }
     };

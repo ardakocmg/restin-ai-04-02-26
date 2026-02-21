@@ -25,7 +25,7 @@ export default function SelfDiagnostics() {
       setRunning(true);
       const res = await api.post(`/system/diagnostics/run?venue_id=${activeVenue.id}`);
       setReport(res.data?.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Diagnostics error:', error);
     } finally {
       setRunning(false);

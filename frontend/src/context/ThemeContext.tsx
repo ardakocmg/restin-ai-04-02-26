@@ -249,7 +249,7 @@ export function ThemeProvider({ children }: ThemeProviderProps): JSX.Element {
                         // Let the normal mode (light/dark/system) dictate the base classes
                     }
                 }
-            } catch (err: any) {
+            } catch (err) {
                 logger.warn('Failed to load global AI theme engine setting', { err });
             }
 
@@ -270,7 +270,7 @@ export function ThemeProvider({ children }: ThemeProviderProps): JSX.Element {
                     setCurrentTheme(themeSettings.custom);
                 }
             }
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to load theme', { error });
         } finally {
             setLoading(false);
@@ -314,7 +314,7 @@ export function ThemeProvider({ children }: ThemeProviderProps): JSX.Element {
             applyTheme(theme);
 
             return true;
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to save theme', { error });
             return false;
         }

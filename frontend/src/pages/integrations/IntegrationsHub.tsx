@@ -187,7 +187,7 @@ export default function IntegrationsHub() {
     try {
       const response = await api.get(`/venues/${activeVenue.id}/integrations`);
       setIntegrations(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load integrations:', error);
       // Initialize with empty data
       setIntegrations([]);
@@ -224,7 +224,7 @@ export default function IntegrationsHub() {
       toast.success(`${selectedIntegration.name} configured successfully`);
       setConfigOpen(false);
       loadIntegrations();
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Failed to save configuration');
       logger.error(error);
     } finally {
@@ -237,7 +237,7 @@ export default function IntegrationsHub() {
       await api.patch(`/venues/${activeVenue.id}/integrations/${key}`, { enabled });
       toast.success(enabled ? 'Integration enabled' : 'Integration disabled');
       loadIntegrations();
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Failed to toggle integration');
     }
   };

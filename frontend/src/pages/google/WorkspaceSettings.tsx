@@ -138,7 +138,7 @@ export default function WorkspaceSettings() {
             setEvents(eventsRes.data?.data || []);
             setAnalytics(analyticsRes.data?.data || []);
 
-        } catch (err: any) {
+        } catch (err) {
             logger.error('Failed to load settings', { error: err });
             // toast.error('Failed to load settings'); // Suppress to avoid spamming on partial loads
         } finally {
@@ -161,7 +161,7 @@ export default function WorkspaceSettings() {
             });
             setConfig({ ...config, [field]: value });
             toast.success(`SSO ${field === 'sso_enabled' ? (value ? 'enabled' : 'disabled') : (value ? 'enforced' : 'relaxed')}`);
-        } catch (err: any) {
+        } catch (err) {
             logger.error('SSO toggle failed', { error: err });
             toast.error('Failed to update SSO settings');
         } finally {
@@ -178,7 +178,7 @@ export default function WorkspaceSettings() {
                 allowed_login_domains: config.allowed_login_domains
             });
             toast.success("Group domains updated successfully");
-        } catch (err: any) {
+        } catch (err) {
             toast.error('Failed to sync group domains');
         } finally {
             setSaving(false);
@@ -203,7 +203,7 @@ export default function WorkspaceSettings() {
             setNewCustomerId('');
             setShowAddDomain(false);
             await loadConfig();
-        } catch (err: any) {
+        } catch (err) {
             toast.error('Failed to add domain');
         } finally {
             setSaving(false);
@@ -216,7 +216,7 @@ export default function WorkspaceSettings() {
             await api.delete(`/workspace/domains/${domain}?venue_id=${venueId}`);
             toast.success(`Domain ${domain} removed`);
             await loadConfig();
-        } catch (err: any) {
+        } catch (err) {
             toast.error('Failed to remove domain');
         }
     };
@@ -230,7 +230,7 @@ export default function WorkspaceSettings() {
             } else {
                 toast.error(`Connection failed: ${res.data.message}`);
             }
-        } catch (err: any) {
+        } catch (err) {
             toast.error('Test failed');
         } finally {
             setTestingDomain(null);
@@ -242,7 +242,7 @@ export default function WorkspaceSettings() {
             await api.post(`/google/connect?venue_id=${venueId}`);
             await loadConfig();
             toast.success("Google Account Connected");
-        } catch (err: any) {
+        } catch (err) {
             toast.error("Failed to connect Google");
         }
     };
@@ -256,7 +256,7 @@ export default function WorkspaceSettings() {
             // Refresh reviews
             const reviewsRes = await api.get(`/google/reviews?venue_id=${venueId}`);
             setReviews(reviewsRes.data?.data || []);
-        } catch (error: any) {
+        } catch (error) {
             toast.error('Failed to save reply');
         }
     };

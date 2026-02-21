@@ -42,8 +42,9 @@ export default function LogsViewer() {
         q: filters.q || null,
         limit: 100
       });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setLogs((logsData as any)?.items || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load logs:', error);
       if (error.response?.status !== 403) {
         toast.error('Failed to load logs');

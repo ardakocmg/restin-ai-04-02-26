@@ -27,7 +27,7 @@ export const exportToPdf = async (elementId, fileName = 'document.pdf') => {
 
         pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
         pdf.save(fileName);
-    } catch (error: any) {
+    } catch (error) {
         logger.error('Error generating PDF:', error);
     }
 };
@@ -50,7 +50,7 @@ export const exportToJpeg = async (elementId, fileName = 'document.jpg') => {
         link.download = fileName;
         link.href = dataUrl;
         link.click();
-    } catch (error: any) {
+    } catch (error) {
         logger.error('Error generating JPEG:', error);
     }
 };

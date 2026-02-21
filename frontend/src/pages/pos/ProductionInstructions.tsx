@@ -189,6 +189,7 @@ const ProductionInstructions: React.FC = () => {
                     <div style={{ display: 'flex', gap: 14, marginBottom: 16 }}>
                         {['required', 'printOnKDS', 'printOnTicket'].map(k => (
                             <label key={k} style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 <input type="checkbox" checked={(editingGroup as any)[k] as boolean} onChange={() => setEditingGroup(p => p ? { ...p, [k]: !(p as any)[k] } : null)} />
                                 {k === 'printOnKDS' ? 'Print KDS' : k === 'printOnTicket' ? 'Print Ticket' : 'Required'}
                             </label>

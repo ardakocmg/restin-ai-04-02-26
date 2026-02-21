@@ -41,7 +41,7 @@ export default function DeliveryAggregators() {
       setDeliveryOrders(ordersRes.data?.data || []);
       setCapabilities(capRes.data?.data || []);
       setMenuMappings(mapRes.data?.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Delivery error:', error);
     } finally {
       setLoading(false);

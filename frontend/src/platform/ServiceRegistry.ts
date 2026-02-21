@@ -41,7 +41,7 @@ class ServiceRegistry {
   }
 
   async initAll(): Promise<void> {
-    for (const [name] of this.services) {
+    for (const [name] of Array.from(this.services.entries())) {
       await this.init(name);
     }
   }

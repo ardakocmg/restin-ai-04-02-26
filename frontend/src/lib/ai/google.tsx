@@ -50,7 +50,7 @@ export const generateText = async (
         const result = await model.generateContent(prompt);
         const response = await result.response;
         return response.text();
-    } catch (error: any) {
+    } catch (error) {
         logger.error(`Vertex AI Error (${modelName})`, { error });
         throw error;
     }
@@ -71,7 +71,7 @@ export const identifyImage = async (
 
         const result = await model.generateContent([prompt, base64Data]);
         return result.response.text();
-    } catch (error: any) {
+    } catch (error) {
         logger.error("Vertex Image Analysis Error", { error });
         throw error;
     }

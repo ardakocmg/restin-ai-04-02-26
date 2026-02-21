@@ -48,7 +48,7 @@ export class MenuSyncEngine {
             const response = await AiServiceFactory.promptWithGrounding(prompt, 'GEMINI_FLASH');
             const metadata = JSON.parse(response);
             return metadata;
-        } catch (error: any) {
+        } catch (error) {
             logger.error('[Pillar 2] AI SEO failed', { error });
             return {
                 title: `${productName} - Freshly Made at Restin`,

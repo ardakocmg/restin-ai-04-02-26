@@ -32,7 +32,7 @@ export default function Documents() {
     try {
       const response = await api.get(`/venues/${activeVenue.id}/documents`);
       setDocuments(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load documents:', error);
     } finally {
       setLoading(false);

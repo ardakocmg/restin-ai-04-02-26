@@ -24,7 +24,7 @@ export default function StockAdjustments() {
     try {
       const res = await api.get('/inventory/adjustments', { params: { venue_id: activeVenue.id } });
       setAdjustments(Array.isArray(res.data) ? res.data : res.data.adjustments || []);
-    } catch (err: any) {
+    } catch (err) {
       logger.warn('Failed to load stock adjustments');
       setAdjustments([]);
     } finally {

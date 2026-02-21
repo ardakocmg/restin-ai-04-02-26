@@ -36,7 +36,7 @@ export default function SFMAccounting() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/accounting/gl-accounts`);
       setAccounts(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch accounts:', error);
       setAccounts([]);
     } finally {
@@ -49,7 +49,7 @@ export default function SFMAccounting() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/accounting/ledger-entries`);
       setLedger(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch ledger:', error);
       setLedger([]);
     } finally {
@@ -62,7 +62,7 @@ export default function SFMAccounting() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/accounting/vat-returns`);
       setVat(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch VAT:', error);
       setVat([]);
     } finally {
@@ -76,7 +76,7 @@ export default function SFMAccounting() {
       await api.post(`/venues/${venueId}/accounting/gl-accounts`, formData);
       setShowModal(false);
       fetchAccounts();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to create account:', error);
     }
   };

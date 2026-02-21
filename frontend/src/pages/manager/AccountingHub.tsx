@@ -27,7 +27,7 @@ export default function AccountingHub() {
       const userRole = user?.role;
       const permissions = response.data.roles?.[userRole] || [];
       setCanExport(permissions.includes('FINANCE_EXPORT') || permissions.includes('CHECKS_EXPORT'));
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to check permissions:', error);
     }
   };
@@ -61,6 +61,7 @@ export default function AccountingHub() {
               <PermissionedTable
                 venueId={venueId}
                 tableKey="accounting_journal"
+                dataEndpoint="/api/v1/accounting/journal"
               />
             </TabsContent>
 

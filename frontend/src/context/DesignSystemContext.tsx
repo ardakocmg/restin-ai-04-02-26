@@ -217,7 +217,7 @@ export function DesignSystemProvider({ children }: DesignSystemProviderProps): J
                     setVenueColors(settings.ui.customColors);
                 }
             }
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to load design settings', { error });
         } finally {
             setLoading(false);

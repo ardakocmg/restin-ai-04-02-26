@@ -27,7 +27,7 @@ export default function TrainingExpiringReport() {
         expiry: (doc.expiry_date || '').split('T')[0],
         status: doc.days_until_expiry <= 14 ? 'critical' : 'expiring'
       })));
-    } catch (err: any) {
+    } catch (err) {
       logger.warn('Failed to load expiring training data');
     } finally {
       setLoading(false);

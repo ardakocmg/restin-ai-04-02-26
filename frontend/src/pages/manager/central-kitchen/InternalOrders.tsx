@@ -19,7 +19,7 @@ export default function InternalOrders() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/internal-orders`);
       setOrders(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch orders:', error);
       setOrders([]);
     } finally {

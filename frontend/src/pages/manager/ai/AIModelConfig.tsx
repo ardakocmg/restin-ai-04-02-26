@@ -159,7 +159,7 @@ export default function AIModelConfig() {
                     setVenueConfig(venueRes.data);
                 } catch { /* no venue config yet */ }
             }
-        } catch (err: any) {
+        } catch (err) {
             toast.error('Failed');
         } finally {
             setLoading(false);
@@ -181,7 +181,7 @@ export default function AIModelConfig() {
                 limits: editLimits,
             });
             await loadData();
-        } catch (err: any) {
+        } catch (err) {
             toast.error('Failed to save config');
         } finally {
             setSaving(false);

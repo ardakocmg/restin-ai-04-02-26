@@ -37,7 +37,7 @@ export default function FinanceProviderSettings() {
     try {
       const res = await api.get(`/finance-provider/settings?venue_id=${activeVenue.id}`);
       setSettings(res.data?.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Provider settings error:', error);
     } finally {
       setLoading(false);
@@ -49,7 +49,7 @@ export default function FinanceProviderSettings() {
       setSaving(true);
       await api.put(`/finance-provider/settings?venue_id=${activeVenue.id}`, settings);
       toast.success('Settings saved successfully!');
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Save error:', error);
       toast.error('Failed to save settings');
     } finally {

@@ -41,7 +41,7 @@ const MigrationHub = () => {
         try {
             const res = await api.get('migrations/history');
             setHistory(Array.isArray(res.data) ? res.data : []);
-        } catch (error: any) {
+        } catch (error) {
             logger.error(error);
         }
     };
@@ -51,7 +51,7 @@ const MigrationHub = () => {
             const venueId = localStorage.getItem('venueId') || '';
             const res = await api.get(`import-templates?venue_id=${venueId}&source=${source}`);
             setImportTemplates(Array.isArray(res.data) ? res.data : []);
-        } catch (error: any) {
+        } catch (error) {
             logger.error(error);
             setImportTemplates([]);
         }
@@ -77,7 +77,7 @@ const MigrationHub = () => {
             setShowSaveDialog(false);
             setTemplateName('');
             fetchImportTemplates(selectedProvider.id);
-        } catch (error: any) {
+        } catch (error) {
             logger.error(error);
             toast.error('Failed to save template');
         } finally {
@@ -142,7 +142,7 @@ const MigrationHub = () => {
                     const worksheet = workbook.Sheets[firstSheetName];
                     const json = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
                     resolve(json);
-                } catch (err: any) {
+                } catch (err) {
                     reject(err);
                 }
             };
@@ -186,7 +186,7 @@ const MigrationHub = () => {
             setStep(3);
             setIsProcessing(false);
 
-        } catch (error: any) {
+        } catch (error) {
             logger.error(error);
             toast.error(error.response?.data?.detail || "Failed to analyze file");
             setIsProcessing(false);
@@ -208,7 +208,7 @@ const MigrationHub = () => {
             setIsProcessing(false);
             toast.success("Migration Completed Successfully!");
             fetchHistory(); // Refresh history
-        } catch (error: any) {
+        } catch (error) {
             logger.error(error);
             toast.error("Migration failed");
             setIsProcessing(false);

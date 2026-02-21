@@ -37,7 +37,7 @@ export default function DeviceHub() {
     try {
       const response = await api.get(`/venues/${activeVenue.id}/devices`);
       setDevices(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load devices:', error);
     } finally {
       setLoading(false);

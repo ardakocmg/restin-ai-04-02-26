@@ -68,7 +68,7 @@ export default function RecipeManagement() {
 
       setRecipes(recipesRes.data || []);
       setInventoryItems(itemsRes.data.items || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error loading data:', error);
       toast.error('Failed to load recipes');
     } finally {
@@ -135,7 +135,7 @@ export default function RecipeManagement() {
         ingredients: [],
         instructions: []
       });
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error creating recipe:', error);
       toast.error('Failed to create recipe');
     }

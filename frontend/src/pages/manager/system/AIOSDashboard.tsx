@@ -62,7 +62,7 @@ export default function AIOSDashboard() {
                 // AI-OS Stats endpoint doesn't return logs currently, so ignore them for now.
                 setLogs([]);
             }
-        } catch (error: any) {
+        } catch (error) {
             logger.warn("Dashboard load failed, using defaults", error);
             setStats(null); // Let the components use their own safe fallbacks
             setLogs([]);

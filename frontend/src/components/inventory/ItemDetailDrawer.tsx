@@ -31,7 +31,7 @@ export default function ItemDetailDrawer({ open, onClose, skuId, venueId }) {
       setLoading(true);
       const res = await api.get(`/inventory/items/${skuId}/detail?venue_id=${venueId}`);
       setDetail(res.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load item detail:', error);
     } finally {
       setLoading(false);
@@ -43,7 +43,7 @@ export default function ItemDetailDrawer({ open, onClose, skuId, venueId }) {
       await api.put(`/inventory/items/${skuId}?venue_id=${venueId}`, updates);
       toast.success('Item updated');
       loadItemDetail();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to update item:', error);
       toast.error('Failed to update item');
     }

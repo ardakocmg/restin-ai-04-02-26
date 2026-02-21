@@ -55,7 +55,7 @@ export default function FloorPlanEditor() {
         img.src = response.data.background_image_url;
         img.onload = () => setBackgroundImage(img);
       }
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Failed to load floor plan");
       navigate("/manager/floor-plans");
     }
@@ -233,7 +233,7 @@ export default function FloorPlanEditor() {
     try {
       await api.post(`/floor-plans/${planId}/objects/bulk-save`, objects);
       toast.success("Floor plan saved");
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Failed to save floor plan");
     }
   };

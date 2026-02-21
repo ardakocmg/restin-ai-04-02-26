@@ -260,6 +260,7 @@ export default function OrderingSuggestions() {
             toast.success(`${poCount} purchase order(s) generated for ${selected.size} items`);
             setSelected(new Set());
         } catch (err: unknown) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             logger.error('Failed to generate POs', err as any);
             toast.error('Failed to generate purchase orders');
         } finally {

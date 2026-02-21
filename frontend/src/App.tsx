@@ -109,7 +109,7 @@ function RootOverlays() {
           logger.warn('Version mismatch detected (ignored for dev)');
         }
         if (serverBuild) localStorage.setItem("last_build_id", serverBuild);
-      } catch (e: any) {
+      } catch (e) {
         logger.warn('Version check failed', { error: (e as Error).message });
       }
     })();

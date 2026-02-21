@@ -42,6 +42,7 @@ interface CountItem {
    ═══════════════════════════════════════════════════════════════════ */
 export default function MobileStockCount() {
     const { t } = useTranslation();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { activeVenue: selectedVenue } = useVenue() as any;
 
     const [items, setItems] = useState<CountItem[]>([]);

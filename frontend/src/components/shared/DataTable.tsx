@@ -267,7 +267,7 @@ export default function DataTable<TData, TValue>({
         setColumnSizing(prefs.columnSizing || {});
         setPageSize(prefs.pageSize || DEFAULT_PAGE_SIZES[1]);
         setPrefsLoaded(true);
-      } catch (error: any) {
+      } catch (error) {
         setPrefsLoaded(true);
       }
     };
@@ -280,7 +280,7 @@ export default function DataTable<TData, TValue>({
       try {
         const response = await tablePresetsAPI.list(resolvedTableId, resolvedVenueId);
         setPresets(response.data.presets || []);
-      } catch (error: any) {
+      } catch (error) {
         setPresets([]);
       }
     };
@@ -387,7 +387,7 @@ export default function DataTable<TData, TValue>({
       setPresetName('');
       const response = await tablePresetsAPI.list(resolvedTableId, resolvedVenueId);
       setPresets(response.data.presets || []);
-    } catch (error: any) {
+    } catch (error) {
       // handled silently
     }
   };

@@ -59,7 +59,7 @@ export default function OnboardingChecklists() {
             ]);
             setTemplates(tRes.data || []);
             setActiveChecklists(aRes.data || []);
-        } catch (e: any) { logger.error('Failed to fetch checklists:', e); }
+        } catch (e) { logger.error('Failed to fetch checklists:', e); }
         setLoading(false);
     }, [venueId]);
 
@@ -72,14 +72,14 @@ export default function OnboardingChecklists() {
             setShowNewTemplate(false);
             setNewTemplate({ name: '', template_type: 'onboarding', items: [{ title: '', assignee_role: 'hr', due_days_offset: 0 }] });
             fetchData();
-        } catch (e: any) { logger.error('Failed to create template:', e); }
+        } catch (e) { logger.error('Failed to create template:', e); }
     };
 
     const completeTask = async (checklistId: string, taskId: string) => {
         try {
             await api.put(`/venues/${venueId}/hr/checklists/${checklistId}/tasks/${taskId}/complete`);
             fetchData();
-        } catch (e: any) { logger.error('Failed to complete task:', e); }
+        } catch (e) { logger.error('Failed to complete task:', e); }
     };
 
     const addItem = () => setNewTemplate(p => ({ ...p, items: [...p.items, { title: '', assignee_role: 'hr', due_days_offset: 0 }] }));

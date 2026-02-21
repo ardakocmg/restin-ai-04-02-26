@@ -640,7 +640,7 @@ export default function InventoryItemsNew() {
         ...prev,
         total: response.data?.pagination?.total || fetchedItems.length,
       }));
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load items:', error);
       toast.error('Failed to load inventory items');
     } finally {

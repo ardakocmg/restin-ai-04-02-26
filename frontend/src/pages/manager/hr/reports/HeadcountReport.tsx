@@ -22,7 +22,7 @@ export default function HeadcountReport() {
       const response = await api.get(`/venues/${venueId}/hr/employees`);
       processData(response.data);
       setLoading(false);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to load headcount:", error);
       setLoading(false);
     }

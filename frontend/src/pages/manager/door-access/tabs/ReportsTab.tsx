@@ -33,7 +33,7 @@ export default function ReportsTab() {
             if (sumResp.status === 200) setSummary(sumResp.data);
             if (tlResp.status === 200) setTimeline(tlResp.data);
             if (hmResp.status === 200) setHeatmap(hmResp.data);
-        } catch (e: any) {
+        } catch (e) {
             logger.error('Reports load failed', { error: String(e) });
         } finally { setLoading(false); }
     };

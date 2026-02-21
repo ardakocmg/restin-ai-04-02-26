@@ -24,7 +24,7 @@ export default function PurchaseOrdersPage() {
     try {
       const res = await api.get(`/inventory/purchase-orders?venue_id=${activeVenue.id}`);
       setPos(res.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load purchase orders:', error);
     } finally {
       setLoading(false);

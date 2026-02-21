@@ -29,7 +29,7 @@ const GROUP_COLORS: Record<string, string> = { Owner: '#EF4444', Manager: '#3B82
 
 function staffToUser(s: StaffMember): POSUser {
     const initials = s.name?.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || '??';
-    return { id: s.id, name: s.name || 'Unknown', pin: s.pos_config?.pin || '0000', group: s.pos_config?.group || s.role || 'Server', email: s.email || '', isActive: s.pos_config?.is_pos_active ?? true, lastLogin: s.created_at ? new Date(s.created_at).toLocaleDateString() : 'Never', avatar: initials };
+    return { id: s.id, name: s.name || 'Unknown', pin: String(s.pos_config?.pin || '0000'), group: String(s.pos_config?.group || s.role || 'Server'), email: s.email || '', isActive: s.pos_config?.is_pos_active ?? true, lastLogin: s.created_at ? new Date(s.created_at).toLocaleDateString() : 'Never', avatar: initials };
 }
 
 type TabKey = 'users' | 'groups';
@@ -43,7 +43,7 @@ const POSUsersGroups: React.FC = () => {
     const [editGroup, setEditGroup] = useState<UserGroup | null>(null);
     const [showPin, setShowPin] = useState(false);
     const [localUsers, setLocalUsers] = useState<POSUser[]>([]);
-    const venueId = localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '';
+    const venueId = String(localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '');
     const { staff, loading, error, refetch, updatePosConfig } = useStaffService({ venueId, includePos: true, includeShifts: false, includeStats: false, search, enabled: !!venueId });
     useEffect(() => { if (staff.length > 0) setLocalUsers(staff.map(staffToUser)); }, [staff]);
     const [groups, setGroups] = useState(SEED_GROUPS);

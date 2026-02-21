@@ -21,7 +21,7 @@ export default function QualityAudits() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/quality/audits`);
       setAudits(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch audits:', error);
       setAudits([]);
     } finally {
@@ -35,7 +35,7 @@ export default function QualityAudits() {
       await api.post(`/venues/${venueId}/quality/audits`, formData);
       setShowModal(false);
       fetchAudits();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to create audit:', error);
     }
   };

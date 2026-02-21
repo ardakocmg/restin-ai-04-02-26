@@ -23,7 +23,7 @@ export default function POSSales() {
       // Attempt to fetch real data
       const res = await api.get('/analytics/pos-sales');
       setData(res.data);
-    } catch (e: any) {
+    } catch (e) {
       logger.warn("Analytics API failed", e);
       // NO MOCK DATA - User Request
       setData(null);

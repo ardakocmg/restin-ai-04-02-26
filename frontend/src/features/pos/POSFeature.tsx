@@ -52,7 +52,7 @@ export default function POSFeature() {
                     }
                     setMenuItems(allItems);
                 }
-            } catch (err: any) {
+            } catch (err) {
                 // Offline-first: fail silently
                 logger.warn('POS: Could not fetch menu from API');
             } finally {

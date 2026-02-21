@@ -102,7 +102,7 @@ export default function UniversalSearchBar({
       setResults(res || null);
       if (onResults) onResults(res || null);
       setOpen(true);
-    } catch (e: any) {
+    } catch (e) {
       if (reqId !== lastReqId.current) return;
       setErr("Search failed. Please try again.");
       setResults(null);

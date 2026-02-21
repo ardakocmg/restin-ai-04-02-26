@@ -48,7 +48,7 @@ export default function EmployeesSetupPage() {
       setNewEmployee({ full_name: '', email: '', role: 'staff', department: '' });
       setShowAddForm(false);
       loadEmployees();
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Failed to add employee');
     }
   };

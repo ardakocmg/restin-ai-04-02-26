@@ -198,13 +198,13 @@ export default function AuditLogs() {
       ]);
       setLogs(Array.isArray(logsRes.data) ? logsRes.data : []);
       setSummary(summaryRes.data || { total: 0, info: 0, warning: 0, critical: 0 });
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load audit data', { error: error instanceof Error ? error.message : String(error) });
       // Fallback: try legacy endpoint
       try {
         const fallback = await api.get(`/venues/${activeVenue.id}/audit-logs`);
         setLogs(Array.isArray(fallback.data) ? fallback.data : []);
-      } catch (fallbackErr: any) {
+      } catch (fallbackErr) {
         logger.error('Fallback audit endpoint also failed', { error: fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr) });
       }
     } finally {

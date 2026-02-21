@@ -113,7 +113,7 @@ export default function OrganizationProfile() {
             // Fetch legal entities summary
             const leRes = await api.get('/api/legal-entities');
             setLegalEntities((leRes.data?.legal_entities || []).filter((e: LegalEntity & { deleted_at?: string }) => !e.deleted_at));
-        } catch (err: any) {
+        } catch (err) {
             logger.error('Failed to load org data', { error: err });
         } finally {
             setLoading(false);
@@ -132,7 +132,7 @@ export default function OrganizationProfile() {
             toast.success('Organization profile saved');
             logAction('SETTINGS_UPDATED', 'organization_profile', activeVenue?.id || '');
             refreshVenues();
-        } catch (err: any) {
+        } catch (err) {
             logger.error('Failed to save org profile', { error: err });
             toast.error('Failed to save');
         } finally {

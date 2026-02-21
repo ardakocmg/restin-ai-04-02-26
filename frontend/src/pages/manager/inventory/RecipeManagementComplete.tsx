@@ -355,7 +355,7 @@ export default function RecipeManagement() {
     try {
       const res = await api.get(`venues/${activeVenue.id}/recipes/engineered/stats`);
       setStats(res.data);
-    } catch (e: any) {
+    } catch (e) {
       logger.error("Failed to load stats", e);
     }
   };
@@ -422,7 +422,7 @@ export default function RecipeManagement() {
 
       if (itemsRes.data) setItems(itemsRes.data);
       if (menuRes.data) setMenuItems(menuRes.data);
-    } catch (e: any) {
+    } catch (e) {
       logger.error(e);
       toast.error("Failed to load data");
     } finally {
@@ -473,7 +473,7 @@ export default function RecipeManagement() {
       }
       toast.success(res.data.message);
       loadData();
-    } catch (e: any) {
+    } catch (e) {
       toast.error("Action failed");
     }
   };
@@ -502,7 +502,7 @@ export default function RecipeManagement() {
       toast.success(res?.data?.message || 'Action completed');
       setSelectedIds(new Set());
       loadData();
-    } catch (e: any) {
+    } catch (e) {
       toast.error(e?.response?.data?.detail || "Bulk action failed");
     }
   };
@@ -580,7 +580,7 @@ export default function RecipeManagement() {
         const error = await response.json();
         toast.error(error.detail || "Failed to save recipe");
       }
-    } catch (e: any) {
+    } catch (e) {
       logger.error(e);
       toast.error("An error occurred while saving");
     }

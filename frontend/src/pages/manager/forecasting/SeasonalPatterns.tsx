@@ -18,7 +18,7 @@ export default function SeasonalPatterns() {
       const venueId = localStorage.getItem('currentVenueId');
       // Fetch from API when available
       setPatterns([]);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch patterns:', error);
     } finally {
       setLoading(false);

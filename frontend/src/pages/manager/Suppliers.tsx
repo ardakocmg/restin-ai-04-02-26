@@ -24,6 +24,7 @@ import {
 import { toast } from 'sonner';
 
 // ── KPI Stat Card ──────────────────────────────────────────────────
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground' }: { icon: any; label: any; value: any; subtext?: any; color?: string }) {
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -70,7 +71,7 @@ export default function SuppliersPage() {
       const res = await api.get(`/inventory/suppliers?venue_id=${activeVenue.id}`);
       const data = res.data;
       setSuppliers(Array.isArray(data) ? data : (data?.suppliers || []));
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load suppliers:', error);
       toast.error('Failed to load suppliers');
     } finally {
@@ -97,7 +98,7 @@ export default function SuppliersPage() {
       setShowCreate(false);
       setFormData({ name: '', email: '', phone: '', address: '', payment_terms_days: '30', lead_time_days: '3', notes: '' });
       loadSuppliers();
-    } catch (e: any) {
+    } catch (e) {
       logger.error('Failed to create supplier:', e);
       toast.error('Failed to create supplier');
     } finally {
@@ -111,7 +112,7 @@ export default function SuppliersPage() {
       await api.put(`/inventory/suppliers/${id}`, { is_active: false });
       toast.success('Supplier archived');
       loadSuppliers();
-    } catch (e: any) {
+    } catch (e) {
       logger.error('Failed to archive:', e);
       toast.error('Failed to archive supplier');
     }

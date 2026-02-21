@@ -91,7 +91,7 @@ export default function Observability() {
       ]);
       setMetrics(metricsRes.data);
       setDevices(devicesRes.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load observability data:', error);
     } finally {
       setLoading(false);

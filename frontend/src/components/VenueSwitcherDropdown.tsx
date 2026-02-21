@@ -29,7 +29,7 @@ export default function VenueSwitcherDropdown() {
     try {
       const response = await api.get(`/venue-groups/${group.id}/venues`);
       setVenues(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load venues:', error);
     } finally {
       setLoading(false);

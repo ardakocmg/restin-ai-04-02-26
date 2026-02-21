@@ -24,7 +24,7 @@ export default function ESGModule() {
     try {
       const response = await api.get('esg/metrics');
       setData(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch ESG data:', error);
     } finally {
       setLoading(false);

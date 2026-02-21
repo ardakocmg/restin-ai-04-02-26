@@ -24,7 +24,7 @@ export default function DocumentManagement() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/hr/documents`);
       setDocuments(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch documents:', error);
       setDocuments([]);
     } finally {

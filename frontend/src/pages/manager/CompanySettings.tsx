@@ -87,7 +87,7 @@ export default function CompanySettings() {
             ]);
             setZones(zonesRes.data);
             setTables(tablesRes.data);
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to load data:', error);
         } finally {
             setDataLoading(false);
@@ -109,7 +109,7 @@ export default function CompanySettings() {
             toast.success('Settings saved successfully');
             logAction('SETTINGS_UPDATED', 'company_settings', activeVenue.id);
             refreshVenues();
-        } catch (error: any) {
+        } catch (error) {
             toast.error('Failed to update settings');
         } finally {
             setLoading(false);
@@ -165,6 +165,7 @@ export default function CompanySettings() {
                             </div>
 
                             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             <Separator {...{ className: 'bg-white/5' } as any} />
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

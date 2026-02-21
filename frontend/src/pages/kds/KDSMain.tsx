@@ -79,7 +79,7 @@ export default function KDSMain() {
       const response = await api.get(`/venues/${venueId}/kds/tickets`);
       setTickets(response.data);
       setLastUpdate(new Date());
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to load tickets:", error);
     } finally {
       setLoading(false);
@@ -102,7 +102,7 @@ export default function KDSMain() {
       await api.post(`/kds/tickets/${ticketId}/items/${itemId}/start`);
       toast.success("Item started");
       await loadData();
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to start item:", error);
       toast.error("Failed to start item");
     }
@@ -113,7 +113,7 @@ export default function KDSMain() {
       await api.post(`/kds/tickets/${ticketId}/items/${itemId}/ready`);
       toast.success("Item ready");
       await loadData();
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to mark ready:", error);
       toast.error("Failed to mark ready");
     }
@@ -127,7 +127,7 @@ export default function KDSMain() {
       await api.post(`/venues/${venueId}/kds/tickets/${ticketId}/items/${itemId}/hold?reason=${encodeURIComponent(reason)}`);
       toast.success("Item held");
       await loadData();
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to hold item:", error);
       toast.error("Failed to hold item");
     }
@@ -138,7 +138,7 @@ export default function KDSMain() {
       await api.post(`/venues/${venueId}/kds/tickets/${ticketId}/pass-approve`);
       toast.success("PASS approved");
       await loadData();
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to approve:", error);
       toast.error("Failed to approve");
     }
@@ -149,7 +149,7 @@ export default function KDSMain() {
       await api.post(`/venues/${venueId}/kds/tickets/${ticketId}/deliver`);
       toast.success("Delivered to table");
       await loadData();
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to deliver:", error);
       toast.error(error.response?.data?.message || "Failed to deliver");
     }

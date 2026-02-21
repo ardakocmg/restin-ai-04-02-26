@@ -69,7 +69,7 @@ export const POSFilterProvider: React.FC<POSFilterProviderProps> = ({ children }
                         to: new Date(parsed.dateRange.to)
                     }
                 };
-            } catch (e: any) {
+            } catch (e) {
                 logger.error('Failed to revive POS filters', { error: e });
             }
         }

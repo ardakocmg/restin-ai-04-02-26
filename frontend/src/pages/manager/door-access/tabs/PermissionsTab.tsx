@@ -28,7 +28,7 @@ export default function PermissionsTab() {
             ]);
             if (permResp.status === 200) setPermissions(permResp.data);
             if (doorResp.status === 200) setDoors(doorResp.data);
-        } catch (e: any) {
+        } catch (e) {
             logger.error('Load permissions failed', { error: String(e) });
         } finally {
             setLoading(false);
@@ -47,7 +47,7 @@ export default function PermissionsTab() {
                 setNewPerm({ door_id: '', role_id: '', can_unlock: true, can_lock: true, can_unlatch: false });
                 loadData();
             }
-        } catch (e: any) {
+        } catch (e) {
             toast.error('Create failed');
             logger.error('Create permission failed', { error: String(e) });
         }
@@ -61,7 +61,7 @@ export default function PermissionsTab() {
                 toast.success('Permission removed');
                 loadData();
             }
-        } catch (e: any) {
+        } catch (e) {
             toast.error('Delete failed');
         }
     };

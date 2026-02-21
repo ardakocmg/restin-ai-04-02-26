@@ -71,7 +71,7 @@ export default function TemplateList() {
 
             const response = await api.get('/templates', { params });
             setTemplates(response.data || []);
-        } catch (err: any) {
+        } catch (err) {
             toast.error('Failed to load templates');
         } finally {
             setLoading(false);

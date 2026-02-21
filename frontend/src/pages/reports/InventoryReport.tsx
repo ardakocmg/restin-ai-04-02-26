@@ -35,7 +35,7 @@ export default function InventoryReport() {
       setMetrics(d.metrics);
       setStockLevels(d.stock_levels || []);
       setWasteData(d.waste_trend || []);
-    } catch (err: any) {
+    } catch (err) {
       logger.warn('Inventory report API failed');
       setMetrics({ total_items: 0, low_stock_alerts: 0, waste_cost_week: 0, inventory_value: 0 });
     } finally {

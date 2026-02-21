@@ -73,7 +73,7 @@ export function useVenueSettings(venueId) {
         
         // Cache in localStorage
         localStorage.setItem(`venue_settings_${venueId}`, JSON.stringify(merged));
-      } catch (error: any) {
+      } catch (error) {
         logger.error("Failed to load venue settings:", error);
         // Fallback to localStorage
         const cached = localStorage.getItem(`venue_settings_${venueId}`);

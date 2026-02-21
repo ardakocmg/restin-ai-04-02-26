@@ -16,7 +16,7 @@ export function useViewState(venueId, pageKey) {
     try {
       const res = await api.get(`/uix/view-state?venue_id=${venueId}&page_key=${pageKey}`);
       setViewState(res.data?.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load view state:', error);
       // Use default
       setViewState({
@@ -34,7 +34,7 @@ export function useViewState(venueId, pageKey) {
         ui,
         query
       });
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to save view state:', error);
     }
   };

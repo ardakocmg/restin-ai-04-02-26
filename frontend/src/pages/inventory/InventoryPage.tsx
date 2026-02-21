@@ -53,7 +53,7 @@ export default function InventoryPage() {
 
       const res = await api.get(`/inventory/items?${params}`);
       setItems(res.data?.items || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load items:', error);
     } finally {
       setLoading(false);
@@ -149,6 +149,7 @@ export default function InventoryPage() {
             No items found
           </div>
         ) : (
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           items.map((item: any) => {
             const status = getStockStatus(item);
             const StatusIcon = status.icon;
@@ -165,6 +166,7 @@ export default function InventoryPage() {
                       <Package className="h-5 w-5 text-slate-600" />
                       <span className="font-medium text-foreground">{item.name}</span>
                     </div>
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     <Badge variant={status.color as any} className={status.className}>
                       <StatusIcon className="h-3 w-3 mr-1" />
                       {status.label}

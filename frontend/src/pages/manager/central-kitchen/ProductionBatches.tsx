@@ -21,7 +21,7 @@ export default function ProductionBatches() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/production/batches`);
       setBatches(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch batches:', error);
       setBatches([]);
     } finally {
@@ -35,7 +35,7 @@ export default function ProductionBatches() {
       await api.post(`/venues/${venueId}/production/batches`, formData);
       setShowModal(false);
       fetchBatches();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to create batch:', error);
     }
   };

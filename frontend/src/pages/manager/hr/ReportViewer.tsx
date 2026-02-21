@@ -38,7 +38,7 @@ export default function ReportViewer() {
         try {
             const response = await api.get(`/reporting/hr/${reportSlug}`);
             setReport(response.data);
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to fetch report:', error);
         } finally {
             setLoading(false);

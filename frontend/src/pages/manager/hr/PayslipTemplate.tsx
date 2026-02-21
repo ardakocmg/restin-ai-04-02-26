@@ -31,7 +31,7 @@ export default function PayslipTemplate() {
                 if (payslip) {
                     setData({ run, payslip });
                 }
-            } catch (error: any) {
+            } catch (error) {
                 logger.error("Failed to load payslip", error);
             } finally {
                 setLoading(false);

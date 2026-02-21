@@ -28,7 +28,7 @@ function DeviceManagement() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setDevices(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching devices:', error);
     } finally {
       setLoading(false);
@@ -43,7 +43,7 @@ function DeviceManagement() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setPairingCodes(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching pairing codes:', error);
     }
   };
@@ -58,7 +58,7 @@ function DeviceManagement() {
       );
       fetchPairingCodes();
       setShowPairingModal(true);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error generating code:', error);
     }
   };
@@ -72,7 +72,7 @@ function DeviceManagement() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       fetchDevices();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error updating device:', error);
     }
   };

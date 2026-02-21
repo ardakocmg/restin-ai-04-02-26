@@ -27,7 +27,7 @@ export default function PreGoLive() {
       const res = await api.post(`/ops/pre-go-live/run?venue_id=${activeVenue.id}`);
       setCurrentRun(res.data?.data);
       loadRuns();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Certification error:', error);
     } finally {
       setRunning(false);
@@ -38,7 +38,7 @@ export default function PreGoLive() {
     try {
       const res = await api.get(`/ops/pre-go-live/runs?venue_id=${activeVenue.id}`);
       setRuns(res.data?.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Load runs error:', error);
     }
   };

@@ -46,6 +46,7 @@ const TaxSettings: React.FC = () => {
     const venueId = localStorage.getItem('restin_pos_venue') || '';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: apiRates } = useVenueConfig<any>({ venueId, configType: 'tax-profiles' });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useEffect(() => { if (apiRates?.length > 0) { setRates(apiRates.map((r: any) => ({ id: r.id || r._id || crypto.randomUUID(), name: r.name || '', rate: r.rate ?? 0, isDefault: r.isDefault ?? r.is_default ?? false, isActive: r.isActive ?? r.is_active ?? true, accountingRef: r.accountingRef ?? r.accounting_ref ?? '' }))); setIsLive(true); } }, [apiRates]);
     const filteredRates = rates.filter(r => !search || r.name.toLowerCase().includes(search.toLowerCase()));
     const filteredProfiles = profiles.filter(p => !search || p.name.toLowerCase().includes(search.toLowerCase()));

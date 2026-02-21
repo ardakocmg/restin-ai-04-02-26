@@ -28,7 +28,7 @@ function StockCount() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setItems(response.data.items || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching items:', error);
     }
   };
@@ -43,7 +43,7 @@ function StockCount() {
       );
       setCount(response.data.count);
       toast.success('Stock count started: ' + response.data.count.display_id);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error starting count:', error);
     }
   };
@@ -67,7 +67,7 @@ function StockCount() {
       );
 
       toast.info(`Counted: ${item.name} — ${countedQty} ${item.base_unit}`);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error submitting line:', error);
     }
   };
@@ -87,7 +87,7 @@ function StockCount() {
       toast.success('Stock count completed!');
       setCount(null);
       setCountLines({});
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error completing count:', error);
     }
   };

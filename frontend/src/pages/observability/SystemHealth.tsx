@@ -31,7 +31,7 @@ export default function SystemHealth() {
     try {
       const res = await api.get(`/system/health?venue_id=${activeVenue.id}`);
       setHealth(res.data?.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Health check error:', error);
     } finally {
       setLoading(false);

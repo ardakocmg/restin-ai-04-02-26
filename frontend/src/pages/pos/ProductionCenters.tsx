@@ -38,7 +38,7 @@ const SEED: ProductionCenter[] = [
 
 const ProductionCenters: React.FC = () => {
     const navigate = useNavigate();
-    const venueId = localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '';
+    const venueId = String(localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '');
     const { data: apiCenters, loading: apiLoading, error: apiError, refetch } = useVenueConfig({ venueId, configType: 'production-centers', enabled: !!venueId });
     const [centers, setCenters] = useState<ProductionCenter[]>(SEED);
     const [apiWired, setApiWired] = useState(false);
@@ -48,7 +48,7 @@ const ProductionCenters: React.FC = () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const mapped: ProductionCenter[] = apiCenters.map((ac: any, idx: number) => ({
                 id: String(ac.id || ac._id || ''), name: String(ac.name || ''), color: String(ac.color || COLORS[idx % COLORS.length]),
-                type: (ac.type || 'kitchen') as ProductionCenter['type'], printer: String(ac.printer || 'None'),
+                type: String(ac.type || 'kitchen') as ProductionCenter['type'], printer: String(ac.printer || 'None'),
                 backupPrinter: String(ac.backup_printer || ac.backupPrinter || 'None'), itemCount: Number(ac.item_count || ac.itemCount || 0),
                 avgPrepTime: Number(ac.avg_prep_time || ac.avgPrepTime || 0), isActive: ac.is_active !== false,
                 staffCount: Number(ac.staff_count || ac.staffCount || 0), sortOrder: Number(ac.sort_order || ac.sortOrder || idx + 1),

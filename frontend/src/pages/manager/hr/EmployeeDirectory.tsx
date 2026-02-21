@@ -82,7 +82,7 @@ export default function EmployeeDirectory() {
     try {
       const response = await api.get(`/venues/${venueId}/hr/employees`);
       setEmployees(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to load employees:", error);
       toast.error("Failed to load employee directory");
     } finally {
@@ -109,7 +109,7 @@ export default function EmployeeDirectory() {
         email: "", start_date: new Date().toISOString().split("T")[0]
       });
       loadEmployees();
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to create employee:", error);
       toast.error("Failed to create employee");
     } finally {

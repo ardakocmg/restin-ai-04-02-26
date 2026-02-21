@@ -66,7 +66,7 @@ export default function PhysicalTables() {
             if (!selectedFloor || !loadedFloors.includes(selectedFloor)) {
                 setSelectedFloor(loadedFloors[0]);
             }
-        } catch (err: any) {
+        } catch (err) {
             toast.error('Failed to load tables');
             setTables([]);
             setFloors(['Main Floor']);

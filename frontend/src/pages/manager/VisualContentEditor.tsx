@@ -34,7 +34,7 @@ export default function VisualContentEditor() {
         content_type: 'page'
       });
       toast.success('Content saved successfully!');
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to save content:', error);
       toast.error('Failed to save content');
     } finally {

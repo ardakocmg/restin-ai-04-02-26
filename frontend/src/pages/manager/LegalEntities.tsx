@@ -72,7 +72,7 @@ export default function LegalEntities() {
             const ents = (entRes.data?.legal_entities || []).filter((e: LegalEntity) => !e.deleted_at);
             setEntities(ents);
             setVenues(venRes.data?.venues || venRes.data || []);
-        } catch (err: any) {
+        } catch (err) {
             logger.error('Failed to load legal entities', { error: err });
             toast.error('Failed to load legal entities');
         } finally {
@@ -101,7 +101,7 @@ export default function LegalEntities() {
             setEditingId(null);
             setForm(EMPTY_FORM);
             fetchData();
-        } catch (err: any) {
+        } catch (err) {
             logger.error('Failed to save legal entity', { error: err });
             toast.error('Failed to save');
         } finally {
@@ -116,7 +116,7 @@ export default function LegalEntities() {
             await api.delete(`/legal-entities/${id}`);
             toast.success('Legal entity deleted');
             fetchData();
-        } catch (err: any) {
+        } catch (err) {
             logger.error('Failed to delete legal entity', { error: err });
             toast.error('Failed to delete');
         }
@@ -132,7 +132,7 @@ export default function LegalEntities() {
             toast.success('Venues assigned successfully');
             setShowAssign(null);
             fetchData();
-        } catch (err: any) {
+        } catch (err) {
             logger.error('Failed to assign venues', { error: err });
             toast.error('Failed to assign venues');
         }

@@ -60,6 +60,7 @@ interface Venue {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { activeVenue } = useVenue() as any;
   const { user, isManager, isOwner } = useAuth();
   const { logAction } = useAuditLog();
@@ -86,12 +87,12 @@ export default function Dashboard() {
       setLoading(true);
       const [statsRes, ordersRes] = await Promise.all([
         venueAPI.getStats(activeVenue.id),
-        venueAPI.getOrders(activeVenue.id, {}, {}).catch(() => ({ data: [] }))
+        venueAPI.getOrders(activeVenue.id, '', '').catch(() => ({ data: [] }))
       ]);
 
       setStats(statsRes.data);
       setRecentOrders(ordersRes.data?.slice(0, 5) || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load dashboard:', { error: String(error) });
     } finally {
       setLoading(false);

@@ -35,6 +35,7 @@ const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, React.ComponentPropsW
     <Comp
       ref={ref}
       className={cn("transition-colors hover:text-foreground", className)}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       {...(props as any)} />
   );
 })

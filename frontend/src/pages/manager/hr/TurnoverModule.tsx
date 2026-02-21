@@ -36,7 +36,7 @@ export default function TurnoverModule() {
     try {
       const response = await api.get(`/venues/${venueId}/hr/analytics/turnover`);
       setData(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch turnover data:', error);
     } finally {
       setLoading(false);

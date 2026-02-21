@@ -45,7 +45,7 @@ export default function SalaryBenchmarks() {
             ]);
             setBenchmarks(bRes.data?.benchmarks || bRes.data || []);
             setGenderGap(gRes.data || null);
-        } catch (e: any) { logger.error('Failed to fetch benchmarks:', e); }
+        } catch (e) { logger.error('Failed to fetch benchmarks:', e); }
         setLoading(false);
     }, [venueId]);
 

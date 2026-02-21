@@ -48,7 +48,9 @@ export class ReceiptBuilder {
         // For real ESC/POS, sometimes we need Codepage 437 or 1252.
         // Assuming UTF-8 printer support or ASCII for now.
         const encoded = encoder.encode(text);
-        this.buffer.push(...encoded);
+        for (let i = 0; i < encoded.length; i++) {
+            this.buffer.push(encoded[i]);
+        }
         return this;
     }
 

@@ -27,7 +27,7 @@ export default function AnalyticsPage() {
       
       setDashboards(dashRes.data?.data || []);
       setMetrics(metricsRes.data?.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Analytics error:', error);
     } finally {
       setLoading(false);

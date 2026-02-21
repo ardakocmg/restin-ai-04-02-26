@@ -39,7 +39,7 @@ export default function AdvancedObservability() {
       setSlowQueries(slowRes.data?.data || []);
       setDataVolume(volRes.data?.data || []);
       setReadModelHealth(healthRes.data?.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Observability error:', error);
     } finally {
       setLoading(false);

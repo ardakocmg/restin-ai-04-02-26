@@ -114,7 +114,7 @@ export default function POSDashboard() {
                 if (settings.shifts) setShifts(settings.shifts);
                 // eventTime and taxInclusive should ideally come from global context now
                 if (settings.closingDays) setClosingDays(settings.closingDays);
-            } catch (e: any) {
+            } catch (e) {
                 logger.error('Failed to load POS dashboard settings:', e);
             }
         }
@@ -146,7 +146,7 @@ export default function POSDashboard() {
                     setData(result.data || []);
                     setViewMode(result.view_mode || (isSameDay(date.from, date.to) ? 'hourly' : 'daily'));
                     setApiCategories(result.categories || []);
-                } catch (err: any) {
+                } catch (err) {
                     logger.error('Failed to load POS dashboard:', err);
                     setData([]);
                     setApiCategories([]);

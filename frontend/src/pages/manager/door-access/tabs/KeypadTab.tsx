@@ -28,7 +28,7 @@ export default function KeypadTab() {
             ]);
             if (pinResp.status === 200) setPins(pinResp.data);
             if (doorResp.status === 200) setDoors(doorResp.data);
-        } catch (e: any) {
+        } catch (e) {
             logger.error('Keypad load failed', { error: String(e) });
         } finally { setLoading(false); }
     };
@@ -48,7 +48,7 @@ export default function KeypadTab() {
                 setNewPin({ door_id: '', name: '', code: '', valid_from: '', valid_until: '' });
                 loadData();
             } else { toast.error(resp.data.detail || 'PIN creation failed'); }
-        } catch (e: any) { toast.error('PIN creation error'); logger.error('Create PIN failed', { error: String(e) }); }
+        } catch (e) { toast.error('PIN creation error'); logger.error('Create PIN failed', { error: String(e) }); }
         finally { setCreating(false); }
     };
 
@@ -57,7 +57,7 @@ export default function KeypadTab() {
             const resp = await api.delete(`/access-control/keypad/pins/${pinId}?venue_id=${getVenueId()}`);
             if (resp.status === 200) { toast.success('PIN revoked from device'); loadData(); }
             else { toast.error('Revocation failed'); }
-        } catch (e: any) { toast.error('Revoke error'); logger.error('Revoke PIN failed', { error: String(e) }); }
+        } catch (e) { toast.error('Revoke error'); logger.error('Revoke PIN failed', { error: String(e) }); }
     };
 
     const activePins = pins.filter(p => p.status === 'active');

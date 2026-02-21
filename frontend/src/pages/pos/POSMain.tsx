@@ -77,7 +77,7 @@ export default function POSMain() {
           toast.info("Menu updated! Refreshing...");
           loadMenuData();
         }
-      } catch (error: any) {
+      } catch (error) {
         logger.error('Failed to poll config version', { error });
       }
     };
@@ -149,7 +149,7 @@ export default function POSMain() {
       await loadMenuData();
 
       logger.info('[POS] All data loaded successfully');
-    } catch (error: any) {
+    } catch (error) {
       logger.error('[POS] Failed to load data', { error });
       setLoadingError(error.message || "Failed to load POS data");
       toast.error("Failed to load POS data. Please retry.");
@@ -188,10 +188,10 @@ export default function POSMain() {
       try {
         const { data } = await api.get(`/venues/${venueId}/active-config-version`);
         setMenuVersion(data.menu_version);
-      } catch (error: any) {
+      } catch (error) {
         logger.warn('[POS] Failed to get menu version', { error });
       }
-    } catch (error: any) {
+    } catch (error) {
       logger.error('[POS] Failed to load menu', { error });
       toast.error("Failed to load menu data");
     }
@@ -202,7 +202,7 @@ export default function POSMain() {
     try {
       const response = await menuAPI.getItems(venueId, categoryId);
       setMenuItems(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load items', { error });
       toast.error("Failed to load items");
     }
@@ -225,7 +225,7 @@ export default function POSMain() {
         setOrderItems([]);
         toast.info(`New order for ${table.name}`);
       }
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load order', { error });
       toast.error("Failed to load order");
     } finally {
@@ -403,7 +403,7 @@ export default function POSMain() {
       // Reload table status
       const tablesRes = await venueAPI.getTables(venueId);
       setTables(tablesRes.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to send order:", error);
 
       // Safe mode: Extract error, show in-place, NO navigate
@@ -450,7 +450,7 @@ export default function POSMain() {
           setTables(tablesRes.data);
           return;
         }
-      } catch (error: any) {
+      } catch (error) {
         logger.error("Express auto-send failed:", error);
         toast.error(error.response?.data?.detail || "Failed to process order");
         return;
@@ -474,7 +474,7 @@ export default function POSMain() {
         }
         return;
       }
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to check billing eligibility:", error);
       // Allow if check fails (graceful degradation)
     }
@@ -504,7 +504,7 @@ export default function POSMain() {
       // Reload tables
       const tablesRes = await venueAPI.getTables(venueId);
       setTables(tablesRes.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Payment failed:", error);
       toast.error("Failed to process payment");
     }

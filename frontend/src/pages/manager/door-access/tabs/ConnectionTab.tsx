@@ -20,7 +20,7 @@ export default function ConnectionTab() {
         try {
             const resp = await api.get(`/access-control/connection/status?venue_id=${getVenueId()}`);
             if (resp.status === 200) setStatus(resp.data);
-        } catch (e: any) {
+        } catch (e) {
             logger.error('Connection check failed', { error: String(e) });
         }
     };
@@ -42,7 +42,7 @@ export default function ConnectionTab() {
             } else {
                 toast.error('Connection failed');
             }
-        } catch (e: any) {
+        } catch (e) {
             toast.error('Connection error');
             logger.error('Token connect failed', { error: String(e) });
         } finally {
@@ -58,7 +58,7 @@ export default function ConnectionTab() {
             } else {
                 toast.error('OAuth2 not configured on server');
             }
-        } catch (e: any) {
+        } catch (e) {
             toast.error('OAuth2 start failed');
             logger.error('OAuth start failed', { error: String(e) });
         }

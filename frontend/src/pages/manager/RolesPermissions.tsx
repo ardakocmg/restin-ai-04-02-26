@@ -515,7 +515,7 @@ export default function RolesPermissions() {
             }
             // Note: permissionGroups always use DEFAULT_PERMISSION_GROUPS (source of truth)
             // API only provides role configs, not the permission structure
-        } catch (error: any) {
+        } catch (error) {
             logger.error("Failed to fetch roles from API, using defaults:", error);
             setRoles(DEFAULT_ROLES);
             setSelectedRole(DEFAULT_ROLES[0]);
@@ -560,7 +560,7 @@ export default function RolesPermissions() {
             await api.put(`/manager/roles/${selectedRole.id}`, selectedRole);
             toast.success("Policy saved successfully");
             logAction('ROLE_PERMISSIONS_UPDATED', 'roles_permissions', selectedRole.id, { roleName: selectedRole.label });
-        } catch (error: any) {
+        } catch (error) {
             logger.error("Failed to save role:", error);
             toast.success("Policy saved successfully");
         } finally {

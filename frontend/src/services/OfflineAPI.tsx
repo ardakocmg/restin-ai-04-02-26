@@ -115,7 +115,7 @@ class OfflineAPI {
                     }
                 );
                 return { success: true, data: response.data, mode: 'online' };
-            } catch (error: any) {
+            } catch (error) {
                 // If online fails, queue it
                 logger.warn('Online request failed, queuing offline');
                 return await this.queueOrderOffline(orderData, requestId);

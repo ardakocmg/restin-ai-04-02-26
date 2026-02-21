@@ -30,7 +30,7 @@ export default function DeviceMapping() {
     try {
       const response = await api.get(`/venues/${activeVenue.id}/device-mappings`);
       setMappings(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load mappings:', error);
     } finally {
       setLoading(false);

@@ -29,7 +29,7 @@ export default function MonitoringDashboard() {
       setHealth(res.data);
       setError(null);
       setLastRefresh(new Date());
-    } catch (err: any) {
+    } catch (err) {
       setError('Failed to connect to backend');
     } finally {
       setLoading(false);

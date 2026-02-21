@@ -18,7 +18,7 @@ export default function BirthdaysAnniversariesReport() {
       const response = await api.get(`/venues/${venueId}/hr/employees`);
       setEmployees(response.data || []);
       setLoading(false);
-    } catch (error: any) {
+    } catch (error) {
       setLoading(false);
     }
   };

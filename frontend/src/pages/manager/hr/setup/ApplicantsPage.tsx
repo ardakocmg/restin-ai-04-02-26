@@ -26,7 +26,7 @@ export default function ApplicantsPage() {
       const data = res.data;
       setApplicants(data.applicants || []);
       setSummary(data.summary || { open_roles: 0, total_applicants: 0, interviews_today: 0 });
-    } catch (err: any) {
+    } catch (err) {
       logger.warn('Failed to load applicants');
     } finally {
       setLoading(false);

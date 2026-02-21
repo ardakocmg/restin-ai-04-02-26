@@ -31,7 +31,7 @@ export default function InvoiceOCR() {
         setResult(response.data);
       };
       reader.readAsDataURL(file);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('OCR failed:', error);
       toast.error('Failed to process invoice');
     } finally {

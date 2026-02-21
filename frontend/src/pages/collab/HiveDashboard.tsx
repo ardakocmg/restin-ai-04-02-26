@@ -67,7 +67,7 @@ export default function HiveDashboard() {
                     return [...otherChannels, ...mapped];
                 });
             }
-        } catch (e: any) { /* offline fallback */ }
+        } catch (e) { /* offline fallback */ }
     }, []);
 
     // Load all channels on mount

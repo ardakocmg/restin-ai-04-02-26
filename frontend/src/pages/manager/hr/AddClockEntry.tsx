@@ -85,7 +85,7 @@ export default function AddClockEntry() {
                 if (res.data?.length > 0 && !workArea) {
                     setWorkArea(res.data[0].code);
                 }
-            } catch (err: any) {
+            } catch (err) {
                 logger.error('Failed to fetch work areas', err as Record<string, unknown>);
                 // Use defaults
                 setWorkAreas([
@@ -108,7 +108,7 @@ export default function AddClockEntry() {
             try {
                 const res = await api.get(`/venues/${activeVenue.id}/hr/employees`);
                 setEmployees(res.data || []);
-            } catch (err: any) {
+            } catch (err) {
                 logger.error('Failed to fetch employees', err as Record<string, unknown>);
             }
         };

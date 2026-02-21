@@ -64,7 +64,7 @@ export default function ProductionManagement() {
 
       setBatches(batchesRes.data || []);
       setRecipes(recipesRes.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error loading data:', error);
       toast.error('Failed to load production data');
     } finally {
@@ -82,7 +82,7 @@ export default function ProductionManagement() {
       );
       toast.success('Batch started');
       loadData();
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Failed to start batch');
     }
   };
@@ -97,7 +97,7 @@ export default function ProductionManagement() {
       );
       toast.success('Batch completed');
       loadData();
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Failed to complete batch');
     }
   };
@@ -136,7 +136,7 @@ export default function ProductionManagement() {
       toast.success('Batch scheduled');
       setShowCreateModal(false);
       loadData();
-    } catch (error: any) {
+    } catch (error) {
       logger.error(error);
       toast.error('Failed to create batch');
     }

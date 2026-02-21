@@ -64,7 +64,7 @@ export default function ProductManagement() {
             // In a real scenario, this would be /venues/{id}/products
             const response = await api.get(`/venues/${activeVenue.id}/inventory`);
             setProducts(response.data.items || []);
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to load products:', error);
         } finally {
             setLoading(false);

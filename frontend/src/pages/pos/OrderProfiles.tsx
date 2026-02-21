@@ -136,6 +136,7 @@ const OrderProfiles: React.FC = () => {
                         <div className="pos-text-xs pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Requirements & Behavior</div>
                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                         {([['continuous', 'Continuous (stays active for subsequent orders)'], ['orderModifier', 'Order modifier (affects tax on posted items)'], ['requiresTable', 'Requires table selection'], ['requiresCustomer', 'Requires customer info'], ['requiresAddress', 'Requires delivery address'], ['autoOpenDrawer', 'Auto-open cash drawer'], ['autoCloseAfterPayment', 'Auto-close after payment'], ['isActive', 'Active']] as const).map(([key, label]) =>
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             <div key={key} className="pos-flex pos-flex--center pos-flex--between" style={{ padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}><span className="pos-cell-value">{label}</span><Toggle value={editing[key] as boolean} onChange={() => setEditing(p => p ? { ...p, [key]: !(p as any)[key] } : null)} /></div>
                         )}
                     </div>

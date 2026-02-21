@@ -31,7 +31,7 @@ export default function SickLeaveAnalysis() {
     try {
       const response = await api.get('sick-leave/metrics');
       setData(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch sick leave data:', error);
     } finally {
       setLoading(false);

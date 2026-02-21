@@ -47,7 +47,7 @@ export default function InventoryReports() {
       setMetrics(analytics.metrics || { total_items: items.length, low_stock_alerts: lowStock.length, waste_cost_week: 0, inventory_value: 0 });
       setWasteTrend(analytics.waste_trend || []);
       setCostVariance(analytics.cost_variance || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.warn('Error loading inventory reports:', error);
     } finally {
       setLoading(false);

@@ -36,7 +36,7 @@ export default function PayrollDashboard() {
             const empData = await HRService.getEmployees();
             setEmployees(empData);
             setOfflineMode(false);
-        } catch (e: any) {
+        } catch (e) {
             logger.warn("API Offline, check for local data?");
             toast.error("Network Error: Could not fetch employees.");
             setOfflineMode(true);
@@ -69,7 +69,7 @@ export default function PayrollDashboard() {
             // Auto-save to local draft
             results.forEach(p => HRService.saveDraftLocally(p));
 
-        } catch (error: any) {
+        } catch (error) {
             logger.error("Payroll Run Failed", { error: String(error) });
             toast.error("Failed to run payroll. Check connection.");
             setOfflineMode(true);

@@ -43,7 +43,7 @@ export default function PayrollRunDetail() {
         try {
             const response = await api.get(`/hr/payroll/runs/${runId}`);
             setRun(response.data);
-        } catch (error: any) {
+        } catch (error) {
             logger.error("Failed to fetch run details", error);
             toast.error("Could not load payroll run details");
         } finally {
@@ -69,7 +69,7 @@ export default function PayrollRunDetail() {
             link.remove();
 
             toast.success("Payslip downloaded");
-        } catch (error: any) {
+        } catch (error) {
             logger.error("Failed to download payslip", error);
             toast.error("Failed to generate PDF");
         }

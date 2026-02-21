@@ -34,7 +34,7 @@ export default function HeadcountModule() {
     try {
       const response = await api.get(`/venues/${venueId}/hr/analytics/headcount`);
       setData(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch headcount data:', error);
     } finally {
       setLoading(false);

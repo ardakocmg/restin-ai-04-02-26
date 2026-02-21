@@ -44,7 +44,7 @@ export default function Contracts() {
     try {
       const response = await api.get(`/hr/contracts?venue_id=${venueId}`);
       setContracts(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to load contracts:", error);
       if (error.response?.status !== 403) {
         toast.error("Failed to load contracts");
@@ -73,7 +73,7 @@ export default function Contracts() {
       await api.post(`/hr/contracts/${contractId}/activate`);
       toast.success("Contract activated");
       await loadContracts();
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Failed to activate contract");
     }
   };

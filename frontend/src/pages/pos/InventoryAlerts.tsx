@@ -36,7 +36,7 @@ const STATUS_COLORS: Record<string, string> = { ok: '#10B981', low: '#F59E0B', c
 
 const InventoryAlerts: React.FC = () => {
     const navigate = useNavigate();
-    const venueId = localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '';
+    const venueId = String(localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '');
     const { items: apiItems, loading: apiLoading, error: apiError, refetch } = useItemService({ venueId, lowStockOnly: true, enabled: !!venueId });
     const [items, setItems] = useState(SEED);
     const [apiWired, setApiWired] = useState(false);
@@ -58,7 +58,7 @@ const InventoryAlerts: React.FC = () => {
                     parLevel: par,
                     reorderPoint: reorder,
                     unit: String(ai.unit || 'pcs'),
-                    status,
+                    status: (current <= 0 ? 'out' : pct <= 0.2 ? 'critical' : current <= reorder ? 'low' : 'ok') as AlertItem['status'],
                 };
             });
             setItems(mapped);

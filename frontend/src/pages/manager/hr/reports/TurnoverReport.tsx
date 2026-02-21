@@ -33,7 +33,7 @@ export default function TurnoverReport() {
         turnoverRate: ((left / total) * 100).toFixed(1)
       });
       setLoading(false);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to load turnover:", error);
       setLoading(false);
     }

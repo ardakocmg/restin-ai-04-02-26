@@ -43,7 +43,7 @@ export default function KDSPerformance() {
           orders: h.orders
         }))
       });
-    } catch (err: any) {
+    } catch (err) {
       logger.warn('Failed to load KDS Performance data');
     } finally {
       setLoading(false);

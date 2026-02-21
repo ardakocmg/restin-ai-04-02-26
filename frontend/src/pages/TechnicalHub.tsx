@@ -275,7 +275,7 @@ export default function TechnicalHub() {
           setContent({ ...defaultContent, ...response.data.content });
           setIsPreview(!!previewId);
         }
-      } catch (error: any) {
+      } catch (error) {
         logger.warn('Technical content fallback used');
       }
     };

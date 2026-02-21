@@ -37,7 +37,7 @@ export class VoiceReceptionist {
                 tokensUsed: response.length / 4, // Simple estimate for billing
                 timestamp: new Date().toISOString()
             };
-        } catch (error: any) {
+        } catch (error) {
             logger.error('[Pillar 4] Voice AI failed:', { error: String(error) });
             return {
                 response: "I'm sorry, I'm having trouble connecting to our system. Let me transfer you to a human manager.",

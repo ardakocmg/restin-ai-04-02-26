@@ -90,7 +90,7 @@ class DeviceMesh {
                 try {
                     const data = JSON.parse(event.data) as MeshMessage;
                     this.handleMessage(data);
-                } catch (error: any) {
+                } catch (error) {
                     const err = error as Error;
                     logger.error('Mesh message parse error', { error: err.message });
                 }
@@ -105,7 +105,7 @@ class DeviceMesh {
                 this.ws = null;
                 this.attemptReconnect();
             };
-        } catch (error: any) {
+        } catch (error) {
             const err = error as Error;
             logger.error('Mesh connection failed', { error: err.message });
             this.attemptReconnect();

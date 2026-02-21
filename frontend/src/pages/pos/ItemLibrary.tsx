@@ -72,7 +72,7 @@ const SEED_ITEMS: Item[] = [
 
 const ItemLibrary: React.FC = () => {
     const navigate = useNavigate();
-    const venueId = localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '';
+    const venueId = String(localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '');
     const { items: apiItems, loading: apiLoading, error: apiError, refetch } = useItemService({ venueId, enabled: !!venueId });
     const [items, setItems] = useState<Item[]>(SEED_ITEMS);
     const [apiWired, setApiWired] = useState(false);
@@ -84,7 +84,7 @@ const ItemLibrary: React.FC = () => {
             const mapped: Item[] = apiItems.map((ai: any) => ({
                 id: String(ai.id || ai._id || ''),
                 name: String(ai.name || ''),
-                type: (ai.type as Item['type']) || 'single',
+                type: String(ai.type || 'single') as Item['type'],
                 price: Number(ai.price || ai.sell_price || 0),
                 costPrice: Number(ai.cost_price || ai.costPrice || 0),
                 accountingGroup: String(ai.accounting_group || ai.accountingGroup || ai.category || GROUPS[0]),

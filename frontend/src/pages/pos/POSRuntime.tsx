@@ -94,7 +94,7 @@ export default function POSRuntime() {
           toast.info("Menu updated! Refreshing...");
           loadMenuData();
         }
-      } catch (error: any) {
+      } catch (error) {
         logger.error('Failed to poll config version', { error });
       }
     };
@@ -158,7 +158,7 @@ export default function POSRuntime() {
       await loadMenuData();
 
       logger.info('[POS] All data loaded successfully');
-    } catch (error: any) {
+    } catch (error) {
       logger.error('[POS] Failed to load data', { error });
       setLoadingError(error.message || "Failed to load POS data");
       toast.error("Failed to load POS data.");
@@ -189,10 +189,10 @@ export default function POSRuntime() {
       try {
         const { data } = await api.get(`/venues/${venueId}/active-config-version`);
         setMenuVersion(data.menu_version);
-      } catch (error: any) {
+      } catch (error) {
         logger.warn('[POS] Failed to get menu version', { error });
       }
-    } catch (error: any) {
+    } catch (error) {
       logger.error('[POS] Failed to load menu', { error });
       toast.error("Failed to load menu data");
     }
@@ -203,7 +203,7 @@ export default function POSRuntime() {
     try {
       const response = await menuAPI.getItems(venueId, categoryId);
       setMenuItems(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load items', { error });
       toast.error("Failed to load items");
     }
@@ -226,7 +226,7 @@ export default function POSRuntime() {
         setOrderItems([]);
         toast.info(`New order for ${table.name}`);
       }
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load order', { error });
       toast.error("Failed to load order");
     } finally {
@@ -391,10 +391,10 @@ export default function POSRuntime() {
         try {
           const tablesRes = await venueAPI.getTables(venueId);
           setTables(tablesRes.data);
-        } catch (e: any) { logger.warn("Failed to refresh tables", e); }
+        } catch (e) { logger.warn("Failed to refresh tables", e); }
       }
 
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Send failed:', error);
 
       // Safety Net: Queue if it was a network error during the process
@@ -434,7 +434,7 @@ export default function POSRuntime() {
       // Reload tables
       const tablesRes = await venueAPI.getTables(venueId);
       setTables(tablesRes.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Payment failed:", error);
       toast.error("Failed to process payment");
     }
@@ -757,7 +757,7 @@ export default function POSRuntime() {
               setCurrentOrder(res.data);
               setOrderItems(res.data.items || []);
 
-            } catch (error: any) {
+            } catch (error) {
               logger.error("Split failed:", error);
               toast.error("Failed to split bill");
             }

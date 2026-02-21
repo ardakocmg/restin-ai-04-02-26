@@ -37,7 +37,7 @@ export default function TrustDashboard() {
       setRiskFindings(riskRes.data?.data || []);
       setKillSwitches(switchRes.data?.data || []);
       setOverrides(overrideRes.data?.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Trust data error:', error);
     } finally {
       setLoading(false);

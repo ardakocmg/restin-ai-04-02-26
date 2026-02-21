@@ -84,7 +84,7 @@ export default function StockCount() {
       const data = res.data;
       setItems(Array.isArray(data) ? data : (data?.items || []));
       setCounts({});
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load inventory:', error);
       toast.error('Failed to load inventory');
     } finally {
@@ -224,7 +224,7 @@ export default function StockCount() {
       }
       toast.success('Stock count applied successfully');
       loadData();
-    } catch (e: any) {
+    } catch (e) {
       logger.error('Failed to save adjustments:', e);
       toast.error('Failed to save adjustments');
     } finally {

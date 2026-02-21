@@ -65,7 +65,7 @@ export default function Devices() {
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 setDevices(response.data);
-            } catch (error: any) {
+            } catch (error) {
                 logger.error("Failed to fetch devices", error);
             } finally {
                 setLoading(false);

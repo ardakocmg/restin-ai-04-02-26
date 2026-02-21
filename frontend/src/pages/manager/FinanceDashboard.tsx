@@ -27,7 +27,7 @@ export default function FinanceDashboard() {
     try {
       const response = await api.get(`/venues/${venueId}/finance/summary`);
       setSummary(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load finance summary:', error);
       if (error.response?.status !== 403) {
         toast.error('Failed to load finance data');
@@ -98,6 +98,7 @@ export default function FinanceDashboard() {
               <PermissionedTable
                 venueId={venueId}
                 tableKey="orders_open"
+                dataEndpoint="/api/v1/orders/open"
               />
             </TabsContent>
 
@@ -105,6 +106,7 @@ export default function FinanceDashboard() {
               <PermissionedTable
                 venueId={venueId}
                 tableKey="checks_closed"
+                dataEndpoint="/api/v1/orders/closed"
               />
             </TabsContent>
           </CardContent>

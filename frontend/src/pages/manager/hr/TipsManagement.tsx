@@ -44,7 +44,7 @@ export default function TipsManagement() {
     try {
       const response = await api.get(`/hr/tips/pools?venue_id=${venueId}`);
       setTipsPools(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to load tips pools:", error);
       if (error.response?.status !== 403) {
         toast.error("Failed to load tips pools");
@@ -73,7 +73,7 @@ export default function TipsManagement() {
       await api.post(`/hr/tips/pools/${poolId}/lock`);
       toast.success("Tips pool locked");
       await loadTipsPools();
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Failed to lock pool");
     }
   };

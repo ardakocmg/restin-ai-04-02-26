@@ -46,6 +46,7 @@ export default function CallLogs() {
 
     // Filter & sort
     const filteredLogs = logs
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .filter((log: any) => {
             if (searchQuery) {
                 const q = searchQuery.toLowerCase();
@@ -54,6 +55,7 @@ export default function CallLogs() {
             }
             return true;
         })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .sort((a: any, b: any) => {
             const aVal = a[sortField] || '';
             const bVal = b[sortField] || '';
@@ -182,6 +184,7 @@ export default function CallLogs() {
                                 </TableCell>
                             </TableRow>
                         ) : (
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             filteredLogs.map((log: any, i: number) => (
                                 <TableRow
                                     key={log.id || i}

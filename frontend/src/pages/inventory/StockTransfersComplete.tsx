@@ -55,7 +55,7 @@ export default function StockTransfersComplete() {
       setTransfers(transfersRes.data || []);
       setLocations(locationsRes.data || []);
       setInventoryItems(inventoryRes.data.items || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load data:', error);
     } finally {
       setLoading(false);
@@ -79,7 +79,7 @@ export default function StockTransfersComplete() {
       setIsTransferOpen(false);
       setNewTransfer({ to_venue_id: '', item_id: '', quantity: '', reason: '' });
       loadData();
-    } catch (error: any) {
+    } catch (error) {
       logger.error(error);
       toast.error('Failed to create transfer');
     }

@@ -163,7 +163,7 @@ export default function PurchaseOrdersNew() {
       setSuppliers(Array.isArray(suppData) ? suppData : (suppData?.suppliers || []));
       const itemsData = itemsRes.data;
       setInventoryItems(Array.isArray(itemsData) ? itemsData : (itemsData?.items || []));
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load PO data:', error);
       toast.error('Failed to load procurement data');
     } finally {
@@ -192,7 +192,7 @@ export default function PurchaseOrdersNew() {
       setShowCreate(false);
       setFormData({ supplier_id: '', delivery_date: '', delivery_time: '', delivery_notes: '', invoice_ref: '', items: [{ item_id: '', quantity: '', unit_cost: '' }] });
       loadData();
-    } catch (e: any) {
+    } catch (e) {
       logger.error('Failed to create PO:', e);
       toast.error('Failed to create PO');
     } finally {
@@ -206,7 +206,7 @@ export default function PurchaseOrdersNew() {
       await api.post(`/inventory/purchase-orders/${id}/${action}`);
       toast.success(`PO ${action} successful`);
       loadData();
-    } catch (e: any) {
+    } catch (e) {
       logger.error(`Failed to ${action} PO:`, e);
       toast.error(`Failed to ${action} PO`);
     }

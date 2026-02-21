@@ -81,7 +81,7 @@ export default function GlobalSearch({ open, onOpenChange }) {
         const response = await api.get(`/search?q=${encodeURIComponent(searchQuery)}&venue_id=${activeVenue?.id}`);
         // Backend returns { results: { menu_items: [...], users: [...], guests: [...], orders: [...] } }
         setDataResults(response.data?.results || {});
-      } catch (error: any) {
+      } catch (error) {
         // Silently fail — page results will still appear
         setDataResults({});
       } finally {

@@ -70,7 +70,7 @@ export function MultiVenueProvider({ children }: MultiVenueProviderProps): JSX.E
             const currentV = userVenues.find(v => v.id === savedVenueId) || userVenues[0];
             setCurrentVenue(currentV || null);
 
-        } catch (error: any) {
+        } catch (error) {
             const err = error as Error;
             logger.error('Failed to load venues', { error: err.message });
         } finally {

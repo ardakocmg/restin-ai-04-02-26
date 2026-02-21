@@ -53,7 +53,7 @@ export default function ProductionManagementComplete() {
       ]);
       setBatches(batchesRes.data || []);
       setRecipes(recipesRes.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load data:', error);
     } finally {
       setLoading(false);
@@ -80,7 +80,7 @@ export default function ProductionManagementComplete() {
       loadData();
       // Reset form
       setNewBatch({ recipe_id: '', planned_quantity: '', unit: 'portions', status: 'PLANNED' });
-    } catch (error: any) {
+    } catch (error) {
       logger.error(error);
       toast.error('Failed to create batch');
     }

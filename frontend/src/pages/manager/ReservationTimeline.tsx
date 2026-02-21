@@ -58,7 +58,7 @@ export default function ReservationTimeline() {
             // In a real app, query by date
             const response = await api.get(`/venues/${activeVenue.id}/reservations`);
             setReservations(response.data);
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to load reservations:', error);
         } finally {
             setLoading(false);

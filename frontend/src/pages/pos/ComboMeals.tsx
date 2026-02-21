@@ -51,7 +51,7 @@ const SEED: Combo[] = [
 
 const ComboMeals: React.FC = () => {
     const navigate = useNavigate();
-    const venueId = localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '';
+    const venueId = String(localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '');
     const { recipes: apiCombos, loading: apiLoading, error: apiError, refetch } = useRecipeService({ venueId, type: 'combo', enabled: !!venueId });
     const [combos, setCombos] = useState(SEED);
     const [apiWired, setApiWired] = useState(false);
@@ -63,7 +63,7 @@ const ComboMeals: React.FC = () => {
                     id: String(ac.id || ac._id || ''),
                     name: String(ac.name || ''),
                     price: Number(ac.price || ac.sell_price || 0),
-                    pricingType: (ac.pricing_type || ac.pricingType || 'fixed') as Combo['pricingType'],
+                    pricingType: String(ac.pricing_type || ac.pricingType || 'fixed') as Combo['pricingType'],
                     steps: Array.isArray(ac.steps) ? ac.steps : [],
                     isActive: ac.is_active !== false,
                     soldCount: Number(ac.sold_count || ac.soldCount || 0),

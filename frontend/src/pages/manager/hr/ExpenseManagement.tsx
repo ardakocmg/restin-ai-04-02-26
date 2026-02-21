@@ -29,7 +29,7 @@ export default function ExpenseManagement() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/hr/expense/claims`);
       setClaims(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch claims:', error);
       setClaims([]);
     } finally {

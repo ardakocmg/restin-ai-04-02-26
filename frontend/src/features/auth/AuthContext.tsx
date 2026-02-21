@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             // Extra check: ensure user has required fields
             if (storedUser.id && storedUser.role) {
                 setToken(storedToken);
-                setUser(storedUser);
+                setUser(storedUser as unknown as User);
             } else {
                 logger.warn('Stored user missing required fields, clearing auth');
                 authStore.clearAuth();
@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         logger.info('Login called', { hasToken: !!authToken, userName: userData?.name });
         setUser(userData);
         setToken(authToken);
-        authStore.setAuth(authToken, userData);
+        authStore.setAuth(authToken, userData as any);
     };
 
     const logout = () => {

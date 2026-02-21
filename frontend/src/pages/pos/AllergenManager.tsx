@@ -32,7 +32,7 @@ const EU_ALLERGENS: Allergen[] = [
 
 const AllergenManager: React.FC = () => {
     const navigate = useNavigate();
-    const venueId = localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '';
+    const venueId = String(localStorage.getItem('restin_pos_venue') || authStore.getUser()?.venue_id || '');
     const { data: apiAllergens, loading: apiLoading, error: apiError, refetch } = useVenueConfig({ venueId, configType: 'allergens', enabled: !!venueId });
     const [allergens, setAllergens] = useState(EU_ALLERGENS);
     const [apiWired, setApiWired] = useState(false);

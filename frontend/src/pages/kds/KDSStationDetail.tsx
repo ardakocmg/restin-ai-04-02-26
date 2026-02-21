@@ -33,7 +33,7 @@ function KDSStationDetail() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setStation(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching station:', error);
     } finally {
       setLoading(false);
@@ -48,7 +48,7 @@ function KDSStationDetail() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setSettings(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching settings:', error);
     }
   };
@@ -63,7 +63,7 @@ function KDSStationDetail() {
       );
       toast.success('Settings saved successfully');
       fetchSettings();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error updating settings:', error);
       toast.error('Failed to save settings');
     }
@@ -79,7 +79,7 @@ function KDSStationDetail() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success('Station reset successfully');
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error resetting station:', error);
     }
   };

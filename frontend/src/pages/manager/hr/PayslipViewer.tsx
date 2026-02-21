@@ -47,7 +47,7 @@ export default function PayslipViewer() {
             const payslipId = period || employeeId;
             const response = await api.get(`/hr/payslips/${payslipId}`);
             setPayslipData(response.data);
-        } catch (error: any) {
+        } catch (error) {
             // Fallback: try listing payslips for the employee and pick latest
             try {
                 const listRes = await api.get('/hr/payslips', {
@@ -57,7 +57,7 @@ export default function PayslipViewer() {
                 if (Array.isArray(payslips) && payslips.length > 0) {
                     setPayslipData(payslips[0]);
                 }
-            } catch (fallbackErr: any) {
+            } catch (fallbackErr) {
                 logger.error('Failed to load payslip:', fallbackErr);
             }
         } finally {
@@ -92,7 +92,7 @@ export default function PayslipViewer() {
                 venue_id: activeVenue?.id
             });
             toast.success('Payslip email sent successfully to employee!');
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to send email:', error);
             toast.error('Failed to send email. Please try again.');
         } finally {

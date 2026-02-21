@@ -77,7 +77,7 @@ export default function Scheduler() {
       const numDays = viewType === 'month' ? 28 : 7;
       const response = await api.get(`scheduler/data?week_start=${weekStart}&num_days=${numDays}`);
       setData(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch scheduler data:', error);
       toast.error("Failed to load scheduler data");
     } finally {

@@ -356,7 +356,7 @@ export default function Login() {
                 }
             });
 
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Google SSO init error', { error });
             toast.error('Failed to initialize Google Sign-In');
             setGoogleLoading(false);

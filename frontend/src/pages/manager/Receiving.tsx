@@ -24,7 +24,7 @@ export default function ReceivingPage() {
     try {
       const res = await api.get(`/inventory/receiving/grns?venue_id=${activeVenue.id}`);
       setGrns(res.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load GRNs:', error);
     } finally {
       setLoading(false);

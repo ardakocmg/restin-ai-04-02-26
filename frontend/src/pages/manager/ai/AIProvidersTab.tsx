@@ -134,7 +134,7 @@ export default function AIProvidersTab() {
         try {
             const res = await api.get(`/ai/dashboard?days=${days}`);
             setData(res.data);
-        } catch (err: any) {
+        } catch (err) {
             // Silent fail — show empty state
         } finally {
             setLoading(false);

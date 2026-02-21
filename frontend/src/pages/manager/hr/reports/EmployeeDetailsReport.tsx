@@ -23,7 +23,7 @@ export default function EmployeeDetailsReport() {
       const response = await api.get(`/venues/${venueId}/hr/employees`);
       setData(response.data || []);
       setLoading(false);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to load details:", error);
       setLoading(false);
     }

@@ -46,7 +46,7 @@ export default function TimesheetsPage() {
     try {
       const response = await api.get(`/hr/timesheets?venue_id=${venueId}`);
       setTimesheets(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error("Failed to load timesheets:", error);
       if (error.response?.status !== 403) {
         toast.error("Failed to load timesheets");
@@ -75,7 +75,7 @@ export default function TimesheetsPage() {
       await api.post(`/hr/timesheets/${timesheetId}/submit`);
       toast.success("Timesheet submitted");
       await loadTimesheets();
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Failed to submit");
     }
   };
@@ -85,7 +85,7 @@ export default function TimesheetsPage() {
       await api.post(`/hr/timesheets/${timesheetId}/approve`);
       toast.success("Timesheet approved");
       await loadTimesheets();
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Failed to approve");
     }
   };

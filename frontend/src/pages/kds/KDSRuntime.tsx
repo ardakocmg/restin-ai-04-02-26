@@ -50,7 +50,7 @@ function KDSRuntime() {
       );
       setSettings(response.data.settings);
       await fetchTickets();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error bootstrapping:', error);
     } finally {
       setLoading(false);
@@ -65,7 +65,7 @@ function KDSRuntime() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setTickets(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching tickets:', error);
     }
   };
@@ -82,7 +82,7 @@ function KDSRuntime() {
       setTimeout(() => setUndoToast(null), 30000);
       toast.success(`Ticket updated to ${newStatus}`);
       await fetchTickets();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error bumping ticket:', error);
       const errorMsg = error.response?.data?.detail || 'Failed to update ticket status';
       toast.error(`Error: ${errorMsg}`);
@@ -100,7 +100,7 @@ function KDSRuntime() {
       );
       setUndoToast(null);
       await fetchTickets();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error undoing:', error);
       toast.warning('Cannot undo — time window expired');
     }

@@ -63,7 +63,7 @@ export default function HiringATS() {
             ]);
             setJobs(jobsRes.data || []);
             setAnalytics(analyticsRes.data || null);
-        } catch (e: any) { logger.error('Failed to fetch hiring data:', e); }
+        } catch (e) { logger.error('Failed to fetch hiring data:', e); }
         setLoading(false);
     }, [venueId]);
 
@@ -75,7 +75,7 @@ export default function HiringATS() {
             setShowNewJob(false);
             setNewJob({ title: '', department: '', location: '', employment_type: 'Full-time', description: '' });
             fetchData();
-        } catch (e: any) { logger.error('Failed to create job:', e); }
+        } catch (e) { logger.error('Failed to create job:', e); }
     };
 
     const fetchCandidates = async (jobId: string) => {
@@ -83,7 +83,7 @@ export default function HiringATS() {
             const res = await api.get(`/venues/${venueId}/hr/hiring/jobs/${jobId}/applicants`);
             setCandidates(res.data || []);
             setView('pipeline');
-        } catch (e: any) { logger.error('Failed to fetch candidates:', e); }
+        } catch (e) { logger.error('Failed to fetch candidates:', e); }
     };
 
     /* No full-page spinner — page renders immediately with 0s */

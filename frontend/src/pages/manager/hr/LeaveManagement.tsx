@@ -120,7 +120,7 @@ export default function LeaveManagement() {
         const response = await api.get(`/venues/${venueId}/hr/leave/accrual-rules`);
         setRules(response.data || []);
       }
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch leave data:', error);
     }
   };
@@ -135,7 +135,7 @@ export default function LeaveManagement() {
         toast.success('Leave request rejected');
       }
       fetchData();
-    } catch (e: any) {
+    } catch (e) {
       logger.error('Action failed', e);
       toast.error('Action failed');
     }
@@ -155,7 +155,7 @@ export default function LeaveManagement() {
       setNewRequest({ type: 'vacation', start: '', end: '', notes: '' });
       setActiveTab('my-leave');
       fetchData();
-    } catch (e: any) {
+    } catch (e) {
       logger.error('Submit failed', e);
       toast.error('Failed to submit leave request');
     }

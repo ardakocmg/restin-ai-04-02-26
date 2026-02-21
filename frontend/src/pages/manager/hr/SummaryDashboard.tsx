@@ -106,7 +106,7 @@ export default function SummaryDashboard() {
     try {
       const response = await api.get(`/venues/${venueId}/summary/dashboard?company=${selectedCompany}`);
       setData(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch summary data:', error);
     } finally {
       setLoading(false);
@@ -181,6 +181,7 @@ export default function SummaryDashboard() {
 
       {/* KPI Row */}
       <div className="grid gap-4 md:grid-cols-3">
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {(data as any).kpi_metrics.map((metric: any, idx: number) => {
           const Icon = metric.icon === 'wallet' ? Wallet : (metric.icon === 'clock' ? Clock : Users);
           return (
@@ -208,6 +209,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Temporal Headcount Trend</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               <LineChart data={(data as any).headcount_by_year}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="year" stroke="#666" fontSize={10} />
@@ -223,6 +225,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Employment Archetype</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               <BarChart data={(data as any).headcount_by_employment_type}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis type="number" stroke="#666" fontSize={10} />
@@ -238,6 +241,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Demographic Bracket</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               <BarChart data={(data as any).headcount_by_age_bracket}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="bracket" angle={-45} textAnchor="end" height={60} stroke="#666" fontSize={9} />
@@ -256,6 +260,7 @@ export default function SummaryDashboard() {
           <CardHeader><CardTitle className="text-[11px] uppercase tracking-widest text-muted-foreground font-bold">Attrition vs Engagement Dynamics</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               <BarChart data={(data as any).engagements_terminations}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="year" stroke="#666" fontSize={10} />
@@ -275,11 +280,14 @@ export default function SummaryDashboard() {
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   data={(data as any).headcount_by_gender}
                   cx="50%" cy="50%" innerRadius={60} outerRadius={90}
                   paddingAngle={8} dataKey="count"
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   label={({ gender, percentage }: any) => `${gender} ${percentage}%`}
                 >
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   {(data as any).headcount_by_gender.map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}

@@ -105,7 +105,7 @@ class CircuitBreaker {
             const result = await fn();
             this.recordSuccess();
             return result;
-        } catch (error: any) {
+        } catch (error) {
             this.recordFailure();
             if (this.breaker.state === 'OPEN' && this.options.fallback !== undefined) {
                 return this.options.fallback as T;

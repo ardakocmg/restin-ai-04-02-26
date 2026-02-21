@@ -56,7 +56,7 @@ export const VenueProvider: React.FC<VenueProviderProps> = ({ children }) => {
                     selectVenue(response.data[0]);
                 }
             }
-        } catch (error: any) {
+        } catch (error) {
             logger.error('Failed to load venues', { error });
         } finally {
             setLoading(false);

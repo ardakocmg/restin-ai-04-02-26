@@ -19,7 +19,7 @@ export default function RecipeList() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/recipes/engineered`);
       setRecipes(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch recipes:', error);
       setRecipes([]);
     } finally {

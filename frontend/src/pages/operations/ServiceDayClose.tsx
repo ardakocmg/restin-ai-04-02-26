@@ -26,7 +26,7 @@ export default function ServiceDayClose() {
       setLoading(true);
       const res = await api.get(`/ops/service-day-close/status?venue_id=${activeVenue.id}&date=${today}`);
       setCloseStatus(res.data?.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Day close error:', error);
     } finally {
       setLoading(false);

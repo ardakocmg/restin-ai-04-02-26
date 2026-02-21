@@ -91,7 +91,7 @@ class PrintJobManager {
             toast.success('Print Job sent to spooler');
             return true;
 
-        } catch (error: any) {
+        } catch (error) {
             const err = error as Error;
             logger.error('Print failed', { error: err.message });
             // Fallback to Window Print

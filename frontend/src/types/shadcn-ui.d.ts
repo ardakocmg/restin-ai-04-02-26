@@ -92,15 +92,18 @@ declare module "@/components/ui/calendar" {
         className?: string;
         mode?: "single" | "range" | "multiple";
         selected?: Date | Date[] | { from?: Date; to?: Date };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onSelect?: (date: any) => void;
         disabled?: (date: Date) => boolean;
         initialFocus?: boolean;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         [key: string]: any;
     }>;
 }
 
 declare module "@/components/ui/carousel" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     export const Carousel: React.FC<{ className?: string; children?: React.ReactNode;[key: string]: any }>;
     export const CarouselContent: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode } & RefAttributes<HTMLDivElement>
@@ -130,6 +133,7 @@ declare module "@/components/ui/collapsible" {
 declare module "@/components/ui/command" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
     export const Command: ForwardRefExoticComponent<
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         { className?: string; children?: React.ReactNode;[key: string]: any } & RefAttributes<HTMLDivElement>
     >;
     export const CommandInput: ForwardRefExoticComponent<
@@ -168,6 +172,7 @@ declare module "@/components/ui/context-menu" {
 
 declare module "@/components/ui/drawer" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     export const Drawer: React.FC<{ children?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void;[key: string]: any }>;
     export const DrawerTrigger: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode; asChild?: boolean } & RefAttributes<HTMLButtonElement>
@@ -190,7 +195,9 @@ declare module "@/components/ui/drawer" {
 
 declare module "@/components/ui/form" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     export const Form: React.FC<{ children?: React.ReactNode;[key: string]: any }>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     export const FormField: React.FC<{ children?: React.ReactNode; control?: any; name: string; render: (field: any) => React.ReactNode }>;
     export const FormItem: ForwardRefExoticComponent<
         { className?: string; children?: React.ReactNode } & RefAttributes<HTMLDivElement>
@@ -301,10 +308,12 @@ declare module "@/components/ui/separator" {
 
 declare module "@/components/ui/skeleton" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     export const Skeleton: React.FC<{ className?: string;[key: string]: any }>;
 }
 
 declare module "@/components/ui/sonner" {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     export const Toaster: React.FC<{ [key: string]: any }>;
 }
 
@@ -325,6 +334,7 @@ declare module "@/components/ui/toggle" {
 declare module "@/components/ui/toggle-group" {
     import { ForwardRefExoticComponent, RefAttributes } from "react";
     export const ToggleGroup: ForwardRefExoticComponent<
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         { className?: string; children?: React.ReactNode; type?: "single" | "multiple"; value?: string | string[]; onValueChange?: (v: any) => void; variant?: string; size?: string } & RefAttributes<HTMLDivElement>
     >;
     export const ToggleGroupItem: ForwardRefExoticComponent<

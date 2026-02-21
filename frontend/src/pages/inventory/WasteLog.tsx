@@ -34,7 +34,7 @@ function WasteLog() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setWasteEntries(response.data.waste || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching waste:', error);
     }
   };
@@ -47,7 +47,7 @@ function WasteLog() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setItems(response.data.items || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching items:', error);
     }
   };
@@ -77,7 +77,7 @@ function WasteLog() {
       setShowForm(false);
       setFormData({ item_id: '', qty: '', reason: 'SPOILAGE', notes: '' });
       fetchWaste();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error logging waste:', error);
     }
   };

@@ -16,7 +16,7 @@ export default function VarianceAnalysis() {
       const venueId = localStorage.getItem('currentVenueId');
       const response = await api.get(`/venues/${venueId}/invoices/ai?status=variance_detected`);
       setInvoices(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch variances:', error);
     } finally {
       setLoading(false);

@@ -33,7 +33,7 @@ export default function ForecastingCosts() {
     try {
       const response = await api.get('forecasting-costs/metrics');
       setData(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to fetch forecasting data:', error);
     } finally {
       setLoading(false);

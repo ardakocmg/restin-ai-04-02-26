@@ -25,7 +25,7 @@ function PurchaseOrders() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setPos(response.data.purchase_orders || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching POs:', error);
     } finally {
       setLoading(false);

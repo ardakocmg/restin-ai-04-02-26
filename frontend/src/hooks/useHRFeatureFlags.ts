@@ -16,7 +16,7 @@ export const useHRFeatureFlags = () => {
         setLoading(true);
         const response = await hrFeatureFlagsAPI.get(activeVenue.id);
         setFlags(response.data.flags || []);
-      } catch (error: any) {
+      } catch (error) {
         setFlags([]);
       } finally {
         setLoading(false);

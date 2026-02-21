@@ -44,7 +44,7 @@ export default function EventMonitorPage() {
       setOutboxEvents(outboxRes.data.events || []);
       setDlqEvents(dlqRes.data.events || []);
       setCompletedEvents(completedRes.data.events || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load events:', error);
     } finally {
       setLoading(false);

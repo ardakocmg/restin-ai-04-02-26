@@ -24,7 +24,7 @@ export default function InventoryStatus() {
         try {
             const res = await api.get('/inventory/analytics', { params: { venue_id: activeVenue.id } });
             setData(res.data);
-        } catch (err: any) {
+        } catch (err) {
             logger.warn('Inventory analytics API failed');
             setData({
                 metrics: { total_items: 0, low_stock_alerts: 0, waste_cost_week: 0, inventory_value: 0 },

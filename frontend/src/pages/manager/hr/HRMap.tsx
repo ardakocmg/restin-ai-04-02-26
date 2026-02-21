@@ -36,7 +36,7 @@ export default function HRMap() {
                 const data = res.data;
                 setMarkers(data.markers || []);
                 setStats(data.stats || { total_check_ins: 0, currently_in: 0, mobile_users: 0 });
-            } catch (err: any) {
+            } catch (err) {
                 logger.error('Failed to load attendance data:', err);
             } finally {
                 setLoading(false);
@@ -152,6 +152,7 @@ export default function HRMap() {
                 </svg>
 
                 {/* Markers */}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 {([] as any[]).map((m, i) => (
                     <div
                         key={m.id}

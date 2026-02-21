@@ -139,7 +139,7 @@ export default function HREmployeePerformance() {
                         if (emp) setEmployee({ name: emp.employee_name, department: emp.department, role: emp.role });
                     }
                 }
-            } catch (err: any) {
+            } catch (err) {
                 logger.error('Failed to fetch employee performance:', err);
             } finally {
                 setLoading(false);

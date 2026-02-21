@@ -34,7 +34,7 @@ function CreatePinDialog({ doorId, isOpen, onClose, onSuccess }: { doorId: strin
         }
         setLoading(true);
         try {
-            const resp = await accessControlAPI.createPin(getVenueId(), doorId, name, parseInt(code), undefined, undefined);
+            const resp = await accessControlAPI.createPin(getVenueId(), doorId, name, code, undefined, undefined);
             if (resp.status === 200) {
                 toast.success('PIN created successfully');
                 onSuccess();
@@ -42,7 +42,7 @@ function CreatePinDialog({ doorId, isOpen, onClose, onSuccess }: { doorId: strin
                 setName('');
                 setCode('');
             }
-        } catch (e: any) {
+        } catch (e) {
             toast.error('Failed to create PIN');
             logger.error('Create PIN failed', { error: String(e) });
         } finally {
@@ -106,7 +106,7 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
                 const resp = await accessControlAPI.getNativeLogs(door.id, getVenueId());
                 if (resp.status === 200) setLogs(resp.data);
             }
-        } catch (e: any) {
+        } catch (e) {
             logger.error(`Load ${tab} failed`, { error: String(e) });
             toast.error(`Failed to load ${tab}`);
         } finally {
@@ -118,9 +118,9 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
         if (!config) return;
         setSaving(true);
         try {
-            const resp = await accessControlAPI.updateConfig(door.id, config, getVenueId());
+            const resp = await accessControlAPI.updateConfig(door.id, config as any, getVenueId());
             if (resp.status === 200) { toast.success('Settings saved'); setConfig(resp.data); }
-        } catch (e: any) {
+        } catch (e) {
             toast.error('Save failed');
             logger.error('Save config failed', { error: String(e) });
         } finally { setSaving(false); }
@@ -131,7 +131,7 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
         try {
             const resp = await accessControlAPI.deleteAuth(door.id, authId, getVenueId());
             if (resp.status === 200) { toast.success('User revoked'); loadTabContent('users'); }
-        } catch (e: any) { toast.error('Revoke failed'); }
+        } catch (e) { toast.error('Revoke failed'); }
     };
 
     return (
@@ -229,7 +229,7 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
                                     <Button size="sm" variant="outline" onClick={async () => {
                                         toast.loading("Syncing logs...");
                                         try { await accessControlAPI.syncLogs(door.id, getVenueId()); toast.dismiss(); toast.success("Logs synced!"); loadTabContent('logs'); }
-                                        catch (e: any) { toast.dismiss(); toast.error("Sync failed"); }
+                                        catch (e) { toast.dismiss(); toast.error("Sync failed"); }
                                     }} className="h-8 gap-2 border-border text-secondary-foreground">
                                         <RefreshCw className="h-3 w-3" /> Sync from Device
                                     </Button>
@@ -293,7 +293,7 @@ export default function DoorsTab() {
         try {
             const resp = await api.get(`/access-control/doors?venue_id=${getVenueId()}`);
             if (resp.status === 200) setDoors(resp.data);
-        } catch (e: any) { logger.error('Load doors failed', { error: String(e) }); }
+        } catch (e) { logger.error('Load doors failed', { error: String(e) }); }
         finally { setLoading(false); }
     };
 
@@ -306,7 +306,7 @@ export default function DoorsTab() {
                 toast.success(`Synced: ${data.discovered} devices (${data.new} new, ${data.updated} updated)`);
                 loadDoors();
             } else { toast.error(resp.data.detail || 'Sync failed'); }
-        } catch (e: any) { toast.error('Device sync failed'); logger.error('Sync failed', { error: String(e) }); }
+        } catch (e) { toast.error('Device sync failed'); logger.error('Sync failed', { error: String(e) }); }
         finally { setSyncing(false); }
     };
 
@@ -315,7 +315,7 @@ export default function DoorsTab() {
         try {
             const resp = await api.post(`/access-control/doors/${doorId}/rename?venue_id=${getVenueId()}`, { new_name: editName });
             if (resp.status === 200) { toast.success('Door renamed'); setEditingId(null); loadDoors(); }
-        } catch (e: any) { toast.error('Rename failed'); logger.error('Rename failed', { error: String(e) }); }
+        } catch (e) { toast.error('Rename failed'); logger.error('Rename failed', { error: String(e) }); }
     };
 
     const executeAction = async (doorId: string, action: string) => {
@@ -326,7 +326,7 @@ export default function DoorsTab() {
             const resp = await api.post(`/access-control/doors/${doorId}/${action.toLowerCase()}?venue_id=${getVenueId()}&user_id=${userId}`);
             if (resp.status === 200) { toast.success(`${action} successful via ${resp.data.provider_path} (${resp.data.duration_ms}ms)`); loadDoors(); }
             else { toast.error(resp.data.detail || `${action} failed`); }
-        } catch (e: any) { toast.error(`${action} failed`); logger.error('Action failed', { error: String(e) }); }
+        } catch (e) { toast.error(`${action} failed`); logger.error('Action failed', { error: String(e) }); }
         finally { setActionLoading(null); }
     };
 

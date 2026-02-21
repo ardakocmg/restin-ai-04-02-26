@@ -38,7 +38,7 @@ export default function IntegrityPage() {
 
       setRuns(runsRes.data?.data || []);
       setFindings(findingsRes.data?.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Integrity data error:', error);
     } finally {
       setLoading(false);
@@ -49,7 +49,7 @@ export default function IntegrityPage() {
     try {
       await api.post(`/system/integrity/run?venue_id=${activeVenue.id}`, {});
       await loadIntegrityData();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Run checks error:', error);
     }
   };

@@ -36,7 +36,7 @@ export default function TasksKanban() {
     try {
       const res = await api.get(`/collab/tasks/board?venue_id=${activeVenue.id}`);
       setBoard(res.data?.data || { columns: [], cards: [] });
-    } catch (error: any) {
+    } catch (error) {
       logger.warn('Board API failed');
       toast.error('Failed to load tasks board from server');
     } finally {

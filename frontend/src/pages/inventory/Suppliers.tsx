@@ -25,7 +25,7 @@ function Suppliers() {
       // Handle both array and {suppliers: [...]} response formats
       const data = response.data;
       setSuppliers(Array.isArray(data) ? data : (data.suppliers || []));
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching suppliers:', error);
     }
   };

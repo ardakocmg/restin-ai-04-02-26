@@ -26,7 +26,7 @@ function InventoryItems() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setItems(response.data.items || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Error fetching items:', error);
     } finally {
       setLoading(false);

@@ -30,7 +30,7 @@ export default function Guests() {
     try {
       const response = await api.get(`/venues/${activeVenue.id}/guests`);
       setGuests(response.data);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load guests:', error);
     } finally {
       setLoading(false);
@@ -52,7 +52,7 @@ export default function Guests() {
       setShowCreateDialog(false);
       setNewGuest({ name: '', email: '', phone: '', preferences: '' });
       loadGuests();
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Failed to create guest');
     }
   };

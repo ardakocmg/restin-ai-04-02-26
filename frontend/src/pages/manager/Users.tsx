@@ -76,7 +76,7 @@ export default function Users() {
     try {
       const response = await api.get(`/venues/${activeVenueId}/users`);
       setUsers(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load users:', error);
       toast.error('Failed to load users');
     } finally {
@@ -99,7 +99,7 @@ export default function Users() {
       setShowCreateDialog(false);
       setNewUser({ name: '', role: 'staff', pin: '', email: '' });
       loadUsers();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to create user:', error);
       toast.error('Failed to create user');
     } finally {
@@ -115,7 +115,7 @@ export default function Users() {
       });
       toast.success(isCurrentlyArchived ? 'User restored' : 'User archived');
       loadUsers();
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Archive toggle failed:', error);
       toast.error('Action failed');
     }
@@ -126,7 +126,7 @@ export default function Users() {
     try {
       const res = await api.post(`/venues/${activeVenueId}/admin/users/${userId}/reset-pin`);
       toast.success(`PIN reset for ${userName}. New PIN: ${res.data.new_pin}`);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('PIN reset failed:', error);
       toast.error('Failed to reset PIN');
     }
@@ -149,7 +149,7 @@ export default function Users() {
       await api.post('/auth/admin/set-password', { user_id: pwTargetUser.id, new_password: pwValue });
       toast.success(`Password set for ${pwTargetUser.name}`);
       setShowPwDialog(false);
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error?.response?.data?.detail || 'Failed to set password');
     } finally {
       setPwSaving(false);
@@ -179,7 +179,7 @@ export default function Users() {
       toast.success('User linked to employee record');
       setShowLinkDialog(false);
       loadUsers();
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error?.response?.data?.detail || 'Failed to link employee');
     }
   };

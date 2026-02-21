@@ -41,7 +41,7 @@ export default function ReservationModal({ open, onOpenChange, venueId, onCreate
             });
             setSlots(res.data.slots);
             toast.success("Availability updated");
-        } catch (e: any) {
+        } catch (e) {
             toast.error("Error checking availability");
         } finally {
             setChecking(false);
@@ -75,7 +75,7 @@ export default function ReservationModal({ open, onOpenChange, venueId, onCreate
             toast.success("Reservation created successfully");
             onCreated();
             onOpenChange(false);
-        } catch (e: any) {
+        } catch (e) {
             toast.error("Error creating reservation. Check for overlaps.");
         } finally {
             setLoading(false);

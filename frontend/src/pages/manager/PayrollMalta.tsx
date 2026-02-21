@@ -29,7 +29,7 @@ export default function PayrollMaltaPage() {
       
       setProfiles(profRes.data?.data || []);
       setPayruns(runRes.data?.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Payroll error:', error);
     } finally {
       setLoading(false);

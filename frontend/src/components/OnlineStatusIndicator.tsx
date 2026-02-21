@@ -31,6 +31,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
     resilienceManager.init();
 
     // Subscribe to resilience status
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const unsubscribe = resilienceManager.onStatusChange((newStatus: any) => {
       setStatus(newStatus);
     });
@@ -69,7 +70,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
       const stats = await offlineDB.getStats();
       setPendingCount(stats.pending_commands);
       setLastSync(stats.last_sync);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load sync stats:', error);
     }
   };

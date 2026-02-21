@@ -232,7 +232,7 @@ export default function POSRuntimeEnhanced() {
 
       // Load menu categories + first category items
       await loadMenuData();
-    } catch (err: any) {
+    } catch (err) {
       logger.error('[L-Series POS] Failed to load data', { error: err });
     } finally {
       setLoading(false);
@@ -252,7 +252,7 @@ export default function POSRuntimeEnhanced() {
       } else {
         setMenuItems([]);
       }
-    } catch (error: any) {
+    } catch (error) {
       logger.error('[L-Series POS] Failed to load menu', { error });
     }
   };
@@ -262,7 +262,7 @@ export default function POSRuntimeEnhanced() {
     try {
       const response = await menuAPI.getItems(venueId, categoryId);
       setMenuItems(response.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Failed to load category items', { error });
     }
   };
@@ -279,7 +279,7 @@ export default function POSRuntimeEnhanced() {
       setOrder(response.data.order);
       setItems([]);
       return response.data.order;
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Error creating order', { error: err });
     }
   };
@@ -314,7 +314,7 @@ export default function POSRuntimeEnhanced() {
       });
       setLastAddedItem({ menuItem, customizations });
       await refreshOrder();
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Error adding item', { error: err });
       toast.error('Failed to add item');
     }
@@ -334,7 +334,7 @@ export default function POSRuntimeEnhanced() {
         pos_x: newPos.x,
         pos_y: newPos.y,
       });
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Error saving table position', { error: err });
     }
   };
@@ -351,7 +351,7 @@ export default function POSRuntimeEnhanced() {
       const response = await api.get(`pos/orders/${order.id}?venue_id=${venueId}`);
       setOrder(response.data.order);
       setItems(response.data.items || []);
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Error refreshing order', { error: err });
     }
   };
@@ -360,7 +360,7 @@ export default function POSRuntimeEnhanced() {
     try {
       await api.post(`pos/orders/${order.id}/items/${itemId}/void?venue_id=${venueId}`, {});
       refreshOrder();
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Error voiding item', { error: err });
     }
   };
@@ -370,7 +370,7 @@ export default function POSRuntimeEnhanced() {
       await api.post(`pos/orders/${order.id}/send?venue_id=${venueId}`, {});
       toast.success('Sent to Kitchen!');
       refreshOrder();
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Error sending order', { error: err });
     }
   };
@@ -379,7 +379,7 @@ export default function POSRuntimeEnhanced() {
     try {
       await api.post(`pos/orders/${order.id}/send?venue_id=${venueId}`, { destination: 'BAR' });
       toast.success('Sent to Bar!');
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Error sending to bar', { error: err });
     }
   };
@@ -403,7 +403,7 @@ export default function POSRuntimeEnhanced() {
       await api.put(`pos/orders/${order.id}/items/${item.id}?venue_id=${venueId}`, { qty });
       refreshOrder();
       toast.success(`Qty set to ${qty}`);
-    } catch (err: any) { logger.error('Error updating qty', { error: err }); }
+    } catch (err) { logger.error('Error updating qty', { error: err }); }
     setShowQuantityPopup(null);
   };
 
@@ -412,7 +412,7 @@ export default function POSRuntimeEnhanced() {
       await api.put(`pos/orders/${order.id}/items/${item.id}?venue_id=${venueId}`, { unit_price: price });
       refreshOrder();
       toast.success(`Price overridden to €${price.toFixed(2)}`);
-    } catch (err: any) { logger.error('Error overriding price', { error: err }); }
+    } catch (err) { logger.error('Error overriding price', { error: err }); }
     setShowPricePopup(null);
   };
 
@@ -447,7 +447,7 @@ export default function POSRuntimeEnhanced() {
       await api.put(`pos/orders/${order.id}/items/${item.id}?venue_id=${venueId}`, { course: nextCourse });
       refreshOrder();
       toast.success(`Moved to Course ${nextCourse}`);
-    } catch (err: any) { logger.error('Error moving course', { error: err }); }
+    } catch (err) { logger.error('Error moving course', { error: err }); }
   };
 
   const handleMoveSeat = async (item) => {
@@ -456,7 +456,7 @@ export default function POSRuntimeEnhanced() {
       await api.put(`pos/orders/${order.id}/items/${item.id}?venue_id=${venueId}`, { seat: nextSeat });
       refreshOrder();
       toast.success(`Moved to Seat ${nextSeat}`);
-    } catch (err: any) { logger.error('Error moving seat', { error: err }); }
+    } catch (err) { logger.error('Error moving seat', { error: err }); }
   };
 
   const handleStock86 = (item) => {
@@ -471,7 +471,7 @@ export default function POSRuntimeEnhanced() {
       });
       refreshOrder();
       toast.success(action === 'hold' ? `⏸️ ${item.menu_item_name || item.name} — HELD` : `🔥 ${item.menu_item_name || item.name} — RUSH`);
-    } catch (err: any) {
+    } catch (err) {
       logger.error(`Error ${action} item`, { error: err });
       // Optimistic fallback toast
       toast.success(action === 'hold' ? `⏸️ ${item.menu_item_name || item.name} — HELD` : `🔥 ${item.menu_item_name || item.name} — RUSH`);
@@ -484,7 +484,7 @@ export default function POSRuntimeEnhanced() {
       await api.post(`pos/orders/${order.id}/items/${item.id}/void?venue_id=${venueId}`, { reason });
       refreshOrder();
       toast.success(`Voided: ${reason}`);
-    } catch (err: any) { logger.error('Error voiding item', { error: err }); }
+    } catch (err) { logger.error('Error voiding item', { error: err }); }
   };
 
   const saveItemNote = async () => {
@@ -493,7 +493,7 @@ export default function POSRuntimeEnhanced() {
       await api.put(`pos/orders/${order.id}/items/${item.id}?venue_id=${venueId}`, { instructions: noteText });
       refreshOrder();
       toast.success('Note saved');
-    } catch (err: any) { logger.error('Error saving note', { error: err }); }
+    } catch (err) { logger.error('Error saving note', { error: err }); }
     setShowNoteInput(null);
     setNoteText('');
   };
@@ -503,7 +503,7 @@ export default function POSRuntimeEnhanced() {
     try {
       await api.post(`pos/orders/${order.id}/fire?venue_id=${venueId}`, { course: courseNum });
       toast.success(`Course ${courseNum} fired! 🔥`);
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Error firing course', { error: err });
       toast.success(`Course ${courseNum} fired! 🔥`); // Optimistic
     }
@@ -530,7 +530,7 @@ export default function POSRuntimeEnhanced() {
           await api.post(`pos/orders/${order.id}/void?venue_id=${venueId}`, { reason: 'Manager void' });
           toast.success('Order voided');
           setOrder(null); setItems([]);
-        } catch (err: any) { logger.error('Error voiding order', { error: err }); }
+        } catch (err) { logger.error('Error voiding order', { error: err }); }
         break;
       default: break;
     }
@@ -561,7 +561,7 @@ export default function POSRuntimeEnhanced() {
       });
       await refreshOrder();
       toast.success(`Added: ${openItemName}`);
-    } catch (err: any) { logger.error('Error adding open item', { error: err }); }
+    } catch (err) { logger.error('Error adding open item', { error: err }); }
     setShowOpenItem(false);
     setOpenItemName('');
     setOpenItemPrice('');
@@ -588,7 +588,7 @@ export default function POSRuntimeEnhanced() {
       const res = await api.post('customers', { ...data, venue_id: venueId });
       setAssignedCustomer(res.data);
       toast.success(`Created & assigned: ${data.name}`);
-    } catch (err: any) { logger.error('Error creating customer', { error: err }); }
+    } catch (err) { logger.error('Error creating customer', { error: err }); }
   };
 
   // Table timer
@@ -630,7 +630,7 @@ export default function POSRuntimeEnhanced() {
       setOrder(null);
       setItems([]);
       setShowPayment(false);
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Error processing payment', { error: err });
       toast.error('Payment failed');
     }
@@ -1093,7 +1093,7 @@ export default function POSRuntimeEnhanced() {
               await api.post(`pos/orders/${o.id}/unfinalize?venue_id=${venueId}`, {});
               toast.success('Order unfinalized — you can now edit it');
               refreshOrder();
-            } catch (err: any) {
+            } catch (err) {
               logger.error('Error unfinalizing order', { error: err });
               // Optimistic: still allow editing
               toast.success('Order reopened for editing');

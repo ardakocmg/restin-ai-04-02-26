@@ -130,6 +130,7 @@ const Discounts: React.FC = () => {
                     <div className="pos-flex pos-gap-16 pos-mb-16 pos-flex--wrap">
                         {([['isCustom', 'Custom discount (POS user enters amount)'], ['qrEnabled', 'Enable QR code'], ['requiresReason', 'Requires reason'], ['requiresManager', 'Requires manager'], ['isActive', 'Active']] as const).map(([key, label]) =>
                             <label key={key} className="pos-toggle-label">
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 <input type="checkbox" checked={editing[key] as boolean} onChange={() => setEditing(p => p ? { ...p, [key]: !(p as any)[key] } : null)} /> {label}</label>
                         )}
                     </div>

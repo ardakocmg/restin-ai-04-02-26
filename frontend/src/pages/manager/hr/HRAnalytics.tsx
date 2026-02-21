@@ -390,7 +390,7 @@ export default function HRAnalytics() {
       if (posRes.status === 'fulfilled') setPosData(posRes.value.data);
       if (kdsRes.status === 'fulfilled') setKdsData(kdsRes.value.data);
       if (sysRes.status === 'fulfilled') setSystemData(sysRes.value.data);
-    } catch (err: any) {
+    } catch (err) {
       logger.error('Failed to fetch HR analytics:', err);
     } finally {
       setLoading(false);

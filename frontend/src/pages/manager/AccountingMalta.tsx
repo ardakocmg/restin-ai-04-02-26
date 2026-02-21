@@ -28,7 +28,7 @@ export default function AccountingMaltaPage() {
       
       setAccounts(accRes.data?.data || []);
       setJournals(jrnRes.data?.data || []);
-    } catch (error: any) {
+    } catch (error) {
       logger.error('Accounting error:', error);
     } finally {
       setLoading(false);
