@@ -152,7 +152,6 @@ export default function HRMap() {
                 </svg>
 
                 {/* Markers */}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 {([] as unknown[]).map((m, i) => (
                     <div
                         key={m.id}

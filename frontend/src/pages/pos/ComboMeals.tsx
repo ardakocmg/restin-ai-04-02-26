@@ -58,8 +58,8 @@ const ComboMeals: React.FC = () => {
 
     useEffect(() => {
         if (apiCombos.length > 0) {
-            const mapped: Combo[] = apiCombos.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (ac: any) => ({
+            const mapped: Combo[] = (apiCombos as unknown as Record<string, unknown>[]).map(
+                (ac: Record<string, unknown>) => ({
                     id: String(ac.id || ac._id || ''),
                     name: String(ac.name || ''),
                     price: Number(ac.price || ac.sell_price || 0),
