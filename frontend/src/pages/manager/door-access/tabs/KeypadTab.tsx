@@ -13,7 +13,7 @@ import { getVenueId } from '../doorAccessTypes';
 export default function KeypadTab() {
     const [pins, setPins] = useState<KeypadPin[]>([]);
     const [doors, setDoors] = useState<Door[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [_loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(false);
     const [newPin, setNewPin] = useState({ door_id: '', name: '', code: '', valid_from: '', valid_until: '' });
 

@@ -103,7 +103,7 @@ export default function EmployeePortalComplete() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [currentYear, _setCurrentYear] = useState(new Date().getFullYear());
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [showLeaveDialog, setShowLeaveDialog] = useState(false);
   const [showLeaveRequestDialog, setShowLeaveRequestDialog] = useState(false);

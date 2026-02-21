@@ -53,7 +53,7 @@ const TABS = [
  */
 export default function VoiceDashboard() {
     const { activeVenueId } = useVenue();
-    const { user, isManager, isOwner } = useAuth();
+    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const location = useLocation();

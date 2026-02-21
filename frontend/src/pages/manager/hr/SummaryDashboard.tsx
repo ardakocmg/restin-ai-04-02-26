@@ -86,7 +86,7 @@ export default function SummaryDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedCompany, setSelectedCompany] = useState('All');
-  const [period, setPeriod] = useState("All");
+  const [_period, _setPeriod] = useState("All");
 
   const mainActions = [
     { title: 'People & Talent', icon: Users, path: '/manager/hr/people' },
@@ -143,7 +143,7 @@ export default function SummaryDashboard() {
 
   if (!data) return <div className="p-8 bg-background min-h-screen text-muted-foreground">{"No "}core intelligence data available.</div>;
 
-  const iconMap = {
+  const _iconMap = {
     'user-plus': UserPlus,
     'users': Users,
     'user-x': UserMinus
@@ -300,7 +300,7 @@ export default function SummaryDashboard() {
                   // @ts-expect-error Recharts internal types for labels are hardcoded to generic objects
                   label={(props: { gender?: string; percentage?: number | string }) => `${props.gender || ''} ${props.percentage || ''}%`}
                 >
-                  {(data as /**/any).headcount_by_gender.map((entry: /**/any, index: number) => (
+                  {(data as /**/any).headcount_by_gender.map((_entry: /**/any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

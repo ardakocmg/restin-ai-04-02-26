@@ -75,7 +75,7 @@ interface CashDrawer {
 }
 
 export default function Printers() {
-    const { user } = useAuth();
+    const { user: _user } = useAuth();
     const { activeVenue } = useVenue();
     const { logAction } = useAuditLog();
     useEffect(() => { logAction('PRINTERS_VIEWED', 'printers'); }, []);
@@ -91,7 +91,7 @@ export default function Printers() {
     const [printers, setPrinters] = useState<PrinterData[]>([]);
     const [templates, setTemplates] = useState<TemplateData[]>([]); // Will load from API
     const [cashDrawers, setCashDrawers] = useState<CashDrawer[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [_loading, setLoading] = useState(false);
 
     const [editPrinterModal, setEditPrinterModal] = useState(false);
     const [editTemplateModal, setEditTemplateModal] = useState(false);

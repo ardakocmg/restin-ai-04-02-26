@@ -7,7 +7,7 @@ import api from '../../../../lib/api';
 
 import { logger } from '@/lib/logger';
 export default function TurnoverReport() {
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const [stats, setStats] = useState({ joined: 0, left: 0, turnoverRate: "0" });
   const [loading, setLoading] = useState(true);
 

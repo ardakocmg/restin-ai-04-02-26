@@ -75,7 +75,7 @@ export default function POSRuntimeEnhanced() {
   const [loading, setLoading] = useState(true);
 
   // UI state
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, _setSearchQuery] = useState('');
   const [showModifierModal, setShowModifierModal] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState(null);
   const [showPayment, setShowPayment] = useState(false);
@@ -85,7 +85,7 @@ export default function POSRuntimeEnhanced() {
   // L-Series specific state
   const [currentSeat, setCurrentSeat] = useState(1);
   const [seatCount, setSeatCount] = useState(1);
-  const [currentCourse, setCurrentCourse] = useState(1);
+  const [currentCourse, _setCurrentCourse] = useState(1);
   const [orderViewMode, setOrderViewMode] = useState('Seat');
   const [activeLeftTool, setActiveLeftTool] = useState(null);
   const [bottomPanelTab, setBottomPanelTab] = useState('TABLE');
@@ -107,24 +107,24 @@ export default function POSRuntimeEnhanced() {
   const [showCoversPopup, setShowCoversPopup] = useState(false);
   const [covers, setCovers] = useState(0);
   const [assignedCustomer, setAssignedCustomer] = useState(null);
-  const [customers, setCustomers] = useState([]);
-  const [allMenuItems, setAllMenuItems] = useState([]); // for search across categories
+  const [customers, _setCustomers] = useState([]);
+  const [allMenuItems, _setAllMenuItems] = useState([]); // for search across categories
   const [stock86Items, setStock86Items] = useState(new Set()); // out-of-stock item IDs
   const [tableStartTime, setTableStartTime] = useState(null);
   const [openItemName, setOpenItemName] = useState('');
   const [openItemPrice, setOpenItemPrice] = useState('');
-  const [itemGridView, setItemGridView] = useState('grid'); // 'grid' | 'list'
+  const [itemGridView, _setItemGridView] = useState('grid'); // 'grid' | 'list'
   const [showOverview, setShowOverview] = useState(false); // open-orders overview
   const [overviewMode, setOverviewMode] = useState('grid'); // 'grid' | 'floorplan'
   const [lastAddedItem, setLastAddedItem] = useState(null); // for repeat-last-item
-  const [posMode, setPosMode] = useState(() => localStorage.getItem('pos_mode') || 'dine-in');
+  const [posMode, _setPosMode] = useState(() => localStorage.getItem('pos_mode') || 'dine-in');
   const [trainingMode, setTrainingMode] = useState(false);
   const [showCashRegister, setShowCashRegister] = useState(false);
   const [showReports, setShowReports] = useState(false);
   const [showTableMerge, setShowTableMerge] = useState(false);
-  const [showCustomerDisplay, setShowCustomerDisplay] = useState(false);
+  const [_showCustomerDisplay, setShowCustomerDisplay] = useState(false);
   const [roomChargeEnabled, setRoomChargeEnabled] = useState(false);
-  const longPressTimer = useRef(null);
+  const _longPressTimer = useRef(null);
 
   // Course colors for visual coding
   const COURSE_COLORS = { 1: '#2A9D8F', 2: '#5B8DEF', 3: '#E07A5F', 4: '#C77DBA', 5: '#F4A261' };
@@ -350,7 +350,7 @@ export default function POSRuntimeEnhanced() {
   };
 
   /* ─── Launch Customer Display in New Window ───────────────── */
-  const launchCustomerDisplay = () => {
+  const _launchCustomerDisplay = () => {
     const w = window.open('/pos/customer-display', 'customer_display', 'width=800,height=600');
     if (w) setShowCustomerDisplay(true);
   };
@@ -366,7 +366,7 @@ export default function POSRuntimeEnhanced() {
     }
   };
 
-  const voidItem = async (itemId) => {
+  const _voidItem = async (itemId) => {
     try {
       await api.post(`pos/orders/${order.id}/items/${itemId}/void?venue_id=${venueId}`, {});
       refreshOrder();
@@ -608,7 +608,7 @@ export default function POSRuntimeEnhanced() {
     if (!order) setTableStartTime(null);
   }, [order]);
 
-  const tableElapsed = useMemo(() => {
+  const _tableElapsed = useMemo(() => {
     if (!tableStartTime) return '';
     const mins = Math.floor((Date.now() - tableStartTime) / 60000);
     if (mins < 1) return '<1m';

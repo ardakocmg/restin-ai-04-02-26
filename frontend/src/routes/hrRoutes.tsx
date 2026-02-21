@@ -83,7 +83,7 @@ const TrainingStartingReport = React.lazy(() => import('../pages/manager/hr/repo
 const TrainingOngoingReport = React.lazy(() => import('../pages/manager/hr/reports/TrainingOngoingReport'));
 
 // ─── Payroll Feature ────────────────────────────────────────────────────────────
-const PayrollDashboard = React.lazy(() => import('../features/hr/PayrollDashboard'));
+const _PayrollDashboard = React.lazy(() => import('../features/hr/PayrollDashboard'));
 
 // ─── Shireburn Gap Closure Pages ────────────────────────────────────────────────
 const HiringATS = React.lazy(() => import('../pages/manager/hr/HiringATS'));

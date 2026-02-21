@@ -25,7 +25,7 @@ import { getStatusColor } from "../../lib/palette";
 
 export default function KDSMain() {
   const navigate = useNavigate();
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { user: _user, isAuthenticated, loading: authLoading } = useAuth();
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stationFilter, setStationFilter] = useState("all");
@@ -243,7 +243,7 @@ export default function KDSMain() {
 // Item Card Component with Timer
 function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onDeliver }) {
   const [timeLeft, setTimeLeft] = useState(null);
-  const [elapsed, setElapsed] = useState(0);
+  const [_elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
     if (item.status === "PREPARING" && item.started_at) {

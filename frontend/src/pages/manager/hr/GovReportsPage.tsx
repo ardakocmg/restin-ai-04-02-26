@@ -21,9 +21,9 @@ import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 
 export default function GovReportsPage() {
-    const { user, isManager, isOwner } = useAuth();
-    const { logAction } = useAuditLog();
-    const [year, setYear] = useState('2026');
+    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+    const { logAction: _logAction } = useAuditLog();
+    const [year, _setYear] = useState('2026');
     const [loading, setLoading] = useState(false);
     const [fs7Data, setFs7Data] = useState(null);
     const [runs, setRuns] = useState([]);

@@ -12,8 +12,8 @@ export default function FS3Document({ fs3Data, venue = null }) {
     const displayPayerPE = venue?.legal_info?.pe_number || payer.peNumber;
     const displayPrincipal = venue?.legal_info?.principal_name || payer.principalName;
     const displayPosition = venue?.legal_info?.principal_position || payer.principalPosition;
-    const displayLogo = venue?.branding?.logo_url || null;
-    const primaryColor = venue?.branding?.primary_color || "#000000";
+    const _displayLogo = venue?.branding?.logo_url || null;
+    const _primaryColor = venue?.branding?.primary_color || "#000000";
 
     const rowStyle = "border-b border-border py-1 flex justify-between items-center";
     const labelStyle = "text-[10px] font-medium text-foreground uppercase";

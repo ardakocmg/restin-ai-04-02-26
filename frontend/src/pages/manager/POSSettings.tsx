@@ -1,37 +1,37 @@
 import { logger } from '@/lib/logger';
 import {
-AlertTriangle,
-Clock,DollarSign,
-Edit2,
-Gift,
-Languages,
-Monitor,
-Percent,
-Plus,
-Printer,
-Receipt,
-Save,
-Shield,
-Tag,
-Trash2,
-Utensils
+  AlertTriangle,
+  Clock, DollarSign,
+  Edit2,
+  Gift,
+  Languages,
+  Monitor,
+  Percent,
+  Plus,
+  Printer,
+  Receipt,
+  Save,
+  Shield,
+  Tag,
+  Trash2,
+  Utensils
 } from 'lucide-react';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import DataTable from '../../components/shared/DataTable';
 import PermissionGate from '../../components/shared/PermissionGate';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
-import { Card,CardContent,CardHeader,CardTitle } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Switch } from '../../components/ui/switch';
-import { Tabs,TabsContent,TabsList,TabsTrigger } from '../../components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { useAuth } from '../../context/AuthContext';
 import { useVenue } from '../../context/VenueContext';
 import { useAuditLog } from '../../hooks/useAuditLog';
 import PageContainer from '../../layouts/PageContainer';
-import api,{ venueAPI } from '../../lib/api';
+import api, { venueAPI } from '../../lib/api';
 import { cn } from '../../lib/utils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -96,14 +96,14 @@ export default function POSSettings() {
   const [loading, setLoading] = useState(true);
 
   // Device Profiles
-  const [devices, setDevices] = useState([
+  const [devices, _setDevices] = useState([
     { id: '1', name: 'iPad Bar', type: 'iPad', profile: 'Bar POS', status: 'active', menu: 'Bar Menu' },
     { id: '2', name: 'iPad Floor', type: 'iPad', profile: 'Full POS', status: 'active', menu: 'Full Menu' },
     { id: '3', name: 'Kitchen KDS', type: 'KDS', profile: 'Kitchen Display', status: 'active', menu: 'N/A' },
   ]);
 
   // Modifiers
-  const [modifierGroups, setModifierGroups] = useState([
+  const [modifierGroups, _setModifierGroups] = useState([
     { id: '1', name: 'Cooking Level', modifiers: ['Rare', 'Medium Rare', 'Medium', 'Well Done'], required: true, min: 1, max: 1 },
     { id: '2', name: 'Extras', modifiers: ['Extra Cheese', 'Bacon', 'Avocado', 'Jalapeños'], required: false, min: 0, max: 4 },
     { id: '3', name: 'Sauce', modifiers: ['Ketchup', 'Mayo', 'BBQ', 'Ranch', 'Hot Sauce'], required: false, min: 0, max: 3 },
@@ -111,7 +111,7 @@ export default function POSSettings() {
   ]);
 
   // Printers
-  const [printers, setPrinters] = useState([
+  const [printers, _setPrinters] = useState([
     { id: '1', name: 'Kitchen Printer', ip: '192.168.1.100', type: 'ESC/POS', station: 'Kitchen', status: 'online', model: 'Epson TM-T20III' },
     { id: '2', name: 'Bar Printer', ip: '192.168.1.101', type: 'ESC/POS', station: 'Bar', status: 'online', model: 'Star TSP143' },
     { id: '3', name: 'Receipt Printer', ip: '192.168.1.102', type: 'ESC/POS', station: 'Front', status: 'offline', model: 'Epson TM-T88VI' },
@@ -325,7 +325,7 @@ export default function POSSettings() {
     }
   };
 
-  const handleUpdateVenue = async () => {
+  const _handleUpdateVenue = async () => {
     try {
       await venueAPI.update(activeVenue?.id, venueForm);
       toast.success('Settings saved successfully');

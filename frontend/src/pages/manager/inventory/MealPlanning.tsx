@@ -71,7 +71,7 @@ function StatCard({ icon: Icon, label, value, subtext, color = 'text-foreground'
 
 // ── Main Page ────────────────────────────────────────────────
 export default function MealPlanning() {
-    const { activeVenue } = useVenue();
+    const { activeVenue: _activeVenue } = useVenue();
     const [currentWeek, setCurrentWeek] = useState(0);
     const [guestCount, setGuestCount] = useState(80);
     const [costCeiling, setCostCeiling] = useState(8.00);

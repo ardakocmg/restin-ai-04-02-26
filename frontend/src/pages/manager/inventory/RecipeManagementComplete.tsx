@@ -76,7 +76,7 @@ function RecipeCheckboxFilter({ options, selected, onChange, maxVisible = 6 }) {
 
 export default function RecipeManagement() {
   const { activeVenue } = useVenue();
-  const { user, isManager, isOwner } = useAuth();
+  const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
   const [items, setItems] = useState([]); // Inventory Items to pick from
@@ -96,7 +96,7 @@ export default function RecipeManagement() {
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
   const [selectedDiets, setSelectedDiets] = useState([]);
   const [availableCategories, setAvailableCategories] = useState([]);
-  const [availableSubcategories, setAvailableSubcategories] = useState([]);
+  const [availableSubcategories, _setAvailableSubcategories] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [quickFilter, setQuickFilter] = useState('all');
@@ -114,7 +114,7 @@ export default function RecipeManagement() {
   ];
 
   // Multi-select toggle helper
-  const toggleMultiSelect = (arr, setArr, value) => {
+  const toggleMultiSelect = (_arr, setArr, value) => {
     setArr(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);
   };
 
@@ -426,7 +426,7 @@ export default function RecipeManagement() {
     }
   };
 
-  const addItemToRecipe = (inventoryItem) => {
+  const _addItemToRecipe = (inventoryItem) => {
     setFormData(prev => ({
       ...prev,
       components: [
@@ -443,20 +443,20 @@ export default function RecipeManagement() {
     }));
   };
 
-  const updateComponent = (index, field, value) => {
+  const _updateComponent = (index, field, value) => {
     const updated = [...formData.components];
     updated[index][field] = value;
     updated[index].qty_base = parseFloat(updated[index].qty_base || 0);
     setFormData({ ...formData, components: updated });
   };
 
-  const removeComponent = (index) => {
+  const _removeComponent = (index) => {
     const updated = [...formData.components];
     updated.splice(index, 1);
     setFormData({ ...formData, components: updated });
   };
 
-  const handleAction = async (action, recipeId) => {
+  const _handleAction = async (action, recipeId) => {
     try {
       let res;
       const ids = [recipeId];
@@ -583,7 +583,7 @@ export default function RecipeManagement() {
   };
 
   // Helper to find name from ID
-  const getName = (id, list) => list.find(x => x.id === id)?.name || id;
+  const _getName = (id, list) => list.find(x => x.id === id)?.name || id;
 
 
 

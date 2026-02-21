@@ -87,9 +87,9 @@ export default function POSDashboard() {
 
     // Event Time State
     const [eventTime, setEventTime] = useState({ start: "18:00", end: "18:00", enabled: false });
-    const [eventOpen, setEventOpen] = useState(false);
+    const [_eventOpen, setEventOpen] = useState(false);
 
-    const applyEventTime = () => {
+    const _applyEventTime = () => {
         const [startH] = eventTime.start.split(':').map(Number);
         const [endH] = eventTime.end.split(':').map(Number);
         if (!isNaN(startH) && !isNaN(endH) && startH <= endH) {

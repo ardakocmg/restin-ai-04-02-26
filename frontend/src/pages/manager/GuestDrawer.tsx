@@ -73,7 +73,7 @@ interface GuestDrawerProps {
 export default function GuestDrawer({ open, onOpenChange, guestId }: GuestDrawerProps) {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState<GuestData | null>(null);
-    const { logAction } = useAuditLog();
+    const { logAction: _logAction } = useAuditLog();
 
     useEffect(() => {
         if (open && guestId) {

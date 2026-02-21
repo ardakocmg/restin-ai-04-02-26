@@ -22,7 +22,7 @@ const formatCents = (cents) =>
 
 export default function ForecastingDashboard() {
     const { activeVenueId } = useVenue();
-    const { user, isManager, isOwner } = useAuth();
+    const { user, isManager: _isManager, isOwner: _isOwner } = useAuth();
     const { logAction } = useAuditLog();
 
     // Audit: log who viewed forecasting

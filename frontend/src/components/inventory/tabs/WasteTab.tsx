@@ -1,6 +1,6 @@
 import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 
-export default function WasteTab({ wasteProfile, sku }) {
+export default function WasteTab({ wasteProfile, sku: _sku }) {
   if (!wasteProfile) {
     return (
       <Card>

@@ -98,7 +98,7 @@ const ACTIONS = [
     },
 ];
 
-export default function ActionsPanel({ order, tables, onAction, onClose }: ActionsPanelProps) {
+export default function ActionsPanel({ order: _order, tables, onAction, onClose }: ActionsPanelProps) {
     const [showTablePicker, setShowTablePicker] = useState<string | false>(false);
     const [transferTarget, setTransferTarget] = useState<Table | null>(null);
 

@@ -22,7 +22,7 @@ XCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const icons = {
+const _icons = {
     scheduler: Calendar,
     settings: Settings,
     import: Upload,

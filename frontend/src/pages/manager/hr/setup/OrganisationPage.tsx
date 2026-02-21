@@ -17,7 +17,7 @@ export default function OrganisationPage() {
     { id: '5', name: 'Pastry', head: 'Pastry Chef', headcount: 3, location: 'Pastry Kitchen' },
   ]);
 
-  const [locations, setLocations] = useState([
+  const [locations, _setLocations] = useState([
     { id: '1', name: 'Main Restaurant', address: 'Portomaso, St Julians', type: 'Venue' },
     { id: '2', name: 'Central Kitchen', address: 'Mriehel Industrial Estate', type: 'Production' },
   ]);

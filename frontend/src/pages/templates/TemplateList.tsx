@@ -69,7 +69,7 @@ export default function TemplateList() {
     // Check permissions
     const userRole = (user?.role || '').toLowerCase();
     const canEdit = ['product_owner', 'owner', 'general_manager', 'manager'].includes(userRole);
-    const canPublish = ['product_owner', 'owner', 'general_manager'].includes(userRole);
+    const _canPublish = ['product_owner', 'owner', 'general_manager'].includes(userRole);
     const canDelete = ['product_owner', 'owner'].includes(userRole);
 
     const fetchTemplates = useCallback(async () => {

@@ -403,7 +403,7 @@ const RISK_COLORS = {
 // ─── Collapsible Tree Node ──────────────────────────────────────────────
 function PermissionTreeGroup({ group, expanded, onToggle }) {
     const GroupIcon = group.icon || Shield;
-    const enabledCount = (group.children || []).filter(p => p.risk !== "CRITICAL").length;
+    const _enabledCount = (group.children || []).filter(p => p.risk !== "CRITICAL").length;
     const totalCount = (group.children || []).length;
 
     return (
@@ -492,7 +492,7 @@ function PermissionTreeGroup({ group, expanded, onToggle }) {
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function RolesPermissions() {
-    const { user } = useAuth();
+    const { user: _user } = useAuth();
     const { logAction } = useAuditLog();
     const [roles, setRoles] = useState([]);
     const navigate = useNavigate();

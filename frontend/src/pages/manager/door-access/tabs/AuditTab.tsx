@@ -10,7 +10,7 @@ import { getVenueId } from '../doorAccessTypes';
 
 export default function AuditTab() {
     const [entries, setEntries] = useState<AuditEntry[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [_loading, setLoading] = useState(true);
 
     useEffect(() => { loadAudit(); }, []);
 

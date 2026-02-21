@@ -19,7 +19,7 @@ class Money {
   /**
    * Format amount in minor units (cents)
    */
-  static format(amountMinor: number, currencyCode: string = 'EUR', locale: string | null = null): string {
+  static format(amountMinor: number, currencyCode: string = 'EUR', _locale: string | null = null): string {
     const currency = this.CURRENCIES[currencyCode as CurrencyCode] || this.CURRENCIES.EUR;
     const amountMajor = amountMinor / Math.pow(10, currency.decimals);
     const formatted = amountMajor.toFixed(currency.decimals);

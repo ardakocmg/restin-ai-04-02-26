@@ -24,7 +24,7 @@ export default function HRMap() {
     const navigate = useNavigate();
     const [markers, setMarkers] = useState([]);
     const [stats, setStats] = useState({ total_check_ins: 0, currently_in: 0, mobile_users: 0 });
-    const [loading, setLoading] = useState(true);
+    const [_loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadAttendance = async () => {

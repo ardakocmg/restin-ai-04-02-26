@@ -15,7 +15,7 @@ const PROCUREMENT_MODULES = [
 export default function ProcurementHub() {
   const navigate = useNavigate();
   const [stats, setStats] = useState({ rfqs: 0, pending: 0, approved: 0, suppliers: 0 });
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchStats();
@@ -23,7 +23,7 @@ export default function ProcurementHub() {
 
   const fetchStats = async () => {
     try {
-      const venueId = localStorage.getItem('currentVenueId');
+      const _venueId = localStorage.getItem('currentVenueId');
       setStats({ rfqs: 12, pending: 3, approved: 8, suppliers: 24 });
     } catch (error) {
       logger.error('Failed to fetch stats:', error);

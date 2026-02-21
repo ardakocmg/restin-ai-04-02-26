@@ -281,12 +281,12 @@ export default function TechnicalHub() {
   const hero = content.hero || defaultContent.hero;
   const frontendSchema = content.frontendSchema || defaultContent.frontendSchema;
   const backendSchema = content.backendSchema || defaultContent.backendSchema;
-  const menuMap = content.menuMap || defaultContent.menuMap;
+  const _menuMap = content.menuMap || defaultContent.menuMap;
   const menuTable = content.menuTable || defaultContent.menuTable;
-  const eventFlows = content.eventFlows || defaultContent.eventFlows;
+  const _eventFlows = content.eventFlows || defaultContent.eventFlows;
   const architectureLayers = content.architectureLayers || defaultContent.architectureLayers;
   const microservices = content.microservices || defaultContent.microservices;
-  const templates = content.templates || defaultContent.templates;
+  const _templates = content.templates || defaultContent.templates;
   const diagrams = content.diagrams || defaultContent.diagrams;
   const apiSurface = content.apiSurface || defaultContent.apiSurface;
   const security = content.security || defaultContent.security;

@@ -67,7 +67,7 @@ const CrmDashboard: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { activeVenueId } = useVenue();
-    const { user, isManager, isOwner } = useAuth();
+    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
     const queryClient = useQueryClient();
     const [searchQuery, setSearchQuery] = useState('');
 

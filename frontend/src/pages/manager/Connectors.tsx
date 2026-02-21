@@ -10,7 +10,7 @@ import api from '../../lib/api';
 export default function ConnectorsPage() {
   const { activeVenue } = useVenue();
   const [connectors, setConnectors] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (activeVenue?.id) {

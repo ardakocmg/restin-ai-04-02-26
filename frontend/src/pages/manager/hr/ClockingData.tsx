@@ -57,7 +57,7 @@ const DEVICE_BADGE: Record<string, { label: string; icon: React.ElementType; bg:
 export default function ClockingData() {
   const { activeVenue } = useVenue();
   const venueId = activeVenue?.id;
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const { logAction } = useAuditLog();
   React.useEffect(() => { logAction('CLOCKING_DATA_VIEWED', 'clocking-data'); }, [logAction]);
   const navigate = useNavigate();

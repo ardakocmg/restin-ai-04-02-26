@@ -63,7 +63,7 @@ export default function DataExportPage() {
         onError: () => toast.error('Export failed — check your permissions')
     });
 
-    const latestJob = history[0];
+    const _latestJob = history[0];
 
     return (
         <div className="p-6 space-y-6">

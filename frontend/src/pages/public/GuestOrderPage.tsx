@@ -74,7 +74,7 @@ export default function GuestOrderPage() {
     const [search, setSearch] = useState('');
     const [view, setView] = useState<OrderStatus>('browsing');
     const [guestName, setGuestName] = useState('');
-    const [guestPhone, setGuestPhone] = useState('');
+    const [guestPhone, _setGuestPhone] = useState('');
     const [guestNotes, setGuestNotes] = useState('');
     const [orderType, setOrderType] = useState<'dine_in' | 'takeaway'>('dine_in');
     const [tableInput, setTableInput] = useState(tableName);

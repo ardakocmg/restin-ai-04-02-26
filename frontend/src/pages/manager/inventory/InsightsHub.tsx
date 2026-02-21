@@ -26,7 +26,7 @@ import { useMemo,useState } from 'react';
 import { toast } from 'sonner';
 
 /* ────────────────── Data ────────────────── */
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const _MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const MONTHLY_DATA = [
     { month: 'Jan', revenue: 42000, cogs: 12600, labor: 10500, covers: 1680, avgCheck: 25.0 },
     { month: 'Feb', revenue: 38500, cogs: 11550, labor: 9625, covers: 1540, avgCheck: 25.0 },

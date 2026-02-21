@@ -39,10 +39,10 @@ interface NewTemplateForm {
 }
 
 export default function OnboardingChecklists() {
-    const { user } = useAuth();
+    const { user: _user } = useAuth();
     const [templates, setTemplates] = useState<ChecklistTemplate[]>([]);
     const [activeChecklists, setActiveChecklists] = useState<ActiveChecklist[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [_loading, setLoading] = useState(true);
     const [view, setView] = useState<'templates' | 'active'>('templates');
     const [showNewTemplate, setShowNewTemplate] = useState(false);
     const [newTemplate, setNewTemplate] = useState<NewTemplateForm>({ name: '', template_type: 'onboarding', items: [{ title: '', assignee_role: 'hr', due_days_offset: 0 }] });

@@ -72,7 +72,7 @@ const HeyRin = React.lazy(() => import("./components/voice/HeyRin"));
 // ─── Root Overlays ────────────────────────────────────────────────────────────
 function RootOverlays() {
   const { loading, modalError, hideErrorModal, hideLoading, authExpiredModalOpen, openAuthExpiredModal, closeAuthExpiredModal } = useUI();
-  const [showVersionWarning, setShowVersionWarning] = useState(false);
+  const [showVersionWarning, _setShowVersionWarning] = useState(false);
   const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
 
   useEffect(() => {
@@ -88,7 +88,7 @@ function RootOverlays() {
 
   useEffect(() => {
     let mounted = true;
-    const clearSessionHard = () => {
+    const _clearSessionHard = () => {
       localStorage.removeItem("restin_token");
       localStorage.removeItem("restin_user");
       try { delete axios.defaults.headers.common.Authorization; } catch { /* header may not exist */ }

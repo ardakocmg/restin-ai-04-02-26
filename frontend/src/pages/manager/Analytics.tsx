@@ -10,7 +10,7 @@ export default function AnalyticsPage() {
   const { activeVenue } = useVenue();
   const [dashboards, setDashboards] = useState([]);
   const [metrics, setMetrics] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (activeVenue?.id) {

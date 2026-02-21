@@ -10,7 +10,7 @@ import api from '../../lib/api';
 export default function AutomationsPage() {
   const { activeVenue } = useVenue();
   const [flows, setFlows] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (activeVenue?.id) {

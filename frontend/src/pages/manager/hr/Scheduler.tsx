@@ -83,7 +83,7 @@ interface ColumnFilters {
 }
 
 export default function Scheduler() {
-  const { user, isManager, isOwner } = useAuth();
+  const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
   const { logAction } = useAuditLog();
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export default function Scheduler() {
   const [data, setData] = useState<SchedulerData | null>(null);
   const [loading, setLoading] = useState(true);
   const [weekStart, setWeekStart] = useState('2026-01-26');
-  const [groupBy, setGroupBy] = useState('none'); // 'cost_centre', 'occupation', 'none'
+  const [_groupBy, _setGroupBy] = useState('none'); // 'cost_centre', 'occupation', 'none'
   const [contextMenu, setContextMenu] = useState<ContextMenuState>({ visible: false, x: 0, y: 0, cell: null });
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'employee_name', direction: 'asc' });
   const [filters, setFilters] = useState<ColumnFilters>({

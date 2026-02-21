@@ -376,7 +376,7 @@ export default function ComboBuilder() {
                                     </button>
                                 </div>
 
-                                {selectedCombo.groups.map((group, gi) => (
+                                {selectedCombo.groups.map((group, _gi) => (
                                     <div key={group.id} className="bg-card/50 border border-border rounded-2xl overflow-hidden">
                                         {/* Group Header */}
                                         <div

@@ -42,7 +42,7 @@ const EU_ALLERGENS = [
   'lupin', 'molluscs',
 ];
 
-const STORAGE_TYPES = [
+const _STORAGE_TYPES = [
   { value: 'ambient', label: 'Ambient', icon: Sun },
   { value: 'refrigerated', label: 'Refrigerated', icon: Thermometer },
   { value: 'frozen', label: 'Frozen', icon: Snowflake },

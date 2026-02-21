@@ -14,7 +14,7 @@ export default function BridgeTab() {
     const [health, setHealth] = useState<BridgeHealth>({ configured: false, is_healthy: false });
     const [bridgeIp, setBridgeIp] = useState('');
     const [bridgePort, setBridgePort] = useState('8080');
-    const [bridgeToken, setBridgeToken] = useState('');
+    const [bridgeToken, _setBridgeToken] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => { checkHealth(); }, []);

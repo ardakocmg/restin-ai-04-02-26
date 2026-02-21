@@ -134,7 +134,7 @@ export default function StockAdjustments() {
     let positiveAdj = 0;
     let negativeAdj = 0;
 
-    for (const [id, adj] of Object.entries(adjustments) as [string, AdjustmentEntry][]) {
+    for (const [_id, adj] of Object.entries(adjustments) as [string, AdjustmentEntry][]) {
       const qty = parseFloat(adj.qty || '0');
       if (qty !== 0 && !isNaN(qty)) {
         adjustedCount++;

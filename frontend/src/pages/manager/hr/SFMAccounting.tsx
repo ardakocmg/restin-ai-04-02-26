@@ -15,7 +15,7 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 
 export default function SFMAccounting() {
-  const { user, isManager, isOwner } = useAuth();
+  const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
   const { logAction } = useAuditLog();
   const [view, setView] = useState('gl');
   const [accounts, setAccounts] = useState([]);

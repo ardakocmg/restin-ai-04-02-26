@@ -517,7 +517,7 @@ export default function WasteLog() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {(topWastedItems.length === 0 ? Array.from({ length: 5 }, (_, i) => ({ name: '—', qty: 0, value: 0 })) : topWastedItems).map((item, i) => (
+              {(topWastedItems.length === 0 ? Array.from({ length: 5 }, (_, _i) => ({ name: '—', qty: 0, value: 0 })) : topWastedItems).map((item, i) => (
                 <div key={i} className="flex justify-between items-center text-sm">
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="w-6 h-6 rounded-full p-0 flex items-center justify-center text-[10px]">{i + 1}</Badge>

@@ -8,7 +8,7 @@ import api from '../../../../lib/api';
 
 import { logger } from '@/lib/logger';
 export default function HeadcountReport() {
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -68,7 +68,7 @@ export default function HeadcountReport() {
                   itemStyle={{ color: '#818cf8' }} /* keep-inline */
                 />
                 <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]}>
-                  {data.map((entry, index) => (
+                  {data.map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={['#4f46e5', '#818cf8', '#6366f1', '#a5b4fc'][index % 4]} />
                   ))}
                 </Bar>

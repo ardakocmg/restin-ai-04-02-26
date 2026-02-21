@@ -40,7 +40,7 @@ import { useAuditLog } from '../../hooks/useAuditLog';
 
 export default function CompanySettings() {
     const { activeVenue, refreshVenues } = useVenue();
-    const { user, isOwner, isManager } = useAuth();
+    const { user: _user, isOwner, isManager } = useAuth();
     const canEdit = isOwner() || isManager();
     const { logAction } = useAuditLog();
     const [loading, setLoading] = useState(false);

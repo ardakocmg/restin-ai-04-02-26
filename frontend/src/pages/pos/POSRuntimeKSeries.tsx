@@ -108,7 +108,7 @@ export default function POSRuntimeKSeries() {
         items: [],
         status: 'open',
     });
-    const [orderMode, setOrderMode] = useState<'direct' | 'table'>('direct');
+    const [orderMode, _setOrderMode] = useState<'direct' | 'table'>('direct');
     const [viewMode, setViewMode] = useState<'seat' | 'course'>('course');
     const [activeCourse, setActiveCourse] = useState(1);
     const [activeSeat, setActiveSeat] = useState('Shared');

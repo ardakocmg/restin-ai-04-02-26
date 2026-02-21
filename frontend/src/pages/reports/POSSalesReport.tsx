@@ -61,7 +61,7 @@ import { exportToCsv,exportToPdf } from '@/lib/exportUtils';
 
 import { toast } from 'sonner';
 
-const COLORS = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+const _COLORS = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
 
 export default function POSSalesReport() {
   const { activeVenueId: venueId } = useVenue();
@@ -71,7 +71,7 @@ export default function POSSalesReport() {
   const [loading, setLoading] = useState(false);
   const [activeReport, setActiveReport] = useState(searchParams.get('type') || 'hub');
   const [timeRange, setTimeRange] = useState('today');
-  const [advancedWidgets, setAdvancedWidgets] = useState([
+  const [advancedWidgets, _setAdvancedWidgets] = useState([
     { id: 'rev-sum', type: 'revenue_summary', title: 'Revenue summary' },
     { id: 'pay-sum', type: 'payments', title: 'Payments' }
   ]);

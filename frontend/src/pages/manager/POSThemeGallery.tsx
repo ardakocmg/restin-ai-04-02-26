@@ -49,7 +49,7 @@ const BIZ_TYPE_LABELS: Record<string, string> = {
 
 /** Mini preview layouts for visual differentiation */
 function ThemePreview({ engine }: { engine: string }) {
-    const previewStyles: Record<string, React.CSSProperties> = {
+    const _previewStyles: Record<string, React.CSSProperties> = {
         'l-series': {},
         'restin': {},
         'pro': {},
@@ -211,7 +211,7 @@ function ThemePreview({ engine }: { engine: string }) {
 }
 
 export default function POSThemeGallery() {
-    const { t } = useTranslation();
+    const { t: _t } = useTranslation();
     const navigate = useNavigate();
     const [activeThemeId, setActiveThemeId] = useState<string>(getActiveTheme().id);
     const [selectedTheme, setSelectedTheme] = useState<POSThemeConfig | null>(null);

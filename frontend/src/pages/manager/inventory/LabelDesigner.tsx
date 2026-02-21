@@ -245,7 +245,7 @@ function LabelPreview({ template, scale = 1 }: { template: LabelTemplate; scale?
    ██  LABEL DESIGNER
    ═══════════════════════════════════════════════════════════════════ */
 export default function LabelDesigner() {
-    const { t } = useTranslation();
+    const { t: _t } = useTranslation();
 
     /* ── State ── */
     const [activeTab, setActiveTab] = useState('templates');

@@ -10,7 +10,7 @@ export default function PayrollMaltaPage() {
   const { activeVenue } = useVenue();
   const [profiles, setProfiles] = useState([]);
   const [payruns, setPayruns] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (activeVenue?.id) {

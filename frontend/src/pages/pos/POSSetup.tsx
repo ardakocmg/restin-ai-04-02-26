@@ -32,8 +32,8 @@ import { logger } from "../../lib/logger";
 
 export default function POSSetup() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { t: _t } = useTranslation();
+  const { user: _user, isAuthenticated, loading: authLoading } = useAuth();
 
   // Data State
   const [venues, setVenues] = useState([]);

@@ -29,7 +29,7 @@ export default function PrintPreviewPage() {
 
     const [bridgeHost, setBridgeHost] = useState('localhost');
     const [bridgePort, setBridgePort] = useState('9100');
-    const [testStatus, setTestStatus] = useState(null); // 'testing' | 'success' | 'fail'
+    const [_testStatus, setTestStatus] = useState(null); // 'testing' | 'success' | 'fail'
 
     const { data: printers = [], isPending } = useQuery({
         queryKey: ['printers', venueId],

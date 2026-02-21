@@ -49,7 +49,7 @@ const InventoryAlerts: React.FC = () => {
                 const par = Number(ai.par_level || ai.parLevel || 50);
                 const reorder = Number(ai.reorder_point || ai.reorderPoint || 10);
                 const pct = par > 0 ? current / par : 0;
-                const status: AlertItem['status'] = current <= 0 ? 'out' : pct <= 0.2 ? 'critical' : current <= reorder ? 'low' : 'ok';
+                const _status: AlertItem['status'] = current <= 0 ? 'out' : pct <= 0.2 ? 'critical' : current <= reorder ? 'low' : 'ok';
                 return {
                     id: String(ai.id || ai._id || ''),
                     name: String(ai.name || ''),

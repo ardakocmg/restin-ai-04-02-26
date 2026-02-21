@@ -19,8 +19,8 @@ export default function MicroservicesPage() {
   const [eventBusRunning, setEventBusRunning] = useState(false);
   const [outboxEvents, setOutboxEvents] = useState([]);
   const [dlqEvents, setDlqEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [_loading, setLoading] = useState(true);
+  const _navigate = useNavigate();
 
   useEffect(() => {
     loadServiceData();

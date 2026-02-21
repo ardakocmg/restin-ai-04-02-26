@@ -12,7 +12,7 @@ import api from '../../lib/api';
 
 export default function AccountingHub() {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [_loading, _setLoading] = useState(false);
   const [canExport, setCanExport] = useState(false);
 
   const venueId = user?.venueId || localStorage.getItem('restin_venue');

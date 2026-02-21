@@ -14,7 +14,7 @@ import { deviceAPI,venueAPI } from "../../lib/api";
 export default function KDSSetup() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { user: _user, isAuthenticated, loading: authLoading } = useAuth();
   const [venues, setVenues] = useState([]);
   const [zones, setZones] = useState([]);
   const [selectedVenue, setSelectedVenue] = useState("");

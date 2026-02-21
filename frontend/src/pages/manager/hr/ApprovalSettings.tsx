@@ -89,7 +89,7 @@ const DEFAULTS: ApprovalSettings = {
 export default function ApprovalSettings() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user: _user } = useAuth();
     const { activeVenueId: venueId } = useVenue();
 
     const [settings, setSettings] = useState<ApprovalSettings>(DEFAULTS);

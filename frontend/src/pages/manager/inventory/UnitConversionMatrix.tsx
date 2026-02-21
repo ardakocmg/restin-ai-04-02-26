@@ -86,7 +86,7 @@ function convertTemperature(value: number, from: string, to: string): number | n
    ██  UNIT CONVERSION MATRIX
    ═══════════════════════════════════════════════════════════════════ */
 export default function UnitConversionMatrix() {
-    const { t } = useTranslation();
+    const { t: _t } = useTranslation();
 
     /* ── Converter State ── */
     const [fromValue, setFromValue] = useState<number>(1);
@@ -136,7 +136,7 @@ export default function UnitConversionMatrix() {
     const availableUnits = currentCategory?.units || [];
 
     /* ── Quick Conversions Table ── */
-    const quickTable = useMemo(() => {
+    const _quickTable = useMemo(() => {
         if (!currentCategory) return [];
         const units = currentCategory.units;
         return units.map(from => ({

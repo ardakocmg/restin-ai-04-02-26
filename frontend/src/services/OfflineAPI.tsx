@@ -71,10 +71,10 @@ export interface OptimisticItem {
 
 class OfflineAPI {
     public isOnline: boolean = navigator.onLine;
-    private edgeAvailable = false;
+    private _edgeAvailable = false;
 
     constructor() {
-        syncService.onStatusChange((status, online) => {
+        syncService.onStatusChange((_status, online) => {
             if (typeof online === 'boolean') {
                 this.isOnline = online;
             }
@@ -89,9 +89,9 @@ class OfflineAPI {
 
         try {
             const response = await axios.get(`${EDGE_GATEWAY_URL}/health`, { timeout: 2000 });
-            this.edgeAvailable = response.status === 200;
+            this._edgeAvailable = response.status === 200;
         } catch {
-            this.edgeAvailable = false;
+            this._edgeAvailable = false;
         }
     }
 

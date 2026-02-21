@@ -303,7 +303,7 @@ const INSTRUCTION_ICONS: Record<InstructionType, { icon: React.ReactNode; label:
 /* ===== Main Component ===== */
 
 const KDS2Screen: React.FC = () => {
-    const { user } = useAuth();
+    const { user: _user } = useAuth();
 
     // State
     const [tickets, setTickets] = useState<KDSTicket[]>(DEMO_TICKETS);
@@ -651,7 +651,7 @@ const KDS2Screen: React.FC = () => {
                                     {/* Course color bar */}
                                     {ticket.courses.length > 1 && (
                                         <div className="kds2-ticket-courses-bar">
-                                            {ticket.courses.map((c, idx) => (
+                                            {ticket.courses.map((_c, idx) => (
                                                 <div key={idx} className={`course-segment ${idx === 0 ? 'completed' : ''}`} style={{ background: ['#3B82F6', '#22C55E', '#F97316', '#8B5CF6'][idx % 4]  /* keep-inline */ }} /* keep-inline */ /* keep-inline */ />
                                             ))}
                                         </div>

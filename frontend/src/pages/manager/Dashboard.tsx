@@ -61,7 +61,7 @@ interface Order {
   [key: string]: unknown;
 }
 
-interface Venue {
+interface _Venue {
   id: string;
   name: string;
   type: string;

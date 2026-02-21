@@ -29,7 +29,7 @@ export default function PayslipViewer() {
     const { employeeId, period } = useParams();
     const navigate = useNavigate();
     const { activeVenue } = useVenue();
-    const { user, isManager, isOwner } = useAuth();
+    const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
     const { logAction } = useAuditLog();
     useEffect(() => {
         logAction('PAYSLIP_VIEWED', 'payslip-viewer');

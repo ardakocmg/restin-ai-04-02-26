@@ -118,7 +118,7 @@ interface CostMetrics {
 export default function PayrollPage() {
     const [runs, setRuns] = useState<PayrollRun[]>([]);
     const [employees, setEmployees] = useState<PayrollEmployee[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [_loading, setLoading] = useState(true);
     const [calculating, setCalculating] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [docTypeFilter, setDocTypeFilter] = useState('ALL'); // ALL, FS3, FS5, FS7, PAYSLIP
@@ -240,7 +240,7 @@ export default function PayrollPage() {
     // Compliance Actions
     const downloadSEPA = (run: PayrollRun) => handleDownload(`venues/${activeVenue?.id}/hr/payroll/runs/${run.id}/sepa-xml`, `SEPA_PAYROLL_${run.id}.xml`);
     const downloadFS5 = (run: PayrollRun) => handleDownload(`venues/${activeVenue?.id}/hr/payroll/reports/fs5/${run.id}/pdf`, `FS5_Report_${(run.period_end || '').replace(/\//g, '-')}.pdf`);
-    const downloadFS3Pack = (year: string) => handleDownload(`venues/${activeVenue?.id}/hr/payroll/reports/fs3/${year}/pdf`, `FS3_Pack_${year}.zip`);
+    const _downloadFS3Pack = (year: string) => handleDownload(`venues/${activeVenue?.id}/hr/payroll/reports/fs3/${year}/pdf`, `FS3_Pack_${year}.zip`);
     const downloadPayslipPack = (run: PayrollRun) => handleDownload(`venues/${activeVenue?.id}/hr/payroll/runs/${run.id}/dispatch-zip`, `Payroll_${run.run_number}.zip`);
 
     // Derived stats based on filtered data

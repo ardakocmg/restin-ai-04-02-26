@@ -16,7 +16,7 @@ import { Award,CheckCircle2,Loader2,Play,XCircle } from 'lucide-react';
 
 export default function PreGoLive() {
   const { activeVenue } = useVenue();
-  const [runs, setRuns] = useState([]);
+  const [_runs, setRuns] = useState([]);
   const [currentRun, setCurrentRun] = useState(null);
   const [running, setRunning] = useState(false);
 

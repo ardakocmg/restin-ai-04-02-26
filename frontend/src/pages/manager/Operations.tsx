@@ -14,9 +14,9 @@ import api from '../../lib/api';
 
 export default function Operations() {
   const { activeVenue } = useVenue();
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const [settings, setSettings] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
   const [complimentaryItems, setComplimentaryItems] = useState([]);
   const [newItem, setNewItem] = useState('');
 

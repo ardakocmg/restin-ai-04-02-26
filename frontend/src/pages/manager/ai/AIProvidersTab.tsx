@@ -166,7 +166,7 @@ export default function AIProvidersTab() {
 
     const { providers, usage, shadow_learning, task_mapping, summary } = data;
     const connectedProviders = providers.filter(p => p.connected);
-    const disconnectedProviders = providers.filter(p => !p.connected);
+    const _disconnectedProviders = providers.filter(p => !p.connected);
 
     // Usage bar chart data
     const maxUsage = Math.max(...Object.values(usage.by_provider), 1);

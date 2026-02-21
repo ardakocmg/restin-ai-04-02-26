@@ -24,7 +24,7 @@ import { cn } from '../../../lib/utils';
 export default function RecipeVideoBites() {
     const { activeVenue } = useVenue();
     const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
-    const queryClient = useQueryClient();
+    const _queryClient = useQueryClient();
     const [search, setSearch] = useState('');
     const [selectedRecipe, setSelectedRecipe] = useState(null);
 

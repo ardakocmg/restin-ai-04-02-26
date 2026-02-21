@@ -149,7 +149,7 @@ interface Employee {
 export default function ManualClocking() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { user, isManager, isOwner } = useAuth();
+    const { user: _user, isManager, isOwner } = useAuth();
     const { activeVenueId } = useVenue();
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 

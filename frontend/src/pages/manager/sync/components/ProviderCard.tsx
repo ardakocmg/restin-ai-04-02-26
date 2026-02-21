@@ -48,7 +48,7 @@ function timeAgo(dateStr: string): string {
 }
 
 export function ProviderCard({
-    provider, label, description, icon: Icon,
+    provider: _provider, label, description, icon: Icon,
     status, lastSync, configuredAt, configuredBy, configSummary,
     onSync, onConfigure, loading, appLink, appLabel,
     portalUrl, portalLabel, accentColor

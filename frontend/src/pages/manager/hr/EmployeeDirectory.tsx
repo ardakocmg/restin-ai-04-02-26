@@ -60,7 +60,7 @@ const STATUS_ICONS = {
 export default function EmployeeDirectory() {
   const navigate = useNavigate();
   const { activeVenue } = useVenue();
-  const { getAccess } = useHRFeatureFlags();
+  const { getAccess: _getAccess } = useHRFeatureFlags();
   const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);

@@ -33,10 +33,10 @@ interface NewEventForm {
 }
 
 export default function HRCalendarPage() {
-    const { user } = useAuth();
+    const { user: _user } = useAuth();
     const [events, setEvents] = useState<CalendarEvent[]>([]);
     const [upcoming, setUpcoming] = useState<UpcomingEvent[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [_loading, setLoading] = useState(true);
     const [month, setMonth] = useState(new Date().getMonth());
     const [year, setYear] = useState(new Date().getFullYear());
     const [showNewEvent, setShowNewEvent] = useState(false);

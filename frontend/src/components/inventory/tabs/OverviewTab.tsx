@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card';
 import { AlertTriangle,Package,TrendingDown } from 'lucide-react';
 
-export default function OverviewTab({ data, onRefresh }) {
+export default function OverviewTab({ data, onRefresh: _onRefresh }) {
   const sku = data?.sku || {};
   const balance = data?.on_hand_balance || 0;
   const minStock = sku.min_stock || sku.min_quantity || 0;

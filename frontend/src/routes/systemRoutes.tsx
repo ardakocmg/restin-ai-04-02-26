@@ -60,7 +60,7 @@ const UpdatesPage = React.lazy(() => import('../pages/manager/UpdatesPage'));
 const Microservices = React.lazy(() => import('../pages/manager/Microservices'));
 const EventMonitor = React.lazy(() => import('../pages/manager/EventMonitor'));
 const Analytics = React.lazy(() => import('../pages/manager/Analytics'));
-const Documents = React.lazy(() => import('../pages/manager/Documents'));
+const _Documents = React.lazy(() => import('../pages/manager/Documents'));
 const WorkspaceSettings = React.lazy(() => import('../pages/google/WorkspaceSettings'));
 const MyGooglePanel = React.lazy(() => import('../pages/google/MyGooglePanel'));
 const GoogleSyncDashboard = React.lazy(() => import('../pages/google/GoogleSyncDashboard'));

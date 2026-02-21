@@ -31,7 +31,7 @@ export default function LoyaltyPage() {
     React.useEffect(() => {
         logAction('LOYALTY_VIEWED', 'loyalty', undefined, { user_id: user?.id });
     }, []);
-    const [loading, setLoading] = useState(true);
+    const [_loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('members');
 
     // Phase 5: Simulated Tiers

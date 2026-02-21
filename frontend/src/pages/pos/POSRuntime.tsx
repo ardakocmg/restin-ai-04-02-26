@@ -42,7 +42,7 @@ const CATEGORY_ICONS = {
 };
 
 export default function POSRuntime() {
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const { setSafeMode, setOrderActive, setSendInProgress, sendInProgress } = useSafeMode();
   const sendInFlightRef = useRef(false);
@@ -60,14 +60,14 @@ export default function POSRuntime() {
   const [currentOrder, setCurrentOrder] = useState(null);
   const [orderItems, setOrderItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loadingError, setLoadingError] = useState(null);
+  const [_loadingError, setLoadingError] = useState(null);
   const [showTableDialog, setShowTableDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [showModifierDialog, setShowModifierDialog] = useState(false);
-  const [showFloorPlanDialog, setShowFloorPlanDialog] = useState(false);
+  const [_showFloorPlanDialog, _setShowFloorPlanDialog] = useState(false);
   const [showSplitBillDialog, setShowSplitBillDialog] = useState(false); // NEW STATE
   const [selectedItem, setSelectedItem] = useState(null);
-  const [floorPlan, setFloorPlan] = useState(null);
+  const [_floorPlan, setFloorPlan] = useState(null);
   const [menuVersion, setMenuVersion] = useState(0);
 
   // Send options state
@@ -287,7 +287,7 @@ export default function POSRuntime() {
     setShowModifierDialog(false);
   };
 
-  const updateItemQuantity = (index, delta) => {
+  const _updateItemQuantity = (index, delta) => {
     const updated = [...orderItems];
     updated[index].quantity += delta;
 
@@ -422,7 +422,7 @@ export default function POSRuntime() {
     }
   };
 
-  const handlePayment = async (method) => {
+  const handlePayment = async (_method) => {
     if (!currentOrder) {
       toast.error("No active order");
       return;
@@ -462,7 +462,7 @@ export default function POSRuntime() {
     );
   }
 
-  const { subtotal, tax, total } = calculateTotal();
+  const { subtotal: _subtotal, tax: _tax, total } = calculateTotal();
 
   return (
     <div className="h-screen flex bg-background overflow-hidden">

@@ -18,8 +18,8 @@ export default function SalesChart({ data, title = "Hourly Sales" }) {
     ];
 
     const maxValue = Math.max(...chartData.map(d => d.value));
-    const height = 200;
-    const width = 600;
+    const _height = 200;
+    const _width = 600;
 
     return (
         <div className="w-full bg-card border border-border rounded-xl p-4 shadow-lg">

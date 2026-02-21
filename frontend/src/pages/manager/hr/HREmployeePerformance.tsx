@@ -109,7 +109,7 @@ function DeltaCard({ label, current, previous, unit = '' }: { label: string; cur
 // ── Main Component ───────────────────────────────────────────
 export default function HREmployeePerformance() {
     const { employeeId } = useParams();
-    const [searchParams] = useSearchParams();
+    const [_searchParams] = useSearchParams();
     const navigate = useNavigate();
     const { activeVenueId: venueId } = useVenue();
 

@@ -84,7 +84,7 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
     embedding: <Database className="w-4 h-4" />,
 };
 
-const CATEGORY_COLORS: Record<string, string> = {
+const _CATEGORY_COLORS: Record<string, string> = {
     text: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
     image: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
     tts: 'bg-green-500/10 text-green-400 border-green-500/20',
@@ -118,9 +118,9 @@ export default function AIModelConfig() {
     const { user } = useAuth();
     const isSystemAdmin = user?.role?.toUpperCase() === 'PRODUCT_OWNER';
     const [models, setModels] = useState<AIModel[]>([]);
-    const [defaultRouting, setDefaultRouting] = useState<Record<string, string>>({});
+    const [_defaultRouting, setDefaultRouting] = useState<Record<string, string>>({});
     const [geminiStatus, setGeminiStatus] = useState<GeminiStatus | null>(null);
-    const [systemConfig, setSystemConfig] = useState<AIConfig | null>(null);
+    const [_systemConfig, setSystemConfig] = useState<AIConfig | null>(null);
     const [venueConfig, setVenueConfig] = useState<AIConfig | null>(null);
     const [resolvedConfig, setResolvedConfig] = useState<AIConfig | null>(null);
     const [usageStats, setUsageStats] = useState<UsageStats | null>(null);

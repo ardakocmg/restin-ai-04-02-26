@@ -16,7 +16,7 @@ const COLORS = ['#EF4444', '#F59E0B', '#10B981'];
 
 export default function TurnoverModule() {
   const { activeVenueId: venueId } = useVenue();
-  const { user, isManager, isOwner } = useAuth();
+  const { user, isManager: _isManager, isOwner: _isOwner } = useAuth();
   const { logAction } = useAuditLog();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -79,7 +79,7 @@ export default function TurnoverModule() {
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie data={data.by_reason} dataKey="count" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
-                    {data.by_reason.map((entry, index) => (
+                    {data.by_reason.map((_entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>

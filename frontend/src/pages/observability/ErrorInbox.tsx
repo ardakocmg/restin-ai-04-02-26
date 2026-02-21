@@ -183,7 +183,7 @@ export default function ErrorInbox() {
       });
 
       const tokenRes = await api.post(`/observability/error-inbox/${errorId}/action-token`);
-      const retryRes = await api.post(`/observability/error-inbox/${errorId}/retry`, {
+      const _retryRes = await api.post(`/observability/error-inbox/${errorId}/retry`, {
         token: tokenRes.data.action_token,
         mode: retryPlan?.mode || 'FULL_REPLAY',
         patch

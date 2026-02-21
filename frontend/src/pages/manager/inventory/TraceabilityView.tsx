@@ -61,7 +61,7 @@ function ChainArrow() {
     return <ChevronRight className="h-4 w-4 text-muted-foreground mx-1 flex-shrink-0" />;
 }
 
-function ChainNode({ label, icon: Icon, color, count, sublabel }: {
+function _ChainNode({ label, icon: Icon, color, count, sublabel }: {
     label: string; icon: React.ElementType; color: string; count?: number; sublabel?: string;
 }) {
     return (
@@ -102,7 +102,7 @@ function AllergenBadge({ allergen }: { allergen: string }) {
    ██  TRACEABILITY VIEW
    ═══════════════════════════════════════════════════════════════════ */
 export default function TraceabilityView() {
-    const { t } = useTranslation();
+    const { t: _t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { activeVenue: selectedVenue } = useVenue() as/**/any;
 

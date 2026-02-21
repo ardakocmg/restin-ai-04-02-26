@@ -11,7 +11,7 @@ import { Bar,BarChart,CartesianGrid,Line,LineChart,ResponsiveContainer,Tooltip,X
 import api from '@/lib/api';
 
 export default function SickLeaveAnalysis() {
-  const { user, isManager, isOwner } = useAuth();
+  const { user, isManager: _isManager, isOwner: _isOwner } = useAuth();
   const { logAction } = useAuditLog();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);

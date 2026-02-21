@@ -62,7 +62,7 @@ export default function StockCount() {
 
   // ── Package Counting State ──
   const [countMode, setCountMode] = useState('unit'); // 'unit' | 'package'
-  const [packageSizes, setPackageSizes] = useState({}); // { itemId: packageSize }
+  const [packageSizes, _setPackageSizes] = useState({}); // { itemId: packageSize }
 
   // ── Voice Counting State (Gap 10) ──
   const [voiceActive, setVoiceActive] = useState(false);

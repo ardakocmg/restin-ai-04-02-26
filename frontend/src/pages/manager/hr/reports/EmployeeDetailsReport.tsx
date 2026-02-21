@@ -9,7 +9,7 @@ import api from '../../../../lib/api';
 
 import { logger } from '@/lib/logger';
 export default function EmployeeDetailsReport() {
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 

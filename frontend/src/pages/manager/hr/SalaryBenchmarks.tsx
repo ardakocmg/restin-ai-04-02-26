@@ -28,10 +28,10 @@ interface GenderGapData {
 }
 
 export default function SalaryBenchmarks() {
-    const { user } = useAuth();
+    const { user: _user } = useAuth();
     const [benchmarks, setBenchmarks] = useState<SalaryBenchmark[]>([]);
     const [genderGap, setGenderGap] = useState<GenderGapData | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [_loading, setLoading] = useState(true);
 
     const venueId = localStorage.getItem('currentVenueId');
 

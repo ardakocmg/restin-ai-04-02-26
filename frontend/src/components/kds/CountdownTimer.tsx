@@ -1,7 +1,7 @@
 import { Timer } from 'lucide-react';
 import { useEffect,useState } from 'react';
 
-export default function CountdownTimer({ targetTime, createdAt }) {
+export default function CountdownTimer({ targetTime, createdAt: _createdAt }) {
   const [timeLeft, setTimeLeft] = useState(null);
   const [overtime, setOvertime] = useState(false);
 

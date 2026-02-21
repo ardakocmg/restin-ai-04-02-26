@@ -126,7 +126,7 @@ const STAFF = ['Chef Marco', 'Maria C.', 'John D.', 'Anna P.'];
    ██  PREP LISTS
    ═══════════════════════════════════════════════════════════════════ */
 export default function PrepLists() {
-    const { t } = useTranslation();
+    const { t: _t } = useTranslation();
 
     /* ── State ── */
     const [tasks, setTasks] = useState<PrepTask[]>(PREP_TASKS);

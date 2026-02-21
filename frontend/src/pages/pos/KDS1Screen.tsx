@@ -158,7 +158,7 @@ const getTimerText = (minutes: number): string => {
     return `${minutes}m`;
 };
 
-const getOrderTypeIcon = (type: OrderType) => {
+const _getOrderTypeIcon = (type: OrderType) => {
     switch (type) {
         case 'dine-in': return <UtensilsCrossed size={12} />;
         case 'delivery': return <Truck size={12} />;
@@ -174,7 +174,7 @@ const getOrderTypeBadge = (type: OrderType) => {
 /* ===== Main Component ===== */
 
 const KDS1Screen: React.FC = () => {
-    const { user } = useAuth();
+    const { user: _user } = useAuth();
 
     // State
     const [mode, setMode] = useState<KDS1Mode>('receipt');

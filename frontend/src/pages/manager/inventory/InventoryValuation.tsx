@@ -120,7 +120,7 @@ function CategoryBar({ categories }: { categories: CategorySummary[] }) {
    ██  INVENTORY VALUATION PAGE
    ═══════════════════════════════════════════════════════════════════ */
 export default function InventoryValuation() {
-    const { t } = useTranslation();
+    const { t: _t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { activeVenue: selectedVenue } = useVenue() as/**/any;
 

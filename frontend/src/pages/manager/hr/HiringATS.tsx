@@ -42,12 +42,12 @@ interface NewJobForm {
 }
 
 export default function HiringATS() {
-    const { user } = useAuth();
+    const { user: _user } = useAuth();
     const [jobs, setJobs] = useState<JobPosting[]>([]);
     const [candidates, setCandidates] = useState<Candidate[]>([]);
     const [analytics, setAnalytics] = useState<Analytics | null>(null);
     const [view, setView] = useState<'jobs' | 'pipeline' | 'analytics'>('jobs');
-    const [loading, setLoading] = useState(true);
+    const [_loading, setLoading] = useState(true);
     const [showNewJob, setShowNewJob] = useState(false);
     const [newJob, setNewJob] = useState<NewJobForm>({ title: '', department: '', location: '', employment_type: 'Full-time', description: '' });
 

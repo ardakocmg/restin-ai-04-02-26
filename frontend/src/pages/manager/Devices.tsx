@@ -50,7 +50,7 @@ export default function Devices() {
     const { user } = useAuth();
     const { logAction } = useAuditLog();
     const [devices, setDevices] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [_loading, setLoading] = useState(true);
     const [selectedDevice, setSelectedDevice] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
 

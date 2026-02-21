@@ -10,11 +10,11 @@ import RoleRoute from '../components/shared/RoleRoute';
 // ─── Lazy Imports ───────────────────────────────────────────────────────────────
 const POSSetup = React.lazy(() => import('../pages/pos/POSSetup'));
 const POSMain = React.lazy(() => import('../pages/pos/POSMain'));
-const POSRuntimeEnhanced = React.lazy(() => import('../pages/pos/POSRuntimeEnhanced'));
+const _POSRuntimeEnhanced = React.lazy(() => import('../pages/pos/POSRuntimeEnhanced'));
 const POSThemeRouter = React.lazy(() => import('../pages/pos/POSThemeRouter'));
 const POSDashboard = React.lazy(() => import('../pages/manager/POSDashboard'));
 const POSSettings = React.lazy(() => import('../pages/manager/POSSettings'));
-const POSFeature = React.lazy(() => import('../features/pos/POSFeature'));
+const _POSFeature = React.lazy(() => import('../features/pos/POSFeature'));
 const KDSSetup = React.lazy(() => import('../pages/kds/KDSSetup'));
 const KDSMain = React.lazy(() => import('../pages/kds/KDSMain'));
 const KDSRuntime = React.lazy(() => import('../pages/kds/KDSRuntime'));

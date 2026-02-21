@@ -530,7 +530,7 @@ export default function RestinSettings() {
         </div>
     );
 
-    const renderThemeEngineFields = () => (
+    const _renderThemeEngineFields = () => (
         <div className="space-y-4">
             <div className="p-3 rounded-lg bg-pink-500/10 border border-pink-500/20">
                 <h4 className="text-sm font-semibold text-pink-400 mb-1">Global System Theme</h4>

@@ -13,7 +13,7 @@ export default function SkillsPassDocument({ data, view = 'certificate' }) {
         batchNumber = '69',
         publicKey = '0x646f8870fbbfef4eab416e8ed46e787a842f98c4',
         issuer = 'Skills Pass Malta',
-        issuerPosition = 'Senior Manager',
+        _issuerPosition = 'Senior Manager',
         issuerName = 'Martina Vella Montebello'
     } = data;
 

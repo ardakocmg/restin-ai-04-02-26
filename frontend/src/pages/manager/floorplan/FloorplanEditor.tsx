@@ -54,7 +54,7 @@ export default function FloorplanEditor() {
     const { user } = useAuth();
     const { logAction } = useAuditLog();
     const venueId = activeVenue?.id || localStorage.getItem('currentVenueId') || 'default';
-    const queryClient = useQueryClient();
+    const _queryClient = useQueryClient();
 
     // Audit: log floorplan editor access
     React.useEffect(() => {

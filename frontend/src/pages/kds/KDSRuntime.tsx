@@ -16,7 +16,7 @@ function KDSRuntime() {
   const { stationKey } = useParams();
   const [tickets, setTickets] = useState([]);
   const [filter, setFilter] = useState('ALL');
-  const [settings, setSettings] = useState(null);
+  const [_settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [undoToast, setUndoToast] = useState(null);
   const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';

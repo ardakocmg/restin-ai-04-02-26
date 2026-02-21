@@ -17,7 +17,7 @@ import api from '../../../lib/api';
 import { logger } from '@/lib/logger';
 export default function PayrollMalta() {
   const { activeVenue } = useVenue();
-  const { user, isOwner, isManager } = useAuth();
+  const { user, isOwner: _isOwner, isManager: _isManager } = useAuth();
   const navigate = useNavigate();
   const { logAction } = useAuditLog();
 
@@ -75,7 +75,7 @@ export default function PayrollMalta() {
   const activeRun = async () => {
     setLoading(true);
     try {
-      const res = await api.post('/payroll-mt/run', {
+      const _res = await api.post('/payroll-mt/run', {
         venue_id: activeVenue.id,
         year: parseInt(year),
         month: parseInt(month),

@@ -88,7 +88,7 @@ function VarianceBadge({ status }: { status: StockComparison['status'] }) {
    ██  THEORETICAL VS ACTUAL STOCK
    ═══════════════════════════════════════════════════════════════════ */
 export default function TheoreticalVsActual() {
-    const { t } = useTranslation();
+    const { t: _t } = useTranslation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { activeVenue: selectedVenue } = useVenue() as/**/any;
 

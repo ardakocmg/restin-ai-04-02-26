@@ -178,7 +178,7 @@ export default function AICopilot() {
     const { user } = useAuth();
     const venueId = activeVenueId || localStorage.getItem('venueId') || '';
     const roleTier = getRoleTier(user?.role as string);
-    const canUseExternalAi = roleTier === 'owner' || roleTier === 'manager';
+    const _canUseExternalAi = roleTier === 'owner' || roleTier === 'manager';
 
     // Filter suggestions by role
     const suggestions = useMemo(

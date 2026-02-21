@@ -37,7 +37,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
     });
 
     // Subscribe to sync events
-    const unsubscribeSync = syncService.onStatusChange((status, online) => {
+    const unsubscribeSync = syncService.onStatusChange((status, _online) => {
       if (status === 'sync_complete') {
         loadStats();
       }

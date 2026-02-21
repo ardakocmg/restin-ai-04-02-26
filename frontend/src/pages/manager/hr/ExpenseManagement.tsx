@@ -15,8 +15,8 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 
 export default function ExpenseManagement() {
-  const { user, isManager, isOwner } = useAuth();
-  const { logAction } = useAuditLog();
+  const { user: _user, isManager: _isManager, isOwner: _isOwner } = useAuth();
+  const { logAction: _logAction } = useAuditLog();
   const [claims, setClaims] = useState([]);
   const [loading, setLoading] = useState(true);
 

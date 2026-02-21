@@ -25,7 +25,7 @@ export default function FloorPlanEditor() {
   const [objects, setObjects] = useState([]);
   const [selectedObject, setSelectedObject] = useState(null);
   const [dragStart, setDragStart] = useState(null);
-  const [zoom, setZoom] = useState(1);
+  const [zoom, _setZoom] = useState(1);
   const [snapToGrid, setSnapToGrid] = useState(true);
   const [backgroundImage, setBackgroundImage] = useState(null);
   

@@ -38,9 +38,9 @@ export default function PhysicalTables() {
     const [selectedFloor, setSelectedFloor] = useState('');
     const [tables, setTables] = useState([]);
     const [floors, setFloors] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [decorations, setDecorations] = useState(DECORATIONS);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [_loading, setLoading] = useState(true);
+    const [decorations, _setDecorations] = useState(DECORATIONS);
+    const [_searchQuery, _setSearchQuery] = useState('');
     const [draggedItem, setDraggedItem] = useState(null);
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
     const [selectedTable, setSelectedTable] = useState(null);
@@ -114,7 +114,7 @@ export default function PhysicalTables() {
         }
     };
 
-    const deleteTable = async (id) => {
+    const _deleteTable = async (id) => {
         try {
             await api.delete(`/tables/${id}`);
             setTables(prev => prev.filter(t => t.id !== id));
@@ -127,7 +127,7 @@ export default function PhysicalTables() {
         }
     };
 
-    const handleBackgroundUpload = (e) => {
+    const _handleBackgroundUpload = (e) => {
         const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();
@@ -447,7 +447,7 @@ export default function PhysicalTables() {
     );
 }
 
-const AssetButton = ({ icon: Icon, label }) => (
+const _AssetButton = ({ icon: Icon, label }) => (
     <button className="p-3 bg-background border border-border rounded-lg hover:border-red-500/30 transition-all group flex flex-col items-center gap-2">
         <Icon className="w-5 h-5 text-muted-foreground group-hover:text-red-500" />
         <span className="text-[9px] font-bold text-muted-foreground group-hover:text-foreground uppercase">{label}</span>

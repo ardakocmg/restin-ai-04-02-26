@@ -10,7 +10,7 @@ export default function AccountingMaltaPage() {
   const { activeVenue } = useVenue();
   const [accounts, setAccounts] = useState([]);
   const [journals, setJournals] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (activeVenue?.id) {

@@ -19,7 +19,7 @@ export default function AIOSDashboard() {
     const { user } = useAuth();
     const { logAction } = useAuditLog();
     const [stats, setStats] = useState(null);
-    const [logs, setLogs] = useState([]);
+    const [_logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const fetchingRef = useRef(false);
     const auditedRef = useRef(false);

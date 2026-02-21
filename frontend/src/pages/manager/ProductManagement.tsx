@@ -35,7 +35,7 @@ Wine
 import { cn } from '../../lib/utils';
 
 export default function ProductManagement() {
-    const navigate = useNavigate();
+    const _navigate = useNavigate();
     const { activeVenue } = useVenue();
     const { user } = useAuth();
     const { logAction } = useAuditLog();
@@ -150,17 +150,17 @@ export default function ProductManagement() {
                                     {
                                         key: 'category',
                                         label: 'Category',
-                                        render: (row) => <Badge variant="outline" className="text-[10px] uppercase font-bold border-border text-muted-foreground">DISIIES</Badge>
+                                        render: (_row) => <Badge variant="outline" className="text-[10px] uppercase font-bold border-border text-muted-foreground">DISIIES</Badge>
                                     },
                                     {
                                         key: 'price',
                                         label: 'Price',
-                                        render: (row) => <span className="font-black text-foreground italic">€24.50</span>
+                                        render: (_row) => <span className="font-black text-foreground italic">€24.50</span>
                                     },
                                     {
                                         key: 'status',
                                         label: 'Status',
-                                        render: (row) => (
+                                        render: (_row) => (
                                             <div className="flex items-center gap-2">
                                                 <div className="h-2 w-2 rounded-full bg-green-500" />
                                                 <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Published</span>

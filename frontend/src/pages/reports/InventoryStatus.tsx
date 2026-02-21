@@ -117,7 +117,7 @@ export default function InventoryStatus() {
                                     paddingAngle={5}
                                     dataKey="value"
                                 >
-                                    {(data.waste_distribution.length > 0 ? data.waste_distribution : [{ name: 'Expired', value: 0.01 }, { name: 'Damaged', value: 0.01 }, { name: 'Over-production', value: 0.01 }, { name: 'Other', value: 0.01 }]).map((entry, index) => (
+                                    {(data.waste_distribution.length > 0 ? data.waste_distribution : [{ name: 'Expired', value: 0.01 }, { name: 'Damaged', value: 0.01 }, { name: 'Over-production', value: 0.01 }, { name: 'Other', value: 0.01 }]).map((_entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>

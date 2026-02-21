@@ -30,7 +30,7 @@ interface TipPresetConfig {
 
 export default function TipPresetsSettings() {
     const { activeVenue } = useVenue();
-    const { user } = useAuth();
+    const { user: _user } = useAuth();
     const [config, setConfig] = useState<TipPresetConfig | null>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);

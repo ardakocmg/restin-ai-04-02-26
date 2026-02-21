@@ -18,7 +18,7 @@ Trash2
 import React,{ useEffect,useRef } from 'react';
 import type { ZonePosition } from './themeZoneTypes';
 
-interface ContextMenuAction {
+interface _ContextMenuAction {
     label: string;
     icon: React.ElementType;
     shortcut?: string;

@@ -693,7 +693,7 @@ const MigrationHub = () => {
                                                         placeholder="Filter mappings..."
                                                         className="w-full bg-background border border-input rounded-lg pl-9 pr-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none"
                                                         onChange={(e) => {
-                                                            const term = e.target.value.toLowerCase();
+                                                            const _term = e.target.value.toLowerCase();
                                                             // Filter logic would go here if we had state for it
                                                         }}
                                                     />
