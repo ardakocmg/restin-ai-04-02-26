@@ -3,7 +3,7 @@ import { logger } from '@/lib/logger';
 
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 import { Clock, TrendingUp, Activity, AlertCircle } from 'lucide-react';
 
@@ -33,10 +33,9 @@ export default function KDSPerformanceReport() {
       const res = await api.get('/kds/analytics', { params: { venue_id: activeVenue.id } });
       const d = res.data;
       setMetrics(d.metrics);
-      // Transform hourly_throughput for the chart
       setPerformanceData((d.hourly_throughput || []).map(h => ({
         time: h.time,
-        avgTime: 0, // avg per-hour data would need per-hour aggregation
+        avgTime: 0,
         tickets: h.orders
       })));
       setStationData((d.station_performance || []).map(s => ({
@@ -62,42 +61,42 @@ export default function KDSPerformanceReport() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Avg Ticket Time</CardTitle>
-              <Clock className="h-4 w-4" style={{ color: '#E53935' }} />
+              <CardTitle className="text-sm font-medium text-zinc-400">Avg Ticket Time</CardTitle>
+              <Clock className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.avg_prep_time || '0m'}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>Current average</p>
+              <div className="text-2xl font-bold text-zinc-100">{metrics?.avg_prep_time || '0m'}</div>
+              <p className="text-xs text-zinc-500">Current average</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Total Tickets</CardTitle>
-              <Activity className="h-4 w-4" style={{ color: '#E53935' }} />
+              <CardTitle className="text-sm font-medium text-zinc-400">Total Tickets</CardTitle>
+              <Activity className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.total_tickets || 0}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>Today</p>
+              <div className="text-2xl font-bold text-zinc-100">{metrics?.total_tickets || 0}</div>
+              <p className="text-xs text-zinc-500">Today</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Peak Time</CardTitle>
-              <TrendingUp className="h-4 w-4" style={{ color: '#E53935' }} />
+              <CardTitle className="text-sm font-medium text-zinc-400">Peak Time</CardTitle>
+              <TrendingUp className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.peak_time || 'N/A'}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>{metrics?.peak_tickets || 0} tickets/hour</p>
+              <div className="text-2xl font-bold text-zinc-100">{metrics?.peak_time || 'N/A'}</div>
+              <p className="text-xs text-zinc-500">{metrics?.peak_tickets || 0} tickets/hour</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Delayed Orders</CardTitle>
-              <AlertCircle className="h-4 w-4" style={{ color: '#FB8C00' }} />
+              <CardTitle className="text-sm font-medium text-zinc-400">Delayed Orders</CardTitle>
+              <AlertCircle className="h-4 w-4 text-amber-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#FB8C00' }}>{metrics?.delayed_orders || 0}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>{metrics?.delay_rate || 0}% of total</p>
+              <div className="text-2xl font-bold text-amber-500">{metrics?.delayed_orders || 0}</div>
+              <p className="text-xs text-zinc-500">{metrics?.delay_rate || 0}% of total</p>
             </CardContent>
           </Card>
         </div>
@@ -113,8 +112,8 @@ export default function KDSPerformanceReport() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                 <XAxis dataKey="time" stroke="#A1A1AA" />
                 <YAxis stroke="#A1A1AA" />
-                <Tooltip contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', color: '#F5F5F7' }} />
-                <Legend wrapperStyle={{ color: '#D4D4D8' }} />
+                <Tooltip contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', color: '#F5F5F7' }} /> {/* keep-inline: Recharts API */}
+                <Legend wrapperStyle={{ color: '#D4D4D8' }} /> {/* keep-inline: Recharts API */}
                 <Line type="monotone" dataKey="tickets" stroke="#E53935" strokeWidth={2} name="Tickets" />
               </LineChart>
             </ResponsiveContainer>
@@ -133,14 +132,14 @@ export default function KDSPerformanceReport() {
                 { station: 'Salad', tickets: 0, avgTime: 0, status: 'good' },
                 { station: 'Dessert', tickets: 0, avgTime: 0, status: 'good' },
               ] : stationData).map((station) => (
-                <div key={station.station} className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div key={station.station} className="flex items-center justify-between p-4 rounded-lg bg-white/[0.02] border border-white/5">
                   <div className="flex-1">
-                    <h4 className="font-medium" style={{ color: '#F5F5F7' }}>{station.station}</h4>
-                    <p className="text-sm" style={{ color: '#A1A1AA' }}>{station.tickets} tickets completed</p>
+                    <h4 className="font-medium text-zinc-100">{station.station}</h4>
+                    <p className="text-sm text-zinc-400">{station.tickets} tickets completed</p>
                   </div>
                   <div className="text-right mr-4">
-                    <div className="text-lg font-bold" style={{ color: '#D4D4D8' }}>{station.avgTime} min</div>
-                    <p className="text-xs" style={{ color: '#71717A' }}>avg time</p>
+                    <div className="text-lg font-bold text-zinc-300">{station.avgTime} min</div>
+                    <p className="text-xs text-zinc-500">avg time</p>
                   </div>
                   <Badge variant={station.status === 'good' ? 'default' : 'destructive'}>
                     {station.status === 'good' ? 'On Track' : 'Slow'}

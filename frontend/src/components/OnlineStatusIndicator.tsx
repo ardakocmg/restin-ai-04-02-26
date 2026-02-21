@@ -135,16 +135,16 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
   return (
     <div className={positionClasses[position]}>
+      {/* keep-inline: dynamic border/shadow color from runtime getStatusColor() */}
       <button
         onClick={() => setShowDetails(!showDetails)}
-        className="flex items-center gap-2 px-4 py-1.5 rounded-full transition-all duration-300 hover:scale-[1.02] active:scale-95 group"
+        className="flex items-center gap-2 px-4 py-1.5 rounded-full transition-all duration-300 hover:scale-[1.02] active:scale-95 group bg-zinc-900/40 backdrop-blur-xl"
         style={{
-          background: 'rgba(23, 23, 23, 0.4)',
-          backdropFilter: 'blur(12px)',
           border: `1px solid ${getStatusColor()}40`,
           boxShadow: `0 0 20px ${getStatusColor()}15`
         }}
       >
+        {/* keep-inline: dynamic backgroundColor from runtime getStatusColor() */}
         <div
           className="w-2 h-2 rounded-full animate-pulse shadow-[0_0_8px_currentColor]"
           style={{ backgroundColor: getStatusColor(), color: getStatusColor() }}
@@ -154,13 +154,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
           {getStatusText()}
         </span>
         {pendingCount > 0 && (
-          <span
-            className="px-2 py-0.5 rounded-full text-xs font-bold"
-            style={{
-              backgroundColor: 'rgba(229, 57, 53, 0.2)',
-              color: '#E53935'
-            }}
-          >
+          <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-red-500/20 text-red-500">
             {pendingCount}
           </span>
         )}
@@ -168,20 +162,18 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
       {/* Details Dropdown */}
       {showDetails && (
-        <div
-          className="absolute top-full mt-2 right-0 w-80 card-dark p-4 rounded-xl shadow-2xl"
-          style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
-        >
-          <h3 className="font-heading text-sm mb-3" style={{ color: '#F5F5F7' }}>
+        <div className="absolute top-full mt-2 right-0 w-80 card-dark p-4 rounded-xl shadow-2xl border border-white/10">
+          <h3 className="font-heading text-sm mb-3 text-zinc-100">
             SYNC STATUS
           </h3>
 
           <div className="space-y-3">
             {/* Resilience Mode */}
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: '#A1A1AA' }}>Mode:</span>
+              <span className="text-sm text-zinc-400">Mode:</span>
               <div className="flex items-center gap-2">
                 {getStatusIcon()}
+                {/* keep-inline: dynamic color from runtime getStatusColor() */}
                 <span className="text-sm font-medium" style={{ color: getStatusColor() }}>
                   {getStatusText()}
                 </span>
@@ -190,7 +182,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
             {/* Cloud Status */}
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: '#A1A1AA' }}>Cloud:</span>
+              <span className="text-sm text-zinc-400">Cloud:</span>
               <div className="flex items-center gap-2">
                 {status.cloudReachable ? (
                   <>
@@ -208,7 +200,7 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
             {/* Edge Gateway Status */}
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: '#A1A1AA' }}>Edge Gateway:</span>
+              <span className="text-sm text-zinc-400">Edge Gateway:</span>
               <div className="flex items-center gap-2">
                 {status.edgeReachable ? (
                   <>
@@ -217,8 +209,8 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
                   </>
                 ) : (
                   <>
-                    <WifiOff className="w-4 h-4" style={{ color: '#71717A' }} />
-                    <span className="text-sm" style={{ color: '#71717A' }}>Unavailable</span>
+                    <WifiOff className="w-4 h-4 text-zinc-500" />
+                    <span className="text-sm text-zinc-500">Unavailable</span>
                   </>
                 )}
               </div>
@@ -226,8 +218,8 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
             {/* Pending Commands */}
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: '#A1A1AA' }}>Pending:</span>
-              <span className="text-sm font-bold" style={{ color: pendingCount > 0 ? '#E53935' : '#4ADE80' }}>
+              <span className="text-sm text-zinc-400">Pending:</span>
+              <span className={`text-sm font-bold ${pendingCount > 0 ? 'text-red-500' : 'text-green-400'}`}>
                 {pendingCount} commands
               </span>
             </div>
@@ -235,8 +227,8 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
             {/* Last Sync */}
             {lastSync && (
               <div className="flex items-center justify-between">
-                <span className="text-sm" style={{ color: '#A1A1AA' }}>Last Sync:</span>
-                <span className="text-xs" style={{ color: '#71717A' }}>
+                <span className="text-sm text-zinc-400">Last Sync:</span>
+                <span className="text-xs text-zinc-500">
                   {new Date(lastSync).toLocaleTimeString()}
                 </span>
               </div>
@@ -255,24 +247,24 @@ export default function OnlineStatusIndicator({ position = 'top-right' }) {
 
             {/* Mode Info */}
             {status.mode === 'edge' && (
-              <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
-                <p className="text-xs" style={{ color: '#D4D4D8' }}>
+              <div className="mt-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/30">
+                <p className="text-xs text-zinc-300">
                   Operating via Edge Gateway. Commands queued locally and synced via venue server.
                 </p>
               </div>
             )}
 
             {status.mode === 'mesh' && (
-              <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.3)' }}>
-                <p className="text-xs" style={{ color: '#D4D4D8' }}>
+              <div className="mt-3 p-3 rounded-lg bg-purple-500/10 border border-purple-500/30">
+                <p className="text-xs text-zinc-300">
                   Device mesh active. Commands replicated across peer devices for redundancy.
                 </p>
               </div>
             )}
 
             {status.mode === 'device' && (
-              <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: 'rgba(229, 57, 53, 0.1)', border: '1px solid rgba(229, 57, 53, 0.3)' }}>
-                <p className="text-xs" style={{ color: '#D4D4D8' }}>
+              <div className="mt-3 p-3 rounded-lg bg-red-500/10 border border-red-500/30">
+                <p className="text-xs text-zinc-300">
                   Full offline mode. All operations queued locally and will sync when connection restored.
                 </p>
               </div>
