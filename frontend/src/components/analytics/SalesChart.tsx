@@ -4,7 +4,12 @@
   For this artifact, I will implement a responsive SVG chart to avoid dependency issues if Recharts is missing.
 */
 
-export default function SalesChart({ data, title = "Hourly Sales" }) {
+interface SalesChartProps {
+    data?: { label: string; value: number }[];
+    title?: string;
+}
+
+export default function SalesChart({ data, title = "Hourly Sales" }: SalesChartProps) {
     const chartData = data || [
         { label: "12pm", value: 120 },
         { label: "1pm", value: 450 },
