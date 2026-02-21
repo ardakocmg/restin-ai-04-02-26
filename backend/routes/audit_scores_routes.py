@@ -355,20 +355,125 @@ def compute_audit_scores() -> Dict:
     }
     
     # ═══════════════════════════════════════════════════════════════════════════
+    # 8. TYPESCRIPT STRICTNESS (weight: 5%)
+    # ═══════════════════════════════════════════════════════════════════════════
+    ts_score = 3.0
+    tsconfig_path = root / "frontend" / "tsconfig.json"
+    has_tsconfig = tsconfig_path.exists()
+    has_strict_mode = False
+    has_no_any = False
+    any_count = 0
+    
+    if has_tsconfig:
+        ts_score += 1.0
+        try:
+            content = tsconfig_path.read_text(encoding="utf-8", errors="ignore")
+            has_strict_mode = '"strict": true' in content or '"strict":true' in content
+            has_no_any = '"noImplicitAny": true' in content
+        except Exception:
+            pass
+    if has_strict_mode:
+        ts_score += 2.5
+    if has_no_any:
+        ts_score += 1.0
+    
+    # Penalty: count `any` usage
+    any_count = _file_contains_pattern(frontend, [".ts", ".tsx"], ": any", max_files=100)
+    if any_count == 0:
+        ts_score += 2.0
+    elif any_count <= 5:
+        ts_score += 1.0
+    elif any_count <= 20:
+        ts_score += 0.0
+    else:
+        ts_score -= 1.0
+    
+    scores["typescript_strictness"] = round(max(0, min(10, ts_score)), 1)
+    evidence["typescript_strictness"] = {
+        "has_tsconfig": has_tsconfig,
+        "strict_mode": has_strict_mode,
+        "no_implicit_any": has_no_any,
+        "files_with_any": any_count,
+    }
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # 9. API DOCUMENTATION (weight: 5%)
+    # ═══════════════════════════════════════════════════════════════════════════
+    has_swagger = _file_contains_pattern(backend, [".py"], "swagger", max_files=30) > 0
+    has_openapi = _file_contains_pattern(backend, [".py"], "openapi", max_files=30) > 0
+    has_docstrings = _file_contains_pattern(backend / "routes", [".py"], '"""', max_files=50)
+    has_storybook = (root / "frontend" / ".storybook").exists()
+    
+    docs_score = 2.0
+    if has_swagger or has_openapi:
+        docs_score += 2.0
+    if has_docstrings >= 30:
+        docs_score += 3.0
+    elif has_docstrings >= 15:
+        docs_score += 2.0
+    elif has_docstrings >= 5:
+        docs_score += 1.0
+    if has_storybook:
+        docs_score += 2.0
+    
+    scores["api_documentation"] = round(min(10, docs_score), 1)
+    evidence["api_documentation"] = {
+        "has_swagger_openapi": has_swagger or has_openapi,
+        "route_files_with_docstrings": has_docstrings,
+        "has_storybook": has_storybook,
+    }
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # 10. ACCESSIBILITY & UX (weight: 5%)
+    # ═══════════════════════════════════════════════════════════════════════════
+    aria_usage = _file_contains_pattern(frontend, [".tsx"], "aria-", max_files=100)
+    has_error_boundary = _file_contains_pattern(frontend, [".tsx"], "ErrorBoundary", max_files=50) > 0
+    has_loading_states = _file_contains_pattern(frontend, [".tsx"], "isLoading", max_files=100)
+    has_responsive = _file_contains_pattern(frontend, [".tsx"], "md:", max_files=50)
+    
+    a11y_score = 2.0
+    if aria_usage >= 20:
+        a11y_score += 2.5
+    elif aria_usage >= 5:
+        a11y_score += 1.5
+    elif aria_usage >= 1:
+        a11y_score += 0.5
+    if has_error_boundary:
+        a11y_score += 1.5
+    if has_loading_states >= 10:
+        a11y_score += 1.5
+    elif has_loading_states >= 3:
+        a11y_score += 0.5
+    if has_responsive >= 10:
+        a11y_score += 1.5
+    elif has_responsive >= 3:
+        a11y_score += 0.5
+    
+    scores["accessibility_ux"] = round(min(10, a11y_score), 1)
+    evidence["accessibility_ux"] = {
+        "files_with_aria": aria_usage,
+        "has_error_boundary": has_error_boundary,
+        "files_with_loading_states": has_loading_states,
+        "files_with_responsive": has_responsive,
+    }
+    
+    # ═══════════════════════════════════════════════════════════════════════════
     # COMPOSITE WEIGHTED SCORE
     # ═══════════════════════════════════════════════════════════════════════════
     weights = {
-        "code_volume": 0.15,
-        "architecture": 0.15,
+        "code_volume": 0.10,
+        "architecture": 0.12,
         "testing": 0.15,
         "security": 0.10,
         "observability": 0.10,
-        "infrastructure": 0.15,
+        "infrastructure": 0.12,
         "production_readiness": 0.10,
+        "typescript_strictness": 0.07,
+        "api_documentation": 0.07,
+        "accessibility_ux": 0.07,
     }
     
     weighted_total = sum(scores[k] * weights[k] for k in weights)
-    # Normalize to 0-10 scale
     overall = round(weighted_total, 1)
     
     result = {
@@ -386,6 +491,60 @@ def compute_audit_scores() -> Dict:
     return result
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# Helper functions (used by hyperscale_routes and tests)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def _compute_system_iq(snapshot: Dict, dlq: Dict, db_ok: bool, pending: int) -> int:
+    """Compute system health IQ (0-100) from real metrics."""
+    score = 100
+    
+    error_rate = snapshot.get("error_rate_5xx", 0)
+    if error_rate > 0.05:
+        score -= 30
+    elif error_rate > 0.01:
+        score -= 15
+    elif error_rate > 0:
+        score -= 5
+    
+    p99 = snapshot.get("p99_latency_ms", 0)
+    if p99 > 1000:
+        score -= 20
+    elif p99 > 500:
+        score -= 10
+    elif p99 > 200:
+        score -= 5
+    
+    dlq_size = dlq.get("dlq_size", 0)
+    if dlq_size > 100:
+        score -= 20
+    elif dlq_size > 10:
+        score -= 10
+    elif dlq_size > 0:
+        score -= 3
+    
+    if not db_ok:
+        score -= 25
+    
+    if pending > 100:
+        score -= 10
+    elif pending > 10:
+        score -= 5
+    
+    return max(0, score)
+
+
+def _compute_resilience(snapshot: Dict, db_ok: bool) -> float:
+    """Compute resilience score (0-100%)."""
+    if not db_ok:
+        return 0.0
+    total = snapshot.get("total_requests", 0)
+    errors = snapshot.get("total_errors_5xx", 0)
+    if total == 0:
+        return 100.0
+    return round((total - errors) / total * 100, 2)
+
+
 @router.get("/audit-scores")
 async def get_audit_scores(current_user: dict = Depends(get_current_user)):
     """
@@ -398,3 +557,4 @@ async def get_audit_scores(current_user: dict = Depends(get_current_user)):
     except Exception as e:
         logger.error("Audit score computation failed: %s", e)
         return {"error": str(e), "scores": {}}
+
