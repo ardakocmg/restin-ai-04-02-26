@@ -3,47 +3,47 @@ import api from '@/lib/api';
 import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import {
-Archive,
-Building2,
-Calendar,
-Check,
-CheckSquare,
-ChevronRight,
-Circle,
-Clock,
-Contact,
-ExternalLink,
-Eye,
-File,
-FileSpreadsheet,
-FileText,
-Folder,
-HardDrive,
-Image,
-ImageIcon,
-Link2,
-Mail,
-MailOpen,
-MapPin,
-Paperclip,
-Phone,
-Plus,
-Presentation,
-RefreshCw,
-Settings,
-Star,StarOff,
-Table,
-ThumbsUp,
-ToggleLeft,ToggleRight,
-Trash2,
-Unlink,
-Upload,
-Users,
-X,
-Youtube,
-Zap
+    Archive,
+    Building2,
+    Calendar,
+    Check,
+    CheckSquare,
+    ChevronRight,
+    Circle,
+    Clock,
+    Contact,
+    ExternalLink,
+    Eye,
+    File,
+    FileSpreadsheet,
+    FileText,
+    Folder,
+    HardDrive,
+    Image,
+    ImageIcon,
+    Link2,
+    Mail,
+    MailOpen,
+    MapPin,
+    Paperclip,
+    Phone,
+    Plus,
+    Presentation,
+    RefreshCw,
+    Settings,
+    Star, StarOff,
+    Table,
+    ThumbsUp,
+    ToggleLeft, ToggleRight,
+    Trash2,
+    Unlink,
+    Upload,
+    Users,
+    X,
+    Youtube,
+    Zap
 } from 'lucide-react';
-import React,{ useCallback,useEffect,useMemo,useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -136,7 +136,7 @@ const SERVICE_META: Record<ServiceKey, { label: string; icon: React.ElementType;
 // ── Main Component ─────────────────────────────────────────────────────
 
 export default function MyGooglePanel(): React.ReactElement {
-    const { t } = useTranslation();
+    const { t: _t } = useTranslation();
 
     // Connection
     const [status, setStatus] = useState<GoogleStatus | null>(null);
@@ -417,7 +417,7 @@ export default function MyGooglePanel(): React.ReactElement {
         }
     };
 
-    const handleDeleteFile = async (id: string) => {
+    const _handleDeleteFile = async (id: string) => {
         try {
             await api.delete(`/google/personal/drive/files/${id}`);
             setFiles(prev => prev.filter(f => f.id !== id));

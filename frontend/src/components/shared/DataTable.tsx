@@ -73,7 +73,7 @@ const buildTableId = (pathname: string, columns: ColumnDef[]) => {
   return `table:${pathname}:${key}`;
 };
 
-export interface DataTableProps<TData, TValue> {
+export interface DataTableProps<TData, _TValue> {
   columns: ColumnDef[];
   data: TData[];
   loading?: boolean;
@@ -101,7 +101,7 @@ export interface DataTableProps<TData, TValue> {
   renderRowDrawer?: (row: TData | null) => React.ReactNode;
 }
 
-export default function DataTable<TData, TValue>({
+export default function DataTable<TData, _TValue>({
   columns,
   data,
   loading = false,
@@ -127,7 +127,7 @@ export default function DataTable<TData, TValue>({
   onQueryChange,
   onExport,
   renderRowDrawer
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData, _TValue>) {
   const location = useLocation();
   const { user } = useAuth();
   const resolvedVenueId = venueId || (user as { defaultVenueId?: string })?.defaultVenueId || localStorage.getItem('restin_pos_venue');

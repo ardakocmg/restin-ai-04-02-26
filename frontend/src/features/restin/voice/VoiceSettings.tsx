@@ -1,30 +1,30 @@
-import { useMutation,useQuery,useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-AlertCircle,
-Bot,
-CheckCircle,
-ChevronRight,ExternalLink,
-FileText,
-Globe,
-Key,
-Loader2,
-Mic,
-PhoneCall,
-Phone as PhoneIcon,
-RefreshCw,
-Save,
-Shield,
-Trash2,
-Unplug,
-Upload,
-Volume2,
-Zap,
+    AlertCircle,
+    Bot,
+    CheckCircle,
+    ChevronRight, ExternalLink,
+    FileText,
+    Globe,
+    Key,
+    Loader2,
+    Mic,
+    PhoneCall,
+    Phone as PhoneIcon,
+    RefreshCw,
+    Save,
+    Shield,
+    Trash2,
+    Unplug,
+    Upload,
+    Volume2,
+    Zap,
 } from 'lucide-react';
-import { useEffect,useRef,useState } from 'react';
-import { useLocation,useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '../../../components/ui/button';
-import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '../../../components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 import { Slider } from '../../../components/ui/slider';
@@ -365,7 +365,7 @@ export default function VoiceSettings() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const { data: config, isLoading } = useQuery({
+    const { data: config, isLoading: _isLoading } = useQuery({
         queryKey: ['voice-config', activeVenueId],
         queryFn: () => voiceService.getConfig(activeVenueId || 'default'),
         enabled: !!activeVenueId
@@ -629,7 +629,7 @@ export default function VoiceSettings() {
                         </CardHeader>
                         <CardContent>
                             <input aria-label="Input" type="file" ref={fileInputRef} onChange={handleFileUpload}
-                                accept=".pdf,.txt,.doc,.docx" className="hidden"  />
+                                accept=".pdf,.txt,.doc,.docx" className="hidden" />
                             <div onClick={() => fileInputRef.current?.click()}
                                 className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:bg-card/50 transition-colors cursor-pointer">
                                 <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">

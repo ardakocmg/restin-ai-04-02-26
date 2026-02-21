@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 
-export default function ErrorPage({ error, resetError }) {
+export default function ErrorPage({ error, _resetError }) {
   const navigate = useNavigate();
   const [showDetails, setShowDetails] = React.useState(false);
 

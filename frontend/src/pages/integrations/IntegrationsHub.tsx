@@ -179,9 +179,9 @@ const AVAILABLE_INTEGRATIONS = [
 
 export default function IntegrationsHub() {
   const { activeVenue } = useVenue();
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
   const [integrations, setIntegrations] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
   const [selectedIntegration, setSelectedIntegration] = useState<any>(null);
   const [configOpen, setConfigOpen] = useState(false);
   const [configData, setConfigData] = useState<Record<string, any>>({});

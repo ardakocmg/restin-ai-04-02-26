@@ -28,7 +28,7 @@ export default function NewTopBar(): React.ReactElement {
   const { mode, setMode } = useTheme();
   const { isSafeMode, setSafeMode } = useSafeMode();
   const { totalCount: notifTotal } = useNotifications();
-  const location = useLocation();
+  const _location = useLocation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);

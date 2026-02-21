@@ -10,7 +10,7 @@ const API_URL = process.env.REACT_APP_BACKEND_URL;
 function DeviceManagement() {
   const [devices, setDevices] = useState([]);
   const [pairingCodes, setPairingCodes] = useState([]);
-  const [showPairingModal, setShowPairingModal] = useState(false);
+  const [_showPairingModal, setShowPairingModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const venueId = localStorage.getItem('currentVenueId') || 'venue-caviar-bull';
 

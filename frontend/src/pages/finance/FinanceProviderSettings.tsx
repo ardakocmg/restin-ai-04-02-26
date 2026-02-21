@@ -24,7 +24,7 @@ import { toast } from 'sonner';
 export default function FinanceProviderSettings() {
   const { activeVenue } = useVenue();
   const [settings, setSettings] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {

@@ -3,11 +3,11 @@
  * resize handles, context menu, and framer-motion animations.
  */
 import { cn } from '@/lib/utils';
-import { AnimatePresence,motion } from 'framer-motion';
-import { Eye,EyeOff,GripVertical,X } from 'lucide-react';
-import React,{ useCallback,useRef,useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Eye, EyeOff, GripVertical, X } from 'lucide-react';
+import React, { useCallback, useRef, useState } from 'react';
 import type { ThemeStyleValues } from './StyleEditor';
-import type { ZoneComponentDef,ZoneConfig,ZonePosition } from './themeZoneTypes';
+import type { ZoneComponentDef, ZoneConfig, ZonePosition } from './themeZoneTypes';
 import { getComponentDef } from './themeZoneTypes';
 import ZoneContextMenu from './ZoneContextMenu';
 
@@ -99,7 +99,8 @@ function ZoneCard({
                 style={{ /* keep-inline */
                     backgroundColor: styles.tileBg + '40',
                     borderRadius: `${styles.tileRadius}px`,
-                 /* keep-inline */ }}
+                    /* keep-inline */
+}}
             >
                 {/* Drag handle */}
                 <div className="flex items-center px-1.5 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity">
@@ -161,10 +162,10 @@ export default function BuilderCanvas({
     onReorderZone,
     onDuplicateZone,
     onMoveZoneTo,
-    onUpdateZoneWidth,
+    onUpdateZoneWidth: _onUpdateZoneWidth,
 }: BuilderCanvasProps) {
     const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
-    const [draggedZoneId, setDraggedZoneId] = useState<string | null>(null);
+    const [_draggedZoneId, setDraggedZoneId] = useState<string | null>(null);
     const [resizing, setResizing] = useState<{ panel: 'left' | 'right'; startX: number; startWidth: number } | null>(null);
     const [leftPanelWidth, setLeftPanelWidth] = useState(160);
     const [rightPanelWidth, setRightPanelWidth] = useState(160);
@@ -394,7 +395,8 @@ export default function BuilderCanvas({
                 style={{ /* keep-inline */
                     backgroundColor: styles.rootBg,
                     fontFamily: styles.fontFamily,
-                 /* keep-inline */ }} /* keep-inline */ /* keep-inline */
+                    /* keep-inline */
+}} /* keep-inline */ /* keep-inline */
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Top row */}
@@ -410,7 +412,8 @@ export default function BuilderCanvas({
                             width: `${leftPanelWidth}px`,
                             minWidth: '80px',
                             maxWidth: '320px',
-                         /* keep-inline */ }}
+                            /* keep-inline */
+}}
                         className="flex-shrink-0 transition-[width]"
                     >
                         {renderDropArea('left', leftZones)}
@@ -430,7 +433,8 @@ export default function BuilderCanvas({
                             width: `${rightPanelWidth}px`,
                             minWidth: '80px',
                             maxWidth: '320px',
-                         /* keep-inline */ }}
+                            /* keep-inline */
+}}
                         className="flex-shrink-0 transition-[width]"
                     >
                         {renderDropArea('right', rightZones)}

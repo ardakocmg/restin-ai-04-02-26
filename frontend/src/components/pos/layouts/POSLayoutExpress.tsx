@@ -49,14 +49,14 @@ const CATEGORY_ICONS: CategoryIconMap = {
 };
 
 export default function POSLayoutExpress({
-    venue, user, categories, menuItems, tables, activeCategory, selectedTable,
-    currentOrder, orderItems, settings, sendOptions, sendInProgress, floorPlan, selectedItem,
-    showTableDialog, showPaymentDialog, showFloorPlanDialog, showModifierDialog,
-    subtotal, tax, total, searchQuery, onSearchChange, isKeyboardOpen, onSetKeyboardOpen,
+    venue, user: _user, categories, menuItems, tables, activeCategory, selectedTable,
+    currentOrder, orderItems, settings: _settings, sendOptions: _sendOptions, sendInProgress: _sendInProgress, floorPlan: _floorPlan, selectedItem,
+    showTableDialog: _showTableDialog, showPaymentDialog: _showPaymentDialog, showFloorPlanDialog: _showFloorPlanDialog, showModifierDialog,
+    subtotal, tax, total, searchQuery, onSearchChange, isKeyboardOpen: _isKeyboardOpen, onSetKeyboardOpen,
     onLoadCategoryItems, onSelectTable, onAddItemToOrder, onConfirmItemWithModifiers,
-    onUpdateItemQuantity, onRemoveItem, onSendOrder, onHandlePayment, onClearOrder,
-    onDeselectTable, onSetSendOptions, onSetShowTableDialog, onSetShowPaymentDialog,
-    onSetShowFloorPlanDialog, onSetShowModifierDialog, onCloseModifierDialog, onNavigate,
+    onUpdateItemQuantity, onRemoveItem, onSendOrder: _onSendOrder, onHandlePayment, onClearOrder,
+    onDeselectTable, onSetSendOptions: _onSetSendOptions, onSetShowTableDialog: _onSetShowTableDialog, onSetShowPaymentDialog: _onSetShowPaymentDialog,
+    onSetShowFloorPlanDialog: _onSetShowFloorPlanDialog, onSetShowModifierDialog: _onSetShowModifierDialog, onCloseModifierDialog, onNavigate,
     themeSelector,
 }: POSLayoutProps) {
     // --- Helper functions ---

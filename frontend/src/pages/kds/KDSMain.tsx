@@ -4,16 +4,16 @@
  */
 import { logger } from '@/lib/logger';
 import {
-Award,
-CheckCircle,
-Loader2,
-LogOut,
-PauseCircle,
-PlayCircle,RefreshCw,
-Truck,
-Wifi,WifiOff
+  Award,
+  CheckCircle,
+  Loader2,
+  LogOut,
+  PauseCircle,
+  PlayCircle, RefreshCw,
+  Truck,
+  Wifi, WifiOff
 } from "lucide-react";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -31,8 +31,8 @@ const useSyncStatus = () => {
   const [status, setStatus] = useState({ isOnline: navigator.onLine, isSyncing: false });
 
   useEffect(() => {
-    const handleStatus = (s, online) => setStatus(prev => ({ ...prev, isOnline: online }));
-    const handleSync = (s, data) => setStatus(prev => ({ ...prev, isSyncing: s !== 'sync_complete' }));
+    const handleStatus = (_s, online) => setStatus(prev => ({ ...prev, isOnline: online }));
+    const _handleSync = (_s: string, _data: unknown) => setStatus(prev => ({ ...prev, isSyncing: _s !== 'sync_complete' }));
 
     const unsub = SyncService.onStatusChange(handleStatus);
     return unsub;
@@ -42,8 +42,8 @@ const useSyncStatus = () => {
 
 export default function KDSMain() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { t: _t } = useTranslation();
+  const { user: _user, isAuthenticated, loading: authLoading } = useAuth();
   const { isOnline, isSyncing } = useSyncStatus();
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -277,7 +277,7 @@ export default function KDSMain() {
 // Item Card Component with Timer
 function ItemCard({ item, settings, onStart, onReady, onHold, onPassApprove, onDeliver }) {
   const [timeLeft, setTimeLeft] = useState(null);
-  const [elapsed, setElapsed] = useState(0);
+  const [_elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
     if (item.status === "PREPARING" && item.started_at) {

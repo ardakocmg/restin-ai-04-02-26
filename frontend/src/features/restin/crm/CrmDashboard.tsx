@@ -58,7 +58,7 @@ interface Campaign {
 }
 
 // Rule 7: Zod schema for guest search/input
-const GuestFilterSchema = z.object({
+const _GuestFilterSchema = z.object({
     query: z.string().min(0).max(100),
     risk: z.enum(['All', 'HIGH', 'MEDIUM', 'LOW']),
 });

@@ -1,69 +1,69 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs,TabsContent,TabsList,TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from '@/context/AuthContext';
 import { useVenue } from '@/context/VenueContext';
-import { TransmissionResult,useGlobalPTT } from '@/contexts/GlobalPTTContext';
+import { TransmissionResult, useGlobalPTT } from '@/contexts/GlobalPTTContext';
 import type { TTSConfig } from '@/hooks/useVoiceDictation';
-import { getAvailableVoices,isSpeaking,speakMessage,stopSpeaking,SUPPORTED_LANGUAGES,useVoiceDictation } from '@/hooks/useVoiceDictation';
+import { getAvailableVoices, isSpeaking, speakMessage, stopSpeaking, SUPPORTED_LANGUAGES, useVoiceDictation } from '@/hooks/useVoiceDictation';
 import api from '@/lib/api';
-import { AnimatePresence,motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
-AlarmClock,
-BarChart3,
-Bookmark,
-Check,
-CheckSquare,Clock,
-Copy,
-Edit3,
-Eye,
-FileAudio,
-FileText,
-Flag,
-Globe,
-Hash,
-Image,
-Languages,
-Layout,
-MessageSquare,
-MessageSquarePlus,
-Mic,MicOff,
-Paperclip,
-Pause,
-PhoneCall,
-Pin,
-Play,
-Plus,
-Radio,
-Reply,
-RotateCw,
-Search,
-Send,
-Settings,
-Share2,
-Smile,
-Sparkles,
-Timer,
-Trash2,
-Users,
-Volume1,
-Volume2,
-VolumeX,
-X,
-Zap
+    AlarmClock,
+    BarChart3,
+    Bookmark,
+    Check,
+    CheckSquare, Clock,
+    Copy,
+    Edit3,
+    Eye,
+    FileAudio,
+    FileText,
+    Flag,
+    Globe,
+    Hash,
+    Image,
+    Languages,
+    Layout,
+    MessageSquare,
+    MessageSquarePlus,
+    Mic, MicOff,
+    Paperclip,
+    Pause,
+    PhoneCall,
+    Pin,
+    Play,
+    Plus,
+    Radio,
+    Reply,
+    RotateCw,
+    Search,
+    Send,
+    Settings,
+    Share2,
+    Smile,
+    Sparkles,
+    Timer,
+    Trash2,
+    Users,
+    Volume1,
+    Volume2,
+    VolumeX,
+    X,
+    Zap
 } from 'lucide-react';
-import React,{ useCallback,useEffect,useMemo,useRef,useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // ─── Extracted types, constants & helpers ────────────────────────────────
-import { AttachmentBubble,SmartMessageRenderer,TypingIndicator } from './HiveComponents';
-import type { ChatMessage,MicroTask,OnlineStaff } from './hiveTypes';
+import { AttachmentBubble, SmartMessageRenderer, TypingIndicator } from './HiveComponents';
+import type { ChatMessage, MicroTask, OnlineStaff } from './hiveTypes';
 import {
-API_BASE,
-CHANNELS,
-mapApiMessage,
-QUICK_MESSAGES,REACTION_EMOJIS
+    API_BASE,
+    CHANNELS,
+    mapApiMessage,
+    QUICK_MESSAGES, REACTION_EMOJIS
 } from './hiveTypes';
 
 
@@ -143,7 +143,7 @@ export default function HiveDashboard() {
 
     // ─── Tier 1-3 Feature State ─────────────────────────────────────────
     const [showBookmarks, setShowBookmarks] = useState(false);
-    const [showScheduler, setShowScheduler] = useState<string | null>(null); // msg id being scheduled
+    const [_showScheduler, setShowScheduler] = useState<string | null>(null); // msg id being scheduled
     const [scheduleTime, setScheduleTime] = useState('');
     const [showPollCreator, setShowPollCreator] = useState(false);
     const [pollQuestion, setPollQuestion] = useState('');
@@ -162,7 +162,7 @@ export default function HiveDashboard() {
     const [showStatusPicker, setShowStatusPicker] = useState(false);
     const [mutedChannels, setMutedChannels] = useState<string[]>([]);
     const [showReceiptsDetail, setShowReceiptsDetail] = useState<string | null>(null);
-    const [lastReadTimestamp, setLastReadTimestamp] = useState<string>('14:35');
+    const [lastReadTimestamp, _setLastReadTimestamp] = useState<string>('14:35');
 
     // ─── Message Settings State ──────────────────────────────────────
     const [ttsRate, setTtsRate] = useState(1.4);
@@ -214,7 +214,7 @@ export default function HiveDashboard() {
 
     // PTT — use global context (shared with FloatingPTT + Space bar + AirPods)
     const {
-        isTalking, isConnected, startTalking, stopTalking, micPermission,
+        isTalking, isConnected: _isConnected, startTalking, stopTalking, micPermission,
         liveTranscript, callLog, clearCallLog, liveSpeakers,
         activeChannel, setActiveChannel, setOnTransmissionEnd,
     } = useGlobalPTT();
@@ -544,7 +544,7 @@ export default function HiveDashboard() {
     }, [messages]);
 
     // ─── Tier 1: Schedule Message ────────────────────────────────────────
-    const sendScheduledMessage = useCallback(() => {
+    const _sendScheduledMessage = useCallback(() => {
         if (!messageInput.trim() || !scheduleTime) return;
         const newMsg: ChatMessage = {
             id: `msg-${Date.now()}`,

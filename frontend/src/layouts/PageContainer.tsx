@@ -4,7 +4,7 @@ import React from 'react';
 /**
  * PageContainer — Minimal page wrapper.
  *
- * The page header (title, description, back button, actions) has been
+ * The page header (title, _description, back button, actions) has been
  * removed because contextual actions now live in the Breadcrumb bar
  * (via useBreadcrumbActions). This keeps a single top bar and avoids
  * duplicate UI for action buttons.
@@ -23,7 +23,7 @@ interface PageContainerProps {
   actions?: React.ReactNode;
 }
 
-export default function PageContainer({ children, className = '', title, description, actions }: PageContainerProps) {
+export default function PageContainer({ children, className = '', title: _title, description: _description, actions: _actions }: PageContainerProps) {
   return (
     <div className={cn('min-h-screen bg-background', className)}>
       {/* Page Content — no header, actions moved to breadcrumb bar */}

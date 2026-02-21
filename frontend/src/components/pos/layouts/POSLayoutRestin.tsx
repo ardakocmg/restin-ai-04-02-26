@@ -48,11 +48,11 @@ export default function POSLayoutRestin({
     venue, user, categories, menuItems, tables, activeCategory, selectedTable,
     currentOrder, orderItems, settings, sendOptions, sendInProgress, floorPlan, selectedItem,
     showTableDialog, showPaymentDialog, showFloorPlanDialog, showModifierDialog,
-    subtotal, tax, total, searchQuery, onSearchChange, isKeyboardOpen, onSetKeyboardOpen,
+    subtotal, tax, total, searchQuery, onSearchChange, isKeyboardOpen: _isKeyboardOpen, onSetKeyboardOpen,
     onLoadCategoryItems, onSelectTable, onAddItemToOrder, onConfirmItemWithModifiers,
     onUpdateItemQuantity, onRemoveItem, onSendOrder, onHandlePayment, onClearOrder,
     onDeselectTable, onSetSendOptions, onSetShowTableDialog, onSetShowPaymentDialog,
-    onSetShowFloorPlanDialog, onSetShowModifierDialog, onCloseModifierDialog, onNavigate,
+    onSetShowFloorPlanDialog, onSetShowModifierDialog: _onSetShowModifierDialog, onCloseModifierDialog, onNavigate,
     themeSelector,
 }: POSLayoutProps) {
     // --- Helper functions (pure UI) ---

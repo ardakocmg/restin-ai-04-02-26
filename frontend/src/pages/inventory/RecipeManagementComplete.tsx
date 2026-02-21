@@ -52,7 +52,7 @@ export default function RecipeManagementComplete() {
 
   const handleSave = async () => {
     try {
-      const payload = {
+      const _payload = {
         ...editingRecipe,
         components
       };

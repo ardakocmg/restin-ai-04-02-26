@@ -1,4 +1,4 @@
-import { useCallback,useRef,useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 // ─── SpeechRecognition Types ────────────────────────────────────────────
 interface SpeechRecognitionEvent {
@@ -67,7 +67,7 @@ export const SUPPORTED_LANGUAGES = [
 ] as const;
 
 // ─── Text-to-Speech Utility ─────────────────────────────────────────────
-let currentUtterance: SpeechSynthesisUtterance | null = null;
+let _currentUtterance: SpeechSynthesisUtterance | null = null;
 
 /** List all available TTS voices from the browser */
 export function getAvailableVoices(): SpeechSynthesisVoice[] {
@@ -109,7 +109,7 @@ export function speakMessage(text: string, config: TTSConfig = {}): boolean {
     }
     if (selectedVoice) utterance.voice = selectedVoice;
 
-    currentUtterance = utterance;
+    _currentUtterance = utterance;
     window.speechSynthesis.speak(utterance);
     return true;
 }
@@ -118,7 +118,7 @@ export function stopSpeaking(): void {
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
     }
-    currentUtterance = null;
+    _currentUtterance = null;
 }
 
 export function isSpeaking(): boolean {

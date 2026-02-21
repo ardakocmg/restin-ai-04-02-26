@@ -43,7 +43,7 @@ export default function Login() {
     // Google SSO state
     const [googleLoading, setGoogleLoading] = useState(false);
     const [googleClientId, setGoogleClientId] = useState<string | null>(null);
-    const googleBtnRef = useRef<HTMLDivElement>(null);
+    const _googleBtnRef = useRef<HTMLDivElement>(null);
 
     // Fetch Google SSO config on mount + prefetch dashboard chunks
     useEffect(() => {

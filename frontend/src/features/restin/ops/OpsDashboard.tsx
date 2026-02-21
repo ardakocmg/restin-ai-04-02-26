@@ -1,18 +1,18 @@
-import { useMutation,useQuery,useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-AlertCircle,
-AlertTriangle,
-ArrowUpRight,
-CheckCircle2,
-DollarSign,
-Flame,
-Layers,
-Loader2,
-RefreshCw,
-Settings,
-TrendingUp,
-Truck,
-Users
+    AlertCircle,
+    AlertTriangle,
+    ArrowUpRight,
+    CheckCircle2,
+    DollarSign,
+    Flame,
+    Layers,
+    Loader2,
+    RefreshCw,
+    Settings,
+    TrendingUp,
+    Truck,
+    Users
 } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,10 +20,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
-import { Card,CardContent,CardHeader,CardTitle } from "../../../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { useAuth } from '../../../context/AuthContext';
 import { useVenue } from '../../../context/VenueContext';
-import { aggregatorService,opsService } from './ops-service';
+import { aggregatorService, opsService } from './ops-service';
 
 // Rule 1: No 'any'
 interface OpsMetrics {
@@ -139,7 +139,7 @@ const OpsDashboard: React.FC = () => {
         { label: 'Revenue Today', value: formatCents(metrics?.total_revenue_cents || 0), target: `${metrics?.total_orders || 0} orders`, icon: DollarSign, status: 'LIVE' },
     ];
 
-    const platformColors: Record<string, string> = {
+    const _platformColors: Record<string, string> = {
         wolt: 'bg-blue-500',
         uber_eats: 'bg-green-500',
         bolt_food: 'bg-emerald-500',
@@ -301,13 +301,13 @@ const OpsDashboard: React.FC = () => {
                         <div className="space-y-3">
                             {laborAlerts.map((alert, i) => (
                                 <div key={alert.id || i} className={`flex items-center justify-between p-4 rounded-xl border transition-all ${alert.severity === 'critical' ? 'bg-red-500/5 border-red-500/20' :
-                                        alert.severity === 'warning' ? 'bg-amber-500/5 border-amber-500/20' :
-                                            'bg-green-500/5 border-green-500/20'
+                                    alert.severity === 'warning' ? 'bg-amber-500/5 border-amber-500/20' :
+                                        'bg-green-500/5 border-green-500/20'
                                     }`}>
                                     <div className="flex items-center gap-4">
                                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${alert.severity === 'critical' ? 'bg-red-500/10' :
-                                                alert.severity === 'warning' ? 'bg-amber-500/10' :
-                                                    'bg-green-500/10'
+                                            alert.severity === 'warning' ? 'bg-amber-500/10' :
+                                                'bg-green-500/10'
                                             }`}>
                                             {alert.severity === 'critical' ? <AlertCircle className="w-5 h-5 text-red-500" /> :
                                                 alert.severity === 'warning' ? <AlertTriangle className="w-5 h-5 text-amber-500" /> :
@@ -321,8 +321,8 @@ const OpsDashboard: React.FC = () => {
                                         </div>
                                     </div>
                                     <Badge className={`border-none text-[10px] font-black uppercase ${alert.severity === 'critical' ? 'bg-red-500/10 text-red-500' :
-                                            alert.severity === 'warning' ? 'bg-amber-500/10 text-amber-500' :
-                                                'bg-green-500/10 text-green-500'
+                                        alert.severity === 'warning' ? 'bg-amber-500/10 text-amber-500' :
+                                            'bg-green-500/10 text-green-500'
                                         }`}>
                                         {alert.severity}
                                     </Badge>

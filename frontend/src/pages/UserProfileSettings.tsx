@@ -1,34 +1,34 @@
-import { Alert,AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Tabs,TabsContent,TabsList,TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { logger } from '@/lib/logger';
 import {
-AlertCircle,
-BellRing,
-Calendar,
-CheckCircle2,
-DollarSign,
-Download,
-Eye,EyeOff,
-FileText,
-Globe,
-KeyRound,
-LayoutDashboard,
-Loader2,
-Lock,
-Palette,
-Save,
-Shield,
-Smartphone,
-User
+  AlertCircle,
+  BellRing,
+  Calendar,
+  CheckCircle2,
+  DollarSign,
+  Download,
+  Eye, EyeOff,
+  FileText,
+  Globe,
+  KeyRound,
+  LayoutDashboard,
+  Loader2,
+  Lock,
+  Palette,
+  Save,
+  Shield,
+  Smartphone,
+  User
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import React,{ useCallback,useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useDesignSystem } from '../context/DesignSystemContext';
 import { useUserSettings } from '../context/UserSettingsContext';
@@ -41,6 +41,17 @@ export default function UserProfileSettings() {
   // ─── Hooks ───────────────────────────────────────────────────────
   const { user } = useAuth();
   const { settings, updateSettings, enable2FA, verify2FA, disable2FA, refreshSettings, loading: settingsLoading } = useUserSettings();
+
+  // Show loading while settings are being fetched
+  if (settingsLoading) {
+    return (
+      <div className="container max-w-5xl mx-auto p-6">
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        </div>
+      </div>
+    );
+  }
   const { themeMode, toggleTheme } = useDesignSystem();
   const { activeVenue } = useVenue();
 
@@ -408,163 +419,171 @@ export default function UserProfileSettings() {
 
         {/* ─── WORK & PAY TAB ─── */}
         <TabsContent value="work" className="space-y-6 animate-in fade-in-50 duration-500">
-          {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Total Tips (Month)</p>
-                    <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">€{totalTips.toFixed(2)}</p>
-                  </div>
-                  <DollarSign className="h-8 w-8 text-green-500/50 dark:text-green-400/50" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Upcoming Shifts</p>
-                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">{upcomingShifts.length}</p>
-                  </div>
-                  <Calendar className="h-8 w-8 text-blue-500/50 dark:text-blue-400/50" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Payslips</p>
-                    <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">{payslips.length}</p>
-                  </div>
-                  <FileText className="h-8 w-8 text-purple-500/50 dark:text-purple-400/50" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Documents</p>
-                    <p className="text-2xl font-bold text-orange-600 dark:text-orange-400 mt-1">{documents.length}</p>
-                  </div>
-                  <FileText className="h-8 w-8 text-orange-500/50 dark:text-orange-400/50" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          {employeeLoading ? (
+            <div className="flex items-center justify-center py-16">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            </div>
+          ) : (
+            <>
+              {/* Summary Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Total Tips (Month)</p>
+                        <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">€{totalTips.toFixed(2)}</p>
+                      </div>
+                      <DollarSign className="h-8 w-8 text-green-500/50 dark:text-green-400/50" />
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Upcoming Shifts</p>
+                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">{upcomingShifts.length}</p>
+                      </div>
+                      <Calendar className="h-8 w-8 text-blue-500/50 dark:text-blue-400/50" />
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Payslips</p>
+                        <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">{payslips.length}</p>
+                      </div>
+                      <FileText className="h-8 w-8 text-purple-500/50 dark:text-purple-400/50" />
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Documents</p>
+                        <p className="text-2xl font-bold text-orange-600 dark:text-orange-400 mt-1">{documents.length}</p>
+                      </div>
+                      <FileText className="h-8 w-8 text-orange-500/50 dark:text-orange-400/50" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
 
-          {/* Sub Tabs for Details */}
-          <Tabs defaultValue="shifts" className="w-full">
-            <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent space-x-6">
-              <TabsTrigger value="shifts" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-0 py-2">My Shifts</TabsTrigger>
-              <TabsTrigger value="payslips" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-0 py-2">Payslips</TabsTrigger>
-              <TabsTrigger value="tips" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-0 py-2">Tips History</TabsTrigger>
-              <TabsTrigger value="documents" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-0 py-2">Documents</TabsTrigger>
-            </TabsList>
+              {/* Sub Tabs for Details */}
+              <Tabs defaultValue="shifts" className="w-full">
+                <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent space-x-6">
+                  <TabsTrigger value="shifts" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-0 py-2">My Shifts</TabsTrigger>
+                  <TabsTrigger value="payslips" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-0 py-2">Payslips</TabsTrigger>
+                  <TabsTrigger value="tips" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-0 py-2">Tips History</TabsTrigger>
+                  <TabsTrigger value="documents" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent px-0 py-2">Documents</TabsTrigger>
+                </TabsList>
 
-            <TabsContent value="shifts" className="mt-4">
-              <Card>
-                <CardHeader><CardTitle>Upcoming Shifts</CardTitle><CardDescription>Your scheduled work roster</CardDescription></CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {upcomingShifts.length === 0 ? (
-                      <p className="text-center py-8 text-muted-foreground">{"No "}upcoming shifts scheduled</p>
-                    ) : (
-                      upcomingShifts.map((shift) => (
-                        <div key={shift.id} className="p-4 rounded-lg border flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">{new Date(shift.start_time).toLocaleDateString()}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {new Date(shift.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} – {new Date(shift.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </p>
-                          </div>
-                          <Badge variant={shift.checked_in ? "default" : "outline"}>{shift.checked_in ? 'Checked In' : 'Scheduled'}</Badge>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="payslips" className="mt-4">
-              <Card>
-                <CardHeader><CardTitle>Payslips</CardTitle><CardDescription>View and download your salary statements</CardDescription></CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {payslips.length === 0 ? (
-                      <p className="text-center py-8 text-muted-foreground">{"No "}payslips available yet</p>
-                    ) : (
-                      payslips.map((doc) => (
-                        <div key={doc.id} className="p-4 rounded-lg border flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <FileText className="h-5 w-5 text-blue-500 dark:text-blue-400" />
-                            <div>
-                              <p className="font-medium">{doc.filename}</p>
-                              <p className="text-sm text-muted-foreground">{new Date(doc.uploaded_at).toLocaleDateString()}</p>
+                <TabsContent value="shifts" className="mt-4">
+                  <Card>
+                    <CardHeader><CardTitle>Upcoming Shifts</CardTitle><CardDescription>Your scheduled work roster</CardDescription></CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {upcomingShifts.length === 0 ? (
+                          <p className="text-center py-8 text-muted-foreground">{"No "}upcoming shifts scheduled</p>
+                        ) : (
+                          upcomingShifts.map((shift) => (
+                            <div key={shift.id} className="p-4 rounded-lg border flex items-center justify-between">
+                              <div>
+                                <p className="font-medium">{new Date(shift.start_time).toLocaleDateString()}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  {new Date(shift.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} – {new Date(shift.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </p>
+                              </div>
+                              <Badge variant={shift.checked_in ? "default" : "outline"}>{shift.checked_in ? 'Checked In' : 'Scheduled'}</Badge>
                             </div>
-                          </div>
-                          <Button variant="outline" size="sm"><Download className="h-4 w-4 mr-2" /> Download</Button>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+                          ))
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
 
-            <TabsContent value="tips" className="mt-4">
-              <Card>
-                <CardHeader><CardTitle>Tips History</CardTitle><CardDescription>Record of gratuities received</CardDescription></CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {tips.length === 0 ? (
-                      <p className="text-center py-8 text-muted-foreground">{"No "}tips recorded yet</p>
-                    ) : (
-                      tips.map((tip) => (
-                        <div key={tip.id} className="p-4 rounded-lg border border-green-500/20 bg-green-500/5 flex items-center justify-between">
-                          <div>
-                            <p className="font-medium text-green-600 dark:text-green-400">€{tip.amount.toFixed(2)}</p>
-                            <p className="text-sm text-muted-foreground">{new Date(tip.distributed_at).toLocaleDateString()}</p>
-                          </div>
-                          <Badge variant="outline" className="border-green-500/30 text-green-600 dark:text-green-400">Order #{tip.order_id?.substring(0, 8)}</Badge>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="documents" className="mt-4">
-              <Card>
-                <CardHeader><CardTitle>General Documents</CardTitle><CardDescription>Contracts, policies, and certificates</CardDescription></CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {documents.filter(d => d.category !== 'payslip').length === 0 ? (
-                      <p className="text-center py-8 text-muted-foreground">{"No "}documents available</p>
-                    ) : (
-                      documents.filter(d => d.category !== 'payslip').map((doc) => (
-                        <div key={doc.id} className="p-4 rounded-lg border flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <FileText className="h-5 w-5 text-muted-foreground" />
-                            <div>
-                              <p className="font-medium">{doc.filename}</p>
-                              <p className="text-sm text-muted-foreground">{doc.category} • {new Date(doc.uploaded_at).toLocaleDateString()}</p>
+                <TabsContent value="payslips" className="mt-4">
+                  <Card>
+                    <CardHeader><CardTitle>Payslips</CardTitle><CardDescription>View and download your salary statements</CardDescription></CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {payslips.length === 0 ? (
+                          <p className="text-center py-8 text-muted-foreground">{"No "}payslips available yet</p>
+                        ) : (
+                          payslips.map((doc) => (
+                            <div key={doc.id} className="p-4 rounded-lg border flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <FileText className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+                                <div>
+                                  <p className="font-medium">{doc.filename}</p>
+                                  <p className="text-sm text-muted-foreground">{new Date(doc.uploaded_at).toLocaleDateString()}</p>
+                                </div>
+                              </div>
+                              <Button variant="outline" size="sm"><Download className="h-4 w-4 mr-2" /> Download</Button>
                             </div>
-                          </div>
-                          <Button variant="outline" size="sm"><Download className="h-4 w-4 mr-2" /> Download</Button>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                          ))
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="tips" className="mt-4">
+                  <Card>
+                    <CardHeader><CardTitle>Tips History</CardTitle><CardDescription>Record of gratuities received</CardDescription></CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {tips.length === 0 ? (
+                          <p className="text-center py-8 text-muted-foreground">{"No "}tips recorded yet</p>
+                        ) : (
+                          tips.map((tip) => (
+                            <div key={tip.id} className="p-4 rounded-lg border border-green-500/20 bg-green-500/5 flex items-center justify-between">
+                              <div>
+                                <p className="font-medium text-green-600 dark:text-green-400">€{tip.amount.toFixed(2)}</p>
+                                <p className="text-sm text-muted-foreground">{new Date(tip.distributed_at).toLocaleDateString()}</p>
+                              </div>
+                              <Badge variant="outline" className="border-green-500/30 text-green-600 dark:text-green-400">Order #{tip.order_id?.substring(0, 8)}</Badge>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="documents" className="mt-4">
+                  <Card>
+                    <CardHeader><CardTitle>General Documents</CardTitle><CardDescription>Contracts, policies, and certificates</CardDescription></CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {documents.filter(d => d.category !== 'payslip').length === 0 ? (
+                          <p className="text-center py-8 text-muted-foreground">{"No "}documents available</p>
+                        ) : (
+                          documents.filter(d => d.category !== 'payslip').map((doc) => (
+                            <div key={doc.id} className="p-4 rounded-lg border flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <FileText className="h-5 w-5 text-muted-foreground" />
+                                <div>
+                                  <p className="font-medium">{doc.filename}</p>
+                                  <p className="text-sm text-muted-foreground">{doc.category} • {new Date(doc.uploaded_at).toLocaleDateString()}</p>
+                                </div>
+                              </div>
+                              <Button variant="outline" size="sm"><Download className="h-4 w-4 mr-2" /> Download</Button>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            </>
+          )}
         </TabsContent>
 
         {/* ─── SECURITY TAB ─── */}

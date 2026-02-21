@@ -1,4 +1,4 @@
-import { Loader2,Monitor,Tablet,Zap } from "lucide-react";
+﻿import { Loader2,Monitor,Tablet,Zap } from "lucide-react";
 import { useEffect,useRef,useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -234,7 +234,7 @@ export default function POSMain() {
   };
 
   const addItemToOrder = async (item) => {
-    // Express theme is counter-service — no table selection needed
+    // Express theme is counter-service â€” no table selection needed
     if (!selectedTable && theme !== 'express') {
       setShowTableDialog(true);
       return;
@@ -485,7 +485,7 @@ export default function POSMain() {
       // implementing the implementation_plan.md logic
 
       // For MVP: Just show a toast that this feature is activated
-      toast.info(`Split Bill Feature Activated! (2-Way: €${splitAmount.toFixed(2)}/each)`);
+      toast.info(`Split Bill Feature Activated! (2-Way: â‚¬${splitAmount.toFixed(2)}/each)`);
 
       // Simulating flow for user demo
       return;
@@ -517,6 +517,22 @@ export default function POSMain() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-12 h-12 text-destructive animate-spin" />
+      </div>
+    );
+  }
+
+  if (loadingError) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
+        <div className="text-destructive text-lg font-bold">Failed to load POS</div>
+        <p className="text-muted-foreground text-sm max-w-md text-center">{loadingError}</p>
+        <button
+          onClick={loadData}
+          className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
+          title="Retry loading POS data"
+        >
+          Retry
+        </button>
       </div>
     );
   }

@@ -56,10 +56,10 @@ export default function UniversalSearchBar({
     ].filter((g) => g.items.length > 0);
   }, [results]);
 
-  async function defaultSearchFn(payload) {
+  async function defaultSearchFn(_payload) {
     // If you already have SearchService, plug it here.
     // Example:
-    // return searchService.search(payload);
+    // return searchService.search(_payload);
     // For skeleton: return empty results (never crash).
     return {
       tickets: [],

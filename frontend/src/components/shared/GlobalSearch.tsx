@@ -154,7 +154,7 @@ export default function GlobalSearch({ open, onOpenChange }) {
       navigate(item.data.path);
     } else {
       // Navigate to the relevant section/page for data results
-      const entityId = item.data.id || item.data._id;
+      const _entityId = item.data.id || item.data._id;
       if (item.type === 'menu_items') navigate(`/manager/products`);
       else if (item.type === 'users') navigate(`/manager/hr/people`);
       else if (item.type === 'guests') navigate(`/manager/crm`);

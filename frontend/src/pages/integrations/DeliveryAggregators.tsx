@@ -22,7 +22,7 @@ export default function DeliveryAggregators() {
   const [deliveryOrders, setDeliveryOrders] = useState([]);
   const [capabilities, setCapabilities] = useState([]);
   const [menuMappings, setMenuMappings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (activeVenue?.id) {
@@ -78,7 +78,7 @@ export default function DeliveryAggregators() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2 text-sm">
-                      {Object.entries(conn.supports).filter(([k, v]) => v).slice(0, 4).map(([key, value]) => (
+                      {Object.entries(conn.supports).filter(([_k, v]) => v).slice(0, 4).map(([key, _value]) => (
                         <div key={key} className="flex items-center gap-2">
                           <CheckCircle2 className="h-3 w-3 text-green-600 dark:text-green-400" />
                           <span className="text-slate-700">{key.replace(/_/g, ' ')}</span>

@@ -131,7 +131,7 @@ export default function InventoryDashboard() {
         wasteToday: 0,
         recipesCount: 0,
     });
-    const [loading, setLoading] = useState(true);
+    const [_loading, setLoading] = useState(true);
     const [dataQuality, setDataQuality] = useState({
         missingAllergens: 0,
         missingImages: 0,
@@ -147,7 +147,7 @@ export default function InventoryDashboard() {
         status: 'healthy' as 'healthy' | 'warning' | 'error',
     });
     const [negativeStockItems, setNegativeStockItems] = useState<Array<{ name: string; qty: number; unit: string }>>([]);
-    const [cogsHistory, setCogsHistory] = useState<Array<{ label: string; pct: number }>>([
+    const [cogsHistory, _setCogsHistory] = useState<Array<{ label: string; pct: number }>>([
         { label: 'W1', pct: 28 }, { label: 'W2', pct: 31 }, { label: 'W3', pct: 29 },
         { label: 'W4', pct: 27 }, { label: 'W5', pct: 32 }, { label: 'W6', pct: 30 },
     ]);
@@ -170,10 +170,10 @@ export default function InventoryDashboard() {
     const [showPanelSettings, setShowPanelSettings] = useState(false);
 
     // Gap 22: Accounting Export
-    const [showAccountingExport, setShowAccountingExport] = useState(false);
+    const [_showAccountingExport, _setShowAccountingExport] = useState(false);
     const [accountingProvider, setAccountingProvider] = useState('xero');
     const [accountingStatus, setAccountingStatus] = useState('disconnected'); // connected | disconnected | syncing
-    const [salesInsights, setSalesInsights] = useState({
+    const [salesInsights, _setSalesInsights] = useState({
         revenue: 0,
         foodCost: 0,
         foodCostPct: 0,

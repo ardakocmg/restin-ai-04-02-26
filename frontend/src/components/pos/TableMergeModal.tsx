@@ -6,7 +6,7 @@ import { Dialog,DialogContent,DialogFooter,DialogHeader,DialogTitle } from '../.
 
 export default function TableMergeModal({ open, onClose, currentTable, availableTables, onConfirm }) {
   const [selectedTables, setSelectedTables] = useState([]);
-  const [targetTable, setTargetTable] = useState(currentTable);
+  const [targetTable, _setTargetTable] = useState(currentTable);
 
   const toggleTable = (table) => {
     if (selectedTables.find(t => t.id === table.id)) {

@@ -32,7 +32,7 @@ import { radarService } from './radar-service';
 export default function RadarDashboard() {
     const { activeVenueId } = useVenue();
     const { user, isManager, isOwner } = useAuth();
-    const [region, setRegion] = useState('Valletta');
+    const [region, _setRegion] = useState('Valletta');
 
     // Fetch Insights
     const { data: insights } = useQuery({

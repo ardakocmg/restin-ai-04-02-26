@@ -5,31 +5,31 @@
  */
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog,DialogContent,DialogFooter,DialogHeader,DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Tabs,TabsContent,TabsList,TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-AlertTriangle,
-BarChart3,
-Building2,
-Calendar,
-CheckCircle2,
-Globe,
-HardDrive,
-LinkIcon,
-Loader2,
-Lock,
-MapPin,
-Plus,
-Send,
-Shield,
-Star,
-TestTube,
-Trash2,
-XCircle
+    AlertTriangle,
+    BarChart3,
+    Building2,
+    Calendar,
+    CheckCircle2,
+    Globe,
+    HardDrive,
+    LinkIcon,
+    Loader2,
+    Lock,
+    MapPin,
+    Plus,
+    Send,
+    Shield,
+    Star,
+    TestTube,
+    Trash2,
+    XCircle
 } from 'lucide-react';
-import { useCallback,useEffect,useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useAuth } from '../../features/auth/AuthContext';
@@ -97,7 +97,7 @@ interface AnalyticsSnapshot {
 // ── Component ────────────────────────────────────────────────────────────
 
 export default function WorkspaceSettings() {
-    const { t } = useTranslation();
+    const { t: _t } = useTranslation();
     const { user, isOwner } = useAuth();
     const venueId = user?.venueId || '';
 

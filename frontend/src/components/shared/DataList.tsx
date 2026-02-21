@@ -1,32 +1,32 @@
 import {
-ArrowDown,
-ArrowUp,
-ArrowUpDown,
-ChevronLeft,
-ChevronRight,
-ChevronsLeft,
-ChevronsRight,
-LayoutGrid,
-List
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  LayoutGrid,
+  List
 } from 'lucide-react';
-import React,{ useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '../ui/button';
-import { Card,CardContent } from '../ui/card';
+import { Card, CardContent } from '../ui/card';
 import {
-Select,
-SelectContent,
-SelectItem,
-SelectTrigger,
-SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '../ui/select';
 import { Skeleton } from '../ui/skeleton';
 import {
-Table,
-TableBody,
-TableCell,
-TableHead,
-TableHeader,
-TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '../ui/table';
 
 interface DataListColumn {
@@ -85,8 +85,8 @@ export default function DataList({
   density = 'comfortable',
   emptyMessage = 'No data found',
   cardRender,
-  selectedIds = [],
-  onSelect
+  selectedIds: _selectedIds = [],
+  onSelect: _onSelect,
 }: DataListProps) {
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
   const [sortState, setSortState] = useState<SortState>({ key: null, direction: null });

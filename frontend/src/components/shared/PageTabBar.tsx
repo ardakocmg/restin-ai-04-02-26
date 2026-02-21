@@ -27,7 +27,7 @@ export default function PageTabBar(): React.ReactElement | null {
     const location = useLocation();
     const navigate = useNavigate();
     const { user } = useAuth();
-    const actions = useBreadcrumbActions();
+    const _actions = useBreadcrumbActions();
     const containerRef = useRef<HTMLDivElement>(null);
     const [visibleCount, setVisibleCount] = useState<number>(100);
 
@@ -92,7 +92,7 @@ export default function PageTabBar(): React.ReactElement | null {
         return () => observer.disconnect();
     }, [measureTabs, siblingPages]);
 
-    const handleAction = (action: BreadcrumbAction): void => {
+    const _handleAction = (action: BreadcrumbAction): void => {
         if (action.href) {
             navigate(action.href);
         } else {

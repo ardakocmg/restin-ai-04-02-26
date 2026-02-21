@@ -22,7 +22,7 @@ export class OpsHub {
      * Inject Aggregator Order (UberEats/Wolt/Bolt)
      * White-labeled injection into the Restin KDS.
      */
-    static injectExternalOrder(source: 'UBEREATS' | 'WOLT' | 'BOLT', externalId: string, payload: OrderPayload) {
+    static injectExternalOrder(source: 'UBEREATS' | 'WOLT' | 'BOLT', externalId: string, _payload: OrderPayload) {
         logger.info('[Pillar 7] Injecting external order', { source, externalId });
         // Logic: Transform specific payload to Restin Order format and push to event bus.
         return {
