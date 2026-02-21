@@ -343,7 +343,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             {!loading && activeTab === 'venues' && (
                 <div className="space-y-4">
                     {venues.length === 0 && (
-                        <div className="text-center py-12 text-muted-foreground text-sm">No venues configured</div>
+                        <div className="text-center py-12 text-muted-foreground text-sm">{"No "}venues configured</div>
                     )}
                     {venues.map(venue => (
                         <div key={venue.venue_id} className="bg-card/50 border border-border rounded-2xl p-5 hover:border-border transition-all">
@@ -385,7 +385,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             {!loading && activeTab === 'personnel' && (
                 <div className="space-y-3">
                     {filteredPersonnel.length === 0 && (
-                        <div className="text-center py-12 text-muted-foreground text-sm">No personnel found</div>
+                        <div className="text-center py-12 text-muted-foreground text-sm">{"No "}personnel found</div>
                     )}
                     {filteredPersonnel.map(person => (
                         <div key={person.user_id} className="bg-card/50 border border-border rounded-2xl p-4 hover:border-border transition-all">
@@ -447,7 +447,7 @@ export default function GoogleSyncDashboard(): React.ReactElement {
             {!loading && activeTab === 'logs' && (
                 <div className="space-y-2">
                     {filteredLogs.length === 0 && (
-                        <div className="text-center py-12 text-muted-foreground text-sm">No sync logs</div>
+                        <div className="text-center py-12 text-muted-foreground text-sm">{"No "}sync logs</div>
                     )}
                     {filteredLogs.map(log => (
                         <div key={log.id} className="flex items-center gap-3 p-3 bg-card/30 border border-border rounded-xl hover:border-border transition-all">

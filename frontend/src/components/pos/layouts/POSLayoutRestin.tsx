@@ -275,7 +275,7 @@ export default function POSLayoutRestin({
                     {orderItems.length === 0 ? (
                         <div className="text-center py-12 text-muted-foreground">
                             <UtensilsCrossed className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                            <p>No items yet</p>
+                            <p>{"No "}items yet</p>
                             <p className="text-xs mt-1">Select items to start order</p>
                         </div>
                     ) : (
@@ -562,7 +562,7 @@ export default function POSLayoutRestin({
                         </div>
                     ) : (
                         <div className="p-8 text-center text-muted-foreground">
-                            <p>No active floor plan configured</p>
+                            <p>{"No "}active floor plan configured</p>
                             <p className="text-sm mt-2">Create and activate a floor plan in Admin</p>
                         </div>
                     )}

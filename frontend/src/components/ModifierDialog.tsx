@@ -171,7 +171,7 @@ export default function ModifierDialog({ item, open, onClose, onConfirm }: Modif
           </div>
         ) : modifierGroups.length === 0 ? (
           <div className="py-8 text-center text-muted-foreground">
-            <p>No modifiers available</p>
+            <p>{"No "}modifiers available</p>
             <p className="text-xs mt-1">Item will be added with no customization</p>
           </div>
         ) : (

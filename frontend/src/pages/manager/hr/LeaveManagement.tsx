@@ -204,7 +204,7 @@ export default function LeaveManagement() {
                 <Card className="bg-card/50 border-border">
                   <CardContent className="p-12 text-center">
                     <ListChecks className="h-12 w-12 mx-auto mb-3 text-zinc-700" />
-                    <p className="text-muted-foreground font-bold">No leave requests found</p>
+                    <p className="text-muted-foreground font-bold">{"No "}leave requests found</p>
                   </CardContent>
                 </Card>
               ) : requests.map(r => (
@@ -325,7 +325,7 @@ export default function LeaveManagement() {
                   ) : (
                     <div className="text-center py-8 text-muted-foreground">
                       <Calendar className="h-10 w-10 mx-auto mb-2 opacity-30" />
-                      <p className="text-sm font-bold">No leave requests yet</p>
+                      <p className="text-sm font-bold">{"No "}leave requests yet</p>
                       <p className="text-xs">Click 'New Request' to apply for leave</p>
                     </div>
                   )}
@@ -341,7 +341,7 @@ export default function LeaveManagement() {
                 <Card className="bg-card/50 border-border md:col-span-3">
                   <CardContent className="p-12 text-center text-muted-foreground">
                     <CalendarDays className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                    <p className="font-bold">No balance data available</p>
+                    <p className="font-bold">{"No "}balance data available</p>
                   </CardContent>
                 </Card>
               ) : balances.map(b => (
@@ -375,7 +375,7 @@ export default function LeaveManagement() {
                 <Card className="bg-card/50 border-border">
                   <CardContent className="p-12 text-center text-muted-foreground">
                     <Ban className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                    <p className="font-bold">No blackout dates configured</p>
+                    <p className="font-bold">{"No "}blackout dates configured</p>
                   </CardContent>
                 </Card>
               ) : blackouts.map(b => (
@@ -408,7 +408,7 @@ export default function LeaveManagement() {
                 <Card className="bg-card/50 border-border">
                   <CardContent className="p-12 text-center text-muted-foreground">
                     <TrendingUp className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                    <p className="font-bold">No accrual rules configured</p>
+                    <p className="font-bold">{"No "}accrual rules configured</p>
                   </CardContent>
                 </Card>
               ) : rules.map(r => (
@@ -484,7 +484,7 @@ export default function LeaveManagement() {
                 </div>
                 <div className="flex gap-2">
                   <Button variant="outline" className="flex-1 border-border text-muted-foreground" onClick={() => setShowNewRequest(false)}>Cancel</Button>
-                  <Button className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-foreground font-black" onClick={handleSubmitRequest}>Submit Request</Button>
+                  <Button className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-foreground font-black" onClick={handleSubmitRequest}>{"Submit "}Request</Button>
                 </div>
               </div>
             </DialogContent>

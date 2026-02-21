@@ -119,7 +119,7 @@ const OrderProfiles: React.FC = () => {
                         <div className="pos-text-xs pos-text-bold pos-text-secondary pos-mb-8" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Takeaway</div>
                         <div className="pos-form-grid">
                             <div><label className="pos-form-label">Mode</label><select className="pos-select" value={editing.takeawayMode} onChange={e => setEditing(p => p ? { ...p, takeawayMode: e.target.value as OrderProfile['takeawayMode'] } : null)} aria-label="Takeaway mode"><option value="none">None (Dine-in)</option><option value="pickup">Pickup</option><option value="delivery">Delivery</option></select></div>
-                            {editing.takeawayMode === 'delivery' && <div><label className="pos-form-label">Delivery Delay</label><select className="pos-select" value={editing.deliveryDelay} onChange={e => setEditing(p => p ? { ...p, deliveryDelay: e.target.value as OrderProfile['deliveryDelay'] } : null)} aria-label="Delivery delay"><option value="none">No delay</option><option value="custom">Custom delay</option><option value="no-time">No delivery time</option></select></div>}
+                            {editing.takeawayMode === 'delivery' && <div><label className="pos-form-label">Delivery Delay</label><select className="pos-select" value={editing.deliveryDelay} onChange={e => setEditing(p => p ? { ...p, deliveryDelay: e.target.value as OrderProfile['deliveryDelay'] } : null)} aria-label="Delivery delay"><option value="none">{"No "}delay</option><option value="custom">Custom delay</option><option value="no-time">{"No "}delivery time</option></select></div>}
                         </div>
                     </div>
                     {/* Service Charges Section */}

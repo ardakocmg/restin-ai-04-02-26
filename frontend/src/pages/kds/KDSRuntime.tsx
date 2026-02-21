@@ -151,7 +151,7 @@ function KDSRuntime() {
     return (
       <div className="min-h-screen flex items-center justify-center " style={{ backgroundColor: '#0A0A0B' }}>
         <div className="text-center\">
-          <div className="text-2xl font-bold " style={{ color: '#F5F5F7' }}>Loading KDS...</div>
+          <div className="text-2xl font-bold " style={{ color: '#F5F5F7' }}>{"Loading "}KDS...</div>
         </div>
       </div>
     );
@@ -277,7 +277,7 @@ function KDSRuntime() {
       {filteredTickets.length === 0 && (
         <div className="text-center py-20">
           <ChefHat className="w-20 h-20 mx-auto text-muted-foreground mb-4" />
-          <p className="text-2xl font-medium text-gray-400">No orders in {filter} status</p>
+          <p className="text-2xl font-medium text-gray-400">{"No "}orders in {filter} status</p>
         </div>
       )}
 

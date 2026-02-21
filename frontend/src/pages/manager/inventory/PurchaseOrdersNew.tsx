@@ -488,7 +488,7 @@ export default function PurchaseOrdersNew() {
                       <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
                     ))}
                     {suppliers.length === 0 && (
-                      <SelectItem value="none" disabled>No suppliers — add one first</SelectItem>
+                      <SelectItem value="none" disabled>{"No "}suppliers — add one first</SelectItem>
                     )}
                   </SelectContent>
                 </Select>
@@ -624,7 +624,7 @@ export default function PurchaseOrdersNew() {
           </DialogHeader>
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {orderTemplates.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-8">No templates saved yet. Create a PO and save it as a template.</p>
+              <p className="text-sm text-muted-foreground text-center py-8">{"No "}templates saved yet. Create a PO and save it as a template.</p>
             )}
             {orderTemplates.map(tpl => (
               <div key={tpl.id} className="flex items-center gap-3 p-3 rounded-lg border border-border/50 hover:border-primary/30 hover:bg-accent/10 transition-all">

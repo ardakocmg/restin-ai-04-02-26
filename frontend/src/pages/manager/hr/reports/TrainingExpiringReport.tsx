@@ -51,7 +51,7 @@ export default function TrainingExpiringReport() {
 
       <div className="grid gap-4">
         {expiringTraining.length === 0 ? (
-          <p className="text-muted-foreground text-center py-8">No expiring training certificates found</p>
+          <p className="text-muted-foreground text-center py-8">{"No "}expiring training certificates found</p>
         ) : expiringTraining.map(item => (
           <Card key={item.id} className="bg-card border-border hover:border-yellow-500/50 transition-colors">
             <CardContent className="flex items-center justify-between p-4">

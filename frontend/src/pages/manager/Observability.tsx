@@ -204,7 +204,7 @@ export default function Observability() {
                   ))
               ) : (
                 <div className="col-span-full py-4 text-center border-2 border-dashed border-border rounded-xl">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">No active terminals detected</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{"No "}active terminals detected</p>
                 </div>
               )}
             </div>
@@ -228,7 +228,7 @@ export default function Observability() {
                   ))
               ) : (
                 <div className="col-span-full py-4 text-center border-2 border-dashed border-border rounded-xl">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">No peripherals detected</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{"No "}peripherals detected</p>
                 </div>
               )}
             </div>

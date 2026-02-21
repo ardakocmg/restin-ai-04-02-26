@@ -162,7 +162,7 @@ export default function ReportsTab() {
                                         <div className="flex items-center gap-2"><Activity className="h-4 w-4 text-muted-foreground" /><span className="text-sm text-muted-foreground">—</span></div>
                                         <Badge variant="outline" className="text-[9px] border-border text-muted-foreground">—</Badge>
                                     </div>
-                                    <p className="text-[10px] text-muted-foreground mt-1">No entries</p>
+                                    <p className="text-[10px] text-muted-foreground mt-1">{"No "}entries</p>
                                 </div>
                             ))
                         )}

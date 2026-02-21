@@ -394,7 +394,7 @@ export default function Printers() {
                         )}
                         <DialogFooter>
                             <Button variant="outline" onClick={() => setEditPrinterModal(false)}>Cancel</Button>
-                            <Button className="bg-red-600 hover:bg-red-700" onClick={() => setEditPrinterModal(false)}>Save Changes</Button>
+                            <Button className="bg-red-600 hover:bg-red-700" onClick={() => setEditPrinterModal(false)}>{"Save "}Changes</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>

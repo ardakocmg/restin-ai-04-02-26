@@ -172,7 +172,7 @@ export default function UpdatesPage() {
                 <TabsTrigger value="technical">Technical View</TabsTrigger>
               </TabsList>
               <TabsContent value={viewMode} className="mt-4">
-                {loadingReleases && <div className="text-sm text-muted-foreground">Loading releases…</div>}
+                {loadingReleases && <div className="text-sm text-muted-foreground">{"Loading "}releases…</div>}
                 <div className="space-y-4">
                   {releases.map((release) => (
                     <div key={release.id} className="rounded-xl border border-border bg-black/30 p-4" data-testid={`updates-release-${release.version_code}`}>

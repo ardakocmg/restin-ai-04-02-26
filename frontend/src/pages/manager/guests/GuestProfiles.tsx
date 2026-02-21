@@ -128,7 +128,7 @@ export default function GuestProfiles() {
                         ) : filtered.length === 0 ? (
                             <Card className="p-8 bg-card border-border text-center">
                                 <User className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                                <p className="text-sm text-muted-foreground">No guests found. Guests are created automatically from orders.</p>
+                                <p className="text-sm text-muted-foreground">{"No "}guests found. Guests are created automatically from orders.</p>
                             </Card>
                         ) : (
                             filtered.map(guest => (

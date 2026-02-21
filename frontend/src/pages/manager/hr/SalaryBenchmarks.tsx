@@ -123,7 +123,7 @@ export default function SalaryBenchmarks() {
                     </thead>
                     <tbody>
                         {benchmarks.length === 0 ? (
-                            <tr><td colSpan={6} style={{ padding: 40, textAlign: 'center', color: '#64748b' }}>No salary data available.</td></tr>
+                            <tr><td colSpan={6} style={{ padding: 40, textAlign: 'center', color: '#64748b' }}>{"No "}salary data available.</td></tr>
                         ) : benchmarks.map((b, i) => {
                             const spread = b.max_salary && b.min_salary && b.avg_salary ? Math.round(((b.max_salary - b.min_salary) / b.avg_salary) * 100) : 0;
                             return (

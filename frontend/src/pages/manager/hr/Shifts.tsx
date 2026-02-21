@@ -180,7 +180,7 @@ export default function ShiftsPage() {
         {shifts.length === 0 && !loading && (
           <div className="text-center py-12 text-muted-foreground">
             <Calendar className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p>No shifts scheduled</p>
+            <p>{"No "}shifts scheduled</p>
           </div>
         )}
       </div>

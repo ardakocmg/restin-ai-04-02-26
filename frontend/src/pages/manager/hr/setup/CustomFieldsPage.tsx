@@ -174,7 +174,7 @@ export default function CustomFieldsPage() {
           {fields.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Type className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>No custom fields defined yet</p>
+              <p>{"No "}custom fields defined yet</p>
               <p className="text-sm mt-1">Click "Add Field" to create your first custom field</p>
             </div>
           ) : (

@@ -189,7 +189,7 @@ export default function EmployeePortalComplete() {
     );
   }
 
-  if (!data) return <div className="p-8 text-muted-foreground">No data available</div>;
+  if (!data) return <div className="p-8 text-muted-foreground">{"No "}data available</div>;
 
   return (
     <PermissionGate requiredRole="STAFF">
@@ -513,7 +513,7 @@ export default function EmployeePortalComplete() {
               <CardContent>
                 <div className="grid grid-cols-4 gap-2 mb-4">
                   <Button size="sm" className="text-xs bg-indigo-600 hover:bg-indigo-500 text-foreground" onClick={() => { setLeaveRequestType('vacation'); setShowLeaveRequestDialog(true); }}>Apply ▼</Button>
-                  <Button size="sm" variant="outline" className="text-xs border-border text-muted-foreground hover:text-foreground" onClick={() => navigate('/manager/hr/leave-management')}>Cancel ▼</Button>
+                  <Button size="sm" variant="outline" className="text-xs border-border text-muted-foreground hover:text-foreground" onClick={() => navigate('/manager/hr/leave-management')}>{"Cancel "}▼</Button>
                   <Button size="sm" className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20" onClick={() => { setLeaveRequestType('sick'); setShowLeaveRequestDialog(true); }}>Sick</Button>
                   <Button size="sm" variant="outline" className="text-xs border-border text-muted-foreground hover:text-foreground" onClick={() => navigate('/manager/hr/scheduler')}>Heat Map</Button>
                 </div>

@@ -271,7 +271,7 @@ const MigrationHub = () => {
                                 <tbody className="divide-y divide-border">
                                     {history.length === 0 ? (
                                         <tr>
-                                            <td colSpan="6" className="px-4 py-8 text-center text-muted-foreground italic">No migration history found.</td>
+                                            <td colSpan="6" className="px-4 py-8 text-center text-muted-foreground italic">{"No "}migration history found.</td>
                                         </tr>
                                     ) : (
                                         history.map((log) => (
@@ -821,7 +821,7 @@ const MigrationHub = () => {
                                                     <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                                                         <div className="p-2 divide-y divide-white/5">
                                                             {previewData.new === 0 ? (
-                                                                <div className="py-20 text-center text-muted-foreground italic">No new items found.</div>
+                                                                <div className="py-20 text-center text-muted-foreground italic">{"No "}new items found.</div>
                                                             ) : (
                                                                 previewData.details.filter(d => d.type === 'new' || d.type === 'new_recipe' || d.type === 'new_employee').slice(0, visibleCount).map((d, i) => (
                                                                     <div key={i} className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors group">
@@ -866,7 +866,7 @@ const MigrationHub = () => {
                                                         {previewData.update === 0 ? (
                                                             <div className="py-24 text-center">
                                                                 <div className="text-4xl mb-4 opacity-20">✨</div>
-                                                                <div className="text-muted-foreground italic">No updates needed - all items are new.</div>
+                                                                <div className="text-muted-foreground italic">{"No "}updates needed - all items are new.</div>
                                                             </div>
                                                         ) : (
                                                             <div className="p-4 space-y-3 max-h-[400px] overflow-y-auto">
@@ -910,7 +910,7 @@ const MigrationHub = () => {
                                                         {previewData.conflict === 0 ? (
                                                             <div className="py-24 text-center">
                                                                 <div className="text-4xl mb-4 opacity-20">✨</div>
-                                                                <div className="text-muted-foreground italic">No structure or data conflicts found.</div>
+                                                                <div className="text-muted-foreground italic">{"No "}structure or data conflicts found.</div>
                                                             </div>
                                                         ) : (
                                                             <div className="p-4 space-y-3">

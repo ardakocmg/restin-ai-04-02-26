@@ -828,7 +828,7 @@ export default function RestinSettings() {
                         <Card className="bg-card/60 border-border">
                             <CardContent className="p-8 text-center">
                                 <History className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                                <p className="text-sm text-muted-foreground">No configuration changes recorded yet</p>
+                                <p className="text-sm text-muted-foreground">{"No "}configuration changes recorded yet</p>
                                 <p className="text-xs text-muted-foreground mt-1">Changes will appear here as you modify module settings</p>
                             </CardContent>
                         </Card>

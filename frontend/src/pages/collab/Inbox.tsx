@@ -88,13 +88,13 @@ export default function CollabInbox() {
           {loading ? (
             <div className="text-center py-12 text-muted-foreground">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-3" />
-              <p>Loading notifications...</p>
+              <p>{"Loading "}notifications...</p>
             </div>
           ) : notifications.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <CheckCircle2 className="h-12 w-12 mx-auto mb-3 text-emerald-500" />
               <p className="text-secondary-foreground font-medium">All caught up!</p>
-              <p className="text-muted-foreground text-sm mt-1">No notifications for {user.name}</p>
+              <p className="text-muted-foreground text-sm mt-1">{"No "}notifications for {user.name}</p>
             </div>
           ) : (
             <div className="space-y-2">

@@ -83,7 +83,7 @@ export default function AdminSettings() {
               Only Owner or Product Owner can edit feature flags.
             </div>
           )}
-          {loading && <div className="text-sm text-muted-foreground">Loading flags…</div>}
+          {loading && <div className="text-sm text-muted-foreground">{"Loading "}flags…</div>}
           <div className="space-y-4">
             {moduleRows.map((flag) => (
               <div key={flag.module_key} className="rounded-lg border border-indigo-400/20 bg-indigo-950/30 p-4" data-testid={`hr-flag-${flag.module_key}`}>

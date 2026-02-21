@@ -199,7 +199,7 @@ export default function DynamicPricingPage() {
             ) : priceBooks.length === 0 ? (
                 <Card className="p-12 bg-card border-border text-center">
                     <DollarSign className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="font-semibold text-foreground">No Price Books Yet</h3>
+                    <h3 className="font-semibold text-foreground">{"No "}Price Books Yet</h3>
                     <p className="text-sm text-muted-foreground mt-1">
                         Create your first pricing rule to get started with happy hours, surge pricing, and more.
                     </p>

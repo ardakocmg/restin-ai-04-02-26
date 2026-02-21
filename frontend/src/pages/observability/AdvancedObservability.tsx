@@ -68,7 +68,7 @@ export default function AdvancedObservability() {
             </CardHeader>
             <CardContent>
               {slowQueries.length === 0 ? (
-                <p className="text-center py-8 text-green-600 dark:text-green-400">No slow queries detected</p>
+                <p className="text-center py-8 text-green-600 dark:text-green-400">{"No "}slow queries detected</p>
               ) : (
                 <div className="space-y-2">
                   {slowQueries.slice(0, 10).map((q, idx) => (

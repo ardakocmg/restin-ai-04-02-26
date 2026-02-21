@@ -195,7 +195,7 @@ export default function MicroservicesPage() {
               {outboxEvents.length === 0 ? (
                 <div className="text-center py-8 text-slate-500">
                   <CheckCircle2 className="h-8 w-8 mx-auto mb-2 text-green-500" />
-                  <p className="text-sm">No pending events</p>
+                  <p className="text-sm">{"No "}pending events</p>
                 </div>
               ) : (
                 outboxEvents.map((event) => (
@@ -231,7 +231,7 @@ export default function MicroservicesPage() {
               {dlqEvents.length === 0 ? (
                 <div className="text-center py-8 text-slate-500">
                   <CheckCircle2 className="h-8 w-8 mx-auto mb-2 text-green-500" />
-                  <p className="text-sm">No failed events</p>
+                  <p className="text-sm">{"No "}failed events</p>
                 </div>
               ) : (
                 dlqEvents.map((event) => (

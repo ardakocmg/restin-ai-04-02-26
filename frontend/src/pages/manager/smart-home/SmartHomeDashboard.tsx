@@ -613,7 +613,7 @@ export default function SmartHomeDashboard() {
                             </div>
                             <div className="absolute -inset-2 rounded-2xl border-2 border-emerald-500/20 animate-ping" />
                         </div>
-                        <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Loading devices...</p>
+                        <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider">{"Loading "}devices...</p>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -685,7 +685,7 @@ export default function SmartHomeDashboard() {
                     <div className="h-20 w-20 rounded-2xl bg-card border border-border flex items-center justify-center">
                         <Radio className="h-10 w-10 text-zinc-700" />
                     </div>
-                    <h3 className="text-lg font-bold text-muted-foreground">No Devices Found</h3>
+                    <h3 className="text-lg font-bold text-muted-foreground">{"No "}Devices Found</h3>
                     <p className="text-sm text-muted-foreground max-w-md text-center">
                         {syncing
                             ? 'Discovering devices from Meross & Tuya cloud... This may take a moment.'

@@ -144,7 +144,7 @@ export default function CRMPage() {
         ) : guests.length === 0 ? (
           <div className="py-20 text-center bg-background border border-border rounded-2xl">
             <Users className="w-12 h-12 text-foreground mx-auto mb-4" />
-            <h3 className="text-foreground font-black uppercase italic tracking-tighter text-xl">No Guests Found</h3>
+            <h3 className="text-foreground font-black uppercase italic tracking-tighter text-xl">{"No "}Guests Found</h3>
             <p className="text-muted-foreground font-bold uppercase text-[11px]">Expand your search or clear filters</p>
           </div>
         ) : (

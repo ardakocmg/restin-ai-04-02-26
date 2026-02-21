@@ -386,7 +386,7 @@ const KDS1Screen: React.FC = () => {
                     {activeOrders.length === 0 && (
                         <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: 60, color: 'var(--kds1-text-secondary)' }}>
                             <div style={{ fontSize: 48, opacity: 0.3, marginBottom: 12 }}>🍳</div>
-                            <div style={{ fontSize: 16, fontWeight: 500 }}>No active orders</div>
+                            <div style={{ fontSize: 16, fontWeight: 500 }}>{"No "}active orders</div>
                         </div>
                     )}
                 </div>
@@ -437,7 +437,7 @@ const KDS1Screen: React.FC = () => {
                     {productionItems.length === 0 && (
                         <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: 60, color: 'var(--kds1-text-secondary)' }}>
                             <div style={{ fontSize: 48, opacity: 0.3, marginBottom: 12 }}>🍳</div>
-                            <div style={{ fontSize: 16, fontWeight: 500 }}>No items waiting</div>
+                            <div style={{ fontSize: 16, fontWeight: 500 }}>{"No "}items waiting</div>
                         </div>
                     )}
                 </div>

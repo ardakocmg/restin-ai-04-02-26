@@ -77,7 +77,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
       return (
         <div className="text-center py-8 text-muted-foreground">
           <ImageIcon className="mx-auto h-12 w-12 mb-2 opacity-30" />
-          <p>No photos available</p>
+          <p>{"No "}photos available</p>
         </div>
       );
     }
@@ -109,7 +109,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
       return (
         <div className="text-center py-8 text-muted-foreground">
           <StepsIcon className="mx-auto h-12 w-12 mb-2 opacity-30" />
-          <p>No steps available</p>
+          <p>{"No "}steps available</p>
         </div>
       );
     }
@@ -171,7 +171,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
       return (
         <div className="text-center py-8 text-muted-foreground">
           <MeasuresIcon className="mx-auto h-12 w-12 mb-2 opacity-30" />
-          <p>No measures available</p>
+          <p>{"No "}measures available</p>
         </div>
       );
     }
@@ -218,7 +218,7 @@ const GuideDrawer: React.FC<GuideDrawerProps> = ({
 
   const renderNoGuide = () => (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-      <h3 className="text-lg font-medium text-foreground mb-2">No Guide Available</h3>
+      <h3 className="text-lg font-medium text-foreground mb-2">{"No "}Guide Available</h3>
       <p className="text-sm text-muted-foreground mb-6">
         This {entityType.replace('_', ' ')} doesn't have a guide yet.
       </p>

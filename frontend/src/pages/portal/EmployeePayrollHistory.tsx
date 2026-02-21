@@ -116,7 +116,7 @@ export default function EmployeePayrollHistory() {
         if (id) await exportToJpeg(id, name);
     };
 
-    if (loading) return <div className="p-8">Loading document history...</div>;
+    if (loading) return <div className="p-8">{"Loading "}document history...</div>;
 
     return (
         <PageContainer title="Employee Documents" description="Access your payslips, legal contracts, and certifications">

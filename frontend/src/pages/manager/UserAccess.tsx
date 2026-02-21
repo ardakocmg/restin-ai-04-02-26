@@ -170,7 +170,7 @@ export default function UserAccess() {
                                         </Button>
                                     </div>
                                 ) : (
-                                    <p className="text-xs text-muted-foreground">No employee record linked</p>
+                                    <p className="text-xs text-muted-foreground">{"No "}employee record linked</p>
                                 )}
                             </CardContent>
                         </Card>

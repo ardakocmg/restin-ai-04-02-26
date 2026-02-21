@@ -137,7 +137,7 @@ export default function CustomerModal({ customers, onSelect, onCreate, onClose }
                         </div>
                         <div style={s.body}>
                             {filtered.length === 0 ? (
-                                <div style={s.empty}>No customers found</div>
+                                <div style={s.empty}>{"No "}customers found</div>
                             ) : (
                                 filtered.slice(0, 20).map((c: Customer, idx: number) => (
                                     <button

@@ -67,7 +67,7 @@ export default function AnalyticsPage() {
         </CardHeader>
         <CardContent>
           {dashboards.length === 0 ? (
-            <p className="text-center py-8 text-slate-500">No dashboards configured. Enable Analytics feature in venue settings.</p>
+            <p className="text-center py-8 text-slate-500">{"No "}dashboards configured. Enable Analytics feature in venue settings.</p>
           ) : (
             <div className="space-y-2">
               {dashboards.map(d => (

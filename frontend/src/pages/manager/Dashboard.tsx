@@ -360,7 +360,7 @@ export default function Dashboard() {
                 ) : (
                   <div className="text-center py-8">
                     <CheckCircle2 className="h-12 w-12 text-green-600 dark:text-green-400 mx-auto mb-3" />
-                    <p className="text-sm text-muted-foreground">No active alerts</p>
+                    <p className="text-sm text-muted-foreground">{"No "}active alerts</p>
                   </div>
                 )}
               </CardContent>

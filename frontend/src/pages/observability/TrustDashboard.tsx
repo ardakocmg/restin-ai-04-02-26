@@ -115,7 +115,7 @@ export default function TrustDashboard() {
             {riskFindings.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground flex flex-col items-center gap-2">
                 <CheckCircle2 className="h-12 w-12 text-green-500" />
-                <p>No risk findings. Enable Trust Risk Engine in venue settings.</p>
+                <p>{"No "}risk findings. Enable Trust Risk Engine in venue settings.</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -144,7 +144,7 @@ export default function TrustDashboard() {
           </CardHeader>
           <CardContent>
             {killSwitches.length === 0 ? (
-              <p className="text-center py-8 text-slate-500">No kill switches configured</p>
+              <p className="text-center py-8 text-slate-500">{"No "}kill switches configured</p>
             ) : (
               <div className="space-y-2">
                 {killSwitches.map(s => (

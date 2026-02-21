@@ -143,7 +143,7 @@ export default function HRCalendarPage() {
                 <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 20 }}>
                     <h3 style={{ color: '#f1f5f9', fontSize: 16, fontWeight: 600, marginBottom: 16, margin: '0 0 16px' }}>Upcoming (30 days)</h3>
                     {upcoming.length === 0 ? (
-                        <p style={{ color: '#64748b', fontSize: 13, textAlign: 'center', padding: 20 }}>No upcoming events</p>
+                        <p style={{ color: '#64748b', fontSize: 13, textAlign: 'center', padding: 20 }}>{"No "}upcoming events</p>
                     ) : upcoming.map((ev, i) => {
                         const Icon = EVENT_ICONS[ev.type] || Calendar;
                         const color = EVENT_COLORS[ev.type] || '#6366f1';

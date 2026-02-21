@@ -181,7 +181,7 @@ export default function EventMonitorPage() {
               <Card>
                 <CardContent className="py-12 text-center text-slate-500">
                   <CheckCircle2 className="h-12 w-12 mx-auto mb-3 text-green-500" />
-                  <p>No pending events</p>
+                  <p>{"No "}pending events</p>
                 </CardContent>
               </Card>
             ) : (
@@ -197,7 +197,7 @@ export default function EventMonitorPage() {
             {completedEvents.length === 0 ? (
               <Card>
                 <CardContent className="py-12 text-center text-slate-500">
-                  <p>No completed events yet</p>
+                  <p>{"No "}completed events yet</p>
                 </CardContent>
               </Card>
             ) : (
@@ -214,7 +214,7 @@ export default function EventMonitorPage() {
               <Card>
                 <CardContent className="py-12 text-center text-slate-500">
                   <CheckCircle2 className="h-12 w-12 mx-auto mb-3 text-green-500" />
-                  <p>No failed events</p>
+                  <p>{"No "}failed events</p>
                 </CardContent>
               </Card>
             ) : (

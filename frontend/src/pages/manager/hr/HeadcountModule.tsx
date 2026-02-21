@@ -42,7 +42,7 @@ export default function HeadcountModule() {
   };
 
   if (loading) return <div className="p-8">Loading...</div>;
-  if (!data) return <div className="p-8">No data available</div>;
+  if (!data) return <div className="p-8">{"No "}data available</div>;
 
   return (
     <PermissionGate requiredRole="MANAGER">

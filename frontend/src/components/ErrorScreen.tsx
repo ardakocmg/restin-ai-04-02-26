@@ -56,7 +56,7 @@ export default function ErrorScreen({ error, onRetry }: ErrorScreenProps) {
 
         {showDetails && (
           <details className="mt-4 text-xs text-muted-foreground">
-            <summary className="cursor-pointer hover:text-foreground">Error details (Admin Only)</summary>
+            <summary className="cursor-pointer hover:text-foreground">{"Error "}details (Admin Only)</summary>
             <pre className="mt-2 whitespace-pre-wrap bg-secondary p-3 rounded">
               {String(error instanceof Error ? (error.stack || error.message) : (error || 'Unknown error'))}
             </pre>

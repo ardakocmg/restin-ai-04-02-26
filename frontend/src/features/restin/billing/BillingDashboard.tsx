@@ -68,7 +68,7 @@ export default function BillingDashboard() {
         },
     });
 
-    if (isLoading) return <div className="p-8 text-center text-muted-foreground">Loading billing…</div>;
+    if (isLoading) return <div className="p-8 text-center text-muted-foreground">{"Loading "}billing…</div>;
 
     const modules = billing?.modules?.items ?? [];
     const moduleKeys: Record<string, boolean> = {};
@@ -271,7 +271,7 @@ export default function BillingDashboard() {
                         </div>
                     ))}
                     {(!invoices || invoices.length === 0) && (
-                        <div className="text-center py-8 text-muted-foreground">No invoices yet</div>
+                        <div className="text-center py-8 text-muted-foreground">{"No "}invoices yet</div>
                     )}
                 </div>
             )}

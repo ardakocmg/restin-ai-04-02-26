@@ -134,7 +134,7 @@ export default function HiringATS() {
                     {jobs.length === 0 ? (
                         <div style={{ textAlign: 'center', padding: 60, color: '#64748b', background: '#0f172a', borderRadius: 12, border: '1px solid #1e293b' }}>
                             <Briefcase size={48} style={{ opacity: 0.3, marginBottom: 16 }} />
-                            <p style={{ fontSize: 16 }}>No job postings yet. Click "New Job" to create your first posting.</p>
+                            <p style={{ fontSize: 16 }}>{"No "}job postings yet. Click "New Job" to create your first posting.</p>
                         </div>
                     ) : jobs.map(job => (
                         <div key={job.id} style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', transition: 'border-color 0.2s' }} onClick={() => fetchCandidates(job.id)} onMouseOver={e => (e.currentTarget.style.borderColor = '#6366f1')} onMouseOut={e => (e.currentTarget.style.borderColor = '#1e293b')}>

@@ -126,7 +126,7 @@ export default function DeliveryAggregators() {
               {deliveryOrders.length === 0 ? (
                 <div className="text-center py-12 text-slate-500">
                   <UtensilsCrossed className="h-12 w-12 mx-auto mb-3 text-slate-400" />
-                  <p>No delivery orders yet</p>
+                  <p>{"No "}delivery orders yet</p>
                   <p className="text-xs mt-2">Configure connectors to start receiving orders</p>
                 </div>
               ) : (

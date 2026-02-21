@@ -425,7 +425,7 @@ export default function OrganizationProfile() {
                 <CardContent>
                     {legalEntities.length === 0 ? (
                         <div className="text-center py-8">
-                            <p className="text-sm text-muted-foreground">No legal entities configured</p>
+                            <p className="text-sm text-muted-foreground">{"No "}legal entities configured</p>
                             <Button
                                 variant="link"
                                 onClick={() => navigate('/manager/legal-entities')}

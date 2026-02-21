@@ -356,7 +356,7 @@ export default function GuestOrderPage() {
                     {filteredProducts.length === 0 && (
                         <div className="text-center py-12">
                             <ChefHat className="w-12 h-12 text-foreground mx-auto mb-3" />
-                            <p className="text-sm text-muted-foreground">No items found</p>
+                            <p className="text-sm text-muted-foreground">{"No "}items found</p>
                         </div>
                     )}
                     {filteredProducts.map(item => {

@@ -130,7 +130,7 @@ export default function ReservationTimeline() {
                                 {loading ? (
                                     <div className="p-8 text-center text-muted-foreground font-black uppercase text-xs animate-pulse">Synchronizing Timeline...</div>
                                 ) : reservations.length === 0 ? (
-                                    <div className="p-12 text-center text-muted-foreground italic font-bold">No operational data for this date</div>
+                                    <div className="p-12 text-center text-muted-foreground italic font-bold">{"No "}operational data for this date</div>
                                 ) : (
                                     reservations.map((res, idx) => (
                                         <div key={res.id || idx} className="flex border-b border-border dark:border-border hover:bg-zinc-50 dark:hover:bg-white/[0.02] group">

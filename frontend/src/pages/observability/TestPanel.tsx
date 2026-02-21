@@ -163,9 +163,9 @@ export default function TestPanel() {
               </Button>
             </CardHeader>
             <CardContent className="space-y-2">
-              {runsLoading && <p className="text-sm text-muted-foreground">Loading runs...</p>}
+              {runsLoading && <p className="text-sm text-muted-foreground">{"Loading "}runs...</p>}
               {!runsLoading && runs.length === 0 && (
-                <p className="text-sm text-muted-foreground">No runs yet.</p>
+                <p className="text-sm text-muted-foreground">{"No "}runs yet.</p>
               )}
               {!runsLoading && runs.map((run) => (
                 <button

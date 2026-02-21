@@ -140,7 +140,7 @@ export default function AccountingMalta() {
                   <TableBody>
                     {history.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">No exports yet</TableCell>
+                        <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">{"No "}exports yet</TableCell>
                       </TableRow>
                     ) : history.map((row) => (
                       <TableRow key={row.id} className="border-border hover:bg-white/5">

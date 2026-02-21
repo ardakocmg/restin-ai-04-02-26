@@ -394,7 +394,7 @@ export default function RecipeEditor() {
                     </Button>
                     <div className="relative group">
                         <Button size="sm" onClick={() => handleSave(true)} disabled={saving}>
-                            <Save className="h-4 w-4 mr-2" />Save and Close
+                            <Save className="h-4 w-4 mr-2" />{"Save "}and Close
                             <ChevronDown className="h-3 w-3 ml-1" />
                         </Button>
                     </div>
@@ -545,7 +545,7 @@ export default function RecipeEditor() {
                                                     <span className="text-sm">{item.name}</span>
                                                 </div>
                                             )) : ingredientSearch.trim() ? (
-                                                <p className="text-sm text-muted-foreground text-center py-4">No results found</p>
+                                                <p className="text-sm text-muted-foreground text-center py-4">{"No "}results found</p>
                                             ) : (
                                                 <p className="text-sm text-muted-foreground text-center py-4">Type to search...</p>
                                             )}
@@ -896,7 +896,7 @@ export default function RecipeEditor() {
                             ) : (
                                 <div className="text-center py-8 text-muted-foreground">
                                     <Building2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                                    <p className="text-sm">No outlets configured. Outlets will be populated from your branches.</p>
+                                    <p className="text-sm">{"No "}outlets configured. Outlets will be populated from your branches.</p>
                                 </div>
                             )}
                         </CardContent>

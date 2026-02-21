@@ -217,7 +217,7 @@ export default function FloatingChat() {
                         <div className="flex-1 flex items-center justify-center h-full">
                             <div className="text-center">
                                 <MessageSquare className="h-8 w-8 text-foreground mx-auto mb-2" />
-                                <p className="text-xs text-muted-foreground">No messages in #{activeChannelData?.name}</p>
+                                <p className="text-xs text-muted-foreground">{"No "}messages in #{activeChannelData?.name}</p>
                             </div>
                         </div>
                     ) : (

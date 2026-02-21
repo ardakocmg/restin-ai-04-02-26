@@ -275,7 +275,7 @@ export default function HREmployeePerformance() {
                                             <p className={`text-lg font-black ${kdsEmp.vs_team_avg_sec < 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                                                 {kdsEmp.vs_team_avg_sec > 0 ? '+' : ''}{kdsEmp.vs_team_avg_sec}s
                                             </p>
-                                        ) : <p className="text-muted-foreground">No data</p>}
+                                        ) : <p className="text-muted-foreground">{"No "}data</p>}
                                         <p className="text-xs text-muted-foreground mt-1">{kdsEmp.vs_team_avg_sec < 0 ? 'Faster than average' : 'Slower than average'}</p>
                                     </Card>
                                     <DeltaCard label="Speed vs Previous" current={kdsEmp.avg_completion_sec || 0} previous={Math.round((kdsEmp.avg_completion_sec || 0) * 100 / Math.max(100 + (kdsEmp.speed_change_pct || 0), 1))} unit="s" />

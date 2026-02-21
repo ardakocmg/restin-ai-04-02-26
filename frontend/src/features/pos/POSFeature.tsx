@@ -113,9 +113,9 @@ export default function POSFeature() {
                     </div>
 
                     {loading ? (
-                        <div className="flex-1 flex items-center justify-center text-muted-foreground">Loading menu...</div>
+                        <div className="flex-1 flex items-center justify-center text-muted-foreground">{"Loading "}menu...</div>
                     ) : filteredItems.length === 0 ? (
-                        <div className="flex-1 flex items-center justify-center text-muted-foreground">No menu items found</div>
+                        <div className="flex-1 flex items-center justify-center text-muted-foreground">{"No "}menu items found</div>
                     ) : (
                         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto">
                             {filteredItems.map(item => (

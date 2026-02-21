@@ -50,7 +50,7 @@ export default function BirthdaysAnniversariesReport() {
         <Card className="bg-card border-border">
           <CardHeader><CardTitle className="text-foreground flex items-center gap-2"><Cake className="w-4 h-4 text-pink-400" /> Upcoming Birthdays</CardTitle></CardHeader>
           <CardContent className="space-y-4">
-            {upcomingBirthdays.length === 0 ? <p className="text-muted-foreground">No upcoming birthdays.</p> : (
+            {upcomingBirthdays.length === 0 ? <p className="text-muted-foreground">{"No "}upcoming birthdays.</p> : (
               upcomingBirthdays.map(e => (
                 <div key={e.id} className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
                   <div className="font-medium text-foreground">{e.full_name}</div>
@@ -66,7 +66,7 @@ export default function BirthdaysAnniversariesReport() {
         <Card className="bg-card border-border">
           <CardHeader><CardTitle className="text-foreground flex items-center gap-2"><Gift className="w-4 h-4 text-purple-400" /> Work Anniversaries</CardTitle></CardHeader>
           <CardContent className="space-y-4">
-            {upcomingAnniversaries.length === 0 ? <p className="text-muted-foreground">No upcoming anniversaries.</p> : (
+            {upcomingAnniversaries.length === 0 ? <p className="text-muted-foreground">{"No "}upcoming anniversaries.</p> : (
               upcomingAnniversaries.map(e => (
                 <div key={e.id} className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
                   <div className="font-medium text-foreground">{e.full_name}</div>

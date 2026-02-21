@@ -72,7 +72,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
             </div>
             {process.env.NODE_ENV === 'development' && (
               <details className="mt-4 text-left">
-                <summary className="text-muted-foreground text-sm cursor-pointer">Error details</summary>
+                <summary className="text-muted-foreground text-sm cursor-pointer">{"Error "}details</summary>
                 <pre className="text-red-400 text-xs mt-2 overflow-auto">
                   {this.state.error?.toString()}
                 </pre>

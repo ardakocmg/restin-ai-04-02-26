@@ -183,7 +183,7 @@ export default function POSLayoutPro({
                             {courseKeys.length === 0 ? (
                                 <div className="text-center py-8">
                                     <UtensilsCrossed className="w-10 h-10 mx-auto mb-2 text-zinc-700" />
-                                    <p className="text-muted-foreground text-sm">No items yet</p>
+                                    <p className="text-muted-foreground text-sm">{"No "}items yet</p>
                                     <p className="text-muted-foreground text-xs mt-1">Tap items to build order</p>
                                 </div>
                             ) : (
@@ -646,7 +646,7 @@ export default function POSLayoutPro({
                         </div>
                     ) : (
                         <div className="p-8 text-center text-muted-foreground">
-                            <p>No active floor plan configured</p>
+                            <p>{"No "}active floor plan configured</p>
                             <p className="text-sm mt-2 text-muted-foreground">Create and activate a floor plan in Admin</p>
                         </div>
                     )}

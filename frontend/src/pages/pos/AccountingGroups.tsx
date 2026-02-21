@@ -183,7 +183,7 @@ const AccountingGroups: React.FC = () => {
                     {filtered.length === 0 && (
                         <div className="ag-empty">
                             <Layers size={36} className="ag-empty-icon" />
-                            <p className="ag-empty-text">No groups found</p>
+                            <p className="ag-empty-text">{"No "}groups found</p>
                         </div>
                     )}
                 </div>
@@ -263,7 +263,7 @@ const AccountingGroups: React.FC = () => {
                         <div className="ag-form-group">
                             <label className="ag-form-label">Default Course</label>
                             <select className="ag-select" value={editing.course} onChange={e => setEditing(p => p ? { ...p, course: parseInt(e.target.value) } : null)} aria-label="Course">
-                                <option value={0}>No Default Course</option>
+                                <option value={0}>{"No "}Default Course</option>
                                 <option value={1}>Course 1 - Starters</option>
                                 <option value={2}>Course 2 - Mains</option>
                                 <option value={3}>Course 3 - Desserts</option>

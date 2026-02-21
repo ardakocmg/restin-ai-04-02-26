@@ -144,7 +144,7 @@ export default function BookingWidget() {
                     </Button>
                 ))}
                 {slots.filter(s => s.available).length === 0 && (
-                    <div className="col-span-3 text-center text-muted-foreground py-4">No slots available</div>
+                    <div className="col-span-3 text-center text-muted-foreground py-4">{"No "}slots available</div>
                 )}
             </div>
             <div className="flex gap-2">

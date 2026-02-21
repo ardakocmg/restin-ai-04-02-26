@@ -197,7 +197,7 @@ const ItemLibrary: React.FC = () => {
                 </div>
 
                 {/* Loading / Error */}
-                {apiLoading && <div style={{ ...cd, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span style={{ color: 'var(--text-secondary)' }}>Loading items from API...</span></div>}
+                {apiLoading && <div style={{ ...cd, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span style={{ color: 'var(--text-secondary)' }}>{"Loading "}items from API...</span></div>}
                 {apiError && <div style={{ ...cd, borderColor: '#EF4444', padding: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button style={{ ...bo, padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>}
 
                 {/* Stats Row */}
@@ -345,7 +345,7 @@ const ItemLibrary: React.FC = () => {
                         {filtered.length === 0 && (
                             <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-secondary)' }}>
                                 <Package size={36} style={{ opacity: 0.3, marginBottom: 8 }} />
-                                <p style={{ fontSize: 14, fontWeight: 500 }}>No items found</p>
+                                <p style={{ fontSize: 14, fontWeight: 500 }}>{"No "}items found</p>
                                 <p style={{ fontSize: 12 }}>{search ? 'Try a different search term' : 'Create your first item to get started'}</p>
                             </div>
                         )}
@@ -401,7 +401,7 @@ const ItemLibrary: React.FC = () => {
                             <div>
                                 <label style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4, display: 'block' }}>Course</label>
                                 <select style={sl} value={editingItem.course} onChange={e => setEditingItem(p => p ? { ...p, course: parseInt(e.target.value) } : null)} aria-label="Course">
-                                    <option value={0}>No Course</option>
+                                    <option value={0}>{"No "}Course</option>
                                     <option value={1}>Course 1 - Starters</option>
                                     <option value={2}>Course 2 - Mains</option>
                                     <option value={3}>Course 3 - Desserts</option>

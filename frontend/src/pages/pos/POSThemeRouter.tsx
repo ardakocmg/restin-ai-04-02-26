@@ -39,7 +39,7 @@ const LoadingFallback = () => (
     }}>
         <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🔥</div>
-            <div style={{ color: '#888', fontSize: 16 }}>Loading POS...</div>
+            <div style={{ color: '#888', fontSize: 16 }}>{"Loading "}POS...</div>
         </div>
     </div>
 );

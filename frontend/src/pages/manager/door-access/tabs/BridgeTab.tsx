@@ -79,7 +79,7 @@ export default function BridgeTab() {
                         ) : (
                             <>
                                 <WifiOff className="h-5 w-5 text-muted-foreground" />
-                                <span className="text-muted-foreground">No bridge configured — using Nuki Web API only</span>
+                                <span className="text-muted-foreground">{"No "}bridge configured — using Nuki Web API only</span>
                             </>
                         )}
                     </div>

@@ -86,7 +86,7 @@ function KpiCard({ label, value, icon: Icon, change, subtitle }) {
 
 function DataTable({ columns, data, onRowClick }) {
   if (!data || data.length === 0) {
-    return <p className="text-muted-foreground text-sm p-4 text-center">No data for this period</p>;
+    return <p className="text-muted-foreground text-sm p-4 text-center">{"No "}data for this period</p>;
   }
   return (
     <div className="overflow-x-auto">

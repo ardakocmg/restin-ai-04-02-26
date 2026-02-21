@@ -57,7 +57,7 @@ export default function InventoryReports() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-6 flex items-center justify-center">
-        <div className="text-foreground">Loading Inventory Reports...</div>
+        <div className="text-foreground">{"Loading "}Inventory Reports...</div>
       </div>
     );
   }

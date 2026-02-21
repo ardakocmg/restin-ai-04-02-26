@@ -104,7 +104,7 @@ export default function Operations() {
                 </div>
               ))}
               {complimentaryItems.length === 0 && (
-                <p className="text-center py-8 text-muted-foreground font-bold italic text-xs uppercase tracking-widest">No complimentary items configured</p>
+                <p className="text-center py-8 text-muted-foreground font-bold italic text-xs uppercase tracking-widest">{"No "}complimentary items configured</p>
               )}
             </div>
           </CardContent>

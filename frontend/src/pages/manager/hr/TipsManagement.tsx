@@ -133,7 +133,7 @@ export default function TipsManagement() {
         {tipsPools.length === 0 && !loading && (
           <div className="text-center py-12 text-muted-foreground">
             <DollarSign className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p>No tips pools yet</p>
+            <p>{"No "}tips pools yet</p>
           </div>
         )}
       </div>

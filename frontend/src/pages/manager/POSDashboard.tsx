@@ -863,7 +863,7 @@ export default function POSDashboard() {
                                                 ))}
                                                 {processedDetailData.length === 0 && (
                                                     <tr>
-                                                        <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">No data available for this range.</td>
+                                                        <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">{"No "}data available for this range.</td>
                                                     </tr>
                                                 )}
                                             </tbody>

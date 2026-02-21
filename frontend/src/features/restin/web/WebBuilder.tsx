@@ -184,7 +184,7 @@ export default function WebBuilder() {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {isLoading ? (
-                                    <div className="text-foreground text-center col-span-2">Loading menu data...</div>
+                                    <div className="text-foreground text-center col-span-2">{"Loading "}menu data...</div>
                                 ) : menuItems.slice(0, 4).map((item: MenuItem, i: number) => (
                                     <div key={i} className="p-4 bg-white/5 rounded-2xl border border-border hover:border-border transition-all cursor-pointer">
                                         <div className="flex justify-between items-start mb-2">

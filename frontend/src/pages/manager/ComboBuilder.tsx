@@ -244,7 +244,7 @@ export default function ComboBuilder() {
                     {combos.length === 0 ? (
                         <div className="p-8 bg-card/50 border border-border rounded-2xl text-center">
                             <Utensils className="w-10 h-10 text-foreground mx-auto mb-3" />
-                            <p className="text-sm text-muted-foreground">No combos yet</p>
+                            <p className="text-sm text-muted-foreground">{"No "}combos yet</p>
                             <p className="text-xs text-muted-foreground mt-1">Create one or seed demo data</p>
                         </div>
                     ) : (

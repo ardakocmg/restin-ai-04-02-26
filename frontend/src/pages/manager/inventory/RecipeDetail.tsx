@@ -257,7 +257,7 @@ export default function RecipeDetail() {
                                             </tr>
                                         ))}
                                         {recipe.ingredients.length === 0 && (
-                                            <tr><td colSpan={5} className="py-8 text-center text-muted-foreground">No ingredients added</td></tr>
+                                            <tr><td colSpan={5} className="py-8 text-center text-muted-foreground">{"No "}ingredients added</td></tr>
                                         )}
                                     </tbody>
                                 </table>
@@ -305,7 +305,7 @@ export default function RecipeDetail() {
                             ) : (
                                 <div className="text-center py-8 text-muted-foreground">
                                     <FileText className="h-8 w-8 mx-auto mb-2 text-amber-400" />
-                                    <p>No cooking steps found for this recipe</p>
+                                    <p>{"No "}cooking steps found for this recipe</p>
                                     <p className="text-xs mt-1">Add step-by-step instructions with timing and photos</p>
                                 </div>
                             )}
@@ -321,7 +321,7 @@ export default function RecipeDetail() {
                                 ) : (
                                     <div className="text-center py-4 text-muted-foreground">
                                         <X className="h-6 w-6 mx-auto mb-1 text-red-400" />
-                                        <p className="text-sm">No recipes found using this recipe.</p>
+                                        <p className="text-sm">{"No "}recipes found using this recipe.</p>
                                         <Button variant="outline" size="sm" className="mt-2"><Plus className="h-4 w-4 mr-1" />Add Recipe</Button>
                                     </div>
                                 )}
@@ -614,7 +614,7 @@ export default function RecipeDetail() {
                                 <div className="flex flex-wrap gap-2">
                                     {(recipe.ecolabels?.length ?? 0) > 0 ? recipe.ecolabels?.map((label, i) => (
                                         <Badge key={i} variant="outline" className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20">{label}</Badge>
-                                    )) : <p className="text-sm text-muted-foreground">No eco labels assigned</p>}
+                                    )) : <p className="text-sm text-muted-foreground">{"No "}eco labels assigned</p>}
                                 </div>
                             </CardContent>
                         </Card>
@@ -894,7 +894,7 @@ export default function RecipeDetail() {
                                     </div>
                                 ))}
                                 {(recipe.outlets?.length ?? 0) === 0 && (
-                                    <p className="text-center py-8 text-muted-foreground">No outlets configured</p>
+                                    <p className="text-center py-8 text-muted-foreground">{"No "}outlets configured</p>
                                 )}
                             </div>
                         </CardContent>
@@ -928,7 +928,7 @@ export default function RecipeDetail() {
                             ) : (
                                 <div className="border-2 border-dashed border-muted-foreground/30 rounded-lg p-12 text-center">
                                     <ImageIcon className="h-12 w-12 mx-auto mb-3 text-muted-foreground/50" />
-                                    <p className="text-muted-foreground mb-2">No images linked to this product</p>
+                                    <p className="text-muted-foreground mb-2">{"No "}images linked to this product</p>
                                     <p className="text-xs text-muted-foreground mb-4">Drag & drop images here, or click Add Images above</p>
                                     <Button variant="outline"><Plus className="h-4 w-4 mr-2" />Add Images</Button>
                                 </div>

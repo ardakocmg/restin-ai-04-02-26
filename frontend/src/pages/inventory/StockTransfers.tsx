@@ -124,7 +124,7 @@ export default function StockTransfers() {
         {transfers.length === 0 ? (
           <div className="text-center py-20 bg-card/50 rounded-xl border border-dashed border-border">
             <Package className="w-12 h-12 text-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-muted-foreground">No Recent Transfers</h3>
+            <h3 className="text-lg font-bold text-muted-foreground">{"No "}Recent Transfers</h3>
             <p className="text-muted-foreground">Transfers will appear here after you create them.</p>
           </div>
         ) : (

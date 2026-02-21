@@ -310,7 +310,7 @@ const MenuBuilder: React.FC = () => {
                     {filteredMenus.length === 0 && (
                         <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-secondary, #a1a1aa)' }}>
                             <MenuIcon size={48} style={{ marginBottom: 12, opacity: 0.3 }} />
-                            <p style={{ fontSize: 16, fontWeight: 500 }}>No menus found</p>
+                            <p style={{ fontSize: 16, fontWeight: 500 }}>{"No "}menus found</p>
                             <p style={{ fontSize: 13 }}>Create your first POS menu to get started</p>
                         </div>
                     )}

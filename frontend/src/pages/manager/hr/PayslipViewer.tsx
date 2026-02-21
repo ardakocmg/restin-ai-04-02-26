@@ -104,7 +104,7 @@ export default function PayslipViewer() {
         return (
             <PageContainer title="Loading Payslip...">
                 <div className="flex items-center justify-center h-64">
-                    <div className="text-muted-foreground">Loading payslip data...</div>
+                    <div className="text-muted-foreground">{"Loading "}payslip data...</div>
                 </div>
             </PageContainer>
         );

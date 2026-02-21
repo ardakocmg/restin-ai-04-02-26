@@ -736,7 +736,7 @@ export default function EmployeeDetailPage() {
                 {documents.length === 0 ? (
                   <div className="text-center py-12 border border-dashed border-border rounded-2xl">
                     <FileText className="h-10 w-10 mx-auto text-foreground mb-3" />
-                    <p className="text-muted-foreground font-medium">No documents on file</p>
+                    <p className="text-muted-foreground font-medium">{"No "}documents on file</p>
                     <p className="text-muted-foreground text-xs mt-1">Upload contracts, certificates, or other files</p>
                   </div>
                 ) : (
@@ -795,7 +795,7 @@ export default function EmployeeDetailPage() {
                 {leaveRequests.length === 0 ? (
                   <div className="text-center py-8 border border-dashed border-border rounded-2xl">
                     <Calendar className="h-8 w-8 mx-auto text-foreground mb-2" />
-                    <p className="text-muted-foreground text-sm">No leave requests found</p>
+                    <p className="text-muted-foreground text-sm">{"No "}leave requests found</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -852,7 +852,7 @@ export default function EmployeeDetailPage() {
                 {payrollRuns.length === 0 ? (
                   <div className="text-center py-8 border border-dashed border-border rounded-2xl">
                     <CreditCard className="h-8 w-8 mx-auto text-foreground mb-2" />
-                    <p className="text-muted-foreground text-sm">No payroll runs found</p>
+                    <p className="text-muted-foreground text-sm">{"No "}payroll runs found</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -989,7 +989,7 @@ export default function EmployeeDetailPage() {
                         <div className="flex items-center gap-3 p-4 rounded-xl bg-background/50 border border-dashed border-border">
                           <AlertCircle className="h-5 w-5 text-muted-foreground flex-shrink-0" />
                           <div>
-                            <p className="text-sm font-bold text-muted-foreground">No linked user account</p>
+                            <p className="text-sm font-bold text-muted-foreground">{"No "}linked user account</p>
                             <p className="text-[10px] text-muted-foreground">Go to User Accounts to create and link a user account first</p>
                           </div>
                         </div>
@@ -1057,7 +1057,7 @@ export default function EmployeeDetailPage() {
                             <AlertCircle className="h-5 w-5 text-muted-foreground" />
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-muted-foreground">No user account linked</p>
+                            <p className="text-sm font-bold text-muted-foreground">{"No "}user account linked</p>
                             <p className="text-[10px] text-muted-foreground">This employee cannot log in to the system</p>
                           </div>
                         </div>
@@ -1107,7 +1107,7 @@ export default function EmployeeDetailPage() {
                   {notes.length === 0 ? (
                     <div className="text-center py-8 border border-dashed border-border rounded-2xl">
                       <StickyNote className="h-8 w-8 mx-auto text-foreground mb-2" />
-                      <p className="text-muted-foreground text-sm">No admin notes yet</p>
+                      <p className="text-muted-foreground text-sm">{"No "}admin notes yet</p>
                     </div>
                   ) : (
                     <div className="space-y-2">

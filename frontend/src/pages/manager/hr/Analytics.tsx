@@ -98,7 +98,7 @@ export default function AnalyticsPage() {
           </div>
         ) : (
           <div className="text-center py-12 text-muted-foreground">
-            <p>No analytics available</p>
+            <p>{"No "}analytics available</p>
           </div>
         )}
       </div>

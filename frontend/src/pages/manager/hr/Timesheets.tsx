@@ -149,7 +149,7 @@ export default function TimesheetsPage() {
         {timesheets.length === 0 && !loading && (
           <div className="text-center py-12 text-muted-foreground">
             <Clock className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p>No timesheets yet</p>
+            <p>{"No "}timesheets yet</p>
           </div>
         )}
       </div>

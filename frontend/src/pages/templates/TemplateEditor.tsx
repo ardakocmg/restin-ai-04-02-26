@@ -399,7 +399,7 @@ export default function TemplateEditor() {
                 },
                 output_format: 'html'
             });
-            setPreviewHtml(res.data?.html || '<p>No preview</p>');
+            setPreviewHtml(res.data?.html || '<p>{"No "}preview</p>');
             setShowPreview(true);
         } catch { toast.error(t('Preview failed')); }
     };

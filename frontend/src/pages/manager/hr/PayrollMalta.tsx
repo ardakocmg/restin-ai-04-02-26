@@ -231,7 +231,7 @@ export default function PayrollMalta() {
                 {loading ? (
                   <div className="py-12 text-center"><Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" /></div>
                 ) : !fs5Data ? (
-                  <div className="py-12 text-center text-muted-foreground">No Data for this period</div>
+                  <div className="py-12 text-center text-muted-foreground">{"No "}Data for this period</div>
                 ) : (
                   <div className="space-y-6 text-sm">
                     <div className="grid grid-cols-2 gap-8 border-b border-border pb-4">

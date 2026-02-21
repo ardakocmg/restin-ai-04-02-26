@@ -139,7 +139,7 @@ export default function DataExportPage() {
                 ) : history.length === 0 ? (
                     <Card className="p-8 bg-card border-border text-center">
                         <Clock className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                        <p className="text-sm text-muted-foreground">No exports yet. Click "Export All Data" to get started.</p>
+                        <p className="text-sm text-muted-foreground">{"No "}exports yet. Click "Export All Data" to get started.</p>
                     </Card>
                 ) : (
                     <div className="space-y-2">

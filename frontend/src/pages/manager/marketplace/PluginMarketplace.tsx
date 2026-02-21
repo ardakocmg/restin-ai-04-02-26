@@ -208,7 +208,7 @@ export default function PluginMarketplace() {
             {filtered.length === 0 && (
                 <Card className="p-12 bg-card border-border text-center">
                     <Puzzle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="font-semibold text-foreground">No plugins found</h3>
+                    <h3 className="font-semibold text-foreground">{"No "}plugins found</h3>
                     <p className="text-sm text-muted-foreground mt-1">Try a different search or category</p>
                 </Card>
             )}

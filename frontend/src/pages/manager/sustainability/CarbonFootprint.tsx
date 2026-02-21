@@ -179,7 +179,7 @@ export default function CarbonFootprint() {
                 ) : wasteData.length === 0 ? (
                     <div className="text-center py-8">
                         <Recycle className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                        <p className="text-sm text-muted-foreground">No waste logs yet. Record waste from Inventory → Waste Log.</p>
+                        <p className="text-sm text-muted-foreground">{"No "}waste logs yet. Record waste from Inventory → Waste Log.</p>
                     </div>
                 ) : (
                     <div className="space-y-2">

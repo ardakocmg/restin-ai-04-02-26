@@ -46,9 +46,9 @@ export default function FloorPlans() {
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
-          <p className="col-span-full text-center py-12 text-muted-foreground font-bold animate-pulse">Loading Floor Plans...</p>
+          <p className="col-span-full text-center py-12 text-muted-foreground font-bold animate-pulse">{"Loading "}Floor Plans...</p>
         ) : floorPlans.length === 0 ? (
-          <p className="col-span-full text-center py-12 text-muted-foreground font-bold italic">No floor plans found</p>
+          <p className="col-span-full text-center py-12 text-muted-foreground font-bold italic">{"No "}floor plans found</p>
         ) : (
           floorPlans.map(plan => (
             <Card key={plan.id} className="bg-background border-border shadow-2xl hover:border-red-500/30 transition-all group overflow-hidden">

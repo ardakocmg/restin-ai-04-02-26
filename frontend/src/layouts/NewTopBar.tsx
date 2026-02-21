@@ -227,7 +227,7 @@ export default function NewTopBar(): React.ReactElement {
                 </DropdownMenuItem>
               ))}
               {(!venues || venues.length === 0) && (
-                <div className="px-4 py-3 text-xs text-muted-foreground italic">No venues available</div>
+                <div className="px-4 py-3 text-xs text-muted-foreground italic">{"No "}venues available</div>
               )}
             </DropdownMenuContent>
           </DropdownMenu>

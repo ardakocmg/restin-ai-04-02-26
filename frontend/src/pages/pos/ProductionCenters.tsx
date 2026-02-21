@@ -83,7 +83,7 @@ const ProductionCenters: React.FC = () => {
                 <button className="pos-btn-primary" onClick={() => setEditing({ id: crypto.randomUUID(), name: '', color: '#3B82F6', type: 'kitchen', printer: 'None', backupPrinter: 'None', itemCount: 0, avgPrepTime: 0, isActive: true, staffCount: 0, sortOrder: centers.length + 1 })}><Plus size={16} /> Add Center</button>
             </div>
 
-            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">Loading production centers...</span></div>}
+            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">{"Loading "}production centers...</span></div>}
             {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center" style={{ borderColor: '#EF4444', padding: 14 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button className="pos-btn-outline" style={{ padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>}
 
             {/* Stats */}

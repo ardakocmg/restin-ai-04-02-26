@@ -114,7 +114,7 @@ export default function ApplicantsPage() {
           <TableBody>
             {applicants.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">No applicants found</TableCell>
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">{"No "}applicants found</TableCell>
               </TableRow>
             ) : applicants.map(app => (
               <TableRow key={app.id || app._id} className="border-border hover:bg-white/5">

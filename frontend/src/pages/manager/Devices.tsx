@@ -319,7 +319,7 @@ export default function Devices() {
 
             <div className="flex justify-end gap-3 pt-6 border-t border-border">
                 <Button variant="outline" className="border-border text-muted-foreground hover:bg-card rounded-xl px-8" onClick={() => setSelectedDevice(null)}>Cancel</Button>
-                <Button className="bg-red-600 hover:bg-red-700 text-foreground rounded-xl px-8 font-bold">Save Device Changes</Button>
+                <Button className="bg-red-600 hover:bg-red-700 text-foreground rounded-xl px-8 font-bold">{"Save "}Device Changes</Button>
             </div>
         </div>
     );

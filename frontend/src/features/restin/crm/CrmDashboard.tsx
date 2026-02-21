@@ -210,12 +210,12 @@ const CrmDashboard: React.FC = () => {
                             {isLoading ? (
                                 <div className="p-8 text-center">
                                     <Loader2 className="w-6 h-6 text-muted-foreground animate-spin mx-auto mb-2" />
-                                    <span className="text-muted-foreground text-sm">Loading guests...</span>
+                                    <span className="text-muted-foreground text-sm">{"Loading "}guests...</span>
                                 </div>
                             ) : filteredGuests.length === 0 ? (
                                 <div className="p-8 text-center text-muted-foreground">
                                     <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                                    <p className="font-bold text-sm">No guests found</p>
+                                    <p className="font-bold text-sm">{"No "}guests found</p>
                                     <p className="text-xs mt-1">Click "Seed Demo" to populate CRM data</p>
                                 </div>
                             ) : filteredGuests.map((c: GuestProfile, i: number) => (
@@ -301,7 +301,7 @@ const CrmDashboard: React.FC = () => {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {campaigns.length === 0 ? (
-                                <p className="text-xs text-muted-foreground text-center py-4">No campaigns yet. Run Boomerang or seed data.</p>
+                                <p className="text-xs text-muted-foreground text-center py-4">{"No "}campaigns yet. Run Boomerang or seed data.</p>
                             ) : campaigns.map((camp, i) => (
                                 <div key={camp.id || i} className="p-3 rounded-xl bg-background border border-border flex items-center justify-between group hover:border-border transition-all">
                                     <div>

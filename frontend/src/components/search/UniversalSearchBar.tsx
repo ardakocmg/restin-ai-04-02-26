@@ -215,7 +215,7 @@ export default function UniversalSearchBar({
                 </div>
               ))}
               {groups.length === 0 ? (
-                <div className="p-3 text-sm text-muted-foreground">No results</div>
+                <div className="p-3 text-sm text-muted-foreground">{"No "}results</div>
               ) : null}
             </div>
           )}

@@ -122,7 +122,7 @@ export default function KeypadTab() {
                                         <td className="p-3 text-sm text-secondary-foreground">{pin.door_display_name}</td>
                                         <td className="p-3"><code className="text-xs text-muted-foreground bg-card px-2 py-0.5 rounded">{pin.code_hint}</code></td>
                                         <td className="p-3 text-xs text-muted-foreground">
-                                            {pin.valid_until ? <div className="flex items-center gap-1"><Timer className="h-3 w-3 text-amber-400" />{new Date(pin.valid_until).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}</div> : <span className="text-muted-foreground">No expiry</span>}
+                                            {pin.valid_until ? <div className="flex items-center gap-1"><Timer className="h-3 w-3 text-amber-400" />{new Date(pin.valid_until).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}</div> : <span className="text-muted-foreground">{"No "}expiry</span>}
                                         </td>
                                         <td className="p-3 text-xs text-muted-foreground">{new Date(pin.created_at).toLocaleDateString('en-GB')} by {pin.created_by}</td>
                                         <td className="p-3 text-right">
@@ -133,7 +133,7 @@ export default function KeypadTab() {
                                     </motion.tr>
                                 ))}
                             </AnimatePresence>
-                            {activePins.length === 0 && <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">No active PINs. Create one above.</td></tr>}
+                            {activePins.length === 0 && <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">{"No "}active PINs. Create one above.</td></tr>}
                         </tbody>
                     </table>
                 </CardContent>

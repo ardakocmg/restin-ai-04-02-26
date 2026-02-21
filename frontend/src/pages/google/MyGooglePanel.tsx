@@ -602,7 +602,7 @@ export default function MyGooglePanel(): React.ReactElement {
                     <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-secondary/50 flex items-center justify-center">
                         <Link2 className="h-8 w-8 text-muted-foreground rotate-45" />
                     </div>
-                    <h2 className="text-lg font-black text-foreground uppercase tracking-wide mb-2">No Google Account Connected</h2>
+                    <h2 className="text-lg font-black text-foreground uppercase tracking-wide mb-2">{"No "}Google Account Connected</h2>
                     <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
                         Link your Google account to manage Calendar, Drive, Gmail, Contacts, Tasks, Photos, Sheets and YouTube right here in Restin.ai.
                     </p>
@@ -692,7 +692,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                     </div>
                                 </div>
                             )}
-                            {events.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No upcoming events</div>}
+                            {events.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">{"No "}upcoming events</div>}
                             {events.map(ev => (
                                 <div key={ev.id} className="group flex items-start gap-3 p-3 bg-card/30 border border-border rounded-xl hover:border-border transition-all">
                                     <div className="mt-1.5 h-3 w-3 rounded-full flex-shrink-0" style={{ backgroundColor: ev.color || '#4285f4' }} />
@@ -717,7 +717,7 @@ export default function MyGooglePanel(): React.ReactElement {
                     {!loadingData && activeTab === 'drive' && (
                         <div className="space-y-3">
                             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Recent Files ({files.length})</h3>
-                            {files.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No files</div>}
+                            {files.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">{"No "}files</div>}
                             <div className="divide-y divide-white/5">
                                 {files.map(file => (
                                     <div
@@ -746,7 +746,7 @@ export default function MyGooglePanel(): React.ReactElement {
                             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                 Inbox ({messages.length}) · {messages.filter(m => !m.read).length} unread
                             </h3>
-                            {messages.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No messages</div>}
+                            {messages.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">{"No "}messages</div>}
                             {messages.map(msg => (
                                 <div
                                     key={msg.id}
@@ -798,7 +798,7 @@ export default function MyGooglePanel(): React.ReactElement {
                     {!loadingData && activeTab === 'contacts' && (
                         <div className="space-y-3">
                             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Contacts ({contacts.length})</h3>
-                            {contacts.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No contacts</div>}
+                            {contacts.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">{"No "}contacts</div>}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {contacts.map(c => (
                                     <div key={c.id} className="flex items-start gap-3 p-3 bg-card/30 border border-border rounded-xl hover:border-border transition-all">
@@ -849,7 +849,7 @@ export default function MyGooglePanel(): React.ReactElement {
                                     </div>
                                 </div>
                             )}
-                            {tasks.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No tasks</div>}
+                            {tasks.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">{"No "}tasks</div>}
                             {tasks.map(task => (
                                 <div key={task.id} className={cn(
                                     "group flex items-start gap-3 p-3 rounded-xl border transition-all",
@@ -886,7 +886,7 @@ export default function MyGooglePanel(): React.ReactElement {
                             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                                 Photos ({photos.length}) · {Array.from(new Set(photos.map(p => p.album))).length} albums
                             </h3>
-                            {photos.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No photos</div>}
+                            {photos.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">{"No "}photos</div>}
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                 {photos.map(photo => (
                                     <div key={photo.id} className="group relative bg-secondary/50 border border-border rounded-xl overflow-hidden hover:border-border transition-all aspect-[4/3]">
@@ -914,7 +914,7 @@ export default function MyGooglePanel(): React.ReactElement {
                     {!loadingData && activeTab === 'sheets' && (
                         <div className="space-y-3">
                             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Spreadsheets ({sheets.length})</h3>
-                            {sheets.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No spreadsheets</div>}
+                            {sheets.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">{"No "}spreadsheets</div>}
                             <div className="divide-y divide-white/5">
                                 {sheets.map(sheet => (
                                     <div
@@ -962,7 +962,7 @@ export default function MyGooglePanel(): React.ReactElement {
 
                             {/* Liked Videos */}
                             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Liked Videos ({ytVideos.length})</h3>
-                            {ytVideos.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">No liked videos</div>}
+                            {ytVideos.length === 0 && <div className="text-center py-8 text-muted-foreground text-sm">{"No "}liked videos</div>}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {ytVideos.map(video => (
                                     <div

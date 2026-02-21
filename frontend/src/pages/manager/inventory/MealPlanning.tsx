@@ -166,7 +166,7 @@ export default function MealPlanning() {
                         <Leaf className="h-3 w-3 mr-1" /><SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="all">No Restriction</SelectItem>
+                        <SelectItem value="all">{"No "}Restriction</SelectItem>
                         <SelectItem value="vegetarian">Vegetarian</SelectItem>
                         <SelectItem value="vegan">Vegan</SelectItem>
                         <SelectItem value="gluten_free">Gluten Free</SelectItem>

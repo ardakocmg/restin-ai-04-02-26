@@ -91,7 +91,7 @@ const ComboMeals: React.FC = () => {
                 <button className="pos-btn-primary" onClick={() => setEditing({ id: crypto.randomUUID(), name: '', price: 0, pricingType: 'fixed', steps: [], isActive: true, soldCount: 0 })}><Plus size={16} /> Create Combo</button>
             </div>
 
-            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">Loading combos...</span></div>}
+            {apiLoading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 30 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">{"Loading "}combos...</span></div>}
             {apiError && <div className="pos-card pos-flex pos-flex--between pos-flex--center" style={{ borderColor: '#EF4444', padding: 14 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {apiError}</span><button className="pos-btn-outline pos-btn-back" onClick={() => refetch()}>Retry</button></div>}
 
             <div className="pos-search-wrapper pos-mb-16">

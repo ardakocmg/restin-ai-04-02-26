@@ -313,7 +313,7 @@ export default function POSRuntimeKSeries() {
             <div className="ks-root">
                 <div className="ks-loading">
                     <div className="ks-loading-spinner" />
-                    <span>Loading K-Series POS...</span>
+                    <span>{"Loading "}K-Series POS...</span>
                 </div>
             </div>
         );
@@ -398,7 +398,7 @@ export default function POSRuntimeKSeries() {
                         {order.items.length === 0 ? (
                             <div className="ks-menu-empty">
                                 <ShoppingCart size={32} className="ks-menu-empty-icon" />
-                                <span>No items yet</span>
+                                <span>{"No "}items yet</span>
                             </div>
                         ) : (
                             <>
@@ -585,7 +585,7 @@ export default function POSRuntimeKSeries() {
                         {menuItems.length === 0 ? (
                             <div className="ks-menu-empty">
                                 <UtensilsCrossed size={32} className="ks-menu-empty-icon" />
-                                <span>No items in this category</span>
+                                <span>{"No "}items in this category</span>
                             </div>
                         ) : (
                             menuItems.map((item, idx) => (
@@ -731,7 +731,7 @@ export default function POSRuntimeKSeries() {
                     <div className="ks-search-results">
                         {searchResults.length === 0 && searchQuery ? (
                             <div className="ks-menu-empty">
-                                <span>No results for &quot;{searchQuery}&quot;</span>
+                                <span>{"No "}results for &quot;{searchQuery}&quot;</span>
                             </div>
                         ) : (
                             <div className="ks-menu-grid">

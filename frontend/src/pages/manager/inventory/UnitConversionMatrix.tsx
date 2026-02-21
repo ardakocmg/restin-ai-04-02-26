@@ -236,7 +236,7 @@ export default function UnitConversionMatrix() {
                                     </p>
                                 </>
                             ) : (
-                                <p className="text-lg text-muted-foreground">No conversion available</p>
+                                <p className="text-lg text-muted-foreground">{"No "}conversion available</p>
                             )}
                         </div>
 
@@ -319,7 +319,7 @@ export default function UnitConversionMatrix() {
                                 </div>
                             ))}
                             {customConversions.length === 0 && (
-                                <p className="text-center text-xs text-muted-foreground py-4">No custom conversions yet</p>
+                                <p className="text-center text-xs text-muted-foreground py-4">{"No "}custom conversions yet</p>
                             )}
                         </div>
                     </CardContent>

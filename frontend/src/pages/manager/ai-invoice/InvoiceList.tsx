@@ -63,7 +63,7 @@ export default function InvoiceList() {
           {loading ? (
             <Card><CardContent className="p-8 text-center">Loading...</CardContent></Card>
           ) : invoices.length === 0 ? (
-            <Card><CardContent className="p-8 text-center text-slate-400">No invoices found</CardContent></Card>
+            <Card><CardContent className="p-8 text-center text-slate-400">{"No "}invoices found</CardContent></Card>
           ) : (
             invoices.map((invoice) => (
               <Card key={invoice.id} className="border-slate-700">

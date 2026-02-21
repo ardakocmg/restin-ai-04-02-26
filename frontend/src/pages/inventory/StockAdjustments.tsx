@@ -35,7 +35,7 @@ export default function StockAdjustments() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-6 flex items-center justify-center">
-        <div className="text-foreground">Loading Adjustments...</div>
+        <div className="text-foreground">{"Loading "}Adjustments...</div>
       </div>
     );
   }
@@ -63,7 +63,7 @@ export default function StockAdjustments() {
       <div className="space-y-4">
         {adjustments.length === 0 ? (
           <div className="card-dark p-12 rounded-xl text-center">
-            <p className="text-muted-foreground">No stock adjustments found</p>
+            <p className="text-muted-foreground">{"No "}stock adjustments found</p>
           </div>
         ) : adjustments.map((adj) => (
           <div key={adj.id || adj._id} className="card-dark p-6 rounded-xl">

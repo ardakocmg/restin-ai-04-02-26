@@ -87,13 +87,13 @@ const POSUsersGroups: React.FC = () => {
 
             <div className="pos-search-wrapper pos-mb-16"><Search size={14} className="pos-search-icon" /><input className="pos-input pos-search-input" placeholder={`Search ${tab}...`} value={search} onChange={e => setSearch(e.target.value)} /></div>
 
-            {loading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 40 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">Loading staff from API...</span></div>}
+            {loading && <div className="pos-card pos-flex pos-flex--center" style={{ justifyContent: 'center', gap: 8, padding: 40 }}><Loader2 size={18} className="animate-spin" style={{ color: '#3B82F6' }} /><span className="pos-text-secondary">{"Loading "}staff from API...</span></div>}
             {error && <div className="pos-card pos-flex pos-flex--between pos-flex--center pos-mb-16" style={{ borderColor: '#EF4444', padding: 16 }}><span style={{ color: '#EF4444', fontSize: 13 }}>⚠ {error} — showing cached data</span><button className="pos-btn-outline" style={{ padding: '6px 14px', fontSize: 12 }} onClick={() => refetch()}>Retry</button></div>}
 
             {/* Users Tab */}
             {tab === 'users' && !loading && <div className="pos-card">
                 <div className="pos-table-header" style={{ gridTemplateColumns: userTableCols }}><div></div><div>Name</div><div>Group</div><div>PIN</div><div>Last Login</div><div></div></div>
-                {filteredUsers.length === 0 && <div className="pos-empty-state">No staff found. {!venueId && 'Please select a venue first.'}</div>}
+                {filteredUsers.length === 0 && <div className="pos-empty-state">{"No "}staff found. {!venueId && 'Please select a venue first.'}</div>}
                 {filteredUsers.map(user => (
                     <div key={user.id} className="pos-table-row" style={{ gridTemplateColumns: userTableCols, opacity: user.isActive ? 1 : 0.5 }} onClick={() => setEditUser({ ...user })}>
                         <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(59,130,246,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: '#3B82F6' }}>{user.avatar}</div>

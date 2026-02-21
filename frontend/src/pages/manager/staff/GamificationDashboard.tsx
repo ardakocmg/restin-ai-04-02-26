@@ -338,7 +338,7 @@ export default function GamificationDashboard() {
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <p className="text-sm font-medium text-muted-foreground">—</p>
-                                                <p className="text-xs text-muted-foreground mt-0.5">No active quests</p>
+                                                <p className="text-xs text-muted-foreground mt-0.5">{"No "}active quests</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">

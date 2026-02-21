@@ -108,7 +108,7 @@ export default function RecipeVideoBites() {
                     ) : filtered.length === 0 ? (
                         <Card className="p-8 bg-card border-border text-center">
                             <ChefHat className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                            <p className="text-sm text-muted-foreground">No recipes found. Create recipes in Inventory → Recipes first.</p>
+                            <p className="text-sm text-muted-foreground">{"No "}recipes found. Create recipes in Inventory → Recipes first.</p>
                         </Card>
                     ) : (
                         filtered.map(recipe => (

@@ -160,7 +160,7 @@ function KDSStations() {
           <div className="col-span-full">
             <div className="text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-300">
               <Monitor className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2">No stations configured</h3>
+              <h3 className="text-lg font-medium text-foreground mb-2">{"No "}stations configured</h3>
               <p className="text-gray-500 mb-4">Get started by creating your first KDS station</p>
               <button
                 onClick={() => navigate('/manager/kds/stations/new')}

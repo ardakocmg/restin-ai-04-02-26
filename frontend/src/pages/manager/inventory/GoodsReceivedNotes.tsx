@@ -630,7 +630,7 @@ export default function GoodsReceivedNotes() {
                             </div>
                         </div>
                     ) : (
-                        <p className="text-muted-foreground text-sm py-4">No line-level data available for this GRN.</p>
+                        <p className="text-muted-foreground text-sm py-4">{"No "}line-level data available for this GRN.</p>
                     )}
                 </DialogContent>
             </Dialog>

@@ -492,9 +492,9 @@ export default function ThemeEngineSettings() {
                                             </Button>
 
                                             <div className="flex flex-wrap gap-2">
-                                                <Badge style={{ backgroundColor: customThemeObj.success, color: '#ffffff' }}>Success Node</Badge>
+                                                <Badge style={{ backgroundColor: customThemeObj.success, color: '#ffffff' }}>{"Success"} Node</Badge>
                                                 <Badge style={{ backgroundColor: customThemeObj.warning, color: '#ffffff' }}>Warning Flag</Badge>
-                                                <Badge style={{ backgroundColor: customThemeObj.danger, color: '#ffffff' }}>Error Alert</Badge>
+                                                <Badge style={{ backgroundColor: customThemeObj.danger, color: '#ffffff' }}>{"Error "}Alert</Badge>
                                             </div>
 
                                             <div className="p-4 rounded-xl font-medium" style={{ backgroundColor: customThemeObj.primaryLight || `${customThemeObj.primary}15`, color: customThemeObj.primary }}>

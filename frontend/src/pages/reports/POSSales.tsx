@@ -34,7 +34,7 @@ export default function POSSales() {
   };
 
   if (!data) {
-    return <div className="p-8 text-center text-muted-foreground">No data available or connection failed.</div>;
+    return <div className="p-8 text-center text-muted-foreground">{"No "}data available or connection failed.</div>;
   }
 
   if (loading) {

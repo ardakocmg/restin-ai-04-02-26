@@ -157,7 +157,7 @@ export default function POSSalesReport() {
   );
 
   const renderProductReport = () => {
-    if (!salesData || !salesData.items) return <div className="text-muted-foreground text-center p-8">No product data found</div>;
+    if (!salesData || !salesData.items) return <div className="text-muted-foreground text-center p-8">{"No "}product data found</div>;
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in slide-in-from-bottom-4 duration-500">
         <Card className="lg:col-span-2 bg-card border-border shadow-xl">

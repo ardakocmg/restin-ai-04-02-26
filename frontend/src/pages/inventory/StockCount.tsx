@@ -147,7 +147,7 @@ function StockCount() {
       {!count ? (
         <div className="text-center py-20 bg-white rounded-xl border-2 border-dashed border-gray-300">
           <ClipboardList className="w-20 h-20 mx-auto text-muted-foreground mb-4" />
-          <p className="text-xl text-muted-foreground mb-2">No active count</p>
+          <p className="text-xl text-muted-foreground mb-2">{"No "}active count</p>
           <p className="text-gray-400">Start a new stock count to begin</p>
         </div>
       ) : (

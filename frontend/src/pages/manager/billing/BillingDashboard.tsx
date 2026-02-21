@@ -76,7 +76,7 @@ export default function BillingDashboard() {
     };
 
     if (loading) {
-        return <div className="p-8 text-muted-foreground">Loading financial data...</div>;
+        return <div className="p-8 text-muted-foreground">{"Loading "}financial data...</div>;
     }
 
     if (!invoice) {

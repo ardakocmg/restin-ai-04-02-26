@@ -34,7 +34,7 @@ export default function KDSFeature() {
         <PageLayout title="Kitchen Display System" description="Live Orders View">
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {orders.length === 0 && !loading && (
-                    <div className="col-span-full text-center text-muted-foreground mt-20 text-xl">No active orders in kitchen</div>
+                    <div className="col-span-full text-center text-muted-foreground mt-20 text-xl">{"No "}active orders in kitchen</div>
                 )}
 
                 {orders.map(order => (

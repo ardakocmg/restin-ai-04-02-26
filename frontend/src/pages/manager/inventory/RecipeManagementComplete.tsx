@@ -866,7 +866,7 @@ export default function RecipeManagement() {
                 </label>
               ))}
               {availableCategories.filter(c => c !== 'All').length === 0 && (
-                <div className="text-xs text-muted-foreground text-center py-3">No categories</div>
+                <div className="text-xs text-muted-foreground text-center py-3">{"No "}categories</div>
               )}
             </div>
           </PopoverContent>
@@ -897,7 +897,7 @@ export default function RecipeManagement() {
                 </label>
               ))}
               {availableSubcategories.filter(c => c !== 'All').length === 0 && (
-                <div className="text-xs text-muted-foreground text-center py-3">No subcategories</div>
+                <div className="text-xs text-muted-foreground text-center py-3">{"No "}subcategories</div>
               )}
             </div>
           </PopoverContent>
@@ -1308,7 +1308,7 @@ export default function RecipeManagement() {
                 </Card>
               ))}
               {recipes.length === 0 && (
-                <div className="col-span-full text-center py-12 text-muted-foreground">No recipes found.</div>
+                <div className="col-span-full text-center py-12 text-muted-foreground">{"No "}recipes found.</div>
               )}
             </div>
           ) : (

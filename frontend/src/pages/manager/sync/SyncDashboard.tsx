@@ -375,7 +375,7 @@ export default function SyncDashboard() {
                     {!loading && filteredProviders.length === 0 && (
                         <div className="text-center py-16 text-muted-foreground">
                             <Search className="h-10 w-10 mx-auto mb-3 opacity-50" />
-                            <p className="text-sm">No integrations match your search.</p>
+                            <p className="text-sm">{"No "}integrations match your search.</p>
                         </div>
                     )}
                 </TabsContent>
@@ -516,7 +516,7 @@ export default function SyncDashboard() {
                                     </CardHeader>
                                     <CardContent className="space-y-2">
                                         {groupData.summary.providers_used.length === 0 ? (
-                                            <p className="text-sm text-muted-foreground text-center py-4">No integrations connected yet.</p>
+                                            <p className="text-sm text-muted-foreground text-center py-4">{"No "}integrations connected yet.</p>
                                         ) : (
                                             groupData.summary.providers_used.map(provKey => {
                                                 const pDef = PROVIDERS.find(p => p.key === provKey);
@@ -642,7 +642,7 @@ export default function SyncDashboard() {
                             </div>
                             <div className="flex items-center justify-between p-4 rounded-lg bg-card/50 border border-border">
                                 <div>
-                                    <p className="text-sm font-medium text-secondary-foreground">Error Notifications</p>
+                                    <p className="text-sm font-medium text-secondary-foreground">{"Error "}Notifications</p>
                                     <p className="text-xs text-muted-foreground mt-0.5">Send email alerts when a sync run fails</p>
                                 </div>
                                 <Switch defaultChecked />

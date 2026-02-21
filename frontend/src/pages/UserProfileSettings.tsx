@@ -386,7 +386,7 @@ export default function UserProfileSettings() {
 
         {/* ─── PORTAL TAB ─── */}
         <TabsContent value="portal" className="space-y-4">
-          <React.Suspense fallback={<div className="flex items-center justify-center py-16 text-muted-foreground"><Loader2 className="h-6 w-6 animate-spin mr-3" />Loading Portal...</div>}>
+          <React.Suspense fallback={<div className="flex items-center justify-center py-16 text-muted-foreground"><Loader2 className="h-6 w-6 animate-spin mr-3" />{"Loading "}Portal...</div>}>
             <EmployeePortalComplete />
           </React.Suspense>
         </TabsContent>
@@ -456,7 +456,7 @@ export default function UserProfileSettings() {
                 <CardContent>
                   <div className="space-y-3">
                     {upcomingShifts.length === 0 ? (
-                      <p className="text-center py-8 text-muted-foreground">No upcoming shifts scheduled</p>
+                      <p className="text-center py-8 text-muted-foreground">{"No "}upcoming shifts scheduled</p>
                     ) : (
                       upcomingShifts.map((shift) => (
                         <div key={shift.id} className="p-4 rounded-lg border flex items-center justify-between">
@@ -481,7 +481,7 @@ export default function UserProfileSettings() {
                 <CardContent>
                   <div className="space-y-3">
                     {payslips.length === 0 ? (
-                      <p className="text-center py-8 text-muted-foreground">No payslips available yet</p>
+                      <p className="text-center py-8 text-muted-foreground">{"No "}payslips available yet</p>
                     ) : (
                       payslips.map((doc) => (
                         <div key={doc.id} className="p-4 rounded-lg border flex items-center justify-between">
@@ -507,7 +507,7 @@ export default function UserProfileSettings() {
                 <CardContent>
                   <div className="space-y-3">
                     {tips.length === 0 ? (
-                      <p className="text-center py-8 text-muted-foreground">No tips recorded yet</p>
+                      <p className="text-center py-8 text-muted-foreground">{"No "}tips recorded yet</p>
                     ) : (
                       tips.map((tip) => (
                         <div key={tip.id} className="p-4 rounded-lg border border-green-500/20 bg-green-500/5 flex items-center justify-between">
@@ -530,7 +530,7 @@ export default function UserProfileSettings() {
                 <CardContent>
                   <div className="space-y-3">
                     {documents.filter(d => d.category !== 'payslip').length === 0 ? (
-                      <p className="text-center py-8 text-muted-foreground">No documents available</p>
+                      <p className="text-center py-8 text-muted-foreground">{"No "}documents available</p>
                     ) : (
                       documents.filter(d => d.category !== 'payslip').map((doc) => (
                         <div key={doc.id} className="p-4 rounded-lg border flex items-center justify-between">

@@ -289,7 +289,7 @@ export default function ContentStudio() {
                   </div>
                 </button>
               ))}
-              {!versions.length && <p className="text-xs text-muted-foreground">No versions yet.</p>}
+              {!versions.length && <p className="text-xs text-muted-foreground">{"No "}versions yet.</p>}
             </div>
           </CardContent>
         </Card>

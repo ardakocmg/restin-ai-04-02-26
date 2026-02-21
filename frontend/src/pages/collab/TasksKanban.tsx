@@ -108,7 +108,7 @@ export default function TasksKanban() {
       {loading ? (
         <div className="text-center py-16">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-3" />
-          <p className="text-muted-foreground">Loading task board...</p>
+          <p className="text-muted-foreground">{"Loading "}task board...</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-[calc(100vh-280px)] overflow-x-auto">

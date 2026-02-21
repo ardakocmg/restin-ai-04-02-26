@@ -329,7 +329,7 @@ export default function VenueSettings() {
                       <SelectValue placeholder="Select a legal entity..." />
                     </SelectTrigger>
                     <SelectContent className="bg-card border-border">
-                      <SelectItem value="none" className="text-muted-foreground">No legal entity</SelectItem>
+                      <SelectItem value="none" className="text-muted-foreground">{"No "}legal entity</SelectItem>
                       {legalEntities.map((le: LegalEntity) => (
                         <SelectItem key={le._id} value={le._id} className="text-foreground">
                           {le.registered_name}{le.vat_number ? ` (${le.vat_number})` : ''}

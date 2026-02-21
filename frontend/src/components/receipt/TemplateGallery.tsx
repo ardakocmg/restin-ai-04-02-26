@@ -330,7 +330,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({ open, onClose,
                     {filtered.length === 0 && (
                         <div className="text-center py-12">
                             <Search className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
-                            <p className="text-zinc-500">No templates match your search</p>
+                            <p className="text-zinc-500">{"No "}templates match your search</p>
                         </div>
                     )}
                 </div>

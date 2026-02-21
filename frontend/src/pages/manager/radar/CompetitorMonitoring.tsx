@@ -116,7 +116,7 @@ export default function CompetitorMonitoring() {
                     ) : competitors.length === 0 ? (
                         <Card className="p-8 bg-card border-border text-center">
                             <Store className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                            <p className="text-sm text-muted-foreground">No competitors tracked. Run a market scan to discover nearby restaurants.</p>
+                            <p className="text-sm text-muted-foreground">{"No "}competitors tracked. Run a market scan to discover nearby restaurants.</p>
                         </Card>
                     ) : (
                         competitors.map(comp => {

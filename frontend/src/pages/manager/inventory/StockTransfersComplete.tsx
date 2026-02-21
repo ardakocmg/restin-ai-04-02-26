@@ -401,7 +401,7 @@ export default function StockTransfersComplete() {
                 <SelectTrigger><SelectValue placeholder={formData.order_type === 'internal' ? 'Select central kitchen...' : 'Select destination venue...'} /></SelectTrigger>
                 <SelectContent>
                   {venues.map((v: VenueItem) => <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>)}
-                  {venues.length === 0 && <SelectItem value="none" disabled>No other venues available</SelectItem>}
+                  {venues.length === 0 && <SelectItem value="none" disabled>{"No "}other venues available</SelectItem>}
                 </SelectContent>
               </Select>
             </div>

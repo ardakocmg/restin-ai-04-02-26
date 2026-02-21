@@ -224,7 +224,7 @@ export default function Scheduler() {
     <div className="flex items-center justify-center min-h-screen bg-[#0A0A0B]">
       <div className="animate-pulse flex flex-col items-center gap-4">
         <div className="h-12 w-12 rounded-full border-t-2 border-blue-500 animate-spin" />
-        <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">Loading Roster...</p>
+        <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">{"Loading "}Roster...</p>
       </div>
     </div>
   );

@@ -85,7 +85,7 @@ function Suppliers() {
         {suppliers.length === 0 && (
           <div className="col-span-full text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-300">
             <Building2 className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-            <p className="text-gray-600">No suppliers added yet</p>
+            <p className="text-gray-600">{"No "}suppliers added yet</p>
           </div>
         )}
       </div>

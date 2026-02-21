@@ -45,7 +45,7 @@ export default function PayrollMaltaPage() {
           </CardHeader>
           <CardContent>
             {payruns.length === 0 ? (
-              <p className="text-center py-8 text-slate-500">No pay runs. Enable Payroll MT in venue settings.</p>
+              <p className="text-center py-8 text-slate-500">{"No "}pay runs. Enable Payroll MT in venue settings.</p>
             ) : (
               <div className="space-y-2">
                 {payruns.map(pr => (

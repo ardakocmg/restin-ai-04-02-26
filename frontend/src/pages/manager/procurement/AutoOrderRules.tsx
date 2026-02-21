@@ -63,7 +63,7 @@ export default function AutoOrderRules() {
         {loading ? (
           <Card><CardContent className="p-8 text-center">Loading...</CardContent></Card>
         ) : rules.length === 0 ? (
-          <Card><CardContent className="p-8 text-center text-slate-400">No auto-order rules configured</CardContent></Card>
+          <Card><CardContent className="p-8 text-center text-slate-400">{"No "}auto-order rules configured</CardContent></Card>
         ) : (
           rules.map((rule) => (
             <Card key={rule.id} className="border-slate-700">

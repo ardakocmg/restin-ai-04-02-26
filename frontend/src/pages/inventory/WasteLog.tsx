@@ -208,7 +208,7 @@ function WasteLog() {
           {wasteEntries.length === 0 && (
             <div className="p-12 text-center text-gray-400">
               <Trash2 className="w-16 h-16 mx-auto mb-4" />
-              <p>No waste entries yet</p>
+              <p>{"No "}waste entries yet</p>
             </div>
           )}
         </div>

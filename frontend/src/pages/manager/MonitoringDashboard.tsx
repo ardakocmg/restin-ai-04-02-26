@@ -159,7 +159,7 @@ export default function MonitoringDashboard() {
                   </div>
                 ))}
                 {!health?.services?.length && !loading && (
-                  <p className="text-center py-4" style={{ color: '#71717A' }}>No services data available</p>
+                  <p className="text-center py-4" style={{ color: '#71717A' }}>{"No "}services data available</p>
                 )}
               </div>
             </CardContent>

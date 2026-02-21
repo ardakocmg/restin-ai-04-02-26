@@ -291,7 +291,7 @@ function VapiConfigPanel({ venueId }: { venueId: string }) {
                     ) : (
                         <div className="text-center py-6">
                             <PhoneIcon className="w-8 h-8 text-muted-foreground mx-auto mb-2 opacity-50" />
-                            <p className="text-xs text-muted-foreground mb-2">No phone numbers on your Vapi account.</p>
+                            <p className="text-xs text-muted-foreground mb-2">{"No "}phone numbers on your Vapi account.</p>
                             <a href="https://dashboard.vapi.ai/phone-numbers" target="_blank" rel="noopener noreferrer"
                                 className="text-xs text-blue-400 hover:underline inline-flex items-center gap-1">
                                 Add a phone number in Vapi Dashboard <ExternalLink className="w-3 h-3" />
@@ -641,7 +641,7 @@ export default function VoiceSettings() {
                                     </div>
                                 ))}
                                 {knowledge.length === 0 && (
-                                    <p className="text-xs text-muted-foreground text-center py-4">No documents uploaded yet.</p>
+                                    <p className="text-xs text-muted-foreground text-center py-4">{"No "}documents uploaded yet.</p>
                                 )}
                             </div>
                         </CardContent>

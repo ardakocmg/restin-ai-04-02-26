@@ -169,7 +169,7 @@ export default function ProductionManagement() {
         {batches.length === 0 ? (
           <div className="text-center py-20 bg-card/50 rounded-xl border border-dashed border-border">
             <Factory className="w-12 h-12 text-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-muted-foreground">No Active Batches</h3>
+            <h3 className="text-lg font-bold text-muted-foreground">{"No "}Active Batches</h3>
           </div>
         ) : (
           batches.map(batch => (

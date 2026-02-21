@@ -116,7 +116,7 @@ export default function LogsViewer() {
             {loading ? (
               <p className="text-center py-8 text-gray-500">Loading...</p>
             ) : logs.length === 0 ? (
-              <p className="text-center py-8 text-gray-500">No logs found</p>
+              <p className="text-center py-8 text-gray-500">{"No "}logs found</p>
             ) : (
               logs.map((log, idx) => (
                 <div key={log.id || idx} className="p-3 border border-border rounded-lg hover:bg-gray-50">

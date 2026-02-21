@@ -161,7 +161,7 @@ const ProductionInstructions: React.FC = () => {
                                 </div>
                             </div>
                         ))}
-                        {activeGroup.instructions.length === 0 && <div style={{ textAlign: 'center', padding: 30, color: 'var(--text-secondary)' }}><ListChecks size={32} style={{ opacity: 0.3, marginBottom: 8 }} /><p>No options yet</p></div>}
+                        {activeGroup.instructions.length === 0 && <div style={{ textAlign: 'center', padding: 30, color: 'var(--text-secondary)' }}><ListChecks size={32} style={{ opacity: 0.3, marginBottom: 8 }} /><p>{"No "}options yet</p></div>}
                     </div>
                 </> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', color: 'var(--text-secondary)' }}>
                     <LayoutGrid size={48} style={{ opacity: 0.2, marginBottom: 12 }} /><p>Select a group or create one</p>

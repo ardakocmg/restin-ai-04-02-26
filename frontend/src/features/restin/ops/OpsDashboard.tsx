@@ -218,7 +218,7 @@ const OpsDashboard: React.FC = () => {
                             {aggregators.length === 0 ? (
                                 <div className="col-span-2 text-center text-muted-foreground py-8">
                                     <Truck className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                                    <p className="text-sm font-bold">No aggregators configured</p>
+                                    <p className="text-sm font-bold">{"No "}aggregators configured</p>
                                     <p className="text-xs mt-1">Click "Seed Demo" to populate data</p>
                                 </div>
                             ) : aggregators.map((agg, i) => (
@@ -261,7 +261,7 @@ const OpsDashboard: React.FC = () => {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {logs.length === 0 ? (
-                            <p className="text-xs text-muted-foreground text-center py-4">No events yet. Seed demo data to populate.</p>
+                            <p className="text-xs text-muted-foreground text-center py-4">{"No "}events yet. Seed demo data to populate.</p>
                         ) : logs.map((log, i) => (
                             <div key={log.id || i} className="flex gap-3 items-start group">
                                 <span className="text-[10px] font-mono text-muted-foreground mt-1 whitespace-nowrap">{timeAgo(log.created_at)}</span>

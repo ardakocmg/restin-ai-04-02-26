@@ -209,7 +209,7 @@ export default function SystemDashboard() {
                         <ScrollArea className="flex-1 p-4">
                             <div className="space-y-4">
                                 {logs.length === 0 ? (
-                                    <p className="text-center text-muted-foreground text-sm py-4">No audit events yet</p>
+                                    <p className="text-center text-muted-foreground text-sm py-4">{"No "}audit events yet</p>
                                 ) : logs.map((log, i) => (
                                     <div key={log.id || i} className="flex gap-3 items-start">
                                         <div className={`mt-1 w-2 h-2 rounded-full ${(log.action || '').includes('ERROR') ? 'bg-red-500' : 'bg-blue-500'}`} />

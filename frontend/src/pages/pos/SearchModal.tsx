@@ -90,7 +90,7 @@ export default function SearchModal({ allItems, onSelect, onClose }: SearchModal
                     {query.length === 0 ? (
                         <div style={s.empty}>Start typing to search products</div>
                     ) : filtered.length === 0 ? (
-                        <div style={s.empty}>No products found for &quot;{query}&quot;</div>
+                        <div style={s.empty}>{"No "}products found for &quot;{query}&quot;</div>
                     ) : (
                         filtered.map((item: SearchItem, idx: number) => (
                             <button

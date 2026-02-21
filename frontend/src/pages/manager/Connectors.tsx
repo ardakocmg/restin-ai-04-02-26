@@ -40,7 +40,7 @@ export default function ConnectorsPage() {
         </CardHeader>
         <CardContent>
           {connectors.length === 0 ? (
-            <p className="text-center py-8 text-slate-500">No connectors configured. Enable API Connectors in venue settings.</p>
+            <p className="text-center py-8 text-slate-500">{"No "}connectors configured. Enable API Connectors in venue settings.</p>
           ) : (
             <div className="space-y-3">
               {connectors.map(conn => (

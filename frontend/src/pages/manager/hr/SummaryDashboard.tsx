@@ -122,7 +122,7 @@ export default function SummaryDashboard() {
     </div>
   );
 
-  if (!data) return <div className="p-8 bg-background min-h-screen text-muted-foreground">No core intelligence data available.</div>;
+  if (!data) return <div className="p-8 bg-background min-h-screen text-muted-foreground">{"No "}core intelligence data available.</div>;
 
   const iconMap = {
     'user-plus': UserPlus,

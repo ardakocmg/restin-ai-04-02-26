@@ -217,7 +217,7 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
                                                     <td className="p-3 text-right"><Button size="sm" variant="ghost" onClick={() => revokeAuth(auth.id)} className="text-red-400 hover:bg-red-950/50 h-6 w-6 p-0"><Trash2 className="h-3 w-3" /></Button></td>
                                                 </tr>
                                             ))}
-                                            {auths.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-muted-foreground">No authorizations found.</td></tr>}
+                                            {auths.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-muted-foreground">{"No "}authorizations found.</td></tr>}
                                         </tbody>
                                     </table>
                                 </div>
@@ -262,7 +262,7 @@ function DoorDetailModal({ door, isOpen, onClose }: { door: Door; isOpen: boolea
                                                     <td className="p-3 text-xs text-muted-foreground">{log.trigger}</td>
                                                 </tr>
                                             ))}
-                                            {logs.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-muted-foreground">No logs found on device.</td></tr>}
+                                            {logs.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-muted-foreground">{"No "}logs found on device.</td></tr>}
                                         </tbody>
                                     </table>
                                 </div>
@@ -359,7 +359,7 @@ export default function DoorsTab() {
             ) : doors.length === 0 ? (
                 <Card className="bg-background border-border p-8 text-center">
                     <DoorOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                    <p className="text-muted-foreground">No doors registered. Click "Sync Devices" to discover your Nuki locks.</p>
+                    <p className="text-muted-foreground">{"No "}doors registered. Click "Sync Devices" to discover your Nuki locks.</p>
                 </Card>
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

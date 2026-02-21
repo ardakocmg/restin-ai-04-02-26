@@ -139,7 +139,7 @@ export default function Contracts() {
         {contracts.length === 0 && !loading && (
           <div className="text-center py-12 text-muted-foreground">
             <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p>No contracts yet</p>
+            <p>{"No "}contracts yet</p>
           </div>
         )}
       </div>

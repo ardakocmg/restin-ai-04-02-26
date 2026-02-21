@@ -154,7 +154,7 @@ export default function HACCPChecklists() {
                     ) : templates.length === 0 ? (
                         <Card className="p-12 bg-card border-border text-center">
                             <ClipboardCheck className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                            <h3 className="font-semibold text-foreground">No Templates Yet</h3>
+                            <h3 className="font-semibold text-foreground">{"No "}Templates Yet</h3>
                             <p className="text-sm text-muted-foreground mt-1">
                                 Seed demo data or create your first HACCP checklist template.
                             </p>
@@ -222,7 +222,7 @@ export default function HACCPChecklists() {
                     ) : logs.length === 0 ? (
                         <Card className="p-12 bg-card border-border text-center">
                             <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                            <h3 className="font-semibold text-foreground">No Logs Yet</h3>
+                            <h3 className="font-semibold text-foreground">{"No "}Logs Yet</h3>
                             <p className="text-sm text-muted-foreground mt-1">
                                 Checklist submissions will appear here. Seed demo data to see examples.
                             </p>

@@ -154,7 +154,7 @@ export default function RFQManagement() {
         {loading ? (
           <Card><CardContent className="p-8 text-center text-slate-400">Loading...</CardContent></Card>
         ) : rfqs.length === 0 ? (
-          <Card><CardContent className="p-8 text-center text-slate-400">No RFQs found. Create your first RFQ!</CardContent></Card>
+          <Card><CardContent className="p-8 text-center text-slate-400">{"No "}RFQs found. Create your first RFQ!</CardContent></Card>
         ) : (
           rfqs.map((rfq: RFQData) => (
             <Card key={rfq.id} className="border-slate-700 hover:border-slate-600 transition">
@@ -251,7 +251,7 @@ export default function RFQManagement() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-slate-400 text-sm">No quotes received yet</p>
+                      <p className="text-slate-400 text-sm">{"No "}quotes received yet</p>
                     )}
                   </div>
                 </div>

@@ -507,11 +507,11 @@ export default function InventoryDashboard() {
                                 <Badge variant={dataQuality.missingAllergens > 0 ? 'destructive' : 'outline'} className="tabular-nums text-xs">{dataQuality.missingAllergens}</Badge>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span>No Images</span>
+                                <span>{"No "}Images</span>
                                 <Badge variant={dataQuality.missingImages > 0 ? 'destructive' : 'outline'} className="tabular-nums text-xs">{dataQuality.missingImages}</Badge>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span>No Supplier Linked</span>
+                                <span>{"No "}Supplier Linked</span>
                                 <Badge variant={dataQuality.missingSuppliers > 0 ? 'destructive' : 'outline'} className="tabular-nums text-xs">{dataQuality.missingSuppliers}</Badge>
                             </div>
                             <div className="flex justify-between items-center">
@@ -653,7 +653,7 @@ export default function InventoryDashboard() {
                         {negativeStockItems.length === 0 ? (
                             <div className="text-center py-6 text-muted-foreground">
                                 <CheckCircle2 className="h-8 w-8 mx-auto mb-2 text-green-500" />
-                                <p className="text-sm">No negative stock items</p>
+                                <p className="text-sm">{"No "}negative stock items</p>
                             </div>
                         ) : (
                             <div className="space-y-2 max-h-48 overflow-y-auto">

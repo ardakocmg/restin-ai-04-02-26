@@ -119,7 +119,7 @@ export default function Documents() {
         {documents.length === 0 && !loading && (
           <div className="text-center py-12 text-muted-foreground">
             <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p>No documents uploaded</p>
+            <p>{"No "}documents uploaded</p>
           </div>
         )}
       </div>

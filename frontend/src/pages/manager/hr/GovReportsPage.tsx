@@ -104,7 +104,7 @@ export default function GovReportsPage() {
                             {loading && <Loader2 className="animate-spin text-foreground" />}
 
                             {!loading && runs.length === 0 && (
-                                <Card className="bg-card border-border"><div className="p-6 text-muted-foreground">No payroll runs found for {year}</div></Card>
+                                <Card className="bg-card border-border"><div className="p-6 text-muted-foreground">{"No "}payroll runs found for {year}</div></Card>
                             )}
 
                             <div className="grid gap-4">
@@ -166,7 +166,7 @@ export default function GovReportsPage() {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className="p-4 text-center text-muted-foreground">No Data Available</div>
+                                            <div className="p-4 text-center text-muted-foreground">{"No "}Data Available</div>
                                         )}
                                         <Button className="w-full bg-purple-600 hover:bg-purple-700" onClick={() => handleDownload('FS7')}>
                                             <Download className="mr-2 h-4 w-4" /> Generate FS7 Data

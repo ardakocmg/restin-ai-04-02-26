@@ -125,7 +125,7 @@ export default function ObservabilityLogs() {
         <Tabs defaultValue="logs" className="w-full">
           <TabsList className="bg-card mb-6">
             <TabsTrigger value="logs">Live Logs</TabsTrigger>
-            <TabsTrigger value="codes">Error Codes</TabsTrigger>
+            <TabsTrigger value="codes">{"Error "}Codes</TabsTrigger>
           </TabsList>
 
           {/* Live Logs Tab */}
@@ -252,7 +252,7 @@ export default function ObservabilityLogs() {
                 {logs.length === 0 && (
                   <div className="text-center py-12 text-muted-foreground">
                     <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <p>No logs found</p>
+                    <p>{"No "}logs found</p>
                   </div>
                 )}
               </div>

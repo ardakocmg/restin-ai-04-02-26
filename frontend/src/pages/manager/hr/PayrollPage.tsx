@@ -504,7 +504,7 @@ export default function PayrollPage() {
                                     <div className="h-16 w-16 rounded-full bg-card border border-border flex items-center justify-center mb-4">
                                         <AlertCircle className="h-8 w-8 text-zinc-700" />
                                     </div>
-                                    <h4 className="text-muted-foreground font-black uppercase tracking-widest mb-1">No Payroll Artifacts Detected</h4>
+                                    <h4 className="text-muted-foreground font-black uppercase tracking-widest mb-1">{"No "}Payroll Artifacts Detected</h4>
                                     <p className="text-xs text-muted-foreground max-w-[300px]">Adjust your filters or execute a new payroll cycle to generate documentation.</p>
                                 </div>
                             ) : (
@@ -803,7 +803,7 @@ export default function PayrollPage() {
                                             <tr>
                                                 <td colSpan={7} className="px-4 py-12 text-center text-muted-foreground">
                                                     <ListChecks className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                                                    <p className="text-sm font-bold">No payroll runs yet</p>
+                                                    <p className="text-sm font-bold">{"No "}payroll runs yet</p>
                                                     <p className="text-xs">Click 'New Payroll Run' to get started</p>
                                                 </td>
                                             </tr>
@@ -867,7 +867,7 @@ export default function PayrollPage() {
                                     )) : (
                                         <div className="text-center py-12">
                                             <Users className="h-12 w-12 text-foreground mx-auto mb-4" />
-                                            <p className="text-muted-foreground text-sm italic">No personnel matches your search.</p>
+                                            <p className="text-muted-foreground text-sm italic">{"No "}personnel matches your search.</p>
                                         </div>
                                     )}
                             </div>

@@ -218,12 +218,12 @@ const FintechDashboard: React.FC = () => {
                             {isLoading ? (
                                 <div className="p-8 text-center">
                                     <Loader2 className="w-6 h-6 text-muted-foreground animate-spin mx-auto mb-2" />
-                                    <span className="text-muted-foreground text-sm">Loading transactions...</span>
+                                    <span className="text-muted-foreground text-sm">{"Loading "}transactions...</span>
                                 </div>
                             ) : transactions.length === 0 ? (
                                 <div className="p-8 text-center text-muted-foreground">
                                     <CreditCard className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                                    <p className="font-bold text-sm">No transactions</p>
+                                    <p className="font-bold text-sm">{"No "}transactions</p>
                                     <p className="text-xs mt-1">Click "Seed Demo" to populate data</p>
                                 </div>
                             ) : transactions.slice(0, 8).map((tr, i) => (

@@ -290,7 +290,7 @@ export default function RadarDashboard() {
                 ) : (
                     <div className="text-center py-8 text-muted-foreground">
                         <ShieldAlert size={32} className="mx-auto mb-2 opacity-50" />
-                        <p className="text-sm font-bold">No allergens detected in menu</p>
+                        <p className="text-sm font-bold">{"No "}allergens detected in menu</p>
                         <p className="text-xs text-foreground mt-1">Add ingredients to menu items to enable scanning</p>
                     </div>
                 )}
@@ -355,7 +355,7 @@ export default function RadarDashboard() {
                         </div>
                     ))}
                     {yieldRules.length === 0 && (
-                        <div className="text-center py-6 text-muted-foreground text-sm">No pricing rules configured</div>
+                        <div className="text-center py-6 text-muted-foreground text-sm">{"No "}pricing rules configured</div>
                     )}
                 </div>
             </Card>

@@ -211,7 +211,7 @@ export default function LegalEntities() {
             {!loading && entities.length === 0 && (
                 <div className="text-center py-20 rounded-2xl border border-border bg-card/50">
                     <Building2 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-secondary-foreground">No Legal Entities Yet</h3>
+                    <h3 className="text-lg font-semibold text-secondary-foreground">{"No "}Legal Entities Yet</h3>
                     <p className="text-muted-foreground mt-1 max-w-md mx-auto">
                         Add your company registrations to organize venues under their legal entities.
                     </p>
@@ -329,7 +329,7 @@ export default function LegalEntities() {
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-sm text-muted-foreground italic">No venues assigned</p>
+                            <p className="text-sm text-muted-foreground italic">{"No "}venues assigned</p>
                         )}
                     </div>
                 </div>
@@ -517,7 +517,7 @@ export default function LegalEntities() {
                         </div>
                         <div className="p-6 space-y-2 max-h-[400px] overflow-y-auto">
                             {venues.length === 0 && (
-                                <p className="text-sm text-muted-foreground text-center py-4">No venues found</p>
+                                <p className="text-sm text-muted-foreground text-center py-4">{"No "}venues found</p>
                             )}
                             {venues.map((venue) => {
                                 const isSelected = selectedVenues.includes(venue._id);

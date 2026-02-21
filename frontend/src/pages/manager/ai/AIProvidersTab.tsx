@@ -457,7 +457,7 @@ export default function AIProvidersTab() {
                                         <th className="text-left py-2 px-2 font-medium">Model</th>
                                         <th className="text-left py-2 px-2 font-medium">Provider</th>
                                         <th className="text-right py-2 px-2 font-medium">Samples</th>
-                                        <th className="text-right py-2 px-2 font-medium">Success</th>
+                                        <th className="text-right py-2 px-2 font-medium">{"Success"}</th>
                                         <th className="text-right py-2 px-2 font-medium">Overlap</th>
                                         <th className="text-right py-2 px-2 font-medium">Latency</th>
                                         <th className="text-right py-2 px-2 font-medium">Tokens</th>
@@ -551,7 +551,7 @@ export default function AIProvidersTab() {
                 <Card className="bg-card/60 border-border border-dashed">
                     <CardContent className="p-8 text-center">
                         <BarChart3 className="w-10 h-10 mx-auto text-foreground mb-3" />
-                        <h3 className="text-sm font-medium text-muted-foreground">No Usage Data Yet</h3>
+                        <h3 className="text-sm font-medium text-muted-foreground">{"No "}Usage Data Yet</h3>
                         <p className="text-xs text-muted-foreground mt-1">
                             Start using AI features to see analytics and shadow learning insights
                         </p>

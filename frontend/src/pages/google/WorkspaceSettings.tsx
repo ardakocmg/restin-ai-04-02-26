@@ -448,7 +448,7 @@ export default function WorkspaceSettings() {
                                 ) : (
                                     <div className="text-center py-12 border-2 border-dashed border-muted rounded-xl">
                                         <Globe className="w-10 h-10 mx-auto mb-3 text-muted-foreground/50" />
-                                        <p className="text-sm text-foreground">No domains configured yet</p>
+                                        <p className="text-sm text-foreground">{"No "}domains configured yet</p>
                                     </div>
                                 )}
                             </div>
@@ -530,7 +530,7 @@ export default function WorkspaceSettings() {
                                     </div>
                                 </div>
                             ) : (
-                                <p className="text-sm text-muted-foreground">No data yet</p>
+                                <p className="text-sm text-muted-foreground">{"No "}data yet</p>
                             )}
                             <Button variant="outline" className="w-full">View Report</Button>
                         </div>
@@ -622,7 +622,7 @@ export default function WorkspaceSettings() {
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-foreground">Drive Backups</h3>
-                                    <p className="text-xs text-muted-foreground">Save daily reports to Google Drive</p>
+                                    <p className="text-xs text-muted-foreground">{"Save "}daily reports to Google Drive</p>
                                 </div>
                             </div>
                             <div className="flex items-center justify-between p-4 rounded-lg bg-muted/30 border border-border">

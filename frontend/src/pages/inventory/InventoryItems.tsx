@@ -102,7 +102,7 @@ function InventoryItems() {
         {items.length === 0 && (
           <div className="text-center py-12 text-gray-400">
             <Package className="w-16 h-16 mx-auto mb-4" />
-            <p>No items found</p>
+            <p>{"No "}items found</p>
           </div>
         )}
       </div>

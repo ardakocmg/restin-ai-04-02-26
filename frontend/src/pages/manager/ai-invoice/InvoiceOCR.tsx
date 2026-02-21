@@ -55,7 +55,7 @@ export default function InvoiceOCR() {
                   onChange={(e) => setSelectedPO(e.target.value)}
                   className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded"
                 >
-                  <option value="">No PO</option>
+                  <option value="">{"No "}PO</option>
                 </select>
               </div>
               <div className="border-2 border-dashed border-slate-700 rounded-lg p-8 text-center">

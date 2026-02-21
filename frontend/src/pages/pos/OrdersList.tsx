@@ -222,9 +222,9 @@ export default function OrdersList({ venueId, onReopen, onClose }: OrdersListPro
 
                 <div style={s.body}>
                     {loading ? (
-                        <div style={s.empty}>Loading orders...</div>
+                        <div style={s.empty}>{"Loading "}orders...</div>
                     ) : filtered.length === 0 ? (
-                        <div style={s.empty}>No orders found</div>
+                        <div style={s.empty}>{"No "}orders found</div>
                     ) : (
                         <table style={s.table}>
                             <thead>

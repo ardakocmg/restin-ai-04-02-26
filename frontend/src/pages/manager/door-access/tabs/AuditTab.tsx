@@ -90,7 +90,7 @@ export default function AuditTab() {
                                     </tr>
                                 ))}
                                 {entries.length === 0 && (
-                                    <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">No audit entries yet.</td></tr>
+                                    <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">{"No "}audit entries yet.</td></tr>
                                 )}
                             </tbody>
                         </table>

@@ -130,7 +130,7 @@ export default function OnboardingChecklists() {
                     {templates.length === 0 ? (
                         <div style={{ textAlign: 'center', padding: 60, color: '#64748b', background: '#0f172a', borderRadius: 12, border: '1px solid #1e293b' }}>
                             <ClipboardList size={48} style={{ opacity: 0.3, marginBottom: 16 }} />
-                            <p>No templates yet. Create your first onboarding checklist.</p>
+                            <p>{"No "}templates yet. Create your first onboarding checklist.</p>
                         </div>
                     ) : templates.map(t => (
                         <div key={t.id} style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 20 }}>
@@ -155,7 +155,7 @@ export default function OnboardingChecklists() {
                     {activeChecklists.length === 0 ? (
                         <div style={{ textAlign: 'center', padding: 60, color: '#64748b', background: '#0f172a', borderRadius: 12, border: '1px solid #1e293b' }}>
                             <Users size={48} style={{ opacity: 0.3, marginBottom: 16 }} />
-                            <p>No active checklists. Activate a template for an employee.</p>
+                            <p>{"No "}active checklists. Activate a template for an employee.</p>
                         </div>
                     ) : activeChecklists.map(c => (
                         <div key={c.id} style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: 12, padding: 20 }}>

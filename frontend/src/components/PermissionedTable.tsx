@@ -146,7 +146,7 @@ export default function PermissionedTable({
     return (
       <div className="text-center py-12 px-4">
         <ShieldOff className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-        <p className="text-xl text-muted-foreground mb-2">No Access</p>
+        <p className="text-xl text-muted-foreground mb-2">{"No "}Access</p>
         <p className="text-sm text-muted-foreground">You don't have permission to view this data</p>
       </div>
     );
@@ -166,7 +166,7 @@ export default function PermissionedTable({
   if (rows.length === 0) {
     return (
       <div className="text-center py-12 px-4">
-        <p className="text-muted-foreground">No data available</p>
+        <p className="text-muted-foreground">{"No "}data available</p>
       </div>
     );
   }

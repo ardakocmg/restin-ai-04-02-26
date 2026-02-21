@@ -516,7 +516,7 @@ export default function SupplierManagement() {
             ) : filtered.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
                     <Truck className="h-12 w-12 mb-3 opacity-30" />
-                    <p className="text-lg font-medium">No suppliers found</p>
+                    <p className="text-lg font-medium">{"No "}suppliers found</p>
                     <p className="text-sm">Create your first supplier to get started</p>
                 </div>
             ) : (

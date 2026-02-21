@@ -94,7 +94,7 @@ function PurchaseOrders() {
         {pos.length === 0 && (
           <div className="bg-white rounded-xl border-2 border-dashed border-border p-12 text-center">
             <FileText className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-            <p className="text-gray-600">No purchase orders yet</p>
+            <p className="text-gray-600">{"No "}purchase orders yet</p>
           </div>
         )}
       </div>

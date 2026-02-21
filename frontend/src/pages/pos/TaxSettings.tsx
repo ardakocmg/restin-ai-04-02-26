@@ -85,7 +85,7 @@ const TaxSettings: React.FC = () => {
                 {filteredProfiles.map(profile => (<div key={profile.id} className="pos-table-row" style={{ gridTemplateColumns: profileTableCols }} onClick={() => setEditingProfile({ ...profile })}>
                     <div className="pos-flex pos-flex--center pos-gap-8"><FileText size={14} color="#3B82F6" /><div><span className="pos-cell-value">{profile.name}</span>{!profile.isActive && <span className="pos-cell-red" style={{ fontSize: 10, marginLeft: 6 }}>(Inactive)</span>}</div></div>
                     <span className="pos-cell-secondary">{profile.defaultTaxRate}</span>
-                    <div>{profile.rules.length > 0 ? <span className="pos-badge pos-badge--purple">{profile.rules.length} rule{profile.rules.length > 1 ? 's' : ''}</span> : <span className="pos-cell-secondary">No rules</span>}</div>
+                    <div>{profile.rules.length > 0 ? <span className="pos-badge pos-badge--purple">{profile.rules.length} rule{profile.rules.length > 1 ? 's' : ''}</span> : <span className="pos-cell-secondary">{"No "}rules</span>}</div>
                     <span className="pos-cell-value">{profile.itemCount}</span>
                     <div className="pos-actions"><button title="Edit profile" className="pos-btn-icon" onClick={e => { e.stopPropagation(); setEditingProfile({ ...profile }); }}><Edit3 size={13} /></button><button title="Delete profile" className="pos-btn-icon pos-btn-icon--danger" onClick={e => { e.stopPropagation(); setProfiles(p => p.filter(pp => pp.id !== profile.id)); toast.success('Deleted'); }}><Trash2 size={13} /></button></div>
                 </div>))}

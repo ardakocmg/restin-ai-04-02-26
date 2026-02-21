@@ -431,7 +431,7 @@ export default function NutritionalCalculator() {
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="text-xs text-emerald-400">No allergens detected</p>
+                                    <p className="text-xs text-emerald-400">{"No "}allergens detected</p>
                                 )}
                             </CardContent>
                         </Card>

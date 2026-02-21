@@ -260,7 +260,7 @@ export default function TablesideConfig() {
                     {assignments.length === 0 ? (
                         <div className="p-12 bg-card/30 border border-dashed border-border rounded-2xl text-center">
                             <Users className="w-12 h-12 text-foreground mx-auto mb-3" />
-                            <p className="text-sm text-muted-foreground">No server assignments yet</p>
+                            <p className="text-sm text-muted-foreground">{"No "}server assignments yet</p>
                             <p className="text-xs text-muted-foreground mt-1">Assign tables to servers for tableside ordering</p>
                         </div>
                     ) : (
@@ -316,7 +316,7 @@ export default function TablesideConfig() {
                         {myTables.length === 0 ? (
                             <div className="p-8 bg-background/50 border border-dashed border-border rounded-xl text-center">
                                 <Table2 className="w-8 h-8 text-foreground mx-auto mb-2" />
-                                <p className="text-xs text-muted-foreground">No tables assigned to you</p>
+                                <p className="text-xs text-muted-foreground">{"No "}tables assigned to you</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

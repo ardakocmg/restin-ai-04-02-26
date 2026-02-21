@@ -544,7 +544,7 @@ export default function ReceiptTemplates() {
                             {filtered.length === 0 && (
                                 <div className="col-span-full text-center py-16">
                                     <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-                                    <p className="text-zinc-500 mb-4">No templates of this type</p>
+                                    <p className="text-zinc-500 mb-4">{"No "}templates of this type</p>
                                     <Button onClick={handleNew} variant="outline" size="sm">
                                         <Plus className="w-4 h-4 mr-2" /> Create One
                                     </Button>

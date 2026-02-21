@@ -177,7 +177,7 @@ function DeviceManagement() {
           {devices.length === 0 && (
             <div className="p-12 text-center">
               <Monitor className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-              <p className="text-gray-600">No devices registered yet</p>
+              <p className="text-gray-600">{"No "}devices registered yet</p>
             </div>
           )}
         </div>

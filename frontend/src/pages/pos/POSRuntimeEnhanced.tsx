@@ -694,7 +694,7 @@ export default function POSRuntimeEnhanced() {
     return (
       <div style={styles.loadingContainer}>
         <div style={styles.loadingLogo}>🔥</div>
-        <div style={styles.loadingText}>Loading POS...</div>
+        <div style={styles.loadingText}>{"Loading "}POS...</div>
       </div>
     );
   }
@@ -1449,7 +1449,7 @@ export default function POSRuntimeEnhanced() {
               />
               <div style={{ display: 'flex', gap: 8 }}>
                 <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: '1px solid #555', background: 'none', color: '#888', cursor: 'pointer', fontSize: 14 }} onClick={() => { setShowNoteInput(null); setNoteText(''); }}>Cancel</button>
-                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: 'none', backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer' }} onClick={saveItemNote}>Save Note</button>
+                <button style={{ flex: 1, padding: '12px 0', borderRadius: 8, border: 'none', backgroundColor: '#2A9D8F', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer' }} onClick={saveItemNote}>{"Save "}Note</button>
               </div>
             </div>
           </div>

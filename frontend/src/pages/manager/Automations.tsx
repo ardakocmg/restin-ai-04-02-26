@@ -40,7 +40,7 @@ export default function AutomationsPage() {
         </CardHeader>
         <CardContent>
           {flows.length === 0 ? (
-            <p className="text-center py-8 text-slate-500">No flows configured. Enable Automations in venue settings.</p>
+            <p className="text-center py-8 text-slate-500">{"No "}flows configured. Enable Automations in venue settings.</p>
           ) : (
             <div className="space-y-3">
               {flows.map(flow => (

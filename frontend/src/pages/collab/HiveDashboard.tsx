@@ -1927,7 +1927,7 @@ export default function HiveDashboard() {
                                             className="bg-secondary/60 border border-border/50 rounded-lg text-xs text-secondary-foreground h-8 px-2"
                                             title="Task recurrence schedule"
                                         >
-                                            <option value="none">No Repeat</option>
+                                            <option value="none">{"No "}Repeat</option>
                                             <option value="daily">🔄 Daily</option>
                                             <option value="weekly">📅 Weekly</option>
                                             <option value="shift-start">▶ Shift Start</option>
@@ -2319,7 +2319,7 @@ export default function HiveDashboard() {
                             {callLog.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-10 text-center">
                                     <PhoneCall className="h-8 w-8 text-foreground mb-2" />
-                                    <p className="text-xs text-muted-foreground">No calls yet</p>
+                                    <p className="text-xs text-muted-foreground">{"No "}calls yet</p>
                                     <p className="text-[10px] text-foreground mt-1">PTT transmissions will appear here with transcripts</p>
                                 </div>
                             ) : (
@@ -2536,7 +2536,7 @@ export default function HiveDashboard() {
                             {threadReplies.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-8 text-center">
                                     <Reply className="h-8 w-8 text-foreground mb-2" />
-                                    <p className="text-xs text-muted-foreground">No replies yet</p>
+                                    <p className="text-xs text-muted-foreground">{"No "}replies yet</p>
                                     <p className="text-[10px] text-foreground mt-0.5">Click Reply on a message to start a thread</p>
                                 </div>
                             ) : (

@@ -146,11 +146,11 @@ export default function EmployeesSetupPage() {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="text-center py-8 text-muted-foreground">Loading employees...</div>
+              <div className="text-center py-8 text-muted-foreground">{"Loading "}employees...</div>
             ) : filteredEmployees.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p>No employees found</p>
+                <p>{"No "}employees found</p>
               </div>
             ) : (
               <div className="divide-y">
