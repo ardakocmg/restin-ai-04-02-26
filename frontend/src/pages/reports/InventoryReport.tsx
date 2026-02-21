@@ -52,42 +52,42 @@ export default function InventoryReport() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Total Items</CardTitle>
-              <Package className="h-4 w-4" style={{ color: '#E53935' }} />
+              <CardTitle className="text-sm font-medium text-zinc-400">Total Items</CardTitle>
+              <Package className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>{metrics?.total_items || 0}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>Across all categories</p>
+              <div className="text-2xl font-bold text-zinc-100">{metrics?.total_items || 0}</div>
+              <p className="text-xs text-zinc-500">Across all categories</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Low Stock</CardTitle>
-              <AlertTriangle className="h-4 w-4" style={{ color: '#FB8C00' }} />
+              <CardTitle className="text-sm font-medium text-zinc-400">Low Stock</CardTitle>
+              <AlertTriangle className="h-4 w-4 text-amber-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#FB8C00' }}>{metrics?.low_stock_alerts || 0}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>Items need reorder</p>
+              <div className="text-2xl font-bold text-amber-500">{metrics?.low_stock_alerts || 0}</div>
+              <p className="text-xs text-zinc-500">Items need reorder</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Waste This Week</CardTitle>
-              <TrendingDown className="h-4 w-4" style={{ color: '#EF4444' }} />
+              <CardTitle className="text-sm font-medium text-zinc-400">Waste This Week</CardTitle>
+              <TrendingDown className="h-4 w-4 text-red-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#EF4444' }}>€{metrics?.waste_cost_week || 0}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>Weekly waste cost</p>
+              <div className="text-2xl font-bold text-red-400">€{metrics?.waste_cost_week || 0}</div>
+              <p className="text-xs text-zinc-500">Weekly waste cost</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#A1A1AA' }}>Stock Value</CardTitle>
-              <DollarSign className="h-4 w-4" style={{ color: '#E53935' }} />
+              <CardTitle className="text-sm font-medium text-zinc-400">Stock Value</CardTitle>
+              <DollarSign className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#F5F5F7' }}>€{(metrics?.inventory_value || 0).toLocaleString()}</div>
-              <p className="text-xs" style={{ color: '#71717A' }}>Current inventory</p>
+              <div className="text-2xl font-bold text-zinc-100">€{(metrics?.inventory_value || 0).toLocaleString()}</div>
+              <p className="text-xs text-zinc-500">Current inventory</p>
             </CardContent>
           </Card>
         </div>
@@ -101,25 +101,25 @@ export default function InventoryReport() {
             <div className="space-y-3">
               {stockLevels.length === 0 ? (
                 Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/5">
                     <div className="flex-1">
-                      <h4 className="font-medium" style={{ color: '#F5F5F7' }}>—</h4>
-                      <p className="text-sm" style={{ color: '#A1A1AA' }}>Current: 0 | Min: 0</p>
+                      <h4 className="font-medium text-zinc-100">—</h4>
+                      <p className="text-sm text-zinc-400">Current: 0 | Min: 0</p>
                     </div>
                     <div className="text-right mr-4">
-                      <div className="text-sm font-medium" style={{ color: '#D4D4D8' }}>€0</div>
+                      <div className="text-sm font-medium text-zinc-300">€0</div>
                     </div>
                     <Badge variant="secondary">OK</Badge>
                   </div>
                 ))
               ) : stockLevels.map((item) => (
-                <div key={item.item} className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div key={item.item} className="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/5">
                   <div className="flex-1">
-                    <h4 className="font-medium" style={{ color: '#F5F5F7' }}>{item.item}</h4>
-                    <p className="text-sm" style={{ color: '#A1A1AA' }}>Current: {item.current} | Min: {item.min}</p>
+                    <h4 className="font-medium text-zinc-100">{item.item}</h4>
+                    <p className="text-sm text-zinc-400">Current: {item.current} | Min: {item.min}</p>
                   </div>
                   <div className="text-right mr-4">
-                    <div className="text-sm font-medium" style={{ color: '#D4D4D8' }}>€{item.cost}</div>
+                    <div className="text-sm font-medium text-zinc-300">€{item.cost}</div>
                   </div>
                   <Badge variant={item.status === 'critical' ? 'destructive' : item.status === 'low' ? 'outline' : 'secondary'}>
                     {item.status === 'critical' ? 'Critical' : item.status === 'low' ? 'Low' : 'OK'}
@@ -141,8 +141,8 @@ export default function InventoryReport() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                 <XAxis dataKey="date" stroke="#A1A1AA" />
                 <YAxis stroke="#A1A1AA" />
-                <Tooltip contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', color: '#F5F5F7' }} />
-                <Legend wrapperStyle={{ color: '#D4D4D8' }} />
+                <Tooltip contentStyle={{ backgroundColor: '#18181B', border: '1px solid rgba(255,255,255,0.1)', color: '#F5F5F7' }} /> {/* keep-inline: Recharts requires style object */}
+                <Legend wrapperStyle={{ color: '#D4D4D8' }} /> {/* keep-inline: Recharts requires style object */}
                 <Bar dataKey="cost" fill="#EF4444" name="Waste Cost (€)" />
               </BarChart>
             </ResponsiveContainer>
