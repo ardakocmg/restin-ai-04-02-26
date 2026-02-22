@@ -598,6 +598,8 @@ api_main.include_router(updates_router)
 api_main.include_router(bill_split_router)
 api_main.include_router(table_merge_router)
 api_main.include_router(observability_router)
+api_main.include_router(hyperscale_router)
+api_main.include_router(audit_scores_router)
 api_main.include_router(migration_router, tags=["Migration"])
 api_main.include_router(user_settings_router)
 
