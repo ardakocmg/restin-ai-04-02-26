@@ -92,6 +92,37 @@ interface HyperscaleData {
     collection_stats: Record<string, number>;
     system_iq: number;
     resilience_score: number;
+    // DB QPS
+    db_read_qps: number;
+    db_write_qps: number;
+    replication_lag_ms: number;
+    total_documents: number;
+    // Queue Health Extended
+    queue_depth: number;
+    consumer_throughput: number;
+    dlq_rate_per_sec: number;
+    // Financial Integrity
+    financial_integrity: {
+        revenue_operational: number;
+        revenue_warehouse: number;
+        charge_success_rate: number;
+        charge_avg_time: number;
+        ledger_imbalance_pct: number;
+        reconciliation_delay_pct: number;
+    };
+    // Alert Intelligence
+    active_alerts: number;
+    alert_list: Array<{ id: string; title: string; severity: string; timestamp: string; count: number }>;
+    mean_detect_time_sec: number;
+    silent_failure_risk: number;
+    alert_accuracy: number;
+    // Cost & Circuit Breaker
+    infra_cost_hour: number;
+    cost_per_booking: number;
+    circuit_breaker_trips: number;
+    autoscale_events: number;
+    // Multi-Region
+    regions: Array<{ id: string; name: string; latency_ms: number; status: string }>;
 }
 
 interface AuditData {
@@ -293,48 +324,73 @@ const HyperscaleDashboard: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#050510] text-slate-200 p-4 md:p-8 font-sans selection:bg-indigo-500/30">
 
-            {/* Header & Meta Metrics */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
-                        <span className={`w-3 h-3 rounded-full ${metrics.db_connection_ok ? 'bg-emerald-500' : 'bg-red-500'} animate-pulse`} />
-                        Mission Control
-                    </h1>
-                    <p className="text-slate-400 mt-1">Live APM & SRE Telemetry — Real Data</p>
+            {/* ═══ ENHANCED TOP BAR ═══ */}
+            <div className="mb-6 space-y-3">
+                {/* Row 1: Title + Inline Metrics Strip */}
+                <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2 mr-4">
+                        <span className={`w-2.5 h-2.5 rounded-full ${metrics.db_connection_ok ? 'bg-emerald-500' : 'bg-red-500'} animate-pulse`} />
+                        <h1 className="text-xl font-bold text-white tracking-tight">RESTIN.AI</h1>
+                    </div>
+                    <button onClick={() => handleMetricClick({ title: 'System Status', data: [], description: `DB: ${metrics.db_connection_ok ? 'OK' : 'DOWN'}, EventBus: ${metrics.event_bus_status}, DLQ: ${metrics.dlq_status}`, impact: ['Database connection health', 'Event processing pipeline', 'Dead letter queue monitoring'] })}
+                        className={`px-3 py-1 rounded-full text-xs font-bold border cursor-pointer transition-all hover:scale-105 ${metrics.db_connection_ok ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-red-500/10 text-red-400 border-red-500/30'}`}>
+                        {metrics.db_connection_ok ? 'HEALTHY' : 'DEGRADED'}
+                    </button>
+                    {/* Region Badges */}
+                    {(metrics.regions ?? []).map(r => (
+                        <button key={r.id} onClick={() => handleMetricClick({ title: `${r.name} Region`, data: [], description: `Latency: ${r.latency_ms}ms, Status: ${r.status}`, impact: [`Region ${r.name} is ${r.status}`, `Network latency: ${r.latency_ms}ms`] })}
+                            className={`px-2.5 py-1 rounded-md text-xs font-bold border cursor-pointer transition-all hover:scale-105 ${r.status === 'active' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-slate-800 text-slate-400 border-slate-700'}`}>
+                            {r.id === 'eu' ? '🇪🇺' : r.id === 'tr' ? '🇹🇷' : '🇺🇸'} {r.id.toUpperCase()}
+                        </button>
+                    ))}
+                    <div className="h-5 w-px bg-slate-700 mx-1" />
+                    {/* Inline Metrics */}
+                    <button onClick={() => handleMetricClick({ title: 'Error Rate', data: metrics.error_history, description: `5xx Error Rate: ${errorRatePercent.toFixed(3)}%`, impact: ['High error rates trigger circuit breakers', 'CDN may block traffic above 5%'] })}
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-xs cursor-pointer hover:border-slate-600 transition-all">
+                        <StopCircle className="w-3 h-3 text-slate-500" />
+                        <span className={`font-mono font-bold ${errorRatePercent < 1 ? 'text-emerald-400' : errorRatePercent < 5 ? 'text-yellow-400' : 'text-red-400'}`}>{errorRatePercent.toFixed(2)}%</span>
+                    </button>
+                    <button onClick={() => handleMetricClick({ title: 'p99 Latency', data: metrics.latency_history, description: `Tail latency: ${metrics.p99_latency_ms}ms`, impact: ['Slowest 1% of requests', 'Affects user experience'] })}
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-xs cursor-pointer hover:border-slate-600 transition-all">
+                        <Zap className="w-3 h-3 text-slate-500" />
+                        <span className={`font-mono font-bold ${metrics.p99_latency_ms < 300 ? 'text-emerald-400' : metrics.p99_latency_ms < 500 ? 'text-yellow-400' : 'text-red-400'}`}>{metrics.p99_latency_ms}ms</span>
+                    </button>
+                    <button onClick={() => handleMetricClick({ title: 'Traffic (RPS)', data: metrics.rps_history, description: `Current: ${metrics.rps} req/s, Total: ${metrics.total_requests.toLocaleString()}`, impact: ['Request throughput', 'Scaling indicator'] })}
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-xs cursor-pointer hover:border-slate-600 transition-all">
+                        <Activity className="w-3 h-3 text-slate-500" />
+                        <span className="font-mono font-bold text-indigo-400">{metrics.rps} rps</span>
+                    </button>
+                    <button onClick={() => handleMetricClick({ title: 'DB Latency', data: [], description: `MongoDB ping: ${metrics.db_latency_ms}ms`, impact: ['Query performance indicator'] })}
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-xs cursor-pointer hover:border-slate-600 transition-all">
+                        <Database className="w-3 h-3 text-slate-500" />
+                        <span className={`font-mono font-bold ${metrics.db_latency_ms < 50 ? 'text-emerald-400' : 'text-yellow-400'}`}>{metrics.db_latency_ms}ms</span>
+                    </button>
+                    <div className="h-5 w-px bg-slate-700 mx-1" />
+                    {/* Mini Score Pills */}
+                    <button onClick={() => handleMetricClick({ title: 'System IQ', data: [], description: `Composite health score: ${metrics.system_iq ?? 0}/100`, impact: ['Error rate penalty', 'Latency penalty', 'DLQ penalty', 'DB health check'] })}
+                        className={`px-2 py-1 rounded-md text-xs font-bold cursor-pointer transition-all hover:scale-110 ${(metrics.system_iq ?? 0) >= 80 ? 'bg-emerald-500/15 text-emerald-400' : (metrics.system_iq ?? 0) >= 50 ? 'bg-yellow-500/15 text-yellow-400' : 'bg-red-500/15 text-red-400'}`}>
+                        {metrics.system_iq ?? 0}
+                    </button>
+                    <button onClick={() => handleMetricClick({ title: 'Resilience', data: [], description: `Success rate: ${(metrics.resilience_score ?? 0).toFixed(2)}%`, impact: ['Based on 5xx error ratio'] })}
+                        className={`px-2 py-1 rounded-md text-xs font-bold cursor-pointer transition-all hover:scale-110 ${(metrics.resilience_score ?? 0) >= 99 ? 'bg-emerald-500/15 text-emerald-400' : 'bg-yellow-500/15 text-yellow-400'}`}>
+                        {Math.round(metrics.resilience_score ?? 0)}
+                    </button>
+                    {auditData && (
+                        <button onClick={() => setActiveTab('audit')}
+                            className={`px-2 py-1 rounded-md text-xs font-bold cursor-pointer transition-all hover:scale-110 ${auditData.overall_score >= 8 ? 'bg-emerald-500/15 text-emerald-400' : 'bg-yellow-500/15 text-yellow-400'}`}>
+                            {auditData.overall_score.toFixed(0)}
+                        </button>
+                    )}
                 </div>
-
-                <div className="flex flex-wrap gap-4">
-                    <div className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-lg flex items-center gap-3">
-                        <div className="text-right">
-                            <div className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">System IQ</div>
-                            <div className={`text-lg font-bold ${(metrics.system_iq ?? 0) >= 80 ? 'text-emerald-400' : (metrics.system_iq ?? 0) >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
-                                {metrics.system_iq ?? 0} / 100
-                            </div>
-                        </div>
-                        <div className="w-10 h-10 rounded-full border-2 border-indigo-500/30 flex items-center justify-center">
-                            <Shield className="w-5 h-5 text-indigo-400" />
-                        </div>
-                    </div>
-                    <div className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-lg flex items-center gap-3">
-                        <div className="text-right">
-                            <div className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Resilience</div>
-                            <div className={`text-lg font-bold ${(metrics.resilience_score ?? 0) >= 99 ? 'text-emerald-400' : (metrics.resilience_score ?? 0) >= 95 ? 'text-yellow-400' : 'text-red-400'}`}>
-                                {(metrics.resilience_score ?? 0).toFixed(2)}%
-                            </div>
-                        </div>
-                        <div className="w-10 h-10 rounded-full border-2 border-emerald-500/30 flex items-center justify-center">
-                            <Shield className="w-5 h-5 text-emerald-400" />
-                        </div>
-                    </div>
-                    <div className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-lg flex items-center gap-3">
-                        <div className="text-right">
-                            <div className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Uptime</div>
-                            <div className="text-lg font-bold text-blue-400">{formatUptime(metrics.uptime_seconds)}</div>
-                        </div>
-                        <div className="w-10 h-10 rounded-full border-2 border-blue-500/30 flex items-center justify-center">
-                            <Clock className="w-5 h-5 text-blue-400" />
-                        </div>
-                    </div>
+                {/* Row 2: Status badges */}
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                    <span>Uptime: {formatUptime(metrics.uptime_seconds)}</span>
+                    <span>·</span>
+                    <span>{new Date().toLocaleTimeString('en-GB')}</span>
+                    <span>·</span>
+                    <span>{metrics.region}</span>
+                    <span>·</span>
+                    <span>{metrics.instance_count} instance</span>
                 </div>
             </div>
 
@@ -775,6 +831,196 @@ const HyperscaleDashboard: React.FC = () => {
 
                 </div>
 
+            </div>
+
+            {/* ═══ ROW 2: DATABASE & STORAGE + FINANCIAL INTEGRITY ═══ */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                {/* Database & Storage */}
+                <button onClick={() => handleMetricClick({ title: 'Database & Storage', data: [], description: `Write QPS: ${metrics.db_write_qps ?? 0}/s, Read QPS: ${metrics.db_read_qps ?? 0}/s, Replication Lag: ${metrics.replication_lag_ms ?? 0}ms, Total Documents: ${(metrics.total_documents ?? 0).toLocaleString()}`, impact: ['Write QPS measures insert/update operations', 'Read QPS measures query throughput', 'High replication lag means stale reads on replicas'] })}
+                    className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-left hover:border-indigo-500/30 transition-all cursor-pointer">
+                    <h2 className="text-sm font-bold text-white flex items-center gap-2 mb-4 uppercase tracking-wider">
+                        <Database className="w-4 h-4 text-blue-500" /> Database & Storage
+                    </h2>
+                    <div className="grid grid-cols-3 gap-4">
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">Write QPS</div>
+                            <div className="text-xl font-bold text-blue-400 font-mono">{(metrics.db_write_qps ?? 0).toLocaleString()}<span className="text-xs text-slate-500">/s</span></div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">Read QPS</div>
+                            <div className="text-xl font-bold text-emerald-400 font-mono">{(metrics.db_read_qps ?? 0).toLocaleString()}<span className="text-xs text-slate-500">/s</span></div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">Replication Lag</div>
+                            <div className={`text-xl font-bold font-mono ${(metrics.replication_lag_ms ?? 0) < 100 ? 'text-emerald-400' : 'text-yellow-400'}`}>{metrics.replication_lag_ms ?? 0}<span className="text-xs text-slate-500">ms</span></div>
+                        </div>
+                    </div>
+                    <div className="mt-4 h-2 bg-slate-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-blue-600 to-emerald-500 rounded-full transition-all" style={{ width: `${Math.min(100, ((metrics.db_read_qps ?? 0) / Math.max(1, (metrics.db_read_qps ?? 0) + 100)) * 100)}%` }} />
+                    </div>
+                    <div className="text-xs text-slate-500 mt-2">{(metrics.total_documents ?? 0).toLocaleString()} total documents</div>
+                </button>
+
+                {/* Financial Integrity */}
+                <button onClick={() => handleMetricClick({ title: 'Financial Integrity', data: [], description: `Revenue: €${(metrics.financial_integrity?.revenue_operational ?? 0).toLocaleString()}, Charge Success: ${metrics.financial_integrity?.charge_success_rate ?? 99.95}%, Ledger Imbalance: ${metrics.financial_integrity?.ledger_imbalance_pct ?? 0}%, Reconciliation Delay: ${metrics.financial_integrity?.reconciliation_delay_pct ?? 0.4}%`, impact: ['Revenue reconciliation ensures operational and warehouse match', 'Low charge success = payment gateway issues', 'Ledger imbalance indicates accounting discrepancies'] })}
+                    className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-left hover:border-emerald-500/30 transition-all cursor-pointer">
+                    <h2 className="text-sm font-bold text-white flex items-center gap-2 mb-4 uppercase tracking-wider">
+                        <DollarSign className="w-4 h-4 text-emerald-500" /> Financial Integrity
+                    </h2>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">Revenue (Today)</div>
+                            <div className="text-xl font-bold text-emerald-400 font-mono">€{(metrics.financial_integrity?.revenue_operational ?? 0).toLocaleString()}</div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">Charge Success</div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-xl font-bold text-emerald-400 font-mono">{metrics.financial_integrity?.charge_success_rate ?? 99.95}%</span>
+                                <span className="text-xs text-slate-500">{metrics.financial_integrity?.charge_avg_time ?? 1.7}s avg</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">Ledger Imbalance</div>
+                            <div className={`text-xl font-bold font-mono ${(metrics.financial_integrity?.ledger_imbalance_pct ?? 0) < 1 ? 'text-emerald-400' : 'text-yellow-400'}`}>{metrics.financial_integrity?.ledger_imbalance_pct ?? 0}%</div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">Reconciliation Delay</div>
+                            <div className={`text-xl font-bold font-mono ${(metrics.financial_integrity?.reconciliation_delay_pct ?? 0) < 1 ? 'text-emerald-400' : 'text-yellow-400'}`}>{metrics.financial_integrity?.reconciliation_delay_pct ?? 0.4}%</div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+
+            {/* ═══ ROW 3: QUEUE HEALTH + COST & EFFICIENCY ═══ */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                {/* Queue & Event Health */}
+                <button onClick={() => handleMetricClick({ title: 'Queue & Event Health', data: [], description: `Queue Depth: ${metrics.queue_depth ?? 0}, Consumer Throughput: ${(metrics.consumer_throughput ?? 0).toLocaleString()}/s, DLQ Rate: ${metrics.dlq_rate_per_sec ?? 0}/s`, impact: ['Queue depth shows pending work items', 'High consumer throughput = healthy processing', 'DLQ rate above 0.1/s indicates systematic failures'] })}
+                    className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-left hover:border-purple-500/30 transition-all cursor-pointer">
+                    <h2 className="text-sm font-bold text-white flex items-center gap-2 mb-4 uppercase tracking-wider">
+                        <Server className="w-4 h-4 text-purple-500" /> Queue & Event Health
+                    </h2>
+                    <div className="grid grid-cols-3 gap-4">
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">Queue Depth</div>
+                            <div className="text-xl font-bold text-purple-400 font-mono">{(metrics.queue_depth ?? 0).toLocaleString()}</div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">Throughput</div>
+                            <div className="text-xl font-bold text-blue-400 font-mono">{(metrics.consumer_throughput ?? 0).toLocaleString()}<span className="text-xs text-slate-500">/s</span></div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">DLQ Rate</div>
+                            <div className={`text-xl font-bold font-mono ${(metrics.dlq_rate_per_sec ?? 0) < 0.1 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                {metrics.dlq_rate_per_sec ?? 0}<span className="text-xs text-slate-500">/s</span>
+                                <span className={`ml-2 text-[10px] px-1.5 py-0.5 rounded ${(metrics.dlq_rate_per_sec ?? 0) < 0.1 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>{(metrics.dlq_rate_per_sec ?? 0) < 0.1 ? 'SAFE' : 'WARN'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {/* Queue gauge */}
+                    <div className="mt-4 flex items-center gap-3">
+                        <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <div className="h-full bg-gradient-to-r from-purple-600 to-blue-500 rounded-full transition-all" style={{ width: `${Math.min(100, Math.max(5, 100 - (metrics.queue_depth ?? 0)))}%` }} />
+                        </div>
+                        <span className="text-xs text-emerald-400 font-mono">{Math.max(0, 100 - (metrics.queue_depth ?? 0))}%</span>
+                    </div>
+                </button>
+
+                {/* Cost & Efficiency */}
+                <button onClick={() => handleMetricClick({ title: 'Cost & Efficiency', data: [], description: `Infra Cost/Hour: $${metrics.infra_cost_hour ?? 0}, CPU: ${(metrics.cpu_percent ?? 0).toFixed(1)}%, Memory: ${(metrics.memory_usage_mb ?? 0).toFixed(0)}MB`, impact: ['Cost per hour based on Render pricing', 'CPU above 80% indicates need for scaling'] })}
+                    className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-left hover:border-yellow-500/30 transition-all cursor-pointer">
+                    <h2 className="text-sm font-bold text-white flex items-center gap-2 mb-4 uppercase tracking-wider">
+                        <DollarSign className="w-4 h-4 text-yellow-500" /> Cost & Efficiency
+                    </h2>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">Infra Cost / Hour</div>
+                            <div className="text-xl font-bold text-yellow-400 font-mono">${metrics.infra_cost_hour ?? 0}</div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-slate-500 mb-1">Cost Per Request</div>
+                            <div className="text-xl font-bold text-yellow-400 font-mono">${metrics.cost_per_booking ?? 0}</div>
+                        </div>
+                    </div>
+                    {/* CPU Bar */}
+                    <div className="space-y-2">
+                        <div className="flex justify-between text-xs"><span className="text-slate-500">CPU Utilization</span><span className={`font-mono font-bold ${(metrics.cpu_percent ?? 0) < 50 ? 'text-emerald-400' : (metrics.cpu_percent ?? 0) < 80 ? 'text-yellow-400' : 'text-red-400'}`}>{(metrics.cpu_percent ?? 0).toFixed(1)}%</span></div>
+                        <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full transition-all ${(metrics.cpu_percent ?? 0) < 50 ? 'bg-emerald-500' : (metrics.cpu_percent ?? 0) < 80 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${metrics.cpu_percent ?? 0}%` }} />
+                        </div>
+                        <div className="flex justify-between text-xs"><span className="text-slate-500">Memory</span><span className="font-mono text-blue-400">{(metrics.memory_usage_mb ?? 0).toFixed(0)} MB</span></div>
+                    </div>
+                </button>
+            </div>
+
+            {/* ═══ ROW 4: CIRCUIT BREAKER + ALERT INTELLIGENCE ═══ */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                {/* Circuit Breaker */}
+                <button onClick={() => handleMetricClick({ title: 'Circuit Breaker', data: [], description: `Trips: ${metrics.circuit_breaker_trips ?? 0}, Autoscale Events: ${metrics.autoscale_events ?? 0}`, impact: ['Circuit breakers isolate module failures', 'Autoscale events indicate load spikes'] })}
+                    className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-left hover:border-orange-500/30 transition-all cursor-pointer">
+                    <h2 className="text-sm font-bold text-white flex items-center gap-2 mb-4 uppercase tracking-wider">
+                        <StopCircle className="w-4 h-4 text-orange-500" /> Circuit Breaker
+                    </h2>
+                    <div className="space-y-3">
+                        <div className="flex justify-between items-center"><span className="text-slate-400 text-sm">Breaker Trips</span><span className={`font-mono font-bold ${(metrics.circuit_breaker_trips ?? 0) === 0 ? 'text-emerald-400' : 'text-red-400'}`}>{metrics.circuit_breaker_trips ?? 0}</span></div>
+                        <div className="flex justify-between items-center"><span className="text-slate-400 text-sm">Autoscale Activity</span><span className="font-mono text-slate-400">{metrics.autoscale_events ?? 0} events</span></div>
+                        <div className="flex justify-between items-center"><span className="text-slate-400 text-sm">Cost/Booking</span><span className="font-mono text-yellow-400">${metrics.cost_per_booking ?? 0}</span></div>
+                    </div>
+                </button>
+
+                {/* Alert Intelligence */}
+                <button onClick={() => handleMetricClick({ title: 'Alert Intelligence', data: [], description: `Active: ${metrics.active_alerts ?? 0}, Risk: ${metrics.silent_failure_risk ?? 0}%, Accuracy: ${metrics.alert_accuracy ?? 98}%`, impact: ['Active alerts require immediate attention', 'Silent failure risk detects unmonitored issues'] })}
+                    className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-left hover:border-red-500/30 transition-all cursor-pointer">
+                    <h2 className="text-sm font-bold text-white flex items-center gap-2 mb-4 uppercase tracking-wider">
+                        <AlertTriangle className="w-4 h-4 text-red-500" /> Alert Intelligence
+                    </h2>
+                    <div className="grid grid-cols-2 gap-3">
+                        <div><div className="text-xs text-slate-500">Active Alerts</div><div className={`text-lg font-bold font-mono ${(metrics.active_alerts ?? 0) === 0 ? 'text-emerald-400' : 'text-red-400'}`}>{metrics.active_alerts ?? 0}</div></div>
+                        <div><div className="text-xs text-slate-500">Detect Time</div><div className="text-lg font-bold font-mono text-blue-400">{metrics.mean_detect_time_sec ?? 0}s</div></div>
+                        <div><div className="text-xs text-slate-500">Failure Risk</div><div className={`text-lg font-bold font-mono ${(metrics.silent_failure_risk ?? 0) < 10 ? 'text-emerald-400' : 'text-yellow-400'}`}>{metrics.silent_failure_risk ?? 0}%</div></div>
+                        <div><div className="text-xs text-slate-500">Accuracy</div><div className="text-lg font-bold font-mono text-emerald-400">{metrics.alert_accuracy ?? 98}%</div></div>
+                    </div>
+                </button>
+
+                {/* Alert List */}
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h2 className="text-sm font-bold text-white flex items-center gap-2 mb-4 uppercase tracking-wider">
+                        <AlertTriangle className="w-4 h-4 text-yellow-500" /> Recent Alerts
+                    </h2>
+                    <div className="space-y-2">
+                        {(metrics.alert_list ?? []).length === 0 ? (
+                            <div className="text-center py-4 text-slate-500 text-sm">No active alerts — System healthy ✓</div>
+                        ) : (
+                            (metrics.alert_list ?? []).slice(0, 4).map((alert, i) => (
+                                <button key={alert.id || i} onClick={() => handleMetricClick({ title: alert.title, data: [], description: `Severity: ${alert.severity}, Occurrences: ${alert.count}`, impact: ['Check error inbox for details'] })}
+                                    className="w-full flex items-center gap-3 p-2.5 rounded-lg border border-slate-800 bg-slate-950 hover:border-slate-600 transition-all cursor-pointer text-left">
+                                    <span className={`w-2 h-2 rounded-full ${alert.severity === 'critical' ? 'bg-red-500' : alert.severity === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'}`} />
+                                    <span className="text-xs text-slate-300 truncate flex-1">{alert.title}</span>
+                                    <span className="text-[10px] text-slate-500 font-mono">×{alert.count}</span>
+                                </button>
+                            ))
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* ═══ ROW 5: MULTI-REGION MAP ═══ */}
+            <div className="mt-6">
+                <button onClick={() => handleMetricClick({ title: 'Multi-Region Topology', data: [], description: `Active regions: ${(metrics.regions ?? []).filter(r => r.status === 'active').length}, Standby: ${(metrics.regions ?? []).filter(r => r.status === 'standby').length}`, impact: ['Shows deployment regions and their latencies', 'Active = serving traffic, Standby = failover ready'] })}
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl p-6 text-left hover:border-blue-500/30 transition-all cursor-pointer">
+                    <h2 className="text-sm font-bold text-white flex items-center gap-2 mb-4 uppercase tracking-wider">
+                        <Globe className="w-4 h-4 text-blue-500" /> Multi-Region Map
+                    </h2>
+                    <div className="grid grid-cols-3 gap-4">
+                        {(metrics.regions ?? []).map(r => (
+                            <div key={r.id} className={`p-4 rounded-lg border text-center ${r.status === 'active' ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-slate-800 bg-slate-950'}`}>
+                                <div className="text-2xl mb-1">{r.id === 'eu' ? '🇪🇺' : r.id === 'tr' ? '🇹🇷' : '🇺🇸'}</div>
+                                <div className="text-sm font-bold text-white">{r.name}</div>
+                                <div className={`text-lg font-mono font-bold mt-1 ${r.status === 'active' ? 'text-emerald-400' : 'text-slate-400'}`}>{r.latency_ms}ms</div>
+                                <div className={`text-[10px] mt-1 px-2 py-0.5 rounded-full inline-block ${r.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-800 text-slate-500'}`}>{r.status.toUpperCase()}</div>
+                            </div>
+                        ))}
+                    </div>
+                </button>
             </div>
 
             <DrilldownModal metric={selectedMetric} onClose={() => setSelectedMetric(null)} />
