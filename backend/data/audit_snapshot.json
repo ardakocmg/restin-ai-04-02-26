@@ -15,35 +15,35 @@
   "evidence": {
     "code_volume": {
       "frontend_files": {
-        "value": 656,
+        "value": 657,
         "source": "frontend/src/",
         "method": "file_count",
         "confidence": "high",
         "industry_ref": "SonarQube: Lines of Code"
       },
       "backend_files": {
-        "value": 725,
+        "value": 726,
         "source": "backend/",
         "method": "file_count",
         "confidence": "high",
         "industry_ref": "SonarQube: Lines of Code"
       },
       "frontend_loc": {
-        "value": 112595,
+        "value": 112697,
         "source": "frontend/src/",
         "method": "line_count",
         "confidence": "high",
         "industry_ref": "SonarQube: ncloc"
       },
       "backend_loc": {
-        "value": 63598,
+        "value": 63625,
         "source": "backend/",
         "method": "line_count",
         "confidence": "high",
         "industry_ref": "SonarQube: ncloc"
       },
       "total_loc": {
-        "value": 176193,
+        "value": 176322,
         "method": "computed",
         "confidence": "high",
         "industry_ref": "SonarQube: Total Lines"
@@ -119,7 +119,7 @@
     },
     "testing": {
       "backend_test_files": {
-        "value": 25,
+        "value": 26,
         "source": "backend/tests/",
         "method": "file_count",
         "confidence": "high",
@@ -586,9 +586,9 @@
     "api_documentation": "7%",
     "accessibility_ux": "7%"
   },
-  "computed_at": 1771728899.7484424,
-  "_ts": 1771728899.7484426,
-  "_generated_at": "2026-02-22T02:54:59Z",
+  "computed_at": 1771730201.4822507,
+  "_ts": 1771730201.482251,
+  "_generated_at": "2026-02-22T03:16:41Z",
   "_generator": "compute_audit_snapshot.py",
   "_source": "build-time"
 }

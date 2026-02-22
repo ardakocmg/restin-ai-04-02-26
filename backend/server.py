@@ -11,6 +11,24 @@ import os
 import logging
 from pathlib import Path
 
+# Sentry SDK — Error tracking & DORA MTTR (Mean Time to Recovery)
+try:
+    import sentry_sdk
+    _sentry_dsn = os.getenv("SENTRY_DSN", "")
+    if _sentry_dsn:
+        sentry_sdk.init(
+            dsn=_sentry_dsn,
+            traces_sample_rate=0.1,
+            profiles_sample_rate=0.1,
+            environment=os.getenv("ENVIRONMENT", "development"),
+            release=os.getenv("RENDER_GIT_COMMIT", "local"),
+        )
+        logging.getLogger(__name__).info("✅ Sentry SDK initialized (env: %s)", os.getenv("ENVIRONMENT", "development"))
+    else:
+        logging.getLogger(__name__).info("ℹ️  SENTRY_DSN not set — Sentry disabled")
+except ImportError:
+    logging.getLogger(__name__).warning("⚠️  sentry-sdk not installed — run: pip install sentry-sdk[fastapi]")
+
 # Core imports
 from core.config import FRONTEND_BUILD_DIR, STATIC_DIR, INDEX_FILE
 from core.database import db, client
@@ -301,6 +319,10 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"]
 )
+
+# Rate Limiting Middleware — OWASP A04 (was implemented but not wired)
+from core.security_middleware import RateLimitMiddleware
+app.add_middleware(RateLimitMiddleware, requests_per_minute=1000)
 
 # Exception Handlers
 setup_exception_handlers(app)

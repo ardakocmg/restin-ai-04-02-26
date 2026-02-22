@@ -7,6 +7,10 @@ from core.database import db
 from core.dependencies import get_current_user, check_venue_access
 from models import Guest, GuestCreate, Reservation, ReservationCreate, ReservationStatus
 from services.audit_service import create_audit_log
+from services.pii_encryption import encrypt_document_pii, decrypt_document_pii
+
+# PII fields in guest records
+GUEST_PII = {"email", "phone", "full_name", "name"}
 
 
 def create_guest_router():
@@ -16,7 +20,8 @@ def create_guest_router():
     async def create_guest(guest_data: GuestCreate, current_user: dict = Depends(get_current_user)):
         await check_venue_access(current_user, guest_data.venue_id)
         guest = Guest(**guest_data.model_dump())
-        await db.guests.insert_one(guest.model_dump())
+        doc = encrypt_document_pii(guest.model_dump(), GUEST_PII)
+        await db.guests.insert_one(doc)
         return guest.model_dump()
 
     @router.get("/venues/{venue_id}/guests")
@@ -34,7 +39,7 @@ def create_guest_router():
                 {"phone": {"$regex": search, "$options": "i"}}
             ]
         guests = await db.guests.find(query, {"_id": 0}).sort("name", 1).to_list(500)
-        return guests
+        return [decrypt_document_pii(g, GUEST_PII) for g in guests]
 
     @router.get("/guests/{guest_id}")
     async def get_guest(guest_id: str, current_user: dict = Depends(get_current_user)):
