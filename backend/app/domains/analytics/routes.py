@@ -5,7 +5,7 @@ from app.core.database import get_database
 from app.core.dependencies import get_current_user
 import logging
 
-router = APIRouter(prefix="/api", tags=["analytics"])
+router = APIRouter(tags=["analytics"])
 logger = logging.getLogger(__name__)
 
 @router.get("/admin/dashboard-stats")
