@@ -6,7 +6,7 @@ from core.events_outbox import Outbox
 from services.event_bus import event_handler
 
 
-@event_handler("pos.order.closed")
+@event_handler("order.closed")
 async def earn_loyalty_points(event: dict):
     """Award loyalty points when order closes"""
     data = event["data"]

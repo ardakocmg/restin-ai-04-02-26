@@ -7,7 +7,7 @@ from services.event_bus import event_handler
 from utils.helpers import compute_hash
 
 
-@event_handler("pos.order.closed")
+@event_handler("order.closed")
 async def handle_pos_order_closed(event: dict):
     """Deduct stock when POS order is closed"""
     data = event["data"]

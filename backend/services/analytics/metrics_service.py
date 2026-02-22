@@ -5,7 +5,7 @@ from core.database import db
 from services.event_bus import event_handler
 
 
-@event_handler("pos.order.closed")
+@event_handler("order.closed")
 async def capture_sales_metric(event: dict):
     """Capture sales metrics"""
     data = event["data"]

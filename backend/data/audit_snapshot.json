@@ -15,14 +15,14 @@
   "evidence": {
     "code_volume": {
       "frontend_files": {
-        "value": 657,
+        "value": 656,
         "source": "frontend/src/",
         "method": "file_count",
         "confidence": "high",
         "industry_ref": "SonarQube: Lines of Code"
       },
       "backend_files": {
-        "value": 726,
+        "value": 725,
         "source": "backend/",
         "method": "file_count",
         "confidence": "high",
@@ -36,14 +36,14 @@
         "industry_ref": "SonarQube: ncloc"
       },
       "backend_loc": {
-        "value": 63625,
+        "value": 63756,
         "source": "backend/",
         "method": "line_count",
         "confidence": "high",
         "industry_ref": "SonarQube: ncloc"
       },
       "total_loc": {
-        "value": 176334,
+        "value": 176465,
         "method": "computed",
         "confidence": "high",
         "industry_ref": "SonarQube: Total Lines"
@@ -586,9 +586,9 @@
     "api_documentation": "7%",
     "accessibility_ux": "7%"
   },
-  "computed_at": 1771730500.1311793,
-  "_ts": 1771730500.1311796,
-  "_generated_at": "2026-02-22T03:21:40Z",
+  "computed_at": 1771734988.7324262,
+  "_ts": 1771734988.7324264,
+  "_generated_at": "2026-02-22T04:36:28Z",
   "_generator": "compute_audit_snapshot.py",
   "_source": "build-time"
 }

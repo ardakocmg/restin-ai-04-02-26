@@ -6,7 +6,7 @@ from core.events_outbox import Outbox
 from services.event_bus import event_handler
 
 
-@event_handler("pos.order.closed")
+@event_handler("order.closed")
 async def post_sales_journal(event: dict):
     """Post sales journal entry when order closes"""
     data = event["data"]
