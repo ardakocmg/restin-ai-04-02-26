@@ -307,8 +307,8 @@ const HyperscaleDashboard: React.FC = () => {
                     <div className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-lg flex items-center gap-3">
                         <div className="text-right">
                             <div className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">System IQ</div>
-                            <div className={`text-lg font-bold ${metrics.system_iq >= 80 ? 'text-emerald-400' : metrics.system_iq >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
-                                {metrics.system_iq} / 100
+                            <div className={`text-lg font-bold ${(metrics.system_iq ?? 0) >= 80 ? 'text-emerald-400' : (metrics.system_iq ?? 0) >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
+                                {metrics.system_iq ?? 0} / 100
                             </div>
                         </div>
                         <div className="w-10 h-10 rounded-full border-2 border-indigo-500/30 flex items-center justify-center">
@@ -318,8 +318,8 @@ const HyperscaleDashboard: React.FC = () => {
                     <div className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-lg flex items-center gap-3">
                         <div className="text-right">
                             <div className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Resilience</div>
-                            <div className={`text-lg font-bold ${metrics.resilience_score >= 99 ? 'text-emerald-400' : metrics.resilience_score >= 95 ? 'text-yellow-400' : 'text-red-400'}`}>
-                                {metrics.resilience_score.toFixed(2)}%
+                            <div className={`text-lg font-bold ${(metrics.resilience_score ?? 0) >= 99 ? 'text-emerald-400' : (metrics.resilience_score ?? 0) >= 95 ? 'text-yellow-400' : 'text-red-400'}`}>
+                                {(metrics.resilience_score ?? 0).toFixed(2)}%
                             </div>
                         </div>
                         <div className="w-10 h-10 rounded-full border-2 border-emerald-500/30 flex items-center justify-center">
@@ -621,7 +621,7 @@ const HyperscaleDashboard: React.FC = () => {
                                 <div className="flex items-center gap-3">
                                     <span className="text-slate-500 text-xs">Auto-scanned • 5 min cache</span>
                                     <div className={`text-3xl font-bold ${auditData.overall_score >= 7 ? 'text-emerald-400' :
-                                            auditData.overall_score >= 5 ? 'text-yellow-400' : 'text-red-400'
+                                        auditData.overall_score >= 5 ? 'text-yellow-400' : 'text-red-400'
                                         }`}>
                                         {auditData.overall_score.toFixed(1)}
                                         <span className="text-sm text-slate-500 font-normal">/10</span>
@@ -660,8 +660,8 @@ const HyperscaleDashboard: React.FC = () => {
                                                     <div key={k} className="flex justify-between text-xs">
                                                         <span className="text-slate-500 truncate">{k.replace(/_/g, ' ')}</span>
                                                         <span className={`font-mono ${v === true ? 'text-emerald-400' :
-                                                                v === false ? 'text-red-400' :
-                                                                    typeof v === 'number' && v > 0 ? 'text-blue-400' : 'text-slate-400'
+                                                            v === false ? 'text-red-400' :
+                                                                typeof v === 'number' && v > 0 ? 'text-blue-400' : 'text-slate-400'
                                                             }`}>
                                                             {v === true ? '✓' : v === false ? '✗' : String(v)}
                                                         </span>
