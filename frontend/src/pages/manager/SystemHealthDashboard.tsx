@@ -186,7 +186,7 @@ export default function SystemHealthDashboard() {
                   </span>
                 </div>
                 <p className="text-xs text-zinc-500 mt-1">
-                  {health ? `${health.avg_latency_ms.toFixed(0)}ms avg · ${(health.error_rate_5xx * 100).toFixed(1)}% errors` : 'Loading...'}
+                  {health ? `${(health.avg_latency_ms || 0).toFixed(0)}ms avg · ${((health.error_rate_5xx || 0) * 100).toFixed(1)}% errors` : 'Loading...'}
                 </p>
               </CardContent>
             </Card>
@@ -269,8 +269,8 @@ export default function SystemHealthDashboard() {
                       <div
                         key={key}
                         className={`rounded-lg border transition-all cursor-pointer ${isExpanded
-                            ? 'bg-white/[0.04] border-blue-500/30 col-span-1 md:col-span-2 lg:col-span-3'
-                            : 'bg-white/[0.02] border-white/5 hover:border-white/10'
+                          ? 'bg-white/[0.04] border-blue-500/30 col-span-1 md:col-span-2 lg:col-span-3'
+                          : 'bg-white/[0.02] border-white/5 hover:border-white/10'
                           }`}
                         onClick={() => setExpandedDim(isExpanded ? null : key)}
                       >

@@ -163,8 +163,8 @@ export default function MonitoringDashboard() {
                   <Cpu className="h-4 w-4 text-blue-400" />
                   <span className="text-xs text-zinc-400 uppercase font-bold">Avg Latency</span>
                 </div>
-                <div className="text-2xl font-bold text-zinc-100">{metrics?.avg_latency_ms.toFixed(1) || '—'}ms</div>
-                <p className="text-xs text-zinc-500 mt-1">P95: {metrics?.p95_latency_ms.toFixed(0) || '—'}ms · P99: {metrics?.p99_latency_ms.toFixed(0) || '—'}ms</p>
+                <div className="text-2xl font-bold text-zinc-100">{metrics ? `${(metrics.avg_latency_ms || 0).toFixed(1)}ms` : '—'}</div>
+                <p className="text-xs text-zinc-500 mt-1">P95: {metrics ? `${(metrics.p95_latency_ms || 0).toFixed(0)}ms` : '—'} · P99: {metrics ? `${(metrics.p99_latency_ms || 0).toFixed(0)}ms` : '—'}</p>
               </CardContent>
             </Card>
             <Card>
@@ -174,7 +174,7 @@ export default function MonitoringDashboard() {
                   <span className="text-xs text-zinc-400 uppercase font-bold">Throughput</span>
                 </div>
                 <div className="text-2xl font-bold text-zinc-100">{metrics ? (metrics.rps * 60).toFixed(0) : '—'} r/m</div>
-                <p className="text-xs text-zinc-500 mt-1">{metrics?.rps.toFixed(2) || '—'} req/s</p>
+                <p className="text-xs text-zinc-500 mt-1">{metrics ? `${(metrics.rps || 0).toFixed(2)} req/s` : '—'}</p>
               </CardContent>
             </Card>
             <Card>

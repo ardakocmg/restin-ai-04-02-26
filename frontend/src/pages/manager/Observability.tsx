@@ -131,17 +131,17 @@ export default function Observability() {
     {
       id: 'backend', icon: Server, label: 'FastAPI Backend',
       status: metrics ? (metrics.error_rate_5xx < 0.05 ? 'healthy' : metrics.error_rate_5xx < 0.1 ? 'degraded' : 'unhealthy') : 'unknown',
-      sublabel: metrics ? `${metrics.avg_latency_ms.toFixed(0)}ms avg` : 'Loading...',
+      sublabel: metrics ? `${(metrics.avg_latency_ms || 0).toFixed(0)}ms avg` : 'Loading...',
     },
     {
       id: 'db', icon: Database, label: 'MongoDB Atlas',
       status: metrics?.db_ok ? 'healthy' : 'unhealthy',
-      sublabel: metrics?.db_ok ? `${metrics.db_latency_ms.toFixed(0)}ms ping` : 'Unreachable',
+      sublabel: metrics?.db_ok ? `${(metrics.db_latency_ms || 0).toFixed(0)}ms ping` : 'Unreachable',
     },
     {
       id: 'api', icon: Activity, label: 'API Gateway',
       status: metrics ? (metrics.rps > 0 ? 'healthy' : 'healthy') : 'unknown',
-      sublabel: metrics ? `${metrics.rps.toFixed(1)} req/s` : 'Loading...',
+      sublabel: metrics ? `${(metrics.rps || 0).toFixed(1)} req/s` : 'Loading...',
     },
   ];
 
@@ -309,16 +309,16 @@ export default function Observability() {
       <StatsGrid columns={4}>
         <StatCard
           title="Avg API Latency"
-          value={metrics ? `${metrics.avg_latency_ms.toFixed(1)}ms` : '—'}
+          value={metrics ? `${(metrics.avg_latency_ms || 0).toFixed(1)}ms` : '—'}
           icon={Cpu}
-          description={metrics ? `P95: ${metrics.p95_latency_ms.toFixed(0)}ms · P99: ${metrics.p99_latency_ms.toFixed(0)}ms` : 'Loading...'}
+          description={metrics ? `P95: ${(metrics.p95_latency_ms || 0).toFixed(0)}ms · P99: ${(metrics.p99_latency_ms || 0).toFixed(0)}ms` : 'Loading...'}
           className="bg-black/40 border-border"
         />
         <StatCard
           title="Database IO"
           value={metrics?.db_ok ? 'Healthy' : 'Down'}
           icon={Database}
-          description={metrics?.db_ok ? `${metrics.db_latency_ms.toFixed(0)}ms ping · ${(metrics.total_documents || 0).toLocaleString()} docs` : 'Connection failed'}
+          description={metrics?.db_ok ? `${(metrics.db_latency_ms || 0).toFixed(0)}ms ping · ${(metrics.total_documents || 0).toLocaleString()} docs` : 'Connection failed'}
           className="bg-black/40 border-border"
         />
         <StatCard
@@ -330,9 +330,9 @@ export default function Observability() {
         />
         <StatCard
           title="Throughput"
-          value={metrics ? `${(metrics.rps * 60).toFixed(0)} r/m` : '—'}
+          value={metrics ? `${((metrics.rps || 0) * 60).toFixed(0)} r/m` : '—'}
           icon={Zap}
-          description={metrics ? `${metrics.rps.toFixed(2)} req/s · ${(metrics.error_rate_5xx * 100).toFixed(2)}% errors` : 'Loading...'}
+          description={metrics ? `${(metrics.rps || 0).toFixed(2)} req/s · ${((metrics.error_rate_5xx || 0) * 100).toFixed(2)}% errors` : 'Loading...'}
           className="bg-black/40 border-border"
         />
       </StatsGrid>
