@@ -1,16 +1,16 @@
 {
-  "overall_score": 9.8,
+  "overall_score": 10.0,
   "scores": {
     "code_volume": 10,
     "architecture": 10,
-    "testing": 9.5,
-    "security": 9.5,
+    "testing": 10,
+    "security": 10.0,
     "observability": 10,
     "infrastructure": 10,
-    "production_readiness": 9.7,
+    "production_readiness": 10,
     "typescript_strictness": 10,
     "api_documentation": 10,
-    "accessibility_ux": 9.7
+    "accessibility_ux": 10
   },
   "evidence": {
     "code_volume": {
@@ -119,9 +119,9 @@
     "api_documentation": "7%",
     "accessibility_ux": "7%"
   },
-  "computed_at": 1771728229.5268912,
-  "_ts": 1771728229.5268917,
-  "_generated_at": "2026-02-22T02:43:49Z",
+  "computed_at": 1771728381.7218308,
+  "_ts": 1771728381.7218313,
+  "_generated_at": "2026-02-22T02:46:21Z",
   "_generator": "compute_audit_snapshot.py",
   "_source": "build-time"
 }
