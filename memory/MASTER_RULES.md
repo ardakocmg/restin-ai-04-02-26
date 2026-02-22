@@ -210,3 +210,16 @@
    - Sorting works on at least 2 columns
    - The page looks good in both Light and Dark mode
    - Stat cards (if present) show correct aggregated numbers
+
+---
+
+## XIII. FLEXIBLE THEMING, BRANDING & ESLINT GUARDRAILS (Rules 107–114)
+
+1. **No Hardcoded Brand Colors:** NEVER use raw hex codes (`#FF0000`, `#3B82F6`) in JSX. Use Tailwind semantic tokens (`text-foreground`, `bg-card`, `border-border`, `text-muted-foreground`). Status colors (`emerald/yellow/red-400`) allowed — they encode meaning, not branding.
+2. **No Hardcoded Logos/Names:** Dashboard titles, logos, brand names → tenant config or i18n. White-label ready at all times.
+3. **Theme-Aware Colors:** Every `bg-` class MUST have a `dark:` counterpart OR use semantic tokens. `restin-guardrails/no-hardcoded-colors` ESLint rule enforces.
+4. **TypeScript Soft Enforcement:** `strict: false` in tsconfig (legacy compat). Quality via ESLint: `@typescript-eslint/no-explicit-any` → warn, `no-console` → warn.
+5. **ESLint > Compiler:** ESLint is primary code quality gate. AI agent NEVER uses `any` — rule is for human devs.
+6. **Hyperscale Dashboard Config:** Widget panel colors → dynamic theme tokens. Status semantics (`emerald`/`yellow`/`red`) allowed.
+7. **Style Inline Exception:** `style={{}}` ONLY for dynamic values (width %, positions). Mark `/* keep-inline */`. ESLint enforces.
+8. **Dual-PC Sync:** When rules/settings change, update `memory/PC2_SYNC.md` so second agent can pull and apply.

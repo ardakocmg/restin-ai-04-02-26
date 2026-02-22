@@ -88,7 +88,8 @@ export default [
             "restin-guardrails/no-inline-styles": "warn",
             "react/prop-types": "off",
             "no-unused-vars": "warn",
-            "no-undef": "error"
+            "no-undef": "error",
+            "no-console": "warn",
         }
     }
 ];
