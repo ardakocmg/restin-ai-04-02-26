@@ -32,21 +32,16 @@ import {
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import api from '@/lib/api';
 
 // ─── Real API Fetchers ────────────────────────────────────────────────────────
 const fetchHyperscaleMetrics = async () => {
-    const token = localStorage.getItem('token');
-    const { data } = await axios.get('/api/system/hyperscale-metrics', {
-        headers: { Authorization: `Bearer ${token}` },
-    });
+    const { data } = await api.get('/system/hyperscale-metrics');
     return data;
 };
 
 const fetchAuditScores = async () => {
-    const token = localStorage.getItem('token');
-    const { data } = await axios.get('/api/system/audit-scores', {
-        headers: { Authorization: `Bearer ${token}` },
-    });
+    const { data } = await api.get('/system/audit-scores');
     return data;
 };
 
