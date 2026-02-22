@@ -363,7 +363,7 @@ export default function UserProfileSettings() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="profile-phone">Phone Number</Label>
-                  <Input aria-label="Profile Phone" id="profile-phone" value={profileForm.phone}
+                  <Input aria-label="Profile Phone" id="profile-phone" value={String(profileForm.phone || '')}
                     onChange={(e) => setProfileForm(p => ({ ...p, phone: e.target.value }))} />
                 </div>
                 <div className="space-y-2">

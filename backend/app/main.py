@@ -809,6 +809,11 @@ api_main.include_router(pos_session_router)
 # POS/KDS Theme Builder API
 from routes.pos_theme_routes import router as pos_theme_router
 api_main.include_router(pos_theme_router)
+
+# Audit Scores (Hyperscale Dashboard)
+from routes.audit_scores_routes import router as audit_scores_router
+api_main.include_router(audit_scores_router)
+
 api_main.include_router(admin_router_new)
 api_main.include_router(template_router)
 api_main.include_router(template_assets_router)

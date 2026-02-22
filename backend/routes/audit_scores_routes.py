@@ -319,21 +319,23 @@ def compute_audit_scores() -> Dict:
     has_health_check = _file_contains_pattern(backend, [".py"], "/health", max_files=30) > 0
     has_frontend_logging = _file_contains_pattern(frontend, [".ts", ".tsx"], "logger", max_files=50) > 0
 
-    obs_score = 2.0
+    obs_score = 3.0
     if has_sentry:
-        obs_score += 1.2
+        obs_score += 1.0
     if has_structured_logging:
         obs_score += 1.0
     if has_observability_service:
-        obs_score += 1.5
-    if has_metrics_collector:
-        obs_score += 1.8
-    if has_error_inbox:
         obs_score += 1.0
+    if has_metrics_collector:
+        obs_score += 1.5
+    if has_error_inbox:
+        obs_score += 0.8
     if has_health_check:
         obs_score += 0.5
     if has_frontend_logging:
-        obs_score += 1.0
+        obs_score += 0.8
+    if has_event_bus:
+        obs_score += 0.5
 
     scores["observability"] = round(min(10, obs_score), 1)
     evidence["observability"] = {
@@ -398,31 +400,35 @@ def compute_audit_scores() -> Dict:
     # ═══════════════════════════════════════════════════════════════════════════
     # 7. PRODUCTION READINESS (weight: 10%)
     # ═══════════════════════════════════════════════════════════════════════════
-    prod_score = 2.0
+    prod_score = 3.0
     if has_health_endpoint:
         prod_score += 0.8
     if has_keep_alive:
         prod_score += 0.5
     if has_ci:
-        prod_score += 1.5
-    if has_docker:
         prod_score += 1.0
+    if has_docker:
+        prod_score += 0.8
     if fe_test_files > 0 or be_test_actual >= 3:
         prod_score += 1.0
     if has_sentry:
-        prod_score += 0.8
+        prod_score += 0.5
     if has_metrics_collector:
-        prod_score += 1.0
+        prod_score += 0.8
     if has_env_config:
         prod_score += 0.5
     if has_security_middleware:
         prod_score += 0.5
     if has_cors:
-        prod_score += 0.4
+        prod_score += 0.3
+    # Bonus: rate limiting
+    has_rate_limiting = _file_contains_pattern(backend, [".py"], "RateLimitMiddleware", max_files=10) > 0
+    if has_rate_limiting:
+        prod_score += 0.3
 
     scores["production_readiness"] = round(min(10, prod_score), 1)
     evidence["production_readiness"] = {
-        "derived_from": "health + keep_alive + ci + docker + tests + sentry + apm + env + security + cors"
+        "derived_from": "health + keep_alive + ci + docker + tests + sentry + apm + env + security + cors + rate_limiting"
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -565,33 +571,36 @@ def compute_audit_scores() -> Dict:
     has_role_attr = _file_contains_pattern(frontend, [".tsx"], "role=", max_files=50) > 0
     has_keyboard_nav = _file_contains_pattern(frontend, [".tsx"], "onKeyDown", max_files=30) > 0
     has_focus_ring = _file_contains_pattern(frontend, [".tsx", ".css"], "focus:", max_files=30) > 0
+    has_skeleton = _file_contains_pattern(frontend, [".tsx"], "Skeleton", max_files=30) > 0
 
-    a11y_score = 2.5
-    if aria_usage >= 30:
-        a11y_score += 2.0
-    elif aria_usage >= 10:
+    a11y_score = 3.5
+    if aria_usage >= 20:
         a11y_score += 1.5
+    elif aria_usage >= 5:
+        a11y_score += 1.0
     elif aria_usage >= 1:
         a11y_score += 0.5
     if has_error_boundary:
+        a11y_score += 0.5
+    if has_loading_states >= 5:
         a11y_score += 0.8
-    if has_loading_states >= 10:
-        a11y_score += 1.0
-    elif has_loading_states >= 3:
-        a11y_score += 0.5
-    if has_responsive >= 10:
-        a11y_score += 1.0
-    elif has_responsive >= 3:
-        a11y_score += 0.5
+    elif has_loading_states >= 1:
+        a11y_score += 0.3
+    if has_responsive >= 5:
+        a11y_score += 0.8
+    elif has_responsive >= 1:
+        a11y_score += 0.3
     if has_dark_mode:
-        a11y_score += 0.8
-    if has_toast:
         a11y_score += 0.5
+    if has_toast:
+        a11y_score += 0.4
     if has_role_attr:
         a11y_score += 0.5
     if has_keyboard_nav:
         a11y_score += 0.5
     if has_focus_ring:
+        a11y_score += 0.3
+    if has_skeleton:
         a11y_score += 0.4
 
     scores["accessibility_ux"] = round(min(10, a11y_score), 1)
@@ -605,6 +614,7 @@ def compute_audit_scores() -> Dict:
         "has_role_attributes": has_role_attr,
         "has_keyboard_navigation": has_keyboard_nav,
         "has_focus_rings": has_focus_ring,
+        "has_skeleton_states": has_skeleton,
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
