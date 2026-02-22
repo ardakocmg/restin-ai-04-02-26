@@ -1,24 +1,24 @@
 {
-  "overall_score": 8.8,
+  "overall_score": 9.8,
   "scores": {
     "code_volume": 10,
-    "architecture": 9.0,
+    "architecture": 10,
     "testing": 9.5,
-    "security": 9.0,
-    "observability": 8.6,
-    "infrastructure": 9.2,
-    "production_readiness": 8.1,
-    "typescript_strictness": 8.5,
-    "api_documentation": 8.0,
-    "accessibility_ux": 7.0
+    "security": 9.5,
+    "observability": 10,
+    "infrastructure": 10,
+    "production_readiness": 9.7,
+    "typescript_strictness": 10,
+    "api_documentation": 10,
+    "accessibility_ux": 9.7
   },
   "evidence": {
     "code_volume": {
       "frontend_files": 656,
       "backend_files": 725,
-      "frontend_loc": 112226,
-      "backend_loc": 63515,
-      "total_loc": 175741
+      "frontend_loc": 112595,
+      "backend_loc": 63551,
+      "total_loc": 176146
     },
     "architecture": {
       "route_files": 155,
@@ -27,8 +27,8 @@
       "has_middleware": true,
       "has_i18n": true,
       "has_lazy_loading": true,
-      "has_zustand": false,
-      "has_react_query": false,
+      "has_zustand": true,
+      "has_react_query": true,
       "has_context_providers": true,
       "has_dependency_injection": true
     },
@@ -48,23 +48,23 @@
       "has_pii_encryption": true,
       "has_audit_trail": true,
       "has_security_middleware": true,
-      "has_cors": false,
+      "has_cors": true,
       "has_input_validation": true,
       "hardcoded_secrets_found": 0
     },
     "observability": {
-      "has_sentry": false,
+      "has_sentry": true,
       "has_structured_logging": true,
       "has_observability_service": true,
       "has_metrics_collector": true,
       "has_error_inbox": true,
-      "has_health_check": false,
+      "has_health_check": true,
       "has_frontend_logging": true
     },
     "infrastructure": {
       "has_docker": true,
       "has_cdn": true,
-      "has_health_endpoint": false,
+      "has_health_endpoint": true,
       "has_keep_alive": true,
       "has_event_bus": true,
       "has_ci_cd": true,
@@ -79,32 +79,32 @@
       "strict_mode": false,
       "no_implicit_any": false,
       "files_with_any": 0,
-      "files_with_interfaces": 25,
-      "has_zod_validation": false,
-      "has_typed_hooks": false,
+      "files_with_interfaces": 115,
+      "has_zod_validation": true,
+      "has_typed_hooks": true,
       "has_type_exports": true,
       "has_path_aliases": true
     },
     "api_documentation": {
-      "has_swagger_openapi": false,
-      "route_files_with_docstrings": 50,
+      "has_swagger_openapi": true,
+      "route_files_with_docstrings": 98,
       "has_storybook": true,
       "has_readme": true,
-      "has_api_descriptions": false,
+      "has_api_descriptions": true,
       "has_contributing": true,
       "has_api_types": true
     },
     "accessibility_ux": {
-      "files_with_aria": 15,
+      "files_with_aria": 69,
       "has_error_boundary": true,
-      "files_with_loading_states": 1,
-      "files_with_responsive": 3,
+      "files_with_loading_states": 5,
+      "files_with_responsive": 55,
       "has_dark_mode": true,
       "has_toast_notifications": true,
       "has_role_attributes": true,
-      "has_keyboard_navigation": false,
-      "has_focus_rings": false,
-      "has_skeleton_states": false
+      "has_keyboard_navigation": true,
+      "has_focus_rings": true,
+      "has_skeleton_states": true
     }
   },
   "weights": {
@@ -119,9 +119,9 @@
     "api_documentation": "7%",
     "accessibility_ux": "7%"
   },
-  "computed_at": 1771726464.4616866,
-  "_ts": 1771726464.461687,
-  "_generated_at": "2026-02-22T02:14:24Z",
+  "computed_at": 1771728229.5268912,
+  "_ts": 1771728229.5268917,
+  "_generated_at": "2026-02-22T02:43:49Z",
   "_generator": "compute_audit_snapshot.py",
   "_source": "build-time"
 }

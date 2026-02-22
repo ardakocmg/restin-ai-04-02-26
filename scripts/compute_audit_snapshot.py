@@ -47,9 +47,9 @@ def main():
     
     # Print summary
     s = scores.get("scores", {})
-    total = scores.get("total_score", 0)
+    total = scores.get("overall_score", 0)
     print(f"\n[OK] Audit snapshot saved to: {output_file}")
-    print(f"   Total Score: {total}/10")
+    print(f"   Overall Score: {total}/10")
     print(f"   Dimensions:")
     for key, val in s.items():
         print(f"     {key}: {val}")
