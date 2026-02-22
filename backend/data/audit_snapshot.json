@@ -14,97 +14,564 @@
   },
   "evidence": {
     "code_volume": {
-      "frontend_files": 656,
-      "backend_files": 725,
-      "frontend_loc": 112595,
-      "backend_loc": 63551,
-      "total_loc": 176146
+      "frontend_files": {
+        "value": 656,
+        "source": "frontend/src/",
+        "method": "file_count",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Lines of Code"
+      },
+      "backend_files": {
+        "value": 725,
+        "source": "backend/",
+        "method": "file_count",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Lines of Code"
+      },
+      "frontend_loc": {
+        "value": 112595,
+        "source": "frontend/src/",
+        "method": "line_count",
+        "confidence": "high",
+        "industry_ref": "SonarQube: ncloc"
+      },
+      "backend_loc": {
+        "value": 63598,
+        "source": "backend/",
+        "method": "line_count",
+        "confidence": "high",
+        "industry_ref": "SonarQube: ncloc"
+      },
+      "total_loc": {
+        "value": 176193,
+        "method": "computed",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Total Lines"
+      }
     },
     "architecture": {
-      "route_files": 155,
-      "service_files": 80,
-      "has_event_bus": true,
-      "has_middleware": true,
-      "has_i18n": true,
-      "has_lazy_loading": true,
-      "has_zustand": true,
-      "has_react_query": true,
-      "has_context_providers": true,
-      "has_dependency_injection": true
+      "route_files": {
+        "value": 155,
+        "source": "backend/routes/",
+        "method": "file_count",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Module Count"
+      },
+      "service_files": {
+        "value": 80,
+        "source": "backend/services/",
+        "method": "file_count",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Module Count"
+      },
+      "has_event_bus": {
+        "value": true,
+        "source": "backend/services/event_bus.py",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "DORA: Event-Driven Architecture"
+      },
+      "has_middleware": {
+        "value": true,
+        "source": "backend/core/middleware.py",
+        "method": "file_exists",
+        "confidence": "high"
+      },
+      "has_i18n": {
+        "value": true,
+        "source": "frontend\\src\\lib\\ai-messages.ts, frontend\\src\\lib\\i18n.ts",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "Lighthouse: Internationalization"
+      },
+      "has_lazy_loading": {
+        "value": true,
+        "source": "frontend\\src\\App.tsx, frontend\\src\\pages\\UserProfileSettings.tsx",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "Lighthouse: Code Splitting"
+      },
+      "has_zustand": {
+        "value": true,
+        "source": "frontend\\src\\hooks\\useAuthElevation.tsx, frontend\\src\\store\\useAppStore.tsx",
+        "method": "pattern_scan",
+        "confidence": "medium"
+      },
+      "has_react_query": {
+        "value": true,
+        "source": "frontend\\src\\pages\\HyperscaleDashboard.tsx",
+        "method": "pattern_scan",
+        "confidence": "high"
+      },
+      "has_context_providers": {
+        "value": true,
+        "source": "frontend\\src\\context\\DesignSystemContext.tsx, frontend\\src\\context\\MultiVenueContext.tsx",
+        "method": "pattern_scan",
+        "confidence": "high"
+      },
+      "has_dependency_injection": {
+        "value": true,
+        "source": "backend/core/dependencies.py",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Dependency Injection"
+      }
     },
     "testing": {
-      "backend_test_files": 25,
-      "frontend_test_files": 7,
-      "has_ci_cd": true,
-      "has_jest_config": true,
-      "has_pytest_config": true,
-      "has_coverage_reports": true,
-      "has_e2e_tests": true
+      "backend_test_files": {
+        "value": 25,
+        "source": "backend/tests/",
+        "method": "file_count",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Unit Tests"
+      },
+      "frontend_test_files": {
+        "value": 7,
+        "source": "frontend/src/",
+        "method": "file_count",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Unit Tests"
+      },
+      "has_ci_cd": {
+        "value": true,
+        "source": ".github/workflows/",
+        "method": "dir_exists",
+        "confidence": "high",
+        "industry_ref": "DORA: Deployment Frequency"
+      },
+      "has_jest_config": {
+        "value": true,
+        "source": "frontend/jest.config.js",
+        "method": "file_exists",
+        "confidence": "high"
+      },
+      "has_pytest_config": {
+        "value": true,
+        "source": "backend/pyproject.toml",
+        "method": "file_exists",
+        "confidence": "high"
+      },
+      "has_coverage_reports": {
+        "value": true,
+        "source": "frontend/coverage/ or backend/htmlcov/",
+        "method": "dir_exists",
+        "confidence": "medium",
+        "industry_ref": "SonarQube: Coverage %"
+      },
+      "has_e2e_tests": {
+        "value": true,
+        "source": "backend/tests/",
+        "method": "file_count",
+        "confidence": "medium",
+        "industry_ref": "SonarQube: Integration Tests"
+      }
     },
     "security": {
-      "has_jwt_auth": true,
-      "has_rate_limiter": true,
-      "has_rbac": true,
-      "has_pii_encryption": true,
-      "has_audit_trail": true,
-      "has_security_middleware": true,
-      "has_cors": true,
-      "has_input_validation": true,
-      "hardcoded_secrets_found": 0
+      "has_jwt_auth": {
+        "value": true,
+        "source": "backend\\core\\config.py, backend\\core\\dependencies.py",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "OWASP: A07 Auth Failures"
+      },
+      "has_rate_limiter": {
+        "value": true,
+        "source": "backend/core/rate_limiter.py",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "OWASP: A04 Insecure Design"
+      },
+      "has_rbac": {
+        "value": true,
+        "source": "backend/routes/rbac_routes.py",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "OWASP: A01 Broken Access Control"
+      },
+      "has_pii_encryption": {
+        "value": true,
+        "source": "backend/services/pii_encryption.py",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "OWASP: A02 Crypto Failures"
+      },
+      "has_audit_trail": {
+        "value": true,
+        "source": "backend/services/audit_trail.py",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "SOC2: Audit Logging"
+      },
+      "has_security_middleware": {
+        "value": true,
+        "source": "backend/core/security_middleware.py",
+        "method": "file_exists",
+        "confidence": "high"
+      },
+      "has_cors": {
+        "value": true,
+        "source": "backend/server.py",
+        "method": "direct_read",
+        "confidence": "high",
+        "industry_ref": "OWASP: A05 Security Misconfiguration"
+      },
+      "has_input_validation": {
+        "value": true,
+        "source": "backend\\hr_models.py, backend\\hr_routes.py",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "OWASP: A03 Injection"
+      },
+      "hardcoded_secrets_found": {
+        "value": 0,
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "OWASP: A07 Hardcoded Credentials"
+      }
     },
     "observability": {
-      "has_sentry": true,
-      "has_structured_logging": true,
-      "has_observability_service": true,
-      "has_metrics_collector": true,
-      "has_error_inbox": true,
-      "has_health_check": true,
-      "has_frontend_logging": true
+      "has_sentry": {
+        "value": true,
+        "source": "frontend\\src\\routes\\inventoryRoutes.tsx",
+        "method": "pattern_scan",
+        "confidence": "medium",
+        "industry_ref": "DORA: Mean Time to Recovery"
+      },
+      "has_structured_logging": {
+        "value": true,
+        "source": "backend\\server.py, backend\\app\\main.py, backend\\core\\mongo_database.py",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Logging Quality"
+      },
+      "has_observability_service": {
+        "value": true,
+        "source": "backend/services/observability_service.py",
+        "method": "file_exists",
+        "confidence": "high"
+      },
+      "has_metrics_collector": {
+        "value": true,
+        "source": "backend/core/metrics_collector.py",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "DORA: Monitoring"
+      },
+      "has_error_inbox": {
+        "value": true,
+        "source": "backend\\routes\\audit_scores_routes.py, backend\\routes\\hyperscale_routes.py",
+        "method": "pattern_scan",
+        "confidence": "high"
+      },
+      "has_health_check": {
+        "value": true,
+        "source": "backend/routes/system_routes.py",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "DORA: Health Probes"
+      },
+      "has_frontend_logging": {
+        "value": true,
+        "source": "frontend\\src\\hooks\\useAuditLog.ts, frontend\\src\\hooks\\useVenueSettings.ts",
+        "method": "pattern_scan",
+        "confidence": "medium",
+        "industry_ref": "Lighthouse: Error Handling"
+      }
     },
     "infrastructure": {
-      "has_docker": true,
-      "has_cdn": true,
-      "has_health_endpoint": true,
-      "has_keep_alive": true,
-      "has_event_bus": true,
-      "has_ci_cd": true,
-      "has_env_config": true,
-      "has_vercel": true
+      "has_docker": {
+        "value": true,
+        "source": "Dockerfile or docker-compose.yml",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "DORA: Deployment Automation"
+      },
+      "has_cdn": {
+        "value": true,
+        "source": "Cloudflare (production config)",
+        "method": "known_config",
+        "confidence": "high",
+        "industry_ref": "Lighthouse: Performance"
+      },
+      "has_health_endpoint": {
+        "value": true,
+        "source": "backend/routes/system_routes.py",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "DORA: Health Probes"
+      },
+      "has_keep_alive": {
+        "value": true,
+        "source": "backend/scripts/keep_alive.py",
+        "method": "file_exists",
+        "confidence": "high"
+      },
+      "has_event_bus": {
+        "value": true,
+        "source": "backend/services/event_bus.py",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "DORA: Event-Driven"
+      },
+      "has_ci_cd": {
+        "value": true,
+        "source": ".github/workflows/",
+        "method": "dir_exists",
+        "confidence": "high",
+        "industry_ref": "DORA: Deployment Frequency"
+      },
+      "has_env_config": {
+        "value": true,
+        "source": ".env.example or os.environ usage",
+        "method": "file_exists+pattern",
+        "confidence": "high"
+      },
+      "has_vercel": {
+        "value": true,
+        "source": "frontend/vercel.json",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "DORA: Deployment Platform"
+      }
     },
     "production_readiness": {
-      "derived_from": "health + keep_alive + ci + docker + tests + sentry + apm + env + security + cors + rate_limiting"
+      "has_health_endpoint": {
+        "value": true,
+        "source": "backend/routes/system_routes.py",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "DORA: Health Probes"
+      },
+      "has_keep_alive": {
+        "value": true,
+        "source": "backend/scripts/keep_alive.py",
+        "method": "file_exists",
+        "confidence": "high"
+      },
+      "has_ci_cd": {
+        "value": true,
+        "source": ".github/workflows/",
+        "method": "dir_exists",
+        "confidence": "high",
+        "industry_ref": "DORA: Deployment Frequency"
+      },
+      "has_docker": {
+        "value": true,
+        "source": "Dockerfile",
+        "method": "file_exists",
+        "confidence": "high"
+      },
+      "has_tests": {
+        "value": true,
+        "source": "tests/",
+        "method": "file_count",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Test Coverage"
+      },
+      "has_sentry": {
+        "value": true,
+        "method": "pattern_scan",
+        "confidence": "medium",
+        "industry_ref": "DORA: Mean Time to Recovery"
+      },
+      "has_metrics_collector": {
+        "value": true,
+        "source": "backend/core/metrics_collector.py",
+        "method": "file_exists",
+        "confidence": "high"
+      },
+      "has_cors": {
+        "value": true,
+        "source": "backend/server.py",
+        "method": "direct_read",
+        "confidence": "high",
+        "industry_ref": "OWASP: CORS Config"
+      },
+      "has_rate_limiting": {
+        "value": false,
+        "source": "backend\\server.py",
+        "method": "pattern_scan",
+        "confidence": "medium"
+      }
     },
     "typescript_strictness": {
-      "has_tsconfig": true,
-      "strict_mode": false,
-      "no_implicit_any": false,
-      "files_with_any": 0,
-      "files_with_interfaces": 115,
-      "has_zod_validation": true,
-      "has_typed_hooks": true,
-      "has_type_exports": true,
-      "has_path_aliases": true
+      "has_tsconfig": {
+        "value": true,
+        "source": "frontend/tsconfig.json",
+        "method": "file_exists",
+        "confidence": "high",
+        "industry_ref": "SonarQube: TypeScript Config"
+      },
+      "strict_mode": {
+        "value": false,
+        "source": "frontend/tsconfig.json",
+        "method": "config_parse",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Strict Mode"
+      },
+      "no_implicit_any": {
+        "value": false,
+        "source": "frontend/tsconfig.json",
+        "method": "config_parse",
+        "confidence": "high"
+      },
+      "files_with_any": {
+        "value": 0,
+        "source": "frontend/src/",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Code Smells"
+      },
+      "files_with_interfaces": {
+        "value": 115,
+        "source": "frontend/src/",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Type Safety"
+      },
+      "has_zod_validation": {
+        "value": true,
+        "source": "frontend\\src\\lib\\safeApi.ts, frontend\\src\\lib\\schemas\\pillars.ts",
+        "method": "pattern_scan",
+        "confidence": "medium",
+        "industry_ref": "OWASP: Input Validation"
+      },
+      "has_typed_hooks": {
+        "value": true,
+        "source": "frontend\\src\\hooks\\shared\\useAccountingService.ts, frontend\\src\\hooks\\shared\\useGuestService.ts",
+        "method": "pattern_scan",
+        "confidence": "high"
+      },
+      "has_type_exports": {
+        "value": true,
+        "source": "frontend\\src\\lib\\gamification.ts, frontend\\src\\lib\\safeApi.ts",
+        "method": "pattern_scan",
+        "confidence": "high"
+      },
+      "has_path_aliases": {
+        "value": true,
+        "source": "frontend/tsconfig.json",
+        "method": "config_parse",
+        "confidence": "high"
+      }
     },
     "api_documentation": {
-      "has_swagger_openapi": true,
-      "route_files_with_docstrings": 98,
-      "has_storybook": true,
-      "has_readme": true,
-      "has_api_descriptions": true,
-      "has_contributing": true,
-      "has_api_types": true
+      "has_swagger_openapi": {
+        "value": true,
+        "source": "backend\\hr_routes.py, backend\\server.py",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "SonarQube: API Documentation"
+      },
+      "route_files_with_docstrings": {
+        "value": 98,
+        "source": "backend/routes/",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "SonarQube: Documented API %"
+      },
+      "has_storybook": {
+        "value": true,
+        "source": "frontend/.storybook/",
+        "method": "dir_exists",
+        "confidence": "high",
+        "industry_ref": "Lighthouse: Component Docs"
+      },
+      "has_readme": {
+        "value": true,
+        "source": "README.md",
+        "method": "file_exists",
+        "confidence": "high"
+      },
+      "has_api_descriptions": {
+        "value": true,
+        "source": "backend\\seed_marvin_group.py, backend\\models\\payroll.py",
+        "method": "pattern_scan",
+        "confidence": "medium"
+      },
+      "has_contributing": {
+        "value": true,
+        "source": "CONTRIBUTING.md or .agent/RULES.md",
+        "method": "file_exists",
+        "confidence": "high"
+      },
+      "has_api_types": {
+        "value": true,
+        "source": "frontend\\src\\lib\\gamification.ts, frontend\\src\\lib\\safeApi.ts",
+        "method": "pattern_scan",
+        "confidence": "high"
+      }
     },
     "accessibility_ux": {
-      "files_with_aria": 69,
-      "has_error_boundary": true,
-      "files_with_loading_states": 5,
-      "files_with_responsive": 55,
-      "has_dark_mode": true,
-      "has_toast_notifications": true,
-      "has_role_attributes": true,
-      "has_keyboard_navigation": true,
-      "has_focus_rings": true,
-      "has_skeleton_states": true
+      "files_with_aria": {
+        "value": 69,
+        "source": "frontend/src/",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "Lighthouse: Accessibility (aria)"
+      },
+      "has_error_boundary": {
+        "value": true,
+        "source": "frontend\\src\\App.tsx, frontend\\src\\components\\ErrorBoundary.tsx",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "Lighthouse: Error Handling"
+      },
+      "files_with_loading_states": {
+        "value": 5,
+        "source": "frontend/src/",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "Lighthouse: UX Loading States"
+      },
+      "files_with_responsive": {
+        "value": 55,
+        "source": "frontend/src/",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "Lighthouse: Responsive Design"
+      },
+      "has_dark_mode": {
+        "value": true,
+        "source": "frontend\\src\\components\\ErrorBoundary.tsx, frontend\\src\\components\\ModifierDialog.tsx",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "WCAG 2.2: Visual Presentation"
+      },
+      "has_toast_notifications": {
+        "value": true,
+        "source": "frontend\\src\\components\\DocumentUploader.tsx, frontend\\src\\components\\PermissionedTable.tsx",
+        "method": "pattern_scan",
+        "confidence": "high"
+      },
+      "has_role_attributes": {
+        "value": true,
+        "source": "frontend\\src\\layouts\\NewSidebar.tsx, frontend\\src\\routes\\aiRoutes.tsx",
+        "method": "pattern_scan",
+        "confidence": "high",
+        "industry_ref": "WCAG 2.2: Name, Role, Value"
+      },
+      "has_keyboard_navigation": {
+        "value": true,
+        "source": "frontend\\src\\layouts\\NewSidebar.tsx, frontend\\src\\pages\\collab\\HiveDashboard.tsx",
+        "method": "pattern_scan",
+        "confidence": "medium",
+        "industry_ref": "WCAG 2.2: Keyboard Accessible"
+      },
+      "has_focus_rings": {
+        "value": true,
+        "source": "frontend\\src\\layouts\\NewSidebar.tsx, frontend\\src\\layouts\\NewTopBar.tsx",
+        "method": "pattern_scan",
+        "confidence": "medium",
+        "industry_ref": "WCAG 2.2: Focus Visible"
+      },
+      "has_skeleton_states": {
+        "value": true,
+        "source": "frontend/src/components/ui/skeleton.tsx",
+        "method": "file_exists+pattern",
+        "confidence": "high",
+        "industry_ref": "Lighthouse: CLS/Loading"
+      }
     }
   },
   "weights": {
@@ -119,9 +586,9 @@
     "api_documentation": "7%",
     "accessibility_ux": "7%"
   },
-  "computed_at": 1771728381.7218308,
-  "_ts": 1771728381.7218313,
-  "_generated_at": "2026-02-22T02:46:21Z",
+  "computed_at": 1771728899.7484424,
+  "_ts": 1771728899.7484426,
+  "_generated_at": "2026-02-22T02:54:59Z",
   "_generator": "compute_audit_snapshot.py",
   "_source": "build-time"
 }

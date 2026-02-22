@@ -93,6 +93,45 @@ def _file_contains_pattern(directory: Path, extensions: List[str], pattern: str,
     return count
 
 
+def _find_pattern_files(directory: Path, extensions: List[str], pattern: str, max_files: int = 200, limit: int = 3) -> List[str]:
+    """Find up to `limit` file paths containing pattern. Returns relative paths."""
+    found = []
+    files_checked = 0
+    root = _get_project_root()
+    if not directory.exists():
+        return []
+    for ext in extensions:
+        for f in directory.rglob(f"*{ext}"):
+            if files_checked >= max_files or len(found) >= limit:
+                break
+            path_str = str(f)
+            if "node_modules" in path_str or "__pycache__" in path_str or ".git" in path_str:
+                continue
+            try:
+                content = open(f, "r", encoding="utf-8", errors="ignore").read()
+                if pattern.lower() in content.lower():
+                    try:
+                        found.append(str(f.relative_to(root)))
+                    except ValueError:
+                        found.append(f.name)
+                files_checked += 1
+            except Exception:
+                pass
+    return found
+
+
+def _check(value, source: str = "", method: str = "file_scan", confidence: str = "high", industry_ref: str = "") -> Dict:
+    """Build a rich evidence check object."""
+    obj: Dict[str, Any] = {"value": value}
+    if source:
+        obj["source"] = source
+    obj["method"] = method
+    obj["confidence"] = confidence
+    if industry_ref:
+        obj["industry_ref"] = industry_ref
+    return obj
+
+
 def compute_audit_scores() -> Dict:
     """Compute all audit dimension scores by analyzing the codebase."""
     now = time.time()
@@ -136,11 +175,11 @@ def compute_audit_scores() -> Dict:
 
     scores["code_volume"] = round(code_score, 1)
     evidence["code_volume"] = {
-        "frontend_files": fe_files,
-        "backend_files": be_files,
-        "frontend_loc": fe_loc,
-        "backend_loc": be_loc,
-        "total_loc": total_loc,
+        "frontend_files": _check(fe_files, "frontend/src/", "file_count", "high", "SonarQube: Lines of Code"),
+        "backend_files": _check(be_files, "backend/", "file_count", "high", "SonarQube: Lines of Code"),
+        "frontend_loc": _check(fe_loc, "frontend/src/", "line_count", "high", "SonarQube: ncloc"),
+        "backend_loc": _check(be_loc, "backend/", "line_count", "high", "SonarQube: ncloc"),
+        "total_loc": _check(total_loc, "", "computed", "high", "SonarQube: Total Lines"),
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -190,16 +229,16 @@ def compute_audit_scores() -> Dict:
 
     scores["architecture"] = round(min(10, arch_score), 1)
     evidence["architecture"] = {
-        "route_files": route_files,
-        "service_files": service_files,
-        "has_event_bus": has_event_bus,
-        "has_middleware": has_middleware,
-        "has_i18n": has_i18n,
-        "has_lazy_loading": has_lazy_loading,
-        "has_zustand": has_zustand,
-        "has_react_query": has_react_query,
-        "has_context_providers": has_context_providers,
-        "has_dependency_injection": has_dependency_injection,
+        "route_files": _check(route_files, "backend/routes/", "file_count", "high", "SonarQube: Module Count"),
+        "service_files": _check(service_files, "backend/services/", "file_count", "high", "SonarQube: Module Count"),
+        "has_event_bus": _check(has_event_bus, "backend/services/event_bus.py", "file_exists", "high", "DORA: Event-Driven Architecture"),
+        "has_middleware": _check(has_middleware, "backend/core/middleware.py", "file_exists", "high"),
+        "has_i18n": _check(has_i18n, ", ".join(_find_pattern_files(frontend, [".ts",".tsx"], "i18next", limit=2)), "pattern_scan", "high", "Lighthouse: Internationalization"),
+        "has_lazy_loading": _check(has_lazy_loading, ", ".join(_find_pattern_files(frontend, [".tsx"], "React.lazy", limit=2)), "pattern_scan", "high", "Lighthouse: Code Splitting"),
+        "has_zustand": _check(has_zustand, ", ".join(_find_pattern_files(frontend, [".ts",".tsx"], "zustand", limit=2)) or "pattern: create(", "pattern_scan", "medium"),
+        "has_react_query": _check(has_react_query, ", ".join(_find_pattern_files(frontend, [".ts",".tsx"], "useQuery", limit=3)), "pattern_scan", "high"),
+        "has_context_providers": _check(has_context_providers, ", ".join(_find_pattern_files(frontend, [".tsx"], "createContext", limit=2)), "pattern_scan", "high"),
+        "has_dependency_injection": _check(has_dependency_injection, "backend/core/dependencies.py", "file_exists", "high", "SonarQube: Dependency Injection"),
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -246,13 +285,13 @@ def compute_audit_scores() -> Dict:
 
     scores["testing"] = round(min(10, test_score), 1)
     evidence["testing"] = {
-        "backend_test_files": be_test_actual,
-        "frontend_test_files": fe_test_files,
-        "has_ci_cd": has_ci,
-        "has_jest_config": has_jest_config,
-        "has_pytest_config": has_pytest,
-        "has_coverage_reports": has_coverage,
-        "has_e2e_tests": has_e2e,
+        "backend_test_files": _check(be_test_actual, "backend/tests/", "file_count", "high", "SonarQube: Unit Tests"),
+        "frontend_test_files": _check(fe_test_files, "frontend/src/", "file_count", "high", "SonarQube: Unit Tests"),
+        "has_ci_cd": _check(has_ci, ".github/workflows/", "dir_exists", "high", "DORA: Deployment Frequency"),
+        "has_jest_config": _check(has_jest_config, "frontend/jest.config.js", "file_exists", "high"),
+        "has_pytest_config": _check(has_pytest, "backend/pyproject.toml", "file_exists", "high"),
+        "has_coverage_reports": _check(has_coverage, "frontend/coverage/ or backend/htmlcov/", "dir_exists", "medium", "SonarQube: Coverage %"),
+        "has_e2e_tests": _check(has_e2e, "backend/tests/", "file_count", "medium", "SonarQube: Integration Tests"),
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -302,15 +341,15 @@ def compute_audit_scores() -> Dict:
 
     scores["security"] = round(max(0, min(10, sec_score)), 1)
     evidence["security"] = {
-        "has_jwt_auth": has_jwt,
-        "has_rate_limiter": has_rate_limiter,
-        "has_rbac": has_rbac_file,
-        "has_pii_encryption": has_pii_encryption,
-        "has_audit_trail": has_audit_trail,
-        "has_security_middleware": has_security_middleware,
-        "has_cors": has_cors,
-        "has_input_validation": has_input_validation,
-        "hardcoded_secrets_found": hardcoded_secrets,
+        "has_jwt_auth": _check(has_jwt, ", ".join(_find_pattern_files(backend / "core", [".py"], "jwt", limit=2)), "pattern_scan", "high", "OWASP: A07 Auth Failures"),
+        "has_rate_limiter": _check(has_rate_limiter, "backend/core/rate_limiter.py", "file_exists", "high", "OWASP: A04 Insecure Design"),
+        "has_rbac": _check(has_rbac_file, "backend/routes/rbac_routes.py", "file_exists", "high", "OWASP: A01 Broken Access Control"),
+        "has_pii_encryption": _check(has_pii_encryption, "backend/services/pii_encryption.py", "file_exists", "high", "OWASP: A02 Crypto Failures"),
+        "has_audit_trail": _check(has_audit_trail, "backend/services/audit_trail.py", "file_exists", "high", "SOC2: Audit Logging"),
+        "has_security_middleware": _check(has_security_middleware, "backend/core/security_middleware.py", "file_exists", "high"),
+        "has_cors": _check(has_cors, "backend/server.py", "direct_read", "high", "OWASP: A05 Security Misconfiguration"),
+        "has_input_validation": _check(has_input_validation, ", ".join(_find_pattern_files(backend, [".py"], "pydantic", limit=2)), "pattern_scan", "high", "OWASP: A03 Injection"),
+        "hardcoded_secrets_found": _check(hardcoded_secrets, "", "pattern_scan", "high" if hardcoded_secrets == 0 else "critical", "OWASP: A07 Hardcoded Credentials"),
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -348,13 +387,13 @@ def compute_audit_scores() -> Dict:
 
     scores["observability"] = round(min(10, obs_score), 1)
     evidence["observability"] = {
-        "has_sentry": has_sentry,
-        "has_structured_logging": has_structured_logging,
-        "has_observability_service": has_observability_service,
-        "has_metrics_collector": has_metrics_collector,
-        "has_error_inbox": has_error_inbox,
-        "has_health_check": has_health_check,
-        "has_frontend_logging": has_frontend_logging,
+        "has_sentry": _check(has_sentry, ", ".join(_find_pattern_files(frontend, [".ts",".tsx"], "sentry", limit=2) or _find_pattern_files(backend, [".py"], "sentry", limit=2)), "pattern_scan", "medium" if has_sentry else "low", "DORA: Mean Time to Recovery"),
+        "has_structured_logging": _check(has_structured_logging, ", ".join(_find_pattern_files(backend, [".py"], "logger.error", limit=3)), "pattern_scan", "high", "SonarQube: Logging Quality"),
+        "has_observability_service": _check(has_observability_service, "backend/services/observability_service.py", "file_exists", "high"),
+        "has_metrics_collector": _check(has_metrics_collector, "backend/core/metrics_collector.py", "file_exists", "high", "DORA: Monitoring"),
+        "has_error_inbox": _check(has_error_inbox, ", ".join(_find_pattern_files(backend / "routes", [".py"], "error_inbox", limit=2)), "pattern_scan", "high"),
+        "has_health_check": _check(has_health_check, "backend/routes/system_routes.py", "file_exists", "high", "DORA: Health Probes"),
+        "has_frontend_logging": _check(has_frontend_logging, ", ".join(_find_pattern_files(frontend, [".ts",".tsx"], "logger", limit=2)), "pattern_scan", "medium", "Lighthouse: Error Handling"),
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -396,14 +435,14 @@ def compute_audit_scores() -> Dict:
 
     scores["infrastructure"] = round(min(10, infra_score), 1)
     evidence["infrastructure"] = {
-        "has_docker": has_docker,
-        "has_cdn": has_cdn,
-        "has_health_endpoint": has_health_endpoint,
-        "has_keep_alive": has_keep_alive,
-        "has_event_bus": has_event_bus_infra,
-        "has_ci_cd": has_ci,
-        "has_env_config": has_env_config,
-        "has_vercel": has_vercel,
+        "has_docker": _check(has_docker, "Dockerfile or docker-compose.yml", "file_exists", "high", "DORA: Deployment Automation"),
+        "has_cdn": _check(has_cdn, "Cloudflare (production config)", "known_config", "high", "Lighthouse: Performance"),
+        "has_health_endpoint": _check(has_health_endpoint, "backend/routes/system_routes.py", "file_exists", "high", "DORA: Health Probes"),
+        "has_keep_alive": _check(has_keep_alive, "backend/scripts/keep_alive.py", "file_exists", "high"),
+        "has_event_bus": _check(has_event_bus_infra, "backend/services/event_bus.py", "file_exists", "high", "DORA: Event-Driven"),
+        "has_ci_cd": _check(has_ci, ".github/workflows/", "dir_exists", "high", "DORA: Deployment Frequency"),
+        "has_env_config": _check(has_env_config, ".env.example or os.environ usage", "file_exists+pattern", "high"),
+        "has_vercel": _check(has_vercel, "frontend/vercel.json", "file_exists", "high", "DORA: Deployment Platform"),
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -437,7 +476,15 @@ def compute_audit_scores() -> Dict:
 
     scores["production_readiness"] = round(min(10, prod_score), 1)
     evidence["production_readiness"] = {
-        "derived_from": "health + keep_alive + ci + docker + tests + sentry + apm + env + security + cors + rate_limiting"
+        "has_health_endpoint": _check(has_health_endpoint, "backend/routes/system_routes.py", "file_exists", "high", "DORA: Health Probes"),
+        "has_keep_alive": _check(has_keep_alive, "backend/scripts/keep_alive.py", "file_exists", "high"),
+        "has_ci_cd": _check(has_ci, ".github/workflows/", "dir_exists", "high", "DORA: Deployment Frequency"),
+        "has_docker": _check(has_docker, "Dockerfile", "file_exists", "high"),
+        "has_tests": _check(fe_test_files > 0 or be_test_actual >= 3, "tests/", "file_count", "high", "SonarQube: Test Coverage"),
+        "has_sentry": _check(has_sentry, "", "pattern_scan", "medium", "DORA: Mean Time to Recovery"),
+        "has_metrics_collector": _check(has_metrics_collector, "backend/core/metrics_collector.py", "file_exists", "high"),
+        "has_cors": _check(has_cors, "backend/server.py", "direct_read", "high", "OWASP: CORS Config"),
+        "has_rate_limiting": _check(has_rate_limiting, ", ".join(_find_pattern_files(backend, [".py"], "RateLimitMiddleware", limit=1)), "pattern_scan", "medium"),
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -513,15 +560,15 @@ def compute_audit_scores() -> Dict:
 
     scores["typescript_strictness"] = round(max(0, min(10, ts_score)), 1)
     evidence["typescript_strictness"] = {
-        "has_tsconfig": has_tsconfig,
-        "strict_mode": has_strict_mode,
-        "no_implicit_any": has_no_any,
-        "files_with_any": any_count,
-        "files_with_interfaces": has_interfaces,
-        "has_zod_validation": has_zod,
-        "has_typed_hooks": has_typed_hooks,
-        "has_type_exports": has_type_exports,
-        "has_path_aliases": has_path_aliases,
+        "has_tsconfig": _check(has_tsconfig, "frontend/tsconfig.json", "file_exists", "high", "SonarQube: TypeScript Config"),
+        "strict_mode": _check(has_strict_mode, "frontend/tsconfig.json", "config_parse", "high", "SonarQube: Strict Mode"),
+        "no_implicit_any": _check(has_no_any, "frontend/tsconfig.json", "config_parse", "high"),
+        "files_with_any": _check(any_count, "frontend/src/", "pattern_scan", "high" if any_count <= 5 else "medium", "SonarQube: Code Smells"),
+        "files_with_interfaces": _check(has_interfaces, "frontend/src/", "pattern_scan", "high", "SonarQube: Type Safety"),
+        "has_zod_validation": _check(has_zod, ", ".join(_find_pattern_files(frontend, [".ts",".tsx"], "zod", limit=2) or _find_pattern_files(frontend, [".ts",".tsx"], "z.object", limit=2)), "pattern_scan", "medium", "OWASP: Input Validation"),
+        "has_typed_hooks": _check(has_typed_hooks, ", ".join(_find_pattern_files(frontend, [".ts",".tsx"], "useState<", limit=2)), "pattern_scan", "high"),
+        "has_type_exports": _check(has_type_exports, ", ".join(_find_pattern_files(frontend, [".ts",".tsx"], "export type ", limit=2)), "pattern_scan", "high"),
+        "has_path_aliases": _check(has_path_aliases, "frontend/tsconfig.json", "config_parse", "high"),
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -563,13 +610,13 @@ def compute_audit_scores() -> Dict:
 
     scores["api_documentation"] = round(min(10, docs_score), 1)
     evidence["api_documentation"] = {
-        "has_swagger_openapi": has_swagger or has_openapi,
-        "route_files_with_docstrings": has_docstrings,
-        "has_storybook": has_storybook,
-        "has_readme": has_readme,
-        "has_api_descriptions": has_api_docs,
-        "has_contributing": has_contributing,
-        "has_api_types": has_api_types,
+        "has_swagger_openapi": _check(has_swagger or has_openapi, ", ".join(_find_pattern_files(backend, [".py"], "FastAPI", limit=2)), "pattern_scan", "high" if has_openapi else "medium", "SonarQube: API Documentation"),
+        "route_files_with_docstrings": _check(has_docstrings, "backend/routes/", "pattern_scan", "high", "SonarQube: Documented API %"),
+        "has_storybook": _check(has_storybook, "frontend/.storybook/", "dir_exists", "high", "Lighthouse: Component Docs"),
+        "has_readme": _check(has_readme, "README.md", "file_exists", "high"),
+        "has_api_descriptions": _check(has_api_docs, ", ".join(_find_pattern_files(backend, [".py"], "description=", limit=2)), "pattern_scan", "medium"),
+        "has_contributing": _check(has_contributing, "CONTRIBUTING.md or .agent/RULES.md", "file_exists", "high"),
+        "has_api_types": _check(has_api_types, ", ".join(_find_pattern_files(frontend, [".ts",".tsx"], "export type ", limit=2)), "pattern_scan", "high"),
     }
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -624,16 +671,16 @@ def compute_audit_scores() -> Dict:
 
     scores["accessibility_ux"] = round(min(10, a11y_score), 1)
     evidence["accessibility_ux"] = {
-        "files_with_aria": aria_usage,
-        "has_error_boundary": has_error_boundary,
-        "files_with_loading_states": has_loading_states,
-        "files_with_responsive": has_responsive,
-        "has_dark_mode": has_dark_mode,
-        "has_toast_notifications": has_toast,
-        "has_role_attributes": has_role_attr,
-        "has_keyboard_navigation": has_keyboard_nav,
-        "has_focus_rings": has_focus_ring,
-        "has_skeleton_states": has_skeleton,
+        "files_with_aria": _check(aria_usage, "frontend/src/", "pattern_scan", "high", "Lighthouse: Accessibility (aria)"),
+        "has_error_boundary": _check(has_error_boundary, ", ".join(_find_pattern_files(frontend, [".tsx"], "ErrorBoundary", limit=2)), "pattern_scan", "high", "Lighthouse: Error Handling"),
+        "files_with_loading_states": _check(has_loading_states, "frontend/src/", "pattern_scan", "high", "Lighthouse: UX Loading States"),
+        "files_with_responsive": _check(has_responsive, "frontend/src/", "pattern_scan", "high", "Lighthouse: Responsive Design"),
+        "has_dark_mode": _check(has_dark_mode, ", ".join(_find_pattern_files(frontend, [".tsx",".css"], "dark:", limit=2)), "pattern_scan", "high", "WCAG 2.2: Visual Presentation"),
+        "has_toast_notifications": _check(has_toast, ", ".join(_find_pattern_files(frontend, [".tsx"], "toast", limit=2)), "pattern_scan", "high"),
+        "has_role_attributes": _check(has_role_attr, ", ".join(_find_pattern_files(frontend, [".tsx"], "role=", limit=2)), "pattern_scan", "high", "WCAG 2.2: Name, Role, Value"),
+        "has_keyboard_navigation": _check(has_keyboard_nav, ", ".join(_find_pattern_files(frontend, [".tsx"], "onKeyDown", limit=2)), "pattern_scan", "medium", "WCAG 2.2: Keyboard Accessible"),
+        "has_focus_rings": _check(has_focus_ring, ", ".join(_find_pattern_files(frontend, [".tsx",".css"], "focus:", limit=2) or _find_pattern_files(frontend, [".tsx",".css"], "focus-visible", limit=2)), "pattern_scan", "medium", "WCAG 2.2: Focus Visible"),
+        "has_skeleton_states": _check(has_skeleton, "frontend/src/components/ui/skeleton.tsx", "file_exists+pattern", "high", "Lighthouse: CLS/Loading"),
     }
 
     # ═══════════════════════════════════════════════════════════════════════════

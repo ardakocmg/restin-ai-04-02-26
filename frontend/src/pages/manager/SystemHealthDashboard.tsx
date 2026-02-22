@@ -1,5 +1,5 @@
-import { Activity, AlertCircle, CheckCircle, Cpu, Database, Server, RefreshCw, Shield, Clock, Zap, BarChart3, FileCode2, TestTube2, Eye, Wrench, FileText, Accessibility } from 'lucide-react';
-import { useEffect } from 'react';
+import { Activity, AlertCircle, CheckCircle, ChevronDown, Cpu, Database, Server, RefreshCw, Shield, Clock, Zap, BarChart3, FileCode2, TestTube2, Eye, Wrench, FileText, Accessibility, ExternalLink } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import PermissionGate from '../../components/shared/PermissionGate';
@@ -34,8 +34,16 @@ interface HealthMetrics {
 interface AuditScores {
   overall_score: number;
   scores: Record<string, number>;
-  evidence: Record<string, Record<string, unknown>>;
+  evidence: Record<string, Record<string, EvidenceCheck>>;
   _source?: string;
+}
+
+interface EvidenceCheck {
+  value: unknown;
+  source?: string;
+  method: string;
+  confidence: string;
+  industry_ref?: string;
 }
 
 // ─── Fetchers ─────────────────────────────────────────────────────────────────
@@ -64,6 +72,23 @@ const getScoreColor = (score: number): string => {
   if (score >= 6) return 'text-yellow-400';
   if (score >= 4) return 'text-orange-400';
   return 'text-red-400';
+};
+
+const getConfidenceBadge = (c: string): { color: string; label: string } => {
+  if (c === 'high') return { color: 'bg-green-500/20 text-green-400 border-green-500/30', label: 'High' };
+  if (c === 'medium') return { color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30', label: 'Medium' };
+  if (c === 'critical') return { color: 'bg-red-500/20 text-red-400 border-red-500/30', label: 'Critical' };
+  return { color: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30', label: 'Low' };
+};
+
+const getMethodLabel = (m: string): string => {
+  const labels: Record<string, string> = {
+    file_exists: 'File Exists', file_count: 'File Count', line_count: 'Line Count',
+    pattern_scan: 'Pattern Scan', config_parse: 'Config Parse', direct_read: 'Direct Read',
+    dir_exists: 'Dir Exists', computed: 'Computed', known_config: 'Known Config',
+    'file_exists+pattern': 'File + Pattern',
+  };
+  return labels[m] || m;
 };
 
 const getScoreBarColor = (score: number): string => {
@@ -107,6 +132,8 @@ export default function SystemHealthDashboard() {
   useEffect(() => {
     if (user?.id) logAction('SYSTEM_HEALTH_VIEWED', 'system_health_dashboard');
   }, [user?.id]);
+
+  const [expandedDim, setExpandedDim] = useState<string | null>(null);
 
   const { data: health, isLoading: healthLoading, refetch: refetchHealth } = useQuery<HealthMetrics>({
     queryKey: ['health-metrics'],
@@ -236,21 +263,96 @@ export default function SystemHealthDashboard() {
                   {Object.entries(audit.scores).map(([key, score]) => {
                     const Icon = DIMENSION_ICONS[key] || Activity;
                     const label = DIMENSION_LABELS[key] || key;
+                    const isExpanded = expandedDim === key;
+                    const dimEvidence = audit.evidence[key] || {};
                     return (
-                      <div key={key} className="p-4 rounded-lg bg-white/[0.02] border border-white/5">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-2">
-                            <Icon className={`h-4 w-4 ${getScoreColor(score)}`} />
-                            <span className="text-sm font-medium text-zinc-200">{label}</span>
+                      <div
+                        key={key}
+                        className={`rounded-lg border transition-all cursor-pointer ${isExpanded
+                            ? 'bg-white/[0.04] border-blue-500/30 col-span-1 md:col-span-2 lg:col-span-3'
+                            : 'bg-white/[0.02] border-white/5 hover:border-white/10'
+                          }`}
+                        onClick={() => setExpandedDim(isExpanded ? null : key)}
+                      >
+                        <div className="p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <Icon className={`h-4 w-4 ${getScoreColor(score)}`} />
+                              <span className="text-sm font-medium text-zinc-200">{label}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className={`text-lg font-bold ${getScoreColor(score)}`}>{score}</span>
+                              <ChevronDown className={`h-4 w-4 text-zinc-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                            </div>
                           </div>
-                          <span className={`text-lg font-bold ${getScoreColor(score)}`}>{score}</span>
+                          <div className="w-full bg-zinc-800 rounded-full h-2">
+                            <div
+                              className={`h-2 rounded-full transition-all duration-500 ${getScoreBarColor(score)}`}
+                              style={{ width: `${(score / 10) * 100}%` }}
+                            />
+                          </div>
                         </div>
-                        <div className="w-full bg-zinc-800 rounded-full h-2">
-                          <div
-                            className={`h-2 rounded-full transition-all duration-500 ${getScoreBarColor(score)}`}
-                            style={{ width: `${(score / 10) * 100}%` }}
-                          />
-                        </div>
+                        {isExpanded && (
+                          <div className="px-4 pb-4 border-t border-white/5 pt-3" onClick={(e) => e.stopPropagation()}>
+                            <table className="w-full text-xs">
+                              <thead>
+                                <tr className="text-zinc-500 border-b border-white/5">
+                                  <th className="text-left py-2 font-medium">Check</th>
+                                  <th className="text-left py-2 font-medium">Value</th>
+                                  <th className="text-left py-2 font-medium">Source</th>
+                                  <th className="text-left py-2 font-medium">Method</th>
+                                  <th className="text-left py-2 font-medium">Confidence</th>
+                                  <th className="text-left py-2 font-medium">Standard</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {Object.entries(dimEvidence).map(([checkKey, check]) => {
+                                  const c = check as EvidenceCheck;
+                                  const conf = getConfidenceBadge(c.confidence || 'low');
+                                  const val = c.value;
+                                  const isPass = typeof val === 'boolean' ? val : typeof val === 'number' ? val > 0 : !!val;
+                                  return (
+                                    <tr key={checkKey} className="border-b border-white/[0.03] hover:bg-white/[0.02]">
+                                      <td className="py-2 text-zinc-300 font-mono">{checkKey}</td>
+                                      <td className="py-2">
+                                        {typeof val === 'boolean' ? (
+                                          <span className={val ? 'text-green-400' : 'text-red-400'}>
+                                            {val ? '✓' : '✗'}
+                                          </span>
+                                        ) : (
+                                          <span className="text-zinc-200 font-mono">{String(val)}</span>
+                                        )}
+                                      </td>
+                                      <td className="py-2 text-zinc-400 max-w-[200px] truncate" title={c.source || ''}>
+                                        {c.source || '—'}
+                                      </td>
+                                      <td className="py-2">
+                                        <span className="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
+                                          {getMethodLabel(c.method)}
+                                        </span>
+                                      </td>
+                                      <td className="py-2">
+                                        <span className={`px-1.5 py-0.5 rounded border text-[10px] ${conf.color}`}>
+                                          {conf.label}
+                                        </span>
+                                      </td>
+                                      <td className="py-2">
+                                        {c.industry_ref ? (
+                                          <span className="flex items-center gap-1 text-blue-400">
+                                            <ExternalLink className="h-3 w-3" />
+                                            {c.industry_ref}
+                                          </span>
+                                        ) : (
+                                          <span className="text-zinc-600">—</span>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
