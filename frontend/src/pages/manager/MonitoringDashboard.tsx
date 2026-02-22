@@ -76,18 +76,18 @@ export default function MonitoringDashboard() {
     {
       name: 'FastAPI Backend',
       status: metrics.error_rate_5xx < 0.05 ? 'healthy' : metrics.error_rate_5xx < 0.1 ? 'degraded' : 'unhealthy',
-      responseTime: `${metrics.avg_latency_ms.toFixed(1)}ms`,
+      responseTime: `${(metrics.avg_latency_ms || 0).toFixed(1)}ms`,
       uptime: formatUptime(metrics.uptime_seconds),
       details: {
-        rps: metrics.rps.toFixed(2),
+        rps: (metrics.rps || 0).toFixed(2),
         total_requests: metrics.total_requests,
-        error_rate: `${(metrics.error_rate_5xx * 100).toFixed(2)}%`,
+        error_rate: `${((metrics.error_rate_5xx || 0) * 100).toFixed(2)}%`,
       },
     },
     {
       name: 'MongoDB Atlas',
       status: metrics.db_ok ? 'healthy' : 'unhealthy',
-      responseTime: `${metrics.db_latency_ms.toFixed(1)}ms`,
+      responseTime: `${(metrics.db_latency_ms || 0).toFixed(1)}ms`,
       uptime: metrics.db_ok ? '99.9%' : 'DOWN',
       details: {
         collections: Object.keys(metrics.collection_stats || {}).length,
