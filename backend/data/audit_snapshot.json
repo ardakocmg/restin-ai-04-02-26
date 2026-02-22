@@ -1,0 +1,127 @@
+{
+  "overall_score": 8.8,
+  "scores": {
+    "code_volume": 10,
+    "architecture": 9.0,
+    "testing": 9.5,
+    "security": 9.0,
+    "observability": 8.6,
+    "infrastructure": 9.2,
+    "production_readiness": 8.1,
+    "typescript_strictness": 8.5,
+    "api_documentation": 8.0,
+    "accessibility_ux": 7.0
+  },
+  "evidence": {
+    "code_volume": {
+      "frontend_files": 656,
+      "backend_files": 725,
+      "frontend_loc": 112226,
+      "backend_loc": 63515,
+      "total_loc": 175741
+    },
+    "architecture": {
+      "route_files": 155,
+      "service_files": 80,
+      "has_event_bus": true,
+      "has_middleware": true,
+      "has_i18n": true,
+      "has_lazy_loading": true,
+      "has_zustand": false,
+      "has_react_query": false,
+      "has_context_providers": true,
+      "has_dependency_injection": true
+    },
+    "testing": {
+      "backend_test_files": 25,
+      "frontend_test_files": 7,
+      "has_ci_cd": true,
+      "has_jest_config": true,
+      "has_pytest_config": true,
+      "has_coverage_reports": true,
+      "has_e2e_tests": true
+    },
+    "security": {
+      "has_jwt_auth": true,
+      "has_rate_limiter": true,
+      "has_rbac": true,
+      "has_pii_encryption": true,
+      "has_audit_trail": true,
+      "has_security_middleware": true,
+      "has_cors": false,
+      "has_input_validation": true,
+      "hardcoded_secrets_found": 0
+    },
+    "observability": {
+      "has_sentry": false,
+      "has_structured_logging": true,
+      "has_observability_service": true,
+      "has_metrics_collector": true,
+      "has_error_inbox": true,
+      "has_health_check": false,
+      "has_frontend_logging": true
+    },
+    "infrastructure": {
+      "has_docker": true,
+      "has_cdn": true,
+      "has_health_endpoint": false,
+      "has_keep_alive": true,
+      "has_event_bus": true,
+      "has_ci_cd": true,
+      "has_env_config": true,
+      "has_vercel": true
+    },
+    "production_readiness": {
+      "derived_from": "health + keep_alive + ci + docker + tests + sentry + apm + env + security + cors + rate_limiting"
+    },
+    "typescript_strictness": {
+      "has_tsconfig": true,
+      "strict_mode": false,
+      "no_implicit_any": false,
+      "files_with_any": 0,
+      "files_with_interfaces": 25,
+      "has_zod_validation": false,
+      "has_typed_hooks": false,
+      "has_type_exports": true,
+      "has_path_aliases": true
+    },
+    "api_documentation": {
+      "has_swagger_openapi": false,
+      "route_files_with_docstrings": 50,
+      "has_storybook": true,
+      "has_readme": true,
+      "has_api_descriptions": false,
+      "has_contributing": true,
+      "has_api_types": true
+    },
+    "accessibility_ux": {
+      "files_with_aria": 15,
+      "has_error_boundary": true,
+      "files_with_loading_states": 1,
+      "files_with_responsive": 3,
+      "has_dark_mode": true,
+      "has_toast_notifications": true,
+      "has_role_attributes": true,
+      "has_keyboard_navigation": false,
+      "has_focus_rings": false,
+      "has_skeleton_states": false
+    }
+  },
+  "weights": {
+    "code_volume": "10%",
+    "architecture": "12%",
+    "testing": "15%",
+    "security": "10%",
+    "observability": "10%",
+    "infrastructure": "12%",
+    "production_readiness": "10%",
+    "typescript_strictness": "7%",
+    "api_documentation": "7%",
+    "accessibility_ux": "7%"
+  },
+  "computed_at": 1771726464.4616866,
+  "_ts": 1771726464.461687,
+  "_generated_at": "2026-02-22T02:14:24Z",
+  "_generator": "compute_audit_snapshot.py",
+  "_source": "build-time"
+}

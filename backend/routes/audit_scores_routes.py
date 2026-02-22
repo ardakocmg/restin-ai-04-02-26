@@ -708,12 +708,29 @@ def _compute_resilience(snapshot: Dict, db_ok: bool) -> float:
 @router.get("/audit-scores")
 async def get_audit_scores(current_user: dict = Depends(get_current_user)):
     """
-    Automated system audit scoring — scans codebase for architecture,
-    testing, security, observability, and infrastructure maturity.
-    Cached for 5 minutes.
+    Automated system audit scoring.
+    
+    Priority:
+      1. Pre-computed snapshot (backend/data/audit_snapshot.json) — build-time
+      2. Runtime filesystem scan — fallback for local dev
     """
+    import json as _json
+
+    # Try snapshot first (works in production where frontend/ doesn't exist)
+    snapshot_path = Path(__file__).resolve().parent.parent / "data" / "audit_snapshot.json"
+    if snapshot_path.exists():
+        try:
+            with open(snapshot_path, "r", encoding="utf-8") as f:
+                data = _json.load(f)
+            data["_source"] = "snapshot"
+            return data
+        except Exception as e:
+            logger.warning("Failed to read audit snapshot: %s", e)
+
+    # Fallback: runtime computation (only works where both dirs exist)
     try:
         return compute_audit_scores()
     except Exception as e:
         logger.error("Audit score computation failed: %s", e)
         return {"error": str(e), "scores": {}}
+
