@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 """Payroll Malta Routes"""
 from fastapi import APIRouter, Depends, Query
 from datetime import datetime
@@ -21,7 +24,7 @@ def create_payroll_mt_router():
             from bson import ObjectId
             try:
                 le = await db.legal_entities.find_one({"_id": ObjectId(le_id), "deleted_at": None})
-            except Exception:
+            except Exception as e:  # noqa
                 le = await db.legal_entities.find_one({"id": le_id, "deleted_at": None})
             if le:
                 return {
@@ -222,7 +225,8 @@ def create_payroll_mt_router():
                 # Inject legal entity meta into report
                 report["employer"] = legal_entity_meta
                 return {"ok": True, "data": report}
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Silenced error: {e}")
             pass
 
         # Fallback: query seeded fs5_forms collection directly
@@ -253,7 +257,8 @@ def create_payroll_mt_router():
             if report:
                 report["employer"] = employer_meta
                 return {"ok": True, "data": report}
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Silenced error: {e}")
             pass
 
         # Fallback: query seeded fs3_entries by employee_id
@@ -341,7 +346,8 @@ def create_payroll_mt_router():
             from bson import ObjectId
             try:
                 run = await db.payroll_runs.find_one({"_id": ObjectId(run_id), "venue_id": venue_id})
-            except:
+            except Exception as e:
+                logger.warning(f"Silenced error: {e}")
                 pass
         
         if not run:

@@ -319,7 +319,7 @@ def create_staff_unified_router():
         try:
             result = await db.orders.aggregate(pipeline).to_list(1)
             stats = result[0] if result else {}
-        except Exception:
+        except Exception as e:  # noqa
             stats = {}
 
         void_count = await db.voids.count_documents(

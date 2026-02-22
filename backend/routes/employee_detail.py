@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 """Employee Detail Routes"""
 import os
 from fastapi import APIRouter, Depends, HTTPException
@@ -147,7 +150,8 @@ async def download_document(
         from bson import ObjectId
         try:
              doc = await db.documents.find_one({"_id": ObjectId(doc_id)})
-        except:
+        except Exception as e:
+             logger.warning(f"Silenced error: {e}")
              pass
              
     if not doc:

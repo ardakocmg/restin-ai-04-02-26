@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 """
 Observability Routes - Test Panel & Error Inbox
 """
@@ -315,7 +318,7 @@ def create_observability_router():
             status_code = response.status_code
             try:
                 response_payload = response.json()
-            except Exception:
+            except Exception as e:  # noqa
                 response_payload = {"raw": response.text}
         except Exception as exc:
             response_payload = {"error": str(exc)}
@@ -472,7 +475,7 @@ def create_observability_router():
             status_code = response.status_code
             try:
                 response_payload = response.json()
-            except Exception:
+            except Exception as e:  # noqa
                 response_payload = {"raw": response.text}
         except Exception as exc:
             response_payload = {"error": str(exc)}

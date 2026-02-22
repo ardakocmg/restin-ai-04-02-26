@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 from fastapi import APIRouter, HTTPException, Depends, Request
 from typing import Optional, List, Dict, Any
 from datetime import datetime, timedelta, timezone
@@ -35,7 +38,7 @@ def create_pos_report_router():
             try:
                 dt_start = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
                 dt_end = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
-            except:
+            except Exception as e:  # noqa
                 dt_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
                 dt_end = now
         else:

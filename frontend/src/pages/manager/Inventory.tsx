@@ -1,9 +1,9 @@
-import { AlertTriangle,Plus } from 'lucide-react';
-import { useEffect,useState } from 'react';
+import { AlertTriangle, Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import DataTable from '../../components/shared/DataTable';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
-import { Card,CardContent } from '../../components/ui/card';
+import { Card, CardContent } from '../../components/ui/card';
 import { useVenue } from '../../context/VenueContext';
 import PageContainer from '../../layouts/PageContainer';
 import api from '../../lib/api';
@@ -25,7 +25,7 @@ interface TableQuery {
   pageSize: number;
   sorting: Array<{ id: string; desc: boolean }>;
   globalSearch: string;
-  filters: /**/any;
+  filters: Record<string, unknown>;
 }
 
 export default function Inventory() {
@@ -76,7 +76,7 @@ export default function Inventory() {
 
   const loadInventory = async (query: TableQuery = tableQuery) => {
     try {
-      const params: /**/any = {
+      const params: Record<string, string | number | undefined> = {
         page: query.pageIndex + 1,
         page_size: query.pageSize,
         search: query.globalSearch || undefined
@@ -114,12 +114,12 @@ export default function Inventory() {
 
   const handleExport = async (query: TableQuery) => {
     try {
-      const params: /**/any = {
+      const params: Record<string, string | number | undefined> = {
         page: 1,
         page_size: 1000,
         search: query.globalSearch || undefined
       };
-      const filters = query.filters || {} as /**/any;
+      const filters = query.filters || {} as Record<string, unknown>;
       if ((filters.unit as string[] | undefined)?.length) params.unit = (filters.unit as string[]).join(',');
       if ((filters.current_stock as Record<string, number> | undefined)?.min) params.current_stock_min = (filters.current_stock as Record<string, number>).min;
       if ((filters.current_stock as Record<string, number> | undefined)?.max) params.current_stock_max = (filters.current_stock as Record<string, number>).max;

@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 """Recipe Engineering Routes"""
 from fastapi import APIRouter, HTTPException, Depends, Request, Query
 from fastapi.responses import StreamingResponse, JSONResponse
@@ -665,7 +668,7 @@ def create_recipe_engineering_router():
         
         try:
             sales_data = await db.orders.aggregate(sales_pipeline).to_list(1000)
-        except Exception:
+        except Exception as e:  # noqa
             sales_data = []
         
         # Build lookup map: recipe_name -> {times_sold, revenue}

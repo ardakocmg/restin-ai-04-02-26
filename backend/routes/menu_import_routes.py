@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 """Menu import routes - Excel/CSV menu import"""
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File
 from typing import Dict, Any, List
@@ -33,7 +36,8 @@ def parse_price(price_str: str) -> float:
             return 0.0
         
         return round(price, 2)
-    except:
+    except Exception as e:
+        logger.warning(f"Silenced error: {e}")
         return 0.0
 
 

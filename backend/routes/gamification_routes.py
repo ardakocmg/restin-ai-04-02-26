@@ -270,7 +270,8 @@ def create_gamification_router():
                             hours_left = f"{hours}h left"
                         else:
                             hours_left = "Overdue"
-                    except Exception:
+                    except Exception as e:
+                        logger.warning(f"Silenced error: {e}")
                         pass
 
                 quests.append(

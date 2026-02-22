@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 """Summary Dashboard Routes"""
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
@@ -23,7 +26,8 @@ async def get_summary_dashboard(
     if venue_id not in ("GLOBAL", "system"):
         try:
             await check_venue_access(current_user, venue_id)
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Silenced error: {e}")
             pass  # Allow through for demo
 
     # Real DB queries for KPI metrics

@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 """Clocking Data Routes"""
 from fastapi import APIRouter, Depends, HTTPException, Request
 from models.clocking_data import ClockingRecord, ClockingDataRequest
@@ -118,7 +121,7 @@ async def clock_in(
         try:
             from core.venue_config import DEFAULTS
             approval_rules = DEFAULTS.get("rules", {}).get("approval", {}).get("manual_clocking", {})
-        except Exception:
+        except Exception as e:  # noqa
             approval_rules = {}
 
     # Check if staff app requires approval
@@ -154,7 +157,8 @@ async def clock_in(
                 if diff_mins > tolerance:
                     needs_approval = True
                     approval_reason = f"Shift mismatch: clocking at {now_malta.strftime('%H:%M')}, shift starts at {shift_start_str} ({int(diff_mins)}min diff)"
-            except Exception:
+            except Exception as e:
+                logger.warning(f"Silenced error: {e}")
                 pass
         elif not scheduled_shift:
             needs_approval = True

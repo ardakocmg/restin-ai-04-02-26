@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 """
 Malta Payroll Compliance Routes
 Handles FS3, FS5, FS7 and SEPA XML Generation
@@ -62,7 +65,8 @@ def get_month_year_from_period(period_end: str):
         if len(parts) == 3:
             return parts[1], parts[2]
         return "01", datetime.now().strftime("%Y")
-    except:
+    except Exception as e:
+        logger.warning(f"Silenced error: {e}")
         return "01", datetime.now().strftime("%Y")
 
 

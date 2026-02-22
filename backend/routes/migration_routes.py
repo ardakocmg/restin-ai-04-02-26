@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Body
 from typing import Optional, List, Dict
 from core.dependencies import get_current_user
@@ -171,7 +174,7 @@ async def backfill_item_ids(
         try:
             # Extract number from MG{CODE}{NUM}
             current_seq = int(max_recipe["item_id"].replace(prefix, ""))
-        except:
+        except Exception as e:  # noqa
             current_seq = 0
             
     # If no existing sequences, make sure we account for total existing to avoid collision if regex failed

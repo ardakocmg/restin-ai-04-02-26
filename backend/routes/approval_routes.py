@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 """Approval Center Routes — Unified approval workflow with venue config integration"""
 from fastapi import APIRouter, Depends, HTTPException, Request
 from models.approval_request import ApprovalRequest
@@ -45,7 +48,8 @@ async def _get_approval_config(venue_id: str, approval_type: str) -> dict:
         defaults = DEFAULT_APPROVAL.get(approval_type, {})
         venue_type_cfg = venue_approval.get(approval_type, {})
         return {**defaults, **venue_type_cfg}
-    except Exception:
+    except Exception as e:
+        logger.warning(f"Silenced error: {e}")
         return DEFAULT_APPROVAL.get(approval_type, {})
 
 

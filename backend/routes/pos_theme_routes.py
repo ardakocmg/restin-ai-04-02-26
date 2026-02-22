@@ -261,7 +261,7 @@ async def get_theme(
     # Check custom themes
     try:
         doc = await db.pos_themes.find_one({"_id": ObjectId(theme_id), "deleted_at": None})
-    except Exception:
+    except Exception as e:  # noqa
         raise HTTPException(status_code=404, detail="Theme not found")
 
     if not doc:
@@ -322,7 +322,7 @@ async def update_theme(
             {"_id": ObjectId(theme_id), "deleted_at": None},
             update,
         )
-    except Exception:
+    except Exception as e:  # noqa
         raise HTTPException(status_code=404, detail="Theme not found")
 
     if result.matched_count == 0:
@@ -346,7 +346,8 @@ async def duplicate_theme(
     else:
         try:
             source = await db.pos_themes.find_one({"_id": ObjectId(theme_id), "deleted_at": None})
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Silenced error: {e}")
             pass
 
     if not source:
@@ -393,7 +394,7 @@ async def delete_theme(
             {"_id": ObjectId(theme_id), "deleted_at": None},
             {"$set": {"deleted_at": datetime.now(timezone.utc)}},
         )
-    except Exception:
+    except Exception as e:  # noqa
         raise HTTPException(status_code=404, detail="Theme not found")
 
     if result.matched_count == 0:
@@ -417,7 +418,8 @@ async def activate_theme(
         try:
             doc = await db.pos_themes.find_one({"_id": ObjectId(theme_id), "deleted_at": None})
             exists = doc is not None
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Silenced error: {e}")
             pass
 
     if not exists:

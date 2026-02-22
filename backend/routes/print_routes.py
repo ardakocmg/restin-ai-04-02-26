@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 """Print routes - printers, templates, and jobs"""
 from fastapi import APIRouter, Depends, HTTPException, Query, Body, status
 from typing import List, Optional
@@ -138,7 +141,8 @@ def create_print_router():
         try:
             # Try to sort if DB supports it, MockDB supports restricted sort
             cursor = cursor.sort("created_at", -1) 
-        except:
+        except Exception as e:
+            logger.warning(f"Silenced error: {e}")
             pass
             
         return await cursor.to_list(100)

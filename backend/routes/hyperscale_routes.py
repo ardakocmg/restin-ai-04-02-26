@@ -53,7 +53,8 @@ async def get_hyperscale_metrics(current_user: dict = Depends(get_current_user))
         await db.command("ping")
         db_latency_ms = round((time.monotonic() - start) * 1000, 1)
         db_ok = True
-    except Exception:
+    except Exception as e:
+        logger.warning(f"Silenced error: {e}")
         pass
     
     # 5. Collection stats (active data volume)
@@ -119,7 +120,8 @@ async def get_hyperscale_metrics(current_user: dict = Depends(get_current_user))
                 "timestamp": doc.get("timestamp", ""),
                 "count": doc.get("occurrence_count", 1),
             })
-    except Exception:
+    except Exception as e:
+        logger.warning(f"Silenced error: {e}")
         pass
     error_rate_5xx = snapshot.get("error_rate_5xx", 0)
     silent_failure_risk = min(100, round(error_rate_5xx * 100 * 5, 1))

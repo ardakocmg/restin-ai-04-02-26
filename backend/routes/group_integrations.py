@@ -168,7 +168,8 @@ def create_group_integrations_router():
                         "scope": "venue",
                         "devices": nuki_count,
                     }
-            except Exception:
+            except Exception as e:
+                logger.warning(f"Silenced error: {e}")
                 pass
 
             matrix[vid] = venue_integrations

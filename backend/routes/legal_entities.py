@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 """
 Legal Entities API — Manages company registrations within an organization.
 Hierarchy: Organization → Legal Entity → Venue (Branch)
@@ -98,7 +101,8 @@ async def list_legal_entities(
                 v = await db.venues.find_one({"_id": ObjectId(vid)})
                 if v:
                     venue_names.append({"_id": str(v["_id"]), "name": v.get("name", "Unknown")})
-            except Exception:
+            except Exception as e:
+                logger.warning(f"Silenced error: {e}")
                 pass
         entity["venues"] = venue_names
 
@@ -114,7 +118,7 @@ async def get_legal_entity(
     db = get_db()
     try:
         doc = await db.legal_entities.find_one({"_id": ObjectId(entity_id)})
-    except Exception:
+    except Exception as e:  # noqa
         raise HTTPException(status_code=400, detail="Invalid entity ID")
 
     if not doc:
@@ -129,7 +133,8 @@ async def get_legal_entity(
             v = await db.venues.find_one({"_id": ObjectId(vid)})
             if v:
                 venue_names.append({"_id": str(v["_id"]), "name": v.get("name", "Unknown")})
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Silenced error: {e}")
             pass
     entity["venues"] = venue_names
 
@@ -175,7 +180,7 @@ async def update_legal_entity(
     db = get_db()
     try:
         oid = ObjectId(entity_id)
-    except Exception:
+    except Exception as e:  # noqa
         raise HTTPException(status_code=400, detail="Invalid entity ID")
 
     existing = await db.legal_entities.find_one({"_id": oid})
@@ -203,7 +208,7 @@ async def delete_legal_entity(
     db = get_db()
     try:
         oid = ObjectId(entity_id)
-    except Exception:
+    except Exception as e:  # noqa
         raise HTTPException(status_code=400, detail="Invalid entity ID")
 
     existing = await db.legal_entities.find_one({"_id": oid})
@@ -228,7 +233,8 @@ async def delete_legal_entity(
                     {"_id": ObjectId(vid)},
                     {"$unset": {"legal_entity_id": ""}}
                 )
-            except Exception:
+            except Exception as e:
+                logger.warning(f"Silenced error: {e}")
                 pass
 
     return {"message": "Legal entity deleted (soft)"}
@@ -244,7 +250,7 @@ async def assign_venues(
     db = get_db()
     try:
         oid = ObjectId(entity_id)
-    except Exception:
+    except Exception as e:  # noqa
         raise HTTPException(status_code=400, detail="Invalid entity ID")
 
     existing = await db.legal_entities.find_one({"_id": oid})
@@ -274,7 +280,8 @@ async def assign_venues(
                 {"_id": ObjectId(vid)},
                 {"$set": {"legal_entity_id": entity_id}}
             )
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Silenced error: {e}")
             pass
 
     return {"message": f"Assigned {len(body.venue_ids)} venues to entity"}

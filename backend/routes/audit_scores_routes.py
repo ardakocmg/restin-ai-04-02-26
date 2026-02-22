@@ -22,7 +22,7 @@ from typing import Dict, List
 
 logger = logging.getLogger("audit_scores")
 
-router = APIRouter(prefix="/system", tags=["hyperscale"])
+router = APIRouter(prefix="/system", tags=["audit-scores"])
 
 # Cache
 _cache: Dict = {}
@@ -65,7 +65,8 @@ def _count_lines(directory: Path, extensions: List[str], max_files: int = 500) -
             try:
                 total += sum(1 for _ in open(f, "r", encoding="utf-8", errors="ignore"))
                 files_counted += 1
-            except Exception:
+            except Exception as e:
+                logger.warning(f"Silenced error: {e}")
                 pass
     return total
 
@@ -88,7 +89,8 @@ def _file_contains_pattern(directory: Path, extensions: List[str], pattern: str,
                 if pattern.lower() in content.lower():
                     count += 1
                 files_checked += 1
-            except Exception:
+            except Exception as e:
+                logger.warning(f"Silenced error: {e}")
                 pass
     return count
 
@@ -115,7 +117,8 @@ def _find_pattern_files(directory: Path, extensions: List[str], pattern: str, ma
                     except ValueError:
                         found.append(f.name)
                 files_checked += 1
-            except Exception:
+            except Exception as e:
+                logger.warning(f"Silenced error: {e}")
                 pass
     return found
 
@@ -505,7 +508,8 @@ def compute_audit_scores() -> Dict:
             content = tsconfig_path.read_text(encoding="utf-8", errors="ignore")
             has_strict_mode = '"strict": true' in content or '"strict":true' in content
             has_no_any = '"noImplicitAny": true' in content
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Silenced error: {e}")
             pass
 
     if has_strict_mode:
@@ -553,7 +557,8 @@ def compute_audit_scores() -> Dict:
         try:
             content = tsconfig_path.read_text(encoding="utf-8", errors="ignore")
             has_path_aliases = '"paths"' in content or '"@/' in content
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Silenced error: {e}")
             pass
     if has_path_aliases:
         ts_score += 0.5
