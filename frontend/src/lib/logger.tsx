@@ -52,19 +52,19 @@ class Logger {
         switch (entry.level) {
             case 'debug':
                 // eslint-disable-next-line no-console
-                logger.debug(`${prefix} ${entry.message}${contextStr}`);
+                console.debug(`${prefix} ${entry.message}${contextStr}`);
                 break;
             case 'info':
                 // eslint-disable-next-line no-console
-                logger.info(`${prefix} ${entry.message}${contextStr}`);
+                console.info(`${prefix} ${entry.message}${contextStr}`);
                 break;
             case 'warn':
                 // eslint-disable-next-line no-console
-                logger.warn(`${prefix} ${entry.message}${contextStr}`);
+                console.warn(`${prefix} ${entry.message}${contextStr}`);
                 break;
             case 'error':
                 // eslint-disable-next-line no-console
-                logger.error(`${prefix} ${entry.message}${contextStr}`);
+                console.error(`${prefix} ${entry.message}${contextStr}`);
                 break;
         }
 
