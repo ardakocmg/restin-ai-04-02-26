@@ -1,13 +1,14 @@
 import { logger } from '@/lib/logger';
-import { Plus,UserPlus } from 'lucide-react';
-import { useEffect,useState } from 'react';
+import { Loader2, Plus, UserPlus } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import DataTable from '../../components/shared/DataTable';
 import { Button } from '../../components/ui/button';
-import { Card,CardContent } from '../../components/ui/card';
-import { Dialog,DialogContent,DialogHeader,DialogTitle } from '../../components/ui/dialog';
+import { Card, CardContent } from '../../components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
+import { Skeleton } from '../../components/ui/skeleton';
 import { useVenue } from '../../context/VenueContext';
 import PageContainer from '../../layouts/PageContainer';
 import api from '../../lib/api';
@@ -16,6 +17,7 @@ export default function Guests() {
   const { activeVenue } = useVenue();
   const [guests, setGuests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [newGuest, setNewGuest] = useState({ name: '', email: '', phone: '', preferences: '' });
 
@@ -42,6 +44,7 @@ export default function Guests() {
       return;
     }
 
+    setSubmitting(true);
     try {
       await api.post('/guests', {
         venue_id: activeVenue.id,
@@ -53,6 +56,15 @@ export default function Guests() {
       loadGuests();
     } catch (error) {
       toast.error('Failed to create guest');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleFormKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey && !submitting) {
+      e.preventDefault();
+      handleCreateGuest();
     }
   };
 
@@ -75,8 +87,8 @@ export default function Guests() {
               { key: 'email', label: 'Email', render: (row) => row.email || '-' },
               { key: 'phone', label: 'Phone', render: (row) => row.phone || '-' },
               { key: 'visit_count', label: 'Visits' },
-              { 
-                key: 'total_spend', 
+              {
+                key: 'total_spend',
                 label: 'Total Spend',
                 render: (row) => `€${row.total_spend?.toFixed(2) || '0.00'}`
               }
@@ -93,12 +105,12 @@ export default function Guests() {
           <DialogHeader>
             <DialogTitle>Add Guest</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-4 py-4" onKeyDown={handleFormKeyDown} role="form">
             <div>
               <Label>Name *</Label>
               <Input aria-label="Input field"
                 value={newGuest.name}
-                onChange={(e) => setNewGuest({...newGuest, name: e.target.value})}
+                onChange={(e) => setNewGuest({ ...newGuest, name: e.target.value })}
                 placeholder="Guest name"
               />
             </div>
@@ -107,7 +119,7 @@ export default function Guests() {
               <Input aria-label="Input field"
                 type="email"
                 value={newGuest.email}
-                onChange={(e) => setNewGuest({...newGuest, email: e.target.value})}
+                onChange={(e) => setNewGuest({ ...newGuest, email: e.target.value })}
                 placeholder="guest@example.com"
               />
             </div>
@@ -115,7 +127,7 @@ export default function Guests() {
               <Label>Phone</Label>
               <Input aria-label="Input field"
                 value={newGuest.phone}
-                onChange={(e) => setNewGuest({...newGuest, phone: e.target.value})}
+                onChange={(e) => setNewGuest({ ...newGuest, phone: e.target.value })}
                 placeholder="+356..."
               />
             </div>
@@ -123,13 +135,13 @@ export default function Guests() {
               <Label>Preferences</Label>
               <Input aria-label="Input field"
                 value={newGuest.preferences}
-                onChange={(e) => setNewGuest({...newGuest, preferences: e.target.value})}
+                onChange={(e) => setNewGuest({ ...newGuest, preferences: e.target.value })}
                 placeholder="Window seat, no salt..."
               />
             </div>
-            <Button onClick={handleCreateGuest} className="w-full">
-              <UserPlus className="w-4 h-4 mr-2" />
-              Create Guest
+            <Button onClick={handleCreateGuest} className="w-full focus-visible:ring-2 focus-visible:ring-ring" disabled={submitting}>
+              {submitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <UserPlus className="w-4 h-4 mr-2" />}
+              {submitting ? 'Creating...' : 'Create Guest'}
             </Button>
           </div>
         </DialogContent>

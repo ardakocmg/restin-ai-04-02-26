@@ -29,7 +29,7 @@
         "industry_ref": "SonarQube: Lines of Code"
       },
       "frontend_loc": {
-        "value": 112697,
+        "value": 112709,
         "source": "frontend/src/",
         "method": "line_count",
         "confidence": "high",
@@ -43,7 +43,7 @@
         "industry_ref": "SonarQube: ncloc"
       },
       "total_loc": {
-        "value": 176322,
+        "value": 176334,
         "method": "computed",
         "confidence": "high",
         "industry_ref": "SonarQube: Total Lines"
@@ -586,9 +586,9 @@
     "api_documentation": "7%",
     "accessibility_ux": "7%"
   },
-  "computed_at": 1771730201.4822507,
-  "_ts": 1771730201.482251,
-  "_generated_at": "2026-02-22T03:16:41Z",
+  "computed_at": 1771730500.1311793,
+  "_ts": 1771730500.1311796,
+  "_generated_at": "2026-02-22T03:21:40Z",
   "_generator": "compute_audit_snapshot.py",
   "_source": "build-time"
 }
